@@ -19,9 +19,9 @@ export default {
   mounted: function () {
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
-        baseUrl: 'https://dev-183252.okta.com/oauth2/default'.split('/oauth2')[0],
+        baseUrl: 'https://dev-183252.okta.com',
         clientId: '0oa3xeljtDMSTwJ3h4x6',
-        redirectUri: 'http://localhost:8080/implicit/callback',
+        redirectUri: 'https://app.traininblocks.com/implicit/callback',
         logo: require('@/assets/logo.png'),
         i18n: {
           en: {
@@ -30,7 +30,8 @@ export default {
         },
         authParams: {
           pkce: true,
-          display: 'page'
+          display: 'page',
+          issuer: 'https://dev-183252.okta.com/oauth2/default'
         }
       })
 

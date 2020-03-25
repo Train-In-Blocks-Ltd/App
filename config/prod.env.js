@@ -18,7 +18,7 @@ process.env.OKTA_TESTING_DISABLEHTTPSCHECK = process.env.OKTA_TESTING_DISABLEHTT
 
 // List of environment variables made available to the app
 [
-  'https://dev-183252-admin.okta.com/oauth2/default',
+  'https://dev-183252.okta.com/oauth2/default',
   '0oa3xeljtDMSTwJ3h4x6'
 ].forEach((key) => {
   process.env[key] = JSON.stringify(process.env[key]) // ensure variable is a string

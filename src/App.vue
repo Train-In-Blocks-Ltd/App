@@ -5,6 +5,7 @@
     margin: 0;
     min-height: 100vh;
     display: grid;
+    font-size: 16px;
   }
   #app {
     display: grid;
@@ -14,53 +15,35 @@
     grid-area: main;
     display: grid;
     align-items: center;
+    padding: 80px 60px;
   }
   #app.authenticated {
     display: grid;
-    grid-template-areas: "sidebar main main main";
+    grid-template-areas: "sidebar main";
+    grid-template-columns: 260px 1fr;
   }
-  .sidebar.authenticated {
+  .sidebar {
     grid-area: sidebar;
+    display: grid;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    padding: 80px 0;
   }
 </style>
 <template>
   <div id="app" v-bind:class="{'authenticated': authenticated}">
     <div class="sidebar" v-if="authenticated">
-      <router-link
-        to="/"
-        class="header item"
-      >
-        <img
-          class="ui mini image"
-          src="./assets/logo.png"
-        >
-        &nbsp;
-        Train in Blocks
-      </router-link>
-      <router-link
-        to="/login"
-        class="item"
-        v-if="!authenticated"
-      >
-      Login
-      </router-link>
-      <router-link
-        to="/profile"
-        class="item"
-        id="profile-button"
-        v-if="authenticated"
-      >
-      Account
-      </router-link>
-      <router-link
-        to="/"
-        id="logout-button"
-        class="item"
-        v-if="authenticated"
-        v-on:click.native="logout()"
-      >
-      Logout
-      </router-link>
+      <div class="logo_container">
+        <router-link to="/" class="logo_link">
+          <img class="logo" src="./assets/logo.png" width="60px">
+        </router-link>
+      </div>
+      <div class="nav_item">
+        <router-link to="/account" id="account-button">Account</router-link>
+      </div>
+      <div class="nav_item">
+        <router-link to="/" id="logout-button" v-on:click.native="logout()">Logout</router-link>
+      </div>
     </div>
     <main>
       <router-view/>
