@@ -1,61 +1,51 @@
+<style>
+  #logout_message {
+    text-align: center;
+    font-size: 2.5rem;
+  }
+</style>
+</style>
 <template>
   <div id="home">
-    <h1 class="ui header">Custom Login Page with Sign In Widget</h1>
-    <div v-if="!this.$parent.authenticated">
-      <p>If you‘re viewing this page then you have successfully started this Vue application.</p>
-      <p>This example shows you how to use the
-        <a href="https://github.com/okta/okta-oidc-js/tree/master/packages/okta-vue">Okta Vue Library</a>
-        and the
-        <a href="https://github.com/okta/okta-signin-widget">Okta Sign-In Widget</a>
-        to add the
-        <a href="https://developer.okta.com/docs/guides/implement-auth-code-pkce">PKCE Flow</a>
-        to your application.
-        This combination is useful when you want to leverage the features of the Sign-In Widget, and the authentication helper components from the okta-vue module.
-      </p>
-      <p>
-        Once you have logged in you will be redirected through your authorization server (the issuer defined in config) to create a session for Single-Sign-On (SSO).
-        After this you will be redirected back to the application with an ID token and access token. The tokens will be stored in local storage for future use.
-      </p>
-      <router-link
-        role="button"
-        to="/login"
-      >
-      Login
-      </router-link>
-    </div>
+    <h1 v-if="!this.$parent.authenticated" id="logout_message">You have been logged out successfully</h1>
 
     <div v-if="this.$parent.authenticated">
-      <p>Welcome back, {{claims.firstName}}!</p>
-      <p>
-        You have successfully authenticated against your Okta org, and have been redirected back to this application.  You now have an ID token and access token in local storage.
-        Visit the <a href="/account">My Profile</a> page to take a look inside the ID token.
-      </p>
-      <h3>Next Steps</h3>
-      <p>
-        Currently this application is a stand-alone front end application.
-        At this point you can use the access token to authenticate yourself against resource servers that you control.
-      </p>
-      <p>
-        This sample is designed to work with one of our resource server examples.
-        To see access token authentication in action, please download one of these resource server examples:
-      </p>
-      <p>Once you have downloaded and started the example resource server, you can visit the <a href="/clients">My Messages</a> page to see the authentication process in action.</p>
+      <h1>Explore</h1>
+      <p>Welcome back, {{claims.name}}!</p>
+      <p>{{posts}}</p>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'home',
   data: function () {
     return {
-      claims: ''
+      claims: '',
+      posts: 'Loading clients...'
     }
   },
-  created () { this.setup() },
+  created () {
+    this.setup()
+    this.clients()
+  },
   methods: {
     async setup () {
       this.claims = await this.$auth.getUser()
+    },
+    async clients () {
+      await this.$auth.getUser()
+      if (this.$parent.authenticated) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          const response = await axios.get(`https://api.traininblocks.com/clients`)
+          this.posts = response.data
+        } catch (e) {
+          console.error(`${e}`)
+        }
+      }
     }
   }
 }

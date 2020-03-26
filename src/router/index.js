@@ -6,7 +6,6 @@ import Auth from '@okta/okta-vue'
 import HomeComponent from '@/components/Home'
 import LoginComponent from '@/components/Login'
 import ProfileComponent from '@/components/Account'
-import ClientsComponent from '@/components/Clients'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -38,13 +37,6 @@ const router = new Router({
     {
       path: '/account',
       component: ProfileComponent,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/clients',
-      component: ClientsComponent,
       meta: {
         requiresAuth: true
       }

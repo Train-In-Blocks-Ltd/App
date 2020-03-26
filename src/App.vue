@@ -1,11 +1,30 @@
 <style>
+  * {
+    box-sizing: border-box;
+  }
   body {
     background-color: #ffffff;
-    font-family: Raleway, sans-serif;
+    color: #282828;
+    font-family: 'Raleway', sans-serif;
     margin: 0;
     min-height: 100vh;
     display: grid;
     font-size: 16px;
+  }
+  h1 {
+    margin-top: -1rem;
+    margin-bottom: 5rem;
+    font-weight: bold;
+    font-size: 3.75rem;
+    text-transform: uppercase;
+  }
+  a {
+    text-decoration: none;
+    color: #282828;
+    font-weight: bold;
+  }
+  a:hover {
+    text-decoration: underline;
   }
   #app {
     display: grid;
@@ -14,8 +33,8 @@
   main {
     grid-area: main;
     display: grid;
-    align-items: center;
-    padding: 80px 60px;
+    align-items: start;
+    padding: 5rem 3.75rem;
   }
   #app.authenticated {
     display: grid;
@@ -25,9 +44,24 @@
   .sidebar {
     grid-area: sidebar;
     display: grid;
-    text-align: center;
+    text-align: left;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    padding: 80px 0;
+    padding: 5rem 2.5rem;
+    grid-auto-rows: 3.75rem auto;
+    grid-gap: 3.75rem;
+  }
+  .logo_container {
+    text-align: center;
+  }
+  .account_nav_container {
+    align-self: end;
+    text-align: center;
+  }
+  .nav_item {
+    padding: 1rem 0;
+  }
+  .nav_item:last-of-type {
+    padding-bottom: 0;
   }
 </style>
 <template>
@@ -39,10 +73,15 @@
         </router-link>
       </div>
       <div class="nav_item">
-        <router-link to="/account" id="account-button">Account</router-link>
-      </div>
-      <div class="nav_item">
-        <router-link to="/" id="logout-button" v-on:click.native="logout()">Logout</router-link>
+          <router-link to="/" id="explore-link">Explore</router-link>
+        </div>
+      <div class="account_nav_container">
+        <div class="nav_item">
+          <router-link to="/account" id="account-link">Account</router-link>
+        </div>
+        <div class="nav_item">
+          <router-link to="/" id="logout-link" v-on:click.native="logout()">Logout</router-link>
+        </div>
       </div>
     </div>
     <main>
