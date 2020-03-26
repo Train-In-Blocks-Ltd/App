@@ -12,7 +12,11 @@
     <div v-if="this.$parent.authenticated">
       <h1>Explore</h1>
       <p>Welcome back, {{claims.name}}!</p>
-      <p>{{posts}}</p>
+      <div v-for="(messages, index) in posts"
+            :key="index">
+        <p>{{messages.date}}</p>
+      </div>
+      <p>{{posts.messages[0].date}}</p>
     </div>
   </div>
 </template>

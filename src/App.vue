@@ -63,6 +63,9 @@
   .nav_item:last-of-type {
     padding-bottom: 0;
   }
+  pwa-update {
+    display: none;
+  }
 </style>
 <template>
   <div id="app" v-bind:class="{'authenticated': authenticated}">
