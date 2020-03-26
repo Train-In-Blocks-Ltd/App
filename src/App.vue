@@ -17,6 +17,7 @@
     font-weight: bold;
     font-size: 3.75rem;
     text-transform: uppercase;
+    letter-spacing: 0.15em;
   }
   a {
     text-decoration: none;
