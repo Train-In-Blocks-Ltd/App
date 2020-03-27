@@ -1,6 +1,7 @@
 {
     "name": "Train In Blocks",
     "short_name": "Train In Blocks",
+    "start_url": "https://app.traininblocks.com",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
