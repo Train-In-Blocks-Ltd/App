@@ -116,7 +116,6 @@
 import OktaSignIn from '@okta/okta-signin-widget'
 
 export default {
-  name: 'Login',
   mounted: function () {
     this.$nextTick(function () {
       this.widget = new OktaSignIn({

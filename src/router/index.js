@@ -6,6 +6,8 @@ import Auth from '@okta/okta-vue'
 import HomeComponent from '@/components/Home'
 import LoginComponent from '@/components/Login'
 import ProfileComponent from '@/components/Account'
+import UpdateComponent from '@/components/AccountUpdate'
+import LogoutComponent from '@/components/Logout'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -13,7 +15,8 @@ Vue.use(Auth, {
   clientId: '0oa3xeljtDMSTwJ3h4x6',
   redirectUri: 'https://app.traininblocks.com/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
-  pkce: true
+  pkce: true,
+  autoRenew: true
 })
 
 const router = new Router({
@@ -31,8 +34,19 @@ const router = new Router({
       component: LoginComponent
     },
     {
+      path: '/logout',
+      component: LogoutComponent
+    },
+    {
       path: '/implicit/callback',
       component: Auth.handleCallback()
+    },
+    {
+      path: '/update-details',
+      component: UpdateComponent,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/account',
