@@ -9,6 +9,7 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
+    letter-spacing: 0.1em;
   }
   h1 {
     margin-top: -1rem;
@@ -100,6 +101,9 @@
     display: grid;
     align-items: start;
     padding: 5rem 3.75rem;
+  }
+  main div {
+    max-width: 750px
   }
   #app.authenticated {
     display: grid;
@@ -194,6 +198,30 @@
       var(--blue)
     )
   }
+  ::placeholder {
+    color: rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.6
+    );
+    opacity: 1; /* Firefox */
+  }
+  .nav_subitem {
+    padding: 0.8rem 0;
+  }
+  .nav_subitem:first-of-type {
+    padding-top: 0;
+  }
+  .nav_subitem:last-of-type {
+    padding-bottom: 0;
+  }
+  .nav_subitem:before {
+    content: '>  '
+  }
+  .nav_subitem a {
+    font-weight: 400;
+  }
 </style>
 <template>
   <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
@@ -203,9 +231,15 @@
           <img class="logo" src="./assets/logo.png" width="60px">
         </router-link>
       </div>
-      <div class="nav_item">
-          <router-link to="/" id="explore-link">Explore</router-link>
+      <div class="main_nav">
+        <div class="nav_item">
+            <router-link to="/" id="explore-link">Explore</router-link>
         </div>
+        <div v-for="(clients, index) in posts"
+            :key="index" class="nav_subitem">
+          <router-link :to="'/client/'+clients.name">{{clients.name}}</router-link>
+        </div>
+      </div>
       <div class="account_nav_container">
         <div class="nav_item">
           <router-link to="/account" id="account-link">Account</router-link>
@@ -222,9 +256,11 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data: function () {
     return {
+      posts: '',
       claims: '',
       authenticated: false,
       colors: {
@@ -239,6 +275,8 @@ export default {
   },
   created () {
     this.isAuthenticated()
+    this.setup()
+    this.clients()
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -248,6 +286,20 @@ export default {
     setColor (value) {
       this.colors = value
     },
+    async setup () {
+      this.claims = await this.$auth.getUser()
+      this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
+      this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
+      this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
+    },
+    hexToRgb (hex) {
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null
+    },
     async isAuthenticated () {
       this.authenticated = await this.$auth.isAuthenticated()
     },
@@ -255,6 +307,18 @@ export default {
       await this.$auth.logout()
       await this.isAuthenticated()
       this.$router.push('/logout')
+    },
+    async clients () {
+      await this.$auth.getUser()
+      if (this.authenticated) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.email}`)
+          this.posts = response.data
+        } catch (e) {
+          console.error(`${e}`)
+        }
+      }
     }
   }
 }

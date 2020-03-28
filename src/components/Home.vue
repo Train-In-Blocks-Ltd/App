@@ -1,53 +1,60 @@
+<style>
+  .client_container p {
+    display: inline;
+  }
+  .client_link {
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    padding: 1rem 0;
+    margin: 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 400;
+    display: block
+  }
+  .client_link:hover {
+    text-decoration: none;
+    border-bottom: 2px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    margin-bottom: -1px
+  }
+  .client_container:last-of-type .client_link:hover {
+    margin-bottom: calc(0.5rem - 1px)
+  }
+  .search {
+    width: 100%;
+    font-size: 1rem;
+  }
+</style>
 <template>
   <div id="home">
-    <div>
-      <h1>Explore</h1>
-      <p>Welcome back, {{$parent.claims.name}}!</p>
-      <div v-for="(messages, index) in posts"
-            :key="index">
-        <p>{{messages.date}}</p>
-      </div>
-      <p>{{posts}}</p>
+    <h1>Explore</h1>
+    <p>Welcome back, {{$parent.claims.name}}!</p>
+    <input type="text" rel="search" placeholder="Search..." class="search"/>
+    <div v-for="(clients, index) in $parent.posts"
+          :key="index" class="client_container">
+      <router-link class="client_link" :to="'/client/'+clients.name">
+        <p><b>{{clients.name}}</b></p>
+        <p> - </p>
+        <p>{{clients.email}}</p>
+        <p> - </p>
+        <p>{{clients.number}}</p>
+      </router-link>
     </div>
+    <button id="add_client-link" class="button" v-on:click="save()">New client</button>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
-  data: function () {
-    return {
-      posts: 'Loading clients...'
-    }
-  },
   async created () {
-    this.clients()
-    function hexToRgb (hex) {
-      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null
-    }
-    this.$parent.claims = await this.$auth.getUser()
-    this.$parent.colors.rgba.r = await hexToRgb(this.$parent.claims.color).r
-    this.$parent.colors.rgba.g = await hexToRgb(this.$parent.claims.color).g
-    this.$parent.colors.rgba.b = await hexToRgb(this.$parent.claims.color).b
-  },
-  methods: {
-    async clients () {
-      await this.$auth.getUser()
-      if (this.$parent.authenticated) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        try {
-          const response = await axios.get(`https://api.traininblocks.com/clients`)
-          this.posts = response.data
-        } catch (e) {
-          console.error(`${e}`)
-        }
-      }
-    }
+    this.$parent.setup()
+    this.$parent.clients()
   }
 }
 </script>
