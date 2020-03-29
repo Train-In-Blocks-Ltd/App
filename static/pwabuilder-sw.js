@@ -10,6 +10,8 @@ self.addEventListener('message', (event) => {
   }
 })
 
+workbox.setConfig({ debug: false })
+
 workbox.routing.registerRoute(
   new RegExp('/*'),
   new workbox.strategies.NetworkFirst({

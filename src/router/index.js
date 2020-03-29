@@ -8,6 +8,7 @@ import LoginComponent from '@/components/Login'
 import ProfileComponent from '@/components/Account'
 import UpdateComponent from '@/components/AccountUpdate'
 import LogoutComponent from '@/components/Logout'
+import ClientComponent from '@/components/Client'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -51,6 +52,13 @@ const router = new Router({
     {
       path: '/account',
       component: ProfileComponent,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/client/:name',
+      component: ClientComponent,
       meta: {
         requiresAuth: true
       }

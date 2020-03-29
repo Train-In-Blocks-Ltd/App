@@ -1,34 +1,10 @@
 'use strict'
-
-// Support storing environment variables in a file named "testenv" at the project root
-const path = require('path')
-const dotenv = require('dotenv')
-const fs = require('fs')
-
-// Read environment variables from "testenv". Override environment vars if they are already set.
-const TESTENV = path.resolve(__dirname, '..', '..', 'testenv')
-if (fs.existsSync(TESTENV)) {
-  const envConfig = dotenv.parse(fs.readFileSync(TESTENV))
-  Object.keys(envConfig).forEach((k) => {
-    process.env[k] = envConfig[k]
-  })
-}
-process.env.CLIENT_ID = process.env.CLIENT_ID || process.env.SPA_CLIENT_ID;
-process.env.OKTA_TESTING_DISABLEHTTPSCHECK = process.env.OKTA_TESTING_DISABLEHTTPSCHECK || false;
-
-// List of environment variables made available to the app
-[
-  'https://dev-183252.okta.com/oauth2/default',
-  '0oa3xeljtDMSTwJ3h4x6'
-].forEach((key) => {
-  process.env[key] = JSON.stringify(process.env[key]) // ensure variable is a string
-})
-
-const { CLIENT_ID, ISSUER, OKTA_TESTING_DISABLEHTTPSCHECK } = process.env
-
 module.exports = {
   NODE_ENV: '"production"',
-  CLIENT_ID,
-  ISSUER,
-  OKTA_TESTING_DISABLEHTTPSCHECK
+  CLIENT_ID: '"0oa3xeljtDMSTwJ3h4x6"',
+  ISSUER: '"https://dev-183252.okta.com"',
+  URL: '"https://app.traininblocks.com"',
+  AUTH_HEADER: '"SSWS 00HqfFqOGTIaDz0MENWiQ_mVVe7-a2OWJaLrB4L6a6"',
+  REVOKE_ID: '"0oa4zf9czDcyWNqd14x6"',
+  REVOKE_SECRET: '"vg-6ulwKHl9yo4kcZr8QpyhZGX30xSwWaKdR_GGJ"'
 }

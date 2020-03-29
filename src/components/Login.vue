@@ -106,22 +106,22 @@
 </style>
 
 <template>
-  <div id="login">
+  <div id="login" v-if="!this.$parent.authenticated">
     <div id="okta-signin-container"></div>
   </div>
 </template>
 
 <script>
-
 import OktaSignIn from '@okta/okta-signin-widget'
 
 export default {
   mounted: function () {
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
-        baseUrl: 'https://dev-183252.okta.com',
-        clientId: '0oa3xeljtDMSTwJ3h4x6',
-        redirectUri: 'https://app.traininblocks.com/implicit/callback',
+        baseUrl: process.env.ISSUER,
+        issuer: process.env.ISSUER + '/oauth2/default',
+        clientId: process.env.CLIENT_ID,
+        redirectUri: process.env.URL + '/implicit/callback',
         logo: require('@/assets/logo.png'),
         i18n: {
           en: {
@@ -131,7 +131,7 @@ export default {
         authParams: {
           pkce: true,
           display: 'page',
-          issuer: 'https://dev-183252.okta.com/oauth2/default',
+          issuer: process.env.ISSUER + '/oauth2/default',
           scopes: ['openid', 'profile', 'email']
         }
       })
@@ -149,6 +149,11 @@ export default {
         }
       )
     })
+  },
+  beforeDestroy () {
+    console.log('yes')
+    this.$parent.setup()
+    this.$parent.clients()
   },
   destroyed () {
     // Remove the widget from the DOM on path change

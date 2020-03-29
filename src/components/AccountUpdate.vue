@@ -56,7 +56,7 @@ export default {
     },
     async save () {
       try {
-        await axios.post(`https://dev-183252.okta.com/api/v1/users/me`,
+        await axios.post(`${process.env.ISSUER}/api/v1/users/me`,
           {
             'profile': {
               'firstName': this.$parent.claims.given_name,
@@ -69,11 +69,11 @@ export default {
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': 'SSWS 00HqfFqOGTIaDz0MENWiQ_mVVe7-a2OWJaLrB4L6a6'
+              'Authorization': process.env.AUTH_HEADER
             }
           }
         )
-        await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/revoke`,
+        await axios.post(`${process.env.ISSUER}/oauth2/default/v1/revoke`,
           qs.stringify({
             token: await this.$auth.getAccessToken(),
             token_type_hint: 'access_token'
@@ -81,7 +81,7 @@ export default {
           {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
-              'Authorization': 'Basic ' + base64.encode('0oa4zf9czDcyWNqd14x6:vg-6ulwKHl9yo4kcZr8QpyhZGX30xSwWaKdR_GGJ')
+              'Authorization': 'Basic ' + base64.encode(process.env.REVOKE_ID + ':' + process.env.REVOKE_SECRET)
             }
           }
         )

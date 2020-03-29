@@ -28,13 +28,14 @@
     );
     font-weight: bold;
   }
-  a:hover {
+  a:hover, .router-link-exact-active {
     text-decoration: underline;
   }
   .small {
     font-size: 0.8rem;
   }
   .button {
+    text-align: center;
     border-radius: 4px;
     border: 1px solid rgb(
       var(--accessible-color),
@@ -69,7 +70,7 @@
     );
     text-decoration: none;
   }
-  input[type="text"] {
+  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"] {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -118,6 +119,9 @@
     padding: 5rem 2.5rem;
     grid-auto-rows: 3.75rem auto;
     grid-gap: 3.75rem;
+    position: sticky;
+    height: 100vh;
+    top: 0;
   }
   .logo_container {
     text-align: center;
@@ -245,7 +249,7 @@
           <router-link to="/account" id="account-link">Account</router-link>
         </div>
         <div class="nav_item">
-          <router-link to="/" id="logout-link" v-on:click.native="logout()">Logout</router-link>
+          <router-link to="/logout" id="logout-link" v-on:click.native="logout()">Logout</router-link>
         </div>
       </div>
     </div>
@@ -261,6 +265,8 @@ export default {
   data: function () {
     return {
       posts: '',
+      loading_clients: true,
+      no_clients: false,
       claims: '',
       authenticated: false,
       colors: {
@@ -313,8 +319,13 @@ export default {
       if (this.authenticated) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.email}`)
-          this.posts = response.data
+          const response = await axios.get(`https://api.traininblocks.com/clients/${await this.claims.sub}`)
+          if (response.data == null) {
+            this.no_clients = true
+          } else {
+            this.posts = response.data
+          }
+          this.loading_clients = false
         } catch (e) {
           console.error(`${e}`)
         }
