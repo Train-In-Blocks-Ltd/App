@@ -150,11 +150,6 @@ export default {
       )
     })
   },
-  beforeDestroy () {
-    console.log('yes')
-    this.$parent.setup()
-    this.$parent.clients()
-  },
   destroyed () {
     // Remove the widget from the DOM on path change
     this.widget.remove()

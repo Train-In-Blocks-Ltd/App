@@ -264,6 +264,7 @@ import axios from 'axios'
 export default {
   data: function () {
     return {
+      error: '',
       posts: '',
       loading_clients: true,
       no_clients: false,
@@ -294,9 +295,9 @@ export default {
     },
     async setup () {
       this.claims = await this.$auth.getUser()
-      this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
-      this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
-      this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
+      this.colors.rgba.r = this.hexToRgb(this.claims.color).r
+      this.colors.rgba.g = this.hexToRgb(this.claims.color).g
+      this.colors.rgba.b = this.hexToRgb(this.claims.color).b
     },
     hexToRgb (hex) {
       var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
@@ -312,22 +313,23 @@ export default {
     async logout () {
       await this.$auth.logout()
       await this.isAuthenticated()
-      this.$router.push('/logout')
     },
     async clients () {
       await this.$auth.getUser()
       if (this.authenticated) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          const response = await axios.get(`https://api.traininblocks.com/clients/${await this.claims.sub}`)
-          if (response.data == null) {
+          const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
+          if (response.data.length === 0) {
             this.no_clients = true
           } else {
             this.posts = response.data
           }
           this.loading_clients = false
         } catch (e) {
-          console.error(`${e}`)
+          this.no_clients = true
+          this.loading_clients = false
+          this.error = e.toString()
         }
       }
     }
