@@ -12,9 +12,9 @@ import ClientComponent from '@/components/Client'
 
 Vue.use(Router)
 Vue.use(Auth, {
-  issuer: 'https://dev-183252.okta.com/oauth2/default',
-  clientId: '0oa3xeljtDMSTwJ3h4x6',
-  redirectUri: 'https://app.traininblocks.com/implicit/callback',
+  issuer: process.env.ISSUER + '/oauth2/default',
+  clientId: process.env.CLIENT_ID,
+  redirectUri: process.env.URL + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: true

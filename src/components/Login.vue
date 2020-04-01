@@ -150,6 +150,11 @@ export default {
       )
     })
   },
+  async beforeDestroy () {
+    await this.$parent.isAuthenticated()
+    await this.$parent.setup()
+    await this.$parent.clients()
+  },
   destroyed () {
     // Remove the widget from the DOM on path change
     this.widget.remove()

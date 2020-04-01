@@ -265,10 +265,10 @@ export default {
   data: function () {
     return {
       error: '',
-      posts: '',
+      posts: null,
       loading_clients: true,
       no_clients: false,
-      claims: '',
+      claims: null,
       authenticated: false,
       colors: {
         rgba: {
@@ -280,10 +280,10 @@ export default {
       }
     }
   },
-  created () {
-    this.isAuthenticated()
-    this.setup()
-    this.clients()
+  async created () {
+    await this.isAuthenticated()
+    await this.setup()
+    await this.clients()
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -315,7 +315,7 @@ export default {
       await this.isAuthenticated()
     },
     async clients () {
-      await this.$auth.getUser()
+      this.error = false
       if (this.authenticated) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
@@ -324,10 +324,12 @@ export default {
             this.no_clients = true
           } else {
             this.posts = response.data
+            this.no_clients = false
+            this.error = false
           }
           this.loading_clients = false
         } catch (e) {
-          this.no_clients = true
+          this.no_clients = false
           this.loading_clients = false
           this.error = e.toString()
         }

@@ -56,11 +56,11 @@
 <template>
   <div id="home">
     <h1>Explore</h1>
-    <p :style="'font-size: 1.5rem'">Welcome back, {{$parent.claims.name}}!</p>
+    <p :style="'font-size: 1.5rem'" v-if="this.$parent.claims">Welcome back, {{this.$parent.claims.name}}!</p>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
-    <div v-if="!this.$parent.no_clients && !this.$parent.error">
+    <div v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
       <input type="search" rel="search" placeholder="Search..." class="search" v-model="search"/>
       <div v-for="(clients, index) in $parent.posts"
             :key="index" class="client_container">
@@ -110,9 +110,13 @@
         search: ''
       }
     },
-    created () {
-      this.$parent.setup()
-      this.$parent.clients()
+    async created () {
+      if (!(typeof this.$parent.claims === 'object' && this.$parent.claims !== null) || this.$parent.claims == null) {
+        await this.$parent.setup()
+      }
+      if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
+        await this.$parent.clients()
+      }
     },
     methods: {
       creation () {
@@ -127,6 +131,7 @@
         if (this.$parent.authenticated) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            // eslint-disable-next-line
             const response_save_clients = await axios.put(`https://api.traininblocks.com/clients/${this.new_client.name}`,
               qs.stringify({
                 pt_id: this.$parent.claims.sub,
@@ -141,7 +146,7 @@
                 }
               }
             )
-
+            // eslint-disable-next-line
             this.response = response_save_clients.data
 
             this.$parent.clients()

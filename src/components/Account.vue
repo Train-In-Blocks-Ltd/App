@@ -1,5 +1,5 @@
 <template>
-  <div id="account">
+  <div id="account" v-if="this.$parent.claims">
     <h1>Your Account</h1>
     <p><b>Name: </b><span>{{$parent.claims.name}}</span></p>
     <p><b>Email: </b><span>{{$parent.claims.email}}</span></p>

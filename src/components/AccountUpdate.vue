@@ -19,7 +19,7 @@
 <template>
   <div id="update-account">
     <h1>Your Account</h1>
-    <div class="details_container">
+    <div class="details_container" v-if="$parent.claims">
         <label for="first-name"><b>First name: </b></label><input type="text" id="first-name" name="first-name" v-model="$parent.claims.given_name"/>
         <label for="last-name"><b>Last name: </b></label><input type="text" id="last-name" name="last-name" v-model="$parent.claims.family_name"/>
         <label for="email"><b>Email: </b></label><input type="text" id="email" name="email" v-model="$parent.claims.email"/>

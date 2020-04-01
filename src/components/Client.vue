@@ -74,26 +74,33 @@
         }
       }
     },
-    created () {
-      this.get_programmes()
+    async created () {
+      await this.get_programmes()
+    },
+    watch: {
+    // call again the method if the route changes
+      '$route': 'get_programmes'
     },
     methods: {
       async client_id () {
-        await this.$parent.clients()
+        if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
+          await this.$parent.clients()
+        }
         var x
         for (x in this.$parent.posts) {
           if (this.$parent.posts[x].name === this.$route.params.name) {
             return this.$parent.posts[x].client_id
-          } else {
-            break
           }
         }
       },
       async get_programmes () {
-        await this.$parent.$auth.getUser()
+        if (!(typeof this.$parent.claims === 'object' && this.$parent.claims !== null) || this.$parent.claims == null) {
+          await this.$parent.$auth.getUser()
+        }
         if (this.$parent.authenticated) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            // eslint-disable-next-line
             const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${await this.client_id()}`)
             if (response_programmes.data.length === 0) {
               this.no_programmes = true
@@ -120,6 +127,7 @@
         if (this.$parent.authenticated) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            // eslint-disable-next-line
             const response_save_programmes = await axios.put(`https://api.traininblocks.com/programmes/${this.new_programme.name}`,
               qs.stringify({
                 client_id: await this.client_id(),
@@ -135,7 +143,7 @@
                 }
               }
             )
-
+            // eslint-disable-next-line
             this.response = response_save_programmes.data
 
             this.get_programmes()
