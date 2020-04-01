@@ -9,6 +9,7 @@ import ProfileComponent from '@/components/Account'
 import UpdateComponent from '@/components/AccountUpdate'
 import LogoutComponent from '@/components/Logout'
 import ClientComponent from '@/components/Client'
+import NotFound from '@/components/NotFound'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -62,6 +63,10 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '*',
+      component: NotFound
     }
   ]
 })

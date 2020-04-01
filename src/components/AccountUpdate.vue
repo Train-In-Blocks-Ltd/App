@@ -50,15 +50,20 @@ export default {
       res: ''
     }
   },
+  beforeRouteUpdate (to, from, next) {
+      this.$parent.setup()
+      next()
+  },
   methods: {
     updateColor (value) {
       this.$parent.colors = value
     },
     async save () {
       try {
-        await axios.post(`${process.env.ISSUER}/api/v1/users/me`,
+        await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
           {
             'profile': {
+              'login': this.$parent.claims.email,
               'firstName': this.$parent.claims.given_name,
               'lastName': this.$parent.claims.family_name,
               'email': this.$parent.claims.email,
@@ -86,10 +91,9 @@ export default {
           }
         )
         this.res = 'Details updated successfully'
-
         this.$parent.claims = await this.$auth.getUser()
       } catch (e) {
-        console.error(`${e}`)
+        this.res = e
       }
     }
   }
