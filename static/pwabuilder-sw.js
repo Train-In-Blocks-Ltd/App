@@ -10,11 +10,22 @@ self.addEventListener('message', (event) => {
   }
 })
 
-workbox.setConfig({ debug: false })
+// workbox.setConfig({ debug: false })
+
+const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)|([\s\S]+).okta.com([\s\S]+)/];
+
+networkFirstPaths.forEach((path) => {
+  workbox.routing.registerRoute(
+    new RegExp(path),
+    new workbox.strategies.NetworkFirst({
+      cacheName: CACHE
+    })
+  );
+});
 
 workbox.routing.registerRoute(
   new RegExp('/*'),
-  new workbox.strategies.NetworkFirst({
+  new workbox.strategies.CacheFirst({
     cacheName: CACHE
   })
-)
+);

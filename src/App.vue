@@ -283,7 +283,7 @@ export default {
   async created () {
     await this.isAuthenticated()
     await this.setup()
-    await this.clients()
+    await this.clients_to_vue()
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -315,6 +315,13 @@ export default {
       await this.isAuthenticated()
       localStorage.clear()
     },
+    async clients_to_vue () {
+      if (!localStorage.getItem('posts')) {
+        await this.clients()
+      }
+      this.posts = JSON.parse(localStorage.getItem('posts'))
+      this.loading_clients = false
+    },
     async clients () {
       this.error = false
       if (this.authenticated) {
@@ -324,7 +331,7 @@ export default {
           if (response.data.length === 0) {
             this.no_clients = true
           } else {
-            this.posts = response.data
+            localStorage.setItem('posts', JSON.stringify(response.data))
             this.no_clients = false
             this.error = false
           }

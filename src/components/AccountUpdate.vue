@@ -51,8 +51,8 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-      this.$parent.setup()
-      next()
+    this.$parent.setup()
+    next()
   },
   methods: {
     updateColor (value) {
