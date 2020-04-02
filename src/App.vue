@@ -101,7 +101,7 @@
     align-items: start;
     padding: 5rem 3.75rem;
   }
-  main div {
+  main > div {
     max-width: 750px
   }
   #app.authenticated {
@@ -256,7 +256,7 @@
     margin-bottom: 2.5rem;
   }
   .main_nav::-webkit-scrollbar-track {
-    border: 1px solid rgba(
+    border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
@@ -268,15 +268,65 @@
     background-color: #FFFFFF;
   }
   .main_nav::-webkit-scrollbar-thumb {
-    background-color: #000000;  
+    background-color: rgba(
+      calc(var(--red) + 45),
+      calc(var(--green) + 45),
+      calc(var(--blue) + 45),
+      0.8
+    )
   }
   .account_nav_container .nav_item:first-of-type {
     padding-top: 0;
   }
+  @media (min-width: 768px) {
+    #hamburger, #close {
+      display: none;
+    }
+  }
+  @media (max-width: 768px) {
+    #app.authenticated {
+      display: block;
+    }
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-top: -.9rem;
+      margin-bottom: 2.5rem;
+    }
+    .sidebar {
+      position: fixed;
+      width: 100%;
+      background-color: rgb(
+        var(--red),
+        var(--green),
+        var(--blue)
+      );
+      transition: opacity 0.5s, z-index 1s;
+      z-index: -1;
+      opacity: 0;
+    }
+    .sidebar.open {
+      opacity: 1;
+      z-index: 99;
+    }
+    main {
+      padding: 2.5rem 1.875rem;
+    }
+    #hamburger, #close {
+      position: absolute;
+      left: 1.875rem;
+      top: 1.5rem;
+    }
+    #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
+      fill: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    }
+  }
 </style>
 <template>
   <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
-    <div class="sidebar" v-if="authenticated">
+    <a href="javascript:void(0)" title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
+    <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
+      <a id="close" v-on:click="sidebar()"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></a>
       <div class="logo_container">
         <router-link to="/" class="logo_link" title="Home">
           <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="74" height="74"><defs><path d="M380 580L380 380L580 380L580 580L380 580ZM260 260L260 580L60 580L60 60L580 60L580 260L260 260Z" id="go6TfJQF0"></path></defs><g><g><g><use xlink:href="#go6TfJQF0"></use></g></g></g></svg>
@@ -314,6 +364,7 @@ import axios from 'axios'
 export default {
   data: function () {
     return {
+      open: false,
       error: '',
       posts: null,
       loading_clients: true,
@@ -337,9 +388,13 @@ export default {
   },
   watch: {
     // Everytime the route changes, check for auth status
-    '$route': 'isAuthenticated'
+    '$route': 'isAuthenticated',
+    '$route': 'sidebar'
   },
   methods: {
+    sidebar() {
+      this.open = !this.open
+    },
     client_archive (id) {
 
     },

@@ -1,9 +1,4 @@
 <style>
-@media (max-width: 400px) {
-    #login {
-      min-width: 90%;
-    }
-}
   #login {
     text-align: center;
     display: inline;
@@ -98,6 +93,11 @@
   }
   .link.help.js-back {
     font-size: 0.9rem;
+  }
+  @media (max-width: 400px) {
+    #login {
+      min-width: 90%;
+    }
   }
 </style>
 

@@ -1,6 +1,6 @@
 <style>
   .client_container p {
-    display: inline;
+    margin: 0;
   }
   .client_link {
     border-bottom: 1px solid rgb(
@@ -12,7 +12,7 @@
     margin: 0.5rem 0;
     font-size: 1.25rem;
     font-weight: 400;
-    display: block
+    display: block;
   }
   .client_link:hover {
     text-decoration: none;
@@ -53,10 +53,10 @@
     height: 4rem;
   }
   .client_update {
-    float: right;
     transition: 0.5s;
     opacity: 1;
     font-size: 0.9rem;
+    text-align: right;
   }
   .client_container:hover .client_update svg path:not(.transparent) {
     fill: rgba(
@@ -65,6 +65,11 @@
       var(--accessible-color),
       1
     );
+  }
+  .client_link {
+    display: grid;
+    grid-template-columns: 1fr 0.1fr;
+    align-items: center;
   }
 </style>
 <template>
@@ -77,19 +82,13 @@
     <div v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
       <input type="search" rel="search" placeholder="Search..." class="search" v-model="search"/>
       <div v-for="(clients, index) in $parent.posts"
-            :key="index" class="client_container">
-        <div v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
-          <router-link class="client_link" :to="'/client/'+clients.name">
-            <p><b>{{clients.name}}</b></p>
-            <p> - </p>
-            <p>{{clients.email}}</p>
-            <p> - </p>
-            <p>{{clients.number}}</p>
-            <div class="client_update">
-              <span :click="$parent.client_archive(clients.id)" title="Archive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></span>
-            </div>
-          </router-link>
-        </div>
+        :key="index" class="client_container">
+        <router-link class="client_link" :to="'/client/'+clients.name" v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
+          <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
+          <div class="client_update">
+            <span :click="$parent.client_archive(clients.id)" title="Archive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></span>
+          </div>
+        </router-link>
       </div>
     </div>
     <button v-if="!creating" id="add_client-link" class="button" v-on:click="creation()">New client</button>
