@@ -6,6 +6,11 @@
         font-size: 2.5rem;
         letter-spacing: 0.15em;
     }
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 1.35rem;
+      }
+    }
 </style>
 
 <template>

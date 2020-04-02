@@ -288,10 +288,11 @@
       display: block;
     }
     h1 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       text-align: center;
       margin-top: -.9rem;
       margin-bottom: 2.5rem;
+      margin-left: 1.25em;
     }
     .sidebar {
       position: fixed;
@@ -388,11 +389,13 @@ export default {
   },
   watch: {
     // Everytime the route changes, check for auth status
-    '$route': 'isAuthenticated',
-    '$route': 'sidebar'
+    '$route' (to, from) {
+      this.isAuthenticated()
+      this.sidebar()
+    }
   },
   methods: {
-    sidebar() {
+    sidebar () {
       this.open = !this.open
     },
     client_archive (id) {
