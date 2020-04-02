@@ -64,7 +64,7 @@
       <input type="search" rel="search" placeholder="Search..." class="search" v-model="search"/>
       <div v-for="(clients, index) in $parent.posts"
             :key="index" class="client_container">
-        <div v-if="(!search) || clients.name.includes(search)">
+        <div v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
           <router-link class="client_link" :to="'/client/'+clients.name">
             <p><b>{{clients.name}}</b></p>
             <p> - </p>
@@ -113,6 +113,7 @@
     async created () {
       if (!localStorage.getItem('firstLoaded')) {
         await this.$parent.setup()
+        await this.$parent.clients()
         await this.$parent.clients_to_vue()
         localStorage.setItem('firstLoaded', true)
       }
