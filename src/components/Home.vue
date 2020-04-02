@@ -112,12 +112,8 @@
     },
     async created () {
       if (!localStorage.getItem('firstLoaded')) {
-        if (!(typeof this.$parent.claims === 'object' && this.$parent.claims !== null) || this.$parent.claims == null) {
-          await this.$parent.setup()
-        }
-        if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
-          await this.$parent.clients()
-        }
+        await this.$parent.setup()
+        await this.$parent.clients_to_vue()
         localStorage.setItem('firstLoaded', true)
       }
     },
@@ -127,9 +123,9 @@
       },
       close () {
         this.creating = false
-        this.response = ''
       },
       async save () {
+        this.response = ''
         if (this.$parent.authenticated) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
@@ -151,7 +147,8 @@
             // eslint-disable-next-line
             this.response = response_save_clients.data
 
-            this.$parent.clients()
+            await this.$parent.clients()
+            this.$parent.clients_to_vue()
 
             this.close()
 

@@ -10,7 +10,7 @@ self.addEventListener('message', (event) => {
   }
 })
 
-// workbox.setConfig({ debug: false })
+workbox.setConfig({ debug: false })
 
 const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)|([\s\S]+).okta.com([\s\S]+)/];
 
