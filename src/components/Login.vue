@@ -8,7 +8,6 @@
     text-align: center;
     display: inline;
     margin: 0 auto;
-    border-radius: 0.5rem;
     border: 2px solid #eee;
     padding: 1.75rem 1.25rem;
     min-width: 360px;
@@ -26,7 +25,6 @@
   }
   .okta-form-input-field input {
     width: 100%;
-    border-radius: 4px;
     border: 2px solid #eee;
     margin: 0.75rem 0;
     padding: 0.5rem;
@@ -51,7 +49,6 @@
   }
   .o-form-button-bar .button {
     width: 100%;
-    border-radius: 4px;
     border: none;
     padding: 0.5rem;
     font-family: 'Raleway', sans-serif;
@@ -82,7 +79,6 @@
   }
   .email-button {
     width: 100%;
-    border-radius: 4px;
     border: none;
     padding: 0.5rem;
     font-family: 'Raleway', sans-serif;

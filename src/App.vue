@@ -36,7 +36,6 @@
   }
   .button {
     text-align: center;
-    border-radius: 4px;
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -76,7 +75,6 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    border-radius: 4px;
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -116,7 +114,7 @@
     display: grid;
     text-align: left;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-    padding: 5rem 2.5rem;
+    padding: 5rem 2.5rem 2.5rem 2.5rem;
     grid-auto-rows: 3.75rem auto;
     grid-gap: 3.75rem;
     position: sticky;
@@ -125,6 +123,13 @@
   }
   .logo_container {
     text-align: center;
+  }
+  .logo_container svg defs path {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
   }
   .account_nav_container {
     align-self: end;
@@ -157,7 +162,6 @@
   .vc-chrome-fields .vc-input__input {
     padding: 0.75rem 0!important;
     box-shadow: none!important;
-    border-radius: 4px!important;
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -211,6 +215,14 @@
     );
     opacity: 1; /* Firefox */
   }
+  svg path:not(.transparent) {
+    fill: rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.6
+    );
+  }
   .nav_subitem {
     padding: 0.8rem 0;
   }
@@ -231,8 +243,8 @@
   <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
     <div class="sidebar" v-if="authenticated">
       <div class="logo_container">
-        <router-link to="/" class="logo_link">
-          <img class="logo" src="./assets/logo.png" width="60px">
+        <router-link to="/" class="logo_link" title="Home">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="60" height="60"><defs><path d="M380 580L380 380L580 380L580 580L380 580ZM260 260L260 580L60 580L60 60L580 60L580 260L260 260Z" id="go6TfJQF0"></path></defs><g><g><g><use xlink:href="#go6TfJQF0"></use></g></g></g></svg>
         </router-link>
       </div>
       <div class="main_nav">
@@ -245,6 +257,9 @@
         </div>
       </div>
       <div class="account_nav_container">
+        <div class="nav_item">
+          <router-link to="/archive" id="archive-link">Archive</router-link>
+        </div>
         <div class="nav_item">
           <router-link to="/account" id="account-link">Account</router-link>
         </div>
@@ -290,6 +305,9 @@ export default {
     '$route': 'isAuthenticated'
   },
   methods: {
+    client_archive (id) {
+
+    },
     setColor (value) {
       this.colors = value
     },

@@ -23,9 +23,10 @@ networkFirstPaths.forEach((path) => {
   );
 });
 
+/*
 workbox.routing.registerRoute(
   new RegExp('/*'),
   new workbox.strategies.CacheFirst({
     cacheName: CACHE
   })
-);
+); */
