@@ -115,7 +115,7 @@
     text-align: left;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     padding: 5rem 2.5rem 2.5rem 2.5rem;
-    grid-auto-rows: 3.75rem auto;
+    grid-auto-rows: 3.75rem auto auto;
     grid-gap: 3.75rem;
     position: sticky;
     height: 100vh;
@@ -123,6 +123,13 @@
   }
   .logo_container {
     text-align: center;
+  }
+  .logo_container a {
+    display: block;
+    height: 60px;
+  }
+  .logo_container svg {
+    margin-top: -8px;
   }
   .logo_container svg defs path {
     fill: rgb(
@@ -238,16 +245,32 @@
   .nav_subitem a {
     font-weight: 400;
   }
+  .seperator {
+    display: block;
+    border-bottom: 0.5px solid rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.1
+    );
+    box-shadow: 0px 4px 10px rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.15
+    );
+  }
 </style>
 <template>
   <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
     <div class="sidebar" v-if="authenticated">
       <div class="logo_container">
         <router-link to="/" class="logo_link" title="Home">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="60" height="60"><defs><path d="M380 580L380 380L580 380L580 580L380 580ZM260 260L260 580L60 580L60 60L580 60L580 260L260 260Z" id="go6TfJQF0"></path></defs><g><g><g><use xlink:href="#go6TfJQF0"></use></g></g></g></svg>
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="74" height="74"><defs><path d="M380 580L380 380L580 380L580 580L380 580ZM260 260L260 580L60 580L60 60L580 60L580 260L260 260Z" id="go6TfJQF0"></path></defs><g><g><g><use xlink:href="#go6TfJQF0"></use></g></g></g></svg>
         </router-link>
       </div>
       <div class="main_nav">
+        <span class="seperator"></span>
         <div class="nav_item">
             <router-link to="/" id="explore-link">Explore</router-link>
         </div>
@@ -257,6 +280,7 @@
         </div>
       </div>
       <div class="account_nav_container">
+        <span class="seperator"></span>
         <div class="nav_item">
           <router-link to="/archive" id="archive-link">Archive</router-link>
         </div>
