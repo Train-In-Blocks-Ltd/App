@@ -69,7 +69,7 @@
     );
     text-decoration: none;
   }
-  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"] {
+  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -91,6 +91,25 @@
       0.8
     )!important;
   }
+    .form_grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    align-items: center;
+    max-width: 660px;
+    grid-column-gap: 1rem;
+  }
+  .form_buttons {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2rem;
+    max-width: 200px;
+  }
+  #notes {
+    resize: vertical;
+    min-height: 2rem;
+    height: 4rem;
+  }
   #app {
     display: grid;
     grid-template-areas: "main";
@@ -102,7 +121,7 @@
     padding: 5rem 3.75rem;
   }
   main > div {
-    max-width: 750px
+    max-width: calc(100% - 3.75rem - 3.75rem - 3.75rem);
   }
   #app.authenticated {
     display: grid;
@@ -115,7 +134,7 @@
     text-align: left;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     padding: 5rem 2.5rem 2.5rem 2.5rem;
-    grid-auto-rows: 3.75rem auto auto;
+    grid-auto-rows: 3.75rem auto min-content;
     position: sticky;
     height: 100vh;
     top: 0;
@@ -287,6 +306,9 @@
     #app.authenticated {
       display: block;
     }
+    main > div {
+      max-width: 100%;
+    }
     h1 {
       font-size: 1.4rem;
       text-align: center;
@@ -400,9 +422,6 @@ export default {
     },
     client_archive (id) {
 
-    },
-    setColor (value) {
-      this.colors = value
     },
     async setup () {
       this.claims = await this.$auth.getUser()

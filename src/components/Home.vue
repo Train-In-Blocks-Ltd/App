@@ -33,25 +33,6 @@
   .add_new_client_container {
     margin-top: 2rem;
   }
-  .add_new_client_container form {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    align-items: center;
-    width: 75%;
-    grid-column-gap: 1rem;
-  }
-  .form_buttons {
-    grid-column: span 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 2rem;
-    max-width: 200px;
-  }
-  #notes {
-    resize: vertical;
-    min-height: 2rem;
-    height: 4rem;
-  }
   .client_update {
     transition: 0.5s;
     opacity: 1;
@@ -95,14 +76,14 @@
     <p class="response" v-if="!creating">{{response}}</p>
     <div class="add_new_client_container" v-if="creating">
       <h3>Add new client</h3>
-      <form name="add_client" v-on:submit.prevent="save()">
+      <form name="add_client" class="form_grid" v-on:submit.prevent="save()">
         <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_client.name" required/>
         <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" v-model="new_client.email" required/>
         <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" v-model="new_client.number" required pattern="[0-9]{11}"/>
         <label for="notes"><b>Notes: </b></label><textarea id="notes" name="notes" v-model="new_client.notes"></textarea>
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
-          <button id="close" class="button" v-on:click="close()">Close</button>
+          <button class="button" v-on:click="close()">Close</button>
         </div>
       </form>
     </div>
