@@ -111,11 +111,14 @@
       }
     },
     async created () {
-      if (!(typeof this.$parent.claims === 'object' && this.$parent.claims !== null) || this.$parent.claims == null) {
-        await this.$parent.setup()
-      }
-      if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
-        await this.$parent.clients()
+      if (!localStorage.getItem('firstLoaded')) {
+        if (!(typeof this.$parent.claims === 'object' && this.$parent.claims !== null) || this.$parent.claims == null) {
+          await this.$parent.setup()
+        }
+        if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
+          await this.$parent.clients()
+        }
+        localStorage.setItem('firstLoaded', true)
       }
     },
     methods: {
@@ -127,7 +130,6 @@
         this.response = ''
       },
       async save () {
-        await this.$parent.$auth.getUser()
         if (this.$parent.authenticated) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {

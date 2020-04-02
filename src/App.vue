@@ -313,6 +313,7 @@ export default {
     async logout () {
       await this.$auth.logout()
       await this.isAuthenticated()
+      localStorage.clear()
     },
     async clients () {
       this.error = false
