@@ -116,7 +116,6 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
     padding: 5rem 2.5rem 2.5rem 2.5rem;
     grid-auto-rows: 3.75rem auto auto;
-    grid-gap: 3.75rem;
     position: sticky;
     height: 100vh;
     top: 0;
@@ -233,32 +232,46 @@
   .nav_subitem {
     padding: 0.8rem 0;
   }
-  .nav_subitem:first-of-type {
-    padding-top: 0;
-  }
-  .nav_subitem:last-of-type {
-    padding-bottom: 0;
-  }
   .nav_subitem:before {
     content: '>  '
   }
   .nav_subitem a {
     font-weight: 400;
   }
-  .seperator {
-    display: block;
+  .main_nav {
     border-bottom: 0.5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
       0.1
     );
-    box-shadow: 0px 4px 10px rgba(
+    border-top: 0.5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.15
+      0.1
     );
+    overflow-y: auto;
+    margin-top: 3.75rem;
+    margin-bottom: 2.5rem;
+  }
+  .main_nav::-webkit-scrollbar-track {
+    border: 1px solid rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    background-color: #FFFFFF;
+  }
+  .main_nav::-webkit-scrollbar {
+    width: 10px;
+    background-color: #FFFFFF;
+  }
+  .main_nav::-webkit-scrollbar-thumb {
+    background-color: #000000;  
+  }
+  .account_nav_container .nav_item:first-of-type {
+    padding-top: 0;
   }
 </style>
 <template>
@@ -270,7 +283,6 @@
         </router-link>
       </div>
       <div class="main_nav">
-        <span class="seperator"></span>
         <div class="nav_item">
             <router-link to="/" id="explore-link">Explore</router-link>
         </div>
@@ -280,7 +292,6 @@
         </div>
       </div>
       <div class="account_nav_container">
-        <span class="seperator"></span>
         <div class="nav_item">
           <router-link to="/archive" id="archive-link">Archive</router-link>
         </div>
