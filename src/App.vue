@@ -415,7 +415,7 @@
 </style>
 <template>
   <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
-    <a href="javascript:void(0)" title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
+    <a title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
     <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
       <a id="close" v-on:click="sidebar()"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></a>
       <div class="logo_container">
@@ -485,7 +485,7 @@ export default {
     // Everytime the route changes, check for auth status
     '$route' (to, from) {
       this.isAuthenticated()
-      this.sidebar()
+      this.open = false
     }
   },
   methods: {
@@ -586,6 +586,23 @@ export default {
       try {
         // eslint-disable-next-line
         const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+        // eslint-disable-next-line
+        this.response = response.data
+
+        await this.archive()
+        this.archive_to_vue()
+
+        await this.clients()
+        this.clients_to_vue()
+      } catch (e) {
+        console.error(`${e}`)
+      }
+    },
+    async client_delete (id) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+      try {
+        // eslint-disable-next-line
+        const response = await axios.delete(`https://api.traininblocks.com/clients/${id}`)
         // eslint-disable-next-line
         this.response = response.data
 
