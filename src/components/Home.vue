@@ -1,58 +1,3 @@
-<style>
-  .client_container p {
-    margin: 0;
-  }
-  .client_link {
-    border-bottom: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    padding: 1rem 0;
-    margin: 0.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 400;
-    display: block;
-  }
-  .client_link:hover {
-    text-decoration: none;
-    border-bottom: 2px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    margin-bottom: -1px
-  }
-  .client_container:last-of-type .client_link:hover {
-    margin-bottom: calc(0.5rem - 1px)
-  }
-  .search {
-    width: 100%;
-    font-size: 1rem;
-  }
-  .add_new_client_container {
-    margin-top: 2rem;
-  }
-  .client_update {
-    transition: 0.5s;
-    opacity: 1;
-    font-size: 0.9rem;
-    text-align: right;
-  }
-  .client_container:hover .client_update svg path:not(.transparent) {
-    fill: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      1
-    );
-  }
-  .client_link {
-    display: grid;
-    grid-template-columns: 1fr 0.1fr;
-    align-items: center;
-  }
-</style>
 <template>
   <div id="home">
     <h1>Explore</h1>
@@ -66,10 +11,10 @@
         :key="index" class="client_container">
         <router-link class="client_link" :to="'/client/'+clients.name" v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
           <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
-          <div class="client_update">
-            <span :click="$parent.client_archive(clients.id)" title="Archive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></span>
-          </div>
         </router-link>
+        <div class="client_update">
+          <span v-on:click="$parent.client_archive(clients.client_id)" title="Archive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></span>
+        </div>
       </div>
     </div>
     <button v-if="!creating" id="add_client-link" class="button" v-on:click="creation()">New client</button>
@@ -124,41 +69,39 @@
       },
       async save () {
         this.response = ''
-        if (this.$parent.authenticated) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          try {
-            // eslint-disable-next-line
-            const response_save_clients = await axios.put(`https://api.traininblocks.com/clients/${this.new_client.name}`,
-              qs.stringify({
-                pt_id: this.$parent.claims.sub,
-                email: this.new_client.email,
-                number: this.new_client.number,
-                notes: this.new_client.notes
-              }),
-              {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          // eslint-disable-next-line
+          const response_save_clients = await axios.put(`https://api.traininblocks.com/clients/${this.new_client.name}`,
+            qs.stringify({
+              pt_id: this.$parent.claims.sub,
+              email: this.new_client.email,
+              number: this.new_client.number,
+              notes: this.new_client.notes
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
               }
-            )
-            // eslint-disable-next-line
-            this.response = response_save_clients.data
-
-            await this.$parent.clients()
-            this.$parent.clients_to_vue()
-
-            this.close()
-
-            this.new_client = {
-              name: '',
-              email: '',
-              number: '',
-              notes: ''
             }
-          } catch (e) {
-            console.error(`${e}`)
+          )
+          // eslint-disable-next-line
+          this.response = response_save_clients.data
+
+          await this.$parent.clients()
+          this.$parent.clients_to_vue()
+
+          this.close()
+
+          this.new_client = {
+            name: '',
+            email: '',
+            number: '',
+            notes: ''
           }
+        } catch (e) {
+          console.error(`${e}`)
         }
       }
     }

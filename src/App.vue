@@ -297,6 +297,74 @@
   .account_nav_container .nav_item:first-of-type {
     padding-top: 0;
   }
+    .client_container p {
+    margin: 0;
+  }
+  .client_container {
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    margin: 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 400;
+    display: grid;
+    grid-template-columns: 1fr 0.1fr;
+    align-items: center;
+  }
+  .client_container:not(.archived):hover {
+    border-bottom: 2px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    margin-bottom: -1px
+  }
+  #home .client_container:not(.archived):last-of-type:hover {
+    margin-bottom: calc(0.5rem - 1px);
+  }
+  .client_link {
+    padding: 1rem 0;
+  }
+  .client_link:hover {
+    text-decoration: none;
+  }
+  .search {
+    width: 100%;
+    font-size: 1rem;
+  }
+  .add_new_client_container {
+    margin-top: 2rem;
+  }
+  .client_update {
+    transition: 0.5s;
+    font-size: 0.9rem;
+    text-align: right;
+  }
+  .client_update span {
+    height: 32px;
+    width: 32px;
+    transition: 0.5s;
+    display: grid;
+    text-align: center;
+    float: right;
+    align-items: center;
+    justify-content: center;
+  }
+  .client_update span:hover {
+    cursor: pointer;
+    border-radius: 50px;
+    background-color: rgba( calc(var(--red) + 45), calc(var(--green) + 45), calc(var(--blue) + 45), 0.8 );
+  }
+  .client_update span:hover svg path:not(.transparent) {
+    fill: rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      1
+    );
+  }
   @media (min-width: 768px) {
     #hamburger, #close {
       display: none;
@@ -377,7 +445,7 @@
       </div>
     </div>
     <main>
-      <router-view/>
+      <router-view :key="$route.fullPath"/>
     </main>
   </div>
 </template>
@@ -387,6 +455,9 @@ import axios from 'axios'
 export default {
   data: function () {
     return {
+      archive_error: '',
+      archive_posts: {},
+      no_archive: false,
       open: false,
       error: '',
       posts: null,
@@ -408,6 +479,7 @@ export default {
     await this.isAuthenticated()
     await this.setup()
     await this.clients_to_vue()
+    await this.archive_to_vue()
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -419,9 +491,6 @@ export default {
   methods: {
     sidebar () {
       this.open = !this.open
-    },
-    client_archive (id) {
-
     },
     async setup () {
       this.claims = await this.$auth.getUser()
@@ -454,23 +523,79 @@ export default {
     },
     async clients () {
       this.error = false
-      if (this.authenticated) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        try {
-          const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
-          if (response.data.length === 0) {
-            this.no_clients = true
-          } else {
-            localStorage.setItem('posts', JSON.stringify(response.data))
-            this.no_clients = false
-            this.error = false
-          }
-          this.loading_clients = false
-        } catch (e) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+      try {
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
+        if (response.data.length === 0) {
+          this.no_clients = true
+        } else {
           this.no_clients = false
-          this.loading_clients = false
-          this.error = e.toString()
+          this.error = false
         }
+        localStorage.setItem('posts', JSON.stringify(response.data))
+        this.loading_clients = false
+      } catch (e) {
+        this.no_clients = false
+        this.loading_clients = false
+        this.error = e.toString()
+      }
+    },
+
+    async archive_to_vue () {
+      if (!localStorage.getItem('archive')) {
+        await this.archive()
+      }
+      this.archive_posts = JSON.parse(localStorage.getItem('archive'))
+    },
+    async archive () {
+      this.archive_error = false
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+      try {
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
+        if (response.data.length === 0) {
+          this.no_archive = true
+        } else {
+          this.no_archive = false
+          this.archive_error = false
+        }
+        localStorage.setItem('archive', JSON.stringify(response.data))
+      } catch (e) {
+        this.no_archive = false
+        this.archive_error = e.toString()
+      }
+    },
+    async client_archive (id) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+      try {
+        // eslint-disable-next-line
+        const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
+        // eslint-disable-next-line
+        this.response = response.data
+
+        await this.clients()
+        this.clients_to_vue()
+
+        await this.archive()
+        this.archive_to_vue()
+      } catch (e) {
+        console.error(`${e}`)
+      }
+    },
+    async client_unarchive (id) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+      try {
+        // eslint-disable-next-line
+        const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+        // eslint-disable-next-line
+        this.response = response.data
+
+        await this.archive()
+        this.archive_to_vue()
+
+        await this.clients()
+        this.clients_to_vue()
+      } catch (e) {
+        console.error(`${e}`)
       }
     }
   }

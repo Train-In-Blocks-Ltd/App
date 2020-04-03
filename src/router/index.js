@@ -10,6 +10,7 @@ import UpdateComponent from '@/components/AccountUpdate'
 import LogoutComponent from '@/components/Logout'
 import ClientComponent from '@/components/Client'
 import NotFound from '@/components/NotFound'
+import ArchiveComponent from '@/components/Archive'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -60,6 +61,13 @@ const router = new Router({
     {
       path: '/client/:name',
       component: ClientComponent,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/archive',
+      component: ArchiveComponent,
       meta: {
         requiresAuth: true
       }

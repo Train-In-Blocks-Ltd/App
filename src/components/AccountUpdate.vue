@@ -50,8 +50,8 @@ export default {
       res: ''
     }
   },
-  beforeRouteLeave (to, from, next) {
-    this.$parent.setup()
+  async beforeRouteLeave (to, from, next) {
+    await this.$parent.setup()
     next()
   },
   methods: {

@@ -1,6 +1,12 @@
 <style scoped>
-  h1 {
-      text-transform: capitalize
+  #title {
+    text-transform: capitalize!important;
+    margin-top: -1rem;
+    margin-bottom: 5rem;
+    font-weight: bold;
+    font-size: 3.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
   }
   h2 {
       font-size: 2.5rem;
@@ -31,6 +37,11 @@
   }
   .program_link:hover { 
     text-decoration: none;
+    border: 2px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+    padding: calc(1.5rem - 1px);
   }
   .program_container h3 {
     margin-top: 0;
@@ -54,6 +65,17 @@
   #duration, #date {
     width: auto
   }
+  .client_info input:not([type="submit"]) {
+    background-color: initial!important;
+    border: none;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    padding: 0;
+    font-size: 1rem;
+  }
   @media (max-width: 768px) {
     h2 {
       font-size: 1.35rem;
@@ -63,15 +85,15 @@
 
 <template>
     <div id="client">
-        <h1>{{ $route.params.name }}</h1>
-        <div v-for="(clients, index) in this.$parent.posts"
-            :key="index">
-            <div v-if="clients.name == $route.params.name" class="client_info">
-                <label><b>Email: </b><input type="email" id="email" name="email" v-model="clients.email"/></label>
-                <label><b>Number: </b><input type="tel" id="number" name="number" v-model="clients.number" required pattern="[0-9]{11}"/></label>
-                <label><b>Notes: </b><input type="text" id="notes" name="notes" v-model="clients.notes" required/></label>
-            </div>
-      </div>
+      <form class="client_info" v-on:submit.prevent="update_client()">
+        <input type="text" id="title" name="name" v-model="client_details.name" v-on:click="editing()"/>
+        <label><b>Email: </b><input type="email" id="email" name="email" v-model="client_details.email" v-on:click="editing()"/></label>
+        <label><b>Number: </b><input type="tel" id="number" name="number" v-model="client_details.number" required pattern="[0-9]{11}" v-on:click="editing()"/></label>
+        <label><b>Notes: </b><input type="text" name="notes" v-model="client_details.notes" required v-on:click="editing()"/></label>
+        <input v-if="edit" type="submit" class="button" value="Save" />
+      </form>
+      <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
+      <p v-if="this.clients_update_error"><b>{{clients_update_error}}</b></p>
       <h2>Programmes</h2>
       <p v-if="this.no_programmes">No programmes yet. You can add one below.</p>
       <p v-if="this.loading_programmes">Loading programmes...</p>
@@ -112,12 +134,16 @@
   export default {
     data: function () {
       return {
+        edit: false,
         programmes: {},
         error: '',
         no_programmes: false,
         loading_programmes: true,
         response: '',
         creating: false,
+        clients_update_response: '',
+        clients_update_error: '',
+        client_details: {},
         new_programme: {
           name: '',
           desc: '',
@@ -128,41 +154,60 @@
       }
     },
     async created () {
+      this.get_client_details()
       await this.get_programmes()
     },
-    watch: {
-    // call again the method if the route changes
-      '$route': 'get_programmes'
-    },
     methods: {
-      async client_id () {
+      async update_client () {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          // eslint-disable-next-line
+          const response_update_clients = await axios.post(`https://api.traininblocks.com/clients`,
+            {
+              'id': this.client_details.client_id,
+              'name': this.client_details.name,
+              'email': this.client_details.email,
+              'number': this.client_details.number,
+              'notes': this.client_details.notes
+            }
+          )
+          await this.$parent.clients()
+          await this.$parent.clients_to_vue()
+          await this.get_client_details()
+          this.clients_update_response = response_update_clients.data
+        } catch (e) {
+          this.clients_update_error = e.toString()
+        }
+      },
+      editing () {
+        this.edit = true
+      },
+      async get_client_details () {
         if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
           await this.$parent.clients_to_vue()
         }
         var x
         for (x in this.$parent.posts) {
           if (this.$parent.posts[x].name === this.$route.params.name) {
-            return this.$parent.posts[x].client_id
+            this.client_details = this.$parent.posts[x]
           }
         }
       },
-      async get_programmes () {        
-        if (this.$parent.authenticated) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          try {
-            // eslint-disable-next-line
-            const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${await this.client_id()}`)
-            if (response_programmes.data.length === 0) {
-              this.no_programmes = true
-            } else {
-              this.programmes = response_programmes.data
-            }
-            this.loading_programmes = false
-          } catch (e) {
-            this.no_programmes = false
-            this.loading_programmes = false
-            this.error = e.toString()
+      async get_programmes () {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          // eslint-disable-next-line
+          const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.client_details.client_id}`)
+          if (response_programmes.data.length === 0) {
+            this.no_programmes = true
+          } else {
+            this.programmes = response_programmes.data
           }
+          this.loading_programmes = false
+        } catch (e) {
+          this.no_programmes = false
+          this.loading_programmes = false
+          this.error = e.toString()
         }
       },
       creation () {

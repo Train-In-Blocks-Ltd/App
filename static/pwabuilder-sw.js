@@ -20,8 +20,8 @@ networkFirstPaths.forEach((path) => {
     new workbox.strategies.NetworkFirst({
       cacheName: CACHE
     })
-  );
-});
+  )
+})
 
 /*
 workbox.routing.registerRoute(
