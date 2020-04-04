@@ -257,6 +257,12 @@
   .nav_subitem a {
     font-weight: 400;
   }
+  .nav_subitem.subitem {
+    padding-left: 1rem;
+  }
+  .nav_subitem.subitem:last-of-type {
+    padding-bottom: 0;
+  }
   .main_nav {
     border-bottom: 0.5px solid rgba(
       var(--accessible-color),
@@ -428,8 +434,14 @@
             <router-link to="/" id="explore-link">Explore</router-link>
         </div>
         <div v-for="(clients, index) in posts"
-            :key="index" class="nav_subitem">
+          :key="index" class="nav_subitem">
           <router-link :to="'/client/'+clients.name">{{clients.name}}</router-link>
+          <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
+            <div v-for="(programme, index) in posts[index].programmes"
+              :key="index" class="nav_subitem subitem">
+              <router-link :to="'/client/'+clients.name+'/programme/'+programme.id">{{programme.name}}</router-link>
+            </div>
+          </div>
         </div>
       </div>
       <div class="account_nav_container">
@@ -465,6 +477,7 @@ export default {
       no_clients: false,
       claims: null,
       authenticated: false,
+      client_details: null,
       colors: {
         rgba: {
           r: 255,

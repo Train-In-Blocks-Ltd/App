@@ -13,6 +13,10 @@
       letter-spacing: 0.15em;
       margin: 1.75rem 0;
   }
+  .client_info {
+    display: grid;
+    grid-template-columns: max-content;
+  }
   .client_info label {
     display: block;
   }
@@ -84,12 +88,12 @@
 </style>
 
 <template>
-    <div id="client">
+    <div id="client" v-if="this.$parent.client_details">
       <form class="client_info" v-on:submit.prevent="update_client()">
-        <input type="text" id="title" name="name" v-model="client_details.name" v-on:click="editing()"/>
-        <label><b>Email: </b><input type="email" id="email" name="email" v-model="client_details.email" v-on:click="editing()"/></label>
-        <label><b>Number: </b><input type="tel" id="number" name="number" v-model="client_details.number" required pattern="[0-9]{11}" v-on:click="editing()"/></label>
-        <label><b>Notes: </b><input type="text" name="notes" v-model="client_details.notes" required v-on:click="editing()"/></label>
+        <input type="text" id="title" name="name" v-model="this.$parent.client_details.name" v-on:click="editing()"/>
+        <label><b>Email: </b><input type="email" id="email" name="email" v-model="this.$parent.client_details.email" v-on:click="editing()"/></label>
+        <label><b>Number: </b><input type="tel" id="number" name="number" v-model="this.$parent.client_details.number" required pattern="[0-9]{11}" v-on:click="editing()"/></label>
+        <label><b>Notes: </b><input type="text" name="notes" v-model="this.$parent.client_details.notes" required v-on:click="editing()"/></label>
         <input v-if="edit" type="submit" class="button" value="Save" />
       </form>
       <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
@@ -99,7 +103,7 @@
       <p v-if="this.loading_programmes">Loading programmes...</p>
       <p v-if="this.error"><b>{{error}}</b></p>
       <div v-if="!this.no_programmes && !this.error" class="program_wrapper">
-        <div v-for="(programme, index) in this.programmes"
+        <div v-for="(programme, index) in this.$parent.client_details.programmes"
           :key="index" class="program_container">
           <router-link class="program_link" :to="$route.params.name+'/programme/'+programme.id">
             <h3>{{programme.name}}</h3>
@@ -135,7 +139,6 @@
     data: function () {
       return {
         edit: false,
-        programmes: {},
         error: '',
         no_programmes: false,
         loading_programmes: true,
@@ -143,7 +146,6 @@
         creating: false,
         clients_update_response: '',
         clients_update_error: '',
-        client_details: {},
         new_programme: {
           name: '',
           desc: '',
@@ -154,7 +156,6 @@
       }
     },
     async created () {
-      this.get_client_details()
       await this.get_programmes()
     },
     methods: {
@@ -164,11 +165,11 @@
           // eslint-disable-next-line
           const response_update_clients = await axios.post(`https://api.traininblocks.com/clients`,
             {
-              'id': this.client_details.client_id,
-              'name': this.client_details.name,
-              'email': this.client_details.email,
-              'number': this.client_details.number,
-              'notes': this.client_details.notes
+              'id': this.$parent.client_details.client_id,
+              'name': this.$parent.client_details.name,
+              'email': this.$parent.client_details.email,
+              'number': this.$parent.client_details.number,
+              'notes': this.$parent.client_details.notes
             }
           )
           await this.$parent.clients()
@@ -182,26 +183,26 @@
       editing () {
         this.edit = true
       },
-      async get_client_details () {
-        if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
-          await this.$parent.clients_to_vue()
-        }
-        var x
-        for (x in this.$parent.posts) {
-          if (this.$parent.posts[x].name === this.$route.params.name) {
-            this.client_details = this.$parent.posts[x]
-          }
-        }
-      },
       async get_programmes () {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
-          const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.client_details.client_id}`)
-          if (response_programmes.data.length === 0) {
-            this.no_programmes = true
-          } else {
-            this.programmes = response_programmes.data
+          if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
+            await this.$parent.clients_to_vue()
+          }
+          var x
+          for (x in this.$parent.posts) {
+            if (this.$parent.posts[x].name === this.$route.params.name) {
+              if (!this.$parent.posts[x].programmes) {
+                // eslint-disable-next-line
+                const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
+                if (response_programmes.data.length === 0) {
+                  this.no_programmes = true
+                }
+                this.$parent.posts[x].programmes = response_programmes.data
+                localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+              }
+              this.$parent.client_details = this.$parent.posts[x]
+            }
           }
           this.loading_programmes = false
         } catch (e) {
@@ -225,7 +226,7 @@
             // eslint-disable-next-line
             const response_save_programmes = await axios.put(`https://api.traininblocks.com/programmes/${this.new_programme.name}`,
               qs.stringify({
-                client_id: await this.client_id(),
+                client_id: this.$parent.client_details.client_id,
                 desc: this.new_programme.desc,
                 duration: this.new_programme.duration,
                 start: this.new_programme.start,
@@ -241,6 +242,12 @@
             // eslint-disable-next-line
             this.response = response_save_programmes.data
 
+            var x
+            for (x in this.$parent.posts) {
+              if (this.$parent.posts[x].name === this.$route.params.name) {
+                this.$parent.posts[x].programmes = null
+              }
+            }
             this.get_programmes()
 
             this.close()
