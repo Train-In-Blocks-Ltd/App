@@ -66,6 +66,13 @@ const router = new Router({
       }
     },
     {
+      path: '/client/:name/programme/:id',
+      component: ClientComponent,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/archive',
       component: ArchiveComponent,
       meta: {

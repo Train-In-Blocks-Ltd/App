@@ -1,86 +1,5 @@
 <style scoped>
-  #title {
-    text-transform: capitalize!important;
-    margin-top: -1rem;
-    margin-bottom: 5rem;
-    font-weight: bold;
-    font-size: 3.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-  }
-  h2 {
-      font-size: 2.5rem;
-      letter-spacing: 0.15em;
-      margin: 1.75rem 0;
-  }
-  .client_info label {
-    display: block;
-  }
-  .program_wrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    grid-gap: 40px;
-  }
-  .program_container:first-of-type {
-    margin-left: 0;
-  }
-  .program_container:last-of-type {
-    margin-right: 0;
-  }
-  .program_link {
-    padding: 1.5rem;
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color));
-    display: block;
-  }
-  .program_link:hover { 
-    text-decoration: none;
-    border: 2px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color));
-    padding: calc(1.5rem - 1px);
-  }
-  .program_container h3 {
-    margin-top: 0;
-    font-size: 1.25rem;
-    margin-bottom: 0;
-  }
-  .desc {
-    margin-bottom: 1.25rem!important;
-  }
-  .program_container p {
-    font-size: 0.625rem;
-    font-weight: 500;
-    margin: 0.375rem 0;
-  }
-  .program_container p:last-of-type {
-    margin-bottom: 0;
-  }
-  #add_programme_link {
-    margin-top: 1.75rem;
-  }
-  #duration, #date {
-    width: auto
-  }
-  .client_info input:not([type="submit"]) {
-    background-color: initial!important;
-    border: none;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    padding: 0;
-    font-size: 1rem;
-  }
-  @media (max-width: 768px) {
-    h2 {
-      font-size: 1.35rem;
-    }
-  }
+
 </style>
 
 <template>
@@ -101,7 +20,7 @@
       <div v-if="!this.no_programmes && !this.error" class="program_wrapper">
         <div v-for="(programme, index) in this.programmes"
           :key="index" class="program_container">
-          <router-link class="program_link" :to="$route.params.name+'/programme/'+programme.id">
+          <router-link class="program_link" :to="'/programmes/'+programmes.id">
             <h3>{{programme.name}}</h3>
             <p class="desc">"{{programme.description}}"</p>
             <p><b>Duration: </b>{{programme.duration}}</p>
@@ -116,7 +35,7 @@
             <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
                 <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/>
                 <label for="description"><b>Description: </b></label><input type="text" id="description" name="description" v-model="new_programme.desc" required/>
-                <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required/>
+                <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required />
                 <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
                 <label for="notes"><b>Notes: </b></label><textarea id="notes" name="notes" v-model="new_programme.notes"></textarea>
                 <div class="form_buttons">

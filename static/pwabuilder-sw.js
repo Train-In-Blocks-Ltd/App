@@ -1,5 +1,3 @@
-// This is the service worker with the Cache-first network
-
 const CACHE = 'pwabuilder-precache'
 
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.0.0/workbox-sw.js')
@@ -10,9 +8,13 @@ self.addEventListener('message', (event) => {
   }
 })
 
+self.addEventListener("install", function (event) {
+  self.skipWaiting()
+})
+
 workbox.setConfig({ debug: false })
 
-const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)|([\s\S]+).okta.com([\s\S]+)/];
+const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)|([\s\S]+).okta.com([\s\S]+)/]
 
 networkFirstPaths.forEach((path) => {
   workbox.routing.registerRoute(
@@ -23,10 +25,9 @@ networkFirstPaths.forEach((path) => {
   )
 })
 
-/*
 workbox.routing.registerRoute(
   new RegExp('/*'),
-  new workbox.strategies.CacheFirst({
+  new workbox.strategies.StaleWhileRevalidate({
     cacheName: CACHE
   })
-); */
+);

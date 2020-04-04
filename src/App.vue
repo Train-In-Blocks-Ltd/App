@@ -494,9 +494,9 @@ export default {
     },
     async setup () {
       this.claims = await this.$auth.getUser()
-      this.colors.rgba.r = this.hexToRgb(this.claims.color).r
-      this.colors.rgba.g = this.hexToRgb(this.claims.color).g
-      this.colors.rgba.b = this.hexToRgb(this.claims.color).b
+      this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
+      this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
+      this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
     },
     hexToRgb (hex) {
       var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
