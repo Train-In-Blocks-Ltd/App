@@ -94,7 +94,7 @@
         <label><b>Email: </b><input type="email" id="email" name="email" v-model="this.$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" id="number" name="number" v-model="this.$parent.client_details.number" required pattern="[0-9]{11}" v-on:click="editing()"/></label>
         <label><b>Notes: </b><input type="text" name="notes" v-model="this.$parent.client_details.notes" required v-on:click="editing()"/></label>
-        <input v-if="edit" type="submit" class="button" value="Save" />
+        <div><input v-if="edit" type="submit" class="button" value="Save" /></div>
       </form>
       <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
       <p v-if="this.clients_update_error"><b>{{clients_update_error}}</b></p>
@@ -114,21 +114,21 @@
         </div>
       </div>
       <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New programme</button>
-        <p class="response" v-if="!creating">{{response}}</p>
-        <div class="add_new_programme_container" v-if="creating">
-            <h3>Add new programme</h3>
-            <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-                <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/>
-                <label for="description"><b>Description: </b></label><input type="text" id="description" name="description" v-model="new_programme.desc" required/>
-                <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required/>
-                <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
-                <label for="notes"><b>Notes: </b></label><textarea id="notes" name="notes" v-model="new_programme.notes"></textarea>
-                <div class="form_buttons">
-                    <input type="submit" class="button" value="Save" />
-                    <button class="button" v-on:click="close()">Close</button>
-                </div>
-            </form>
-        </div>
+      <p class="response" v-if="!creating">{{response}}</p>
+      <div class="add_new_programme_container" v-if="creating">
+          <h3>Add new programme</h3>
+          <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
+              <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/>
+              <label for="description"><b>Description: </b></label><input type="text" id="description" name="description" v-model="new_programme.desc" required/>
+              <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required/>
+              <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
+              <label for="notes"><b>Notes: </b></label><textarea id="notes" name="notes" v-model="new_programme.notes"></textarea>
+              <div class="form_buttons">
+                  <input type="submit" class="button" value="Save" />
+                  <button class="button" v-on:click="close()">Close</button>
+              </div>
+          </form>
+      </div>
     </div>
 </template>
 

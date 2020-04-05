@@ -30,6 +30,9 @@
       return {
         search: ''
       }
+    },
+    async created () {
+      await this.$parent.archive_to_vue()
     }
   }
 </script>

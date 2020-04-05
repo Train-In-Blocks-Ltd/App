@@ -492,7 +492,6 @@ export default {
     await this.isAuthenticated()
     await this.setup()
     await this.clients_to_vue()
-    await this.archive_to_vue()
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -558,7 +557,11 @@ export default {
       if (!localStorage.getItem('archive')) {
         await this.archive()
       }
-      this.archive_posts = JSON.parse(localStorage.getItem('archive'))
+      if (JSON.parse(localStorage.getItem('archive')).length === 0) {
+        this.no_archive = true
+      } else {
+        this.archive_posts = JSON.parse(localStorage.getItem('archive'))
+      }
     },
     async archive () {
       this.archive_error = false

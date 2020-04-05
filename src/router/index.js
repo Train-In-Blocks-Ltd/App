@@ -9,6 +9,7 @@ import ProfileComponent from '@/components/Account'
 import UpdateComponent from '@/components/AccountUpdate'
 import LogoutComponent from '@/components/Logout'
 import ClientComponent from '@/components/Client'
+import ProgrammeComponent from '@/components/Programme'
 import NotFound from '@/components/NotFound'
 import ArchiveComponent from '@/components/Archive'
 
@@ -67,7 +68,7 @@ const router = new Router({
     },
     {
       path: '/client/:name/programme/:id',
-      component: ClientComponent,
+      component: ProgrammeComponent,
       meta: {
         requiresAuth: true
       }
