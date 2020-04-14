@@ -23,7 +23,7 @@
     font-weight: bold;
   }
   #duration {
-    width: 3ch;
+    width: 4ch;
   }
   #title, #duration {
     margin-bottom: 0.25rem;
@@ -55,6 +55,19 @@
     width: 100%;
     resize: vertical;
   }
+  #title, #description {
+    background-color: initial!important;
+    border: none;
+    color: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color) );
+    padding: 0;
+    font-size: 1rem;
+  }
+  textarea {
+    overflow-y: hidden;
+    resize: vertical;
+    appearance: none;
+    -webkit-appearance: none;
+  }
 </style>
 
 <template>
@@ -64,8 +77,16 @@
         :key="index">
         <div v-if="programme.id == $route.params.id">
           <form class="programme_info" v-on:submit.prevent="update_programme()">
-            <input type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()"/>
-            <input type="text" id="description" name="description" v-model="programme.description" v-on:click="editing()"/>
+            <ResizeAuto>
+              <template v-slot:default="{resize}">
+                <textarea type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()" @input="resize" rows="1"></textarea>
+              </template>
+            </ResizeAuto>
+            <ResizeAuto>
+              <template v-slot:default="{resize}">
+              <textarea type="text" id="description" name="description" v-model="programme.description" v-on:click="editing()" @input="resize" rows="1"></textarea>
+              </template>
+            </ResizeAuto>
             <label><b>Duration: </b><input type="number" id="duration" name="duration" v-model="programme.duration" required v-on:click="editing()"/> weeks</label>
             <label><b>Start: </b><input type="date" id="start" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
             <div><input v-if="edit" type="submit" class="button" value="Save" /></div>
@@ -81,7 +102,14 @@
             :key="index">
             <div v-if="programme.id == $route.params.id">
               <form v-on:submit.prevent="update_programme()">
-                <label><b>Notes</b><textarea id="notes" name="notes" v-model="programme.notes" required v-on:click="editing1()"></textarea></label>
+                <label>
+                  <b>Notes</b>
+                  <ResizeAuto>
+                    <template v-slot:default="{resize}">
+                      <textarea id="notes" name="notes" v-model="programme.notes" required v-on:click="editing1()" rows="3" @input="resize"></textarea>
+                    </template>
+                  </ResizeAuto>
+                </label>
                 <div><input v-if="edit1" type="submit" class="button" value="Save" /></div>
               </form>
             </div>
@@ -92,7 +120,6 @@
       </div>
       <div class="workouts">
         <h3>Workouts</h3>
-        
         <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New workout</button>
         <p class="response" v-if="!creating">{{response}}</p>
         <div class="add_new_programme_container" v-if="creating">
@@ -100,7 +127,14 @@
             <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
                 <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required/>
                 <label for="start"><b>Start: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
-                <label for="notes"><b>Description: </b></label><textarea id="description" name="description" v-model="new_workout.description"></textarea>
+                <label for="notes">
+                  <b>Description: </b>
+                </label>
+                <ResizeAuto>
+                  <template v-slot:default="{resize}">
+                    <textarea name="description" v-model="new_workout.description" rows="3" @input="resize"></textarea>
+                  </template>
+                </ResizeAuto>
                 <div class="form_buttons">
                     <input type="submit" class="button" value="Save" />
                     <button class="button" v-on:click="close()">Close</button>
@@ -112,7 +146,11 @@
 </template>
 
 <script>
+  import ResizeAuto from './ResizeAuto'
   export default {
+    components: {
+      ResizeAuto
+    },
     data: function () {
       return {
         creating: false,
@@ -162,7 +200,7 @@
       close () {
         this.creating = false
         this.response = ''
-      },
+      }
     }
   }
 </script>

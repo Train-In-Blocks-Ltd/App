@@ -105,11 +105,6 @@
     grid-gap: 2rem;
     max-width: 200px;
   }
-  #notes {
-    resize: vertical;
-    min-height: 2rem;
-    height: 4rem;
-  }
   #app {
     display: grid;
     grid-template-areas: "main";
@@ -303,8 +298,9 @@
   .account_nav_container .nav_item:first-of-type {
     padding-top: 0;
   }
-    .client_container p {
+  .client_container p {
     margin: 0;
+    font-weight: 400;
   }
   .client_container {
     border-bottom: 1px solid rgb(

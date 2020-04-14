@@ -122,7 +122,14 @@
               <label for="description"><b>Description: </b></label><input type="text" id="description" name="description" v-model="new_programme.desc" required/>
               <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required/>
               <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
-              <label for="notes"><b>Notes: </b></label><textarea id="notes" name="notes" v-model="new_programme.notes"></textarea>
+              <label for="notes">
+                <b>Notes: </b>
+              </label>
+              <ResizeAuto>
+                <template v-slot:default="{resize}">
+                  <textarea id="notes" name="notes" v-model="new_programme.notes"></textarea>
+                </template>
+              </ResizeAuto>
               <div class="form_buttons">
                   <input type="submit" class="button" value="Save" />
                   <button class="button" v-on:click="close()">Close</button>
@@ -135,7 +142,11 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
+  import ResizeAuto from "./ResizeAuto"
   export default {
+    components: {
+      ResizeAuto
+    },
     data: function () {
       return {
         edit: false,
