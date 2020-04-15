@@ -13,13 +13,6 @@
       letter-spacing: 0.15em;
       margin: 1.75rem 0;
   }
-  .client_info {
-    display: grid;
-    grid-template-columns: max-content;
-  }
-  .client_info label {
-    display: block;
-  }
   .program_wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, 300px);
@@ -80,6 +73,34 @@
     padding: 0;
     font-size: 1rem;
   }
+  .client_info textarea {
+    background-color: initial!important;
+    border: none;
+    color: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color) );
+    padding: 0;
+    font-size: 1rem;
+    margin: 0;
+  }
+  .client_info {
+    display: grid;
+    grid-template-columns: max-content;
+    grid-gap: 1rem;
+  }
+  .client_info label {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min-content minmax(200px, 300px);
+    grid-gap: 1rem;
+  }
+  .client_info input {
+    margin: 0;
+  }
+  textarea {
+    overflow-y: hidden;
+    resize: vertical;
+    appearance: none;
+    -webkit-appearance: none;
+  }
   @media (max-width: 768px) {
     h2 {
       font-size: 1.35rem;
@@ -93,7 +114,14 @@
         <input type="text" id="title" name="name" v-model="this.$parent.client_details.name" v-on:click="editing()"/>
         <label><b>Email: </b><input type="email" id="email" name="email" v-model="this.$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" id="number" name="number" v-model="this.$parent.client_details.number" required pattern="[0-9]{11}" v-on:click="editing()"/></label>
-        <label><b>Notes: </b><input type="text" name="notes" v-model="this.$parent.client_details.notes" required v-on:click="editing()"/></label>
+        <label>
+          <b>Notes: </b>
+          <ResizeAuto>
+            <template v-slot:default="{resize}">
+              <textarea type="text" name="notes" v-model="$parent.client_details.notes" required v-on:click="editing()" rows="3" @input="resize"/>
+            </template>
+          </ResizeAuto>
+        </label>
         <div><input v-if="edit" type="submit" class="button" value="Save" /></div>
       </form>
       <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
@@ -119,7 +147,14 @@
           <h3>Add new programme</h3>
           <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
               <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/>
-              <label for="description"><b>Description: </b></label><input type="text" id="description" name="description" v-model="new_programme.desc" required/>
+              <label for="description">
+                <b>Description: </b>
+              </label>
+              <ResizeAuto>
+                <template v-slot:default="{resize}">
+                  <textarea type="text" id="description" name="description" v-model="new_programme.desc" required @input="resize" rows="1"></textarea>
+                </template>
+              </ResizeAuto>
               <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required/>
               <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
               <label for="notes">
@@ -127,7 +162,7 @@
               </label>
               <ResizeAuto>
                 <template v-slot:default="{resize}">
-                  <textarea id="notes" name="notes" v-model="new_programme.notes"></textarea>
+                  <textarea id="notes" name="notes" v-model="new_programme.notes" rows="3" @input="resize"></textarea>
                 </template>
               </ResizeAuto>
               <div class="form_buttons">
@@ -142,7 +177,7 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
-  import ResizeAuto from "./ResizeAuto"
+  import ResizeAuto from './ResizeAuto'
   export default {
     components: {
       ResizeAuto
@@ -168,6 +203,15 @@
     },
     async created () {
       await this.get_programmes()
+      var d = new Date()
+      var n = d.getTime()
+      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
+        await this.$parent.setup()
+        await this.$parent.clients()
+        await this.$parent.clients_to_vue()
+        localStorage.setItem('firstLoaded', true)
+        localStorage.setItem('loadTime', n)
+      }
     },
     methods: {
       async update_client () {

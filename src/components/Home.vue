@@ -55,7 +55,6 @@
     async created () {
       var d = new Date()
       var n = d.getTime()
-      console.log(n)
       if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
         await this.$parent.setup()
         await this.$parent.clients()

@@ -54,6 +54,17 @@ export default {
     await this.$parent.setup()
     next()
   },
+  async created () {
+    var d = new Date()
+    var n = d.getTime()
+    if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
+      await this.$parent.setup()
+      await this.$parent.clients()
+      await this.$parent.clients_to_vue()
+      localStorage.setItem('firstLoaded', true)
+      localStorage.setItem('loadTime', n)
+    }
+  },
   methods: {
     updateColor (value) {
       this.$parent.colors = value
