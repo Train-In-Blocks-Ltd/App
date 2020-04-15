@@ -24,8 +24,13 @@
       <form name="add_client" class="form_grid" v-on:submit.prevent="save()">
         <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_client.name" required/>
         <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" v-model="new_client.email" required/>
-        <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" v-model="new_client.number" required pattern="[0-9]{11}"/>
-        <label for="notes"><b>Notes: </b></label><textarea id="notes" name="notes" v-model="new_client.notes"></textarea>
+        <label for="number"><b>Number: </b></label><input type="number" id="number" name="number" v-model="new_client.number"/>
+        <label for="notes"><b>Notes: </b></label>
+        <ResizeAuto>
+          <template v-slot:default="{resize}">
+            <textarea id="notes" name="notes" v-model="new_client.notes" @input="resize" rows="3"></textarea>
+          </template>
+        </ResizeAuto>
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
@@ -38,7 +43,11 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
+  import ResizeAuto from './ResizeAuto'
   export default {
+    components: {
+      ResizeAuto
+    },
     data: function () {
       return {
         response: '',

@@ -414,6 +414,12 @@
       fill: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color));
     }
   }
+  textarea {
+    overflow-y: hidden;
+    resize: vertical;
+    appearance: none;
+    -webkit-appearance: none;
+  }
 </style>
 <template>
   <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">

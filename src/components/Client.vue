@@ -95,12 +95,6 @@
   .client_info input {
     margin: 0;
   }
-  textarea {
-    overflow-y: hidden;
-    resize: vertical;
-    appearance: none;
-    -webkit-appearance: none;
-  }
   @media (max-width: 768px) {
     h2 {
       font-size: 1.35rem;
@@ -113,12 +107,12 @@
       <form class="client_info" v-on:submit.prevent="update_client()">
         <input type="text" id="title" name="name" v-model="this.$parent.client_details.name" v-on:click="editing()"/>
         <label><b>Email: </b><input type="email" id="email" name="email" v-model="this.$parent.client_details.email" v-on:click="editing()"/></label>
-        <label><b>Number: </b><input type="tel" id="number" name="number" v-model="this.$parent.client_details.number" required pattern="[0-9]{11}" v-on:click="editing()"/></label>
+        <label><b>Number: </b><input type="number" id="number" name="number" v-model="this.$parent.client_details.number" v-on:click="editing()"/></label>
         <label>
           <b>Notes: </b>
           <ResizeAuto>
             <template v-slot:default="{resize}">
-              <textarea type="text" name="notes" v-model="$parent.client_details.notes" required v-on:click="editing()" rows="3" @input="resize"/>
+              <textarea type="text" name="notes" v-model="$parent.client_details.notes" v-on:click="editing()" rows="3" @input="resize"/>
             </template>
           </ResizeAuto>
         </label>

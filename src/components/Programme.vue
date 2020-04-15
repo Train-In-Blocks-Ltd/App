@@ -62,12 +62,6 @@
     padding: 0;
     font-size: 1rem;
   }
-  textarea {
-    overflow-y: hidden;
-    resize: vertical;
-    appearance: none;
-    -webkit-appearance: none;
-  }
 </style>
 
 <template>
@@ -106,7 +100,7 @@
                   <b>Notes</b>
                   <ResizeAuto>
                     <template v-slot:default="{resize}">
-                      <textarea id="notes" name="notes" v-model="programme.notes" required v-on:click="editing1()" rows="3" @input="resize"></textarea>
+                      <textarea id="notes" name="notes" v-model="programme.notes" v-on:click="editing1()" rows="3" @input="resize"></textarea>
                     </template>
                   </ResizeAuto>
                 </label>
