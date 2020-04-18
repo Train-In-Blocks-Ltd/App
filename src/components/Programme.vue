@@ -120,15 +120,7 @@
             <h3>Add new workout</h3>
             <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
                 <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required/>
-                <label for="start"><b>Start: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
-                <label for="notes">
-                  <b>Description: </b>
-                </label>
-                <ResizeAuto>
-                  <template v-slot:default="{resize}">
-                    <textarea name="description" v-model="new_workout.description" rows="3" @input="resize"></textarea>
-                  </template>
-                </ResizeAuto>
+                <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" />
                 <div class="form_buttons">
                     <input type="submit" class="button" value="Save" />
                     <button class="button" v-on:click="close()">Close</button>
@@ -157,8 +149,7 @@
         programme1_update_error: '',
         new_workout: {
           name: '',
-          date: '',
-          desc: ''
+          date: ''
         }
       }
     },
