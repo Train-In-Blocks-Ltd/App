@@ -28,11 +28,7 @@
         <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" v-model="new_client.email" required/>
         <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" inputmode="tel" v-model="new_client.number" minlength="9" maxlength="14"/>
         <label for="notes"><b>Notes: </b></label>
-        <ResizeAuto>
-          <template v-slot:default="{resize}">
-            <textarea id="notes" name="notes" v-model="new_client.notes" @input="resize" rows="3"></textarea>
-          </template>
-        </ResizeAuto>
+        <quill v-model="new_client.notes" output="html"></quill>
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
@@ -64,7 +60,7 @@
           name: '',
           email: '',
           number: '',
-          notes: ''
+          notes: '<p><strong>Age:</strong></p><p><strong>Blood pressure:</strong></p><p><strong>Height:</strong></p><p><strong>BMI:</strong></p><p><strong>Body fat:</strong></p><p><strong>Muscle Mass</strong></p><p><strong>Hydration:</strong></p><p><br></p><p><strong>Goals:</strong></p><p><br></p><p><strong>Lifestyle:</strong></p><p><br></p><p><strong>Barriers to exercise:</strong></p><p><br></p><p><strong>Motivation:</strong></p><p><br></p><p><strong>Preferences:</strong></p><p><br></p>'
         },
         search: ''
       }

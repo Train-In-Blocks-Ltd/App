@@ -108,14 +108,6 @@
         <input type="text" id="title" name="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
         <label><b>Email: </b><input type="email" id="email" name="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14"/></label>
-        <label>
-          <b>Notes: </b>
-          <ResizeAuto>
-            <template v-slot:default="{resize}">
-              <textarea type="text" name="notes" v-model="$parent.client_details.notes" v-on:click="editing()" rows="3" @input="resize"/>
-            </template>
-          </ResizeAuto>
-        </label>
         <div class="loading-grid">
           <input v-if="edit" type="submit" class="button" value="Save" />
           <span class="loader" v-if="$parent.loading" style="height: 3rem; margin-top: -1rem;">
@@ -156,14 +148,6 @@
               </ResizeAuto>
               <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required/>
               <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
-              <label for="notes">
-                <b>Notes: </b>
-              </label>
-              <ResizeAuto>
-                <template v-slot:default="{resize}">
-                  <textarea id="notes" name="notes" v-model="new_programme.notes" rows="3" @input="resize"></textarea>
-                </template>
-              </ResizeAuto>
               <div class="form_buttons">
                   <input type="submit" class="button" value="Save" />
                   <button class="button" v-on:click="close()">Close</button>
@@ -201,8 +185,7 @@
           name: '',
           desc: '',
           duration: '',
-          start: '',
-          notes: ''
+          start: ''
         }
       }
     },
@@ -296,8 +279,7 @@
                 client_id: this.$parent.client_details.client_id,
                 desc: this.new_programme.desc,
                 duration: this.new_programme.duration,
-                start: this.new_programme.start,
-                notes: this.new_programme.notes
+                start: this.new_programme.start
               }),
               {
                 headers: {
