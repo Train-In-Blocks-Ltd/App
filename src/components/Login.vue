@@ -3,24 +3,36 @@
     text-align: center;
     display: inline;
     margin: 0 auto;
-    border: 2px solid #eee;
-    padding: 1.75rem 1.25rem;
-    min-width: 360px;
+    padding: 6rem 4rem;
+    min-width: 500px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
   }
   .auth-org-logo {
-    width: 100px;
+    width: 200px;
+    margin-bottom: 2 rem;
   }
   .okta-form-title {
-    font-size: 1.25rem;
+    font-size: 2.25rem;
+    line-height: 4rem;
+    text-align: left;
+  }
+  .okta-form-title:after {
+    content: '';
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    display: block;
+    width: 100%;
   }
   .okta-form-label {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     font-weight: bold;
     text-align: left;
+    color: rgba(40, 40, 40, 0.3);
   }
   .okta-form-input-field input {
     width: 100%;
-    border: 2px solid #eee;
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.3);
     margin: 0.75rem 0;
     padding: 0.5rem;
     font-family: 'Raleway', sans-serif;
@@ -40,21 +52,20 @@
     font-size: 0.9rem;
   }
   .o-form-button-bar {
-    margin: 0.75rem 0;
+    margin: 1.25rem 0;
   }
-  .o-form-button-bar .button {
-    width: 100%;
-    border: none;
-    padding: 0.5rem;
+  .o-form-button-bar .button, .email-button {
+    padding: 0.25rem 0.5rem;
     font-family: 'Raleway', sans-serif;
     font-size: 0.9rem;
+    border: 1px solid #282828;
     cursor: pointer;
-    background-color: hsl(0, 0%, 92%);
     transition: 0.5s;
     font-weight: bold;
+    display: block;
   }
-  .o-form-button-bar .button:hover {
-    background-color: hsl(0, 0%, 85%);
+  .email-button {
+    display: inline-block;
   }
   .help-links {
     list-style-type: none;
@@ -72,24 +83,9 @@
   .help-links li:last-of-type {
     padding-bottom: 0;
   }
-  .email-button {
-    width: 100%;
-    border: none;
-    padding: 0.5rem;
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.9rem;
-    cursor: pointer;
-    background-color: hsl(0, 0%, 92%);
-    transition: 0.5s;
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-  .email-button:hover {
-    background-color: hsl(0, 0%, 85%);
-    text-decoration: none;
-  }
   .auth-footer, .o-form-fieldset-container {
     margin-top: 1.75rem;
+    text-align: left;
   }
   .link.help.js-back {
     font-size: 0.9rem;
@@ -121,7 +117,11 @@ export default {
         logo: require('@/assets/logo.png'),
         i18n: {
           en: {
-            'primaryauth.title': 'Sign in to Train In Blocks'
+            'primaryauth.title': 'Account',
+            'primaryauth.username.placeholder': 'Email',
+            'primaryauth.username.tooltip': 'Enter your email',
+            'primaryauth.password.placeholder': 'Password',
+            'primaryauth.password.tooltip': 'Enter your password'
           }
         },
         authParams: {
