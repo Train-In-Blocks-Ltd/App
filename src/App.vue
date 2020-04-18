@@ -537,7 +537,13 @@ export default {
           this.no_clients = false
           this.error = false
         }
-        localStorage.setItem('posts', JSON.stringify(response.data))
+        localStorage.setItem('posts', JSON.stringify(
+          response.data.sort(function(a, b) {
+            var textA = a.name.toUpperCase();
+            var textB = b.name.toUpperCase();
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+          })
+        ))
         this.loading_clients = false
       } catch (e) {
         this.no_clients = false
@@ -567,7 +573,13 @@ export default {
           this.no_archive = false
           this.archive_error = false
         }
-        localStorage.setItem('archive', JSON.stringify(response.data))
+        localStorage.setItem('archive', JSON.stringify(
+          response.data.sort(function(a, b) {
+            var textA = a.name.toUpperCase();
+            var textB = b.name.toUpperCase();
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+          })
+        ))
       } catch (e) {
         this.no_archive = false
         this.archive_error = e.toString()
