@@ -28,7 +28,12 @@
     <h3>Colour Theme</h3>
     <chrome-picker :value="$parent.colors" @input="updateColor"></chrome-picker>
 
-    <button id="save_changes-link" class="button" v-on:click="save()">Save changes</button>
+    <div class="loading-grid">
+      <button id="save_changes-link" class="button" v-on:click="save()">Save changes</button>
+      <span class="loader" v-if="$parent.loading">
+        <inline-svg :src="require('../assets/loader.svg')"/>
+      </span>
+    </div>
 
     <p class="response">{{res}}</p>
 
@@ -40,10 +45,12 @@ import { Chrome } from 'vue-color'
 import axios from 'axios'
 import qs from 'qs'
 import base64 from 'base-64'
+import InlineSvg from 'vue-inline-svg'
 
 export default {
   components: {
-    'chrome-picker': Chrome
+    'chrome-picker': Chrome,
+    InlineSvg
   },
   data: function () {
     return {
@@ -70,6 +77,7 @@ export default {
       this.$parent.colors = value
     },
     async save () {
+      this.$parent.loading = true
       try {
         await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
           {
@@ -101,6 +109,7 @@ export default {
             }
           }
         )
+        this.$parent.loading = false
         this.res = 'Details updated successfully'
         this.$parent.claims = await this.$auth.getUser()
       } catch (e) {

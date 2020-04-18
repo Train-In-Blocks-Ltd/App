@@ -101,9 +101,9 @@
   .form_buttons {
     grid-column: span 2;
     display: grid;
-    grid-template-columns: 1fr 1fr;
     grid-gap: 2rem;
-    max-width: 200px;
+    place-content: start;
+    grid-auto-flow: column;
   }
   #app {
     display: grid;
@@ -235,6 +235,24 @@
     );
     opacity: 1; /* Firefox */
   }
+  .loading-grid {
+    display: inline-grid;
+    grid-template-columns: repeat(2, auto);
+    place-items: end;
+    justify-self: start;
+    grid-gap: 1rem;
+  }
+  .loader, .loader svg {
+    width: 4rem;
+    height: 3.5rem;
+  }
+  .loader circle {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+  }
   svg path:not(.transparent) {
     fill: rgba(
       var(--accessible-color),
@@ -314,7 +332,7 @@
     );
     margin-bottom: -1px
   }
-  #home .client_container:not(.archived):last-of-type:hover {
+  #home div div:last-of-type .client_container:not(.archived):hover {
     margin-bottom: calc(0.5rem - 1px);
   }
   .client_link {
@@ -357,6 +375,9 @@
       var(--accessible-color),
       1
     );
+  }
+  #add_client-link {
+    margin-top: 1.75rem;
   }
   @media (min-width: 768px) {
     #hamburger, #close {
@@ -471,6 +492,7 @@ export default {
       claims: null,
       authenticated: false,
       client_details: null,
+      loading: false,
       colors: {
         rgba: {
           r: 255,
@@ -538,10 +560,10 @@ export default {
           this.error = false
         }
         localStorage.setItem('posts', JSON.stringify(
-          response.data.sort(function(a, b) {
-            var textA = a.name.toUpperCase();
-            var textB = b.name.toUpperCase();
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+          response.data.sort(function (a, b) {
+            var textA = a.name.toUpperCase()
+            var textB = b.name.toUpperCase()
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
           })
         ))
         this.loading_clients = false
@@ -574,10 +596,10 @@ export default {
           this.archive_error = false
         }
         localStorage.setItem('archive', JSON.stringify(
-          response.data.sort(function(a, b) {
-            var textA = a.name.toUpperCase();
-            var textB = b.name.toUpperCase();
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+          response.data.sort(function (a, b) {
+            var textA = a.name.toUpperCase()
+            var textB = b.name.toUpperCase()
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
           })
         ))
       } catch (e) {

@@ -26,7 +26,7 @@
       <form name="add_client" class="form_grid" v-on:submit.prevent="save()">
         <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_client.name" required/>
         <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" v-model="new_client.email" required/>
-        <label for="number"><b>Number: </b></label><input type="number" id="number" name="number" v-model="new_client.number"/>
+        <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" inputmode="tel" v-model="new_client.number" minlength="9" maxlength="14"/>
         <label for="notes"><b>Notes: </b></label>
         <ResizeAuto>
           <template v-slot:default="{resize}">
@@ -36,6 +36,9 @@
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
+          <span class="loader" v-if="$parent.loading">
+            <inline-svg :src="require('../assets/loader.svg')"/>
+          </span>
         </div>
       </form>
     </div>
@@ -46,9 +49,12 @@
   import axios from 'axios'
   import qs from 'qs'
   import ResizeAuto from './ResizeAuto'
+  import InlineSvg from 'vue-inline-svg'
+
   export default {
     components: {
-      ResizeAuto
+      ResizeAuto,
+      InlineSvg
     },
     data: function () {
       return {
@@ -85,6 +91,7 @@
         this.response = ''
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
+          this.$parent.loading = true
           // eslint-disable-next-line
           const response_save_clients = await axios.put(`https://api.traininblocks.com/clients/${this.new_client.name}`,
             qs.stringify({
@@ -105,6 +112,8 @@
 
           await this.$parent.clients()
           this.$parent.clients_to_vue()
+
+          this.$parent.loading = false
 
           this.close()
 

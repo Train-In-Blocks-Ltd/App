@@ -103,11 +103,11 @@
 </style>
 
 <template>
-    <div id="client" v-if="this.$parent.client_details">
+    <div id="client" v-if="$parent.client_details">
       <form class="client_info" v-on:submit.prevent="update_client()">
-        <input type="text" id="title" name="name" v-model="this.$parent.client_details.name" v-on:click="editing()"/>
-        <label><b>Email: </b><input type="email" id="email" name="email" v-model="this.$parent.client_details.email" v-on:click="editing()"/></label>
-        <label><b>Number: </b><input type="number" id="number" name="number" v-model="this.$parent.client_details.number" v-on:click="editing()"/></label>
+        <input type="text" id="title" name="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
+        <label><b>Email: </b><input type="email" id="email" name="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
+        <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14"/></label>
         <label>
           <b>Notes: </b>
           <ResizeAuto>
@@ -116,7 +116,12 @@
             </template>
           </ResizeAuto>
         </label>
-        <div><input v-if="edit" type="submit" class="button" value="Save" /></div>
+        <div class="loading-grid">
+          <input v-if="edit" type="submit" class="button" value="Save" />
+          <span class="loader" v-if="$parent.loading" style="height: 3rem; margin-top: -1rem;">
+            <inline-svg :src="require('../assets/loader.svg')"/>
+          </span>
+        </div>
       </form>
       <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
       <p v-if="this.clients_update_error"><b>{{clients_update_error}}</b></p>
@@ -162,6 +167,9 @@
               <div class="form_buttons">
                   <input type="submit" class="button" value="Save" />
                   <button class="button" v-on:click="close()">Close</button>
+                  <span class="loader" v-if="$parent.loading">
+                    <inline-svg :src="require('../assets/loader.svg')"/>
+                  </span>
               </div>
           </form>
       </div>
@@ -172,9 +180,12 @@
   import axios from 'axios'
   import qs from 'qs'
   import ResizeAuto from './ResizeAuto'
+  import InlineSvg from 'vue-inline-svg'
+
   export default {
     components: {
-      ResizeAuto
+      ResizeAuto,
+      InlineSvg
     },
     data: function () {
       return {
@@ -211,6 +222,7 @@
       async update_client () {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
+          this.$parent.loading = true
           // eslint-disable-next-line
           const response_update_clients = await axios.post(`https://api.traininblocks.com/clients`,
             {
@@ -222,9 +234,11 @@
             }
           )
           await this.$parent.clients()
-          await this.$parent.clients_to_vue()
           await this.get_client_details()
           this.clients_update_response = response_update_clients.data
+          this.$parent.loading = false
+          this.edit = false
+          await this.$parent.clients_to_vue()
         } catch (e) {
           this.clients_update_error = e.toString()
         }
@@ -232,27 +246,30 @@
       editing () {
         this.edit = true
       },
+      async get_client_details () {
+        var x
+        for (x in this.$parent.posts) {
+          if (this.$parent.posts[x].name === this.$route.params.name) {
+            if (!this.$parent.posts[x].programmes) {
+              // eslint-disable-next-line
+              const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
+              if (response_programmes.data.length === 0) {
+                this.no_programmes = true
+              }
+              this.$parent.posts[x].programmes = response_programmes.data
+              localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+            }
+            this.$parent.client_details = this.$parent.posts[x]
+          }
+        }
+      },
       async get_programmes () {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           if (!(typeof this.$parent.posts === 'object' && this.$parent.posts !== null) || this.$parent.posts == null) {
             await this.$parent.clients_to_vue()
           }
-          var x
-          for (x in this.$parent.posts) {
-            if (this.$parent.posts[x].name === this.$route.params.name) {
-              if (!this.$parent.posts[x].programmes) {
-                // eslint-disable-next-line
-                const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
-                if (response_programmes.data.length === 0) {
-                  this.no_programmes = true
-                }
-                this.$parent.posts[x].programmes = response_programmes.data
-                localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
-              }
-              this.$parent.client_details = this.$parent.posts[x]
-            }
-          }
+          await this.get_client_details()
           this.loading_programmes = false
         } catch (e) {
           this.no_programmes = false
@@ -272,6 +289,7 @@
         if (this.$parent.authenticated) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            this.$parent.loading = true
             // eslint-disable-next-line
             const response_save_programmes = await axios.put(`https://api.traininblocks.com/programmes/${this.new_programme.name}`,
               qs.stringify({
@@ -297,7 +315,9 @@
                 this.$parent.posts[x].programmes = null
               }
             }
-            this.get_programmes()
+            await this.get_programmes()
+
+            this.$parent.loading = false
 
             this.close()
 
