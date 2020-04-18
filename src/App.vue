@@ -276,11 +276,7 @@
     margin-bottom: 2.5rem;
   }
   .main_nav::-webkit-scrollbar-track {
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border: 1px solid white;
     background-color: #FFFFFF;
   }
   .main_nav::-webkit-scrollbar {
@@ -288,12 +284,7 @@
     background-color: #FFFFFF;
   }
   .main_nav::-webkit-scrollbar-thumb {
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      0.8
-    )
+    background-color: rgba(0,0,0,0.2)
   }
   .account_nav_container .nav_item:first-of-type {
     padding-top: 0;
