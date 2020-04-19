@@ -9,9 +9,11 @@ import ProfileComponent from '@/components/Account'
 import UpdateComponent from '@/components/AccountUpdate'
 import LogoutComponent from '@/components/Logout'
 import ClientComponent from '@/components/Client'
-import ProgrammeComponent from '@/components/Programme'
+import WorkoutComponent from '@/components/Workout'
 import NotFound from '@/components/NotFound'
 import ArchiveComponent from '@/components/Archive'
+import ClientProgrammes from '@/components/ClientProgrammes'
+import ClientResults from '@/components/ClientResults'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -20,7 +22,7 @@ Vue.use(Auth, {
   redirectUri: process.env.URL + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
-  autoRenew: true
+  autoRenew: false
 })
 
 const router = new Router({
@@ -64,11 +66,23 @@ const router = new Router({
       component: ClientComponent,
       meta: {
         requiresAuth: true
-      }
+      },
+      children: [
+        {
+          path: '',
+          component: ClientProgrammes,
+          name: 'programmes'
+        },
+        {
+          path: 'results',
+          component: ClientResults,
+          name: 'results'
+        }
+      ]
     },
     {
-      path: '/client/:name/programme/:id',
-      component: ProgrammeComponent,
+      path: '/client/:name/workout/:id',
+      component: WorkoutComponent,
       meta: {
         requiresAuth: true
       }

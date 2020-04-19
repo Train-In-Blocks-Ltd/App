@@ -413,7 +413,7 @@
       z-index: 99;
     }
     main {
-      padding: 2.5rem 1.875rem;
+      padding: 5rem 1.875rem;
     }
     #hamburger, #close {
       position: absolute;
@@ -492,7 +492,7 @@
           <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
             <div v-for="(programme, index) in posts[index].programmes"
               :key="index" class="nav_subitem subitem">
-              <router-link :to="'/client/'+clients.name+'/programme/'+programme.id">{{programme.name}}</router-link>
+              <router-link :to="'/client/'+clients.name+'/workout/'+programme.id">{{programme.name}}</router-link>
             </div>
           </div>
         </div>
