@@ -90,9 +90,19 @@
   .link.help.js-back {
     font-size: 0.9rem;
   }
-  @media (max-width: 400px) {
+  @media (max-width: 520px) {
+    main {
+      padding: 2rem 1.5rem;
+    }
     #login {
-      min-width: 90%;
+      min-width: 100%;
+      padding: 4rem 2rem;
+    }
+    .okta-form-title {
+      font-size: 1.5rem;
+    }
+    .okta-form-label {
+      font-size: 1rem;
     }
   }
 </style>
