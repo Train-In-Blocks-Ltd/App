@@ -160,10 +160,12 @@
   import axios from 'axios'
   import qs from 'qs'
   import ResizeAuto from './ResizeAuto'
+  import Loader from './Loader'
 
   export default {
     components: {
-      ResizeAuto
+      ResizeAuto,
+      Loader
     },
     data: function () {
       return {

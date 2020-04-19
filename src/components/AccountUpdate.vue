@@ -39,81 +39,81 @@
   </div>
 </template>
 <script>
-import { Chrome } from 'vue-color'
-import axios from 'axios'
-import qs from 'qs'
-import base64 from 'base-64'
-import InlineSvg from 'vue-inline-svg'
+  import { Chrome } from 'vue-color'
+  import axios from 'axios'
+  import qs from 'qs'
+  import base64 from 'base-64'
+  import Loader from './Loader'
 
-export default {
-  components: {
-    'chrome-picker': Chrome,
-    InlineSvg
-  },
-  data: function () {
-    return {
-      res: ''
-    }
-  },
-  async beforeRouteLeave (to, from, next) {
-    await this.$parent.setup()
-    next()
-  },
-  async created () {
-    var d = new Date()
-    var n = d.getTime()
-    if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-      await this.$parent.setup()
-      await this.$parent.clients()
-      await this.$parent.clients_to_vue()
-      localStorage.setItem('firstLoaded', true)
-      localStorage.setItem('loadTime', n)
-    }
-  },
-  methods: {
-    updateColor (value) {
-      this.$parent.colors = value
+  export default {
+    components: {
+      'chrome-picker': Chrome,
+      Loader
     },
-    async save () {
-      this.$parent.loading = true
-      try {
-        await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
-          {
-            'profile': {
-              'login': this.$parent.claims.email,
-              'firstName': this.$parent.claims.given_name,
-              'lastName': this.$parent.claims.family_name,
-              'email': this.$parent.claims.email,
-              'color': this.$parent.colors.hex
+    data: function () {
+      return {
+        res: ''
+      }
+    },
+    async beforeRouteLeave (to, from, next) {
+      await this.$parent.setup()
+      next()
+    },
+    async created () {
+      var d = new Date()
+      var n = d.getTime()
+      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
+        await this.$parent.setup()
+        await this.$parent.clients()
+        await this.$parent.clients_to_vue()
+        localStorage.setItem('firstLoaded', true)
+        localStorage.setItem('loadTime', n)
+      }
+    },
+    methods: {
+      updateColor (value) {
+        this.$parent.colors = value
+      },
+      async save () {
+        this.$parent.loading = true
+        try {
+          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
+            {
+              'profile': {
+                'login': this.$parent.claims.email,
+                'firstName': this.$parent.claims.given_name,
+                'lastName': this.$parent.claims.family_name,
+                'email': this.$parent.claims.email,
+                'color': this.$parent.colors.hex
+              }
+            },
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
             }
-          },
-          {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': process.env.AUTH_HEADER
+          )
+          await axios.post(`${process.env.ISSUER}/oauth2/default/v1/revoke`,
+            qs.stringify({
+              token: await this.$auth.getAccessToken(),
+              token_type_hint: 'access_token'
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + base64.encode(process.env.REVOKE_ID + ':' + process.env.REVOKE_SECRET)
+              }
             }
-          }
-        )
-        await axios.post(`${process.env.ISSUER}/oauth2/default/v1/revoke`,
-          qs.stringify({
-            token: await this.$auth.getAccessToken(),
-            token_type_hint: 'access_token'
-          }),
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'Authorization': 'Basic ' + base64.encode(process.env.REVOKE_ID + ':' + process.env.REVOKE_SECRET)
-            }
-          }
-        )
-        this.$parent.loading = false
-        this.res = 'Details updated successfully'
-        this.$parent.claims = await this.$auth.getUser()
-      } catch (e) {
-        this.res = e
+          )
+          this.$parent.loading = false
+          this.res = 'Details updated successfully'
+          this.$parent.claims = await this.$auth.getUser()
+        } catch (e) {
+          this.res = e
+        }
       }
     }
   }
-}
 </script>

@@ -4,10 +4,11 @@
     </span>
 </template>
 <script>
-    import InlineSvg from 'vue-inline-svg'
-    export default {
-        components: {
-            InlineSvg
-        },
+  import InlineSvg from 'vue-inline-svg'
+  export default {
+    name: 'Loader',
+    components: {
+      InlineSvg
     }
+  }
 </script>

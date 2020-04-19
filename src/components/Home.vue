@@ -42,13 +42,11 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
-  import ResizeAuto from './ResizeAuto'
-  import InlineSvg from 'vue-inline-svg'
+  import Loader from './Loader'
 
   export default {
     components: {
-      ResizeAuto,
-      InlineSvg
+      Loader
     },
     data: function () {
       return {
