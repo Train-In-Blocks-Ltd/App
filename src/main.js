@@ -17,8 +17,10 @@ import './polyfills'
 import App from './App'
 import router from './router'
 import VueQuill from 'vue-quill'
+import Loader from './components/Loader'
 
 Vue.use(VueQuill)
+Vue.use(Loader)
 
 Vue.config.productionTip = false
 

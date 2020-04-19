@@ -32,9 +32,7 @@
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
-          <span class="loader" v-if="$parent.loading">
-            <inline-svg :src="require('../assets/loader.svg')"/>
-          </span>
+          <Loader></Loader>
         </div>
       </form>
     </div>

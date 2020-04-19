@@ -30,9 +30,7 @@
 
     <div class="loading-grid">
       <button id="save_changes-link" class="button" v-on:click="save()">Save changes</button>
-      <span class="loader" v-if="$parent.loading">
-        <inline-svg :src="require('../assets/loader.svg')"/>
-      </span>
+      <Loader></Loader>
     </div>
 
     <p class="response">{{res}}</p>

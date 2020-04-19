@@ -110,9 +110,7 @@
         <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14"/></label>
         <div class="loading-grid">
           <input v-if="edit" type="submit" class="button" value="Save" />
-          <span class="loader" v-if="$parent.loading" style="height: 3rem; margin-top: -1rem;">
-            <inline-svg :src="require('../assets/loader.svg')"/>
-          </span>
+          <Loader></Loader>
         </div>
       </form>
       <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
@@ -151,9 +149,7 @@
               <div class="form_buttons">
                   <input type="submit" class="button" value="Save" />
                   <button class="button" v-on:click="close()">Close</button>
-                  <span class="loader" v-if="$parent.loading">
-                    <inline-svg :src="require('../assets/loader.svg')"/>
-                  </span>
+                  <Loader></Loader>
               </div>
           </form>
       </div>
@@ -164,12 +160,10 @@
   import axios from 'axios'
   import qs from 'qs'
   import ResizeAuto from './ResizeAuto'
-  import InlineSvg from 'vue-inline-svg'
 
   export default {
     components: {
-      ResizeAuto,
-      InlineSvg
+      ResizeAuto
     },
     data: function () {
       return {
