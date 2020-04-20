@@ -9,7 +9,7 @@ import ProfileComponent from '@/components/Account'
 import UpdateComponent from '@/components/AccountUpdate'
 import LogoutComponent from '@/components/Logout'
 import ClientComponent from '@/components/Client'
-import WorkoutComponent from '@/components/Workout'
+import ProgrammeComponent from '@/components/Workout'
 import NotFound from '@/components/NotFound'
 import ArchiveComponent from '@/components/Archive'
 import ClientProgrammes from '@/components/ClientProgrammes'
@@ -77,15 +77,13 @@ const router = new Router({
           path: 'results',
           component: ClientResults,
           name: 'results'
+        },
+        {
+          path: 'programme/:id',
+          component: ProgrammeComponent,
+          name: 'programme'
         }
       ]
-    },
-    {
-      path: '/client/:name/workout/:id',
-      component: WorkoutComponent,
-      meta: {
-        requiresAuth: true
-      }
     },
     {
       path: '/archive',

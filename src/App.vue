@@ -496,11 +496,11 @@
         </div>
         <div v-for="(clients, index) in posts"
           :key="index" class="nav_subitem">
-          <router-link :to="'/client/'+clients.name">{{clients.name}}</router-link>
+          <router-link :to="'/client/'+clients.name+'/'">{{clients.name}}</router-link>
           <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
             <div v-for="(programme, index) in posts[index].programmes"
               :key="index" class="nav_subitem subitem">
-              <router-link :to="'/client/'+clients.name+'/workout/'+programme.id">{{programme.name}}</router-link>
+              <router-link :to="'/client/'+clients.name+'/programme/'+programme.id">{{programme.name}}</router-link>
             </div>
           </div>
         </div>

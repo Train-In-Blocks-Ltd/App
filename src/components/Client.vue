@@ -1,4 +1,4 @@
-<style scoped>
+<style>
   #title {
     text-transform: capitalize!important;
     margin-top: -1rem;
@@ -104,6 +104,11 @@
     display: grid;
     align-items: center;
   }
+  .loader {
+    height: 37px;
+    display: grid;
+    align-content: center;
+  }
   @media (max-width: 768px) {
     h2 {
       font-size: 1.35rem;
@@ -128,7 +133,7 @@
 
 <template>
     <div id="client" v-if="$parent.client_details">
-      <div class="top_grid">
+      <div class="top_grid" v-if="!workout">
         <form class="client_info" v-on:submit.prevent="update_client()">
           <input type="text" id="title" name="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
           <label><b>Email: </b><input type="email" id="email" name="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
@@ -143,7 +148,7 @@
         <div>
           <div class="floating_nav">
             <a v-on:click="client_notes_function()" href="javascript:void(0);">Client Notes</a>
-            <router-link :to="{name: 'programmes'}">Programme</router-link>
+            <router-link :to="{name: 'programmes'}">Programmes</router-link>
             <router-link :to="{name: 'results'}">Results</router-link>
           </div>
         </div>
@@ -179,7 +184,8 @@
         clients_update_error: '',
         no_programmes: false,
         loading_programmes: true,
-        client_notes: false
+        client_notes: false,
+        workout: false
       }
     },
     async created () {

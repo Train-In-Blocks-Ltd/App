@@ -48,6 +48,10 @@
   #duration, #date {
     width: auto
   }
+  .add_new_programme_container .quill {
+    margin: 0.75rem 0;
+    background-color: rgba( calc(var(--red) + 45), calc(var(--green) + 45), calc(var(--blue) + 45), 0.8 );
+  }
 </style>
 <template>
     <div>
@@ -58,7 +62,7 @@
       <div v-if="!this.$parent.no_programmes && !this.error" class="program_wrapper">
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
           :key="index" class="program_container">
-          <router-link class="program_link" :to="$route.params.name+'/workout/'+programme.id">
+          <router-link class="program_link" :to="'programme/'+programme.id">
           <h3>{{programme.name}}</h3>
           <p class="desc">"{{programme.description}}"</p>
           <p><b>Duration: </b>{{programme.duration}}</p>
@@ -82,6 +86,8 @@
             </ResizeAuto>
             <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" v-model="new_programme.duration" required/>
             <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
+            <label style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
+            <quill v-model="new_programme.notes" output="html" class="quill"></quill>
             <div class="form_buttons">
                 <input type="submit" class="button" value="Save" />
                 <button class="button" v-on:click="close()">Close</button>
@@ -111,7 +117,8 @@
           name: '',
           desc: '',
           duration: '',
-          start: ''
+          start: '',
+          notes: ''
         }
       }
     },
@@ -135,7 +142,8 @@
                 client_id: this.$parent.$parent.client_details.client_id,
                 desc: this.new_programme.desc,
                 duration: this.new_programme.duration,
-                start: this.new_programme.start
+                start: this.new_programme.start,
+                notes: this.new_programme.notes
               }),
               {
                 headers: {

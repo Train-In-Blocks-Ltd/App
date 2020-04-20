@@ -10,7 +10,7 @@
       <div v-for="(clients, index) in $parent.posts"
         :key="index">
         <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container">
-          <router-link class="client_link" :to="'/client/'+clients.name">
+          <router-link class="client_link" :to="'/client/'+clients.name+'/'">
             <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
           </router-link>
           <div class="client_update">
@@ -27,7 +27,7 @@
         <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_client.name" required/>
         <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" v-model="new_client.email" required/>
         <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" inputmode="tel" v-model="new_client.number" minlength="9" maxlength="14"/>
-        <label for="notes" style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
+        <label style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
         <quill v-model="new_client.notes" output="html" class="quill"></quill>
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
