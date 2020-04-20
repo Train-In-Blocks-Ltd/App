@@ -60,15 +60,15 @@
       <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
       <p v-if="this.error"><b>{{error}}</b></p>
       <div v-if="!this.$parent.no_programmes && !this.error" class="program_wrapper">
-      <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
-          :key="index" class="program_container">
-          <router-link class="program_link" :to="'programme/'+programme.id">
-          <h3>{{programme.name}}</h3>
-          <p class="desc">"{{programme.description}}"</p>
-          <p><b>Duration: </b>{{programme.duration}}</p>
-          <p><b>Start: </b>{{programme.start}}</p>
-          </router-link>
-      </div>
+        <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
+            :key="index" class="program_container">
+            <router-link class="program_link" :to="'programme/'+programme.id">
+            <h3>{{programme.name}}</h3>
+            <p class="desc">"{{programme.description}}"</p>
+            <p><b>Duration: </b>{{programme.duration}}</p>
+            <p><b>Start: </b>{{programme.start}}</p>
+            </router-link>
+        </div>
       </div>
       <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New programme</button>
       <p class="response" v-if="!creating">{{response}}</p>
@@ -159,7 +159,7 @@
               this.$parent.$parent.posts[x].programmes = null
             }
           }
-          await this.get_programmes()
+          await this.$parent.get_client_details()
 
           this.$parent.$parent.loading = false
 

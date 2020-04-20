@@ -27,13 +27,14 @@
   }
   .programme_grid {
     display: grid;
-    grid-template-areas: "table notes";
+    grid-template-areas: "table notes"
+                          "workouts notes";
     grid-template-columns: 1fr 0.33fr;
     grid-gap: 2rem;
   }
   .notes {
     grid-area: notes;
-    padding-left: 1rem;
+    padding-left: 2rem;
     border-left: 3px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -87,11 +88,55 @@
     font-weight: bold;
     width: 100%;
   }
+  .programme_duration_container > * {
+    border-top: none;
+  }
   .programme_duration_container {
     display: grid;
     grid-auto-flow: column;
     border: none;
     padding: 0;
+  }
+  #workout_notes {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 9;
+    text-align: left;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    background-color: rgb( var(--red), var(--green), var(--blue) );
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    align-items: center;
+  }
+  #workout_notes_header p {
+    margin: 0;
+  }
+  #workout_notes_header {
+    cursor: grab;
+    z-index: 10;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    padding: 0 0.5rem;
+  }
+  #workout_notes_footer button {
+    margin-bottom: 0;
+  }
+  #workout_notes_footer, #workout_notes_header {
+    height: 100%;
+    display: grid;
+    align-items: center;
+  }
+  .workouts {
+    grid-area: workouts
+  }
+  .workout {
+    display: block;
+    border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    padding: 0.5rem 0;
+    cursor: pointer
   }
 </style>
 
@@ -143,13 +188,59 @@
                   </div>
                 </div>
               </div> <!-- programme_table -->
+              <div class="workouts">
+                <h3>Workouts</h3>
+                <p v-if="no_workouts">No workouts yet. You can add one below.</p>
+                <p v-if="loading_workouts">Loading workouts...</p>
+                <p v-if="error"><b>{{error}}</b></p>
+                <div v-if="!no_workouts && !error" class="workout_wrapper">
+                  <div v-for="(workout, index) in programme.workouts"
+                    :key="index">
+                    <p v-on:click="workout_notes_function()" class="workout">
+                      <b>{{workout.name}}</b>
+                      {{workout.date}}
+                    </p>
+                    <div v-show="workout_notes" id="workout_notes">
+                      <div id="workout_notes_header">
+                        <p>
+                          <b>{{workout.name}}</b>
+                          {{workout.date}}
+                        </p>
+                      </div>
+                      <quill v-model="workout.notes" output="html" class="quill"></quill>
+                      <div id="workout_notes_footer">
+                        <div class="loading-grid">
+                          <button class="button" v-on:click="update_workout()">Save</button>
+                          <Loader></Loader>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button v-if="!creating" id="add_workout_link" class="button" v-on:click="creation()">New workout</button>
+                  <p class="response" v-if="!creating">{{response}}</p>
+                  <div class="add_new_workout_container" v-if="creating">
+                    <h3>Add new workout</h3>
+                    <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
+                      <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
+                      <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
+                      <label style="margin: 1.5rem 0; align-self:start"><b>Content: </b></label>
+                      <quill v-model="new_workout.notes" output="html" class="quill border"></quill>
+                      <div class="form_buttons">
+                          <input type="submit" class="button" value="Save" />
+                          <button class="button" v-on:click="close()">Close</button>
+                          <Loader></Loader>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div><!-- workouts -->
               <div class="notes" v-on:click="editing1()">
-                <div id="workout_notes_header">
+                <div id="programme_notes_header">
                   <p>Programme Notes</p>
                   <h3>Data & Statistics</h3>
                 </div>
-                <quill v-model="programme.notes" output="html" class="quill"></quill>
-                <div id="workout_notes_footer">
+                <quill v-model="programme.notes" output="html" class="quill border"></quill>
+                <div id="programme_notes_footer">
                   <div class="loading-grid" v-if="edit1">
                     <button class="button" v-on:click="update_programme()">Save</button>
                     <Loader></Loader>
@@ -159,27 +250,9 @@
                 <p v-if="programme1_update_error"><b>{{programme1_update_error}}</b></p>
               </div>  <!-- notes -->
             </div> <!-- programme_grid -->
-            <div class="workouts">
-              <h3>Workouts</h3>
-              <button v-if="!creating" id="add_workout_link" class="button" v-on:click="creation()">New workout</button>
-              <p class="response" v-if="!creating">{{response}}</p>
-              <div class="add_new_workout_container" v-if="creating">
-                <h3>Add new workout</h3>
-                <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-                    <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
-                    <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
-                    <label style="margin: 1.5rem 0; align-self:start"><b>Content: </b></label>
-                    <quill v-model="new_workout.notes" output="html" class="quill"></quill>
-                    <div class="form_buttons">
-                        <input type="submit" class="button" value="Save" />
-                        <button class="button" v-on:click="close()">Close</button>
-                        <Loader></Loader>
-                    </div>
-                </form>
-              </div>
-            </div> <!-- workouts -->
           </div>
         </div>
+      </div>
     </div>
 </template>
 
@@ -204,6 +277,10 @@
         programme_update_error: '',
         programme1_update_response: '',
         programme1_update_error: '',
+        no_workouts: false,
+        loading_workouts: true,
+        error: '',
+        workout_notes: false,
         new_workout: {
           name: '',
           date: '',
@@ -216,6 +293,10 @@
       this.$parent.workout = true
     },
     methods: {
+      workout_notes_function () {
+        this.workout_notes = !this.workout_notes
+        this.$parent.dragElement(document.getElementById('workout_notes'))
+      },
       programme_duration (duration) {
         const arr = []
         let i
@@ -295,57 +376,85 @@
         this.response = ''
       },
       async get_workouts () {
-
+        try {
+          // Loop through programmes
+          var x
+          for (x in this.$parent.$parent.client_details.programmes) {
+            
+            // If programme matches programme in route
+            if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
+              // If client_details.programmes.workouts is set to false
+              if (this.$parent.$parent.client_details.programmes[x].workouts === false) {
+                this.no_workouts = true
+              // If client_details.programmes.workouts is not set then query the API
+              } else if (!this.$parent.$parent.client_details.programmes[x].workouts) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+                // eslint-disable-next-line
+                const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.$parent.client_details.programmes[x].id}`)
+                // If there are no workouts
+                if (response_programmes.data.length === 0) {
+                  this.no_workouts = true
+                  this.$parent.$parent.client_details.programmes[x].workouts = false
+                  // If there are workouts set the client_details to include workouts
+                } else {
+                  this.$parent.$parent.client_details.programmes[x].workouts = response_programmes.data
+                }
+                // Sync client_details with posts
+                // Loop through clients
+                let y
+                for (y in this.$parent.$parent.posts) {
+                  // If client matches client in route
+                  if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
+                    this.$parent.$parent.posts[x] = this.$parent.$parent.client_details
+                  }
+                }
+                // Update the localstorage with the workouts
+                localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
+              }
+              this.loading_workouts = false
+            }
+          }
+        } catch (e) {
+          this.error = e.toString()
+        }
       },
       async update_workout () {
 
       },
       async save () {
-        await this.$parent.$parent.$auth.getUser()
-        if (this.$parent.$parent.authenticated) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          try {
-            this.$parent.$parent.loading = true
-            // eslint-disable-next-line
-            const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
-              qs.stringify({
-                programme_id: this.$route.params.id,
-                date: this.new_workout.date,
-                notes: this.new_workout.notes
-              }),
-              {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              }
-            )
-            // eslint-disable-next-line
-            this.response = response_save_workouts.data
-            /*
-
-            var x
-            for (x in this.$parent.$parent.posts) {
-              if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
-                this.$parent.$parent.posts[x].programmes = null
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          this.$parent.$parent.loading = true
+          // eslint-disable-next-line
+          const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
+            qs.stringify({
+              programme_id: this.$route.params.id,
+              date: this.new_workout.date,
+              notes: this.new_workout.notes
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
               }
             }
-            await this.get_programmes()
+          )
+          // eslint-disable-next-line
+          this.response = response_save_workouts.data
 
-            */
+          await this.get_workouts()
 
-            this.$parent.$parent.loading = false
+          this.$parent.$parent.loading = false
 
-            this.close()
+          this.close()
 
-            this.new_workout = {
-              name: '',
-              date: '',
-              notes: ''
-            }
-          } catch (e) {
-            console.error(`${e}`)
+          this.new_workout = {
+            name: '',
+            date: '',
+            notes: ''
           }
+        } catch (e) {
+          console.error(`${e}`)
         }
       }
     }
