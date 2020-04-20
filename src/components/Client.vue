@@ -66,6 +66,44 @@
     display: block;
     margin: 0.5rem 0;
   }
+  #client {
+    position: relative;
+  }
+  #client_notes {
+    color: #282828;
+    position: absolute;
+    right: 0;
+    z-index: 9;
+    text-align: left;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+    background-color: rgb( var(--red), var(--green), var(--blue) );
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    align-items: center;
+  }
+  #client_notes_header p {
+    font-weight: bold;
+  }
+  .quill, #client_notes_header p {
+    margin: 0;
+  }
+  #client_notes_header {
+    cursor: grab;
+    z-index: 10;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    padding: 0 0.5rem;
+  }
+  #client_notes_footer button {
+    margin-bottom: 0;
+  }
+  #client_notes_footer, #client_notes_header {
+    height: 100%;
+    display: grid;
+    align-items: center;
+  }
   @media (max-width: 768px) {
     h2 {
       font-size: 1.35rem;
@@ -104,9 +142,21 @@
         </form>
         <div>
           <div class="floating_nav">
-            <a>Client Notes</a>
+            <a v-on:click="client_notes_function()" href="javascript:void(0);">Client Notes</a>
             <router-link :to="{name: 'programmes'}">Programme</router-link>
             <router-link :to="{name: 'results'}">Results</router-link>
+          </div>
+        </div>
+      </div>
+      <div v-show="client_notes" id="client_notes">
+        <div id="client_notes_header">
+          <p>Client Information</p>
+        </div>
+        <quill v-model="$parent.client_details.notes" output="html" class="quill"></quill>
+        <div id="client_notes_footer">
+          <div class="loading-grid">
+            <button class="button" v-on:click="update_client()">Save</button>
+            <Loader></Loader>
           </div>
         </div>
       </div>
@@ -128,7 +178,8 @@
         clients_update_response: '',
         clients_update_error: '',
         no_programmes: false,
-        loading_programmes: true
+        loading_programmes: true,
+        client_notes: false
       }
     },
     async created () {
@@ -144,6 +195,53 @@
       await this.get_client_details()
     },
     methods: {
+      client_notes_function () {
+        this.client_notes = !this.client_notes
+        this.dragElement(document.getElementById('client_notes'))
+      },
+      dragElement (elmnt) {
+        let pos1 = 0
+        let pos2 = 0
+        let pos3 = 0
+        let pos4 = 0
+        if (document.getElementById(elmnt.id + '_header')) {
+          /* if present, the header is where you move the DIV from: */
+          document.getElementById(elmnt.id + '_header').onmousedown = dragMouseDown
+        } else {
+          /* otherwise, move the DIV from anywhere inside the DIV: */
+          elmnt.onmousedown = dragMouseDown
+        }
+
+        function dragMouseDown (e) {
+          e = e || window.event
+          e.preventDefault()
+          // get the mouse cursor position at startup:
+          pos3 = e.clientX
+          pos4 = e.clientY
+          document.onmouseup = closeDragElement
+          // call a function whenever the cursor moves:
+          document.onmousemove = elementDrag
+        }
+
+        function elementDrag (e) {
+          e = e || window.event
+          e.preventDefault()
+          // calculate the new cursor position:
+          pos1 = pos3 - e.clientX
+          pos2 = pos4 - e.clientY
+          pos3 = e.clientX
+          pos4 = e.clientY
+          // set the element's new position:
+          elmnt.style.top = (elmnt.offsetTop - pos2) + 'px'
+          elmnt.style.left = (elmnt.offsetLeft - pos1) + 'px'
+        }
+
+        function closeDragElement () {
+          /* stop moving when mouse button is released: */
+          document.onmouseup = null
+          document.onmousemove = null
+        }
+      },
       async get_client_details () {
         var x
         for (x in this.$parent.posts) {
@@ -169,9 +267,9 @@
         }
       },
       async update_client () {
+        this.$parent.loading = true
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          this.$parent.loading = true
           // eslint-disable-next-line
           const response_update_clients = await axios.post(`https://api.traininblocks.com/clients`,
             {

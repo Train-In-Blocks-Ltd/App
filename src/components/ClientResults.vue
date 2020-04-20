@@ -1,12 +1,10 @@
 <style scoped>
-p {
-    color: orange
-}
+
 </style>
 
 <template>
     <div>
-        <p>yeet</p>
+        <h2>Results</h2>
     </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-    <span class="loader" v-if="$parent.loading">
+    <span class="loader" v-if="$parent.$parent.loading">
         <inline-svg :src="require('../assets/loader.svg')"/>
     </span>
 </template>
