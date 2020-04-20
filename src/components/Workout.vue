@@ -142,115 +142,114 @@
 
 <template>
     <div id="programme">
-        <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
-          :key="index">
-          <div v-if="programme.id == $route.params.id">
-            <div class="top_grid">
-              <div class="client_info">
-                <h1>{{$route.params.name}}</h1>
-                <form class="programme_info" v-on:submit.prevent="update_programme()">
-                  <ResizeAuto>
-                    <template v-slot:default="{resize}">
-                      <textarea type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()" @input="resize" rows="1"></textarea>
-                    </template>
-                  </ResizeAuto>
-                  <ResizeAuto>
-                    <template v-slot:default="{resize}">
-                    <textarea type="text" id="description" name="description" v-model="programme.description" v-on:click="editing()" @input="resize" rows="1"></textarea>
-                    </template>
-                  </ResizeAuto>
-                  <label style="margin-top: 1rem"><b>Duration: </b><input type="number" id="duration" name="duration" v-model="programme.duration" required v-on:click="editing()"/> weeks</label>
-                  <label style="align-items: end"><b>Start: </b><input type="date" id="start" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
-                  <div class="loading-grid" v-if="edit">
-                    <input type="submit" class="button" value="Save" />
-                    <Loader></Loader>
-                  </div>
-                  <p v-if="programme_update_response"><b>{{programme_update_response}}</b></p>
-                  <p v-if="programme_update_error"><b>{{programme_update_error}}</b></p>
-                </form>
-              </div>  <!-- client_info -->
-              <div class="floating_nav_container">
-                <div class="floating_nav">
-                  <a v-on:click="$parent.client_notes_function()" href="javascript:void(0);">Client Notes</a>
-                  <router-link :to="{name: 'programmes'}">Programme</router-link>
-                  <router-link :to="{name: 'results'}">Results</router-link>
+      <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
+        :key="index">
+        <div v-if="programme.id == $route.params.id">
+          <div class="top_grid">
+            <div class="client_info">
+              <h1>{{$route.params.name}}</h1>
+              <form class="programme_info" v-on:submit.prevent="update_programme()">
+                <ResizeAuto>
+                  <template v-slot:default="{resize}">
+                    <textarea type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()" @input="resize" rows="1"></textarea>
+                  </template>
+                </ResizeAuto>
+                <ResizeAuto>
+                  <template v-slot:default="{resize}">
+                  <textarea type="text" id="description" name="description" v-model="programme.description" v-on:click="editing()" @input="resize" rows="1"></textarea>
+                  </template>
+                </ResizeAuto>
+                <label style="margin-top: 1rem"><b>Duration: </b><input type="number" id="duration" name="duration" v-model="programme.duration" required v-on:click="editing()"/> weeks</label>
+                <label style="align-items: end"><b>Start: </b><input type="date" id="start" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
+                <div class="loading-grid" v-if="edit">
+                  <input type="submit" class="button" value="Save" />
+                  <Loader></Loader>
                 </div>
-              </div>  <!-- floating_nav_container -->
-            </div> <!-- top_grid -->
-            <div class="programme_grid">
-              <div class="programme_table">
-                <div class="programme_name">
-                  <p>{{programme.name}}</p>
+                <p v-if="programme_update_response"><b>{{programme_update_response}}</b></p>
+                <p v-if="programme_update_error"><b>{{programme_update_error}}</b></p>
+              </form>
+            </div>  <!-- client_info -->
+            <div class="floating_nav_container">
+              <div class="floating_nav">
+                <a v-on:click="$parent.client_notes_function()" href="javascript:void(0);">Client Notes</a>
+                <router-link :to="{name: 'programmes'}">Programme</router-link>
+                <router-link :to="{name: 'results'}">Results</router-link>
+              </div>
+            </div>  <!-- floating_nav_container -->
+          </div> <!-- top_grid -->
+          <div class="programme_grid">
+            <div class="programme_table">
+              <div class="programme_name">
+                <p>{{programme.name}}</p>
+              </div>
+              <div class="programme_duration_container">
+                <div v-for="item in programme_duration(programme.duration)" :key="item">
+                  {{item}}
                 </div>
-                <div class="programme_duration_container">
-                  <div v-for="item in programme_duration(programme.duration)" :key="item">
-                    {{item}}
-                  </div>
-                </div>
-              </div> <!-- programme_table -->
-              <div class="workouts">
-                <h3>Workouts</h3>
-                <p v-if="no_workouts">No workouts yet. You can add one below.</p>
-                <p v-if="loading_workouts">Loading workouts...</p>
-                <p v-if="error"><b>{{error}}</b></p>
-                <div v-if="!no_workouts && !error" class="workout_wrapper">
-                  <div v-for="(workout, index) in programme.workouts"
-                    :key="index">
-                    <p v-on:click="workout_notes_function()" class="workout">
-                      <b>{{workout.name}}</b>
-                      {{workout.date}}
-                    </p>
-                    <div v-show="workout_notes" id="workout_notes">
-                      <div id="workout_notes_header">
-                        <p>
-                          <b>{{workout.name}}</b>
-                          {{workout.date}}
-                        </p>
-                      </div>
-                      <quill v-model="workout.notes" output="html" class="quill"></quill>
-                      <div id="workout_notes_footer">
-                        <div class="loading-grid">
-                          <button class="button" v-on:click="update_workout()">Save</button>
-                          <Loader></Loader>
-                        </div>
+              </div>
+            </div> <!-- programme_table -->
+            <div class="workouts">
+              <h3>Workouts</h3>
+              <p v-if="no_workouts">No workouts yet. You can add one below.</p>
+              <p v-if="loading_workouts">Loading workouts...</p>
+              <p v-if="error"><b>{{error}}</b></p>
+              <div v-if="!no_workouts && !error" class="workout_wrapper">
+                <div v-for="(workout, index) in programme.workouts"
+                  :key="index">
+                  <p v-on:click="workout_notes_function()" class="workout">
+                    <b>{{workout.name}}</b>
+                    {{workout.date}}
+                  </p>
+                  <div v-show="workout_notes" id="workout_notes">
+                    <div id="workout_notes_header">
+                      <p>
+                        <b>{{workout.name}}</b>
+                        {{workout.date}}
+                      </p>
+                    </div>
+                    <quill v-model="workout.notes" output="html" class="quill"></quill>
+                    <div id="workout_notes_footer">
+                      <div class="loading-grid">
+                        <button class="button" v-on:click="update_workout()">Save</button>
+                        <Loader></Loader>
                       </div>
                     </div>
                   </div>
-                  <button v-if="!creating" id="add_workout_link" class="button" v-on:click="creation()">New workout</button>
-                  <p class="response" v-if="!creating">{{response}}</p>
-                  <div class="add_new_workout_container" v-if="creating">
-                    <h3>Add new workout</h3>
-                    <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-                      <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
-                      <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
-                      <label style="margin: 1.5rem 0; align-self:start"><b>Content: </b></label>
-                      <quill v-model="new_workout.notes" output="html" class="quill border"></quill>
-                      <div class="form_buttons">
-                          <input type="submit" class="button" value="Save" />
-                          <button class="button" v-on:click="close()">Close</button>
-                          <Loader></Loader>
-                      </div>
-                    </form>
-                  </div>
                 </div>
-              </div><!-- workouts -->
-              <div class="notes" v-on:click="editing1()">
-                <div id="programme_notes_header">
-                  <p>Programme Notes</p>
-                  <h3>Data & Statistics</h3>
+                <button v-if="!creating" id="add_workout_link" class="button" v-on:click="creation()">New workout</button>
+                <p class="response" v-if="!creating">{{response}}</p>
+                <div class="add_new_workout_container" v-if="creating">
+                  <h3>Add new workout</h3>
+                  <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
+                    <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
+                    <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
+                    <label style="margin: 1.5rem 0; align-self:start"><b>Content: </b></label>
+                    <quill v-model="new_workout.notes" output="html" class="quill border"></quill>
+                    <div class="form_buttons">
+                        <input type="submit" class="button" value="Save" />
+                        <button class="button" v-on:click="close()">Close</button>
+                        <Loader></Loader>
+                    </div>
+                  </form>
                 </div>
-                <quill v-model="programme.notes" output="html" class="quill border"></quill>
-                <div id="programme_notes_footer">
-                  <div class="loading-grid" v-if="edit1">
-                    <button class="button" v-on:click="update_programme()">Save</button>
-                    <Loader></Loader>
-                  </div>
+              </div>
+            </div><!-- workouts -->
+            <div class="notes" v-on:click="editing1()">
+              <div id="programme_notes_header">
+                <p>Programme Notes</p>
+                <h3>Data & Statistics</h3>
+              </div>
+              <quill v-model="programme.notes" output="html" class="quill border"></quill>
+              <div id="programme_notes_footer">
+                <div class="loading-grid" v-if="edit1">
+                  <button class="button" v-on:click="update_programme()">Save</button>
+                  <Loader></Loader>
                 </div>
-                <p v-if="programme1_update_response"><b>{{programme1_update_response}}</b></p>
-                <p v-if="programme1_update_error"><b>{{programme1_update_error}}</b></p>
-              </div>  <!-- notes -->
-            </div> <!-- programme_grid -->
-          </div>
+              </div>
+              <p v-if="programme1_update_response"><b>{{programme1_update_response}}</b></p>
+              <p v-if="programme1_update_error"><b>{{programme1_update_error}}</b></p>
+            </div>  <!-- notes -->
+          </div> <!-- programme_grid -->
         </div>
       </div>
     </div>
@@ -311,7 +310,7 @@
         let x
         var programme
         for (x in this.$parent.$parent.client_details.programmes) {
-          if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
+          if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
             programme = this.$parent.$parent.client_details.programmes[x]
           }
         }
@@ -327,29 +326,29 @@
               'notes': programme.notes
             }
           )
-          this.programme_update_response = "Details updated successfully"
+          this.programme_update_response = 'Details updated successfully'
           this.$parent.loading = false
           this.edit = false
           this.programme_update_error = false
-          
+
           // Set vue client_details data to new data
           let x
           // Loop through client_details programmes
           for (x in this.$parent.$parent.client_details.programmes) {
-            if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
+            if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
               console.log()
-              this.$parent.$parent.client_details.programmes[x] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}','}'))
+              this.$parent.$parent.client_details.programmes[x] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}', '}'))
             }
           }
-          
+
           // Set vue client programmes data to new data
           x = 0
           let y
           for (x in this.$parent.$parent.posts) {
-            if (this.$parent.$parent.posts[x].name == this.$route.params.name) {
+            if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
               for (y in this.$parent.$parent.posts[x].programmes[y]) {
-                if (this.$parent.$parent.posts[x].programmes[y].id == this.$route.params.id) {
-                  this.$parent.$parent.posts[x].programmes[y] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}','}'))
+                if (this.$parent.$parent.posts[x].programmes[y].id === this.$route.params.id) {
+                  this.$parent.$parent.posts[x].programmes[y] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}', '}'))
                 }
               }
             }
@@ -380,9 +379,8 @@
           // Loop through programmes
           var x
           for (x in this.$parent.$parent.client_details.programmes) {
-            
             // If programme matches programme in route
-            if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
+            if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
               // If client_details.programmes.workouts is set to false
               if (this.$parent.$parent.client_details.programmes[x].workouts === false) {
                 this.no_workouts = true
@@ -401,7 +399,7 @@
                 }
                 // Sync client_details with posts
                 // Loop through clients
-                let y
+                var y
                 for (y in this.$parent.$parent.posts) {
                   // If client matches client in route
                   if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
@@ -411,9 +409,9 @@
                 // Update the localstorage with the workouts
                 localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
               }
-              this.loading_workouts = false
             }
           }
+          this.loading_workouts = false
         } catch (e) {
           this.error = e.toString()
         }

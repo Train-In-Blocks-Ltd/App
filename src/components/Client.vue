@@ -252,7 +252,7 @@
         }
       },
       async get_client_details () {
-        try{
+        try {
           // Loop through clients
           var x
           for (x in this.$parent.posts) {
@@ -284,7 +284,7 @@
             }
           }
         } catch (e) {
-            this.error = e.toString()
+          this.error = e.toString()
         }
       },
       async update_client () {
