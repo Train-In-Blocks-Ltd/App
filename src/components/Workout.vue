@@ -219,13 +219,65 @@
       programme_duration (duration) {
         const arr = []
         let i
-        for (i = 1; i < parseInt(duration, 10)+1; i++) {
+        for (i = 1; i < parseInt(duration, 10) + 1; i++) {
           arr.push(i)
         }
         return arr
       },
       async update_programme () {
-
+        this.$parent.loading = true
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        let x
+        var programme
+        for (x in this.$parent.$parent.client_details.programmes) {
+          if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
+            programme = this.$parent.$parent.client_details.programmes[x]
+          }
+        }
+        try {
+          // eslint-disable-next-line
+          const response_update_programme = await axios.post(`https://api.traininblocks.com/programmes`,
+            {
+              'id': programme.id,
+              'name': programme.name,
+              'description': programme.description,
+              'duration': programme.duration,
+              'start': programme.start,
+              'notes': programme.notes
+            }
+          )
+          this.programme_update_response = "Details updated successfully"
+          this.$parent.loading = false
+          this.edit = false
+          this.programme_update_error = false
+          
+          // Set vue client_details data to new data
+          let x
+          // Loop through client_details programmes
+          for (x in this.$parent.$parent.client_details.programmes) {
+            if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
+              console.log()
+              this.$parent.$parent.client_details.programmes[x] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}','}'))
+            }
+          }
+          
+          // Set vue client programmes data to new data
+          x = 0
+          let y
+          for (x in this.$parent.$parent.posts) {
+            if (this.$parent.$parent.posts[x].name == this.$route.params.name) {
+              for (y in this.$parent.$parent.posts[x].programmes[y]) {
+                if (this.$parent.$parent.posts[x].programmes[y].id == this.$route.params.id) {
+                  this.$parent.$parent.posts[x].programmes[y] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}','}'))
+                }
+              }
+            }
+          }
+          // Update the localstorage with the programmes
+          localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
+        } catch (e) {
+          this.programme_update_error = e.toString()
+        }
       },
       editing () {
         this.edit1 = false
@@ -257,7 +309,7 @@
             // eslint-disable-next-line
             const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
               qs.stringify({
-                programme_id: $route.params.id,
+                programme_id: this.$route.params.id,
                 date: this.new_workout.date,
                 notes: this.new_workout.notes
               }),

@@ -131,52 +131,49 @@
         this.response = ''
       },
       async save () {
-        await this.$parent.$parent.$auth.getUser()
-        if (this.$parent.$parent.authenticated) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          try {
-            this.$parent.$parent.loading = true
-            // eslint-disable-next-line
-            const response_save_programmes = await axios.put(`https://api.traininblocks.com/programmes/${this.new_programme.name}`,
-              qs.stringify({
-                client_id: this.$parent.$parent.client_details.client_id,
-                desc: this.new_programme.desc,
-                duration: this.new_programme.duration,
-                start: this.new_programme.start,
-                notes: this.new_programme.notes
-              }),
-              {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              }
-            )
-            // eslint-disable-next-line
-            this.response = response_save_programmes.data
-
-            var x
-            for (x in this.$parent.$parent.posts) {
-              if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
-                this.$parent.$parent.posts[x].programmes = null
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          this.$parent.$parent.loading = true
+          // eslint-disable-next-line
+          const response_save_programmes = await axios.put(`https://api.traininblocks.com/programmes/${this.new_programme.name}`,
+            qs.stringify({
+              client_id: this.$parent.$parent.client_details.client_id,
+              desc: this.new_programme.desc,
+              duration: this.new_programme.duration,
+              start: this.new_programme.start,
+              notes: this.new_programme.notes
+            }),
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
               }
             }
-            await this.get_programmes()
+          )
+          // eslint-disable-next-line
+          this.response = response_save_programmes.data
 
-            this.$parent.$parent.loading = false
-
-            this.close()
-
-            this.new_programme = {
-              name: '',
-              desc: '',
-              duration: '',
-              start: '',
-              notes: ''
+          var x
+          for (x in this.$parent.$parent.posts) {
+            if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
+              this.$parent.$parent.posts[x].programmes = null
             }
-          } catch (e) {
-            console.error(`${e}`)
           }
+          await this.get_programmes()
+
+          this.$parent.$parent.loading = false
+
+          this.close()
+
+          this.new_programme = {
+            name: '',
+            desc: '',
+            duration: '',
+            start: '',
+            notes: ''
+          }
+        } catch (e) {
+          console.error(`${e}`)
         }
       }
     }
