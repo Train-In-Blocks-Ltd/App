@@ -6,7 +6,7 @@
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <div v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
-      <input type="search" rel="search" placeholder="Search..." class="search" v-model="search"/>
+      <input type="search" rel="search" placeholder="Search..." class="search" autocomplete="name" v-model="search"/>
       <div v-for="(clients, index) in $parent.posts"
         :key="index">
         <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container">
@@ -24,9 +24,9 @@
     <div class="add_new_client_container" v-if="creating">
       <h3>Add new client</h3>
       <form name="add_client" class="form_grid" v-on:submit.prevent="save()">
-        <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_client.name" required/>
-        <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" v-model="new_client.email" required/>
-        <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" inputmode="tel" v-model="new_client.number" minlength="9" maxlength="14"/>
+        <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" autocomplete="name" v-model="new_client.name" required/>
+        <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" autocomplete="email" v-model="new_client.email" required/>
+        <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14"/>
         <label style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
         <quill v-model="new_client.notes" output="html" class="quill"></quill>
         <div class="form_buttons">

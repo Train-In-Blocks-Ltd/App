@@ -9,7 +9,7 @@
     <p v-if="this.$parent.no_archive">No clients are archived</p>
     <p v-if="this.$parent.archive_error"><b>{{this.$parent.archive_error}}</b></p>
     <div v-if="!this.$parent.no_archive && !this.$parent.archive_error && this.$parent.archive_posts">
-      <input type="search" rel="search" placeholder="Search..." class="search" v-model="search"/>
+      <input type="search" rel="search" placeholder="Search..." class="search" autocomplete="name" v-model="search"/>
       <div v-for="(clients, index) in $parent.archive_posts"
         :key="index" class="client_container archived">
         <div class="client_link" v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
