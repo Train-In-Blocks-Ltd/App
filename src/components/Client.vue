@@ -134,41 +134,44 @@
 </style>
 
 <template>
-    <div id="client" v-if="$parent.client_details">
-      <div class="top_grid" v-if="!workout">
-        <form class="client_info" v-on:submit.prevent="update_client()">
-          <input type="text" id="title" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
-          <label><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-          <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14"/></label>
-          <div class="loading-grid">
-            <input v-if="edit" type="submit" class="button" value="Save" />
-            <Loader></Loader>
-          </div>
-          <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
-          <p v-if="this.clients_update_error"><b>{{clients_update_error}}</b></p>
-        </form>
-        <div>
-          <div class="floating_nav">
-            <a v-on:click="client_notes_function()" href="javascript:void(0);">Client Notes</a>
-            <router-link :to="{name: 'programmes'}">Programmes</router-link>
-            <router-link :to="{name: 'results'}">Results</router-link>
-          </div>
+  <div id="client" v-if="$parent.client_details">
+    <!-- Don't show if on workout page because workout page renders slightly different top ui -->
+    <div class="top_grid" v-if="!workout">
+      <!-- Update the client details -->
+      <form class="client_info" v-on:submit.prevent="update_client()">
+        <input type="text" id="title" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
+        <label><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
+        <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14"/></label>
+        <div class="loading-grid">
+          <input v-if="edit" type="submit" class="button" value="Save" />
+          <Loader></Loader>
+        </div>
+        <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
+        <p v-if="this.clients_update_error"><b>{{clients_update_error}}</b></p>
+      </form>
+      <div>
+        <div class="floating_nav">
+          <a v-on:click="client_notes_function()" href="javascript:void(0);">Client Notes</a>
+          <router-link :to="{name: 'programmes'}">Programmes</router-link>
+          <router-link :to="{name: 'results'}">Results</router-link>
         </div>
       </div>
-      <div v-show="client_notes" id="client_notes">
-        <div id="client_notes_header">
-          <p>Client Information</p>
-        </div>
-        <quill v-model="$parent.client_details.notes" output="html" class="quill"></quill>
-        <div id="client_notes_footer">
-          <div class="loading-grid">
-            <button class="button" v-on:click="update_client()">Save</button>
-            <Loader></Loader>
-          </div>
-        </div>
-      </div>
-      <router-view :key="$route.fullPath"></router-view>
     </div>
+    <div v-show="client_notes" id="client_notes">
+      <div id="client_notes_header">
+        <p>Client Information</p>
+      </div>
+      <quill v-model="$parent.client_details.notes" output="html" class="quill"></quill>
+      <div id="client_notes_footer">
+        <div class="loading-grid">
+          <button class="button" v-on:click="update_client()">Save</button>
+          <Loader></Loader>
+        </div>
+      </div>
+    </div>
+    <!-- Router View for Client Pages -->
+    <router-view :key="$route.fullPath"></router-view>
+  </div>
 </template>
 
 <script>
@@ -192,14 +195,7 @@
       }
     },
     async created () {
-      var d = new Date()
-      var n = d.getTime()
-      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.$parent.setup()
-        await this.$parent.clients()
-        localStorage.setItem('firstLoaded', true)
-        localStorage.setItem('loadTime', n)
-      }
+      // Call clients_to_vue again because parent call on created is executed after and get_client_details needs clients_to_vue to happen first
       await this.$parent.clients_to_vue()
       await this.get_client_details()
     },
@@ -246,7 +242,7 @@
         }
 
         function closeDragElement () {
-          /* stop moving when mouse button is released: */
+          // stop moving when mouse button is released:
           document.onmouseup = null
           document.onmousemove = null
         }
@@ -275,9 +271,9 @@
                   // If there are programmes set the posts to include programmes
                 } else {
                   this.$parent.posts[x].programmes = response_programmes.data
+                  // Update the localstorage with the programmes
+                  localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
                 }
-                // Update the localstorage with the programmes
-                localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
               }
               this.$parent.client_details = this.$parent.posts[x]
               this.loading_programmes = false
@@ -301,12 +297,13 @@
               'notes': this.$parent.client_details.notes
             }
           )
+          // Get the client information again as we have just updated the client
           await this.$parent.clients()
-          await this.get_client_details()
           this.clients_update_response = response_update_clients.data
           this.$parent.loading = false
           this.edit = false
           await this.$parent.clients_to_vue()
+          await this.get_client_details()
         } catch (e) {
           this.clients_update_error = e.toString()
         }

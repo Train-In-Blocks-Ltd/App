@@ -5,10 +5,12 @@
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
+    <!-- Loop through clients -->
     <div v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
       <input type="search" rel="search" placeholder="Search..." class="search" autocomplete="name" v-model="search"/>
       <div v-for="(clients, index) in $parent.posts"
         :key="index">
+        <!-- Perform case insensitive search -->
         <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container">
           <router-link class="client_link" :to="'/client/'+clients.name+'/'">
             <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
@@ -61,17 +63,6 @@
         search: ''
       }
     },
-    async created () {
-      var d = new Date()
-      var n = d.getTime()
-      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.$parent.setup()
-        await this.$parent.clients()
-        await this.$parent.clients_to_vue()
-        localStorage.setItem('firstLoaded', true)
-        localStorage.setItem('loadTime', n)
-      }
-    },
     methods: {
       creation () {
         this.creating = true
@@ -81,7 +72,6 @@
       },
       async save () {
         this.response = ''
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           this.$parent.loading = true
           // eslint-disable-next-line

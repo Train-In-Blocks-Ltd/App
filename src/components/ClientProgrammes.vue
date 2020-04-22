@@ -131,7 +131,6 @@
         this.response = ''
       },
       async save () {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           this.$parent.$parent.loading = true
           // eslint-disable-next-line
@@ -152,13 +151,15 @@
           )
           // eslint-disable-next-line
           this.response = response_save_programmes.data
-
+          
+          // Set old programmes to null so that they can be repopulated
           var x
           for (x in this.$parent.$parent.posts) {
             if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
               this.$parent.$parent.posts[x].programmes = null
             }
           }
+          // Get the new programmes
           await this.$parent.get_client_details()
 
           this.$parent.$parent.loading = false

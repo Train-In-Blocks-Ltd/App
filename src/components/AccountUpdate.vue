@@ -56,19 +56,9 @@
       }
     },
     async beforeRouteLeave (to, from, next) {
+      // Before navigating away from the page, reset the colors because the user may have changed them but not saved them
       await this.$parent.setup()
       next()
-    },
-    async created () {
-      var d = new Date()
-      var n = d.getTime()
-      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.$parent.setup()
-        await this.$parent.clients()
-        await this.$parent.clients_to_vue()
-        localStorage.setItem('firstLoaded', true)
-        localStorage.setItem('loadTime', n)
-      }
     },
     methods: {
       updateColor (value) {
@@ -77,6 +67,7 @@
       async save () {
         this.$parent.loading = true
         try {
+          // Trouble with access control header so use cors-anywhere
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
             {
               'profile': {
@@ -95,6 +86,7 @@
               }
             }
           )
+          // Get new user token because details have changed
           await axios.post(`${process.env.ISSUER}/oauth2/default/v1/revoke`,
             qs.stringify({
               token: await this.$auth.getAccessToken(),

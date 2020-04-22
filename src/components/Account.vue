@@ -7,19 +7,3 @@
     <h2>Your Subscription</h2>
   </div>
 </template>
-
-<script>
-export default {
-  async created () {
-    var d = new Date()
-    var n = d.getTime()
-    if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-      await this.$parent.setup()
-      await this.$parent.clients()
-      await this.$parent.clients_to_vue()
-      localStorage.setItem('firstLoaded', true)
-      localStorage.setItem('loadTime', n)
-    }
-  }
-}
-</script>

@@ -142,12 +142,14 @@
 
 <template>
     <div id="programme">
+       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
               <h1>{{$route.params.name}}</h1>
+               <!-- Update the programme info -->
               <form class="programme_info" v-on:submit.prevent="update_programme()">
                 <ResizeAuto>
                   <template v-slot:default="{resize}">
@@ -193,29 +195,34 @@
               <p v-if="no_workouts">No workouts yet. You can add one below.</p>
               <p v-if="loading_workouts">Loading workouts...</p>
               <p v-if="error"><b>{{error}}</b></p>
-              <div v-if="!no_workouts && !error" class="workout_wrapper">
-                <div v-for="(workout, index) in programme.workouts"
-                  :key="index">
-                  <p v-on:click="workout_notes_function()" class="workout">
-                    <b>{{workout.name}}</b>
-                    {{workout.date}}
-                  </p>
-                  <div v-show="workout_notes" id="workout_notes">
-                    <div id="workout_notes_header">
-                      <p>
-                        <b>{{workout.name}}</b>
-                        {{workout.date}}
-                      </p>
-                    </div>
-                    <quill v-model="workout.notes" output="html" class="quill"></quill>
-                    <div id="workout_notes_footer">
-                      <div class="loading-grid">
-                        <button class="button" v-on:click="update_workout()">Save</button>
-                        <Loader></Loader>
+              <div class="workout_wrapper">
+                <div v-if="!no_workouts && !error">
+                  <!-- Loop through workouts -->
+                  <div v-for="(workout, index) in programme.workouts"
+                    :key="index">
+                    <!-- Open the notes in a popup when clicked -->
+                    <p v-on:click="workout_notes_function()" class="workout">
+                      <b>{{workout.name}}</b>
+                      {{workout.date}}
+                    </p>
+                    <div v-show="workout_notes" id="workout_notes">
+                      <div id="workout_notes_header">
+                        <p>
+                          <b>{{workout.name}}</b>
+                          {{workout.date}}
+                        </p>
+                      </div>
+                      <quill v-model="workout.notes" output="html" class="quill"></quill>
+                      <div id="workout_notes_footer">
+                        <div class="loading-grid">
+                          <button class="button" v-on:click="update_workout()">Save</button>
+                          <Loader></Loader>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                 <!-- Add a new workout -->
                 <button v-if="!creating" id="add_workout_link" class="button" v-on:click="creation()">New workout</button>
                 <p class="response" v-if="!creating">{{response}}</p>
                 <div class="add_new_workout_container" v-if="creating">
@@ -288,15 +295,18 @@
       }
     },
     async created () {
-      this.get_workouts()
+      await this.get_workouts()
       this.$parent.workout = true
     },
     methods: {
       workout_notes_function () {
+        // Toggle workout_notes
         this.workout_notes = !this.workout_notes
+        // Make notes draggable
         this.$parent.dragElement(document.getElementById('workout_notes'))
       },
       programme_duration (duration) {
+        // Turn the duration of the programme into an array to render the boxes in the table
         const arr = []
         let i
         for (i = 1; i < parseInt(duration, 10) + 1; i++) {
@@ -305,10 +315,13 @@
         return arr
       },
       async update_programme () {
+        // Set loading status to true
         this.$parent.loading = true
+        // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         let x
         var programme
+        // Set the programme variable to the current programme
         for (x in this.$parent.$parent.client_details.programmes) {
           if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
             programme = this.$parent.$parent.client_details.programmes[x]
@@ -340,7 +353,6 @@
               this.$parent.$parent.client_details.programmes[x] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}', '}'))
             }
           }
-
           // Set vue client programmes data to new data
           x = 0
           let y
@@ -380,7 +392,8 @@
           var x
           for (x in this.$parent.$parent.client_details.programmes) {
             // If programme matches programme in route
-            if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
+            // eslint-disable-next-line
+            if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
               // If client_details.programmes.workouts is set to false
               if (this.$parent.$parent.client_details.programmes[x].workouts === false) {
                 this.no_workouts = true
@@ -420,7 +433,6 @@
 
       },
       async save () {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           this.$parent.$parent.loading = true
           // eslint-disable-next-line
@@ -440,6 +452,7 @@
           // eslint-disable-next-line
           this.response = response_save_workouts.data
 
+          // Get the workouts from the API because we've just created a new one
           await this.get_workouts()
 
           this.$parent.$parent.loading = false

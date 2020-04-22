@@ -424,6 +424,8 @@
       fill: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color));
     }
   }
+
+  /* QUILL */
   textarea {
     overflow-y: hidden;
     resize: vertical;
@@ -481,22 +483,31 @@
   }
 </style>
 <template>
+  <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
     <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
     <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
-      <a id="close" v-on:click="sidebar()"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></a>
+       <!-- Mobile open/close sidebar icon -->
+      <a id="close" v-on:click="sidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32">
+          <path d="M0 0h24v24H0V0z" fill="none" class="transparent"/>
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+        </svg>
+      </a>
       <div class="logo_container">
         <router-link to="/" class="logo_link" title="Home">
           <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="74" height="74"><defs><path d="M380 580L380 380L580 380L580 580L380 580ZM260 260L260 580L60 580L60 60L580 60L580 260L260 260Z" id="go6TfJQF0"></path></defs><g><g><g><use xlink:href="#go6TfJQF0"></use></g></g></g></svg>
         </router-link>
-      </div>
+      </div> <!-- .logo_container -->
       <div class="main_nav">
         <div class="nav_item">
             <router-link to="/" id="explore-link">Explore</router-link>
         </div>
+         <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
           :key="index" class="nav_subitem">
           <router-link :to="'/client/'+clients.name+'/'">{{clients.name}}</router-link>
+           <!-- If on client page and the client has programmes display the programmes-->
           <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
             <div v-for="(programme, index) in posts[index].programmes"
               :key="index" class="nav_subitem subitem">
@@ -516,7 +527,7 @@
           <router-link to="/logout" id="logout-link" v-on:click.native="logout()">Logout</router-link>
         </div>
       </div>
-    </div>
+    </div> <!-- .sidebar -->
     <main>
       <router-view :key="$route.fullPath"/>
     </main>
@@ -554,7 +565,17 @@ export default {
   async created () {
     await this.isAuthenticated()
     await this.setup()
-    await this.clients_to_vue()
+
+    var d = new Date()
+    var n = d.getTime()
+    if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
+      await this.clients()
+      await this.clients_to_vue()
+      localStorage.setItem('firstLoaded', true)
+      localStorage.setItem('loadTime', n)
+    } else {
+      await this.clients_to_vue()
+    }
   },
   watch: {
     // Everytime the route changes, check for auth status

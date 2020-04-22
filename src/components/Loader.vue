@@ -1,4 +1,5 @@
 <template>
+  <!-- If App Component data loading=true -->
     <span class="loader" v-if="$parent.$parent.loading">
         <inline-svg :src="require('../assets/loader.svg')"/>
     </span>
