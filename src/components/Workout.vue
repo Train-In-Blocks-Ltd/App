@@ -108,7 +108,7 @@
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
     background-color: rgb( var(--red), var(--green), var(--blue) );
     display: grid;
-    grid-template-rows: 1fr auto 1fr;
+    grid-template-rows: 40px auto;
     align-items: center;
   }
   #workout_notes_header p {
@@ -202,23 +202,23 @@
                     :key="index">
                     <!-- Open the notes in a popup when clicked -->
                     <p v-on:click="workout_notes_function()" class="workout">
-                      <b>{{workout.name}}</b>
-                      {{workout.date}}
+                      <span><b>{{workout.name}}</b></span>
+                      -
+                      <span>{{day(workout.date)}}</span>
+                      -
+                      <span>{{workout.date}}</span>
                     </p>
                     <div v-show="workout_notes" id="workout_notes">
                       <div id="workout_notes_header">
                         <p>
-                          <b>{{workout.name}}</b>
-                          {{workout.date}}
+                          <span><b>{{workout.name}}</b></span>
+                          -
+                          <span>{{day(workout.date)}}</span>
+                          -
+                          <span>{{workout.date}}</span>
                         </p>
                       </div>
                       <quill v-model="workout.notes" output="html" class="quill"></quill>
-                      <div id="workout_notes_footer">
-                        <div class="loading-grid">
-                          <button class="button" v-on:click="update_workout()">Save</button>
-                          <Loader></Loader>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -299,6 +299,18 @@
       this.$parent.workout = true
     },
     methods: {
+      day (date) {
+        var weekday = new Array(7)
+        weekday[0] = "Sun"
+        weekday[1] = "Mon"
+        weekday[2] = "Tue"
+        weekday[3] = "Wed"
+        weekday[4] = "Thu"
+        weekday[5] = "Fri"
+        weekday[6] = "Sat"
+        var d = new Date(date)
+        return weekday[d.getDay()]
+      },
       workout_notes_function () {
         // Toggle workout_notes
         this.workout_notes = !this.workout_notes
