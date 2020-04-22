@@ -611,7 +611,11 @@ export default {
       if (!localStorage.getItem('posts')) {
         await this.clients()
       }
-      this.posts = JSON.parse(localStorage.getItem('posts'))
+      this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+        var textA = a.name.toUpperCase()
+        var textB = b.name.toUpperCase()
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+      })
       this.loading_clients = false
     },
     async clients () {
@@ -625,13 +629,7 @@ export default {
           this.no_clients = false
           this.error = false
         }
-        localStorage.setItem('posts', JSON.stringify(
-          response.data.sort(function (a, b) {
-            var textA = a.name.toUpperCase()
-            var textB = b.name.toUpperCase()
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-          })
-        ))
+        localStorage.setItem('posts', JSON.stringify(response.data))
         this.loading_clients = false
       } catch (e) {
         this.no_clients = false
@@ -647,7 +645,11 @@ export default {
       if (JSON.parse(localStorage.getItem('archive')).length === 0) {
         this.no_archive = true
       } else {
-        this.archive_posts = JSON.parse(localStorage.getItem('archive'))
+        this.archive_posts = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
+          var textA = a.name.toUpperCase()
+          var textB = b.name.toUpperCase()
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        })
       }
     },
     async archive () {
@@ -661,67 +663,101 @@ export default {
           this.no_archive = false
           this.archive_error = false
         }
-        localStorage.setItem('archive', JSON.stringify(
-          response.data.sort(function (a, b) {
-            var textA = a.name.toUpperCase()
-            var textB = b.name.toUpperCase()
-            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-          })
-        ))
+        localStorage.setItem('archive', JSON.stringify(response.data))
       } catch (e) {
         this.no_archive = false
         this.archive_error = e.toString()
       }
     },
-    async client_archive (id) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-      try {
-        // eslint-disable-next-line
-        const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
-        // eslint-disable-next-line
-        this.response = response.data
+    async client_archive (id, index) {
+      if (confirm('Are you sure you want to archive this client?')) {
+        for (var i = 0; i < this.posts.length; i++) {
+          if (this.posts[i].client_id == id) {
+            this.posts.splice(index, 1)
+            if (this.posts.length === 0) {
+              this.no_clients = true
+            }
+          }
+        }
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          // eslint-disable-next-line
+          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
+          // eslint-disable-next-line
+          this.response = response.data
 
-        await this.clients()
-        this.clients_to_vue()
+          await this.clients()
+          this.clients_to_vue()
 
-        await this.archive()
-        this.archive_to_vue()
-      } catch (e) {
-        console.error(`${e}`)
+          await this.archive()
+          this.archive_to_vue()
+        } catch (e) {
+          console.error(`${e}`)
+        }
       }
     },
-    async client_unarchive (id) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-      try {
-        // eslint-disable-next-line
-        const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-        // eslint-disable-next-line
-        this.response = response.data
+    async client_unarchive (id, index) {
+      if (confirm('Are you sure you want to unarchive this client?')) {
+        for (var i = 0; i < this.archive_posts.length; i++) {
+          if (this.archive_posts[i].client_id == id) {
+            var arr = JSON.parse(localStorage.getItem('posts'))
+            arr.push(this.archive_posts[i])
 
-        await this.archive()
-        this.archive_to_vue()
+            localStorage.setItem('posts', JSON.stringify(arr))
+            this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+              var textA = a.name.toUpperCase()
+              var textB = b.name.toUpperCase()
+              return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+            })
 
-        await this.clients()
-        this.clients_to_vue()
-      } catch (e) {
-        console.error(`${e}`)
+            this.archive_posts.splice(index, 1)
+            if (this.archive_posts.length === 0) {
+              this.no_archive = true
+            }
+          }
+        }
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          // eslint-disable-next-line
+          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+          // eslint-disable-next-line
+          this.response = response.data
+
+          await this.archive()
+          this.archive_to_vue()
+
+          await this.clients()
+          this.clients_to_vue()
+        } catch (e) {
+          console.error(`${e}`)
+        }
       }
     },
-    async client_delete (id) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-      try {
-        // eslint-disable-next-line
-        const response = await axios.delete(`https://api.traininblocks.com/clients/${id}`)
-        // eslint-disable-next-line
-        this.response = response.data
+    async client_delete (id, index) {
+      if (confirm('Are you sure you want to delete this client?')) {
+         for (var i = 0; i < this.archive_posts.length; i++) {
+          if (this.archive_posts[i].client_id == id) {
+            this.archive_posts.splice(index, 1)
+            if (this.archive_posts.length === 0) {
+              this.no_archive = true
+            }
+          }
+        }
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          // eslint-disable-next-line
+          const response = await axios.delete(`https://api.traininblocks.com/clients/${id}`)
+          // eslint-disable-next-line
+          this.response = response.data
 
-        await this.archive()
-        this.archive_to_vue()
+          await this.archive()
+          this.archive_to_vue()
 
-        await this.clients()
-        this.clients_to_vue()
-      } catch (e) {
-        console.error(`${e}`)
+          await this.clients()
+          this.clients_to_vue()
+        } catch (e) {
+          console.error(`${e}`)
+        }
       }
     }
   }
