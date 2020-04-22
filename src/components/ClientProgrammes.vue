@@ -85,7 +85,7 @@
             </template>
             </ResizeAuto>
             <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_programme.duration" required/>
-            <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" inputmode="decimal" v-model="new_programme.start" required />
+            <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
             <label style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
             <quill v-model="new_programme.notes" output="html" class="quill"></quill>
             <div class="form_buttons">

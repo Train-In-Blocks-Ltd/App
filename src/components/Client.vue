@@ -141,7 +141,7 @@
       <form class="client_info" v-on:submit.prevent="update_client()">
         <input type="text" id="title" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
         <label><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-        <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14"/></label>
+        <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="loading-grid">
           <input v-if="edit" type="submit" class="button" value="Save" />
           <Loader></Loader>

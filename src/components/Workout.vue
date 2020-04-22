@@ -162,7 +162,7 @@
                   </template>
                 </ResizeAuto>
                 <label style="margin-top: 1rem"><b>Duration: </b><input type="number" id="duration" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/> weeks</label>
-                <label style="align-items: end"><b>Start: </b><input type="date" id="start" name="start" inputmode="decimal" v-model="programme.start" required v-on:click="editing()"/></label>
+                <label style="align-items: end"><b>Start: </b><input type="date" id="start" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
                 <div class="loading-grid" v-if="edit">
                   <input type="submit" class="button" value="Save" />
                   <Loader></Loader>
