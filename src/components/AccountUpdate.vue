@@ -55,6 +55,9 @@
         res: ''
       }
     },
+    async created () {
+      await this.$parent.setup()
+    },
     async beforeRouteLeave (to, from, next) {
       // Before navigating away from the page, reset the colors because the user may have changed them but not saved them
       await this.$parent.setup()

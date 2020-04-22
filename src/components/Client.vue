@@ -195,8 +195,7 @@
       }
     },
     async created () {
-      // Call clients_to_vue again because parent call on created is executed after and get_client_details needs clients_to_vue to happen first
-      await this.$parent.clients_to_vue()
+      await this.$parent.setup()
       await this.get_client_details()
     },
     methods: {

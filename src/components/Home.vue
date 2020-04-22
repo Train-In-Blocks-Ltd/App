@@ -63,6 +63,9 @@
         search: ''
       }
     },
+    async created () {
+      await this.$parent.setup()
+    },
     methods: {
       creation () {
         this.creating = true

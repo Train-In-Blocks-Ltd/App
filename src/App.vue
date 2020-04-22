@@ -564,18 +564,6 @@ export default {
   },
   async created () {
     await this.isAuthenticated()
-    await this.setup()
-
-    var d = new Date()
-    var n = d.getTime()
-    if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-      await this.clients()
-      await this.clients_to_vue()
-      localStorage.setItem('firstLoaded', true)
-      localStorage.setItem('loadTime', n)
-    } else {
-      await this.clients_to_vue()
-    }
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -593,6 +581,15 @@ export default {
       this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
       this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
       this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
+
+      var d = new Date()
+      var n = d.getTime()
+      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
+        await this.clients()
+        localStorage.setItem('firstLoaded', true)
+        localStorage.setItem('loadTime', n)
+      }
+      await this.clients_to_vue()
     },
     hexToRgb (hex) {
       var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)

@@ -32,6 +32,7 @@
       }
     },
     async created () {
+      await this.$parent.setup()
       await this.$parent.archive_to_vue()
     }
   }

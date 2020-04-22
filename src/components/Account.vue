@@ -7,3 +7,10 @@
     <h2>Your Subscription</h2>
   </div>
 </template>
+<script>
+export default {
+  async created () {
+    await this.$parent.setup()
+  }
+}
+</script>
