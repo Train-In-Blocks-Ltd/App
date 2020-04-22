@@ -201,7 +201,7 @@
                   <div v-for="(workout, index) in programme.workouts"
                     :key="index">
                     <!-- Open the notes in a popup when clicked -->
-                    <p v-on:click="workout_notes_function()" class="workout">
+                    <p v-on:click="workout_notes_function(workout.id)" class="workout">
                       <span><b>{{workout.name}}</b></span>
                       -
                       <span>{{day(workout.date)}}</span>
@@ -311,11 +311,32 @@
         var d = new Date(date)
         return weekday[d.getDay()]
       },
-      workout_notes_function () {
+      workout_notes_function (id) {
         // Toggle workout_notes
         this.workout_notes = !this.workout_notes
         // Make notes draggable
         this.$parent.dragElement(document.getElementById('workout_notes'))
+
+        // Set vue self
+        var self = this
+
+        function click(e) {
+          // If box is open
+          if (self.workout_notes) {
+            if (!document.getElementById('workout_notes').contains(e.target)) {
+              // Update the workout
+              self.update_workout(id)
+              window.removeEventListener("click", click)
+            }
+          }
+        }
+        // Wait 1 second before applying the event listener to avoid registering the click to open the box
+        setTimeout( 
+          function() {
+            // Add event listener for clicking outside box
+            window.addEventListener('click', click)
+          }
+        , 1000)
       },
       programme_duration (duration) {
         // Turn the duration of the programme into an array to render the boxes in the table
@@ -427,7 +448,7 @@
                 var y
                 for (y in this.$parent.$parent.posts) {
                   // If client matches client in route
-                  if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
+                  if (this.$parent.$parent.posts[x].name == this.$route.params.name) {
                     this.$parent.$parent.posts[x] = this.$parent.$parent.client_details
                   }
                 }
@@ -441,8 +462,38 @@
           this.error = e.toString()
         }
       },
-      async update_workout () {
+      async update_workout (id) {
+        // Close the box
+        this.workout_notes = !this.workout_notes
 
+        // Set auth header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+
+        let x
+        // Set the programme variable to the current programme
+        for (x in this.$parent.$parent.client_details.programmes) {
+          if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
+            var programme = this.$parent.$parent.client_details.programmes[x]
+            var y
+            for (y in programme.workouts) {
+              if (programme.workouts[y].id === id) {
+                var workouts_id = programme.workouts[y].id
+                var workouts_notes = programme.workouts[y].notes
+              }
+            }
+          }
+        }
+        try {
+          // eslint-disable-next-line
+          await axios.post(`https://api.traininblocks.com/workouts`,
+            {
+              'id': workouts_id,
+              'notes': workouts_notes
+            }
+          )
+        } catch (e) {
+          this.programme_update_error = e.toString()
+        }
       },
       async save () {
         try {
