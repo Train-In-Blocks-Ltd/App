@@ -16,7 +16,7 @@
             <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
           </router-link>
           <div class="client_update">
-            <span v-on:click="$parent.client_archive(clients.client_id, index)" title="Archive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></span>
+            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)" title="Archive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></a>
           </div>
         </div>
       </div>

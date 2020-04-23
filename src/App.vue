@@ -350,7 +350,7 @@
     font-size: 0.9rem;
     text-align: right;
   }
-  .client_update span {
+  .client_update a {
     height: 32px;
     width: 32px;
     transition: 0.5s;
@@ -360,12 +360,12 @@
     align-items: center;
     justify-content: center;
   }
-  .client_update span:hover {
+  .client_update a:hover {
     cursor: pointer;
     border-radius: 50px;
     background-color: rgba( calc(var(--red) + 45), calc(var(--green) + 45), calc(var(--blue) + 45), 0.8 );
   }
-  .client_update span:hover svg path:not(.transparent) {
+  .client_update a:hover svg path:not(.transparent) {
     fill: rgba(
       var(--accessible-color),
       var(--accessible-color),
