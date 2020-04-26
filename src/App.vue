@@ -507,13 +507,6 @@
         <div v-for="(clients, index) in posts"
           :key="index" class="nav_subitem">
           <router-link :to="'/client/'+clients.name+'/'">{{clients.name}}</router-link>
-           <!-- If on client page and the client has programmes display the programmes-->
-          <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
-            <div v-for="(programme, index) in posts[index].programmes"
-              :key="index" class="nav_subitem subitem">
-              <router-link :to="'/client/'+clients.name+'/programme/'+programme.id">{{programme.name}}</router-link>
-            </div>
-          </div>
         </div>
       </div>
       <div class="account_nav_container">
