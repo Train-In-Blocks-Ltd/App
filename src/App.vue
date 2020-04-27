@@ -161,7 +161,7 @@
   .nav_item:last-of-type {
     padding-bottom: 0;
   }
-  pwa-update, .vc-chrome-toggle-icon-highlight, .vc-chrome-alpha-wrap, .vc-chrome-field:nth-of-type(4) {
+  .vc-chrome-toggle-icon-highlight, .vc-chrome-alpha-wrap, .vc-chrome-field:nth-of-type(4) {
     display: none;
   }
   .vc-chrome-body, .vc-chrome-fields .vc-input__input  {
