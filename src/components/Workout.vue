@@ -136,7 +136,14 @@
     display: block;
     border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
     padding: 0.5rem 0;
-    cursor: pointer
+    cursor: pointer;
+    width: 20rem;
+
+    transition: width 1500ms;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .workout:hover {
+    width: 25rem;
   }
 </style>
 

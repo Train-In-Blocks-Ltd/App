@@ -45,17 +45,13 @@
   #add_programme_link {
     margin-top: 1.75rem;
   }
-  #duration, #date {
-    width: auto
-  }
-  .add_new_programme_container .quill {
+  .add_new_programme_container {
     margin: 0.75rem 0;
-    background-color: rgba( calc(var(--red) + 45), calc(var(--green) + 45), calc(var(--blue) + 45), 0.8 );
   }
 </style>
 <template>
     <div>
-      <h2>Programmes</h2>
+      <h2>Blocks</h2>
       <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
       <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
       <p v-if="this.error"><b>{{error}}</b></p>
@@ -73,21 +69,11 @@
       <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New programme</button>
       <p class="response" v-if="!creating">{{response}}</p>
       <div class="add_new_programme_container" v-if="creating">
-        <h3>Add new programme</h3>
-        <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-            <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/>
-            <label for="description">
-            <b>Description: </b>
-            </label>
-            <ResizeAuto>
-            <template v-slot:default="{resize}">
-                <textarea type="text" id="description" name="description" v-model="new_programme.desc" required @input="resize" rows="1"></textarea>
-            </template>
-            </ResizeAuto>
-            <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_programme.duration" required/>
-            <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
-            <label style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
-            <quill v-model="new_programme.notes" output="html" class="quill"></quill>
+        <h3 class="add-new">New Block</h3>
+        <form name="add_program" v-on:submit.prevent="save()">
+            <input type="text" id="name" class="input-small" name="name" autocomplete="off" placeholder="Name" spellcheck="false" v-model="new_programme.name" required/><br>
+            <input type="number" id="duration" class="input-xsmall" name="duration" autocomplete="off" placeholder="Weeks" spellcheck="false" inputmode="decimal" v-model="new_programme.duration" required/>
+            <input type="date" id="start" class="input-xsmall" name="start" autocomplete="off" spellcheck="false" v-model="new_programme.start" required /><br>
             <div class="form_buttons">
                 <input type="submit" class="button" value="Save" />
                 <button class="button" v-on:click="close()">Close</button>

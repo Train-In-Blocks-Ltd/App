@@ -22,14 +22,14 @@
       var(--accessible-color)
     );
     padding: 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   .client_info textarea {
     background-color: initial!important;
     border: none;
     color: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color) );
     padding: 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin: 0;
   }
   .client_info {

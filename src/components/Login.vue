@@ -114,7 +114,7 @@
 
 <template>
   <div id="login" v-if="!this.$parent.authenticated">
-    <div id="okta-signin-container"></div>
+    <div id="okta-signin-container" spellcheck="false"></div>
   </div>
 </template>
 
