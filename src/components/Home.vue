@@ -25,10 +25,10 @@
     <p class="response" v-if="!creating">{{response}}</p>
     <div class="add_new_client_container" v-if="creating">
       <h3 class="add-new">New Client</h3>
-      <form name="add_client" class="form_grid" v-on:submit.prevent="save()">
-        <input type="text" id="name" class="input-small" name="name" autocomplete="off" placeholder="Name" spellcheck="false" v-model="new_client.name" required/>
-        <input type="email" id="email" class="input-small" name="email" autocomplete="off" placeholder="Email" spellcheck="false" v-model="new_client.email" required/>
-        <input type="tel" id="number" class="input-small" name="number" inputmode="tel" autocomplete="off" placeholder="Mobile" spellcheck="false" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" />
+      <form name="add_client" class="form_grid" spellcheck="false" v-on:submit.prevent="save()">
+        <input type="text" id="name" class="input-small" name="name" placeholder="Name" v-model="new_client.name" required/>
+        <input type="email" id="email" class="input-small" name="email" placeholder="Email" v-model="new_client.email" required/>
+        <input type="tel" id="number" class="input-small" name="number" inputmode="tel" placeholder="Mobile" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" />
         <quill v-model="new_client.notes" output="html" class="quill"></quill>
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />

@@ -92,19 +92,20 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    margin: 0.75rem 0;
-    padding: 0.5rem;
-
-    border: 1px solid #282828;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 0.10em;
-    display: inline-block;
     background-color: rgba(
       calc(var(--red) + 45),
       calc(var(--green) + 45),
       calc(var(--blue) + 45),
       0.8
     )!important;
+    margin: 0.75rem 0;
+    padding: 0.5rem;
+    border: 1px solid #282828;
+    display: inline-block;
+
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.10em;
+
   }
   .form_grid {
     display: flex;
@@ -370,7 +371,7 @@
     transition: opacity 1500ms;
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   }
-  .search:focus{
+  .search:hover, :focus {
     opacity: 100%;
   }
   .add_new_client_container {
