@@ -10,7 +10,6 @@
     flex-direction: column;
   }
   body {
-    background-color: #fff;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     min-height: 100vh;
@@ -102,6 +101,7 @@
     padding: 0.5rem;
     border: 1px solid #282828;
     display: inline-block;
+    resize: none;
 
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: 0.10em;
@@ -140,6 +140,7 @@
     display: grid;
     align-items: start;
     padding: 5rem 3.75rem;
+    background: #f9f9f9;
   }
   main > div {
     max-width: calc(100% - 3.75rem - 3.75rem - 3.75rem);
@@ -159,6 +160,7 @@
     position: sticky;
     height: 100vh;
     top: 0;
+    background-color: #fff;
   }
   .logo_container {
     text-align: center;
@@ -175,14 +177,14 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    )
+    );
   }
   .account_nav_container {
     align-self: end;
     text-align: center;
   }
   .nav_item {
-    padding: 1rem 0;
+    padding: 0.5rem 0;
   }
   .nav_item:last-of-type {
     padding-bottom: 0;
@@ -287,21 +289,75 @@
       0.6
     );
   }
+  
+  /* Nav Spacing */
+  .nav_item {
+    font-size: 1.2em;
+  }
   .nav_subitem {
-    padding: 0.8rem 0;
-  }
-  .nav_subitem:before {
-    content: '>  '
-  }
-  .nav_subitem a {
-    font-weight: 400;
+    padding: 0.4rem 0;
   }
   .nav_subitem.subitem {
-    padding-left: 1rem;
+    padding: 0.8rem 0 0 0.8rem;
   }
   .nav_subitem.subitem:last-of-type {
-    padding-bottom: 0;
+    padding-bottom: 1rem;
   }
+
+  /* Nav--Animated Underline */
+  .nav_item > a {
+    color: #282828;
+    text-decoration: none;
+    position: relative;
+  }
+  .nav_item > a:hover {
+    color: #282828;
+  }
+  .nav_item > a:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #282828;
+
+    visibility: hidden;
+    transition: all 0.3s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .nav_item > a:hover:before {
+    visibility: visible;
+    width: 100%;
+  }
+  .nav_subitem > a {
+    position: relative;
+
+    font-weight: 400;
+    color: #282828;
+    text-decoration: none;
+  }
+  .nav_subitem > a:hover {
+    color: #282828;
+  }
+  .nav_subitem > a:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #282828;
+
+    visibility: hidden;
+    transition: all 0.3s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .nav_subitem > a:hover:before {
+    visibility: visible;
+    width: 100%;
+  }
+
   .main_nav {
     border-bottom: 0.5px solid rgba(
       var(--accessible-color),
@@ -459,13 +515,12 @@
   /* QUILL */
   textarea {
     overflow-y: hidden;
-    resize: vertical;
+    resize: none;
     appearance: none;
     -webkit-appearance: none;
   }
   .quill {
     margin: 0.75rem 0;
-    border: 1px solid #282828;
   }
   .ql-toolbar.ql-snow {
     border:none;
@@ -479,11 +534,13 @@
   }
   .ql-editor {
     min-height: 400px;
+    max-height: 400px ;
     color:rgb(
               var(--accessible-color),
               var(--accessible-color),
               var(--accessible-color)
-            )
+            );
+    overflow-y: auto;
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: rgba(
@@ -509,6 +566,24 @@
               0.6
             )
   }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+      width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+      background: transparent; 
+  }
+    
+  ::-webkit-scrollbar-thumb {
+      background: #00000020; 
+  }
+    
+  ::-webkit-scrollbar-thumb:hover {
+      background: #00000030;
+  }
+
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->

@@ -29,11 +29,10 @@
         <input type="text" id="name" class="input-small" name="name" placeholder="Name" v-model="new_client.name" required/>
         <input type="email" id="email" class="input-small" name="email" placeholder="Email" v-model="new_client.email" required/>
         <input type="tel" id="number" class="input-small" name="number" inputmode="tel" placeholder="Mobile" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" />
-        <quill v-model="new_client.notes" output="html" class="quill"></quill>
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
-          <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="fullPage"></loading>
+          <Loader></Loader>
         </div>
       </form>
     </div>
@@ -43,12 +42,11 @@
 <script>
   import axios from 'axios';
   import qs from 'qs';
-  import Loading from 'vue-loading-overlay';
-  import 'vue-loading-overlay/dist/vue-loading.css';
+  import Loader from './Loader';
 
   export default {
     components: {
-      Loading
+      Loader
     },
     data: function () {
       return {
@@ -61,8 +59,6 @@
           notes: '<p><strong>Age:</strong></p><p><strong>Blood pressure:</strong></p><p><strong>Height:</strong></p><p><strong>BMI:</strong></p><p><strong>Body fat:</strong></p><p><strong>Muscle Mass</strong></p><p><strong>Hydration:</strong></p><p><br></p><p><strong>Goals:</strong></p><p><br></p><p><strong>Lifestyle:</strong></p><p><br></p><p><strong>Barriers to exercise:</strong></p><p><br></p><p><strong>Motivation:</strong></p><p><br></p><p><strong>Preferences:</strong></p><p><br></p>'
         },
         search: '',
-        isLoading: false,
-        fullPage: true
       }
     },
     async created () {
@@ -124,16 +120,6 @@
 
       return msg[sel];
       },
-      doAjax() {
-                this.isLoading = true;
-                // simulate AJAX
-                setTimeout(() => {
-                  this.isLoading = false
-                },5000)
-      },
-      onCancel() {
-        console.log('User cancelled the loader.')
-      }
     }
   }
 </script>

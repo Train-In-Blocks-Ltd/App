@@ -60,16 +60,15 @@
             :key="index" class="program_container">
             <router-link class="program_link" :to="'programme/'+programme.id">
             <h3>{{programme.name}}</h3>
-            <p class="desc">"{{programme.description}}"</p>
             <p><b>Duration: </b>{{programme.duration}}</p>
             <p><b>Start: </b>{{programme.start}}</p>
             </router-link>
         </div>
       </div>
-      <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New programme</button>
+      <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New Block</button>
       <p class="response" v-if="!creating">{{response}}</p>
       <div class="add_new_programme_container" v-if="creating">
-        <h3 class="add-new">New Block</h3>
+        <h3 class="add-new">New Block Incoming...</h3>
         <form name="add_program" v-on:submit.prevent="save()">
             <input type="text" id="name" class="input-small" name="name" autocomplete="off" placeholder="Name" spellcheck="false" v-model="new_programme.name" required/><br>
             <input type="number" id="duration" class="input-xsmall" name="duration" autocomplete="off" placeholder="Weeks" spellcheck="false" inputmode="decimal" v-model="new_programme.duration" required/>

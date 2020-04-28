@@ -163,11 +163,6 @@
                     <textarea type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()" @input="resize" rows="1"></textarea>
                   </template>
                 </ResizeAuto>
-                <ResizeAuto>
-                  <template v-slot:default="{resize}">
-                  <textarea type="text" id="description" name="description" v-model="programme.description" v-on:click="editing()" @input="resize" rows="1"></textarea>
-                  </template>
-                </ResizeAuto>
                 <label style="margin-top: 1rem"><b>Duration: </b><input type="number" id="duration" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/> weeks</label>
                 <label style="align-items: end"><b>Start: </b><input type="date" id="start" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
                 <div class="loading-grid" v-if="edit">
@@ -235,10 +230,8 @@
                 <div class="add_new_workout_container" v-if="creating">
                   <h3>Add new workout</h3>
                   <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-                    <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
-                    <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
-                    <label style="margin: 1.5rem 0; align-self:start"><b>Content: </b></label>
-                    <quill v-model="new_workout.notes" output="html" class="quill border"></quill>
+                    <input type="text" id="name" class="input-small" name="name" placeholder="Name" v-model="new_workout.name" required />
+                    <input type="date" id="date" class="input-small" name="date" v-model="new_workout.date" required />
                     <div class="form_buttons">
                         <input type="submit" class="button" value="Save" />
                         <button class="button" v-on:click="close()">Close</button>
