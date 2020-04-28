@@ -243,8 +243,8 @@
             </div><!-- workouts -->
             <div class="notes" v-on:click="editing1()">
               <div id="programme_notes_header">
-                <p>Programme Notes</p>
-                <h3>Data & Statistics</h3>
+                <p>Block Notes</p>
+                <h3>Statistics</h3>
               </div>
               <quill v-model="programme.notes" output="html" class="quill border"></quill>
               <div id="programme_notes_footer">

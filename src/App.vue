@@ -583,7 +583,6 @@
   ::-webkit-scrollbar-thumb:hover {
       background: #00000030;
   }
-
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->

@@ -20,7 +20,7 @@
   }
   .program_link:hover { 
     text-decoration: none;
-    border: 2px solid rgb(
+    border: 2px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color));
@@ -51,7 +51,14 @@
 </style>
 <template>
     <div>
-      <h2>Blocks</h2>
+
+      <!-- This is where we stitch all the blocks all-together! -->
+      <h2 style="margin-top:1rem">Programme</h2>
+      <div style="display: flex">
+        <div style="background-color: #c4c4c4; width: 80%; height: 20vh; text-align: center;">Visualisation Goes Here!!</div>
+        <div style="background-color: #e1e1e1; width: 20%; height: 20vh; text-align: center;">Programme Data Goes Here!!</div>
+      </div>
+      <h2 style="font-size: 2em">Blocks</h2>
       <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
       <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
       <p v-if="this.error"><b>{{error}}</b></p>

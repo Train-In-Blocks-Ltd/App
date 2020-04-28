@@ -177,6 +177,7 @@
 <script>
   import axios from 'axios'
   import Loader from './Loader'
+  import Loading from 'vue-loading-overlay'
 
   export default {
     components: {
