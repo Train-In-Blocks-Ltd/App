@@ -33,7 +33,7 @@
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
-          <Loader></Loader>
+          <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="fullPage"></loading>
         </div>
       </form>
     </div>
@@ -41,13 +41,14 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import qs from 'qs'
-  import Loader from './Loader'
+  import axios from 'axios';
+  import qs from 'qs';
+  import Loading from 'vue-loading-overlay';
+  import 'vue-loading-overlay/dist/vue-loading.css';
 
   export default {
     components: {
-      Loader
+      Loading
     },
     data: function () {
       return {
@@ -59,7 +60,9 @@
           number: '',
           notes: '<p><strong>Age:</strong></p><p><strong>Blood pressure:</strong></p><p><strong>Height:</strong></p><p><strong>BMI:</strong></p><p><strong>Body fat:</strong></p><p><strong>Muscle Mass</strong></p><p><strong>Hydration:</strong></p><p><br></p><p><strong>Goals:</strong></p><p><br></p><p><strong>Lifestyle:</strong></p><p><br></p><p><strong>Barriers to exercise:</strong></p><p><br></p><p><strong>Motivation:</strong></p><p><br></p><p><strong>Preferences:</strong></p><p><br></p>'
         },
-        search: ''
+        search: '',
+        isLoading: false,
+        fullPage: true
       }
     },
     async created () {
@@ -120,6 +123,16 @@
       var sel = Math.floor(Math.random() * 3);
 
       return msg[sel];
+      },
+      doAjax() {
+                this.isLoading = true;
+                // simulate AJAX
+                setTimeout(() => {
+                  this.isLoading = false
+                },5000)
+      },
+      onCancel() {
+        console.log('User cancelled the loader.')
       }
     }
   }
