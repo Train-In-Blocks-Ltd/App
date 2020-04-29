@@ -99,7 +99,6 @@
     )!important;
     margin: 0.75rem 0;
     padding: 0.5rem;
-    border: 1px solid #282828;
     display: inline-block;
     resize: none;
 
