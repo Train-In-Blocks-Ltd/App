@@ -36,6 +36,7 @@
   .okta-form-input-field input:hover, .okta-form-input-field input:focus {
     width: 100%;
     outline-width: 0;
+    border-bottom: 1px solid #888;
   }
   .okta-form-input-error {
     width: 100%;
