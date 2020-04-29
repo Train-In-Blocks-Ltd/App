@@ -101,7 +101,7 @@
     padding: 0.5rem;
     display: inline-block;
     resize: none;
-
+    border: 1px solid #282828;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: 0.10em;
   }
@@ -138,9 +138,6 @@
     display: grid;
     align-items: start;
     padding: 5rem 3.75rem;
-  }
-  main > div {
-    max-width: calc(100% - 3.75rem - 3.75rem - 3.75rem);
   }
   #app.authenticated {
     display: grid;
@@ -566,6 +563,7 @@
   /* Scrollbar */
   ::-webkit-scrollbar {
       width: 6px;
+      height: 6px;
   }
 
   ::-webkit-scrollbar-track {

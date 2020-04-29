@@ -27,9 +27,10 @@
   }
   .programme_grid {
     display: grid;
-    grid-template-areas: "table notes"
-                          "workouts notes";
-    grid-template-columns: 1fr 0.33fr;
+    grid-template-areas: 
+    "table notes"
+    "workouts notes";
+    grid-template-columns: 2fr 1fr;
     grid-gap: 2rem;
   }
   .notes {
@@ -76,20 +77,31 @@
   .programme_grid {
     margin-top: 2.5rem;
   }
+  .programme_table {
+    overflow-x: auto ;
+  }
+  .programme_container {
+    margin-bottom: 5px;
+  }
   .programme_table > *, .programme_duration_container > * {
     border: 1px solid rgb(
           var(--accessible-color),
           var(--accessible-color),
           var(--accessible-color)
         );
-    padding: 1rem;
-    display: grid;
+    display: inline-block;
     place-items: center;
     font-weight: bold;
-    width: 100%;
+    text-align: center  ;
   }
   .programme_duration_container > * {
-    border-top: none;
+    border-left: none;
+    border-bottom: none;
+    padding: 30px 0px;
+    width: 40px;
+  }
+  .programme_duration_container > *:last-of-type {
+    border-right: none;
   }
   .programme_duration_container {
     display: grid;
@@ -183,12 +195,12 @@
           </div> <!-- top_grid -->
           <div class="programme_grid">
             <div class="programme_table">
-              <div class="programme_name">
-                <p>{{programme.name}}</p>
-              </div>
-              <div class="programme_duration_container">
-                <div v-for="item in programme_duration(programme.duration)" :key="item">
-                  {{item}}
+              <div class="programme_container">
+                <p style="margin: 30px 0px">{{programme.name}}</p>
+                <div class="programme_duration_container">
+                  <div v-for="item in programme_duration(programme.duration)" :key="item">
+                    {{item}}
+                  </div>
                 </div>
               </div>
             </div> <!-- programme_table -->
