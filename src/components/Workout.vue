@@ -103,7 +103,7 @@
     border-right: none;
   }
   .programme_duration_container > *:hover {    
-    box-shadow: inset 0px 20px 30px -30px rgba(40,40,40,0.5);
+    box-shadow: inset 0px 20px 30px -30px rgba(128, 93, 93, 0.5);
     
     cursor: pointer;
   }
