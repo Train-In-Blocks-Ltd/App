@@ -105,7 +105,6 @@
 
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: 0.10em;
-
   }
   .form_grid {
     display: flex;
@@ -140,7 +139,6 @@
     display: grid;
     align-items: start;
     padding: 5rem 3.75rem;
-    background: #f9f9f9;
   }
   main > div {
     max-width: calc(100% - 3.75rem - 3.75rem - 3.75rem);
@@ -160,7 +158,6 @@
     position: sticky;
     height: 100vh;
     top: 0;
-    background-color: #fff;
   }
   .logo_container {
     text-align: center;
