@@ -2,9 +2,47 @@
   * {
     box-sizing: border-box;
   }
+  /* === GLOBAL INPUT === */
   input:focus, textarea:focus {
     outline-width: 0;
   }
+  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    background-color: rgba(
+      calc(var(--red) + 45),
+      calc(var(--green) + 45),
+      calc(var(--blue) + 45),
+      0.8
+    )!important;
+    margin: 0.75rem 0;
+    padding: 0.5rem;
+    display: inline-block;
+    resize: none;
+    border: 1px solid #282828;
+
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.10em;
+  }
+  .input-xsmall {
+    width: 10rem;
+    height: 2.6em;
+  }
+  .input-small {
+    width: 20.3rem;
+  }
+  .input-medium {
+    width: 25rem;
+  }
+  /*-------------------------------------------------------------------------------------*/
   #home {
     display: flex;
     flex-direction: column;
@@ -65,7 +103,7 @@
       calc(var(--blue) + 30),
       0.8
     );
-    margin: 0.5rem 0;
+    margin: 1rem 0 0.5rem 0;
     display: inline-block;
     transition: background-color 0.4s, color 0.2s;
   }
@@ -80,31 +118,7 @@
     background-color: #282828;
     color: #fff;
   }
-  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    border-bottom: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      0.8
-    )!important;
-    margin: 0.75rem 0;
-    padding: 0.5rem;
-    display: inline-block;
-    resize: none;
-    border: 1px solid #282828;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 0.10em;
-  }
+
   .form_grid {
     display: flex;
     flex-direction: column;
@@ -115,16 +129,6 @@
   .add-new {
     font-size: 2em;
     margin: 2rem 0 0.2rem 0;
-  }
-  .input-xsmall {
-    width: 10rem;
-    height: 2.6em;
-  }
-  .input-small {
-    width: 20.3rem;
-  }
-  .input-medium {
-    width: 25rem;
   }
   .form_buttons {
     place-content: start;
@@ -504,7 +508,7 @@
       fill: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color));
     }
   }
-
+  
   /* QUILL */
   textarea {
     overflow-y: hidden;

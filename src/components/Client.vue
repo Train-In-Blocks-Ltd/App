@@ -1,10 +1,9 @@
 <style>
   #title {
-    text-transform: capitalize!important;
     margin-top: -1rem;
+    text-transform: capitalize!important;
     font-weight: bold;
     font-size: 3.75rem;
-    text-transform: uppercase;
     letter-spacing: 0.15em;
   }
   h2 {
@@ -14,13 +13,7 @@
       margin-top: 4rem;
   }
   .client_info input:not([type="submit"]) {
-    background-color: initial!important;
     border: none;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
     padding: 0;
     font-size: 0.9rem;
   }
@@ -62,10 +55,35 @@
   .floating_nav a:first-of-type {
     margin-top: 0;
   }
-  .floating_nav a {
+  .floating_nav > a {
     display: block;
     margin: 0.5rem 0;
+    position: relative;
+
+    color: #282828;
+    text-decoration: none;
   }
+  .floating_nav > a:hover {
+    color: #282828;
+  }
+  .floating_nav > a:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    bottom: 0;
+    right: 0;
+    background-color: #282828;
+
+    visibility: hidden;
+    transition: all 0.3s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .floating_nav > a:hover:before {
+    visibility: visible;
+    width: 100%;
+  }
+
   #client {
     position: relative;
   }

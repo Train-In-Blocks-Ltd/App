@@ -16,7 +16,6 @@
       var(--accessible-color)
     );
     padding: 0;
-    font-size: 1rem;
   }
   #title, h3 {
     font-size: 1.25rem;
@@ -30,7 +29,7 @@
     grid-template-areas: 
     "table notes"
     "workouts notes";
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-gap: 2rem;
   }
   .notes {
@@ -103,6 +102,11 @@
   .programme_duration_container > *:last-of-type {
     border-right: none;
   }
+  .programme_duration_container > *:hover {    
+    box-shadow: inset 0px 20px 30px -30px rgba(40,40,40,0.5);
+    
+    cursor: pointer;
+  }
   .programme_duration_container {
     display: grid;
     grid-auto-flow: column;
@@ -157,6 +161,63 @@
   .workout:hover {
     width: 25rem;
   }
+  .client-info--workout {
+    height: auto; 
+    margin: 0; 
+    font-size: 1em;
+  }
+  .label--workout {
+    align-items: end;
+    display: inline-block;
+  }
+  .label--workout > select {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #282828;
+    outline-width: 0;
+    width: 50%;
+
+    transition: all 1000ms;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .label--workout > select:hover {
+    width: 60%;
+    cursor: pointer;
+  }
+  .label--workout input, .label--workout select {
+    font-size: 1em;
+  }
+
+  #programme_notes_header > p {
+    display: block;
+    margin: 0.5rem 0;
+    position: relative;
+    width: fit-content;
+
+    color: #282828;
+    text-decoration: none;
+  }
+  #programme_notes_header > p:hover {
+    color: #282828;
+    cursor: pointer;
+  }
+  #programme_notes_header > p:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #282828;
+
+    visibility: hidden;
+    transition: all 0.3s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  #programme_notes_header > p:hover:before {
+    visibility: visible;
+    width: 100%;
+  }
 </style>
 
 <template>
@@ -175,10 +236,15 @@
                     <textarea type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()" @input="resize" rows="1"></textarea>
                   </template>
                 </ResizeAuto>
-                <label style="margin-top: 1rem"><b>Duration: </b><input type="number" id="duration" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/> weeks</label>
-                <label style="align-items: end"><b>Start: </b><input type="date" id="start" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
+                <label class="label--workout">Duration: <input type="number" id="duration" class="client-info--workout" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
+                <label class="label--workout">Start: <input type="date" id="start" class="client-info--workout" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
+                <label class="label--workout">Follow to: 
+                  <select>
+                    <option>Select a Block</option>
+                  </select>
+                </label>
                 <div class="loading-grid" v-if="edit">
-                  <input type="submit" class="button" value="Save" />
+                  <input style="margin: 1rem 0 0.5rem 0" type="submit" class="button" value="Save" />
                   <Loader></Loader>
                 </div>
                 <p v-if="programme_update_response"><b>{{programme_update_response}}</b></p>
@@ -258,13 +324,7 @@
                 <p>Block Notes</p>
                 <h3>Statistics</h3>
               </div>
-              <quill v-model="programme.notes" output="html" class="quill border"></quill>
-              <div id="programme_notes_footer">
-                <div class="loading-grid" v-if="edit1">
-                  <button class="button" v-on:click="update_programme()">Save</button>
-                  <Loader></Loader>
-                </div>
-              </div>
+              <div style="background-color: #c4c4c4; height: 50vh; text-align: center; line-height: 50vh;">Graph and data goes here!!</div>
               <p v-if="programme1_update_response"><b>{{programme1_update_response}}</b></p>
               <p v-if="programme1_update_error"><b>{{programme1_update_error}}</b></p>
             </div>  <!-- notes -->
