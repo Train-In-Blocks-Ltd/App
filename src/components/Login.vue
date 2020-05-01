@@ -6,6 +6,9 @@
     padding: 6rem 4rem;
     min-width: 500px;
   }
+  .auth-org-logo {
+    margin: 5vh 0;
+  }
   .okta-form-title {
     font-size: 2rem;
     text-align: left;
@@ -36,6 +39,7 @@
   .okta-form-input-field input:hover, .okta-form-input-field input:focus {
     width: 100%;
     border-bottom: 1px solid #888;
+    outline-width: 0;
   }
   .okta-form-input-error {
     width: 100%;
@@ -129,6 +133,7 @@ export default {
         issuer: process.env.ISSUER + '/oauth2/default',
         clientId: process.env.CLIENT_ID,
         redirectUri: process.env.URL + '/implicit/callback',
+        logo: require('@/assets/logo.png'),
         i18n: {
           en: {
             'primaryauth.title': ' ',
