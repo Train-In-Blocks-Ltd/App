@@ -80,6 +80,7 @@
     font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
+    opacity: 50%;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -93,22 +94,16 @@
     );
     margin: 1rem 0 0.5rem 0;
     display: inline-block;
-    transition: background-color 0.4s, color 0.2s;
+    transition: opacity 0.4s, background-color 0.4s, color 0.2s;
   }
   .button:hover {
-    background-color: rgba(
-      calc(var(--red) - 200),
-      calc(var(--green) - 200),
-      calc(var(--blue) - 200),
-      1
-    );
+    opacity: 100%;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
     text-decoration: none;
-    color: #fff;
   }
   
   /* Misc Containers */
@@ -289,6 +284,7 @@
   .account_nav_container {
     align-self: end;
     text-align: center;
+    font-size: 0.8em;
   }
   .nav_item {
     padding: 0.5rem 0;
@@ -458,7 +454,7 @@
   /* Search Bar */
   .search {
     width: 55vw;
-    opacity: 40%;
+    opacity: 50%;
     font-size: 1rem;
 
     transition: opacity 1500ms;
