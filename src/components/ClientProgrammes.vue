@@ -53,6 +53,11 @@
   .add_new_programme_container {
     margin: 0.75rem 0;
   }
+  .add_new_programme_container > form {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 30vw;
+  }
 </style>
 <template>
     <div>
@@ -81,7 +86,7 @@
         <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New Block</button>
         <p class="response" v-if="!creating">{{response}}</p>
         <div class="add_new_programme_container" v-if="creating">
-          <h3 class="add-new">New Block Incoming...</h3>
+          <h3>New Block Incoming...</h3>
           <form name="add_program" v-on:submit.prevent="save()">
               <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/> 
               <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_programme.duration" required/>
