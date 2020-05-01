@@ -25,7 +25,7 @@
   }
   .program_link:hover { 
     text-decoration: none;
-    border: 2px solid rgba(
+    border: 2px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color));
@@ -58,13 +58,13 @@
     <div>
       
       <!-- This is where we stitch all the blocks all-together! -->
-      <h2 style="margin-top:1rem">Programme</h2>
+      <h2>Programme</h2>
       <div id="graph">
         <div style="background-color: #c4c4c4; height: 20vh; text-align: center;">Visualisation Goes Here!!</div>
         <div style="background-color: #e1e1e1; height: 20vh; text-align: center;">Programme Data Goes Here!!</div>
       </div>
       <div>
-        <h2 style="font-size: 2em">Blocks</h2>
+        <h3>Blocks</h3>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
         <p v-if="this.error"><b>{{error}}</b></p>
@@ -83,9 +83,9 @@
         <div class="add_new_programme_container" v-if="creating">
           <h3 class="add-new">New Block Incoming...</h3>
           <form name="add_program" v-on:submit.prevent="save()">
-              <input type="text" id="name" class="input-small" name="name" autocomplete="off" placeholder="Name" spellcheck="false" v-model="new_programme.name" required/><br>
-              <input type="number" id="duration" class="input-xsmall" name="duration" autocomplete="off" placeholder="Weeks" spellcheck="false" inputmode="decimal" v-model="new_programme.duration" required/>
-              <input type="date" id="start" class="input-xsmall" name="start" autocomplete="off" spellcheck="false" v-model="new_programme.start" required /><br>
+              <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/> 
+              <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_programme.duration" required/>
+              <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
               <div class="form_buttons">
                   <input type="submit" class="button" value="Save" />
                   <button class="button" v-on:click="close()">Close</button>

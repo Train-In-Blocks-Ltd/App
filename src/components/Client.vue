@@ -60,11 +60,17 @@
     margin: 0.5rem 0;
     position: relative;
 
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
     text-decoration: none;
   }
   .floating_nav > a:hover {
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
   }
   .floating_nav > a:before {
     content: "";
@@ -73,7 +79,10 @@
     height: 1px;
     bottom: 0;
     right: 0;
-    background-color: #282828;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
 
     visibility: hidden;
     transition: all 0.3s;
@@ -157,9 +166,9 @@
     <div class="top_grid" v-if="!workout">
       <!-- Update the client details -->
       <form class="client_info" v-on:submit.prevent="update_client()">
-        <input type="text" id="title" name="name" autocomplete="chrome-off" spellcheck="false" v-model="$parent.client_details.name" v-on:click="editing()"/>
-        <input type="email" id="email" name="email" spellcheck="false" v-model="$parent.client_details.email" v-on:click="editing()"/>
-        <input type="tel" id="number" name="number" inputmode="tel" spellcheck="false" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" />
+        <input type="text" id="title" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
+        <label><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
+        <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="loading-grid">
           <input v-if="edit" type="submit" class="button" value="Save" />
           <Loader></Loader>
@@ -195,7 +204,6 @@
 <script>
   import axios from 'axios'
   import Loader from './Loader'
-  import Loading from 'vue-loading-overlay'
 
   export default {
     components: {

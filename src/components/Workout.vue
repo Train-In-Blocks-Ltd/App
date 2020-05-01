@@ -153,13 +153,13 @@
     border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
     padding: 0.5rem 0;
     cursor: pointer;
-    width: 20rem;
+    width: 20vw;
 
     transition: width 1500ms;
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   }
   .workout:hover {
-    width: 25rem;
+    width: 25vw;
   }
   .client-info--workout {
     height: auto; 
@@ -173,15 +173,14 @@
   .label--workout > select {
     background: transparent;
     border: none;
-    border-bottom: 1px solid #282828;
-    outline-width: 0;
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
     width: 50%;
 
-    transition: all 1000ms;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   }
   .label--workout > select:hover {
-    width: 60%;
     cursor: pointer;
   }
   .label--workout input, .label--workout select {
@@ -194,11 +193,17 @@
     position: relative;
     width: fit-content;
 
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));;
     text-decoration: none;
   }
   #programme_notes_header > p:hover {
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));;
     cursor: pointer;
   }
   #programme_notes_header > p:before {
@@ -208,7 +213,10 @@
     height: 1px;
     bottom: 0;
     left: 0;
-    background-color: #282828;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
 
     visibility: hidden;
     transition: all 0.3s;
@@ -325,6 +333,18 @@
                 <h3>Statistics</h3>
               </div>
               <div style="background-color: #c4c4c4; height: 50vh; text-align: center; line-height: 50vh;">Graph and data goes here!!</div>
+              
+              <!--Reverted but need to turn this into a pop-up. 
+              It's now called block notes and the button to open it is above.
+
+              <quill v-model="programme.notes" output="html" class="quill border"></quill>
+              <div id="programme_notes_footer">
+                <div class="loading-grid" v-if="edit1">
+                  <button class="button" v-on:click="update_programme()">Save</button>
+                  <Loader></Loader>
+                </div>
+              </div>  -->
+
               <p v-if="programme1_update_response"><b>{{programme1_update_response}}</b></p>
               <p v-if="programme1_update_error"><b>{{programme1_update_error}}</b></p>
             </div>  <!-- notes -->

@@ -35,7 +35,6 @@
   }
   .okta-form-input-field input:hover, .okta-form-input-field input:focus {
     width: 100%;
-    outline-width: 0;
     border-bottom: 1px solid #888;
   }
   .okta-form-input-error {
@@ -115,7 +114,7 @@
 
 <template>
   <div id="login" v-if="!this.$parent.authenticated">
-    <div id="okta-signin-container" spellcheck="false"></div>
+    <div id="okta-signin-container"></div>
   </div>
 </template>
 
@@ -138,7 +137,7 @@ export default {
             'primaryauth.password.placeholder': 'Password',
             'primaryauth.password.tooltip': 'Enter your password',
             'error.username.required': 'Please enter your email',
-            'errors.E0000004': 'That didn\'t work. Was password correct?'
+            'errors.E0000004': 'That didn\'t work. Was your password correct?'
           }
         },
         authParams: {

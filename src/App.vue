@@ -1,58 +1,20 @@
 <style>
   * {
     box-sizing: border-box;
-  }
-  /* === GLOBAL INPUT === */
-  input:focus, textarea:focus {
-    outline-width: 0;
-  }
-  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
-    border-bottom: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      0.8
-    )!important;
-    margin: 0.75rem 0;
-    padding: 0.5rem;
-    display: inline-block;
-    resize: none;
-    border: 1px solid #282828;
-
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color)
-    );
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 0.10em;
+      var(--accessible-color));
   }
-  .input-xsmall {
-    width: 10rem;
-    height: 2.6em;
-  }
-  .input-small {
-    width: 20.3rem;
-  }
-  .input-medium {
-    width: 25rem;
-  }
-  /*-------------------------------------------------------------------------------------*/
   #home {
-    display: flex;
-    flex-direction: column;
+    display: grid;
   }
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     min-height: 100vh;
     display: grid;
-    font-size: 12px;
+    font-size: 1em;
     letter-spacing: 0.15em;
   }
   h1 {
@@ -75,8 +37,30 @@
   a:hover, .router-link-exact-active {
     text-decoration: underline;
   }
-  .small {
-    font-size: 0.8rem;
+  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
+    border: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    background-color: rgba(
+      calc(var(--red) + 45),
+      calc(var(--green) + 45),
+      calc(var(--blue) + 45),
+      0.8
+    )!important;
+    margin: 0.75rem 0;
+    padding: 0.5rem;
+    display: inline-block;
+    resize: none;
+
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.10em;
   }
   .button {
     text-align: center;
@@ -109,29 +93,38 @@
   }
   .button:hover {
     background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
+      calc(var(--red) - 45),
+      calc(var(--green) - 45),
+      calc(var(--blue) - 45),
       1
     );
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
     text-decoration: none;
-    background-color: #282828;
     color: #fff;
   }
 
   .form_grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     max-width: 660px;
     margin: 0;
   }
+
   /* Standardised Compoments */
   .add-new {
     font-size: 2em;
     margin: 2rem 0 0.2rem 0;
   }
   .form_buttons {
+    grid-column: span 1;
+    display: grid;
+    grid-gap: 1rem;
     place-content: start;
+    grid-auto-flow: column;
   }
   #app {
     display: grid;
@@ -303,12 +296,18 @@
 
   /* Nav--Animated Underline */
   .nav_item > a {
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
     text-decoration: none;
     position: relative;
   }
   .nav_item > a:hover {
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
   }
   .nav_item > a:before {
     content: "";
@@ -317,7 +316,10 @@
     height: 1px;
     bottom: 0;
     left: 0;
-    background-color: #282828;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
 
     visibility: hidden;
     transition: all 0.3s;
@@ -331,11 +333,17 @@
     position: relative;
 
     font-weight: 400;
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
     text-decoration: none;
   }
   .nav_subitem > a:hover {
-    color: #282828;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
   }
   .nav_subitem > a:before {
     content: "";
@@ -344,7 +352,10 @@
     height: 1px;
     bottom: 0;
     left: 0;
-    background-color: #282828;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
 
     visibility: hidden;
     transition: all 0.3s;
@@ -386,6 +397,9 @@
   .account_nav_container .nav_item:first-of-type {
     padding-top: 0;
   }
+  .nav_subitem a.router-link-exact-active {
+    font-weight: bold;
+  }
   .client_container p {
     margin: 0;
     margin-right: 0.8rem;
@@ -401,12 +415,17 @@
     font-size: 1rem;
     font-weight: 400;
     grid-template-columns: 1fr 0.1fr;
-    width: 20rem;
+    width: 50vw;
     transition: width 1s;
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   }
   .client_container:not(.archived):hover {
-    width: 30rem;
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    width: 55vw;
   }
   .client_link {
     padding: 0.2rem 0;
@@ -417,7 +436,7 @@
     text-decoration: none;
   }
   .search {
-    width: 30rem;
+    width: 55vw;
     opacity: 40%;
     font-size: 1rem;
 
@@ -459,6 +478,7 @@
   }
   #add_client-link {
     margin-top: 1.75rem;
+    display: block;
     width: 10rem;  
   }
   @media (min-width: 768px) {
@@ -510,12 +530,6 @@
   }
   
   /* QUILL */
-  textarea {
-    overflow-y: hidden;
-    resize: none;
-    appearance: none;
-    -webkit-appearance: none;
-  }
   .quill {
     margin: 0.75rem 0;
   }
@@ -566,8 +580,8 @@
   
   /* Scrollbar */
   ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 10px;
+      height: 10px;
   }
 
   ::-webkit-scrollbar-track {
