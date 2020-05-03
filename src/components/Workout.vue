@@ -241,11 +241,7 @@
               <h1>{{$route.params.name}}</h1>
                <!-- Update the programme info -->
               <form class="programme_info" v-on:submit.prevent="update_programme()">
-                <ResizeAuto>
-                  <template v-slot:default="{resize}">
-                    <textarea type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()" @input="resize" rows="1"></textarea>
-                  </template>
-                </ResizeAuto>
+                <input type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()">
                 <label class="label--workout">Duration: <input type="number" id="duration" class="client-info--workout" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
                 <label class="label--workout">Start: <input type="date" id="start" class="client-info--workout" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
                 <label class="label--workout">Follow to: 
@@ -357,14 +353,12 @@
 </template>
 
 <script>
-  import ResizeAuto from './ResizeAuto'
   import Loader from './Loader'
   import axios from 'axios'
   import qs from 'qs'
 
   export default {
     components: {
-      ResizeAuto,
       Loader
     },
     data: function () {

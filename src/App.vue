@@ -17,8 +17,14 @@
     font-size: 16px;
     letter-spacing: 0.15em;
   }
+  #title {
+    text-transform: capitalize!important;
+    font-weight: bold;
+    font-size: 3.75rem;
+    letter-spacing: 0.15em;
+  }
   h1 {
-    margin-top: -1rem;
+    margin-top: 0;
     margin-bottom: 5rem;
     font-weight: bold;
     font-size: 3.75rem;
@@ -26,7 +32,10 @@
     letter-spacing: 0.15rem;
   }
   h2 {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    letter-spacing: 0.15em;
+    margin: 1.75rem 0;
+    margin-top: 4rem;
   }
   h3 {
     font-size: 2rem;
@@ -114,7 +123,6 @@
     margin: 0;
   }
   .form_buttons {
-    grid-column: span 1;
     display: grid;
     grid-gap: 1rem;
     place-content: start;
@@ -642,6 +650,13 @@
         <div v-for="(clients, index) in posts"
           :key="index" class="nav_subitem">
           <router-link :to="'/client/'+clients.name+'/'">{{clients.name}}</router-link>
+          <!-- If on client page and the client has programmes display the programmes-->
+          <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
+            <div v-for="(programme, index) in posts[index].programmes"
+              :key="index" class="nav_subitem subitem">
+              <router-link :to="'/client/'+clients.name+'/programme/'+programme.id">{{programme.name}}</router-link>
+            </div>
+          </div>
         </div>
       </div>
       <div class="account_nav_container">

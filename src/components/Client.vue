@@ -1,17 +1,4 @@
 <style>
-  #title {
-    margin-top: -1rem;
-    text-transform: capitalize!important;
-    font-weight: bold;
-    font-size: 3.75rem;
-    letter-spacing: 0.15em;
-  }
-  h2 {
-      font-size: 2.5rem;
-      letter-spacing: 0.15em;
-      margin: 1.75rem 0;
-      margin-top: 4rem;
-  }
   .client_info input:not([type="submit"]) {
     background-color: initial!important;
     border: none;
