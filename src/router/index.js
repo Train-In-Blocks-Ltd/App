@@ -14,7 +14,7 @@ import ArchiveComponent from '@/components/pages/Archive'
 
 import ClientProgrammes from '@/components/pages/_client/ClientProgrammes'
 import ClientResults from '@/components/pages/_client/ClientResults'
-import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
+import ClientBlocks from '@/components/pages/_client/ClientBlocks'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -81,7 +81,7 @@ const router = new Router({
         },
         {
           path: 'programme/:id',
-          component: ClientWorkouts,
+          component: ClientBlocks,
           name: 'programme'
         }
       ]
