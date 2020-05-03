@@ -6,7 +6,7 @@
   }
   .program_wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, 300px);
     grid-gap: 40px;
   }
   .program_container:first-of-type {

@@ -13,6 +13,7 @@
       margin-top: 4rem;
   }
   .client_info input:not([type="submit"]) {
+    background-color: initial!important;
     border: none;
     padding: 0;
     font-size: 0.9rem;

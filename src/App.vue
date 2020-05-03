@@ -14,7 +14,7 @@
     margin: 0;
     min-height: 100vh;
     display: grid;
-    font-size: 1em;
+    font-size: 16px;
     letter-spacing: 0.15em;
   }
   h1 {
@@ -23,13 +23,13 @@
     font-weight: bold;
     font-size: 3.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.15rem;
   }
   h2 {
-    font-size: 3em;
+    font-size: 3rem;
   }
   h3 {
-    font-size: 2em;
+    font-size: 2rem;
   }
   a {
     text-decoration: none;
@@ -566,8 +566,7 @@
     )
   }
   .ql-editor {
-    min-height: 400px;
-    max-height: 400px ;
+    height: 400px ;
     color:rgb(
               var(--accessible-color),
               var(--accessible-color),

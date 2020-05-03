@@ -89,7 +89,6 @@
           var(--accessible-color)
         );
     display: inline-block;
-    place-items: center;
     font-weight: bold;
     text-align: center  ;
   }
@@ -319,8 +318,8 @@
                 <div class="add_new_workout_container" v-if="creating">
                   <h3>Add new workout</h3>
                   <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-                    <input type="text" id="name" class="input-small" name="name" placeholder="Name" v-model="new_workout.name" required />
-                    <input type="date" id="date" class="input-small" name="date" v-model="new_workout.date" required />
+                    <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
+                    <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
                     <div class="form_buttons">
                         <input type="submit" class="button" value="Save" />
                         <button class="button" v-on:click="close()">Close</button>
