@@ -155,7 +155,7 @@
           )
           // eslint-disable-next-line
           this.response = response_save_programmes.data
-          
+
           // Set old programmes to null so that they can be repopulated
           var x
           for (x in this.$parent.$parent.posts) {

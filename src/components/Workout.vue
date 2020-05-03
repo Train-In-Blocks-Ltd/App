@@ -395,13 +395,13 @@
     methods: {
       day (date) {
         var weekday = new Array(7)
-        weekday[0] = "Sun"
-        weekday[1] = "Mon"
-        weekday[2] = "Tue"
-        weekday[3] = "Wed"
-        weekday[4] = "Thu"
-        weekday[5] = "Fri"
-        weekday[6] = "Sat"
+        weekday[0] = 'Sun'
+        weekday[1] = 'Mon'
+        weekday[2] = 'Tue'
+        weekday[3] = 'Wed'
+        weekday[4] = 'Thu'
+        weekday[5] = 'Fri'
+        weekday[6] = 'Sat'
         var d = new Date(date)
         return weekday[d.getDay()]
       },
@@ -414,19 +414,19 @@
         // Set vue self
         var self = this
 
-        function click(e) {
+        function click (e) {
           // If box is open
           if (self.workout_notes) {
             if (!document.getElementById('workout_notes').contains(e.target)) {
               // Update the workout
               self.update_workout(id)
-              window.removeEventListener("click", click)
+              window.removeEventListener('click', click)
             }
           }
         }
         // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout( 
-          function() {
+        setTimeout(
+          function () {
             // Add event listener for clicking outside box
             window.addEventListener('click', click)
           }
@@ -539,9 +539,11 @@
                 }
                 // Sync client_details with posts
                 // Loop through clients
+                //eslint-disable-next-line
                 var y
                 for (y in this.$parent.$parent.posts) {
                   // If client matches client in route
+                  //eslint-disable-next-line
                   if (this.$parent.$parent.posts[x].name == this.$route.params.name) {
                     this.$parent.$parent.posts[x] = this.$parent.$parent.client_details
                   }
@@ -566,13 +568,14 @@
         let x
         // Set the programme variable to the current programme
         for (x in this.$parent.$parent.client_details.programmes) {
+          //eslint-disable-next-line
           if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
             var programme = this.$parent.$parent.client_details.programmes[x]
             var y
             for (y in programme.workouts) {
               if (programme.workouts[y].id === id) {
-                var workouts_id = programme.workouts[y].id
-                var workouts_notes = programme.workouts[y].notes
+                var workoutsId = programme.workouts[y].id
+                var workoutsNotes = programme.workouts[y].notes
               }
             }
           }
@@ -581,8 +584,8 @@
           // eslint-disable-next-line
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
-              'id': workouts_id,
-              'notes': workouts_notes
+              'id': workoutsId,
+              'notes': workoutsNotes
             }
           )
         } catch (e) {

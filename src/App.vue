@@ -460,7 +460,7 @@
     transition: opacity 1500ms;
     transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   }
-  .search:hover, :focus {
+  .search:hover, .search:focus {
     opacity: 100%;
   }
 
@@ -800,6 +800,7 @@ export default {
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
         for (var i = 0; i < this.posts.length; i++) {
+          //eslint-disable-next-line
           if (this.posts[i].client_id == id) {
             this.posts.splice(index, 1)
             if (this.posts.length === 0) {
@@ -827,6 +828,7 @@ export default {
     async client_unarchive (id, index) {
       if (confirm('Are you sure you want to unarchive this client?')) {
         for (var i = 0; i < this.archive_posts.length; i++) {
+          //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
             var arr = JSON.parse(localStorage.getItem('posts'))
             arr.push(this.archive_posts[i])
@@ -863,7 +865,8 @@ export default {
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
-         for (var i = 0; i < this.archive_posts.length; i++) {
+        for (var i = 0; i < this.archive_posts.length; i++) {
+          //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
             this.archive_posts.splice(index, 1)
             if (this.archive_posts.length === 0) {
