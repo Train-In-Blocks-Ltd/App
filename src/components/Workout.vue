@@ -16,7 +16,6 @@
       var(--accessible-color)
     );
     padding: 0;
-    font-size: 1rem;
   }
   #title, h3 {
     font-size: 1.25rem;
@@ -27,9 +26,10 @@
   }
   .programme_grid {
     display: grid;
-    grid-template-areas: "table notes"
-                          "workouts notes";
-    grid-template-columns: 1fr 0.33fr;
+    grid-template-areas: 
+    "table notes"
+    "workouts notes";
+    grid-template-columns: 1fr 1fr;
     grid-gap: 2rem;
   }
   .notes {
@@ -76,20 +76,38 @@
   .programme_grid {
     margin-top: 2.5rem;
   }
+  .programme_table {
+    overflow-x: auto ;
+  }
+  .programme_container {
+    margin-bottom: 5px;
+  }
   .programme_table > *, .programme_duration_container > * {
     border: 1px solid rgb(
           var(--accessible-color),
           var(--accessible-color),
           var(--accessible-color)
         );
-    padding: 1rem;
-    display: grid;
-    place-items: center;
+    display: inline-block;
     font-weight: bold;
-    width: 100%;
+    text-align: center  ;
   }
   .programme_duration_container > * {
-    border-top: none;
+    border-left: none;
+    border-bottom: none;
+    padding: 30px 0px;
+    width: 40px;
+  }
+  .programme_duration_container > *:last-of-type {
+    border-right: none;
+  }
+  .programme_duration_container > *:hover {    
+    box-shadow: inset 0px 20px 30px -30px rgba(
+          var(--accessible-color),
+          var(--accessible-color),
+          var(--accessible-color),
+          0.5);
+    cursor: pointer;
   }
   .programme_duration_container {
     display: grid;
@@ -136,7 +154,79 @@
     display: block;
     border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
     padding: 0.5rem 0;
-    cursor: pointer
+    cursor: pointer;
+    width: 20vw;
+
+    transition: width 1500ms;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .workout:hover {
+    width: 25vw;
+  }
+  .client-info--workout {
+    height: auto; 
+    margin: 0; 
+    font-size: 1em;
+  }
+  .label--workout {
+    align-items: end;
+    display: inline-block;
+  }
+  .label--workout > select {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+    width: 50%;
+
+  }
+  .label--workout > select:hover {
+    cursor: pointer;
+  }
+  .label--workout input, .label--workout select {
+    font-size: 1em;
+  }
+
+  #programme_notes_header > p {
+    display: block;
+    margin: 0.5rem 0;
+    position: relative;
+    width: fit-content;
+
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));;
+    text-decoration: none;
+  }
+  #programme_notes_header > p:hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));;
+    cursor: pointer;
+  }
+  #programme_notes_header > p:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+
+    visibility: hidden;
+    transition: all 0.3s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  #programme_notes_header > p:hover:before {
+    visibility: visible;
+    width: 100%;
   }
 </style>
 
@@ -156,15 +246,15 @@
                     <textarea type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()" @input="resize" rows="1"></textarea>
                   </template>
                 </ResizeAuto>
-                <ResizeAuto>
-                  <template v-slot:default="{resize}">
-                  <textarea type="text" id="description" name="description" v-model="programme.description" v-on:click="editing()" @input="resize" rows="1"></textarea>
-                  </template>
-                </ResizeAuto>
-                <label style="margin-top: 1rem"><b>Duration: </b><input type="number" id="duration" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/> weeks</label>
-                <label style="align-items: end"><b>Start: </b><input type="date" id="start" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
+                <label class="label--workout">Duration: <input type="number" id="duration" class="client-info--workout" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
+                <label class="label--workout">Start: <input type="date" id="start" class="client-info--workout" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
+                <label class="label--workout">Follow to: 
+                  <select>
+                    <option>Select a Block</option>
+                  </select>
+                </label>
                 <div class="loading-grid" v-if="edit">
-                  <input type="submit" class="button" value="Save" />
+                  <input style="margin: 1rem 0 0.5rem 0" type="submit" class="button" value="Save" />
                   <Loader></Loader>
                 </div>
                 <p v-if="programme_update_response"><b>{{programme_update_response}}</b></p>
@@ -181,12 +271,12 @@
           </div> <!-- top_grid -->
           <div class="programme_grid">
             <div class="programme_table">
-              <div class="programme_name">
-                <p>{{programme.name}}</p>
-              </div>
-              <div class="programme_duration_container">
-                <div v-for="item in programme_duration(programme.duration)" :key="item">
-                  {{item}}
+              <div class="programme_container">
+                <p style="margin: 30px 0px">{{programme.name}}</p>
+                <div class="programme_duration_container">
+                  <div v-for="item in programme_duration(programme.duration)" :key="item">
+                    {{item}}
+                  </div>
                 </div>
               </div>
             </div> <!-- programme_table -->
@@ -230,8 +320,6 @@
                   <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
                     <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
                     <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
-                    <label style="margin: 1.5rem 0; align-self:start"><b>Content: </b></label>
-                    <quill v-model="new_workout.notes" output="html" class="quill border"></quill>
                     <div class="form_buttons">
                         <input type="submit" class="button" value="Save" />
                         <button class="button" v-on:click="close()">Close</button>
@@ -243,16 +331,22 @@
             </div><!-- workouts -->
             <div class="notes" v-on:click="editing1()">
               <div id="programme_notes_header">
-                <p>Programme Notes</p>
-                <h3>Data & Statistics</h3>
+                <p>Block Notes</p>
+                <h3>Statistics</h3>
               </div>
+              <div style="background-color: #c4c4c4; height: 50vh; text-align: center; line-height: 50vh;">Graph and data goes here!!</div>
+              
+              <!--Reverted but need to turn this into a pop-up. 
+              It's now called block notes and the button to open it is above.
+
               <quill v-model="programme.notes" output="html" class="quill border"></quill>
               <div id="programme_notes_footer">
                 <div class="loading-grid" v-if="edit1">
                   <button class="button" v-on:click="update_programme()">Save</button>
                   <Loader></Loader>
                 </div>
-              </div>
+              </div>  -->
+
               <p v-if="programme1_update_response"><b>{{programme1_update_response}}</b></p>
               <p v-if="programme1_update_error"><b>{{programme1_update_error}}</b></p>
             </div>  <!-- notes -->

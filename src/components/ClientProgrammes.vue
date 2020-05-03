@@ -1,4 +1,9 @@
 <style scoped>
+  #graph {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 10px;
+  }
   .program_wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, 300px);
@@ -45,55 +50,54 @@
   #add_programme_link {
     margin-top: 1.75rem;
   }
-  #duration, #date {
-    width: auto
-  }
-  .add_new_programme_container .quill {
+  .add_new_programme_container {
     margin: 0.75rem 0;
-    background-color: rgba( calc(var(--red) + 45), calc(var(--green) + 45), calc(var(--blue) + 45), 0.8 );
+  }
+  .add_new_programme_container > form {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 30vw;
   }
 </style>
 <template>
     <div>
-      <h2>Programmes</h2>
-      <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
-      <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
-      <p v-if="this.error"><b>{{error}}</b></p>
-      <div v-if="!this.$parent.no_programmes && !this.error" class="program_wrapper">
-        <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
-            :key="index" class="program_container">
-            <router-link class="program_link" :to="'programme/'+programme.id">
-            <h3>{{programme.name}}</h3>
-            <p class="desc">"{{programme.description}}"</p>
-            <p><b>Duration: </b>{{programme.duration}}</p>
-            <p><b>Start: </b>{{programme.start}}</p>
-            </router-link>
-        </div>
+      
+      <!-- This is where we stitch all the blocks all-together! -->
+      <h2>Programme</h2>
+      <div id="graph">
+        <div style="background-color: #c4c4c4; height: 20vh; text-align: center;">Visualisation Goes Here!!</div>
+        <div style="background-color: #e1e1e1; height: 20vh; text-align: center;">Programme Data Goes Here!!</div>
       </div>
-      <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New programme</button>
-      <p class="response" v-if="!creating">{{response}}</p>
-      <div class="add_new_programme_container" v-if="creating">
-        <h3>Add new programme</h3>
-        <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-            <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/>
-            <label for="description">
-            <b>Description: </b>
-            </label>
-            <ResizeAuto>
-            <template v-slot:default="{resize}">
-                <textarea type="text" id="description" name="description" v-model="new_programme.desc" required @input="resize" rows="1"></textarea>
-            </template>
-            </ResizeAuto>
-            <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_programme.duration" required/>
-            <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
-            <label style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
-            <quill v-model="new_programme.notes" output="html" class="quill"></quill>
-            <div class="form_buttons">
-                <input type="submit" class="button" value="Save" />
-                <button class="button" v-on:click="close()">Close</button>
-                <Loader></Loader>
-            </div>
-        </form>
+      <div>
+        <h3>Blocks</h3>
+        <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
+        <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
+        <p v-if="this.error"><b>{{error}}</b></p>
+        <div v-if="!this.$parent.no_programmes && !this.error" class="program_wrapper">
+          <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
+              :key="index" class="program_container">
+              <router-link class="program_link" :to="'programme/'+programme.id">
+              <h3>{{programme.name}}</h3>
+              <p><b>Duration: </b>{{programme.duration}}</p>
+              <p><b>Start: </b>{{programme.start}}</p>
+              </router-link>
+          </div>
+        </div>
+        <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New Block</button>
+        <p class="response" v-if="!creating">{{response}}</p>
+        <div class="add_new_programme_container" v-if="creating">
+          <h3>New Block Incoming...</h3>
+          <form name="add_program" v-on:submit.prevent="save()">
+              <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/> 
+              <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_programme.duration" required/>
+              <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
+              <div class="form_buttons">
+                  <input type="submit" class="button" value="Save" />
+                  <button class="button" v-on:click="close()">Close</button>
+                  <Loader></Loader>
+              </div>
+          </form>
+        </div>
       </div>
     </div>
 </template>

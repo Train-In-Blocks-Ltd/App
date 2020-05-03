@@ -1,15 +1,21 @@
 <style>
   * {
     box-sizing: border-box;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+  }
+  #home {
+    display: grid;
   }
   body {
-    background-color: #ffffff;
-    font-family: 'Raleway', sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     min-height: 100vh;
     display: grid;
     font-size: 16px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
   }
   h1 {
     margin-top: -1rem;
@@ -17,7 +23,13 @@
     font-weight: bold;
     font-size: 3.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.15rem;
+  }
+  h2 {
+    font-size: 3rem;
+  }
+  h3 {
+    font-size: 2rem;
   }
   a {
     text-decoration: none;
@@ -28,11 +40,31 @@
     );
     font-weight: bold;
   }
-  a:hover, .router-link-exact-active {
-    text-decoration: underline;
-  }
-  .small {
-    font-size: 0.8rem;
+  /* Inputs */
+  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
+    border: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    background-color: rgba(
+      calc(var(--red) + 45),
+      calc(var(--green) + 45),
+      calc(var(--blue) + 45),
+      0.8
+    )!important;
+    margin: 0.75rem 0;
+    padding: 0.5rem;
+    display: inline-block;
+    resize: none;
+
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    font-family: Arial, Helvetica, sans-serif;
+    letter-spacing: 0.10em;
   }
   .button {
     text-align: center;
@@ -41,11 +73,14 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding: 0.5rem;
-    font-family: 'Raleway', sans-serif;
-    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    height: auto;
+    width: auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
+    opacity: 50%;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -57,51 +92,31 @@
       calc(var(--blue) + 30),
       0.8
     );
-    margin: 0.5rem 0;
+    margin: 1rem 0 0.5rem 0;
     display: inline-block;
+    transition: opacity 0.4s, background-color 0.4s, color 0.2s;
   }
   .button:hover {
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      1
-    );
-    text-decoration: none;
-  }
-  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
+    opacity: 100%;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    margin: 0.75rem 0;
-    padding: 0.5rem;
-    font-family: 'Raleway', sans-serif;
-    display: inline-block;
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      0.8
-    )!important;
+    text-decoration: none;
   }
-    .form_grid {
+  
+  /* Misc Containers */
+  .form_grid {
     display: grid;
-    grid-template-columns: max-content 1fr;
-    align-items: center;
+    grid-template-columns: 1fr;
     max-width: 660px;
-    grid-column-gap: 1rem;
+    margin: 0;
   }
   .form_buttons {
-    grid-column: span 2;
+    grid-column: span 1;
     display: grid;
-    grid-gap: 2rem;
+    grid-gap: 1rem;
     place-content: start;
     grid-auto-flow: column;
   }
@@ -114,9 +129,6 @@
     display: grid;
     align-items: start;
     padding: 5rem 3.75rem;
-  }
-  main > div {
-    max-width: calc(100% - 3.75rem - 3.75rem - 3.75rem);
   }
   #app.authenticated {
     display: grid;
@@ -149,19 +161,11 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    )
+    );
   }
-  .account_nav_container {
-    align-self: end;
-    text-align: center;
-  }
-  .nav_item {
-    padding: 1rem 0;
-  }
-  .nav_item:last-of-type {
-    padding-bottom: 0;
-  }
-  .vc-chrome-toggle-icon-highlight, .vc-chrome-alpha-wrap, .vc-chrome-field:nth-of-type(4) {
+  
+  /* Color Picker */
+  pwa-update, .vc-chrome-toggle-icon-highlight, .vc-chrome-alpha-wrap, .vc-chrome-field:nth-of-type(4) {
     display: none;
   }
   .vc-chrome-body, .vc-chrome-fields .vc-input__input  {
@@ -193,7 +197,7 @@
     font-size: 0.8rem!important;
   }
   .vc-chrome-fields .vc-input__input, .vc-chrome-fields .vc-input__label {
-    font-family: 'Raleway', sans-serif!important;
+    font-family: Arial, Helvetica, sans-serif!important;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -203,6 +207,8 @@
   .vc-chrome {
     box-shadow: none!important;
   }
+
+  /* Misc */
   #app {
     --accessible-color: calc(
       (
@@ -261,21 +267,105 @@
       0.6
     );
   }
+
+  /* Navigation */
+  .nav_item {
+    font-size: 1.2em;
+  }
   .nav_subitem {
-    padding: 0.8rem 0;
-  }
-  .nav_subitem:before {
-    content: '>  '
-  }
-  .nav_subitem a {
-    font-weight: 400;
+    padding: 0.4rem 0;
   }
   .nav_subitem.subitem {
-    padding-left: 1rem;
+    padding: 0.8rem 0 0 0.8rem;
   }
   .nav_subitem.subitem:last-of-type {
+    padding-bottom: 1rem;
+  }
+  .account_nav_container {
+    align-self: end;
+    text-align: center;
+    font-size: 0.8em;
+  }
+  .nav_item {
+    padding: 0.5rem 0;
+  }
+  .nav_item:last-of-type {
     padding-bottom: 0;
   }
+
+  /* Nav Animated */
+  .nav_item > a {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+    text-decoration: none;
+    position: relative;
+  }
+  .nav_item > a:hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+  }
+  .nav_item > a:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+
+    visibility: hidden;
+    transition: all 0.3s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .nav_item > a:hover:before {
+    visibility: visible;
+    width: 100%;
+  }
+  .nav_subitem > a {
+    position: relative;
+
+    font-weight: 400;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+    text-decoration: none;
+  }
+  .nav_subitem > a:hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+  }
+  .nav_subitem > a:before {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+
+    visibility: hidden;
+    transition: all 0.3s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .nav_subitem > a:hover:before {
+    visibility: visible;
+    width: 100%;
+  }
+
+  /* Main Nav and Scrollbar */
   .main_nav {
     border-bottom: 0.5px solid rgba(
       var(--accessible-color),
@@ -307,41 +397,74 @@
   .account_nav_container .nav_item:first-of-type {
     padding-top: 0;
   }
+  .nav_subitem a.router-link-exact-active {
+    font-weight: bold;
+  }
+
+  /* Client Container */
   .client_container p {
     margin: 0;
     font-weight: 400;
   }
   .client_container {
-    border-bottom: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
     margin: 0.5rem 0;
-    font-size: 1.25rem;
-    font-weight: 400;
+    font-size: 1rem;
     display: grid;
     grid-template-columns: 1fr 0.1fr;
-    align-items: center;
+    width: 55vw;
   }
-  .client_container:not(.archived):hover {
-    border-bottom: 2px solid rgb(
+
+  /* Client Container Animation */
+  .client_container > a {
+    position: relative;
+    font-weight: 400;
+    color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color)
-    );
-    margin-bottom: -1px
+      var(--accessible-color));
+    text-decoration: none;
+  }
+  .client_container > a:not(.archived):hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+  }
+  .client_container > a:before {
+    content: "";
+    position: absolute;
+    width: 90%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color));
+    transition: all 500ms;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .client_container > a:not(.archived):hover:before {
+    width: 100%;
   }
   .client_link {
     padding: 1rem 0;
   }
-  .client_link:hover {
-    text-decoration: none;
-  }
+
+  /* Search Bar */
   .search {
-    width: 100%;
+    width: 55vw;
+    opacity: 50%;
     font-size: 1rem;
+
+    transition: opacity 1500ms;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   }
+  .search:hover, :focus {
+    opacity: 100%;
+  }
+
+  /* New and Update Client */
   .add_new_client_container {
     margin-top: 2rem;
   }
@@ -376,7 +499,10 @@
   #add_client-link {
     margin-top: 1.75rem;
     display: block;
+    width: 10rem;  
   }
+
+  /* Responsive Design */
   @media (min-width: 768px) {
     #hamburger, #close {
       display: none;
@@ -424,23 +550,13 @@
       fill: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color));
     }
   }
-
+  
   /* QUILL */
-  textarea {
-    overflow-y: hidden;
-    resize: vertical;
-    appearance: none;
-    -webkit-appearance: none;
-  }
   .quill {
     margin: 0.75rem 0;
   }
-  .ql-container.ql-snow, .ql-toolbar.ql-snow {
-    border: 1px solid rgb(
-          var(--accessible-color),
-          var(--accessible-color),
-          var(--accessible-color)
-        );
+  .ql-toolbar.ql-snow {
+    border:none;
   }
   .ql-snow .ql-stroke {
     stroke: rgb(
@@ -450,12 +566,13 @@
     )
   }
   .ql-editor {
-    min-height: 400px;
+    height: 400px ;
     color:rgb(
               var(--accessible-color),
               var(--accessible-color),
               var(--accessible-color)
-            )
+            );
+    overflow-y: auto;
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: rgba(
@@ -480,6 +597,24 @@
               var(--accessible-color),
               0.6
             )
+  }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+      background: transparent; 
+  }
+    
+  ::-webkit-scrollbar-thumb {
+      background: #00000020; 
+  }
+    
+  ::-webkit-scrollbar-thumb:hover {
+      background: #00000030;
   }
 </style>
 <template>

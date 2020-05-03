@@ -1,50 +1,52 @@
 <style>
   #login {
-    text-align: center;
+    text-align: left;
     display: inline;
-    margin: 0 auto;
+    margin: auto;
     padding: 6rem 4rem;
     min-width: 500px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
   }
   .auth-org-logo {
-    width: 200px;
-    margin-bottom: 2 rem;
+    margin: 5vh 0;
   }
   .okta-form-title {
-    font-size: 2.25rem;
-    line-height: 4rem;
+    font-size: 2rem;
     text-align: left;
-  }
-  .okta-form-title:after {
-    content: '';
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    display: block;
-    width: 100%;
+    color: #282828;
   }
   .okta-form-label {
     font-size: 1.1rem;
     font-weight: bold;
     text-align: left;
-    color: rgba(40, 40, 40, 0.3);
+    color: #282828;
+    letter-spacing: 0.15em;
   }
   .okta-form-input-field input {
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+    width: 75%;
     margin: 0.75rem 0;
     padding: 0.5rem;
-    font-family: 'Raleway', sans-serif;
+
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 0.9rem;
+    letter-spacing: 0.10em;
+
+    border: none;
+    border-bottom: 1px solid #888;
+
+    transition: width 1s;
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  .okta-form-input-field input:hover, .okta-form-input-field input:focus {
+    width: 100%;
+    border-bottom: 1px solid #888;
+    outline-width: 0;
   }
   .okta-form-input-error {
     width: 100%;
     color: #EB5757;
     margin-top: 0.5rem;
     margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    font-weight: bold;
+    font-size: 0.6rem;
     text-align: left;
   }
   .o-form-input-name-remember {
@@ -54,25 +56,31 @@
   .o-form-button-bar {
     margin: 1.25rem 0;
   }
-  .o-form-button-bar .button, .email-button {
-    padding: 0.25rem 0.5rem;
-    font-family: 'Raleway', sans-serif;
-    font-size: 0.9rem;
-    border: 1px solid #282828;
-    cursor: pointer;
-    transition: 0.5s;
-    font-weight: bold;
-    display: block;
-  }
-  .email-button {
+  .o-form-button-bar .button, .email-button{
+    padding: 0.5rem 1rem;
     display: inline-block;
+    border: 1px solid #282828;
+    height: auto;
+    width: auto;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+
+    cursor: pointer;
+    transition: background-color 0.4s, color 0.2s;
+  }
+  .o-form-button-bar .button:hover, .email-button:hover {
+    background-color: #282828;
+    color: #fff;
   }
   .help-links {
     list-style-type: none;
     margin: 0;
     padding: 0;
     margin-top: 0.75rem;
-    font-size: 0.9rem;
+    font-size: 0.6rem;
   }
   .help-links li {
     padding: 0.25rem 0;
@@ -87,8 +95,9 @@
     margin-top: 1.75rem;
     text-align: left;
   }
-  .link.help.js-back {
-    font-size: 0.9rem;
+  .link.help.js-help, .link.help.js-back {
+    font-size: 0.6rem;
+    font-weight: 600;
   }
   @media (max-width: 520px) {
     main {
@@ -127,11 +136,13 @@ export default {
         logo: require('@/assets/logo.png'),
         i18n: {
           en: {
-            'primaryauth.title': 'Account',
+            'primaryauth.title': ' ',
             'primaryauth.username.placeholder': 'Email',
             'primaryauth.username.tooltip': 'Enter your email',
             'primaryauth.password.placeholder': 'Password',
-            'primaryauth.password.tooltip': 'Enter your password'
+            'primaryauth.password.tooltip': 'Enter your password',
+            'error.username.required': 'Please enter your email',
+            'errors.E0000004': 'That didn\'t work. Was your password correct?'
           }
         },
         authParams: {

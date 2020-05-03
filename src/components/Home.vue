@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <h1>Explore</h1>
-    <p :style="'font-size: 1.5rem'" v-if="this.$parent.claims">Welcome back, {{this.$parent.claims.name}}!</p>
+    <p :style="'font-size: 1.5rem'" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{rdmWelcome()}}</p>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
@@ -14,23 +14,21 @@
         <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
           <router-link class="client_link" :to="'/client/'+clients.name+'/'">
             <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
-          </router-link>
+          </router-link>   
           <div class="client_update">
             <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)" title="Archive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></a>
           </div>
         </div>
       </div>
     </div>
-    <button v-if="!creating" id="add_client-link" class="button" v-on:click="creation()">New client</button>
+    <button v-if="!creating" id="add_client-link" class="button" v-on:click="creation()">New Client</button>
     <p class="response" v-if="!creating">{{response}}</p>
     <div class="add_new_client_container" v-if="creating">
-      <h3>Add new client</h3>
-      <form name="add_client" class="form_grid" v-on:submit.prevent="save()">
+      <h3 class="add-new">New Client</h3>
+      <form name="add_client" class="form_grid" spellcheck="false" v-on:submit.prevent="save()">
         <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" autocomplete="name" v-model="new_client.name" required/>
         <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" autocomplete="email" v-model="new_client.email" required/>
         <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" />
-        <label style="margin: 1.5rem 0; align-self:start"><b>Notes: </b></label>
-        <quill v-model="new_client.notes" output="html" class="quill"></quill>
         <div class="form_buttons">
           <input type="submit" id="save_client-link" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
@@ -111,7 +109,17 @@
         } catch (e) {
           console.error(`${e}`)
         }
-      }
+      },
+      rdmWelcome() {
+      var msg = [
+      "let's get programming!",
+      "stay motivated!",
+      "quick one today?"
+      ];
+      var sel = Math.floor(Math.random() * 3);
+
+      return msg[sel];
+      },
     }
   }
 </script>
