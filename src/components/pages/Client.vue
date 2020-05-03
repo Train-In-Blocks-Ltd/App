@@ -191,7 +191,7 @@
 
 <script>
   import axios from 'axios'
-  import Loader from './Loader'
+  import Loader from '../components/Loader'
 
   export default {
     components: {

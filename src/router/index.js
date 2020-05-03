@@ -3,17 +3,18 @@ import Router from 'vue-router'
 
 import Auth from '@okta/okta-vue'
 
-import HomeComponent from '@/components/Home'
-import LoginComponent from '@/components/Login'
-import ProfileComponent from '@/components/Account'
-import UpdateComponent from '@/components/AccountUpdate'
-import LogoutComponent from '@/components/Logout'
-import ClientComponent from '@/components/Client'
-import ProgrammeComponent from '@/components/Workout'
-import NotFound from '@/components/NotFound'
-import ArchiveComponent from '@/components/Archive'
-import ClientProgrammes from '@/components/ClientProgrammes'
-import ClientResults from '@/components/ClientResults'
+import HomeComponent from '@/components/pages/Home'
+import LoginComponent from '@/components/pages/Login'
+import ProfileComponent from '@/components/pages/Account'
+import UpdateComponent from '@/components/pages/AccountUpdate'
+import LogoutComponent from '@/components/pages/Logout'
+import ClientComponent from '@/components/pages/Client'
+import NotFound from '@/components/pages/NotFound'
+import ArchiveComponent from '@/components/pages/Archive'
+
+import ClientProgrammes from '@/components/pages/_client/ClientProgrammes'
+import ClientResults from '@/components/pages/_client/ClientResults'
+import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -80,7 +81,7 @@ const router = new Router({
         },
         {
           path: 'programme/:id',
-          component: ProgrammeComponent,
+          component: ClientWorkouts,
           name: 'programme'
         }
       ]

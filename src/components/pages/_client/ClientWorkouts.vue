@@ -353,7 +353,7 @@
 </template>
 
 <script>
-  import Loader from './Loader'
+  import Loader from '../../components/Loader'
   import axios from 'axios'
   import qs from 'qs'
 

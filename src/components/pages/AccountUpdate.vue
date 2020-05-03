@@ -43,7 +43,7 @@
   import axios from 'axios'
   import qs from 'qs'
   import base64 from 'base-64'
-  import Loader from './Loader'
+  import Loader from '../components/Loader'
 
   export default {
     components: {
