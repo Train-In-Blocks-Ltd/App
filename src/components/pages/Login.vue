@@ -19,52 +19,52 @@
     font-weight: bold;
     text-align: left;
     color: #282828;
-    letter-spacing: 0.15em
+    letter-spacing: .15rem
   }
   .okta-form-input-field input {
     width: 75%;
-    margin: 0.75rem 0;
-    padding: 0.5rem;
+    margin: .75rem 0;
+    padding: .5rem;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
+    font-size: .9rem;
+    letter-spacing: .1rem;
     border: none;
-    border-bottom: 1px solid #888;
+    border-bottom: 1px solid #888888;
     transition: width 1s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .okta-form-input-field input:hover, .okta-form-input-field input:focus {
     width: 100%;
-    border-bottom: 1px solid #888;
+    border-bottom: 1px solid #888888;
     outline-width: 0
   }
   .okta-form-input-error {
     width: 100%;
     color: #EB5757;
-    margin-top: 0.5rem;
+    margin-top: .5rem;
     margin-bottom: 1.5rem;
-    font-size: 0.6rem;
+    font-size: .6rem;
     text-align: left
   }
   .o-form-input-name-remember {
     text-align: left;
-    font-size: 0.9rem
+    font-size: .9rem
   }
   .o-form-button-bar {
     margin: 1.25rem 0
   }
   .o-form-button-bar .button, .email-button {
-    padding: 0.5rem 1rem;
+    padding: .5rem 1rem;
     display: inline-block;
     border: 1px solid #282828;
     height: auto;
     width: auto;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.9rem;
+    font-size: .9rem;
     font-weight: bold;
     text-align: center;
     cursor: pointer;
-    transition: background-color 0.4s, color 0.2s
+    transition: background-color .4s, color .2s
   }
   .o-form-button-bar .button:hover, .email-button:hover {
     background-color: #282828;
@@ -74,11 +74,11 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
-    margin-top: 0.75rem;
-    font-size: 0.6rem
+    margin-top: .75rem;
+    font-size: .6rem
   }
   .help-links li {
-    padding: 0.25rem 0
+    padding: .25rem 0
   }
   .help-links li:first-of-type {
     padding-top: 0
@@ -91,7 +91,7 @@
     text-align: left
   }
   .link.help.js-help, .link.help.js-back {
-    font-size: 0.6rem;
+    font-size: .6rem;
     font-weight: 600
   }
   @media (max-width: 520px) {

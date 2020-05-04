@@ -38,6 +38,12 @@ Stylelint is used to lint CSS. Please follow it's guidance when developing.
 
 Stylelint doesn't work with WebPack and Vue so you need to install the [VSCode plugin](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint). No set-up is necessary, install and go.
 
+You can autofix problems by running:
+
+```
+npx stylelint "**/*.vue" --fix
+```
+
 ### JavaScript
 
 ESLint is used to lint JavaScript and HTML. Please follow it's guidance when developing.

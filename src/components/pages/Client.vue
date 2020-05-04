@@ -1,9 +1,9 @@
 <style>
-  .client_info input:not([type="submit"]) {
+  .client_info input:not([type='submit']) {
     background-color: initial!important;
     border: none;
     padding: 0;
-    font-size: 0.9rem
+    font-size: .9rem
   }
   .client_info textarea {
     background-color: initial!important;
@@ -14,7 +14,7 @@
       var(--accessible-color)
     );
     padding: 0;
-    font-size: 0.9rem;
+    font-size: .9rem;
     margin: 0
   }
   .client_info {
@@ -33,7 +33,7 @@
   }
   .top_grid {
     display: grid;
-    grid-template-columns: 1fr 0.25fr
+    grid-template-columns: 1fr .25fr
   }
   .floating_nav {
     text-align: right;
@@ -42,14 +42,14 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding-right: 0.5rem
+    padding-right: .5rem
   }
   .floating_nav a:first-of-type {
     margin-top: 0
   }
   .floating_nav > a {
     display: block;
-    margin: 0.5rem 0;
+    margin: .5rem 0;
     position: relative;
     color: rgb(
       var(--accessible-color),
@@ -66,7 +66,7 @@
     )
   }
   .floating_nav > a:before {
-    content: "";
+    content: '';
     position: absolute;
     width: 0%;
     height: 1px;
@@ -78,8 +78,8 @@
       var(--accessible-color)
     );
     visibility: hidden;
-    transition: all 0.3s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition: all .3s;
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .floating_nav > a:hover:before {
     visibility: visible;
@@ -98,7 +98,7 @@
     text-align: left;
     max-width: 400px;
     width: 100%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
     background-color: rgb(
       var(--red),
       var(--green),
@@ -117,9 +117,9 @@
   #client_notes_header {
     cursor: grab;
     z-index: 10;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
-    padding: 0 0.5rem
+    padding: 0 .5rem
   }
   #client_notes_footer button {
     margin-bottom: 0
@@ -139,13 +139,13 @@
       font-size: 1.35rem
     }
     .top_grid {
-      grid-template-rows: 1fr 0.25fr;
+      grid-template-rows: 1fr .25fr;
       grid-template-columns: auto
     }
     .floating_nav {
       text-align: left;
       padding-right: 0;
-      padding-top: 0.5rem;
+      padding-top: .5rem;
       border: none;
       border-top: 2px solid rgb(
         var(--accessible-color),

@@ -42,9 +42,9 @@
     margin-bottom: 1.25rem!important
   }
   .program_container p {
-    font-size: 0.625rem;
+    font-size: .625rem;
     font-weight: 500;
-    margin: 0.375rem 0
+    margin: .375rem 0
   }
   .program_container p:last-of-type {
     margin-bottom: 0
@@ -53,7 +53,7 @@
     margin-top: 1.75rem
   }
   .add_new_programme_container {
-    margin: 0.75rem 0
+    margin: .75rem 0
   }
   .add_new_programme_container > form {
     display: grid;

@@ -11,13 +11,13 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
-    letter-spacing: 0.15em
+    letter-spacing: .15rem
   }
   #title {
     text-transform: capitalize!important;
     font-weight: bold;
     font-size: 3.75rem;
-    letter-spacing: 0.15em
+    letter-spacing: .15rem
   }
   h1 {
     margin-top: 0;
@@ -25,11 +25,11 @@
     font-weight: bold;
     font-size: 3.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.15rem
+    letter-spacing: .15rem
   }
   h2 {
     font-size: 2.5rem;
-    letter-spacing: 0.15em;
+    letter-spacing: .15rem;
     margin: 1.75rem 0;
     margin-top: 4rem
   }
@@ -47,7 +47,7 @@
   }
 
   /* Inputs */
-  input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
+  input[type='text'], textarea, input[type='email'], input[type='tel'], input[type='search'], input[type='number'], input[type='date'] {
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -57,10 +57,10 @@
       calc(var(--red) + 45),
       calc(var(--green) + 45),
       calc(var(--blue) + 45),
-      0.8
+      .8
     )!important;
-    margin: 0.75rem 0;
-    padding: 0.5rem;
+    margin: .75rem 0;
+    padding: .5rem;
     display: inline-block;
     resize: none;
     color: rgb(
@@ -69,7 +69,7 @@
       var(--accessible-color)
     );
     font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 0.1em
+    letter-spacing: .1rem
   }
   .button {
     text-align: center;
@@ -78,11 +78,11 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding: 0.5rem 1rem;
+    padding: .5rem 1rem;
     height: auto;
     width: auto;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.9rem;
+    font-size: .9rem;
     font-weight: bold;
     cursor: pointer;
     opacity: 50%;
@@ -95,11 +95,11 @@
       calc(var(--red) + 30),
       calc(var(--green) + 30),
       calc(var(--blue) + 30),
-      0.8
+      .8
     );
-    margin: 1rem 0 0.5rem 0;
+    margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: opacity 0.4s, background-color 0.4s, color 0.2s
+    transition: opacity .4s, background-color .4s, color .2s
   }
   .button:hover {
     opacity: 100%;
@@ -134,7 +134,7 @@
     grid-area: sidebar;
     display: grid;
     text-align: left;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
     padding: 5rem 2.5rem 2.5rem 2.5rem;
     grid-auto-rows: 3.75rem auto min-content;
     position: sticky;
@@ -168,7 +168,7 @@
       calc(var(--red) + 30),
       calc(var(--green) + 30),
       calc(var(--blue) + 30),
-      0.8
+      .8
     )!important
   }
   .vc-chrome-toggle-icon svg path {
@@ -179,17 +179,17 @@
     )!important
   }
   .vc-chrome-fields .vc-input__input {
-    padding: 0.75rem 0!important;
+    padding: .75rem 0!important;
     box-shadow: none!important;
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     )!important;
-    font-size: 0.9rem!important
+    font-size: .9rem!important
   }
   .vc-chrome-fields .vc-input__label {
-    font-size: 0.8rem!important
+    font-size: .8rem!important
   }
   .vc-chrome-fields .vc-input__input, .vc-chrome-fields .vc-input__label {
     font-family: Arial, Helvetica, sans-serif!important;
@@ -228,11 +228,11 @@
       var(--blue)
     );
     display: grid;
-    grid-template-areas: "main"
+    grid-template-areas: 'main'
   }
   #app.authenticated {
     display: grid;
-    grid-template-areas: "sidebar main";
+    grid-template-areas: 'sidebar main';
     grid-template-columns: 260px 1fr
   }
   ::placeholder {
@@ -240,7 +240,7 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.6
+      .6
     );
     opacity: 1; /* Firefox */
   }
@@ -267,20 +267,20 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.6
+      .6
     )
   }
 
   /* Navigation */
   .nav_item {
-    font-size: 1.2em;
-    padding: 0.5rem 0
+    font-size: 1.2rem;
+    padding: .5rem 0
   }
   .nav_subitem {
-    padding: 0.4rem 0
+    padding: .4rem 0
   }
   .nav_subitem.subitem {
-    padding: 0.8rem 0 0 0.8rem
+    padding: .8rem 0 0 .8rem
   }
   .nav_subitem.subitem:last-of-type {
     padding-bottom: 1rem
@@ -288,7 +288,7 @@
   .account_nav_container {
     align-self: end;
     text-align: center;
-    font-size: 0.8em
+    font-size: .8rem
   }
   .nav_item:last-of-type {
     padding-bottom: 0
@@ -312,7 +312,7 @@
     )
   }
   .nav_item > a:before {
-    content: "";
+    content: '';
     position: absolute;
     width: 0%;
     height: 2px;
@@ -324,8 +324,8 @@
       var(--accessible-color)
     );
     visibility: hidden;
-    transition: all 0.3s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition: all .3s;
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .nav_item > a:hover:before {
     visibility: visible;
@@ -349,7 +349,7 @@
     )
   }
   .nav_subitem > a:before {
-    content: "";
+    content: '';
     position: absolute;
     width: 0%;
     height: 1px;
@@ -361,8 +361,8 @@
       var(--accessible-color)
     );
     visibility: hidden;
-    transition: all 0.3s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition: all .3s;
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .nav_subitem > a:hover:before {
     visibility: visible;
@@ -371,17 +371,17 @@
 
   /* Main Nav and Scrollbar */
   .main_nav {
-    border-bottom: 0.5px solid rgba(
+    border-bottom: .5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.1
+      .1
     );
-    border-top: 0.5px solid rgba(
+    border-top: .5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.1
+      .1
     );
     overflow-y: auto;
     margin-top: 3.75rem;
@@ -396,7 +396,7 @@
     background-color: white
   }
   .main_nav::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2)
+    background-color: rgba(0, 0, 0, .2)
   }
   .account_nav_container .nav_item:first-of-type {
     padding-top: 0
@@ -411,10 +411,10 @@
     font-weight: 400
   }
   .client_container {
-    margin: 0.5rem 0;
+    margin: .5rem 0;
     font-size: 1rem;
     display: grid;
-    grid-template-columns: 1fr 0.1fr;
+    grid-template-columns: 1fr .1fr;
     width: 55vw
   }
 
@@ -437,7 +437,7 @@
     )
   }
   .client_container > a:before {
-    content: "";
+    content: '';
     position: absolute;
     width: 90%;
     height: 1px;
@@ -449,7 +449,7 @@
       var(--accessible-color)
     );
     transition: all 500ms;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .client_container > a:not(.archived):hover:before {
     width: 100%
@@ -464,7 +464,7 @@
     opacity: 50%;
     font-size: 1rem;
     transition: opacity 1500ms;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .search:hover, .search:focus {
     opacity: 100%
@@ -475,14 +475,14 @@
     margin-top: 2rem
   }
   .client_update {
-    transition: 0.5s;
-    font-size: 0.9rem;
+    transition: .5s;
+    font-size: .9rem;
     text-align: right
   }
   .client_update a {
     height: 32px;
     width: 32px;
-    transition: 0.5s;
+    transition: .5s;
     display: grid;
     text-align: center;
     float: right;
@@ -496,7 +496,7 @@
       calc(var(--red) + 45),
       calc(var(--green) + 45),
       calc(var(--blue) + 45),
-      0.8
+      .8
     )
   }
   .client_update a:hover svg path:not(.transparent) {
@@ -529,9 +529,9 @@
     h1 {
       font-size: 1.4rem;
       text-align: center;
-      margin-top: -0.9rem;
+      margin-top: -.9rem;
       margin-bottom: 2.5rem;
-      margin-left: 1.25em
+      margin-left: 1.25rem
     }
     .sidebar {
       position: fixed;
@@ -541,7 +541,7 @@
         var(--green),
         var(--blue)
       );
-      transition: opacity 0.5s, z-index 1s;
+      transition: opacity .5s, z-index 1s;
       z-index: -1;
       opacity: 0
     }
@@ -568,7 +568,7 @@
 
   /* QUILL */
   .quill {
-    margin: 0.75rem 0
+    margin: .75rem 0
   }
   .ql-toolbar.ql-snow {
     border: none
@@ -594,7 +594,7 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.6
+      .6
     )
   }
   .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow.ql-toolbar button:hover .ql-stroke-miter, .ql-snow .ql-toolbar button:hover .ql-stroke-miter, .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
@@ -602,7 +602,7 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.6
+      .6
     )
   }
   .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
@@ -610,7 +610,7 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      0.6
+      .6
     )
   }
 

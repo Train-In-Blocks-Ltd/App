@@ -4,7 +4,7 @@
   }
   .details_container {
     display: grid;
-    grid-template-columns: 0.75fr 1fr;
+    grid-template-columns: .75fr 1fr;
     align-items: center;
     max-width: 360px
   }
