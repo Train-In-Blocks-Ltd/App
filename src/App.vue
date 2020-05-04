@@ -670,8 +670,8 @@ export default {
       }
     }
   },
-  async created () {
-    await this.isAuthenticated()
+  created () {
+    this.isAuthenticated()
   },
   watch: {
     // Everytime the route changes, check for auth status

@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <h1>Explore</h1>
-    <p class="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg[Math.floor(Math.random() * 3)]}}</p>
+    <p class="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</p>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
@@ -56,17 +56,22 @@
           notes: '<p><strong>Age:</strong></p><p><strong>Blood pressure:</strong></p><p><strong>Height:</strong></p><p><strong>BMI:</strong></p><p><strong>Body fat:</strong></p><p><strong>Muscle Mass</strong></p><p><strong>Hydration:</strong></p><p><br></p><p><strong>Goals:</strong></p><p><br></p><p><strong>Lifestyle:</strong></p><p><br></p><p><strong>Barriers to exercise:</strong></p><p><br></p><p><strong>Motivation:</strong></p><p><br></p><p><strong>Preferences:</strong></p><p><br></p>'
         },
         search: '',
-        msg: [
+        msg: ''
+      }
+    },
+    created () {
+      this.$parent.setup()
+      this.welcomeMsg()
+    },
+    methods: {
+      welcomeMsg () {
+        var arr = [
           'let\'s get programming!',
           'stay motivated!',
           'quick one today?'
         ]
-      }
-    },
-    async created () {
-      await this.$parent.setup()
-    },
-    methods: {
+        this.msg = arr[Math.floor(Math.random() * 3)]
+      },
       creation () {
         this.creating = true
       },
