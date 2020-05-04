@@ -3,7 +3,8 @@
     box-sizing: border-box
   }
   #home {
-    display: grid
+    display: grid;
+    max-width: 1056px
   }
   body {
     font-family: Arial, Helvetica, sans-serif;
@@ -19,9 +20,13 @@
     font-size: 3.75rem;
     letter-spacing: .15rem
   }
+  .intro {
+    font-size: 1.5rem;
+    margin-top: 0
+  }
   h1 {
     margin-top: 0;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
     font-weight: bold;
     font-size: 3.75rem;
     text-transform: uppercase;
@@ -85,7 +90,7 @@
     font-size: .9rem;
     font-weight: bold;
     cursor: pointer;
-    opacity: 50%;
+    opacity: .5;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -102,7 +107,7 @@
     transition: opacity .4s, background-color .4s, color .2s
   }
   .button:hover {
-    opacity: 100%;
+    opacity: 1;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -413,13 +418,12 @@
   .client_container {
     margin: .5rem 0;
     font-size: 1rem;
-    display: grid;
-    grid-template-columns: 1fr .1fr;
-    width: 55vw
+    display: block
   }
 
   /* Client Container Animation */
   .client_container > a {
+    display: block;
     position: relative;
     font-weight: 400;
     color: rgb(
@@ -461,56 +465,13 @@
   /* Search Bar */
   .search {
     width: 55vw;
-    opacity: 50%;
+    opacity: .5;
     font-size: 1rem;
     transition: opacity 1500ms;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .search:hover, .search:focus {
-    opacity: 100%
-  }
-
-  /* New and Update Client */
-  .add_new_client_container {
-    margin-top: 2rem
-  }
-  .client_update {
-    transition: .5s;
-    font-size: .9rem;
-    text-align: right
-  }
-  .client_update a {
-    height: 32px;
-    width: 32px;
-    transition: .5s;
-    display: grid;
-    text-align: center;
-    float: right;
-    align-items: center;
-    justify-content: center
-  }
-  .client_update a:hover {
-    cursor: pointer;
-    border-radius: 50px;
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      .8
-    )
-  }
-  .client_update a:hover svg path:not(.transparent) {
-    fill: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      1
-    )
-  }
-  #add_client-link {
-    margin-top: 1.75rem;
-    display: block;
-    width: 10rem
+    opacity: 1
   }
 
   /* Responsive Design */
@@ -658,7 +619,7 @@
           <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
             <div v-for="(programme, index) in posts[index].programmes"
               :key="index" class="nav_subitem subitem">
-              <router-link :to="'/client/'+clients.name+'/programme/'+programme.id">{{programme.name}}</router-link>
+              <router-link :to="'/client/'+clients.name+'/blocks/'+programme.id">{{programme.name}}</router-link>
             </div>
           </div>
         </div>
@@ -818,6 +779,7 @@ export default {
     },
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
+        this.$router.push('/')
         for (var i = 0; i < this.posts.length; i++) {
           //eslint-disable-next-line
           if (this.posts[i].client_id == id) {

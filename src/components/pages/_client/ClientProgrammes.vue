@@ -38,9 +38,6 @@
     font-size: 1.25rem;
     margin-bottom: 0
   }
-  .desc {
-    margin-bottom: 1.25rem!important
-  }
   .program_container p {
     font-size: .625rem;
     font-weight: 500;
@@ -63,7 +60,6 @@
 </style>
 <template>
     <div>
-      
       <!-- This is where we stitch all the blocks all-together! -->
       <h2>Programme</h2>
       <div id="graph">
@@ -76,12 +72,12 @@
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
         <p v-if="this.error"><b>{{error}}</b></p>
         <div v-if="!this.$parent.no_programmes && !this.error" class="program_wrapper">
-          <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
+          <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
               :key="index" class="program_container">
-              <router-link class="program_link" :to="'programme/'+programme.id">
-              <h3>{{programme.name}}</h3>
-              <p><b>Duration: </b>{{programme.duration}}</p>
-              <p><b>Start: </b>{{programme.start}}</p>
+              <router-link class="program_link" :to="'blocks/'+block.id">
+              <h3>{{block.name}}</h3>
+              <p><b>Duration: </b>{{block.duration}}</p>
+              <p><b>Start: </b>{{block.start}}</p>
               </router-link>
           </div>
         </div>
@@ -90,9 +86,9 @@
         <div class="add_new_programme_container" v-if="creating">
           <h3>New Block Incoming...</h3>
           <form name="add_program" v-on:submit.prevent="save()">
-              <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_programme.name" required/> 
-              <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_programme.duration" required/>
-              <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_programme.start" required />
+              <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_block.name" required/> 
+              <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_block.duration" required/>
+              <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_block.start" required />
               <div class="form_buttons">
                   <input type="submit" class="button" value="Save" />
                   <button class="button" v-on:click="close()">Close</button>
@@ -117,12 +113,10 @@
         error: '',
         response: '',
         creating: false,
-        new_programme: {
+        new_block: {
           name: '',
-          desc: '',
           duration: '',
-          start: '',
-          notes: ''
+          start: ''
         }
       }
     },
@@ -138,13 +132,11 @@
         try {
           this.$parent.$parent.loading = true
           // eslint-disable-next-line
-          const response_save_programmes = await axios.put(`https://api.traininblocks.com/programmes/${this.new_programme.name}`,
+          const response_save_block = await axios.put(`https://api.traininblocks.com/programmes/${this.new_block.name}`,
             qs.stringify({
               client_id: this.$parent.$parent.client_details.client_id,
-              desc: this.new_programme.desc,
-              duration: this.new_programme.duration,
-              start: this.new_programme.start,
-              notes: this.new_programme.notes
+              duration: this.new_block.duration,
+              start: this.new_block.start
             }),
             {
               headers: {
@@ -154,7 +146,7 @@
             }
           )
           // eslint-disable-next-line
-          this.response = response_save_programmes.data
+          this.response = response_save_block.data
 
           // Set old programmes to null so that they can be repopulated
           var x
@@ -170,12 +162,10 @@
 
           this.close()
 
-          this.new_programme = {
+          this.new_block = {
             name: '',
-            desc: '',
             duration: '',
-            start: '',
-            notes: ''
+            start: ''
           }
         } catch (e) {
           console.error(`${e}`)

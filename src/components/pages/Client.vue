@@ -33,7 +33,7 @@
   }
   .top_grid {
     display: grid;
-    grid-template-columns: 1fr .25fr
+    grid-template-columns: 1fr .15fr
   }
   .floating_nav {
     text-align: right;
@@ -47,7 +47,7 @@
   .floating_nav a:first-of-type {
     margin-top: 0
   }
-  .floating_nav > a {
+  .floating_nav a {
     display: block;
     margin: .5rem 0;
     position: relative;
@@ -58,14 +58,14 @@
     );
     text-decoration: none
   }
-  .floating_nav > a:hover {
+  .floating_nav a:hover {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     )
   }
-  .floating_nav > a:before {
+  .floating_nav a:before {
     content: '';
     position: absolute;
     width: 0%;
@@ -81,7 +81,7 @@
     transition: all .3s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
-  .floating_nav > a:hover:before {
+  .floating_nav a:hover:before {
     visibility: visible;
     width: 100%
   }
@@ -105,7 +105,7 @@
       var(--blue)
     );
     display: grid;
-    grid-template-rows: 1fr auto 1fr;
+    grid-template-rows: 40px auto;
     align-items: center
   }
   #client_notes_header p {
@@ -158,8 +158,8 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
-    <!-- Don't show if on workout page because workout page renders slightly different top ui -->
-    <div class="top_grid" v-if="!workout">
+    <!-- Don't show if on blocks page because blocks page renders slightly different top ui -->
+    <div class="top_grid" v-if="!blocks">
       <!-- Update the client details -->
       <form class="client_info" v-on:submit.prevent="update_client()">
         <input type="text" id="title" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
@@ -174,9 +174,14 @@
       </form>
       <div>
         <div class="floating_nav">
-          <a v-on:click="client_notes_function()" href="javascript:void(0);">Client Notes</a>
+          <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
           <router-link :to="{name: 'programmes'}">Programmes</router-link>
           <router-link :to="{name: 'results'}">Results</router-link>
+          <div v-for="(clients, index) in $parent.posts" :key="index">
+            <div v-if="clients.name == $route.params.name">
+              <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -185,12 +190,6 @@
         <p>Client Information</p>
       </div>
       <quill v-model="$parent.client_details.notes" output="html" class="quill"></quill>
-      <div id="client_notes_footer">
-        <div class="loading-grid">
-          <button class="button" v-on:click="update_client()">Save</button>
-          <Loader></Loader>
-        </div>
-      </div>
     </div>
     <!-- Router View for Client Pages -->
     <router-view :key="$route.fullPath"></router-view>
@@ -213,7 +212,7 @@
         no_programmes: false,
         loading_programmes: true,
         client_notes: false,
-        workout: false,
+        blocks: false,
         error: ''
       }
     },
@@ -225,6 +224,28 @@
       client_notes_function () {
         this.client_notes = !this.client_notes
         this.dragElement(document.getElementById('client_notes'))
+
+        // Set vue self
+        var self = this
+
+        function click (e) {
+          // If box is open
+          if (self.client_notes) {
+            if (!document.getElementById('client_notes').contains(e.target)) {
+              // Update the workout
+              self.update_client()
+              window.removeEventListener('click', click)
+              self.client_notes = false
+            }
+          }
+        }
+        // Wait 1 second before applying the event listener to avoid registering the click to open the box
+        setTimeout(
+          function () {
+            // Add event listener for clicking outside box
+            window.addEventListener('click', click)
+          }
+        , 1000)
       },
       dragElement (elmnt) {
         let pos1 = 0

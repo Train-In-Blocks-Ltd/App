@@ -3,12 +3,19 @@
     margin-bottom: 0;
     text-transform: capitalize
   }
+  #title, h3 {
+    font-size: 1.25rem;
+    font-weight: bold
+  }
+  #title {
+    margin-top: 0
+  }
   .programme_info {
     display: grid;
     grid-template-columns: max-content;
     grid-gap: .5rem
   }
-  .programme_info input:not([type='submit']), #notes {
+  .programme_info input:not([type='submit']) {
     background-color: initial!important;
     border: none;
     color: rgb(
@@ -18,13 +25,6 @@
     );
     padding: 0
   }
-  #title, h3 {
-    font-size: 1.25rem;
-    font-weight: bold
-  }
-  #duration {
-    width: 4ch
-  }
   .programme_grid {
     display: grid;
     grid-template-areas:
@@ -33,24 +33,6 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: 2rem;
     margin-top: 2.5rem
-  }
-  .notes {
-    grid-area: notes;
-    padding-left: 2rem;
-    border-left: 3px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
-  .notes form label b {
-    display: block;
-    font-size: 1.25rem
-  }
-  .notes form textarea {
-    display: block;
-    width: 100%;
-    resize: vertical
   }
   #title, #description {
     background-color: initial!important;
@@ -75,11 +57,11 @@
       .8
     )
   }
-  #title {
-    margin-top: 0
-  }
   #duration, #start {
     margin-left: .25rem
+  }
+  #duration {
+    width: 4ch
   }
   .programme_table {
     overflow-x: auto
@@ -121,7 +103,7 @@
     border: none;
     padding: 0
   }
-  #workout_notes {
+  .workout_notes {
     position: absolute;
     right: 0;
     top: 0;
@@ -181,7 +163,7 @@
     align-items: end;
     display: inline-block
   }
-  .label--workout > select {
+  .label--workout select {
     background: transparent;
     border: none;
     border-bottom: 1px solid rgb(
@@ -191,13 +173,13 @@
     );
     width: 50%
   }
-  .label--workout > select:hover {
+  .label--workout select:hover {
     cursor: pointer
   }
   .label--workout input, .label--workout select {
     font-size: 1rem
   }
-  #programme_notes_header > p {
+  #programme_notes_header p {
     display: block;
     margin: .5rem 0;
     position: relative;
@@ -209,7 +191,7 @@
     );
     text-decoration: none
   }
-  #programme_notes_header > p:hover {
+  #programme_notes_header p:hover {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -217,7 +199,7 @@
     );
     cursor: pointer
   }
-  #programme_notes_header > p:before {
+  #programme_notes_header p:before {
     content: '';
     position: absolute;
     width: 0%;
@@ -233,7 +215,7 @@
     transition: all .3s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
-  #programme_notes_header > p:hover:before {
+  #programme_notes_header p:hover:before {
     visibility: visible;
     width: 100%
   }
@@ -268,8 +250,7 @@
             </div>  <!-- client_info -->
             <div class="floating_nav_container">
               <div class="floating_nav">
-                <a v-on:click="$parent.client_notes_function()" href="javascript:void(0);">Client Notes</a>
-                <router-link :to="{name: 'programmes'}">Programme</router-link>
+                <router-link :to="{name: 'programmes'}">Programmes</router-link>
                 <router-link :to="{name: 'results'}">Results</router-link>
               </div>
             </div>  <!-- floating_nav_container -->
@@ -303,7 +284,7 @@
                       -
                       <span>{{workout.date}}</span>
                     </p>
-                    <div v-show="workout_notes" id="workout_notes">
+                    <div v-show="workout_notes == workout.id" class="workout_notes" :id="'workout_notes_' + workout.id">
                       <div id="workout_notes_header">
                         <p>
                           <span><b>{{workout.name}}</b></span>
@@ -334,9 +315,9 @@
                 </div>
               </div>
             </div><!-- workouts -->
-            <div class="notes" v-on:click="editing1()">
-              <div id="programme_notes_header">
-                <p>Block Notes</p>
+            <div>
+              <div id="block_notes_header">
+                <a href="javascript:void()" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
               </div>
               <div style="background-color: #C4C4C4; height: 50vh; text-align: center; line-height: 50vh">Graph and data goes here!!</div>
@@ -386,14 +367,13 @@
         workout_notes: false,
         new_workout: {
           name: '',
-          date: '',
-          notes: ''
+          date: ''
         }
       }
     },
     async created () {
+      this.$parent.blocks = true
       await this.get_workouts()
-      this.$parent.workout = true
     },
     methods: {
       day (date) {
@@ -409,10 +389,11 @@
         return weekday[d.getDay()]
       },
       workout_notes_function (id) {
-        // Toggle workout_notes
-        this.workout_notes = !this.workout_notes
+        // Set workout_notes to id of workout
+        this.workout_notes = id
+
         // Make notes draggable
-        this.$parent.dragElement(document.getElementById('workout_notes'))
+        this.$parent.dragElement(document.getElementById('workout_notes_' + id))
 
         // Set vue self
         var self = this
@@ -420,7 +401,7 @@
         function click (e) {
           // If box is open
           if (self.workout_notes) {
-            if (!document.getElementById('workout_notes').contains(e.target)) {
+            if (!document.getElementById('workout_notes_' + id).contains(e.target)) {
               // Update the workout
               self.update_workout(id)
               window.removeEventListener('click', click)
@@ -602,8 +583,7 @@
           const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
             qs.stringify({
               programme_id: this.$route.params.id,
-              date: this.new_workout.date,
-              notes: this.new_workout.notes
+              date: this.new_workout.date
             }),
             {
               headers: {

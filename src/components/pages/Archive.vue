@@ -2,6 +2,16 @@
   .client_update a:first-of-type {
     margin-left: 1rem
   }
+  .client_container.archived {
+    display: grid;
+    grid-template-columns: 1fr .1fr
+  }
+  .client_update {
+    padding: 1rem 0
+  }
+  .client_update a {
+    float: right
+  }
 </style>
 <template>
   <div id="home">

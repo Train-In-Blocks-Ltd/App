@@ -80,9 +80,9 @@ const router = new Router({
           name: 'results'
         },
         {
-          path: 'programme/:id',
+          path: 'blocks/:id',
           component: ClientBlocks,
-          name: 'programme'
+          name: 'blocks'
         }
       ]
     },
