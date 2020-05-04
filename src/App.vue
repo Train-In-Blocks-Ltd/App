@@ -1,13 +1,9 @@
 <style>
   * {
-    box-sizing: border-box;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color));
+    box-sizing: border-box
   }
   #home {
-    display: grid;
+    display: grid
   }
   body {
     font-family: Arial, Helvetica, sans-serif;
@@ -15,13 +11,13 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.15em
   }
   #title {
     text-transform: capitalize!important;
     font-weight: bold;
     font-size: 3.75rem;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.15em
   }
   h1 {
     margin-top: 0;
@@ -29,16 +25,16 @@
     font-weight: bold;
     font-size: 3.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.15rem;
+    letter-spacing: 0.15rem
   }
   h2 {
     font-size: 2.5rem;
     letter-spacing: 0.15em;
     margin: 1.75rem 0;
-    margin-top: 4rem;
+    margin-top: 4rem
   }
   h3 {
-    font-size: 2rem;
+    font-size: 2rem
   }
   a {
     text-decoration: none;
@@ -47,8 +43,9 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    font-weight: bold;
+    font-weight: bold
   }
+
   /* Inputs */
   input[type="text"], textarea, input[type="email"], input[type="tel"], input[type="search"], input[type="number"], input[type="date"] {
     border: 1px solid rgb(
@@ -66,14 +63,13 @@
     padding: 0.5rem;
     display: inline-block;
     resize: none;
-
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
     font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: 0.10em;
+    letter-spacing: 0.1em
   }
   .button {
     text-align: center;
@@ -103,7 +99,7 @@
     );
     margin: 1rem 0 0.5rem 0;
     display: inline-block;
-    transition: opacity 0.4s, background-color 0.4s, color 0.2s;
+    transition: opacity 0.4s, background-color 0.4s, color 0.2s
   }
   .button:hover {
     opacity: 100%;
@@ -112,84 +108,75 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    text-decoration: none;
+    text-decoration: none
   }
-  
+
   /* Misc Containers */
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
     max-width: 660px;
-    margin: 0;
+    margin: 0
   }
   .form_buttons {
     display: grid;
     grid-gap: 1rem;
     place-content: start;
-    grid-auto-flow: column;
-  }
-  #app {
-    display: grid;
-    grid-template-areas: "main";
+    grid-auto-flow: column
   }
   main {
     grid-area: main;
     display: grid;
     align-items: start;
-    padding: 5rem 3.75rem;
-  }
-  #app.authenticated {
-    display: grid;
-    grid-template-areas: "sidebar main";
-    grid-template-columns: 260px 1fr;
+    padding: 5rem 3.75rem
   }
   .sidebar {
     grid-area: sidebar;
     display: grid;
     text-align: left;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
     padding: 5rem 2.5rem 2.5rem 2.5rem;
     grid-auto-rows: 3.75rem auto min-content;
     position: sticky;
     height: 100vh;
-    top: 0;
+    top: 0
   }
   .logo_container {
-    text-align: center;
+    text-align: center
   }
   .logo_container a {
     display: block;
-    height: 60px;
+    height: 60px
   }
   .logo_container svg {
-    margin-top: -8px;
+    margin-top: -8px
   }
   .logo_container svg defs path {
     fill: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    );
+    )
   }
-  
+
   /* Color Picker */
   .vc-chrome-toggle-icon-highlight, .vc-chrome-alpha-wrap, .vc-chrome-field:nth-of-type(4) {
-    display: none;
+    display: none
   }
-  .vc-chrome-body, .vc-chrome-fields .vc-input__input  {
+  .vc-chrome-body, .vc-chrome-fields .vc-input__input {
     background-color: rgba(
       calc(var(--red) + 30),
       calc(var(--green) + 30),
       calc(var(--blue) + 30),
       0.8
-    )!important;
+    )!important
   }
   .vc-chrome-toggle-icon svg path {
     fill: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    )!important;
+    )!important
   }
   .vc-chrome-fields .vc-input__input {
     padding: 0.75rem 0!important;
@@ -199,10 +186,10 @@
       var(--accessible-color),
       var(--accessible-color)
     )!important;
-    font-size: 0.9rem!important;
+    font-size: 0.9rem!important
   }
   .vc-chrome-fields .vc-input__label {
-    font-size: 0.8rem!important;
+    font-size: 0.8rem!important
   }
   .vc-chrome-fields .vc-input__input, .vc-chrome-fields .vc-input__label {
     font-family: Arial, Helvetica, sans-serif!important;
@@ -210,10 +197,10 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    )!important;
+    )!important
   }
   .vc-chrome {
-    box-shadow: none!important;
+    box-shadow: none!important
   }
 
   /* Misc */
@@ -229,6 +216,7 @@
         ) - 128
       ) * -1000
     );
+
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -238,7 +226,14 @@
       var(--red),
       var(--green),
       var(--blue)
-    )
+    );
+    display: grid;
+    grid-template-areas: "main"
+  }
+  #app.authenticated {
+    display: grid;
+    grid-template-areas: "sidebar main";
+    grid-template-columns: 260px 1fr
   }
   ::placeholder {
     color: rgba(
@@ -254,18 +249,18 @@
     grid-template-columns: repeat(2, auto);
     place-items: end;
     justify-self: start;
-    grid-gap: 1rem;
+    grid-gap: 1rem
   }
   .loader, .loader svg {
     width: 4rem;
-    height: 3.5rem;
+    height: 3.5rem
   }
   .loader circle {
     fill: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    );
+    )
   }
   svg path:not(.transparent) {
     fill: rgba(
@@ -273,32 +268,30 @@
       var(--accessible-color),
       var(--accessible-color),
       0.6
-    );
+    )
   }
 
   /* Navigation */
   .nav_item {
     font-size: 1.2em;
+    padding: 0.5rem 0
   }
   .nav_subitem {
-    padding: 0.4rem 0;
+    padding: 0.4rem 0
   }
   .nav_subitem.subitem {
-    padding: 0.8rem 0 0 0.8rem;
+    padding: 0.8rem 0 0 0.8rem
   }
   .nav_subitem.subitem:last-of-type {
-    padding-bottom: 1rem;
+    padding-bottom: 1rem
   }
   .account_nav_container {
     align-self: end;
     text-align: center;
-    font-size: 0.8em;
-  }
-  .nav_item {
-    padding: 0.5rem 0;
+    font-size: 0.8em
   }
   .nav_item:last-of-type {
-    padding-bottom: 0;
+    padding-bottom: 0
   }
 
   /* Nav Animated */
@@ -306,15 +299,17 @@
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
+      var(--accessible-color)
+    );
     text-decoration: none;
-    position: relative;
+    position: relative
   }
   .nav_item > a:hover {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
+      var(--accessible-color)
+    )
   }
   .nav_item > a:before {
     content: "";
@@ -326,31 +321,32 @@
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-
+      var(--accessible-color)
+    );
     visibility: hidden;
     transition: all 0.3s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
   }
   .nav_item > a:hover:before {
     visibility: visible;
-    width: 100%;
+    width: 100%
   }
   .nav_subitem > a {
     position: relative;
-
     font-weight: 400;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-    text-decoration: none;
+      var(--accessible-color)
+    );
+    text-decoration: none
   }
   .nav_subitem > a:hover {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
+      var(--accessible-color)
+    )
   }
   .nav_subitem > a:before {
     content: "";
@@ -362,15 +358,15 @@
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-
+      var(--accessible-color)
+    );
     visibility: hidden;
     transition: all 0.3s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
   }
   .nav_subitem > a:hover:before {
     visibility: visible;
-    width: 100%;
+    width: 100%
   }
 
   /* Main Nav and Scrollbar */
@@ -389,37 +385,37 @@
     );
     overflow-y: auto;
     margin-top: 3.75rem;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.5rem
   }
   .main_nav::-webkit-scrollbar-track {
     border: 1px solid white;
-    background-color: #FFFFFF;
+    background-color: white
   }
   .main_nav::-webkit-scrollbar {
     width: 10px;
-    background-color: #FFFFFF;
+    background-color: white
   }
   .main_nav::-webkit-scrollbar-thumb {
-    background-color: rgba(0,0,0,0.2)
+    background-color: rgba(0, 0, 0, 0.2)
   }
   .account_nav_container .nav_item:first-of-type {
-    padding-top: 0;
+    padding-top: 0
   }
   .nav_subitem a.router-link-exact-active {
-    font-weight: bold;
+    font-weight: bold
   }
 
   /* Client Container */
   .client_container p {
     margin: 0;
-    font-weight: 400;
+    font-weight: 400
   }
   .client_container {
     margin: 0.5rem 0;
     font-size: 1rem;
     display: grid;
     grid-template-columns: 1fr 0.1fr;
-    width: 55vw;
+    width: 55vw
   }
 
   /* Client Container Animation */
@@ -429,14 +425,16 @@
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-    text-decoration: none;
+      var(--accessible-color)
+    );
+    text-decoration: none
   }
   .client_container > a:not(.archived):hover {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
+      var(--accessible-color)
+    )
   }
   .client_container > a:before {
     content: "";
@@ -448,15 +446,16 @@
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
+      var(--accessible-color)
+    );
     transition: all 500ms;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
   }
   .client_container > a:not(.archived):hover:before {
-    width: 100%;
+    width: 100%
   }
   .client_link {
-    padding: 1rem 0;
+    padding: 1rem 0
   }
 
   /* Search Bar */
@@ -464,22 +463,21 @@
     width: 55vw;
     opacity: 50%;
     font-size: 1rem;
-
     transition: opacity 1500ms;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1)
   }
   .search:hover, .search:focus {
-    opacity: 100%;
+    opacity: 100%
   }
 
   /* New and Update Client */
   .add_new_client_container {
-    margin-top: 2rem;
+    margin-top: 2rem
   }
   .client_update {
     transition: 0.5s;
     font-size: 0.9rem;
-    text-align: right;
+    text-align: right
   }
   .client_update a {
     height: 32px;
@@ -489,12 +487,17 @@
     text-align: center;
     float: right;
     align-items: center;
-    justify-content: center;
+    justify-content: center
   }
   .client_update a:hover {
     cursor: pointer;
     border-radius: 50px;
-    background-color: rgba( calc(var(--red) + 45), calc(var(--green) + 45), calc(var(--blue) + 45), 0.8 );
+    background-color: rgba(
+      calc(var(--red) + 45),
+      calc(var(--green) + 45),
+      calc(var(--blue) + 45),
+      0.8
+    )
   }
   .client_update a:hover svg path:not(.transparent) {
     fill: rgba(
@@ -502,33 +505,33 @@
       var(--accessible-color),
       var(--accessible-color),
       1
-    );
+    )
   }
   #add_client-link {
     margin-top: 1.75rem;
     display: block;
-    width: 10rem;  
+    width: 10rem
   }
 
   /* Responsive Design */
   @media (min-width: 768px) {
     #hamburger, #close {
-      display: none;
+      display: none
     }
   }
   @media (max-width: 768px) {
     #app.authenticated {
-      display: block;
+      display: block
     }
     main > div {
-      max-width: 100%;
+      max-width: 100%
     }
     h1 {
       font-size: 1.4rem;
       text-align: center;
-      margin-top: -.9rem;
+      margin-top: -0.9rem;
       margin-bottom: 2.5rem;
-      margin-left: 1.25em;
+      margin-left: 1.25em
     }
     .sidebar {
       position: fixed;
@@ -540,31 +543,35 @@
       );
       transition: opacity 0.5s, z-index 1s;
       z-index: -1;
-      opacity: 0;
+      opacity: 0
     }
     .sidebar.open {
       opacity: 1;
-      z-index: 99;
+      z-index: 99
     }
     main {
-      padding: 5rem 1.875rem;
+      padding: 5rem 1.875rem
     }
     #hamburger, #close {
       position: absolute;
       left: 1.875rem;
-      top: 1.5rem;
+      top: 1.5rem
     }
     #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
-      fill: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color));
+      fill: rgb(
+        var(--accessible-color),
+        var(--accessible-color),
+        var(--accessible-color)
+      )
     }
   }
-  
+
   /* QUILL */
   .quill {
-    margin: 0.75rem 0;
+    margin: 0.75rem 0
   }
   .ql-toolbar.ql-snow {
-    border:none;
+    border: none
   }
   .ql-snow .ql-stroke {
     stroke: rgb(
@@ -574,55 +581,52 @@
     )
   }
   .ql-editor {
-    height: 400px ;
+    height: 400px;
     color:rgb(
-              var(--accessible-color),
-              var(--accessible-color),
-              var(--accessible-color)
-            );
-    overflow-y: auto;
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    overflow-y: auto
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: rgba(
-          var(--accessible-color),
-          var(--accessible-color),
-          var(--accessible-color),
-          0.6
-        );
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.6
+    )
   }
   .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow.ql-toolbar button:hover .ql-stroke-miter, .ql-snow .ql-toolbar button:hover .ql-stroke-miter, .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
     stroke: rgba(
-              var(--accessible-color),
-              var(--accessible-color),
-              var(--accessible-color),
-              0.6
-            )
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.6
+    )
   }
   .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
     fill: rgba(
-              var(--accessible-color),
-              var(--accessible-color),
-              var(--accessible-color),
-              0.6
-            )
-  }
-  
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.6
+    )
   }
 
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px
+  }
   ::-webkit-scrollbar-track {
-      background: transparent; 
+    background: transparent
   }
-    
   ::-webkit-scrollbar-thumb {
-      background: #00000020; 
+    background: #00000020
   }
-    
   ::-webkit-scrollbar-thumb:hover {
-      background: #00000030;
+    background: #00000030
   }
 </style>
 <template>

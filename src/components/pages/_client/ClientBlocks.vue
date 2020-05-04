@@ -1,13 +1,14 @@
 <style scoped>
   h1 {
     margin-bottom: 0;
-    text-transform: capitalize;
+    text-transform: capitalize
   }
   .programme_info {
     display: grid;
     grid-template-columns: max-content;
+    grid-gap: .5rem
   }
-  .programme_info input:not([type="submit"]), #notes {
+  .programme_info input:not([type='submit']), #notes {
     background-color: initial!important;
     border: none;
     color: rgb(
@@ -15,22 +16,23 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding: 0;
+    padding: 0
   }
   #title, h3 {
     font-size: 1.25rem;
-    font-weight: bold;
+    font-weight: bold
   }
   #duration {
-    width: 4ch;
+    width: 4ch
   }
   .programme_grid {
     display: grid;
-    grid-template-areas: 
-    "table notes"
-    "workouts notes";
+    grid-template-areas:
+      'table notes'
+      'workouts notes';
     grid-template-columns: 1fr 1fr;
     grid-gap: 2rem;
+    margin-top: 2.5rem
   }
   .notes {
     grid-area: notes;
@@ -43,77 +45,81 @@
   }
   .notes form label b {
     display: block;
-    font-size: 1.25rem;
+    font-size: 1.25rem
   }
   .notes form textarea {
     display: block;
     width: 100%;
-    resize: vertical;
+    resize: vertical
   }
   #title, #description {
     background-color: initial!important;
     border: none;
-    color: rgb( var(--accessible-color), var(--accessible-color), var(--accessible-color) );
-    padding: 0;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    padding: 0
   }
   .client_info label {
     grid-auto-columns: min-content;
-    grid-gap: 0;
+    grid-gap: 0
   }
   .add_new_workout_container .quill {
-    margin: 0.75rem 0;
-    background-color: rgba( calc(var(--red) + 45), calc(var(--green) + 45), calc(var(--blue) + 45), 0.8 );
-  }
-  .programme_info {
-    grid-gap: 0.5rem;
+    margin: .75rem 0;
+    background-color: rgba(
+      calc(var(--red) + 45),
+      calc(var(--green) + 45),
+      calc(var(--blue) + 45),
+      .8
+    )
   }
   #title {
-    margin-top: 0;
+    margin-top: 0
   }
   #duration, #start {
-    margin-left: 0.25rem;
-  }
-  .programme_grid {
-    margin-top: 2.5rem;
+    margin-left: .25rem
   }
   .programme_table {
-    overflow-x: auto ;
+    overflow-x: auto
   }
   .programme_container {
-    margin-bottom: 5px;
+    margin-bottom: 5px
   }
   .programme_table > *, .programme_duration_container > * {
     border: 1px solid rgb(
-          var(--accessible-color),
-          var(--accessible-color),
-          var(--accessible-color)
-        );
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
     display: inline-block;
     font-weight: bold;
-    text-align: center  ;
+    text-align: center
   }
   .programme_duration_container > * {
     border-left: none;
     border-bottom: none;
-    padding: 30px 0px;
-    width: 40px;
+    padding: 30px 0;
+    width: 40px
   }
   .programme_duration_container > *:last-of-type {
-    border-right: none;
+    border-right: none
   }
-  .programme_duration_container > *:hover {    
-    box-shadow: inset 0px 20px 30px -30px rgba(
-          var(--accessible-color),
-          var(--accessible-color),
-          var(--accessible-color),
-          0.5);
-    cursor: pointer;
+  .programme_duration_container > *:hover {
+    box-shadow: inset 0 20px 30px -30px rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      .5
+    );
+    cursor: pointer
   }
   .programme_duration_container {
     display: grid;
     grid-auto-flow: column;
     border: none;
-    padding: 0;
+    padding: 0
   }
   #workout_notes {
     position: absolute;
@@ -123,29 +129,33 @@
     text-align: left;
     max-width: 400px;
     width: 100%;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
-    background-color: rgb( var(--red), var(--green), var(--blue) );
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
+    background-color: rgb(
+      var(--red),
+      var(--green),
+      var(--blue)
+    );
     display: grid;
     grid-template-rows: 40px auto;
-    align-items: center;
+    align-items: center
   }
   #workout_notes_header p {
-    margin: 0;
+    margin: 0
   }
   #workout_notes_header {
     cursor: grab;
     z-index: 10;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
-    padding: 0 0.5rem;
+    padding: 0 .5rem
   }
   #workout_notes_footer button {
-    margin-bottom: 0;
+    margin-bottom: 0
   }
   #workout_notes_footer, #workout_notes_header {
     height: 100%;
     display: grid;
-    align-items: center;
+    align-items: center
   }
   .workouts {
     grid-area: workouts
@@ -153,24 +163,23 @@
   .workout {
     display: block;
     border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
-    padding: 0.5rem 0;
+    padding: .5rem 0;
     cursor: pointer;
     width: 20vw;
-
     transition: width 1500ms;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .workout:hover {
-    width: 25vw;
+    width: 25vw
   }
   .client-info--workout {
-    height: auto; 
-    margin: 0; 
-    font-size: 1em;
+    height: auto;
+    margin: 0;
+    font-size: 1rem
   }
   .label--workout {
     align-items: end;
-    display: inline-block;
+    display: inline-block
   }
   .label--workout > select {
     background: transparent;
@@ -178,38 +187,38 @@
     border-bottom: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-    width: 50%;
-
+      var(--accessible-color)
+    );
+    width: 50%
   }
   .label--workout > select:hover {
-    cursor: pointer;
+    cursor: pointer
   }
   .label--workout input, .label--workout select {
-    font-size: 1em;
+    font-size: 1rem
   }
-
   #programme_notes_header > p {
     display: block;
-    margin: 0.5rem 0;
+    margin: .5rem 0;
     position: relative;
     width: fit-content;
-
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));;
-    text-decoration: none;
+      var(--accessible-color)
+    );
+    text-decoration: none
   }
   #programme_notes_header > p:hover {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));;
-    cursor: pointer;
+      var(--accessible-color)
+    );
+    cursor: pointer
   }
   #programme_notes_header > p:before {
-    content: "";
+    content: '';
     position: absolute;
     width: 0%;
     height: 1px;
@@ -218,15 +227,15 @@
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-
+      var(--accessible-color)
+    );
     visibility: hidden;
-    transition: all 0.3s;
-    transition-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition: all .3s;
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   #programme_notes_header > p:hover:before {
     visibility: visible;
-    width: 100%;
+    width: 100%
   }
 </style>
 
@@ -250,7 +259,7 @@
                   </select>
                 </label>
                 <div class="loading-grid" v-if="edit">
-                  <input style="margin: 1rem 0 0.5rem 0" type="submit" class="button" value="Save" />
+                  <input style="margin: 1rem 0 .5rem 0" type="submit" class="button" value="Save" />
                   <Loader></Loader>
                 </div>
                 <p v-if="programme_update_response"><b>{{programme_update_response}}</b></p>
@@ -268,7 +277,7 @@
           <div class="programme_grid">
             <div class="programme_table">
               <div class="programme_container">
-                <p style="margin: 30px 0px">{{programme.name}}</p>
+                <p style="margin: 30px 0">{{programme.name}}</p>
                 <div class="programme_duration_container">
                   <div v-for="item in programme_duration(programme.duration)" :key="item">
                     {{item}}
@@ -330,7 +339,7 @@
                 <p>Block Notes</p>
                 <h3>Statistics</h3>
               </div>
-              <div style="background-color: #c4c4c4; height: 50vh; text-align: center; line-height: 50vh;">Graph and data goes here!!</div>
+              <div style="background-color: #C4C4C4; height: 50vh; text-align: center; line-height: 50vh">Graph and data goes here!!</div>
               
               <!--Reverted but need to turn this into a pop-up. 
               It's now called block notes and the button to open it is above.

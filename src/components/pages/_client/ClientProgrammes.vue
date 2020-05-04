@@ -2,61 +2,63 @@
   #graph {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    grid-gap: 10px;
+    grid-gap: 10px
   }
   .program_wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, 300px);
-    grid-gap: 40px;
+    grid-gap: 40px
   }
   .program_container:first-of-type {
-    margin-left: 0;
+    margin-left: 0
   }
   .program_container:last-of-type {
-    margin-right: 0;
+    margin-right: 0
   }
   .program_link {
     padding: 1.5rem;
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-    display: block;
+      var(--accessible-color)
+    );
+    display: block
   }
-  .program_link:hover { 
+  .program_link:hover {
     text-decoration: none;
     border: 2px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
-      var(--accessible-color));
-    padding: calc(1.5rem - 1px);
+      var(--accessible-color)
+    );
+    padding: calc(1.5rem - 1px)
   }
   .program_container h3 {
     margin-top: 0;
     font-size: 1.25rem;
-    margin-bottom: 0;
+    margin-bottom: 0
   }
   .desc {
-    margin-bottom: 1.25rem!important;
+    margin-bottom: 1.25rem!important
   }
   .program_container p {
     font-size: 0.625rem;
     font-weight: 500;
-    margin: 0.375rem 0;
+    margin: 0.375rem 0
   }
   .program_container p:last-of-type {
-    margin-bottom: 0;
+    margin-bottom: 0
   }
   #add_programme_link {
-    margin-top: 1.75rem;
+    margin-top: 1.75rem
   }
   .add_new_programme_container {
-    margin: 0.75rem 0;
+    margin: 0.75rem 0
   }
   .add_new_programme_container > form {
     display: grid;
     grid-template-columns: 1fr;
-    width: 30vw;
+    width: 30vw
   }
 </style>
 <template>
@@ -65,8 +67,8 @@
       <!-- This is where we stitch all the blocks all-together! -->
       <h2>Programme</h2>
       <div id="graph">
-        <div style="background-color: #c4c4c4; height: 20vh; text-align: center;">Visualisation Goes Here!!</div>
-        <div style="background-color: #e1e1e1; height: 20vh; text-align: center;">Programme Data Goes Here!!</div>
+        <div style="background-color: #C4C4C4; height: 20vh; text-align: center">Visualisation Goes Here!!</div>
+        <div style="background-color: #E1E1E1; height: 20vh; text-align: center">Programme Data Goes Here!!</div>
       </div>
       <div>
         <h3>Blocks</h3>

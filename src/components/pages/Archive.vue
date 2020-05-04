@@ -1,6 +1,6 @@
 <style scoped>
   .client_update a:first-of-type {
-    margin-left: 1rem;
+    margin-left: 1rem
   }
 </style>
 <template>

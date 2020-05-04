@@ -1,19 +1,19 @@
 <style>
   #save_changes-link {
-    margin-top: 2rem;
+    margin-top: 2rem
   }
   .details_container {
     display: grid;
     grid-template-columns: 0.75fr 1fr;
     align-items: center;
-    max-width: 360px;
+    max-width: 360px
   }
   .response {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    );
+    )
   }
 </style>
 <template>
