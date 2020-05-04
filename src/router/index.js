@@ -72,17 +72,26 @@ const router = new Router({
         {
           path: '',
           component: ClientProgrammes,
-          name: 'programmes'
+          name: 'programmes',
+          meta: {
+            requiresAuth: true
+          }
         },
         {
           path: 'results',
           component: ClientResults,
-          name: 'results'
+          name: 'results',
+          meta: {
+            requiresAuth: true
+          }
         },
         {
           path: 'blocks/:id',
           component: ClientBlocks,
-          name: 'blocks'
+          name: 'blocks',
+          meta: {
+            requiresAuth: true
+          }
         }
       ]
     },

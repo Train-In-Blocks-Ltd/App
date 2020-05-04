@@ -12,7 +12,8 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
-    letter-spacing: .15rem
+    letter-spacing: .15rem;
+    overflow-x: hidden
   }
   #title {
     text-transform: capitalize!important;
@@ -288,7 +289,7 @@
     padding: .8rem 0 0 .8rem
   }
   .nav_subitem.subitem:last-of-type {
-    padding-bottom: 1rem
+    padding-bottom: .5rem
   }
   .account_nav_container {
     align-self: end;
@@ -300,23 +301,11 @@
   }
 
   /* Nav Animated */
-  .nav_item > a {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    text-decoration: none;
-    position: relative
+  .main_nav a {
+    position: relative;
+    border: 0
   }
-  .nav_item > a:hover {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
-  .nav_item > a:before {
+  .main_nav a:before {
     content: '';
     position: absolute;
     width: 0%;
@@ -332,46 +321,15 @@
     transition: all .3s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
-  .nav_item > a:hover:before {
-    visibility: visible;
-    width: 100%
-  }
-  .nav_subitem > a {
-    position: relative;
-    font-weight: 400;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    text-decoration: none
-  }
-  .nav_subitem > a:hover {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
   .nav_subitem > a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    visibility: hidden;
-    transition: all .3s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+    height: 1px
   }
-  .nav_subitem > a:hover:before {
+  .main_nav a:hover:before {
     visibility: visible;
     width: 100%
+  }
+  .nav_subitem a {
+    font-weight: 400
   }
 
   /* Main Nav and Scrollbar */

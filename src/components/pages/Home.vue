@@ -98,7 +98,7 @@
             }
           )
           // eslint-disable-next-line
-          this.response = response_save_clients.data
+          this.response = (response_save_clients.data).toString()
 
           await this.$parent.clients()
           this.$parent.clients_to_vue()
