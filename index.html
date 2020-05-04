@@ -26,6 +26,14 @@
     <meta property="og:image" content="https://app.traininblocks.com/android-chrome-192x192.png">
   </head>
   <body>
+    <script>
+      if (localStorage.getItem('colors')) {
+        const color = JSON.parse(localStorage.getItem('colors'))
+        document.getElementsByTagName('BODY')[0].style.setProperty('--red', color.r)
+        document.getElementsByTagName('BODY')[0].style.setProperty('--green', color.g)
+        document.getElementsByTagName('BODY')[0].style.setProperty('--blue', color.b)
+      }
+    </script>
     <div id="app"></div>
     <noscript>JavaScript is required to run this app. Please enable it.</noscript>
     <script>

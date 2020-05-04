@@ -550,7 +550,7 @@
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
-  <div id="app" v-bind:class="{'authenticated': authenticated}" :style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
+  <div id="app" v-bind:class="{'authenticated': authenticated}">
     <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
     <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
        <!-- Mobile open/close sidebar icon -->
@@ -647,7 +647,12 @@ export default {
       this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
       this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
       this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
-
+      if (!localStorage.getItem('colors')) {
+        document.getElementsByTagName('BODY')[0].style.setProperty('--red', this.colors.rgba.r)
+        document.getElementsByTagName('BODY')[0].style.setProperty('--green', this.colors.rgba.g)
+        document.getElementsByTagName('BODY')[0].style.setProperty('--blue', this.colors.rgba.b)
+      }
+      localStorage.setItem('colors', JSON.stringify(this.colors.rgba))
       var d = new Date()
       var n = d.getTime()
       if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
