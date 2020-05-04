@@ -9,8 +9,8 @@
 </template>
 <script>
 export default {
-  async created () {
-    await this.$parent.setup()
+  created () {
+    this.$parent.setup()
   }
 }
 </script>

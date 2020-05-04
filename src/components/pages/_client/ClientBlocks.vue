@@ -268,11 +268,11 @@
             </div> <!-- programme_table -->
             <div class="workouts">
               <h3>Workouts</h3>
-              <p v-if="no_workouts">No workouts yet. You can add one below.</p>
-              <p v-if="loading_workouts">Loading workouts...</p>
-              <p v-if="error"><b>{{error}}</b></p>
+              <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
+              <p v-if="$parent.loading_workouts">Loading workouts...</p>
+              <p v-if="$parent.workout_error"><b>{{$parent.workout_error}}</b></p>
               <div class="workout_wrapper">
-                <div v-if="!no_workouts && !error">
+                <div v-if="!$parent.no_workouts && !$parent.workout_error">
                   <!-- Loop through workouts -->
                   <div v-for="(workout, index) in programme.workouts"
                     :key="index">
@@ -361,8 +361,6 @@
         programme_update_error: '',
         programme1_update_response: '',
         programme1_update_error: '',
-        no_workouts: false,
-        loading_workouts: true,
         error: '',
         workout_notes: false,
         new_workout: {
@@ -373,7 +371,6 @@
     },
     async created () {
       this.$parent.blocks = true
-      await this.get_workouts()
     },
     methods: {
       day (date) {
@@ -497,51 +494,6 @@
         this.creating = false
         this.response = ''
       },
-      async get_workouts () {
-        try {
-          // Loop through programmes
-          var x
-          for (x in this.$parent.$parent.client_details.programmes) {
-            // If programme matches programme in route
-            // eslint-disable-next-line
-            if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
-              // If client_details.programmes.workouts is set to false
-              if (this.$parent.$parent.client_details.programmes[x].workouts === false) {
-                this.no_workouts = true
-              // If client_details.programmes.workouts is not set then query the API
-              } else if (!this.$parent.$parent.client_details.programmes[x].workouts) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-                // eslint-disable-next-line
-                const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.$parent.client_details.programmes[x].id}`)
-                // If there are no workouts
-                if (response_programmes.data.length === 0) {
-                  this.no_workouts = true
-                  this.$parent.$parent.client_details.programmes[x].workouts = false
-                  // If there are workouts set the client_details to include workouts
-                } else {
-                  this.$parent.$parent.client_details.programmes[x].workouts = response_programmes.data
-                }
-                // Sync client_details with posts
-                // Loop through clients
-                //eslint-disable-next-line
-                var y
-                for (y in this.$parent.$parent.posts) {
-                  // If client matches client in route
-                  //eslint-disable-next-line
-                  if (this.$parent.$parent.posts[x].name == this.$route.params.name) {
-                    this.$parent.$parent.posts[x] = this.$parent.$parent.client_details
-                  }
-                }
-                // Update the localstorage with the workouts
-                localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
-              }
-            }
-          }
-          this.loading_workouts = false
-        } catch (e) {
-          this.error = e.toString()
-        }
-      },
       async update_workout (id) {
         // Close the box
         this.workout_notes = !this.workout_notes
@@ -596,7 +548,7 @@
           this.response = response_save_workouts.data
 
           // Get the workouts from the API because we've just created a new one
-          await this.get_workouts()
+          await this.$parent.get_client_details()
 
           this.$parent.$parent.loading = false
 

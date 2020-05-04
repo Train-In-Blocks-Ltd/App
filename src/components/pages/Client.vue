@@ -213,7 +213,10 @@
         loading_programmes: true,
         client_notes: false,
         blocks: false,
-        error: ''
+        error: '',
+        no_workouts: false,
+        loading_workouts: true,
+        workout_error: false
       }
     },
     async created () {
@@ -324,6 +327,49 @@
           }
         } catch (e) {
           this.error = e.toString()
+        }
+        try {
+          // Loop through programmes
+          var f
+          for (f in this.$parent.client_details.programmes) {
+            // If programme matches programme in route
+            // eslint-disable-next-line
+            if (this.$parent.client_details.programmes[f].id == this.$route.params.id) {
+              // If client_details.programmes.workouts is set to false
+              if (this.$parent.client_details.programmes[f].workouts === false) {
+                this.no_workouts = true
+              // If client_details.programmes.workouts is not set then query the API
+              } else if (!this.$parent.client_details.programmes[f].workouts) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+                // eslint-disable-next-line
+                const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.programmes[x].id}`)
+                // If there are no workouts
+                if (response_programmes.data.length === 0) {
+                  this.no_workouts = true
+                  this.$parent.client_details.programmes[f].workouts = false
+                  // If there are workouts set the client_details to include workouts
+                } else {
+                  this.$parent.client_details.programmes[f].workouts = response_programmes.data
+                }
+                // Sync client_details with posts
+                // Loop through clients
+                //eslint-disable-next-line
+                var y
+                for (y in this.$parent.posts) {
+                  // If client matches client in route
+                  //eslint-disable-next-line
+                  if (this.$parent.posts[f].name == this.$route.params.name) {
+                    this.$parent.posts[f] = this.$parent.client_details
+                  }
+                }
+                // Update the localstorage with the workouts
+                localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+              }
+            }
+          }
+          this.loading_workouts = false
+        } catch (e) {
+          this.workout_error = e.toString()
         }
       },
       async update_client () {
