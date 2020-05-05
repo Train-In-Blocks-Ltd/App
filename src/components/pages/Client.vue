@@ -216,7 +216,8 @@
         error: '',
         no_workouts: false,
         loading_workouts: true,
-        workout_error: false
+        workout_error: false,
+        workouts: []
       }
     },
     async created () {
@@ -342,7 +343,7 @@
               } else if (!this.$parent.client_details.programmes[f].workouts) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
                 // eslint-disable-next-line
-                const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.programmes[x].id}`)
+                const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.programmes[f].id}`)
                 // If there are no workouts
                 if (response_programmes.data.length === 0) {
                   this.no_workouts = true

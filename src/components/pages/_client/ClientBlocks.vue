@@ -121,23 +121,18 @@
     grid-template-rows: 40px auto;
     align-items: center
   }
-  #workout_notes_header p {
-    margin: 0
-  }
-  #workout_notes_header {
+  .workout_notes_header {
     cursor: grab;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
-    padding: 0 .5rem
-  }
-  #workout_notes_footer button {
-    margin-bottom: 0
-  }
-  #workout_notes_footer, #workout_notes_header {
+    padding: 0 .5rem;
     height: 100%;
     display: grid;
     align-items: center
+  }
+  #workout_notes_header p {
+    margin: 0
   }
   .workouts {
     grid-area: workouts
@@ -285,7 +280,7 @@
                       <span>{{workout.date}}</span>
                     </p>
                     <div v-show="workout_notes == workout.id" class="workout_notes" :id="'workout_notes_' + workout.id">
-                      <div id="workout_notes_header">
+                      <div :id="'workout_notes_' + workout.id + '_header'" class="workout_notes_header">
                         <p>
                           <span><b>{{workout.name}}</b></span>
                           -
@@ -320,7 +315,16 @@
                 <a href="javascript:void()" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
               </div>
-              <div style="background-color: #C4C4C4; height: 50vh; text-align: center; line-height: 50vh">Graph and data goes here!!</div>
+              <line-chart :chart-data="datacollection" :options="chartOptions"></line-chart>
+              <select id="exercise" v-on:change="fillData()">
+                <option>Select a Measure</option>
+              </select>
+              <select id="dataCat" v-on:change="fillData()">
+                <option id="sets">Sets</option>
+                <option id="reps">Reps</option>
+                <option id="load">Load</option>
+                <option id="volume">Volume</option>
+              </select>
               
               <!--Reverted but need to turn this into a pop-up. 
               It's now called block notes and the button to open it is above.
@@ -346,10 +350,12 @@
   import Loader from '../../components/Loader'
   import axios from 'axios'
   import qs from 'qs'
+  import LineChart from '../../components/LineChart.js'
 
   export default {
     components: {
-      Loader
+      Loader,
+      LineChart
     },
     data: function () {
       return {
@@ -366,13 +372,226 @@
         new_workout: {
           name: '',
           date: ''
+        },
+        xVal: null,
+        yVal: null,
+        datacollection: null,
+        chartOptions: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                suggestedMin: 1,
+                stepSize: 1
+              }
+            }]
+          }
         }
       }
     },
-    async created () {
+    created () {
       this.$parent.blocks = true
     },
+    mounted () {
+      this.fillData()
+    },
     methods: {
+      fillData () {
+        // Regex
+        const regexPull = /(^\w*\))\s*(.[^:]*):\s*(.+)/gmi
+        const regexSetRep = /(\d*)\s*x\s*((\d*[,|\/]*)*)/gmi
+        const regexBreakReps = /\d+/gmi
+        const regexIntCapt = /(at|@)(.+)/gmi
+        const regexIntBreak = /(\d*[.]?\d*)/gmi
+
+        // Scans all the workouts and pulls the protocols from the text.
+        function pullProtocols(workout) {
+            var matchGroup = [];
+            let a;
+            while ((a = regexPull.exec(workout.replace(/(<br>)/ig, "\n").replace(/(<\/p>)/ig, "\n").replace(/(<([^>]+)>)/ig,""))) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (a.index === regexPull.lastIndex) {
+                    regexPull.lastIndex++;
+                }
+                // The result can be accessed through the `a`-variable.
+                a.forEach((match) => {
+                    matchGroup.push(match)
+                });
+            }
+            return matchGroup;
+        }
+
+        // Function to select either the sets or reps. E.g. '3' as sets and '6' as reps from '3x6'
+        function setsReps(protocol, type) {
+            var store = 0
+            var sets = 0
+
+            //Removes all spaces
+            protocol = protocol.replace(/\s/g, '');
+
+            let c1;
+            while ((c1 = regexSetRep.exec(protocol)) !== null) {
+
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (c1.index === regexSetRep.lastIndex) {
+                    regexSetRep.lastIndex++;
+                }
+
+                // The result can be accessed through the `c1`-variable.
+                c1.forEach((match, groupIndex) => {
+                    if (groupIndex === 1 && type === 'Sets') {
+                        store = parseInt(match);
+                    }
+                    if (groupIndex === 1) {
+                        sets = match;
+                    }
+                    if (groupIndex === 2 && type === 'Reps') {
+                        store = sumReps(match, sets)
+                    }
+                });
+            }
+            return store;
+        }
+
+        // This connects to the previous function above and sums up the reps to show on the graph
+        function sumReps(repsProtocol, sets) {
+            var sum = 0;
+            let c2;
+
+            while ((c2 = regexBreakReps.exec(repsProtocol)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (c2.index === regexBreakReps.lastIndex) {
+                    regexBreakReps.lastIndex++;
+                }
+                // The result can be accessed through the `c2`-variable.
+                c2.forEach((match) => {
+                    if (repsProtocol.includes('/') === true) {
+                        sum += parseInt(match);
+                    }
+                    if (repsProtocol.includes('/') === false) {
+                        sum = sets * parseInt(match);
+                    }
+                });
+            }
+            return sum;
+        }
+
+        function load(protocol) {
+            var sum = 0;
+            
+            //Removes all spaces
+            protocol = protocol.replace(/\s/g, '');
+
+            let b1;
+
+            while ((b1 = regexIntCapt.exec(protocol)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (b1.index === regexIntCapt.lastIndex) {
+                    regexIntCapt.lastIndex++;
+                }
+
+                // The result can be accessed through the `b1`-variable.
+                b1.forEach((match, groupIndex) => {
+                    if (groupIndex === 2) {
+                        protocol = match;
+                    }
+                });
+            }
+            let b2;
+
+            while ((b2 = regexIntBreak.exec(protocol)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (b2.index === regexIntBreak.lastIndex) {
+                    regexIntBreak.lastIndex++;
+                }
+
+                // The result can be accessed through the `b2`-variable.
+                b2.forEach((match, groupIndex) => {
+                    if (match !== '' && groupIndex === 1) {
+                        sum += parseFloat(match);
+                    }
+                });
+            }
+            return sum;
+        }
+
+        function tidyProtocols(matchGroup) {
+          var e = 1;
+          // Removes all but exercise name and protocols store in alternating pattern.
+          for (;e < matchGroup.length; e++) {
+            delete matchGroup[4*e-4];
+            delete matchGroup[4*e-3];
+          }
+          // Removes all undefined
+          var matchGroup = matchGroup.filter(() => true);
+          return matchGroup;
+        }
+
+        // Set the options
+        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          if(programme.id == this.$route.params.id) {
+            programme.workouts.forEach((workout) => {
+              var currentWorkout = tidyProtocols(pullProtocols(workout.notes))
+              var options = document.getElementById('exercise').innerText
+              var i = 0
+
+              for (;i < currentWorkout.length; i++) {
+                var conditionOne = options.includes(currentWorkout[i-1])
+                var conditionTwo = currentWorkout[i].includes('/')
+                var conditionThree = currentWorkout[i].includes('at')
+                var conditionFour = currentWorkout[i].includes('@')
+
+                if (i%2 !== 0 && conditionOne !== true && conditionTwo && (conditionThree !==true || conditionFour !==true)) {
+                  document.getElementById('exercise').innerHTML += '<option>' + currentWorkout[i-1] + '</option>'
+                }
+              }
+            })
+          }
+        })
+
+        var exercise = document.getElementById('exercise').value
+        var type = document.getElementById('dataCat').value
+
+        this.xVal = []
+        this.yVal = []
+
+        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          if(programme.id == this.$route.params.id) {
+            programme.workouts.forEach((workout, id) => {
+              var matchGroup = tidyProtocols(pullProtocols(workout.notes))
+              var i = 0
+              for (;i < matchGroup.length; i++) {
+                if (matchGroup[i] === exercise && type === "Sets") {
+                  this.yVal.push(setsReps(matchGroup[i+1], type));
+                }
+                if (matchGroup[i] === exercise && type === "Reps") {
+                  this.yVal.push(setsReps(matchGroup[i+1], type));
+                }
+                if (matchGroup[i] === exercise && type === "Load") {
+                  this.yVal.push(load(matchGroup[i+1]));
+                }
+                if (matchGroup[i] === exercise && type === "Volume") {
+                  this.yVal.push(setsReps(matchGroup[i+1], 'Reps')*load(matchGroup[i+1]))
+                }
+              }
+              this.xVal.push("Workout "+ (id + 1))
+            })
+          }
+        })
+        this.datacollection = {
+          labels: this.xVal,
+          datasets: [
+            {
+              label: 'none',
+              backgroundColor: 'transparent',
+              borderColor: '#282828',
+              data: this.yVal
+            }
+          ]
+        }
+      },
       day (date) {
         var weekday = new Array(7)
         weekday[0] = 'Sun'
