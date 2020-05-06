@@ -315,7 +315,7 @@
                 <a href="javascript:void()" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
               </div>
-              <line-chart :chart-data="datacollection" :options="chartOptions"></line-chart>
+              <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
               <select id="exercise" v-on:change="fillData()">
                 <option>Select a Measure</option>
               </select>
@@ -373,9 +373,19 @@
           name: '',
           date: ''
         },
-        xVal: null,
-        yVal: null,
-        datacollection: null,
+        xVal: [],
+        yVal: [],
+        dataCollection: {
+          labels: this.xVal,
+          datasets: [
+            {
+              label: 'none',
+              backgroundColor: 'transparent',
+              borderColor: '#282828',
+              data: this.yVal
+            }
+          ]
+        },
         chartOptions: {
           legend: {
             display: false
@@ -401,186 +411,184 @@
       fillData () {
         // Regex
         const regexPull = /(^\w*\))\s*(.[^:]*):\s*(.+)/gmi
+        // eslint-disable-next-line
         const regexSetRep = /(\d*)\s*x\s*((\d*[,|\/]*)*)/gmi
         const regexBreakReps = /\d+/gmi
         const regexIntCapt = /(at|@)(.+)/gmi
         const regexIntBreak = /(\d*[.]?\d*)/gmi
 
+        // Regex functions
+
         // Scans all the workouts and pulls the protocols from the text.
-        function pullProtocols(workout) {
-            var matchGroup = [];
-            let a;
-            while ((a = regexPull.exec(workout.replace(/(<br>)/ig, "\n").replace(/(<\/p>)/ig, "\n").replace(/(<([^>]+)>)/ig,""))) !== null) {
-                // This is necessary to avoid infinite loops with zero-width matches
-                if (a.index === regexPull.lastIndex) {
-                    regexPull.lastIndex++;
-                }
-                // The result can be accessed through the `a`-variable.
-                a.forEach((match) => {
-                    matchGroup.push(match)
-                });
+        function pullProtocols (workout) {
+          console.log(workout)
+          var matchGroup = []
+          let a
+          while ((a = regexPull.exec(workout.replace(/(<br>)/ig, '\n').replace(/(<\/p>)/ig, '\n').replace(/(<([^>]+)>)/ig, ''))) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (a.index === regexPull.lastIndex) {
+              regexPull.lastIndex++
             }
-            return matchGroup;
+            // The result can be accessed through the `a`-variable.
+            a.forEach((match) => {
+              matchGroup.push(match)
+            })
+          }
+          return matchGroup
         }
 
-        // Function to select either the sets or reps. E.g. '3' as sets and '6' as reps from '3x6'
-        function setsReps(protocol, type) {
-            var store = 0
-            var sets = 0
+        // Selects either the sets or reps. E.g. '3' as sets and '6' as reps from '3x6'
+        function setsReps (protocol, type) {
+          var store = 0
+          var sets = 0
 
-            //Removes all spaces
-            protocol = protocol.replace(/\s/g, '');
+          // Removes all spaces
+          protocol = protocol.replace(/\s/g, '')
 
-            let c1;
-            while ((c1 = regexSetRep.exec(protocol)) !== null) {
-
-                // This is necessary to avoid infinite loops with zero-width matches
-                if (c1.index === regexSetRep.lastIndex) {
-                    regexSetRep.lastIndex++;
-                }
-
-                // The result can be accessed through the `c1`-variable.
-                c1.forEach((match, groupIndex) => {
-                    if (groupIndex === 1 && type === 'Sets') {
-                        store = parseInt(match);
-                    }
-                    if (groupIndex === 1) {
-                        sets = match;
-                    }
-                    if (groupIndex === 2 && type === 'Reps') {
-                        store = sumReps(match, sets)
-                    }
-                });
+          let c1
+          while ((c1 = regexSetRep.exec(protocol)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (c1.index === regexSetRep.lastIndex) {
+              regexSetRep.lastIndex++
             }
-            return store;
+            // The result can be accessed through the `c1`-variable.
+            c1.forEach((match, groupIndex) => {
+              if (groupIndex === 1 && type === 'Sets') {
+                store = parseInt(match)
+              }
+              if (groupIndex === 1) {
+                sets = match
+              }
+              if (groupIndex === 2 && type === 'Reps') {
+                store = sumReps(match, sets)
+              }
+            })
+          }
+          return store
         }
 
         // This connects to the previous function above and sums up the reps to show on the graph
-        function sumReps(repsProtocol, sets) {
-            var sum = 0;
-            let c2;
+        function sumReps (repsProtocol, sets) {
+          var sum = 0
+          let c2
 
-            while ((c2 = regexBreakReps.exec(repsProtocol)) !== null) {
-                // This is necessary to avoid infinite loops with zero-width matches
-                if (c2.index === regexBreakReps.lastIndex) {
-                    regexBreakReps.lastIndex++;
-                }
-                // The result can be accessed through the `c2`-variable.
-                c2.forEach((match) => {
-                    if (repsProtocol.includes('/') === true) {
-                        sum += parseInt(match);
-                    }
-                    if (repsProtocol.includes('/') === false) {
-                        sum = sets * parseInt(match);
-                    }
-                });
+          while ((c2 = regexBreakReps.exec(repsProtocol)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (c2.index === regexBreakReps.lastIndex) {
+              regexBreakReps.lastIndex++
             }
-            return sum;
+            // The result can be accessed through the `c2`-variable.
+            c2.forEach((match) => {
+              if (repsProtocol.includes('/') === true) {
+                sum += parseInt(match)
+              }
+              if (repsProtocol.includes('/') === false) {
+                sum = sets * parseInt(match)
+              }
+            })
+          }
+          return sum
         }
 
-        function load(protocol) {
-            var sum = 0;
-            
-            //Removes all spaces
-            protocol = protocol.replace(/\s/g, '');
-
-            let b1;
-
-            while ((b1 = regexIntCapt.exec(protocol)) !== null) {
-                // This is necessary to avoid infinite loops with zero-width matches
-                if (b1.index === regexIntCapt.lastIndex) {
-                    regexIntCapt.lastIndex++;
-                }
-
-                // The result can be accessed through the `b1`-variable.
-                b1.forEach((match, groupIndex) => {
-                    if (groupIndex === 2) {
-                        protocol = match;
-                    }
-                });
+        // Calculates the load
+        function load (protocol) {
+          var sum = 0
+          // Removes all spaces
+          protocol = protocol.replace(/\s/g, '')
+          let b1
+          while ((b1 = regexIntCapt.exec(protocol)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (b1.index === regexIntCapt.lastIndex) {
+              regexIntCapt.lastIndex++
             }
-            let b2;
+            // The result can be accessed through the `b1`-variable.
+            b1.forEach((match, groupIndex) => {
+              if (groupIndex === 2) {
+                protocol = match
+              }
+            })
+          }
+          let b2
 
-            while ((b2 = regexIntBreak.exec(protocol)) !== null) {
-                // This is necessary to avoid infinite loops with zero-width matches
-                if (b2.index === regexIntBreak.lastIndex) {
-                    regexIntBreak.lastIndex++;
-                }
-
-                // The result can be accessed through the `b2`-variable.
-                b2.forEach((match, groupIndex) => {
-                    if (match !== '' && groupIndex === 1) {
-                        sum += parseFloat(match);
-                    }
-                });
+          while ((b2 = regexIntBreak.exec(protocol)) !== null) {
+            // This is necessary to avoid infinite loops with zero-width matches
+            if (b2.index === regexIntBreak.lastIndex) {
+              regexIntBreak.lastIndex++
             }
-            return sum;
+
+            // The result can be accessed through the `b2`-variable.
+            b2.forEach((match, groupIndex) => {
+              if (match !== '' && groupIndex === 1) {
+                sum += parseFloat(match)
+              }
+            })
+          }
+          return sum
         }
 
-        function tidyProtocols(matchGroup) {
-          var e = 1;
+        // Tidies the protocols
+        function tidyProtocols (matchGroup) {
+          var e = 1
           // Removes all but exercise name and protocols store in alternating pattern.
           for (;e < matchGroup.length; e++) {
-            delete matchGroup[4*e-4];
-            delete matchGroup[4*e-3];
+            delete matchGroup[4 * e - 4]
+            delete matchGroup[4 * e - 3]
           }
           // Removes all undefined
-          var matchGroup = matchGroup.filter(() => true);
-          return matchGroup;
+          matchGroup = matchGroup.filter(() => true)
+          return matchGroup
         }
+
+        // Resets xVal and yVal
+        this.xVal = []
+        this.yVal = []
+
+        // Gets values of graph dropdown selects
+        var exercise = document.getElementById('exercise').value
+        var type = document.getElementById('dataCat').value
 
         // Set the options
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
-          if(programme.id == this.$route.params.id) {
-            programme.workouts.forEach((workout) => {
+          // eslint-disable-next-line
+          if (programme.id == this.$route.params.id) {
+            programme.workouts.forEach((workout, id) => {
               var currentWorkout = tidyProtocols(pullProtocols(workout.notes))
               var options = document.getElementById('exercise').innerText
               var i = 0
 
               for (;i < currentWorkout.length; i++) {
-                var conditionOne = options.includes(currentWorkout[i-1])
+                var conditionOne = options.includes(currentWorkout[i - 1])
                 var conditionTwo = currentWorkout[i].includes('/')
                 var conditionThree = currentWorkout[i].includes('at')
                 var conditionFour = currentWorkout[i].includes('@')
 
-                if (i%2 !== 0 && conditionOne !== true && conditionTwo && (conditionThree !==true || conditionFour !==true)) {
-                  document.getElementById('exercise').innerHTML += '<option>' + currentWorkout[i-1] + '</option>'
+                if (i % 2 !== 0 && conditionOne !== true && conditionTwo && (conditionThree !== true || conditionFour !== true)) {
+                  document.getElementById('exercise').innerHTML += '<option>' + currentWorkout[i - 1] + '</option>'
+                }
+
+                // Set the yVal to the type requested
+                if (currentWorkout[i] === exercise && type === 'Sets') {
+                  this.yVal.push(setsReps(currentWorkout[i + 1], type))
+                }
+                if (currentWorkout[i] === exercise && type === 'Reps') {
+                  this.yVal.push(setsReps(currentWorkout[i + 1], type))
+                }
+                if (currentWorkout[i] === exercise && type === 'Load') {
+                  this.yVal.push(load(currentWorkout[i + 1]))
+                }
+                if (currentWorkout[i] === exercise && type === 'Volume') {
+                  this.yVal.push(setsReps(currentWorkout[i + 1], 'Reps') * load(currentWorkout[i + 1]))
                 }
               }
+
+              // Set xVal to Workout number
+              this.xVal.push('Workout ' + (id + 1))
             })
           }
         })
 
-        var exercise = document.getElementById('exercise').value
-        var type = document.getElementById('dataCat').value
-
-        this.xVal = []
-        this.yVal = []
-
-        this.$parent.$parent.client_details.programmes.forEach((programme) => {
-          if(programme.id == this.$route.params.id) {
-            programme.workouts.forEach((workout, id) => {
-              var matchGroup = tidyProtocols(pullProtocols(workout.notes))
-              var i = 0
-              for (;i < matchGroup.length; i++) {
-                if (matchGroup[i] === exercise && type === "Sets") {
-                  this.yVal.push(setsReps(matchGroup[i+1], type));
-                }
-                if (matchGroup[i] === exercise && type === "Reps") {
-                  this.yVal.push(setsReps(matchGroup[i+1], type));
-                }
-                if (matchGroup[i] === exercise && type === "Load") {
-                  this.yVal.push(load(matchGroup[i+1]));
-                }
-                if (matchGroup[i] === exercise && type === "Volume") {
-                  this.yVal.push(setsReps(matchGroup[i+1], 'Reps')*load(matchGroup[i+1]))
-                }
-              }
-              this.xVal.push("Workout "+ (id + 1))
-            })
-          }
-        })
-        this.datacollection = {
+        // Sets the dataCollection value which the graph uses to display data. This has to be reset each time to update the graph
+        this.dataCollection = {
           labels: this.xVal,
           datasets: [
             {
