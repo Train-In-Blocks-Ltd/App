@@ -103,7 +103,7 @@
     border: none;
     padding: 0
   }
-  .workout_notes {
+  .workout_notes, #block_notes {
     position: absolute;
     right: 0;
     top: 0;
@@ -121,7 +121,7 @@
     grid-template-rows: 40px auto;
     align-items: center
   }
-  .workout_notes_header {
+  .workout_notes_header, #block_notes_header {
     cursor: grab;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
@@ -131,7 +131,7 @@
     display: grid;
     align-items: center
   }
-  #workout_notes_header p {
+  .workout_notes_header p, #workout_notes_header p {
     margin: 0
   }
   .workouts {
@@ -311,9 +311,15 @@
               </div>
             </div><!-- workouts -->
             <div>
-              <div id="block_notes_header">
-                <a href="javascript:void()" v-on:click="block_notes_function()">Block Notes</a>
+              <div>
+                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
+              </div>
+              <div v-show="block_notes" id="block_notes">
+                <div id="block_notes_header">
+                  <p>Block Notes</p>
+                </div>
+                <quill v-model="programme.notes" output="html" class="quill"></quill>
               </div>
               <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
               <select id="exercise" v-on:change="fillData()">
@@ -325,20 +331,6 @@
                 <option id="load">Load</option>
                 <option id="volume">Volume</option>
               </select>
-              
-              <!--Reverted but need to turn this into a pop-up. 
-              It's now called block notes and the button to open it is above.
-
-              <quill v-model="programme.notes" output="html" class="quill border"></quill>
-              <div id="programme_notes_footer">
-                <div class="loading-grid" v-if="edit1">
-                  <button class="button" v-on:click="update_programme()">Save</button>
-                  <Loader></Loader>
-                </div>
-              </div>  -->
-
-              <p v-if="programme1_update_response"><b>{{programme1_update_response}}</b></p>
-              <p v-if="programme1_update_error"><b>{{programme1_update_error}}</b></p>
             </div>  <!-- notes -->
           </div> <!-- programme_grid -->
         </div>
@@ -365,10 +357,9 @@
         edit1: false,
         programme_update_response: '',
         programme_update_error: '',
-        programme1_update_response: '',
-        programme1_update_error: '',
         error: '',
         workout_notes: false,
+        block_notes: false,
         new_workout: {
           name: '',
           date: ''
@@ -421,7 +412,6 @@
 
         // Scans all the workouts and pulls the protocols from the text.
         function pullProtocols (workout) {
-          console.log(workout)
           var matchGroup = []
           let a
           while ((a = regexPull.exec(workout.replace(/(<br>)/ig, '\n').replace(/(<\/p>)/ig, '\n').replace(/(<([^>]+)>)/ig, ''))) !== null) {
@@ -612,6 +602,35 @@
         var d = new Date(date)
         return weekday[d.getDay()]
       },
+      block_notes_function () {
+        // Set block_notes to true
+        this.block_notes = true
+
+        // Make notes draggable
+        this.$parent.dragElement(document.getElementById('block_notes'))
+
+        // Set vue self
+        var self = this
+
+        function click (e) {
+          // If box is open
+          if (self.block_notes) {
+            if (!document.getElementById('block_notes').contains(e.target)) {
+              // Update the workout
+              self.update_programme()
+              window.removeEventListener('click', click)
+              self.block_notes = false
+            }
+          }
+        }
+        // Wait 1 second before applying the event listener to avoid registering the click to open the box
+        setTimeout(
+          function () {
+            // Add event listener for clicking outside box
+            window.addEventListener('click', click)
+          }
+        , 1000)
+      },
       workout_notes_function (id) {
         // Set workout_notes to id of workout
         this.workout_notes = id
@@ -658,7 +677,8 @@
         var programme
         // Set the programme variable to the current programme
         for (x in this.$parent.$parent.client_details.programmes) {
-          if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
+          // eslint-disable-next-line
+          if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
             programme = this.$parent.$parent.client_details.programmes[x]
           }
         }
@@ -684,7 +704,6 @@
           // Loop through client_details programmes
           for (x in this.$parent.$parent.client_details.programmes) {
             if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
-              console.log()
               this.$parent.$parent.client_details.programmes[x] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}', '}'))
             }
           }

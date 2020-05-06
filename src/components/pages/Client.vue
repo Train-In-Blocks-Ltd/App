@@ -256,13 +256,8 @@
         let pos2 = 0
         let pos3 = 0
         let pos4 = 0
-        if (document.getElementById(elmnt.id + '_header')) {
-          /* if present, the header is where you move the DIV from: */
-          document.getElementById(elmnt.id + '_header').onmousedown = dragMouseDown
-        } else {
-          /* otherwise, move the DIV from anywhere inside the DIV: */
-          elmnt.onmousedown = dragMouseDown
-        }
+
+        document.getElementById(elmnt.id + '_header').onmousedown = dragMouseDown
 
         function dragMouseDown (e) {
           e = e || window.event
