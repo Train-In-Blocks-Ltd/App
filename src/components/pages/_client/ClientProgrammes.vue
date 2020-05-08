@@ -42,7 +42,7 @@
     text-overflow: ellipsis
   }
   .program_container p {
-    font-size: 0.8rem;
+    font-size: .8rem;
     font-weight: 500;
     margin: .375rem 0
   }

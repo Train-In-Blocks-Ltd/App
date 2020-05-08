@@ -1,6 +1,4 @@
 <style>
-  @import "../node_modules/animate.css";
-
   * {
     box-sizing: border-box
   }
@@ -282,7 +280,7 @@
   /* Navigation */
   .nav_item {
     font-size: 1.2rem;
-    padding: .5rem 0;
+    padding: .5rem 0
   }
   .nav_subitem {
     padding: .4rem 0;
@@ -291,8 +289,11 @@
     text-overflow: ellipsis
   }
   .nav_subitem.subitem {
-    padding: .8rem 0 0 .8rem;
-    font-size: 0.8rem
+    padding: 0 0 .8rem .8rem;
+    font-size: .8rem
+  }
+  .nav_subitem.subitem:first-of-type {
+    padding-top: .5rem
   }
   .nav_subitem.subitem:last-of-type {
     padding-bottom: .5rem
@@ -306,7 +307,7 @@
     padding-bottom: 0
   }
   #archive-link, #account-link, #logout-link {
-    font-size: 1rem;
+    font-size: 1rem
   }
 
   /* Nav Animated */
@@ -384,7 +385,10 @@
   /* Client Container */
   .client_container p {
     margin: 0;
-    font-weight: 400
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
   }
   .client_container {
     margin: .5rem 0;
@@ -414,7 +418,7 @@
   .client_container > a:before {
     content: '';
     position: absolute;
-    width: 50vw;
+    width: 70%;
     height: 1px;
     bottom: 0;
     left: 0;
@@ -423,10 +427,10 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    transition: all 0.6s cubic-bezier(.075, .82, .165, 1)
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .client_container > a:not(.archived):hover:before {
-    width: 55vw
+    width: 75%
   }
   .client_link {
     padding: 1rem 0
@@ -606,9 +610,7 @@
       </div>
     </div> <!-- .sidebar -->
     <main>
-      <transition enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-        <router-view :key="$route.fullPath"/>
-      </transition>
+      <router-view :key="$route.fullPath"/>
     </main>
   </div>
 </template>

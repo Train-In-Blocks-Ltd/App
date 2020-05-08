@@ -3,7 +3,7 @@
     background-color: initial!important;
     border: none;
     padding: 0;
-    font-size: .9rem
+    font-size: 1rem
   }
   .client_info textarea {
     background-color: initial!important;
@@ -53,7 +53,7 @@
       var(--accessible-color)
     );
     text-decoration: none;
-    margin: 0.5rem 0;
+    margin: .5rem 0;
   }
   .floating_nav a:hover {
     color: rgb(
@@ -75,7 +75,7 @@
       var(--accessible-color)
     );
     visibility: hidden;
-    transition: all .6s cubic-bezier(0.165, 0.84, 0.44, 1)
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .floating_nav a:hover:before {
     visibility: visible;
