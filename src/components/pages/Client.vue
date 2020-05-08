@@ -53,7 +53,7 @@
       var(--accessible-color)
     );
     text-decoration: none;
-    margin: .5rem 0;
+    margin: .5rem 0
   }
   .floating_nav a:hover {
     color: rgb(
