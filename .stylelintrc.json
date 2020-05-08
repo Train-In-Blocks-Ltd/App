@@ -23,6 +23,7 @@
         "unit-case": "lower",
         "length-zero-no-unit": true,
         "value-keyword-case": "lower",
-        "property-case": "lower"
+        "property-case": "lower",
+        "declaration-property-unit-blacklist": {"opacity": ["%"]}
     }
 }
