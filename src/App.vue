@@ -550,7 +550,7 @@
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
-  <div id="app" v-bind:class="{'authenticated': authenticated}">
+  <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
     <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
     <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
        <!-- Mobile open/close sidebar icon -->
@@ -620,9 +620,9 @@ export default {
       loading: false,
       colors: {
         rgba: {
-          r: 255,
-          g: 255,
-          b: 255,
+          r: null,
+          g: null,
+          b: null,
           a: 1
         }
       }
