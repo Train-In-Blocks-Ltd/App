@@ -1,4 +1,50 @@
 <style>
+  
+  /* Color Picker */
+  .vc-chrome-toggle-icon-highlight, .vc-chrome-alpha-wrap, .vc-chrome-field:nth-of-type(4) {
+    display: none
+  }
+  .vc-chrome-body, .vc-chrome-fields .vc-input__input {
+    background-color: rgba(
+      calc(var(--red) + 30),
+      calc(var(--green) + 30),
+      calc(var(--blue) + 30),
+      .8
+    )!important
+  }
+  .vc-chrome-toggle-icon svg path {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )!important
+  }
+  .vc-chrome-fields .vc-input__input {
+    padding: .75rem 0!important;
+    box-shadow: none!important;
+    border: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )!important;
+    font-size: .9rem!important
+  }
+  .vc-chrome-fields .vc-input__label {
+    font-size: .8rem!important
+  }
+  .vc-chrome-fields .vc-input__input, .vc-chrome-fields .vc-input__label {
+    font-family: Arial, Helvetica, sans-serif!important;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )!important
+  }
+  .vc-chrome {
+    box-shadow: none!important
+  }
+
+  /* Account Update */
   #save_changes-link {
     margin-top: 2rem
   }

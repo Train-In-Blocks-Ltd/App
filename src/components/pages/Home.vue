@@ -1,3 +1,79 @@
+<style>
+  #home {
+    display: grid;
+    max-width: 1056px
+  }
+  .intro {
+    font-size: 1.5rem;
+    margin-top: 0
+  }
+
+  /* Client Container */
+  .client_container p {
+    margin: 0;
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+  }
+  .client_container {
+    margin: .5rem 0;
+    font-size: 1rem;
+    display: block
+  }
+
+  /* Client Container Animation */
+  .client_container > a {
+    display: block;
+    position: relative;
+    font-weight: 400;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    text-decoration: none
+  }
+  .client_container > a:not(.archived):hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
+  }
+  .client_container > a:before {
+    content: '';
+    position: absolute;
+    width: 70%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
+  }
+  .client_container > a:not(.archived):hover:before {
+    width: 75%
+  }
+  .client_link {
+    padding: 1rem 0
+  }
+
+  /* Search Bar */
+  .search {
+    width: 55vw;
+    opacity: .5;
+    font-size: 1rem;
+    transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
+  }
+  .search:hover, .search:focus {
+    opacity: 1
+  }
+</style>
+
 <template>
   <div id="home">
     <h1>Explore</h1>
