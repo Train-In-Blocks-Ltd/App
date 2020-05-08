@@ -36,10 +36,13 @@
   .program_container h3 {
     margin-top: 0;
     font-size: 1.25rem;
-    margin-bottom: 0
+    margin-bottom: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   .program_container p {
-    font-size: .625rem;
+    font-size: 0.8rem;
     font-weight: 500;
     margin: .375rem 0
   }

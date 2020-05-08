@@ -83,7 +83,8 @@
     border-left: none;
     border-bottom: none;
     padding: 30px 0;
-    width: 40px
+    min-width: 40px;
+    width: 100%;
   }
   .programme_duration_container > *:last-of-type {
     border-right: none
@@ -253,7 +254,9 @@
           <div class="programme_grid">
             <div class="programme_table">
               <div class="programme_container">
-                <p style="margin: 30px 0">{{programme.name}}</p>
+                <div style="width: 100%">
+                  <p style="margin: 1.5rem 1rem">{{programme.name}}</p>
+                </div>
                 <div class="programme_duration_container">
                   <div v-for="item in programme_duration(programme.duration)" :key="item">
                     {{item}}

@@ -44,19 +44,16 @@
     );
     padding-right: .5rem
   }
-  .floating_nav a:first-of-type {
-    margin-top: 0
-  }
   .floating_nav a {
-    display: block;
-    margin: .5rem 0;
+    display: inline-block;
     position: relative;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
-    text-decoration: none
+    text-decoration: none;
+    margin: 0.5rem 0;
   }
   .floating_nav a:hover {
     color: rgb(
@@ -69,7 +66,7 @@
     content: '';
     position: absolute;
     width: 0%;
-    height: 1px;
+    height: 2px;
     bottom: 0;
     right: 0;
     background-color: rgb(
@@ -78,8 +75,7 @@
       var(--accessible-color)
     );
     visibility: hidden;
-    transition: all .3s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+    transition: all .6s cubic-bezier(0.165, 0.84, 0.44, 1)
   }
   .floating_nav a:hover:before {
     visibility: visible;
