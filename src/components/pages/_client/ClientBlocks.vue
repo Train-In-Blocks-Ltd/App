@@ -42,7 +42,10 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding: 0
+    padding: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
   }
   .client_info label {
     grid-auto-columns: min-content;
@@ -83,7 +86,8 @@
     border-left: none;
     border-bottom: none;
     padding: 30px 0;
-    width: 40px
+    min-width: 40px;
+    width: 100%
   }
   .programme_duration_container > *:last-of-type {
     border-right: none
@@ -102,6 +106,15 @@
     grid-auto-flow: column;
     border: none;
     padding: 0
+  }
+  .notes_wrapper {
+    grid-area: notes;
+    border-left: 2px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    padding-left: 1rem
   }
   .workout_notes, #block_notes {
     position: absolute;
@@ -142,12 +155,15 @@
     border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
     padding: .5rem 0;
     cursor: pointer;
-    width: 20vw;
+    width: 70%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
     transition: width 1500ms;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .workout:hover {
-    width: 25vw
+    width: 80%
   }
   .client-info--workout {
     height: auto;
@@ -253,7 +269,7 @@
           <div class="programme_grid">
             <div class="programme_table">
               <div class="programme_container">
-                <p style="margin: 30px 0">{{programme.name}}</p>
+                <p style="margin: 1.5rem 1rem">{{programme.name}}</p>
                 <div class="programme_duration_container">
                   <div v-for="item in programme_duration(programme.duration)" :key="item">
                     {{item}}
@@ -310,7 +326,7 @@
                 </div>
               </div>
             </div><!-- workouts -->
-            <div>
+            <div class="notes_wrapper">
               <div>
                 <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
@@ -378,6 +394,8 @@
           ]
         },
         chartOptions: {
+          responsive: true,
+          maintainAspectRatio: false,
           legend: {
             display: false
           },

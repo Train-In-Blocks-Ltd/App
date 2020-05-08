@@ -283,10 +283,17 @@
     padding: .5rem 0
   }
   .nav_subitem {
-    padding: .4rem 0
+    padding: .4rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   .nav_subitem.subitem {
-    padding: .8rem 0 0 .8rem
+    padding: 0 0 .8rem .8rem;
+    font-size: .8rem
+  }
+  .nav_subitem.subitem:first-of-type {
+    padding-top: .5rem
   }
   .nav_subitem.subitem:last-of-type {
     padding-bottom: .5rem
@@ -299,6 +306,9 @@
   .nav_item:last-of-type {
     padding-bottom: 0
   }
+  #archive-link, #account-link, #logout-link {
+    font-size: 1rem
+  }
 
   /* Nav Animated */
   .main_nav a {
@@ -310,7 +320,7 @@
     position: absolute;
     width: 0%;
     height: 2px;
-    bottom: 0;
+    bottom: -2px;
     left: 0;
     background-color: rgb(
       var(--accessible-color),
@@ -318,8 +328,7 @@
       var(--accessible-color)
     );
     visibility: hidden;
-    transition: all .3s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .nav_subitem > a:before {
     height: 1px
@@ -367,11 +376,19 @@
   .nav_subitem a.router-link-exact-active {
     font-weight: bold
   }
+  .main_nav a.router-link-exact-active:before {
+    visibility: visible;
+    width: 100%;
+    height: 2px
+  }
 
   /* Client Container */
   .client_container p {
     margin: 0;
-    font-weight: 400
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
   }
   .client_container {
     margin: .5rem 0;
@@ -401,7 +418,7 @@
   .client_container > a:before {
     content: '';
     position: absolute;
-    width: 90%;
+    width: 70%;
     height: 1px;
     bottom: 0;
     left: 0;
@@ -410,11 +427,10 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    transition: all 500ms;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .client_container > a:not(.archived):hover:before {
-    width: 100%
+    width: 75%
   }
   .client_link {
     padding: 1rem 0
@@ -425,8 +441,7 @@
     width: 55vw;
     opacity: .5;
     font-size: 1rem;
-    transition: opacity 1500ms;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+    transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
   }
   .search:hover, .search:focus {
     opacity: 1
