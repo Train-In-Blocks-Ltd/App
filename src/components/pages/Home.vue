@@ -68,7 +68,7 @@
 
   /* Search Bar */
   .search {
-    width: 55vw;
+    width: 70%;
     opacity: .5;
     font-size: 1rem;
     transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
