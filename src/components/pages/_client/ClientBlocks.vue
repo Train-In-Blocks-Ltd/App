@@ -799,6 +799,7 @@
         } catch (e) {
           this.programme_update_error = e.toString()
         }
+        this.$parent.force_get_workouts()
       },
       async save () {
         try {
@@ -820,7 +821,7 @@
           this.response = response_save_workouts.data
 
           // Get the workouts from the API because we've just created a new one
-          await this.$parent.get_client_details()
+          await this.$parent.force_get_workouts()
 
           this.$parent.$parent.loading = false
 

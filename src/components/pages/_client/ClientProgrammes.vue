@@ -164,7 +164,7 @@
             }
           }
           // Get the new programmes
-          await this.$parent.get_client_details()
+          await this.$parent.force_get_client_details()
 
           this.$parent.$parent.loading = false
 

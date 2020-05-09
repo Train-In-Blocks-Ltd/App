@@ -296,41 +296,46 @@
           }
         }
       },
-      async get_client_details () {
+      async force_get_workouts () {
         try {
-          // Loop through clients
-          var x
-          for (x in this.$parent.posts) {
-            // If client matches client in route
-            if (this.$parent.posts[x].name === this.$route.params.name) {
-              // Set client_details variable with client details
-              this.$parent.client_details = this.$parent.posts[x]
-              // If client_details.programmes is set to false
-              if (this.$parent.posts[x].programmes === false) {
-                this.no_programmes = true
-              // If client_details.programmes is not set then query the API
-              } else if (!this.$parent.posts[x].programmes) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-                // eslint-disable-next-line
-                const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
-                // If there are no programmes
-                if (response_programmes.data.length === 0) {
-                  this.no_programmes = true
-                  this.$parent.posts[x].programmes = false
-                  // If there are programmes set the posts to include programmes
-                } else {
-                  this.$parent.posts[x].programmes = response_programmes.data
-                  // Update the localstorage with the programmes
-                  localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+          // Loop through programmes
+          var f
+          for (f in this.$parent.client_details.programmes) {
+            // If programme matches programme in route
+            // eslint-disable-next-line
+            if (this.$parent.client_details.programmes[f].id == this.$route.params.id) {
+              axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+              // eslint-disable-next-line
+              const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.programmes[f].id}`)
+              // If there are no workouts
+              if (response_programmes.data.length === 0) {
+                this.no_workouts = true
+                this.$parent.client_details.programmes[f].workouts = false
+                // If there are workouts set the client_details to include workouts
+              } else {
+                this.$parent.client_details.programmes[f].workouts = response_programmes.data
+              }
+              // Sync client_details with posts
+              // Loop through clients
+              //eslint-disable-next-line
+              var y
+              for (y in this.$parent.posts) {
+                // If client matches client in route
+                //eslint-disable-next-line
+                if (this.$parent.posts[f].name == this.$route.params.name) {
+                  this.$parent.posts[f] = this.$parent.client_details
                 }
               }
-              this.$parent.client_details = this.$parent.posts[x]
-              this.loading_programmes = false
+              // Update the localstorage with the workouts
+              localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
             }
           }
+          this.loading_workouts = false
         } catch (e) {
-          this.error = e.toString()
+          this.workout_error = e.toString()
         }
+      },
+      async get_workouts () {
         try {
           // Loop through programmes
           var f
@@ -374,6 +379,75 @@
         } catch (e) {
           this.workout_error = e.toString()
         }
+      },
+      async force_get_client_details () {
+        try {
+          // Loop through clients
+          var x
+          for (x in this.$parent.posts) {
+            // If client matches client in route
+            if (this.$parent.posts[x].name === this.$route.params.name) {
+              // Set client_details variable with client details
+              this.$parent.client_details = this.$parent.posts[x]
+              // Query API for programmes
+              axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+              // eslint-disable-next-line
+              const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
+              // If there are no programmes
+              if (response_programmes.data.length === 0) {
+                this.no_programmes = true
+                this.$parent.posts[x].programmes = false
+                // If there are programmes set the posts to include programmes
+              } else {
+                this.$parent.posts[x].programmes = response_programmes.data
+                // Update the localstorage with the programmes
+                localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+              }
+              this.$parent.client_details = this.$parent.posts[x]
+              this.loading_programmes = false
+            }
+          }
+        } catch (e) {
+          this.error = e.toString()
+        }
+        this.get_workouts()
+      },
+      async get_client_details () {
+        try {
+          // Loop through clients
+          var x
+          for (x in this.$parent.posts) {
+            // If client matches client in route
+            if (this.$parent.posts[x].name === this.$route.params.name) {
+              // Set client_details variable with client details
+              this.$parent.client_details = this.$parent.posts[x]
+              // If client_details.programmes is set to false
+              if (this.$parent.posts[x].programmes === false) {
+                this.no_programmes = true
+              // If client_details.programmes is not set then query the API
+              } else if (!this.$parent.posts[x].programmes) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+                // eslint-disable-next-line
+                const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
+                // If there are no programmes
+                if (response_programmes.data.length === 0) {
+                  this.no_programmes = true
+                  this.$parent.posts[x].programmes = false
+                  // If there are programmes set the posts to include programmes
+                } else {
+                  this.$parent.posts[x].programmes = response_programmes.data
+                  // Update the localstorage with the programmes
+                  localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+                }
+              }
+              this.$parent.client_details = this.$parent.posts[x]
+              this.loading_programmes = false
+            }
+          }
+        } catch (e) {
+          this.error = e.toString()
+        }
+        this.get_workouts()
       },
       async update_client () {
         this.$parent.loading = true
