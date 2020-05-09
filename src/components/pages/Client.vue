@@ -217,8 +217,9 @@
       }
     },
     async created () {
+      this.created()
       await this.$parent.setup()
-      await this.get_client_details()
+      this.get_client_details()
     },
     methods: {
       client_notes_function () {
@@ -283,6 +284,16 @@
           // stop moving when mouse button is released:
           document.onmouseup = null
           document.onmousemove = null
+        }
+      },
+      created () {
+        var x
+        for (x in this.$parent.posts) {
+          // If client matches client in route
+          if (this.$parent.posts[x].name === this.$route.params.name) {
+            // Set client_details variable with client details
+            this.$parent.client_details = this.$parent.posts[x]
+          }
         }
       },
       async get_client_details () {
