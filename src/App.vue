@@ -55,25 +55,6 @@
     padding: 5rem 3.75rem
   }
 
-  /* Logo */
-  .logo_container {
-    text-align: center
-  }
-  .logo_container a {
-    display: block;
-    height: 60px
-  }
-  .logo_container svg {
-    margin-top: -8px
-  }
-  .logo_container svg defs path {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
-
   /* Fonts */
   #title {
     text-transform: capitalize!important;
@@ -115,6 +96,25 @@
       var(--accessible-color),
       var(--accessible-color),
       .6
+    )
+  }
+
+  /* Logo */
+  .logo_container {
+    text-align: center
+  }
+  .logo_container a {
+    display: block;
+    height: 60px
+  }
+  .logo_container svg.logo {
+    margin-top: -8px
+  }
+  svg.logo path {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
     )
   }
 
@@ -164,7 +164,7 @@
   }
 
   /* Inputs */
-  input[type='text'], textarea, input[type='email'], input[type='tel'], input[type='search'], input[type='number'], input[type='date'] {
+  input:not([type=checkbox]):not([type=radio]), textarea {
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -504,22 +504,88 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #00000030
   }
+
+  /* Archive and Home page styles */
+  .client_container p {
+    margin: 0;
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+  }
+  .client_container {
+    margin: .5rem 0;
+    font-size: 1rem;
+    display: block
+  }
+
+  /* Client Container Animation */
+  .client_container > a {
+    display: block;
+    position: relative;
+    font-weight: 400;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    text-decoration: none
+  }
+  .client_container > a:not(.archived):hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
+  }
+  .client_container > a:before {
+    content: '';
+    position: absolute;
+    width: 70%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
+  }
+  .client_container > a:not(.archived):hover:before {
+    width: 75%
+  }
+  .client_container > a:not(.archived):active:before {
+    width: 0
+  }
+  .client_link {
+    padding: 1rem 0;
+    width: 90%
+  }
+  .search {
+    width: 70%;
+    opacity: .5;
+    font-size: 1rem;
+    transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
+  }
+  .search:hover, .search:focus {
+    opacity: 1
+  }
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
-    <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
+    <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger">
+      <inline-svg :src="require('./assets/svg/Hamburger.svg')"/>
+    </a>
     <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
        <!-- Mobile open/close sidebar icon -->
       <a id="close" v-on:click="sidebar()">
-        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32">
-          <path d="M0 0h24v24H0V0z" fill="none" class="transparent"/>
-          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-        </svg>
+        <inline-svg :src="require('./assets/svg/SidebarClose.svg')" class="logo"/>
       </a>
       <div class="logo_container animate__animated animate__bounceInDown animate__delay-1s">
         <router-link to="/" class="logo_link" title="Home">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="74" height="74"><defs><path d="M380 580L380 380L580 380L580 580L380 580ZM260 260L260 580L60 580L60 60L580 60L580 260L260 260Z" id="go6TfJQF0"></path></defs><g><g><g><use xlink:href="#go6TfJQF0"></use></g></g></g></svg>
+          <inline-svg :src="require('./assets/svg/SidebarLogo.svg')" class="logo"/>
         </router-link>
       </div> <!-- .logo_container -->
       <div class="main_nav animate__animated animate__fadeInLeft animate__faster">
@@ -542,26 +608,21 @@
       <div class="account_nav_container animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
         <div class="nav_item">
           <router-link to="/archive" id="archive-link">
-            <svg class="icon" width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 2H14V4.4375H1V2Z" fill="#282828"/>
-              <path d="M2 5.25V14.1875H13.375V5.25H2ZM10.125 8.5H5.25V6.875H10.125V8.5Z" fill="#282828"/>
-            </svg>
-          Archive</router-link>
+            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="icon"/>
+            Archive
+          </router-link>
         </div>
         <div class="nav_item">
           <router-link to="/account" id="account-link">
-            <svg class="icon" width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 3.33333V12.6667C2 13.0203 2.14048 13.3594 2.39052 13.6095C2.64057 13.8595 2.97971 14 3.33333 14H12.6667C13.4 14 14 13.4 14 12.6667V3.33333C14 2.6 13.4 2 12.6667 2H3.33333C2.97971 2 2.64057 2.14048 2.39052 2.39052C2.14048 2.64057 2 2.97971 2 3.33333V3.33333ZM10 6C10 7.10667 9.10667 8 8 8C6.89333 8 6 7.10667 6 6C6 4.89333 6.89333 4 8 4C9.10667 4 10 4.89333 10 6ZM4 11.3333C4 10 6.66667 9.26667 8 9.26667C9.33333 9.26667 12 10 12 11.3333V12H4V11.3333Z" fill="#282828"/>
-            </svg>
-          Account</router-link>
+            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" class="icon"/>
+            Account
+          </router-link>
         </div>
         <div class="nav_item">
           <router-link to="/logout" id="logout-link" v-on:click.native="logout()">
-            <svg class="icon" width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11.9999 14.6667L5.99992 14.6667C5.6463 14.6667 5.30716 14.5262 5.05711 14.2761C4.80706 14.0261 4.66659 13.687 4.66659 13.3333V12H5.99992V13.3333H11.9999L11.9999 2.66667L5.99992 2.66667L5.99992 4H4.66659V2.66667C4.66659 2.31305 4.80706 1.97391 5.05711 1.72386C5.30716 1.47381 5.6463 1.33334 5.99992 1.33334L11.9999 1.33334C12.3535 1.33334 12.6927 1.47381 12.9427 1.72386C13.1928 1.97391 13.3333 2.31305 13.3333 2.66667L13.3333 13.3333C13.3333 13.687 13.1928 14.0261 12.9427 14.2761C12.6927 14.5262 12.3535 14.6667 11.9999 14.6667V14.6667Z" fill="#282828"/>
-              <path d="M5.27333 5.60666L4.33333 4.66666L1 7.99999L4.33333 11.3333L5.27333 10.3933L3.55333 8.66666H10V7.33333L3.55333 7.33333L5.27333 5.60666Z" fill="#282828"/>
-            </svg>
-          Logout</router-link>
+            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" class="icon"/>
+            Logout
+          </router-link>
         </div>
       </div>
     </div> <!-- .sidebar -->
@@ -575,8 +636,12 @@
 
 <script>
 import axios from 'axios'
+import InlineSvg from 'vue-inline-svg'
 
 export default {
+  components: {
+    InlineSvg
+  },
   data: function () {
     return {
       archive_error: '',
