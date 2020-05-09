@@ -1,16 +1,35 @@
 <style scoped>
   .client_update a:first-of-type {
-    margin-left: 1rem
+    margin-right: 1rem
   }
   .client_container.archived {
     display: grid;
-    grid-template-columns: 1fr .1fr
+    grid-template-columns: 1fr .4fr
   }
   .client_update {
     padding: 1rem 0
   }
   .client_update a {
-    float: right
+    float: left
+  }
+  .archive__icon > path {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
+  }
+  .archive__icon, .archive__icon > path {
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .archive__icon:hover {
+    opacity: .6
+  }
+  .archive__icon:hover > path.lid--side {
+    transform: translate(-10px, 0)
+  }
+  .archive__icon:hover > path.lid--up {
+    transform: translate(0, -2px)
   }
 </style>
 <template>
@@ -26,8 +45,18 @@
           <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
         </div>
         <div class="client_update">
-          <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M6 21h12V7H6v14zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
-          <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM14 15v2h-4v-2H6.5L12 9.5l5.5 5.5H14zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></a>
+          <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Delete">
+            <svg class="archive__icon" width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path class="lid--side" d="M1 2H14V4.4375H1V2Z" fill="#282828"/>
+              <path d="M2 5.25V14.1875H13.375V5.25H2ZM10.125 8.5H5.25V6.875H10.125V8.5Z" fill="#282828"/>
+            </svg>
+          </a>
+          <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
+            <svg class="archive__icon" width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.1165 5.41185H3.88332C3.83363 5.41179 3.78442 5.42152 3.7385 5.4405C3.69258 5.45948 3.65085 5.48732 3.6157 5.52244C3.58055 5.55756 3.55267 5.59927 3.53365 5.64517C3.51464 5.69108 3.50486 5.74028 3.50488 5.78997V13.7391C3.50486 13.7888 3.51463 13.838 3.53364 13.884C3.55265 13.9299 3.58052 13.9717 3.61566 14.0068C3.6508 14.042 3.69252 14.0699 3.73845 14.089C3.78438 14.108 3.8336 14.1178 3.88332 14.1178H12.1165C12.1663 14.1179 12.2155 14.1081 12.2615 14.089C12.3074 14.07 12.3491 14.0421 12.3843 14.0069C12.4194 13.9717 12.4473 13.93 12.4663 13.884C12.4853 13.8381 12.495 13.7888 12.495 13.7391V5.78981C12.495 5.74012 12.4853 5.69092 12.4662 5.64501C12.4472 5.5991 12.4194 5.5574 12.3842 5.52229C12.349 5.48718 12.3073 5.45935 12.2614 5.4404C12.2154 5.42145 12.1662 5.41175 12.1165 5.41185V5.41185Z" fill="#282828"/>
+              <path class="lid--up" d="M12.6216 2.85662H9.49814V2.37876C9.49822 2.32905 9.4885 2.27981 9.46954 2.23386C9.45057 2.18791 9.42273 2.14615 9.38761 2.11097C9.35249 2.07579 9.31078 2.04789 9.26486 2.02884C9.21895 2.0098 9.16973 2 9.12002 2H6.87998C6.83026 2 6.78102 2.0098 6.73509 2.02884C6.68915 2.04788 6.64742 2.07578 6.61227 2.11095C6.57713 2.14613 6.54926 2.18789 6.53026 2.23384C6.51126 2.27979 6.5015 2.32903 6.50155 2.37876V2.85662H3.37844C3.32875 2.85656 3.27954 2.8663 3.23362 2.88527C3.18769 2.90425 3.14596 2.93209 3.11081 2.96721C3.07566 3.00233 3.04779 3.04404 3.02877 3.08994C3.00976 3.13585 2.99998 3.18506 3 3.23474V4.3393C2.99998 4.38899 3.00976 4.4382 3.02877 4.4841C3.04779 4.53001 3.07566 4.57171 3.11081 4.60683C3.14596 4.64195 3.18769 4.6698 3.23362 4.68877C3.27954 4.70775 3.32875 4.71749 3.37844 4.71742H12.6216C12.6713 4.71753 12.7205 4.70782 12.7664 4.68886C12.8124 4.6699 12.8541 4.64206 12.8893 4.60693C12.9244 4.5718 12.9523 4.53008 12.9713 4.48415C12.9903 4.43823 13.0001 4.389 13 4.3393V3.23474C13.0001 3.18504 12.9903 3.13582 12.9713 3.08989C12.9523 3.04397 12.9244 3.00225 12.8893 2.96712C12.8541 2.93199 12.8124 2.90415 12.7664 2.88519C12.7205 2.86623 12.6713 2.85652 12.6216 2.85662V2.85662Z" fill="#282828"/>
+            </svg>
+          </a>
         </div>
       </div>
     </div>

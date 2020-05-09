@@ -74,14 +74,16 @@
     text-transform: capitalize!important;
     font-weight: bold;
     font-size: 3.75rem;
-    letter-spacing: .15rem
+    letter-spacing: .15rem;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   h1 {
     margin-top: 0;
     margin-bottom: 3rem;
     font-weight: bold;
     font-size: 3.75rem;
-    text-transform: uppercase;
+    text-transform: capitalize;
     letter-spacing: .15rem
   }
   h2 {
@@ -127,6 +129,7 @@
     font-weight: bold;
     cursor: pointer;
     opacity: .5;
+    outline-width: 0;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -140,7 +143,7 @@
     );
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: opacity .4s, background-color .4s, color .2s
+    transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .button:hover {
     opacity: 1;
@@ -150,6 +153,9 @@
       var(--accessible-color)
     );
     text-decoration: none
+  }
+  .button:active {
+    transform: scale(.95)
   }
 
   /* Inputs */
@@ -267,10 +273,10 @@
   /* Navigation Items */
   .nav_item {
     font-size: 1.2rem;
-    padding: .5rem 0
+    padding: .8rem 0
   }
   .nav_subitem {
-    padding: .4rem 0;
+    padding: .8rem 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis
@@ -280,7 +286,7 @@
     font-size: .8rem
   }
   .nav_subitem.subitem:first-of-type {
-    padding-top: .5rem
+    padding-top: .8rem
   }
   .nav_subitem.subitem:last-of-type {
     padding-bottom: .5rem
@@ -303,9 +309,14 @@
     font-weight: bold
   }
   .main_nav a.router-link-exact-active:before {
-    visibility: visible;
+    opacity: 1;
     width: 100%;
     height: 2px
+  }
+  .icon {
+    margin: 0 .4rem 0 0;
+    height: 1.4rem;
+    vertical-align: bottom
   }
 
   /* Navigation Items Animated */
@@ -318,25 +329,54 @@
     position: absolute;
     width: 0%;
     height: 2px;
-    bottom: -2px;
+    bottom: -4px;
     left: 0;
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
-    visibility: hidden;
+    opacity: 0;
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .nav_subitem > a:before {
     height: 1px
   }
   .main_nav a:hover:before {
-    visibility: visible;
+    opacity: 1;
     width: 100%
+  }
+  .main_nav a:hover:active {
+    opacity: .6
   }
   .nav_subitem a {
     font-weight: 400
+  }
+  .account_nav_container a {
+    position: relative;
+    border: 0
+  }
+  .account_nav_container a:before {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    opacity: 0;
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
+  }
+  .account_nav_container a:hover:before {
+    opacity: 1;
+    width: 100%
+  }
+  .account_nav_container a:active {
+    opacity: .6
   }
 
   /* Responsive Design */
@@ -474,7 +514,7 @@
       </div> <!-- .logo_container -->
       <div class="main_nav">
         <div class="nav_item">
-            <router-link to="/" id="explore-link">Explore</router-link>
+            <router-link to="/" id="explore-link">Clients</router-link>
         </div>
          <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
@@ -491,13 +531,13 @@
       </div>
       <div class="account_nav_container">
         <div class="nav_item">
-          <router-link to="/archive" id="archive-link">Archive</router-link>
+          <router-link to="/archive" id="archive-link"><img class="icon" src="./assets/svg/ArchiveIconClose.svg"/>Archive</router-link>
         </div>
         <div class="nav_item">
-          <router-link to="/account" id="account-link">Account</router-link>
+          <router-link to="/account" id="account-link"><img class="icon" src="./assets/svg/AccountIcon.svg"/>Account</router-link>
         </div>
         <div class="nav_item">
-          <router-link to="/logout" id="logout-link" v-on:click.native="logout()">Logout</router-link>
+          <router-link to="/logout" id="logout-link" v-on:click.native="logout()"><img class="icon" src="./assets/svg/LogoutIcon.svg"/>Logout</router-link>
         </div>
       </div>
     </div> <!-- .sidebar -->

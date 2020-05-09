@@ -58,8 +58,12 @@
   .client_container > a:not(.archived):hover:before {
     width: 75%
   }
+  .client_container > a:not(.archived):active:before {
+    width: 0
+  }
   .client_link {
-    padding: 1rem 0
+    padding: 1rem 0;
+    width: 90%
   }
 
   /* Search Bar */
@@ -76,8 +80,8 @@
 
 <template>
   <div id="home">
-    <h1>Explore</h1>
-    <p class="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</p>
+    <h1>Your Clients</h1>
+    <h1 class="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</h1>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>

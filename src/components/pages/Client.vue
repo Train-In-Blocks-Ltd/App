@@ -67,18 +67,18 @@
     position: absolute;
     width: 0%;
     height: 2px;
-    bottom: 0;
+    bottom: -4px;
     right: 0;
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
-    visibility: hidden;
+    opacity: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .floating_nav a:hover:before {
-    visibility: visible;
+    opacity: 1;
     width: 100%
   }
   #client {
@@ -175,7 +175,7 @@
           <router-link :to="{name: 'results'}">Results</router-link>
           <div v-for="(clients, index) in $parent.posts" :key="index">
             <div v-if="clients.name == $route.params.name">
-              <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive</a>
+              <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
             </div>
           </div>
         </div>
