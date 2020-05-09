@@ -4,7 +4,7 @@
     max-width: 1056px
   }
   .intro {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-top: 0
   }
 
