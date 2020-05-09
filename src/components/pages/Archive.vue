@@ -1,18 +1,41 @@
 <style scoped>
   .client_update a:first-of-type {
-    margin-left: 1rem
+    margin-right: 1rem
   }
   .client_container.archived {
     display: grid;
-    grid-template-columns: 1fr .1fr
+    grid-template-columns: 1fr .4fr
   }
   .client_update {
     padding: 1rem 0
   }
   .client_update a {
-    float: right
+    float: left
   }
 </style>
+
+<style>
+  .archive__icon path {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
+  }
+  .archive__icon, .archive__icon path {
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .archive__icon:hover {
+    opacity: .6
+  }
+  .archive__icon:hover path.lid--side {
+    transform: translate(-10px, 0)
+  }
+  .archive__icon:hover path.lid--up {
+    transform: translate(0, -2px)
+  }
+</style>
+
 <template>
   <div id="home">
     <h1>Archive</h1>
@@ -26,8 +49,12 @@
           <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
         </div>
         <div class="client_update">
-          <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M6 21h12V7H6v14zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></a>
-          <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M18.71 3H5.29L3 5.79V21h18V5.79L18.71 3zM14 15v2h-4v-2H6.5L12 9.5l5.5 5.5H14zM5.12 5l.81-1h12l.94 1H5.12z"/></svg></a>
+          <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Delete">
+            <inline-svg :src="require('../../assets/svg/Trash.svg')" class="archive__icon"/>
+          </a>
+          <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Unarchive">
+            <inline-svg :src="require('../../assets/svg/ArchiveIconClose.svg')" class="archive__icon"/>
+          </a>
         </div>
       </div>
     </div>
@@ -35,7 +62,12 @@
 </template>
 
 <script>
+  import InlineSvg from 'vue-inline-svg'
+
   export default {
+    components: {
+      InlineSvg
+    },
     data: function () {
       return {
         search: ''

@@ -1,7 +1,12 @@
 <style>
+  @import '../node_modules/animate.css';
+
   /* Global */
   * {
     box-sizing: border-box
+  }
+  :root {
+    --animate-delay: .5s
   }
   body {
     font-family: Arial, Helvetica, sans-serif;
@@ -50,38 +55,21 @@
     padding: 5rem 3.75rem
   }
 
-  /* Logo */
-  .logo_container {
-    text-align: center
-  }
-  .logo_container a {
-    display: block;
-    height: 60px
-  }
-  .logo_container svg {
-    margin-top: -8px
-  }
-  .logo_container svg defs path {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
-
   /* Fonts */
   #title {
     text-transform: capitalize!important;
     font-weight: bold;
     font-size: 3.75rem;
-    letter-spacing: .15rem
+    letter-spacing: .15rem;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   h1 {
     margin-top: 0;
     margin-bottom: 3rem;
     font-weight: bold;
     font-size: 3.75rem;
-    text-transform: uppercase;
+    text-transform: capitalize;
     letter-spacing: .15rem
   }
   h2 {
@@ -111,6 +99,25 @@
     )
   }
 
+  /* Logo */
+  .logo_container {
+    text-align: center
+  }
+  .logo_container a {
+    display: block;
+    height: 60px
+  }
+  .logo_container svg.logo {
+    margin-top: -8px
+  }
+  svg.logo path {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
+  }
+
   /* Buttons */
   .button {
     text-align: center;
@@ -127,6 +134,7 @@
     font-weight: bold;
     cursor: pointer;
     opacity: .5;
+    outline-width: 0;
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -140,7 +148,7 @@
     );
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: opacity .4s, background-color .4s, color .2s
+    transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .button:hover {
     opacity: 1;
@@ -151,9 +159,12 @@
     );
     text-decoration: none
   }
+  .button:active {
+    transform: scale(.95)
+  }
 
   /* Inputs */
-  input[type='text'], textarea, input[type='email'], input[type='tel'], input[type='search'], input[type='number'], input[type='date'] {
+  input:not([type=checkbox]):not([type=radio]), textarea {
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -267,10 +278,10 @@
   /* Navigation Items */
   .nav_item {
     font-size: 1.2rem;
-    padding: .5rem 0
+    padding: .8rem 0
   }
   .nav_subitem {
-    padding: .4rem 0;
+    padding: .8rem 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis
@@ -280,7 +291,7 @@
     font-size: .8rem
   }
   .nav_subitem.subitem:first-of-type {
-    padding-top: .5rem
+    padding-top: .8rem
   }
   .nav_subitem.subitem:last-of-type {
     padding-bottom: .5rem
@@ -302,10 +313,20 @@
   .nav_subitem a.router-link-exact-active {
     font-weight: bold
   }
-  .main_nav a.router-link-exact-active:before {
-    visibility: visible;
+  .main_nav a.router-link-exact-active:before, .account_nav_container a.router-link-exact-active:before {
+    opacity: 1;
     width: 100%;
     height: 2px
+  }
+  .icon {
+    margin: 0 .4rem 0 0;
+    height: 1.4rem;
+    vertical-align: bottom;
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
   }
 
   /* Navigation Items Animated */
@@ -318,25 +339,54 @@
     position: absolute;
     width: 0%;
     height: 2px;
-    bottom: -2px;
+    bottom: -4px;
     left: 0;
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
-    visibility: hidden;
+    opacity: 0;
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .nav_subitem > a:before {
     height: 1px
   }
   .main_nav a:hover:before {
-    visibility: visible;
+    opacity: 1;
     width: 100%
+  }
+  .main_nav a:hover:active {
+    opacity: .6
   }
   .nav_subitem a {
     font-weight: 400
+  }
+  .account_nav_container a {
+    position: relative;
+    border: 0
+  }
+  .account_nav_container a:before {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -8px;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    opacity: 0;
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
+  }
+  .account_nav_container a:hover:before {
+    opacity: 1;
+    width: 100%
+  }
+  .account_nav_container a:active {
+    opacity: .6
   }
 
   /* Responsive Design */
@@ -454,31 +504,97 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #00000030
   }
+
+  /* Archive and Home page styles */
+  .client_container p {
+    margin: 0;
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+  }
+  .client_container {
+    margin: .5rem 0;
+    font-size: 1rem;
+    display: block
+  }
+
+  /* Client Container Animation */
+  .client_container > a {
+    display: block;
+    position: relative;
+    font-weight: 400;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    text-decoration: none
+  }
+  .client_container > a:not(.archived):hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
+  }
+  .client_container > a:before {
+    content: '';
+    position: absolute;
+    width: 70%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
+  }
+  .client_container > a:not(.archived):hover:before {
+    width: 75%
+  }
+  .client_container > a:not(.archived):active:before {
+    width: 0
+  }
+  .client_link {
+    padding: 1rem 0;
+    width: 90%
+  }
+  .search {
+    width: 70%;
+    opacity: .5;
+    font-size: 1rem;
+    transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
+  }
+  .search:hover, .search:focus {
+    opacity: 1
+  }
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
-    <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger"><svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32"><path d="M0 0h24v24H0V0z" fill="none" class="transparent"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></a>
+    <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger">
+      <inline-svg :src="require('./assets/svg/Hamburger.svg')"/>
+    </a>
     <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
        <!-- Mobile open/close sidebar icon -->
       <a id="close" v-on:click="sidebar()">
-        <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 0 24 24" width="32">
-          <path d="M0 0h24v24H0V0z" fill="none" class="transparent"/>
-          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-        </svg>
+        <inline-svg :src="require('./assets/svg/SidebarClose.svg')" class="logo"/>
       </a>
-      <div class="logo_container">
+      <div class="logo_container animate__animated animate__bounceInDown animate__delay-1s">
         <router-link to="/" class="logo_link" title="Home">
-          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="74" height="74"><defs><path d="M380 580L380 380L580 380L580 580L380 580ZM260 260L260 580L60 580L60 60L580 60L580 260L260 260Z" id="go6TfJQF0"></path></defs><g><g><g><use xlink:href="#go6TfJQF0"></use></g></g></g></svg>
+          <inline-svg :src="require('./assets/svg/SidebarLogo.svg')" class="logo"/>
         </router-link>
       </div> <!-- .logo_container -->
-      <div class="main_nav">
+      <div class="main_nav animate__animated animate__fadeInLeft animate__faster">
         <div class="nav_item">
-            <router-link to="/" id="explore-link">Explore</router-link>
+            <router-link to="/" id="explore-link">Clients</router-link>
         </div>
          <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
-          :key="index" class="nav_subitem">
+          :key="index" class="nav_subitem animate__animated animate__fadeIn">
           <router-link :to="'/client/'+clients.name+'/'">{{clients.name}}</router-link>
           <!-- If on client page and the client has programmes display the programmes-->
           <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
@@ -489,28 +605,43 @@
           </div>
         </div>
       </div>
-      <div class="account_nav_container">
+      <div class="account_nav_container animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
         <div class="nav_item">
-          <router-link to="/archive" id="archive-link">Archive</router-link>
+          <router-link to="/archive" id="archive-link">
+            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="icon"/>
+            Archive
+          </router-link>
         </div>
         <div class="nav_item">
-          <router-link to="/account" id="account-link">Account</router-link>
+          <router-link to="/account" id="account-link">
+            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" class="icon"/>
+            Account
+          </router-link>
         </div>
         <div class="nav_item">
-          <router-link to="/logout" id="logout-link" v-on:click.native="logout()">Logout</router-link>
+          <router-link to="/logout" id="logout-link" v-on:click.native="logout()">
+            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" class="icon"/>
+            Logout
+          </router-link>
         </div>
       </div>
     </div> <!-- .sidebar -->
     <main>
-      <router-view :key="$route.fullPath"/>
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <router-view :key="$route.fullPath"/>
+      </transition>
     </main>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import InlineSvg from 'vue-inline-svg'
 
 export default {
+  components: {
+    InlineSvg
+  },
   data: function () {
     return {
       archive_error: '',

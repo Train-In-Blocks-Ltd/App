@@ -4,8 +4,9 @@
     text-transform: capitalize
   }
   #title, h3 {
-    font-size: 1.25rem;
-    font-weight: bold
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0
   }
   #title {
     margin-top: 0
@@ -87,7 +88,8 @@
     border-bottom: none;
     padding: 30px 0;
     min-width: 40px;
-    width: 100%
+    width: 100%;
+    transition: all .3s cubic-bezier(.165, .84, .44, 1)
   }
   .programme_duration_container > *:last-of-type {
     border-right: none
@@ -190,7 +192,11 @@
   .label--workout input, .label--workout select {
     font-size: 1rem
   }
-  #programme_notes_header p {
+  #block_notes_header > p {
+    margin: auto 0;
+    font-weight: 700
+  }
+  #block-notes {
     display: block;
     margin: .5rem 0;
     position: relative;
@@ -202,7 +208,7 @@
     );
     text-decoration: none
   }
-  #programme_notes_header p:hover {
+  #block-notes:hover {
     color: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -210,25 +216,27 @@
     );
     cursor: pointer
   }
-  #programme_notes_header p:before {
+  #block-notes:before {
     content: '';
     position: absolute;
     width: 0%;
-    height: 1px;
-    bottom: 0;
+    height: 2px;
+    bottom: -4px;
     left: 0;
     background-color: rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
-    visibility: hidden;
-    transition: all .3s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+    opacity: 0;
+    transition: all .3s cubic-bezier(.165, .84, .44, 1)
   }
-  #programme_notes_header p:hover:before {
-    visibility: visible;
+  #block-notes:hover:before {
+    opacity: 1;
     width: 100%
+  }
+  #block-notes:active:before {
+    width: 0
   }
 </style>
 
@@ -328,7 +336,7 @@
             </div><!-- workouts -->
             <div class="notes_wrapper">
               <div>
-                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
+                <a id="block-notes" href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
               </div>
               <div v-show="block_notes" id="block_notes">

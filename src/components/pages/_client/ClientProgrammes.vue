@@ -22,7 +22,8 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    display: block
+    display: block;
+    transition: all .1s cubic-bezier(.165, .84, .44, 1)
   }
   .program_link:hover {
     text-decoration: none;
@@ -32,6 +33,10 @@
       var(--accessible-color)
     );
     padding: calc(1.5rem - 1px)
+  }
+  .program_link:active {
+    transform: scale(.95);
+    opacity: .6
   }
   .program_container h3 {
     margin-top: 0;

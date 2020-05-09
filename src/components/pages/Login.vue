@@ -1,4 +1,4 @@
-<style>
+<style scoped>
   #login {
     text-align: left;
     display: inline;
@@ -6,22 +6,30 @@
     padding: 6rem 4rem;
     min-width: 500px
   }
+  @media (max-width: 520px) {
+    main {
+      padding: 2rem 1.5rem
+    }
+    #login {
+      min-width: 100%;
+      padding: 4rem 2rem
+    }
+  }
+</style>
+<style>
+  .okta-form-title {
+    display: none
+  }
   .auth-org-logo {
     margin: 5vh 0
-  }
-  .okta-form-title {
-    font-size: 2rem;
-    text-align: left;
-    color: #282828
   }
   .okta-form-label {
     font-size: 1.1rem;
     font-weight: bold;
     text-align: left;
-    color: #282828;
     letter-spacing: .15rem
   }
-  .okta-form-input-field input {
+  .o-form-input .okta-form-input-field input {
     width: 75%;
     margin: .75rem 0;
     padding: .5rem;
@@ -95,16 +103,6 @@
     font-weight: 600
   }
   @media (max-width: 520px) {
-    main {
-      padding: 2rem 1.5rem
-    }
-    #login {
-      min-width: 100%;
-      padding: 4rem 2rem
-    }
-    .okta-form-title {
-      font-size: 1.5rem
-    }
     .okta-form-label {
       font-size: 1rem
     }
@@ -113,14 +111,19 @@
 
 <template>
   <div id="login" v-if="!this.$parent.authenticated">
+    <inline-svg :src="require('../../assets/svg/LoginLogo.svg')" class="auth-org-logo logo"/>
     <div id="okta-signin-container"></div>
   </div>
 </template>
 
 <script>
 import OktaSignIn from '@okta/okta-signin-widget'
+import InlineSvg from 'vue-inline-svg'
 
 export default {
+  components: {
+    InlineSvg
+  },
   mounted: function () {
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
@@ -128,10 +131,9 @@ export default {
         issuer: process.env.ISSUER + '/oauth2/default',
         clientId: process.env.CLIENT_ID,
         redirectUri: process.env.URL + '/implicit/callback',
-        logo: require('@/assets/logo.png'),
         i18n: {
           en: {
-            'primaryauth.title': ' ',
+            'primaryauth.title': '',
             'primaryauth.username.placeholder': 'Email',
             'primaryauth.username.tooltip': 'Enter your email',
             'primaryauth.password.placeholder': 'Password',
