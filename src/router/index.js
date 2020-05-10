@@ -13,7 +13,6 @@ import NotFound from '@/components/pages/NotFound'
 import ArchiveComponent from '@/components/pages/Archive'
 
 import ClientProgrammes from '@/components/pages/_client/ClientProgrammes'
-import ClientResults from '@/components/pages/_client/ClientResults'
 import ClientBlocks from '@/components/pages/_client/ClientBlocks'
 
 Vue.use(Router)
