@@ -78,14 +78,6 @@ const router = new Router({
           }
         },
         {
-          path: 'results',
-          component: ClientResults,
-          name: 'results',
-          meta: {
-            requiresAuth: true
-          }
-        },
-        {
           path: 'blocks/:id',
           component: ClientBlocks,
           name: 'blocks',

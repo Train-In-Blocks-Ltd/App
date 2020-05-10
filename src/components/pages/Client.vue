@@ -166,7 +166,6 @@
         <div class="floating_nav">
           <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
           <router-link :to="{name: 'programmes'}">Programmes</router-link>
-          <router-link :to="{name: 'results'}">Results</router-link>
           <div v-for="(clients, index) in $parent.posts" :key="index">
             <div v-if="clients.name == $route.params.name">
               <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
