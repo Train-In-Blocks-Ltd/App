@@ -161,12 +161,6 @@
         <input type="text" id="title" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
         <label><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
-        <div class="loading-grid">
-          <input v-if="edit" type="submit" class="button" value="Save" />
-          <Loader></Loader>
-        </div>
-        <p v-if="this.clients_update_response"><b>{{clients_update_response}}</b></p>
-        <p v-if="this.clients_update_error"><b>{{clients_update_error}}</b></p>
       </form>
       <div>
         <div class="floating_nav">
@@ -194,17 +188,10 @@
 
 <script>
   import axios from 'axios'
-  import Loader from '../components/Loader'
 
   export default {
-    components: {
-      Loader
-    },
     data: function () {
       return {
-        edit: false,
-        clients_update_response: '',
-        clients_update_error: '',
         no_programmes: false,
         loading_programmes: true,
         client_notes: false,
@@ -465,17 +452,29 @@
           )
           // Get the client information again as we have just updated the client
           await this.$parent.clients()
-          this.clients_update_response = response_update_clients.data
-          this.$parent.loading = false
-          this.edit = false
           await this.$parent.clients_to_vue()
-          await this.get_client_details()
         } catch (e) {
-          this.clients_update_error = e.toString()
+          console.log(e.toString())
         }
       },
       editing () {
-        this.edit = true
+        // Set vue self
+        var self = this
+
+        function click (e) {
+          if (!document.querySelector('.client_info').contains(e.target)) {
+            // Update the workout
+            self.update_client()
+            window.removeEventListener('click', click)
+          }
+        }
+        // Wait 1 second before applying the event listener to avoid registering the click to open the box
+        setTimeout(
+          function () {
+            // Add event listener for clicking outside box
+            window.addEventListener('click', click)
+          }
+        , 1000)
       }
     }
   }

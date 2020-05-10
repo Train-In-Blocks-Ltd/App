@@ -250,7 +250,7 @@
             <div class="client_info">
               <h1>{{$route.params.name}}</h1>
                <!-- Update the programme info -->
-              <form class="programme_info" v-on:submit.prevent="update_programme()">
+              <form class="programme_info">
                 <input type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()">
                 <label class="label--workout">Duration: <input type="number" id="duration" class="client-info--workout" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
                 <label class="label--workout">Start: <input type="date" id="start" class="client-info--workout" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
@@ -259,12 +259,6 @@
                     <option>Select a Block</option>
                   </select>
                 </label>
-                <div class="loading-grid" v-if="edit">
-                  <input style="margin: 1rem 0 .5rem 0" type="submit" class="button" value="Save" />
-                  <Loader></Loader>
-                </div>
-                <p v-if="programme_update_response"><b>{{programme_update_response}}</b></p>
-                <p v-if="programme_update_error"><b>{{programme_update_error}}</b></p>
               </form>
             </div>  <!-- client_info -->
             <div class="floating_nav_container">
@@ -377,10 +371,7 @@
       return {
         creating: false,
         response: '',
-        edit: false,
         edit1: false,
-        programme_update_response: '',
-        programme_update_error: '',
         error: '',
         workout_notes: false,
         block_notes: false,
@@ -720,10 +711,7 @@
               'notes': programme.notes
             }
           )
-          this.programme_update_response = 'Details updated successfully'
           this.$parent.loading = false
-          this.edit = false
-          this.programme_update_error = false
 
           // Set vue client_details data to new data
           let x
@@ -748,12 +736,29 @@
           // Update the localstorage with the programmes
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
         } catch (e) {
-          this.programme_update_error = e.toString()
+          console.log(e.toString())
         }
       },
       editing () {
         this.edit1 = false
-        this.edit = true
+
+        // Set vue self
+        var self = this
+
+        function click (e) {
+          if (!document.querySelector('.programme_info').contains(e.target)) {
+            // Update the workout
+            self.update_programme()
+            window.removeEventListener('click', click)
+          }
+        }
+        // Wait 1 second before applying the event listener to avoid registering the click to open the box
+        setTimeout(
+          function () {
+            // Add event listener for clicking outside box
+            window.addEventListener('click', click)
+          }
+        , 1000)
       },
       editing1 () {
         this.edit = false
