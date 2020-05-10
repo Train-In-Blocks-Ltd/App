@@ -176,7 +176,6 @@
       calc(var(--blue) + 45),
       .8
     )!important;
-    margin: .75rem 0;
     padding: .5rem;
     display: inline-block;
     resize: none;
