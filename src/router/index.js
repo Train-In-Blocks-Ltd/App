@@ -6,7 +6,6 @@ import Auth from '@okta/okta-vue'
 import HomeComponent from '@/components/pages/Home'
 import LoginComponent from '@/components/pages/Login'
 import ProfileComponent from '@/components/pages/Account'
-import UpdateComponent from '@/components/pages/AccountUpdate'
 import LogoutComponent from '@/components/pages/Logout'
 import ClientComponent from '@/components/pages/Client'
 import NotFound from '@/components/pages/NotFound'
@@ -46,13 +45,6 @@ const router = new Router({
     {
       path: '/implicit/callback',
       component: Auth.handleCallback()
-    },
-    {
-      path: '/update-details',
-      component: UpdateComponent,
-      meta: {
-        requiresAuth: true
-      }
     },
     {
       path: '/account',

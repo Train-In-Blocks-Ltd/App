@@ -164,7 +164,7 @@
   }
 
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]), textarea {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]), textarea {
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -681,6 +681,7 @@ export default {
     },
     async setup () {
       this.claims = await this.$auth.getUser()
+      this.colors.hex = this.claims.color
       this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
       this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
       this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
