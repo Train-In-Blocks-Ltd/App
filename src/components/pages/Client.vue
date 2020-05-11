@@ -20,16 +20,20 @@
   #client .client_info .client_info--name, #client .client_info input.client_info--name {
     font-size: 3.75rem;
     letter-spacing: .15rem;
-    margin: 0
+    margin: 0;
+    width: 45vw
   }
 
   /* Top Grid */
   .top_grid {
     display: grid;
-    grid-template-columns: 1fr .15fr
+    grid-template-columns: 1fr 1fr
   }
 
   /* Floating Nav */
+  .floating_nav--container {
+    justify-self: right
+  }
   .floating_nav {
     text-align: right;
     border-right: 2px solid rgb(
@@ -37,7 +41,9 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding-right: .5rem
+    padding-right: .5rem;
+    display: grid;
+    width: fit-content
   }
   .floating_nav a {
     display: inline-block;
@@ -116,21 +122,40 @@
     margin: 0
   }
 
-  @media (max-width: 768px) {
+  /* Responsiveness */
+  @media (max-width: 992px) {
     .top_grid {
-      grid-template-rows: 1fr .25fr;
-      grid-template-columns: auto
+      grid-template-columns: 1fr
+    }
+    .floating_nav--container {
+      justify-self: left
     }
     .floating_nav {
       text-align: left;
-      padding-right: 0;
-      padding-top: .5rem;
       border: none;
-      border-top: 2px solid rgb(
-        var(--accessible-color),
-        var(--accessible-color),
-        var(--accessible-color)
-      )
+      grid-template-columns: 1fr
+    }
+    .floating_nav a:before {
+      left: 0
+    }
+    .floating_nav:before {
+      content: '';
+      height: 2px;
+      background-color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+      width: 3rem;
+      margin: 1rem 0
+    }
+    .floating_nav:after {
+      content: '';
+      height: 2px;
+      background-color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+      width: 5rem;
+      margin: 1rem 0
+    }
+    @media (max-width: 768px) {
+      #client .client_info .client_info--name, #client .client_info input.client_info--name {
+        width: 90vw
+      }
     }
   }
 </style>
@@ -145,7 +170,7 @@
         <label><b>Email: </b><input type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
-      <div>
+      <div class="floating_nav--container">
         <div class="floating_nav">
           <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
           <div v-for="(clients, index) in $parent.posts" :key="index">

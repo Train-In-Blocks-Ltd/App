@@ -19,6 +19,12 @@
     display: grid;
     grid-gap: .5rem
   }
+
+  @media (max-width: 768px) {
+    .home--container {
+      width: 100%
+    }
+  }
 </style>
 
 <template>

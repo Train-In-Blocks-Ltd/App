@@ -52,7 +52,8 @@
     grid-area: main;
     display: grid;
     align-items: start;
-    padding: 5rem 3.75rem
+    padding: 5rem 3.75rem;
+    overflow-y: auto;
   }
 
   /* Fonts */

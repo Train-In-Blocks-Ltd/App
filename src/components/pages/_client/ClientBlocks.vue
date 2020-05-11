@@ -49,7 +49,8 @@
 
   /* Block Table */
   .block_table {
-    overflow-x: auto
+    overflow-x: auto;
+    height: fit-content
   }
   .block_table--container {
     border: 1px solid rgb(
@@ -99,14 +100,15 @@
 
   /* Workouts */
   .workouts {
-    grid-area: workouts
+    grid-area: workouts;
+    overflow-x: auto
   }
   .workouts--workout {
     display: block;
     border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
     padding: .5rem 0;
     cursor: pointer;
-    width: 70%;
+    width: 25rem;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -114,7 +116,7 @@
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .workouts--workout:hover {
-    width: 80%
+    width: 27rem
   }
 
   /* Notes Grid Section */
@@ -125,7 +127,9 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding-left: 1rem
+    padding-left: 1rem;
+    width: 35vw;
+    justify-self: right
   }
 
   /* Quill Notes */
@@ -176,6 +180,23 @@
     display: grid;
     grid-gap: .5rem
   }
+
+  /* Responsiveness */
+  @media (max-width: 992px) {
+    .block_grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: .2fr 1fr 1fr;
+      grid-template-areas:
+        'table'
+        'workouts'
+        'notes'
+    }
+    .notes {
+      width: 100%;
+      border: none;
+      padding: 0
+    }
+  }
 </style>
 
 <template>
@@ -192,14 +213,9 @@
                 <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
                 <label>Duration: <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
-                <label>Follow to: 
-                  <select>
-                    <option>Select a Block</option>
-                  </select>
-                </label>
               </form>
             </div>  <!-- client_info -->
-            <div>
+            <div class="floating_nav--container">
               <div class="floating_nav">
                 <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a>
                 <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>

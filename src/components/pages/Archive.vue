@@ -39,6 +39,12 @@
   .archive--container {
     width: 50vw
   }
+
+  @media (max-width: 768px) {
+    .archive--container {
+      width: 100%
+    }
+  }
 </style>
 
 <template>
