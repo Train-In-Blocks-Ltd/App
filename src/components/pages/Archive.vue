@@ -49,11 +49,11 @@
           <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
         </div>
         <div class="client_update">
-          <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Delete">
-            <inline-svg :src="require('../../assets/svg/Trash.svg')" class="archive__icon"/>
-          </a>
-          <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Unarchive">
+          <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
             <inline-svg :src="require('../../assets/svg/ArchiveIconClose.svg')" class="archive__icon"/>
+          </a>
+          <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Delete">
+            <inline-svg :src="require('../../assets/svg/Trash.svg')" class="archive__icon"/>
           </a>
         </div>
       </div>
