@@ -13,7 +13,7 @@
         <label for="first-name"><b>Name: </b><input type="text" id="first-name" name="first-name" autocomplete="given-name" v-model="$parent.claims.name" required v-on:click="edit()"/></label>
         <label for="email"><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.claims.email" required v-on:click="edit()"/></label>
         <label for="color"><b>Colour theme: </b><input type="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/></label>
-        <p class="small">To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
+        <p>To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
     </form>
     <h2>Your Subscription</h2>
   </div>

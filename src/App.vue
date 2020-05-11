@@ -56,16 +56,7 @@
   }
 
   /* Fonts */
-  #title {
-    text-transform: capitalize!important;
-    font-weight: bold;
-    font-size: 3.75rem;
-    letter-spacing: .15rem;
-    white-space: nowrap;
-    text-overflow: ellipsis
-  }
   h1 {
-    margin-top: 0;
     margin-bottom: 3rem;
     font-weight: bold;
     font-size: 3.75rem;
@@ -100,17 +91,17 @@
   }
 
   /* Logo */
-  .logo_container {
+  .logo {
     text-align: center
   }
-  .logo_container a {
+  .logo--link {
     display: block;
     height: 60px
   }
-  .logo_container svg.logo {
+  .logo--svg {
     margin-top: -8px
   }
-  svg.logo path {
+  svg.logo--svg path {
     fill: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -175,7 +166,7 @@
       calc(var(--green) + 45),
       calc(var(--blue) + 45),
       .8
-    )!important;
+    );
     padding: .5rem;
     display: inline-block;
     resize: none;
@@ -186,6 +177,16 @@
     );
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
+  }
+  input.title {
+    margin-top: 0;
+    margin-bottom: 3rem;
+    font-weight: bold;
+    font-size: 3.75rem;
+    text-transform: capitalize;
+    letter-spacing: .15rem;
+    white-space: nowrap;
+    text-overflow: ellipsis
   }
   ::placeholder {
     color: rgba(
@@ -243,7 +244,7 @@
     height: 100vh;
     top: 0
   }
-  .main_nav {
+  .nav {
     border-bottom: .5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
@@ -261,83 +262,39 @@
     margin-bottom: 2.5rem
   }
 
-  /* Nav Scrollbar */
-  .main_nav::-webkit-scrollbar-track {
-    border: 1px solid white;
-    background-color: white
-  }
-  .main_nav::-webkit-scrollbar {
-    width: 10px;
-    background-color: white
-  }
-  .main_nav::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, .2)
-  }
-
-  /* Navigation Items */
-  .nav_item {
-    font-size: 1.2rem;
-    padding: .8rem 0
-  }
-  .nav_subitem {
+  /* Client Navigation Items */
+  .nav--item {
     padding: .8rem 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis
   }
-  .nav_subitem.subitem {
+  .nav--item:first-of-type {
+    font-size: 1.2rem
+  }
+  .nav--item:first-of-type a {
+    font-weight: bold
+  }
+  .nav--item--item {
     padding: 0 0 .8rem .8rem;
     font-size: .8rem
   }
-  .nav_subitem.subitem:first-of-type {
+  .nav--item--item:first-of-type {
     padding-top: .8rem
   }
-  .nav_subitem.subitem:last-of-type {
-    padding-bottom: .5rem
+  .nav--item--item:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: -.8rem
   }
-  .account_nav_container {
-    align-self: end;
-    text-align: center;
-    font-size: .8rem
+  .nav--item a {
+    font-weight: normal;
+    position: relative
   }
-  .nav_item:last-of-type {
-    padding-bottom: 0
-  }
-  #archive-link, #account-link, #logout-link {
-    font-size: 1rem
-  }
-  .account_nav_container .nav_item:first-of-type {
-    padding-top: 0
-  }
-  .nav_subitem a.router-link-exact-active {
-    font-weight: bold
-  }
-  .main_nav a.router-link-exact-active:before, .account_nav_container a.router-link-exact-active:before {
-    opacity: 1;
-    width: 100%;
-    height: 2px
-  }
-  .icon {
-    margin: 0 .4rem 0 0;
-    height: 1.4rem;
-    vertical-align: bottom;
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
-
-  /* Navigation Items Animated */
-  .main_nav a {
-    position: relative;
-    border: 0
-  }
-  .main_nav a:before {
+  .nav--item a:before {
     content: '';
     position: absolute;
     width: 0%;
-    height: 2px;
+    height: 1px;
     bottom: -4px;
     left: 0;
     background-color: rgb(
@@ -348,24 +305,43 @@
     opacity: 0;
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
-  .nav_subitem > a:before {
-    height: 1px
-  }
-  .main_nav a:hover:before {
+  .nav--item a:hover:before {
     opacity: 1;
     width: 100%
   }
-  .main_nav a:hover:active {
+  .nav--item a:hover:active {
     opacity: .6
   }
-  .nav_subitem a {
-    font-weight: 400
+  .nav--item a.router-link-exact-active {
+    font-weight: bold
   }
-  .account_nav_container a {
+  .nav a.router-link-exact-active:before {
+    opacity: 1;
+    width: 100%;
+    height: 2px
+  }
+
+  /* Account Navigation Items */
+  .account_nav {
+    align-self: end;
+    text-align: center;
+    font-size: .8rem
+  }
+  .account_nav--item {
+    font-size: 1rem;
+    padding: .8rem 0
+  }
+  .account_nav--item:first-of-type {
+    padding-top: 0
+  }
+  .account_nav--item:last-of-type {
+    padding-bottom: 0
+  }
+  .account_nav--item a {
     position: relative;
     border: 0
   }
-  .account_nav_container a:before {
+  .account_nav--item a:before {
     content: '';
     position: absolute;
     width: 0%;
@@ -380,65 +356,27 @@
     opacity: 0;
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
-  .account_nav_container a:hover:before {
+  .account_nav--item a:hover:before {
     opacity: 1;
     width: 100%
   }
-  .account_nav_container a:active {
+  .account_nav--item a:active {
     opacity: .6
   }
-
-  /* Responsive Design */
-  @media (min-width: 768px) {
-    #hamburger, #close {
-      display: none
-    }
+  .account_nav--item a.router-link-exact-active:before {
+    opacity: 1;
+    width: 100%;
+    height: 2px
   }
-  @media (max-width: 768px) {
-    #app.authenticated {
-      display: block
-    }
-    main > div {
-      max-width: 100%
-    }
-    h1 {
-      font-size: 1.4rem;
-      text-align: center;
-      margin-top: -.9rem;
-      margin-bottom: 2.5rem;
-      margin-left: 1.25rem
-    }
-    .sidebar {
-      position: fixed;
-      width: 100%;
-      background-color: rgb(
-        var(--red),
-        var(--green),
-        var(--blue)
-      );
-      transition: opacity .5s, z-index 1s;
-      z-index: -1;
-      opacity: 0
-    }
-    .sidebar.open {
-      opacity: 1;
-      z-index: 99
-    }
-    main {
-      padding: 5rem 1.875rem
-    }
-    #hamburger, #close {
-      position: absolute;
-      left: 1.875rem;
-      top: 1.5rem
-    }
-    #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
-      fill: rgb(
-        var(--accessible-color),
-        var(--accessible-color),
-        var(--accessible-color)
-      )
-    }
+  .account_nav--item--icon {
+    margin: 0 .4rem 0 0;
+    height: 1.4rem;
+    vertical-align: bottom;
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
   }
 
   /* QUILL */
@@ -446,6 +384,9 @@
     margin: .75rem 0
   }
   .ql-toolbar.ql-snow {
+    border: none
+  }
+  .ql-container.ql-snow {
     border: none
   }
   .ql-snow .ql-stroke {
@@ -570,6 +511,59 @@
   .search:hover, .search:focus {
     opacity: 1
   }
+
+  /* Responsive Design */
+  @media (min-width: 768px) {
+    #hamburger, #close {
+      display: none
+    }
+  }
+  @media (max-width: 768px) {
+    #app.authenticated {
+      display: block
+    }
+    main > div {
+      max-width: 100%
+    }
+    h1 {
+      font-size: 1.4rem;
+      text-align: center;
+      margin-top: -.9rem;
+      margin-bottom: 2.5rem;
+      margin-left: 1.25rem
+    }
+    .sidebar {
+      position: fixed;
+      width: 100%;
+      background-color: rgb(
+        var(--red),
+        var(--green),
+        var(--blue)
+      );
+      transition: opacity .5s, z-index 1s;
+      z-index: -1;
+      opacity: 0
+    }
+    .sidebar.open {
+      opacity: 1;
+      z-index: 99
+    }
+    main {
+      padding: 5rem 1.875rem
+    }
+    #hamburger, #close {
+      position: absolute;
+      left: 1.875rem;
+      top: 1.5rem
+    }
+    #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
+      fill: rgb(
+        var(--accessible-color),
+        var(--accessible-color),
+        var(--accessible-color)
+      )
+    }
+  }
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
@@ -577,54 +571,54 @@
     <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger">
       <inline-svg :src="require('./assets/svg/Hamburger.svg')"/>
     </a>
-    <div class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
+    <nav class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
        <!-- Mobile open/close sidebar icon -->
       <a id="close" v-on:click="sidebar()">
-        <inline-svg :src="require('./assets/svg/SidebarClose.svg')" class="logo"/>
+        <inline-svg :src="require('./assets/svg/SidebarClose.svg')"/>
       </a>
-      <div class="logo_container animate__animated animate__bounceInDown animate__delay-1s">
-        <router-link to="/" class="logo_link" title="Home">
-          <inline-svg :src="require('./assets/svg/SidebarLogo.svg')" class="logo"/>
+      <div class="logo animate__animated animate__bounceInDown animate__delay-1s">
+        <router-link to="/" class="logo--link" title="Home">
+          <inline-svg :src="require('./assets/svg/SidebarLogo.svg')" class="logo--svg"/>
         </router-link>
-      </div> <!-- .logo_container -->
-      <div class="main_nav animate__animated animate__fadeInLeft animate__faster">
-        <div class="nav_item">
-            <router-link to="/" id="explore-link">Clients</router-link>
+      </div> <!-- .logo -->
+      <div class="nav animate__animated animate__fadeInLeft animate__faster">
+        <div class="nav--item">
+            <router-link to="/">Clients</router-link>
         </div>
          <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
-          :key="index" class="nav_subitem animate__animated animate__fadeIn">
+          :key="index" class="nav--item animate__animated animate__fadeIn">
           <router-link :to="'/client/'+clients.name+'/'">{{clients.name}}</router-link>
           <!-- If on client page and the client has programmes display the programmes-->
           <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
             <div v-for="(programme, index) in posts[index].programmes"
-              :key="index" class="nav_subitem subitem">
+              :key="index" class="nav--item--item">
               <router-link :to="'/client/'+clients.name+'/blocks/'+programme.id">{{programme.name}}</router-link>
             </div>
           </div>
         </div>
       </div>
-      <div class="account_nav_container animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
-        <div class="nav_item">
-          <router-link to="/archive" id="archive-link">
-            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="icon"/>
+      <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
+        <div class="account_nav--item">
+          <router-link to="/archive">
+            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="account_nav--item--icon"/>
             Archive
           </router-link>
         </div>
-        <div class="nav_item">
-          <router-link to="/account" id="account-link">
-            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" class="icon"/>
+        <div class="account_nav--item">
+          <router-link to="/account">
+            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" class="account_nav--item--icon"/>
             Account
           </router-link>
         </div>
-        <div class="nav_item">
-          <router-link to="/logout" id="logout-link" v-on:click.native="logout()">
-            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" class="icon"/>
+        <div class="account_nav--item">
+          <router-link to="/logout" v-on:click.native="logout()">
+            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" class="account_nav--item--icon"/>
             Logout
           </router-link>
         </div>
       </div>
-    </div> <!-- .sidebar -->
+    </nav> <!-- .sidebar -->
     <main>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>

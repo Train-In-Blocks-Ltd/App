@@ -1,32 +1,43 @@
 <style scoped>
-  h1 {
-    margin-bottom: 0;
-    text-transform: capitalize
-  }
-  #title, h3 {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 1rem 0
-  }
-  #title {
-    margin-top: 0
-  }
-  .programme_info {
+  /* Block Info */
+  .block_info {
     display: grid;
     grid-template-columns: max-content;
-    grid-gap: .5rem
+    grid-gap: 1rem
   }
-  .programme_info input:not([type='submit']) {
-    background-color: initial!important;
+  #blocks .block_info label {
+    grid-auto-columns: min-content;
+    display: inline-block
+  }
+  .block_info select {
+    background: initial;
     border: none;
-    color: rgb(
+    border-bottom: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding: 0
+    width: 50%;
+    font-size: 1rem
   }
-  .programme_grid {
+  .block_info select:hover {
+    cursor: pointer
+  }
+  .block_info input#duration, .block_info input#start {
+    margin-left: .25rem
+  }
+  .block_info input#duration {
+    width: 4ch
+  }
+  #blocks .block_info input.block_info--name.title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: .15rem
+  }
+
+  /* Block Grid */
+  .block_grid {
     display: grid;
     grid-template-areas:
       'table notes'
@@ -35,45 +46,12 @@
     grid-gap: 2rem;
     margin-top: 2.5rem
   }
-  #title, #description {
-    background-color: initial!important;
-    border: none;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    padding: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden
-  }
-  .client_info label {
-    grid-auto-columns: min-content;
-    grid-gap: 0
-  }
-  .add_new_workout_container .quill {
-    margin: .75rem 0;
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      .8
-    )
-  }
-  #duration, #start {
-    margin-left: .25rem
-  }
-  #duration {
-    width: 4ch
-  }
-  .programme_table {
+
+  /* Block Table */
+  .block_table {
     overflow-x: auto
   }
-  .programme_container {
-    margin-bottom: 5px
-  }
-  .programme_table > *, .programme_duration_container > * {
+  .block_table--container {
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -83,7 +61,22 @@
     font-weight: bold;
     text-align: center
   }
-  .programme_duration_container > * {
+  .block_table--container p {
+    margin: 1.5rem 1rem
+  }
+  .block_table--container--block_duration_container {
+    display: grid;
+    grid-auto-flow: column;
+    border: none;
+    padding: 0
+  }
+  .block_table--container--block_duration_container * {
+    border: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    display: inline-block;
     border-left: none;
     border-bottom: none;
     padding: 30px 0;
@@ -91,10 +84,10 @@
     width: 100%;
     transition: all .3s cubic-bezier(.165, .84, .44, 1)
   }
-  .programme_duration_container > *:last-of-type {
+  .block_table--container--block_duration_container *:last-of-type {
     border-right: none
   }
-  .programme_duration_container > *:hover {
+  .block_table--container--block_duration_container *:hover {
     box-shadow: inset 0 20px 30px -30px rgba(
       var(--accessible-color),
       var(--accessible-color),
@@ -103,13 +96,29 @@
     );
     cursor: pointer
   }
-  .programme_duration_container {
-    display: grid;
-    grid-auto-flow: column;
-    border: none;
-    padding: 0
+
+  /* Workouts */
+  .workouts {
+    grid-area: workouts
   }
-  .notes_wrapper {
+  .workouts--workout {
+    display: block;
+    border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    padding: .5rem 0;
+    cursor: pointer;
+    width: 70%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    transition: width 1500ms;
+    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+  }
+  .workouts--workout:hover {
+    width: 80%
+  }
+
+  /* Notes Grid Section */
+  .notes {
     grid-area: notes;
     border-left: 2px solid rgb(
       var(--accessible-color),
@@ -118,6 +127,50 @@
     );
     padding-left: 1rem
   }
+  .notes a {
+    display: block;
+    margin: .5rem 0;
+    position: relative;
+    width: fit-content;
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    text-decoration: none
+  }
+  .notes a:hover {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    cursor: pointer
+  }
+  .notes a:before {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+    opacity: 0;
+    transition: all .3s cubic-bezier(.165, .84, .44, 1)
+  }
+  .notes a:hover:before {
+    opacity: 1;
+    width: 100%
+  }
+  .notes a:active:before {
+    width: 0
+  }
+
+  /* Quill Notes */
   .workout_notes, #block_notes {
     position: absolute;
     right: 0;
@@ -146,151 +199,68 @@
     display: grid;
     align-items: center
   }
-  .workout_notes_header p, #workout_notes_header p {
-    margin: 0
-  }
-  .workouts {
-    grid-area: workouts
-  }
-  .workout {
-    display: block;
-    border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
-    padding: .5rem 0;
-    cursor: pointer;
-    width: 70%;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    transition: width 1500ms;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
-  }
-  .workout:hover {
-    width: 80%
-  }
-  .client-info--workout {
-    height: auto;
-    margin: 0;
-    font-size: 1rem
-  }
-  .label--workout {
-    align-items: end;
-    display: inline-block
-  }
-  .label--workout select {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    width: 50%
-  }
-  .label--workout select:hover {
-    cursor: pointer
-  }
-  .label--workout input, .label--workout select {
-    font-size: 1rem
-  }
-  #block_notes_header > p {
+  .workout_notes_header p, #block_notes_header p {
     margin: auto 0;
     font-weight: 700
-  }
-  #block-notes {
-    display: block;
-    margin: .5rem 0;
-    position: relative;
-    width: fit-content;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    text-decoration: none
-  }
-  #block-notes:hover {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    cursor: pointer
-  }
-  #block-notes:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    opacity: 0;
-    transition: all .3s cubic-bezier(.165, .84, .44, 1)
-  }
-  #block-notes:hover:before {
-    opacity: 1;
-    width: 100%
-  }
-  #block-notes:active:before {
-    width: 0
   }
 </style>
 
 <template>
-    <div id="programme">
+    <div id="blocks">
        <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <h1>{{$route.params.name}}</h1>
+              <h1 class="client_info--name title">{{$route.params.name}}</h1>
                <!-- Update the programme info -->
-              <form class="programme_info">
-                <input type="text" id="title" name="name" v-model="programme.name" v-on:click="editing()">
-                <label class="label--workout">Duration: <input type="number" id="duration" class="client-info--workout" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
-                <label class="label--workout">Start: <input type="date" id="start" class="client-info--workout" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
-                <label class="label--workout">Follow to: 
+              <form class="block_info">
+                <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
+                <label>Duration: <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
+                <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
+                <label>Follow to: 
                   <select>
                     <option>Select a Block</option>
                   </select>
                 </label>
               </form>
             </div>  <!-- client_info -->
-            <div class="floating_nav_container">
+            <div>
               <div class="floating_nav">
+                <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a>
                 <router-link :to="{name: 'programmes'}">Programmes</router-link>
-                <router-link :to="{name: 'results'}">Results</router-link>
-              </div>
-            </div>  <!-- floating_nav_container -->
+                <div v-for="(clients, index) in $parent.$parent.posts" :key="index">
+                  <div v-if="clients.name == $route.params.name">
+                    <a href="javascript:void(0)" v-on:click="$parent.$parent.client_archive(clients.client_id, index)">Archive Client</a>
+                  </div>
+                </div>
+              </div> <!-- floating_nav -->
+            </div>
           </div> <!-- top_grid -->
-          <div class="programme_grid">
-            <div class="programme_table">
-              <div class="programme_container">
-                <p style="margin: 1.5rem 1rem">{{programme.name}}</p>
-                <div class="programme_duration_container">
+          <div class="block_grid">
+            <div class="block_table">
+              <div class="block_table--container">
+                <p>{{programme.name}}</p>
+                <div class="block_table--container--block_duration_container">
                   <div v-for="item in programme_duration(programme.duration)" :key="item">
                     {{item}}
                   </div>
                 </div>
               </div>
-            </div> <!-- programme_table -->
+            </div> <!-- block_table -->
             <div class="workouts">
               <h3>Workouts</h3>
               <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
               <p v-if="$parent.loading_workouts">Loading workouts...</p>
               <p v-if="$parent.workout_error"><b>{{$parent.workout_error}}</b></p>
-              <div class="workout_wrapper">
+              <div>
                 <div v-if="!$parent.no_workouts && !$parent.workout_error">
                   <!-- Loop through workouts -->
                   <div v-for="(workout, index) in programme.workouts"
                     :key="index">
                     <!-- Open the notes in a popup when clicked -->
-                    <p v-on:click="workout_notes_function(workout.id)" class="workout">
+                    <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
                       <span><b>{{workout.name}}</b></span>
                       -
                       <span>{{day(workout.date)}}</span>
@@ -328,9 +298,9 @@
                 </div>
               </div>
             </div><!-- workouts -->
-            <div class="notes_wrapper">
+            <div class="notes">
               <div>
-                <a id="block-notes" href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
+                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
               </div>
               <div v-show="block_notes" id="block_notes">
@@ -344,10 +314,10 @@
                 <option>Select a Measure</option>
               </select>
               <select id="dataCat" v-on:change="fillData()">
-                <option id="sets">Sets</option>
-                <option id="reps">Reps</option>
-                <option id="load">Load</option>
-                <option id="volume">Volume</option>
+                <option>Sets</option>
+                <option>Reps</option>
+                <option>Load</option>
+                <option>Volume</option>
               </select>
             </div>  <!-- notes -->
           </div> <!-- programme_grid -->

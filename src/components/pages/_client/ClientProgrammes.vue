@@ -1,21 +1,25 @@
 <style scoped>
+  /* Remove */
   #graph {
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-gap: 10px
   }
-  .program_wrapper {
+
+  /* Blocks */
+  .blocks_grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, 300px);
-    grid-gap: 40px
+    grid-gap: 40px;
+    margin-bottom: 2rem
   }
-  .program_container:first-of-type {
+  .block_container:first-of-type {
     margin-left: 0
   }
-  .program_container:last-of-type {
+  .block_container:last-of-type {
     margin-right: 0
   }
-  .program_link {
+  .block_container--link {
     padding: 1.5rem;
     border: 1px solid rgb(
       var(--accessible-color),
@@ -25,7 +29,7 @@
     display: block;
     transition: all .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .program_link:hover {
+  .block_container--link:hover {
     text-decoration: none;
     border: 2px solid rgb(
       var(--accessible-color),
@@ -34,11 +38,11 @@
     );
     padding: calc(1.5rem - 1px)
   }
-  .program_link:active {
+  .block_container--link:active {
     transform: scale(.95);
     opacity: .6
   }
-  .program_container h3 {
+  .block_container--link h3 {
     margin-top: 0;
     font-size: 1.25rem;
     margin-bottom: 0;
@@ -46,24 +50,28 @@
     white-space: nowrap;
     text-overflow: ellipsis
   }
-  .program_container p {
+  .block_container--link p {
     font-size: .8rem;
     font-weight: 500;
     margin: .375rem 0
   }
-  .program_container p:last-of-type {
+  .block_container--link p:last-of-type {
     margin-bottom: 0
   }
-  #add_programme_link {
-    margin-top: 1.75rem
+
+  /* Add Block Form */
+  .add_block_container {
+    padding-top: 1rem
   }
-  .add_new_programme_container {
-    margin: .75rem 0
+  .add_block_container h3 {
+    margin-top: 0
   }
-  .add_new_programme_container > form {
+  .add_block {
+    grid-gap: 1rem
+  }
+  .add_block label {
     display: grid;
-    grid-template-columns: 1fr;
-    width: 30vw
+    grid-gap: .5rem
   }
 </style>
 <template>
@@ -79,24 +87,24 @@
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
         <p v-if="this.error"><b>{{error}}</b></p>
-        <div v-if="!this.$parent.no_programmes && !this.error" class="program_wrapper">
+        <div v-if="!this.$parent.no_programmes && !this.error" class="blocks_grid">
           <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
-              :key="index" class="program_container">
-              <router-link class="program_link" :to="'blocks/'+block.id">
+              :key="index" class="block_container">
+              <router-link class="block_container--link" :to="'blocks/'+block.id">
               <h3>{{block.name}}</h3>
               <p><b>Duration: </b>{{block.duration}}</p>
               <p><b>Start: </b>{{block.start}}</p>
               </router-link>
           </div>
         </div>
-        <button v-if="!creating" id="add_programme_link" class="button" v-on:click="creation()">New Block</button>
+        <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
         <p class="response" v-if="!creating">{{response}}</p>
-        <div class="add_new_programme_container" v-if="creating">
+        <div v-if="creating" class="add_block_container">
           <h3>New Block Incoming...</h3>
-          <form name="add_program" v-on:submit.prevent="save()">
-              <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_block.name" required/> 
-              <label for="duration"><b>Duration (in weeks): </b></label><input type="number" id="duration" name="duration" inputmode="decimal" v-model="new_block.duration" required/>
-              <label for="start"><b>Start: </b></label><input type="date" id="start" name="start" v-model="new_block.start" required />
+          <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
+              <label><b>Name: </b><input type="text" v-model="new_block.name" required/></label>
+              <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
+              <label><b>Start: </b><input type="date" v-model="new_block.start" required /></label>
               <div class="form_buttons">
                   <input type="submit" class="button" value="Save" />
                   <button class="button" v-on:click="close()">Close</button>

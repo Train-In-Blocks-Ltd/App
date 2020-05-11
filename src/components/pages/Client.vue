@@ -1,40 +1,35 @@
 <style>
-  .client_info input:not([type='submit']) {
-    background-color: initial!important;
-    border: none;
-    padding: 0;
-    font-size: 1rem
-  }
-  .client_info textarea {
-    background-color: initial!important;
-    border: none;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    padding: 0;
-    font-size: .9rem;
-    margin: 0
-  }
+  /* Client Info */
   .client_info {
     display: grid;
     grid-template-columns: max-content;
     grid-gap: 1rem
   }
-  .client_info label {
+  #client .client_info label {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: min-content minmax(200px, 300px);
     grid-gap: 1rem
   }
-  .client_info input {
+  #client .client_info input:not([type='submit']) {
+    background-color: initial;
+    border: none;
+    padding: 0;
+    font-size: 1rem
+  }
+  #client .client_info .client_info--name, #client .client_info input.client_info--name {
+    font-size: 3.75rem;
+    letter-spacing: .15rem;
     margin: 0
   }
+
+  /* Top Grid */
   .top_grid {
     display: grid;
     grid-template-columns: 1fr .15fr
   }
+
+  /* Floating Nav */
   .floating_nav {
     text-align: right;
     border-right: 2px solid rgb(
@@ -81,13 +76,12 @@
     opacity: 1;
     width: 100%
   }
+
+  /* Client Notes */
   #client {
     position: relative
   }
-  .quill:not(.border) .ql-container.ql-snow {
-    border: none
-  }
-  #client_notes {
+  .client_notes {
     position: absolute;
     right: 0;
     z-index: 9;
@@ -104,36 +98,25 @@
     grid-template-rows: 40px auto;
     align-items: center
   }
-  #client_notes_header p {
-    font-weight: bold
-  }
-  .quill, #client_notes_header p {
-    margin: 0
-  }
-  #client_notes_header {
+  .client_notes--header {
     cursor: grab;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
-    padding: 0 .5rem
-  }
-  #client_notes_footer button {
-    margin-bottom: 0
-  }
-  #client_notes_footer, #client_notes_header {
+    padding: 0 .5rem;
     height: 100%;
     display: grid;
     align-items: center
   }
-  .loader {
-    height: 37px;
-    display: grid;
-    align-content: center
+  .client_notes--header p {
+    margin: 0;
+    font-weight: bold
   }
+  .client_notes--quill {
+    margin: 0
+  }
+
   @media (max-width: 768px) {
-    h2 {
-      font-size: 1.35rem
-    }
     .top_grid {
       grid-template-rows: 1fr .25fr;
       grid-template-columns: auto
@@ -158,9 +141,9 @@
     <div class="top_grid" v-if="!blocks">
       <!-- Update the client details -->
       <form class="client_info" v-on:submit.prevent="update_client()">
-        <input type="text" id="title" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
-        <label><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-        <label><b>Number: </b><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
+        <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
+        <label><b>Email: </b><input type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
+        <label><b>Number: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
       <div>
         <div class="floating_nav">
@@ -174,11 +157,11 @@
         </div>
       </div>
     </div>
-    <div v-show="client_notes" id="client_notes">
-      <div id="client_notes_header">
+    <div v-show="client_notes" class="client_notes">
+      <div class="client_notes--header">
         <p>Client Information</p>
       </div>
-      <quill v-model="$parent.client_details.notes" output="html" class="quill"></quill>
+      <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill"></quill>
     </div>
     <!-- Router View for Client Pages -->
     <router-view :key="$route.fullPath"></router-view>

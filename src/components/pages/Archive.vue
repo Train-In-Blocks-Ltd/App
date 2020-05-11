@@ -1,7 +1,4 @@
 <style scoped>
-  .client_update a:first-of-type {
-    margin-right: 1rem
-  }
   .client_container.archived {
     display: grid;
     grid-template-columns: 1fr .4fr
@@ -11,6 +8,9 @@
   }
   .client_update a {
     float: left
+  }
+  .client_update a:first-of-type {
+    margin-right: 1rem
   }
 </style>
 

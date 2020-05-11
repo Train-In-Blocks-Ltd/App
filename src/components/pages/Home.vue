@@ -3,16 +3,25 @@
     display: grid;
     max-width: 1056px
   }
-  .intro {
+  #intro {
     font-size: 2rem;
     margin-top: 0
+  }
+
+  /* Add Client Form */
+  .add_client {
+    grid-gap: 1rem
+  }
+  .add_client label {
+    display: grid;
+    grid-gap: .5rem
   }
 </style>
 
 <template>
   <div id="home">
     <h1>Your Clients</h1>
-    <h1 class="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</h1>
+    <p id="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</p>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
@@ -29,16 +38,16 @@
         </div>
       </div>
     </div>
-    <div class="add_client-link_container"><button v-if="!creating" id="add_client-link" class="button" v-on:click="creation()">New Client</button></div>
-    <p class="response" v-if="!creating">{{response}}</p>
-    <div class="add_new_client_container" v-if="creating">
-      <h3 class="add-new">New Client</h3>
-      <form name="add_client" class="form_grid" spellcheck="false" v-on:submit.prevent="save()">
-        <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" autocomplete="name" v-model="new_client.name" required/>
-        <label for="email"><b>Email: </b></label><input type="email" id="email" name="email" autocomplete="email" v-model="new_client.email" required/>
-        <label for="number"><b>Number: </b></label><input type="tel" id="number" name="number" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" />
+    <div><button v-if="!creating" class="button" v-on:click="creation()">New Client</button></div>
+    <p v-if="!creating">{{response}}</p>
+    <div v-if="creating">
+      <h3 >New Client</h3>
+      <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save()">
+        <label><b>Name: </b><input type="text" autocomplete="name" v-model="new_client.name" required/></label>
+        <label><b>Email: </b><input type="email" autocomplete="email" v-model="new_client.email" required/></label>
+        <label><b>Number: </b><input type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
-          <input type="submit" id="save_client-link" class="button" value="Save" />
+          <input type="submit" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>
           <Loader></Loader>
         </div>
