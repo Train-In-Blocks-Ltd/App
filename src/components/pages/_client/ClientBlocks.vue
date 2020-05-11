@@ -127,48 +127,6 @@
     );
     padding-left: 1rem
   }
-  .notes a {
-    display: block;
-    margin: .5rem 0;
-    position: relative;
-    width: fit-content;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    text-decoration: none
-  }
-  .notes a:hover {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    cursor: pointer
-  }
-  .notes a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    opacity: 0;
-    transition: all .3s cubic-bezier(.165, .84, .44, 1)
-  }
-  .notes a:hover:before {
-    opacity: 1;
-    width: 100%
-  }
-  .notes a:active:before {
-    width: 0
-  }
 
   /* Quill Notes */
   .workout_notes, #block_notes {
@@ -197,11 +155,11 @@
     padding: 0 .5rem;
     height: 100%;
     display: grid;
+    grid-template-columns: 1fr .1fr .1fr .1fr; /* For the 3 icons in this order, toolkit, info and delete */
     align-items: center
   }
   .workout_notes_header p, #block_notes_header p {
-    margin: auto 0;
-    font-weight: 700
+    margin: auto 0
   }
 
   /* Add Workout Form */
@@ -244,7 +202,7 @@
             <div>
               <div class="floating_nav">
                 <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a>
-                <router-link :to="{name: 'programmes'}">Programmes</router-link>
+                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <div v-for="(clients, index) in $parent.$parent.posts" :key="index">
                   <div v-if="clients.name == $route.params.name">
                     <a href="javascript:void(0)" v-on:click="$parent.$parent.client_archive(clients.client_id, index)">Archive Client</a>
@@ -315,7 +273,6 @@
             </div><!-- workouts -->
             <div class="notes">
               <div>
-                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
               </div>
               <div v-show="block_notes" id="block_notes">
@@ -346,6 +303,7 @@
   import axios from 'axios'
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
     components: {
