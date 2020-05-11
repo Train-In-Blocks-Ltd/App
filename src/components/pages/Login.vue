@@ -23,6 +23,13 @@
   .auth-org-logo {
     margin: 5vh 0
   }
+  .auth-org-logo.logo > path {
+    fill: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
+  }
   .okta-form-label {
     font-size: 1.1rem;
     font-weight: bold;
@@ -36,14 +43,17 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: .9rem;
     letter-spacing: .1rem;
-    border: none;
-    border-bottom: 1px solid #888888;
+    border: none!important;
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )!important;
     transition: width 1s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .okta-form-input-field input:hover, .okta-form-input-field input:focus {
     width: 100%;
-    border-bottom: 1px solid #888888;
     outline-width: 0
   }
   .okta-form-input-error {
