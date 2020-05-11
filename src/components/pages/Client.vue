@@ -134,7 +134,8 @@
     .floating_nav {
       text-align: left;
       border: none;
-      grid-template-columns: 1fr
+      grid-template-columns: 1fr;
+      justify-items: left
     }
     .floating_nav a:before {
       left: 0

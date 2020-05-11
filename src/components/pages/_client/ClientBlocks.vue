@@ -127,7 +127,7 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding-left: 1rem;
+    padding-left: 3rem;
     width: 35vw;
     justify-self: right
   }
@@ -182,6 +182,11 @@
   }
 
   /* Responsiveness */
+  @media (max-width: 1440px) {
+    .notes {
+      padding-left: 1rem
+    }
+  }
   @media (max-width: 992px) {
     .block_grid {
       grid-template-columns: 1fr;
