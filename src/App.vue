@@ -481,7 +481,7 @@
   .client_container > a:before {
     content: '';
     position: absolute;
-    width: 70%;
+    width: 95%;
     height: 1px;
     bottom: 0;
     left: 0;
@@ -493,17 +493,17 @@
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .client_container > a:not(.archived):hover:before {
-    width: 75%
+    width: 100%
   }
   .client_container > a:not(.archived):active:before {
     width: 0
   }
   .client_link {
     padding: 1rem 0;
-    width: 90%
+    width: 95%
   }
   .search {
-    width: 70%;
+    width: 95%;
     opacity: .5;
     font-size: 1rem;
     transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
