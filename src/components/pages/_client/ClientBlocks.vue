@@ -203,6 +203,21 @@
     margin: auto 0;
     font-weight: 700
   }
+
+  /* Add Workout Form */
+  .add_workout_container {
+    padding-top: 1rem
+  }
+  .add_workout_container h3 {
+    margin-top: 0
+  }
+  .add_workout {
+    grid-gap: 1rem
+  }
+  .add_workout label {
+    display: grid;
+    grid-gap: .5rem
+  }
 </style>
 
 <template>
@@ -282,13 +297,13 @@
                   </div>
                 </div>
                  <!-- Add a new workout -->
-                <button v-if="!creating" id="add_workout_link" class="button" v-on:click="creation()">New workout</button>
+                <button v-if="!creating" class="button" v-on:click="creation()">New workout</button>
                 <p class="response" v-if="!creating">{{response}}</p>
-                <div class="add_new_workout_container" v-if="creating">
+                <div v-if="creating" class="add_workout_container">
                   <h3>Add new workout</h3>
-                  <form name="add_program" class="form_grid" v-on:submit.prevent="save()">
-                    <label for="name"><b>Name: </b></label><input type="text" id="name" name="name" v-model="new_workout.name" required />
-                    <label for="date"><b>Date: </b></label><input type="date" id="date" name="date" v-model="new_workout.date" required />
+                  <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="save()">
+                    <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
+                    <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
                     <div class="form_buttons">
                         <input type="submit" class="button" value="Save" />
                         <button class="button" v-on:click="close()">Close</button>
