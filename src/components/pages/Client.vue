@@ -43,7 +43,7 @@
     );
     padding-right: .5rem;
     display: grid;
-    width: fit-content
+    justify-items: right
   }
   .floating_nav a {
     display: inline-block;
@@ -54,7 +54,8 @@
       var(--accessible-color)
     );
     text-decoration: none;
-    margin: .5rem 0
+    margin: .5rem 0;
+    width: fit-content
   }
   .floating_nav a:hover {
     color: rgb(
