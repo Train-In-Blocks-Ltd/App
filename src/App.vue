@@ -156,7 +156,7 @@
   }
 
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]), textarea {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]) {
     border: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),

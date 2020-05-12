@@ -2,7 +2,6 @@
   /* Client Info */
   .client_info {
     display: grid;
-    grid-template-columns: max-content;
     grid-gap: 1rem
   }
   #client .client_info label {
@@ -17,11 +16,11 @@
     padding: 0;
     font-size: 1rem
   }
-  #client .client_info .client_info--name, #client .client_info input.client_info--name {
+  #client .client_info input.client_info--name {
     font-size: 3.75rem;
     letter-spacing: .15rem;
     margin: 0;
-    width: 45vw
+    width: 100%
   }
 
   /* Top Grid */
@@ -31,9 +30,6 @@
   }
 
   /* Floating Nav */
-  .floating_nav--container {
-    justify-self: right
-  }
   .floating_nav {
     text-align: right;
     border-right: 2px solid rgb(
@@ -41,9 +37,7 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    padding-right: .5rem;
-    display: grid;
-    justify-items: right
+    padding-right: .5rem
   }
   .floating_nav a {
     display: inline-block;
@@ -54,8 +48,7 @@
       var(--accessible-color)
     );
     text-decoration: none;
-    margin: .5rem 0;
-    width: fit-content
+    margin: .5rem 0
   }
   .floating_nav a:hover {
     color: rgb(
@@ -128,14 +121,10 @@
     .top_grid {
       grid-template-columns: 1fr
     }
-    .floating_nav--container {
-      justify-self: left
-    }
     .floating_nav {
       text-align: left;
       border: none;
-      grid-template-columns: 1fr;
-      justify-items: left
+      display: grid
     }
     .floating_nav a:before {
       left: 0
@@ -153,11 +142,6 @@
       background-color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
       width: 5rem;
       margin: 1rem 0
-    }
-    @media (max-width: 768px) {
-      #client .client_info .client_info--name, #client .client_info input.client_info--name {
-        width: 90vw
-      }
     }
   }
 </style>

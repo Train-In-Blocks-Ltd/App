@@ -24,11 +24,7 @@
     margin: 5vh 0
   }
   .auth-org-logo.logo > path {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    fill: #282828
   }
   .okta-form-label {
     font-size: 1.1rem;
