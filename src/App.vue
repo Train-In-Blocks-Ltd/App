@@ -593,7 +593,7 @@
           <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
             <div v-for="(programme, index) in posts[index].programmes"
               :key="index" class="nav--item--item">
-              <router-link :to="'/client/'+clients.name+'/blocks/'+programme.id">{{programme.name}}</router-link>
+              <router-link :to="'/client/'+clients.name+'/block/'+programme.id">{{programme.name}}</router-link>
             </div>
           </div>
         </div>

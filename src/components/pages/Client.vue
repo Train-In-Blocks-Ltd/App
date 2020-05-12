@@ -148,7 +148,7 @@
       <div>
         <div class="floating_nav">
           <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
-          <router-link :to="{name: 'programmes'}">Programmes</router-link>
+          <router-link :to="{name: 'blocks'}">Programmes</router-link>
           <div v-for="(clients, index) in $parent.posts" :key="index">
             <div v-if="clients.name == $route.params.name">
               <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
@@ -178,11 +178,8 @@
         loading_programmes: true,
         client_notes: false,
         blocks: false,
-        error: '',
         no_workouts: false,
-        loading_workouts: true,
-        workout_error: false,
-        workouts: []
+        loading_workouts: true
       }
     },
     async created () {
@@ -301,7 +298,7 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          this.workout_error = e.toString()
+          console.log(e.toString())
         }
       },
       async get_workouts () {
@@ -346,7 +343,7 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          this.workout_error = e.toString()
+          console.log(e.toString())
         }
       },
       async force_get_client_details () {
@@ -377,7 +374,7 @@
             }
           }
         } catch (e) {
-          this.error = e.toString()
+          console.log(e.toString())
         }
         this.get_workouts()
       },
@@ -414,7 +411,7 @@
             }
           }
         } catch (e) {
-          this.error = e.toString()
+          console.log(e.toString())
         }
         this.get_workouts()
       },
