@@ -44,7 +44,8 @@
     grid-area: main;
     display: grid;
     align-items: start;
-    padding: 5rem 3.75rem
+    padding: 5rem 3.75rem;
+    overflow-y: auto
   }
 
   /* Fonts */
@@ -102,7 +103,7 @@
   }
 
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]), textarea {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]) {
     border: 1px solid #282828;
     background-color: #858585CC;
     padding: .5rem;
@@ -404,7 +405,7 @@
   .client_container > a:before {
     content: '';
     position: absolute;
-    width: 70%;
+    width: 95%;
     height: 1px;
     bottom: 0;
     left: 0;
@@ -412,17 +413,18 @@
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .client_container > a:not(.archived):hover:before {
-    width: 75%
+    width: 100%
   }
   .client_container > a:not(.archived):active:before {
     width: 0
   }
   .client_link {
     padding: 1rem 0;
-    width: 90%
+    width: 95%;
+    overflow-x: auto
   }
   .search {
-    width: 70%;
+    width: 95%;
     opacity: .5;
     font-size: 1rem;
     transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)

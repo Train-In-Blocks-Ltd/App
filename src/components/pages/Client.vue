@@ -2,7 +2,6 @@
   /* Client Info */
   .client_info {
     display: grid;
-    grid-template-columns: max-content;
     grid-gap: 1rem
   }
   #client .client_info label {
@@ -17,16 +16,17 @@
     padding: 0;
     font-size: 1rem
   }
-  #client .client_info .client_info--name, #client .client_info input.client_info--name {
+  #client .client_info input.client_info--name {
     font-size: 3.75rem;
     letter-spacing: .15rem;
-    margin: 0
+    margin: 0;
+    width: 100%
   }
 
   /* Top Grid */
   .top_grid {
     display: grid;
-    grid-template-columns: 1fr .15fr
+    grid-template-columns: 1fr 1fr
   }
 
   /* Floating Nav */
@@ -100,17 +100,32 @@
     margin: 0
   }
 
-  @media (max-width: 768px) {
+  /* Responsiveness */
+  @media (max-width: 992px) {
     .top_grid {
-      grid-template-rows: 1fr .25fr;
-      grid-template-columns: auto
+      grid-template-columns: 1fr
     }
     .floating_nav {
       text-align: left;
-      padding-right: 0;
-      padding-top: .5rem;
       border: none;
-      border-top: 2px solid #282828
+      display: grid
+    }
+    .floating_nav a:before {
+      left: 0
+    }
+    .floating_nav:before {
+      content: '';
+      height: 2px;
+      background-color: #282828;
+      width: 3rem;
+      margin: 1rem 0
+    }
+    .floating_nav:after {
+      content: '';
+      height: 2px;
+      background-color: #282828;
+      width: 5rem;
+      margin: 1rem 0
     }
   }
 </style>
@@ -125,10 +140,9 @@
         <label><b>Email: </b><input type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
-      <div>
+      <div class="floating_nav--container">
         <div class="floating_nav">
           <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
-          <router-link :to="{name: 'blocks'}">Programmes</router-link>
           <div v-for="(clients, index) in $parent.posts" :key="index">
             <div v-if="clients.name == $route.params.name">
               <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>

@@ -1,16 +1,27 @@
 <style scoped>
   .client_container.archived {
     display: grid;
-    grid-template-columns: 1fr .4fr
+    grid-template-columns: 1fr 100px;
+    width: 95%
   }
   .client_update {
-    padding: 1rem 0
+    padding: 1rem 0;
+    justify-self: end
   }
   .client_update a {
     float: left
   }
   .client_update a:first-of-type {
     margin-right: 1rem
+  }
+  .archive--container {
+    width: 75%
+  }
+
+  @media (max-width: 768px) {
+    .archive--container {
+      width: 100%
+    }
   }
 </style>
 
@@ -33,11 +44,11 @@
 </style>
 
 <template>
-  <div id="home">
+  <div>
     <h1>Archive</h1>
     <p v-if="this.$parent.no_archive">No clients are archived</p>
     <p v-if="this.$parent.archive_error"><b>{{this.$parent.archive_error}}</b></p>
-    <div v-if="!this.$parent.no_archive && !this.$parent.archive_error && this.$parent.archive_posts">
+    <div class="archive--container" v-if="!this.$parent.no_archive && !this.$parent.archive_error && this.$parent.archive_posts">
       <input type="search" rel="search" placeholder="Search..." class="search" autocomplete="name" v-model="search"/>
       <div v-for="(clients, index) in $parent.archive_posts"
         :key="index" class="client_container archived">

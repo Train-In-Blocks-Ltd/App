@@ -23,13 +23,16 @@
   .auth-org-logo {
     margin: 5vh 0
   }
+  .auth-org-logo.logo > path {
+    fill: #282828
+  }
   .okta-form-label {
     font-size: 1.1rem;
     font-weight: bold;
     text-align: left;
     letter-spacing: .15rem
   }
-  .o-form-input .okta-form-input-field input {
+  #okta-signin-username, #okta-signin-password, #account-recovery-username {
     width: 75%;
     margin: .75rem 0;
     padding: .5rem;
@@ -37,13 +40,16 @@
     font-size: .9rem;
     letter-spacing: .1rem;
     border: none;
-    border-bottom: 1px solid #888888;
+    border-bottom: 1px solid rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
     transition: width 1s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
-  .okta-form-input-field input:hover, .okta-form-input-field input:focus {
+  #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus, #account-recovery-username:hover, #account-recovery-username:focus {
     width: 100%;
-    border-bottom: 1px solid #888888;
     outline-width: 0
   }
   .okta-form-input-error {
