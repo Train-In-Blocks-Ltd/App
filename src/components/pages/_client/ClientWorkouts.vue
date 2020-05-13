@@ -45,7 +45,8 @@
 
   /* Block Table */
   .block_table {
-    overflow-x: auto
+    overflow-x: auto;
+    height: fit-content
   }
   .block_table--container {
     border: 1px solid #282828;
@@ -82,7 +83,8 @@
 
   /* Workouts */
   .workouts {
-    grid-area: workouts
+    grid-area: workouts;
+    overflow-x: auto
   }
   .workouts--workout {
     display: block;
@@ -97,43 +99,16 @@
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .workouts--workout:hover {
-    width: 80%
+    width: 75%
   }
 
   /* Notes Grid Section */
   .notes {
     grid-area: notes;
     border-left: 2px solid #282828;
-    padding-left: 1rem
-  }
-  .notes a {
-    display: block;
-    margin: .5rem 0;
-    position: relative;
-    color: #282828;
-    text-decoration: none
-  }
-  .notes a:hover {
-    color: #282828;
-    cursor: pointer
-  }
-  .notes a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: #282828;
-    opacity: 0;
-    transition: all .3s cubic-bezier(.165, .84, .44, 1)
-  }
-  .notes a:hover:before {
-    opacity: 1;
-    width: 100%
-  }
-  .notes a:active:before {
-    width: 0
+    padding-left: 3rem;
+    width: 95%;
+    justify-self: right
   }
 
   /* Quill Notes */
@@ -161,9 +136,11 @@
     display: grid;
     align-items: center
   }
+  .workout_notes_header {
+    grid-template-columns: 1fr .1fr .1fr .1fr /* For the 3 icons in this order, toolkit, info and delete */
+  }
   .workout_notes_header p, #block_notes_header p {
-    margin: auto 0;
-    font-weight: 700
+    margin: 0
   }
 
   /* Add Workout Form */
@@ -179,6 +156,28 @@
   .add_workout label {
     display: grid;
     grid-gap: .5rem
+  }
+
+  /* Responsiveness */
+  @media (max-width: 1440px) {
+    .notes {
+      padding-left: 1rem;
+      justify-self: left
+    }
+  }
+  @media (max-width: 992px) {
+    .block_grid {
+      grid-template: .2fr 1fr 1fr / 1fr;
+      grid-template-areas:
+        'table'
+        'workouts'
+        'notes'
+    }
+    .notes {
+      width: 100%;
+      border: none;
+      padding: 0
+    }
   }
 </style>
 
@@ -203,7 +202,7 @@
                 </label>
               </form>
             </div>  <!-- client_info -->
-            <div>
+            <div class="floating_nav--container">
               <div class="floating_nav">
                 <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a>
                 <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
