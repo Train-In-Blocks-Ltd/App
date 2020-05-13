@@ -32,30 +32,18 @@
   /* Floating Nav */
   .floating_nav {
     text-align: right;
-    border-right: 2px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border-right: 2px solid #282828;
     padding-right: .5rem
   }
   .floating_nav a {
     display: inline-block;
     position: relative;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     text-decoration: none;
     margin: .5rem 0
   }
   .floating_nav a:hover {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    color: #282828
   }
   .floating_nav a:before {
     content: '';
@@ -64,11 +52,7 @@
     height: 2px;
     bottom: -4px;
     right: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    background-color: #282828;
     opacity: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
@@ -102,7 +86,7 @@
     cursor: grab;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
-    color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    color: #282828;
     padding: 0 .5rem;
     height: 100%;
     display: grid;
@@ -132,14 +116,14 @@
     .floating_nav:before {
       content: '';
       height: 2px;
-      background-color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+      background-color: #282828;
       width: 3rem;
       margin: 1rem 0
     }
     .floating_nav:after {
       content: '';
       height: 2px;
-      background-color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+      background-color: #282828;
       width: 5rem;
       margin: 1rem 0
     }
@@ -188,11 +172,8 @@
         loading_programmes: true,
         client_notes: false,
         blocks: false,
-        error: '',
         no_workouts: false,
-        loading_workouts: true,
-        workout_error: false,
-        workouts: []
+        loading_workouts: true
       }
     },
     async created () {
@@ -311,7 +292,7 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          this.workout_error = e.toString()
+          console.log(e.toString())
         }
       },
       async get_workouts () {
@@ -356,7 +337,7 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          this.workout_error = e.toString()
+          console.log(e.toString())
         }
       },
       async force_get_client_details () {
@@ -387,7 +368,7 @@
             }
           }
         } catch (e) {
-          this.error = e.toString()
+          console.log(e.toString())
         }
         this.get_workouts()
       },
@@ -424,7 +405,7 @@
             }
           }
         } catch (e) {
-          this.error = e.toString()
+          console.log(e.toString())
         }
         this.get_workouts()
       },

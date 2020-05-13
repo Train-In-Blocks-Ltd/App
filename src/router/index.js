@@ -11,8 +11,8 @@ import ClientComponent from '@/components/pages/Client'
 import NotFound from '@/components/pages/NotFound'
 import ArchiveComponent from '@/components/pages/Archive'
 
-import ClientProgrammes from '@/components/pages/_client/ClientProgrammes'
 import ClientBlocks from '@/components/pages/_client/ClientBlocks'
+import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -62,16 +62,16 @@ const router = new Router({
       children: [
         {
           path: '',
-          component: ClientProgrammes,
-          name: 'programmes',
+          component: ClientBlocks,
+          name: 'blocks',
           meta: {
             requiresAuth: true
           }
         },
         {
-          path: 'blocks/:id',
-          component: ClientBlocks,
-          name: 'blocks',
+          path: 'block/:id',
+          component: ClientWorkouts,
+          name: 'workouts',
           meta: {
             requiresAuth: true
           }
