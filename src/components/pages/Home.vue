@@ -108,6 +108,13 @@
         this.creating = false
       },
       async save () {
+        var client
+        for (client of this.$parent.posts) {
+          if (client.name === this.new_client.name) {
+            window.alert('You\'ve already got a client by this name!')
+            return
+          }
+        }
         this.response = ''
         try {
           this.$parent.loading = true
