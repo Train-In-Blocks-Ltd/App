@@ -53,7 +53,7 @@
     display: grid;
     align-items: start;
     padding: 5rem 3.75rem;
-    overflow-y: auto;
+    overflow-y: auto
   }
 
   /* Fonts */
@@ -501,7 +501,8 @@
   }
   .client_link {
     padding: 1rem 0;
-    width: 95%
+    width: 95%;
+    overflow-x: auto
   }
   .search {
     width: 95%;

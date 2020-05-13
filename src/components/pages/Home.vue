@@ -8,7 +8,7 @@
     margin-top: 0
   }
   .home--container {
-    width: 50vw
+    width: 75%
   }
 
   /* Add Client Form */

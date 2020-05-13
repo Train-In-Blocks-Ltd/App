@@ -108,7 +108,7 @@
     border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
     padding: .5rem 0;
     cursor: pointer;
-    width: 25rem;
+    width: 70%;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -116,7 +116,7 @@
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   .workouts--workout:hover {
-    width: 27rem
+    width: 75%
   }
 
   /* Notes Grid Section */
@@ -128,7 +128,7 @@
       var(--accessible-color)
     );
     padding-left: 3rem;
-    width: 35vw;
+    width: 95%;
     justify-self: right
   }
 
@@ -184,13 +184,13 @@
   /* Responsiveness */
   @media (max-width: 1440px) {
     .notes {
-      padding-left: 1rem
+      padding-left: 1rem;
+      justify-self: left
     }
   }
   @media (max-width: 992px) {
     .block_grid {
-      grid-template-columns: 1fr;
-      grid-template-rows: .2fr 1fr 1fr;
+      grid-template: .2fr 1fr 1fr / 1fr;
       grid-template-areas:
         'table'
         'workouts'
@@ -222,7 +222,7 @@
             </div>  <!-- client_info -->
             <div class="floating_nav--container">
               <div class="floating_nav">
-                <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a>
+                <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a><br>
                 <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <div v-for="(clients, index) in $parent.$parent.posts" :key="index">
                   <div v-if="clients.name == $route.params.name">
@@ -324,7 +324,6 @@
   import axios from 'axios'
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
-  import InlineSvg from 'vue-inline-svg'
 
   export default {
     components: {

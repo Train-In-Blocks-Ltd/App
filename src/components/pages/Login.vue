@@ -32,23 +32,23 @@
     text-align: left;
     letter-spacing: .15rem
   }
-  .o-form-input .okta-form-input-field input {
+  #okta-signin-username, #okta-signin-password, #account-recovery-username {
     width: 75%;
     margin: .75rem 0;
     padding: .5rem;
     font-family: Arial, Helvetica, sans-serif;
     font-size: .9rem;
     letter-spacing: .1rem;
-    border: none!important;
+    border: none;
     border-bottom: 1px solid rgb(
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color)
-    )!important;
+    );
     transition: width 1s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
-  .okta-form-input-field input:hover, .okta-form-input-field input:focus {
+  #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus, #account-recovery-username:hover, #account-recovery-username:focus {
     width: 100%;
     outline-width: 0
   }

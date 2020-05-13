@@ -1,7 +1,7 @@
 <style scoped>
   .client_container.archived {
     display: grid;
-    grid-template-columns: 1fr .2fr;
+    grid-template-columns: 1fr 100px;
     width: 95%
   }
   .client_update {
@@ -13,6 +13,15 @@
   }
   .client_update a:first-of-type {
     margin-right: 1rem
+  }
+  .archive--container {
+    width: 75%
+  }
+
+  @media (max-width: 768px) {
+    .archive--container {
+      width: 100%
+    }
   }
 </style>
 
@@ -35,15 +44,6 @@
   }
   .archive__icon:hover path.lid--up {
     transform: translate(0, -2px)
-  }
-  .archive--container {
-    width: 50vw
-  }
-
-  @media (max-width: 768px) {
-    .archive--container {
-      width: 100%
-    }
   }
 </style>
 
