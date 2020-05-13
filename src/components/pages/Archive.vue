@@ -48,7 +48,7 @@
 </style>
 
 <template>
-  <div id="home">
+  <div>
     <h1>Archive</h1>
     <p v-if="this.$parent.no_archive">No clients are archived</p>
     <p v-if="this.$parent.archive_error"><b>{{this.$parent.archive_error}}</b></p>
