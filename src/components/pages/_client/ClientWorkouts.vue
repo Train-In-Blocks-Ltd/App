@@ -247,6 +247,9 @@
                           -
                           <span>{{workout.date}}</span>
                         </p>
+                        <inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/>
+                        <inline-svg :src="require('../../../assets/svg/Info.svg')"/>
+                        <inline-svg :src="require('../../../assets/svg/Trash.svg')"/>
                       </div>
                       <quill v-model="workout.notes" output="html" class="quill"></quill>
                     </div>
@@ -307,11 +310,13 @@
   import axios from 'axios'
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
     components: {
       Loader,
-      LineChart
+      LineChart,
+      InlineSvg
     },
     data: function () {
       return {
