@@ -179,7 +179,7 @@
     async created () {
       this.created()
       await this.$parent.setup()
-      this.get_client_details()
+      await this.get_client_details()
     },
     methods: {
       client_notes_function () {

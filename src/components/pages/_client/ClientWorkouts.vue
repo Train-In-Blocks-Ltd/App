@@ -142,6 +142,9 @@
   .workout_notes_header p, #block_notes_header p {
     margin: 0
   }
+  .workout_notes_header svg {
+    cursor: pointer
+  }
 
   /* Add Workout Form */
   .add_workout_container {
@@ -249,7 +252,7 @@
                         </p>
                         <inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/>
                         <inline-svg :src="require('../../../assets/svg/Info.svg')"/>
-                        <inline-svg :src="require('../../../assets/svg/Trash.svg')"/>
+                        <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)"/>
                       </div>
                       <quill v-model="workout.notes" output="html" class="quill"></quill>
                     </div>
@@ -329,6 +332,7 @@
           name: '',
           date: ''
         },
+        delete: false,
         str: null,
         regexPull: /(^\w*\))\s*(.[^:]*):\s*(.+)/gmi,
         regexSetRep: /(\d*)\s*x\s*((\d*[,|]*)*)/gmi,
@@ -716,14 +720,16 @@
         var self = this
 
         function click (e) {
-          // If box is open
-          if (self.workout_notes) {
+          if (self.delete === false) {
             if (!document.getElementById('workout_notes_' + id).contains(e.target)) {
               // Update the workout
               self.update_workout(id)
-              window.removeEventListener('click', click)
             }
+          } else {
+            self.delete = false
           }
+          window.removeEventListener('click', click)
+          self.block_notes = false
         }
         // Wait 1 second before applying the event listener to avoid registering the click to open the box
         setTimeout(
@@ -921,12 +927,14 @@
         }
       },
       async delete_workout (id) {
-        if (confirm('Are you sure you want to delete this block?')) {
+        if (confirm('Are you sure you want to delete this workout?')) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             this.$parent.force_get_workouts()
+            this.delete = true
+            this.workout_notes_function(id)
           } catch (e) {
             console.error(`${e}`)
           }
