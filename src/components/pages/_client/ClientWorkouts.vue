@@ -12,11 +12,7 @@
   .block_info select {
     background: initial;
     border: none;
-    border-bottom: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border-bottom: 1px solid #282828;
     width: 50%;
     font-size: 1rem
   }
@@ -52,11 +48,7 @@
     overflow-x: auto
   }
   .block_table--container {
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border: 1px solid #282828;
     display: inline-block;
     font-weight: bold;
     text-align: center
@@ -71,11 +63,7 @@
     padding: 0
   }
   .block_table--container--block_duration_container * {
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border: 1px solid #282828;
     display: inline-block;
     border-left: none;
     border-bottom: none;
@@ -88,12 +76,7 @@
     border-right: none
   }
   .block_table--container--block_duration_container *:hover {
-    box-shadow: inset 0 20px 30px -30px rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .5
-    );
+    box-shadow: inset 0 20px 30px -30px #28282850;
     cursor: pointer
   }
 
@@ -103,7 +86,7 @@
   }
   .workouts--workout {
     display: block;
-    border-bottom: 1px solid rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    border-bottom: 1px solid #282828;
     padding: .5rem 0;
     cursor: pointer;
     width: 70%;
@@ -120,31 +103,18 @@
   /* Notes Grid Section */
   .notes {
     grid-area: notes;
-    border-left: 2px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border-left: 2px solid #282828;
     padding-left: 1rem
   }
   .notes a {
     display: block;
     margin: .5rem 0;
     position: relative;
-    width: fit-content;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     text-decoration: none
   }
   .notes a:hover {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     cursor: pointer
   }
   .notes a:before {
@@ -154,11 +124,7 @@
     height: 2px;
     bottom: -4px;
     left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    background-color: #282828;
     opacity: 0;
     transition: all .3s cubic-bezier(.165, .84, .44, 1)
   }
@@ -180,11 +146,7 @@
     max-width: 400px;
     width: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: rgb(
-      var(--red),
-      var(--green),
-      var(--blue)
-    );
+    background-color: white;
     display: grid;
     grid-template-rows: 40px auto;
     align-items: center
@@ -193,7 +155,7 @@
     cursor: grab;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
-    color: rgb(var(--accessible-color), var(--accessible-color), var(--accessible-color));
+    color: #282828;
     padding: 0 .5rem;
     height: 100%;
     display: grid;
@@ -250,6 +212,7 @@
                     <a href="javascript:void(0)" v-on:click="$parent.$parent.client_archive(clients.client_id, index)">Archive Client</a>
                   </div>
                 </div>
+                <a href="javascript:void(0)" v-on:click="delete_block()">Delete Block</a>
               </div> <!-- floating_nav -->
             </div>
           </div> <!-- top_grid -->

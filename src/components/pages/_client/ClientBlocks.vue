@@ -21,21 +21,13 @@
   }
   .block_container--link {
     padding: 1.5rem;
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border: 1px solid #282828;
     display: block;
     transition: all .1s cubic-bezier(.165, .84, .44, 1)
   }
   .block_container--link:hover {
     text-decoration: none;
-    border: 2px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border: 2px solid #282828;
     padding: calc(1.5rem - 1px)
   }
   .block_container--link:active {

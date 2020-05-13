@@ -16,11 +16,7 @@
 
 <style>
   .archive__icon path {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    fill: #282828
   }
   .archive__icon, .archive__icon path {
     transition: all .4s cubic-bezier(.165, .84, .44, 1)

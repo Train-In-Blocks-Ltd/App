@@ -30,16 +30,8 @@
       ) * -1000
     );
 
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    background-color: rgb(
-      var(--red),
-      var(--green),
-      var(--blue)
-    );
+    color: #282828;
+    background-color: white;
     display: grid;
     grid-template-areas: 'main'
   }
@@ -74,49 +66,17 @@
   }
   a {
     text-decoration: none;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     font-weight: bold
   }
   svg path:not(.transparent) {
-    fill: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .6
-    )
-  }
-
-  /* Logo */
-  .logo {
-    text-align: center
-  }
-  .logo--link {
-    display: block;
-    height: 60px
-  }
-  .logo--svg {
-    margin-top: -8px
-  }
-  svg.logo--svg path {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    fill: #28282899
   }
 
   /* Buttons */
   .button {
     text-align: center;
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border: 1px solid #282828;
     padding: .5rem 1rem;
     height: auto;
     width: auto;
@@ -126,28 +86,15 @@
     cursor: pointer;
     opacity: .5;
     outline-width: 0;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    background-color: rgba(
-      calc(var(--red) + 30),
-      calc(var(--green) + 30),
-      calc(var(--blue) + 30),
-      .8
-    );
+    color: #282828;
+    background-color: #707070CC;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
     transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .button:hover {
     opacity: 1;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     text-decoration: none
   }
   .button:active {
@@ -156,25 +103,12 @@
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]), textarea {
-    border: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    background-color: rgba(
-      calc(var(--red) + 45),
-      calc(var(--green) + 45),
-      calc(var(--blue) + 45),
-      .8
-    );
+    border: 1px solid #282828;
+    background-color: #858585CC;
     padding: .5rem;
     display: inline-block;
     resize: none;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
   }
@@ -189,12 +123,7 @@
     text-overflow: ellipsis
   }
   ::placeholder {
-    color: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .6
-    );
+    color: #28282899;
     opacity: 1; /* Firefox */
   }
 
@@ -225,6 +154,21 @@
     height: 3.5rem
   }
   .loader circle {
+    fill: #282828
+  }
+
+  /* Logo */
+  .logo {
+    text-align: center
+  }
+  .logo--link {
+    display: block;
+    height: 60px
+  }
+  .logo--svg {
+    margin-top: -8px
+  }
+  svg.logo--svg path {
     fill: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -242,7 +186,15 @@
     grid-auto-rows: 3.75rem auto min-content;
     position: sticky;
     height: 100vh;
-    top: 0
+    top: 0;
+    background-color: rgb(var(--red), var(--green), var(--blue))
+  }
+  .nav a, .account_nav a {
+    color:rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    )
   }
   .nav {
     border-bottom: .5px solid rgba(
@@ -371,7 +323,9 @@
   .account_nav--item--icon {
     margin: 0 .4rem 0 0;
     height: 1.4rem;
-    vertical-align: bottom;
+    vertical-align: bottom
+  }
+  .account_nav--item--icon path:not(.transparent) {
     fill: rgb(
       var(--accessible-color),
       var(--accessible-color),
@@ -390,44 +344,21 @@
     border: none
   }
   .ql-snow .ql-stroke {
-    stroke: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    stroke: #282828
   }
   .ql-editor {
     height: 400px;
-    color:rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     overflow-y: auto
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    color: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .6
-    )
+    color: #28282899
   }
   .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow.ql-toolbar button:hover .ql-stroke-miter, .ql-snow .ql-toolbar button:hover .ql-stroke-miter, .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
-    stroke: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .6
-    )
+    stroke: #28282899
   }
   .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
-    fill: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .6
-    )
+    fill: #28282899
   }
 
   /* Scrollbar */
@@ -464,19 +395,11 @@
     display: block;
     position: relative;
     font-weight: 400;
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: #282828;
     text-decoration: none
   }
   .client_container > a:not(.archived):hover {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    color: #282828
   }
   .client_container > a:before {
     content: '';
@@ -485,11 +408,7 @@
     height: 1px;
     bottom: 0;
     left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    background-color: #282828;
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .client_container > a:not(.archived):hover:before {

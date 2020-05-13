@@ -2,7 +2,8 @@
   .details_container {
     display: grid;
     grid-gap: 1rem;
-    align-items: center
+    align-items: center;
+    width: max-content
   }
 </style>
 
@@ -33,22 +34,20 @@
         this.$parent.colors.rgba.r = this.$parent.hexToRgb(e.target.value).r
         this.$parent.colors.rgba.g = this.$parent.hexToRgb(e.target.value).g
         this.$parent.colors.rgba.b = this.$parent.hexToRgb(e.target.value).b
+        this.$parent.colors.hex = e.target.value
       },
       edit () {
         // Set vue self
         var self = this
 
         function click (e) {
-          if (!document.querySelector('.details_container').contains(e.target)) {
-            // Update the workout
-            self.save()
-            window.removeEventListener('click', click)
-          }
+          // Update the workout
+          self.save()
+          window.removeEventListener('click', click)
         }
         // Wait 1 second before applying the event listener to avoid registering the click to open the box
         setTimeout(
           function () {
-            // Add event listener for clicking outside box
             window.addEventListener('click', click)
           }
         , 1000)
