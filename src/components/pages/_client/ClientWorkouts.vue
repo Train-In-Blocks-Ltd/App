@@ -206,12 +206,7 @@
             <div>
               <div class="floating_nav">
                 <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a>
-                <router-link :to="{name: 'blocks'}">Programmes</router-link>
-                <div v-for="(clients, index) in $parent.$parent.posts" :key="index">
-                  <div v-if="clients.name == $route.params.name">
-                    <a href="javascript:void(0)" v-on:click="$parent.$parent.client_archive(clients.client_id, index)">Archive Client</a>
-                  </div>
-                </div>
+                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <a href="javascript:void(0)" v-on:click="delete_block()">Delete Block</a>
               </div> <!-- floating_nav -->
             </div>
@@ -285,7 +280,6 @@
                 <p id="p5"></p>
               </div>
               <div>
-                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
                 <h3>Statistics</h3>
               </div>
               <div v-show="block_notes" id="block_notes">
@@ -386,32 +380,34 @@
         document.getElementById('exercise').innerHTML = ''
         document.getElementById('exercise').innerHTML += '<option>Block Overview</option>'
         // Scans through all workouts stored and picks out every valid exercise protocols from it.
-        this.str.forEach((workout, id) => {
-          var currentWorkout = this.tidyProtocols(this.pullProtocols(workout.notes))
-          var exist = document.getElementById('exercise').innerText
-          var i = 0
+        if (this.str) {
+          this.str.forEach((workout, id) => {
+            var currentWorkout = this.tidyProtocols(this.pullProtocols(workout.notes))
+            var exist = document.getElementById('exercise').innerText
+            var i = 0
 
-          // Detects for valid exercise protocols and appending it to the dropdown.
-          // If i is EVEN then it's the exercise name, if i is ODD then its the protocol.
-          // @ / at are key identifiers of protocols.
-          if (currentWorkout) {
-            for (;i < currentWorkout.length; i++) {
-              var conditionOne = exist.includes(currentWorkout[i - 1])
-              var conditionTwo = currentWorkout[i].includes('/')
-              var conditionThree = currentWorkout[i].includes('at')
-              var conditionFour = currentWorkout[i].includes('@')
+            // Detects for valid exercise protocols and appending it to the dropdown.
+            // If i is EVEN then it's the exercise name, if i is ODD then its the protocol.
+            // @ / at are key identifiers of protocols.
+            if (currentWorkout) {
+              for (;i < currentWorkout.length; i++) {
+                var conditionOne = exist.includes(currentWorkout[i - 1])
+                var conditionTwo = currentWorkout[i].includes('/')
+                var conditionThree = currentWorkout[i].includes('at')
+                var conditionFour = currentWorkout[i].includes('@')
 
-              // Every exercise name will be propercase to allow for easy validation.
-              if ((i - 1) % 2 === 0 && (i - 1) !== 0) {
-                conditionOne = exist.includes(this.properCase(currentWorkout[i - 1]))
-              }
-              // Tests if it's an exercise or protocol. It will only append exercises.
-              if (i % 2 !== 0 && conditionOne !== true && conditionTwo && (conditionThree !== true || conditionFour !== true)) {
-                document.getElementById('exercise').innerHTML += '<option value="' + this.properCase(currentWorkout[i - 1]) + '">' + this.properCase(currentWorkout[i - 1]) + '</option>'
+                // Every exercise name will be propercase to allow for easy validation.
+                if ((i - 1) % 2 === 0 && (i - 1) !== 0) {
+                  conditionOne = exist.includes(this.properCase(currentWorkout[i - 1]))
+                }
+                // Tests if it's an exercise or protocol. It will only append exercises.
+                if (i % 2 !== 0 && conditionOne !== true && conditionTwo && (conditionThree !== true || conditionFour !== true)) {
+                  document.getElementById('exercise').innerHTML += '<option value="' + this.properCase(currentWorkout[i - 1]) + '">' + this.properCase(currentWorkout[i - 1]) + '</option>'
+                }
               }
             }
-          }
-        })
+          })
+        }
       },
       pullProtocols (workout) {
         // Regex functions
@@ -634,11 +630,13 @@
             this.xVal.push(e)
           }
         } else {
-          this.str.forEach((workout, id) => {
-            this.workoutStats(id, dataForType)
-          })
+          if (this.str) {
+            this.str.forEach((workout, id) => {
+              this.workoutStats(id, dataForType)
+            })
 
-          this.descStats(dataForType)
+            this.descStats(dataForType)
+          }
         }
         // Removes duplicates of exercises.
         var optionValues = []
@@ -893,6 +891,41 @@
           }
         } catch (e) {
           console.error(`${e}`)
+        }
+      },
+      async delete_block () {
+        if (confirm('Are you sure you want to delete this block?')) {
+          var programme
+          var id
+          for (programme of this.$parent.$parent.client_details.programmes) {
+            //eslint-disable-next-line
+            if (programme.id == this.$route.params.id) {
+              id = programme.id
+            }
+          }
+          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+          try {
+            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+
+            await this.$parent.$parent.clients()
+            this.$parent.$parent.clients_to_vue()
+
+            this.$router.push({path: '/'})
+          } catch (e) {
+            console.error(`${e}`)
+          }
+        }
+      },
+      async delete_workout (id) {
+        if (confirm('Are you sure you want to delete this block?')) {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+          try {
+            await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
+
+            this.$parent.force_get_workouts()
+          } catch (e) {
+            console.error(`${e}`)
+          }
         }
       }
     }
