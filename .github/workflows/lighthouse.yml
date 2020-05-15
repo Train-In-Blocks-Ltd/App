@@ -12,24 +12,3 @@ jobs:
             https://app.traininblocks.com/
           configPath: '.github/workflows/lighthouserc.json'
           uploadArtifacts: true # save results as an action artifacts
-
-name: Linting
-on: [push, pull_request]
-jobs:
-  stylelint:
-    name: stylelint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions-hub/stylelint@master
-        env:
-          PATTERN: "src/*.vue"
-          INDENT_SPACES: 4
-  eslint:
-    steps:
-      - uses: actions/checkout@v1
-      - uses: a-b-r-o-w-n/eslint-action@v1
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          files: "src/*"
-          extensions: ".vue"
