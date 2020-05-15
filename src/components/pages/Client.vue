@@ -18,7 +18,7 @@
   }
   #client .client_info input.client_info--name {
     font-size: 3.75rem;
-    letter-spacing: .15rem;
+    letter-spacing: .5rem;
     margin: 0;
     width: 100%
   }
@@ -31,12 +31,14 @@
 
   /* Floating Nav */
   .floating_nav {
+    display: grid;
+    justify-items: right;
     text-align: right;
     border-right: 2px solid #282828;
     padding-right: .5rem
   }
   .floating_nav a {
-    display: inline-block;
+    width: fit-content;
     position: relative;
     color: #282828;
     text-decoration: none;
@@ -59,6 +61,9 @@
   .floating_nav a:hover:before {
     opacity: 1;
     width: 100%
+  }
+  .floating_nav .archive-client {
+    margin: .5rem 0
   }
 
   /* Client Notes */
@@ -144,7 +149,7 @@
         <div class="floating_nav">
           <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
           <div v-for="(clients, index) in $parent.posts" :key="index">
-            <div v-if="clients.name == $route.params.name">
+            <div class="archive-client" v-if="clients.name == $route.params.name">
               <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
             </div>
           </div>

@@ -1,5 +1,8 @@
 <style scoped>
   /* Block Info */
+  .client_info--name.title {
+    margin: 0
+  }
   .block_info {
     display: grid;
     grid-template-columns: max-content;
@@ -198,11 +201,6 @@
                 <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
                 <label>Duration: <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
-                <label>Follow to: 
-                  <select>
-                    <option>Select a Block</option>
-                  </select>
-                </label>
               </form>
             </div>  <!-- client_info -->
             <div class="floating_nav--container">

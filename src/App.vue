@@ -82,19 +82,22 @@
     height: auto;
     width: auto;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: .9rem;
+    font-size: .8rem;
+    letter-spacing: .1rem;
     font-weight: bold;
     cursor: pointer;
-    opacity: .5;
     color: #282828;
-    background-color: #707070CC;
+
+    /* Not really sure what this is for but I've commented it out for now (Also see below)
+    background-color: #707070CC; */
+    background-color: transparent;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
     transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .button:hover {
-    opacity: 1;
-    color: #282828;
+    background-color: #282828;
+    color: white;
     text-decoration: none
   }
   .button:active {
@@ -104,7 +107,8 @@
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]) {
     border: 1px solid #282828;
-    background-color: #858585CC;
+
+    /* background-color: #858585CC; */
     padding: .5rem;
     display: inline-block;
     resize: none;
