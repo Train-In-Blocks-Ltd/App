@@ -7,16 +7,6 @@
 [[plugins]]
 package = "netlify-deployment-hours-plugin"
 
-[[plugins]]
-package = "netlify-plugin-a11y"
-
-  # all inputs are optional, we just show you the defaults below
-  [plugins.inputs]
-  
-  checkPaths = ['/src']
-
-  resultMode = "warn"
-
 [[redirects]]
   from = "https://train-in-blocks.netlify.app/*"
   to = "https://app.traininblocks.com/:splat"
