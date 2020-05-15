@@ -12,3 +12,4 @@ jobs:
             https://app.traininblocks.com/
           configPath: '.github/workflows/lighthouserc.json'
           uploadArtifacts: true # save results as an action artifacts
+          temporaryPublicStorage: true
