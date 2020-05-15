@@ -108,6 +108,11 @@
     font-size: .6rem;
     font-weight: 600
   }
+  .custom-checkbox:after {
+    content: 'Please remember to manually logout if this is a shared computer.';
+    display: block;
+    margin-top: 1rem
+  }
   @media (max-width: 520px) {
     .okta-form-label {
       font-size: 1rem
