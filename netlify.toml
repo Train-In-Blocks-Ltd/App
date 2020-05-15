@@ -1,14 +1,22 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  DEPLOYMENT_HOURS_EXPRESSION = 0 0 10-22 ? * * *
-  DEPLOYMENT_HOURS_TIMEZONE = Europe/London
+  environment = { DEPLOYMENT_HOURS_EXPRESSION = "0 0 10-22 ? * * *", DEPLOYMENT_HOURS_TIMEZONE = "Europe/London" }
 
 # Plugins
 [[plugins]]
 package = "netlify-deployment-hours-plugin"
 
-# A basic redirect rule
+[[plugins]]
+package = "netlify-plugin-a11y"
+
+  # all inputs are optional, we just show you the defaults below
+  [plugins.inputs]
+  
+  checkPaths = ['/src']
+
+  resultMode = "warn"
+
 [[redirects]]
   from = "https://train-in-blocks.netlify.app/*"
   to = "https://app.traininblocks.com/:splat"
