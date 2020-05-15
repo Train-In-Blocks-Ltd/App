@@ -86,7 +86,6 @@
     font-weight: bold;
     cursor: pointer;
     opacity: .5;
-    outline-width: 0;
     color: #282828;
     background-color: #707070CC;
     margin: 1rem 0 .5rem 0;
