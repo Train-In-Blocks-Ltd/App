@@ -1,0 +1,27 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  DEPLOYMENT_HOURS_EXPRESSION = 0 0 10-22 ? * * *
+  DEPLOYMENT_HOURS_TIMEZONE = Europe/London
+
+# Plugins
+[[plugins]]
+package = "netlify-deployment-hours-plugin"
+
+# A basic redirect rule
+[[redirects]]
+  from = "https://train-in-blocks.netlify.app/*"
+  to = "https://app.traininblocks.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/index.html" 
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
