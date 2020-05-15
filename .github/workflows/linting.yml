@@ -2,7 +2,7 @@
 name: Linting
 on: [push, pull_request]
 jobs:
-  stylelint:
+  linters:
     name: stylelint
     runs-on: ubuntu-latest
     steps:
@@ -11,7 +11,7 @@ jobs:
         env:
           PATTERN: "src/*.vue"
           INDENT_SPACES: 4
-  eslint:
+  lint:
     name: eslint
     steps:
       - uses: actions/checkout@v1
