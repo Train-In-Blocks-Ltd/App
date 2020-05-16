@@ -1,7 +1,8 @@
 <style>
   #home {
     display: grid;
-    max-width: 1056px
+    max-width: 1056px;
+    margin: 5rem 3.75rem
   }
   #intro {
     font-size: 2rem;

@@ -15,7 +15,7 @@
     display: grid;
     font-size: 16px;
     letter-spacing: .15rem;
-    overflow-x: hidden
+    overflow: hidden
   }
   #app {
     --accessible-color: calc(
@@ -44,8 +44,12 @@
     grid-area: main;
     display: grid;
     align-items: start;
-    padding: 5rem 3.75rem;
-    overflow-y: auto
+    overflow: auto;
+    cursor: grab;
+    height: 100vh
+  }
+  .spacer {
+    height: 5rem
   }
 
   /* Fonts */
@@ -59,8 +63,7 @@
   h2 {
     font-size: 2.5rem;
     letter-spacing: .15rem;
-    margin: 1.75rem 0;
-    margin-top: 4rem
+    margin: 1.75rem 0
   }
   h3 {
     font-size: 2rem
@@ -543,7 +546,7 @@
         </div>
       </div>
     </nav> <!-- .sidebar -->
-    <main>
+    <main v-dragscroll>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>

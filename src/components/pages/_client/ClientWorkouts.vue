@@ -41,14 +41,13 @@
     grid-template-areas:
       'table notes'
       'workouts notes';
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1000px 200px;
     grid-gap: 2rem;
     margin-top: 2.5rem
   }
 
   /* Block Table */
   .block_table {
-    overflow-x: auto;
     height: fit-content
   }
   .block_table--container {
@@ -86,8 +85,7 @@
 
   /* Workouts */
   .workouts {
-    grid-area: workouts;
-    overflow-x: auto
+    grid-area: workouts
   }
   .workouts--workout {
     display: block;
@@ -109,9 +107,7 @@
   .notes {
     grid-area: notes;
     border-left: 2px solid #282828;
-    padding-left: 3rem;
-    width: 95%;
-    justify-self: right
+    padding-left: 3rem
   }
 
   /* Quill Notes */
@@ -273,7 +269,7 @@
                 </div>
               </div>
             </div><!-- workouts -->
-            <div class="notes">
+            <div class="notes" v-dragscroll>
               <div id="stats">
                 <h2>Block Statistics</h2>
                 <p id="p1"></p>

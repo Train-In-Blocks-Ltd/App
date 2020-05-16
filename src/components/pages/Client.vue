@@ -25,12 +25,14 @@
 
   /* Top Grid */
   .top_grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr
+    display: grid
   }
 
   /* Floating Nav */
   .floating_nav {
+    position: fixed;
+    right: 5rem;
+    top: 5rem;
     display: grid;
     justify-items: right;
     text-align: right;
@@ -68,7 +70,8 @@
 
   /* Client Notes */
   #client {
-    position: relative
+    position: relative;
+    margin: 5rem 5rem 5rem 3.75rem
   }
   .client_notes {
     position: absolute;
@@ -103,35 +106,6 @@
   }
   .client_notes--quill {
     margin: 0
-  }
-
-  /* Responsiveness */
-  @media (max-width: 992px) {
-    .top_grid {
-      grid-template-columns: 1fr
-    }
-    .floating_nav {
-      text-align: left;
-      border: none;
-      display: grid
-    }
-    .floating_nav a:before {
-      left: 0
-    }
-    .floating_nav:before {
-      content: '';
-      height: 2px;
-      background-color: #282828;
-      width: 3rem;
-      margin: 1rem 0
-    }
-    .floating_nav:after {
-      content: '';
-      height: 2px;
-      background-color: #282828;
-      width: 5rem;
-      margin: 1rem 0
-    }
   }
 </style>
 
