@@ -674,7 +674,7 @@
       block_notes_function () {
         // Set block_notes to true
         this.block_notes = true
-
+        
         // Set vue self
         var self = this
 

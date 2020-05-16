@@ -9,7 +9,8 @@
     margin-top: 0
   }
   .home--container {
-    width: 75%
+    width: 75%;
+    margin-top: 2rem
   }
 
   /* Add Client Form */

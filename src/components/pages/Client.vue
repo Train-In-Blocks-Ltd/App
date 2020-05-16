@@ -20,7 +20,7 @@
     font-size: 3.75rem;
     letter-spacing: .5rem;
     margin: 0;
-    width: 100%
+    width: 90%
   }
 
   /* Top Grid */
@@ -118,7 +118,14 @@
   /* Responsiveness */
   @media (max-width: 992px) {
     .floating_nav a {
-      grid-template-columns: 1fr
+      grid-template-columns: 1fr;
+      transition: all .1s cubic-bezier(.165, .84, .44, 1)
+    }
+    .floating_nav a:active {
+      transform: scale(.9)
+    }
+    div.floating_nav a:before {
+      content: none
     }
     .floating_nav p {
       display: none

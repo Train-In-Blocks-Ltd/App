@@ -1,4 +1,7 @@
 <style scoped>
+  #account {
+    margin: 5rem
+  }
   .details_container {
     display: grid;
     grid-gap: 1rem;

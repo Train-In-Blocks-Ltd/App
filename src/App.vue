@@ -106,7 +106,7 @@
     text-decoration: none
   }
   .button:active {
-    transform: scale(.95)
+    transform: scale(.9)
   }
 
   /* Inputs */
@@ -117,7 +117,6 @@
     padding: .5rem;
     display: inline-block;
     resize: none;
-    color: #282828;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
   }
@@ -394,7 +393,7 @@
     overflow: hidden
   }
   .client_container {
-    margin: .5rem 0;
+    margin: 1rem 0;
     font-size: 1rem;
     display: block
   }
@@ -430,6 +429,7 @@
   }
   .search {
     width: 95%;
+    margin-bottom: 1rem;
     opacity: .5;
     font-size: 1rem;
     transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
@@ -439,6 +439,12 @@
   }
 
   /* Responsive Design */
+  @media (max-width: 992px) {
+    .button:hover {
+      background-color: transparent;
+      color: #282828
+    }
+  }
   @media (min-width: 768px) {
     #hamburger, #close {
       display: none
