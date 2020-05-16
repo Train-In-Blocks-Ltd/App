@@ -8,7 +8,7 @@
 package = "netlify-deployment-hours-plugin"
 
 [[redirects]]
-  from = "https://train-in-blocks.netlify.app/*"
+  from = "https://app-train-in-blocks.netlify.app/*"
   to = "https://app.traininblocks.com/:splat"
   status = 301
   force = true
