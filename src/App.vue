@@ -50,6 +50,9 @@
   .spacer {
     height: 5rem
   }
+  #hamburger path#lines {
+    fill: #282828
+  }
 
   /* Fonts */
   h1 {
@@ -449,8 +452,7 @@
       max-width: 100%
     }
     h1 {
-      font-size: 1.4rem;
-      text-align: center;
+      font-size: 2rem;
       margin-top: -.9rem;
       margin-bottom: 2.5rem;
       margin-left: 1.25rem
@@ -472,7 +474,8 @@
       z-index: 99
     }
     main {
-      padding: 5rem 1.875rem
+      padding: 0;
+      width: 100vw
     }
     #hamburger, #close {
       position: absolute;

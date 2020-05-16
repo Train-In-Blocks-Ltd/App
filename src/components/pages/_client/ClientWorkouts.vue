@@ -17,16 +17,6 @@
     display: inline-block;
     font-weight: bold
   }
-  .block_info select {
-    background: initial;
-    border: none;
-    border-bottom: 1px solid #282828;
-    width: 50%;
-    font-size: 1rem
-  }
-  .block_info select:hover {
-    cursor: pointer
-  }
   .block_info input#duration, .block_info input#start {
     margin-left: .25rem
   }
@@ -111,9 +101,9 @@
 
   /* Quill Notes */
   .workout_notes, #block_notes {
-    position: absolute;
-    right: 0;
-    top: 0;
+    position: fixed;
+    right: 20rem;
+    top: 5rem;
     z-index: 9;
     text-align: left;
     max-width: 400px;
@@ -138,6 +128,9 @@
     grid-template-columns: 1fr .1fr .1fr .1fr /* For the 3 icons in this order, toolkit, info and delete */
   }
   .workout_notes_header p, #block_notes_header p {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
     margin: 0
   }
   .workout_notes_header svg {
@@ -157,6 +150,31 @@
   .add_workout label {
     display: grid;
     grid-gap: .5rem
+  }
+
+  @media (max-width: 992px) {
+    .workout_notes, #block_notes {
+      right: 10rem
+    }
+  }
+  @media (max-width: 768px) {
+    #blocks .block_info input.block_info--name.title {
+      font-size: 1.2rem
+    }
+  }
+  @media (max-width: 576px) {
+    .workout_notes, #block_notes {
+      right: 6rem;
+      max-width: 250px;
+      height: 400px
+    }
+  }
+  @media (max-width: 360px) {
+    .workout_notes, #block_notes {
+      right: 5rem;
+      max-width: 230px;
+      height: 350px
+    }
   }
 </style>
 
@@ -248,9 +266,9 @@
                 </div>
               </div><!-- workouts -->
             </div>
-            <div class="notes" v-dragscroll>
+            <div class="notes">
               <div id="stats">
-                <h2>Block Statistics</h2>
+                <h2 no>Block Statistics</h2>
                 <p id="p1"></p>
                 <p id="p2"></p>
                 <p id="p3"></p>
@@ -262,7 +280,7 @@
               </div>
               <div v-show="block_notes" id="block_notes">
                 <div id="block_notes_header">
-                  <p>Block Notes</p>
+                  <p><b>Block Notes</b></p>
                 </div>
                 <quill v-model="programme.notes" output="html" class="quill"></quill>
               </div>
@@ -657,9 +675,6 @@
         // Set block_notes to true
         this.block_notes = true
 
-        // Make notes draggable
-        this.$parent.dragElement(document.getElementById('block_notes'))
-
         // Set vue self
         var self = this
 
@@ -685,9 +700,6 @@
       workout_notes_function (id) {
         // Set workout_notes to id of workout
         this.workout_notes = id
-
-        // Make notes draggable
-        this.$parent.dragElement(document.getElementById('workout_notes_' + id))
 
         // Set vue self
         var self = this

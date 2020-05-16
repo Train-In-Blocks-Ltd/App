@@ -85,8 +85,9 @@
     margin: 5rem 3.75rem
   }
   .client_notes {
-    position: absolute;
-    right: 0;
+    position: fixed;
+    right: 20rem;
+    background-color: white;
     z-index: 9;
     text-align: left;
     max-width: 400px;
@@ -121,6 +122,38 @@
     }
     .floating_nav p {
       display: none
+    }
+    .client_notes {
+      right: 10rem
+    }
+  }
+  @media (max-width: 576px) {
+    .floating_nav {
+      right: 3rem
+    }
+    #client {
+      margin: 5rem 2rem
+    }
+    .client_notes {
+      right: 6rem;
+      max-width: 250px;
+      height: 400px
+    }
+    .ql-editor {
+      height: 310px
+    }
+  }
+  @media (max-width: 360px) {
+    .floating_nav {
+      right: 2rem
+    }
+    .client_notes {
+      right: 5rem;
+      max-width: 230px;
+      height: 350px
+    }
+    .ql-editor {
+      height: 260px
     }
   }
 </style>
@@ -181,7 +214,6 @@
     methods: {
       client_notes_function () {
         this.client_notes = !this.client_notes
-        this.dragElement(document.getElementById('client_notes'))
 
         // Set vue self
         var self = this
@@ -204,44 +236,6 @@
             window.addEventListener('click', click)
           }
         , 1000)
-      },
-      dragElement (elmnt) {
-        let pos1 = 0
-        let pos2 = 0
-        let pos3 = 0
-        let pos4 = 0
-
-        document.getElementById(elmnt.id + '_header').onmousedown = dragMouseDown
-
-        function dragMouseDown (e) {
-          e = e || window.event
-          e.preventDefault()
-          // get the mouse cursor position at startup:
-          pos3 = e.clientX
-          pos4 = e.clientY
-          document.onmouseup = closeDragElement
-          // call a function whenever the cursor moves:
-          document.onmousemove = elementDrag
-        }
-
-        function elementDrag (e) {
-          e = e || window.event
-          e.preventDefault()
-          // calculate the new cursor position:
-          pos1 = pos3 - e.clientX
-          pos2 = pos4 - e.clientY
-          pos3 = e.clientX
-          pos4 = e.clientY
-          // set the element's new position:
-          elmnt.style.top = (elmnt.offsetTop - pos2) + 'px'
-          elmnt.style.left = (elmnt.offsetLeft - pos1) + 'px'
-        }
-
-        function closeDragElement () {
-          // stop moving when mouse button is released:
-          document.onmouseup = null
-          document.onmousemove = null
-        }
       },
       created () {
         var x
