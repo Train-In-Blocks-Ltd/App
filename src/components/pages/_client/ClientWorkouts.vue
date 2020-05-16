@@ -1,4 +1,8 @@
 <style scoped>
+  #blocks {
+    cursor: grab
+  }
+
   /* Block Info */
   .client_info--name.title {
     margin: 0
@@ -10,7 +14,8 @@
   }
   #blocks .block_info label {
     grid-auto-columns: min-content;
-    display: inline-block
+    display: inline-block;
+    font-weight: bold
   }
   .block_info select {
     background: initial;
@@ -38,12 +43,9 @@
   /* Block Grid */
   .block_grid {
     display: grid;
-    grid-template-areas:
-      'table notes'
-      'workouts notes';
-    grid-template-columns: 1fr 1000px 200px;
-    grid-gap: 2rem;
-    margin-top: 2.5rem
+    grid-template-columns: 1fr 1000px;
+    grid-gap: 5rem;
+    margin: 5rem 5rem 5rem 0
   }
 
   /* Block Table */
@@ -54,7 +56,8 @@
     border: 1px solid #282828;
     display: inline-block;
     font-weight: bold;
-    text-align: center
+    text-align: center;
+    cursor: default
   }
   .block_table--container p {
     margin: 1.5rem 1rem
@@ -84,9 +87,6 @@
   }
 
   /* Workouts */
-  .workouts {
-    grid-area: workouts
-  }
   .workouts--workout {
     display: block;
     border-bottom: 1px solid #282828;
@@ -105,9 +105,8 @@
 
   /* Notes Grid Section */
   .notes {
-    grid-area: notes;
     border-left: 2px solid #282828;
-    padding-left: 3rem
+    padding-left: 5rem
   }
 
   /* Quill Notes */
@@ -159,28 +158,6 @@
     display: grid;
     grid-gap: .5rem
   }
-
-  /* Responsiveness */
-  @media (max-width: 1440px) {
-    .notes {
-      padding-left: 1rem;
-      justify-self: left
-    }
-  }
-  @media (max-width: 992px) {
-    .block_grid {
-      grid-template: .2fr 1fr 1fr / 1fr;
-      grid-template-areas:
-        'table'
-        'workouts'
-        'notes'
-    }
-    .notes {
-      width: 100%;
-      border: none;
-      padding: 0
-    }
-  }
 </style>
 
 <template>
@@ -201,74 +178,76 @@
             </div>  <!-- client_info -->
             <div class="floating_nav--container">
               <div class="floating_nav">
-                <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()">Client Notes</a>
-                <a href="javascript:void(0)" v-on:click="block_notes_function()">Block Notes</a>
-                <a href="javascript:void(0)" v-on:click="delete_block()">Delete Block</a>
+                <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
+                <a href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                <a href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
               </div> <!-- floating_nav -->
             </div>
           </div> <!-- top_grid -->
           <div class="block_grid">
-            <div class="block_table">
-              <div class="block_table--container">
-                <p>{{programme.name}}</p>
-                <div class="block_table--container--block_duration_container">
-                  <div v-for="item in programme_duration(programme.duration)" :key="item">
-                    {{item}}
+            <div>
+              <div class="block_table">
+                <div class="block_table--container">
+                  <p>{{programme.name}}</p>
+                  <div class="block_table--container--block_duration_container">
+                    <div v-for="item in programme_duration(programme.duration)" :key="item">
+                      {{item}}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div> <!-- block_table -->
-            <div class="workouts">
-              <h3>Workouts</h3>
-              <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
-              <p v-if="$parent.loading_workouts">Loading workouts...</p>
-              <div>
-                <div v-if="!$parent.no_workouts">
-                  <!-- Loop through workouts -->
-                  <div v-for="(workout, index) in programme.workouts"
-                    :key="index">
-                    <!-- Open the notes in a popup when clicked -->
-                    <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
-                      <span><b>{{workout.name}}</b></span>
-                      -
-                      <span>{{day(workout.date)}}</span>
-                      -
-                      <span>{{workout.date}}</span>
-                    </p>
-                    <div v-show="workout_notes == workout.id" class="workout_notes" :id="'workout_notes_' + workout.id">
-                      <div :id="'workout_notes_' + workout.id + '_header'" class="workout_notes_header">
-                        <p>
-                          <span><b>{{workout.name}}</b></span>
-                          -
-                          <span>{{day(workout.date)}}</span>
-                          -
-                          <span>{{workout.date}}</span>
-                        </p>
-                        <inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/>
-                        <inline-svg :src="require('../../../assets/svg/Info.svg')"/>
-                        <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)"/>
+              </div> <!-- block_table -->
+              <div class="workouts">
+                <h3>Workouts</h3>
+                <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
+                <p v-if="$parent.loading_workouts">Loading workouts...</p>
+                <div>
+                  <div v-if="!$parent.no_workouts">
+                    <!-- Loop through workouts -->
+                    <div v-for="(workout, index) in programme.workouts"
+                      :key="index">
+                      <!-- Open the notes in a popup when clicked -->
+                      <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
+                        <span><b>{{workout.name}}</b></span>
+                        -
+                        <span>{{day(workout.date)}}</span>
+                        -
+                        <span>{{workout.date}}</span>
+                      </p>
+                      <div v-show="workout_notes == workout.id" class="workout_notes" :id="'workout_notes_' + workout.id">
+                        <div :id="'workout_notes_' + workout.id + '_header'" class="workout_notes_header">
+                          <p>
+                            <span><b>{{workout.name}}</b></span>
+                            -
+                            <span>{{day(workout.date)}}</span>
+                            -
+                            <span>{{workout.date}}</span>
+                          </p>
+                          <inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/>
+                          <inline-svg :src="require('../../../assets/svg/Info.svg')"/>
+                          <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)"/>
+                        </div>
+                        <quill v-model="workout.notes" output="html" class="quill"></quill>
                       </div>
-                      <quill v-model="workout.notes" output="html" class="quill"></quill>
                     </div>
                   </div>
+                  <!-- Add a new workout -->
+                  <button v-if="!creating" class="button" v-on:click="creation()">New workout</button>
+                  <p class="response" v-if="!creating">{{response}}</p>
+                  <div v-if="creating" class="add_workout_container">
+                    <h3>Add new workout</h3>
+                    <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
+                      <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
+                      <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
+                      <div class="form_buttons">
+                          <input type="submit" class="button" value="Save" />
+                          <button class="button" v-on:click="close()">Close</button>
+                          <Loader></Loader>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-                 <!-- Add a new workout -->
-                <button v-if="!creating" class="button" v-on:click="creation()">New workout</button>
-                <p class="response" v-if="!creating">{{response}}</p>
-                <div v-if="creating" class="add_workout_container">
-                  <h3>Add new workout</h3>
-                  <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
-                    <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
-                    <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
-                    <div class="form_buttons">
-                        <input type="submit" class="button" value="Save" />
-                        <button class="button" v-on:click="close()">Close</button>
-                        <Loader></Loader>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div><!-- workouts -->
+              </div><!-- workouts -->
+            </div>
             <div class="notes" v-dragscroll>
               <div id="stats">
                 <h2>Block Statistics</h2>

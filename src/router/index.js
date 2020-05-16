@@ -3,9 +3,6 @@ import Router from 'vue-router'
 
 import Auth from '@okta/okta-vue'
 
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-
 import HomeComponent from '@/components/pages/Home'
 import LoginComponent from '@/components/pages/Login'
 import ProfileComponent from '@/components/pages/Account'
@@ -103,17 +100,6 @@ const onAuthRequired = async (from, to, next) => {
     next()
   }
 }
-
-router.beforeResolve((to, from, next) => {
-  if (to.path) {
-    NProgress.start()
-  }
-  next()
-})
-
-router.afterEach(() => {
-  NProgress.done()
-})
 
 router.beforeEach(onAuthRequired)
 

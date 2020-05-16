@@ -45,7 +45,6 @@
     display: grid;
     align-items: start;
     overflow: auto;
-    cursor: grab;
     height: 100vh
   }
   .spacer {
@@ -374,13 +373,13 @@
     height: 10px
   }
   ::-webkit-scrollbar-track {
-    background: transparent
+    background: #28282815
   }
   ::-webkit-scrollbar-thumb {
-    background: #00000020
+    background: #28282850
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #00000030
+    background: #28282860
   }
 
   /* Archive and Home page styles */
@@ -420,9 +419,6 @@
   }
   .client_container > a:not(.archived):hover:before {
     width: 100%
-  }
-  .client_container > a:not(.archived):active:before {
-    width: 0
   }
   .client_link {
     padding: 1rem 0;

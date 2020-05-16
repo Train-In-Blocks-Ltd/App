@@ -25,7 +25,8 @@
 
   /* Top Grid */
   .top_grid {
-    display: grid
+    display: grid;
+    grid-template-columns: 1fr .4fr
   }
 
   /* Floating Nav */
@@ -40,6 +41,9 @@
     padding-right: .5rem
   }
   .floating_nav a {
+    display: grid;
+    grid-template-columns: 1fr 24px;
+    grid-gap: .6rem;
     width: fit-content;
     position: relative;
     color: #282828;
@@ -67,11 +71,18 @@
   .floating_nav .archive-client {
     margin: .5rem 0
   }
+  .floating_nav p {
+    margin: 0;
+    align-self: end
+  }
+  svg.floating_nav__icon path {
+    fill: #282828
+  }
 
   /* Client Notes */
   #client {
     position: relative;
-    margin: 5rem 5rem 5rem 3.75rem
+    margin: 5rem 3.75rem
   }
   .client_notes {
     position: absolute;
@@ -81,11 +92,6 @@
     max-width: 400px;
     width: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: rgb(
-      var(--red),
-      var(--green),
-      var(--blue)
-    );
     display: grid;
     grid-template-rows: 40px auto;
     align-items: center
@@ -107,6 +113,16 @@
   .client_notes--quill {
     margin: 0
   }
+
+  /* Responsiveness */
+  @media (max-width: 992px) {
+    .floating_nav a {
+      grid-template-columns: 1fr
+    }
+    .floating_nav p {
+      display: none
+    }
+  }
 </style>
 
 <template>
@@ -119,13 +135,11 @@
         <label><b>Email: </b><input type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
-      <div class="floating_nav--container">
-        <div class="floating_nav">
-          <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
-          <div v-for="(clients, index) in $parent.posts" :key="index">
-            <div class="archive-client" v-if="clients.name == $route.params.name">
-              <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
-            </div>
+      <div class="floating_nav">
+        <a href="javascript:void(0)" v-on:click="client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
+        <div v-for="(clients, index) in $parent.posts" :key="index">
+          <div class="archive-client" v-if="clients.name == $route.params.name">
+            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p>Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
           </div>
         </div>
       </div>
@@ -143,8 +157,12 @@
 
 <script>
   import axios from 'axios'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
+    components: {
+      InlineSvg
+    },
     data: function () {
       return {
         no_programmes: false,
