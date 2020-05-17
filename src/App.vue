@@ -56,6 +56,7 @@
 
   /* Fonts */
   h1 {
+    margin-top: 0;
     margin-bottom: 3rem;
     font-weight: bold;
     font-size: 3.75rem;
@@ -92,13 +93,11 @@
     font-weight: bold;
     cursor: pointer;
     color: #282828;
-
-    /* Not really sure what this is for but I've commented it out for now (Also see below)
-    background-color: #707070CC; */
     background-color: transparent;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
+    will-change: transform
   }
   .button:hover {
     background-color: #282828;
@@ -112,8 +111,6 @@
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]) {
     border: 1px solid #282828;
-
-    /* background-color: #858585CC; */
     padding: .5rem;
     display: inline-block;
     resize: none;
@@ -220,6 +217,34 @@
     overflow-y: auto;
     margin-top: 3.75rem;
     margin-bottom: 2.5rem
+  }
+  .sidebar ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px
+  }
+  .sidebar ::-webkit-scrollbar-track {
+    background: rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      .1
+    )
+  }
+  .sidebar ::-webkit-scrollbar-thumb {
+    background: rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      .2
+    )
+  }
+  .sidebar ::-webkit-scrollbar-thumb:hover {
+    background: rgba(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      .4
+    )
   }
 
   /* Client Navigation Items */

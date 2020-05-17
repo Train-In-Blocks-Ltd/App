@@ -40,7 +40,9 @@
 
   /* Block Table */
   .block_table {
-    height: fit-content
+    height: fit-content;
+    max-width: 482px;
+    overflow-x: auto
   }
   .block_table--container {
     border: 1px solid #282828;
