@@ -33,23 +33,19 @@
     letter-spacing: .15rem
   }
   #okta-signin-username, #okta-signin-password, #account-recovery-username {
-    width: 75%;
+    width: 70%;
     margin: .75rem 0;
     padding: .5rem;
     font-family: Arial, Helvetica, sans-serif;
     font-size: .9rem;
     letter-spacing: .1rem;
     border: none;
-    border-bottom: 1px solid rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    border-bottom: 1px solid #282828;
     transition: width 1s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus, #account-recovery-username:hover, #account-recovery-username:focus {
-    width: 100%;
+    width: 75%;
     outline-width: 0
   }
   .okta-form-input-error {
@@ -80,7 +76,7 @@
     cursor: pointer;
     transition: background-color .4s, color .2s
   }
-  .o-form-button-bar .button:hover, .email-button:hover {
+  .o-form-button-bar #okta-signin-submit.button:hover, .email-button:hover {
     background-color: #282828;
     color: white
   }

@@ -15,7 +15,7 @@
     display: grid;
     font-size: 16px;
     letter-spacing: .15rem;
-    overflow-x: hidden
+    overflow: hidden
   }
   #app {
     --accessible-color: calc(
@@ -44,8 +44,14 @@
     grid-area: main;
     display: grid;
     align-items: start;
-    padding: 5rem 3.75rem;
-    overflow-y: auto
+    overflow: auto;
+    height: 100vh
+  }
+  .spacer {
+    height: 5rem
+  }
+  #hamburger path#lines {
+    fill: #282828
   }
 
   /* Fonts */
@@ -59,8 +65,7 @@
   h2 {
     font-size: 2.5rem;
     letter-spacing: .15rem;
-    margin: 1.75rem 0;
-    margin-top: 4rem
+    margin: 1.75rem 0
   }
   h3 {
     font-size: 2rem
@@ -82,33 +87,36 @@
     height: auto;
     width: auto;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: .9rem;
+    font-size: .8rem;
+    letter-spacing: .1rem;
     font-weight: bold;
     cursor: pointer;
-    opacity: .5;
     color: #282828;
-    background-color: #707070CC;
+
+    /* Not really sure what this is for but I've commented it out for now (Also see below)
+    background-color: #707070CC; */
+    background-color: transparent;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
     transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .button:hover {
-    opacity: 1;
-    color: #282828;
+    background-color: #282828;
+    color: white;
     text-decoration: none
   }
   .button:active {
-    transform: scale(.95)
+    transform: scale(.9)
   }
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]) {
     border: 1px solid #282828;
-    background-color: #858585CC;
+
+    /* background-color: #858585CC; */
     padding: .5rem;
     display: inline-block;
     resize: none;
-    color: #282828;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
   }
@@ -367,13 +375,13 @@
     height: 10px
   }
   ::-webkit-scrollbar-track {
-    background: transparent
+    background: #28282815
   }
   ::-webkit-scrollbar-thumb {
-    background: #00000020
+    background: #28282850
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #00000030
+    background: #28282860
   }
 
   /* Archive and Home page styles */
@@ -385,7 +393,7 @@
     overflow: hidden
   }
   .client_container {
-    margin: .5rem 0;
+    margin: 1rem 0;
     font-size: 1rem;
     display: block
   }
@@ -414,9 +422,6 @@
   .client_container > a:not(.archived):hover:before {
     width: 100%
   }
-  .client_container > a:not(.archived):active:before {
-    width: 0
-  }
   .client_link {
     padding: 1rem 0;
     width: 95%;
@@ -424,6 +429,7 @@
   }
   .search {
     width: 95%;
+    margin-bottom: 1rem;
     opacity: .5;
     font-size: 1rem;
     transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
@@ -433,6 +439,12 @@
   }
 
   /* Responsive Design */
+  @media (max-width: 992px) {
+    .button:hover {
+      background-color: transparent;
+      color: #282828
+    }
+  }
   @media (min-width: 768px) {
     #hamburger, #close {
       display: none
@@ -446,8 +458,7 @@
       max-width: 100%
     }
     h1 {
-      font-size: 1.4rem;
-      text-align: center;
+      font-size: 2rem;
       margin-top: -.9rem;
       margin-bottom: 2.5rem;
       margin-left: 1.25rem
@@ -469,7 +480,8 @@
       z-index: 99
     }
     main {
-      padding: 5rem 1.875rem
+      padding: 0;
+      width: 100vw
     }
     #hamburger, #close {
       position: absolute;
@@ -539,7 +551,7 @@
         </div>
       </div>
     </nav> <!-- .sidebar -->
-    <main>
+    <main v-dragscroll>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>

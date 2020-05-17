@@ -18,25 +18,33 @@
   }
   #client .client_info input.client_info--name {
     font-size: 3.75rem;
-    letter-spacing: .15rem;
+    letter-spacing: .5rem;
     margin: 0;
-    width: 100%
+    width: 90%
   }
 
   /* Top Grid */
   .top_grid {
     display: grid;
-    grid-template-columns: 1fr 1fr
+    grid-template-columns: 1fr .4fr
   }
 
   /* Floating Nav */
   .floating_nav {
+    position: fixed;
+    right: 5rem;
+    top: 5rem;
+    display: grid;
+    justify-items: right;
     text-align: right;
     border-right: 2px solid #282828;
     padding-right: .5rem
   }
   .floating_nav a {
-    display: inline-block;
+    display: grid;
+    grid-template-columns: 1fr 24px;
+    grid-gap: .6rem;
+    width: fit-content;
     position: relative;
     color: #282828;
     text-decoration: none;
@@ -60,24 +68,31 @@
     opacity: 1;
     width: 100%
   }
+  .floating_nav .archive-client {
+    margin: .5rem 0
+  }
+  .floating_nav p {
+    margin: 0;
+    align-self: end
+  }
+  svg.floating_nav__icon path {
+    fill: #282828
+  }
 
   /* Client Notes */
   #client {
-    position: relative
+    position: relative;
+    margin: 5rem 3.75rem
   }
   .client_notes {
-    position: absolute;
-    right: 0;
+    position: fixed;
+    right: 20rem;
+    background-color: white;
     z-index: 9;
     text-align: left;
     max-width: 400px;
     width: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: rgb(
-      var(--red),
-      var(--green),
-      var(--blue)
-    );
     display: grid;
     grid-template-rows: 40px auto;
     align-items: center
@@ -102,30 +117,50 @@
 
   /* Responsiveness */
   @media (max-width: 992px) {
-    .top_grid {
-      grid-template-columns: 1fr
+    .floating_nav a {
+      grid-template-columns: 1fr;
+      transition: all .1s cubic-bezier(.165, .84, .44, 1)
     }
+    .floating_nav a:active {
+      transform: scale(.9)
+    }
+    div.floating_nav a:before {
+      content: none
+    }
+    .floating_nav p {
+      display: none
+    }
+    .client_notes {
+      right: 10rem
+    }
+  }
+  @media (max-width: 576px) {
     .floating_nav {
-      text-align: left;
-      border: none;
-      display: grid
+      right: 3rem
     }
-    .floating_nav a:before {
-      left: 0
+    #client {
+      margin: 5rem 2rem
     }
-    .floating_nav:before {
-      content: '';
-      height: 2px;
-      background-color: #282828;
-      width: 3rem;
-      margin: 1rem 0
+    .client_notes {
+      right: 6rem;
+      max-width: 250px;
+      height: 400px
     }
-    .floating_nav:after {
-      content: '';
-      height: 2px;
-      background-color: #282828;
-      width: 5rem;
-      margin: 1rem 0
+    .ql-editor {
+      height: 310px
+    }
+  }
+  @media (max-width: 360px) {
+    .floating_nav {
+      right: 2rem
+    }
+    .client_notes {
+      right: 5rem;
+      max-width: 230px;
+      height: 350px
+    }
+    .ql-editor {
+      height: 260px
     }
   }
 </style>
@@ -140,13 +175,11 @@
         <label><b>Email: </b><input type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
         <label><b>Number: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
-      <div class="floating_nav--container">
-        <div class="floating_nav">
-          <a href="javascript:void(0)" v-on:click="client_notes_function()">Client Notes</a>
-          <div v-for="(clients, index) in $parent.posts" :key="index">
-            <div v-if="clients.name == $route.params.name">
-              <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
-            </div>
+      <div class="floating_nav">
+        <a href="javascript:void(0)" v-on:click="client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
+        <div v-for="(clients, index) in $parent.posts" :key="index">
+          <div class="archive-client" v-if="clients.name == $route.params.name">
+            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p>Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
           </div>
         </div>
       </div>
@@ -164,8 +197,12 @@
 
 <script>
   import axios from 'axios'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
+    components: {
+      InlineSvg
+    },
     data: function () {
       return {
         no_programmes: false,
@@ -184,7 +221,6 @@
     methods: {
       client_notes_function () {
         this.client_notes = !this.client_notes
-        this.dragElement(document.getElementById('client_notes'))
 
         // Set vue self
         var self = this
@@ -207,44 +243,6 @@
             window.addEventListener('click', click)
           }
         , 1000)
-      },
-      dragElement (elmnt) {
-        let pos1 = 0
-        let pos2 = 0
-        let pos3 = 0
-        let pos4 = 0
-
-        document.getElementById(elmnt.id + '_header').onmousedown = dragMouseDown
-
-        function dragMouseDown (e) {
-          e = e || window.event
-          e.preventDefault()
-          // get the mouse cursor position at startup:
-          pos3 = e.clientX
-          pos4 = e.clientY
-          document.onmouseup = closeDragElement
-          // call a function whenever the cursor moves:
-          document.onmousemove = elementDrag
-        }
-
-        function elementDrag (e) {
-          e = e || window.event
-          e.preventDefault()
-          // calculate the new cursor position:
-          pos1 = pos3 - e.clientX
-          pos2 = pos4 - e.clientY
-          pos3 = e.clientX
-          pos4 = e.clientY
-          // set the element's new position:
-          elmnt.style.top = (elmnt.offsetTop - pos2) + 'px'
-          elmnt.style.left = (elmnt.offsetLeft - pos1) + 'px'
-        }
-
-        function closeDragElement () {
-          // stop moving when mouse button is released:
-          document.onmouseup = null
-          document.onmousemove = null
-        }
       },
       created () {
         var x

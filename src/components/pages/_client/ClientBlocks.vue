@@ -68,14 +68,9 @@
 </style>
 <template>
     <div>
-      <!-- This is where we stitch all the blocks all-together! -->
-      <h2>Programme</h2>
-      <div id="graph">
-        <div style="background-color: #C4C4C4; height: 20vh; text-align: center">Visualisation Goes Here!!</div>
-        <div style="background-color: #E1E1E1; height: 20vh; text-align: center">Programme Data Goes Here!!</div>
-      </div>
       <div>
-        <h3>Blocks</h3>
+        <div class="spacer"></div>
+        <h2>Blocks</h2>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
         <div v-if="!this.$parent.no_programmes" class="blocks_grid">

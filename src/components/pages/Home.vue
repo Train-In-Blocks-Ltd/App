@@ -1,14 +1,16 @@
 <style>
   #home {
     display: grid;
-    max-width: 1056px
+    max-width: 1056px;
+    margin: 5rem 3.75rem
   }
   #intro {
     font-size: 2rem;
     margin-top: 0
   }
   .home--container {
-    width: 75%
+    width: 75%;
+    margin-top: 2rem
   }
 
   /* Add Client Form */
