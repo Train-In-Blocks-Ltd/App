@@ -1,5 +1,5 @@
 <style scoped>
-  .archive {
+  #archive {
     margin: 5rem 3.75rem
   }
   .client_container.archived {
@@ -47,7 +47,7 @@
 </style>
 
 <template>
-  <div class="archive">
+  <div id="archive">
     <h1>Archive</h1>
     <p v-if="this.$parent.no_archive">No clients are archived</p>
     <p v-if="this.$parent.archive_error"><b>{{this.$parent.archive_error}}</b></p>

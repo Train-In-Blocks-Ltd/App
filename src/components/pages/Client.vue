@@ -38,7 +38,9 @@
     justify-items: right;
     text-align: right;
     border-right: 2px solid #282828;
-    padding-right: .5rem
+    padding: 0 .5rem;
+    border-radius: 10px 0 0 10px;
+    background-color: white
   }
   .floating_nav a {
     display: grid;
