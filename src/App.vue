@@ -235,7 +235,7 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      .2
+      .4
     )
   }
   .sidebar ::-webkit-scrollbar-thumb:hover {
@@ -243,7 +243,7 @@
       var(--accessible-color),
       var(--accessible-color),
       var(--accessible-color),
-      .4
+      .6
     )
   }
 
@@ -437,6 +437,7 @@
   .client_container > a:before {
     content: '';
     position: absolute;
+    opacity: .4;
     width: 95%;
     height: 1px;
     bottom: 0;
@@ -445,17 +446,23 @@
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .client_container > a:not(.archived):hover:before {
-    width: 100%
+    width: 100%;
+    opacity: 1
   }
   .client_link {
     padding: 1rem 0;
     width: 95%;
-    overflow-x: auto
+    overflow-x: auto;
+    transition: all .1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:active {
+    transform: scale(.98)
   }
   .search {
     width: 95%;
     margin-bottom: 1rem;
-    opacity: .5;
+    opacity: .4;
+    outline-width: 0;
     font-size: 1rem;
     transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
   }
@@ -468,6 +475,15 @@
     .button:hover {
       background-color: transparent;
       color: #282828
+    }
+  }
+  @media (max-width: 768px) {
+    .client_container > a:before {
+      width: 100%;
+      opacity: 1
+    }
+    .search:hover {
+      opacity: .4
     }
   }
   @media (min-width: 768px) {

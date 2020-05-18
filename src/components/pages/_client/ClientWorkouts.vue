@@ -81,18 +81,19 @@
   /* Workouts */
   .workouts--workout {
     display: block;
-    border-bottom: 1px solid #282828;
+    border-bottom: 1px solid #28282840;
     padding: .5rem 0;
     cursor: pointer;
-    width: 70%;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    transition: width 1500ms;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .workouts--workout:hover {
-    width: 75%
+    border-bottom: 1px solid #282828
+  }
+  .workouts--workout:active {
+    transform: scale(.9)
   }
 
   /* Notes Grid Section */
@@ -162,6 +163,13 @@
   @media (max-width: 768px) {
     #blocks .block_info input.block_info--name.title {
       font-size: 1.2rem
+    }
+    .workouts--workout:hover {
+      border-bottom: 1px solid #28282840
+    }
+    .workouts--workout:active {
+      transform: scale(.9);
+      border-bottom: 1px solid #282828
     }
   }
   @media (max-width: 576px) {
