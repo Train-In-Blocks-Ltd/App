@@ -461,14 +461,8 @@
   }
   .search {
     width: 95%;
-    margin-bottom: 1rem;
-    opacity: .4;
-    outline-width: 0;
-    font-size: 1rem;
-    transition: opacity 1500ms cubic-bezier(.075, .82, .165, 1)
-  }
-  .search:hover, .search:focus {
-    opacity: 1
+    margin: .6rem 0 1rem 0;
+    font-size: 1rem
   }
 
   /* Responsive Design */
@@ -482,9 +476,6 @@
     .client_container > a:before {
       width: 100%;
       opacity: 1
-    }
-    .search:hover {
-      opacity: .4
     }
   }
   @media (min-width: 768px) {
