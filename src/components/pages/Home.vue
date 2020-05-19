@@ -38,7 +38,8 @@
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
-      <input type="search" rel="search" placeholder="Search..." class="search" autocomplete="name" v-model="search"/>
+      <label for="search"><b>Find a client:</b></label>
+      <input name="search" type="search" rel="search" placeholder="Type away..." class="search" autocomplete="name" v-model="search"/>
       <div v-for="(clients, index) in $parent.posts"
         :key="index">
         <!-- Perform case insensitive search -->
