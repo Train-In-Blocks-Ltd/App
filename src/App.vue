@@ -15,7 +15,8 @@
     display: grid;
     font-size: 16px;
     letter-spacing: .15rem;
-    overflow: hidden
+    overflow: hidden;
+    user-select: none
   }
   #app {
     --accessible-color: calc(
