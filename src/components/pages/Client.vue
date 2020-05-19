@@ -8,19 +8,29 @@
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: min-content minmax(200px, 300px);
-    grid-gap: 1rem
+    grid-gap: 1rem;
+    align-items: center
   }
   #client .client_info input:not([type='submit']) {
     background-color: initial;
     border: none;
+    border-bottom: 2px solid #28282800;
     padding: 0;
-    font-size: 1rem
+    font-size: 1rem;
+    outline-width: 0;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  #client .client_info input:not([type='submit']):hover {
+    border-bottom: 2px solid #28282880
+  }
+  #client .client_info input:not([type='submit']):focus {
+    border-bottom: 2px solid #282828
   }
   #client .client_info input.client_info--name {
     font-size: 3.75rem;
     letter-spacing: .5rem;
     margin: 0;
-    width: 90%
+    width: 70%
   }
 
   /* Top Grid */
@@ -134,6 +144,11 @@
     }
     .client_notes {
       right: 10rem
+    }
+  }
+  @media (max-width: 768px) {
+    #client .client_info input:not([type='submit']):hover {
+      border-bottom: 2px solid #28282800
     }
   }
   @media (max-width: 576px) {
