@@ -1,6 +1,6 @@
 <style scoped>
   #archive {
-    margin: 5rem 3.75rem
+    padding: 5rem 3.75rem
   }
   .client_container.archived {
     display: grid;

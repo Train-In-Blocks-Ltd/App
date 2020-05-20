@@ -1,7 +1,8 @@
 <style>
   #error_message {
     text-align: center;
-    font-size: 2.5rem
+    font-size: 2.5rem;
+    padding: 5rem 3.75rem
   }
   @media (max-width: 768px) {
     #error_message {

@@ -1,8 +1,4 @@
 <style scoped>
-  #blocks {
-    cursor: grab
-  }
-
   /* Block Info */
   .client_info--name.title {
     margin: 0
@@ -48,8 +44,7 @@
     border: 1px solid #282828;
     display: inline-block;
     font-weight: bold;
-    text-align: center;
-    cursor: default
+    text-align: center
   }
   .block_table--container p {
     margin: 1.5rem 1rem
@@ -118,7 +113,6 @@
     align-items: center
   }
   .workout_notes_header, #block_notes_header {
-    cursor: grab;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: #282828;

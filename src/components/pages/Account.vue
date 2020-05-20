@@ -1,6 +1,6 @@
 <style scoped>
   #account {
-    margin: 5rem
+    padding: 5rem 3.75rem
   }
   .details_container {
     display: grid;

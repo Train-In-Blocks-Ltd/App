@@ -1,4 +1,9 @@
 <style>
+  #client {
+    position: relative;
+    padding: 5rem 3.75rem
+  }
+
   /* Client Info */
   .client_info {
     display: grid;
@@ -92,10 +97,6 @@
   }
 
   /* Client Notes */
-  #client {
-    position: relative;
-    margin: 5rem 3.75rem
-  }
   .client_notes {
     position: fixed;
     right: 20rem;
@@ -110,7 +111,6 @@
     align-items: center
   }
   .client_notes--header {
-    cursor: grab;
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: #282828;
