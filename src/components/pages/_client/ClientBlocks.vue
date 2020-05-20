@@ -152,7 +152,7 @@
           // Set old programmes to null so that they can be repopulated
           var x
           for (x in this.$parent.$parent.posts) {
-            if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
+            if (this.$parent.$parent.posts[x].client_id === this.$route.params.client_id) {
               this.$parent.$parent.posts[x].programmes = null
             }
           }

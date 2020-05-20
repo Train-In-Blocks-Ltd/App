@@ -54,7 +54,7 @@ const router = new Router({
       }
     },
     {
-      path: '/client/:name',
+      path: '/client/:client_id',
       component: ClientComponent,
       meta: {
         requiresAuth: true

@@ -190,7 +190,7 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <h1 class="client_info--name title">{{$route.params.name}}</h1>
+              <h1 class="client_info--name title">{{$route.params.client_id}}</h1>
                <!-- Update the programme info -->
               <form class="block_info">
                 <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
@@ -777,7 +777,7 @@
           x = 0
           let y
           for (x in this.$parent.$parent.posts) {
-            if (this.$parent.$parent.posts[x].name === this.$route.params.name) {
+            if (this.$parent.$parent.posts[x].client_id === this.$route.params.client_id) {
               for (y in this.$parent.$parent.posts[x].programmes[y]) {
                 if (this.$parent.$parent.posts[x].programmes[y].id === this.$route.params.id) {
                   this.$parent.$parent.posts[x].programmes[y] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}', '}'))

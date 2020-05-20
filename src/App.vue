@@ -553,12 +553,12 @@
          <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
           :key="index" class="nav--item animate__animated animate__fadeIn">
-          <router-link :to="'/client/'+clients.name+'/'">{{clients.name}}</router-link>
+          <router-link :to="'/client/'+clients.client_id+'/'">{{clients.name}}</router-link>
           <!-- If on client page and the client has programmes display the programmes-->
-          <div v-if="$route.path.includes('client') && clients.programmes && $route.params.name == clients.name">
+          <div v-if="$route.path.includes('client') && clients.programmes && $route.params.client_id == clients.client_id">
             <div v-for="(programme, index) in posts[index].programmes"
               :key="index" class="nav--item--item">
-              <router-link :to="'/client/'+clients.name+'/block/'+programme.id">{{programme.name}}</router-link>
+              <router-link :to="'/client/'+clients.client_id+'/block/'+programme.id">{{programme.name}}</router-link>
             </div>
           </div>
         </div>

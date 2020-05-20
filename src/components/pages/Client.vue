@@ -195,7 +195,7 @@
       <div class="floating_nav">
         <a href="javascript:void(0)" v-on:click="client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
         <div v-for="(clients, index) in $parent.posts" :key="index">
-          <div class="archive-client" v-if="clients.name == $route.params.name">
+          <div class="archive-client" v-if="clients.client_id == $route.params.client_id">
             <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p>Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
           </div>
         </div>
@@ -265,7 +265,7 @@
         var x
         for (x in this.$parent.posts) {
           // If client matches client in route
-          if (this.$parent.posts[x].name === this.$route.params.name) {
+          if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
             // Set client_details variable with client details
             this.$parent.client_details = this.$parent.posts[x]
           }
@@ -297,7 +297,7 @@
               for (y in this.$parent.posts) {
                 // If client matches client in route
                 //eslint-disable-next-line
-                if (this.$parent.posts[f].name == this.$route.params.name) {
+                if (this.$parent.posts[f].client_id == this.$route.params.client_id) {
                   this.$parent.posts[f] = this.$parent.client_details
                 }
               }
@@ -341,7 +341,7 @@
                 for (y in this.$parent.posts) {
                   // If client matches client in route
                   //eslint-disable-next-line
-                  if (this.$parent.posts[f].name == this.$route.params.name) {
+                  if (this.$parent.posts[f].client_id == this.$route.params.client_id) {
                     this.$parent.posts[f] = this.$parent.client_details
                   }
                 }
@@ -361,7 +361,7 @@
           var x
           for (x in this.$parent.posts) {
             // If client matches client in route
-            if (this.$parent.posts[x].name === this.$route.params.name) {
+            if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
               // Set client_details variable with client details
               this.$parent.client_details = this.$parent.posts[x]
               // Query API for programmes
@@ -393,7 +393,8 @@
           var x
           for (x in this.$parent.posts) {
             // If client matches client in route
-            if (this.$parent.posts[x].name === this.$route.params.name) {
+            //eslint-disable-next-line
+            if (this.$parent.posts[x].client_id == this.$route.params.client_id) {
               // Set client_details variable with client details
               this.$parent.client_details = this.$parent.posts[x]
               // If client_details.programmes is set to false
