@@ -73,7 +73,24 @@
     cursor: pointer
   }
 
+  /* Copy */
+  #copy {
+    margin: auto 0;
+    cursor: pointer;
+    transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
+  }
+  #copy:hover {
+    opacity: .6
+  }
+  #copy:active {
+    transform: scale(.9)
+  }
+
   /* Workouts */
+  .workout--header {
+    display: flex;
+    justify-content: space-between
+  }
   .workouts--workout {
     display: block;
     border-bottom: 1px solid #28282840;
@@ -149,6 +166,26 @@
     grid-gap: .5rem
   }
 
+  /* Copy Modal */
+  .modal--copy {
+    padding: 2rem
+  }
+  .modal--copy h3 {
+    margin: 0 0 1.5rem 0
+  }
+  .form--copy {
+    display: grid;
+    grid-template-columns: .4fr 1fr;
+    grid-gap: .4rem
+  }
+  .form--copy label {
+    font-weight: bold
+  }
+  .form--copy input {
+    width: 100%;
+    margin: .4rem 0
+  }
+
   @media (max-width: 992px) {
     .workout_notes, #block_notes {
       right: 10rem
@@ -164,6 +201,12 @@
     .workouts--workout:active {
       transform: scale(.9);
       border-bottom: 1px solid #282828
+    }
+    .form--copy {
+      grid-template-columns: 1fr
+    }
+    #copy:hover {
+      opacity: 1
     }
   }
   @media (max-width: 576px) {
@@ -184,7 +227,23 @@
 
 <template>
     <div id="blocks">
-       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
+      <modal name="copy" height="auto" :draggable="true" :adaptive="true">
+        <div class="modal--copy">
+          <h3>Let's progress the workouts!</h3>
+          <form class="form--copy">
+            <div>
+              <label for="range">From 1 to: </label>
+              <input name="range" type="number"/>
+            </div>
+            <div>
+              <label for="exclude">Exclude cycles: </label>
+              <input name="exclude" type="text" pattern="/\d+/gmi"/>
+            </div>
+            <button class="button" type="submit">Copy</button>
+          </form>
+        </div>
+      </modal>
+      <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
         <div v-if="programme.id == $route.params.id">
@@ -219,7 +278,10 @@
                 </div>
               </div> <!-- block_table -->
               <div class="workouts">
-                <h3>Workouts</h3>
+                <div class="workout--header">
+                  <h3>Workouts</h3>
+                  <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy()"/>
+                </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
                 <div>
@@ -248,7 +310,7 @@
                           <inline-svg :src="require('../../../assets/svg/Info.svg')"/>
                           <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)"/>
                         </div>
-                        <quill v-model="workout.notes" output="html" class="quill"></quill>
+                        <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
                       </div>
                     </div>
                   </div>
@@ -286,7 +348,7 @@
                 <div id="block_notes_header">
                   <p><b>Block Notes</b></p>
                 </div>
-                <quill v-model="programme.notes" output="html" class="quill"></quill>
+                <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
               </div>
               <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
               <select id="exercise" v-on:change="fillData()"></select>
@@ -316,6 +378,7 @@
       LineChart,
       InlineSvg
     },
+    props: ['quillSettings'],
     data: function () {
       return {
         creating: false,
@@ -372,6 +435,12 @@
       this.fillData()
     },
     methods: {
+      showCopy () {
+        this.$modal.show('copy')
+      },
+      hideCopy () {
+        this.$modal.hide('copy')
+      },
       initializeForm () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
