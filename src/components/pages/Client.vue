@@ -245,7 +245,7 @@
         function click (e) {
           // If box is open
           if (self.client_notes) {
-            if (!document.getElementById('client_notes').contains(e.target)) {
+            if (!document.querySelector('.client_notes').contains(e.target)) {
               // Update the workout
               self.update_client()
               window.removeEventListener('click', click)

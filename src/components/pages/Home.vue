@@ -1,7 +1,7 @@
 <style>
   #home {
     display: grid;
-    max-width: 1056px;
+    max-width: 800px;
     padding: 5rem 3.75rem
   }
   #intro {
@@ -9,7 +9,6 @@
     margin-top: 0
   }
   .home--container {
-    width: 75%;
     margin-top: 2rem
   }
 
@@ -45,7 +44,7 @@
         :key="index">
         <!-- Perform case insensitive search -->
         <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
-          <router-link class="client_link" :to="'/client/'+clients.name+'/'">
+          <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
             <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
           </router-link>
         </div>

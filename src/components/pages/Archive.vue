@@ -18,12 +18,12 @@
     margin-right: 1rem
   }
   .archive--container {
-    width: 75%
+    max-width: 800px
   }
 
   @media (max-width: 768px) {
     .archive--container {
-      width: 100%
+      max-width: 100%
     }
   }
 </style>

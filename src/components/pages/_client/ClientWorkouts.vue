@@ -29,9 +29,9 @@
   /* Block Grid */
   .block_grid {
     display: grid;
-    grid-template-columns: 1fr 1000px;
+    grid-template-columns: .5fr 1fr;
     grid-gap: 5rem;
-    margin: 5rem 5rem 5rem 0
+    margin-top: 5rem
   }
 
   /* Block Table */
@@ -91,8 +91,8 @@
     transform: scale(.9)
   }
 
-  /* Notes Grid Section */
-  .notes {
+  /* Graph */
+  .graph {
     border-left: 2px solid #282828;
     padding-left: 5rem
   }
@@ -190,7 +190,7 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <h1 class="client_info--name title">{{$route.params.client_id}}</h1>
+              <h1 class="client_info--name title">{{$parent.$parent.client_details.name}}</h1>
                <!-- Update the programme info -->
               <form class="block_info">
                 <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
@@ -270,7 +270,7 @@
                 </div>
               </div><!-- workouts -->
             </div>
-            <div class="notes">
+            <div class="graph">
               <div id="stats">
                 <h2 no>Block Statistics</h2>
                 <p id="p1"></p>
@@ -798,7 +798,7 @@
         var self = this
 
         function click (e) {
-          if (!document.querySelector('.programme_info').contains(e.target)) {
+          if (!document.querySelector('.block_info').contains(e.target)) {
             // Update the workout
             self.update_programme()
             window.removeEventListener('click', click)

@@ -15,8 +15,7 @@
     display: grid;
     font-size: 16px;
     letter-spacing: .15rem;
-    overflow: hidden;
-    user-select: none
+    overflow: hidden
   }
   #app {
     --accessible-color: calc(
@@ -584,7 +583,7 @@
         </div>
       </div>
     </nav> <!-- .sidebar -->
-    <main v-dragscroll>
+    <main v-dragscroll:nochilddrag>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
