@@ -179,7 +179,7 @@
     display: grid;
     align-items: center
   }
-  
+
   /* Copy Modal */
   .modal--copy {
     padding: 2rem
