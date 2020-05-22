@@ -15,7 +15,6 @@
     "base-64": "^0.1.0",
     "chart.js": "^2.9.3",
     "qs": "^6.9.3",
-    "text-encoding": "^0.7.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-dragscroll": "^2.1.0",
