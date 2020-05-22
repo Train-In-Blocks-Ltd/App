@@ -104,8 +104,7 @@
     top: 5rem;
     z-index: 9;
     text-align: left;
-    max-width: 400px;
-    width: 100%;
+    width: 400px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
     background-color: white;
     display: grid;
@@ -122,7 +121,8 @@
     align-items: center
   }
   .workout_notes_header {
-    grid-template-columns: 1fr .1fr .1fr .1fr /* For the 3 icons in this order, toolkit, info and delete */
+    grid-template-columns: 1fr 1rem 1rem 1rem; /* For the 3 icons in this order, toolkit, info and delete */
+    grid-gap: .5rem
   }
   .workout_notes_header p, #block_notes_header p {
     white-space: nowrap;
@@ -147,6 +147,20 @@
   .add_workout label {
     display: grid;
     grid-gap: .5rem
+  }
+
+  /* Workout Toolkit */
+  .workout_toolkit {
+    position: fixed;
+    right: calc(21rem + 400px);
+    top: 5rem;
+    z-index: 9;
+    text-align: left;
+    width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
+    background-color: white;
+    display: grid;
+    align-items: center
   }
 
   @media (max-width: 992px) {
@@ -179,6 +193,10 @@
       max-width: 230px;
       height: 350px
     }
+  }
+  #trash_icon {
+    height: 16px;
+    width: 16px
   }
 </style>
 
@@ -244,11 +262,46 @@
                             -
                             <span>{{workout.date}}</span>
                           </p>
-                          <inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/>
-                          <inline-svg :src="require('../../../assets/svg/Info.svg')"/>
-                          <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)"/>
+                          <inline-svg :src="require('../../../assets/svg/Toolkit.svg')" v-on:click="open_toolkit(workout.id)" title="Workout Toolkit"/>
+                          <inline-svg :src="require('../../../assets/svg/Info.svg')" title="Info"/>
+                          <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)" id="trash_icon" title="Delete Workout"/>
                         </div>
                         <quill v-model="workout.notes" output="html" class="quill"></quill>
+                      </div>
+                      <div v-show="toolkit == workout.id" class="workout_toolkit" :id="'workout_toolkit_' + workout.id">
+                        <select class="workout_toolkit--select" v-on:change="get_toolkit()">
+                          <option>Maximal Heart Rate (Tanaka)</option>
+                          <option>Maximal Heart Rate (Gellish)</option>
+                          <option>Heart Rate Training Zone (Karvonen)</option>
+                          <option>Heart Rate Reserve</option>
+                          <option>Body Mass Index</option>
+                        </select>
+                        <div class="workout_toolkit--content">
+                          <div v-if="toolkit_calcs.mhr_tanaka.view">
+                            <label>Age: <input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age"/></label>
+                            <p>{{toolkit_calcs.mhr_tanaka.value}}</p>
+                          </div>
+                          <div v-if="toolkit_calcs.mhr_gellish.view">
+                            <label>Age: <input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age"/></label>
+                            <p>{{toolkit_calcs.mhr_gellish.value}}</p>
+                          </div>
+                          <div v-if="toolkit_calcs.hrtz.view">
+                            <label>Intensity: <input type="number" v-on:input="hrtz_calc()" id="intensity" /></label>
+                            <label>Maximal Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="mhr" /></label>
+                            <label>Resting Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="rhr" /></label>
+                            <p>{{toolkit_calcs.hrtz.value}}</p>
+                          </div>
+                          <div v-if="toolkit_calcs.hrr.view">
+                            <label>Maximal Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="hrr_mhr" /></label>
+                            <label>Resting Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="hrr_rhr" /></label>
+                            <p>{{toolkit_calcs.hrr.value}}</p>
+                          </div>
+                          <div v-if="toolkit_calcs.bmi.view">
+                            <label>Height: <input type="number" v-on:input="bmi_calc()" id="height" /></label>
+                            <label>Weight: <input type="number" v-on:input="bmi_calc()" id="weight" /></label>
+                            <p>{{toolkit_calcs.bmi.value}}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -282,7 +335,7 @@
               <div>
                 <h3>Statistics</h3>
               </div>
-              <div v-show="block_notes" id="block_notes">
+              <div v-if="block_notes" id="block_notes">
                 <div id="block_notes_header">
                   <p><b>Block Notes</b></p>
                 </div>
@@ -323,6 +376,29 @@
         edit1: false,
         workout_notes: false,
         block_notes: false,
+        toolkit: false,
+        toolkit_calcs: {
+          mhr_tanaka: {
+            view: false,
+            value: null
+          },
+          mhr_gellish: {
+            view: false,
+            value: null
+          },
+          hrtz: {
+            view: false,
+            value: null
+          },
+          hrr: {
+            view: false,
+            value: null
+          },
+          bmi: {
+            view: false,
+            value: null
+          }
+        },
         new_workout: {
           name: '',
           date: ''
@@ -674,6 +750,77 @@
         weekday[6] = 'Sat'
         var d = new Date(date)
         return weekday[d.getDay()]
+      },
+      /* Opens the toolkit */
+      open_toolkit (id) {
+        // Set toolkit to true
+        this.toolkit = id
+
+        this.get_toolkit()
+
+        // Set vue self
+        var self = this
+
+        function click (e) {
+          if (!document.getElementById('workout_toolkit_' + id).contains(e.target)) {
+            window.removeEventListener('click', click)
+            self.toolkit = false
+          }
+        }
+        // Wait 1 second before applying the event listener to avoid registering the click to open the box
+        setTimeout(
+          function () {
+            // Add event listener for clicking outside box
+            window.addEventListener('click', click)
+          }
+        , 1000)
+      },
+      /* Various workout calculators */
+      mhr_tanaka_calc () {
+        this.toolkit_calcs.mhr_tanaka.value = 220 - document.querySelector('#tanaka_age').value
+      },
+      mhr_gellish_calc () {
+        this.toolkit_calcs.mhr_gellish.value = 220 - 0.7 * document.querySelector('#gellish_age').value
+      },
+      hrtz_calc () {
+        this.toolkit_calcs.hrtz.value = (document.querySelector('#intensity').value / 100) * (document.querySelector('#mhr').value - document.querySelector('#rhr').value) + document.querySelector('#rhr').value
+      },
+      hrr_calc () {
+        this.toolkit_calcs.hrr.value = document.querySelector('#hrr_mhr').value - document.querySelector('#hrr_rhr').value
+      },
+      bmi_calc () {
+        this.toolkit_calcs.bmi.value = document.querySelector('#height').value / (document.querySelector('#weight').value * document.querySelector('#weight').value)
+      },
+      /* Closes the toolkit */
+      close_toolkit () {
+        this.toolkit_calcs.mhr_tanaka.view = false
+        this.toolkit_calcs.mhr_gellish.view = false
+        this.toolkit_calcs.hrtz.view = false
+        this.toolkit_calcs.hrr.view = false
+        this.toolkit_calcs.bmi.view = false
+        document.querySelectorAll('.workout_toolkit--content input').forEach(e => {
+          e.value = null
+        })
+      },
+      /* Selects the correct calculator depending on the select */
+      get_toolkit () {
+        const select = document.querySelector('.workout_toolkit--select').value
+        if (select === 'Maximal Heart Rate (Tanaka)') {
+          this.close_toolkit()
+          this.toolkit_calcs.mhr_tanaka.view = true
+        } else if (select === 'Maximal Heart Rate (Gellish)') {
+          this.close_toolkit()
+          this.toolkit_calcs.mhr_gellish.view = true
+        } else if (select === 'Heart Rate Training Zone (Karvonen)') {
+          this.close_toolkit()
+          this.toolkit_calcs.hrtz.view = true
+        } else if (select === 'Heart Rate Reserve') {
+          this.close_toolkit()
+          this.toolkit_calcs.hrr.view = true
+        } else if (select === 'Body Mass Index') {
+          this.close_toolkit()
+          this.toolkit_calcs.bmi.view = true
+        }
       },
       block_notes_function () {
         // Set block_notes to true

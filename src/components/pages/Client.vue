@@ -361,7 +361,8 @@
           var x
           for (x in this.$parent.posts) {
             // If client matches client in route
-            if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
+            // eslint-disable-next-line
+            if (this.$parent.posts[x].client_id == this.$route.params.client_id) {
               // Set client_details variable with client details
               this.$parent.client_details = this.$parent.posts[x]
               // Query API for programmes
