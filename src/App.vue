@@ -77,7 +77,7 @@
     font-weight: bold
   }
   svg path:not(.transparent) {
-    fill: #28282899
+    fill: #282828
   }
 
   /* Buttons */
@@ -585,7 +585,7 @@
     </nav> <!-- .sidebar -->
     <main v-dragscroll:nochilddrag>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-        <router-view :key="$route.fullPath"/>
+        <router-view :key="$route.fullPath" :quillSettings="config"/>
       </transition>
     </main>
   </div>
@@ -619,6 +619,16 @@ export default {
           g: null,
           b: null,
           a: 1
+        }
+      },
+      config: {
+        placeholder: 'Type away...',
+        modules: {
+          toolbar: [
+              [{'header': 1}, {'header': 2}],
+              ['bold', 'italic', 'underline', 'strike'],
+              [{'script': 'sub'}, {'script': 'super'}]
+          ]
         }
       }
     }
