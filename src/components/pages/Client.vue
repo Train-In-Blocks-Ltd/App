@@ -111,6 +111,13 @@
     align-items: center
   }
   .client_notes--header {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+    color: #282828;
+    padding: .6rem .8rem
+  }
+
+  /* Old Style w/o Modal
+  .client_notes--header {
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: #282828;
@@ -118,7 +125,7 @@
     height: 100%;
     display: grid;
     align-items: center
-  }
+  } */
   .client_notes--header p {
     margin: 0;
     font-weight: bold
@@ -184,6 +191,12 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
+    <modal name="client-notes" height="auto" width="400px" :adaptive="true">
+      <div class="client_notes--header">
+        <p>Client Information</p>
+      </div>
+      <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill" :config="quillSettings"/>
+    </modal>
     <!-- Don't show if on blocks page because blocks page renders slightly different top ui -->
     <div class="top_grid" v-if="!blocks">
       <!-- Update the client details -->
@@ -193,7 +206,8 @@
         <label><b>Number: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
       <div class="floating_nav">
-        <a href="javascript:void(0)" v-on:click="client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
+        <a href="javascript:void(0)" @click="showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
+        <!-- <a href="javascript:void(0)" v-on:click="client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a> -->
         <div v-for="(clients, index) in $parent.posts" :key="index">
           <div class="archive-client" v-if="clients.client_id == $route.params.client_id">
             <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p>Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
@@ -201,12 +215,13 @@
         </div>
       </div>
     </div>
+    <!--
     <div v-show="client_notes" class="client_notes">
       <div class="client_notes--header">
         <p>Client Information</p>
       </div>
       <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill" :config="quillSettings"/>
-    </div>
+    </div> -->
     <!-- Router View for Client Pages -->
     <router-view :key="$route.fullPath" :quillSettings="quillSettings"></router-view>
   </div>
@@ -237,6 +252,12 @@
       await this.get_client_details()
     },
     methods: {
+      showClientNotes () {
+        this.$modal.show('client-notes')
+      },
+      hideClientNotes () {
+        this.$modal.hide('client-notes')
+      },
       client_notes_function () {
         this.client_notes = !this.client_notes
 
