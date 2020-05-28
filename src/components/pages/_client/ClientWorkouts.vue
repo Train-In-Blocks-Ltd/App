@@ -168,6 +168,8 @@
 
   /* Workout Toolkit */
   .workout_toolkit {
+    display: grid;
+    grid-gap: 1rem;
     position: fixed;
     right: calc(21rem + 400px);
     top: 5rem;
@@ -176,8 +178,18 @@
     width: 400px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
     background-color: white;
+    align-items: center;
+    padding: 1rem
+  }
+  .workout_toolkit--content > div {
     display: grid;
-    align-items: center
+    grid-gap: 1rem
+  }
+  .workout_toolkit label {
+    font-weight: bold
+  }
+  .workout_toolkit--select {
+    padding: .4rem
   }
 
   /* Copy Modal */
@@ -277,7 +289,8 @@
             </div>  <!-- client_info -->
             <div class="floating_nav--container">
               <div class="floating_nav">
-                <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
+                <a href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
+                <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
                 <a href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
                 <a href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
               </div> <!-- floating_nav -->
@@ -340,28 +353,28 @@
                         </select>
                         <div class="workout_toolkit--content">
                           <div v-if="toolkit_calcs.mhr_tanaka.view">
-                            <label>Age: <input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age"/></label>
-                            <p>{{toolkit_calcs.mhr_tanaka.value}}</p>
+                            <label for="tanaka_age">Age: </label><input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
+                            <p><b>MHR: </b>{{toolkit_calcs.mhr_tanaka.value}} BPM</p>
                           </div>
                           <div v-if="toolkit_calcs.mhr_gellish.view">
-                            <label>Age: <input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age"/></label>
-                            <p>{{toolkit_calcs.mhr_gellish.value}}</p>
+                            <label for="gellish_age">Age: </label><input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
+                            <p><b>MHR: </b>{{toolkit_calcs.mhr_gellish.value}} BPM</p>
                           </div>
                           <div v-if="toolkit_calcs.hrtz.view">
-                            <label>Intensity: <input type="number" v-on:input="hrtz_calc()" id="intensity" /></label>
-                            <label>Maximal Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="mhr" /></label>
-                            <label>Resting Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="rhr" /></label>
-                            <p>{{toolkit_calcs.hrtz.value}}</p>
+                            <label for="intensity">Intensity: </label><input type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
+                            <label for="mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
+                            <label for="rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
+                            <p><b>HR: </b>{{toolkit_calcs.hrtz.value}} BPM</p>
                           </div>
                           <div v-if="toolkit_calcs.hrr.view">
-                            <label>Maximal Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="hrr_mhr" /></label>
-                            <label>Resting Heart Rate: <input type="number" v-on:input="hrtz_calc()" id="hrr_rhr" /></label>
-                            <p>{{toolkit_calcs.hrr.value}}</p>
+                            <label for="hrr_mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="hrr_mhr" name="hrr_mhr"/>
+                            <label for="hrr_rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="hrr_rhr" name="hrr_rhr"/>
+                            <p><b>HRR: </b>{{toolkit_calcs.hrr.value}} BPM</p>
                           </div>
                           <div v-if="toolkit_calcs.bmi.view">
-                            <label>Height: <input type="number" v-on:input="bmi_calc()" id="height" /></label>
-                            <label>Weight: <input type="number" v-on:input="bmi_calc()" id="weight" /></label>
-                            <p>{{toolkit_calcs.bmi.value}}</p>
+                            <label for="height">Height: </label><input type="number" v-on:input="bmi_calc()" id="height" name="height"/>
+                            <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
+                            <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
                           </div>
                         </div>
                       </div>
@@ -846,19 +859,19 @@
       },
       /* Various workout calculators */
       mhr_tanaka_calc () {
-        this.toolkit_calcs.mhr_tanaka.value = 220 - document.querySelector('#tanaka_age').value
+        this.toolkit_calcs.mhr_tanaka.value = 220 - Number(document.querySelector('#tanaka_age').value)
       },
       mhr_gellish_calc () {
-        this.toolkit_calcs.mhr_gellish.value = 220 - 0.7 * document.querySelector('#gellish_age').value
+        this.toolkit_calcs.mhr_gellish.value = 220 - 0.7 * Number(document.querySelector('#gellish_age').value)
       },
       hrtz_calc () {
-        this.toolkit_calcs.hrtz.value = (document.querySelector('#intensity').value / 100) * (document.querySelector('#mhr').value - document.querySelector('#rhr').value) + document.querySelector('#rhr').value
+        this.toolkit_calcs.hrtz.value = (Number(document.querySelector('#intensity').value / 100)) * (Number(document.querySelector('#mhr').value) - Number(document.querySelector('#rhr').value)) + Number(document.querySelector('#rhr').value)
       },
       hrr_calc () {
-        this.toolkit_calcs.hrr.value = document.querySelector('#hrr_mhr').value - document.querySelector('#hrr_rhr').value
+        this.toolkit_calcs.hrr.value = Number(document.querySelector('#hrr_mhr').value) - Number(document.querySelector('#hrr_rhr').value)
       },
       bmi_calc () {
-        this.toolkit_calcs.bmi.value = document.querySelector('#height').value / (document.querySelector('#weight').value * document.querySelector('#weight').value)
+        this.toolkit_calcs.bmi.value = (Number(document.querySelector('#weight').value) / (Number(document.querySelector('#height').value) * Number(document.querySelector('#height').value))).toFixed(2)
       },
       /* Closes the toolkit */
       close_toolkit () {

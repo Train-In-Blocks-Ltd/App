@@ -111,7 +111,7 @@
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]) {
     border: 1px solid #282828;
-    padding: .5rem;
+    padding: .4rem;
     display: inline-block;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
