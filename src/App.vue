@@ -111,6 +111,7 @@
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]) {
     border: 1px solid #282828;
+    border-radius: 0;
     padding: .5rem;
     display: inline-block;
     resize: none;
