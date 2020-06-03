@@ -25,6 +25,27 @@
     margin-bottom: 1rem;
     letter-spacing: .15rem
   }
+  .message--save {
+    margin: 2rem 0;
+    font-size: .8rem
+  }
+  .toggleFloatingNav {
+    display: grid;
+    grid-template-columns: 10px 1fr 10px;
+    grid-gap: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: .8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: grid-gap .4s, transform .2s cubic-bezier(.165, .84, .44, 1)
+  }
+  .toggleFloatingNav:hover {
+    grid-gap: .2rem
+  }
+  .toggleFloatingNav:active {
+    transform: scale(.8)
+  }
 
   /* Block Grid */
   .block_grid {
@@ -76,23 +97,19 @@
   }
 
   /* Copy */
-  #copy {
-    margin: auto 1rem;
+  #copy, #info {
+    margin: auto 0 auto 1rem;
     cursor: pointer;
     transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
   }
-  #copy:hover {
+  #copy:hover, #info:hover {
     opacity: .6
   }
-  #copy:active {
+  #copy:active, #info:active {
     transform: scale(.9)
   }
 
   /* Workouts */
-  .message--save {
-    font-weight: bold;
-    margin: auto 1rem
-  }
   .container--workouts {
     display: grid;
     grid-template-columns: repeat(3, 300px);
@@ -108,6 +125,9 @@
   }
   .workout--header {
     display: flex
+  }
+  .text--date {
+    font-size: .8rem
   }
   .bottom-bar {
     padding: .6rem 1rem;
@@ -353,7 +373,7 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <h1 class="client_info--name title">{{$parent.$parent.client_details.name}}</h1>
+              <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
                <!-- Update the programme info -->
               <form class="block_info">
                 <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
@@ -363,11 +383,21 @@
             </div>  <!-- client_info -->
             <div class="floating_nav--container">
               <div class="floating_nav">
-                <a href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
-                <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
-                <a href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
-                <a href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
-                <a href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
+                <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
+                <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+                  <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
+                </transition>
+                  <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
+                <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+                  <a v-show="showFloatingNav" href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                </transition>
+                <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+                  <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
+                </transition>
+                <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+                  <a v-show="showFloatingNav" href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
+                </transition>
+                <p class="message--save"><b></b>{{msg}}</p>
               </div> <!-- floating_nav -->
             </div>
           </div> <!-- top_grid -->
@@ -386,8 +416,8 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Workouts</h3>
+                  <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy()"/>
-                  <p class="message--save">{{msg}}</p>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
@@ -398,12 +428,14 @@
                       :key="index">
                       <p class="workouts--workout">
                         <span><b>{{workout.name}}</b></span><br>
-                        <span>{{day(workout.date)}}</span>
-                        <span>{{workout.date}}</span>
+                        <span class="text--date">{{day(workout.date)}}</span>
+                        <span class="text--date">{{workout.date}}</span>
                       </p>
                       <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
                       <div class="bottom-bar">
                         <button class="button" @click="updateWorkoutNotes(workout.id)">Save</button>
+                        <button id="button-move" class="button">Move</button>
+                        <button id="button-delete" class="button delete" @click="delete_workout(workout.id)">Delete</button>
                       </div>
                       <!-- <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
                         <span><b>{{workout.name}}</b></span>
@@ -545,6 +577,8 @@
     props: ['quillSettings'],
     data: function () {
       return {
+        showFloatingNav: true,
+        msgFloatingNav: 'Hide',
         creating: false,
         response: '',
         edit1: false,
@@ -589,7 +623,7 @@
         options: null,
         yData: [],
         xLabel: [],
-        msg: ''
+        msg: 'Idle'
       }
     },
     created () {
@@ -600,6 +634,14 @@
       this.selection()
     },
     methods: {
+      toggleFloatingNav () {
+        this.showFloatingNav = !this.showFloatingNav
+        if (this.msgFloatingNav === 'Hide') {
+          this.msgFloatingNav = 'Options'
+        } else {
+          this.msgFloatingNav = 'Hide'
+        }
+      },
       showCopy () {
         this.$modal.show('copy')
       },
@@ -611,7 +653,7 @@
         var self = this
         self.update_workout(id)
         this.scan()
-        setTimeout(() => { this.msg = '' }, 4000);
+        setTimeout(() => { this.msg = 'Idle' }, 4000);
       },
 
       // CHART METHODS //

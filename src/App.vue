@@ -14,7 +14,7 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
-    letter-spacing: .15rem;
+    letter-spacing: .1rem;
     overflow: hidden
   }
   #app {
@@ -106,6 +106,9 @@
   }
   .button:active {
     transform: scale(.9)
+  }
+  .delete:hover {
+    background-color: #B80000
   }
 
   /* Inputs */

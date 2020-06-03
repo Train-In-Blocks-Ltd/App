@@ -54,8 +54,8 @@
     justify-items: right;
     text-align: right;
     border-right: 2px solid #282828;
-    padding: 0 .5rem;
-    background-color: white
+    padding: 0 1rem;
+    background-color: #FFFFFF99
   }
   .floating_nav a {
     display: grid;
