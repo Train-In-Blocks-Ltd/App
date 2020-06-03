@@ -399,14 +399,6 @@
               </div><!-- workouts -->
             </div>
             <div class="graph">
-              <div id="stats">
-                <h2 no>Block Statistics</h2>
-                <p id="p1"></p>
-                <p id="p2"></p>
-                <p id="p3"></p>
-                <p id="p4"></p>
-                <p id="p5"></p>
-              </div>
               <div>
                 <h3>Statistics</h3>
               </div>
@@ -429,13 +421,13 @@
                   </div>
                 </div>
               </div>
-              <!--
               <div v-if="block_notes" id="block_notes">
                 <div id="block_notes_header">
                   <p><b>Block Notes</b></p>
                 </div>
                 <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
               </div>
+              <!--
               <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
               <select id="exercise" v-on:change="fillData()"></select>
               <select @change="selection()" id="dataType">
