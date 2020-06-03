@@ -385,6 +385,9 @@
     color: #282828;
     overflow-y: auto
   }
+  .ql-editor ul li:not(.ql-direction-rtl) {
+    padding: 0
+  }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: #28282899
   }
@@ -627,8 +630,11 @@ export default {
         modules: {
           toolbar: [
               [{'header': 1}, {'header': 2}],
-              ['bold', 'italic', 'underline', 'strike'],
-              [{'script': 'sub'}, {'script': 'super'}]
+              ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              [{ 'indent': '-1'}, { 'indent': '+1' }],
+              ['link'],
+              ['clean']
           ]
         }
       }

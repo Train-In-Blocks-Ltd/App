@@ -55,8 +55,7 @@
     justify-items: right;
     text-align: right;
     border-right: 2px solid #282828;
-    padding: 0 1rem;
-    background-color: #FFFFFF99
+    padding: 0 1rem
   }
   .floating_nav a {
     display: grid;
