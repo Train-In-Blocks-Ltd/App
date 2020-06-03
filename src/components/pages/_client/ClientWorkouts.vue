@@ -113,6 +113,14 @@
     border-left: 2px solid #282828;
     padding-left: 5rem
   }
+  .data-select {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 3rem
+  }
+  #chart {
+    width: 500px
+  }
 
   /* Quill Notes */
   .workout_notes, #block_notes {
@@ -166,7 +174,7 @@
     grid-gap: .5rem
   }
 
-  /* Workout Toolkit */
+  /* Workout Toolkit Old
   .workout_toolkit {
     display: grid;
     grid-gap: 1rem;
@@ -179,6 +187,9 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
     background-color: white;
     align-items: center;
+    padding: 1rem
+  } */
+  .modal--toolkit {
     padding: 1rem
   }
   .workout_toolkit--content > div {
@@ -273,6 +284,43 @@
           </form>
         </div>
       </modal>
+      <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
+        <div class="modal--toolkit" >
+          <select class="workout_toolkit--select" v-on:change="get_toolkit()">
+            <option>Maximal Heart Rate (Tanaka)</option>
+            <option>Maximal Heart Rate (Gellish)</option>
+            <option>Heart Rate Training Zone (Karvonen)</option>
+            <option>Heart Rate Reserve</option>
+            <option>Body Mass Index</option>
+          </select>
+          <div class="workout_toolkit--content">
+            <div v-if="toolkit_calcs.mhr_tanaka.view">
+              <label for="tanaka_age">Age: </label><input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
+              <p><b>MHR: </b>{{toolkit_calcs.mhr_tanaka.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.mhr_gellish.view">
+              <label for="gellish_age">Age: </label><input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
+              <p><b>MHR: </b>{{toolkit_calcs.mhr_gellish.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.hrtz.view">
+              <label for="intensity">Intensity: </label><input type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
+              <label for="mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
+              <label for="rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
+              <p><b>HR: </b>{{toolkit_calcs.hrtz.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.hrr.view">
+              <label for="hrr_mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_mhr" name="hrr_mhr"/>
+              <label for="hrr_rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_rhr" name="hrr_rhr"/>
+              <p><b>HRR: </b>{{toolkit_calcs.hrr.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.bmi.view">
+              <label for="height">Height: </label><input type="number" v-on:input="bmi_calc()" id="height" name="height"/>
+              <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
+              <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
+            </div>
+        </div>
+        </div>
+      </modal>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
@@ -292,6 +340,7 @@
                 <a href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
                 <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
                 <a href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                <a href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
                 <a href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
               </div> <!-- floating_nav -->
             </div>
@@ -337,12 +386,13 @@
                             -
                             <span>{{workout.date}}</span>
                           </p>
-                          <inline-svg :src="require('../../../assets/svg/Toolkit.svg')" v-on:click="open_toolkit(workout.id)" title="Workout Toolkit"/>
+                          <!-- <inline-svg :src="require('../../../assets/svg/Toolkit.svg')" v-on:click="open_toolkit(workout.id)" title="Workout Toolkit"/> -->
                           <inline-svg :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                           <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)" id="trash_icon" title="Delete Workout"/>
                         </div>
                         <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
                       </div>
+                      <!--
                       <div v-show="toolkit == workout.id" class="workout_toolkit" :id="'workout_toolkit_' + workout.id">
                         <select class="workout_toolkit--select" v-on:change="get_toolkit()">
                           <option>Maximal Heart Rate (Tanaka)</option>
@@ -377,7 +427,7 @@
                             <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
                           </div>
                         </div>
-                      </div>
+                      </div>-->
                     </div>
                   </div>
                   <!-- Add a new workout -->
@@ -516,6 +566,9 @@
     methods: {
       showCopy () {
         this.$modal.show('copy')
+      },
+      showToolkit () {
+        this.$modal.show('toolkit')
       },
       // CHART METHODS //
       fillData () {
@@ -1049,12 +1102,7 @@
         }
       }, */
 
-
-
-
-
-
-      // Other Methods
+      // OTHER METHODS //
       day (date) {
         var weekday = new Array(7)
         weekday[0] = 'Sun'
