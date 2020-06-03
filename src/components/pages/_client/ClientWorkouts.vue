@@ -29,16 +29,18 @@
   /* Block Grid */
   .block_grid {
     display: grid;
-    grid-template-columns: .5fr 1fr;
     grid-gap: 5rem;
     margin-top: 5rem
+  }
+  .block-plan {
+    border-left: 2px solid #282828;
+    padding-left: 5rem
   }
 
   /* Block Table */
   .block_table {
     height: fit-content;
-    max-width: 482px;
-    overflow-x: auto
+    max-width: 482px
   }
   .block_table--container {
     border: 1px solid #282828;
@@ -75,7 +77,7 @@
 
   /* Copy */
   #copy {
-    margin: auto 0;
+    margin: auto 1rem;
     cursor: pointer;
     transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
   }
@@ -87,11 +89,31 @@
   }
 
   /* Workouts */
-  .workout--header {
-    display: flex;
-    justify-content: space-between
+  .container--workouts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    grid-gap: 2rem
+  }
+  .wrapper--workout {
+    border: 1px solid #282828;
+    height: fit-content
   }
   .workouts--workout {
+    margin: 0;
+    padding: 1rem
+  }
+  .workout--header {
+    display: flex
+  }
+  .bottom-bar {
+    padding: .6rem 1rem;
+    border-top: 1px solid #282828
+  }
+  .bottom-bar .button {
+    margin: 0
+  }
+
+  /* .workouts--workout {
     display: block;
     border-bottom: 1px solid #28282840;
     padding: .5rem 0;
@@ -106,7 +128,7 @@
   }
   .workouts--workout:active {
     transform: scale(.9)
-  }
+  } */
 
   /* Graph */
   .graph {
@@ -318,7 +340,7 @@
               <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
               <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
             </div>
-        </div>
+          </div>
         </div>
       </modal>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
@@ -346,7 +368,7 @@
             </div>
           </div> <!-- top_grid -->
           <div class="block_grid">
-            <div>
+            <div class="block-plan">
               <div class="block_table">
                 <div class="block_table--container">
                   <p>{{programme.name}}</p>
@@ -365,12 +387,21 @@
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
                 <div>
-                  <div v-if="!$parent.no_workouts">
+                  <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div v-for="(workout, index) in programme.workouts"
+                    <div class="wrapper--workout" v-for="(workout, index) in programme.workouts"
                       :key="index">
-                      <!-- Open the notes in a popup when clicked -->
-                      <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
+                      <p class="workouts--workout">
+                        <span><b>{{workout.name}}</b></span><br>
+                        <span>{{day(workout.date)}}</span>
+                        <span>{{workout.date}}</span>
+                      </p>
+                      <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
+                      <div class="bottom-bar">
+                        <button v-show="editButton" class="button" @click="editWorkout()">Edit</button>
+                        <button v-show="!editButton" class="button" @click="updateWorkoutNotes(workout.id)">Save</button>
+                      </div>
+                      <!-- <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
                         <span><b>{{workout.name}}</b></span>
                         -
                         <span>{{day(workout.date)}}</span>
@@ -386,12 +417,13 @@
                             -
                             <span>{{workout.date}}</span>
                           </p>
-                          <!-- <inline-svg :src="require('../../../assets/svg/Toolkit.svg')" v-on:click="open_toolkit(workout.id)" title="Workout Toolkit"/> -->
+                          <inline-svg :src="require('../../../assets/svg/Toolkit.svg')" v-on:click="open_toolkit(workout.id)" title="Workout Toolkit"/>
                           <inline-svg :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                           <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)" id="trash_icon" title="Delete Workout"/>
                         </div>
                         <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
-                      </div>
+                      </div> -->
+                      
                       <!--
                       <div v-show="toolkit == workout.id" class="workout_toolkit" :id="'workout_toolkit_' + workout.id">
                         <select class="workout_toolkit--select" v-on:change="get_toolkit()">
@@ -543,6 +575,7 @@
         },
         delete: false,
         str: null,
+        editButton: true,
         showType: true,
         dataPacketStore: [],
         regexExtract: /(?<=\[)(.*?)\s*:\s*(.*?)(?=\])/gi,
@@ -552,7 +585,7 @@
         dataCollection: null,
         options: null,
         yData: [],
-        xLabel: []
+        xLabel: [],
       }
     },
     created () {
@@ -570,9 +603,18 @@
       showToolkit () {
         this.$modal.show('toolkit')
       },
+      editWorkout (id) {
+        this.editButton = false
+      },
+      updateWorkoutNotes (id) {
+        this.workout_notes = id
+        var self = this
+        self.update_workout(id)
+        this.editButton = true
+      },
 
       // CHART METHODS //
-      
+
       fillData () {
         this.dataCollection = {
           labels: this.xLabel,
@@ -1374,12 +1416,14 @@
         }
         try {
           // eslint-disable-next-line
+          console.log('posting...')
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'notes': workoutsNotes
             }
           )
+          console.log('success')
         } catch (e) {
           console.log(e.toString())
         }

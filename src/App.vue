@@ -368,9 +368,6 @@
   }
 
   /* QUILL */
-  .quill {
-    margin: .75rem 0
-  }
   .ql-toolbar.ql-snow {
     border: none
   }
@@ -381,7 +378,7 @@
     stroke: #282828
   }
   .ql-editor {
-    height: 400px;
+    max-height: 250px;
     color: #282828;
     overflow-y: auto
   }
