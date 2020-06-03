@@ -113,31 +113,42 @@
     border-left: 2px solid #282828;
     padding-left: 5rem
   }
+  .data-select {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 3rem
+  }
+  #chart {
+    width: 500px
+  }
 
-  /* Quill Notes */
+  /* Modal Notes */
   .workout_notes, #block_notes {
     position: fixed;
     right: 20rem;
-    top: 5rem;
+    background-color: white;
     z-index: 9;
     text-align: left;
-    width: 400px;
+    max-width: 400px;
+    width: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: white;
     display: grid;
     grid-template-rows: 40px auto;
     align-items: center
   }
-  .workout_notes_header, #block_notes_header {
+  #block_notes_header {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+    color: #282828;
+    padding: .6rem .8rem
+  }
+  .workout_notes_header {
     z-index: 10;
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: #282828;
     padding: 0 .5rem;
     height: 100%;
     display: grid;
-    align-items: center
-  }
-  .workout_notes_header {
+    align-items: center;
     grid-template-columns: 1fr 1rem 1rem 1rem; /* For the 3 icons in this order, toolkit, info and delete */
     grid-gap: .5rem
   }
@@ -277,6 +288,12 @@
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
         <div v-if="programme.id == $route.params.id">
+          <modal name="block" height="auto" :draggable="true" :adaptive="true" @before-close="updateBlockNotes()">
+            <div id="block_notes_header">
+              <p><b>Block Notes</b></p>
+            </div>
+            <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
+          </modal>
           <div class="top_grid">
             <div class="client_info">
               <h1 class="client_info--name title">{{$parent.$parent.client_details.name}}</h1>
@@ -291,7 +308,7 @@
               <div class="floating_nav">
                 <a href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
                 <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
-                <a href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                <a href="javascript:void(0)" @click="showBlock()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
                 <a href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
               </div> <!-- floating_nav -->
             </div>
@@ -321,7 +338,7 @@
                     <div v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <!-- Open the notes in a popup when clicked -->
-                      <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
+                      <p @click="workout_notes_function(workout.id)" class="workouts--workout">
                         <span><b>{{workout.name}}</b></span>
                         -
                         <span>{{day(workout.date)}}</span>
@@ -399,31 +416,28 @@
               </div><!-- workouts -->
             </div>
             <div class="graph">
-              <div id="stats">
-                <h2 no>Block Statistics</h2>
-                <p id="p1"></p>
-                <p id="p2"></p>
-                <p id="p3"></p>
-                <p id="p4"></p>
-                <p id="p5"></p>
-              </div>
               <div>
                 <h3>Statistics</h3>
               </div>
-              <div v-if="block_notes" id="block_notes">
-                <div id="block_notes_header">
-                  <p><b>Block Notes</b></p>
+              <div class="container--content">
+                <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
+                <div class="data-select">
+                  <div>
+                    <label for="measure"><b>Data: </b></label><br>
+                    <select @change="selection()" id="dataName" name="measure">
+                    </select>
+                  </div>
+                  <div v-show="showType">
+                    <label for="measure-type"><b>Data type: </b></label><br>
+                    <select @change="selection()" id="dataType" name="measure-type">
+                      <option>Sets</option>
+                      <option>Reps</option>
+                      <option>Load</option>
+                      <option>Volume</option>
+                    </select>
+                  </div>
                 </div>
-                <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
               </div>
-              <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
-              <select id="exercise" v-on:change="fillData()"></select>
-              <select id="dataCat" v-on:change="fillData()">
-                <option>Sets</option>
-                <option>Reps</option>
-                <option>Load</option>
-                <option>Volume</option>
-              </select>
             </div>  <!-- notes -->
           </div> <!-- programme_grid -->
         </div>
@@ -481,346 +495,289 @@
         },
         delete: false,
         str: null,
-        regexPull: /(^\w*\))\s*(.[^:]*):\s*(.+)/gmi,
-        regexSetRep: /(\d*)\s*x\s*((\d*[,|]*)*)/gmi,
-        regexBreakReps: /\d+/gmi,
-        regexIntCapt: /(at|@)(.+)/gmi,
-        regexIntBreak: /(\d*[.]?\d*)/gmi,
-        xVal: [],
-        yVal: [],
-        dataCollection: {
-          labels: this.xVal,
-          datasets: [
-            {
-              label: 'none',
-              backgroundColor: 'transparent',
-              borderColor: '#282828',
-              data: this.yVal
-            }
-          ]
-        },
-        chartOptions: {
-          responsive: true,
-          maintainAspectRatio: false,
-          legend: {
-            display: false
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                suggestedMin: 1,
-                stepSize: 1
-              }
-            }]
-          }
-        }
+        showType: true,
+        dataPacketStore: [],
+        regexExtract: /(?<=\[)(.*?)\s*:\s*(.*?)(?=\])/gi,
+        regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
+        regexLoadCapture: /(at|@)(.+)/gi,
+        regexNumberBreakdown: /[0-9.]+/gi,
+        dataCollection: null,
+        options: null,
+        yData: [],
+        xLabel: []
       }
     },
     created () {
       this.$parent.blocks = true
     },
     async mounted () {
-      await this.initializeForm()
+      await this.scan()
+      this.selection()
       this.fillData()
     },
     methods: {
       showCopy () {
         this.$modal.show('copy')
       },
-      hideCopy () {
-        this.$modal.hide('copy')
+      showBlock () {
+        this.$modal.show('block')
       },
-      initializeForm () {
+      updateBlockNotes () {
+        var self = this
+        self.update_programme()
+      },
+      updateWorkoutNotes (id) {
+        this.workout_notes = id
+        var self = this
+        if (self.delete === false) {
+          if (!document.getElementById('workout_notes_' + id).contains(e.target)) {
+            self.update_workout(id)
+          }
+        } else {
+          self.delete = false
+        }
+      },
+      // CHART METHODS //
+      fillData () {
+        this.dataCollection = {
+          labels: this.xLabel,
+          datasets: [
+            {
+              label: 'Data One',
+              borderColor: '#282828',
+              backgroundColor: 'transparent',
+              data: this.yData
+            }
+          ],
+        },
+        this.options = {
+          legend: {
+            display: false
+          },
+          chartOptions: {
+            responsive: true,
+            maintainAspectRatio: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                stepSize: 1,
+                suggestedMin: 0
+              }
+            }]
+          }
+        }
+      },
+      selection () {
+        this.showType = true
+        this.yData.length = 0
+        this.xLabel.length = 0
+        var dataForName = document.getElementById('dataName').value
+        var dataForType = document.getElementById('dataType').value
+        var dataForSum = 0
+        var overviewStore = []
+        this.dataPacketStore.forEach((item) => {
+          overviewStore.length = 0
+          item.forEach((exerciseDataPacket) => {
+            var regex = RegExp(dataForName,'gi')
+            var protocol = exerciseDataPacket[1].replace(/\s/g,'')
+            if (regex.test(exerciseDataPacket[0]) === true) {
+              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[1].includes('at') === true) {
+                this.yData.push(this.setsReps(protocol, dataForType))
+              }
+              if (dataForType === 'Load' && exerciseDataPacket[1].includes('at') === true) {
+                this.yData.push(this.load(protocol))
+              }
+              if (dataForType === 'Volume' && exerciseDataPacket[1].includes('at') === true) {
+                var agg = this.setsReps(protocol, 'Reps') * this.load(protocol)
+                this.yData.push(agg)
+              }
+              if (exerciseDataPacket[1].includes('at') !== true) {
+                this.showType = false
+                this.yData.push(this.otherMeasures(protocol))
+              }
+            }
+            if (dataForName === 'Block Overview' && exerciseDataPacket[1].includes('at') === true) {
+              if (dataForType === 'Sets' || dataForType === 'Reps') {
+                dataForSum = this.setsReps(protocol, dataForType)
+              }
+              if (dataForType === 'Load') {
+                dataForSum = this.load(protocol)
+              }
+              if (dataForType === 'Volume') {
+                dataForSum = this.setsReps(protocol, 'Reps') * this.load(protocol)
+              }
+              overviewStore.push(dataForSum)
+            }
+          })
+          if (dataForName === 'Block Overview' && overviewStore.length !== 0) {
+            this.yData.push(overviewStore.reduce((a,b) => a + b))
+          }
+        })
+        let x = 1
+        for (; x <= this.yData.length; x++) {
+          this.xLabel.push(x)
+        }
+        this.fillData()
+      },
+      // INIT METHODS //
+      scan () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
             this.str = programme.workouts
           }
         })
-        // Empties and sets default options.
-        document.getElementById('exercise').innerHTML = ''
-        document.getElementById('exercise').innerHTML += '<option>Block Overview</option>'
-        // Scans through all workouts stored and picks out every valid exercise protocols from it.
-        if (this.str) {
-          this.str.forEach((workout, id) => {
-            var currentWorkout = this.tidyProtocols(this.pullProtocols(workout.notes))
-            var exist = document.getElementById('exercise').innerText
-            var i = 0
-
-            // Detects for valid exercise protocols and appending it to the dropdown.
-            // If i is EVEN then it's the exercise name, if i is ODD then its the protocol.
-            // @ / at are key identifiers of protocols.
-            if (currentWorkout) {
-              for (;i < currentWorkout.length; i++) {
-                var conditionOne = exist.includes(currentWorkout[i - 1])
-                var conditionTwo = currentWorkout[i].includes('/')
-                var conditionThree = currentWorkout[i].includes('at')
-                var conditionFour = currentWorkout[i].includes('@')
-
-                // Every exercise name will be propercase to allow for easy validation.
-                if ((i - 1) % 2 === 0 && (i - 1) !== 0) {
-                  conditionOne = exist.includes(this.properCase(currentWorkout[i - 1]))
+        // Pulls and creates nested arrays. dataPacketStore > workoutDataPackets > exerciseDataPackets
+        this.str.forEach((object) => {
+          if (object.notes !== null) {
+            var pulledProtocols = this.pullProtocols(object.notes)
+            this.dataPacketStore.push(this.chunkArray(pulledProtocols))
+          }
+        })
+        this.dropdownInit()
+      },
+      pullProtocols (text) {
+        var textNoHTML = text.replace(/<[^>]*>?/gm, '')
+        var tempStore = []
+        let m
+        while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
+          if (m.index === this.regexExtract.lastIndex) {
+            this.regexExtract.lastIndex++
+          }
+          m.forEach((match, groupIndex) => {
+            if (groupIndex === 1 || groupIndex === 2) {
+              tempStore.push(match)
+            }
+          })
+        }
+        return tempStore
+      },
+      chunkArray (myArray) {
+        var index = 0
+        var tempArray = []
+        for (index = 0; index < myArray.length; index += 2) {
+          var dataPacket = myArray.slice(index, index + 2)
+          tempArray.push(dataPacket)
+        }
+        return tempArray
+      },
+      dropdownInit () {
+        var dropdownEl = document.getElementById('dataName')
+        dropdownEl.innerHTML = '<option>Block Overview</option>';
+        var tempItemStore = []
+        var tempItemStoreLate = []
+        this.dataPacketStore.forEach((item) => {
+          item.forEach((exerciseDataPacket) => {
+            var regex = RegExp(exerciseDataPacket[0],'gi')
+            var itemCased = this.properCase(exerciseDataPacket[0])
+            if (regex.test(tempItemStore) !== true && exerciseDataPacket[1].includes('at') === true) {
+              tempItemStore.push(itemCased)
+            }
+            if (regex.test(tempItemStoreLate) !== true && exerciseDataPacket[1].includes('at') !== true) {
+              if (exerciseDataPacket[0].includes('-') === true) {
+                tempItemStoreLate.push(exerciseDataPacket[0])
+              } else {
+                tempItemStoreLate.push(itemCased)
+              }
+            }
+          })
+        })
+        tempItemStore.forEach((item) => {
+          var option = document.createElement('option')
+          option.text = item
+          dropdownEl.add(option)
+        })
+        tempItemStoreLate.forEach((item) => {
+          var option = document.createElement('option')
+          option.text = item
+          dropdownEl.add(option)
+        })
+      },
+      // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
+      properCase (string) {
+        var sentence = string.toLowerCase().split(" ");
+        for(var i = 0; i< sentence.length; i++){
+          sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+        }
+        return sentence.join(" ")
+      },
+      // REGEX METHODS //
+      setsReps (protocol, dataForType) {
+        var setStore = null
+        var extractedSetsReps = null
+        var tempSetsRepsStore = []
+        let m
+        while ((m = this.regexSetsReps.exec(protocol)) !== null) {
+          if (m.index === this.regexSetsReps.lastIndex) {
+            this.regexSetsReps.lastIndex++;
+          }
+          m.forEach((match, groupIndex) => {
+            if (groupIndex === 1) {
+              setStore = parseInt(match)
+            }
+            if (dataForType === 'Sets' && groupIndex === 1) {
+              extractedSetsReps = parseInt(match)
+            }
+            if (dataForType === 'Reps' && groupIndex === 2) {
+              if (match.includes('/') === true) {
+                let n
+                while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
+                  if (n.index === this.regexNumberBreakdown.lastIndex) {
+                    this.regexNumberBreakdown.lastIndex++
+                  }
+                  n.forEach((repsMatchExact) => {
+                    tempSetsRepsStore.push(parseInt(repsMatchExact))
+                  })
                 }
-                // Tests if it's an exercise or protocol. It will only append exercises.
-                if (i % 2 !== 0 && conditionOne !== true && conditionTwo && (conditionThree !== true || conditionFour !== true)) {
-                  document.getElementById('exercise').innerHTML += '<option value="' + this.properCase(currentWorkout[i - 1]) + '">' + this.properCase(currentWorkout[i - 1]) + '</option>'
-                }
+                extractedSetsReps = tempSetsRepsStore.reduce((a,b) => a + b)
+              } else {
+                extractedSetsReps = parseInt(match) * parseInt(setStore)
               }
             }
           })
         }
-      },
-      pullProtocols (workout) {
-        // Regex functions
-        // Scans all the workouts and pulls the protocols from the text.
-        // Returns values to tidyProtocols().
-        if (workout) {
-          var matchGroup = []
-          let a
-          while ((a = this.regexPull.exec(workout.replace(/(<br>)/ig, '\n').replace(/(<\/p>)/ig, '\n').replace(/(<([^>]+)>)/ig, ''))) !== null) {
-            // This is necessary to avoid infinite loops with zero-width matches
-            if (a.index === this.regexPull.lastIndex) {
-              this.regexPull.lastIndex++
-            }
-            // The result can be accessed through the `a`-variable.
-            a.forEach((match) => {
-              matchGroup.push(match)
-            })
-          }
-          return matchGroup
-        }
-      },
-      setsReps (protocol, type) {
-        // Function to select either the sets or reps. E.g. '3' as sets and '6' as reps from '3x6'.
-        // Returns values to be appended to yVal.
-        var store = 0
-        var sets = 0
-        // Removes all spaces
-        protocol = protocol.replace(/\s/g, '')
-        let c1
-        while ((c1 = this.regexSetRep.exec(protocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (c1.index === this.regexSetRep.lastIndex) {
-            this.regexSetRep.lastIndex++
-          }
-          // The result can be accessed through the `c1`-variable.
-          c1.forEach((match, groupIndex) => {
-            if (groupIndex === 1 && type === 'Sets') {
-              store = parseInt(match)
-            }
-            if (groupIndex === 1) {
-              sets = match
-            }
-            if (groupIndex === 2 && type === 'Reps') {
-              store = this.sumReps(match, sets)
-            }
-          })
-        }
-        return store
-      },
-      sumReps (repsProtocol, sets) {
-        // This connects to the previous function above and sums up the reps to show on the graph
-        // Returns values to be appended to yVal.
-        var sum = 0
-        let c2
-        while ((c2 = this.regexBreakReps.exec(repsProtocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (c2.index === this.regexBreakReps.lastIndex) {
-            this.regexBreakReps.lastIndex++
-          }
-          // The result can be accessed through the `c2`-variable.
-          c2.forEach((match) => {
-            if (repsProtocol.includes('/') === true) {
-              sum += parseInt(match)
-            }
-            if (repsProtocol.includes('/') === false) {
-              sum = sets * parseInt(match)
-            }
-          })
-        }
-        return sum
+        return extractedSetsReps
       },
       load (protocol) {
-        // This function adds up all the loads for visualisation and for aggregate to create volume.
-        // Returns values to be appended to yVal.
-        var sum = 0
-        // Removes all spaces
-        protocol = protocol.replace(/\s/g, '')
-        let b1
-        while ((b1 = this.regexIntCapt.exec(protocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (b1.index === this.regexIntCapt.lastIndex) {
-            this.regexIntCapt.lastIndex++
+        var tempLoadStore = []
+        let m
+        while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
+          if (m.index === this.regexLoadCapture.lastIndex) {
+            this.regexLoadCapture.lastIndex++
           }
-
-          // The result can be accessed through the `b1`-variable.
-          b1.forEach((match, groupIndex) => {
+          m.forEach((loadMatch, groupIndex) => {
             if (groupIndex === 2) {
-              protocol = match
+              let n
+              while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
+                if (n.index === this.regexNumberBreakdown.lastIndex) {
+                  this.regexNumberBreakdown.lastIndex++
+                }
+                n.forEach((loadMatchExact) => {
+                  tempLoadStore.push(parseFloat(loadMatchExact))
+                });
+              }
             }
-          })
+          });
         }
-        let b2
-        while ((b2 = this.regexIntBreak.exec(protocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (b2.index === this.regexIntBreak.lastIndex) {
-            this.regexIntBreak.lastIndex++
-          }
-          // The result can be accessed through the `b2`-variable.
-          b2.forEach((match, groupIndex) => {
-            if (match !== '' && groupIndex === 1) {
-              sum += parseFloat(match)
-            }
-          })
-        }
+        var sum = tempLoadStore.reduce((a,b) => a + b)
         return sum
       },
-      tidyProtocols (matchGroup) {
-        // Cleans up the protocol, used in conjuction with pullProcedures().
-        if (matchGroup) {
-          var e = 1
-          // Removes all but exercise name and protocols store in alternating pattern.
-          for (;e < matchGroup.length; e++) {
-            delete matchGroup[4 * e - 4]
-            delete matchGroup[4 * e - 3]
+      otherMeasures (protocol) {
+        var data = 0
+        let m
+        while ((m = this.regexNumberBreakdown.exec(protocol)) !== null) {
+          if (m.index === this.regexNumberBreakdown.lastIndex) {
+            this.regexNumberBreakdown.lastIndex++
           }
-          // Removes all undefined
-          matchGroup = matchGroup.filter(() => true)
-          return matchGroup
-        }
-      },
-      lineGraph (id, exercise, type) {
-        // Visualises the data on the graph. Appends data to an array and works in conjuction with the onChange event for the dropdown.
-        var matchGroup = this.tidyProtocols(this.pullProtocols(this.str[id].notes))
-        var self = this
-        if (matchGroup) {
-          // Runs the correct corresponding regex function to extract the information. I then pushes it to an array.
-          var i = 0
-          for (;i < matchGroup.length; i++) {
-            if (i % 2 === 0) {
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Sets') {
-                self.yVal.push(this.setsReps(matchGroup[i + 1], type))
-              }
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Reps') {
-                console.log(matchGroup[i + 1])
-                self.yVal.push(this.setsReps(matchGroup[i + 1], type))
-              }
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Load') {
-                self.yVal.push(this.load(matchGroup[i + 1]))
-              }
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Volume') {
-                self.yVal.push(this.setsReps(matchGroup[i + 1], 'Reps') * this.load(matchGroup[i + 1]))
-              }
-            }
-          }
-        }
-      },
-      workoutStats (id, dataCat) {
-        // Visualises the data for a whole block/programme. lineGraph() only does it for exercises.
-        var workout = this.tidyProtocols(this.pullProtocols(this.str[id].notes))
-        var sumLoad = 0
-        if (workout) {
-          // Runs the correct corresponding regex function to extract the information. Then it aggregates it all-together.
-          workout.forEach((protocol) => {
-            if (protocol.includes('/') === true) {
-              if (dataCat === 'Sets') {
-                sumLoad += this.setsReps(protocol, dataCat)
-              }
-              if (dataCat === 'Reps') {
-                sumLoad += this.setsReps(protocol, dataCat)
-              }
-              if (dataCat === 'Load') {
-                sumLoad += this.load(protocol)
-              }
-              if (dataCat === 'Volume') {
-                sumLoad += this.setsReps(protocol, 'Reps') * this.load(protocol)
-              }
-            }
+          m.forEach((match) => {
+            data = parseFloat(match)
           })
-          // Appends to graph x and y axis
-          this.xVal.push('Workout ' + (id + 1))
-          this.yVal.push(sumLoad)
         }
+        return data
       },
-      descStats (dataForType) {
-        // Visualises the descriptive data below the h2 statsictics tag.
-        var storeMax = 0
-        var store = 0
-        var sum = this.yVal.reduce((a, b) => a + b)
 
-        // Sets descriptive data with its corresponding info.
-        document.getElementById('p1').innerHTML = '<b>Total' + ' ' + dataForType + ':</b> ' + sum
-        document.getElementById('p2').innerHTML = '<b>Average' + ' ' + dataForType + ':</b> ' + sum / this.yVal.length
-
-        this.yVal.forEach((value) => {
-          storeMax = Math.max(storeMax, value)
-        })
-        document.getElementById('p3').innerHTML = '<b>Maximum' + ' ' + dataForType + ':</b> ' + storeMax
-        store = storeMax
-        this.yVal.forEach((value) => {
-          store = Math.min(store, value)
-        })
-        document.getElementById('p4').innerHTML = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store
-        document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store) * 100).toFixed(1) + '%'
-      },
-      properCase (string) {
-        // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
-        if (string.includes('at') !== true) {
-          var sentence = string.toLowerCase().split(' ')
-          for (var i = 0; i < sentence.length; i++) {
-            sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
-          }
-          return sentence.join(' ')
-        }
-      },
-      fillData () {
-        // Resets xVal and yVal
-        this.xVal = []
-        this.yVal = []
-
-        // Gets values of graph dropdown selects
-        var dataForExercise = document.getElementById('exercise').value
-        var dataForType = document.getElementById('dataCat').value
-        var e = 1
-
-        if (dataForExercise !== 'Block Overview') {
-          this.str.forEach((workout, id) => {
-            this.lineGraph(id, dataForExercise, dataForType)
-          })
-          for (;e <= this.yVal.length; e++) {
-            this.xVal.push(e)
-          }
-        } else {
-          if (this.str) {
-            this.str.forEach((workout, id) => {
-              this.workoutStats(id, dataForType)
-            })
-
-            this.descStats(dataForType)
-          }
-        }
-        // Removes duplicates of exercises.
-        var optionValues = []
-        document.querySelectorAll('#exercise option').forEach(function (e) {
-          if (optionValues.indexOf(e.value) > -1) {
-            document.querySelector(e).remove()
-          } else {
-            optionValues.push(e.value)
-          }
-        })
-        // Sets the dataCollection value which the graph uses to display data. This has to be reset each time to update the graph
-        this.dataCollection = {
-          labels: this.xVal,
-          datasets: [
-            {
-              label: 'none',
-              backgroundColor: 'transparent',
-              borderColor: '#282828',
-              data: this.yVal
-            }
-          ]
-        }
-      },
+      // OTHER METHODS //
       day (date) {
         var weekday = new Array(7)
         weekday[0] = 'Sun'
@@ -903,32 +860,6 @@
           this.close_toolkit()
           this.toolkit_calcs.bmi.view = true
         }
-      },
-      block_notes_function () {
-        // Set block_notes to true
-        this.block_notes = true
-
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          // If box is open
-          if (self.block_notes) {
-            if (!document.getElementById('block_notes').contains(e.target)) {
-              // Update the workout
-              self.update_programme()
-              window.removeEventListener('click', click)
-              self.block_notes = false
-            }
-          }
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
       },
       workout_notes_function (id) {
         // Set workout_notes to id of workout
