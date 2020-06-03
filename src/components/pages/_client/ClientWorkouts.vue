@@ -91,7 +91,7 @@
   /* Workouts */
   .container--workouts {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
+    grid-template-columns: repeat(3, 300px);
     grid-gap: 2rem
   }
   .wrapper--workout {
