@@ -570,7 +570,9 @@
       showToolkit () {
         this.$modal.show('toolkit')
       },
+
       // CHART METHODS //
+      
       fillData () {
         this.dataCollection = {
           labels: this.xLabel,
@@ -601,6 +603,7 @@
           }
         }
       },
+      // This is called at the start and after @change. It scans the current values selected and fills the chart.
       selection () {
         this.showType = true
         this.yData.length = 0
@@ -653,7 +656,9 @@
         }
         this.fillData()
       },
+
       // INIT METHODS //
+
       scan () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
@@ -668,8 +673,10 @@
             this.dataPacketStore.push(this.chunkArray(pulledProtocols))
           }
         })
+        // Appends the options to the select
         this.dropdownInit()
       },
+      // Extracts the protocols and measures and stores it all into a temporary array
       pullProtocols (text) {
         var textNoHTML = text.replace(/<[^>]*>?/gm, '')
         var tempStore = []
@@ -686,6 +693,8 @@
         }
         return tempStore
       },
+      // Breaks down the temporary array into data packets of length 2
+      // Data Packet format: ['NAME', 'PROTOCOL/MEASURE/NUMBERS']
       chunkArray (myArray) {
         var index = 0
         var tempArray = []
@@ -695,6 +704,7 @@
         }
         return tempArray
       },
+      // Init the dropdown selection with validation
       dropdownInit () {
         var dropdownEl = document.getElementById('dataName')
         dropdownEl.innerHTML = '<option>Block Overview</option>';
@@ -735,7 +745,10 @@
         }
         return sentence.join(" ")
       },
+
       // REGEX METHODS //
+
+      // Extracts anything for Sets and Reps
       setsReps (protocol, dataForType) {
         var setStore = null
         var extractedSetsReps = null
@@ -772,6 +785,7 @@
         }
         return extractedSetsReps
       },
+      // Extracts anything for Loads
       load (protocol) {
         var tempLoadStore = []
         let m
@@ -796,6 +810,7 @@
         var sum = tempLoadStore.reduce((a,b) => a + b)
         return sum
       },
+      // Extracts any other measures
       otherMeasures (protocol) {
         var data = 0
         let m
@@ -809,6 +824,7 @@
         }
         return data
       },
+
       /*
       initializeForm () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
@@ -1103,6 +1119,7 @@
       }, */
 
       // OTHER METHODS //
+
       day (date) {
         var weekday = new Array(7)
         weekday[0] = 'Sun'
