@@ -146,7 +146,7 @@
     align-items: center
   }
   .workout_notes_header {
-    grid-template-columns: 1fr 1rem 1rem 1rem; /* For the 3 icons in this order, toolkit, info and delete */
+    grid-template-columns: 1fr 1rem 1rem; /* For the 3 icons in this order, toolkit, info and delete */
     grid-gap: .5rem
   }
   .workout_notes_header p, #block_notes_header p {
