@@ -25,9 +25,15 @@
     margin-bottom: 1rem;
     letter-spacing: .15rem
   }
-  .message--save {
+  .message {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    grid-gap: .4rem;
     margin: 2rem 0;
     font-size: .8rem
+  }
+  .message > p {
+    margin: auto
   }
   .toggleFloatingNav {
     display: grid;
@@ -306,9 +312,22 @@
       height: 350px
     }
   }
+
+  /* Icons */
   #trash_icon {
     height: 16px;
     width: 16px
+  }
+  #idle {
+    animation: fadeInfi 3s infinite alternate-reverse
+  }
+  @keyframes fadeInfi {
+    from {
+      opacity: .4
+    }
+    to {
+      opacity: 1
+    }
   }
 </style>
 
@@ -397,7 +416,10 @@
                 <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
                   <a v-show="showFloatingNav" href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
                 </transition>
-                <p class="message--save"><b></b>{{msg}}</p>
+                <div class="message">
+                  <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)"/>
+                  <p>{{msg}}</p>
+                </div>
               </div> <!-- floating_nav -->
             </div>
           </div> <!-- top_grid -->
@@ -623,7 +645,8 @@
         options: null,
         yData: [],
         xLabel: [],
-        msg: 'Idle'
+        msg: 'Idle',
+        msgIcon: 'Idle.svg'
       }
     },
     created () {
@@ -653,7 +676,7 @@
         var self = this
         self.update_workout(id)
         this.scan()
-        setTimeout(() => { this.msg = 'Idle' }, 4000);
+        setTimeout(() => { this.msg = 'Idle', this.msgIcon = 'Idle.svg' }, 4000);
       },
 
       // CHART METHODS //
@@ -1461,6 +1484,7 @@
         }
         try {
           // eslint-disable-next-line
+          this.msgIcon = 'Cog.svg'
           this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
@@ -1468,6 +1492,7 @@
               'notes': workoutsNotes
             }
           )
+          this.msgIcon = 'Done.svg'
           this.msg = 'Saved'
         } catch (e) {
           console.log(e.toString())
