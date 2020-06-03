@@ -50,6 +50,7 @@
     position: fixed;
     right: 5rem;
     top: 5rem;
+    width: 200px;
     display: grid;
     justify-items: right;
     text-align: right;
