@@ -46,6 +46,7 @@
 
   /* Floating Nav */
   .floating_nav {
+    z-index: 1;
     position: fixed;
     right: 5rem;
     top: 5rem;
@@ -54,7 +55,6 @@
     text-align: right;
     border-right: 2px solid #282828;
     padding: 0 .5rem;
-    border-radius: 10px 0 0 10px;
     background-color: white
   }
   .floating_nav a {

@@ -89,6 +89,10 @@
   }
 
   /* Workouts */
+  .message--save {
+    font-weight: bold;
+    margin: auto 1rem
+  }
   .container--workouts {
     display: grid;
     grid-template-columns: repeat(3, 300px);
@@ -383,6 +387,7 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy()"/>
+                  <p class="message--save">{{msg}}</p>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
@@ -398,8 +403,7 @@
                       </p>
                       <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
                       <div class="bottom-bar">
-                        <button v-show="editButton" class="button" @click="editWorkout()">Edit</button>
-                        <button v-show="!editButton" class="button" @click="updateWorkoutNotes(workout.id)">Save</button>
+                        <button class="button" @click="updateWorkoutNotes(workout.id)">Save</button>
                       </div>
                       <!-- <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
                         <span><b>{{workout.name}}</b></span>
@@ -575,7 +579,6 @@
         },
         delete: false,
         str: null,
-        editButton: true,
         showType: true,
         dataPacketStore: [],
         regexExtract: /(?<=\[)(.*?)\s*:\s*(.*?)(?=\])/gi,
@@ -586,6 +589,7 @@
         options: null,
         yData: [],
         xLabel: [],
+        msg: ''
       }
     },
     created () {
@@ -594,7 +598,6 @@
     async mounted () {
       await this.scan()
       this.selection()
-      this.fillData()
     },
     methods: {
       showCopy () {
@@ -603,14 +606,12 @@
       showToolkit () {
         this.$modal.show('toolkit')
       },
-      editWorkout (id) {
-        this.editButton = false
-      },
       updateWorkoutNotes (id) {
         this.workout_notes = id
         var self = this
         self.update_workout(id)
-        this.editButton = true
+        this.scan()
+        setTimeout(() => { this.msg = '' }, 4000);
       },
 
       // CHART METHODS //
@@ -702,6 +703,7 @@
       // INIT METHODS //
 
       scan () {
+        this.dataPacketStore.length = 0
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
@@ -717,6 +719,7 @@
         })
         // Appends the options to the select
         this.dropdownInit()
+        this.selection()
       },
       // Extracts the protocols and measures and stores it all into a temporary array
       pullProtocols (text) {
@@ -1416,14 +1419,14 @@
         }
         try {
           // eslint-disable-next-line
-          console.log('posting...')
+          this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'notes': workoutsNotes
             }
           )
-          console.log('success')
+          this.msg = 'Saved'
         } catch (e) {
           console.log(e.toString())
         }
