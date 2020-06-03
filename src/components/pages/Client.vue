@@ -115,6 +115,17 @@
     color: #282828;
     padding: .6rem .8rem
   }
+
+  /* Old Style w/o Modal
+  .client_notes--header {
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+    color: #282828;
+    padding: 0 .5rem;
+    height: 100%;
+    display: grid;
+    align-items: center
+  } */
   .client_notes--header p {
     margin: 0;
     font-weight: bold
@@ -196,6 +207,7 @@
       </form>
       <div class="floating_nav">
         <a href="javascript:void(0)" @click="showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
+        <!-- <a href="javascript:void(0)" v-on:click="client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a> -->
         <div v-for="(clients, index) in $parent.posts" :key="index">
           <div class="archive-client" v-if="clients.client_id == $route.params.client_id">
             <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p>Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
@@ -203,6 +215,14 @@
         </div>
       </div>
     </div>
+    <!--
+    <div v-show="client_notes" class="client_notes">
+      <div class="client_notes--header">
+        <p>Client Information</p>
+      </div>
+      <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill" :config="quillSettings"/>
+    </div> -->
+    <!-- Router View for Client Pages -->
     <router-view :key="$route.fullPath" :quillSettings="quillSettings"></router-view>
   </div>
 </template>
