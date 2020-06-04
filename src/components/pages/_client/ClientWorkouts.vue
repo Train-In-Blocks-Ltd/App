@@ -32,7 +32,7 @@
     margin: 2rem 0;
     font-size: .8rem
   }
-  .message > p {
+  .message > p, .message svg {
     margin: auto
   }
   .toggleFloatingNav {
@@ -78,7 +78,7 @@
     border-left: 2px solid #282828
   }
   .fc.fc-ltr.fc-unthemed {
-    width: 80%
+    width: 70%
   }
   .fc-event {
     font-size: .8rem
@@ -192,6 +192,11 @@
   .data-select {
     display: grid;
     grid-gap: 2rem
+  }
+  .data-select__options {
+    display: grid;
+    grid-gap: 1rem;
+    width: fit-content
   }
   #chart {
     width: 500px
@@ -447,7 +452,7 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :events="workoutDates" :eventColor="'#282828'"/>
+              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" :eventColor="'#282828'"/>
             </div>
             <div class="block-plan">
               <div class="block_table">
@@ -572,21 +577,21 @@
               <div class="container--content">
                 <div>
                   <div class="data-desc">
-                    <p>Total</p>
-                    <p>Average</p>
-                    <p>Maximum</p>
-                    <p>Minimum</p>
-                    <p>Change</p>
+                    <p id="p1"></p>
+                    <p id="p2"></p>
+                    <p id="p3"></p>
+                    <p id="p4"></p>
+                    <p id="p5"></p>
                   </div>
                   <div class="spacer"/>
                   <div class="data-select">
-                    <div>
-                      <label for="measure"><b>Data: </b></label><br>
+                    <div class="data-select__options">
+                      <label for="measure"><b>Data: </b></label>
                       <select @change="selection()" id="dataName" name="measure">
                       </select>
                     </div>
-                    <div v-show="showType">
-                      <label for="measure-type"><b>Data type: </b></label><br>
+                    <div class="data-select__options" v-show="showType">
+                      <label for="measure-type"><b>Data type: </b></label>
                       <select @change="selection()" id="dataType" name="measure-type">
                         <option>Sets</option>
                         <option>Reps</option>
@@ -816,6 +821,7 @@
           this.xLabel.push(x)
         }
         this.fillData()
+        this.descStats(dataForType)
       },
 
       // INIT METHODS //
@@ -988,6 +994,25 @@
           })
         }
         return data
+      },
+      descStats(dataForType) {
+        var storeMax = 0, store = 0,
+            sum = this.yData.reduce((a,b) => a + b);
+
+        // Sets descriptive data with its corresponding info.
+        document.getElementById('p1').innerHTML = '<b>Total' + ' ' + dataForType + ':</b> ' + sum;
+        document.getElementById('p2').innerHTML = '<b>Average' + ' ' + dataForType + ':</b> ' + (sum / this.yData.length).toFixed(1);
+
+        this.yData.forEach((value) => {
+          storeMax = Math.max(storeMax, value)
+        })
+        document.getElementById('p3').innerHTML = '<b>Maximum' + ' ' + dataForType + ':</b> ' + storeMax;
+        store = storeMax
+        this.yData.forEach((value) => {
+          store = Math.min(store, value)
+        })
+        document.getElementById('p4').innerHTML = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store;
+        document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store)*100).toFixed(1) + '%';
       },
 
       // OTHER METHODS //
