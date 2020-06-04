@@ -81,7 +81,8 @@
   }
 
   /* Buttons */
-  .button {
+  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary {
+    text-transform: capitalize;
     text-align: center;
     border: 1px solid #282828;
     padding: .5rem 1rem;
@@ -91,7 +92,6 @@
     font-size: .8rem;
     letter-spacing: .1rem;
     font-weight: bold;
-    cursor: pointer;
     color: #282828;
     background-color: transparent;
     margin: 1rem 0 .5rem 0;
@@ -99,12 +99,13 @@
     transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
     will-change: transform
   }
-  .button:hover {
+  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover {
+    cursor: pointer;
     background-color: #282828;
     color: white;
     text-decoration: none
   }
-  .button:active {
+  .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active {
     transform: scale(.9)
   }
   .delete:hover {

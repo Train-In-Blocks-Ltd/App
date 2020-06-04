@@ -56,6 +56,9 @@
   .toggleFloatingNav:active {
     transform: scale(.8)
   }
+  .section-title {
+    margin: 0 0 2rem 0
+  }
 
   /* Block Grid */
   .block_grid {
@@ -441,11 +444,11 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <h3>Overview</h3>
               <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :events="workoutDates"/>
             </div>
             <div class="block-plan">
               <div class="block_table">
+                <h3 class="section-title">Microcycles</h3>
                 <div class="block_table--container">
                   <p>{{programme.name}}</p>
                   <div class="block_table--container--block_duration_container">
@@ -561,7 +564,7 @@
             </div>
             <div class="graph">
               <div>
-                <h3>Statistics</h3>
+                <h3 class="section-title">Statistics</h3>
               </div>
               <div class="container--content">
                 <div>
