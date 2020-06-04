@@ -576,13 +576,14 @@
               </div>
               <div class="container--content">
                 <div>
-                  <div class="data-desc">
+                  <div v-show="showType" class="data-desc">
                     <p id="p1"></p>
                     <p id="p2"></p>
                     <p id="p3"></p>
                     <p id="p4"></p>
                     <p id="p5"></p>
                   </div>
+                  <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
                   <div class="spacer"/>
                   <div class="data-select">
                     <div class="data-select__options">
@@ -762,8 +763,7 @@
           scales: {
             yAxes: [{
               ticks: {
-                stepSize: 1,
-                suggestedMin: 0
+                beginAtZero: false
               }
             }]
           }
@@ -820,8 +820,8 @@
         for (; x <= this.yData.length; x++) {
           this.xLabel.push(x)
         }
-        this.fillData()
         this.descStats(dataForType)
+        this.fillData()
       },
 
       // INIT METHODS //
@@ -997,22 +997,23 @@
       },
       descStats(dataForType) {
         var storeMax = 0, store = 0,
-            sum = this.yData.reduce((a,b) => a + b);
+            sum = this.yData.reduce((a,b) => a + b)
 
         // Sets descriptive data with its corresponding info.
-        document.getElementById('p1').innerHTML = '<b>Total' + ' ' + dataForType + ':</b> ' + sum;
-        document.getElementById('p2').innerHTML = '<b>Average' + ' ' + dataForType + ':</b> ' + (sum / this.yData.length).toFixed(1);
+        document.getElementById('p1').innerHTML = '<b>Total' + ' ' + dataForType + ':</b> ' + sum
+        document.getElementById('p2').innerHTML = '<b>Average' + ' ' + dataForType + ':</b> ' + (sum / this.yData.length).toFixed(1)
 
         this.yData.forEach((value) => {
           storeMax = Math.max(storeMax, value)
         })
-        document.getElementById('p3').innerHTML = '<b>Maximum' + ' ' + dataForType + ':</b> ' + storeMax;
+        document.getElementById('p3').innerHTML = '<b>Maximum' + ' ' + dataForType + ':</b> ' + storeMax
         store = storeMax
         this.yData.forEach((value) => {
           store = Math.min(store, value)
         })
-        document.getElementById('p4').innerHTML = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store;
-        document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store)*100).toFixed(1) + '%';
+        document.getElementById('p4').innerHTML = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store
+        document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store)*100).toFixed(1) + '%'
+        var buffer = parseFloat((storeMax * 0.2).toFixed(0))
       },
 
       // OTHER METHODS //
