@@ -39,7 +39,7 @@
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
       <div>
-        <label for="client-search"><b>Find a client</b></label>
+        <label for="client-search"><b>Find</b></label>
         <input name="client-search" type="search" rel="search" placeholder="Client Name" class="search" autocomplete="name" v-model="search"/>
       </div>
       <div>

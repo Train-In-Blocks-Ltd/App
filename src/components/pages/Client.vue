@@ -97,35 +97,11 @@
   }
 
   /* Client Notes */
-  .client_notes {
-    position: fixed;
-    right: 20rem;
-    background-color: white;
-    z-index: 9;
-    text-align: left;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    display: grid;
-    grid-template-rows: 40px auto;
-    align-items: center
-  }
   .client_notes--header {
     box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: #282828;
     padding: .6rem .8rem
   }
-
-  /* Old Style w/o Modal
-  .client_notes--header {
-    z-index: 10;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
-    color: #282828;
-    padding: 0 .5rem;
-    height: 100%;
-    display: grid;
-    align-items: center
-  } */
   .client_notes--header p {
     margin: 0;
     font-weight: bold
@@ -149,9 +125,6 @@
     .floating_nav p {
       display: none
     }
-    .client_notes {
-      right: 10rem
-    }
   }
   @media (max-width: 768px) {
     #client .client_info input:not([type='submit']):hover {
@@ -165,11 +138,6 @@
     #client {
       margin: 5rem 2rem
     }
-    .client_notes {
-      right: 6rem;
-      max-width: 250px;
-      height: 400px
-    }
     .ql-editor {
       height: 310px
     }
@@ -177,11 +145,6 @@
   @media (max-width: 360px) {
     .floating_nav {
       right: 2rem
-    }
-    .client_notes {
-      right: 5rem;
-      max-width: 230px;
-      height: 350px
     }
     .ql-editor {
       height: 260px
@@ -191,7 +154,7 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
-    <modal name="client-notes" height="auto" width="400px" :adaptive="true">
+    <modal name="client-notes" height="auto" width="400px" :adaptive="true" :before-close="updateClientNotes()">
       <div class="client_notes--header">
         <p>Client Information</p>
       </div>
@@ -207,7 +170,6 @@
       </form>
       <div class="floating_nav">
         <a href="javascript:void(0)" @click="showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
-        <!-- <a href="javascript:void(0)" v-on:click="client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a> -->
         <div v-for="(clients, index) in $parent.posts" :key="index">
           <div class="archive-client" v-if="clients.client_id == $route.params.client_id">
             <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p>Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
@@ -232,7 +194,6 @@
       return {
         no_programmes: false,
         loading_programmes: true,
-        client_notes: false,
         blocks: false,
         no_workouts: false,
         loading_workouts: true
@@ -247,30 +208,9 @@
       showClientNotes () {
         this.$modal.show('client-notes')
       },
-      client_notes_function () {
-        this.client_notes = !this.client_notes
-
-        // Set vue self
+      updateClientNotes () {
         var self = this
-
-        function click (e) {
-          // If box is open
-          if (self.client_notes) {
-            if (!document.querySelector('.client_notes').contains(e.target)) {
-              // Update the workout
-              self.update_client()
-              window.removeEventListener('click', click)
-              self.client_notes = false
-            }
-          }
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
+        self.update_client()
       },
       created () {
         var x

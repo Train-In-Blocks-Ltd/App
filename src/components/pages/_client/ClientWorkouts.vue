@@ -236,11 +236,6 @@
     margin: .4rem 0
   }
 
-  @media (max-width: 992px) {
-    .workout_notes, #block_notes {
-      right: 10rem
-    }
-  }
   @media (max-width: 768px) {
     #blocks .block_info input.block_info--name.title {
       font-size: 1.2rem
@@ -259,20 +254,6 @@
       opacity: 1
     }
   }
-  @media (max-width: 576px) {
-    .workout_notes, #block_notes {
-      right: 6rem;
-      max-width: 250px;
-      height: 400px
-    }
-  }
-  @media (max-width: 360px) {
-    .workout_notes, #block_notes {
-      right: 5rem;
-      max-width: 230px;
-      height: 350px
-    }
-  }
 
   /* Icons */
   #trash_icon {
@@ -282,6 +263,7 @@
   #idle {
     animation: fadeInfi 2s infinite alternate-reverse
   }
+
   @keyframes fadeInfi {
     from {
       opacity: .4
@@ -371,7 +353,6 @@
               <div class="floating_nav">
                 <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
-                <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
@@ -511,8 +492,6 @@
         creating: false,
         response: '',
         edit1: false,
-        workout_notes: false,
-        block_notes: false,
         toolkit: false,
         toolkit_calcs: {
           mhr_tanaka: {
@@ -592,7 +571,6 @@
         }, 4000)
       },
       updateWorkoutNotes (id) {
-        this.workout_notes = id
         var self = this
         self.update_workout(id)
         this.scan()
@@ -965,59 +943,6 @@
           this.toolkit_calcs.bmi.view = true
         }
       },
-      block_notes_function () {
-        // Set block_notes to true
-        this.block_notes = true
-
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          // If box is open
-          if (self.block_notes) {
-            if (!document.getElementById('block_notes').contains(e.target)) {
-              // Update the workout
-              self.update_programme()
-              window.removeEventListener('click', click)
-              self.block_notes = false
-            }
-          }
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
-      },
-      workout_notes_function (id) {
-        // Set workout_notes to id of workout
-        this.workout_notes = id
-
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          if (self.delete === false) {
-            if (!document.getElementById('workout_notes_' + id).contains(e.target)) {
-              // Update the workout
-              self.update_workout(id)
-            }
-          } else {
-            self.delete = false
-          }
-          window.removeEventListener('click', click)
-          self.block_notes = false
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
-      },
       programme_duration (duration) {
         // Turn the duration of the programme into an array to render the boxes in the table
         const arr = []
@@ -1113,9 +1038,6 @@
         this.response = ''
       },
       async update_workout (id) {
-        // Close the box
-        this.workout_notes = !this.workout_notes
-
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
@@ -1218,7 +1140,6 @@
 
             this.$parent.force_get_workouts()
             this.delete = true
-            this.workout_notes_function(id)
             this.scan()
           } catch (e) {
             console.error(`${e}`)

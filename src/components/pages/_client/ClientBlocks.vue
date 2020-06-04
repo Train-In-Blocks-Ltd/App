@@ -23,12 +23,12 @@
     padding: 1.5rem;
     border: 1px solid #282828;
     display: block;
-    transition: all .1s cubic-bezier(.165, .84, .44, 1)
+    transition: background-color .4s, color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .block_container--link:hover {
     text-decoration: none;
-    border: 2px solid #282828;
-    padding: calc(1.5rem - 1px)
+    background-color: #282828;
+    color: white
   }
   .block_container--link:active {
     transform: scale(.95);
