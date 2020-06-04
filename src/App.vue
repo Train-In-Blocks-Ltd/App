@@ -113,7 +113,7 @@
   }
 
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]) {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
     border: 1px solid #282828;
     border-radius: 0;
     padding: .4rem;
@@ -457,6 +457,7 @@
   .client_link {
     padding: 1rem 0;
     width: 95%;
+    line-height: 1.4;
     overflow-x: auto;
     transition: all .1s cubic-bezier(.165, .84, .44, 1)
   }
@@ -464,9 +465,25 @@
     transform: scale(.98)
   }
   .search {
+    border: none;
+    outline-width: 0;
     width: 95%;
-    margin: .6rem 0 1rem 0;
-    font-size: 1rem
+    font-size: 1.6rem;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    border-bottom: 2px solid #282828;
+    padding: .6rem 0;
+    margin: 1rem 0;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .search:hover {
+    border-bottom: 2px solid #28282880;
+    width: 100%
+  }
+  .search:focus {
+    border-bottom: 2px solid #282828;
+    width: 100%;
+    font-size: 2rem
   }
 
   /* Responsive Design */

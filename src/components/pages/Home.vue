@@ -9,6 +9,8 @@
     margin-top: 0
   }
   .home--container {
+    display: grid;
+    grid-template-rows: .4fr 1fr;
     margin-top: 2rem
   }
 
@@ -31,22 +33,25 @@
 <template>
   <div id="home">
     <h1>Your Clients</h1>
-    <p id="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</p>
+    <!-- <p id="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</p> -->
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
-      <label><b>Find a client:</b>
-        <input type="search" rel="search" placeholder="Type away..." class="search" autocomplete="name" v-model="search"/>
-      </label>
-      <div v-for="(clients, index) in $parent.posts"
-        :key="index">
-        <!-- Perform case insensitive search -->
-        <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
-          <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
-            <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
-          </router-link>
+      <div>
+        <label for="client-search"><b>Find a client</b></label>
+        <input name="client-search" type="search" rel="search" placeholder="Client Name" class="search" autocomplete="name" v-model="search"/>
+      </div>
+      <div>
+        <div v-for="(clients, index) in $parent.posts"
+          :key="index">
+          <!-- Perform case insensitive search -->
+          <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
+            <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
+              <p><b>{{clients.name}}</b><br>{{clients.email}}<br>{{clients.number}}</p>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
