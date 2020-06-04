@@ -68,6 +68,16 @@
     padding-left: 5rem
   }
 
+  /* Calendar */
+  .calendar {
+    display: grid;
+    padding-left: 5rem;
+    border-left: 2px solid #282828
+  }
+  .fc.fc-ltr.fc-unthemed {
+    width: 60%
+  }
+
   /* Block Table */
   .block_table {
     height: fit-content;
@@ -430,6 +440,10 @@
             </div>
           </div> <!-- top_grid -->
           <div class="block_grid">
+            <div class="calendar">
+              <h3>Overview</h3>
+              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :events="workoutDates"/>
+            </div>
             <div class="block-plan">
               <div class="block_table">
                 <div class="block_table--container">
@@ -607,11 +621,17 @@
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
 
+  import FullCalendar from '@fullcalendar/vue'
+  import dayGridPlugin from '@fullcalendar/daygrid'
+  import '@fullcalendar/core/main.css';
+  import '@fullcalendar/daygrid/main.css';
+
   export default {
     components: {
       Loader,
       LineChart,
-      InlineSvg
+      InlineSvg,
+      FullCalendar
     },
     props: ['quillSettings'],
     data: function () {
@@ -662,6 +682,8 @@
         options: null,
         yData: [],
         xLabel: [],
+        calendarPlugins: [ dayGridPlugin ],
+        workoutDates: [],
         msg: 'Idle',
         msgIcon: 'Idle.svg'
       }
@@ -802,6 +824,7 @@
         })
         // Pulls and creates nested arrays. dataPacketStore > workoutDataPackets > exerciseDataPackets
         this.str.forEach((object) => {
+          this.workoutDates.push({title: object.name, date: object.date})
           if (object.notes !== null) {
             var pulledProtocols = this.pullProtocols(object.notes)
             this.dataPacketStore.push(this.chunkArray(pulledProtocols))
