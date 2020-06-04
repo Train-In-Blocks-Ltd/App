@@ -78,7 +78,10 @@
     border-left: 2px solid #282828
   }
   .fc.fc-ltr.fc-unthemed {
-    width: 60%
+    width: 80%
+  }
+  .fc-event {
+    font-size: .8rem
   }
 
   /* Block Table */
@@ -444,7 +447,7 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :events="workoutDates"/>
+              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :events="workoutDates" :eventColor="'#282828'"/>
             </div>
             <div class="block-plan">
               <div class="block_table">
@@ -818,6 +821,7 @@
       // INIT METHODS //
 
       scan () {
+        this.workoutDates.length = 0
         this.dataPacketStore.length = 0
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
@@ -1288,6 +1292,7 @@
             date: '',
             notes: ''
           }
+          this.scan()
         } catch (e) {
           console.error(`${e}`)
         }
@@ -1324,6 +1329,7 @@
             this.$parent.force_get_workouts()
             this.delete = true
             this.workout_notes_function(id)
+            this.scan()
           } catch (e) {
             console.error(`${e}`)
           }
