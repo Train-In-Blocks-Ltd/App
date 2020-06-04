@@ -69,7 +69,7 @@
 <template>
     <div>
       <div>
-        <div class="spacer"></div>
+        <div class="spacer"/>
         <h2>Blocks</h2>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>

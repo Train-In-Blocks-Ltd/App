@@ -169,10 +169,13 @@
     border-left: 2px solid #282828;
     padding-left: 5rem
   }
+  .container--content {
+    display: grid;
+    grid-template-columns: 1fr 1fr
+  }
   .data-select {
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 3rem
+    display: grid;
+    grid-gap: 2rem
   }
   #chart {
     width: 500px
@@ -547,23 +550,33 @@
                 <h3>Statistics</h3>
               </div>
               <div class="container--content">
-                <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
-                <div class="data-select">
-                  <div>
-                    <label for="measure"><b>Data: </b></label><br>
-                    <select @change="selection()" id="dataName" name="measure">
-                    </select>
+                <div>
+                  <div class="data-desc">
+                    <p>Total</p>
+                    <p>Average</p>
+                    <p>Maximum</p>
+                    <p>Minimum</p>
+                    <p>Change</p>
                   </div>
-                  <div v-show="showType">
-                    <label for="measure-type"><b>Data type: </b></label><br>
-                    <select @change="selection()" id="dataType" name="measure-type">
-                      <option>Sets</option>
-                      <option>Reps</option>
-                      <option>Load</option>
-                      <option>Volume</option>
-                    </select>
+                  <div class="spacer"/>
+                  <div class="data-select">
+                    <div>
+                      <label for="measure"><b>Data: </b></label><br>
+                      <select @change="selection()" id="dataName" name="measure">
+                      </select>
+                    </div>
+                    <div v-show="showType">
+                      <label for="measure-type"><b>Data type: </b></label><br>
+                      <select @change="selection()" id="dataType" name="measure-type">
+                        <option>Sets</option>
+                        <option>Reps</option>
+                        <option>Load</option>
+                        <option>Volume</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
+                <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
               </div>
               <!--
               <div v-if="block_notes" id="block_notes">
