@@ -1586,16 +1586,11 @@
         if (confirm('Are you sure you want to delete this workout?')) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
-            this.msgIcon = 'Cog.svg'
-            this.msg = 'Deleting...'
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             this.$parent.force_get_workouts()
             this.delete = true
             this.workout_notes_function(id)
-            this.msgIcon = 'Done.svg'
-            this.msg = 'Deleted'
-            setTimeout(() => { this.msg = 'Idle', this.msgIcon = 'Idle.svg' }, 4000);
           } catch (e) {
             console.error(`${e}`)
           }
