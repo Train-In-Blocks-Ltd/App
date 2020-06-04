@@ -178,7 +178,7 @@
     width: 500px
   }
 
-  /* Quill Notes */
+  /* Quill Notes Not
   .workout_notes, #block_notes {
     position: fixed;
     right: 20rem;
@@ -202,7 +202,7 @@
     align-items: center
   }
   .workout_notes_header {
-    grid-template-columns: 1fr 1rem 1rem; /* For the 3 icons in this order, toolkit, info and delete */
+    grid-template-columns: 1fr 1rem 1rem; For the 3 icons in this order, toolkit, info and delete
     grid-gap: .5rem
   }
   .workout_notes_header p, #block_notes_header p {
@@ -216,8 +216,9 @@
   }
 
   /* Add Workout Form */
-  .add_workout_container {
-    padding-top: 1rem
+  #button--new-workout {
+    margin: 0;
+    width: 100%
   }
   .add_workout_container h3 {
     margin-top: 0
@@ -323,7 +324,7 @@
     width: 16px
   }
   #idle {
-    animation: fadeInfi 3s infinite alternate-reverse
+    animation: fadeInfi 2s infinite alternate-reverse
   }
   @keyframes fadeInfi {
     from {
@@ -393,6 +394,12 @@
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
+        <modal name="blockNotes" height="auto" :draggable="true" :adaptive="true" :before-close="updateBlockNotes()">
+          <div>
+            <p><b>Block Notes</b></p>
+          </div>
+          <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
+        </modal>
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
@@ -409,9 +416,9 @@
                 <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
                 <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
-                <a v-show="showFloatingNav" href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
-                <a v-show="showFloatingNav" href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
                 <div class="message">
                   <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)"/>
                   <p>{{msg}}</p>
@@ -515,21 +522,22 @@
                         </div>
                       </div>-->
                     </div>
-                  </div>
-                  <!-- Add a new workout -->
-                  <button v-if="!creating" class="button" v-on:click="creation()">New workout</button>
-                  <p class="response" v-if="!creating">{{response}}</p>
-                  <div v-if="creating" class="add_workout_container">
-                    <h3>Add new workout</h3>
-                    <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
-                      <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
-                      <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
-                      <div class="form_buttons">
-                          <input type="submit" class="button" value="Save" />
-                          <button class="button" v-on:click="close()">Close</button>
-                          <Loader></Loader>
+                    <div>
+                      <button v-if="!creating" id="button--new-workout" class="button" v-on:click="creation()">New workout</button>
+                      <p class="response" v-if="!creating">{{response}}</p>
+                      <div v-if="creating" class="add_workout_container">
+                        <h3>New Workout</h3>
+                        <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
+                          <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
+                          <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
+                          <div class="form_buttons">
+                              <input type="submit" class="button" value="Save" />
+                              <button class="button" v-on:click="close()">Close</button>
+                              <Loader></Loader>
+                          </div>
+                        </form>
                       </div>
-                    </form>
+                    </div><!-- Add a new workout -->
                   </div>
                 </div>
               </div><!-- workouts -->
@@ -557,13 +565,13 @@
                   </div>
                 </div>
               </div>
+              <!--
               <div v-if="block_notes" id="block_notes">
                 <div id="block_notes_header">
                   <p><b>Block Notes</b></p>
                 </div>
                 <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
               </div>
-              <!--
               <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
               <select id="exercise" v-on:change="fillData()"></select>
               <select @change="selection()" id="dataType">
@@ -664,8 +672,16 @@
       showCopy () {
         this.$modal.show('copy')
       },
+      showBlockNotes () {
+        this.$modal.show('blockNotes')
+      },
       showToolkit () {
         this.$modal.show('toolkit')
+      },
+      updateBlockNotes () {
+        var self = this
+        self.update_programme()
+        setTimeout(() => { this.msg = 'Idle', this.msgIcon = 'Idle.svg' }, 4000);
       },
       updateWorkoutNotes (id) {
         this.workout_notes = id
@@ -1557,11 +1573,16 @@
         if (confirm('Are you sure you want to delete this workout?')) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            this.msgIcon = 'Cog.svg'
+            this.msg = 'Deleting...'
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             this.$parent.force_get_workouts()
             this.delete = true
             this.workout_notes_function(id)
+            this.msgIcon = 'Done.svg'
+            this.msg = 'Deleted'
+            setTimeout(() => { this.msg = 'Idle', this.msgIcon = 'Idle.svg' }, 4000);
           } catch (e) {
             console.error(`${e}`)
           }
