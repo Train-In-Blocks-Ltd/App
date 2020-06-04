@@ -163,23 +163,6 @@
     margin: 0
   }
 
-  /* .workouts--workout {
-    display: block;
-    border-bottom: 1px solid #28282840;
-    padding: .5rem 0;
-    cursor: pointer;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .workouts--workout:hover {
-    border-bottom: 1px solid #282828
-  }
-  .workouts--workout:active {
-    transform: scale(.9)
-  } */
-
   /* Graph */
   .graph {
     border-left: 2px solid #282828;
@@ -202,43 +185,6 @@
     width: 500px
   }
 
-  /* Quill Notes Not
-  .workout_notes, #block_notes {
-    position: fixed;
-    right: 20rem;
-    top: 5rem;
-    z-index: 9;
-    text-align: left;
-    width: 400px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: white;
-    display: grid;
-    grid-template-rows: 40px auto;
-    align-items: center
-  }
-  .workout_notes_header, #block_notes_header {
-    z-index: 10;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
-    color: #282828;
-    padding: 0 .5rem;
-    height: 100%;
-    display: grid;
-    align-items: center
-  }
-  .workout_notes_header {
-    grid-template-columns: 1fr 1rem 1rem; For the 3 icons in this order, toolkit, info and delete
-    grid-gap: .5rem
-  }
-  .workout_notes_header p, #block_notes_header p {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    margin: 0
-  }
-  .workout_notes_header svg {
-    cursor: pointer
-  }
-
   /* Add Workout Form */
   #button--new-workout {
     margin: 0;
@@ -255,21 +201,7 @@
     grid-gap: .5rem
   }
 
-  /* Workout Toolkit Old
-  .workout_toolkit {
-    display: grid;
-    grid-gap: 1rem;
-    position: fixed;
-    right: calc(21rem + 400px);
-    top: 5rem;
-    z-index: 9;
-    text-align: left;
-    width: 400px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: white;
-    align-items: center;
-    padding: 1rem
-  } */
+  /* Toolkit */
   .modal--toolkit {
     padding: 1rem
   }
@@ -490,65 +422,6 @@
                         <button id="button-move" class="button">Move</button>
                         <button id="button-delete" class="button delete" @click="delete_workout(workout.id)">Delete</button>
                       </div>
-                      <!-- <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
-                        <span><b>{{workout.name}}</b></span>
-                        -
-                        <span>{{day(workout.date)}}</span>
-                        -
-                        <span>{{workout.date}}</span>
-                      </p>
-                      <div v-show="workout_notes == workout.id" class="workout_notes" :id="'workout_notes_' + workout.id">
-                        <div :id="'workout_notes_' + workout.id + '_header'" class="workout_notes_header">
-                          <p>
-                            <span><b>{{workout.name}}</b></span>
-                            -
-                            <span>{{day(workout.date)}}</span>
-                            -
-                            <span>{{workout.date}}</span>
-                          </p>
-                          <inline-svg :src="require('../../../assets/svg/Toolkit.svg')" v-on:click="open_toolkit(workout.id)" title="Workout Toolkit"/>
-                          <inline-svg :src="require('../../../assets/svg/Info.svg')" title="Info"/>
-                          <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)" id="trash_icon" title="Delete Workout"/>
-                        </div>
-                        <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
-                      </div> -->
-                      
-                      <!--
-                      <div v-show="toolkit == workout.id" class="workout_toolkit" :id="'workout_toolkit_' + workout.id">
-                        <select class="workout_toolkit--select" v-on:change="get_toolkit()">
-                          <option>Maximal Heart Rate (Tanaka)</option>
-                          <option>Maximal Heart Rate (Gellish)</option>
-                          <option>Heart Rate Training Zone (Karvonen)</option>
-                          <option>Heart Rate Reserve</option>
-                          <option>Body Mass Index</option>
-                        </select>
-                        <div class="workout_toolkit--content">
-                          <div v-if="toolkit_calcs.mhr_tanaka.view">
-                            <label for="tanaka_age">Age: </label><input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
-                            <p><b>MHR: </b>{{toolkit_calcs.mhr_tanaka.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.mhr_gellish.view">
-                            <label for="gellish_age">Age: </label><input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
-                            <p><b>MHR: </b>{{toolkit_calcs.mhr_gellish.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.hrtz.view">
-                            <label for="intensity">Intensity: </label><input type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
-                            <label for="mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
-                            <label for="rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
-                            <p><b>HR: </b>{{toolkit_calcs.hrtz.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.hrr.view">
-                            <label for="hrr_mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="hrr_mhr" name="hrr_mhr"/>
-                            <label for="hrr_rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="hrr_rhr" name="hrr_rhr"/>
-                            <p><b>HRR: </b>{{toolkit_calcs.hrr.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.bmi.view">
-                            <label for="height">Height: </label><input type="number" v-on:input="bmi_calc()" id="height" name="height"/>
-                            <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
-                            <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
-                          </div>
-                        </div>
-                      </div>-->
                     </div>
                     <div>
                       <button v-if="!creating" id="button--new-workout" class="button" v-on:click="creation()">New workout</button>
@@ -604,21 +477,6 @@
                 </div>
                 <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
               </div>
-              <!--
-              <div v-if="block_notes" id="block_notes">
-                <div id="block_notes_header">
-                  <p><b>Block Notes</b></p>
-                </div>
-                <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
-              </div>
-              <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
-              <select id="exercise" v-on:change="fillData()"></select>
-              <select @change="selection()" id="dataType">
-                <option>Sets</option>
-                <option>Reps</option>
-                <option>Load</option>
-                <option>Volume</option>
-              </select> -->
             </div>  <!-- notes -->
           </div> <!-- programme_grid -->
         </div>

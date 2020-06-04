@@ -215,14 +215,6 @@
         </div>
       </div>
     </div>
-    <!--
-    <div v-show="client_notes" class="client_notes">
-      <div class="client_notes--header">
-        <p>Client Information</p>
-      </div>
-      <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill" :config="quillSettings"/>
-    </div> -->
-    <!-- Router View for Client Pages -->
     <router-view :key="$route.fullPath" :quillSettings="quillSettings"></router-view>
   </div>
 </template>

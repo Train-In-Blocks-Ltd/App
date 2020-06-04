@@ -33,7 +33,6 @@
 <template>
   <div id="home">
     <h1>Your Clients</h1>
-    <!-- <p id="intro" v-if="this.$parent.claims"> Hi {{this.$parent.claims.name}}, {{this.msg}}</p> -->
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
@@ -49,7 +48,9 @@
           <!-- Perform case insensitive search -->
           <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
             <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
-              <p><b>{{clients.name}}</b><br>{{clients.email}}<br>{{clients.number}}</p>
+              <p><b>{{clients.name}}</b>
+              <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
+              <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
             </router-link>
           </div>
         </div>
@@ -77,10 +78,12 @@
   import axios from 'axios'
   import qs from 'qs'
   import Loader from '../components/Loader'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
     components: {
-      Loader
+      Loader,
+      InlineSvg
     },
     data: function () {
       return {
@@ -90,7 +93,7 @@
           name: '',
           email: '',
           number: '',
-          notes: '<p><strong>Age:</strong></p><p><strong>Blood pressure:</strong></p><p><strong>Height:</strong></p><p><strong>BMI:</strong></p><p><strong>Body fat:</strong></p><p><strong>Muscle Mass</strong></p><p><strong>Hydration:</strong></p><p><br></p><p><strong>Goals:</strong></p><p><br></p><p><strong>Lifestyle:</strong></p><p><br></p><p><strong>Barriers to exercise:</strong></p><p><br></p><p><strong>Motivation:</strong></p><p><br></p><p><strong>Preferences:</strong></p><p><br></p>'
+          notes: ''
         },
         search: '',
         msg: ''
@@ -98,17 +101,8 @@
     },
     created () {
       this.$parent.setup()
-      this.welcomeMsg()
     },
     methods: {
-      welcomeMsg () {
-        var arr = [
-          'let\'s get programming!',
-          'stay motivated!',
-          'quick one today?'
-        ]
-        this.msg = arr[Math.floor(Math.random() * 3)]
-      },
       creation () {
         this.creating = true
       },

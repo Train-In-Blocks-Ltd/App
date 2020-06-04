@@ -464,6 +464,17 @@
   .client_link:active {
     transform: scale(.98)
   }
+  .client_link svg {
+    width: 20px
+  }
+  .client_link__details {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    grid-gap: 1rem
+  }
+  .client_link__details p {
+    margin: auto 0
+  }
   .search {
     border: none;
     outline-width: 0;
