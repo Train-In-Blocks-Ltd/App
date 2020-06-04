@@ -493,8 +493,8 @@
 
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
-  import '@fullcalendar/core/main.css';
-  import '@fullcalendar/daygrid/main.css';
+  import '@fullcalendar/core/main.css'
+  import '@fullcalendar/daygrid/main.css'
 
   export default {
     components: {
@@ -586,14 +586,20 @@
       updateBlockNotes () {
         var self = this
         self.update_programme()
-        setTimeout(() => { this.msg = 'Idle', this.msgIcon = 'Idle.svg' }, 4000);
+        setTimeout(() => {
+          this.msg = 'Idle'
+          this.msgIcon = 'Idle.svg'
+        }, 4000)
       },
       updateWorkoutNotes (id) {
         this.workout_notes = id
         var self = this
         self.update_workout(id)
         this.scan()
-        setTimeout(() => { this.msg = 'Idle', this.msgIcon = 'Idle.svg' }, 4000);
+        setTimeout(() => {
+          this.msg = 'Idle'
+          this.msgIcon = 'Idle.svg'
+        }, 4000)
       },
 
       // CHART METHODS //
@@ -608,8 +614,8 @@
               backgroundColor: 'transparent',
               data: this.yData
             }
-          ],
-        },
+          ]
+        }
         this.options = {
           legend: {
             display: false
@@ -639,8 +645,8 @@
         this.dataPacketStore.forEach((item) => {
           overviewStore.length = 0
           item.forEach((exerciseDataPacket) => {
-            var regex = RegExp(dataForName,'gi')
-            var protocol = exerciseDataPacket[1].replace(/\s/g,'')
+            var regex = RegExp(dataForName, 'gi')
+            var protocol = exerciseDataPacket[1].replace(/\s/g, '')
             if (regex.test(exerciseDataPacket[0]) === true) {
               if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[1].includes('at') === true) {
                 this.yData.push(this.setsReps(protocol, dataForType))
@@ -671,7 +677,7 @@
             }
           })
           if (dataForName === 'Block Overview' && overviewStore.length !== 0) {
-            this.yData.push(overviewStore.reduce((a,b) => a + b))
+            this.yData.push(overviewStore.reduce((a, b) => a + b))
           }
         })
         let x = 1
@@ -736,12 +742,12 @@
       // Init the dropdown selection with validation
       dropdownInit () {
         var dropdownEl = document.getElementById('dataName')
-        dropdownEl.innerHTML = '<option>Block Overview</option>';
+        dropdownEl.innerHTML = '<option>Block Overview</option>'
         var tempItemStore = []
         var tempItemStoreLate = []
         this.dataPacketStore.forEach((item) => {
           item.forEach((exerciseDataPacket) => {
-            var regex = RegExp(exerciseDataPacket[0],'gi')
+            var regex = RegExp(exerciseDataPacket[0], 'gi')
             var itemCased = this.properCase(exerciseDataPacket[0])
             if (regex.test(tempItemStore) !== true && exerciseDataPacket[1].includes('at') === true) {
               tempItemStore.push(itemCased)
@@ -768,11 +774,11 @@
       },
       // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
       properCase (string) {
-        var sentence = string.toLowerCase().split(" ");
-        for(var i = 0; i< sentence.length; i++){
-          sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+        var sentence = string.toLowerCase().split(' ')
+        for (var i = 0; i < sentence.length; i++) {
+          sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
         }
-        return sentence.join(" ")
+        return sentence.join(' ')
       },
 
       // REGEX METHODS //
@@ -785,7 +791,7 @@
         let m
         while ((m = this.regexSetsReps.exec(protocol)) !== null) {
           if (m.index === this.regexSetsReps.lastIndex) {
-            this.regexSetsReps.lastIndex++;
+            this.regexSetsReps.lastIndex++
           }
           m.forEach((match, groupIndex) => {
             if (groupIndex === 1) {
@@ -805,7 +811,7 @@
                     tempSetsRepsStore.push(parseInt(repsMatchExact))
                   })
                 }
-                extractedSetsReps = tempSetsRepsStore.reduce((a,b) => a + b)
+                extractedSetsReps = tempSetsRepsStore.reduce((a, b) => a + b)
               } else {
                 extractedSetsReps = parseInt(match) * parseInt(setStore)
               }
@@ -831,12 +837,12 @@
                 }
                 n.forEach((loadMatchExact) => {
                   tempLoadStore.push(parseFloat(loadMatchExact))
-                });
+                })
               }
             }
-          });
+          })
         }
-        var sum = tempLoadStore.reduce((a,b) => a + b)
+        var sum = tempLoadStore.reduce((a, b) => a + b)
         return sum
       },
       // Extracts any other measures
@@ -853,9 +859,10 @@
         }
         return data
       },
-      descStats(dataForType) {
-        var storeMax = 0, store = 0,
-            sum = this.yData.reduce((a,b) => a + b)
+      descStats (dataForType) {
+        var storeMax = 0
+        var store = 0
+        var sum = this.yData.reduce((a, b) => a + b)
 
         // Sets descriptive data with its corresponding info.
         document.getElementById('p1').innerHTML = '<b>Total' + ' ' + dataForType + ':</b> ' + sum
@@ -870,8 +877,7 @@
           store = Math.min(store, value)
         })
         document.getElementById('p4').innerHTML = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store
-        document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store)*100).toFixed(1) + '%'
-        var buffer = parseFloat((storeMax * 0.2).toFixed(0))
+        document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store) * 100).toFixed(1) + '%'
       },
 
       // OTHER METHODS //

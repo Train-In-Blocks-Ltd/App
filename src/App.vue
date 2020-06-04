@@ -666,8 +666,8 @@ export default {
           toolbar: [
               [{'header': 1}, {'header': 2}],
               ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
-              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-              [{ 'indent': '-1'}, { 'indent': '+1' }],
+              [{'list': 'ordered'}, {'list': 'bullet'}],
+              [{'indent': '-1'}, {'indent': '+1'}],
               ['link'],
               ['clean']
           ]
