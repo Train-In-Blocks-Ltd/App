@@ -58,7 +58,9 @@
       <div v-for="(clients, index) in $parent.archive_posts"
         :key="index" class="client_container archived">
         <div class="client_link" v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
-          <p><b>{{clients.name}}</b> - {{clients.email}} - {{clients.number}}</p>
+          <p><b>{{clients.name}}</b></p>
+          <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
+          <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
         </div>
         <div class="client_update">
           <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">

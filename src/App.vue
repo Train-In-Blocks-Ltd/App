@@ -597,6 +597,12 @@
       </div>
       <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
         <div class="account_nav--item">
+          <router-link to="/learn">
+            <inline-svg :src="require('./assets/svg/Learn.svg')" class="account_nav--item--icon"/>
+            Learn
+          </router-link>
+        </div>
+        <div class="account_nav--item">
           <router-link to="/archive">
             <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="account_nav--item--icon"/>
             Archive
