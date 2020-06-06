@@ -623,7 +623,9 @@
         this.dataPacketStore.forEach((item) => {
           overviewStore.length = 0
           item.forEach((exerciseDataPacket) => {
-            var regex = RegExp(dataForName, 'gi')
+            const tidyA = dataForName.replace(/\(/g, '\\(')
+            const tidyB = tidyA.replace(/\)/g, '\\)')
+            const regex = RegExp(tidyB, 'gi')
             var protocol = exerciseDataPacket[1].replace(/\s/g, '')
             if (regex.test(exerciseDataPacket[0]) === true) {
               if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[1].includes('at') === true) {
@@ -725,13 +727,16 @@
         var tempItemStoreLate = []
         this.dataPacketStore.forEach((item) => {
           item.forEach((exerciseDataPacket) => {
-            var regex = RegExp(exerciseDataPacket[0], 'gi')
+            const tidyA = exerciseDataPacket[0].replace(/\(/g, '\\(')
+            const tidyB = tidyA.replace(/\)/g, '\\)')
+            const regexA = RegExp(tidyB, 'gi')
+            const regexB = RegExp(/[|\\/)(~^:,;?!&%$@*+]/, 'g')
             var itemCased = this.properCase(exerciseDataPacket[0])
-            if (regex.test(tempItemStore) !== true && exerciseDataPacket[1].includes('at') === true) {
+            if (regexA.test(tempItemStore) !== true && exerciseDataPacket[1].includes('at') === true) {
               tempItemStore.push(itemCased)
             }
-            if (regex.test(tempItemStoreLate) !== true && exerciseDataPacket[1].includes('at') !== true) {
-              if (exerciseDataPacket[0].includes('-') === true) {
+            if (regexA.test(tempItemStoreLate) !== true && exerciseDataPacket[1].includes('at') !== true) {
+              if (regexB.test(exerciseDataPacket[0]) === true) {
                 tempItemStoreLate.push(exerciseDataPacket[0])
               } else {
                 tempItemStoreLate.push(itemCased)
