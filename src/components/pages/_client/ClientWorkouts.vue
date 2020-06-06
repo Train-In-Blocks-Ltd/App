@@ -174,7 +174,9 @@
   }
   .data-select {
     display: grid;
-    grid-gap: 2rem
+    grid-gap: 4rem;
+    width: fit-content;
+    grid-template-columns: 1fr 1fr
   }
   .data-select__options {
     display: grid;
@@ -430,15 +432,6 @@
               </div>
               <div class="container--content">
                 <div>
-                  <div v-show="showType" class="data-desc">
-                    <p id="p1"></p>
-                    <p id="p2"></p>
-                    <p id="p3"></p>
-                    <p id="p4"></p>
-                    <p id="p5"></p>
-                  </div>
-                  <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
-                  <div class="spacer"/>
                   <div class="data-select">
                     <div class="data-select__options">
                       <label for="measure"><b>Data: </b></label>
@@ -455,6 +448,15 @@
                       </select>
                     </div>
                   </div>
+                  <div class="spacer"/>
+                  <div v-show="showType" class="data-desc">
+                    <p id="p1"></p>
+                    <p id="p2"></p>
+                    <p id="p3"></p>
+                    <p id="p4"></p>
+                    <p id="p5"></p>
+                  </div>
+                  <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
                 </div>
                 <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
               </div>
@@ -626,24 +628,25 @@
             const tidyA = dataForName.replace(/\(/g, '\\(')
             const tidyB = tidyA.replace(/\)/g, '\\)')
             const regex = RegExp(tidyB, 'gi')
-            var protocol = exerciseDataPacket[1].replace(/\s/g, '')
-            if (regex.test(exerciseDataPacket[0]) === true) {
-              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[1].includes('at') === true) {
+            var protocol = exerciseDataPacket[2].replace(/\s/g, '')
+            if (regex.test(exerciseDataPacket[1]) === true) {
+              this.xLabel.push(exerciseDataPacket[0])
+              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('at') === true) {
                 this.yData.push(this.setsReps(protocol, dataForType))
               }
-              if (dataForType === 'Load' && exerciseDataPacket[1].includes('at') === true) {
+              if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
                 this.yData.push(this.load(protocol))
               }
-              if (dataForType === 'Volume' && exerciseDataPacket[1].includes('at') === true) {
+              if (dataForType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
                 var agg = this.setsReps(protocol, 'Reps') * this.load(protocol)
                 this.yData.push(agg)
               }
-              if (exerciseDataPacket[1].includes('at') !== true) {
+              if (exerciseDataPacket[2].includes('at') !== true) {
                 this.showType = false
                 this.yData.push(this.otherMeasures(protocol))
               }
             }
-            if (dataForName === 'Block Overview' && exerciseDataPacket[1].includes('at') === true) {
+            if (dataForName === 'Block Overview' && exerciseDataPacket[2].includes('at') === true) {
               if (dataForType === 'Sets' || dataForType === 'Reps') {
                 dataForSum = this.setsReps(protocol, dataForType)
               }
@@ -660,9 +663,11 @@
             this.yData.push(overviewStore.reduce((a, b) => a + b))
           }
         })
-        let x = 1
-        for (; x <= this.yData.length; x++) {
-          this.xLabel.push(x)
+        if (dataForName === 'Block Overview') {
+          let x = 1
+          for (; x <= this.yData.length; x++) {
+            this.xLabel.push('Workout ' + x)
+          }
         }
         this.descStats(dataForType)
         this.fillData()
@@ -683,7 +688,7 @@
         this.str.forEach((object) => {
           this.workoutDates.push({title: object.name, date: object.date})
           if (object.notes !== null) {
-            var pulledProtocols = this.pullProtocols(object.notes)
+            var pulledProtocols = this.pullProtocols(object.name ,object.notes)
             this.dataPacketStore.push(this.chunkArray(pulledProtocols))
           }
         })
@@ -692,7 +697,7 @@
         this.selection()
       },
       // Extracts the protocols and measures and stores it all into a temporary array
-      pullProtocols (text) {
+      pullProtocols (workoutName ,text) {
         var textNoHTML = text.replace(/<[^>]*>?/gm, '')
         var tempStore = []
         let m
@@ -701,6 +706,9 @@
             this.regexExtract.lastIndex++
           }
           m.forEach((match, groupIndex) => {
+            if (groupIndex === 0) {
+              tempStore.push(workoutName)
+            }
             if (groupIndex === 1 || groupIndex === 2) {
               tempStore.push(match)
             }
@@ -713,8 +721,8 @@
       chunkArray (myArray) {
         var index = 0
         var tempArray = []
-        for (index = 0; index < myArray.length; index += 2) {
-          var dataPacket = myArray.slice(index, index + 2)
+        for (index = 0; index < myArray.length; index += 3) {
+          var dataPacket = myArray.slice(index, index + 3)
           tempArray.push(dataPacket)
         }
         return tempArray
@@ -727,17 +735,17 @@
         var tempItemStoreLate = []
         this.dataPacketStore.forEach((item) => {
           item.forEach((exerciseDataPacket) => {
-            const tidyA = exerciseDataPacket[0].replace(/\(/g, '\\(')
+            const tidyA = exerciseDataPacket[1].replace(/\(/g, '\\(')
             const tidyB = tidyA.replace(/\)/g, '\\)')
             const regexA = RegExp(tidyB, 'gi')
             const regexB = RegExp(/[|\\/)(~^:,;?!&%$@*+]/, 'g')
-            var itemCased = this.properCase(exerciseDataPacket[0])
-            if (regexA.test(tempItemStore) !== true && exerciseDataPacket[1].includes('at') === true) {
+            var itemCased = this.properCase(exerciseDataPacket[1])
+            if (regexA.test(tempItemStore) !== true && exerciseDataPacket[2].includes('at') === true) {
               tempItemStore.push(itemCased)
             }
-            if (regexA.test(tempItemStoreLate) !== true && exerciseDataPacket[1].includes('at') !== true) {
-              if (regexB.test(exerciseDataPacket[0]) === true) {
-                tempItemStoreLate.push(exerciseDataPacket[0])
+            if (regexA.test(tempItemStoreLate) !== true && exerciseDataPacket[2].includes('at') !== true) {
+              if (regexB.test(exerciseDataPacket[1]) === true) {
+                tempItemStoreLate.push(exerciseDataPacket[1])
               } else {
                 tempItemStoreLate.push(itemCased)
               }
