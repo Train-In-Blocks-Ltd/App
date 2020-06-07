@@ -122,6 +122,18 @@
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
   }
+  input[type=color] {
+    border: none;
+    margin: 0 .4rem;
+    background-color: transparent;
+    padding: 0;
+    outline-width: 0;
+    cursor: pointer;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  input[type=color]:hover, input[type=color]:focus {
+    transform: scale(1.1)
+  }
   input.title {
     margin-top: 0;
     margin-bottom: 3rem;
