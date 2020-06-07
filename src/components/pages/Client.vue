@@ -20,7 +20,7 @@
     background-color: initial;
     border: none;
     border-bottom: 2px solid #28282800;
-    padding: 0;
+    padding: .4rem 0;
     font-size: 1rem;
     outline-width: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -34,8 +34,8 @@
   #client .client_info input.client_info--name {
     font-size: 3.75rem;
     letter-spacing: .5rem;
-    margin: 0;
-    width: 70%
+    padding: .6rem 0;
+    margin: 0
   }
 
   /* Top Grid */
@@ -135,9 +135,6 @@
     .floating_nav {
       right: 3rem
     }
-    #client {
-      margin: 5rem 2rem
-    }
     .ql-editor {
       height: 310px
     }
@@ -166,7 +163,7 @@
       <form class="client_info" v-on:submit.prevent="update_client()">
         <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
         <label><b>Email: </b><input type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-        <label><b>Number: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
+        <label><b>Phone: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
       <div class="floating_nav">
         <a href="javascript:void(0)" @click="showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>

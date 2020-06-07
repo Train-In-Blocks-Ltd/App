@@ -2,7 +2,8 @@
   #home {
     display: grid;
     max-width: 800px;
-    padding: 5rem 3.75rem
+    padding: 5rem 3.75rem;
+    grid-gap: 2rem
   }
   #intro {
     font-size: 2rem;
@@ -10,8 +11,7 @@
   }
   .home--container {
     display: grid;
-    grid-template-rows: .4fr 1fr;
-    margin-top: 2rem
+    grid-template-rows: 8rem 1fr
   }
 
   /* Add Client Form */
@@ -39,16 +39,16 @@
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
       <div>
-        <label for="client-search"><b>Find</b></label>
-        <input name="client-search" type="search" rel="search" placeholder="Client Name" class="search" autocomplete="name" v-model="search"/>
+        <label for="client-search"><b>Find a client:</b></label>
+        <input name="client-search" type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
       </div>
-      <div>
+      <div class="container--clients">
         <div v-for="(clients, index) in $parent.posts"
           :key="index">
           <!-- Perform case insensitive search -->
           <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
             <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
-              <p><b>{{clients.name}}</b>
+              <p class="client_link__name"><b>{{clients.name}}</b>
               <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
               <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
             </router-link>
@@ -63,7 +63,7 @@
       <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save()">
         <label><b>Name: </b><input type="text" autocomplete="name" v-model="new_client.name" required/></label>
         <label><b>Email: </b><input type="email" autocomplete="email" v-model="new_client.email" required/></label>
-        <label><b>Number: </b><input type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
+        <label><b>Mobile: </b><input type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
           <input type="submit" class="button" value="Save" />
           <button class="button" v-on:click="close()">Close</button>

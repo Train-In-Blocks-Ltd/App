@@ -536,7 +536,7 @@
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
         msg: 'Idle',
-        msgIcon: 'Idle.svg'
+        msgIcon: ''
       }
     },
     created () {
@@ -569,7 +569,7 @@
         self.update_programme()
         setTimeout(() => {
           this.msg = 'Idle'
-          this.msgIcon = 'Idle.svg'
+          this.msgIcon = ''
         }, 4000)
       },
       updateWorkoutNotes (id) {
@@ -578,7 +578,7 @@
         this.scan()
         setTimeout(() => {
           this.msg = 'Idle'
-          this.msgIcon = 'Idle.svg'
+          this.msgIcon = ''
         }, 4000)
       },
 

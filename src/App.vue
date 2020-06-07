@@ -173,7 +173,8 @@
   }
   .logo--link {
     display: block;
-    height: 60px
+    height: 60px;
+    transition: opacity .6s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .logo--svg {
     margin-top: -8px
@@ -184,6 +185,14 @@
       var(--accessible-color),
       var(--accessible-color)
     )
+  }
+
+  /* Logo Animation */
+  .logo--link:hover {
+    opacity: .6
+  }
+  .logo--link:active {
+    transform: scale(.9)
   }
 
   /* Navigation */
@@ -207,6 +216,8 @@
     )
   }
   .nav {
+    display: grid;
+    grid-template-rows: repeat(auto-fill, 50px);
     border-bottom: .5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
@@ -253,21 +264,18 @@
   }
 
   /* Client Navigation Items */
+  a.router-link-active.text--client {
+    font-weight: bold
+  }
   .nav--item {
     padding: .8rem 0;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis
-  }
-  .nav--item:first-of-type {
-    font-size: 1.2rem
-  }
-  .nav--item:first-of-type a {
-    font-weight: bold
+    text-overflow: ellipsis;
+    text-transform: capitalize
   }
   .nav--item--item {
-    padding: 0 0 .8rem .8rem;
-    font-size: .8rem
+    padding: 0 0 .8rem .8rem
   }
   .nav--item--item:first-of-type {
     padding-top: .8rem
@@ -278,37 +286,17 @@
   }
   .nav--item a {
     font-weight: normal;
-    position: relative
+    transition: all 1s cubic-bezier(.075, .82, .165, 1)
   }
-  .nav--item a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 1px;
-    bottom: -4px;
-    left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    opacity: 0;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .nav--item a:hover:before {
-    opacity: 1;
-    width: 100%
-  }
-  .nav--item a:hover:active {
+  .nav--item a:hover {
     opacity: .6
   }
-  .nav--item a.router-link-exact-active {
-    font-weight: bold
+  .nav--item a.router-link-active:not(.text--client), .nav--item a.router-link-exact-active {
+    font-weight: bold;
+    font-size: 1.4rem
   }
-  .nav a.router-link-exact-active:before {
-    opacity: 1;
-    width: 100%;
-    height: 2px
+  .nav--item--item a.router-link-exact-active {
+    font-size: 1rem
   }
 
   /* Account Navigation Items */
@@ -415,17 +403,16 @@
   }
 
   /* Archive and Home page styles */
+  .container--clients {
+    display: grid;
+    grid-gap: 2rem
+  }
   .client_container p {
     margin: 0;
     font-weight: 400;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden
-  }
-  .client_container {
-    margin: 1rem 0;
-    font-size: 1rem;
-    display: block
   }
 
   /* Client Container Animation */
@@ -461,11 +448,14 @@
     overflow-x: auto;
     transition: all .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:active {
+  .client_link:not(.archived):active {
     transform: scale(.98)
   }
   .client_link svg {
     width: 20px
+  }
+  .client_link__name {
+    font-size: 1.4rem
   }
   .client_link__details {
     display: grid;
@@ -580,7 +570,7 @@
       </div> <!-- .logo -->
       <div class="nav animate__animated animate__fadeInLeft animate__faster">
         <div class="nav--item">
-            <router-link to="/">Clients</router-link>
+            <router-link class="text--client" to="/">Clients</router-link>
         </div>
          <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
