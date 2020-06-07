@@ -8,16 +8,46 @@
     align-items: center;
     width: max-content
   }
+  .form__options {
+    display: flex
+  }
+  .form__options label {
+    margin: auto 0
+  }
+  #first-name, #email {
+    width: 40%;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    border: none;
+    outline-width: 0;
+    border-bottom: 2px solid #28282800;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  #first-name:hover, #email:hover, #first-name:focus, #email:focus {
+    border-bottom: 2px solid #282828
+  }
+  .text-reset {
+    font-size: .8rem
+  }
 </style>
 
 <template>
   <div id="account" v-if="this.$parent.claims">
     <h1>Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
-        <label for="first-name"><b>Name: </b><input type="text" id="first-name" name="first-name" autocomplete="given-name" v-model="$parent.claims.name" required v-on:click="edit()"/></label>
-        <label for="email"><b>Email: </b><input type="email" id="email" name="email" autocomplete="email" v-model="$parent.claims.email" required v-on:click="edit()"/></label>
-        <label for="color"><b>Colour theme: </b><input type="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/></label>
-        <p>To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
+        <div class="form__options">
+          <label for="first-name"><b>Name: </b></label>
+          <input type="text" id="first-name" name="first-name" autocomplete="given-name" v-model="$parent.claims.name" required v-on:click="edit()"/>
+        </div>
+        <div class="form__options">
+          <label for="email"><b>Email: </b></label>
+          <input type="email" id="email" name="email" autocomplete="email" v-model="$parent.claims.email" required v-on:click="edit()"/>
+        </div>
+        <div class="form__options">
+          <label for="color"><b>Colour theme: </b></label>
+          <input type="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/>
+        </div>
+        <p class="text--reset">To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
     </form>
     <h2>Your Subscription</h2>
   </div>

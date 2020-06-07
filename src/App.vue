@@ -14,7 +14,7 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
-    letter-spacing: .15rem;
+    letter-spacing: .1rem;
     overflow: hidden
   }
   #app {
@@ -81,7 +81,8 @@
   }
 
   /* Buttons */
-  .button {
+  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary {
+    text-transform: capitalize;
     text-align: center;
     border: 1px solid #282828;
     padding: .5rem 1rem;
@@ -91,7 +92,6 @@
     font-size: .8rem;
     letter-spacing: .1rem;
     font-weight: bold;
-    cursor: pointer;
     color: #282828;
     background-color: transparent;
     margin: 1rem 0 .5rem 0;
@@ -99,17 +99,21 @@
     transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
     will-change: transform
   }
-  .button:hover {
+  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover {
+    cursor: pointer;
     background-color: #282828;
     color: white;
     text-decoration: none
   }
-  .button:active {
+  .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active {
     transform: scale(.9)
+  }
+  .delete:hover {
+    background-color: #B80000
   }
 
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]) {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
     border: 1px solid #282828;
     border-radius: 0;
     padding: .4rem;
@@ -117,6 +121,18 @@
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
+  }
+  input[type=color] {
+    border: none;
+    margin: 0 .4rem;
+    background-color: transparent;
+    padding: 0;
+    outline-width: 0;
+    cursor: pointer;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  input[type=color]:hover, input[type=color]:focus {
+    transform: scale(1.1)
   }
   input.title {
     margin-top: 0;
@@ -169,7 +185,8 @@
   }
   .logo--link {
     display: block;
-    height: 60px
+    height: 60px;
+    transition: opacity .6s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .logo--svg {
     margin-top: -8px
@@ -180,6 +197,14 @@
       var(--accessible-color),
       var(--accessible-color)
     )
+  }
+
+  /* Logo Animation */
+  .logo--link:hover {
+    opacity: .6
+  }
+  .logo--link:active {
+    transform: scale(.9)
   }
 
   /* Navigation */
@@ -203,6 +228,8 @@
     )
   }
   .nav {
+    display: grid;
+    grid-template-rows: repeat(auto-fill, 50px);
     border-bottom: .5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
@@ -249,21 +276,18 @@
   }
 
   /* Client Navigation Items */
+  a.router-link-active.text--client {
+    font-weight: bold
+  }
   .nav--item {
     padding: .8rem 0;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis
-  }
-  .nav--item:first-of-type {
-    font-size: 1.2rem
-  }
-  .nav--item:first-of-type a {
-    font-weight: bold
+    text-overflow: ellipsis;
+    text-transform: capitalize
   }
   .nav--item--item {
-    padding: 0 0 .8rem .8rem;
-    font-size: .8rem
+    padding: 0 0 .8rem .8rem
   }
   .nav--item--item:first-of-type {
     padding-top: .8rem
@@ -274,37 +298,17 @@
   }
   .nav--item a {
     font-weight: normal;
-    position: relative
+    transition: all 1s cubic-bezier(.075, .82, .165, 1)
   }
-  .nav--item a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 1px;
-    bottom: -4px;
-    left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    opacity: 0;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .nav--item a:hover:before {
-    opacity: 1;
-    width: 100%
-  }
-  .nav--item a:hover:active {
+  .nav--item a:hover {
     opacity: .6
   }
-  .nav--item a.router-link-exact-active {
-    font-weight: bold
+  .nav--item a.router-link-active:not(.text--client), .nav--item a.router-link-exact-active {
+    font-weight: bold;
+    font-size: 1.4rem
   }
-  .nav a.router-link-exact-active:before {
-    opacity: 1;
-    width: 100%;
-    height: 2px
+  .nav--item--item a.router-link-exact-active {
+    font-size: 1rem
   }
 
   /* Account Navigation Items */
@@ -368,9 +372,6 @@
   }
 
   /* QUILL */
-  .quill {
-    margin: .75rem 0
-  }
   .ql-toolbar.ql-snow {
     border: none
   }
@@ -381,9 +382,12 @@
     stroke: #282828
   }
   .ql-editor {
-    height: 400px;
+    max-height: 250px;
     color: #282828;
     overflow-y: auto
+  }
+  .ql-editor ul li:not(.ql-direction-rtl) {
+    padding: 0
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: #28282899
@@ -411,17 +415,16 @@
   }
 
   /* Archive and Home page styles */
+  .container--clients {
+    display: grid;
+    grid-gap: 2rem
+  }
   .client_container p {
     margin: 0;
     font-weight: 400;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden
-  }
-  .client_container {
-    margin: 1rem 0;
-    font-size: 1rem;
-    display: block
   }
 
   /* Client Container Animation */
@@ -453,16 +456,47 @@
   .client_link {
     padding: 1rem 0;
     width: 95%;
+    line-height: 1.4;
     overflow-x: auto;
     transition: all .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:active {
+  .client_link:not(.archived):active {
     transform: scale(.98)
   }
+  .client_link svg {
+    width: 20px
+  }
+  .client_link__name {
+    font-size: 1.4rem
+  }
+  .client_link__details {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    grid-gap: 1rem
+  }
+  .client_link__details p {
+    margin: auto 0
+  }
   .search {
+    border: none;
+    outline-width: 0;
     width: 95%;
-    margin: .6rem 0 1rem 0;
-    font-size: 1rem
+    font-size: 1.6rem;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    border-bottom: 2px solid #282828;
+    padding: .6rem 0;
+    margin: 1rem 0;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .search:hover {
+    border-bottom: 2px solid #28282880;
+    width: 100%
+  }
+  .search:focus {
+    border-bottom: 2px solid #282828;
+    width: 100%;
+    font-size: 2rem
   }
 
   /* Responsive Design */
@@ -548,7 +582,7 @@
       </div> <!-- .logo -->
       <div class="nav animate__animated animate__fadeInLeft animate__faster">
         <div class="nav--item">
-            <router-link to="/">Clients</router-link>
+            <router-link class="text--client" to="/">Clients</router-link>
         </div>
          <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
@@ -564,6 +598,12 @@
         </div>
       </div>
       <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
+        <div class="account_nav--item">
+          <router-link to="/learn">
+            <inline-svg :src="require('./assets/svg/Learn.svg')" class="account_nav--item--icon"/>
+            Learn
+          </router-link>
+        </div>
         <div class="account_nav--item">
           <router-link to="/archive">
             <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="account_nav--item--icon"/>
@@ -627,8 +667,11 @@ export default {
         modules: {
           toolbar: [
               [{'header': 1}, {'header': 2}],
-              ['bold', 'italic', 'underline', 'strike'],
-              [{'script': 'sub'}, {'script': 'super'}]
+              ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
+              [{'list': 'ordered'}, {'list': 'bullet'}],
+              [{'indent': '-1'}, {'indent': '+1'}],
+              ['link'],
+              ['clean']
           ]
         }
       }

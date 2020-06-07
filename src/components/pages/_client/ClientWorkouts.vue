@@ -25,20 +25,69 @@
     margin-bottom: 1rem;
     letter-spacing: .15rem
   }
+  .message {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    grid-gap: .4rem;
+    margin: 2rem 0;
+    font-size: .8rem
+  }
+  .message > p, .message svg {
+    margin: auto
+  }
+  .toggleFloatingNav {
+    display: grid;
+    grid-template-columns: 10px 1fr 10px;
+    grid-gap: 1rem;
+    justify-self: center;
+    position: relative;
+    right: -2rem;
+    user-select: none;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: .8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: grid-gap .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .toggleFloatingNav:hover {
+    grid-gap: .2rem
+  }
+  .toggleFloatingNav:active {
+    transform: scale(.8)
+  }
+  .section-title {
+    margin: 0 0 2rem 0
+  }
 
   /* Block Grid */
   .block_grid {
     display: grid;
-    grid-template-columns: .5fr 1fr;
     grid-gap: 5rem;
     margin-top: 5rem
+  }
+  .block-plan {
+    border-left: 2px solid #282828;
+    padding-left: 5rem
+  }
+
+  /* Calendar */
+  .calendar {
+    display: grid;
+    padding-left: 5rem;
+    border-left: 2px solid #282828
+  }
+  .fc.fc-ltr.fc-unthemed {
+    width: 70%
+  }
+  .fc-event {
+    font-size: .8rem
   }
 
   /* Block Table */
   .block_table {
     height: fit-content;
-    max-width: 482px;
-    overflow-x: auto
+    max-width: 482px
   }
   .block_table--container {
     border: 1px solid #282828;
@@ -74,38 +123,44 @@
   }
 
   /* Copy */
-  #copy {
-    margin: auto 0;
+  #copy, #info {
+    margin: auto 0 auto 1rem;
     cursor: pointer;
     transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
   }
-  #copy:hover {
+  #copy:hover, #info:hover {
     opacity: .6
   }
-  #copy:active {
+  #copy:active, #info:active {
     transform: scale(.9)
   }
 
   /* Workouts */
-  .workout--header {
-    display: flex;
-    justify-content: space-between
+  .container--workouts {
+    display: grid;
+    grid-template-columns: repeat(3, 300px);
+    grid-gap: 2rem
+  }
+  .wrapper--workout {
+    border: 1px solid #282828;
+    height: fit-content
   }
   .workouts--workout {
-    display: block;
-    border-bottom: 1px solid #28282840;
-    padding: .5rem 0;
-    cursor: pointer;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
+    margin: 0;
+    padding: 1rem
   }
-  .workouts--workout:hover {
-    border-bottom: 1px solid #282828
+  .workout--header {
+    display: flex
   }
-  .workouts--workout:active {
-    transform: scale(.9)
+  .text--date {
+    font-size: .8rem
+  }
+  .bottom-bar {
+    padding: .6rem 1rem;
+    border-top: 1px solid #282828
+  }
+  .bottom-bar .button {
+    margin: 0
   }
 
   /* Graph */
@@ -113,47 +168,29 @@
     border-left: 2px solid #282828;
     padding-left: 5rem
   }
-
-  /* Quill Notes */
-  .workout_notes, #block_notes {
-    position: fixed;
-    right: 20rem;
-    top: 5rem;
-    z-index: 9;
-    text-align: left;
-    width: 400px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: white;
+  .container--content {
     display: grid;
-    grid-template-rows: 40px auto;
-    align-items: center
+    grid-template-columns: 1fr 1fr
   }
-  .workout_notes_header, #block_notes_header {
-    z-index: 10;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
-    color: #282828;
-    padding: 0 .5rem;
-    height: 100%;
+  .data-select {
     display: grid;
-    align-items: center
+    grid-gap: 4rem;
+    width: fit-content;
+    grid-template-columns: 1fr 1fr
   }
-  .workout_notes_header {
-    grid-template-columns: 1fr 1rem 1rem 1rem; /* For the 3 icons in this order, toolkit, info and delete */
-    grid-gap: .5rem
+  .data-select__options {
+    display: grid;
+    grid-gap: 1rem;
+    width: fit-content
   }
-  .workout_notes_header p, #block_notes_header p {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    margin: 0
-  }
-  .workout_notes_header svg {
-    cursor: pointer
+  #chart {
+    width: 500px
   }
 
   /* Add Workout Form */
-  .add_workout_container {
-    padding-top: 1rem
+  #button--new-workout {
+    margin: 0;
+    width: 100%
   }
   .add_workout_container h3 {
     margin-top: 0
@@ -166,19 +203,8 @@
     grid-gap: .5rem
   }
 
-  /* Workout Toolkit */
-  .workout_toolkit {
-    display: grid;
-    grid-gap: 1rem;
-    position: fixed;
-    right: calc(21rem + 400px);
-    top: 5rem;
-    z-index: 9;
-    text-align: left;
-    width: 400px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
-    background-color: white;
-    align-items: center;
+  /* Toolkit */
+  .modal--toolkit {
     padding: 1rem
   }
   .workout_toolkit--content > div {
@@ -212,11 +238,6 @@
     margin: .4rem 0
   }
 
-  @media (max-width: 992px) {
-    .workout_notes, #block_notes {
-      right: 10rem
-    }
-  }
   @media (max-width: 768px) {
     #blocks .block_info input.block_info--name.title {
       font-size: 1.2rem
@@ -235,23 +256,23 @@
       opacity: 1
     }
   }
-  @media (max-width: 576px) {
-    .workout_notes, #block_notes {
-      right: 6rem;
-      max-width: 250px;
-      height: 400px
-    }
-  }
-  @media (max-width: 360px) {
-    .workout_notes, #block_notes {
-      right: 5rem;
-      max-width: 230px;
-      height: 350px
-    }
-  }
+
+  /* Icons */
   #trash_icon {
     height: 16px;
     width: 16px
+  }
+  #idle {
+    animation: fadeInfi 2s infinite alternate-reverse
+  }
+
+  @keyframes fadeInfi {
+    from {
+      opacity: .4
+    }
+    to {
+      opacity: 1
+    }
   }
 </style>
 
@@ -273,13 +294,56 @@
           </form>
         </div>
       </modal>
+      <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
+        <div class="modal--toolkit" >
+          <select class="workout_toolkit--select" v-on:change="get_toolkit()">
+            <option>Maximal Heart Rate (Tanaka)</option>
+            <option>Maximal Heart Rate (Gellish)</option>
+            <option>Heart Rate Training Zone (Karvonen)</option>
+            <option>Heart Rate Reserve</option>
+            <option>Body Mass Index</option>
+          </select>
+          <div class="workout_toolkit--content">
+            <div v-if="toolkit_calcs.mhr_tanaka.view">
+              <label for="tanaka_age">Age: </label><input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
+              <p><b>MHR: </b>{{toolkit_calcs.mhr_tanaka.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.mhr_gellish.view">
+              <label for="gellish_age">Age: </label><input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
+              <p><b>MHR: </b>{{toolkit_calcs.mhr_gellish.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.hrtz.view">
+              <label for="intensity">Intensity: </label><input type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
+              <label for="mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
+              <label for="rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
+              <p><b>HR: </b>{{toolkit_calcs.hrtz.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.hrr.view">
+              <label for="hrr_mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_mhr" name="hrr_mhr"/>
+              <label for="hrr_rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_rhr" name="hrr_rhr"/>
+              <p><b>HRR: </b>{{toolkit_calcs.hrr.value}} BPM</p>
+            </div>
+            <div v-if="toolkit_calcs.bmi.view">
+              <label for="height">Height: </label><input type="number" v-on:input="bmi_calc()" id="height" name="height"/>
+              <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
+              <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
+            </div>
+          </div>
+        </div>
+      </modal>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
+        <modal name="blockNotes" height="auto" :draggable="true" :adaptive="true" :before-close="updateBlockNotes()">
+          <div>
+            <p><b>Block Notes</b></p>
+          </div>
+          <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
+        </modal>
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <h1 class="client_info--name title">{{$parent.$parent.client_details.name}}</h1>
+              <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
                <!-- Update the programme info -->
               <form class="block_info">
                 <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
@@ -289,16 +353,25 @@
             </div>  <!-- client_info -->
             <div class="floating_nav--container">
               <div class="floating_nav">
-                <a href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
-                <!-- <a href="javascript:void(0)" v-on:click="$parent.client_notes_function()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a> -->
-                <a href="javascript:void(0)" v-on:click="block_notes_function()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
-                <a href="javascript:void(0)" v-on:click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
+                <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
+                <div class="message">
+                  <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)"/>
+                  <p>{{msg}}</p>
+                </div>
               </div> <!-- floating_nav -->
             </div>
           </div> <!-- top_grid -->
           <div class="block_grid">
-            <div>
+            <div class="calendar">
+              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" :eventColor="'#282828'"/>
+            </div>
+            <div class="block-plan">
               <div class="block_table">
+                <h3 class="section-title">Microcycles</h3>
                 <div class="block_table--container">
                   <p>{{programme.name}}</p>
                   <div class="block_table--container--block_duration_container">
@@ -311,119 +384,82 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Workouts</h3>
+                  <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy()"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
                 <div>
-                  <div v-if="!$parent.no_workouts">
+                  <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div v-for="(workout, index) in programme.workouts"
+                    <div class="wrapper--workout" v-for="(workout, index) in programme.workouts"
                       :key="index">
-                      <!-- Open the notes in a popup when clicked -->
-                      <p v-on:click="workout_notes_function(workout.id)" class="workouts--workout">
-                        <span><b>{{workout.name}}</b></span>
-                        -
-                        <span>{{day(workout.date)}}</span>
-                        -
-                        <span>{{workout.date}}</span>
+                      <p class="workouts--workout">
+                        <span><b>{{workout.name}}</b></span><br>
+                        <span class="text--date">{{day(workout.date)}}</span>
+                        <span class="text--date">{{workout.date}}</span>
                       </p>
-                      <div v-show="workout_notes == workout.id" class="workout_notes" :id="'workout_notes_' + workout.id">
-                        <div :id="'workout_notes_' + workout.id + '_header'" class="workout_notes_header">
-                          <p>
-                            <span><b>{{workout.name}}</b></span>
-                            -
-                            <span>{{day(workout.date)}}</span>
-                            -
-                            <span>{{workout.date}}</span>
-                          </p>
-                          <inline-svg :src="require('../../../assets/svg/Toolkit.svg')" v-on:click="open_toolkit(workout.id)" title="Workout Toolkit"/>
-                          <inline-svg :src="require('../../../assets/svg/Info.svg')" title="Info"/>
-                          <inline-svg :src="require('../../../assets/svg/Trash.svg')" v-on:click="delete_workout(workout.id)" id="trash_icon" title="Delete Workout"/>
-                        </div>
-                        <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
-                      </div>
-                      <div v-show="toolkit == workout.id" class="workout_toolkit" :id="'workout_toolkit_' + workout.id">
-                        <select class="workout_toolkit--select" v-on:change="get_toolkit()">
-                          <option>Maximal Heart Rate (Tanaka)</option>
-                          <option>Maximal Heart Rate (Gellish)</option>
-                          <option>Heart Rate Training Zone (Karvonen)</option>
-                          <option>Heart Rate Reserve</option>
-                          <option>Body Mass Index</option>
-                        </select>
-                        <div class="workout_toolkit--content">
-                          <div v-if="toolkit_calcs.mhr_tanaka.view">
-                            <label for="tanaka_age">Age: </label><input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
-                            <p><b>MHR: </b>{{toolkit_calcs.mhr_tanaka.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.mhr_gellish.view">
-                            <label for="gellish_age">Age: </label><input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
-                            <p><b>MHR: </b>{{toolkit_calcs.mhr_gellish.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.hrtz.view">
-                            <label for="intensity">Intensity: </label><input type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
-                            <label for="mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
-                            <label for="rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
-                            <p><b>HR: </b>{{toolkit_calcs.hrtz.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.hrr.view">
-                            <label for="hrr_mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="hrr_mhr" name="hrr_mhr"/>
-                            <label for="hrr_rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="hrr_rhr" name="hrr_rhr"/>
-                            <p><b>HRR: </b>{{toolkit_calcs.hrr.value}} BPM</p>
-                          </div>
-                          <div v-if="toolkit_calcs.bmi.view">
-                            <label for="height">Height: </label><input type="number" v-on:input="bmi_calc()" id="height" name="height"/>
-                            <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
-                            <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
-                          </div>
-                        </div>
+                      <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
+                      <div class="bottom-bar">
+                        <button class="button" @click="updateWorkoutNotes(workout.id)">Save</button>
+                        <button id="button-move" class="button">Move</button>
+                        <button id="button-delete" class="button delete" @click="delete_workout(workout.id)">Delete</button>
                       </div>
                     </div>
-                  </div>
-                  <!-- Add a new workout -->
-                  <button v-if="!creating" class="button" v-on:click="creation()">New workout</button>
-                  <p class="response" v-if="!creating">{{response}}</p>
-                  <div v-if="creating" class="add_workout_container">
-                    <h3>Add new workout</h3>
-                    <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
-                      <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
-                      <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
-                      <div class="form_buttons">
-                          <input type="submit" class="button" value="Save" />
-                          <button class="button" v-on:click="close()">Close</button>
-                          <Loader></Loader>
+                    <div>
+                      <button v-if="!creating" id="button--new-workout" class="button" v-on:click="creation()">New workout</button>
+                      <p class="response" v-if="!creating">{{response}}</p>
+                      <div v-if="creating" class="add_workout_container">
+                        <h3>New Workout</h3>
+                        <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
+                          <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
+                          <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
+                          <div class="form_buttons">
+                              <input type="submit" class="button" value="Save" />
+                              <button class="button" v-on:click="close()">Close</button>
+                              <Loader></Loader>
+                          </div>
+                        </form>
                       </div>
-                    </form>
+                    </div><!-- Add a new workout -->
                   </div>
                 </div>
               </div><!-- workouts -->
             </div>
             <div class="graph">
-              <div id="stats">
-                <h2 no>Block Statistics</h2>
-                <p id="p1"></p>
-                <p id="p2"></p>
-                <p id="p3"></p>
-                <p id="p4"></p>
-                <p id="p5"></p>
-              </div>
               <div>
-                <h3>Statistics</h3>
+                <h3 class="section-title">Statistics</h3>
               </div>
-              <div v-if="block_notes" id="block_notes">
-                <div id="block_notes_header">
-                  <p><b>Block Notes</b></p>
+              <div class="container--content">
+                <div>
+                  <div class="data-select">
+                    <div class="data-select__options">
+                      <label for="measure"><b>Data: </b></label>
+                      <select @change="selection()" id="dataName" name="measure">
+                      </select>
+                    </div>
+                    <div class="data-select__options" v-show="showType">
+                      <label for="measure-type"><b>Data type: </b></label>
+                      <select @change="selection()" id="dataType" name="measure-type">
+                        <option>Sets</option>
+                        <option>Reps</option>
+                        <option>Load</option>
+                        <option>Volume</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="spacer"/>
+                  <div v-show="showType" class="data-desc">
+                    <p id="p1"></p>
+                    <p id="p2"></p>
+                    <p id="p3"></p>
+                    <p id="p4"></p>
+                    <p id="p5"></p>
+                  </div>
+                  <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
                 </div>
-                <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
+                <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
               </div>
-              <line-chart :chart-data="dataCollection" :options="chartOptions"></line-chart>
-              <select id="exercise" v-on:change="fillData()"></select>
-              <select id="dataCat" v-on:change="fillData()">
-                <option>Sets</option>
-                <option>Reps</option>
-                <option>Load</option>
-                <option>Volume</option>
-              </select>
             </div>  <!-- notes -->
           </div> <!-- programme_grid -->
         </div>
@@ -438,20 +474,26 @@
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
 
+  import FullCalendar from '@fullcalendar/vue'
+  import dayGridPlugin from '@fullcalendar/daygrid'
+  import '@fullcalendar/core/main.css'
+  import '@fullcalendar/daygrid/main.css'
+
   export default {
     components: {
       Loader,
       LineChart,
-      InlineSvg
+      InlineSvg,
+      FullCalendar
     },
     props: ['quillSettings'],
     data: function () {
       return {
+        showFloatingNav: true,
+        msgFloatingNav: 'Hide',
         creating: false,
         response: '',
         edit1: false,
-        workout_notes: false,
-        block_notes: false,
         toolkit: false,
         toolkit_calcs: {
           mhr_tanaka: {
@@ -481,346 +523,356 @@
         },
         delete: false,
         str: null,
-        regexPull: /(^\w*\))\s*(.[^:]*):\s*(.+)/gmi,
-        regexSetRep: /(\d*)\s*x\s*((\d*[,|]*)*)/gmi,
-        regexBreakReps: /\d+/gmi,
-        regexIntCapt: /(at|@)(.+)/gmi,
-        regexIntBreak: /(\d*[.]?\d*)/gmi,
-        xVal: [],
-        yVal: [],
-        dataCollection: {
-          labels: this.xVal,
-          datasets: [
-            {
-              label: 'none',
-              backgroundColor: 'transparent',
-              borderColor: '#282828',
-              data: this.yVal
-            }
-          ]
-        },
-        chartOptions: {
-          responsive: true,
-          maintainAspectRatio: false,
-          legend: {
-            display: false
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                suggestedMin: 1,
-                stepSize: 1
-              }
-            }]
-          }
-        }
+        showType: true,
+        dataPacketStore: [],
+        regexExtract: /(?<=\[)(.*?)\s*:\s*(.*?)(?=\])/gi,
+        regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
+        regexLoadCapture: /(at|@)(.+)/gi,
+        regexNumberBreakdown: /[0-9.]+/gi,
+        dataCollection: null,
+        options: null,
+        yData: [],
+        xLabel: [],
+        calendarPlugins: [ dayGridPlugin ],
+        workoutDates: [],
+        msg: 'Idle',
+        msgIcon: ''
       }
     },
     created () {
       this.$parent.blocks = true
     },
     async mounted () {
-      await this.initializeForm()
-      this.fillData()
+      await this.scan()
+      this.selection()
     },
     methods: {
+      toggleFloatingNav () {
+        this.showFloatingNav = !this.showFloatingNav
+        if (this.msgFloatingNav === 'Hide') {
+          this.msgFloatingNav = 'Options'
+        } else {
+          this.msgFloatingNav = 'Hide'
+        }
+      },
       showCopy () {
         this.$modal.show('copy')
       },
-      hideCopy () {
-        this.$modal.hide('copy')
+      showBlockNotes () {
+        this.$modal.show('blockNotes')
       },
-      initializeForm () {
+      showToolkit () {
+        this.$modal.show('toolkit')
+      },
+      updateBlockNotes () {
+        var self = this
+        self.update_programme()
+        setTimeout(() => {
+          this.msg = 'Idle'
+          this.msgIcon = ''
+        }, 4000)
+      },
+      updateWorkoutNotes (id) {
+        var self = this
+        self.update_workout(id)
+        this.scan()
+        setTimeout(() => {
+          this.msg = 'Idle'
+          this.msgIcon = ''
+        }, 4000)
+      },
+
+      // CHART METHODS //
+
+      fillData () {
+        this.dataCollection = {
+          labels: this.xLabel,
+          datasets: [
+            {
+              label: 'Data Point',
+              borderColor: '#282828',
+              backgroundColor: 'transparent',
+              data: this.yData
+            }
+          ]
+        }
+        this.options = {
+          legend: {
+            display: false
+          },
+          chartOptions: {
+            responsive: true,
+            maintainAspectRatio: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: false
+              }
+            }]
+          }
+        }
+      },
+      // This is called at the start and after @change. It scans the current values selected and fills the chart.
+      selection () {
+        this.showType = true
+        this.yData.length = 0
+        this.xLabel.length = 0
+        var dataForName = document.getElementById('dataName').value
+        var dataForType = document.getElementById('dataType').value
+        var dataForSum = 0
+        var overviewStore = []
+        this.dataPacketStore.forEach((item) => {
+          overviewStore.length = 0
+          item.forEach((exerciseDataPacket) => {
+            const tidyA = dataForName.replace(/\(/g, '\\(')
+            const tidyB = tidyA.replace(/\)/g, '\\)')
+            const regex = RegExp(tidyB, 'gi')
+            var protocol = exerciseDataPacket[2].replace(/\s/g, '')
+            if (regex.test(exerciseDataPacket[1]) === true) {
+              this.xLabel.push(exerciseDataPacket[0])
+              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('at') === true) {
+                this.yData.push(this.setsReps(protocol, dataForType))
+              }
+              if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
+                this.yData.push(this.load(protocol))
+              }
+              if (dataForType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
+                var agg = this.setsReps(protocol, 'Reps') * this.load(protocol)
+                this.yData.push(agg)
+              }
+              if (exerciseDataPacket[2].includes('at') !== true) {
+                this.showType = false
+                this.yData.push(this.otherMeasures(protocol))
+              }
+            }
+            if (dataForName === 'Block Overview' && exerciseDataPacket[2].includes('at') === true) {
+              if (dataForType === 'Sets' || dataForType === 'Reps') {
+                dataForSum = this.setsReps(protocol, dataForType)
+              }
+              if (dataForType === 'Load') {
+                dataForSum = this.load(protocol)
+              }
+              if (dataForType === 'Volume') {
+                dataForSum = this.setsReps(protocol, 'Reps') * this.load(protocol)
+              }
+              overviewStore.push(dataForSum)
+            }
+          })
+          if (dataForName === 'Block Overview' && overviewStore.length !== 0) {
+            this.yData.push(overviewStore.reduce((a, b) => a + b))
+          }
+        })
+        if (dataForName === 'Block Overview') {
+          let x = 1
+          for (; x <= this.yData.length; x++) {
+            this.xLabel.push('Workout ' + x)
+          }
+        }
+        this.descStats(dataForType)
+        this.fillData()
+      },
+
+      // INIT METHODS //
+
+      scan () {
+        this.workoutDates.length = 0
+        this.dataPacketStore.length = 0
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
             this.str = programme.workouts
           }
         })
-        // Empties and sets default options.
-        document.getElementById('exercise').innerHTML = ''
-        document.getElementById('exercise').innerHTML += '<option>Block Overview</option>'
-        // Scans through all workouts stored and picks out every valid exercise protocols from it.
-        if (this.str) {
-          this.str.forEach((workout, id) => {
-            var currentWorkout = this.tidyProtocols(this.pullProtocols(workout.notes))
-            var exist = document.getElementById('exercise').innerText
-            var i = 0
-
-            // Detects for valid exercise protocols and appending it to the dropdown.
-            // If i is EVEN then it's the exercise name, if i is ODD then its the protocol.
-            // @ / at are key identifiers of protocols.
-            if (currentWorkout) {
-              for (;i < currentWorkout.length; i++) {
-                var conditionOne = exist.includes(currentWorkout[i - 1])
-                var conditionTwo = currentWorkout[i].includes('/')
-                var conditionThree = currentWorkout[i].includes('at')
-                var conditionFour = currentWorkout[i].includes('@')
-
-                // Every exercise name will be propercase to allow for easy validation.
-                if ((i - 1) % 2 === 0 && (i - 1) !== 0) {
-                  conditionOne = exist.includes(this.properCase(currentWorkout[i - 1]))
-                }
-                // Tests if it's an exercise or protocol. It will only append exercises.
-                if (i % 2 !== 0 && conditionOne !== true && conditionTwo && (conditionThree !== true || conditionFour !== true)) {
-                  document.getElementById('exercise').innerHTML += '<option value="' + this.properCase(currentWorkout[i - 1]) + '">' + this.properCase(currentWorkout[i - 1]) + '</option>'
-                }
-              }
+        // Pulls and creates nested arrays. dataPacketStore > workoutDataPackets > exerciseDataPackets
+        this.str.forEach((object) => {
+          this.workoutDates.push({title: object.name, date: object.date})
+          if (object.notes !== null) {
+            var pulledProtocols = this.pullProtocols(object.name ,object.notes)
+            this.dataPacketStore.push(this.chunkArray(pulledProtocols))
+          }
+        })
+        // Appends the options to the select
+        this.dropdownInit()
+        this.selection()
+      },
+      // Extracts the protocols and measures and stores it all into a temporary array
+      pullProtocols (workoutName ,text) {
+        var textNoHTML = text.replace(/<[^>]*>?/gm, '')
+        var tempStore = []
+        let m
+        while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
+          if (m.index === this.regexExtract.lastIndex) {
+            this.regexExtract.lastIndex++
+          }
+          m.forEach((match, groupIndex) => {
+            if (groupIndex === 0) {
+              tempStore.push(workoutName)
+            }
+            if (groupIndex === 1 || groupIndex === 2) {
+              tempStore.push(match)
             }
           })
         }
+        return tempStore
       },
-      pullProtocols (workout) {
-        // Regex functions
-        // Scans all the workouts and pulls the protocols from the text.
-        // Returns values to tidyProtocols().
-        if (workout) {
-          var matchGroup = []
-          let a
-          while ((a = this.regexPull.exec(workout.replace(/(<br>)/ig, '\n').replace(/(<\/p>)/ig, '\n').replace(/(<([^>]+)>)/ig, ''))) !== null) {
-            // This is necessary to avoid infinite loops with zero-width matches
-            if (a.index === this.regexPull.lastIndex) {
-              this.regexPull.lastIndex++
-            }
-            // The result can be accessed through the `a`-variable.
-            a.forEach((match) => {
-              matchGroup.push(match)
-            })
-          }
-          return matchGroup
+      // Breaks down the temporary array into data packets of length 2
+      // Data Packet format: ['NAME', 'PROTOCOL/MEASURE/NUMBERS']
+      chunkArray (myArray) {
+        var index = 0
+        var tempArray = []
+        for (index = 0; index < myArray.length; index += 3) {
+          var dataPacket = myArray.slice(index, index + 3)
+          tempArray.push(dataPacket)
         }
+        return tempArray
       },
-      setsReps (protocol, type) {
-        // Function to select either the sets or reps. E.g. '3' as sets and '6' as reps from '3x6'.
-        // Returns values to be appended to yVal.
-        var store = 0
-        var sets = 0
-        // Removes all spaces
-        protocol = protocol.replace(/\s/g, '')
-        let c1
-        while ((c1 = this.regexSetRep.exec(protocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (c1.index === this.regexSetRep.lastIndex) {
-            this.regexSetRep.lastIndex++
-          }
-          // The result can be accessed through the `c1`-variable.
-          c1.forEach((match, groupIndex) => {
-            if (groupIndex === 1 && type === 'Sets') {
-              store = parseInt(match)
+      // Init the dropdown selection with validation
+      dropdownInit () {
+        var dropdownEl = document.getElementById('dataName')
+        dropdownEl.innerHTML = '<option>Block Overview</option>'
+        var tempItemStore = []
+        var tempItemStoreLate = []
+        this.dataPacketStore.forEach((item) => {
+          item.forEach((exerciseDataPacket) => {
+            const tidyA = exerciseDataPacket[1].replace(/\(/g, '\\(')
+            const tidyB = tidyA.replace(/\)/g, '\\)')
+            const regexA = RegExp(tidyB, 'gi')
+            const regexB = RegExp(/[|\\/)(~^:,;?!&%$@*+]/, 'g')
+            var itemCased = this.properCase(exerciseDataPacket[1])
+            if (regexA.test(tempItemStore) !== true && exerciseDataPacket[2].includes('at') === true) {
+              tempItemStore.push(itemCased)
             }
+            if (regexA.test(tempItemStoreLate) !== true && exerciseDataPacket[2].includes('at') !== true) {
+              if (regexB.test(exerciseDataPacket[1]) === true) {
+                tempItemStoreLate.push(exerciseDataPacket[1])
+              } else {
+                tempItemStoreLate.push(itemCased)
+              }
+            }
+          })
+        })
+        tempItemStore.forEach((item) => {
+          var option = document.createElement('option')
+          option.text = item
+          dropdownEl.add(option)
+        })
+        tempItemStoreLate.forEach((item) => {
+          var option = document.createElement('option')
+          option.text = item
+          dropdownEl.add(option)
+        })
+      },
+      // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
+      properCase (string) {
+        var sentence = string.toLowerCase().split(' ')
+        for (var i = 0; i < sentence.length; i++) {
+          sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
+        }
+        return sentence.join(' ')
+      },
+
+      // REGEX METHODS //
+
+      // Extracts anything for Sets and Reps
+      setsReps (protocol, dataForType) {
+        var setStore = null
+        var extractedSetsReps = null
+        var tempSetsRepsStore = []
+        let m
+        while ((m = this.regexSetsReps.exec(protocol)) !== null) {
+          if (m.index === this.regexSetsReps.lastIndex) {
+            this.regexSetsReps.lastIndex++
+          }
+          m.forEach((match, groupIndex) => {
             if (groupIndex === 1) {
-              sets = match
+              setStore = parseInt(match)
             }
-            if (groupIndex === 2 && type === 'Reps') {
-              store = this.sumReps(match, sets)
+            if (dataForType === 'Sets' && groupIndex === 1) {
+              extractedSetsReps = parseInt(match)
             }
-          })
-        }
-        return store
-      },
-      sumReps (repsProtocol, sets) {
-        // This connects to the previous function above and sums up the reps to show on the graph
-        // Returns values to be appended to yVal.
-        var sum = 0
-        let c2
-        while ((c2 = this.regexBreakReps.exec(repsProtocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (c2.index === this.regexBreakReps.lastIndex) {
-            this.regexBreakReps.lastIndex++
-          }
-          // The result can be accessed through the `c2`-variable.
-          c2.forEach((match) => {
-            if (repsProtocol.includes('/') === true) {
-              sum += parseInt(match)
-            }
-            if (repsProtocol.includes('/') === false) {
-              sum = sets * parseInt(match)
+            if (dataForType === 'Reps' && groupIndex === 2) {
+              if (match.includes('/') === true) {
+                let n
+                while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
+                  if (n.index === this.regexNumberBreakdown.lastIndex) {
+                    this.regexNumberBreakdown.lastIndex++
+                  }
+                  n.forEach((repsMatchExact) => {
+                    tempSetsRepsStore.push(parseInt(repsMatchExact))
+                  })
+                }
+                extractedSetsReps = tempSetsRepsStore.reduce((a, b) => a + b)
+              } else {
+                extractedSetsReps = parseInt(match) * parseInt(setStore)
+              }
             }
           })
         }
-        return sum
+        return extractedSetsReps
       },
+      // Extracts anything for Loads
       load (protocol) {
-        // This function adds up all the loads for visualisation and for aggregate to create volume.
-        // Returns values to be appended to yVal.
-        var sum = 0
-        // Removes all spaces
-        protocol = protocol.replace(/\s/g, '')
-        let b1
-        while ((b1 = this.regexIntCapt.exec(protocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (b1.index === this.regexIntCapt.lastIndex) {
-            this.regexIntCapt.lastIndex++
+        var tempLoadStore = []
+        let m
+        while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
+          if (m.index === this.regexLoadCapture.lastIndex) {
+            this.regexLoadCapture.lastIndex++
           }
-
-          // The result can be accessed through the `b1`-variable.
-          b1.forEach((match, groupIndex) => {
+          m.forEach((loadMatch, groupIndex) => {
             if (groupIndex === 2) {
-              protocol = match
+              let n
+              while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
+                if (n.index === this.regexNumberBreakdown.lastIndex) {
+                  this.regexNumberBreakdown.lastIndex++
+                }
+                n.forEach((loadMatchExact) => {
+                  tempLoadStore.push(parseFloat(loadMatchExact))
+                })
+              }
             }
           })
         }
-        let b2
-        while ((b2 = this.regexIntBreak.exec(protocol)) !== null) {
-          // This is necessary to avoid infinite loops with zero-width matches
-          if (b2.index === this.regexIntBreak.lastIndex) {
-            this.regexIntBreak.lastIndex++
-          }
-          // The result can be accessed through the `b2`-variable.
-          b2.forEach((match, groupIndex) => {
-            if (match !== '' && groupIndex === 1) {
-              sum += parseFloat(match)
-            }
-          })
-        }
+        var sum = tempLoadStore.reduce((a, b) => a + b)
         return sum
       },
-      tidyProtocols (matchGroup) {
-        // Cleans up the protocol, used in conjuction with pullProcedures().
-        if (matchGroup) {
-          var e = 1
-          // Removes all but exercise name and protocols store in alternating pattern.
-          for (;e < matchGroup.length; e++) {
-            delete matchGroup[4 * e - 4]
-            delete matchGroup[4 * e - 3]
+      // Extracts any other measures
+      otherMeasures (protocol) {
+        var data = 0
+        let m
+        while ((m = this.regexNumberBreakdown.exec(protocol)) !== null) {
+          if (m.index === this.regexNumberBreakdown.lastIndex) {
+            this.regexNumberBreakdown.lastIndex++
           }
-          // Removes all undefined
-          matchGroup = matchGroup.filter(() => true)
-          return matchGroup
-        }
-      },
-      lineGraph (id, exercise, type) {
-        // Visualises the data on the graph. Appends data to an array and works in conjuction with the onChange event for the dropdown.
-        var matchGroup = this.tidyProtocols(this.pullProtocols(this.str[id].notes))
-        var self = this
-        if (matchGroup) {
-          // Runs the correct corresponding regex function to extract the information. I then pushes it to an array.
-          var i = 0
-          for (;i < matchGroup.length; i++) {
-            if (i % 2 === 0) {
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Sets') {
-                self.yVal.push(this.setsReps(matchGroup[i + 1], type))
-              }
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Reps') {
-                console.log(matchGroup[i + 1])
-                self.yVal.push(this.setsReps(matchGroup[i + 1], type))
-              }
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Load') {
-                self.yVal.push(this.load(matchGroup[i + 1]))
-              }
-              if (this.properCase(matchGroup[i]) === exercise && type === 'Volume') {
-                self.yVal.push(this.setsReps(matchGroup[i + 1], 'Reps') * this.load(matchGroup[i + 1]))
-              }
-            }
-          }
-        }
-      },
-      workoutStats (id, dataCat) {
-        // Visualises the data for a whole block/programme. lineGraph() only does it for exercises.
-        var workout = this.tidyProtocols(this.pullProtocols(this.str[id].notes))
-        var sumLoad = 0
-        if (workout) {
-          // Runs the correct corresponding regex function to extract the information. Then it aggregates it all-together.
-          workout.forEach((protocol) => {
-            if (protocol.includes('/') === true) {
-              if (dataCat === 'Sets') {
-                sumLoad += this.setsReps(protocol, dataCat)
-              }
-              if (dataCat === 'Reps') {
-                sumLoad += this.setsReps(protocol, dataCat)
-              }
-              if (dataCat === 'Load') {
-                sumLoad += this.load(protocol)
-              }
-              if (dataCat === 'Volume') {
-                sumLoad += this.setsReps(protocol, 'Reps') * this.load(protocol)
-              }
-            }
+          m.forEach((match) => {
+            data = parseFloat(match)
           })
-          // Appends to graph x and y axis
-          this.xVal.push('Workout ' + (id + 1))
-          this.yVal.push(sumLoad)
         }
+        return data
       },
       descStats (dataForType) {
-        // Visualises the descriptive data below the h2 statsictics tag.
         var storeMax = 0
         var store = 0
-        var sum = this.yVal.reduce((a, b) => a + b)
+        var sum = this.yData.reduce((a, b) => a + b)
 
         // Sets descriptive data with its corresponding info.
         document.getElementById('p1').innerHTML = '<b>Total' + ' ' + dataForType + ':</b> ' + sum
-        document.getElementById('p2').innerHTML = '<b>Average' + ' ' + dataForType + ':</b> ' + sum / this.yVal.length
+        document.getElementById('p2').innerHTML = '<b>Average' + ' ' + dataForType + ':</b> ' + (sum / this.yData.length).toFixed(1)
 
-        this.yVal.forEach((value) => {
+        this.yData.forEach((value) => {
           storeMax = Math.max(storeMax, value)
         })
         document.getElementById('p3').innerHTML = '<b>Maximum' + ' ' + dataForType + ':</b> ' + storeMax
         store = storeMax
-        this.yVal.forEach((value) => {
+        this.yData.forEach((value) => {
           store = Math.min(store, value)
         })
         document.getElementById('p4').innerHTML = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store
         document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store) * 100).toFixed(1) + '%'
       },
-      properCase (string) {
-        // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
-        if (string.includes('at') !== true) {
-          var sentence = string.toLowerCase().split(' ')
-          for (var i = 0; i < sentence.length; i++) {
-            sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
-          }
-          return sentence.join(' ')
-        }
-      },
-      fillData () {
-        // Resets xVal and yVal
-        this.xVal = []
-        this.yVal = []
 
-        // Gets values of graph dropdown selects
-        var dataForExercise = document.getElementById('exercise').value
-        var dataForType = document.getElementById('dataCat').value
-        var e = 1
+      // OTHER METHODS //
 
-        if (dataForExercise !== 'Block Overview') {
-          this.str.forEach((workout, id) => {
-            this.lineGraph(id, dataForExercise, dataForType)
-          })
-          for (;e <= this.yVal.length; e++) {
-            this.xVal.push(e)
-          }
-        } else {
-          if (this.str) {
-            this.str.forEach((workout, id) => {
-              this.workoutStats(id, dataForType)
-            })
-
-            this.descStats(dataForType)
-          }
-        }
-        // Removes duplicates of exercises.
-        var optionValues = []
-        document.querySelectorAll('#exercise option').forEach(function (e) {
-          if (optionValues.indexOf(e.value) > -1) {
-            document.querySelector(e).remove()
-          } else {
-            optionValues.push(e.value)
-          }
-        })
-        // Sets the dataCollection value which the graph uses to display data. This has to be reset each time to update the graph
-        this.dataCollection = {
-          labels: this.xVal,
-          datasets: [
-            {
-              label: 'none',
-              backgroundColor: 'transparent',
-              borderColor: '#282828',
-              data: this.yVal
-            }
-          ]
-        }
-      },
       day (date) {
         var weekday = new Array(7)
         weekday[0] = 'Sun'
@@ -903,59 +955,6 @@
           this.close_toolkit()
           this.toolkit_calcs.bmi.view = true
         }
-      },
-      block_notes_function () {
-        // Set block_notes to true
-        this.block_notes = true
-
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          // If box is open
-          if (self.block_notes) {
-            if (!document.getElementById('block_notes').contains(e.target)) {
-              // Update the workout
-              self.update_programme()
-              window.removeEventListener('click', click)
-              self.block_notes = false
-            }
-          }
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
-      },
-      workout_notes_function (id) {
-        // Set workout_notes to id of workout
-        this.workout_notes = id
-
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          if (self.delete === false) {
-            if (!document.getElementById('workout_notes_' + id).contains(e.target)) {
-              // Update the workout
-              self.update_workout(id)
-            }
-          } else {
-            self.delete = false
-          }
-          window.removeEventListener('click', click)
-          self.block_notes = false
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
       },
       programme_duration (duration) {
         // Turn the duration of the programme into an array to render the boxes in the table
@@ -1052,9 +1051,6 @@
         this.response = ''
       },
       async update_workout (id) {
-        // Close the box
-        this.workout_notes = !this.workout_notes
-
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
@@ -1075,12 +1071,16 @@
         }
         try {
           // eslint-disable-next-line
+          this.msgIcon = 'Cog.svg'
+          this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'notes': workoutsNotes
             }
           )
+          this.msgIcon = 'Done.svg'
+          this.msg = 'Saved'
         } catch (e) {
           console.log(e.toString())
         }
@@ -1117,6 +1117,7 @@
             date: '',
             notes: ''
           }
+          this.scan()
         } catch (e) {
           console.error(`${e}`)
         }
@@ -1152,7 +1153,7 @@
 
             this.$parent.force_get_workouts()
             this.delete = true
-            this.workout_notes_function(id)
+            this.scan()
           } catch (e) {
             console.error(`${e}`)
           }
