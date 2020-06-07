@@ -1,11 +1,6 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  environment = { DEPLOYMENT_HOURS_EXPRESSION = "* 10-22 * * *", DEPLOYMENT_HOURS_TIMEZONE = "Europe/London" }
-
-# Plugins
-[[plugins]]
-package = "netlify-deployment-hours-plugin"
 
 [[redirects]]
   from = "https://app-train-in-blocks.netlify.app/*"
