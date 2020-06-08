@@ -35,6 +35,16 @@
   .message > p, .message svg {
     margin: auto
   }
+  .message--failed {
+    display: grid;
+    grid-gap: .4rem;
+    margin: 2rem 0;
+    font-size: .8rem
+  }
+  .button--failed {
+    margin: 0;
+    padding: .2rem
+  }
   .toggleFloatingNav {
     display: grid;
     grid-template-columns: 10px 1fr 10px;
@@ -382,9 +392,13 @@
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
-                <div class="message">
+                <div v-if="str !== undefined" class="message">
                   <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
                   <p>{{msg}}</p>
+                </div>
+                <div v-if="str === undefined" class="message--failed">
+                  <p>Failed to scan</p>
+                  <button @click="scan()" class="button button--failed">Retry</button>
                 </div>
               </div> <!-- floating_nav -->
             </div>
@@ -556,6 +570,7 @@
         regexNumberBreakdown: /[0-9.]+/gi,
         dataCollection: null,
         options: null,
+        str: [],
         yData: [],
         xLabel: [],
         calendarPlugins: [ dayGridPlugin ],
@@ -572,6 +587,7 @@
       this.$parent.blocks = true
     },
     async mounted () {
+      await this.scan()
       this.$modal.show('start')
       setTimeout(() => {
         this.showStartButton = true
@@ -721,16 +737,18 @@
           }
         })
         // Pulls and creates nested arrays. dataPacketStore > workoutDataPackets > exerciseDataPackets
-        this.str.forEach((object) => {
-          this.workoutDates.push({title: object.name, date: object.date})
-          if (object.notes !== null) {
-            var pulledProtocols = this.pullProtocols(object.name, object.notes)
-            this.dataPacketStore.push(this.chunkArray(pulledProtocols))
-          }
-        })
+        if (this.str !== undefined) {
+          this.str.forEach((object) => {
+            this.workoutDates.push({title: object.name, date: object.date})
+            if (object.notes !== null) {
+              var pulledProtocols = this.pullProtocols(object.name, object.notes)
+              this.dataPacketStore.push(this.chunkArray(pulledProtocols))
+            }
+          })
         // Appends the options to the select
         this.dropdownInit()
         this.selection()
+        }
       },
       // Extracts the protocols and measures and stores it all into a temporary array
       pullProtocols (workoutName, text) {
