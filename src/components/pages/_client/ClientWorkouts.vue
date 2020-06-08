@@ -256,24 +256,6 @@
       opacity: 1
     }
   }
-
-  /* Icons */
-  #trash_icon {
-    height: 16px;
-    width: 16px
-  }
-  #idle {
-    animation: fadeInfi 2s infinite alternate-reverse
-  }
-
-  @keyframes fadeInfi {
-    from {
-      opacity: .4
-    }
-    to {
-      opacity: 1
-    }
-  }
 </style>
 
 <template>
@@ -536,15 +518,14 @@
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
         msg: 'Idle',
-        msgIcon: ''
+        msgIcon: 'Done.svg'
       }
     },
     created () {
       this.$parent.blocks = true
     },
-    async mounted () {
-      await this.scan()
-      this.selection()
+    mounted () {
+      this.scan()
     },
     methods: {
       toggleFloatingNav () {
@@ -569,7 +550,6 @@
         self.update_programme()
         setTimeout(() => {
           this.msg = 'Idle'
-          this.msgIcon = ''
         }, 4000)
       },
       updateWorkoutNotes (id) {
@@ -578,7 +558,6 @@
         this.scan()
         setTimeout(() => {
           this.msg = 'Idle'
-          this.msgIcon = ''
         }, 4000)
       },
 
@@ -688,7 +667,7 @@
         this.str.forEach((object) => {
           this.workoutDates.push({title: object.name, date: object.date})
           if (object.notes !== null) {
-            var pulledProtocols = this.pullProtocols(object.name ,object.notes)
+            var pulledProtocols = this.pullProtocols(object.name, object.notes)
             this.dataPacketStore.push(this.chunkArray(pulledProtocols))
           }
         })
@@ -697,7 +676,7 @@
         this.selection()
       },
       // Extracts the protocols and measures and stores it all into a temporary array
-      pullProtocols (workoutName ,text) {
+      pullProtocols (workoutName, text) {
         var textNoHTML = text.replace(/<[^>]*>?/gm, '')
         var tempStore = []
         let m
