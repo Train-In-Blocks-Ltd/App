@@ -546,15 +546,13 @@
         this.$modal.show('toolkit')
       },
       updateBlockNotes () {
-        var self = this
-        self.update_programme()
+        this.update_programme()
         setTimeout(() => {
           this.msg = 'Idle'
         }, 4000)
       },
       updateWorkoutNotes (id) {
-        var self = this
-        self.update_workout(id)
+        this.update_workout(id)
         this.scan()
         setTimeout(() => {
           this.msg = 'Idle'
