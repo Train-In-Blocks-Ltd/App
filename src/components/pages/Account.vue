@@ -33,7 +33,7 @@
 
 <template>
   <div id="account" v-if="this.$parent.claims">
-    <h1>Your Account</h1>
+    <h1 class="main-title">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
         <div class="form__options">
           <label for="first-name"><b>Name: </b></label>

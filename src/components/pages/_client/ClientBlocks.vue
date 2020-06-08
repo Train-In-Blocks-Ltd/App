@@ -76,10 +76,10 @@
         <div v-if="!this.$parent.no_programmes" class="blocks_grid">
           <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
               :key="index" class="block_container">
-              <router-link class="block_container--link" :to="'block/'+block.id">
-              <h3>{{block.name}}</h3>
-              <p><b>Duration: </b>{{block.duration}}</p>
-              <p><b>Start: </b>{{block.start}}</p>
+              <router-link class="block_container--link" :to="'block/' + block.id">
+                <h3>{{block.name}}</h3>
+                <p><b>Duration: </b>{{block.duration}}</p>
+                <p><b>Start: </b>{{block.start}}</p>
               </router-link>
           </div>
         </div>
