@@ -160,7 +160,7 @@
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 660px;
+    max-width: 400px;
     margin: 0
   }
   .form_buttons {

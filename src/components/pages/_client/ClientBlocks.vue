@@ -21,17 +21,18 @@
   }
   .block_container--link {
     padding: 1.5rem;
-    border: 1px solid #282828;
     display: block;
-    transition: background-color .4s, color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    box-shadow: 0 0 20px 10px #28282810;
+    transition: box-shadow .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .block_container--link:hover {
+    transform: scale(1.01);
     text-decoration: none;
-    background-color: #282828;
-    color: white
+    box-shadow: 0 0 20px 10px #28282820;
+    background-color: white
   }
   .block_container--link:active {
-    transform: scale(.95);
+    transform: scale(.96);
     opacity: .6
   }
   .block_container--link h3 {
@@ -65,12 +66,19 @@
     display: grid;
     grid-gap: .5rem
   }
+
+  @media (max-width: 768px) {
+    .block_container--link:hover {
+      transform: scale(1);
+      box-shadow: 0 0 20px 10px #28282810
+    }
+  }
 </style>
 <template>
     <div>
       <div>
         <div class="spacer"/>
-        <h2>Blocks</h2>
+        <h2 class="sub-title">Blocks</h2>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
         <div v-if="!this.$parent.no_programmes" class="blocks_grid">

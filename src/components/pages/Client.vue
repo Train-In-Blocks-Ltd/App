@@ -122,7 +122,7 @@
     div.floating_nav a:before {
       content: none
     }
-    .floating_nav p {
+    .floating_nav .text--hideable {
       display: none
     }
   }
@@ -166,10 +166,10 @@
         <label><b>Phone: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
       <div class="floating_nav">
-        <a href="javascript:void(0)" @click="showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
+        <a href="javascript:void(0)" @click="showClientNotes()"><p class="text--hideable">Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
         <div v-for="(clients, index) in $parent.posts" :key="index">
           <div class="archive-client" v-if="clients.client_id == $route.params.client_id">
-            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p>Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
+            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p class="text--hideable">Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
           </div>
         </div>
       </div>

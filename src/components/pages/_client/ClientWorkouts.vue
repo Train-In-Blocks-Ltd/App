@@ -5,8 +5,7 @@
   }
   .block_info {
     display: grid;
-    grid-template-columns: max-content;
-    grid-gap: 1rem
+    grid-template-columns: max-content
   }
   #blocks .block_info label {
     grid-auto-columns: min-content;
@@ -388,10 +387,10 @@
             <div class="floating_nav--container">
               <div class="floating_nav">
                 <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p class="text--hideable">Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p class="text--hideable">Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
                 <div v-if="str !== undefined" class="message">
                   <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
                   <p>{{msg}}</p>
