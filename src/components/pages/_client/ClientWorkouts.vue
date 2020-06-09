@@ -5,8 +5,7 @@
   }
   .block_info {
     display: grid;
-    grid-template-columns: max-content;
-    grid-gap: 1rem
+    grid-template-columns: max-content
   }
   #blocks .block_info label {
     grid-auto-columns: min-content;
@@ -34,6 +33,16 @@
   }
   .message > p, .message svg {
     margin: auto
+  }
+  .message--failed {
+    display: grid;
+    grid-gap: .4rem;
+    margin: 2rem 0;
+    font-size: .8rem
+  }
+  .button--failed {
+    margin: 0;
+    padding: .2rem
   }
   .toggleFloatingNav {
     display: grid;
@@ -66,16 +75,12 @@
     grid-gap: 5rem;
     margin-top: 5rem
   }
-  .block-plan {
-    border-left: 2px solid #282828;
-    padding-left: 5rem
-  }
 
   /* Calendar */
   .calendar {
     display: grid;
-    padding-left: 5rem;
-    border-left: 2px solid #282828
+    padding: 5rem;
+    box-shadow: 0 0 20px 10px #28282810
   }
   .fc.fc-ltr.fc-unthemed {
     width: 70%
@@ -85,6 +90,10 @@
   }
 
   /* Block Table */
+  .block-plan {
+    padding: 5rem;
+    box-shadow: 0 0 20px 10px #28282810
+  }
   .block_table {
     height: fit-content;
     max-width: 482px
@@ -142,8 +151,9 @@
     grid-gap: 2rem
   }
   .wrapper--workout {
-    border: 1px solid #282828;
-    height: fit-content
+    height: fit-content;
+    background-color: #F4F4F4;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .workouts--workout {
     margin: 0;
@@ -156,17 +166,36 @@
     font-size: .8rem
   }
   .bottom-bar {
-    padding: .6rem 1rem;
-    border-top: 1px solid #282828
+    padding: .6rem 1rem
   }
   .bottom-bar .button {
     margin: 0
   }
+  .show-workout {
+    padding: 12px 15px;
+    max-height: 314px;
+    color: #282828;
+    line-height: 1.42;
+    overflow-y: auto;
+    font-size: .8rem
+  }
+  .show-workout h2 {
+    font-size: 1.5rem
+  }
+  .show-workout p, .show-workout ul, .show-workout ol {
+    text-decoration: none;
+    margin: 0;
+    padding: 0
+  }
+  .activeWorkout {
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810
+  }
 
   /* Graph */
   .graph {
-    border-left: 2px solid #282828;
-    padding-left: 5rem
+    padding: 5rem;
+    box-shadow: 0 0 20px 10px #28282810
   }
   .container--content {
     display: grid;
@@ -186,6 +215,9 @@
   #chart {
     width: 500px
   }
+  .data-desc__p {
+    margin: 1rem 0
+  }
 
   /* Add Workout Form */
   #button--new-workout {
@@ -202,6 +234,17 @@
     display: grid;
     grid-gap: .5rem
   }
+
+  /* Start Modal
+  .modal--start {
+    display: grid;
+    padding: 2rem
+  }
+  .svg--start-load {
+    height: 100px;
+    width: 100px;
+    margin: 1rem auto
+  } */
 
   /* Toolkit */
   .modal--toolkit {
@@ -256,28 +299,20 @@
       opacity: 1
     }
   }
-
-  /* Icons */
-  #trash_icon {
-    height: 16px;
-    width: 16px
-  }
-  #idle {
-    animation: fadeInfi 2s infinite alternate-reverse
-  }
-
-  @keyframes fadeInfi {
-    from {
-      opacity: .4
-    }
-    to {
-      opacity: 1
-    }
-  }
 </style>
 
 <template>
     <div id="blocks">
+      <!--
+      <modal name="start" height="auto" :adaptive="true" :clickToClose="false" :classes="'modal--start'">
+        <div class="modal--start">
+          <inline-svg class="svg--start-load" :src="require('../../../assets/svg/status/' + startSVG)"></inline-svg>
+          <transition enter-active-class="animate__animated animate__fadeIn">
+            <button class="button start-button" v-show="showStartButton" @click="hideStart()">Let's Start</button>
+          </transition>
+        </div>
+      </modal>
+      -->
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--copy">
           <h3>Let's progress the workouts!</h3>
@@ -354,13 +389,17 @@
             <div class="floating_nav--container">
               <div class="floating_nav">
                 <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p>Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p>Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p>Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
-                <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p>Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
-                <div class="message">
-                  <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)"/>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p class="text--hideable">Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p class="text--hideable">Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
+                <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
+                <div v-if="str !== undefined" class="message">
+                  <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
                   <p>{{msg}}</p>
+                </div>
+                <div v-if="str === undefined" class="message--failed">
+                  <p>Failed to scan</p>
+                  <button @click="scan()" class="button button--failed">Retry</button>
                 </div>
               </div> <!-- floating_nav -->
             </div>
@@ -392,16 +431,18 @@
                 <div>
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div class="wrapper--workout" v-for="(workout, index) in programme.workouts"
+                    <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout}" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <p class="workouts--workout">
                         <span><b>{{workout.name}}</b></span><br>
                         <span class="text--date">{{day(workout.date)}}</span>
                         <span class="text--date">{{workout.date}}</span>
                       </p>
-                      <quill v-model="workout.notes" output="html" class="quill" :config="quillSettings"/>
+                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="quillSettings"/>
+                      <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
                       <div class="bottom-bar">
-                        <button class="button" @click="updateWorkoutNotes(workout.id)">Save</button>
+                        <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id)">Edit</button>
+                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="updateWorkoutNotes(workout.id)">Save</button>
                         <button id="button-move" class="button">Move</button>
                         <button id="button-delete" class="button delete" @click="delete_workout(workout.id)">Delete</button>
                       </div>
@@ -450,11 +491,11 @@
                   </div>
                   <div class="spacer"/>
                   <div v-show="showType" class="data-desc">
-                    <p id="p1"></p>
-                    <p id="p2"></p>
-                    <p id="p3"></p>
-                    <p id="p4"></p>
-                    <p id="p5"></p>
+                    <p id="p1" class="data-desc__p"></p>
+                    <p id="p2" class="data-desc__p"></p>
+                    <p id="p3" class="data-desc__p"></p>
+                    <p id="p4" class="data-desc__p"></p>
+                    <p id="p5" class="data-desc__p"></p>
                   </div>
                   <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
                 </div>
@@ -522,7 +563,6 @@
           date: ''
         },
         delete: false,
-        str: null,
         showType: true,
         dataPacketStore: [],
         regexExtract: /(?<=\[)(.*?)\s*:\s*(.*?)(?=\])/gi,
@@ -531,20 +571,29 @@
         regexNumberBreakdown: /[0-9.]+/gi,
         dataCollection: null,
         options: null,
+        str: [],
         yData: [],
         xLabel: [],
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
         msg: 'Idle',
-        msgIcon: ''
+        msgIcon: 'Cog.svg',
+        isEditingWorkout: false,
+        editWorkout: null
+        //startSVG: 'Cog.svg',
+        //showStartButton: false
       }
     },
     created () {
       this.$parent.blocks = true
     },
     async mounted () {
-      await this.scan()
-      this.selection()
+      await this.scan() //This is the bit that scans the whole this.str // You'll find the this.str being populated in scan()
+      /* this.$modal.show('start')
+      setTimeout(() => {
+        this.showStartButton = true
+        this.startSVG = 'Done.svg'
+      }, 2000) */
     },
     methods: {
       toggleFloatingNav () {
@@ -555,6 +604,12 @@
           this.msgFloatingNav = 'Hide'
         }
       },
+      /*
+      hideStart () {
+        this.$modal.hide('start')
+        this.scan()
+      },
+      */
       showCopy () {
         this.$modal.show('copy')
       },
@@ -565,21 +620,21 @@
         this.$modal.show('toolkit')
       },
       updateBlockNotes () {
-        var self = this
-        self.update_programme()
-        setTimeout(() => {
-          this.msg = 'Idle'
-          this.msgIcon = ''
-        }, 4000)
+        this.update_programme()
+      },
+      editingWorkoutNotes (id) {
+        this.isEditingWorkout = true
+        this.editWorkout = id
+        this.msg = 'Editing...'
       },
       updateWorkoutNotes (id) {
-        var self = this
-        self.update_workout(id)
+        this.update_workout(id)
+        this.isEditingWorkout = false
+        this.editWorkout = null
         this.scan()
-        setTimeout(() => {
-          this.msg = 'Idle'
-          this.msgIcon = ''
-        }, 4000)
+      },
+      handleScroll () {
+        this.scrollpx = window.scrollY
       },
 
       // CHART METHODS //
@@ -685,19 +740,21 @@
           }
         })
         // Pulls and creates nested arrays. dataPacketStore > workoutDataPackets > exerciseDataPackets
-        this.str.forEach((object) => {
-          this.workoutDates.push({title: object.name, date: object.date})
-          if (object.notes !== null) {
-            var pulledProtocols = this.pullProtocols(object.name ,object.notes)
-            this.dataPacketStore.push(this.chunkArray(pulledProtocols))
-          }
-        })
+        if (this.str !== undefined) {
+          this.str.forEach((object) => {
+            this.workoutDates.push({title: object.name, date: object.date})
+            if (object.notes !== null) {
+              var pulledProtocols = this.pullProtocols(object.name, object.notes)
+              this.dataPacketStore.push(this.chunkArray(pulledProtocols))
+            }
+          })
         // Appends the options to the select
         this.dropdownInit()
         this.selection()
+        }
       },
       // Extracts the protocols and measures and stores it all into a temporary array
-      pullProtocols (workoutName ,text) {
+      pullProtocols (workoutName, text) {
         var textNoHTML = text.replace(/<[^>]*>?/gm, '')
         var tempStore = []
         let m
@@ -1071,7 +1128,6 @@
         }
         try {
           // eslint-disable-next-line
-          this.msgIcon = 'Cog.svg'
           this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
@@ -1079,8 +1135,7 @@
               'notes': workoutsNotes
             }
           )
-          this.msgIcon = 'Done.svg'
-          this.msg = 'Saved'
+          this.msg = 'Idle'
         } catch (e) {
           console.log(e.toString())
         }

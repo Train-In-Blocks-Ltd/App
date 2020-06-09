@@ -32,7 +32,7 @@
 
 <template>
   <div id="home">
-    <h1>Your Clients</h1>
+    <h1 class="main-title">Your Clients</h1>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>

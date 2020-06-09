@@ -55,7 +55,7 @@
   }
 
   /* Fonts */
-  h1 {
+  .main-title {
     margin-top: 0;
     margin-bottom: 3rem;
     font-weight: bold;
@@ -63,7 +63,7 @@
     text-transform: capitalize;
     letter-spacing: .15rem
   }
-  h2 {
+  .sub-title {
     font-size: 2.5rem;
     letter-spacing: .15rem;
     margin: 1.75rem 0
@@ -76,6 +76,12 @@
     color: #282828;
     font-weight: bold
   }
+  ul, ol {
+    padding-left: 1rem
+  }
+  p {
+    margin: 0
+  }
   svg path:not(.transparent) {
     fill: #282828
   }
@@ -84,6 +90,7 @@
   .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary {
     text-transform: capitalize;
     text-align: center;
+    outline-width: 0;
     border: 1px solid #282828;
     padding: .5rem 1rem;
     height: auto;
@@ -153,7 +160,7 @@
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 660px;
+    max-width: 400px;
     margin: 0
   }
   .form_buttons {
@@ -212,7 +219,7 @@
     grid-area: sidebar;
     display: grid;
     text-align: left;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+    box-shadow: 0 0 20px 10px #28282810;
     padding: 5rem 2.5rem 2.5rem 2.5rem;
     grid-auto-rows: 3.75rem auto min-content;
     position: sticky;
@@ -386,7 +393,7 @@
     color: #282828;
     overflow-y: auto
   }
-  .ql-editor ul li:not(.ql-direction-rtl) {
+  .ql-editor ul li:not(.ql-direction-rtl), .ql-editor ol {
     padding: 0
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
