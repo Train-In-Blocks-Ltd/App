@@ -235,7 +235,7 @@
     grid-gap: .5rem
   }
 
-  /* Start Modal */
+  /* Start Modal
   .modal--start {
     display: grid;
     padding: 2rem
@@ -244,7 +244,7 @@
     height: 100px;
     width: 100px;
     margin: 1rem auto
-  }
+  } */
 
   /* Toolkit */
   .modal--toolkit {
@@ -303,6 +303,7 @@
 
 <template>
     <div id="blocks">
+      <!--
       <modal name="start" height="auto" :adaptive="true" :clickToClose="false" :classes="'modal--start'">
         <div class="modal--start">
           <inline-svg class="svg--start-load" :src="require('../../../assets/svg/status/' + startSVG)"></inline-svg>
@@ -311,6 +312,7 @@
           </transition>
         </div>
       </modal>
+      -->
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--copy">
           <h3>Let's progress the workouts!</h3>
@@ -577,21 +579,21 @@
         msg: 'Idle',
         msgIcon: 'Cog.svg',
         isEditingWorkout: false,
-        editWorkout: null,
-        startSVG: 'Cog.svg',
-        showStartButton: false
+        editWorkout: null
+        //startSVG: 'Cog.svg',
+        //showStartButton: false
       }
     },
     created () {
       this.$parent.blocks = true
     },
     async mounted () {
-      await this.scan()
-      this.$modal.show('start')
+      await this.scan() //This is the bit that scans the whole this.str // You'll find the this.str being populated in scan()
+      /* this.$modal.show('start')
       setTimeout(() => {
         this.showStartButton = true
         this.startSVG = 'Done.svg'
-      }, 2000)
+      }, 2000) */
     },
     methods: {
       toggleFloatingNav () {
@@ -602,10 +604,12 @@
           this.msgFloatingNav = 'Hide'
         }
       },
+      /*
       hideStart () {
         this.$modal.hide('start')
         this.scan()
       },
+      */
       showCopy () {
         this.$modal.show('copy')
       },
