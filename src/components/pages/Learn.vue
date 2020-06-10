@@ -7,6 +7,6 @@
 
 <template>
   <div>
-    <iframe src="http://www.traininblocks.com" frameborder="0">This didn't work, please visit www.traininblocks.com/blog</iframe>
+    <iframe src="http://www.traininblocks.com/blog/" frameborder="0">This didn't work, please visit www.traininblocks.com/blog</iframe>
   </div>
 </template>

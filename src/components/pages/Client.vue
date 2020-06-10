@@ -46,7 +46,7 @@
 
   /* Floating Nav */
   .floating_nav {
-    z-index: 1;
+    z-index: 2;
     position: fixed;
     right: 5rem;
     top: 5rem;
@@ -155,7 +155,7 @@
       <div class="client_notes--header">
         <p>Client Information</p>
       </div>
-      <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill" :config="quillSettings"/>
+      <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill" :config="$parent.config"/>
     </modal>
     <!-- Don't show if on blocks page because blocks page renders slightly different top ui -->
     <div class="top_grid" v-if="!blocks">
@@ -174,7 +174,7 @@
         </div>
       </div>
     </div>
-    <router-view :key="$route.fullPath" :quillSettings="quillSettings"></router-view>
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 
@@ -186,7 +186,6 @@
     components: {
       InlineSvg
     },
-    props: ['quillSettings'],
     data: function () {
       return {
         no_programmes: false,
