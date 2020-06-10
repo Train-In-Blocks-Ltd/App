@@ -633,7 +633,7 @@
     </nav> <!-- .sidebar -->
     <main v-dragscroll:nochilddrag>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-        <router-view :key="$route.fullPath" :quillSettings="config" :childData="client_details"/>
+        <router-view :key="$route.fullPath"/>
       </transition>
     </main>
   </div>

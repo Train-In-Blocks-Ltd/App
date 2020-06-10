@@ -352,7 +352,7 @@
           <div>
             <p><b>Block Notes</b></p>
           </div>
-          <quill v-model="programme.notes" output="html" class="quill" :config="quillSettings"/>
+          <quill v-model="programme.notes" output="html" class="quill" :config="$parent.$parent.config"/>
         </modal>
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
@@ -455,8 +455,7 @@
                   <div class="data-select">
                     <div class="data-select__options">
                       <label for="measure"><b>Data: </b></label>
-                      <select @change="selection()" id="dataName" name="measure">
-                      </select>
+                      <select @change="selection()" id="dataName" name="measure" />
                     </div>
                     <div class="data-select__options" v-show="showType">
                       <label for="measure-type"><b>Data type: </b></label>
@@ -506,7 +505,6 @@
       InlineSvg,
       FullCalendar
     },
-    props: ['quillSettings', 'childData'],
     data: function () {
       return {
         showFloatingNav: true,
@@ -571,8 +569,7 @@
     },
     async mounted () {
       await this.$parent.get_client_details()
-      await this.initPreScan()
-      await this.scan()
+      this.scan()
     },
     methods: {
       toggleFloatingNav () {
@@ -702,38 +699,32 @@
       },
 
       // INIT METHODS //
-
-      initPreScan () {
-        this.childData.programmes.forEach((programme) => {
-            // eslint-disable-next-line
-            if (programme.id == this.$route.params.id) {
-              this.str = programme.workouts
-            }
+      scan () {
+        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          // eslint-disable-next-line
+          if (programme.id == this.$route.params.id) {
+            this.str = programme.workouts
+            this.str.forEach((object) => {
+              this.workoutDates.push({title: object.name, date: object.date})
+              if (object.notes !== null) {
+                var pulledProtocols = this.pullProtocols(object.name, object.notes)
+                this.dataPacketStore.push(this.chunkArray(pulledProtocols))
+              }
+            })
+            // Appends the options to the select
+            this.dropdownInit()
+            this.selection()
+          }
         })
       },
-      scan () {
-        this.initPreScan()
-        this.workoutDates.length = 0
-        this.dataPacketStore.length = 0
-        // Pulls and creates nested arrays. dataPacketStore > workoutDataPackets > exerciseDataPackets
-        if (this.str !== undefined) {
-          this.str.forEach((object) => {
-            this.workoutDates.push({title: object.name, date: object.date})
-            if (object.notes !== null) {
-              var pulledProtocols = this.pullProtocols(object.name, object.notes)
-              this.dataPacketStore.push(this.chunkArray(pulledProtocols))
-            }
-          })
-          // Appends the options to the select
-          this.dropdownInit()
-          this.selection()
-        }
-      },
+
       // Extracts the protocols and measures and stores it all into a temporary array
       pullProtocols (workoutName, text) {
         var textNoHTML = text.replace(/<[^>]*>?/gm, '')
         var tempStore = []
         let m
+        // THE REGEX DOESN'T MATCH THE PREVIOUS WORKOUT FORMATS AND RESULTS IN AN ERROR. WE NEED A WAY TO NOT BREAK THE APPLICATION IF THE REGEX DOESN'T FIND A WORKOUT
+        console.log(this.regexExtract.exec(textNoHTML))
         while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
           if (m.index === this.regexExtract.lastIndex) {
             this.regexExtract.lastIndex++
@@ -747,8 +738,11 @@
             }
           })
         }
+        // RETURNS NULL
+        console.log(tempStore)
         return tempStore
       },
+
       // Breaks down the temporary array into data packets of length 2
       // Data Packet format: ['NAME', 'PROTOCOL/MEASURE/NUMBERS']
       chunkArray (myArray) {
@@ -760,6 +754,7 @@
         }
         return tempArray
       },
+
       // Init the dropdown selection with validation
       dropdownInit () {
         var dropdownEl = document.getElementById('dataName')
