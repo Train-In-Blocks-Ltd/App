@@ -455,6 +455,7 @@
                         <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
                           <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
                           <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
+                          <label><b>Week ID: </b><input type="number" v-model="new_workout.week_id" required /></label>
                           <div class="form_buttons">
                               <input type="submit" class="button" value="Save" />
                               <button class="button" v-on:click="close()">Close</button>
@@ -560,7 +561,8 @@
         },
         new_workout: {
           name: '',
-          date: ''
+          date: '',
+          week_id: ''
         },
         delete: false,
         showType: true,
@@ -1149,7 +1151,8 @@
           const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
             qs.stringify({
               programme_id: this.$route.params.id,
-              date: this.new_workout.date
+              date: this.new_workout.date,
+              week_id: this.week_id
             }),
             {
               headers: {
@@ -1171,7 +1174,8 @@
           this.new_workout = {
             name: '',
             date: '',
-            notes: ''
+            notes: '',
+            week_id: ''
           }
           this.scan()
         } catch (e) {
