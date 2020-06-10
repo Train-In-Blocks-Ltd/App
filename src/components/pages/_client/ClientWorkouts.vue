@@ -715,8 +715,10 @@
                 }
               })
               // Appends the options to the select
-              this.dropdownInit()
-              this.selection()
+              if (this.dataPacketStore !== null) {
+                this.dropdownInit()
+                this.selection()
+              }
             }
           }
         })
