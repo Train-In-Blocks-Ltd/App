@@ -334,7 +334,7 @@
         } catch (e) {
           console.log(e.toString())
         }
-        this.get_workouts()
+        await this.get_workouts()
       },
       async get_client_details () {
         try {
@@ -372,7 +372,7 @@
         } catch (e) {
           console.log(e.toString())
         }
-        this.get_workouts()
+        await this.get_workouts()
       },
       async update_client () {
         this.$parent.loading = true

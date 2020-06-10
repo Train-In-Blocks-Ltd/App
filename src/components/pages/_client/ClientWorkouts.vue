@@ -588,6 +588,7 @@
       this.$parent.blocks = true
     },
     async mounted () {
+      await this.$parent.get_client_details()
       await this.scan() // This is the bit that scans the whole this.str // You'll find the this.str being populated in scan()
       /* this.$modal.show('start')
       setTimeout(() => {
