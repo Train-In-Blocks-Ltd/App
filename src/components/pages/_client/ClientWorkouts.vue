@@ -565,7 +565,7 @@
         delete: false,
         showType: true,
         dataPacketStore: [],
-        regexExtract: /(?<=\[)(.*?)\s*:\s*(.*?)(?=\])/gi,
+        regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
         regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
         regexLoadCapture: /(at|@)(.+)/gi,
         regexNumberBreakdown: /[0-9.]+/gi,
@@ -580,15 +580,15 @@
         msgIcon: 'Cog.svg',
         isEditingWorkout: false,
         editWorkout: null
-        //startSVG: 'Cog.svg',
-        //showStartButton: false
+        // startSVG: 'Cog.svg',
+        // showStartButton: false
       }
     },
     created () {
       this.$parent.blocks = true
     },
     async mounted () {
-      await this.scan() //This is the bit that scans the whole this.str // You'll find the this.str being populated in scan()
+      await this.scan() // This is the bit that scans the whole this.str // You'll find the this.str being populated in scan()
       /* this.$modal.show('start')
       setTimeout(() => {
         this.showStartButton = true
@@ -748,9 +748,9 @@
               this.dataPacketStore.push(this.chunkArray(pulledProtocols))
             }
           })
-        // Appends the options to the select
-        this.dropdownInit()
-        this.selection()
+          // Appends the options to the select
+          this.dropdownInit()
+          this.selection()
         }
       },
       // Extracts the protocols and measures and stores it all into a temporary array
