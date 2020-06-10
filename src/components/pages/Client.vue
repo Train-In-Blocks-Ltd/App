@@ -46,7 +46,7 @@
 
   /* Floating Nav */
   .floating_nav {
-    z-index: 1;
+    z-index: 2;
     position: fixed;
     right: 5rem;
     top: 5rem;
@@ -174,7 +174,7 @@
         </div>
       </div>
     </div>
-    <router-view :key="$route.fullPath" :quillSettings="quillSettings"></router-view>
+    <router-view :key="$route.fullPath" :quillSettings="quillSettings" :childData="childData"></router-view>
   </div>
 </template>
 
@@ -186,7 +186,7 @@
     components: {
       InlineSvg
     },
-    props: ['quillSettings'],
+    props: ['quillSettings', 'childData'],
     data: function () {
       return {
         no_programmes: false,

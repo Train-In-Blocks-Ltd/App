@@ -235,17 +235,6 @@
     grid-gap: .5rem
   }
 
-  /* Start Modal
-  .modal--start {
-    display: grid;
-    padding: 2rem
-  }
-  .svg--start-load {
-    height: 100px;
-    width: 100px;
-    margin: 1rem auto
-  } */
-
   /* Toolkit */
   .modal--toolkit {
     padding: 1rem
@@ -303,16 +292,6 @@
 
 <template>
     <div id="blocks">
-      <!--
-      <modal name="start" height="auto" :adaptive="true" :clickToClose="false" :classes="'modal--start'">
-        <div class="modal--start">
-          <inline-svg class="svg--start-load" :src="require('../../../assets/svg/status/' + startSVG)"></inline-svg>
-          <transition enter-active-class="animate__animated animate__fadeIn">
-            <button class="button start-button" v-show="showStartButton" @click="hideStart()">Let's Start</button>
-          </transition>
-        </div>
-      </modal>
-      -->
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--copy">
           <h3>Let's progress the workouts!</h3>
@@ -393,11 +372,11 @@
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="showBlockNotes()"><p class="text--hideable">Block Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/BlockNotes.svg')"/></a>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
                 <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
-                <div v-if="str !== undefined" class="message">
+                <div v-if="str != 0" class="message">
                   <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
                   <p>{{msg}}</p>
                 </div>
-                <div v-if="str === undefined" class="message--failed">
+                <div v-if="str === undefined || str === null || str == 0 || str === []" class="message--failed">
                   <p>Failed to scan</p>
                   <button @click="scan()" class="button button--failed">Retry</button>
                 </div>
@@ -491,11 +470,11 @@
                   </div>
                   <div class="spacer"/>
                   <div v-show="showType" class="data-desc">
-                    <p id="p1" class="data-desc__p"></p>
-                    <p id="p2" class="data-desc__p"></p>
-                    <p id="p3" class="data-desc__p"></p>
-                    <p id="p4" class="data-desc__p"></p>
-                    <p id="p5" class="data-desc__p"></p>
+                    <p v-html="p1" class="data-desc__p" />
+                    <p v-html="p2" class="data-desc__p" /><br>
+                    <p v-html="p3" class="data-desc__p" />
+                    <p v-html="p4" class="data-desc__p" />
+                    <p v-html="p5" class="data-desc__p" />
                   </div>
                   <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
                 </div>
@@ -527,7 +506,7 @@
       InlineSvg,
       FullCalendar
     },
-    props: ['quillSettings'],
+    props: ['quillSettings', 'childData'],
     data: function () {
       return {
         showFloatingNav: true,
@@ -579,9 +558,12 @@
         msg: 'Idle',
         msgIcon: 'Cog.svg',
         isEditingWorkout: false,
-        editWorkout: null
-        // startSVG: 'Cog.svg',
-        // showStartButton: false
+        editWorkout: null,
+        p1: null,
+        p2: null,
+        p3: null,
+        p4: null,
+        p5: null
       }
     },
     created () {
@@ -589,12 +571,8 @@
     },
     async mounted () {
       await this.$parent.get_client_details()
-      await this.scan() // This is the bit that scans the whole this.str // You'll find the this.str being populated in scan()
-      /* this.$modal.show('start')
-      setTimeout(() => {
-        this.showStartButton = true
-        this.startSVG = 'Done.svg'
-      }, 2000) */
+      await this.initPreScan()
+      await this.scan()
     },
     methods: {
       toggleFloatingNav () {
@@ -605,12 +583,6 @@
           this.msgFloatingNav = 'Hide'
         }
       },
-      /*
-      hideStart () {
-        this.$modal.hide('start')
-        this.scan()
-      },
-      */
       showCopy () {
         this.$modal.show('copy')
       },
@@ -731,15 +703,18 @@
 
       // INIT METHODS //
 
+      initPreScan () {
+        this.childData.programmes.forEach((programme) => {
+            // eslint-disable-next-line
+            if (programme.id == this.$route.params.id) {
+              this.str = programme.workouts
+            }
+        })
+      },
       scan () {
+        this.initPreScan()
         this.workoutDates.length = 0
         this.dataPacketStore.length = 0
-        this.$parent.$parent.client_details.programmes.forEach((programme) => {
-          // eslint-disable-next-line
-          if (programme.id == this.$route.params.id) {
-            this.str = programme.workouts
-          }
-        })
         // Pulls and creates nested arrays. dataPacketStore > workoutDataPackets > exerciseDataPackets
         if (this.str !== undefined) {
           this.str.forEach((object) => {
@@ -788,7 +763,14 @@
       // Init the dropdown selection with validation
       dropdownInit () {
         var dropdownEl = document.getElementById('dataName')
-        dropdownEl.innerHTML = '<option>Block Overview</option>'
+        var ddLength = dropdownEl.options.length
+        let i
+        for (i = ddLength - 1; i >= 0; i--) {
+          dropdownEl.remove(i)
+        }
+        var option = document.createElement('option')
+        option.text = 'Block Overview'
+        dropdownEl.add(option)
         var tempItemStore = []
         var tempItemStoreLate = []
         this.dataPacketStore.forEach((item) => {
@@ -914,19 +896,19 @@
         var sum = this.yData.reduce((a, b) => a + b)
 
         // Sets descriptive data with its corresponding info.
-        document.getElementById('p1').innerHTML = '<b>Total' + ' ' + dataForType + ':</b> ' + sum
-        document.getElementById('p2').innerHTML = '<b>Average' + ' ' + dataForType + ':</b> ' + (sum / this.yData.length).toFixed(1)
+        this.p1 = '<b>Total' + ' ' + dataForType + ':</b> ' + sum
+        this.p2 = '<b>Average' + ' ' + dataForType + ':</b> ' + (sum / this.yData.length).toFixed(1)
 
         this.yData.forEach((value) => {
           storeMax = Math.max(storeMax, value)
         })
-        document.getElementById('p3').innerHTML = '<b>Maximum' + ' ' + dataForType + ':</b> ' + storeMax
+        this.p3 = '<b>Maximum' + ' ' + dataForType + ':</b> ' + storeMax
         store = storeMax
         this.yData.forEach((value) => {
           store = Math.min(store, value)
         })
-        document.getElementById('p4').innerHTML = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store
-        document.getElementById('p5').innerHTML = '- Percentage Change: ' + ((storeMax / store) * 100).toFixed(1) + '%'
+        this.p4 = '<b>Minimum' + ' ' + dataForType + ':</b> ' + store
+        this.p5 = 'Percentage Change: ' + ((storeMax / store) * 100).toFixed(1) + '%'
       },
 
       // OTHER METHODS //
