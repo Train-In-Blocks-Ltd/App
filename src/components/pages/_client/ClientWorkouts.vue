@@ -427,7 +427,7 @@
                       </div>
                     </div>
                     <div>
-                      <button v-if="!creating" id="button--new-workout" class="button" v-on:click="creation()">New workout</button>
+                      <button v-if="!creating || $parent.no_workouts === true" id="button--new-workout" class="button" v-on:click="creation()">New workout</button>
                       <p class="response" v-if="!creating">{{response}}</p>
                       <div v-if="creating" class="add_workout_container">
                         <h3>New Workout</h3>
@@ -694,8 +694,10 @@
             this.xLabel.push('Workout ' + x)
           }
         }
-        this.descStats(dataForType)
-        this.fillData()
+        if (this.yData.length !== 0) {
+          this.descStats(dataForType)
+          this.fillData()
+        }
       },
 
       // INIT METHODS //
@@ -704,16 +706,18 @@
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
             this.str = programme.workouts
-            this.str.forEach((object) => {
-              this.workoutDates.push({title: object.name, date: object.date})
-              if (object.notes !== null) {
-                var pulledProtocols = this.pullProtocols(object.name, object.notes)
-                this.dataPacketStore.push(this.chunkArray(pulledProtocols))
-              }
-            })
-            // Appends the options to the select
-            this.dropdownInit()
-            this.selection()
+            if (this.str !== null && this.$parent.no_workouts === false) {
+              this.str.forEach((object) => {
+                this.workoutDates.push({title: object.name, date: object.date})
+                if (object.notes !== null) {
+                  var pulledProtocols = this.pullProtocols(object.name, object.notes)
+                  this.dataPacketStore.push(this.chunkArray(pulledProtocols))
+                }
+              })
+              // Appends the options to the select
+              this.dropdownInit()
+              this.selection()
+            }
           }
         })
       },
@@ -723,8 +727,6 @@
         var textNoHTML = text.replace(/<[^>]*>?/gm, '')
         var tempStore = []
         let m
-        // THE REGEX DOESN'T MATCH THE PREVIOUS WORKOUT FORMATS AND RESULTS IN AN ERROR. WE NEED A WAY TO NOT BREAK THE APPLICATION IF THE REGEX DOESN'T FIND A WORKOUT
-        console.log(this.regexExtract.exec(textNoHTML))
         while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
           if (m.index === this.regexExtract.lastIndex) {
             this.regexExtract.lastIndex++
@@ -738,9 +740,9 @@
             }
           })
         }
-        // RETURNS NULL
-        console.log(tempStore)
-        return tempStore
+        if (tempStore !== null) {
+          return tempStore
+        }
       },
 
       // Breaks down the temporary array into data packets of length 2
