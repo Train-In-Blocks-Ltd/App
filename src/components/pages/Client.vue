@@ -151,7 +151,7 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
-    <modal name="client-notes" height="auto" width="400px" :adaptive="true" :before-close="updateClientNotes()">
+    <modal name="client-notes" height="auto" width="400px" :adaptive="true">
       <div class="client_notes--header">
         <p>Client Information</p>
       </div>

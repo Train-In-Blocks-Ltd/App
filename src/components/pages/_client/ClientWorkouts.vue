@@ -369,7 +369,7 @@
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
-        <modal name="blockNotes" height="auto" :draggable="true" :adaptive="true" :before-close="updateBlockNotes()">
+        <modal name="blockNotes" height="auto" :draggable="true" :adaptive="true">
           <div>
             <p><b>Block Notes</b></p>
           </div>
