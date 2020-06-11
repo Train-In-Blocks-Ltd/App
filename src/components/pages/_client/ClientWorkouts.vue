@@ -1133,7 +1133,7 @@
             qs.stringify({
               programme_id: this.$route.params.id,
               date: this.new_workout.date,
-              week_id: this.week_id
+              week_id: this.new_workout.week_id
             }),
             {
               headers: {
