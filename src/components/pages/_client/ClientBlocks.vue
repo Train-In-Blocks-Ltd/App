@@ -6,6 +6,54 @@
     grid-gap: 10px
   }
 
+  /* Overall */
+  .container--block-links {
+    display: grid;
+    grid-template-columns: .8fr 300px
+  }
+
+  /* Client Notes */
+  .client-notes {
+    margin-top: 6rem;
+    height: fit-content;
+    border-radius: 3px;
+    background-color: #F4F4F4;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client-notes__header {
+    margin: 0;
+    padding: 1rem
+  }
+  .text--date {
+    font-size: .8rem
+  }
+  .bottom-bar {
+    padding: .6rem 1rem
+  }
+  .bottom-bar .button {
+    margin: 0
+  }
+  .show-client-notes {
+    padding: 12px 15px;
+    max-height: 314px;
+    color: #282828;
+    line-height: 1.42;
+    overflow-y: auto;
+    font-size: .8rem
+  }
+  .show-client-notes h2 {
+    font-size: 1.5rem
+  }
+  .show-client-notes p, .show-client-notes ul, .show-client-notes ol {
+    text-decoration: none;
+    margin: 0;
+    padding: 0
+  }
+  .activeClientNotes {
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810
+  }
+
   /* Blocks */
   .blocks_grid {
     display: grid;
@@ -21,6 +69,7 @@
   }
   .block_container--link {
     padding: 1.5rem;
+    border-radius: 3px;
     display: block;
     box-shadow: 0 0 20px 10px #28282810;
     transition: box-shadow .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
@@ -76,35 +125,48 @@
 </style>
 <template>
     <div>
-      <div>
-        <div class="spacer"/>
-        <h2 class="sub-title">Blocks</h2>
-        <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
-        <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
-        <div v-if="!this.$parent.no_programmes" class="blocks_grid">
-          <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
-              :key="index" class="block_container">
-              <router-link class="block_container--link" :to="'block/' + block.id">
-                <h3>{{block.name}}</h3>
-                <p><b>Duration: </b>{{block.duration}}</p>
-                <p><b>Start: </b>{{block.start}}</p>
-              </router-link>
+      <div class="spacer"/>
+      <div class="container--block-links">
+        <div>
+          <h2 class="sub-title">Blocks</h2>
+          <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
+          <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
+          <div v-if="!this.$parent.no_programmes" class="blocks_grid">
+            <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
+                :key="index" class="block_container">
+                <router-link class="block_container--link" :to="'block/' + block.id">
+                  <h3>{{block.name}}</h3>
+                  <p><b>Duration: </b>{{block.duration}}</p>
+                  <p><b>Start: </b>{{block.start}}</p>
+                </router-link>
+            </div>
           </div>
-        </div>
-        <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
-        <p class="response" v-if="!creating">{{response}}</p>
-        <div v-if="creating" class="add_block_container">
-          <h3>New Block Incoming...</h3>
-          <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
+          <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
+          <p class="response" v-if="!creating">{{response}}</p>
+          <div v-if="creating" class="add_block_container">
+            <h3>New Block Incoming...</h3>
+            <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
               <label><b>Name: </b><input type="text" v-model="new_block.name" required/></label>
               <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
               <label><b>Start: </b><input type="date" v-model="new_block.start" required /></label>
               <div class="form_buttons">
-                  <input type="submit" class="button" value="Save" />
-                  <button class="button" v-on:click="close()">Close</button>
-                  <Loader></Loader>
+                <input type="submit" class="button" value="Save" />
+                <button class="button" v-on:click="close()">Close</button>
+                <Loader></Loader>
               </div>
-          </form>
+            </form>
+          </div>
+        </div>
+        <div :class="{activeClientNotes: $parent.editClientNotes}" class="client-notes">
+          <div class="client-notes__header">
+            <p><b>Client Information</b></p>
+          </div>
+          <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
+          <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
+          <div class="bottom-bar">
+            <button v-show="!$parent.editClientNotes" @click="$parent.editClientNotes = true" id="button-edit" class="button">Edit</button>
+            <button v-show="$parent.editClientNotes" @click="$parent.updateClientNotes()" id="button-save" class="button">Save</button>
+          </div>
         </div>
       </div>
     </div>
@@ -127,7 +189,8 @@
           name: '',
           duration: '',
           start: ''
-        }
+        },
+        editClientNotes: false
       }
     },
     methods: {

@@ -151,12 +151,6 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
-    <modal name="client-notes" height="auto" width="400px" :adaptive="true">
-      <div class="client_notes--header">
-        <p>Client Information</p>
-      </div>
-      <quill v-model="$parent.client_details.notes" output="html" class="client_notes--quill quill" :config="$parent.config"/>
-    </modal>
     <!-- Don't show if on blocks page because blocks page renders slightly different top ui -->
     <div class="top_grid" v-if="!blocks">
       <!-- Update the client details -->
@@ -166,7 +160,6 @@
         <label><b>Phone: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" /></label>
       </form>
       <div class="floating_nav">
-        <a href="javascript:void(0)" @click="showClientNotes()"><p class="text--hideable">Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/User.svg')"/></a>
         <div v-for="(clients, index) in $parent.posts" :key="index">
           <div class="archive-client" v-if="clients.client_id == $route.params.client_id">
             <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p class="text--hideable">Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
@@ -192,7 +185,8 @@
         loading_programmes: true,
         blocks: false,
         no_workouts: false,
-        loading_workouts: true
+        loading_workouts: true,
+        editClientNotes: false
       }
     },
     async created () {
@@ -201,12 +195,9 @@
       await this.get_client_details()
     },
     methods: {
-      showClientNotes () {
-        this.$modal.show('client-notes')
-      },
       updateClientNotes () {
-        var self = this
-        self.update_client()
+        this.update_client()
+        this.editClientNotes = false
       },
       created () {
         var x
