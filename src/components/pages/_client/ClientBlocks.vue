@@ -9,6 +9,7 @@
   /* Overall */
   .container--block-links {
     display: grid;
+    grid-gap: 4rem;
     grid-template-columns: .8fr 300px
   }
 
