@@ -45,8 +45,7 @@
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
   #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus, #account-recovery-username:hover, #account-recovery-username:focus {
-    width: 75%;
-    outline-width: 0
+    width: 75%
   }
   .okta-form-input-error {
     width: 100%;
