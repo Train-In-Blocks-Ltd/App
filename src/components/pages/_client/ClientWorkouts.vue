@@ -343,17 +343,15 @@
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--copy">
           <h3>Let's progress the workouts!</h3>
-          <form class="form--copy">
-            <div>
-              <label for="range">From 1 to: </label>
-              <input name="range" type="number"/>
-            </div>
-            <div>
-              <label for="exclude">Exclude cycles: </label>
-              <input name="exclude" type="text" pattern="/\d+/gmi"/>
-            </div>
-            <button class="button" type="submit">Copy</button>
-          </form>
+          <div>
+            <label for="range">From 1 to: </label>
+            <input v-model="copyTarget" name="range" type="number" required/>
+          </div>
+          <div>
+            <label for="exclude">Exclude cycles: </label>
+            <input name="exclude" type="text" pattern="/\d+/gmi"/>
+          </div>
+          <button @click="copyAcross()" class="button">Copy</button>
         </div>
       </modal>
       <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
@@ -490,7 +488,7 @@
                         <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id)">Edit</button>
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="updateWorkoutNotes(workout.id)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
-                        <button id="button-delete" class="button delete" @click="delete_workout(workout.id)">Delete</button>
+                        <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
                       </div>
                     </div>
                   </div>
@@ -656,7 +654,9 @@
         updateWeekID: 1,
         currentWeek: 1,
         maxWeek: 1,
-        movingWorkout: null
+        movingWorkout: null,
+        copyTarget: null,
+        copyStr: []
       }
     },
     created () {
@@ -677,6 +677,24 @@
       },
       showCopy () {
         this.$modal.show('copy')
+      },
+      copyAcross () {
+        var tempStrOne = []
+        var tempStrTwo = []
+        this.str.forEach((workout) => {
+          if (workout.week_id == this.currentWeek) {
+            tempStrOne.push(workout)
+          }
+        })
+        tempStrOne.forEach((workout, index) => {
+          tempStrTwo.push(workout)
+          tempStrTwo[index].week_id = parseInt(this.copyTarget)
+        })
+        tempStrTwo.forEach((match) => {
+          this.str.push(match)
+        })
+        this.copyTarget = null
+        this.$modal.hide('copy')
       },
       showToolkit () {
         this.$modal.show('toolkit')
@@ -1127,7 +1145,8 @@
               'description': programme.description,
               'duration': programme.duration,
               'start': programme.start,
-              'notes': programme.notes
+              'notes': programme.notes,
+              'workouts': this.str
             }
           )
           this.$parent.loading = false
