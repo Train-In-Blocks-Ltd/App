@@ -102,26 +102,25 @@
     letter-spacing: .1rem;
     font-weight: bold;
     color: #282828;
-    background-color: #F2F2F2;
+    box-shadow: 0 0 20px 6px #28282815;
+    background-color: white;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1);
+    transition: color .4s, background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1);
     will-change: transform
   }
   .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover {
     cursor: pointer;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282815;
+    color: white;
+    background-color: #282828;
     text-decoration: none
   }
   .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active {
     transform: scale(.9)
   }
   .delete:hover {
+    color: white;
     background-color: #B80000
-  }
-  .button--edit {
-    background-color: white
   }
 
   /* Inputs */

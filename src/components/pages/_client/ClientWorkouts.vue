@@ -1244,7 +1244,6 @@
           )
           // eslint-disable-next-line
           this.response = response_save_workouts.data
-          console.log('Posted', this.currentWeek, this.new_workout.date)
           // Get the workouts from the API because we've just created a new one
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false

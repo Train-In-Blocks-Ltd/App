@@ -151,8 +151,8 @@
               <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
               <label><b>Start: </b><input type="date" v-model="new_block.start" required /></label>
               <div class="form_buttons">
-                <input type="submit" class="button" value="Save" />
-                <button class="button" v-on:click="close()">Close</button>
+                <input type="submit" class="button button--save" value="Save" />
+                <button class="button button--close" v-on:click="close()">Close</button>
                 <Loader></Loader>
               </div>
             </form>
@@ -166,7 +166,7 @@
           <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
           <div class="bottom-bar">
             <button v-show="!$parent.editClientNotes" @click="$parent.editClientNotes = true" class="button button--edit">Edit</button>
-            <button v-show="$parent.editClientNotes" @click="$parent.updateClientNotes()" class="button">Save</button>
+            <button v-show="$parent.editClientNotes" @click="$parent.updateClientNotes()" class="button button--save">Save</button>
           </div>
         </div>
       </div>
