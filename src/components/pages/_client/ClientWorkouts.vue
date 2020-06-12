@@ -229,7 +229,7 @@
     width: fit-content
   }
   #chart {
-    margin: auto
+    margin: 0 auto
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
@@ -931,6 +931,9 @@
       // Extracts anything for Loads
       load (protocol) {
         var tempLoadStore = []
+        let sum = 0
+        let isMultiple = false
+        const sets = this.setsReps(protocol, 'Sets')
         let m
         while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
           if (m.index === this.regexLoadCapture.lastIndex) {
@@ -944,13 +947,20 @@
                   this.regexNumberBreakdown.lastIndex++
                 }
                 n.forEach((loadMatchExact) => {
-                  tempLoadStore.push(parseFloat(loadMatchExact))
+                  if (loadMatch.includes('/') === true) {
+                    tempLoadStore.push(parseFloat(loadMatchExact))
+                    isMultiple = true
+                  } else {
+                    sum = parseFloat(loadMatchExact) * sets
+                  }
                 })
               }
             }
           })
         }
-        var sum = tempLoadStore.reduce((a, b) => a + b)
+        if (isMultiple) {
+          sum = tempLoadStore.reduce((a, b) => a + b)
+        }
         return sum
       },
       // Extracts any other measures
