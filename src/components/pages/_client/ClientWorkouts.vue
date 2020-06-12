@@ -535,24 +535,24 @@
                   <div class="spacer"/>
                   <div v-show="showType" class="data-desc">
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p1.desc}}</b></p>
-                      <p class="data-desc__value">{{p1.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
+                      <p class="data-desc__value">{{ p1.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p2.desc}}</b></p>
-                      <p class="data-desc__value">{{p2.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p2.desc }}</b></p>
+                      <p class="data-desc__value">{{ p2.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p3.desc}}</b></p>
-                      <p class="data-desc__value">{{p3.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p3.desc }}</b></p>
+                      <p class="data-desc__value">{{ p3.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p4.desc}}</b></p>
-                      <p class="data-desc__value">{{p4.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p4.desc }}</b></p>
+                      <p class="data-desc__value">{{ p4.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc">{{p5.desc}}</p>
-                      <p class="data-desc__value">{{p5.value}}</p>
+                      <p class="data-desc__desc">{{ p5.desc }}</p>
+                      <p class="data-desc__value">{{ p5.value }}</p>
                     </div>
                   </div>
                   <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
@@ -677,7 +677,7 @@
       },
       updateBlockNotes () {
         this.update_programme()
-         this.editBlockNotes = false
+        this.editBlockNotes = false
       },
       editingWorkoutNotes (id) {
         this.isEditingWorkout = true
@@ -855,7 +855,7 @@
 
       // Init the dropdown selection with validation
       dropdownInit () {
-        this.optionsForDataName = [{ id: 0, text: 'Block Overview', value: 'Block Overview'}]
+        this.optionsForDataName = [{ id: 0, text: 'Block Overview', value: 'Block Overview' }]
         var tempItemStore = []
         var tempItemStoreLate = []
         var continueValue = 0
@@ -880,10 +880,10 @@
         })
         tempItemStore.forEach((item, index) => {
           continueValue = index + 1
-          this.optionsForDataName.push({id: continueValue, text: item, value: item })
+          this.optionsForDataName.push({ id: continueValue, text: item, value: item })
         })
         tempItemStoreLate.forEach((item, index) => {
-          this.optionsForDataName.push({id: continueValue + index + 1, text: item, value: item })
+          this.optionsForDataName.push({ id: continueValue + index + 1, text: item, value: item })
         })
       },
       // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
@@ -995,12 +995,12 @@
         this.yData.forEach((value) => {
           storeMax = Math.max(storeMax, value)
         })
-        this.p3 = {desc: 'Maximum ' + dataForType + ': ', value: storeMax }
+        this.p3 = { desc: 'Maximum ' + dataForType + ': ', value: storeMax }
         store = storeMax
         this.yData.forEach((value) => {
           store = Math.min(store, value)
         })
-        this.p4 = { desc: 'Minimum ' + dataForType + ': ', value: store}
+        this.p4 = { desc: 'Minimum ' + dataForType + ': ', value: store }
         this.p5 = { desc: 'Percentage Change: ', value: ((storeMax / store) * 100).toFixed(1) + '%' }
       },
 

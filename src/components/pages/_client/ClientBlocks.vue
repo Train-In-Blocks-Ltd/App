@@ -165,8 +165,8 @@
           <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
           <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
           <div class="bottom-bar">
-            <button v-show="!$parent.editClientNotes" @click="$parent.editClientNotes = true" id="button-edit" class="button">Edit</button>
-            <button v-show="$parent.editClientNotes" @click="$parent.updateClientNotes()" id="button-save" class="button">Save</button>
+            <button v-show="!$parent.editClientNotes" @click="$parent.editClientNotes = true" class="button button--edit">Edit</button>
+            <button v-show="$parent.editClientNotes" @click="$parent.updateClientNotes()" class="button">Save</button>
           </div>
         </div>
       </div>
@@ -221,7 +221,7 @@
           )
           // eslint-disable-next-line
           this.response = response_save_block.data
-
+          
           // Set old programmes to null so that they can be repopulated
           var x
           for (x in this.$parent.$parent.posts) {
