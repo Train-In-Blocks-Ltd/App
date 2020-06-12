@@ -92,7 +92,7 @@
     text-transform: capitalize;
     text-align: center;
     outline-width: 0;
-    border: 1px solid #282828;
+    border: 0;
     border-radius: 3px;
     padding: .5rem 1rem;
     height: auto;
@@ -102,16 +102,16 @@
     letter-spacing: .1rem;
     font-weight: bold;
     color: #282828;
-    background-color: transparent;
+    background-color: #F2F2F2;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: opacity .4s, background-color .4s, color .4s, transform .1s cubic-bezier(.165, .84, .44, 1);
+    transition: background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1);
     will-change: transform
   }
   .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover {
     cursor: pointer;
-    background-color: #282828;
-    color: white;
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282815;
     text-decoration: none
   }
   .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active {
@@ -120,10 +120,12 @@
   .delete:hover {
     background-color: #B80000
   }
+  .button--edit {
+    background-color: white
+  }
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
-    border: 1px solid #282828;
     padding: .4rem;
     display: inline-block;
     resize: none;

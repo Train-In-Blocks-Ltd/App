@@ -76,7 +76,7 @@
   /* Calendar */
   .calendar {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: .8fr .4fr;
     grid-gap: 2rem;
     padding: 5rem;
     border-radius: 3px;
@@ -86,7 +86,7 @@
     font-size: .8rem
   }
   .block-notes {
-    margin-top: 6rem
+    margin: 6rem auto auto auto
   }
 
   /* Block Table */
@@ -119,7 +119,7 @@
   }
   .block_table--container--block_duration_container {
     display: grid;
-    grid-gap: 1rem .2rem;
+    grid-gap: 1rem .4rem;
     grid-template-columns: repeat(12, 50px);
     border: none;
     padding: 0
@@ -132,7 +132,7 @@
     cursor: pointer;
     box-shadow: 0 0 20px 10px #28282808;
     border-radius: 3px;
-    background-color: white;
+    background-color: #F2F2F2;
     display: inline-block;
     border-left: none;
     border-bottom: none;
@@ -147,6 +147,7 @@
   }
   .weekActive {
     box-shadow: 0 0 20px 10px #28282815;
+    background-color: white;
     height: 100px
   }
   .week.weekActive:hover {
@@ -174,7 +175,9 @@
   }
   .wrapper--workout, .block-notes {
     height: fit-content;
-    background-color: #F4F4F4;
+    width: 300px;
+    border-radius: 3px;
+    background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .workouts--workout, .block-notes__header {
@@ -236,7 +239,7 @@
     width: fit-content
   }
   #chart {
-    margin: 0 auto
+    position: relative
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
@@ -433,8 +436,8 @@
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                 <div v-show="!editBlockNotes" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
                 <div class="bottom-bar">
-                  <button v-show="!editBlockNotes" @click="editBlockNotes = true" id="button-edit" class="button">Edit</button>
-                  <button v-show="editBlockNotes" @click="updateBlockNotes()" id="button-save" class="button">Save</button>
+                  <button v-show="!editBlockNotes" @click="editBlockNotes = true" class="button button--edit">Edit</button>
+                  <button v-show="editBlockNotes" @click="updateBlockNotes()" class="button button--save">Save</button>
                 </div>
               </div>
             </div>
@@ -512,7 +515,7 @@
                 <div>
                   <div class="data-select">
                     <div class="data-select__options">
-                      <label for="measure"><b>Data: </b></label>
+                      <label for="measure"><b>Measurement: </b></label>
                       <select v-model="selectedDataName" @change="selection()" name="measure">
                         <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
                           {{option.text}}

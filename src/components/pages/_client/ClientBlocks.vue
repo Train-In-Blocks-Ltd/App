@@ -18,7 +18,7 @@
     margin-top: 6rem;
     height: fit-content;
     border-radius: 3px;
-    background-color: #F4F4F4;
+    background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .client-notes__header {
