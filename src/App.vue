@@ -158,12 +158,6 @@
     color: #28282899;
     opacity: 1; /* Firefox */
   }
-  select {
-    border-radius: 3px;
-    outline-width: 0;
-    font-size: 1rem;
-    padding: .2rem
-  }
 
   /* Forms */
   .form_grid {

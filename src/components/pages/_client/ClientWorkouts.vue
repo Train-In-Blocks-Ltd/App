@@ -229,14 +229,20 @@
   }
   .data-select {
     display: grid;
-    grid-gap: 4rem;
-    width: fit-content;
-    grid-template-columns: 1fr 1fr
+    grid-gap: 2rem;
+    width: fit-content
   }
   .data-select__options {
     display: grid;
     grid-gap: 1rem;
     width: fit-content
+  }
+  .data-select__options select {
+    border: 0;
+    font-size: 1.6rem;
+    width: fit-content;
+    padding: .2rem 1rem .2rem 0;
+    font-weight: bold
   }
   #chart {
     position: relative
