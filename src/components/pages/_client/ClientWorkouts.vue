@@ -12,11 +12,8 @@
     display: inline-block;
     font-weight: bold
   }
-  .block_info input#duration, .block_info input#start {
+  #duration, .block_info input#start {
     margin-left: .25rem
-  }
-  .block_info input#duration {
-    width: 4ch
   }
   #blocks .block_info input.block_info--name.title {
     font-size: 2rem;
@@ -98,6 +95,17 @@
     border-radius: 3px;
     box-shadow: 0 0 20px 10px #28282810
   }
+  .block_table__header h3 {
+    margin: 0
+  }
+  .block_table__header {
+    display: grid;
+    margin: 0 0 4rem 0;
+    grid-gap: 1rem
+  }
+  #duration {
+    width: 4rem
+  }
   .block_table {
     height: fit-content
   }
@@ -114,7 +122,6 @@
     grid-gap: 1rem .2rem;
     grid-template-columns: repeat(12, 50px);
     border: none;
-    height: 100px;
     padding: 0
   }
   .container--week {
@@ -387,19 +394,12 @@
                <!-- Update the programme info -->
               <form class="block_info">
                 <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
-                <label>Duration: <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" required v-on:click="editing()"/></label>
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
               </form>
             </div>  <!-- client_info -->
             <div class="floating_nav--container">
               <div class="floating_nav">
                 <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
-                <transition
-                  enter-active-class="animate__animated animate__fadeIn animate__faster"
-                  leave-active-class="animate__animated animate__fadeOut animate__faster"
-                >
-                  <a v-show="showFloatingNav" href="javascript:void(0)" @click="$parent.showClientNotes()"><p class="text--hideable">Client Notes</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/User.svg')"/></a>
-                </transition>
                 <transition
                   enter-active-class="animate__animated animate__fadeIn animate__faster"
                   leave-active-class="animate__animated animate__fadeOut animate__faster"
@@ -440,7 +440,13 @@
             </div>
             <div class="block-plan">
               <div class="block_table">
-                <h3 class="section-title">Microcycles</h3>
+                <div class="block_table__header">
+                  <h3>Microcycles</h3>
+                  <div class="wrapper-duration">
+                    <label for="duration"><b>Duration: </b></label>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" required @click="editing()"/>
+                  </div>
+                </div>
                 <div class="block_table--container">
                   <div class="block_table--container--block_duration_container">
                     <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
@@ -662,9 +668,6 @@
       },
       showCopy () {
         this.$modal.show('copy')
-      },
-      showBlockNotes () {
-        this.$modal.show('blockNotes')
       },
       showToolkit () {
         this.$modal.show('toolkit')

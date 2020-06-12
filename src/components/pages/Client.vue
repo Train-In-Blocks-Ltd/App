@@ -9,14 +9,14 @@
     display: grid;
     grid-gap: 1rem
   }
-  #client .client_info label {
+  #client .client_info label, .label--duration {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: min-content minmax(200px, 300px);
     grid-gap: 1rem;
     align-items: center
   }
-  #client .client_info input:not([type='submit']) {
+  #client .client_info input:not([type='submit']), #duration {
     background-color: initial;
     border: none;
     border-bottom: 2px solid #28282800;
@@ -25,10 +25,10 @@
     outline-width: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  #client .client_info input:not([type='submit']):hover {
+  #client .client_info input:not([type='submit']):hover, #duration:hover {
     border-bottom: 2px solid #28282880
   }
-  #client .client_info input:not([type='submit']):focus {
+  #client .client_info input:not([type='submit']):focus, #duration:focus {
     border-bottom: 2px solid #282828
   }
   #client .client_info input.client_info--name {
@@ -127,7 +127,7 @@
     }
   }
   @media (max-width: 768px) {
-    #client .client_info input:not([type='submit']):hover {
+    #client .client_info input:not([type='submit']):hover, , #duration:hover {
       border-bottom: 2px solid #28282800
     }
   }
