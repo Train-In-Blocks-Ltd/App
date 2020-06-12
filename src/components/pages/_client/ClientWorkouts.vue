@@ -1233,7 +1233,7 @@
             qs.stringify({
               programme_id: this.$route.params.id,
               date: this.new_workout.date,
-              week_id: this.new_workout.week_id
+              week_id: this.currentWeek
             }),
             {
               headers: {
@@ -1244,10 +1244,9 @@
           )
           // eslint-disable-next-line
           this.response = response_save_workouts.data
-
+          console.log('Posted', this.currentWeek, this.new_workout.date)
           // Get the workouts from the API because we've just created a new one
           await this.$parent.force_get_workouts()
-
           this.$parent.$parent.loading = false
 
           this.close()
