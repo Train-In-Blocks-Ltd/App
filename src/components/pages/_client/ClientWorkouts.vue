@@ -225,7 +225,7 @@
   }
   .container--content {
     display: grid;
-    grid-template-columns: 1fr 1fr
+    grid-template-columns: .6fr 1fr
   }
   .data-select {
     display: grid;
@@ -331,13 +331,9 @@
     <div id="blocks">
       <modal name="move" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--move">
-          <form class="form--move">
-            <div>
-              <label for="range">Move to:</label>
-              <input name="range" type="number" v-model="updateWeekID" min="2" :max="maxWeek" required/>
-            </div>
-            <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout)">Move</button>
-          </form>
+          <label for="range">Move to:</label>
+          <input name="range" type="number" v-model="moveTarget" min="2" :max="maxWeek" required/>
+          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout)">Move</button>
         </div>
       </modal>
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
@@ -451,7 +447,7 @@
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" required @click="editing()"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @click="editing()"/>
                   </div>
                 </div>
                 <div class="block_table--container">
@@ -650,11 +646,11 @@
         selectedDataName: 'Block Overview',
         optionsForDataName: [],
         selectedDataType: 'Sets',
-        updateWeekID: 1,
         currentWeek: 1,
         maxWeek: '1',
         movingWorkout: null,
-        copyTarget: null
+        moveTarget: 1,
+        copyTarget: 1
       }
     },
     created () {
@@ -695,7 +691,9 @@
           })
         }
         this.currentCopyWorkoutNotes = ''
-        this.copyTarget = null
+        this.copyTarget = 1
+        this.new_workout.name = ''
+        this.new_workout.date = ''
         this.$modal.hide('copy')
       },
       showToolkit () {
@@ -1157,8 +1155,7 @@
               'description': programme.description,
               'duration': programme.duration,
               'start': programme.start,
-              'notes': programme.notes,
-              'workouts': this.str
+              'notes': programme.notes
             }
           )
           this.$parent.loading = false
@@ -1246,6 +1243,7 @@
             {
               'id': workoutsId,
               'notes': workoutsNotes,
+              'week_id': this.moveTarget
             }
           )
           this.msg = 'Idle'
