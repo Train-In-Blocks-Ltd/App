@@ -647,7 +647,7 @@
         optionsForDataName: [],
         selectedDataType: 'Sets',
         currentWeek: 1,
-        maxWeek: '1',
+        maxWeek: '2',
         movingWorkout: null,
         moveTarget: 1,
         copyTarget: 1
