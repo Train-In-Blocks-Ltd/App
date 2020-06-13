@@ -334,7 +334,7 @@
           <form class="form--move">
             <div>
               <label for="range">Move to:</label>
-              <input name="range" type="number" v-model="updateWeekID" :max="maxWeek" required/>
+              <input name="range" type="number" v-model="updateWeekID" min="2" :max="maxWeek" required/>
             </div>
             <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout)">Move</button>
           </form>
@@ -345,7 +345,7 @@
           <h3>Let's progress the workouts!</h3>
           <div>
             <label for="range">From 1 to: </label>
-            <input v-model="copyTarget" name="range" type="number" required/>
+            <input v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
           </div>
           <div>
             <label for="exclude">Exclude cycles: </label>
@@ -468,7 +468,7 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
-                  <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy()"/>
+                  <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
@@ -622,8 +622,7 @@
         },
         new_workout: {
           name: '',
-          date: '',
-          week_id: this.currentWeek
+          date: ''
         },
         delete: false,
         showType: true,
@@ -653,10 +652,9 @@
         selectedDataType: 'Sets',
         updateWeekID: 1,
         currentWeek: 1,
-        maxWeek: 1,
+        maxWeek: '1',
         movingWorkout: null,
-        copyTarget: null,
-        copyStr: []
+        copyTarget: null
       }
     },
     created () {
@@ -675,24 +673,28 @@
           this.msgFloatingNav = 'Hide'
         }
       },
-      showCopy () {
+      showCopy (maxWeek) {
+        this.maxWeek = maxWeek
         this.$modal.show('copy')
       },
       copyAcross () {
-        var tempStrOne = []
-        var tempStrTwo = []
+        var copyWorkouts = []
+        let weekCount = 2
         this.str.forEach((workout) => {
           if (workout.week_id == this.currentWeek) {
-            tempStrOne.push(workout)
+            copyWorkouts.push({ name: workout.name, date: workout.date, notes: workout.notes })
           }
         })
-        tempStrOne.forEach((workout, index) => {
-          tempStrTwo.push(workout)
-          tempStrTwo[index].week_id = parseInt(this.copyTarget)
-        })
-        tempStrTwo.forEach((match) => {
-          this.str.push(match)
-        })
+        for (; weekCount <= this.copyTarget; weekCount++) {
+          this.currentWeek = weekCount
+          copyWorkouts.forEach((workout) => {
+            this.new_workout.name = workout.name
+            this.new_workout.date = this.addDays(workout.date, 7 * (weekCount - 1))
+            this.currentCopyWorkoutNotes = workout.notes
+            this.add_workout()
+          })
+        }
+        this.currentCopyWorkoutNotes = ''
         this.copyTarget = null
         this.$modal.hide('copy')
       },
@@ -1030,7 +1032,16 @@
       },
 
       // OTHER METHODS //
-
+      addDays(date, days) {
+        var d = new Date(date)
+        d.setHours(0,0,0,0)
+        d.setMonth(d.getMonth() + 1)
+        d.setDate(d.getDate() + days)
+        var year = d.getFullYear()
+        var month = d.getMonth()
+        var dayDate = d.getDate()
+        return `${year}/${month}/${dayDate}`
+      },
       day (date) {
         var weekday = new Array(7)
         weekday[0] = 'Sun'
@@ -1235,10 +1246,8 @@
             {
               'id': workoutsId,
               'notes': workoutsNotes,
-              'week_id': this.updateWeekID
             }
           )
-          this.updateWeekID = null
           this.msg = 'Idle'
         } catch (e) {
           console.log(e.toString())
@@ -1253,6 +1262,7 @@
             qs.stringify({
               programme_id: this.$route.params.id,
               date: this.new_workout.date,
+              notes: this.currentCopyWorkoutNotes,
               week_id: this.currentWeek
             }),
             {
