@@ -748,6 +748,7 @@
           scales: {
             yAxes: [{
               ticks: {
+                suggestedMin: 0,
                 beginAtZero: false
               }
             }]
@@ -1025,7 +1026,7 @@
           store = Math.min(store, value)
         })
         this.p4 = { desc: 'Minimum ' + dataForType + ': ', value: store }
-        this.p5 = { desc: 'Percentage Change: ', value: ((storeMax / store) * 100).toFixed(1) + '%' }
+        this.p5 = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
       },
 
       // OTHER METHODS //
