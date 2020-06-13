@@ -650,7 +650,7 @@
         maxWeek: '2',
         movingWorkout: null,
         moveTarget: 1,
-        copyTarget: 1
+        copyTarget: 2
       }
     },
     created () {
