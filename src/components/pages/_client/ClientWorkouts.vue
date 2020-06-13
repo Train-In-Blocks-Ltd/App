@@ -128,17 +128,25 @@
     height: 100px;
     user-select: none
   }
+  .week__color {
+    width: 50px;
+    height: 6px;
+    border-radius: 3px 3px 0 0
+  }
+  .week__number {
+    padding: 1rem 0
+  }
   .week {
+    display: grid;
+    grid-template-rows: 6px 90px;
     cursor: pointer;
     box-shadow: 0 0 20px 10px #28282808;
     border-radius: 3px;
     background-color: #F2F2F2;
-    display: inline-block;
     border-left: none;
     border-bottom: none;
-    padding: 30px 0;
     min-width: 50px;
-    height: 80px;
+    height: 74px;
     width: 100%;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
@@ -148,7 +156,7 @@
   .weekActive {
     box-shadow: 0 0 20px 10px #28282815;
     background-color: white;
-    height: 100px
+    height: 94px
   }
   .week.weekActive:hover {
     box-shadow: 0 0 20px 10px #28282808
@@ -453,8 +461,9 @@
                 <div class="block_table--container">
                   <div class="block_table--container--block_duration_container">
                     <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
-                      <div :class="{weekActive: item === currentWeek}" class="week">
-                        {{item}}
+                      <div :class="{ weekActive: item === currentWeek }" class="week">
+                        <div :style="weekColor" class="week__color"/>
+                        <div class="week__number">{{item}}</div>
                       </div>
                     </div>
                   </div>
@@ -587,6 +596,9 @@
     },
     data: function () {
       return {
+        weekColor: {
+          backgroundColor: '#168dc0'
+        },
         showFloatingNav: true,
         msgFloatingNav: 'Hide',
         creating: false,
