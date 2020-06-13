@@ -1243,7 +1243,7 @@
             {
               'id': workoutsId,
               'notes': workoutsNotes,
-              'week_id': this.moveTarget
+              'week_id': parseInt(this.moveTarget)
             }
           )
           this.msg = 'Idle'
