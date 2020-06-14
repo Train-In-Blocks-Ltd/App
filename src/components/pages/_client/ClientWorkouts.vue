@@ -124,6 +124,12 @@
     border: none;
     padding: 0
   }
+
+  /* Week */
+  .week-color-picker {
+    margin: auto 0 auto 1rem;
+    height: 28px
+  }
   .container--week {
     height: 100px;
     user-select: none
@@ -436,7 +442,7 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" :eventColor="'#282828'"/>
+              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" />
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
@@ -462,7 +468,7 @@
                   <div class="block_table--container--block_duration_container">
                     <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
-                        <div :style="weekColor" class="week__color"/>
+                        <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
                         <div class="week__number">{{item}}</div>
                       </div>
                     </div>
@@ -472,6 +478,7 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Workouts</h3>
+                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
@@ -597,7 +604,7 @@
     data: function () {
       return {
         weekColor: {
-          backgroundColor: '#168dc0'
+          backgroundColor: ''
         },
         showFloatingNav: true,
         msgFloatingNav: 'Hide',
@@ -673,6 +680,15 @@
       this.scan()
     },
     methods: {
+      updateBlockColor () {
+        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          if (programme.id == this.$route.params.id) {
+            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g,'').replace(/[\[\]]/g,'').replace(/\//g,'')
+          }
+        })
+        this.update_programme()
+        this.scan()
+      },
       toggleFloatingNav () {
         this.showFloatingNav = !this.showFloatingNav
         if (this.msgFloatingNav === 'Hide') {
@@ -837,6 +853,7 @@
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
+            this.weekColor.backgroundColor = programme.block_color.replace('[', '').replace(']', '').split(',')
             this.str = programme.workouts
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
@@ -1169,7 +1186,7 @@
               'duration': programme.duration,
               'start': programme.start,
               'notes': programme.notes,
-              'block_color': //NEEDS FILLING IN
+              'block_color': programme.block_color
             }
           )
           this.$parent.loading = false

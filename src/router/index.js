@@ -10,7 +10,6 @@ import LogoutComponent from '@/components/pages/Logout'
 import ClientComponent from '@/components/pages/Client'
 import NotFound from '@/components/pages/NotFound'
 import ArchiveComponent from '@/components/pages/Archive'
-import LearnComponent from '@/components/pages/Learn'
 
 import ClientBlocks from '@/components/pages/_client/ClientBlocks'
 import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
@@ -82,13 +81,6 @@ const router = new Router({
     {
       path: '/archive',
       component: ArchiveComponent,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/learn',
-      component: LearnComponent,
       meta: {
         requiresAuth: true
       }
