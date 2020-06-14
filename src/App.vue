@@ -88,10 +88,12 @@
 
   /* Buttons */
   .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary {
+    user-select: none;
     text-transform: capitalize;
     text-align: center;
     outline-width: 0;
-    border: 1px solid #282828;
+    border: 0;
+    border-radius: 3px;
     padding: .5rem 1rem;
     height: auto;
     width: auto;
@@ -100,29 +102,29 @@
     letter-spacing: .1rem;
     font-weight: bold;
     color: #282828;
-    background-color: transparent;
+    box-shadow: 0 0 20px 6px #28282815;
+    background-color: white;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: opacity .4s, background-color .4s, color .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
+    transition: color .4s, background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1);
     will-change: transform
   }
   .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover {
     cursor: pointer;
-    background-color: #282828;
     color: white;
+    background-color: #282828;
     text-decoration: none
   }
   .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active {
     transform: scale(.9)
   }
   .delete:hover {
+    color: white;
     background-color: #B80000
   }
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
-    border: 1px solid #282828;
-    border-radius: 0;
     padding: .4rem;
     display: inline-block;
     resize: none;
@@ -160,7 +162,7 @@
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 400px;
+    max-width: 300px;
     margin: 0
   }
   .form_buttons {

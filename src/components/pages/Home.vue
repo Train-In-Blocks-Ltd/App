@@ -56,17 +56,17 @@
         </div>
       </div>
     </div>
-    <div><button v-if="!creating" class="button" v-on:click="creation()">New Client</button></div>
+    <div><button v-if="!creating" class="button button--new-client" v-on:click="creation()">New Client</button></div>
     <p v-if="!creating">{{response}}</p>
     <div v-if="creating">
-      <h3 >New Client</h3>
+      <h3>New Client</h3>
       <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save()">
         <label><b>Name: </b><input type="text" autocomplete="name" v-model="new_client.name" required/></label>
         <label><b>Email: </b><input type="email" autocomplete="email" v-model="new_client.email" required/></label>
         <label><b>Mobile: </b><input type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
-          <input type="submit" class="button" value="Save" />
-          <button class="button" v-on:click="close()">Close</button>
+          <input type="submit" class="button button--save" value="Save" />
+          <button class="button button--close" v-on:click="close()">Close</button>
           <Loader></Loader>
         </div>
       </form>
