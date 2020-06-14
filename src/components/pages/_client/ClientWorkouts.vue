@@ -182,6 +182,9 @@
   }
 
   /* Workouts */
+  .workout--header {
+    display: flex
+  }
   .container--workouts {
     display: grid;
     grid-template-columns: repeat(3, 300px);
@@ -194,17 +197,33 @@
     background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .workouts--workout, .block-notes__header {
+  .wrapper--workout__header, .block-notes__header {
     margin: 0;
     padding: 1rem
   }
-  .workout--header {
-    display: flex
+  input.workout-name, input.workout-date {
+    text-overflow: ellipsis;
+    border: 0;
+    border-bottom: 1px solid #282828;
+    outline-width: 0;
+    padding: 0
+  }
+  input.workout-name {
+    font-size: 1rem;
+    font-weight: bold
+  }
+  input.workout-date {
+    font-size: .8rem
+  }
+  .text--name {
+    text-overflow: ellipsis;
+    white-space: nowrap
   }
   .text--date {
     font-size: .8rem
   }
   .bottom-bar {
+    height: 54px;
     padding: .6rem 1rem
   }
   .bottom-bar .button {
@@ -239,7 +258,8 @@
   }
   .container--content {
     display: grid;
-    grid-template-columns: .6fr 1fr
+    grid-template-columns: .6fr 1fr;
+    grid-gap: 8rem
   }
   .data-select {
     display: grid;
@@ -324,13 +344,6 @@
   @media (max-width: 768px) {
     #blocks .block_info input.block_info--name.title {
       font-size: 1.2rem
-    }
-    .workouts--workout:hover {
-      border-bottom: 1px solid #28282840
-    }
-    .workouts--workout:active {
-      transform: scale(.9);
-      border-bottom: 1px solid #282828
     }
     .form--copy {
       grid-template-columns: 1fr
@@ -489,10 +502,12 @@
                     <!-- Loop through workouts -->
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
-                      <p class="workouts--workout">
-                        <span><b>{{workout.name}}</b></span><br>
-                        <span class="text--date">{{day(workout.date)}}</span>
-                        <span class="text--date">{{workout.date}}</span>
+                      <p class="wrapper--workout__header">
+                        <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
+                        <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
+                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span>
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" />
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" />
                       </p>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
@@ -1262,6 +1277,8 @@
             for (y in programme.workouts) {
               if (programme.workouts[y].id === id) {
                 var workoutsId = programme.workouts[y].id
+                var workoutsName = programme.workouts[y].name
+                var workoutsDate = programme.workouts[y].date
                 var workoutsNotes = programme.workouts[y].notes
               }
             }
@@ -1272,6 +1289,8 @@
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
+              'name': workoutsName,
+              'date': workoutsDate,
               'notes': workoutsNotes,
               'week_id': parseInt(this.moveTarget)
             }

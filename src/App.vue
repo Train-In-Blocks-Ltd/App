@@ -125,7 +125,6 @@
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
-    padding: .4rem;
     display: inline-block;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
