@@ -478,7 +478,7 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Workouts</h3>
-                  <input @blur="scan(), update_programme()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
+                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
@@ -682,6 +682,14 @@
       this.scan()
     },
     methods: {
+      updateBlockColor () {
+        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          if (programme.id == this.$route.params.id) {
+            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g,'').replace(/[\[\]]/g,'').replace(/\//g,'')
+          }
+        })
+        this.update_programme()
+      },
       toggleFloatingNav () {
         this.showFloatingNav = !this.showFloatingNav
         if (this.msgFloatingNav === 'Hide') {
@@ -846,7 +854,7 @@
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
-            this.weekColor.backgroundColor = programme.block_color
+            this.weekColor.backgroundColor = programme.block_color.replace('[', '').replace(']', '').split(',')
             this.str = programme.workouts
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
