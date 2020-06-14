@@ -857,7 +857,7 @@
             this.str = programme.workouts
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
-                this.workoutDates.push({title: object.name, date: object.date})
+                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1] })
                 if (object.notes !== null) {
                   var pulledProtocols = this.pullProtocols(object.name, object.notes)
                   this.dataPacketStore.push(this.chunkArray(pulledProtocols))
