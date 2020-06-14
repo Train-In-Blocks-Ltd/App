@@ -689,6 +689,7 @@
           }
         })
         this.update_programme()
+        this.scan()
       },
       toggleFloatingNav () {
         this.showFloatingNav = !this.showFloatingNav
