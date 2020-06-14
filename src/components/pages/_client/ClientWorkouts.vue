@@ -630,10 +630,7 @@
         },
         new_workout: {
           name: '',
-          date: '',
-          notes: '',
-          week_id: '',
-          block_color: ''
+          date: ''
         },
         delete: false,
         showType: true,
@@ -1171,7 +1168,8 @@
               'description': programme.description,
               'duration': programme.duration,
               'start': programme.start,
-              'notes': programme.notes
+              'notes': programme.notes,
+              'block_color': //NEEDS FILLING IN
             }
           )
           this.$parent.loading = false
@@ -1276,8 +1274,7 @@
               programme_id: this.$route.params.id,
               date: this.new_workout.date,
               notes: this.currentCopyWorkoutNotes,
-              week_id: this.currentWeek,
-              block_color: this.new_workout.block_color
+              week_id: this.currentWeek
             }),
             {
               headers: {
