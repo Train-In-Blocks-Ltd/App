@@ -76,7 +76,7 @@
   /* Calendar */
   .calendar {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: .8fr .4fr;
     grid-gap: 2rem;
     padding: 5rem;
     border-radius: 3px;
@@ -86,7 +86,7 @@
     font-size: .8rem
   }
   .block-notes {
-    margin-top: 6rem
+    margin: 6rem auto auto auto
   }
 
   /* Block Table */
@@ -119,7 +119,7 @@
   }
   .block_table--container--block_duration_container {
     display: grid;
-    grid-gap: 1rem .2rem;
+    grid-gap: 1rem .4rem;
     grid-template-columns: repeat(12, 50px);
     border: none;
     padding: 0
@@ -128,17 +128,25 @@
     height: 100px;
     user-select: none
   }
+  .week__color {
+    width: 50px;
+    height: 6px;
+    border-radius: 3px 3px 0 0
+  }
+  .week__number {
+    padding: 1rem 0
+  }
   .week {
+    display: grid;
+    grid-template-rows: 6px 90px;
     cursor: pointer;
     box-shadow: 0 0 20px 10px #28282808;
     border-radius: 3px;
-    background-color: white;
-    display: inline-block;
+    background-color: #F2F2F2;
     border-left: none;
     border-bottom: none;
-    padding: 30px 0;
     min-width: 50px;
-    height: 80px;
+    height: 74px;
     width: 100%;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
@@ -147,7 +155,8 @@
   }
   .weekActive {
     box-shadow: 0 0 20px 10px #28282815;
-    height: 100px
+    background-color: white;
+    height: 94px
   }
   .week.weekActive:hover {
     box-shadow: 0 0 20px 10px #28282808
@@ -174,7 +183,9 @@
   }
   .wrapper--workout, .block-notes {
     height: fit-content;
-    background-color: #F4F4F4;
+    width: 300px;
+    border-radius: 3px;
+    background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .workouts--workout, .block-notes__header {
@@ -222,21 +233,27 @@
   }
   .container--content {
     display: grid;
-    grid-template-columns: 1fr 1fr
+    grid-template-columns: .6fr 1fr
   }
   .data-select {
     display: grid;
-    grid-gap: 4rem;
-    width: fit-content;
-    grid-template-columns: 1fr 1fr
+    grid-gap: 2rem;
+    width: fit-content
   }
   .data-select__options {
     display: grid;
     grid-gap: 1rem;
     width: fit-content
   }
+  .data-select__options select {
+    border: 0;
+    font-size: 1.6rem;
+    width: fit-content;
+    padding: .2rem 1rem .2rem 0;
+    font-weight: bold
+  }
   #chart {
-    margin: 0 auto
+    position: relative
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
@@ -322,29 +339,23 @@
     <div id="blocks">
       <modal name="move" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--move">
-          <form class="form--move">
-            <div>
-              <label for="range">Move to:</label>
-              <input name="range" type="number" v-model="updateWeekID" :max="maxWeek" required/>
-            </div>
-            <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout)">Move</button>
-          </form>
+          <label for="range">Move to:</label>
+          <input name="range" type="number" v-model="moveTarget" min="2" :max="maxWeek" required/>
+          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout)">Move</button>
         </div>
       </modal>
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--copy">
           <h3>Let's progress the workouts!</h3>
-          <form class="form--copy">
-            <div>
-              <label for="range">From 1 to: </label>
-              <input name="range" type="number"/>
-            </div>
-            <div>
-              <label for="exclude">Exclude cycles: </label>
-              <input name="exclude" type="text" pattern="/\d+/gmi"/>
-            </div>
-            <button class="button" type="submit">Copy</button>
-          </form>
+          <div>
+            <label for="range">From 1 to: </label>
+            <input v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
+          </div>
+          <div>
+            <label for="exclude">Exclude cycles: </label>
+            <input name="exclude" type="text" pattern="/\d+/gmi"/>
+          </div>
+          <button @click="copyAcross()" class="button">Copy</button>
         </div>
       </modal>
       <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
@@ -433,8 +444,8 @@
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                 <div v-show="!editBlockNotes" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
                 <div class="bottom-bar">
-                  <button v-show="!editBlockNotes" @click="editBlockNotes = true" id="button-edit" class="button">Edit</button>
-                  <button v-show="editBlockNotes" @click="updateBlockNotes()" id="button-save" class="button">Save</button>
+                  <button v-show="!editBlockNotes" @click="editBlockNotes = true" class="button button--edit">Edit</button>
+                  <button v-show="editBlockNotes" @click="updateBlockNotes()" class="button button--save">Save</button>
                 </div>
               </div>
             </div>
@@ -444,14 +455,15 @@
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" required @click="editing()"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @click="editing()"/>
                   </div>
                 </div>
                 <div class="block_table--container">
                   <div class="block_table--container--block_duration_container">
                     <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
-                      <div :class="{weekActive: item === currentWeek}" class="week">
-                        {{item}}
+                      <div :class="{ weekActive: item === currentWeek }" class="week">
+                        <div :style="weekColor" class="week__color"/>
+                        <div class="week__number">{{item}}</div>
                       </div>
                     </div>
                   </div>
@@ -461,7 +473,7 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
-                  <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy()"/>
+                  <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
@@ -481,7 +493,7 @@
                         <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id)">Edit</button>
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="updateWorkoutNotes(workout.id)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
-                        <button id="button-delete" class="button delete" @click="delete_workout(workout.id)">Delete</button>
+                        <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
                       </div>
                     </div>
                   </div>
@@ -512,7 +524,7 @@
                 <div>
                   <div class="data-select">
                     <div class="data-select__options">
-                      <label for="measure"><b>Data: </b></label>
+                      <label for="measure"><b>Measurement: </b></label>
                       <select v-model="selectedDataName" @change="selection()" name="measure">
                         <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
                           {{option.text}}
@@ -532,24 +544,24 @@
                   <div class="spacer"/>
                   <div v-show="showType" class="data-desc">
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p1.desc}}</b></p>
-                      <p class="data-desc__value">{{p1.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
+                      <p class="data-desc__value">{{ p1.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p2.desc}}</b></p>
-                      <p class="data-desc__value">{{p2.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p2.desc }}</b></p>
+                      <p class="data-desc__value">{{ p2.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p3.desc}}</b></p>
-                      <p class="data-desc__value">{{p3.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p3.desc }}</b></p>
+                      <p class="data-desc__value">{{ p3.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{p4.desc}}</b></p>
-                      <p class="data-desc__value">{{p4.value}}</p>
+                      <p class="data-desc__desc"><b>{{ p4.desc }}</b></p>
+                      <p class="data-desc__value">{{ p4.value }}</p>
                     </div>
                     <div class="container--data-desc">
-                      <p class="data-desc__desc">{{p5.desc}}</p>
-                      <p class="data-desc__value">{{p5.value}}</p>
+                      <p class="data-desc__desc">{{ p5.desc }}</p>
+                      <p class="data-desc__value">{{ p5.value }}</p>
                     </div>
                   </div>
                   <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
@@ -584,6 +596,9 @@
     },
     data: function () {
       return {
+        weekColor: {
+          backgroundColor: '#168dc0'
+        },
         showFloatingNav: true,
         msgFloatingNav: 'Hide',
         creating: false,
@@ -616,7 +631,9 @@
         new_workout: {
           name: '',
           date: '',
-          week_id: this.currentWeek
+          notes: '',
+          week_id: '',
+          block_color: ''
         },
         delete: false,
         showType: true,
@@ -644,10 +661,11 @@
         selectedDataName: 'Block Overview',
         optionsForDataName: [],
         selectedDataType: 'Sets',
-        updateWeekID: 1,
         currentWeek: 1,
-        maxWeek: 1,
-        movingWorkout: null
+        maxWeek: '2',
+        movingWorkout: null,
+        moveTarget: 1,
+        copyTarget: 2
       }
     },
     created () {
@@ -666,8 +684,33 @@
           this.msgFloatingNav = 'Hide'
         }
       },
-      showCopy () {
+      showCopy (maxWeek) {
+        this.maxWeek = maxWeek
         this.$modal.show('copy')
+      },
+      copyAcross () {
+        var copyWorkouts = []
+        let weekCount = 2
+        this.str.forEach((workout) => {
+          // eslint-disable-next-line
+          if (workout.week_id == this.currentWeek) {
+            copyWorkouts.push({ name: workout.name, date: workout.date, notes: workout.notes })
+          }
+        })
+        for (; weekCount <= this.copyTarget; weekCount++) {
+          this.currentWeek = weekCount
+          copyWorkouts.forEach((workout) => {
+            this.new_workout.name = workout.name
+            this.new_workout.date = this.addDays(workout.date, 7 * (weekCount - 1))
+            this.currentCopyWorkoutNotes = workout.notes
+            this.add_workout()
+          })
+        }
+        this.currentCopyWorkoutNotes = ''
+        this.copyTarget = 1
+        this.new_workout.name = ''
+        this.new_workout.date = ''
+        this.$modal.hide('copy')
       },
       showToolkit () {
         this.$modal.show('toolkit')
@@ -721,6 +764,7 @@
           scales: {
             yAxes: [{
               ticks: {
+                suggestedMin: 0,
                 beginAtZero: false
               }
             }]
@@ -852,7 +896,7 @@
 
       // Init the dropdown selection with validation
       dropdownInit () {
-        this.optionsForDataName = [{id: 0, text: 'Block Overview', value: 'Block Overview'}]
+        this.optionsForDataName = [{ id: 0, text: 'Block Overview', value: 'Block Overview' }]
         var tempItemStore = []
         var tempItemStoreLate = []
         var continueValue = 0
@@ -877,10 +921,10 @@
         })
         tempItemStore.forEach((item, index) => {
           continueValue = index + 1
-          this.optionsForDataName.push({id: continueValue, text: item, value: item})
+          this.optionsForDataName.push({ id: continueValue, text: item, value: item })
         })
         tempItemStoreLate.forEach((item, index) => {
-          this.optionsForDataName.push({id: continueValue + index + 1, text: item, value: item})
+          this.optionsForDataName.push({ id: continueValue + index + 1, text: item, value: item })
         })
       },
       // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
@@ -992,17 +1036,26 @@
         this.yData.forEach((value) => {
           storeMax = Math.max(storeMax, value)
         })
-        this.p3 = {desc: 'Maximum ' + dataForType + ': ', value: storeMax}
+        this.p3 = { desc: 'Maximum ' + dataForType + ': ', value: storeMax }
         store = storeMax
         this.yData.forEach((value) => {
           store = Math.min(store, value)
         })
-        this.p4 = {desc: 'Minimum ' + dataForType + ': ', value: store}
-        this.p5 = {desc: 'Percentage Change: ', value: ((storeMax / store) * 100).toFixed(1) + '%'}
+        this.p4 = { desc: 'Minimum ' + dataForType + ': ', value: store }
+        this.p5 = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
       },
 
       // OTHER METHODS //
-
+      addDays (date, days) {
+        var d = new Date(date)
+        d.setHours(0, 0, 0, 0)
+        d.setMonth(d.getMonth() + 1)
+        d.setDate(d.getDate() + days)
+        var year = d.getFullYear()
+        var month = d.getMonth()
+        var dayDate = d.getDate()
+        return `${year}/${month}/${dayDate}`
+      },
       day (date) {
         var weekday = new Array(7)
         weekday[0] = 'Sun'
@@ -1200,16 +1253,14 @@
           }
         }
         try {
-          // eslint-disable-next-line
           this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'notes': workoutsNotes,
-              'week_id': this.updateWeekID
+              'week_id': parseInt(this.moveTarget)
             }
           )
-          this.updateWeekID = null
           this.msg = 'Idle'
         } catch (e) {
           console.log(e.toString())
@@ -1224,7 +1275,9 @@
             qs.stringify({
               programme_id: this.$route.params.id,
               date: this.new_workout.date,
-              week_id: this.new_workout.week_id
+              notes: this.currentCopyWorkoutNotes,
+              week_id: this.currentWeek,
+              block_color: this.new_workout.block_color
             }),
             {
               headers: {
@@ -1233,12 +1286,9 @@
               }
             }
           )
-          // eslint-disable-next-line
           this.response = response_save_workouts.data
-
           // Get the workouts from the API because we've just created a new one
           await this.$parent.force_get_workouts()
-
           this.$parent.$parent.loading = false
 
           this.close()
@@ -1247,7 +1297,8 @@
             name: '',
             date: '',
             notes: '',
-            week_id: ''
+            week_id: '',
+            block_color: ''
           }
           this.scan()
         } catch (e) {

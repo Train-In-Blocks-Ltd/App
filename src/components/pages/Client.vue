@@ -386,6 +386,7 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients()
           await this.$parent.clients_to_vue()
+          this.$parent.loading = false
         } catch (e) {
           console.log(e.toString())
         }
