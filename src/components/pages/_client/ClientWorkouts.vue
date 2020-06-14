@@ -442,7 +442,7 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" :eventColor="'#282828'"/>
+              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" />
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
@@ -468,7 +468,7 @@
                   <div class="block_table--container--block_duration_container">
                     <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
-                        <div :style="weekColor" class="week__color"/>
+                        <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
                         <div class="week__number">{{item}}</div>
                       </div>
                     </div>
@@ -478,7 +478,7 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Workouts</h3>
-                  <input class="week-color-picker" v-model="weekColor.backgroundColor" type="color" />
+                  <input @blur="scan(), update_programme()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
@@ -639,8 +639,7 @@
           name: '',
           date: '',
           notes: '',
-          week_id: '',
-          block_color: ''
+          week_id: ''
         },
         delete: false,
         showType: true,
@@ -847,10 +846,11 @@
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
+            this.weekColor.backgroundColor = programme.block_color
             this.str = programme.workouts
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
-                this.workoutDates.push({title: object.name, date: object.date})
+                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1] })
                 if (object.notes !== null) {
                   var pulledProtocols = this.pullProtocols(object.name, object.notes)
                   this.dataPacketStore.push(this.chunkArray(pulledProtocols))
@@ -1178,7 +1178,8 @@
               'description': programme.description,
               'duration': programme.duration,
               'start': programme.start,
-              'notes': programme.notes
+              'notes': programme.notes,
+              'block_color': programme.block_color
             }
           )
           this.$parent.loading = false
@@ -1304,8 +1305,7 @@
             name: '',
             date: '',
             notes: '',
-            week_id: '',
-            block_color: ''
+            week_id: ''
           }
           this.scan()
         } catch (e) {
