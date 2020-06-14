@@ -124,6 +124,12 @@
     border: none;
     padding: 0
   }
+
+  /* Week */
+  .week-color-picker {
+    margin: auto 0 auto 1rem;
+    height: 28px
+  }
   .container--week {
     height: 100px;
     user-select: none
@@ -472,6 +478,7 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Workouts</h3>
+                  <input class="week-color-picker" v-model="weekColor.backgroundColor" type="color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
