@@ -674,7 +674,7 @@
       },
       updateBlockNotes () {
         this.update_programme()
-         this.editBlockNotes = false
+        this.editBlockNotes = false
       },
       editingWorkoutNotes (id) {
         this.isEditingWorkout = true
@@ -852,7 +852,7 @@
 
       // Init the dropdown selection with validation
       dropdownInit () {
-        this.optionsForDataName = [{ id: 0, text: 'Block Overview', value: 'Block Overview'}]
+        this.optionsForDataName = [{id: 0, text: 'Block Overview', value: 'Block Overview'}]
         var tempItemStore = []
         var tempItemStoreLate = []
         var continueValue = 0
@@ -877,10 +877,10 @@
         })
         tempItemStore.forEach((item, index) => {
           continueValue = index + 1
-          this.optionsForDataName.push({id: continueValue, text: item, value: item })
+          this.optionsForDataName.push({id: continueValue, text: item, value: item})
         })
         tempItemStoreLate.forEach((item, index) => {
-          this.optionsForDataName.push({id: continueValue + index + 1, text: item, value: item })
+          this.optionsForDataName.push({id: continueValue + index + 1, text: item, value: item})
         })
       },
       // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
@@ -986,19 +986,19 @@
         var sum = this.yData.reduce((a, b) => a + b)
 
         // Sets descriptive data with its corresponding info.
-        this.p1 = { desc: 'Total ' + dataForType + ': ', value: sum }
-        this.p2 = { desc: 'Average ' + dataForType + ': ', value: (sum / this.yData.length).toFixed(1) }
+        this.p1 = {desc: 'Total ' + dataForType + ': ', value: sum}
+        this.p2 = {desc: 'Average ' + dataForType + ': ', value: (sum / this.yData.length).toFixed(1)}
 
         this.yData.forEach((value) => {
           storeMax = Math.max(storeMax, value)
         })
-        this.p3 = {desc: 'Maximum ' + dataForType + ': ', value: storeMax }
+        this.p3 = {desc: 'Maximum ' + dataForType + ': ', value: storeMax}
         store = storeMax
         this.yData.forEach((value) => {
           store = Math.min(store, value)
         })
-        this.p4 = { desc: 'Minimum ' + dataForType + ': ', value: store}
-        this.p5 = { desc: 'Percentage Change: ', value: ((storeMax / store) * 100).toFixed(1) + '%' }
+        this.p4 = {desc: 'Minimum ' + dataForType + ': ', value: store}
+        this.p5 = {desc: 'Percentage Change: ', value: ((storeMax / store) * 100).toFixed(1) + '%'}
       },
 
       // OTHER METHODS //
