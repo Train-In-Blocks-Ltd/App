@@ -1169,7 +1169,8 @@
               'duration': programme.duration,
               'start': programme.start,
               'notes': programme.notes,
-              'block_color': //NEEDS FILLING IN
+              'block_color': // NEEDS FILLING IN
+              this.new_block
             }
           )
           this.$parent.loading = false

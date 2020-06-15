@@ -211,7 +211,8 @@
               client_id: this.$parent.$parent.client_details.client_id,
               duration: this.new_block.duration,
               start: this.new_block.start,
-              block_color: //NEEDS FILLING IN
+              block_color: // NEEDS FILLING IN
+              this.new_block
             }),
             {
               headers: {
