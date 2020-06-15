@@ -243,6 +243,7 @@
             duration: '',
             start: ''
           }
+          this.$gtag.event('new_block')
         } catch (e) {
           console.error(`${e}`)
         }

@@ -144,6 +144,7 @@
             number: '',
             notes: ''
           }
+          this.$gtag.event('new_client')
         } catch (e) {
           console.error(`${e}`)
         }

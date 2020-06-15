@@ -122,6 +122,7 @@
           )
           this.$parent.loading = false
           this.$parent.claims = await this.$auth.getUser()
+          this.$gtag.event('update_account')
         } catch (e) {
           console.log(e)
         }

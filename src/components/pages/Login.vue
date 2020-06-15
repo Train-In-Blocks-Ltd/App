@@ -177,6 +177,7 @@ export default {
     })
   },
   async beforeDestroy () {
+    this.$gtag.event('login')
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
     await this.$parent.clients()

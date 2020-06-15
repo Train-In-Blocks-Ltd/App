@@ -1197,6 +1197,7 @@
           }
           // Update the localstorage with the programmes
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
+          this.$gtag.event('update_block')
         } catch (e) {
           console.log(e.toString())
         }
@@ -1261,6 +1262,7 @@
             }
           )
           this.msg = 'Idle'
+          this.$gtag.event('update_workout')
         } catch (e) {
           console.log(e.toString())
         }
@@ -1299,6 +1301,7 @@
             block_color: ''
           }
           this.scan()
+          this.$gtag.event('add_workout')
         } catch (e) {
           console.error(`${e}`)
         }
@@ -1321,6 +1324,7 @@
             this.$parent.$parent.clients_to_vue()
 
             this.$router.push({path: '/'})
+            this.$gtag.event('delete_block')
           } catch (e) {
             console.error(`${e}`)
           }
@@ -1335,6 +1339,7 @@
             this.$parent.force_get_workouts()
             this.delete = true
             this.scan()
+            this.$gtag.event('delete_workout')
           } catch (e) {
             console.error(`${e}`)
           }

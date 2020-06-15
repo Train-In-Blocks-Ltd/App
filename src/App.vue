@@ -736,6 +736,7 @@ export default {
       await this.$auth.logout()
       await this.isAuthenticated()
       localStorage.clear()
+      this.$gtag.event('logout')
     },
     async clients_to_vue () {
       if (!localStorage.getItem('posts')) {
@@ -823,6 +824,7 @@ export default {
 
           await this.archive()
           this.archive_to_vue()
+          this.$gtag.event('archive_client')
         } catch (e) {
           console.error(`${e}`)
         }
@@ -861,6 +863,7 @@ export default {
 
           await this.clients()
           this.clients_to_vue()
+          this.$gtag.event('unarchive_client')
         } catch (e) {
           console.error(`${e}`)
         }
@@ -889,6 +892,7 @@ export default {
 
           await this.clients()
           this.clients_to_vue()
+          this.$gtag.event('delete_client')
         } catch (e) {
           console.error(`${e}`)
         }
