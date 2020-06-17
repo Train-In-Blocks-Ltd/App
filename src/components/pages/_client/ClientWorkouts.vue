@@ -1202,7 +1202,6 @@
               'start': programme.start,
               'notes': programme.notes,
               'block_color': programme.block_color
-              this.new_block
             }
           )
           this.$parent.loading = false
