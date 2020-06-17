@@ -4,7 +4,12 @@
     display: inline;
     margin: auto;
     padding: 6rem 4rem;
-    min-width: 500px
+    min-width: 500px;
+    max-width: 720px
+  }
+  .cookies {
+    font-size: .6rem;
+    margin-top: 2rem
   }
   @media (max-width: 520px) {
     main {
@@ -119,6 +124,7 @@
   <div id="login" v-if="!this.$parent.authenticated">
     <inline-svg :src="require('../../assets/svg/LoginLogo.svg')" class="auth-org-logo logo"/>
     <div id="okta-signin-container"></div>
+    <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a></p>
   </div>
 </template>
 
@@ -171,6 +177,7 @@ export default {
     })
   },
   async beforeDestroy () {
+    this.$ga.event('Auth', 'login')
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
     await this.$parent.clients()

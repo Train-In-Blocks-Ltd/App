@@ -1202,6 +1202,7 @@
               'start': programme.start,
               'notes': programme.notes,
               'block_color': programme.block_color
+              this.new_block
             }
           )
           this.$parent.loading = false
@@ -1228,6 +1229,7 @@
           }
           // Update the localstorage with the programmes
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
+          this.$ga.event('Block', 'update')
         } catch (e) {
           console.log(e.toString())
         }
@@ -1296,6 +1298,7 @@
             }
           )
           this.msg = 'Idle'
+          this.$ga.event('Workout', 'update')
         } catch (e) {
           console.log(e.toString())
         }
@@ -1334,6 +1337,7 @@
             block_color: ''
           }
           this.scan()
+          this.$ga.event('Workout', 'new')
         } catch (e) {
           console.error(`${e}`)
         }
@@ -1356,6 +1360,7 @@
             this.$parent.$parent.clients_to_vue()
 
             this.$router.push({path: '/'})
+            this.$ga.event('Block', 'delete')
           } catch (e) {
             console.error(`${e}`)
           }
@@ -1370,6 +1375,7 @@
             this.$parent.force_get_workouts()
             this.delete = true
             this.scan()
+            this.$ga.event('Workout', 'delete')
           } catch (e) {
             console.error(`${e}`)
           }

@@ -212,6 +212,7 @@
               duration: this.new_block.duration,
               start: this.new_block.start,
               block_color: ''
+              this.new_block
             }),
             {
               headers: {
@@ -242,6 +243,7 @@
             duration: '',
             start: ''
           }
+          this.$ga.event('Block', 'new')
         } catch (e) {
           console.error(`${e}`)
         }

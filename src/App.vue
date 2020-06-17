@@ -694,6 +694,14 @@ export default {
     },
     async setup () {
       this.claims = await this.$auth.getUser()
+      if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
+        this.claims.ga = true
+      }
+      if (this.claims.ga !== false) {
+        this.$ga.enable()
+      } else {
+        this.$ga.disable()
+      }
       this.colors.hex = this.claims.color
       this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
       this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
@@ -728,6 +736,7 @@ export default {
       await this.$auth.logout()
       await this.isAuthenticated()
       localStorage.clear()
+      this.$ga.event('Auth', 'logout')
     },
     async clients_to_vue () {
       if (!localStorage.getItem('posts')) {
@@ -815,6 +824,7 @@ export default {
 
           await this.archive()
           this.archive_to_vue()
+          this.$ga.event('Client', 'archive')
         } catch (e) {
           console.error(`${e}`)
         }
@@ -853,6 +863,7 @@ export default {
 
           await this.clients()
           this.clients_to_vue()
+          this.$ga.event('Client', 'unarchive')
         } catch (e) {
           console.error(`${e}`)
         }
@@ -881,6 +892,7 @@ export default {
 
           await this.clients()
           this.clients_to_vue()
+          this.$ga.event('Client', 'delete')
         } catch (e) {
           console.error(`${e}`)
         }
