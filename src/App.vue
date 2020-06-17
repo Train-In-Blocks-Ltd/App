@@ -125,7 +125,6 @@
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
-    padding: .4rem;
     display: inline-block;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
@@ -597,21 +596,14 @@
         <div v-for="(clients, index) in posts"
           :key="index" class="nav--item animate__animated animate__fadeIn">
           <router-link :to="'/client/'+clients.client_id+'/'">{{clients.name}}</router-link>
-          <!-- If on client page and the client has programmes display the programmes
-          <div v-if="$route.path.includes('client') && clients.programmes && $route.params.client_id == clients.client_id">
-            <div v-for="(programme, index) in posts[index].programmes"
-              :key="index" class="nav--item--item">
-              <router-link :to="'/client/'+clients.client_id+'/block/'+programme.id">{{programme.name}}</router-link>
-            </div>
-          </div> -->
         </div>
       </div>
       <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
         <div class="account_nav--item">
-          <router-link to="/learn">
+          <a target="_blank" href="http://www.traininblocks.com/blog">
             <inline-svg :src="require('./assets/svg/Learn.svg')" class="account_nav--item--icon"/>
             Learn
-          </router-link>
+          </a>
         </div>
         <div class="account_nav--item">
           <router-link to="/archive">

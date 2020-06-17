@@ -124,6 +124,12 @@
     border: none;
     padding: 0
   }
+
+  /* Week */
+  .week-color-picker {
+    margin: auto 0 auto 1rem;
+    height: 28px
+  }
   .container--week {
     height: 100px;
     user-select: none
@@ -176,6 +182,9 @@
   }
 
   /* Workouts */
+  .workout--header {
+    display: flex
+  }
   .container--workouts {
     display: grid;
     grid-template-columns: repeat(3, 300px);
@@ -188,17 +197,33 @@
     background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .workouts--workout, .block-notes__header {
+  .wrapper--workout__header, .block-notes__header {
     margin: 0;
     padding: 1rem
   }
-  .workout--header {
-    display: flex
+  input.workout-name, input.workout-date {
+    text-overflow: ellipsis;
+    border: 0;
+    border-bottom: 1px solid #282828;
+    outline-width: 0;
+    padding: 0
+  }
+  input.workout-name {
+    font-size: 1rem;
+    font-weight: bold
+  }
+  input.workout-date {
+    font-size: .8rem
+  }
+  .text--name {
+    text-overflow: ellipsis;
+    white-space: nowrap
   }
   .text--date {
     font-size: .8rem
   }
   .bottom-bar {
+    height: 54px;
     padding: .6rem 1rem
   }
   .bottom-bar .button {
@@ -233,7 +258,8 @@
   }
   .container--content {
     display: grid;
-    grid-template-columns: .6fr 1fr
+    grid-template-columns: .6fr 1fr;
+    grid-gap: 8rem
   }
   .data-select {
     display: grid;
@@ -318,13 +344,6 @@
   @media (max-width: 768px) {
     #blocks .block_info input.block_info--name.title {
       font-size: 1.2rem
-    }
-    .workouts--workout:hover {
-      border-bottom: 1px solid #28282840
-    }
-    .workouts--workout:active {
-      transform: scale(.9);
-      border-bottom: 1px solid #282828
     }
     .form--copy {
       grid-template-columns: 1fr
@@ -436,7 +455,7 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" :eventColor="'#282828'"/>
+              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" />
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
@@ -462,7 +481,7 @@
                   <div class="block_table--container--block_duration_container">
                     <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
-                        <div :style="weekColor" class="week__color"/>
+                        <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
                         <div class="week__number">{{item}}</div>
                       </div>
                     </div>
@@ -472,6 +491,7 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Workouts</h3>
+                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
@@ -482,10 +502,12 @@
                     <!-- Loop through workouts -->
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
-                      <p class="workouts--workout">
-                        <span><b>{{workout.name}}</b></span><br>
-                        <span class="text--date">{{day(workout.date)}}</span>
-                        <span class="text--date">{{workout.date}}</span>
+                      <p class="wrapper--workout__header">
+                        <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
+                        <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
+                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span>
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" />
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" />
                       </p>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
@@ -597,7 +619,7 @@
     data: function () {
       return {
         weekColor: {
-          backgroundColor: '#168dc0'
+          backgroundColor: ''
         },
         showFloatingNav: true,
         msgFloatingNav: 'Hide',
@@ -673,6 +695,15 @@
       this.scan()
     },
     methods: {
+      updateBlockColor () {
+        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          if (programme.id == this.$route.params.id) {
+            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g,'').replace(/[\[\]]/g,'').replace(/\//g,'')
+          }
+        })
+        this.update_programme()
+        this.scan()
+      },
       toggleFloatingNav () {
         this.showFloatingNav = !this.showFloatingNav
         if (this.msgFloatingNav === 'Hide') {
@@ -837,10 +868,11 @@
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
+            this.weekColor.backgroundColor = programme.block_color.replace('[', '').replace(']', '').split(',')
             this.str = programme.workouts
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
-                this.workoutDates.push({title: object.name, date: object.date})
+                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1] })
                 if (object.notes !== null) {
                   var pulledProtocols = this.pullProtocols(object.name, object.notes)
                   this.dataPacketStore.push(this.chunkArray(pulledProtocols))
@@ -1169,7 +1201,7 @@
               'duration': programme.duration,
               'start': programme.start,
               'notes': programme.notes,
-              'block_color': // NEEDS FILLING IN
+              'block_color': programme.block_color
               this.new_block
             }
           )
@@ -1247,6 +1279,8 @@
             for (y in programme.workouts) {
               if (programme.workouts[y].id === id) {
                 var workoutsId = programme.workouts[y].id
+                var workoutsName = programme.workouts[y].name
+                var workoutsDate = programme.workouts[y].date
                 var workoutsNotes = programme.workouts[y].notes
               }
             }
@@ -1257,6 +1291,8 @@
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
+              'name': workoutsName,
+              'date': workoutsDate,
               'notes': workoutsNotes,
               'week_id': parseInt(this.moveTarget)
             }
