@@ -5,7 +5,16 @@ import VueQuill from 'vue-quill'
 import 'quill/dist/quill.snow.css'
 import VueDragscroll from 'vue-dragscroll'
 import VModal from 'vue-js-modal'
+import VueAnalytics from 'vue-analytics'
 
+Vue.use(VueAnalytics, {
+  id: 'UA-167770206-2',
+  router,
+  debug: {
+    sendHitTask: process.env.NODE_ENV === 'production'
+  },
+  disabled: true
+})
 Vue.use(VueQuill)
 Vue.use(VueDragscroll)
 Vue.use(VModal)

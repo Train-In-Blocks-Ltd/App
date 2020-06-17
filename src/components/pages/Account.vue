@@ -37,7 +37,7 @@
     <form class="details_container" v-if="$parent.claims">
         <div class="form__options">
           <label for="first-name"><b>Name: </b></label>
-          <input type="text" id="first-name" name="first-name" autocomplete="given-name" v-model="$parent.claims.name" required v-on:click="edit()"/>
+          <input type="text" id="first-name" name="first-name" autocomplete="given-name" v-model="$parent.claims.given_name" required v-on:click="edit()"/>
         </div>
         <div class="form__options">
           <label for="email"><b>Email: </b></label>
@@ -45,7 +45,11 @@
         </div>
         <div class="form__options">
           <label for="color"><b>Colour theme: </b></label>
-          <input type="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/>
+          <input type="color" name="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/>
+        </div>
+        <div class="form__options">
+          <label for="cookies"><b>Third Party Cookies: </b></label>
+          <input type="checkbox" v-model="$parent.claims.ga" v-on:click="edit()"/>
         </div>
         <p class="text--reset">To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
     </form>
@@ -55,8 +59,6 @@
 
 <script>
   import axios from 'axios'
-  import qs from 'qs'
-  import base64 from 'base-64'
 
   export default {
     created () {
@@ -93,10 +95,10 @@
             {
               'profile': {
                 'login': this.$parent.claims.email,
-                'firstName': this.$parent.claims.name.split(' ')[0],
-                'lastName': this.$parent.claims.name.split(' ')[1],
+                'firstName': this.$parent.claims.given_name,
                 'email': this.$parent.claims.email,
-                'color': this.$parent.colors.hex
+                'color': this.$parent.colors.hex,
+                'ga': this.$parent.claims.ga
               }
             },
             {
@@ -107,21 +109,6 @@
               }
             }
           )
-          // Get new user token because details have changed
-          await axios.post(`${process.env.ISSUER}/oauth2/default/v1/revoke`,
-            qs.stringify({
-              token: await this.$auth.getAccessToken(),
-              token_type_hint: 'access_token'
-            }),
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + base64.encode(process.env.REVOKE_ID + ':' + process.env.REVOKE_SECRET)
-              }
-            }
-          )
-          this.$parent.loading = false
-          this.$parent.claims = await this.$auth.getUser()
         } catch (e) {
           console.log(e)
         }

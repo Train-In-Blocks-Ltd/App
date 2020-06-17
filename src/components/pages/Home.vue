@@ -144,6 +144,7 @@
             number: '',
             notes: ''
           }
+          this.$ga.event('Client', 'new')
         } catch (e) {
           console.error(`${e}`)
         }
