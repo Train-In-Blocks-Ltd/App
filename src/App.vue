@@ -14,6 +14,7 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
+    line-height: 1.42;
     letter-spacing: .1rem;
     overflow: hidden
   }

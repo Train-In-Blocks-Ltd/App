@@ -1,5 +1,7 @@
 <style scoped>
   #archive {
+    display: grid;
+    grid-gap: 2rem;
     padding: 5rem 3.75rem
   }
   .client_container.archived {
@@ -26,6 +28,13 @@
   @media (max-width: 768px) {
     .archive--container {
       max-width: 100%
+    }
+  }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    #archive {
+      padding: 4rem 1rem
     }
   }
 </style>
