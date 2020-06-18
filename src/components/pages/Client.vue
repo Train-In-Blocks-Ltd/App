@@ -36,15 +36,10 @@
   }
   #client .client_info input.client_info--name {
     font-size: 3.75rem;
-    letter-spacing: .5rem;
+    width: 40rem;
+    letter-spacing: .1rem;
     padding: .6rem 0;
     margin: 0
-  }
-
-  /* Top Grid */
-  .top_grid {
-    display: grid;
-    grid-template-columns: 1fr .4fr
   }
 
   /* Floating Nav */
@@ -143,7 +138,9 @@
       padding: 4rem .6rem
     }
     .client_info {
-      grid-gap: 0
+      grid-gap: 0;
+      width: 90vw;
+      margin: 0 auto
     }
     #client .client_info input.client_info--name {
       font-size: 2rem

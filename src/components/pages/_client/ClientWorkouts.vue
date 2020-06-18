@@ -69,14 +69,15 @@
   /* Block Grid */
   .block_grid {
     display: grid;
-    grid-gap: 5rem;
-    margin-top: 5rem
+    grid-gap: 6rem;
+    margin-top: 4rem
   }
 
   /* Calendar */
   .calendar {
     display: grid;
     grid-template-columns: .8fr .4fr;
+    grid-template-areas: 'a b';
     grid-gap: 2rem;
     padding: 5rem;
     border-radius: 3px;
@@ -85,7 +86,11 @@
   .fc-event {
     font-size: .8rem
   }
+  .wrapper--calender {
+    grid-area: a
+  }
   .block-notes {
+    grid-area: b;
     margin: 6rem auto auto auto
   }
   .fc-unthemed tbody {
@@ -129,6 +134,9 @@
   }
 
   /* Week */
+  .fc-view-container * {
+    font-size: .8rem
+  }
   .week-color-picker {
     margin: auto 0 auto 1rem;
     height: 28px
@@ -232,6 +240,7 @@
     margin: 0
   }
   .show-workout, .show-block-notes {
+    overflow-wrap: break-word;
     padding: 12px 15px;
     max-height: 314px;
     color: #282828;
@@ -261,6 +270,7 @@
   .container--content {
     display: grid;
     grid-template-columns: .6fr 1fr;
+    grid-template-areas: 'a b';
     grid-gap: 8rem
   }
   .data-select {
@@ -280,7 +290,11 @@
     padding: .2rem 1rem .2rem 0;
     font-weight: bold
   }
+  .data-options {
+    grid-area: a
+  }
   #chart {
+    grid-area: b;
     position: relative
   }
   .data-desc__value {
@@ -344,6 +358,9 @@
   }
 
   @media (max-width: 768px) {
+    .toggleFloatingNav:hover {
+      grid-gap: 1rem
+    }
     .form--copy {
       grid-template-columns: 1fr
     }
@@ -363,12 +380,17 @@
       margin: 0
     }
     .block_grid {
-      margin: 2rem 0
+      justify-content: center;
+      margin-top: 6rem;
+      grid-template-columns: 90vw
     }
 
     /* Calendar */
     .calendar, .block-plan, .container--content, .graph {
-      grid-template: .2fr .4fr/90vw;
+      grid-template: .2fr .4fr/1fr;
+      grid-template-areas:
+        'b'
+        'a';
       grid-gap: 0;
       padding: 0;
       box-shadow: none
@@ -376,17 +398,12 @@
     .fc-scroller.fc-day-grid-container {
       overflow: hidden
     }
-    .wrapper--calendar {
-      height: fit-content;
-      width: 90vw;
-      overflow-x: auto
-    }
-    .block-notes {
-      width: 100%;
-      margin: 2rem 0
-    }
 
     /* Block Plans */
+    .block-notes {
+      margin: 0 0 4rem 0;
+      width: 100%
+    }
     .block_table__header {
       margin: 0 0 1.6rem 0
     }
@@ -397,6 +414,11 @@
     }
     .week {
       box-shadow: 0 0 14px 8px #28282808
+    }
+
+    /* Stats */
+    #chart {
+      margin-bottom: 4rem
     }
   }
 </style>
@@ -503,7 +525,7 @@
           <div class="block_grid">
             <div class="calendar">
               <div class="wrapper--calendar">
-                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" />
+                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
               </div>
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
@@ -592,7 +614,7 @@
                 <h3 class="section-title">Statistics</h3>
               </div>
               <div class="container--content">
-                <div>
+                <div class="data-options">
                   <div class="data-select">
                     <div class="data-select__options">
                       <label for="measure"><b>Measurement: </b></label>
@@ -715,6 +737,21 @@
         str: [],
         yData: [],
         xLabel: [],
+        view: {
+          dayGridFourDay: {
+            type: 'dayGrid',
+            duration: { days: 4 },
+            buttonText: '4-day'
+          }
+        },
+        calendarToolbarHeader: {
+          left: 'title',
+          right: ''
+        },
+        calendarToolbarFooter: {
+          left: 'today prev, next',
+          right: 'dayGridWeek dayGridMonth'
+        },
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
         msg: 'Idle',
@@ -756,7 +793,7 @@
       toggleFloatingNav () {
         this.showFloatingNav = !this.showFloatingNav
         if (this.msgFloatingNav === 'Hide') {
-          this.msgFloatingNav = 'Options'
+          this.msgFloatingNav = 'Show'
         } else {
           this.msgFloatingNav = 'Hide'
         }

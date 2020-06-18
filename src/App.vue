@@ -50,8 +50,8 @@
   .spacer {
     height: 5rem
   }
-  #hamburger path#lines {
-    fill: #282828
+  #hamburger {
+    z-index: 1
   }
 
   /* Fonts */
@@ -87,7 +87,7 @@
   }
 
   /* Buttons */
-  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary {
+  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
     user-select: none;
     text-transform: capitalize;
     text-align: center;
@@ -106,21 +106,23 @@
     background-color: white;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: color .4s, background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1);
-    will-change: transform
+    transition: color .4s, background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover {
+  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
     cursor: pointer;
     color: white;
     background-color: #282828;
     text-decoration: none
   }
-  .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active {
+  .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
     transform: scale(.9)
   }
   .delete:hover {
     color: white;
     background-color: #B80000
+  }
+  .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+    margin-left: .4rem
   }
 
   /* Inputs */
@@ -236,8 +238,6 @@
     )
   }
   .nav {
-    display: grid;
-    grid-template-rows: repeat(auto-fill, 50px);
     border-bottom: .5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
@@ -509,7 +509,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    .button:hover {
+    .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       background-color: transparent;
       color: #282828
     }
@@ -546,12 +546,12 @@
         var(--green),
         var(--blue)
       );
-      transition: opacity .5s, z-index 1s;
+      transform: translateX(-100vw);
       z-index: -1;
-      opacity: 0
+      transition: transform .4s, z-index 1s
     }
     .sidebar.open {
-      opacity: 1;
+      transform: translateX(0);
       z-index: 99
     }
     main {
@@ -560,8 +560,8 @@
     }
     #hamburger, #close {
       position: absolute;
-      left: 1rem;
-      top: 2rem
+      left: .4rem;
+      top: 1.4rem
     }
     #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
       fill: rgb(
@@ -577,6 +577,23 @@
     p {
       font-size: .8rem
     }
+    #hamburger, #close {
+      position: absolute;
+      left: .8rem;
+      top: 1.6rem
+    }
+    .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+      padding: .4rem .8rem
+    }
+
+    /* Blocks Page */
+    .fc-view-container {
+      width: 90vw;
+      overflow-x: auto
+    }
+    .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
+      width: 120vw
+    }
   }
 </style>
 <template>
@@ -586,7 +603,7 @@
       <inline-svg :src="require('./assets/svg/Hamburger.svg')"/>
     </a>
     <nav class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
-       <!-- Mobile open/close sidebar icon -->
+      <!-- Mobile open/close sidebar icon -->
       <a id="close" v-on:click="sidebar()">
         <inline-svg :src="require('./assets/svg/SidebarClose.svg')"/>
       </a>
@@ -599,7 +616,7 @@
         <div class="nav--item">
             <router-link class="text--client" to="/">Clients</router-link>
         </div>
-         <!-- Loop through clients and render a link to each one -->
+        <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
           :key="index" class="nav--item animate__animated animate__fadeIn">
           <router-link :to="'/client/'+clients.client_id+'/'">{{clients.name}}</router-link>
@@ -650,6 +667,7 @@ export default {
   },
   data: function () {
     return {
+      screenWidth: screen.width,
       archive_error: '',
       archive_posts: {},
       no_archive: false,
