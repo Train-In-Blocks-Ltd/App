@@ -46,8 +46,8 @@
   .floating_nav {
     z-index: 2;
     position: fixed;
-    right: 5rem;
-    top: 5rem;
+    right: 4rem;
+    top: 6rem;
     width: 200px;
     display: grid;
     justify-items: right;
@@ -135,7 +135,7 @@
     /* Overall */
     #client {
       overflow-x: hidden;
-      padding: 4rem .6rem
+      padding: 4rem 1rem
     }
     .client_info {
       grid-gap: 0;

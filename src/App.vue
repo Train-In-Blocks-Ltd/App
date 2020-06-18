@@ -121,6 +121,11 @@
     color: white;
     background-color: #B80000
   }
+
+  /* GLOBAL: Calendar */
+  .fc-view-container span {
+    font-size: .8rem
+  }
   .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
     margin-left: .4rem
   }
@@ -538,6 +543,9 @@
       margin-bottom: 2.5rem;
       margin-left: 1.25rem
     }
+    .main-title {
+      margin: 0
+    }
     .sidebar {
       position: fixed;
       width: 100%;
@@ -560,7 +568,7 @@
     }
     #hamburger, #close {
       position: absolute;
-      left: .4rem;
+      left: 3.4rem;
       top: 1.4rem
     }
     #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
@@ -582,6 +590,9 @@
       left: .8rem;
       top: 1.6rem
     }
+    .main-title {
+      font-size: 2.4rem
+    }
     .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
       padding: .4rem .8rem
     }
@@ -590,6 +601,9 @@
     .fc-view-container {
       width: 90vw;
       overflow-x: auto
+    }
+    .fc-view-container span {
+      font-size: .7rem
     }
     .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
       width: 120vw

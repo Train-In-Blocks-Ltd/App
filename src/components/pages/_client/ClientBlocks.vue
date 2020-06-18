@@ -10,11 +10,16 @@
   .container--block-links {
     display: grid;
     grid-gap: 4rem;
-    grid-template-columns: .8fr 300px
+    grid-template-columns: .8fr 300px;
+    grid-template-areas: 'a b'
+  }
+  .container--block-links__section {
+    grid-area: a
   }
 
   /* Client Notes */
   .client-notes {
+    grid-area: b;
     margin-top: 6rem;
     height: fit-content;
     border-radius: 3px;
@@ -123,12 +128,25 @@
       box-shadow: 0 0 20px 10px #28282810
     }
   }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    .container--block-links {
+      grid-template: .2fr 1fr/1fr;
+      grid-template-areas:
+        'b'
+        'a'
+    }
+    .client-notes {
+      margin: 0
+    }
+  }
 </style>
 <template>
     <div>
       <div class="spacer"/>
       <div class="container--block-links">
-        <div>
+        <div class="container--block-links__section">
           <h2 class="sub-title">Blocks</h2>
           <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
           <p v-if="this.$parent.loading_programmes">Loading programmes...</p>

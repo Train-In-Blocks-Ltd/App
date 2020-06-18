@@ -25,7 +25,7 @@
     display: grid;
     grid-template-columns: 24px 1fr;
     grid-gap: .4rem;
-    margin: 2rem 0;
+    margin: 1.2rem 0;
     font-size: .8rem
   }
   .message > p, .message svg {
@@ -297,6 +297,9 @@
     grid-area: b;
     position: relative
   }
+  .data-desc {
+    margin-top: 4rem
+  }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
     font-size: 2.4rem;
@@ -409,7 +412,7 @@
     }
     .block_table--container--block_duration_container, .container--workouts {
       overflow-x: auto;
-      width: 100vw;
+      width: 90vw;
       padding: 1rem
     }
     .week {
@@ -419,6 +422,15 @@
     /* Stats */
     #chart {
       margin-bottom: 4rem
+    }
+    .data-desc {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 90vw;
+      margin-top: 2rem
+    }
+    .data-desc__value {
+      font-size: 1.8rem
     }
   }
 </style>
@@ -634,7 +646,6 @@
                       </select>
                     </div>
                   </div>
-                  <div class="spacer"/>
                   <div v-show="showType" class="data-desc">
                     <div class="container--data-desc">
                       <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
