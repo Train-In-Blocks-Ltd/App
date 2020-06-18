@@ -102,7 +102,7 @@
     letter-spacing: .1rem;
     font-weight: bold;
     color: #282828;
-    box-shadow: 0 0 20px 6px #28282815;
+    box-shadow: 0 0 14px 6px #28282812;
     background-color: white;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
@@ -560,8 +560,8 @@
     }
     #hamburger, #close {
       position: absolute;
-      left: 1.875rem;
-      top: 1.5rem
+      left: 1rem;
+      top: 2rem
     }
     #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
       fill: rgb(
@@ -569,6 +569,13 @@
         var(--accessible-color),
         var(--accessible-color)
       )
+    }
+  }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    p {
+      font-size: .8rem
     }
   }
 </style>

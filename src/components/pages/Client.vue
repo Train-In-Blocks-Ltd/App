@@ -134,20 +134,23 @@
       border-bottom: 2px solid #28282800
     }
   }
+
+  /* For Mobile */
   @media (max-width: 576px) {
+    /* Overall */
+    #client {
+      overflow-x: hidden;
+      padding: 4rem .6rem
+    }
+    .client_info {
+      grid-gap: 0
+    }
+    #client .client_info input.client_info--name {
+      font-size: 2rem
+    }
     .floating_nav {
-      right: 3rem
-    }
-    .ql-editor {
-      height: 310px
-    }
-  }
-  @media (max-width: 360px) {
-    .floating_nav {
-      right: 2rem
-    }
-    .ql-editor {
-      height: 260px
+      right: 2rem;
+      top: 2rem
     }
   }
 </style>

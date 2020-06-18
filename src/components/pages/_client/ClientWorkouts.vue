@@ -88,6 +88,9 @@
   .block-notes {
     margin: 6rem auto auto auto
   }
+  .fc-unthemed tbody {
+    border-color: #F1F1F1
+  }
 
   /* Block Table */
   .block-plan {
@@ -135,7 +138,7 @@
     user-select: none
   }
   .week__color {
-    width: 50px;
+    width: 48px;
     height: 6px;
     border-radius: 3px 3px 0 0
   }
@@ -146,11 +149,10 @@
     display: grid;
     grid-template-rows: 6px 90px;
     cursor: pointer;
-    box-shadow: 0 0 20px 10px #28282808;
+    box-shadow: 0 0 14px 08px #28282808;
     border-radius: 3px;
+    border: 1px solid #28282812;
     background-color: #F2F2F2;
-    border-left: none;
-    border-bottom: none;
     min-width: 50px;
     height: 74px;
     width: 100%;
@@ -342,14 +344,59 @@
   }
 
   @media (max-width: 768px) {
-    #blocks .block_info input.block_info--name.title {
-      font-size: 1.2rem
-    }
     .form--copy {
       grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1
+    }
+  }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    /* Overall */
+    div.message {
+      margin: 1rem 0 0 0
+    }
+    #blocks .block_info input.block_info--name.title {
+      font-size: 1.2rem;
+      margin: 0
+    }
+    .block_grid {
+      margin: 2rem 0
+    }
+
+    /* Calendar */
+    .calendar, .block-plan, .container--content, .graph {
+      grid-template: .2fr .4fr/90vw;
+      grid-gap: 0;
+      padding: 0;
+      box-shadow: none
+    }
+    .fc-scroller.fc-day-grid-container {
+      overflow: hidden
+    }
+    .wrapper--calendar {
+      height: fit-content;
+      width: 90vw;
+      overflow-x: auto
+    }
+    .block-notes {
+      width: 100%;
+      margin: 2rem 0
+    }
+
+    /* Block Plans */
+    .block_table__header {
+      margin: 0 0 1.6rem 0
+    }
+    .block_table--container--block_duration_container, .container--workouts {
+      overflow-x: auto;
+      width: 100vw;
+      padding: 1rem
+    }
+    .week {
+      box-shadow: 0 0 14px 8px #28282808
     }
   }
 </style>
@@ -455,7 +502,9 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" />
+              <div class="wrapper--calendar">
+                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" />
+              </div>
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
