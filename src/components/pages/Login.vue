@@ -1,5 +1,6 @@
 <style scoped>
   #login {
+    box-shadow: 0 0 20px 10px #28282810;
     text-align: left;
     display: inline;
     margin: auto;
@@ -9,13 +10,14 @@
   }
   .cookies {
     font-size: .6rem;
-    margin-top: 2rem
+    margin: 2rem 0
   }
   @media (max-width: 520px) {
     main {
       padding: 2rem 1.5rem
     }
     #login {
+      box-shadow: none;
       min-width: 100%;
       padding: 4rem 2rem
     }
@@ -26,23 +28,23 @@
     display: none
   }
   .auth-org-logo {
-    margin: 5vh 0
+    margin: 2rem 0
   }
   .auth-org-logo.logo > path {
     fill: #282828
   }
   .okta-form-label {
-    font-size: 1.1rem;
     font-weight: bold;
     text-align: left;
-    letter-spacing: .15rem
+    letter-spacing: .1rem
   }
   #okta-signin-username, #okta-signin-password, #account-recovery-username {
+    outline-width: 0;
     width: 70%;
-    margin: .75rem 0;
-    padding: .5rem;
+    margin: .8rem 0;
+    padding: .6rem 0;
+    font-size: 1rem;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: .9rem;
     letter-spacing: .1rem;
     border: none;
     border-bottom: 1px solid #282828;
@@ -55,8 +57,8 @@
   .okta-form-input-error {
     width: 100%;
     color: #EB5757;
-    margin-top: .5rem;
-    margin-bottom: 1.5rem;
+    margin-top: .4rem;
+    margin-bottom: 1.4rem;
     font-size: .6rem;
     text-align: left
   }
@@ -68,13 +70,11 @@
     margin: 1.25rem 0
   }
   .o-form-button-bar .button, .email-button {
-    padding: .5rem 1rem;
+    padding: .5rem 2rem;
     display: inline-block;
-    border: 1px solid #282828;
     height: auto;
     width: auto;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: .9rem;
     font-weight: bold;
     text-align: center;
     cursor: pointer;
@@ -88,11 +88,11 @@
     list-style-type: none;
     margin: 0;
     padding: 0;
-    margin-top: .75rem;
+    margin-top: .8rem;
     font-size: .6rem
   }
   .help-links li {
-    padding: .25rem 0
+    padding: .4rem 0
   }
   .help-links li:first-of-type {
     padding-top: 0
@@ -100,8 +100,12 @@
   .help-links li:last-of-type {
     padding-bottom: 0
   }
+  .o-form-fieldset-container {
+    display: grid;
+    grid-gap: 2rem
+  }
   .auth-footer, .o-form-fieldset-container {
-    margin-top: 1.75rem;
+    margin-top: 2rem;
     text-align: left
   }
   .link.help.js-help, .link.help.js-back {
@@ -111,11 +115,11 @@
   .custom-checkbox:after {
     content: 'Please remember to manually logout if this is a shared computer.';
     display: block;
-    margin-top: 1rem
+    margin-top: 2rem
   }
   @media (max-width: 520px) {
     .okta-form-label {
-      font-size: 1rem
+      font-size: 2rem
     }
   }
 </style>

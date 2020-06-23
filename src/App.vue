@@ -311,15 +311,17 @@
     margin-bottom: -.8rem
   }
   .nav--item a {
+    opacity: .6;
     font-weight: normal;
     transition: all 1s cubic-bezier(.075, .82, .165, 1)
   }
   .nav--item a:hover {
-    opacity: .6
+    opacity: 1
   }
   .nav--item a.router-link-active:not(.text--client), .nav--item a.router-link-exact-active {
-    font-weight: bold;
-    font-size: 1.4rem
+    opacity: 1;
+    font-size: 1.2rem;
+    font-weight: bold
   }
   .nav--item--item a.router-link-exact-active {
     font-size: 1rem
@@ -332,8 +334,13 @@
     font-size: .8rem
   }
   .account_nav--item {
+    opacity: .6;
     font-size: 1rem;
-    padding: .8rem 0
+    padding: .8rem 0;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .account_nav--item:hover {
+    opacity: 1
   }
   .account_nav--item:first-of-type {
     padding-top: 0
@@ -345,37 +352,19 @@
     position: relative;
     border: 0
   }
-  .account_nav--item a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    bottom: -8px;
-    left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    opacity: 0;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .account_nav--item a:hover:before {
-    opacity: 1;
-    width: 100%
-  }
   .account_nav--item a:active {
     opacity: .6
   }
-  .account_nav--item a.router-link-exact-active:before {
-    opacity: 1;
-    width: 100%;
-    height: 2px
-  }
+
+  /* Nav Icon and Animations */
   .account_nav--item--icon {
     margin: 0 .4rem 0 0;
     height: 1.4rem;
-    vertical-align: bottom
+    vertical-align: bottom;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .navIconHover {
+    transform: translateX(-10px)
   }
   .account_nav--item--icon path:not(.transparent) {
     fill: rgb(
@@ -638,27 +627,27 @@
         </div>
       </div>
       <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.learn = true" @mouseout="isHovering.learn = false" class="account_nav--item">
           <a target="_blank" href="http://www.traininblocks.com/blog">
-            <inline-svg :src="require('./assets/svg/Learn.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/Learn.svg')" :class="{ navIconHover: isHovering.learn }"  class="account_nav--item--icon"/>
             Learn
           </a>
         </div>
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.archive = true" @mouseout="isHovering.archive = false" class="account_nav--item">
           <router-link to="/archive">
-            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" :class="{ navIconHover: isHovering.archive }"  class="account_nav--item--icon"/>
             Archive
           </router-link>
         </div>
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.account = true" @mouseout="isHovering.account = false" class="account_nav--item">
           <router-link to="/account">
-            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" :class="{ navIconHover: isHovering.account }"  class="account_nav--item--icon"/>
             Account
           </router-link>
         </div>
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.logout = true" @mouseout="isHovering.logout = false" class="account_nav--item">
           <router-link to="/logout" v-on:click.native="logout()">
-            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" :class="{ navIconHover: isHovering.logout }"  class="account_nav--item--icon"/>
             Logout
           </router-link>
         </div>
@@ -682,7 +671,12 @@ export default {
   },
   data: function () {
     return {
-      screenWidth: screen.width,
+      isHovering: {
+        learn: false,
+        archive: false,
+        account: false,
+        logout: false
+      },
       archive_error: '',
       archive_posts: {},
       no_archive: false,
