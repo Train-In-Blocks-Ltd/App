@@ -28,6 +28,13 @@
       width: 100%
     }
   }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    #home {
+      padding: 4rem 1rem
+    }
+  }
 </style>
 
 <template>

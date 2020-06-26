@@ -1,12 +1,22 @@
 <style scoped>
   #account {
+    display: grid;
+    grid-gap: 2rem;
     padding: 5rem 3.75rem
+  }
+  .policies {
+    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .policies:hover {
+    opacity: .6
+  }
+  .policies:active {
+    transform: scale(.9)
   }
   .details_container {
     display: grid;
     grid-gap: 1rem;
-    align-items: center;
-    width: max-content
+    align-items: center
   }
   .form__options {
     display: flex
@@ -29,6 +39,22 @@
   .text-reset {
     font-size: .8rem
   }
+
+  @media (max-width: 768px) {
+    #account {
+      width: 90vw
+    }
+    .policies:hover {
+      opacity: 1
+    }
+  }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    #account {
+      padding: 4rem 1rem
+    }
+  }
 </style>
 
 <template>
@@ -47,13 +73,21 @@
           <label for="color"><b>Colour theme: </b></label>
           <input type="color" name="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/>
         </div>
+        <h2>Your Subscription</h2>
+        <div class="spacer">--Placeholder--</div>
+        <h2>Reset your password</h2>
+        <p class="text--reset">To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
+        <h2>Your Privacy and Data</h2>
+        <p>You can find more information about our policies here:</p>
+        <p><a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a></p>
+        <p><a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a></p>
+        <p><a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a></p>
+        <p><a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a></p>
         <div class="form__options">
           <label for="cookies"><b>Third Party Cookies: </b></label>
           <input type="checkbox" v-model="$parent.claims.ga" v-on:click="edit()"/>
         </div>
-        <p class="text--reset">To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
     </form>
-    <h2>Your Subscription</h2>
   </div>
 </template>
 

@@ -36,23 +36,18 @@
   }
   #client .client_info input.client_info--name {
     font-size: 3.75rem;
-    letter-spacing: .5rem;
+    width: 40rem;
+    letter-spacing: .1rem;
     padding: .6rem 0;
     margin: 0
-  }
-
-  /* Top Grid */
-  .top_grid {
-    display: grid;
-    grid-template-columns: 1fr .4fr
   }
 
   /* Floating Nav */
   .floating_nav {
     z-index: 2;
     position: fixed;
-    right: 5rem;
-    top: 5rem;
+    right: 4rem;
+    top: 6rem;
     width: 200px;
     display: grid;
     justify-items: right;
@@ -134,20 +129,25 @@
       border-bottom: 2px solid #28282800
     }
   }
+
+  /* For Mobile */
   @media (max-width: 576px) {
+    /* Overall */
+    #client {
+      overflow-x: hidden;
+      padding: 4rem 1rem
+    }
+    .client_info {
+      grid-gap: 0;
+      width: 90vw;
+      margin: 0 auto
+    }
+    #client .client_info input.client_info--name {
+      font-size: 2rem
+    }
     .floating_nav {
-      right: 3rem
-    }
-    .ql-editor {
-      height: 310px
-    }
-  }
-  @media (max-width: 360px) {
-    .floating_nav {
-      right: 2rem
-    }
-    .ql-editor {
-      height: 260px
+      right: 2rem;
+      top: 2rem
     }
   }
 </style>

@@ -14,6 +14,7 @@
     min-height: 100vh;
     display: grid;
     font-size: 16px;
+    line-height: 1.42;
     letter-spacing: .1rem;
     overflow: hidden
   }
@@ -50,8 +51,8 @@
   .spacer {
     height: 5rem
   }
-  #hamburger path#lines {
-    fill: #282828
+  #hamburger {
+    z-index: 1
   }
 
   /* Fonts */
@@ -87,7 +88,7 @@
   }
 
   /* Buttons */
-  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary {
+  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
     user-select: none;
     text-transform: capitalize;
     text-align: center;
@@ -102,25 +103,32 @@
     letter-spacing: .1rem;
     font-weight: bold;
     color: #282828;
-    box-shadow: 0 0 20px 6px #28282815;
+    box-shadow: 0 0 14px 6px #28282812;
     background-color: white;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: color .4s, background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1);
-    will-change: transform
+    transition: color .4s, background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover {
+  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
     cursor: pointer;
     color: white;
     background-color: #282828;
     text-decoration: none
   }
-  .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active {
+  .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
     transform: scale(.9)
   }
   .delete:hover {
     color: white;
     background-color: #B80000
+  }
+
+  /* GLOBAL: Calendar */
+  .fc-view-container span {
+    font-size: .8rem
+  }
+  .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+    margin-left: .4rem
   }
 
   /* Inputs */
@@ -236,8 +244,6 @@
     )
   }
   .nav {
-    display: grid;
-    grid-template-rows: repeat(auto-fill, 50px);
     border-bottom: .5px solid rgba(
       var(--accessible-color),
       var(--accessible-color),
@@ -305,15 +311,17 @@
     margin-bottom: -.8rem
   }
   .nav--item a {
+    opacity: .6;
     font-weight: normal;
     transition: all 1s cubic-bezier(.075, .82, .165, 1)
   }
   .nav--item a:hover {
-    opacity: .6
+    opacity: 1
   }
   .nav--item a.router-link-active:not(.text--client), .nav--item a.router-link-exact-active {
-    font-weight: bold;
-    font-size: 1.4rem
+    opacity: 1;
+    font-size: 1.2rem;
+    font-weight: bold
   }
   .nav--item--item a.router-link-exact-active {
     font-size: 1rem
@@ -326,8 +334,13 @@
     font-size: .8rem
   }
   .account_nav--item {
+    opacity: .6;
     font-size: 1rem;
-    padding: .8rem 0
+    padding: .8rem 0;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .account_nav--item:hover {
+    opacity: 1
   }
   .account_nav--item:first-of-type {
     padding-top: 0
@@ -339,37 +352,19 @@
     position: relative;
     border: 0
   }
-  .account_nav--item a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    bottom: -8px;
-    left: 0;
-    background-color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
-    opacity: 0;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .account_nav--item a:hover:before {
-    opacity: 1;
-    width: 100%
-  }
   .account_nav--item a:active {
     opacity: .6
   }
-  .account_nav--item a.router-link-exact-active:before {
-    opacity: 1;
-    width: 100%;
-    height: 2px
-  }
+
+  /* Nav Icon and Animations */
   .account_nav--item--icon {
     margin: 0 .4rem 0 0;
     height: 1.4rem;
-    vertical-align: bottom
+    vertical-align: bottom;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .navIconHover {
+    transform: translateX(-10px)
   }
   .account_nav--item--icon path:not(.transparent) {
     fill: rgb(
@@ -509,7 +504,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    .button:hover {
+    .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       background-color: transparent;
       color: #282828
     }
@@ -538,6 +533,9 @@
       margin-bottom: 2.5rem;
       margin-left: 1.25rem
     }
+    .main-title {
+      margin: 0
+    }
     .sidebar {
       position: fixed;
       width: 100%;
@@ -546,12 +544,12 @@
         var(--green),
         var(--blue)
       );
-      transition: opacity .5s, z-index 1s;
+      transform: translateX(-100vw);
       z-index: -1;
-      opacity: 0
+      transition: transform .4s, z-index 1s
     }
     .sidebar.open {
-      opacity: 1;
+      transform: translateX(0);
       z-index: 99
     }
     main {
@@ -560,8 +558,8 @@
     }
     #hamburger, #close {
       position: absolute;
-      left: 1.875rem;
-      top: 1.5rem
+      left: 3.4rem;
+      top: 1.4rem
     }
     #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
       fill: rgb(
@@ -569,6 +567,36 @@
         var(--accessible-color),
         var(--accessible-color)
       )
+    }
+  }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    p {
+      font-size: .8rem
+    }
+    #hamburger, #close {
+      position: absolute;
+      left: .8rem;
+      top: 1.6rem
+    }
+    .main-title {
+      font-size: 2.4rem
+    }
+    .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+      padding: .4rem .5rem
+    }
+
+    /* Blocks Page */
+    .fc-view-container {
+      width: 90vw;
+      overflow-x: auto
+    }
+    .fc-view-container span {
+      font-size: .7rem
+    }
+    .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
+      width: 120vw
     }
   }
 </style>
@@ -579,7 +607,7 @@
       <inline-svg :src="require('./assets/svg/Hamburger.svg')"/>
     </a>
     <nav class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
-       <!-- Mobile open/close sidebar icon -->
+      <!-- Mobile open/close sidebar icon -->
       <a id="close" v-on:click="sidebar()">
         <inline-svg :src="require('./assets/svg/SidebarClose.svg')"/>
       </a>
@@ -592,34 +620,34 @@
         <div class="nav--item">
             <router-link class="text--client" to="/">Clients</router-link>
         </div>
-         <!-- Loop through clients and render a link to each one -->
+        <!-- Loop through clients and render a link to each one -->
         <div v-for="(clients, index) in posts"
           :key="index" class="nav--item animate__animated animate__fadeIn">
           <router-link :to="'/client/'+clients.client_id+'/'">{{clients.name}}</router-link>
         </div>
       </div>
       <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.learn = true" @mouseout="isHovering.learn = false" class="account_nav--item">
           <a target="_blank" href="http://www.traininblocks.com/blog">
-            <inline-svg :src="require('./assets/svg/Learn.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/Learn.svg')" :class="{ navIconHover: isHovering.learn }"  class="account_nav--item--icon"/>
             Learn
           </a>
         </div>
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.archive = true" @mouseout="isHovering.archive = false" class="account_nav--item">
           <router-link to="/archive">
-            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" :class="{ navIconHover: isHovering.archive }"  class="account_nav--item--icon"/>
             Archive
           </router-link>
         </div>
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.account = true" @mouseout="isHovering.account = false" class="account_nav--item">
           <router-link to="/account">
-            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" :class="{ navIconHover: isHovering.account }"  class="account_nav--item--icon"/>
             Account
           </router-link>
         </div>
-        <div class="account_nav--item">
+        <div @mouseover="isHovering.logout = true" @mouseout="isHovering.logout = false" class="account_nav--item">
           <router-link to="/logout" v-on:click.native="logout()">
-            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" class="account_nav--item--icon"/>
+            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" :class="{ navIconHover: isHovering.logout }"  class="account_nav--item--icon"/>
             Logout
           </router-link>
         </div>
@@ -643,6 +671,12 @@ export default {
   },
   data: function () {
     return {
+      isHovering: {
+        learn: false,
+        archive: false,
+        account: false,
+        logout: false
+      },
       archive_error: '',
       archive_posts: {},
       no_archive: false,

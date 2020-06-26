@@ -25,7 +25,7 @@
     display: grid;
     grid-template-columns: 24px 1fr;
     grid-gap: .4rem;
-    margin: 2rem 0;
+    margin: 1.2rem 0;
     font-size: .8rem
   }
   .message > p, .message svg {
@@ -69,14 +69,15 @@
   /* Block Grid */
   .block_grid {
     display: grid;
-    grid-gap: 5rem;
-    margin-top: 5rem
+    grid-gap: 6rem;
+    margin-top: 4rem
   }
 
   /* Calendar */
   .calendar {
     display: grid;
     grid-template-columns: .8fr .4fr;
+    grid-template-areas: 'a b';
     grid-gap: 2rem;
     padding: 5rem;
     border-radius: 3px;
@@ -85,8 +86,15 @@
   .fc-event {
     font-size: .8rem
   }
+  .wrapper--calender {
+    grid-area: a
+  }
   .block-notes {
+    grid-area: b;
     margin: 6rem auto auto auto
+  }
+  .fc-unthemed tbody {
+    border-color: #F1F1F1
   }
 
   /* Block Table */
@@ -126,6 +134,9 @@
   }
 
   /* Week */
+  .fc-view-container * {
+    font-size: .8rem
+  }
   .week-color-picker {
     margin: auto 0 auto 1rem;
     height: 28px
@@ -135,7 +146,7 @@
     user-select: none
   }
   .week__color {
-    width: 50px;
+    width: 48px;
     height: 6px;
     border-radius: 3px 3px 0 0
   }
@@ -146,11 +157,10 @@
     display: grid;
     grid-template-rows: 6px 90px;
     cursor: pointer;
-    box-shadow: 0 0 20px 10px #28282808;
+    box-shadow: 0 0 14px 08px #28282808;
     border-radius: 3px;
+    border: 1px solid #28282812;
     background-color: #F2F2F2;
-    border-left: none;
-    border-bottom: none;
     min-width: 50px;
     height: 74px;
     width: 100%;
@@ -230,6 +240,7 @@
     margin: 0
   }
   .show-workout, .show-block-notes {
+    overflow-wrap: break-word;
     padding: 12px 15px;
     max-height: 314px;
     color: #282828;
@@ -259,6 +270,7 @@
   .container--content {
     display: grid;
     grid-template-columns: .6fr 1fr;
+    grid-template-areas: 'a b';
     grid-gap: 8rem
   }
   .data-select {
@@ -278,8 +290,15 @@
     padding: .2rem 1rem .2rem 0;
     font-weight: bold
   }
+  .data-options {
+    grid-area: a
+  }
   #chart {
+    grid-area: b;
     position: relative
+  }
+  .data-desc {
+    margin-top: 4rem
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
@@ -342,14 +361,76 @@
   }
 
   @media (max-width: 768px) {
-    #blocks .block_info input.block_info--name.title {
-      font-size: 1.2rem
+    .toggleFloatingNav:hover {
+      grid-gap: 1rem
     }
     .form--copy {
       grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1
+    }
+  }
+
+  /* For Mobile */
+  @media (max-width: 576px) {
+    /* Overall */
+    div.message {
+      margin: 1rem 0 0 0
+    }
+    #blocks .block_info input.block_info--name.title {
+      font-size: 1.2rem;
+      margin: 0
+    }
+    .block_grid {
+      justify-content: center;
+      margin-top: 6rem;
+      grid-template-columns: 90vw
+    }
+
+    /* Calendar */
+    .calendar, .block-plan, .container--content, .graph {
+      grid-template: .2fr .4fr/1fr;
+      grid-template-areas:
+        'b'
+        'a';
+      grid-gap: 0;
+      padding: 0;
+      box-shadow: none
+    }
+    .fc-scroller.fc-day-grid-container {
+      overflow: hidden
+    }
+
+    /* Block Plans */
+    .block-notes {
+      margin: 0 0 4rem 0;
+      width: 100%
+    }
+    .block_table__header {
+      margin: 0 0 1.6rem 0
+    }
+    .block_table--container--block_duration_container, .container--workouts {
+      overflow-x: auto;
+      width: 90vw;
+      padding: 1rem
+    }
+    .week {
+      box-shadow: 0 0 14px 8px #28282808
+    }
+
+    /* Stats */
+    #chart {
+      margin-bottom: 4rem
+    }
+    .data-desc {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      width: 90vw;
+      margin-top: 2rem
+    }
+    .data-desc__value {
+      font-size: 1.8rem
     }
   }
 </style>
@@ -455,7 +536,9 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :weekNumbers="true" :events="workoutDates" />
+              <div class="wrapper--calendar">
+                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
+              </div>
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
@@ -543,7 +626,7 @@
                 <h3 class="section-title">Statistics</h3>
               </div>
               <div class="container--content">
-                <div>
+                <div class="data-options">
                   <div class="data-select">
                     <div class="data-select__options">
                       <label for="measure"><b>Measurement: </b></label>
@@ -563,7 +646,6 @@
                       </select>
                     </div>
                   </div>
-                  <div class="spacer"/>
                   <div v-show="showType" class="data-desc">
                     <div class="container--data-desc">
                       <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
@@ -666,6 +748,21 @@
         str: [],
         yData: [],
         xLabel: [],
+        view: {
+          dayGridFourDay: {
+            type: 'dayGrid',
+            duration: { days: 4 },
+            buttonText: '4-day'
+          }
+        },
+        calendarToolbarHeader: {
+          left: 'title',
+          right: ''
+        },
+        calendarToolbarFooter: {
+          left: 'today prev, next',
+          right: 'dayGridWeek dayGridMonth'
+        },
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
         msg: 'Idle',
@@ -707,7 +804,7 @@
       toggleFloatingNav () {
         this.showFloatingNav = !this.showFloatingNav
         if (this.msgFloatingNav === 'Hide') {
-          this.msgFloatingNav = 'Options'
+          this.msgFloatingNav = 'Show'
         } else {
           this.msgFloatingNav = 'Hide'
         }
