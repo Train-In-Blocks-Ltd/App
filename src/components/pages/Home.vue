@@ -58,9 +58,15 @@
           <!-- Perform case insensitive search -->
           <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
             <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
-              <p class="client_link__name"><b>{{clients.name}}</b>
-              <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
-              <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
+              <div>
+                <p class="client_link__name"><b>{{clients.name}}</b>
+                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
+                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
+              </div>
+              <div class="client_link__notes">
+                <p><b>Notes:</b></p>
+                <div v-html="clients.notes" class="client_link__notes__content" />
+              </div>
             </router-link>
           </div>
         </div>

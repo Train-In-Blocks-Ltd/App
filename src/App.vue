@@ -88,7 +88,7 @@
     text-transform: capitalize;
     text-align: center;
     outline-width: 0;
-    border: 0;
+    border: 1px solid #E1E1E1;
     border-radius: 3px;
     padding: .5rem 1rem;
     height: auto;
@@ -98,11 +98,10 @@
     letter-spacing: .1rem;
     font-weight: bold;
     color: #282828;
-    box-shadow: 0 0 14px 6px #28282812;
     background-color: white;
     margin: 1rem 0 .5rem 0;
     display: inline-block;
-    transition: color .4s, background-color .4s, box-shadow .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    transition: color .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
     cursor: pointer;
@@ -111,7 +110,7 @@
     text-decoration: none
   }
   .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
-    transform: scale(.9)
+    transform: scale(.96)
   }
   .delete:hover {
     color: white;
@@ -427,16 +426,13 @@
     grid-gap: 2rem
   }
   .client_container p {
-    margin: 0;
-    font-weight: 400;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden
+    margin: 0
   }
 
   /* Client Container Animation */
   .client_container > a {
-    display: block;
+    display: grid;
+    grid-gap: 1rem;
     position: relative;
     font-weight: 400;
     color: #282828;
@@ -483,6 +479,10 @@
   }
   .client_link__details p {
     margin: auto 0
+  }
+  .client_link__notes__content {
+    font-size: .8rem;
+    margin-top: .4rem
   }
   .search {
     border: none;
@@ -532,6 +532,11 @@
   }
 
   /* Responsive Design */
+  @media (min-width: 1024px) {
+    .client_link {
+      grid-template: 1fr/1fr 1fr
+    }
+  }
   @media (max-width: 992px) {
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       background-color: transparent;

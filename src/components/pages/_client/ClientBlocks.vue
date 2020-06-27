@@ -8,20 +8,19 @@
 
   /* Overall */
   .container--block-links {
-    display: grid;
-    grid-gap: 4rem;
-    grid-template-columns: .8fr 300px;
-    grid-template-areas: 'a b'
+    display: flex;
+    justify-content: space-between
   }
   .container--block-links__section {
-    grid-area: a
+    margin-right: 4rem
   }
 
   /* Client Notes */
   .client-notes {
-    grid-area: b;
-    margin-top: 6rem;
+    margin: auto;
     height: fit-content;
+    min-width: 300px;
+    max-width: 500px;
     border-left: 1px solid #E1E1E1;
     border-bottom: 1px solid #E1E1E1;
     border-radius: 3px;
@@ -65,8 +64,7 @@
   /* Blocks */
   .blocks_grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    grid-gap: 40px;
+    grid-gap: 2rem;
     margin-bottom: 2rem
   }
   .block_container:first-of-type {
@@ -76,11 +74,13 @@
     margin-right: 0
   }
   .block_container--link {
+    display: grid;
+    grid-gap: 1rem;
+    min-width: 400px;
     text-decoration: none;
     color: #282828;
     padding: 1.5rem;
     border-radius: 3px;
-    display: block;
     box-shadow: 0 0 20px 10px #28282810;
     transition: box-shadow .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
@@ -94,9 +94,12 @@
     transform: scale(.96);
     opacity: .6
   }
+  .block_container--link__block-notes {
+    font-size: .8rem
+  }
   .block_container--link h3 {
     margin-top: 0;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     margin-bottom: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -104,8 +107,7 @@
   }
   .block_container--link p {
     font-size: .8rem;
-    font-weight: 500;
-    margin: .375rem 0
+    font-weight: 500
   }
   .block_container--link p:last-of-type {
     margin-bottom: 0
@@ -126,7 +128,23 @@
     grid-gap: .5rem
   }
 
+  @media (min-width: 1024px) {
+    .block_container--link {
+      grid-template: 1fr/1fr 1fr;
+      grid-gap: 2rem
+    }
+  }
   @media (max-width: 768px) {
+    .container--block-links {
+      flex-direction: column-reverse
+    }
+    .container--block-links__section {
+      margin: 0
+    }
+    .client-notes, .block_container--link {
+      margin: 0;
+      min-width: 0
+    }
     .block_container--link:hover {
       transform: scale(1);
       box-shadow: 0 0 20px 10px #28282810
@@ -161,9 +179,15 @@
             <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
                 :key="index" class="block_container">
                 <router-link class="block_container--link" :to="'block/' + block.id">
-                  <h3>{{block.name}}</h3>
-                  <p><b>Duration: </b>{{block.duration}}</p>
-                  <p><b>Start: </b>{{block.start}}</p>
+                  <div class="block_container--link__info">
+                    <h3>{{block.name}}</h3>
+                    <p><b>Duration: </b>{{block.duration}}</p>
+                    <p><b>Start: </b>{{block.start}}</p>
+                  </div>
+                  <div>
+                    <p><b>Notes:</b></p>
+                    <div v-html="block.notes" class="block_container--link__block-notes" />
+                  </div>
                 </router-link>
             </div>
           </div>
