@@ -22,8 +22,9 @@
     grid-area: b;
     margin-top: 6rem;
     height: fit-content;
+    border-left: 1px solid #E1E1E1;
+    border-bottom: 1px solid #E1E1E1;
     border-radius: 3px;
-    background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .client-notes__header {
@@ -56,8 +57,9 @@
     padding: 0
   }
   .activeClientNotes {
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282810
+    border-left: 1px solid #F1F1F1;
+    border-bottom: 1px solid #F1F1F1;
+    box-shadow: 0 0 20px 10px #28282815
   }
 
   /* Blocks */
@@ -74,6 +76,8 @@
     margin-right: 0
   }
   .block_container--link {
+    text-decoration: none;
+    color: #282828;
     padding: 1.5rem;
     border-radius: 3px;
     display: block;
@@ -139,6 +143,9 @@
     }
     .client-notes {
       margin: 0
+    }
+    .blocks_grid {
+      grid-template-columns: 1fr
     }
   }
 </style>

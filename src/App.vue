@@ -72,11 +72,6 @@
   h3 {
     font-size: 2rem
   }
-  a {
-    text-decoration: none;
-    color: #282828;
-    font-weight: bold
-  }
   ul, ol {
     padding-left: 1rem
   }
@@ -311,6 +306,7 @@
     margin-bottom: -.8rem
   }
   .nav--item a {
+    text-decoration: none;
     opacity: .6;
     font-weight: normal;
     transition: all 1s cubic-bezier(.075, .82, .165, 1)
@@ -334,7 +330,7 @@
     font-size: .8rem
   }
   .account_nav--item {
-    opacity: .6;
+    cursor: pointer;
     font-size: 1rem;
     padding: .8rem 0;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
@@ -349,10 +345,18 @@
     padding-bottom: 0
   }
   .account_nav--item a {
+    opacity: .6;
+    text-decoration: none;
     position: relative;
-    border: 0
+    border: 0;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .account_nav--item a.router-link-exact-active {
+    opacity: 1;
+    font-weight: bold
   }
   .account_nav--item a:active {
+    transform: scale(.9);
     opacity: .6
   }
 
@@ -502,6 +506,31 @@
     font-size: 2rem
   }
 
+  /* Splash */
+  .splash {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: white;
+    z-index: 1
+  }
+  .splash__logo {
+    margin: auto;
+    opacity: 0;
+    animation: splashFade 2 1.2s alternate
+  }
+  @keyframes splashFade {
+    from {
+      opacity: 0
+    }
+    to {
+      opacity: 1
+    }
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -561,7 +590,7 @@
       left: 3.4rem;
       top: 1.4rem
     }
-    #hamburger svg path:not(.transparent), #close svg path:not(.transparent) {
+    #close svg path:not(.transparent) {
       fill: rgb(
         var(--accessible-color),
         var(--accessible-color),
@@ -577,7 +606,7 @@
     }
     #hamburger, #close {
       position: absolute;
-      left: .8rem;
+      left: 1.8rem;
       top: 1.6rem
     }
     .main-title {
@@ -603,6 +632,11 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
+    <transition leave-active-class="animate__animated animate__fadeOut">
+      <div v-show="splashing" class="splash">
+        <inline-svg class="splash__logo" :src="require('./assets/svg/LoginLogo.svg')"/>
+      </div>
+    </transition>
     <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger">
       <inline-svg :src="require('./assets/svg/Hamburger.svg')"/>
     </a>
@@ -611,12 +645,12 @@
       <a id="close" v-on:click="sidebar()">
         <inline-svg :src="require('./assets/svg/SidebarClose.svg')"/>
       </a>
-      <div class="logo animate__animated animate__bounceInDown animate__delay-1s">
+      <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
         <router-link to="/" class="logo--link" title="Home">
           <inline-svg :src="require('./assets/svg/SidebarLogo.svg')" class="logo--svg"/>
         </router-link>
       </div> <!-- .logo -->
-      <div class="nav animate__animated animate__fadeInLeft animate__faster">
+      <div class="nav animate__animated animate__fadeInLeft animate__faster animate__delay-4s">
         <div class="nav--item">
             <router-link class="text--client" to="/">Clients</router-link>
         </div>
@@ -626,7 +660,7 @@
           <router-link :to="'/client/'+clients.client_id+'/'">{{clients.name}}</router-link>
         </div>
       </div>
-      <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-1s">
+      <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-5s">
         <div @mouseover="isHovering.learn = true" @mouseout="isHovering.learn = false" class="account_nav--item">
           <a target="_blank" href="http://www.traininblocks.com/blog">
             <inline-svg :src="require('./assets/svg/Learn.svg')" :class="{ navIconHover: isHovering.learn }"  class="account_nav--item--icon"/>
@@ -671,6 +705,7 @@ export default {
   },
   data: function () {
     return {
+      splashing: true,
       isHovering: {
         learn: false,
         archive: false,
@@ -714,6 +749,9 @@ export default {
   },
   created () {
     this.isAuthenticated()
+  },
+  mounted () {
+    setTimeout(() => { this.splashing = false }, 2200)
   },
   watch: {
     // Everytime the route changes, check for auth status

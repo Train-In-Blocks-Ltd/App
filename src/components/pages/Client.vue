@@ -31,12 +31,14 @@
   #client .client_info input:not([type='submit']):focus, #duration:focus {
     border-bottom: 2px solid #282828
   }
+  .client_info__more-details {
+    width: 400px
+  }
   #phone {
     width: 50%
   }
   #client .client_info input.client_info--name {
     font-size: 3.75rem;
-    width: 40rem;
     letter-spacing: .1rem;
     padding: .6rem 0;
     margin: 0
@@ -135,7 +137,7 @@
     /* Overall */
     #client {
       overflow-x: hidden;
-      padding: 4rem 1rem
+      padding: 4rem 2rem
     }
     .client_info {
       grid-gap: 0;
@@ -144,6 +146,9 @@
     }
     #client .client_info input.client_info--name {
       font-size: 2rem
+    }
+    #client .client_info input.client_info--name:focus {
+      border-bottom: 2px solid #282828
     }
     .floating_nav {
       right: 2rem;
@@ -158,10 +163,10 @@
     <div class="top_grid" v-if="!blocks">
       <!-- Update the client details -->
       <form class="client_info" v-on:submit.prevent="update_client()">
-        <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
-        <div>
-          <label><b>Email: </b><input type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-          <label><b>Phone: </b><input type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
+        <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
+        <div class="client_info__more-details">
+          <label><b>Email: </b><input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
+          <label><b>Phone: </b><input v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
         </div>
       </form>
       <div class="floating_nav">

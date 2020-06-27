@@ -159,7 +159,6 @@
     cursor: pointer;
     box-shadow: 0 0 14px 08px #28282808;
     border-radius: 3px;
-    border: 1px solid #28282812;
     background-color: #F2F2F2;
     min-width: 50px;
     height: 74px;
@@ -170,6 +169,7 @@
     box-shadow: inset 0 20px 30px -30px #28282840
   }
   .weekActive {
+    border-bottom: 2px solid #EEEEEE;
     box-shadow: 0 0 20px 10px #28282815;
     background-color: white;
     height: 94px
@@ -203,8 +203,9 @@
   .wrapper--workout, .block-notes {
     height: fit-content;
     width: 300px;
+    border-left: 1px solid #E1E1E1;
+    border-bottom: 1px solid #E1E1E1;
     border-radius: 3px;
-    background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .wrapper--workout__header, .block-notes__header {
@@ -248,6 +249,9 @@
     overflow-y: auto;
     font-size: .8rem
   }
+  .show-workout a {
+    color: blue
+  }
   .show-workout h2, .show-block-notes h2 {
     font-size: 1.5rem
   }
@@ -257,8 +261,9 @@
     padding: 0
   }
   .activeWorkout {
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282810
+    border-left: 1px solid #F1F1F1;
+    border-bottom: 1px solid #F1F1F1;
+    box-shadow: 0 0 20px 10px #28282815
   }
 
   /* Graph */
@@ -284,6 +289,7 @@
     width: fit-content
   }
   .data-select__options select {
+    background-color: transparent;
     border: 0;
     font-size: 1.6rem;
     width: fit-content;
@@ -446,14 +452,10 @@
       </modal>
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--copy">
-          <h3>Let's progress the workouts!</h3>
+          <h3>Progression</h3>
           <div>
             <label for="range">From 1 to: </label>
             <input v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
-          </div>
-          <div>
-            <label for="exclude">Exclude cycles: </label>
-            <input name="exclude" type="text" pattern="/\d+/gmi"/>
           </div>
           <button @click="copyAcross()" class="button">Copy</button>
         </div>
@@ -501,10 +503,10 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
+              <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
                <!-- Update the programme info -->
               <form class="block_info">
-                <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
+                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
               </form>
             </div>  <!-- client_info -->
@@ -668,7 +670,6 @@
                       <p class="data-desc__value">{{ p5.value }}</p>
                     </div>
                   </div>
-                  <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
                 </div>
                 <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
               </div>
@@ -871,7 +872,7 @@
           labels: this.xLabel,
           datasets: [
             {
-              label: 'Data Point',
+              label: this.selectedDataType,
               borderColor: '#282828',
               backgroundColor: 'transparent',
               data: this.yData

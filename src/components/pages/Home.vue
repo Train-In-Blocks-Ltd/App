@@ -32,7 +32,10 @@
   /* For Mobile */
   @media (max-width: 576px) {
     #home {
-      padding: 4rem 1rem
+      padding: 4rem 2rem
+    }
+    .search, .client-link {
+      width: 100%
     }
   }
 </style>
