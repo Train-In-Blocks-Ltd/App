@@ -1,4 +1,9 @@
 <style scoped>
+  a {
+    font-weight: bold;
+    text-decoration: none;
+    color: #282828
+  }
   #login {
     box-shadow: 0 0 20px 10px #28282810;
     text-align: left;
@@ -70,6 +75,7 @@
     margin: 1.25rem 0
   }
   .o-form-button-bar .button, .email-button {
+    text-decoration: none;
     padding: .5rem 2rem;
     display: inline-block;
     height: auto;
@@ -89,7 +95,7 @@
     margin: 0;
     padding: 0;
     margin-top: .8rem;
-    font-size: .6rem
+    font-size: .8rem
   }
   .help-links li {
     padding: .4rem 0
@@ -108,8 +114,10 @@
     margin-top: 2rem;
     text-align: left
   }
-  .link.help.js-help, .link.help.js-back {
-    font-size: .6rem;
+  .link.help.js-help, #help-links-container *, .link.help.js-back {
+    text-decoration: none;
+    color: #282828;
+    font-size: .8rem;
     font-weight: 600
   }
   .custom-checkbox:after {

@@ -159,7 +159,6 @@
     cursor: pointer;
     box-shadow: 0 0 14px 08px #28282808;
     border-radius: 3px;
-    border: 1px solid #28282812;
     background-color: #F2F2F2;
     min-width: 50px;
     height: 74px;
@@ -170,6 +169,7 @@
     box-shadow: inset 0 20px 30px -30px #28282840
   }
   .weekActive {
+    border-bottom: 2px solid #EEEEEE;
     box-shadow: 0 0 20px 10px #28282815;
     background-color: white;
     height: 94px
@@ -203,8 +203,9 @@
   .wrapper--workout, .block-notes {
     height: fit-content;
     width: 300px;
+    border-left: 1px solid #E1E1E1;
+    border-bottom: 1px solid #E1E1E1;
     border-radius: 3px;
-    background-color: #F2F2F2;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .wrapper--workout__header, .block-notes__header {
@@ -248,6 +249,9 @@
     overflow-y: auto;
     font-size: .8rem
   }
+  .show-workout a {
+    color: blue
+  }
   .show-workout h2, .show-block-notes h2 {
     font-size: 1.5rem
   }
@@ -257,8 +261,9 @@
     padding: 0
   }
   .activeWorkout {
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282810
+    border-left: 1px solid #F1F1F1;
+    border-bottom: 1px solid #F1F1F1;
+    box-shadow: 0 0 20px 10px #28282815
   }
 
   /* Graph */
@@ -284,6 +289,7 @@
     width: fit-content
   }
   .data-select__options select {
+    background-color: transparent;
     border: 0;
     font-size: 1.6rem;
     width: fit-content;
@@ -323,21 +329,6 @@
   .add_workout label {
     display: grid;
     grid-gap: .5rem
-  }
-
-  /* Toolkit */
-  .modal--toolkit {
-    padding: 1rem
-  }
-  .workout_toolkit--content > div {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .workout_toolkit label {
-    font-weight: bold
-  }
-  .workout_toolkit--select {
-    padding: .4rem
   }
 
   /* Copy Modal */
@@ -446,54 +437,16 @@
       </modal>
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--copy">
-          <h3>Let's progress the workouts!</h3>
+          <h3>Progression</h3>
           <div>
             <label for="range">From 1 to: </label>
             <input v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
-          </div>
-          <div>
-            <label for="exclude">Exclude cycles: </label>
-            <input name="exclude" type="text" pattern="/\d+/gmi"/>
           </div>
           <button @click="copyAcross()" class="button">Copy</button>
         </div>
       </modal>
       <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
-        <div class="modal--toolkit" >
-          <select class="workout_toolkit--select" v-on:change="get_toolkit()">
-            <option>Maximal Heart Rate (Tanaka)</option>
-            <option>Maximal Heart Rate (Gellish)</option>
-            <option>Heart Rate Training Zone (Karvonen)</option>
-            <option>Heart Rate Reserve</option>
-            <option>Body Mass Index</option>
-          </select>
-          <div class="workout_toolkit--content">
-            <div v-if="toolkit_calcs.mhr_tanaka.view">
-              <label for="tanaka_age">Age: </label><input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
-              <p><b>MHR: </b>{{toolkit_calcs.mhr_tanaka.value}} BPM</p>
-            </div>
-            <div v-if="toolkit_calcs.mhr_gellish.view">
-              <label for="gellish_age">Age: </label><input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
-              <p><b>MHR: </b>{{toolkit_calcs.mhr_gellish.value}} BPM</p>
-            </div>
-            <div v-if="toolkit_calcs.hrtz.view">
-              <label for="intensity">Intensity: </label><input type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
-              <label for="mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
-              <label for="rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
-              <p><b>HR: </b>{{toolkit_calcs.hrtz.value}} BPM</p>
-            </div>
-            <div v-if="toolkit_calcs.hrr.view">
-              <label for="hrr_mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_mhr" name="hrr_mhr"/>
-              <label for="hrr_rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_rhr" name="hrr_rhr"/>
-              <p><b>HRR: </b>{{toolkit_calcs.hrr.value}} BPM</p>
-            </div>
-            <div v-if="toolkit_calcs.bmi.view">
-              <label for="height">Height: </label><input type="number" v-on:input="bmi_calc()" id="height" name="height"/>
-              <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
-              <p><b>BMI: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
-            </div>
-          </div>
-        </div>
+        <toolkit/>
       </modal>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
@@ -501,10 +454,10 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
+              <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
                <!-- Update the programme info -->
               <form class="block_info">
-                <input class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
+                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
               </form>
             </div>  <!-- client_info -->
@@ -668,7 +621,6 @@
                       <p class="data-desc__value">{{ p5.value }}</p>
                     </div>
                   </div>
-                  <p v-show="!showType">[ Only data that follows the format will show descriptive statistics here ]</p>
                 </div>
                 <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
               </div>
@@ -685,6 +637,7 @@
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
+  import Toolkit from './Toolkit.vue'
 
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
@@ -696,7 +649,8 @@
       Loader,
       LineChart,
       InlineSvg,
-      FullCalendar
+      FullCalendar,
+      Toolkit
     },
     data: function () {
       return {
@@ -709,29 +663,6 @@
         response: '',
         edit1: false,
         editBlockNotes: false,
-        toolkit: false,
-        toolkit_calcs: {
-          mhr_tanaka: {
-            view: false,
-            value: null
-          },
-          mhr_gellish: {
-            view: false,
-            value: null
-          },
-          hrtz: {
-            view: false,
-            value: null
-          },
-          hrr: {
-            view: false,
-            value: null
-          },
-          bmi: {
-            view: false,
-            value: null
-          }
-        },
         new_workout: {
           name: '',
           date: ''
@@ -871,7 +802,7 @@
           labels: this.xLabel,
           datasets: [
             {
-              label: 'Data Point',
+              label: this.selectedDataType,
               borderColor: '#282828',
               backgroundColor: 'transparent',
               data: this.yData
@@ -1193,77 +1124,6 @@
         weekday[6] = 'Sat'
         var d = new Date(date)
         return weekday[d.getDay()]
-      },
-      /* Opens the toolkit */
-      open_toolkit (id) {
-        // Set toolkit to true
-        this.toolkit = id
-
-        this.get_toolkit()
-
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          if (!document.getElementById('workout_toolkit_' + id).contains(e.target)) {
-            window.removeEventListener('click', click)
-            self.toolkit = false
-          }
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
-      },
-      /* Various workout calculators */
-      mhr_tanaka_calc () {
-        this.toolkit_calcs.mhr_tanaka.value = 220 - Number(document.querySelector('#tanaka_age').value)
-      },
-      mhr_gellish_calc () {
-        this.toolkit_calcs.mhr_gellish.value = 220 - 0.7 * Number(document.querySelector('#gellish_age').value)
-      },
-      hrtz_calc () {
-        this.toolkit_calcs.hrtz.value = (Number(document.querySelector('#intensity').value / 100)) * (Number(document.querySelector('#mhr').value) - Number(document.querySelector('#rhr').value)) + Number(document.querySelector('#rhr').value)
-      },
-      hrr_calc () {
-        this.toolkit_calcs.hrr.value = Number(document.querySelector('#hrr_mhr').value) - Number(document.querySelector('#hrr_rhr').value)
-      },
-      bmi_calc () {
-        this.toolkit_calcs.bmi.value = (Number(document.querySelector('#weight').value) / (Number(document.querySelector('#height').value) * Number(document.querySelector('#height').value))).toFixed(2)
-      },
-      /* Closes the toolkit */
-      close_toolkit () {
-        this.toolkit_calcs.mhr_tanaka.view = false
-        this.toolkit_calcs.mhr_gellish.view = false
-        this.toolkit_calcs.hrtz.view = false
-        this.toolkit_calcs.hrr.view = false
-        this.toolkit_calcs.bmi.view = false
-        document.querySelectorAll('.workout_toolkit--content input').forEach(e => {
-          e.value = null
-        })
-      },
-      /* Selects the correct calculator depending on the select */
-      get_toolkit () {
-        const select = document.querySelector('.workout_toolkit--select').value
-        if (select === 'Maximal Heart Rate (Tanaka)') {
-          this.close_toolkit()
-          this.toolkit_calcs.mhr_tanaka.view = true
-        } else if (select === 'Maximal Heart Rate (Gellish)') {
-          this.close_toolkit()
-          this.toolkit_calcs.mhr_gellish.view = true
-        } else if (select === 'Heart Rate Training Zone (Karvonen)') {
-          this.close_toolkit()
-          this.toolkit_calcs.hrtz.view = true
-        } else if (select === 'Heart Rate Reserve') {
-          this.close_toolkit()
-          this.toolkit_calcs.hrr.view = true
-        } else if (select === 'Body Mass Index') {
-          this.close_toolkit()
-          this.toolkit_calcs.bmi.view = true
-        }
       },
       programme_duration (duration) {
         // Turn the duration of the programme into an array to render the boxes in the table
