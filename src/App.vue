@@ -309,7 +309,7 @@
     text-decoration: none;
     opacity: .6;
     font-weight: normal;
-    transition: all 1s cubic-bezier(.075, .82, .165, 1)
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
   .nav--item a:hover {
     opacity: 1
