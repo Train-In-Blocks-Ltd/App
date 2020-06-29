@@ -378,10 +378,10 @@
   }
 
   /* QUILL */
-  .ql-toolbar.ql-snow {
+  div.ql-toolbar.ql-snow {
     border: none
   }
-  .ql-container.ql-snow {
+  div.ql-container.ql-snow {
     border: none
   }
   .ql-snow .ql-stroke {
