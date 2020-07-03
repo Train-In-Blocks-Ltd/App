@@ -22,7 +22,6 @@
     width: 400px;
     border-left: 1px solid #E1E1E1;
     border-bottom: 1px solid #E1E1E1;
-    border-radius: 3px;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .client-notes__header {

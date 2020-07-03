@@ -80,7 +80,6 @@
     grid-template-areas: 'a b';
     grid-gap: 2rem;
     padding: 5rem;
-    border-radius: 3px;
     box-shadow: 0 0 20px 10px #28282810
   }
   .fc-event {
@@ -100,7 +99,6 @@
   /* Block Table */
   .block-plan {
     padding: 5rem;
-    border-radius: 3px;
     box-shadow: 0 0 20px 10px #28282810
   }
   .block_table__header h3 {
@@ -147,8 +145,7 @@
   }
   .week__color {
     width: 48px;
-    height: 6px;
-    border-radius: 3px 3px 0 0
+    height: 6px
   }
   .week__number {
     padding: 1rem 0
@@ -158,7 +155,6 @@
     grid-template-rows: 6px 90px;
     cursor: pointer;
     box-shadow: 0 0 14px 08px #28282808;
-    border-radius: 3px;
     background-color: #F2F2F2;
     min-width: 50px;
     height: 74px;
@@ -205,7 +201,6 @@
     width: 300px;
     border-left: 1px solid #E1E1E1;
     border-bottom: 1px solid #E1E1E1;
-    border-radius: 3px;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .wrapper--workout__header, .block-notes__header {
@@ -269,7 +264,6 @@
   /* Graph */
   .graph {
     padding: 5rem;
-    border-radius: 3px;
     box-shadow: 0 0 20px 10px #28282810
   }
   .container--content {
