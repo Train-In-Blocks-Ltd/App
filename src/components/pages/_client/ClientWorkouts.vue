@@ -493,8 +493,8 @@
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                 <div v-show="!editBlockNotes" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
                 <div class="bottom-bar">
-                  <button v-show="!editBlockNotes" @click="editingBlockNotes()" class="button button--edit">Edit</button>
-                  <button v-show="editBlockNotes" @click="updateBlockNotes()" class="button button--save">Save</button>
+                  <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
+                  <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
                 </div>
               </div>
             </div>
@@ -542,8 +542,8 @@
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
                       <div class="bottom-bar">
-                        <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id)">Edit</button>
-                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="updateWorkoutNotes(workout.id)">Save</button>
+                        <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
+                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
                       </div>
@@ -765,32 +765,40 @@
       showToolkit () {
         this.$modal.show('toolkit')
       },
-      editingBlockNotes () {
-        var vm = this
-        this.editBlockNotes = true
-        window.addEventListener('keydown', quickSave)
-        function quickSave (key) {
-          if (key.keyCode == '13' && key.ctrlKey == true) {
-            vm.updateBlockNotes()
-            window.removeEventListener('keydown', quickSave)
-          }
+      editingBlockNotes (state) {
+        this.editBlockNotes = state
+        if (state) {
+          window.addEventListener('keydown', this.quickSaveBlockNotes)
+        } else {
+          this.updateBlockNotes()
+          window.removeEventListener('keydown', this.quickSaveBlockNotes)
+        }
+      },
+      quickSaveBlockNotes (key, state) {
+        if (key.keyCode == '13' && key.ctrlKey == true) {
+          this.updateBlockNotes()
+          window.removeEventListener('keydown', this.quickSaveBlockNotes)
         }
       },
       updateBlockNotes () {
         this.update_programme()
         this.editBlockNotes = false
       },
-      editingWorkoutNotes (id) {
-        var vm = this
-        this.isEditingWorkout = true
+      editingWorkoutNotes (id, state) {
+        this.isEditingWorkout = state
         this.editWorkout = id
         this.msg = 'Editing...'
-        window.addEventListener('keydown', quickSave)
-        function quickSave (key) {
-          if (key.keyCode == '13' && key.ctrlKey == true) {
-            vm.updateWorkoutNotes(id)
-            window.removeEventListener('keydown', quickSave)
-          }
+        if (state) {
+          window.addEventListener('keydown', this.quickSaveWorkoutNotes)
+        } else {
+          this.updateWorkoutNotes(id)
+          window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
+        }
+      },
+      quickSaveWorkoutNotes (key, state) {
+        if (key.keyCode == '13' && key.ctrlKey == true) {
+          this.updateWorkoutNotes(this.editWorkout)
+          window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
         }
       },
       updateWorkoutNotes (id) {

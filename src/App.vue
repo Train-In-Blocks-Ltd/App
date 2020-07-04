@@ -497,8 +497,7 @@
   }
   .search:focus {
     border-bottom: 2px solid #282828;
-    width: 100%;
-    font-size: 2rem
+    width: 100%
   }
 
   /* Splash */
