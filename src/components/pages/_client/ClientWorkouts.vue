@@ -493,7 +493,7 @@
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                 <div v-show="!editBlockNotes" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
                 <div class="bottom-bar">
-                  <button v-show="!editBlockNotes" @click="editBlockNotes = true" class="button button--edit">Edit</button>
+                  <button v-show="!editBlockNotes" @click="editingBlockNotes()" class="button button--edit">Edit</button>
                   <button v-show="editBlockNotes" @click="updateBlockNotes()" class="button button--save">Save</button>
                 </div>
               </div>
@@ -765,14 +765,33 @@
       showToolkit () {
         this.$modal.show('toolkit')
       },
+      editingBlockNotes () {
+        var vm = this
+        this.editBlockNotes = true
+        window.addEventListener('keydown', quickSave)
+        function quickSave (key) {
+          if (key.keyCode == '13' && key.ctrlKey == true) {
+            vm.updateBlockNotes()
+            window.removeEventListener('keydown', quickSave)
+          }
+        }
+      },
       updateBlockNotes () {
         this.update_programme()
         this.editBlockNotes = false
       },
       editingWorkoutNotes (id) {
+        var vm = this
         this.isEditingWorkout = true
         this.editWorkout = id
         this.msg = 'Editing...'
+        window.addEventListener('keydown', quickSave)
+        function quickSave (key) {
+          if (key.keyCode == '13' && key.ctrlKey == true) {
+            vm.updateWorkoutNotes(id)
+            window.removeEventListener('keydown', quickSave)
+          }
+        }
       },
       updateWorkoutNotes (id) {
         this.update_workout(id)
