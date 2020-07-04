@@ -220,7 +220,7 @@
           <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
           <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
           <div class="bottom-bar">
-            <button v-show="!$parent.editClientNotes" @click="$parent.editClientNotes = true" class="button button--edit">Edit</button>
+            <button v-show="!$parent.editClientNotes" @click="editingClientNotes()" class="button button--edit">Edit</button>
             <button v-show="$parent.editClientNotes" @click="$parent.updateClientNotes()" class="button button--save">Save</button>
           </div>
         </div>
@@ -250,6 +250,17 @@
       }
     },
     methods: {
+      editingClientNotes () {
+        var vm = this.$parent
+        this.$parent.editClientNotes = true
+        window.addEventListener('keydown', quickSave)
+        function quickSave (key) {
+          if (key.keyCode == '13' && key.ctrlKey == true) {
+            vm.updateClientNotes()
+            window.removeEventListener('keydown', quickSave)
+          }
+        }
+      },
       creation () {
         this.creating = true
       },
