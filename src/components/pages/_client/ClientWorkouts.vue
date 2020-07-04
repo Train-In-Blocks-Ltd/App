@@ -962,11 +962,7 @@
               tempItemStore.push(itemCased)
             }
             if (regexA.test(tempItemStoreLate) !== true && exerciseDataPacket[2].includes('at') !== true) {
-              if (regexB.test(exerciseDataPacket[1]) === true) {
-                tempItemStoreLate.push(exerciseDataPacket[1])
-              } else {
-                tempItemStoreLate.push(itemCased)
-              }
+              tempItemStoreLate.push(exerciseDataPacket[1])
             }
           })
         })

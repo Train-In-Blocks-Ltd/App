@@ -117,6 +117,7 @@
     },
     created () {
       this.$parent.setup()
+      this.$parent.client_details = null
     },
     methods: {
       creation () {
