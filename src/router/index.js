@@ -21,7 +21,10 @@ Vue.use(Auth, {
   redirectUri: process.env.URL + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
-  autoRenew: false
+  autoRenew: false,
+  onSessionExpired: async function () {
+    await Vue.$auth.logout({postLogoutRedirectUri: process.env.URL + '/login'})
+  }
 })
 
 const router = new Router({
