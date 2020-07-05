@@ -334,6 +334,7 @@
     font-size: .8rem
   }
   .account_nav--item {
+    opacity: .6;
     cursor: pointer;
     font-size: 1rem;
     padding: .8rem 0;
@@ -349,18 +350,13 @@
     padding-bottom: 0
   }
   .account_nav--item a {
-    opacity: .6;
     text-decoration: none;
     position: relative;
     border: 0;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item a.router-link-exact-active {
-    opacity: 1;
     font-weight: bold
-  }
-  .account_nav--item a:active {
-    opacity: .6
   }
 
   /* Nav Icon and Animations */
@@ -501,8 +497,7 @@
   }
   .search:focus {
     border-bottom: 2px solid #282828;
-    width: 100%;
-    font-size: 2rem
+    width: 100%
   }
 
   /* Splash */

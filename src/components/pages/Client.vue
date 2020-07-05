@@ -204,6 +204,9 @@
       await this.$parent.setup()
       await this.get_client_details()
     },
+    beforeDestroy () {
+      this.$parent.client_details = null
+    },
     methods: {
       updateClientNotes () {
         this.update_client()

@@ -7,7 +7,7 @@ import VueDragscroll from 'vue-dragscroll'
 import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
 import VueInputAutowidth from 'vue-input-autowidth'
- 
+
 Vue.use(VueAnalytics, {
   id: 'UA-167770206-2',
   router,
@@ -20,7 +20,6 @@ Vue.use(VueQuill)
 Vue.use(VueDragscroll)
 Vue.use(VModal)
 Vue.use(VueInputAutowidth)
-
 
 Vue.config.productionTip = false
 
