@@ -89,7 +89,6 @@
     text-align: center;
     outline-width: 0;
     border: 1px solid #E1E1E1;
-    border-radius: 3px;
     padding: .5rem 1rem;
     height: auto;
     width: auto;
@@ -118,6 +117,12 @@
   }
 
   /* GLOBAL: Calendar */
+  .fc-button {
+    border-radius: 0
+  }
+  .fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody, .fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-content, .fc-unthemed .fc-popover, .fc-unthemed .fc-list-view, .fc-unthemed .fc-list-heading td {
+    border-color: transparent
+  }
   .fc-view-container span {
     font-size: .8rem
   }
@@ -355,7 +360,6 @@
     font-weight: bold
   }
   .account_nav--item a:active {
-    transform: scale(.9);
     opacity: .6
   }
 
@@ -378,10 +382,10 @@
   }
 
   /* QUILL */
-  .ql-toolbar.ql-snow {
+  div.ql-toolbar.ql-snow {
     border: none
   }
-  .ql-container.ql-snow {
+  div.ql-container.ql-snow {
     border: none
   }
   .ql-snow .ql-stroke {
@@ -459,12 +463,7 @@
   .client_link {
     padding: 1rem 0;
     width: 95%;
-    line-height: 1.4;
-    overflow-x: auto;
-    transition: all .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:not(.archived):active {
-    transform: scale(.98)
+    overflow-x: auto
   }
   .client_link svg {
     width: 20px

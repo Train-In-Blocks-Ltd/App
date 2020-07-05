@@ -19,11 +19,9 @@
   .client-notes {
     margin: auto;
     height: fit-content;
-    min-width: 300px;
-    max-width: 500px;
+    width: 400px;
     border-left: 1px solid #E1E1E1;
     border-bottom: 1px solid #E1E1E1;
-    border-radius: 3px;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .client-notes__header {
@@ -75,24 +73,30 @@
   }
   .block_container--link {
     display: grid;
+    position: relative;
     grid-gap: 1rem;
+    width: 95%;
+    max-width: 600px;
     min-width: 400px;
     text-decoration: none;
     color: #282828;
-    padding: 1.5rem;
-    border-radius: 3px;
-    box-shadow: 0 0 20px 10px #28282810;
-    transition: box-shadow .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    padding: 1rem 0;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
-  .block_container--link:hover {
-    transform: scale(1.01);
-    text-decoration: none;
-    box-shadow: 0 0 20px 10px #28282820;
-    background-color: white
+  .block_container--link:before {
+    content: '';
+    position: absolute;
+    opacity: .4;
+    width: 95%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: #282828;
+    transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
-  .block_container--link:active {
-    transform: scale(.96);
-    opacity: .6
+  .block_container--link:hover:before {
+    width: 100%;
+    opacity: 1
   }
   .block_container--link__block-notes {
     font-size: .8rem
@@ -102,8 +106,10 @@
     font-size: 1.4rem;
     margin-bottom: 0;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis
+  }
+  .more-block-info {
+    margin-top: 1rem
   }
   .block_container--link p {
     font-size: .8rem;
@@ -143,7 +149,8 @@
     }
     .client-notes, .block_container--link {
       margin: 0;
-      min-width: 0
+      min-width: 0;
+      width: 100%
     }
     .block_container--link:hover {
       transform: scale(1);
@@ -158,9 +165,6 @@
       grid-template-areas:
         'b'
         'a'
-    }
-    .client-notes {
-      margin: 0
     }
     .blocks_grid {
       grid-template-columns: 1fr
@@ -181,8 +185,10 @@
                 <router-link class="block_container--link" :to="'block/' + block.id">
                   <div class="block_container--link__info">
                     <h3>{{block.name}}</h3>
-                    <p><b>Duration: </b>{{block.duration}}</p>
-                    <p><b>Start: </b>{{block.start}}</p>
+                    <div class="more-block-info">
+                      <p><b>Duration: </b>{{block.duration}}</p>
+                      <p><b>Start: </b>{{block.start}}</p>
+                    </div>
                   </div>
                   <div>
                     <p><b>Notes:</b></p>
