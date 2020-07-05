@@ -21,15 +21,23 @@
     margin-bottom: 1rem;
     letter-spacing: .15rem
   }
+  .floating_nav__block {
+    display: grid;
+    grid-gap: 1rem;
+    position: fixed;
+    top: 6rem;
+    right: 2rem;
+    margin-top: 1.5rem;
+    text-align: right
+  }
+  .floating_nav__block a {
+    color: #282828;
+    text-decoration: none
+  }
   .message {
     display: grid;
-    grid-template-columns: 24px 1fr;
-    grid-gap: .4rem;
     margin: 1.2rem 0;
     font-size: .8rem
-  }
-  .message > p, .message svg {
-    margin: auto
   }
   .message--failed {
     display: grid;
@@ -40,27 +48,6 @@
   .button--failed {
     margin: 0;
     padding: .2rem
-  }
-  .toggleFloatingNav {
-    display: grid;
-    grid-template-columns: 10px 1fr 10px;
-    grid-gap: 1rem;
-    justify-self: center;
-    position: relative;
-    right: -2rem;
-    user-select: none;
-    margin-bottom: 1rem;
-    text-align: center;
-    font-size: .8rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: grid-gap .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .toggleFloatingNav:hover {
-    grid-gap: .2rem
-  }
-  .toggleFloatingNav:active {
-    transform: scale(.8)
   }
   .section-title {
     margin: 0 0 2rem 0
@@ -74,14 +61,6 @@
   }
 
   /* Calendar */
-  .calendar {
-    display: grid;
-    grid-template-columns: .8fr .4fr;
-    grid-template-areas: 'a b';
-    grid-gap: 2rem;
-    padding: 5rem;
-    box-shadow: 0 0 20px 10px #28282810
-  }
   .fc-event {
     font-size: .8rem
   }
@@ -97,10 +76,6 @@
   }
 
   /* Block Table */
-  .block-plan {
-    padding: 5rem;
-    box-shadow: 0 0 20px 10px #28282810
-  }
   .block_table__header h3 {
     margin: 0
   }
@@ -126,7 +101,7 @@
   .block_table--container--block_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
-    grid-template-columns: repeat(12, 50px);
+    grid-template-columns: repeat(8, 50px);
     border: none;
     padding: 0
   }
@@ -193,15 +168,12 @@
   }
   .container--workouts {
     display: grid;
-    grid-template-columns: repeat(3, 300px);
     grid-gap: 2rem
   }
   .wrapper--workout, .block-notes {
     height: fit-content;
-    width: 300px;
     border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    border-bottom: 1px solid #E1E1E1
   }
   .wrapper--workout__header, .block-notes__header {
     margin: 0;
@@ -238,7 +210,7 @@
   .show-workout, .show-block-notes {
     overflow-wrap: break-word;
     padding: 12px 15px;
-    max-height: 314px;
+    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
@@ -256,21 +228,13 @@
     padding: 0
   }
   .activeWorkout {
-    border-left: 1px solid #F1F1F1;
-    border-bottom: 1px solid #F1F1F1;
-    box-shadow: 0 0 20px 10px #28282815
+    border: 2px solid #282828
   }
 
   /* Graph */
-  .graph {
-    padding: 5rem;
-    box-shadow: 0 0 20px 10px #28282810
-  }
   .container--content {
-    display: grid;
-    grid-template-columns: .6fr 1fr;
-    grid-template-areas: 'a b';
-    grid-gap: 8rem
+    display: flex;
+    flex-direction: column
   }
   .data-select {
     display: grid;
@@ -298,7 +262,9 @@
     position: relative
   }
   .data-desc {
-    margin-top: 4rem
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 4rem 0
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
@@ -309,7 +275,7 @@
   /* Add Workout Form */
   #button--new-workout {
     margin: 2rem 0;
-    width: 300px
+    width: 400px
   }
   .add_workout_container {
     margin: 2rem 0 0 0
@@ -345,6 +311,11 @@
     margin: .4rem 0
   }
 
+  @media (max-width: 992px) {
+    .container--workouts {
+      grid-template-columns: 1fr
+    }
+  }
   @media (max-width: 768px) {
     .toggleFloatingNav:hover {
       grid-gap: 1rem
@@ -409,8 +380,6 @@
       margin-bottom: 4rem
     }
     .data-desc {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
       width: 90vw;
       margin-top: 2rem
     }
@@ -442,6 +411,18 @@
       <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
         <toolkit/>
       </modal>
+      <div class="floating_nav__block">
+        <a href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p></a>
+        <a href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p></a>
+        <div v-if="str != 0" class="message">
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
+          <p>{{msg}}</p>
+        </div>
+        <div v-if="str === undefined || str === null || str == 0 || str === []" class="message--failed">
+          <p>Failed to scan</p>
+          <button @click="scan()" class="button button--failed">Retry</button>
+        </div>
+      </div> <!-- floating_nav -->
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
@@ -455,31 +436,6 @@
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
               </form>
             </div>  <!-- client_info -->
-            <div class="floating_nav--container">
-              <div class="floating_nav">
-                <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
-                <transition
-                  enter-active-class="animate__animated animate__fadeIn animate__faster"
-                  leave-active-class="animate__animated animate__fadeOut animate__faster"
-                >
-                  <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
-                </transition>
-                <transition
-                  enter-active-class="animate__animated animate__fadeIn animate__faster"
-                  leave-active-class="animate__animated animate__fadeOut animate__faster"
-                >
-                  <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
-                </transition>
-                <div v-if="str != 0" class="message">
-                  <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
-                  <p>{{msg}}</p>
-                </div>
-                <div v-if="str === undefined || str === null || str == 0 || str === []" class="message--failed">
-                  <p>Failed to scan</p>
-                  <button @click="scan()" class="button button--failed">Retry</button>
-                </div>
-              </div> <!-- floating_nav -->
-            </div>
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
@@ -536,7 +492,7 @@
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
                         <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" />
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" /><br>
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" />
                       </p>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
@@ -648,10 +604,10 @@
     },
     data: function () {
       return {
+        showBlockOptions: false,
         weekColor: {
           backgroundColor: ''
         },
-        showFloatingNav: true,
         msgFloatingNav: 'Hide',
         creating: false,
         response: '',

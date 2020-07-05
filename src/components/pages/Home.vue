@@ -1,8 +1,6 @@
 <style>
   #home {
     display: grid;
-    max-width: 800px;
-    padding: 5rem 3.75rem;
     grid-gap: 2rem
   }
   #intro {
@@ -25,16 +23,6 @@
 
   @media (max-width: 768px) {
     .home--container {
-      width: 100%
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    #home {
-      padding: 4rem 2rem
-    }
-    .search, .client-link {
       width: 100%
     }
   }
