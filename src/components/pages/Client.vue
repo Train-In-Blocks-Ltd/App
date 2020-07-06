@@ -112,10 +112,6 @@
   /* For Mobile */
   @media (max-width: 576px) {
     /* Overall */
-    #client {
-      overflow-x: hidden;
-      padding: 4rem 2rem
-    }
     .client_info {
       grid-gap: 0;
       width: 90vw;

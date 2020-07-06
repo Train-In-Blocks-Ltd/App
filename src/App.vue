@@ -49,7 +49,7 @@
   }
 
   /* Global Container */
-  #home, #block, #account, .wrapper--client {
+  #home, #block, #account, #archive, .wrapper--client {
     min-height: 100vh;
     padding: 4rem 20vw
   }
@@ -194,10 +194,13 @@
   }
 
   /* Logo */
+  .logo {
+    margin-bottom: auto
+  }
   .logo--link {
     display: block;
     width: 38px;
-    transition: opacity .6s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    transition: .1 all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
     fill: rgb(
@@ -220,19 +223,11 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    width: calc(38px + 2rem);
+    justify-content: flex-end;
     padding: 2rem 1rem;
     position: fixed;
-    height: 100vh;
     background-color: rgb(var(--red), var(--green), var(--blue));
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .sidebar:hover {
-    width: 10rem
-  }
-  .sidebar:hover .account_nav--item a {
-    display: block
   }
   .nav a, .account_nav a {
     color:rgb(
@@ -327,11 +322,6 @@
   }
 
   /* Account Navigation Items */
-  .account_nav {
-    align-self: end;
-    text-align: center;
-    font-size: .8rem
-  }
   .account_nav--item {
     display: flex;
     opacity: .6;
@@ -349,7 +339,12 @@
   .account_nav--item:last-of-type {
     padding-bottom: 0
   }
-  .account_nav--item a {
+  .account_nav--item--text {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
     display: none;
     text-decoration: none;
     position: relative;
@@ -525,29 +520,48 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
+    #home, #account, #archive, .wrapper--client {
+      padding: 4rem 10vw
+    }
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       background-color: transparent;
       color: #282828
     }
   }
-  @media (max-width: 768px) {
-    .client_container > a:before {
-      width: 100%;
-      opacity: 1
-    }
-  }
   @media (min-width: 768px) {
-    #hamburger, #close {
-      display: none
+    .sidebar {
+      top: 0;
+      height: 100vh;
+      width: calc(38px + 2rem)
     }
-  }
-  @media (max-width: 768px) {
-    #app.authenticated {
+    .sidebar:hover {
+      width: 12rem
+    }
+    .sidebar:hover .account_nav--item a {
       display: block
     }
-    main > div {
-      max-width: 100%
+  }
+  @media (max-width: 768px) {
+    /* Sidebar */
+    .logo {
+      display: none
     }
+    .sidebar {
+      bottom: 0;
+      width: 100%;
+      flex-direction: row;
+      padding: 1rem;
+      justify-content: space-between
+    }
+    main {
+      margin: 0
+    }
+    .account_nav--item {
+      margin: auto;
+      padding: 0
+    }
+
+    /* Other */
     h1 {
       font-size: 2rem;
       margin-top: -.9rem;
@@ -557,42 +571,13 @@
     .main-title {
       margin: 0
     }
-    .sidebar {
-      position: fixed;
-      width: 100%;
-      background-color: rgb(
-        var(--red),
-        var(--green),
-        var(--blue)
-      );
-      transform: translateX(-100vw);
-      z-index: -1;
-      transition: transform .4s, z-index 1s
-    }
-    .sidebar.open {
-      transform: translateX(0);
-      z-index: 99
-    }
-    main {
-      padding: 0;
-      width: 100vw
-    }
-    #hamburger, #close {
-      position: absolute;
-      left: 3.4rem;
-      top: 1.4rem
-    }
-    #close svg path:not(.transparent) {
-      fill: rgb(
-        var(--accessible-color),
-        var(--accessible-color),
-        var(--accessible-color)
-      )
-    }
   }
 
   /* For Mobile */
   @media (max-width: 576px) {
+    #home, #account, #archive, .wrapper--client {
+      padding: 4rem 5vw
+    }
     p {
       font-size: .8rem
     }
@@ -629,55 +614,51 @@
         <inline-svg class="splash__logo" :src="require('./assets/svg/LoginLogo.svg')"/>
       </div>
     </transition>
-    <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger">
-      <inline-svg :src="require('./assets/svg/hamburger.svg')"/>
-    </a>
-    <nav class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
-      <!-- Mobile open/close sidebar icon -->
-      <a id="close" v-on:click="sidebar()">
-        <inline-svg :src="require('./assets/svg/close.svg')"/>
-      </a>
+    <nav class="sidebar" v-if="authenticated">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
         <router-link to="/" class="logo--link" title="Home">
           <inline-svg :src="require('./assets/svg/SidebarLogo.svg')" class="logo--svg"/>
         </router-link>
       </div> <!-- .logo -->
-      <!-- Client links
-      <div class="nav animate__animated animate__fadeInLeft animate__faster animate__delay-4s">
-        <div class="nav--item">
-            <router-link class="text--client" to="/">Clients</router-link>
-        </div>
-        <div v-for="(clients, index) in posts"
-          :key="index" class="nav--item animate__animated animate__fadeIn">
-          <router-link :to="'/client/'+clients.client_id+'/'">{{clients.name}}</router-link>
-        </div>
+      <div class="account_nav--item">
+        <router-link to="/">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
+        </router-link>
+        <router-link to="/" class="account_nav--item--text">
+          Home
+        </router-link>
       </div>
-      -->
-      <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-5s">
-        <div class="account_nav--item">
+      <div class="account_nav--item">
+        <a target="_blank" href="http://www.traininblocks.com/blog">
           <inline-svg :src="require('./assets/svg/Learn.svg')"  class="account_nav--item--icon"/>
-          <a target="_blank" href="http://www.traininblocks.com/blog" class="account_nav--item--text">
-            Learn
-          </a>
-        </div>
-        <div class="account_nav--item">
+        </a>
+        <a target="_blank" href="http://www.traininblocks.com/blog" class="account_nav--item--text">
+          Learn
+        </a>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/archive">
           <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" class="account_nav--item--icon"/>
-          <router-link to="/archive" class="account_nav--item--text">
-            Archive
-          </router-link>
-        </div>
-        <div class="account_nav--item">
+        </router-link>
+        <router-link to="/archive" class="account_nav--item--text">
+          Archive
+        </router-link>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/account">
           <inline-svg :src="require('./assets/svg/AccountIcon.svg')" class="account_nav--item--icon"/>
-          <router-link to="/account" class="account_nav--item--text">
-            Account
-          </router-link>
-        </div>
-        <div class="account_nav--item">
+        </router-link>
+        <router-link to="/account" class="account_nav--item--text">
+          Account
+        </router-link>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/logout" v-on:click.native="logout()">
           <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" class="account_nav--item--icon"/>
-          <router-link to="/logout" v-on:click.native="logout()" class="account_nav--item--text">
-            Logout
-          </router-link>
-        </div>
+        </router-link>
+        <router-link to="/logout" v-on:click.native="logout()" class="account_nav--item--text">
+          Logout
+        </router-link>
       </div>
     </nav> <!-- .sidebar -->
     <main v-dragscroll:nochilddrag>
@@ -748,9 +729,6 @@ export default {
     }
   },
   methods: {
-    sidebar () {
-      this.open = !this.open
-    },
     async setup () {
       this.claims = await this.$auth.getUser()
       if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {

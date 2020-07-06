@@ -11,18 +11,13 @@
     display: flex;
     justify-content: space-between
   }
-  .container--block-links__section {
-    margin-right: 4rem
-  }
 
   /* Client Notes */
   .client-notes {
-    margin: auto;
+    margin: 2rem auto;
     height: fit-content;
-    width: 400px;
     border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    border-bottom: 1px solid #E1E1E1
   }
   .client-notes__header {
     margin: 0;
@@ -39,7 +34,7 @@
   }
   .show-client-notes {
     padding: 12px 15px;
-    max-height: 314px;
+    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
@@ -54,9 +49,7 @@
     padding: 0
   }
   .activeClientNotes {
-    border-left: 1px solid #F1F1F1;
-    border-bottom: 1px solid #F1F1F1;
-    box-shadow: 0 0 20px 10px #28282815
+    border: 2px solid #282828
   }
 
   /* Blocks */
@@ -75,9 +68,6 @@
     display: grid;
     position: relative;
     grid-gap: 1rem;
-    width: 95%;
-    max-width: 600px;
-    min-width: 400px;
     text-decoration: none;
     color: #282828;
     padding: 1rem 0;
@@ -173,7 +163,17 @@
 </style>
 <template>
     <div>
-      <div class="spacer"/>
+      <div :class="{activeClientNotes: $parent.editClientNotes}" class="client-notes">
+        <div class="client-notes__header">
+          <p><b>Client Information</b></p>
+        </div>
+        <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
+        <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
+        <div class="bottom-bar">
+          <button v-show="!$parent.editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
+          <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
+        </div>
+      </div>
       <div class="container--block-links">
         <div class="container--block-links__section">
           <h2 class="sub-title">Blocks</h2>
@@ -211,17 +211,6 @@
                 <Loader></Loader>
               </div>
             </form>
-          </div>
-        </div>
-        <div :class="{activeClientNotes: $parent.editClientNotes}" class="client-notes">
-          <div class="client-notes__header">
-            <p><b>Client Information</b></p>
-          </div>
-          <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-          <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
-          <div class="bottom-bar">
-            <button v-show="!$parent.editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
-            <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
           </div>
         </div>
       </div>

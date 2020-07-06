@@ -31,8 +31,18 @@
     text-align: right
   }
   .floating_nav__block a {
+    display: grid;
+    grid-template-columns: 1fr 24px;
+    grid-gap: 1rem;
     color: #282828;
-    text-decoration: none
+    text-decoration: none;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .floating_nav__block a:hover {
+    opacity: .6
+  }
+  .text--hideable {
+    align-self: center
   }
   .message {
     display: grid;
@@ -95,6 +105,7 @@
   }
   .block_table--container {
     display: inline-block;
+    width: 100%;
     font-weight: bold;
     text-align: center
   }
@@ -104,7 +115,7 @@
   .block_table--container--block_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
-    grid-template-columns: repeat(8, 50px);
+    grid-template-columns: repeat(auto-fill, 50px);
     border: none;
     padding: 0
   }
@@ -311,80 +322,12 @@
     margin: .4rem 0
   }
 
-  @media (max-width: 992px) {
-    .container--workouts {
-      grid-template-columns: 1fr
-    }
-  }
   @media (max-width: 768px) {
-    .toggleFloatingNav:hover {
-      grid-gap: 1rem
-    }
     .form--copy {
       grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    /* Overall */
-    div.message {
-      margin: 1rem 0 0 0
-    }
-    #blocks .block_info input.block_info--name.title {
-      font-size: 1.2rem;
-      margin: 0
-    }
-    .block_grid {
-      justify-content: center;
-      margin-top: 6rem;
-      grid-template-columns: 90vw
-    }
-
-    /* Calendar */
-    .calendar, .block-plan, .container--content, .graph {
-      grid-template: .2fr .4fr/1fr;
-      grid-template-areas:
-        'b'
-        'a';
-      grid-gap: 0;
-      padding: 0;
-      box-shadow: none
-    }
-    .fc-scroller.fc-day-grid-container {
-      overflow: hidden
-    }
-
-    /* Block Plans */
-    .block-notes {
-      margin: 0 0 4rem 0;
-      width: 100%
-    }
-    .block_table__header {
-      margin: 0 0 1.6rem 0
-    }
-    .block_table--container--block_duration_container, .container--workouts {
-      overflow-x: auto;
-      width: 90vw;
-      padding: 1rem
-    }
-    .week {
-      box-shadow: 0 0 14px 8px #28282808
-    }
-
-    /* Stats */
-    #chart {
-      margin-bottom: 4rem
-    }
-    .data-desc {
-      width: 90vw;
-      margin-top: 2rem
-    }
-    .data-desc__value {
-      font-size: 1.8rem
     }
   }
 </style>
@@ -413,8 +356,14 @@
       </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
       <div v-show="!$parent.showOptions" class="floating_nav__block">
-        <a href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p></a>
-        <a href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p></a>
+        <a href="javascript:void(0)" @click="showToolkit()">
+          <p class="text--hideable">Toolkit</p>
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Toolkit.svg')"/>
+        </a>
+        <a href="javascript:void(0)" @click="delete_block()">
+          <p class="text--hideable">Delete Block</p>
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/>
+        </a>
         <div v-if="str != 0" class="message">
           <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
           <p>{{msg}}</p>
