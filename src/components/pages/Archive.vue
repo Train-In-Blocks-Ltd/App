@@ -1,8 +1,7 @@
 <style scoped>
   #archive {
     display: grid;
-    grid-gap: 2rem;
-    padding: 5rem 3.75rem
+    grid-gap: 2rem
   }
   .client_container.archived {
     display: grid;
@@ -21,8 +20,7 @@
   }
   .archive--container {
     display: grid;
-    grid-template-rows: 8rem 1fr;
-    max-width: 800px
+    grid-template-rows: 8rem 1fr
   }
 
   @media (max-width: 768px) {
@@ -71,7 +69,7 @@
           </div>
           <div class="client_update">
             <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
-              <inline-svg :src="require('../../assets/svg/ArchiveIconClose.svg')" class="archive__icon"/>
+              <inline-svg :src="require('../../assets/svg/archive-small.svg')" class="archive__icon"/>
             </a>
             <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Delete">
               <inline-svg :src="require('../../assets/svg/Trash.svg')" class="archive__icon"/>

@@ -1,28 +1,16 @@
 <style scoped>
-  /* Remove */
-  #graph {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-gap: 10px
-  }
-
   /* Overall */
   .container--block-links {
     display: flex;
     justify-content: space-between
   }
-  .container--block-links__section {
-    margin-right: 4rem
-  }
 
   /* Client Notes */
   .client-notes {
-    margin: auto;
+    margin: 2rem auto;
     height: fit-content;
-    width: 400px;
     border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    border-bottom: 1px solid #E1E1E1
   }
   .client-notes__header {
     margin: 0;
@@ -39,7 +27,7 @@
   }
   .show-client-notes {
     padding: 12px 15px;
-    max-height: 314px;
+    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
@@ -54,9 +42,7 @@
     padding: 0
   }
   .activeClientNotes {
-    border-left: 1px solid #F1F1F1;
-    border-bottom: 1px solid #F1F1F1;
-    box-shadow: 0 0 20px 10px #28282815
+    border: 2px solid #282828
   }
 
   /* Blocks */
@@ -75,9 +61,6 @@
     display: grid;
     position: relative;
     grid-gap: 1rem;
-    width: 95%;
-    max-width: 600px;
-    min-width: 400px;
     text-decoration: none;
     color: #282828;
     padding: 1rem 0;
@@ -136,22 +119,11 @@
 
   @media (min-width: 1024px) {
     .block_container--link {
-      grid-template: 1fr/1fr 1fr;
+      grid-template: 1fr/.8fr 1fr;
       grid-gap: 2rem
     }
   }
   @media (max-width: 768px) {
-    .container--block-links {
-      flex-direction: column-reverse
-    }
-    .container--block-links__section {
-      margin: 0
-    }
-    .client-notes, .block_container--link {
-      margin: 0;
-      min-width: 0;
-      width: 100%
-    }
     .block_container--link:hover {
       transform: scale(1);
       box-shadow: 0 0 20px 10px #28282810
@@ -173,56 +145,53 @@
 </style>
 <template>
     <div>
-      <div class="spacer"/>
-      <div class="container--block-links">
-        <div class="container--block-links__section">
-          <h2 class="sub-title">Blocks</h2>
-          <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
-          <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
-          <div v-if="!this.$parent.no_programmes" class="blocks_grid">
-            <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
-                :key="index" class="block_container">
-                <router-link class="block_container--link" :to="'block/' + block.id">
-                  <div class="block_container--link__info">
-                    <h3>{{block.name}}</h3>
-                    <div class="more-block-info">
-                      <p><b>Duration: </b>{{block.duration}}</p>
-                      <p><b>Start: </b>{{block.start}}</p>
-                    </div>
+      <div :class="{activeClientNotes: $parent.editClientNotes}" class="client-notes">
+        <div class="client-notes__header">
+          <p><b>Client Information</b></p>
+        </div>
+        <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
+        <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
+        <div class="bottom-bar">
+          <button v-show="!$parent.editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
+          <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
+        </div>
+      </div>
+      <div class="container--block-links__section">
+        <h2 class="sub-title">Blocks</h2>
+        <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
+        <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
+        <div v-if="!this.$parent.no_programmes" class="blocks_grid">
+          <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
+              :key="index" class="block_container">
+              <router-link class="block_container--link" :to="'block/' + block.id">
+                <div class="block_container--link__info">
+                  <h3>{{block.name}}</h3>
+                  <div class="more-block-info">
+                    <p><b>Duration: </b>{{block.duration}}</p>
+                    <p><b>Start: </b>{{block.start}}</p>
                   </div>
-                  <div>
-                    <p><b>Notes:</b></p>
-                    <div v-html="block.notes" class="block_container--link__block-notes" />
-                  </div>
-                </router-link>
-            </div>
-          </div>
-          <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
-          <p class="response" v-if="!creating">{{response}}</p>
-          <div v-if="creating" class="add_block_container">
-            <h3>New Block Incoming...</h3>
-            <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
-              <label><b>Name: </b><input type="text" v-model="new_block.name" required/></label>
-              <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
-              <label><b>Start: </b><input type="date" v-model="new_block.start" required /></label>
-              <div class="form_buttons">
-                <input type="submit" class="button button--save" value="Save" />
-                <button class="button button--close" v-on:click="close()">Close</button>
-                <Loader></Loader>
-              </div>
-            </form>
+                </div>
+                <div>
+                  <p><b>Notes:</b></p>
+                  <div v-html="block.notes" class="block_container--link__block-notes" />
+                </div>
+              </router-link>
           </div>
         </div>
-        <div :class="{activeClientNotes: $parent.editClientNotes}" class="client-notes">
-          <div class="client-notes__header">
-            <p><b>Client Information</b></p>
-          </div>
-          <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-          <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
-          <div class="bottom-bar">
-            <button v-show="!$parent.editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
-            <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
-          </div>
+        <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
+        <p class="response" v-if="!creating">{{response}}</p>
+        <div v-if="creating" class="add_block_container">
+          <h3>New Block</h3>
+          <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
+            <label><b>Name: </b><input type="text" v-model="new_block.name" required/></label>
+            <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
+            <label><b>Start: </b><input type="date" v-model="new_block.start" required /></label>
+            <div class="form_buttons">
+              <input type="submit" class="button button--save" value="Save" />
+              <button class="button button--close" v-on:click="close()">Close</button>
+              <Loader></Loader>
+            </div>
+          </form>
         </div>
       </div>
     </div>

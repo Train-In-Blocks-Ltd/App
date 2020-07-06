@@ -1,7 +1,14 @@
 <style>
   #client {
-    position: relative;
-    padding: 5rem 3.75rem
+    background-color: #F4F4F4;
+    position: relative
+  }
+  .wrapper--client {
+    background-color: white;
+    transition: all 1.4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .openFloatingNav {
+    transform: translateX(-12rem)
   }
 
   /* Client Info */
@@ -16,12 +23,14 @@
     grid-gap: 1rem;
     align-items: center
   }
+  #duration, #start, .workout-date {
+    cursor: pointer
+  }
   #client .client_info input:not([type='submit']), #duration {
     background-color: initial;
     border: none;
     border-bottom: 2px solid #28282800;
     padding: .4rem 0;
-    font-size: 1rem;
     outline-width: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
@@ -47,53 +56,23 @@
   /* Floating Nav */
   .floating_nav {
     z-index: 2;
-    position: fixed;
-    right: 4rem;
-    top: 6rem;
-    width: 200px;
     display: grid;
-    justify-items: right;
-    text-align: right;
-    border-right: 2px solid #282828;
-    padding: 0 1rem
+    grid-gap: 2rem;
+    position: fixed;
+    right: 2rem;
+    top: 4rem;
+    text-align: right
   }
   .floating_nav a {
-    display: grid;
-    grid-template-columns: 1fr 24px;
-    grid-gap: .6rem;
-    width: fit-content;
-    position: relative;
     color: #282828;
-    text-decoration: none;
-    margin: .5rem 0
+    text-decoration: none
   }
   .floating_nav a:hover {
-    color: #282828
+    opacity: .6rem
   }
-  .floating_nav a:before {
-    content: '';
-    position: absolute;
-    width: 0%;
-    height: 2px;
-    bottom: -4px;
-    right: 0;
-    background-color: #282828;
-    opacity: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .floating_nav a:hover:before {
-    opacity: 1;
-    width: 100%
-  }
-  .floating_nav .archive-client {
-    margin: .5rem 0
-  }
-  .floating_nav p {
-    margin: 0;
-    align-self: end
-  }
-  svg.floating_nav__icon path {
-    fill: #282828
+  .icon--options {
+    cursor: pointer;
+    margin-left: auto
   }
 
   /* Client Notes */
@@ -135,10 +114,6 @@
   /* For Mobile */
   @media (max-width: 576px) {
     /* Overall */
-    #client {
-      overflow-x: hidden;
-      padding: 4rem 2rem
-    }
     .client_info {
       grid-gap: 0;
       width: 90vw;
@@ -159,25 +134,36 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
-    <!-- Don't show if on blocks page because blocks page renders slightly different top ui -->
-    <div class="top_grid" v-if="!blocks">
-      <!-- Update the client details -->
-      <form class="client_info" v-on:submit.prevent="update_client()">
-        <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
-        <div class="client_info__more-details">
-          <label><b>Email: </b><input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-          <label><b>Phone: </b><input v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
-        </div>
-      </form>
-      <div class="floating_nav">
-        <div v-for="(clients, index) in $parent.posts" :key="index">
-          <div class="archive-client" v-if="clients.client_id == $route.params.client_id">
-            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)"><p class="text--hideable">Archive Client</p><inline-svg class="floating_nav__icon" :src="require('../../assets/svg/ArchiveIconClose.svg')"/></a>
+    <div v-show="keepLoaded" class="floating_nav">
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
+        <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
+      </transition>
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
+        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" />
+      </transition>
+      <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index">
+        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+          <div class="archive-client" v-show="clients.client_id == $route.params.client_id && showOptions">
+            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
           </div>
-        </div>
+        </transition>
       </div>
     </div>
-    <router-view :key="$route.fullPath"></router-view>
+    <div class="wrapper--client" :class="{ openFloatingNav: showOptions }">
+      <div class="top_grid" v-if="!blocks">
+        <!-- Update the client details -->
+        <form class="client_info" v-on:submit.prevent="update_client()">
+          <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
+          <div class="client_info__more-details">
+            <label><b>Email: </b><input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
+            <label><b>Phone: </b><input v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
+          </div>
+        </form>
+      </div>
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <router-view :key="$route.fullPath"></router-view>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -191,6 +177,8 @@
     },
     data: function () {
       return {
+        keepLoaded: false,
+        showOptions: false,
         no_programmes: false,
         loading_programmes: true,
         blocks: false,
@@ -203,8 +191,10 @@
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
+      this.keepLoaded = true
     },
     beforeDestroy () {
+      this.keepLoaded = false
       this.$parent.client_details = null
     },
     methods: {

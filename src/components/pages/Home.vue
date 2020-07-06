@@ -1,17 +1,12 @@
 <style>
-  #home {
-    display: grid;
-    max-width: 800px;
-    padding: 5rem 3.75rem;
-    grid-gap: 2rem
-  }
   #intro {
     font-size: 2rem;
     margin-top: 0
   }
   .home--container {
     display: grid;
-    grid-template-rows: 8rem 1fr
+    grid-template-rows: 8rem 1fr;
+    margin-bottom: 2rem
   }
 
   /* Add Client Form */
@@ -25,16 +20,6 @@
 
   @media (max-width: 768px) {
     .home--container {
-      width: 100%
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    #home {
-      padding: 4rem 2rem
-    }
-    .search, .client-link {
       width: 100%
     }
   }

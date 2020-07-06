@@ -21,15 +21,36 @@
     margin-bottom: 1rem;
     letter-spacing: .15rem
   }
+  .floating_nav__block {
+    display: grid;
+    grid-gap: 1rem;
+    position: fixed;
+    top: 6rem;
+    right: 2rem;
+    margin-top: 1.5rem;
+    text-align: right
+  }
+  .floating_nav__block a {
+    display: grid;
+    grid-template-columns: 1fr 24px;
+    grid-gap: 1rem;
+    color: #282828;
+    text-decoration: none;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .floating_nav__block a:hover {
+    opacity: .6
+  }
+  .text--hideable {
+    align-self: center
+  }
   .message {
     display: grid;
     grid-template-columns: 24px 1fr;
-    grid-gap: .4rem;
+    grid-gap: 1rem;
+    justify-self: end;
     margin: 1.2rem 0;
     font-size: .8rem
-  }
-  .message > p, .message svg {
-    margin: auto
   }
   .message--failed {
     display: grid;
@@ -40,27 +61,6 @@
   .button--failed {
     margin: 0;
     padding: .2rem
-  }
-  .toggleFloatingNav {
-    display: grid;
-    grid-template-columns: 10px 1fr 10px;
-    grid-gap: 1rem;
-    justify-self: center;
-    position: relative;
-    right: -2rem;
-    user-select: none;
-    margin-bottom: 1rem;
-    text-align: center;
-    font-size: .8rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: grid-gap .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .toggleFloatingNav:hover {
-    grid-gap: .2rem
-  }
-  .toggleFloatingNav:active {
-    transform: scale(.8)
   }
   .section-title {
     margin: 0 0 2rem 0
@@ -74,14 +74,6 @@
   }
 
   /* Calendar */
-  .calendar {
-    display: grid;
-    grid-template-columns: .8fr .4fr;
-    grid-template-areas: 'a b';
-    grid-gap: 2rem;
-    padding: 5rem;
-    box-shadow: 0 0 20px 10px #28282810
-  }
   .fc-event {
     font-size: .8rem
   }
@@ -97,10 +89,6 @@
   }
 
   /* Block Table */
-  .block-plan {
-    padding: 5rem;
-    box-shadow: 0 0 20px 10px #28282810
-  }
   .block_table__header h3 {
     margin: 0
   }
@@ -117,6 +105,7 @@
   }
   .block_table--container {
     display: inline-block;
+    width: 100%;
     font-weight: bold;
     text-align: center
   }
@@ -126,7 +115,7 @@
   .block_table--container--block_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
-    grid-template-columns: repeat(12, 50px);
+    grid-template-columns: repeat(auto-fill, 50px);
     border: none;
     padding: 0
   }
@@ -193,15 +182,12 @@
   }
   .container--workouts {
     display: grid;
-    grid-template-columns: repeat(3, 300px);
     grid-gap: 2rem
   }
   .wrapper--workout, .block-notes {
     height: fit-content;
-    width: 300px;
     border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    border-bottom: 1px solid #E1E1E1
   }
   .wrapper--workout__header, .block-notes__header {
     margin: 0;
@@ -238,7 +224,7 @@
   .show-workout, .show-block-notes {
     overflow-wrap: break-word;
     padding: 12px 15px;
-    max-height: 314px;
+    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
@@ -256,21 +242,13 @@
     padding: 0
   }
   .activeWorkout {
-    border-left: 1px solid #F1F1F1;
-    border-bottom: 1px solid #F1F1F1;
-    box-shadow: 0 0 20px 10px #28282815
+    border: 2px solid #282828
   }
 
   /* Graph */
-  .graph {
-    padding: 5rem;
-    box-shadow: 0 0 20px 10px #28282810
-  }
   .container--content {
-    display: grid;
-    grid-template-columns: .6fr 1fr;
-    grid-template-areas: 'a b';
-    grid-gap: 8rem
+    display: flex;
+    flex-direction: column
   }
   .data-select {
     display: grid;
@@ -290,14 +268,13 @@
     padding: .2rem 1rem .2rem 0;
     font-weight: bold
   }
-  .data-options {
-    grid-area: a
-  }
   #chart {
-    grid-area: b;
+    margin-top: 4rem;
     position: relative
   }
   .data-desc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     margin-top: 4rem
   }
   .data-desc__value {
@@ -309,7 +286,7 @@
   /* Add Workout Form */
   #button--new-workout {
     margin: 2rem 0;
-    width: 300px
+    width: 100%
   }
   .add_workout_container {
     margin: 2rem 0 0 0
@@ -346,76 +323,20 @@
   }
 
   @media (max-width: 768px) {
-    .toggleFloatingNav:hover {
-      grid-gap: 1rem
+    .floating_nav__block a {
+      grid-template-columns: 1fr
+    }
+    .floating_nav__block svg {
+      margin-left: auto
+    }
+    .text--hideable {
+      display: none
     }
     .form--copy {
       grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    /* Overall */
-    div.message {
-      margin: 1rem 0 0 0
-    }
-    #blocks .block_info input.block_info--name.title {
-      font-size: 1.2rem;
-      margin: 0
-    }
-    .block_grid {
-      justify-content: center;
-      margin-top: 6rem;
-      grid-template-columns: 90vw
-    }
-
-    /* Calendar */
-    .calendar, .block-plan, .container--content, .graph {
-      grid-template: .2fr .4fr/1fr;
-      grid-template-areas:
-        'b'
-        'a';
-      grid-gap: 0;
-      padding: 0;
-      box-shadow: none
-    }
-    .fc-scroller.fc-day-grid-container {
-      overflow: hidden
-    }
-
-    /* Block Plans */
-    .block-notes {
-      margin: 0 0 4rem 0;
-      width: 100%
-    }
-    .block_table__header {
-      margin: 0 0 1.6rem 0
-    }
-    .block_table--container--block_duration_container, .container--workouts {
-      overflow-x: auto;
-      width: 90vw;
-      padding: 1rem
-    }
-    .week {
-      box-shadow: 0 0 14px 8px #28282808
-    }
-
-    /* Stats */
-    #chart {
-      margin-bottom: 4rem
-    }
-    .data-desc {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      width: 90vw;
-      margin-top: 2rem
-    }
-    .data-desc__value {
-      font-size: 1.8rem
     }
   }
 </style>
@@ -425,8 +346,8 @@
       <modal name="move" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--move">
           <label for="range">Move to:</label>
-          <input name="range" type="number" v-model="moveTarget" min="2" :max="maxWeek" required/>
-          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout)">Move</button>
+          <input name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
+          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), this.$modal.hide('move')">Move</button>
         </div>
       </modal>
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
@@ -442,6 +363,30 @@
       <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
         <toolkit/>
       </modal>
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+      <div v-show="!$parent.showOptions" class="floating_nav__block">
+        <router-link :to="`/client/${this.$parent.$parent.client_details.client_id}/`">
+          <p class="text--hideable">Back</p>
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/back.svg')"/>
+        </router-link>
+        <a href="javascript:void(0)" @click="showToolkit()">
+          <p class="text--hideable">Toolkit</p>
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Toolkit.svg')"/>
+        </a>
+        <a href="javascript:void(0)" @click="delete_block()">
+          <p class="text--hideable">Delete Block</p>
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/>
+        </a>
+        <div v-show="str != 0" class="message">
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-show="msg !== 'Idle'"/>
+          <p>{{msg}}</p>
+        </div>
+        <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
+          <p>Failed to scan</p>
+          <button @click="scan()" class="button button--failed">Retry</button>
+        </div>
+      </div> <!-- floating_nav -->
+      </transition>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
@@ -455,31 +400,6 @@
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
               </form>
             </div>  <!-- client_info -->
-            <div class="floating_nav--container">
-              <div class="floating_nav">
-                <div class="toggleFloatingNav" @click="toggleFloatingNav()"><p>[</p><p>{{msgFloatingNav}}</p><p>]</p></div>
-                <transition
-                  enter-active-class="animate__animated animate__fadeIn animate__faster"
-                  leave-active-class="animate__animated animate__fadeOut animate__faster"
-                >
-                  <a v-show="showFloatingNav" href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p><inline-svg :src="require('../../../assets/svg/Toolkit.svg')"/></a>
-                </transition>
-                <transition
-                  enter-active-class="animate__animated animate__fadeIn animate__faster"
-                  leave-active-class="animate__animated animate__fadeOut animate__faster"
-                >
-                  <a v-show="showFloatingNav" href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p><inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/></a>
-                </transition>
-                <div v-if="str != 0" class="message">
-                  <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
-                  <p>{{msg}}</p>
-                </div>
-                <div v-if="str === undefined || str === null || str == 0 || str === []" class="message--failed">
-                  <p>Failed to scan</p>
-                  <button @click="scan()" class="button button--failed">Retry</button>
-                </div>
-              </div> <!-- floating_nav -->
-            </div>
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
@@ -504,7 +424,7 @@
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @click="editing()"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @click="editing()" @change="weekConfirm(programme.duration)"/>
                   </div>
                 </div>
                 <div class="block_table--container">
@@ -536,7 +456,7 @@
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
                         <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" />
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" /><br>
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" />
                       </p>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
@@ -549,22 +469,8 @@
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <button v-if="!creating || $parent.no_workouts === true" id="button--new-workout" class="button" v-on:click="creation()">New workout</button>
-                    <p class="response" v-if="!creating">{{response}}</p>
-                    <div v-if="creating" class="add_workout_container">
-                      <h3>New Workout</h3>
-                      <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
-                        <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
-                        <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
-                        <div class="form_buttons">
-                          <input type="submit" class="button" value="Save" />
-                          <button class="button" v-on:click="close()">Close</button>
-                          <Loader></Loader>
-                        </div>
-                      </form>
-                    </div>
-                  </div><!-- Add a new workout -->
+                  <!-- New Workout -->
+                  <button id="button--new-workout" class="button" @click="add_workout()">New workout</button>
                 </div>
               </div><!-- workouts -->
             </div>
@@ -648,17 +554,16 @@
     },
     data: function () {
       return {
+        showBlockOptions: false,
         weekColor: {
           backgroundColor: ''
         },
-        showFloatingNav: true,
         msgFloatingNav: 'Hide',
-        creating: false,
         response: '',
         edit1: false,
         editBlockNotes: false,
         new_workout: {
-          name: '',
+          name: 'Untitled',
           date: ''
         },
         delete: false,
@@ -702,6 +607,7 @@
         selectedDataName: 'Block Overview',
         optionsForDataName: [],
         selectedDataType: 'Sets',
+        allowMoreWeeks: false,
         currentWeek: 1,
         maxWeek: '2',
         movingWorkout: null,
@@ -714,6 +620,7 @@
     },
     async mounted () {
       await this.$parent.get_client_details()
+      this.today()
       this.scan()
     },
     methods: {
@@ -758,8 +665,8 @@
         }
         this.currentCopyWorkoutNotes = ''
         this.copyTarget = 1
-        this.new_workout.name = ''
-        this.new_workout.date = ''
+        this.new_workout.name = 'Untitled'
+        this.today()
         this.$modal.hide('copy')
       },
       showToolkit () {
@@ -767,6 +674,7 @@
       },
       editingBlockNotes (state) {
         this.editBlockNotes = state
+        this.msg = 'Editing...'
         if (state) {
           window.addEventListener('keydown', this.quickSaveBlockNotes)
         } else {
@@ -783,6 +691,7 @@
       updateBlockNotes () {
         this.update_programme()
         this.editBlockNotes = false
+        this.msg = 'Idle'
       },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
@@ -806,6 +715,7 @@
         this.isEditingWorkout = false
         this.editWorkout = null
         this.scan()
+        this.msg = 'Idle'
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
@@ -1120,6 +1030,22 @@
       },
 
       // OTHER METHODS //
+      weekConfirm (dur) {
+        if (parseInt(dur) > 12 && this.allowMoreWeeks == false) {
+          if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
+            this.allowMoreWeeks = true
+          } else {
+            this.allowMoreWeeks = false
+          }
+        }
+      },
+      today () {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        this.new_workout.date = `${yyyy}-${mm}-${dd}`
+      },
       addDays (date, days) {
         var d = new Date(date)
         d.setHours(0, 0, 0, 0)
@@ -1231,13 +1157,6 @@
       editing1 () {
         this.edit1 = true
       },
-      creation () {
-        this.creating = true
-      },
-      close () {
-        this.creating = false
-        this.response = ''
-      },
       async update_workout (id) {
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
@@ -1260,7 +1179,6 @@
           }
         }
         try {
-          this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
@@ -1270,7 +1188,6 @@
               'week_id': parseInt(this.moveTarget)
             }
           )
-          this.msg = 'Idle'
           this.$ga.event('Workout', 'update')
         } catch (e) {
           console.log(e.toString())
@@ -1280,6 +1197,7 @@
       async add_workout () {
         try {
           this.$parent.$parent.loading = true
+          this.msg = 'Creating...'
           // eslint-disable-next-line
           const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
             qs.stringify({
@@ -1300,15 +1218,14 @@
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false
 
-          this.close()
-
           this.new_workout = {
-            name: '',
-            date: '',
+            name: 'Untitled',
+            date: this.today(),
             notes: '',
             week_id: '',
             block_color: ''
           }
+          this.msg = 'Idle'
           this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {
@@ -1332,7 +1249,7 @@
             await this.$parent.$parent.clients()
             this.$parent.$parent.clients_to_vue()
 
-            this.$router.push({path: '/'})
+            this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
             this.$ga.event('Block', 'delete')
           } catch (e) {
             console.error(`${e}`)
@@ -1343,10 +1260,12 @@
         if (confirm('Are you sure you want to delete this workout?')) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            this.msg = 'Deleting...'
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             this.$parent.force_get_workouts()
             this.delete = true
+            this.msg = 'Idle'
             this.scan()
             this.$ga.event('Workout', 'delete')
           } catch (e) {
