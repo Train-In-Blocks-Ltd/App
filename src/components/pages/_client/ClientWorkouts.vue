@@ -346,8 +346,8 @@
       <modal name="move" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--move">
           <label for="range">Move to:</label>
-          <input name="range" type="number" v-model="moveTarget" min="2" :max="maxWeek" required/>
-          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout)">Move</button>
+          <input name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
+          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), this.$modal.hide('move')">Move</button>
         </div>
       </modal>
       <modal name="copy" height="auto" :draggable="true" :adaptive="true">
@@ -365,6 +365,10 @@
       </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
       <div v-show="!$parent.showOptions" class="floating_nav__block">
+        <router-link :to="`/client/${this.$parent.$parent.client_details.client_id}/`">
+          <p class="text--hideable">Back</p>
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/back.svg')"/>
+        </router-link>
         <a href="javascript:void(0)" @click="showToolkit()">
           <p class="text--hideable">Toolkit</p>
           <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Toolkit.svg')"/>
@@ -1245,7 +1249,7 @@
             await this.$parent.$parent.clients()
             this.$parent.$parent.clients_to_vue()
 
-            this.$router.push({path: '/'})
+            this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
             this.$ga.event('Block', 'delete')
           } catch (e) {
             console.error(`${e}`)

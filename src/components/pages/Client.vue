@@ -23,12 +23,14 @@
     grid-gap: 1rem;
     align-items: center
   }
+  #duration, #start, .workout-date {
+    cursor: pointer
+  }
   #client .client_info input:not([type='submit']), #duration {
     background-color: initial;
     border: none;
     border-bottom: 2px solid #28282800;
     padding: .4rem 0;
-    font-size: 1rem;
     outline-width: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }

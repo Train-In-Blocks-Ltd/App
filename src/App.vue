@@ -130,7 +130,9 @@
   }
 
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
+    padding: .4rem;
+    font-size: 1rem;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
@@ -575,7 +577,7 @@
   /* For Mobile */
   @media (max-width: 576px) {
     #home, #account, #archive, .wrapper--client {
-      padding: 4rem 5vw
+      padding: 2rem 5vw
     }
     p {
       font-size: .8rem

@@ -1,11 +1,4 @@
 <style scoped>
-  /* Remove */
-  #graph {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-gap: 10px
-  }
-
   /* Overall */
   .container--block-links {
     display: flex;
@@ -126,22 +119,11 @@
 
   @media (min-width: 1024px) {
     .block_container--link {
-      grid-template: 1fr/1fr 1fr;
+      grid-template: 1fr/.8fr 1fr;
       grid-gap: 2rem
     }
   }
   @media (max-width: 768px) {
-    .container--block-links {
-      flex-direction: column-reverse
-    }
-    .container--block-links__section {
-      margin: 0
-    }
-    .client-notes, .block_container--link {
-      margin: 0;
-      min-width: 0;
-      width: 100%
-    }
     .block_container--link:hover {
       transform: scale(1);
       box-shadow: 0 0 20px 10px #28282810
@@ -199,7 +181,7 @@
         <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
         <p class="response" v-if="!creating">{{response}}</p>
         <div v-if="creating" class="add_block_container">
-          <h3>New Block Incoming...</h3>
+          <h3>New Block</h3>
           <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
             <label><b>Name: </b><input type="text" v-model="new_block.name" required/></label>
             <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>

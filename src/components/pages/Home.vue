@@ -1,15 +1,12 @@
 <style>
-  #home {
-    display: grid;
-    grid-gap: 2rem
-  }
   #intro {
     font-size: 2rem;
     margin-top: 0
   }
   .home--container {
     display: grid;
-    grid-template-rows: 8rem 1fr
+    grid-template-rows: 8rem 1fr;
+    margin-bottom: 2rem
   }
 
   /* Add Client Form */

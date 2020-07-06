@@ -5,7 +5,6 @@
     color: #282828
   }
   #login {
-    box-shadow: 0 0 20px 10px #28282810;
     text-align: left;
     display: inline;
     margin: auto;
