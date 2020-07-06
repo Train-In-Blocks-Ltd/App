@@ -323,6 +323,15 @@
   }
 
   @media (max-width: 768px) {
+    .floating_nav__block a {
+      grid-template-columns: 1fr
+    }
+    .floating_nav__block svg {
+      margin-left: auto
+    }
+    .text--hideable {
+      display: none
+    }
     .form--copy {
       grid-template-columns: 1fr
     }
@@ -364,11 +373,11 @@
           <p class="text--hideable">Delete Block</p>
           <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/>
         </a>
-        <div v-if="str != 0" class="message">
-          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-if="msg !== 'Idle'"/>
+        <div v-show="str != 0" class="message">
+          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-show="msg !== 'Idle'"/>
           <p>{{msg}}</p>
         </div>
-        <div v-if="str === undefined || str === null || str == 0 || str === []" class="message--failed">
+        <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
           <p>Failed to scan</p>
           <button @click="scan()" class="button button--failed">Retry</button>
         </div>

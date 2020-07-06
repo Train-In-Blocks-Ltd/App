@@ -174,44 +174,42 @@
           <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
         </div>
       </div>
-      <div class="container--block-links">
-        <div class="container--block-links__section">
-          <h2 class="sub-title">Blocks</h2>
-          <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
-          <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
-          <div v-if="!this.$parent.no_programmes" class="blocks_grid">
-            <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
-                :key="index" class="block_container">
-                <router-link class="block_container--link" :to="'block/' + block.id">
-                  <div class="block_container--link__info">
-                    <h3>{{block.name}}</h3>
-                    <div class="more-block-info">
-                      <p><b>Duration: </b>{{block.duration}}</p>
-                      <p><b>Start: </b>{{block.start}}</p>
-                    </div>
+      <div class="container--block-links__section">
+        <h2 class="sub-title">Blocks</h2>
+        <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
+        <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
+        <div v-if="!this.$parent.no_programmes" class="blocks_grid">
+          <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
+              :key="index" class="block_container">
+              <router-link class="block_container--link" :to="'block/' + block.id">
+                <div class="block_container--link__info">
+                  <h3>{{block.name}}</h3>
+                  <div class="more-block-info">
+                    <p><b>Duration: </b>{{block.duration}}</p>
+                    <p><b>Start: </b>{{block.start}}</p>
                   </div>
-                  <div>
-                    <p><b>Notes:</b></p>
-                    <div v-html="block.notes" class="block_container--link__block-notes" />
-                  </div>
-                </router-link>
+                </div>
+                <div>
+                  <p><b>Notes:</b></p>
+                  <div v-html="block.notes" class="block_container--link__block-notes" />
+                </div>
+              </router-link>
+          </div>
+        </div>
+        <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
+        <p class="response" v-if="!creating">{{response}}</p>
+        <div v-if="creating" class="add_block_container">
+          <h3>New Block Incoming...</h3>
+          <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
+            <label><b>Name: </b><input type="text" v-model="new_block.name" required/></label>
+            <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
+            <label><b>Start: </b><input type="date" v-model="new_block.start" required /></label>
+            <div class="form_buttons">
+              <input type="submit" class="button button--save" value="Save" />
+              <button class="button button--close" v-on:click="close()">Close</button>
+              <Loader></Loader>
             </div>
-          </div>
-          <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
-          <p class="response" v-if="!creating">{{response}}</p>
-          <div v-if="creating" class="add_block_container">
-            <h3>New Block Incoming...</h3>
-            <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
-              <label><b>Name: </b><input type="text" v-model="new_block.name" required/></label>
-              <label><b>Duration (in weeks): </b><input type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
-              <label><b>Start: </b><input type="date" v-model="new_block.start" required /></label>
-              <div class="form_buttons">
-                <input type="submit" class="button button--save" value="Save" />
-                <button class="button button--close" v-on:click="close()">Close</button>
-                <Loader></Loader>
-              </div>
-            </form>
-          </div>
+          </form>
         </div>
       </div>
     </div>

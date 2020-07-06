@@ -131,7 +131,6 @@
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
-    display: inline-block;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
