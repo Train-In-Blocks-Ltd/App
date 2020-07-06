@@ -36,6 +36,9 @@
   }
   .message {
     display: grid;
+    grid-template-columns: 24px 1fr;
+    grid-gap: 1rem;
+    justify-self: end;
     margin: 1.2rem 0;
     font-size: .8rem
   }
@@ -254,17 +257,14 @@
     padding: .2rem 1rem .2rem 0;
     font-weight: bold
   }
-  .data-options {
-    grid-area: a
-  }
   #chart {
-    grid-area: b;
+    margin-top: 4rem;
     position: relative
   }
   .data-desc {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin: 4rem 0
+    margin-top: 4rem
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
@@ -275,7 +275,7 @@
   /* Add Workout Form */
   #button--new-workout {
     margin: 2rem 0;
-    width: 400px
+    width: 100%
   }
   .add_workout_container {
     margin: 2rem 0 0 0
@@ -411,7 +411,8 @@
       <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
         <toolkit/>
       </modal>
-      <div class="floating_nav__block">
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+      <div v-show="!$parent.showOptions" class="floating_nav__block">
         <a href="javascript:void(0)" @click="showToolkit()"><p class="text--hideable">Toolkit</p></a>
         <a href="javascript:void(0)" @click="delete_block()"><p class="text--hideable">Delete Block</p></a>
         <div v-if="str != 0" class="message">
@@ -423,6 +424,7 @@
           <button @click="scan()" class="button button--failed">Retry</button>
         </div>
       </div> <!-- floating_nav -->
+      </transition>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
         :key="index">
@@ -460,7 +462,7 @@
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @click="editing()"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @click="editing()" @change="weekConfirm(programme.duration)"/>
                   </div>
                 </div>
                 <div class="block_table--container">
@@ -505,22 +507,8 @@
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <button v-if="!creating || $parent.no_workouts === true" id="button--new-workout" class="button" v-on:click="creation()">New workout</button>
-                    <p class="response" v-if="!creating">{{response}}</p>
-                    <div v-if="creating" class="add_workout_container">
-                      <h3>New Workout</h3>
-                      <form name="add_workout" class="form_grid add_workout" v-on:submit.prevent="add_workout()">
-                        <label><b>Name: </b><input type="text" v-model="new_workout.name" required /></label>
-                        <label><b>Date: </b><input type="date" v-model="new_workout.date" required /></label>
-                        <div class="form_buttons">
-                          <input type="submit" class="button" value="Save" />
-                          <button class="button" v-on:click="close()">Close</button>
-                          <Loader></Loader>
-                        </div>
-                      </form>
-                    </div>
-                  </div><!-- Add a new workout -->
+                  <!-- New Workout -->
+                  <button id="button--new-workout" class="button" @click="add_workout()">New workout</button>
                 </div>
               </div><!-- workouts -->
             </div>
@@ -609,12 +597,11 @@
           backgroundColor: ''
         },
         msgFloatingNav: 'Hide',
-        creating: false,
         response: '',
         edit1: false,
         editBlockNotes: false,
         new_workout: {
-          name: '',
+          name: 'Untitled',
           date: ''
         },
         delete: false,
@@ -658,6 +645,7 @@
         selectedDataName: 'Block Overview',
         optionsForDataName: [],
         selectedDataType: 'Sets',
+        allowMoreWeeks: false,
         currentWeek: 1,
         maxWeek: '2',
         movingWorkout: null,
@@ -670,6 +658,7 @@
     },
     async mounted () {
       await this.$parent.get_client_details()
+      this.today()
       this.scan()
     },
     methods: {
@@ -714,8 +703,8 @@
         }
         this.currentCopyWorkoutNotes = ''
         this.copyTarget = 1
-        this.new_workout.name = ''
-        this.new_workout.date = ''
+        this.new_workout.name = 'Untitled'
+        this.today()
         this.$modal.hide('copy')
       },
       showToolkit () {
@@ -723,6 +712,7 @@
       },
       editingBlockNotes (state) {
         this.editBlockNotes = state
+        this.msg = 'Editing...'
         if (state) {
           window.addEventListener('keydown', this.quickSaveBlockNotes)
         } else {
@@ -739,6 +729,7 @@
       updateBlockNotes () {
         this.update_programme()
         this.editBlockNotes = false
+        this.msg = 'Idle'
       },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
@@ -762,6 +753,7 @@
         this.isEditingWorkout = false
         this.editWorkout = null
         this.scan()
+        this.msg = 'Idle'
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
@@ -1076,6 +1068,22 @@
       },
 
       // OTHER METHODS //
+      weekConfirm (dur) {
+        if (parseInt(dur) > 12 && this.allowMoreWeeks == false) {
+          if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
+            this.allowMoreWeeks = true
+          } else {
+            this.allowMoreWeeks = false
+          }
+        }
+      },
+      today () {
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        this.new_workout.date = `${yyyy}-${mm}-${dd}`
+      },
       addDays (date, days) {
         var d = new Date(date)
         d.setHours(0, 0, 0, 0)
@@ -1187,13 +1195,6 @@
       editing1 () {
         this.edit1 = true
       },
-      creation () {
-        this.creating = true
-      },
-      close () {
-        this.creating = false
-        this.response = ''
-      },
       async update_workout (id) {
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
@@ -1216,7 +1217,6 @@
           }
         }
         try {
-          this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
@@ -1226,7 +1226,6 @@
               'week_id': parseInt(this.moveTarget)
             }
           )
-          this.msg = 'Idle'
           this.$ga.event('Workout', 'update')
         } catch (e) {
           console.log(e.toString())
@@ -1236,6 +1235,7 @@
       async add_workout () {
         try {
           this.$parent.$parent.loading = true
+          this.msg = 'Creating...'
           // eslint-disable-next-line
           const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
             qs.stringify({
@@ -1256,15 +1256,14 @@
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false
 
-          this.close()
-
           this.new_workout = {
-            name: '',
-            date: '',
+            name: 'Untitled',
+            date: this.today(),
             notes: '',
             week_id: '',
             block_color: ''
           }
+          this.msg = 'Idle'
           this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {
@@ -1299,10 +1298,12 @@
         if (confirm('Are you sure you want to delete this workout?')) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            this.msg = 'Deleting...'
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             this.$parent.force_get_workouts()
             this.delete = true
+            this.msg = 'Idle'
             this.scan()
             this.$ga.event('Workout', 'delete')
           } catch (e) {

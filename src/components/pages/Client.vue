@@ -5,7 +5,7 @@
   }
   .wrapper--client {
     background-color: white;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: all 1.4s cubic-bezier(.165, .84, .44, 1)
   }
   .openFloatingNav {
     transform: translateX(-12rem)
@@ -137,12 +137,18 @@
 <template>
   <div id="client" v-if="$parent.client_details">
     <div v-show="keepLoaded" class="floating_nav">
-      <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
-      <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" />
-      <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
-        <div class="archive-client">
-          <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
-        </div>
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
+        <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
+      </transition>
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
+        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" />
+      </transition>
+      <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index">
+        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+          <div class="archive-client" v-show="clients.client_id == $route.params.client_id && showOptions">
+            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
+          </div>
+        </transition>
       </div>
     </div>
     <div class="wrapper--client" :class="{ openFloatingNav: showOptions }">
@@ -156,7 +162,9 @@
           </div>
         </form>
       </div>
-      <router-view :key="$route.fullPath"></router-view>
+      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <router-view :key="$route.fullPath"></router-view>
+      </transition>
     </div>
   </div>
 </template>
