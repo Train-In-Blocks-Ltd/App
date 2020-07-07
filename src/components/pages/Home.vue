@@ -45,8 +45,8 @@
             <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
               <div>
                 <p class="client_link__name"><b>{{clients.name}}</b>
-                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
-                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
+                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
+                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
               </div>
               <div class="client_link__notes">
                 <p><b>Notes:</b></p>

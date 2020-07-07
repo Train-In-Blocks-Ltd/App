@@ -82,7 +82,7 @@
   }
   .block-notes {
     grid-area: b;
-    margin: 6rem auto auto auto
+    margin: 0 0 4rem 0
   }
   .fc-unthemed tbody {
     border-color: #F1F1F1
@@ -355,7 +355,7 @@
       <modal name="move" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--move">
           <label for="range">Move to:</label>
-          <input name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
+          <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
           <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), this.$modal.hide('move')">Move</button>
         </div>
       </modal>
@@ -364,7 +364,7 @@
           <h3>Progression</h3>
           <div>
             <label for="range">From 1 to: </label>
-            <input v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
+            <input class="input--modal" v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
           </div>
           <button @click="copyAcross()" class="button">Copy</button>
         </div>
@@ -380,14 +380,14 @@
           </router-link>
           <a href="javascript:void(0)" @click="showToolkit()">
             <p class="text--hideable">Toolkit</p>
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Toolkit.svg')"/>
+            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/toolkit.svg')"/>
           </a>
           <a href="javascript:void(0)" @click="delete_block()">
             <p class="text--hideable">Delete Block</p>
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/>
+            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
           <div v-show="str != 0" class="message">
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-show="msg !== 'Idle'"/>
+            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/cog.svg')" v-show="msg !== 'Idle'"/>
             <p>{{msg}}</p>
           </div>
           <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
@@ -412,9 +412,6 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <div class="wrapper--calendar">
-                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
-              </div>
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
@@ -425,6 +422,9 @@
                   <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
                   <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
                 </div>
+              </div>
+              <div class="wrapper--calendar">
+                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
               </div>
             </div>
             <div class="block-plan">
@@ -451,8 +451,8 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
-                  <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
-                  <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
+                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info"/>
+                  <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
@@ -569,7 +569,6 @@
         },
         msgFloatingNav: 'Hide',
         response: '',
-        edit1: false,
         editBlockNotes: false,
         new_workout: {
           name: 'Untitled',
@@ -605,7 +604,6 @@
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
         msg: 'Idle',
-        msgIcon: 'Cog.svg',
         isEditingWorkout: false,
         editWorkout: null,
         p1: '',
@@ -1155,8 +1153,6 @@
         }
       },
       editing () {
-        this.edit1 = false
-
         // Set vue self
         var self = this
 
@@ -1174,9 +1170,6 @@
             window.addEventListener('click', click)
           }
         , 1000)
-      },
-      editing1 () {
-        this.edit1 = true
       },
       async update_workout (id) {
         // Set auth header
