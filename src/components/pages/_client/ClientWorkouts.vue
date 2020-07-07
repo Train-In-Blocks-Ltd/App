@@ -550,7 +550,7 @@
 
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
-  import '@fullcalendar/core/main.css'
+  import '@fullcalendar/core/main.min.css'
   import '@fullcalendar/daygrid/main.css'
 
   export default {
@@ -586,20 +586,12 @@
         str: [],
         yData: [],
         xLabel: [],
-        view: {
-          dayGridFourDay: {
-            type: 'dayGrid',
-            duration: { days: 4 },
-            buttonText: '4-day'
-          }
-        },
         calendarToolbarHeader: {
           left: 'title',
           right: ''
         },
         calendarToolbarFooter: {
-          left: 'today prev, next',
-          right: 'dayGridWeek dayGridMonth'
+          right: 'today prev, next'
         },
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
@@ -1281,8 +1273,8 @@
             this.$parent.force_get_workouts()
             this.delete = true
             this.msg = 'Idle'
-            this.scan()
             this.$ga.event('Workout', 'delete')
+            this.scan()
           } catch (e) {
             console.error(`${e}`)
           }
