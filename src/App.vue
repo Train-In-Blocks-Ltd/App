@@ -227,7 +227,7 @@
 
   /* Navigation */
   .sidebar {
-    z-index: 1;
+    z-index: 10;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -470,7 +470,7 @@
     height: 100vh;
     width: 100vw;
     background-color: white;
-    z-index: 2
+    z-index: 20
   }
   .splash__logo {
     margin: auto;

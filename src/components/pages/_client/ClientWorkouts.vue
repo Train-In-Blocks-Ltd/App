@@ -1092,7 +1092,6 @@
             block.workouts.sort((a, b) => {
               return new Date(a.date) - new Date(b.date);
             });
-            console.log(block.workouts)
           }
         })
       },
@@ -1206,7 +1205,7 @@
         } catch (e) {
           console.log(e.toString())
         }
-        this.$parent.force_get_workouts()
+        await this.$parent.force_get_workouts()
         this.sortWorkouts()
       },
       async add_workout () {
