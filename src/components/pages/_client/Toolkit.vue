@@ -3,6 +3,9 @@
   .modal--toolkit {
     padding: 2rem
   }
+  .workout_toolkit--content {
+    margin: 2rem 0
+  }
   .workout_toolkit--content > div {
     display: grid;
     grid-gap: 1rem
@@ -11,8 +14,12 @@
     font-weight: bold
   }
   .workout_toolkit--select {
-    margin-bottom: 2rem;
-    padding: .4rem
+    background-color: transparent;
+    border: 0;
+    font-size: 1.6rem;
+    width: fit-content;
+    padding: .2rem 1rem .2rem 0;
+    font-weight: bold
   }
   .workout_toolkit--content input {
     width: 4rem
@@ -28,6 +35,7 @@
 <template>
   <div class="modal--toolkit" >
     <select class="workout_toolkit--select" v-on:change="get_toolkit()">
+      <option>Select a Calculator</option>
       <option>Maximal Heart Rate (Tanaka)</option>
       <option>Maximal Heart Rate (Gellish)</option>
       <option>Heart Rate Training Zone (Karvonen)</option>
@@ -36,27 +44,54 @@
     </select>
     <div class="workout_toolkit--content">
       <div v-if="toolkit_calcs.mhr_tanaka.view">
-        <label for="tanaka_age">Age: </label><input type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
+        <div>
+          <label for="tanaka_age">Age: </label>
+          <input class="input--toolkit" type="number" v-on:input="mhr_tanaka_calc()" id="tanaka_age" name="tanaka_age"/>
+        </div>
         <p><b>Maximal Heart Rate: </b>{{toolkit_calcs.mhr_tanaka.value}} BPM</p>
       </div>
       <div v-if="toolkit_calcs.mhr_gellish.view">
-        <label for="gellish_age">Age: </label><input type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
+        <div>
+          <label for="gellish_age">Age: </label>
+          <input class="input--toolkit" type="number" v-on:input="mhr_gellish_calc()" id="gellish_age" name="gellish_age"/>
+        </div>
         <p><b>Maximal Heart Rate: </b>{{toolkit_calcs.mhr_gellish.value}} BPM</p>
       </div>
       <div v-if="toolkit_calcs.hrtz.view">
-        <label for="intensity">Intensity: </label><input type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
-        <label for="mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
-        <label for="rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
+        <div>
+          <label for="intensity">Intensity (%): </label>
+          <input class="input--toolkit" type="number" v-on:input="hrtz_calc()" id="intensity" name="intensity"/>
+        </div>
+        <div>
+          <label for="mhr">Maximal Heart Rate: </label>
+          <input class="input--toolkit" type="number" v-on:input="hrtz_calc()" id="mhr" name="mhr"/>
+        </div>
+        <div>
+          <label for="rhr">Resting Heart Rate: </label>
+          <input class="input--toolkit" type="number" v-on:input="hrtz_calc()" id="rhr" name="rhr"/>
+        </div>
         <p><b>Target Heart Rate: </b>{{toolkit_calcs.hrtz.value}} BPM</p>
       </div>
       <div v-if="toolkit_calcs.hrr.view">
-        <label for="hrr_mhr">Maximal Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_mhr" name="hrr_mhr"/>
-        <label for="hrr_rhr">Resting Heart Rate: </label><input type="number" v-on:input="hrr_calc()" id="hrr_rhr" name="hrr_rhr"/>
+        <div>
+          <label for="hrr_mhr">Maximal Heart Rate: </label>
+          <input class="input--toolkit" type="number" v-on:input="hrr_calc()" id="hrr_mhr" name="hrr_mhr"/>
+        </div>
+        <div>
+          <label for="hrr_rhr">Resting Heart Rate: </label>
+          <input class="input--toolkit" type="number" v-on:input="hrr_calc()" id="hrr_rhr" name="hrr_rhr"/>
+        </div>
         <p><b>Heart Rate Reserve: </b>{{toolkit_calcs.hrr.value}} BPM</p>
       </div>
       <div v-if="toolkit_calcs.bmi.view">
-        <label for="height">Height: </label><input type="number" v-on:input="bmi_calc()" id="height" name="height"/>
-        <label for="weight">Weight: </label><input type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
+        <div>
+          <label for="height">Height (m): </label>
+          <input class="input--toolkit" type="number" v-on:input="bmi_calc()" id="height" name="height"/>
+        </div>
+        <div>
+          <label for="weight">Weight (kg): </label>
+          <input class="input--toolkit" type="number" v-on:input="bmi_calc()" id="weight" name="weight"/>
+        </div>
         <p><b>Body Mass Index: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
       </div>
     </div>

@@ -13,10 +13,10 @@
     font-weight: bold
   }
   #duration, .block_info input#start {
+    font-size: 1rem;
     margin-left: .25rem
   }
   #blocks .block_info input.block_info--name.title {
-    font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1rem;
     letter-spacing: .15rem
@@ -82,7 +82,7 @@
   }
   .block-notes {
     grid-area: b;
-    margin: 6rem auto auto auto
+    margin: 0 0 4rem 0
   }
   .fc-unthemed tbody {
     border-color: #F1F1F1
@@ -244,6 +244,9 @@
   .activeWorkout {
     border: 2px solid #282828
   }
+  .newWorkout {
+    border: 2px solid #00800060
+  }
 
   /* Graph */
   .container--content {
@@ -339,6 +342,12 @@
       opacity: 1
     }
   }
+
+  @media (min-width: 576px) {
+    .block_info input.block_info--name.title {
+      font-size: 2rem
+    }
+  }
 </style>
 
 <template>
@@ -346,7 +355,7 @@
       <modal name="move" height="auto" :draggable="true" :adaptive="true">
         <div class="modal--move">
           <label for="range">Move to:</label>
-          <input name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
+          <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
           <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), this.$modal.hide('move')">Move</button>
         </div>
       </modal>
@@ -355,7 +364,7 @@
           <h3>Progression</h3>
           <div>
             <label for="range">From 1 to: </label>
-            <input v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
+            <input class="input--modal" v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
           </div>
           <button @click="copyAcross()" class="button">Copy</button>
         </div>
@@ -364,28 +373,28 @@
         <toolkit/>
       </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-      <div v-show="!$parent.showOptions" class="floating_nav__block">
-        <router-link :to="`/client/${this.$parent.$parent.client_details.client_id}/`">
-          <p class="text--hideable">Back</p>
-          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/back.svg')"/>
-        </router-link>
-        <a href="javascript:void(0)" @click="showToolkit()">
-          <p class="text--hideable">Toolkit</p>
-          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Toolkit.svg')"/>
-        </a>
-        <a href="javascript:void(0)" @click="delete_block()">
-          <p class="text--hideable">Delete Block</p>
-          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/Trash.svg')"/>
-        </a>
-        <div v-show="str != 0" class="message">
-          <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/'+ msgIcon)" v-show="msg !== 'Idle'"/>
-          <p>{{msg}}</p>
-        </div>
-        <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
-          <p>Failed to scan</p>
-          <button @click="scan()" class="button button--failed">Retry</button>
-        </div>
-      </div> <!-- floating_nav -->
+        <div v-show="!$parent.showOptions" class="floating_nav__block">
+          <router-link :to="`/client/${this.$parent.$parent.client_details.client_id}/`">
+            <p class="text--hideable">Back</p>
+            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/back.svg')"/>
+          </router-link>
+          <a href="javascript:void(0)" @click="showToolkit()">
+            <p class="text--hideable">Toolkit</p>
+            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/toolkit.svg')"/>
+          </a>
+          <a href="javascript:void(0)" @click="delete_block()">
+            <p class="text--hideable">Delete Block</p>
+            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
+          </a>
+          <div v-show="str != 0" class="message">
+            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/cog.svg')" v-show="msg !== 'Idle'"/>
+            <p>{{msg}}</p>
+          </div>
+          <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
+            <p>Failed to scan</p>
+            <button @click="scan()" class="button button--failed">Retry</button>
+          </div>
+        </div> <!-- floating_nav -->
       </transition>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
@@ -403,9 +412,6 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <div class="wrapper--calendar">
-                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
-              </div>
               <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
@@ -416,6 +422,9 @@
                   <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
                   <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
                 </div>
+              </div>
+              <div class="wrapper--calendar">
+                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
               </div>
             </div>
             <div class="block-plan">
@@ -442,15 +451,17 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
-                  <inline-svg id="info" :src="require('../../../assets/svg/Info.svg')" title="Info"/>
-                  <inline-svg id="copy" :src="require('../../../assets/svg/Copy.svg')" @click="showCopy(programme.duration)"/>
+                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info"/>
+                  <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading workouts...</p>
                 <div>
+                  <!-- New Workout -->
+                  <button id="button--new-workout" class="button" @click="add_workout()">New workout</button>
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                    <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <p class="wrapper--workout__header">
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
@@ -469,8 +480,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- New Workout -->
-                  <button id="button--new-workout" class="button" @click="add_workout()">New workout</button>
                 </div>
               </div><!-- workouts -->
             </div>
@@ -560,7 +569,6 @@
         },
         msgFloatingNav: 'Hide',
         response: '',
-        edit1: false,
         editBlockNotes: false,
         new_workout: {
           name: 'Untitled',
@@ -596,7 +604,6 @@
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
         msg: 'Idle',
-        msgIcon: 'Cog.svg',
         isEditingWorkout: false,
         editWorkout: null,
         p1: '',
@@ -622,6 +629,7 @@
       await this.$parent.get_client_details()
       this.today()
       this.scan()
+      this.sortWorkouts()
     },
     methods: {
       updateBlockColor () {
@@ -714,6 +722,7 @@
         this.update_workout(id)
         this.isEditingWorkout = false
         this.editWorkout = null
+        this.sortWorkouts()
         this.scan()
         this.msg = 'Idle'
       },
@@ -1077,6 +1086,16 @@
         }
         return arr
       },
+      sortWorkouts () {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          if (block.id == this.$route.params.id) {
+            block.workouts.sort((a, b) => {
+              return new Date(a.date) - new Date(b.date);
+            });
+            console.log(block.workouts)
+          }
+        })
+      },
       async update_programme () {
         // Set loading status to true
         this.$parent.loading = true
@@ -1134,8 +1153,6 @@
         }
       },
       editing () {
-        this.edit1 = false
-
         // Set vue self
         var self = this
 
@@ -1153,9 +1170,6 @@
             window.addEventListener('click', click)
           }
         , 1000)
-      },
-      editing1 () {
-        this.edit1 = true
       },
       async update_workout (id) {
         // Set auth header
@@ -1193,6 +1207,7 @@
           console.log(e.toString())
         }
         this.$parent.force_get_workouts()
+        this.sortWorkouts()
       },
       async add_workout () {
         try {
@@ -1226,6 +1241,7 @@
             block_color: ''
           }
           this.msg = 'Idle'
+          this.sortWorkouts()
           this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {
