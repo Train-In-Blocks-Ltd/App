@@ -129,10 +129,19 @@
     margin-left: .4rem
   }
 
+  /* Remove IOS Corners */
+  input, button {
+    border-radius: 0;
+    -webkit-appearance: none
+  }
+
   /* Inputs */
+  .input--forms, .input--toolkit {
+    font-size: 1rem;
+    border: 1px solid #282828
+  }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
     padding: .4rem;
-    font-size: 1rem;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
