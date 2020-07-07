@@ -7,7 +7,7 @@
 
   /* Client Notes */
   .client-notes {
-    margin: 2rem auto;
+    margin: 4rem auto;
     height: fit-content;
     border-left: 1px solid #E1E1E1;
     border-bottom: 1px solid #E1E1E1

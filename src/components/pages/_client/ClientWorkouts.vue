@@ -45,10 +45,6 @@
     align-self: center
   }
   .message {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    grid-gap: 1rem;
-    justify-self: end;
     margin: 1.2rem 0;
     font-size: .8rem
   }
@@ -211,7 +207,7 @@
     text-overflow: ellipsis;
     white-space: nowrap
   }
-  .text--date {
+  .text--date, .text--checked {
     font-size: .8rem
   }
   .bottom-bar {
@@ -246,6 +242,16 @@
   }
   .newWorkout {
     border: 2px solid #00800060
+  }
+  .incomplete {
+    color: #B80000
+  }
+  .completed {
+    color: green
+  }
+  .editingChecked {
+    cursor: pointer;
+    text-decoration: underline
   }
 
   /* Graph */
@@ -325,6 +331,11 @@
     margin: .4rem 0
   }
 
+  /* Info Modal */
+  .modal--info {
+    padding: 2rem
+  }
+
   @media (max-width: 768px) {
     .floating_nav__block a {
       grid-template-columns: 1fr
@@ -352,16 +363,21 @@
 
 <template>
     <div id="blocks">
-      <modal name="move" height="auto" :draggable="true" :adaptive="true">
+      <modal name="info" height="auto" :adaptive="true">
+        <div class="modal--info">
+          <p><b>The Format Explained</b></p><br>
+          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p>
+        </div>
+      </modal>
+      <modal name="move" height="auto" :adaptive="true">
         <div class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
           <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), this.$modal.hide('move')">Move</button>
         </div>
       </modal>
-      <modal name="copy" height="auto" :draggable="true" :adaptive="true">
+      <modal name="copy" height="auto" :adaptive="true">
         <div class="modal--copy">
-          <h3>Progression</h3>
           <div>
             <label for="range">From 1 to: </label>
             <input class="input--modal" v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
@@ -387,7 +403,6 @@
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
           <div v-show="str != 0" class="message">
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/cog.svg')" v-show="msg !== 'Idle'"/>
             <p>{{msg}}</p>
           </div>
           <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
@@ -451,7 +466,7 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
-                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info"/>
+                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="showInfo()"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
@@ -466,9 +481,11 @@
                       <p class="wrapper--workout__header">
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
-                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span>
+                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
+                        <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" /><br>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" />
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
+                        <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                       </p>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
@@ -624,6 +641,26 @@
       this.sortWorkouts()
     },
     methods: {
+      toggleComplete (value) {
+        var out
+        if (value === 0) {
+          out = 1
+        }
+        if (value === 1) {
+          out = 0
+        }
+        return out
+      },
+      isCompleted (value) {
+        var out
+        if (value === 0) {
+          out = 'Incomplete'
+        }
+        if (value === 1) {
+          out = 'Completed'
+        }
+        return out
+      },
       updateBlockColor () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           if (programme.id == this.$route.params.id) {
@@ -668,6 +705,9 @@
         this.new_workout.name = 'Untitled'
         this.today()
         this.$modal.hide('copy')
+      },
+      showInfo () {
+        this.$modal.show('info')
       },
       showToolkit () {
         this.$modal.show('toolkit')
@@ -1179,6 +1219,7 @@
                 var workoutsName = programme.workouts[y].name
                 var workoutsDate = programme.workouts[y].date
                 var workoutsNotes = programme.workouts[y].notes
+                var workoutsChecked = programme.workouts[y].checked
               }
             }
           }
@@ -1190,7 +1231,8 @@
               'name': workoutsName,
               'date': workoutsDate,
               'notes': workoutsNotes,
-              'week_id': parseInt(this.moveTarget)
+              'week_id': parseInt(this.moveTarget),
+              'checked': workoutsChecked
             }
           )
           this.$ga.event('Workout', 'update')

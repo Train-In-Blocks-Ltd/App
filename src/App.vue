@@ -46,9 +46,9 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client {
+  #home, #block, #account, #archive, .wrapper--client, #learn {
     min-height: 100vh;
-    padding: 4rem 20vw
+    padding: 4rem 20vw 10rem 20vw
   }
 
   /* Fonts */
@@ -138,7 +138,6 @@
     border: 1px solid #282828
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
-    padding: .4rem;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
@@ -206,7 +205,7 @@
   .logo--link {
     display: block;
     width: 38px;
-    transition: .1 all cubic-bezier(.165, .84, .44, 1)
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
     fill: rgb(
@@ -591,12 +590,12 @@
         </router-link>
       </div>
       <div class="account_nav--item">
-        <a target="_blank" href="http://www.traininblocks.com/blog">
+        <router-link to="/learn">
           <inline-svg :src="require('./assets/svg/learn.svg')"  class="account_nav--item--icon"/>
-        </a>
-        <a target="_blank" href="http://www.traininblocks.com/blog" class="account_nav--item--text">
+        </router-link>
+        <router-link to="/learn" class="account_nav--item--text">
           Learn
-        </a>
+        </router-link>
       </div>
       <div class="account_nav--item">
         <router-link to="/archive">
