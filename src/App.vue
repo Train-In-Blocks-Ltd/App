@@ -127,7 +127,7 @@
   }
 
   /* Remove IOS Corners */
-  input, button {
+  input:not([type=checkbox]), button {
     border-radius: 0;
     -webkit-appearance: none
   }
