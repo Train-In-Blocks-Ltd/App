@@ -116,7 +116,7 @@
   .fc-button {
     border-radius: 0
   }
-  .fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody, .fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-content, .fc-unthemed .fc-popover, .fc-unthemed .fc-list-view, .fc-unthemed .fc-list-heading td {
+  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
     border-color: transparent
   }
   .fc-view-container span {
@@ -144,10 +144,9 @@
     letter-spacing: .1rem
   }
   input[type=color] {
-    border: none;
     margin: 0 .4rem;
     background-color: transparent;
-    padding: 0;
+    padding: 0 .14rem;
     outline-width: 0;
     cursor: pointer;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
@@ -227,7 +226,7 @@
 
   /* Navigation */
   .sidebar {
-    z-index: 1;
+    z-index: 10;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -470,7 +469,7 @@
     height: 100vh;
     width: 100vw;
     background-color: white;
-    z-index: 2
+    z-index: 20
   }
   .splash__logo {
     margin: auto;
