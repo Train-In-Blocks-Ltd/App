@@ -1,8 +1,4 @@
 <style scoped>
-  #archive {
-    display: grid;
-    grid-gap: 2rem
-  }
   .client_container.archived {
     display: grid;
     grid-template-columns: 1fr 100px;
@@ -61,8 +57,8 @@
       </div>
       <div class="container--clients">
         <div v-for="(clients, index) in $parent.archive_posts"
-          :key="index" class="client_container archived">
-          <div class="client_link archived" v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
+          :key="index" v-show="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())" class="client_container archived">
+          <div class="client_link archived">
             <p class="client_link__name"><b>{{clients.name}}</b></p>
             <div class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
             <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>

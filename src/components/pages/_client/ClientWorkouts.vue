@@ -16,10 +16,11 @@
     font-size: 1rem;
     margin-left: .25rem
   }
-  #blocks .block_info input.block_info--name.title {
+  #blocks .block_info input.block_info--name {
     font-weight: 700;
     margin-bottom: 1rem;
-    letter-spacing: .15rem
+    letter-spacing: .15rem;
+    font-size: 1.6rem
   }
   .floating_nav__block {
     display: grid;
@@ -417,10 +418,10 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
+              <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
                <!-- Update the programme info -->
               <form class="block_info">
-                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
+                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" v-on:click="editing()">
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
               </form>
             </div>  <!-- client_info -->
@@ -569,6 +570,7 @@
   import dayGridPlugin from '@fullcalendar/daygrid'
   import '@fullcalendar/core/main.min.css'
   import '@fullcalendar/daygrid/main.css'
+import { parse } from '@fullcalendar/core/datelib/parsing'
 
   export default {
     components: {

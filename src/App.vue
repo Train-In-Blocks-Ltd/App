@@ -77,6 +77,9 @@
   svg path:not(.transparent) {
     fill: #282828
   }
+  .allow-text-overflow {
+    text-overflow: ellipsis
+  }
 
   /* Buttons */
   .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
