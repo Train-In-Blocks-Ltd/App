@@ -406,7 +406,7 @@
           <div v-show="str != 0" class="message">
             <p>{{msg}}</p>
           </div>
-          <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
+          <div v-show="(str === undefined || str === null || str == 0 || str === []) && this.$parent.no_workouts === false" class="message--failed">
             <p>Failed to scan</p>
             <button @click="scan()" class="button button--failed">Retry</button>
           </div>
