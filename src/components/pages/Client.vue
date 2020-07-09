@@ -228,6 +228,7 @@
                 this.$parent.client_details.programmes[f].workouts = false
                 // If there are workouts set the client_details to include workouts
               } else {
+                this.no_workouts = false
                 this.$parent.client_details.programmes[f].workouts = response_programmes.data
               }
               // Sync client_details with posts
@@ -319,6 +320,7 @@
                 this.$parent.posts[x].programmes = false
                 // If there are programmes set the posts to include programmes
               } else {
+                this.no_programmes = false
                 this.$parent.posts[x].programmes = response_programmes.data
                 // Update the localstorage with the programmes
                 localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
