@@ -123,12 +123,6 @@
       grid-gap: 2rem
     }
   }
-  @media (max-width: 768px) {
-    .block_container--link:hover {
-      transform: scale(1);
-      box-shadow: 0 0 20px 10px #28282810
-    }
-  }
 
   /* For Mobile */
   @media (max-width: 576px) {

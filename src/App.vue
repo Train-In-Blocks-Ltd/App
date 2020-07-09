@@ -107,7 +107,7 @@
     background-color: #282828;
     text-decoration: none
   }
-  .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
+  .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
     transform: scale(.96)
   }
   .delete:hover {
@@ -137,6 +137,7 @@
 
   /* Inputs */
   .input--forms, .input--toolkit, .input--modal {
+    padding: .4rem;
     font-size: 1rem;
     border: 1px solid #282828
   }
@@ -228,6 +229,7 @@
 
   /* Navigation */
   .sidebar {
+    border-right: 1px solid #E1E1E1;
     z-index: 10;
     display: flex;
     flex-direction: column;

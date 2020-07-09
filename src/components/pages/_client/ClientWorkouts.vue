@@ -374,7 +374,7 @@
         <div class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
-          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), this.$modal.hide('move')">Move</button>
+          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), $modal.hide('move')">Move</button>
         </div>
       </modal>
       <modal name="copy" height="auto" :adaptive="true">
@@ -570,7 +570,6 @@
   import dayGridPlugin from '@fullcalendar/daygrid'
   import '@fullcalendar/core/main.min.css'
   import '@fullcalendar/daygrid/main.css'
-import { parse } from '@fullcalendar/core/datelib/parsing'
 
   export default {
     components: {
@@ -762,6 +761,7 @@ import { parse } from '@fullcalendar/core/datelib/parsing'
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
+        this.moveTarget = weekID
       },
       showMove (id, maxWeek) {
         this.movingWorkout = id
@@ -874,7 +874,7 @@ import { parse } from '@fullcalendar/core/datelib/parsing'
             this.str = programme.workouts
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
-                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1] })
+                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
                 if (object.notes !== null) {
                   var pulledProtocols = this.pullProtocols(object.name, object.notes)
                   this.dataPacketStore.push(this.chunkArray(pulledProtocols))
@@ -1073,6 +1073,16 @@ import { parse } from '@fullcalendar/core/datelib/parsing'
       },
 
       // OTHER METHODS //
+      accessibleColors (hex) {
+        hex = hex.replace('#','')
+        var r, g, b
+        r = parseInt(hex.substring(0,2), 16)
+        g = parseInt(hex.substring(2,4), 16)
+        b = parseInt(hex.substring(4,6), 16)
+        var result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
+        var color = `rgb(${result}, ${result}, ${result})`
+        return color
+      },
       weekConfirm (dur) {
         if (parseInt(dur) > 12 && this.allowMoreWeeks == false) {
           if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
@@ -1091,13 +1101,12 @@ import { parse } from '@fullcalendar/core/datelib/parsing'
       },
       addDays (date, days) {
         var d = new Date(date)
-        d.setHours(0, 0, 0, 0)
-        d.setMonth(d.getMonth() + 1)
+        var day = d.getDay()
         d.setDate(d.getDate() + days)
         var year = d.getFullYear()
-        var month = d.getMonth()
+        var month = d.getMonth() + 1
         var dayDate = d.getDate()
-        return `${year}/${month}/${dayDate}`
+        return `${year}-${month}-${dayDate}`
       },
       day (date) {
         var weekday = new Array(7)
@@ -1122,7 +1131,7 @@ import { parse } from '@fullcalendar/core/datelib/parsing'
       },
       sortWorkouts () {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
-          if (block.id == this.$route.params.id) {
+          if (block.id == this.$route.params.id && this.$parent.no_workouts === false) {
             block.workouts.sort((a, b) => {
               return new Date(a.date) - new Date(b.date);
             });
@@ -1221,6 +1230,7 @@ import { parse } from '@fullcalendar/core/datelib/parsing'
                 var workoutsName = programme.workouts[y].name
                 var workoutsDate = programme.workouts[y].date
                 var workoutsNotes = programme.workouts[y].notes
+                var workoutsWeek = programme.workouts[y].week_id
                 var workoutsChecked = programme.workouts[y].checked
               }
             }
@@ -1233,7 +1243,7 @@ import { parse } from '@fullcalendar/core/datelib/parsing'
               'name': workoutsName,
               'date': workoutsDate,
               'notes': workoutsNotes,
-              'week_id': parseInt(this.moveTarget),
+              'week_id': workoutsWeek,
               'checked': workoutsChecked
             }
           )

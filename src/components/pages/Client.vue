@@ -77,7 +77,6 @@
 
   /* Client Notes */
   .client_notes--header {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: #282828;
     padding: .6rem .8rem
   }
@@ -212,6 +211,7 @@
         }
       },
       async force_get_workouts () {
+        var attmepts = 0
         try {
           // Loop through programmes
           var f
@@ -247,7 +247,11 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          console.log(e.toString())
+          attmepts++
+          if (attmepts <= 2) {
+            return this.force_get_workouts()
+          }
+          console.log(e.toString(), 'Attempts: ' + attmepts)
         }
       },
       async get_workouts () {
