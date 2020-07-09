@@ -130,7 +130,7 @@
     user-select: none
   }
   .week__color {
-    width: 48px;
+    width: 50px;
     height: 6px
   }
   .week__number {
@@ -638,8 +638,8 @@
     async mounted () {
       await this.$parent.get_client_details()
       this.today()
+      this.update_programme()
       this.scan()
-      this.sortWorkouts()
     },
     methods: {
       toggleComplete (value) {
@@ -755,7 +755,6 @@
         this.update_workout(id)
         this.isEditingWorkout = false
         this.editWorkout = null
-        this.sortWorkouts()
         this.scan()
         this.msg = 'Idle'
       },
@@ -1156,6 +1155,7 @@
         }
         try {
           // eslint-disable-next-line
+          this.sortWorkouts()
           const response_update_programme = await axios.post(`https://api.traininblocks.com/programmes`,
             {
               'id': programme.id,
@@ -1164,7 +1164,8 @@
               'duration': programme.duration,
               'start': programme.start,
               'notes': programme.notes,
-              'block_color': programme.block_color
+              'block_color': programme.block_color,
+              'workouts': programme.workouts
             }
           )
           this.$parent.loading = false
@@ -1233,7 +1234,6 @@
                 var workoutsDate = programme.workouts[y].date
                 var workoutsNotes = programme.workouts[y].notes
                 var workoutsWeek = programme.workouts[y].week_id
-                var workoutsChecked = programme.workouts[y].checked
               }
             }
           }
@@ -1245,8 +1245,8 @@
               'name': workoutsName,
               'date': workoutsDate,
               'notes': workoutsNotes,
-              'week_id': workoutsWeek,
-              'checked': workoutsChecked
+              'week_id': workoutsWeek
+              // Re Add checked here
             }
           )
           this.$ga.event('Workout', 'update')
@@ -1277,6 +1277,7 @@
           )
           this.response = response_save_workouts.data
           // Get the workouts from the API because we've just created a new one
+          this.sortWorkouts()
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false
 
@@ -1288,7 +1289,6 @@
             block_color: ''
           }
           this.msg = 'Idle'
-          this.sortWorkouts()
           this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {

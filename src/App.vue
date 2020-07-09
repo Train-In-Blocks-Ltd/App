@@ -520,6 +520,9 @@
       padding: 1rem;
       justify-content: space-between
     }
+    .account_nav--item--text {
+      display: none
+    }
     main {
       margin: 0
     }
@@ -576,7 +579,7 @@
         <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
       </div>
     </transition>
-    <nav @mouseover="showNav = true" @mouseout="showNav = false" class="sidebar" v-if="authenticated">
+    <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
         <router-link to="/" class="logo--link" title="Home">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
@@ -633,7 +636,7 @@
         </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main>
+    <main @mouseover="showNav = false">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>

@@ -211,7 +211,6 @@
         }
       },
       async force_get_workouts () {
-        var attmepts = 0
         try {
           // Loop through programmes
           var f
@@ -248,11 +247,7 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          attmepts++
-          if (attmepts <= 2) {
-            return this.force_get_workouts()
-          }
-          console.log(e.toString(), 'Attempts: ' + attmepts)
+          console.log(e.toString())
         }
       },
       async get_workouts () {
