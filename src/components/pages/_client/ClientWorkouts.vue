@@ -1075,7 +1075,6 @@
       // OTHER METHODS //
       accessibleColors (hex) {
         if (hex !== undefined) {
-          console.log(hex)
           hex = hex.replace('#','')
           var r, g, b
           r = parseInt(hex.substring(0,2), 16)
