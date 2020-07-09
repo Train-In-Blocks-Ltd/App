@@ -27,6 +27,7 @@
 
 <template>
   <div id="home">
+    <!-- First Time
     <modal name="first-time-home" height="100%" width="100%" :adaptive="true" :clickToClose="false">
       <div class="modal--first-time-home">
         <h1 class="main-title">Hello</h1>
@@ -43,6 +44,7 @@
       </form>
       </div>
     </modal>
+    -->
     <h1 class="main-title">Your Clients</h1>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
@@ -120,11 +122,13 @@
       this.$parent.setup()
       this.$parent.client_details = null
     },
+    /*
     mounted () {
       if (this.$parent.posts === null) {
         this.$modal.show('first-time-home')
       }
     },
+    */
     methods: {
       creation () {
         this.creating = true
