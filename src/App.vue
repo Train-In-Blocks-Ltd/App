@@ -316,7 +316,6 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    display: none;
     text-decoration: none;
     position: relative;
     border: 0;
@@ -508,9 +507,6 @@
     .sidebar:hover {
       width: 12rem
     }
-    .sidebar:hover .account_nav--item a {
-      display: block
-    }
   }
   @media (max-width: 768px) {
     /* Sidebar */
@@ -580,7 +576,7 @@
         <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
       </div>
     </transition>
-    <nav class="sidebar" v-if="authenticated">
+    <nav @mouseover="showNav = true" @mouseout="showNav = false" class="sidebar" v-if="authenticated">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
         <router-link to="/" class="logo--link" title="Home">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
@@ -590,41 +586,51 @@
         <router-link to="/">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/" class="account_nav--item--text">
-          Home
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/" v-show="showNav" class="account_nav--item--text">
+            Home
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
         <router-link to="/learn">
           <inline-svg :src="require('./assets/svg/learn.svg')"  class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/learn" class="account_nav--item--text">
-          Learn
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/learn" v-show="showNav" class="account_nav--item--text">
+            Learn
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
         <router-link to="/archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/archive" class="account_nav--item--text">
-          Archive
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/archive" v-show="showNav" class="account_nav--item--text">
+            Archive
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
         <router-link to="/account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/account" class="account_nav--item--text">
-          Account
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/account" v-show="showNav" class="account_nav--item--text">
+            Account
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
         <router-link to="/logout" v-on:click.native="logout()">
           <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/logout" v-on:click.native="logout()" class="account_nav--item--text">
-          Logout
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/logout" v-show="showNav" v-on:click.native="logout()" class="account_nav--item--text">
+            Logout
+          </router-link>
+        </transition>
       </div>
     </nav> <!-- .sidebar -->
     <main>
@@ -645,6 +651,7 @@ export default {
   },
   data: function () {
     return {
+      showNav: false,
       splashing: true,
       archive_error: '',
       archive_posts: {},
