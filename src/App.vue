@@ -46,9 +46,9 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client {
+  #home, #block, #account, #archive, .wrapper--client, #learn {
     min-height: 100vh;
-    padding: 4rem 20vw
+    padding: 4rem 20vw 10rem 20vw
   }
 
   /* Fonts */
@@ -77,6 +77,9 @@
   svg path:not(.transparent) {
     fill: #282828
   }
+  .allow-text-overflow {
+    text-overflow: ellipsis
+  }
 
   /* Buttons */
   .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
@@ -104,7 +107,7 @@
     background-color: #282828;
     text-decoration: none
   }
-  .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
+  .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
     transform: scale(.96)
   }
   .delete:hover {
@@ -134,11 +137,11 @@
 
   /* Inputs */
   .input--forms, .input--toolkit, .input--modal {
+    padding: .4rem;
     font-size: 1rem;
     border: 1px solid #282828
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
-    padding: .4rem;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
@@ -206,7 +209,7 @@
   .logo--link {
     display: block;
     width: 38px;
-    transition: .1 all cubic-bezier(.165, .84, .44, 1)
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
     fill: rgb(
@@ -226,6 +229,7 @@
 
   /* Navigation */
   .sidebar {
+    border-right: 1px solid #E1E1E1;
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -312,7 +316,6 @@
       var(--accessible-color),
       var(--accessible-color)
     );
-    display: none;
     text-decoration: none;
     position: relative;
     border: 0;
@@ -504,9 +507,6 @@
     .sidebar:hover {
       width: 12rem
     }
-    .sidebar:hover .account_nav--item a {
-      display: block
-    }
   }
   @media (max-width: 768px) {
     /* Sidebar */
@@ -519,6 +519,9 @@
       flex-direction: row;
       padding: 1rem;
       justify-content: space-between
+    }
+    .account_nav--item--text {
+      display: none
     }
     main {
       margin: 0
@@ -576,7 +579,7 @@
         <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
       </div>
     </transition>
-    <nav class="sidebar" v-if="authenticated">
+    <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
         <router-link to="/" class="logo--link" title="Home">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
@@ -586,44 +589,54 @@
         <router-link to="/">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/" class="account_nav--item--text">
-          Home
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/" v-show="showNav" class="account_nav--item--text">
+            Home
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
-        <a target="_blank" href="http://www.traininblocks.com/blog">
+        <router-link to="/learn">
           <inline-svg :src="require('./assets/svg/learn.svg')"  class="account_nav--item--icon"/>
-        </a>
-        <a target="_blank" href="http://www.traininblocks.com/blog" class="account_nav--item--text">
-          Learn
-        </a>
+        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/learn" v-show="showNav" class="account_nav--item--text">
+            Learn
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
         <router-link to="/archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/archive" class="account_nav--item--text">
-          Archive
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/archive" v-show="showNav" class="account_nav--item--text">
+            Archive
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
         <router-link to="/account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/account" class="account_nav--item--text">
-          Account
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/account" v-show="showNav" class="account_nav--item--text">
+            Account
+          </router-link>
+        </transition>
       </div>
       <div class="account_nav--item">
         <router-link to="/logout" v-on:click.native="logout()">
           <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <router-link to="/logout" v-on:click.native="logout()" class="account_nav--item--text">
-          Logout
-        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/logout" v-show="showNav" v-on:click.native="logout()" class="account_nav--item--text">
+            Logout
+          </router-link>
+        </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main>
+    <main @mouseover="showNav = false">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
@@ -641,6 +654,7 @@ export default {
   },
   data: function () {
     return {
+      showNav: false,
       splashing: true,
       archive_error: '',
       archive_posts: {},

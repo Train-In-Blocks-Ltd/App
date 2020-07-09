@@ -7,7 +7,7 @@
 
   /* Client Notes */
   .client-notes {
-    margin: 2rem auto;
+    margin: 4rem auto;
     height: fit-content;
     border-left: 1px solid #E1E1E1;
     border-bottom: 1px solid #E1E1E1
@@ -121,12 +121,6 @@
     .block_container--link {
       grid-template: 1fr/.8fr 1fr;
       grid-gap: 2rem
-    }
-  }
-  @media (max-width: 768px) {
-    .block_container--link:hover {
-      transform: scale(1);
-      box-shadow: 0 0 20px 10px #28282810
     }
   }
 

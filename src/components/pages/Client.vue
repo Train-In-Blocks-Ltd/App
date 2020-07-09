@@ -77,7 +77,6 @@
 
   /* Client Notes */
   .client_notes--header {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
     color: #282828;
     padding: .6rem .8rem
   }
@@ -116,8 +115,7 @@
     /* Overall */
     .client_info {
       grid-gap: 0;
-      width: 90vw;
-      margin: 0 auto
+      width: 90vw
     }
     #client .client_info input.client_info--name {
       font-size: 2rem
@@ -141,9 +139,9 @@
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
         <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" />
       </transition>
-      <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index">
+      <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
-          <div class="archive-client" v-show="clients.client_id == $route.params.client_id && showOptions">
+          <div class="archive-client">
             <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
           </div>
         </transition>
@@ -155,8 +153,8 @@
         <form class="client_info" v-on:submit.prevent="update_client()">
           <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
           <div class="client_info__more-details">
-            <label><b>Email: </b><input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-            <label><b>Phone: </b><input v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
+            <label><b>Email: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
+            <label><b>Phone: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
           </div>
         </form>
       </div>
@@ -229,6 +227,7 @@
                 this.$parent.client_details.programmes[f].workouts = false
                 // If there are workouts set the client_details to include workouts
               } else {
+                this.no_workouts = false
                 this.$parent.client_details.programmes[f].workouts = response_programmes.data
               }
               // Sync client_details with posts
@@ -316,6 +315,7 @@
                 this.$parent.posts[x].programmes = false
                 // If there are programmes set the posts to include programmes
               } else {
+                this.no_programmes = false
                 this.$parent.posts[x].programmes = response_programmes.data
                 // Update the localstorage with the programmes
                 localStorage.setItem('posts', JSON.stringify(this.$parent.posts))

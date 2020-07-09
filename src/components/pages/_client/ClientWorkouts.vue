@@ -16,10 +16,11 @@
     font-size: 1rem;
     margin-left: .25rem
   }
-  #blocks .block_info input.block_info--name.title {
+  #blocks .block_info input.block_info--name {
     font-weight: 700;
     margin-bottom: 1rem;
-    letter-spacing: .15rem
+    letter-spacing: .15rem;
+    font-size: 1.6rem
   }
   .floating_nav__block {
     display: grid;
@@ -45,10 +46,6 @@
     align-self: center
   }
   .message {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    grid-gap: 1rem;
-    justify-self: end;
     margin: 1.2rem 0;
     font-size: .8rem
   }
@@ -133,7 +130,7 @@
     user-select: none
   }
   .week__color {
-    width: 48px;
+    width: 50px;
     height: 6px
   }
   .week__number {
@@ -211,7 +208,7 @@
     text-overflow: ellipsis;
     white-space: nowrap
   }
-  .text--date {
+  .text--date, .text--checked {
     font-size: .8rem
   }
   .bottom-bar {
@@ -246,6 +243,16 @@
   }
   .newWorkout {
     border: 2px solid #00800060
+  }
+  .incomplete {
+    color: #B80000
+  }
+  .completed {
+    color: green
+  }
+  .editingChecked {
+    cursor: pointer;
+    text-decoration: underline
   }
 
   /* Graph */
@@ -325,6 +332,11 @@
     margin: .4rem 0
   }
 
+  /* Info Modal */
+  .modal--info {
+    padding: 2rem
+  }
+
   @media (max-width: 768px) {
     .floating_nav__block a {
       grid-template-columns: 1fr
@@ -352,16 +364,21 @@
 
 <template>
     <div id="blocks">
-      <modal name="move" height="auto" :draggable="true" :adaptive="true">
+      <modal name="info" height="auto" :adaptive="true">
+        <div class="modal--info">
+          <p><b>The Format Explained</b></p><br>
+          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p>
+        </div>
+      </modal>
+      <modal name="move" height="auto" :adaptive="true">
         <div class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
-          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), this.$modal.hide('move')">Move</button>
+          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), $modal.hide('move')">Move</button>
         </div>
       </modal>
-      <modal name="copy" height="auto" :draggable="true" :adaptive="true">
+      <modal name="copy" height="auto" :adaptive="true">
         <div class="modal--copy">
-          <h3>Progression</h3>
           <div>
             <label for="range">From 1 to: </label>
             <input class="input--modal" v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
@@ -387,10 +404,9 @@
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
           <div v-show="str != 0" class="message">
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/status/cog.svg')" v-show="msg !== 'Idle'"/>
             <p>{{msg}}</p>
           </div>
-          <div v-show="str === undefined || str === null || str == 0 || str === []" class="message--failed">
+          <div v-show="(str === undefined || str === null || str == 0 || str === []) && this.$parent.no_workouts === false" class="message--failed">
             <p>Failed to scan</p>
             <button @click="scan()" class="button button--failed">Retry</button>
           </div>
@@ -402,10 +418,10 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
+              <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
                <!-- Update the programme info -->
               <form class="block_info">
-                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name title" type="text" name="name" v-model="programme.name" v-on:click="editing()">
+                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" v-on:click="editing()">
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
               </form>
             </div>  <!-- client_info -->
@@ -451,7 +467,7 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
-                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info"/>
+                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="showInfo()"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
@@ -466,9 +482,11 @@
                       <p class="wrapper--workout__header">
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
-                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span>
+                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
+                        <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" /><br>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" />
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
+                        <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                       </p>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
@@ -620,10 +638,30 @@
     async mounted () {
       await this.$parent.get_client_details()
       this.today()
+      this.update_programme()
       this.scan()
-      this.sortWorkouts()
     },
     methods: {
+      toggleComplete (value) {
+        var out
+        if (value === 0) {
+          out = 1
+        }
+        if (value === 1) {
+          out = 0
+        }
+        return out
+      },
+      isCompleted (value) {
+        var out
+        if (value === 0) {
+          out = 'Incomplete'
+        }
+        if (value === 1) {
+          out = 'Completed'
+        }
+        return out
+      },
       updateBlockColor () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           if (programme.id == this.$route.params.id) {
@@ -668,6 +706,9 @@
         this.new_workout.name = 'Untitled'
         this.today()
         this.$modal.hide('copy')
+      },
+      showInfo () {
+        this.$modal.show('info')
       },
       showToolkit () {
         this.$modal.show('toolkit')
@@ -714,12 +755,12 @@
         this.update_workout(id)
         this.isEditingWorkout = false
         this.editWorkout = null
-        this.sortWorkouts()
         this.scan()
         this.msg = 'Idle'
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
+        this.moveTarget = weekID
       },
       showMove (id, maxWeek) {
         this.movingWorkout = id
@@ -832,7 +873,7 @@
             this.str = programme.workouts
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
-                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1] })
+                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
                 if (object.notes !== null) {
                   var pulledProtocols = this.pullProtocols(object.name, object.notes)
                   this.dataPacketStore.push(this.chunkArray(pulledProtocols))
@@ -1031,6 +1072,18 @@
       },
 
       // OTHER METHODS //
+      accessibleColors (hex) {
+        if (hex !== undefined) {
+          hex = hex.replace('#','')
+          var r, g, b
+          r = parseInt(hex.substring(0,2), 16)
+          g = parseInt(hex.substring(2,4), 16)
+          b = parseInt(hex.substring(4,6), 16)
+          var result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
+          var color = `rgb(${result}, ${result}, ${result})`
+          return color
+        }
+      },
       weekConfirm (dur) {
         if (parseInt(dur) > 12 && this.allowMoreWeeks == false) {
           if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
@@ -1049,13 +1102,12 @@
       },
       addDays (date, days) {
         var d = new Date(date)
-        d.setHours(0, 0, 0, 0)
-        d.setMonth(d.getMonth() + 1)
+        var day = d.getDay()
         d.setDate(d.getDate() + days)
         var year = d.getFullYear()
-        var month = d.getMonth()
+        var month = d.getMonth() + 1
         var dayDate = d.getDate()
-        return `${year}/${month}/${dayDate}`
+        return `${year}-${month}-${dayDate}`
       },
       day (date) {
         var weekday = new Array(7)
@@ -1080,7 +1132,7 @@
       },
       sortWorkouts () {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
-          if (block.id == this.$route.params.id) {
+          if (block.id == this.$route.params.id && this.$parent.no_workouts === false) {
             block.workouts.sort((a, b) => {
               return new Date(a.date) - new Date(b.date);
             });
@@ -1103,6 +1155,7 @@
         }
         try {
           // eslint-disable-next-line
+          this.sortWorkouts()
           const response_update_programme = await axios.post(`https://api.traininblocks.com/programmes`,
             {
               'id': programme.id,
@@ -1111,7 +1164,8 @@
               'duration': programme.duration,
               'start': programme.start,
               'notes': programme.notes,
-              'block_color': programme.block_color
+              'block_color': programme.block_color,
+              'workouts': programme.workouts
             }
           )
           this.$parent.loading = false
@@ -1179,6 +1233,7 @@
                 var workoutsName = programme.workouts[y].name
                 var workoutsDate = programme.workouts[y].date
                 var workoutsNotes = programme.workouts[y].notes
+                var workoutsWeek = programme.workouts[y].week_id
               }
             }
           }
@@ -1190,7 +1245,8 @@
               'name': workoutsName,
               'date': workoutsDate,
               'notes': workoutsNotes,
-              'week_id': parseInt(this.moveTarget)
+              'week_id': workoutsWeek
+              // Re Add checked here
             }
           )
           this.$ga.event('Workout', 'update')
@@ -1221,6 +1277,7 @@
           )
           this.response = response_save_workouts.data
           // Get the workouts from the API because we've just created a new one
+          this.sortWorkouts()
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false
 
@@ -1232,7 +1289,6 @@
             block_color: ''
           }
           this.msg = 'Idle'
-          this.sortWorkouts()
           this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {
