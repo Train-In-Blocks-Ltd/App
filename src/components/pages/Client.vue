@@ -132,6 +132,7 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
+    <button @click="createClient">Give this client a login</button>
     <div v-show="keepLoaded" class="floating_nav">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
         <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
@@ -168,6 +169,7 @@
 <script>
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
+  import {email, emailText} from '../components/email'
 
   export default {
     components: {
@@ -196,6 +198,79 @@
       this.$parent.client_details = null
     },
     methods: {
+      async createClient () {
+        try {
+          const oktaOne = await axios.post('https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?activate=false',
+            {
+              'profile': {
+                'firstName': this.$parent.client_details.name,
+                'lastName': this.$parent.client_details.name,
+                'email': this.$parent.client_details.email,
+                'login': this.$parent.client_details.email,
+                'color': null,
+                'ga': true,
+                'client_id_db': this.$parent.client_details.client_id
+              },
+              'groupIds': [
+                '00gf929legrtSjxOe4x6'
+              ]
+            },
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          const oktaTwo = await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${oktaOne.data.id}/lifecycle/activate?sendEmail=false`,
+            {},
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            {
+              'personalizations': [
+                {
+                  'to': [
+                    {
+                      'email': this.$parent.client_details.email,
+                      'name': this.$parent.client_details.name
+                    }
+                  ],
+                  'subject': 'Welcome to Train In Blocks'
+                }
+              ],
+              'from': {
+                'email': 'Train In Blocks <no-reply@traininblocks.com>'
+              },
+              'content': [
+                {
+                  'type': 'text/plain',
+                  'value': emailText(oktaTwo.data.activationUrl)
+                },
+                {
+                  'type': 'text/html',
+                  'value': email(oktaTwo.data.activationUrl)
+                }
+              ]
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': process.env.SENDGRID
+              }
+            }
+          )
+        } catch (e) {
+          console.log(e.toString())
+        }
+      },
       updateClientNotes () {
         this.update_client()
         this.editClientNotes = false
