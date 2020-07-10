@@ -3,7 +3,6 @@ import App from './App'
 import router from './router'
 import VueQuill from 'vue-quill'
 import 'quill/dist/quill.snow.css'
-import VueDragscroll from 'vue-dragscroll'
 import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
 import VueInputAutowidth from 'vue-input-autowidth'
@@ -17,7 +16,6 @@ Vue.use(VueAnalytics, {
   disabled: true
 })
 Vue.use(VueQuill)
-Vue.use(VueDragscroll)
 Vue.use(VModal)
 Vue.use(VueInputAutowidth)
 

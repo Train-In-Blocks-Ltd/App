@@ -5,7 +5,6 @@
     color: #282828
   }
   #login {
-    box-shadow: 0 0 20px 10px #28282810;
     text-align: left;
     display: inline;
     margin: auto;
@@ -22,7 +21,6 @@
       padding: 2rem 1.5rem
     }
     #login {
-      box-shadow: none;
       min-width: 100%;
       padding: 4rem 2rem
     }
@@ -134,7 +132,8 @@
 
 <template>
   <div id="login" v-if="!this.$parent.authenticated">
-    <inline-svg :src="require('../../assets/svg/LoginLogo.svg')" class="auth-org-logo logo"/>
+    <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
+    <h2>Trainer Login</h2>
     <div id="okta-signin-container"></div>
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a></p>
   </div>

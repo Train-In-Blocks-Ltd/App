@@ -1,9 +1,4 @@
 <style scoped>
-  #archive {
-    display: grid;
-    grid-gap: 2rem;
-    padding: 5rem 3.75rem
-  }
   .client_container.archived {
     display: grid;
     grid-template-columns: 1fr 100px;
@@ -21,8 +16,7 @@
   }
   .archive--container {
     display: grid;
-    grid-template-rows: 8rem 1fr;
-    max-width: 800px
+    grid-template-rows: 8rem 1fr
   }
 
   @media (max-width: 768px) {
@@ -63,18 +57,18 @@
       </div>
       <div class="container--clients">
         <div v-for="(clients, index) in $parent.archive_posts"
-          :key="index" class="client_container archived">
-          <div class="client_link archived" v-if="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())">
+          :key="index" v-show="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())" class="client_container archived">
+          <div class="client_link archived">
             <p class="client_link__name"><b>{{clients.name}}</b></p>
-            <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
-            <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
+            <div class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
+            <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
           </div>
           <div class="client_update">
             <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
-              <inline-svg :src="require('../../assets/svg/ArchiveIconClose.svg')" class="archive__icon"/>
+              <inline-svg :src="require('../../assets/svg/archive-small.svg')" class="archive__icon"/>
             </a>
             <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Delete">
-              <inline-svg :src="require('../../assets/svg/Trash.svg')" class="archive__icon"/>
+              <inline-svg :src="require('../../assets/svg/bin.svg')" class="archive__icon"/>
             </a>
           </div>
         </div>

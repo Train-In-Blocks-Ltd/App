@@ -1,17 +1,12 @@
 <style>
-  #home {
-    display: grid;
-    max-width: 800px;
-    padding: 5rem 3.75rem;
-    grid-gap: 2rem
-  }
   #intro {
     font-size: 2rem;
     margin-top: 0
   }
   .home--container {
     display: grid;
-    grid-template-rows: 8rem 1fr
+    grid-template-rows: 8rem 1fr;
+    margin-bottom: 2rem
   }
 
   /* Add Client Form */
@@ -25,16 +20,6 @@
 
   @media (max-width: 768px) {
     .home--container {
-      width: 100%
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    #home {
-      padding: 4rem 2rem
-    }
-    .search, .client-link {
       width: 100%
     }
   }
@@ -60,8 +45,8 @@
             <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
               <div>
                 <p class="client_link__name"><b>{{clients.name}}</b>
-                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Email.svg')" /><p>{{clients.email}}</p></div>
-                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/Mobile.svg')" /><p>{{clients.number}}</p></div>
+                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
+                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
               </div>
               <div class="client_link__notes">
                 <p><b>Notes:</b></p>
@@ -77,9 +62,9 @@
     <div v-if="creating">
       <h3>New Client</h3>
       <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save()">
-        <label><b>Name: </b><input type="text" autocomplete="name" v-model="new_client.name" required/></label>
-        <label><b>Email: </b><input type="email" autocomplete="email" v-model="new_client.email" required/></label>
-        <label><b>Mobile: </b><input type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
+        <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
+        <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
+        <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
           <input type="submit" class="button button--save" value="Save" />
           <button class="button button--close" v-on:click="close()">Close</button>
@@ -117,6 +102,7 @@
     },
     created () {
       this.$parent.setup()
+      this.$parent.client_details = null
     },
     methods: {
       creation () {

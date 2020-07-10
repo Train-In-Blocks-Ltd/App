@@ -32,17 +32,10 @@
     );
 
     color: #282828;
-    background-color: white;
-    display: grid;
-    grid-template-areas: 'main'
-  }
-  #app.authenticated {
-    display: grid;
-    grid-template-areas: 'sidebar main';
-    grid-template-columns: 260px 1fr
+    background-color: white
   }
   main {
-    grid-area: main;
+    margin-left: calc(38px + 2rem);
     display: grid;
     align-items: start;
     overflow: auto;
@@ -51,8 +44,11 @@
   .spacer {
     height: 5rem
   }
-  #hamburger {
-    z-index: 1
+
+  /* Global Container */
+  #home, #block, #account, #archive, .wrapper--client, #learn {
+    min-height: 100vh;
+    padding: 4rem 20vw 10rem 20vw
   }
 
   /* Fonts */
@@ -81,6 +77,9 @@
   svg path:not(.transparent) {
     fill: #282828
   }
+  .allow-text-overflow {
+    text-overflow: ellipsis
+  }
 
   /* Buttons */
   .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
@@ -108,7 +107,7 @@
     background-color: #282828;
     text-decoration: none
   }
-  .button:active, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
+  .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
     transform: scale(.96)
   }
   .delete:hover {
@@ -120,7 +119,7 @@
   .fc-button {
     border-radius: 0
   }
-  .fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody, .fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-content, .fc-unthemed .fc-popover, .fc-unthemed .fc-list-view, .fc-unthemed .fc-list-heading td {
+  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
     border-color: transparent
   }
   .fc-view-container span {
@@ -130,18 +129,27 @@
     margin-left: .4rem
   }
 
+  /* Remove IOS Corners */
+  input:not([type=checkbox]), button {
+    border-radius: 0;
+    -webkit-appearance: none
+  }
+
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]) {
-    display: inline-block;
+  .input--forms, .input--toolkit, .input--modal {
+    padding: .4rem;
+    font-size: 1rem;
+    border: 1px solid #282828
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     letter-spacing: .1rem
   }
   input[type=color] {
-    border: none;
     margin: 0 .4rem;
     background-color: transparent;
-    padding: 0;
+    padding: 0 .14rem;
     outline-width: 0;
     cursor: pointer;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
@@ -196,15 +204,12 @@
 
   /* Logo */
   .logo {
-    text-align: center
+    margin-bottom: auto
   }
   .logo--link {
     display: block;
-    height: 60px;
-    transition: opacity .6s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .logo--svg {
-    margin-top: -8px
+    width: 38px;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
     fill: rgb(
@@ -224,16 +229,15 @@
 
   /* Navigation */
   .sidebar {
-    grid-area: sidebar;
-    display: grid;
-    text-align: left;
-    box-shadow: 0 0 20px 10px #28282810;
-    padding: 5rem 2.5rem 2.5rem 2.5rem;
-    grid-auto-rows: 3.75rem auto min-content;
-    position: sticky;
-    height: 100vh;
-    top: 0;
-    background-color: rgb(var(--red), var(--green), var(--blue))
+    border-right: 1px solid #E1E1E1;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem 1rem;
+    position: fixed;
+    background-color: rgb(var(--red), var(--green), var(--blue));
+    transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
   .nav a, .account_nav a {
     color:rgb(
@@ -288,52 +292,10 @@
     )
   }
 
-  /* Client Navigation Items */
-  a.router-link-active.text--client {
-    font-weight: bold
-  }
-  .nav--item {
-    padding: .8rem 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    text-transform: capitalize
-  }
-  .nav--item--item {
-    padding: 0 0 .8rem .8rem
-  }
-  .nav--item--item:first-of-type {
-    padding-top: .8rem
-  }
-  .nav--item--item:last-of-type {
-    padding-bottom: 0;
-    margin-bottom: -.8rem
-  }
-  .nav--item a {
-    text-decoration: none;
-    opacity: .6;
-    font-weight: normal;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .nav--item a:hover {
-    opacity: 1
-  }
-  .nav--item a.router-link-active:not(.text--client), .nav--item a.router-link-exact-active {
-    opacity: 1;
-    font-size: 1.2rem;
-    font-weight: bold
-  }
-  .nav--item--item a.router-link-exact-active {
-    font-size: 1rem
-  }
-
   /* Account Navigation Items */
-  .account_nav {
-    align-self: end;
-    text-align: center;
-    font-size: .8rem
-  }
   .account_nav--item {
+    display: flex;
+    opacity: .6;
     cursor: pointer;
     font-size: 1rem;
     padding: .8rem 0;
@@ -348,30 +310,25 @@
   .account_nav--item:last-of-type {
     padding-bottom: 0
   }
-  .account_nav--item a {
-    opacity: .6;
+  .account_nav--item--text {
+    color: rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
     text-decoration: none;
     position: relative;
     border: 0;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item a.router-link-exact-active {
-    opacity: 1;
     font-weight: bold
   }
-  .account_nav--item a:active {
-    opacity: .6
-  }
-
-  /* Nav Icon and Animations */
   .account_nav--item--icon {
     margin: 0 .4rem 0 0;
     height: 1.4rem;
     vertical-align: bottom;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .navIconHover {
-    transform: translateX(-10px)
   }
   .account_nav--item--icon path:not(.transparent) {
     fill: rgb(
@@ -436,7 +393,6 @@
   /* Client Container Animation */
   .client_container > a {
     display: grid;
-    grid-gap: 1rem;
     position: relative;
     font-weight: 400;
     color: #282828;
@@ -479,6 +435,9 @@
   .client_link__details p {
     margin: auto 0
   }
+  .client_link__notes {
+    margin-top: 1rem
+  }
   .client_link__notes__content {
     font-size: .8rem;
     margin-top: .4rem
@@ -501,8 +460,7 @@
   }
   .search:focus {
     border-bottom: 2px solid #282828;
-    width: 100%;
-    font-size: 2rem
+    width: 100%
   }
 
   /* Splash */
@@ -514,7 +472,7 @@
     height: 100vh;
     width: 100vw;
     background-color: white;
-    z-index: 1
+    z-index: 20
   }
   .splash__logo {
     margin: auto;
@@ -531,35 +489,49 @@
   }
 
   /* Responsive Design */
-  @media (min-width: 1024px) {
-    .client_link {
-      grid-template: 1fr/1fr 1fr
-    }
-  }
   @media (max-width: 992px) {
+    #home, #account, #archive, .wrapper--client {
+      padding: 4rem 10vw
+    }
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       background-color: transparent;
       color: #282828
     }
   }
-  @media (max-width: 768px) {
-    .client_container > a:before {
-      width: 100%;
-      opacity: 1
+  @media (min-width: 768px) {
+    .sidebar {
+      top: 0;
+      height: 100vh;
+      width: calc(38px + 2rem)
+    }
+    .sidebar:hover {
+      width: 12rem
     }
   }
-  @media (min-width: 768px) {
-    #hamburger, #close {
+  @media (max-width: 768px) {
+    /* Sidebar */
+    .logo {
       display: none
     }
-  }
-  @media (max-width: 768px) {
-    #app.authenticated {
-      display: block
+    .sidebar {
+      bottom: 0;
+      width: 100%;
+      flex-direction: row;
+      padding: 1rem;
+      justify-content: space-between
     }
-    main > div {
-      max-width: 100%
+    .account_nav--item--text {
+      display: none
     }
+    main {
+      margin: 0
+    }
+    .account_nav--item {
+      margin: auto;
+      padding: 0
+    }
+
+    /* Other */
     h1 {
       font-size: 2rem;
       margin-top: -.9rem;
@@ -569,49 +541,15 @@
     .main-title {
       margin: 0
     }
-    .sidebar {
-      position: fixed;
-      width: 100%;
-      background-color: rgb(
-        var(--red),
-        var(--green),
-        var(--blue)
-      );
-      transform: translateX(-100vw);
-      z-index: -1;
-      transition: transform .4s, z-index 1s
-    }
-    .sidebar.open {
-      transform: translateX(0);
-      z-index: 99
-    }
-    main {
-      padding: 0;
-      width: 100vw
-    }
-    #hamburger, #close {
-      position: absolute;
-      left: 3.4rem;
-      top: 1.4rem
-    }
-    #close svg path:not(.transparent) {
-      fill: rgb(
-        var(--accessible-color),
-        var(--accessible-color),
-        var(--accessible-color)
-      )
-    }
   }
 
   /* For Mobile */
   @media (max-width: 576px) {
+    #home, #account, #archive, .wrapper--client {
+      padding: 2rem 5vw
+    }
     p {
       font-size: .8rem
-    }
-    #hamburger, #close {
-      position: absolute;
-      left: 1.8rem;
-      top: 1.6rem
     }
     .main-title {
       font-size: 2.4rem
@@ -638,60 +576,67 @@
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
     <transition leave-active-class="animate__animated animate__fadeOut">
       <div v-show="splashing" class="splash">
-        <inline-svg class="splash__logo" :src="require('./assets/svg/LoginLogo.svg')"/>
+        <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
       </div>
     </transition>
-    <a v-if="authenticated" title="sidebar" v-on:click="sidebar()" id="hamburger">
-      <inline-svg :src="require('./assets/svg/Hamburger.svg')"/>
-    </a>
-    <nav class="sidebar" v-if="authenticated" v-bind:class="{'open': open}">
-      <!-- Mobile open/close sidebar icon -->
-      <a id="close" v-on:click="sidebar()">
-        <inline-svg :src="require('./assets/svg/SidebarClose.svg')"/>
-      </a>
+    <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
         <router-link to="/" class="logo--link" title="Home">
-          <inline-svg :src="require('./assets/svg/SidebarLogo.svg')" class="logo--svg"/>
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
         </router-link>
       </div> <!-- .logo -->
-      <div class="nav animate__animated animate__fadeInLeft animate__faster animate__delay-4s">
-        <div class="nav--item">
-            <router-link class="text--client" to="/">Clients</router-link>
-        </div>
-        <!-- Loop through clients and render a link to each one -->
-        <div v-for="(clients, index) in posts"
-          :key="index" class="nav--item animate__animated animate__fadeIn">
-          <router-link :to="'/client/'+clients.client_id+'/'">{{clients.name}}</router-link>
-        </div>
+      <div class="account_nav--item">
+        <router-link to="/">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
+        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/" v-show="showNav" class="account_nav--item--text">
+            Home
+          </router-link>
+        </transition>
       </div>
-      <div class="account_nav animate__animated animate__fadeInLeft animate__faster animate__delay-5s">
-        <div @mouseover="isHovering.learn = true" @mouseout="isHovering.learn = false" class="account_nav--item">
-          <a target="_blank" href="http://www.traininblocks.com/blog">
-            <inline-svg :src="require('./assets/svg/Learn.svg')" :class="{ navIconHover: isHovering.learn }"  class="account_nav--item--icon"/>
+      <div class="account_nav--item">
+        <router-link to="/learn">
+          <inline-svg :src="require('./assets/svg/learn.svg')"  class="account_nav--item--icon"/>
+        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/learn" v-show="showNav" class="account_nav--item--text">
             Learn
-          </a>
-        </div>
-        <div @mouseover="isHovering.archive = true" @mouseout="isHovering.archive = false" class="account_nav--item">
-          <router-link to="/archive">
-            <inline-svg :src="require('./assets/svg/ArchiveIconClose.svg')" :class="{ navIconHover: isHovering.archive }"  class="account_nav--item--icon"/>
+          </router-link>
+        </transition>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/archive">
+          <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
+        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/archive" v-show="showNav" class="account_nav--item--text">
             Archive
           </router-link>
-        </div>
-        <div @mouseover="isHovering.account = true" @mouseout="isHovering.account = false" class="account_nav--item">
-          <router-link to="/account">
-            <inline-svg :src="require('./assets/svg/AccountIcon.svg')" :class="{ navIconHover: isHovering.account }"  class="account_nav--item--icon"/>
+        </transition>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/account">
+          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
+        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/account" v-show="showNav" class="account_nav--item--text">
             Account
           </router-link>
-        </div>
-        <div @mouseover="isHovering.logout = true" @mouseout="isHovering.logout = false" class="account_nav--item">
-          <router-link to="/logout" v-on:click.native="logout()">
-            <inline-svg :src="require('./assets/svg/LogoutIcon.svg')" :class="{ navIconHover: isHovering.logout }"  class="account_nav--item--icon"/>
+        </transition>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/logout" v-on:click.native="logout()">
+          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
+        </router-link>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+          <router-link to="/logout" v-show="showNav" v-on:click.native="logout()" class="account_nav--item--text">
             Logout
           </router-link>
-        </div>
+        </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main v-dragscroll:nochilddrag>
+    <main @mouseover="showNav = false">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
@@ -709,13 +654,8 @@ export default {
   },
   data: function () {
     return {
+      showNav: false,
       splashing: true,
-      isHovering: {
-        learn: false,
-        archive: false,
-        account: false,
-        logout: false
-      },
       archive_error: '',
       archive_posts: {},
       no_archive: false,
@@ -765,9 +705,6 @@ export default {
     }
   },
   methods: {
-    sidebar () {
-      this.open = !this.open
-    },
     async setup () {
       this.claims = await this.$auth.getUser()
       if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {

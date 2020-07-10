@@ -1,9 +1,4 @@
 <style scoped>
-  #account {
-    display: grid;
-    grid-gap: 2rem;
-    padding: 5rem 3.75rem
-  }
   .policies {
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
