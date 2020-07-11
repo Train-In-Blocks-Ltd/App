@@ -337,6 +337,11 @@
     padding: 2rem
   }
 
+  /* Move Modal */
+  .modal--move {
+    padding: 1rem 2rem
+  }
+
   @media (max-width: 768px) {
     .floating_nav__block a {
       grid-template-columns: 1fr
@@ -1204,6 +1209,7 @@
           // Update the localstorage with the programmes
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
           this.$ga.event('Block', 'update')
+          this.scan()
         } catch (e) {
           console.log(e.toString())
         }
@@ -1301,7 +1307,6 @@
             block_color: ''
           }
           this.msg = 'Idle'
-          this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {
           console.error(`${e}`)
