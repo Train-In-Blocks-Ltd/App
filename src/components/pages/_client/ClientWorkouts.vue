@@ -1234,6 +1234,7 @@
                 var workoutsDate = programme.workouts[y].date
                 var workoutsNotes = programme.workouts[y].notes
                 var workoutsWeek = programme.workouts[y].week_id
+                var workoutsChecked = programme.workouts[y].checked
               }
             }
           }
@@ -1245,8 +1246,8 @@
               'name': workoutsName,
               'date': workoutsDate,
               'notes': workoutsNotes,
-              'week_id': workoutsWeek
-              // Re Add checked here
+              'week_id': workoutsWeek,
+              'checked': workoutsChecked
             }
           )
           this.$ga.event('Workout', 'update')
@@ -1254,7 +1255,7 @@
           console.log(e.toString())
         }
         await this.$parent.force_get_workouts()
-        this.sortWorkouts()
+        this.update_programme()
       },
       async add_workout () {
         try {
@@ -1277,7 +1278,7 @@
           )
           this.response = response_save_workouts.data
           // Get the workouts from the API because we've just created a new one
-          this.sortWorkouts()
+          this.update_programme()
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false
 
