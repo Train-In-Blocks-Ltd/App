@@ -204,7 +204,6 @@
             {
               'profile': {
                 'firstName': this.$parent.client_details.name,
-                'lastName': this.$parent.client_details.name,
                 'email': this.$parent.client_details.email,
                 'login': this.$parent.client_details.email,
                 'color': null,
