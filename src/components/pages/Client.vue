@@ -155,6 +155,7 @@
           <div class="client_info__more-details">
             <label><b>Email: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
             <label><b>Phone: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
+            <button @click="createClient" class="button">Give Access</button>
           </div>
         </form>
       </div>
@@ -168,6 +169,7 @@
 <script>
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
+  import {email, emailText} from '../components/email'
 
   export default {
     components: {
@@ -196,6 +198,79 @@
       this.$parent.client_details = null
     },
     methods: {
+      async createClient () {
+        try {
+          const oktaOne = await axios.post('https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?activate=false',
+            {
+              'profile': {
+                'firstName': this.$parent.client_details.name,
+                'lastName': this.$parent.client_details.name,
+                'email': this.$parent.client_details.email,
+                'login': this.$parent.client_details.email,
+                'color': null,
+                'ga': true,
+                'client_id_db': this.$parent.client_details.client_id
+              },
+              'groupIds': [
+                '00gf929legrtSjxOe4x6'
+              ]
+            },
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          const oktaTwo = await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${oktaOne.data.id}/lifecycle/activate?sendEmail=false`,
+            {},
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            {
+              'personalizations': [
+                {
+                  'to': [
+                    {
+                      'email': this.$parent.client_details.email,
+                      'name': this.$parent.client_details.name
+                    }
+                  ],
+                  'subject': 'Welcome to Train In Blocks'
+                }
+              ],
+              'from': {
+                'email': 'Train In Blocks <no-reply@traininblocks.com>'
+              },
+              'content': [
+                {
+                  'type': 'text/plain',
+                  'value': emailText(oktaTwo.data.activationUrl)
+                },
+                {
+                  'type': 'text/html',
+                  'value': email(oktaTwo.data.activationUrl)
+                }
+              ]
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': process.env.SENDGRID
+              }
+            }
+          )
+        } catch (e) {
+          console.log(e.toString())
+        }
+      },
       updateClientNotes () {
         this.update_client()
         this.editClientNotes = false
