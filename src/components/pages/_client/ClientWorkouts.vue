@@ -374,7 +374,7 @@
         <div class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
-          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), $modal.hide('move')">Move</button>
+          <button class="button" type="submit" @click="initMove(movingWorkout), updateWorkoutNotes(movingWorkout), $modal.hide('move')">Move</button>
         </div>
       </modal>
       <modal name="copy" height="auto" :adaptive="true">
@@ -766,6 +766,17 @@
         this.movingWorkout = id
         this.maxWeek = maxWeek
         this.$modal.show('move')
+      },
+      initMove (id) {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          if (this.$route.params.id == block.id) {
+            block.workouts.forEach((workout) => {
+              if (workout.id == id) {
+                workout.week_id = this.moveTarget
+              }
+            })
+          }
+        })
       },
 
       // CHART METHODS //
