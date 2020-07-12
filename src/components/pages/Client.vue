@@ -251,11 +251,11 @@
               'content': [
                 {
                   'type': 'text/plain',
-                  'value': emailText(oktaTwo.data.activationUrl)
+                  'value': emailText(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
                 },
                 {
                   'type': 'text/html',
-                  'value': email(oktaTwo.data.activationUrl)
+                  'value': email(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
                 }
               ]
             },
