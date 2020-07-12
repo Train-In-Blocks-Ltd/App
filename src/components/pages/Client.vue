@@ -208,7 +208,8 @@
                 'login': this.$parent.client_details.email,
                 'color': null,
                 'ga': true,
-                'client_id_db': this.$parent.client_details.client_id
+                'client_id_db': this.$parent.client_details.client_id,
+                'user_type': 'Client'
               },
               'groupIds': [
                 '00gf929legrtSjxOe4x6'
