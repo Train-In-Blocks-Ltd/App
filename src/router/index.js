@@ -25,6 +25,10 @@ Vue.use(Auth, {
   autoRenew: false,
   onSessionExpired: async function () {
     await Vue.$auth.logout({postLogoutRedirectUri: process.env.URL + '/login'})
+  },
+  tokenManager: {
+    secure: true,
+    storage: 'cookie'
   }
 })
 

@@ -711,7 +711,6 @@ export default {
   methods: {
     async setup () {
       this.claims = await this.$auth.getUser()
-      console.log(this.claims.user_type)
       if (this.claims.user_type === 'Client') {
         window.location.href = 'https://client.traininblocks.com'
       }
