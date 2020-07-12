@@ -46,7 +46,7 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #learn {
+  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home {
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
   }
@@ -110,7 +110,7 @@
   .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
     transform: scale(.96)
   }
-  .delete:hover {
+  .delete:hover, .cancel:hover {
     color: white;
     background-color: #B80000
   }
@@ -136,10 +136,14 @@
   }
 
   /* Inputs */
+  .input--modal {
+    width: 4rem
+  }
   .input--forms, .input--toolkit, .input--modal {
     padding: .4rem;
     font-size: 1rem;
-    border: 1px solid #282828
+    border: none;
+    border-bottom: 1px solid #282828
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
     resize: none;

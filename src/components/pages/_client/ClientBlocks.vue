@@ -182,7 +182,7 @@
             <label><b>Start: </b><input class="input--forms" type="date" v-model="new_block.start" required /></label>
             <div class="form_buttons">
               <input type="submit" class="button button--save" value="Save" />
-              <button class="button button--close" v-on:click="close()">Close</button>
+              <button class="button button--close cancel" v-on:click="close()">Close</button>
               <Loader></Loader>
             </div>
           </form>

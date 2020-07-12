@@ -337,6 +337,11 @@
     padding: 2rem
   }
 
+  /* Move Modal */
+  .modal--move {
+    padding: 1rem 2rem
+  }
+
   @media (max-width: 768px) {
     .floating_nav__block a {
       grid-template-columns: 1fr
@@ -371,20 +376,20 @@
         </div>
       </modal>
       <modal name="move" height="auto" :adaptive="true">
-        <div class="modal--move">
+        <form @submit.prevent="initMove(movingWorkout), updateWorkoutNotes(movingWorkout), $modal.hide('move')" class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
-          <button class="button" type="submit" @click="updateWorkoutNotes(movingWorkout), $modal.hide('move')">Move</button>
-        </div>
+          <button class="button" type="submit">Move</button>
+        </form>
       </modal>
       <modal name="copy" height="auto" :adaptive="true">
-        <div class="modal--copy">
-          <div>
-            <label for="range">From 1 to: </label>
-            <input class="input--modal" v-model="copyTarget" name="range" type="number" min="2" :max="maxWeek" required/>
-          </div>
-          <button @click="copyAcross()" class="button">Copy</button>
-        </div>
+        <form @submit.prevent="copyAcross()" class="modal--copy">
+            <label for="range">From {{currentWeek}} to: </label>
+            <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
+            <label for="range">Days untill next workouts: </label>
+            <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
+            <button class="button">Copy</button>
+        </form>
       </modal>
       <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
         <toolkit/>
@@ -440,7 +445,7 @@
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <FullCalendar defaultView="dayGridMonth" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
+                <FullCalendar defaultView="dayGridMonth" :firstDay="1" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
               </div>
             </div>
             <div class="block-plan">
@@ -510,7 +515,7 @@
                   <div class="data-select">
                     <div class="data-select__options">
                       <label for="measure"><b>Measurement: </b></label>
-                      <select v-model="selectedDataName" @change="selection()" name="measure">
+                      <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
                         <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
                           {{option.text}}
                         </option>
@@ -518,7 +523,7 @@
                     </div>
                     <div class="data-select__options" v-show="showType">
                       <label for="measure-type"><b>Data type: </b></label>
-                      <select v-model="selectedDataType" @change="selection()" name="measure-type">
+                      <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
                         <option value="Sets">Sets</option>
                         <option value="Reps">Reps</option>
                         <option value="Load">Load</option>
@@ -629,7 +634,8 @@
         maxWeek: '2',
         movingWorkout: null,
         moveTarget: 1,
-        copyTarget: 2
+        copyTarget: 2,
+        daysDiff: 7
       }
     },
     created () {
@@ -696,7 +702,7 @@
           this.currentWeek = weekCount
           copyWorkouts.forEach((workout) => {
             this.new_workout.name = workout.name
-            this.new_workout.date = this.addDays(workout.date, 7 * (weekCount - 1))
+            this.new_workout.date = this.addDays(workout.date, this.daysDiff * (weekCount - 1))
             this.currentCopyWorkoutNotes = workout.notes
             this.add_workout()
           })
@@ -705,6 +711,7 @@
         this.copyTarget = 1
         this.new_workout.name = 'Untitled'
         this.today()
+        this.update_programme()
         this.$modal.hide('copy')
       },
       showInfo () {
@@ -766,6 +773,17 @@
         this.movingWorkout = id
         this.maxWeek = maxWeek
         this.$modal.show('move')
+      },
+      initMove (id) {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          if (this.$route.params.id == block.id) {
+            block.workouts.forEach((workout) => {
+              if (workout.id == id) {
+                workout.week_id = this.moveTarget
+              }
+            })
+          }
+        })
       },
 
       // CHART METHODS //
@@ -1193,6 +1211,7 @@
           // Update the localstorage with the programmes
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
           this.$ga.event('Block', 'update')
+          this.scan()
         } catch (e) {
           console.log(e.toString())
         }
@@ -1290,7 +1309,6 @@
             block_color: ''
           }
           this.msg = 'Idle'
-          this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {
           console.error(`${e}`)
