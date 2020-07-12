@@ -136,6 +136,9 @@
   }
 
   /* Inputs */
+  .input--modal {
+    width: 4rem
+  }
   .input--forms, .input--toolkit, .input--modal {
     padding: .4rem;
     font-size: 1rem;
