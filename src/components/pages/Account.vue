@@ -68,8 +68,9 @@
           <label for="color"><b>Colour theme: </b></label>
           <input type="color" name="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/>
         </div>
-        <h2>Your Subscription</h2>
-        <div class="spacer">--Placeholder--</div>
+        <div v-if="$parent.claims.user_type != 'Client'">
+          <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
+        </div>
         <h2>Reset your password</h2>
         <p class="text--reset">To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
         <h2>Your Privacy and Data</h2>
@@ -99,6 +100,14 @@
         this.$parent.colors.rgba.g = this.$parent.hexToRgb(e.target.value).g
         this.$parent.colors.rgba.b = this.$parent.hexToRgb(e.target.value).b
         this.$parent.colors.hex = e.target.value
+      },
+      async manageSubscription () {
+        try {
+          const response = await axios.post(`/.netlify/functions/create-manage-link`, { 'id': this.$parent.claims.stripeId })
+          window.location.href = response.data
+        } catch (e) {
+          console.log(e)
+        }
       },
       edit () {
         // Set vue self
