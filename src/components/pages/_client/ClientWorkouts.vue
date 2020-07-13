@@ -569,7 +569,7 @@
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
-  import Toolkit from './Toolkit.vue'
+  import Toolkit from '../../components/Toolkit.vue'
 
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
