@@ -46,7 +46,7 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home {
+  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
   }
@@ -476,7 +476,7 @@
     height: 100vh;
     width: 100vw;
     background-color: white;
-    z-index: 20
+    z-index: 1000
   }
   .splash__logo {
     margin: auto;
