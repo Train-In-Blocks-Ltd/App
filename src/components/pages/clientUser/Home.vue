@@ -174,7 +174,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
 
 export default {
@@ -207,9 +206,11 @@ export default {
   methods: {
     sortWorkoutsHome () {
       this.$parent.programmes.forEach((block) => {
-        /* block.workouts.sort((a, b) => {
+        /*
+        block.workouts.sort((a, b) => {
           return new Date(a.date) - new Date(b.date)
-        })*/
+        })
+        */
         block.workouts.forEach((workout) => {
           if (workout.date === this.isToday()) {
             this.viewWorkoutsStore.push(workout.id)

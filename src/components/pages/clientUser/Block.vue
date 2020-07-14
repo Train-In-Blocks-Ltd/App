@@ -55,15 +55,17 @@
     methods: {
       sortWorkouts () {
         this.$parent.programmes.forEach((block) => {
+          //eslint-disable-next-line
           if (block.id == this.$route.params.id) {
             block.workouts.sort((a, b) => {
-              return new Date(a.date) - new Date(b.date);
-            });
+              return new Date(a.date) - new Date(b.date)
+            })
           }
         })
       },
       initCountWorkoutsBlock () {
         this.$parent.programmes.forEach((block) => {
+          //eslint-disable-next-line
           if (block.id == this.$route.params.id) {
             this.maxWorkoutIndexBlock = block.workouts.length - 1
           }
