@@ -585,21 +585,27 @@
     </transition>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
-        <router-link to="/" class="logo--link" title="Home">
+        <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer'">
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
+        </router-link>
+        <router-link to="/clientUser" class="logo--link" title="Home" v-if="claims.user_type === 'Client'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
         </router-link>
       </div> <!-- .logo -->
-      <div class="account_nav--item">
+      <div class="account_nav--item" v-if="claims">
         <router-link to="/">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/" v-show="showNav" class="account_nav--item--text">
+          <router-link to="/" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Trainer'">
+            Home
+          </router-link>
+          <router-link to="/clientUser" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
             Home
           </router-link>
         </transition>
       </div>
-      <div class="account_nav--item">
+      <div class="account_nav--item" v-if="claims.user_type === 'Trainer'">
         <router-link to="/learn">
           <inline-svg :src="require('./assets/svg/learn.svg')"  class="account_nav--item--icon"/>
         </router-link>
@@ -609,7 +615,7 @@
           </router-link>
         </transition>
       </div>
-      <div class="account_nav--item">
+      <div class="account_nav--item" v-if="claims.user_type === 'Trainer'">
         <router-link to="/archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
@@ -668,7 +674,9 @@ export default {
       posts: null,
       loading_clients: true,
       no_clients: false,
-      claims: null,
+      claims: {
+        user_type: 0
+      },
       authenticated: false,
       client_details: null,
       loading: false,
@@ -711,9 +719,6 @@ export default {
   methods: {
     async setup () {
       this.claims = await this.$auth.getUser()
-      if (this.claims.user_type === 'Client') {
-        window.location.href = 'https://client.traininblocks.com'
-      }
       if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
         this.claims.ga = true
       }
@@ -916,6 +921,23 @@ export default {
         } catch (e) {
           console.error(`${e}`)
         }
+      }
+    },
+    async get_programmes () {
+      try {
+        if (localStorage.getItem('programmes')) {
+          this.programmes = JSON.parse(localStorage.getItem('programmes'))
+        } else {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+
+          const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+          this.programmes = programmes.data
+
+          // Update the localstorage with the programmes
+          localStorage.setItem('programmes', JSON.stringify(this.programmes))
+        }
+      } catch (e) {
+        console.log(e.toString())
       }
     }
   }

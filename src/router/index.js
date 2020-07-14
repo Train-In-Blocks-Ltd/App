@@ -15,6 +15,9 @@ import LearnComponent from '@/components/pages/Learn'
 import ClientBlocks from '@/components/pages/_client/ClientBlocks'
 import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
 
+import ClientUserComponent from '@/components/pages/clientUser/Home'
+import ClientUserBlocks from '@/components/pages/clientUser/Block'
+
 Vue.use(Router)
 Vue.use(Auth, {
   issuer: process.env.ISSUER + '/oauth2/default',
@@ -35,7 +38,8 @@ const router = new Router({
       path: '/',
       component: HomeComponent,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresTrainer: true
       }
     },
     {
@@ -61,14 +65,16 @@ const router = new Router({
       path: '/learn',
       component: LearnComponent,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresTrainer: true
       }
     },
     {
       path: '/client/:client_id',
       component: ClientComponent,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresTrainer: true
       },
       children: [
         {
@@ -76,7 +82,8 @@ const router = new Router({
           component: ClientBlocks,
           name: 'blocks',
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresTrainer: true
           }
         },
         {
@@ -84,16 +91,34 @@ const router = new Router({
           component: ClientWorkouts,
           name: 'workouts',
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            requiresTrainer: true
           }
         }
       ]
     },
     {
+      path: '/clientUser',
+      component: ClientUserComponent,
+      meta: {
+        requiresAuth: true,
+        requiresClient: true
+      }
+    },
+    {
+      path: '/clientUser/block/:id',
+      component: ClientUserBlocks,
+      meta: {
+        requiresAuth: true,
+        requiresClient: true
+      }
+    },
+    {
       path: '/archive',
       component: ArchiveComponent,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresTrainer: true
       }
     },
     {
@@ -112,6 +137,28 @@ const onAuthRequired = async (from, to, next) => {
   }
 }
 
+const userType = async (from, to, next) => {
+  let result = await Vue.prototype.$auth.getUser()
+  if (from.matched.some(record => record.meta.requiresTrainer)) {
+    if (result.user_type === 'Client') {
+      // Navigate to Client Homepage
+      next({ path: '/clientUser' })
+    } else {
+      next()
+    }
+  } else if (from.matched.some(record => record.meta.requiresClient)) {
+    if (result.user_type === 'Trainer') {
+      // Navigate to Trainer Homepage
+      next({ path: '/' })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
 router.beforeEach(onAuthRequired)
+router.beforeEach(userType)
 
 export default router
