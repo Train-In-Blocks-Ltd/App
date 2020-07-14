@@ -1,5 +1,6 @@
 <style>
   #client {
+    overflow-x: hidden;
     background-color: #F4F4F4;
     position: relative
   }
@@ -155,7 +156,7 @@
           <div class="client_info__more-details">
             <label><b>Email: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
             <label><b>Phone: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
-            <button @click="createClient()" class="button" :disabled="clientAlready">Give Access</button>
+            <button @click="createClient()" class="button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
           </div>
         </form>
       </div>
@@ -185,6 +186,7 @@
         no_workouts: false,
         loading_workouts: true,
         editClientNotes: false,
+        clientAlreadyMsg: 'Give Access',
         clientAlready: false
       }
     },
@@ -212,8 +214,10 @@
             }
           )
           this.clientAlready = true
+          this.clientAlreadyMsg = 'Activated'
         } catch (e) {
           this.clientAlready = false
+          this.clientAlreadyMsg = 'Give Access'
         }
       },
       async createClient () {

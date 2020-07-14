@@ -47,6 +47,7 @@
 
   /* Global Container */
   #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
+    overflow-x: hidden;
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
   }
@@ -84,6 +85,7 @@
   /* Buttons */
   .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
     user-select: none;
+    cursor: pointer;
     text-transform: capitalize;
     text-align: center;
     outline-width: 0;
@@ -102,7 +104,6 @@
     transition: color .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
-    cursor: pointer;
     color: white;
     background-color: #282828;
     text-decoration: none
@@ -113,6 +114,14 @@
   .delete:hover, .cancel:hover {
     color: white;
     background-color: #B80000
+  }
+  button:disabled, button[disabled] {
+    opacity: .6;
+    cursor: default
+  }
+  button:disabled:hover, button[disabled]:hover {
+    color: #282828;
+    background-color: transparent
   }
 
   /* GLOBAL: Calendar */
@@ -519,9 +528,9 @@
     }
     .sidebar {
       bottom: 0;
-      width: 100%;
+      width: 100vw;
       flex-direction: row;
-      padding: 1rem;
+      padding: 1rem 1rem 1.4rem 1rem;
       justify-content: space-between
     }
     .account_nav--item--text {
@@ -549,8 +558,12 @@
 
   /* For Mobile */
   @media (max-width: 576px) {
+    ::-webkit-scrollbar {
+      width: 0;
+      background-color: transparent
+    }
     #home, #account, #archive, .wrapper--client {
-      padding: 2rem 5vw
+      padding: 2rem 5vw 6rem 5vw
     }
     p {
       font-size: .8rem
@@ -717,6 +730,9 @@ export default {
     }
   },
   methods: {
+    responseDelay () {
+      setTimeout(() => { this.response = '' }, 5000)
+    },
     async setup () {
       this.claims = await this.$auth.getUser()
       if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {

@@ -124,7 +124,7 @@
             view: false,
             value: null
           }
-        },
+        }
       }
     },
     methods: {
@@ -174,7 +174,7 @@
           this.close_toolkit()
           this.toolkit_calcs.bmi.view = true
         }
-      },
+      }
     }
   }
 </script>>
