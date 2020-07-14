@@ -173,12 +173,12 @@
           </div>
         </div>
         <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
-        <p class="response" v-if="!creating">{{response}}</p>
+        <p class="new-msg" v-if="!creating">{{response}}</p>
         <div v-if="creating" class="add_block_container">
           <h3>New Block</h3>
           <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
             <label><b>Name: </b><input class="input--forms" type="text" v-model="new_block.name" required/></label>
-            <label><b>Duration: </b><input class="input--forms" type="number" inputmode="decimal" v-model="new_block.duration" required/></label>
+            <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_block.duration" required/></label>
             <label><b>Start: </b><input class="input--forms" type="date" v-model="new_block.start" required /></label>
             <div class="form_buttons">
               <input type="submit" class="button button--save" value="Save" />
@@ -223,7 +223,7 @@
         }
       },
       quickSaveClient (key, state) {
-        if (key.keyCode == '13' && key.ctrlKey == true) {
+        if (key.keyCode === 13 && key.ctrlKey === true) {
           this.$parent.updateClientNotes()
           window.removeEventListener('keydown', this.quickSaveClient)
         }
@@ -253,8 +253,8 @@
               }
             }
           )
-          // eslint-disable-next-line
-          this.response = response_save_block.data
+          this.response = 'Added New Block'
+          this.$parent.$parent.responseDelay()
 
           // Set old programmes to null so that they can be repopulated
           var x

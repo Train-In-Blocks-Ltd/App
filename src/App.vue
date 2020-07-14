@@ -722,6 +722,9 @@ export default {
     }
   },
   methods: {
+    responseDelay () {
+      setTimeout(() => { this.response = '' }, 5000)
+    },
     async setup () {
       this.claims = await this.$auth.getUser()
       if (this.claims.user_type === 'Client') {

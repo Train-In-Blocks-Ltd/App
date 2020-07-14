@@ -670,8 +670,9 @@
       },
       updateBlockColor () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          // eslint-disable-next-line
           if (programme.id == this.$route.params.id) {
-            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g,'').replace(/[\[\]]/g,'').replace(/\//g,'')
+            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
           }
         })
         this.update_programme()
@@ -731,7 +732,7 @@
         }
       },
       quickSaveBlockNotes (key, state) {
-        if (key.keyCode == '13' && key.ctrlKey == true) {
+        if (key.keyCode === 13 && key.ctrlKey === true) {
           this.updateBlockNotes()
           window.removeEventListener('keydown', this.quickSaveBlockNotes)
         }
@@ -753,7 +754,7 @@
         }
       },
       quickSaveWorkoutNotes (key, state) {
-        if (key.keyCode == '13' && key.ctrlKey == true) {
+        if (key.keyCode === 13 && key.ctrlKey === true) {
           this.updateWorkoutNotes(this.editWorkout)
           window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
         }
@@ -776,9 +777,10 @@
       },
       initMove (id) {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
-          if (this.$route.params.id == block.id) {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
             block.workouts.forEach((workout) => {
-              if (workout.id == id) {
+              if (workout.id === id) {
                 workout.week_id = this.moveTarget
               }
             })
@@ -953,7 +955,6 @@
             const tidyA = exerciseDataPacket[1].replace(/\(/g, '\\(')
             const tidyB = tidyA.replace(/\)/g, '\\)')
             const regexA = RegExp(tidyB, 'gi')
-            const regexB = RegExp(/[|\\/)(~^:,;?!&%$@*+]/, 'g')
             var itemCased = this.properCase(exerciseDataPacket[1])
             if (regexA.test(tempItemStore) !== true && exerciseDataPacket[2].includes('at') === true) {
               tempItemStore.push(itemCased)
@@ -1092,18 +1093,18 @@
       // OTHER METHODS //
       accessibleColors (hex) {
         if (hex !== undefined) {
-          hex = hex.replace('#','')
+          hex = hex.replace('#', '')
           var r, g, b
-          r = parseInt(hex.substring(0,2), 16)
-          g = parseInt(hex.substring(2,4), 16)
-          b = parseInt(hex.substring(4,6), 16)
+          r = parseInt(hex.substring(0, 2), 16)
+          g = parseInt(hex.substring(2, 4), 16)
+          b = parseInt(hex.substring(4, 6), 16)
           var result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
           var color = `rgb(${result}, ${result}, ${result})`
           return color
         }
       },
       weekConfirm (dur) {
-        if (parseInt(dur) > 12 && this.allowMoreWeeks == false) {
+        if (parseInt(dur) > 12 && this.allowMoreWeeks === false) {
           if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
             this.allowMoreWeeks = true
           } else {
@@ -1112,15 +1113,14 @@
         }
       },
       today () {
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0');
-        var yyyy = today.getFullYear();
+        var today = new Date()
+        var dd = String(today.getDate()).padStart(2, '0')
+        var mm = String(today.getMonth() + 1).padStart(2, '0')
+        var yyyy = today.getFullYear()
         this.new_workout.date = `${yyyy}-${mm}-${dd}`
       },
       addDays (date, days) {
         var d = new Date(date)
-        var day = d.getDay()
         d.setDate(d.getDate() + days)
         var year = d.getFullYear()
         var month = d.getMonth() + 1
@@ -1150,10 +1150,11 @@
       },
       sortWorkouts () {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
           if (block.id == this.$route.params.id && this.$parent.no_workouts === false) {
             block.workouts.sort((a, b) => {
-              return new Date(a.date) - new Date(b.date);
-            });
+              return new Date(a.date) - new Date(b.date)
+            })
           }
         })
       },
@@ -1172,8 +1173,8 @@
           }
         }
         try {
-          // eslint-disable-next-line
           this.sortWorkouts()
+          // eslint-disable-next-line
           const response_update_programme = await axios.post(`https://api.traininblocks.com/programmes`,
             {
               'id': programme.id,

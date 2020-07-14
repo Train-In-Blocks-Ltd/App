@@ -17,6 +17,9 @@
     display: grid;
     grid-gap: .5rem
   }
+  .new-msg {
+    margin: 2rem 0
+  }
 
   @media (max-width: 768px) {
     .home--container {
@@ -75,8 +78,8 @@
         </div>
       </div>
     </div>
-    <div><button v-if="!creating" class="button button--new-client" v-on:click="creation()">New Client</button></div>
-    <p v-if="!creating">{{response}}</p>
+    <button v-if="!creating" class="button button--new-client" v-on:click="creation()">New Client</button>
+    <p v-if="!creating" class="new-msg">{{response}}</p>
     <div v-if="creating">
       <h3>New Client</h3>
       <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save()">
@@ -156,7 +159,8 @@
             }
           )
           // eslint-disable-next-line
-          this.response = (response_save_clients.data).toString()
+          this.response = 'Added New Client'
+          this.$parent.responseDelay()
 
           await this.$parent.clients()
           this.$parent.clients_to_vue()
