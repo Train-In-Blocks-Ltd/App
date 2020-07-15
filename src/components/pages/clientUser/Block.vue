@@ -48,12 +48,13 @@
       }
     },
     async mounted () {
-      await this.get_workouts()
+      await this.$parent.setup()
+      await this.$parent.get_programmes()
       this.initCountWorkoutsBlock()
       this.sortWorkoutsBlock()
     },
     methods: {
-      sortWorkouts () {
+      sortWorkoutsBlock () {
         this.$parent.programmes.forEach((block) => {
           //eslint-disable-next-line
           if (block.id == this.$route.params.id) {
@@ -82,33 +83,6 @@
         weekday[6] = 'Sat'
         var d = new Date(date)
         return weekday[d.getDay()]
-      },
-      async get_workouts () {
-        await this.$parent.setup()
-        await this.$parent.get_programmes()
-        try {
-          // Loop through programmes
-          var f
-          for (f in this.$parent.programmes) {
-            // If programme matches programme in route
-            // eslint-disable-next-line
-            if (this.$parent.programmes[f].id == this.$route.params.id) {
-              if (!JSON.parse(localStorage.getItem('programmes'))[f].workouts) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-                // eslint-disable-next-line
-                const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.programmes[f].id}`)
-
-                this.$parent.programmes[f].workouts = response_programmes.data
-
-                // Update the localstorage with the workouts
-                localStorage.setItem('programmes', JSON.stringify(this.$parent.programmes))
-              }
-              break
-            }
-          }
-        } catch (e) {
-          console.log(e.toString())
-        }
       },
       async update_workout (id) {
         // Set auth header
@@ -143,7 +117,7 @@
         } catch (e) {
           console.log(e.toString())
         }
-        this.get_workouts()
+        this.$parent.force_get_programmes()
       }
     }
   }

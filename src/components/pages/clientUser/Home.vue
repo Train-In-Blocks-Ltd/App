@@ -213,18 +213,16 @@ export default {
   },
   async mounted () {
     await this.$parent.setup()
-    this.$parent.get_programmes()
+    await this.$parent.get_programmes()
     this.sortWorkoutsHome()
     this.initCountWorkoutsHome()
   },
   methods: {
     sortWorkoutsHome () {
       this.$parent.programmes.forEach((block) => {
-        /*
         block.workouts.sort((a, b) => {
           return new Date(a.date) - new Date(b.date)
         })
-        */
         block.workouts.forEach((workout) => {
           if (workout.date === this.isToday()) {
             this.viewWorkoutsStore.push(workout.id)
