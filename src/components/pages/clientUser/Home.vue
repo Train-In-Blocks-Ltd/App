@@ -8,6 +8,20 @@
   .sub-title.no-margin {
     margin: 0
   }
+  #button-done {
+    background-color: green
+  }
+  #button-to-do {
+    background-color: #B80000
+  }
+  #button-done, #button-to-do {
+    color: white;
+    height: 2rem;
+    margin: auto 0
+  }
+  #button-done:hover, #button-to-do:hover {
+    opacity: .6
+  }
 
   /* SVG */
   .title-icon {
@@ -143,8 +157,8 @@
             </div>
           </div>
         </div>
-        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--">Back</button>
-        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++">Next</button>
+        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
+        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
       </div>
       <div class="spacer"/>
       <div class="container--title">
