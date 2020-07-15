@@ -140,14 +140,18 @@ const onAuthRequired = async (from, to, next) => {
 const userType = async (from, to, next) => {
   let result = await Vue.prototype.$auth.getUser()
   if (from.matched.some(record => record.meta.requiresTrainer)) {
-    if (result.user_type === 'Client') {
+    if (result.user_type === 'Admin') {
+      next()
+    } else if (result.user_type === 'Client') {
       // Navigate to Client Homepage
       next({ path: '/clientUser' })
     } else {
       next()
     }
   } else if (from.matched.some(record => record.meta.requiresClient)) {
-    if (result.user_type === 'Trainer') {
+    if (result.user_type === 'Admin') {
+      next()
+    } else if (result.user_type === 'Trainer') {
       // Navigate to Trainer Homepage
       next({ path: '/' })
     } else {

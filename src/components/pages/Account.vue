@@ -68,7 +68,7 @@
           <label for="color"><b>Colour theme: </b></label>
           <input type="color" name="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/>
         </div>
-        <div v-if="$parent.claims.user_type != 'Client'">
+        <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
           <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
         </div>
         <h2>Reset your password</h2>

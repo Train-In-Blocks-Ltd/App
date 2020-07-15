@@ -596,29 +596,31 @@
         <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
       </div>
     </transition>
-    <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated">
+    <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
-        <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer'">
+        <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
         </router-link>
         <router-link to="/clientUser" class="logo--link" title="Home" v-if="claims.user_type === 'Client'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
         </router-link>
       </div> <!-- .logo -->
-      <div class="account_nav--item" v-if="claims">
+      <div class="account_nav--item">
         <router-link to="/">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Trainer'">
+          <router-link to="/" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
             Home
           </router-link>
+        </transition>
+        <transition>
           <router-link to="/clientUser" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
             Home
           </router-link>
         </transition>
       </div>
-      <div class="account_nav--item" v-if="claims.user_type === 'Trainer'">
+      <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/learn">
           <inline-svg :src="require('./assets/svg/learn.svg')"  class="account_nav--item--icon"/>
         </router-link>
@@ -628,7 +630,7 @@
           </router-link>
         </transition>
       </div>
-      <div class="account_nav--item" v-if="claims.user_type === 'Trainer'">
+      <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
