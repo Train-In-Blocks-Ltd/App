@@ -57,10 +57,6 @@
     <h1 class="main-title">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
         <div class="form__options">
-          <label for="first-name"><b>Name: </b></label>
-          <input type="text" id="first-name" name="first-name" autocomplete="given-name" v-model="$parent.claims.given_name" required v-on:click="edit()"/>
-        </div>
-        <div class="form__options">
           <label for="email"><b>Email: </b></label>
           <input type="email" id="email" name="email" autocomplete="email" v-model="$parent.claims.email" required v-on:click="edit()"/>
         </div>
@@ -133,7 +129,7 @@
             {
               'profile': {
                 'login': this.$parent.claims.email,
-                'firstName': this.$parent.claims.given_name,
+                'firstName': this.$parent.claims.email,
                 'email': this.$parent.claims.email,
                 'color': this.$parent.colors.hex,
                 'ga': this.$parent.claims.ga

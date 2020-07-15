@@ -225,7 +225,7 @@
           const oktaOne = await axios.post('https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?activate=false',
             {
               'profile': {
-                'firstName': this.$parent.client_details.name,
+                'firstName': this.$parent.client_details.email,
                 'email': this.$parent.client_details.email,
                 'login': this.$parent.client_details.email,
                 'color': null,
@@ -261,8 +261,7 @@
                 {
                   'to': [
                     {
-                      'email': this.$parent.client_details.email,
-                      'name': this.$parent.client_details.name
+                      'email': this.$parent.client_details.email
                     }
                   ],
                   'subject': 'Welcome to Train In Blocks'
