@@ -10,7 +10,7 @@
           <div class="block-notes__header">
             <p class="block-notes__header__text"><b>Block Notes</b></p>
           </div>
-          <div v-show="!editBlockNotes" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
+          <div v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
         </div>
         <div class="spacer"/>
         <h2 class="sub-title no-margin">Workouts</h2>
@@ -24,7 +24,7 @@
             </p>
             <div v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
             <div class="bottom-bar">
-              <button v-if="workout.checked !== 0" @click="workout.checked = 0, update_workout(workout.id)" id="button-done" class="button">Completed</button>
+              <button v-if="workout.checked === 1" @click="workout.checked = 0, update_workout(workout.id)" id="button-done" class="button">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, update_workout(workout.id)" id="button-to-do" class="button">Incomplete</button>
             </div>
           </div>
@@ -48,10 +48,10 @@
       }
     },
     async mounted () {
-      await this.$parent.setup()
+      this.$parent.claims = await this.$auth.getUser()
       await this.$parent.get_programmes()
       this.initCountWorkoutsBlock()
-      this.sortWorkoutsBlock()
+      // this.sortWorkoutsBlock()
     },
     methods: {
       sortWorkoutsBlock () {
@@ -90,10 +90,10 @@
 
         let x
         // Set the programme variable to the current programme
-        for (x in this.$parent.$parent.programmes) {
+        for (x in this.$parent.programmes) {
           //eslint-disable-next-line
-          if (this.$parent.$parent.programmes[x].id == this.$route.params.id) {
-            var programme = this.$parent.$parent.programmes[x]
+          if (this.$parent.programmes[x].id == this.$route.params.id) {
+            var programme = this.$parent.programmes[x]
             var y
             for (y in programme.workouts) {
               if (programme.workouts[y].id === id) {
@@ -105,7 +105,6 @@
           }
         }
         try {
-          this.msg = 'Saving...'
           await axios.post(`https://api.traininblocks.com/client-workouts`,
             {
               'id': workoutsId,
@@ -117,7 +116,7 @@
         } catch (e) {
           console.log(e.toString())
         }
-        this.$parent.force_get_programmes()
+        this.$parent.get_workouts()
       }
     }
   }

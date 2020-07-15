@@ -715,7 +715,8 @@ export default {
               ['clean']
           ]
         }
-      }
+      },
+      programmes: null
     }
   },
   created () {
@@ -947,16 +948,10 @@ export default {
           this.programmes = JSON.parse(localStorage.getItem('programmes'))
         } else {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
           const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
           this.programmes = programmes.data
-
-          // Update the localstorage with the programmes
-          localStorage.setItem('programmes', JSON.stringify(this.programmes))
-        }
-        var f
-        for (f in this.programmes) {
-          if (!JSON.parse(localStorage.getItem('programmes'))[f].workouts) {
+          var f
+          for (f in this.programmes) {
             axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
             // eslint-disable-next-line
             const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
@@ -971,23 +966,13 @@ export default {
         console.log(e.toString())
       }
     },
-    async force_get_programmes () {
+    async get_workouts () {
       try {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
-        const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
-        this.programmes = programmes.data
-
-        // Update the localstorage with the programmes
-        localStorage.setItem('programmes', JSON.stringify(this.programmes))
         var f
         for (f in this.programmes) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          // eslint-disable-next-line
-          const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
-
-          this.programmes[f].workouts = response_programmes.data
-
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
+          this.programmes[f].workouts = response.data
           // Update the localstorage with the workouts
           localStorage.setItem('programmes', JSON.stringify(this.programmes))
         }

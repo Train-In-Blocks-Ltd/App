@@ -133,9 +133,9 @@
 </style>
 
 <template>
-  <div id="home" v-if="this.$parent.authenticated">
+  <div id="home">
     <div class="container--client">
-      <h1 class="main-title"> Home</h1>
+      <h1 class="main-title">Home</h1>
       <div class="container--title">
         <inline-svg :src="require('../../../assets/svg/today.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Today</h2>
@@ -212,9 +212,9 @@ export default {
     }
   },
   async mounted () {
-    await this.$parent.setup()
+    this.$parent.claims = await this.$auth.getUser()
     await this.$parent.get_programmes()
-    this.sortWorkoutsHome()
+    // this.sortWorkoutsHome()
     this.initCountWorkoutsHome()
   },
   methods: {
