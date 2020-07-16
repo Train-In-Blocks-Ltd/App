@@ -181,7 +181,6 @@
             <div class="form_buttons">
               <input type="submit" class="button button--save" value="Save" />
               <button class="button button--close cancel" v-on:click="close()">Close</button>
-              <Loader></Loader>
             </div>
           </form>
         </div>
@@ -192,12 +191,8 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
-  import Loader from '../../components/Loader'
 
   export default {
-    components: {
-      Loader
-    },
     data: function () {
       return {
         response: '',

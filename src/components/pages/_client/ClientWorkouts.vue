@@ -524,7 +524,6 @@
 </template>
 
 <script>
-  import Loader from '../../components/Loader'
   import axios from 'axios'
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
@@ -538,7 +537,6 @@
 
   export default {
     components: {
-      Loader,
       LineChart,
       InlineSvg,
       FullCalendar,

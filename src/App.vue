@@ -266,22 +266,6 @@
     grid-auto-flow: column
   }
 
-  /* Loading */
-  .loading-grid {
-    display: inline-grid;
-    grid-template-columns: repeat(2, auto);
-    place-items: end;
-    justify-self: start;
-    grid-gap: 1rem
-  }
-  .loader, .loader svg {
-    width: 4rem;
-    height: 3.5rem
-  }
-  .loader circle {
-    fill: #282828
-  }
-
   /* Logo */
   .logo {
     margin-bottom: auto

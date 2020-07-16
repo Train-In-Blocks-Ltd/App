@@ -48,7 +48,6 @@
         <div class="form_buttons">
           <input type="submit" class="button button--save">
           <button class="button button--close cancel" @click="$modal.hide('first-time-home')">Another Time</button>
-          <Loader></Loader>
         </div>
       </form>
       </div>
@@ -92,7 +91,6 @@
         <div class="form_buttons">
           <input type="submit" class="button button--save" value="Save" />
           <button class="button button--close" v-on:click="close()">Close</button>
-          <Loader></Loader>
         </div>
       </form>
     </div>
@@ -102,12 +100,10 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
-  import Loader from '../components/Loader'
   import InlineSvg from 'vue-inline-svg'
 
   export default {
     components: {
-      Loader,
       InlineSvg
     },
     data: function () {
