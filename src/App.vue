@@ -664,6 +664,7 @@
         <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
       </div>
     </transition>
+    <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
@@ -740,10 +741,13 @@
 <script>
 import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
   components: {
-    InlineSvg
+    InlineSvg,
+    Loading
   },
   data: function () {
     return {

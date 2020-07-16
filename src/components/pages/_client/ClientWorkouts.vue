@@ -1128,7 +1128,7 @@
       },
       async update_programme () {
         // Set loading status to true
-        this.$parent.loading = true
+        this.$parent.$parent.loading = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         let x
@@ -1155,7 +1155,7 @@
               'workouts': programme.workouts
             }
           )
-          this.$parent.loading = false
+          this.$parent.$parent.loading = false
 
           // Set vue client_details data to new data
           let x
