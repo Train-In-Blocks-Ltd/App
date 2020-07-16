@@ -46,10 +46,13 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
+  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logoutfno {
     overflow-x: hidden;
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
+  }
+  .show-block-notes h1, .show-block-notes h2, .show-client-notes h1, .show-client-notes h2, .client_link__notes__content h1, .client_link__notes__content h2 {
+    margin: 0
   }
 
   /* Fonts */
@@ -122,6 +125,70 @@
   button:disabled:hover, button[disabled]:hover {
     color: #282828;
     background-color: transparent
+  }
+  .button.no-margin {
+    margin: 0
+  }
+
+  /* GLOBAL: Workouts */
+  .wrapper--workout__header {
+    height: 6.4rem
+  }
+  .wrapper--workout, .block-notes {
+    height: fit-content;
+    border-left: 1px solid #E1E1E1;
+    border-bottom: 1px solid #E1E1E1
+  }
+  .wrapper--workout__header, .block-notes__header {
+    margin: 0;
+    padding: 1rem
+  }
+  .text--name {
+    text-overflow: ellipsis;
+    white-space: nowrap
+  }
+  .text--date, .text--checked {
+    font-size: .8rem
+  }
+  .bottom-bar {
+    height: 54px;
+    padding: .6rem 1rem
+  }
+  #button-done {
+    background-color: green
+  }
+  #button-to-do {
+    background-color: #B80000
+  }
+  #button-done, #button-to-do {
+    color: white;
+    height: 2rem;
+    margin: auto 0
+  }
+  #button-done:hover, #button-to-do:hover {
+    opacity: .6
+  }
+
+  /* Show workouts */
+  .show-workout, .show-block-notes {
+    overflow-wrap: break-word;
+    padding: 12px 15px;
+    max-height: 293px;
+    color: #282828;
+    line-height: 1.42;
+    overflow-y: auto;
+    font-size: .8rem
+  }
+  .show-workout a {
+    color: blue
+  }
+  .show-workout h2, .show-block-notes h2 {
+    font-size: 1.5rem
+  }
+  .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
+    text-decoration: none;
+    margin: 0;
+    padding: 0
   }
 
   /* GLOBAL: Calendar */
@@ -406,6 +473,7 @@
   /* Client Container Animation */
   .client_container > a {
     display: grid;
+    grid-gap: 1rem;
     position: relative;
     font-weight: 400;
     color: #282828;
@@ -614,7 +682,7 @@
             Home
           </router-link>
         </transition>
-        <transition>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
           <router-link to="/clientUser" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
             Home
           </router-link>

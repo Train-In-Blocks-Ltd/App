@@ -144,7 +144,8 @@
           <p><b>Client Information</b></p>
         </div>
         <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-        <div v-show="!$parent.editClientNotes" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
+        <div v-if="!$parent.editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
+        <p v-if="!$parent.editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
           <button v-show="!$parent.editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
           <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
@@ -165,10 +166,7 @@
                     <p><b>Start: </b>{{block.start}}</p>
                   </div>
                 </div>
-                <div>
-                  <p><b>Notes:</b></p>
-                  <div v-html="block.notes" class="block_container--link__block-notes" />
-                </div>
+                <div v-html="block.notes" class="block_container--link__block-notes" />
               </router-link>
           </div>
         </div>
