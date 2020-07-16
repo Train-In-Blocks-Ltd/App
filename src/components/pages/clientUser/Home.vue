@@ -8,20 +8,6 @@
   .sub-title.no-margin {
     margin: 0
   }
-  #button-done {
-    background-color: green
-  }
-  #button-to-do {
-    background-color: #B80000
-  }
-  #button-done, #button-to-do {
-    color: white;
-    height: 2rem;
-    margin: auto 0
-  }
-  #button-done:hover, #button-to-do:hover {
-    opacity: .6
-  }
 
   /* SVG */
   .title-icon {
@@ -152,13 +138,17 @@
             </p>
             <div v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
             <div class="bottom-bar">
-              <button v-if="workout.checked !== 0" @click="workout.checked = 0" id="button-done" class="button">Completed</button>
-              <button v-if="workout.checked === 0" @click="workout.checked = 1" id="button-to-do" class="button">Incomplete</button>
+              <button v-if="workout.checked !== 0" @click="workout.checked = 0" id="button-done" class="button no-margin">Completed</button>
+              <button v-if="workout.checked === 0" @click="workout.checked = 1" id="button-to-do" class="button no-margin">Incomplete</button>
+              <button class="button no-margin">Give Feedback</button>
             </div>
           </div>
         </div>
-        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
-        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
+        <p v-if="viewWorkoutsStore.length === 0">No workouts today...</p>
+        <div v-if="viewWorkoutsStore.length !== 0">
+          <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
+          <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
+        </div>
       </div>
       <div class="spacer"/>
       <div class="container--title">
@@ -176,10 +166,7 @@
                 <p><b>Start: </b>{{block.start}}</p>
               </div>
             </div>
-            <div>
-              <p><b>Notes:</b></p>
-              <div v-html="block.notes" class="block_container--link__block-notes" />
-            </div>
+            <div v-html="block.notes" class="block_container--link__block-notes" />
           </router-link>
         </div>
       </div>
@@ -207,14 +194,14 @@ export default {
             [{'script': 'sub'}, {'script': 'super'}]
           ]
         },
-        placeholder: 'Show some love and give your trainer some quality feedback...'
+        placeholder: 'Type away...'
       }
     }
   },
   async mounted () {
     this.$parent.claims = await this.$auth.getUser()
     await this.$parent.get_programmes()
-    // this.sortWorkoutsHome()
+    this.sortWorkoutsHome()
     this.initCountWorkoutsHome()
   },
   methods: {

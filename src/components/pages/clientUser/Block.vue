@@ -10,7 +10,8 @@
           <div class="block-notes__header">
             <p class="block-notes__header__text"><b>Block Notes</b></p>
           </div>
-          <div v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
+          <div v-if="programme.notes !== ''" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn" />
+          <p v-if="programme.notes === ''" class="show-block-notes">No block notes added...</p>
         </div>
         <div class="spacer"/>
         <h2 class="sub-title no-margin">Workouts</h2>
@@ -29,8 +30,8 @@
             </div>
           </div>
         </div>
-        <button v-show="currentWorkoutIndexBlock != 0" @click="currentWorkoutIndexBlock--">Back</button>
-        <button v-show="currentWorkoutIndexBlock != maxWorkoutIndexBlock" @click="currentWorkoutIndexBlock++">Next</button>
+        <button class="button" v-show="currentWorkoutIndexBlock != 0" @click="currentWorkoutIndexBlock--">Back</button>
+        <button class="button" v-show="currentWorkoutIndexBlock != maxWorkoutIndexBlock" @click="currentWorkoutIndexBlock++">Next</button>
       </div>
     </div>
   </div>
@@ -51,7 +52,7 @@
       this.$parent.claims = await this.$auth.getUser()
       await this.$parent.get_programmes()
       this.initCountWorkoutsBlock()
-      // this.sortWorkoutsBlock()
+      this.sortWorkoutsBlock()
     },
     methods: {
       sortWorkoutsBlock () {

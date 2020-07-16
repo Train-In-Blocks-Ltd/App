@@ -152,10 +152,10 @@
       <div class="top_grid" v-if="!blocks">
         <!-- Update the client details -->
         <form class="client_info" v-on:submit.prevent="update_client()">
-          <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" v-on:click="editing()"/>
+          <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
           <div class="client_info__more-details">
-            <label><b>Email: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" v-on:click="editing()"/></label>
-            <label><b>Phone: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" v-on:click="editing()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
+            <label><b>Email: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/></label>
+            <label><b>Phone: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
             <button @click="createClient()" class="button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
           </div>
         </form>
@@ -464,7 +464,6 @@
         await this.get_workouts()
       },
       async update_client () {
-        this.$parent.loading = true
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           // eslint-disable-next-line
@@ -480,29 +479,9 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients()
           await this.$parent.clients_to_vue()
-          this.$parent.loading = false
         } catch (e) {
           console.log(e.toString())
         }
-      },
-      editing () {
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          if (!document.querySelector('.client_info').contains(e.target)) {
-            // Update the workout
-            self.update_client()
-            window.removeEventListener('click', click)
-          }
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
       }
     }
   }
