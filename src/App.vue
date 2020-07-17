@@ -528,31 +528,6 @@
     width: 100%
   }
 
-  /* Splash */
-  .splash {
-    display: flex;
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: 100vw;
-    background-color: white;
-    z-index: 1000
-  }
-  .splash__logo {
-    margin: auto;
-    opacity: 0;
-    animation: splashFade 2 1.2s alternate
-  }
-  @keyframes splashFade {
-    from {
-      opacity: 0
-    }
-    to {
-      opacity: 1
-    }
-  }
-
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #account, #archive, .wrapper--client {
@@ -643,14 +618,9 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
-    <transition leave-active-class="animate__animated animate__fadeOut">
-      <div v-show="splashing" class="splash">
-        <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
-      </div>
-    </transition>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
-      <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
+      <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
         </router-link>
@@ -736,7 +706,6 @@ export default {
   data: function () {
     return {
       showNav: false,
-      splashing: true,
       archive_error: '',
       archive_posts: {},
       no_archive: false,
@@ -777,9 +746,6 @@ export default {
   },
   created () {
     this.isAuthenticated()
-  },
-  mounted () {
-    setTimeout(() => { this.splashing = false }, 2200)
   },
   watch: {
     // Everytime the route changes, check for auth status

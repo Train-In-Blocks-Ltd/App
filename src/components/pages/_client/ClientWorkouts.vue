@@ -396,8 +396,8 @@
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-if="!editBlockNotes  && programme.notes !== ''" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
-                <p v-if="!editBlockNotes && programme.notes === ''" class="show-block-notes">No block notes added...</p>
+                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
+                <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
                   <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
                   <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
@@ -1184,6 +1184,7 @@
         }
       },
       async update_workout (id) {
+        this.$parent.$parent.loading = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
