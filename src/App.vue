@@ -530,7 +530,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #account, #archive, .wrapper--client {
+    #home, #account, #archive, .wrapper--client,#learn {
       padding: 4rem 10vw
     }
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -558,7 +558,8 @@
       width: 100vw;
       flex-direction: row;
       padding: 1rem 1rem 1.4rem 1rem;
-      justify-content: space-between
+      justify-content: space-between;
+      border-right: none
     }
     .account_nav--item--text {
       display: none
@@ -589,7 +590,7 @@
       width: 0;
       background-color: transparent
     }
-    #home, #account, #archive, .wrapper--client {
+    #home, #account, #archive, .wrapper--client, #learn {
       padding: 2rem 5vw 6rem 5vw
     }
     p {
@@ -600,6 +601,9 @@
     }
     .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
       padding: .4rem .5rem
+    }
+    .ql-editor {
+      max-height: calc(100vh - 240px)
     }
 
     /* Blocks Page */

@@ -317,6 +317,28 @@
       font-size: 2rem
     }
   }
+
+  @media (max-width: 576px) {
+    /* Container */
+    .block_grid {
+      display: block
+    }
+    .calendar, .block-plan, .graph {
+      margin: 4rem 0
+    }
+
+    /* Full screen editor */
+    .activeWorkout {
+      border: none;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      background-color: white;
+      z-index: 9999;
+      top: 0;
+      left: 0
+    }
+  }
 </style>
 
 <template>
