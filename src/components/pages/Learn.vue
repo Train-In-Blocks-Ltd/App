@@ -29,27 +29,27 @@
   <div id="learn">
     <h1 class="main-title">Learn</h1>
     <div class="container--guide">
-      <div class="guide-item">
-        <img class="img--gif" src="../../assets/guide/gif/add-client.gif" alt="Adding a new client">
+      <div v-for="item in guides" :key="item.id" class="guide-item">
+        <img class="img--gif" :src="require('../../assets/guide/gif/' + item.gif)">
         <div>
-          <h2>Adding a new client</h2>
-          <p>Text</p>
-        </div>
-      </div>
-      <div class="guide-item">
-        <img class="img--gif" src="../../assets/guide/gif/client-notes.gif" alt="Adding client notes">
-        <div>
-          <h2> Adding client notes</h2>
-          <p>Text</p>
-        </div>
-      </div>
-      <div class="guide-item">
-        <img class="img--gif" src="../../assets/guide/gif/add-block.gif" alt="Adding a new block">
-        <div>
-          <h2>Adding a new block</h2>
-          <p>Text</p>
+          <h2>{{ item.title }}</h2>
+          <p>{{ item.text }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data () {
+    return {
+      guides: [
+        { id: 1, gif: 'add-client.gif', title: 'Adding a new client', text: 'Text' },
+        { id: 2, gif: 'client-notes.gif', title: 'Adding client notes', text: 'Text' },
+        { id: 3, gif: 'add-block.gif', title: 'Adding a new block', text: 'Text' }
+      ]
+    }
+  }
+}
+</script>
