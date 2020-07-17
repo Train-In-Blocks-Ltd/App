@@ -319,6 +319,11 @@
   }
 
   @media (max-width: 576px) {
+    /* Overall */
+    .floating_nav__block {
+      top: 4rem
+    }
+
     /* Container */
     .block_grid {
       display: block
@@ -336,7 +341,8 @@
       background-color: white;
       z-index: 9999;
       top: 0;
-      left: 0
+      left: 0;
+      padding: 2rem
     }
   }
 </style>
