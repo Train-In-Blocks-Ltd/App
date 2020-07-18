@@ -24,10 +24,23 @@
   .workout_toolkit--content input {
     width: 4rem
   }
+  .modal--toolkit-close {
+    display: none
+  }
 
   @media (max-width: 576px) {
     .workout_toolkit--content label, .workout_toolkit--content input {
       font-size: .8rem
+    }
+    .workout_toolkit--select {
+      font-size: 1.2rem;
+      width: 100%
+    }
+    .modal--toolkit {
+      height: 100vh
+    }
+    .modal--toolkit-close {
+      display: block
     }
   }
 </style>
@@ -95,6 +108,7 @@
         <p><b>Body Mass Index: </b>{{toolkit_calcs.bmi.value}} kg/m<sup>2</sup></p>
       </div>
     </div>
+    <button class="modal--toolkit-close button" @click="$parent.$modal.hide('toolkit')">Close</button>
   </div>
 </template>
 

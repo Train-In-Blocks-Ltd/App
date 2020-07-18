@@ -109,18 +109,18 @@
     #client .client_info input:not([type='submit']):hover, #duration:hover {
       border-bottom: 2px solid #28282800
     }
+    #client .client_info input.client_info--name {
+      font-size: 2rem
+    }
+    .client_info {
+      grid-gap: 0;
+      width: 90vw
+    }
   }
 
   /* For Mobile */
   @media (max-width: 576px) {
     /* Overall */
-    .client_info {
-      grid-gap: 0;
-      width: 90vw
-    }
-    #client .client_info input.client_info--name {
-      font-size: 2rem
-    }
     #client .client_info input.client_info--name:focus {
       border-bottom: 2px solid #282828
     }
