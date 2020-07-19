@@ -362,7 +362,7 @@
     opacity: .6;
     cursor: pointer;
     font-size: 1rem;
-    padding: .8rem 0;
+    margin: .8rem 0;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item:hover {
