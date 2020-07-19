@@ -187,8 +187,7 @@
   }
   .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
     text-decoration: none;
-    margin: 0;
-    padding: 0
+    margin: 0
   }
 
   /* GLOBAL: Calendar */
