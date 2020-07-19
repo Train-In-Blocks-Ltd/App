@@ -181,15 +181,6 @@
     display: grid;
     grid-gap: 2rem
   }
-  .wrapper--workout, .block-notes {
-    height: fit-content;
-    border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1
-  }
-  .wrapper--workout__header, .block-notes__header {
-    margin: 0;
-    padding: 1rem
-  }
   input.workout-name, input.workout-date {
     text-overflow: ellipsis;
     border: 0;
@@ -204,39 +195,8 @@
   input.workout-date {
     font-size: .8rem
   }
-  .text--name {
-    text-overflow: ellipsis;
-    white-space: nowrap
-  }
-  .text--date, .text--checked {
-    font-size: .8rem
-  }
-  .bottom-bar {
-    height: 54px;
-    padding: .6rem 1rem
-  }
   .bottom-bar .button {
     margin: 0
-  }
-  .show-workout, .show-block-notes {
-    overflow-wrap: break-word;
-    padding: 12px 15px;
-    max-height: 293px;
-    color: #282828;
-    line-height: 1.42;
-    overflow-y: auto;
-    font-size: .8rem
-  }
-  .show-workout a {
-    color: blue
-  }
-  .show-workout h2, .show-block-notes h2 {
-    font-size: 1.5rem
-  }
-  .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
-    text-decoration: none;
-    margin: 0;
-    padding: 0
   }
   .activeWorkout {
     border: 2px solid #282828
@@ -312,10 +272,12 @@
     grid-gap: .5rem
   }
 
-  /* Copy Modal */
-  .modal--copy {
+  /* All Modal */
+  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy {
     padding: 2rem
   }
+
+  /* Copy Modal */
   .modal--copy h3 {
     margin: 0 0 1.5rem 0
   }
@@ -330,16 +292,6 @@
   .form--copy input {
     width: 100%;
     margin: .4rem 0
-  }
-
-  /* Info Modal */
-  .modal--info {
-    padding: 2rem
-  }
-
-  /* Move Modal */
-  .modal--move {
-    padding: 1rem 2rem
   }
 
   @media (max-width: 768px) {
@@ -365,10 +317,44 @@
       font-size: 2rem
     }
   }
+
+  @media (max-width: 576px) {
+    /* Overall */
+    .floating_nav__block {
+      top: 4rem
+    }
+
+    /* Container */
+    .block_grid {
+      display: block
+    }
+    .calendar, .block-plan, .graph {
+      margin: 4rem 0
+    }
+
+    /* Full screen editor */
+    .activeWorkout {
+      border: none;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      background-color: white;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      padding: 2rem
+    }
+  }
 </style>
 
 <template>
     <div id="blocks">
+      <modal name="feedback-trainer" height="auto" :adaptive="true" :clickToClose="false">
+        <div class="modal--feedback-trainer">
+          <div v-html="feedbackStr" /><br>
+          <button class="button no-margin" @click="hideFeedback()">Close</button>
+        </div>
+      </modal>
       <modal name="info" height="auto" :adaptive="true">
         <div class="modal--info">
           <p><b>The Format Explained</b></p><br>
@@ -386,7 +372,7 @@
         <form @submit.prevent="copyAcross()" class="modal--copy">
             <label for="range">From {{currentWeek}} to: </label>
             <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
-            <label for="range">Days untill next workouts: </label>
+            <label for="range">Days until next workouts: </label>
             <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
             <button class="button">Copy</button>
         </form>
@@ -423,11 +409,11 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" v-on:click="$parent.editing()"/>
+              <input @blur="$parent.update_client()" v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the programme info -->
               <form class="block_info">
-                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" v-on:click="editing()">
-                <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required v-on:click="editing()"/></label>
+                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
+                <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/></label>
               </form>
             </div>  <!-- client_info -->
           </div> <!-- top_grid -->
@@ -438,7 +424,8 @@
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-show="!editBlockNotes" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
+                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
+                <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
                   <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
                   <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
@@ -454,7 +441,7 @@
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @click="editing()" @change="weekConfirm(programme.duration)"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @blur="update_programme()" @change="weekConfirm(programme.duration)"/>
                   </div>
                 </div>
                 <div class="block_table--container">
@@ -500,6 +487,7 @@
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
+                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="showFeedback(workout.feedback)">Feedback</button>
                       </div>
                     </div>
                   </div>
@@ -564,7 +552,6 @@
 </template>
 
 <script>
-  import Loader from '../../components/Loader'
   import axios from 'axios'
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
@@ -578,7 +565,6 @@
 
   export default {
     components: {
-      Loader,
       LineChart,
       InlineSvg,
       FullCalendar,
@@ -586,6 +572,7 @@
     },
     data: function () {
       return {
+        feedbackStr: '',
         showBlockOptions: false,
         weekColor: {
           backgroundColor: ''
@@ -597,7 +584,6 @@
           name: 'Untitled',
           date: ''
         },
-        delete: false,
         showType: true,
         dataPacketStore: [],
         regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
@@ -648,6 +634,14 @@
       this.scan()
     },
     methods: {
+      showFeedback (str) {
+        this.feedbackStr = str
+        this.$modal.show('feedback-trainer')
+      },
+      hideFeedback () {
+        this.feedbackStr = ''
+        this.$modal.hide('feedback-trainer')
+      },
       toggleComplete (value) {
         var out
         if (value === 0) {
@@ -1160,7 +1154,7 @@
       },
       async update_programme () {
         // Set loading status to true
-        this.$parent.loading = true
+        this.$parent.$parent.loading = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         let x
@@ -1187,7 +1181,7 @@
               'workouts': programme.workouts
             }
           )
-          this.$parent.loading = false
+          this.$parent.$parent.loading = false
 
           // Set vue client_details data to new data
           let x
@@ -1217,26 +1211,8 @@
           console.log(e.toString())
         }
       },
-      editing () {
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          if (!document.querySelector('.block_info').contains(e.target)) {
-            // Update the workout
-            self.update_programme()
-            window.removeEventListener('click', click)
-          }
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            // Add event listener for clicking outside box
-            window.addEventListener('click', click)
-          }
-        , 1000)
-      },
       async update_workout (id) {
+        this.$parent.$parent.loading = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
@@ -1298,7 +1274,6 @@
           )
           this.response = response_save_workouts.data
           // Get the workouts from the API because we've just created a new one
-          this.update_programme()
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false
 
@@ -1310,6 +1285,7 @@
             block_color: ''
           }
           this.msg = 'Idle'
+          this.update_programme()
           this.$ga.event('Workout', 'new')
         } catch (e) {
           console.error(`${e}`)
@@ -1343,14 +1319,15 @@
         if (confirm('Are you sure you want to delete this workout?')) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
+            this.$parent.$parent.loading = true
             this.msg = 'Deleting...'
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
-            this.$parent.force_get_workouts()
-            this.delete = true
+            await this.$parent.force_get_workouts()
+            this.$parent.$parent.loading = false
             this.msg = 'Idle'
             this.$ga.event('Workout', 'delete')
-            this.scan()
+            this.update_programme()
           } catch (e) {
             console.error(`${e}`)
           }

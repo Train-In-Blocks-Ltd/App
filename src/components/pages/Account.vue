@@ -19,18 +19,6 @@
   .form__options label {
     margin: auto 0
   }
-  #first-name, #email {
-    width: 40%;
-    text-overflow: ellipsis;
-    font-size: 1rem;
-    border: none;
-    outline-width: 0;
-    border-bottom: 2px solid #28282800;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  #first-name:hover, #email:hover, #first-name:focus, #email:focus {
-    border-bottom: 2px solid #282828
-  }
   .text-reset {
     font-size: .8rem
   }
@@ -58,11 +46,11 @@
     <form class="details_container" v-if="$parent.claims">
         <div class="form__options">
           <label for="email"><b>Email: </b></label>
-          <input type="email" id="email" name="email" autocomplete="email" v-model="$parent.claims.email" required v-on:click="edit()"/>
+          <input type="email" id="email" class="input--forms" name="email" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
         </div>
         <div class="form__options">
           <label for="color"><b>Colour theme: </b></label>
-          <input type="color" name="color" :value="$parent.colors.hex" required v-on:click="edit()" @change="rgb($event)"/>
+          <input type="color" name="color" :value="$parent.colors.hex" required @blur="save()" @change="rgb($event)"/>
         </div>
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
           <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
@@ -77,7 +65,7 @@
         <p><a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a></p>
         <div class="form__options">
           <label for="cookies"><b>Third Party Cookies: </b></label>
-          <input type="checkbox" v-model="$parent.claims.ga" v-on:click="edit()"/>
+          <input type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
         </div>
     </form>
   </div>
@@ -105,22 +93,6 @@
           console.log(e)
         }
       },
-      edit () {
-        // Set vue self
-        var self = this
-
-        function click (e) {
-          // Update the workout
-          self.save()
-          window.removeEventListener('click', click)
-        }
-        // Wait 1 second before applying the event listener to avoid registering the click to open the box
-        setTimeout(
-          function () {
-            window.addEventListener('click', click)
-          }
-        , 1000)
-      },
       async save () {
         this.$parent.loading = true
         try {
@@ -143,6 +115,7 @@
               }
             }
           )
+          this.$parent.loading = false
         } catch (e) {
           console.log(e)
         }

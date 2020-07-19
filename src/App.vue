@@ -46,10 +46,13 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
+  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logoutfno {
     overflow-x: hidden;
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
+  }
+  .show-block-notes h1, .show-block-notes h2, .show-client-notes h1, .show-client-notes h2, .client_link__notes__content h1, .client_link__notes__content h2 {
+    margin: 0
   }
 
   /* Fonts */
@@ -122,6 +125,70 @@
   button:disabled:hover, button[disabled]:hover {
     color: #282828;
     background-color: transparent
+  }
+  .button.no-margin {
+    margin: 0
+  }
+
+  /* GLOBAL: Workouts */
+  .wrapper--workout__header {
+    height: 6.4rem
+  }
+  .wrapper--workout, .block-notes {
+    height: fit-content;
+    border-left: 1px solid #E1E1E1;
+    border-bottom: 1px solid #E1E1E1
+  }
+  .wrapper--workout__header, .block-notes__header {
+    margin: 0;
+    padding: 1rem
+  }
+  .text--name {
+    text-overflow: ellipsis;
+    white-space: nowrap
+  }
+  .text--date, .text--checked {
+    font-size: .8rem
+  }
+  .bottom-bar {
+    height: 54px;
+    padding: .6rem 1rem
+  }
+  #button-done {
+    background-color: green
+  }
+  #button-to-do {
+    background-color: #B80000
+  }
+  #button-done, #button-to-do {
+    color: white;
+    height: 2rem;
+    margin: auto 0
+  }
+  #button-done:hover, #button-to-do:hover {
+    opacity: .6
+  }
+
+  /* Show workouts */
+  .show-workout, .show-block-notes {
+    overflow-wrap: break-word;
+    padding: 12px 15px;
+    max-height: 293px;
+    color: #282828;
+    line-height: 1.42;
+    overflow-y: auto;
+    font-size: .8rem
+  }
+  .show-workout a {
+    color: blue
+  }
+  .show-workout h2, .show-block-notes h2 {
+    font-size: 1.5rem
+  }
+  .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
+    text-decoration: none;
+    margin: 0;
+    padding: 0
   }
 
   /* GLOBAL: Calendar */
@@ -197,22 +264,6 @@
     grid-gap: 1rem;
     place-content: start;
     grid-auto-flow: column
-  }
-
-  /* Loading */
-  .loading-grid {
-    display: inline-grid;
-    grid-template-columns: repeat(2, auto);
-    place-items: end;
-    justify-self: start;
-    grid-gap: 1rem
-  }
-  .loader, .loader svg {
-    width: 4rem;
-    height: 3.5rem
-  }
-  .loader circle {
-    fill: #282828
   }
 
   /* Logo */
@@ -406,6 +457,7 @@
   /* Client Container Animation */
   .client_container > a {
     display: grid;
+    grid-gap: 1rem;
     position: relative;
     font-weight: 400;
     color: #282828;
@@ -476,34 +528,9 @@
     width: 100%
   }
 
-  /* Splash */
-  .splash {
-    display: flex;
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: 100vw;
-    background-color: white;
-    z-index: 1000
-  }
-  .splash__logo {
-    margin: auto;
-    opacity: 0;
-    animation: splashFade 2 1.2s alternate
-  }
-  @keyframes splashFade {
-    from {
-      opacity: 0
-    }
-    to {
-      opacity: 1
-    }
-  }
-
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #account, #archive, .wrapper--client {
+    #home, #account, #archive, .wrapper--client,#learn {
       padding: 4rem 10vw
     }
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -531,7 +558,8 @@
       width: 100vw;
       flex-direction: row;
       padding: 1rem 1rem 1.4rem 1rem;
-      justify-content: space-between
+      justify-content: space-between;
+      border-right: none
     }
     .account_nav--item--text {
       display: none
@@ -562,7 +590,7 @@
       width: 0;
       background-color: transparent
     }
-    #home, #account, #archive, .wrapper--client {
+    #home, #account, #archive, .wrapper--client, #learn {
       padding: 2rem 5vw 6rem 5vw
     }
     p {
@@ -573,6 +601,9 @@
     }
     .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
       padding: .4rem .5rem
+    }
+    .ql-editor {
+      max-height: calc(100vh - 240px)
     }
 
     /* Blocks Page */
@@ -591,13 +622,9 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
-    <transition leave-active-class="animate__animated animate__fadeOut">
-      <div v-show="splashing" class="splash">
-        <inline-svg class="splash__logo" :src="require('./assets/svg/full-logo.svg')"/>
-      </div>
-    </transition>
+    <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
-      <div class="logo animate__animated animate__bounceInDown animate__delay-5s">
+      <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
         </router-link>
@@ -614,7 +641,7 @@
             Home
           </router-link>
         </transition>
-        <transition>
+        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
           <router-link to="/clientUser" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
             Home
           </router-link>
@@ -672,15 +699,17 @@
 <script>
 import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
   components: {
-    InlineSvg
+    InlineSvg,
+    Loading
   },
   data: function () {
     return {
       showNav: false,
-      splashing: true,
       archive_error: '',
       archive_posts: {},
       no_archive: false,
@@ -721,9 +750,6 @@ export default {
   },
   created () {
     this.isAuthenticated()
-  },
-  mounted () {
-    setTimeout(() => { this.splashing = false }, 2200)
   },
   watch: {
     // Everytime the route changes, check for auth status

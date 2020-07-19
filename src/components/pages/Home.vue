@@ -8,6 +8,12 @@
     grid-template-rows: 8rem 1fr;
     margin-bottom: 2rem
   }
+  .client_link__notes__content h1, .block_container--link__block-notes h1 {
+    font-size: 1.2rem
+  }
+  .client_link__notes__content h2, .block_container--link__block-notes h2 {
+    font-size: 1rem
+  }
 
   /* Add Client Form */
   .add_client {
@@ -42,7 +48,6 @@
         <div class="form_buttons">
           <input type="submit" class="button button--save">
           <button class="button button--close cancel" @click="$modal.hide('first-time-home')">Another Time</button>
-          <Loader></Loader>
         </div>
       </form>
       </div>
@@ -66,13 +71,10 @@
             <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
               <div>
                 <p class="client_link__name"><b>{{clients.name}}</b>
-                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
-                <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
+                <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
+                <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
               </div>
-              <div class="client_link__notes">
-                <p><b>Notes:</b></p>
-                <div v-html="clients.notes" class="client_link__notes__content" />
-              </div>
+              <div v-if="clients.notes !== ''" v-html="clients.notes" class="client_link__notes__content" />
             </router-link>
           </div>
         </div>
@@ -89,7 +91,6 @@
         <div class="form_buttons">
           <input type="submit" class="button button--save" value="Save" />
           <button class="button button--close" v-on:click="close()">Close</button>
-          <Loader></Loader>
         </div>
       </form>
     </div>
@@ -99,12 +100,10 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
-  import Loader from '../components/Loader'
   import InlineSvg from 'vue-inline-svg'
 
   export default {
     components: {
-      Loader,
       InlineSvg
     },
     data: function () {
