@@ -762,7 +762,7 @@ export default {
       setTimeout(() => { this.response = '' }, 5000)
     },
     async setup () {
-      this.claims = await this.$auth.getUser()
+      this.claims = JSON.parse(localStorage.getItem('claims'))
       if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
         this.claims.ga = true
       }
