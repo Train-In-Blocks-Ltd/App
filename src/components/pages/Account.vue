@@ -1,5 +1,23 @@
 <style scoped>
+  .details {
+    display: grid;
+    grid-gap: 1rem 0
+  }
+  .privacy {
+    display: grid
+  }
+  .policies:first-of-type {
+    margin-top: 2rem
+  }
+  .policies:last-of-type {
+    margin-bottom: 2rem
+  }
   .policies {
+    width: fit-content;
+    text-decoration: none;
+    color: #282828;
+    opacity: 1;
+    margin: .4rem 0;
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   .policies:hover {
@@ -10,7 +28,7 @@
   }
   .details_container {
     display: grid;
-    grid-gap: 1rem;
+    grid-gap: 4rem;
     align-items: center
   }
   .form__options {
@@ -21,6 +39,9 @@
   }
   .text-reset {
     font-size: .8rem
+  }
+  .allow-cookies {
+    align-self: center
   }
 
   @media (max-width: 768px) {
@@ -44,28 +65,34 @@
   <div id="account" v-if="this.$parent.claims">
     <h1 class="main-title">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
-        <div class="form__options">
-          <label for="email"><b>Email: </b></label>
-          <input type="email" id="email" class="input--forms" name="email" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
+        <div class="details">
+          <div class="form__options">
+            <label for="email"><b>Email: </b></label>
+            <input type="email" id="email" class="input--forms" name="email" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
+          </div>
+          <div class="form__options">
+            <label for="color"><b>Sidebar Colour: </b></label>
+            <input type="color" name="color" :value="$parent.colors.hex" required @blur="save()" @change="rgb($event)"/>
+          </div>
+          <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
+            <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
+          </div>
         </div>
-        <div class="form__options">
-          <label for="color"><b>Colour theme: </b></label>
-          <input type="color" name="color" :value="$parent.colors.hex" required @blur="save()" @change="rgb($event)"/>
+        <div>
+          <h2>Reset your password</h2>
+          <p class="text--reset">To reset your password please logout and click on the <i>Need help signing in?</i> link on the login page.</p>
         </div>
-        <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-          <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
-        </div>
-        <h2>Reset your password</h2>
-        <p class="text--reset">To <b>reset your password</b> please logout and click on the <b>Need help signing in?</b> link on the login page.</p>
-        <h2>Your Privacy and Data</h2>
-        <p>You can find more information about our policies here:</p>
-        <p><a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a></p>
-        <p><a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a></p>
-        <p><a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a></p>
-        <p><a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a></p>
-        <div class="form__options">
-          <label for="cookies"><b>Third Party Cookies: </b></label>
-          <input type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
+        <div class="privacy">
+          <h2>Your Privacy and Data</h2>
+          <p>You can find more information about our policies below:</p>
+          <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
+          <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
+          <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
+          <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
+          <div class="form__options">
+            <label for="cookies">Allow Third Party Cookies: </label>
+            <input class="allow-cookies" type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
+          </div>
         </div>
     </form>
   </div>
