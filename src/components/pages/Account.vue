@@ -94,6 +94,7 @@
         }
       },
       async save () {
+        this.$parent.colors.hex = document.querySelector('input[name="color"]').value
         this.$parent.loading = true
         try {
           // Trouble with access control header so use cors-anywhere
