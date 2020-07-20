@@ -74,6 +74,14 @@
     margin-bottom: 0
   }
 
+  /* Modal */
+  .modal--feedback-client {
+    padding: 2rem
+  }
+  .modal--feedback-client button {
+    margin-left: 1rem
+  }
+
   @media (min-width: 1024px) {
     .block_container--link {
       grid-template: 1fr/1fr 1fr;
@@ -115,11 +123,20 @@
     .blocks_grid {
       grid-template-columns: 1fr
     }
+    .modal--feedback-client {
+      padding: 1rem
+    }
   }
 </style>
 
 <template>
   <div id="home">
+    <modal name="feedback-client" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <div class="modal--feedback-client">
+        <quill :config="$parent.config"/>
+        <button @click="$modal.hide('feedback-client')" class="button">Close</button>
+      </div>
+    </modal>
     <div class="container--client">
       <h1 class="main-title">Home</h1>
       <div class="container--title">
@@ -140,7 +157,7 @@
             <div class="bottom-bar">
               <button v-if="workout.checked !== 0" @click="workout.checked = 0" id="button-done" class="button no-margin">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1" id="button-to-do" class="button no-margin">Incomplete</button>
-              <button class="button no-margin">Give Feedback</button>
+              <button @click="showFeedback()" class="button no-margin">Give Feedback</button>
             </div>
           </div>
         </div>
@@ -205,6 +222,9 @@ export default {
     this.initCountWorkoutsHome()
   },
   methods: {
+    showFeedback () {
+      this.$modal.show('feedback-client')
+    },
     sortWorkoutsHome () {
       this.$parent.programmes.forEach((block) => {
         block.workouts.sort((a, b) => {

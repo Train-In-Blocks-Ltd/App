@@ -46,7 +46,7 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logoutfno {
+  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
     overflow-x: hidden;
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
@@ -529,7 +529,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #account, #archive, .wrapper--client,#learn {
+    #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
       padding: 4rem 10vw
     }
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -589,7 +589,7 @@
       width: 0;
       background-color: transparent
     }
-    #home, #account, #archive, .wrapper--client, #learn {
+    #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
       padding: 2rem 5vw 6rem 5vw
     }
     p {

@@ -342,7 +342,7 @@
       z-index: 9999;
       top: 0;
       left: 0;
-      padding: 2rem
+      padding: 2rem 2rem 6rem 2rem
     }
   }
 </style>
