@@ -288,6 +288,7 @@
               }
             }
           )
+          alert('An activation email was sent to your client.')
         } catch (e) {
           console.log(e.toString())
         }

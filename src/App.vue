@@ -46,7 +46,7 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logoutfno {
+  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
     overflow-x: hidden;
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
@@ -187,8 +187,7 @@
   }
   .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
     text-decoration: none;
-    margin: 0;
-    padding: 0
+    margin: 0
   }
 
   /* GLOBAL: Calendar */
@@ -362,7 +361,7 @@
     opacity: .6;
     cursor: pointer;
     font-size: 1rem;
-    padding: .8rem 0;
+    margin: .8rem 0;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item:hover {
@@ -530,7 +529,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #account, #archive, .wrapper--client,#learn {
+    #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
       padding: 4rem 10vw
     }
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -590,7 +589,7 @@
       width: 0;
       background-color: transparent
     }
-    #home, #account, #archive, .wrapper--client, #learn {
+    #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
       padding: 2rem 5vw 6rem 5vw
     }
     p {

@@ -1,5 +1,27 @@
+<style scoped>
+  .modal--feedback-client {
+    padding: 2rem
+  }
+  .modal--feedback-client button {
+    margin-left: 1rem
+  }
+
+  /* Mobile */
+  @media (max-width: 576px) {
+    .modal--feedback-client {
+      padding: 1rem
+    }
+  }
+</style>
+
 <template>
   <div id="block">
+    <modal name="feedback-client" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <div class="modal--feedback-client">
+        <quill :config="$parent.config"/>
+        <button @click="$modal.hide('feedback-client')" class="button">Close</button>
+      </div>
+    </modal>
     <div v-for="(programme, index) in this.$parent.programmes"
       :key="index">
       <div v-if="programme.id == $route.params.id">
@@ -27,6 +49,7 @@
             <div class="bottom-bar">
               <button v-if="workout.checked === 1" @click="workout.checked = 0, update_workout(workout.id)" id="button-done" class="button">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, update_workout(workout.id)" id="button-to-do" class="button">Incomplete</button>
+              <button @click="showFeedback()" class="button no-margin">Give Feedback</button>
             </div>
           </div>
         </div>
@@ -55,6 +78,9 @@
       this.sortWorkoutsBlock()
     },
     methods: {
+      showFeedback () {
+        this.$modal.show('feedback-client')
+      },
       sortWorkoutsBlock () {
         this.$parent.programmes.forEach((block) => {
           //eslint-disable-next-line
