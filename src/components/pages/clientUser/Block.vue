@@ -16,12 +16,20 @@
 
 <template>
   <div id="block">
-    <modal name="feedback-client" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-      <div class="modal--feedback-client">
-        <quill :config="$parent.config"/>
-        <button @click="$modal.hide('feedback-client')" class="button">Close</button>
+    <div v-for="programme in $parent.programmes" :key="programme.id">
+      <div v-if="programme.id == $route.params.id">
+        <div v-for="(workout, index) in programme.workouts" :key="index">
+          <div v-if="index == currentWorkoutIndexBlock">
+            <modal :name="'feedback-client'+workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+              <div class="modal--feedback-client">
+                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn"/>
+                <button @click="$modal.hide('feedback-client'+workout.id), update_workout(workout.id)" class="button">Close</button>
+              </div>
+            </modal>
+          </div>
+        </div>
       </div>
-    </modal>
+    </div>
     <div v-for="(programme, index) in this.$parent.programmes"
       :key="index">
       <div v-if="programme.id == $route.params.id">
@@ -49,7 +57,7 @@
             <div class="bottom-bar">
               <button v-if="workout.checked === 1" @click="workout.checked = 0, update_workout(workout.id)" id="button-done" class="button">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, update_workout(workout.id)" id="button-to-do" class="button">Incomplete</button>
-              <button @click="showFeedback()" class="button no-margin">Give Feedback</button>
+              <button @click="$modal.show('feedback-client'+workout.id)" class="button no-margin">Give Feedback</button>
             </div>
           </div>
         </div>
@@ -78,9 +86,6 @@
       this.sortWorkoutsBlock()
     },
     methods: {
-      showFeedback () {
-        this.$modal.show('feedback-client')
-      },
       sortWorkoutsBlock () {
         this.$parent.programmes.forEach((block) => {
           //eslint-disable-next-line

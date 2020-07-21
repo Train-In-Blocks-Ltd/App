@@ -131,12 +131,20 @@
 
 <template>
   <div id="home">
-    <modal name="feedback-client" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-      <div class="modal--feedback-client">
-        <quill :config="$parent.config"/>
-        <button @click="$modal.hide('feedback-client')" class="button">Close</button>
+    <div v-for="programme in $parent.programmes" :key="programme.id">
+      <div v-if="programme.id == $route.params.id">
+        <div v-for="(workout, index) in programme.workouts" :key="index">
+          <div v-if="index == currentWorkoutIndexBlock">
+            <modal :name="'feedback-client'+workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+              <div class="modal--feedback-client">
+                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn"/>
+                <button @click="$modal.hide('feedback-client'+workout.id), update_workout(workout.id)" class="button">Close</button>
+              </div>
+            </modal>
+          </div>
+        </div>
       </div>
-    </modal>
+    </div>
     <div class="container--client">
       <h1 class="main-title">Home</h1>
       <div class="container--title">
@@ -157,7 +165,7 @@
             <div class="bottom-bar">
               <button v-if="workout.checked !== 0" @click="workout.checked = 0" id="button-done" class="button no-margin">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1" id="button-to-do" class="button no-margin">Incomplete</button>
-              <button @click="showFeedback()" class="button no-margin">Give Feedback</button>
+              <button @click="$modal.show('feedback-client'+workout.id)" class="button no-margin">Give Feedback</button>
             </div>
           </div>
         </div>
@@ -222,9 +230,6 @@ export default {
     this.initCountWorkoutsHome()
   },
   methods: {
-    showFeedback () {
-      this.$modal.show('feedback-client')
-    },
     sortWorkoutsHome () {
       this.$parent.programmes.forEach((block) => {
         block.workouts.sort((a, b) => {
