@@ -598,6 +598,9 @@
     .main-title {
       font-size: 2.4rem
     }
+    .sub-title {
+      font-size: 1.6rem
+    }
     .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
       padding: .4rem .5rem
     }
