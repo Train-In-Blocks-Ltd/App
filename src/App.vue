@@ -614,7 +614,7 @@
       font-size: .7rem
     }
     .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
-      width: 120vw
+      width: 200vw
     }
   }
 </style>
