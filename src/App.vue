@@ -711,7 +711,6 @@ export default {
   },
   data: function () {
     return {
-      screenWidth: null,
       showNav: false,
       archive_error: '',
       archive_posts: {},
@@ -753,9 +752,6 @@ export default {
   },
   created () {
     this.isAuthenticated()
-  },
-  mounted () {
-    this.screenWidth = screen.width
   },
   watch: {
     // Everytime the route changes, check for auth status

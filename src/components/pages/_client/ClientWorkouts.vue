@@ -4,8 +4,8 @@
     margin: 0
   }
   .block_info {
-    display: grid;
-    grid-template-columns: max-content
+    display: flex;
+    flex-direction: column
   }
   #blocks .block_info label {
     grid-auto-columns: min-content;
@@ -398,10 +398,10 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the programme info -->
               <form class="block_info">
-                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
+                <input class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/></label>
               </form>
             </div>  <!-- client_info -->
