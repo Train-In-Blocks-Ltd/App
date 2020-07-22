@@ -246,6 +246,7 @@
         }
       },
       async createClient () {
+        this.$parent.loading = true
         try {
           const oktaOne = await axios.post('https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?activate=false',
             {
@@ -313,10 +314,12 @@
               }
             }
           )
-          alert('An activation email was sent to your client.')
         } catch (e) {
           console.log(e.toString())
         }
+        alert('An activation email was sent to your client.')
+        this.checkClient()
+        this.$parent.loading = false
       },
       updateClientNotes () {
         this.update_client()
