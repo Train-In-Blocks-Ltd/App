@@ -109,6 +109,7 @@
         return weekday[d.getDay()]
       },
       async update_workout (id) {
+        this.$parent.loading = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
@@ -142,6 +143,7 @@
         }
         await this.$parent.get_workouts()
         this.sortWorkoutsBlock()
+        this.$parent.loading = false
       }
     }
   }
