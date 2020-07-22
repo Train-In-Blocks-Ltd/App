@@ -133,7 +133,8 @@
         <inline-svg :src="require('../../../assets/svg/today.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Today</h2>
       </div>
-      <p v-if="viewWorkoutsStore.length === 0">No workouts today...</p>
+      <p v-if="viewWorkoutsStore.length === 0 && loading === false">No workouts today...</p>
+      <p v-if="loading === true">Loading workouts...</p>
       <div v-for="(programme, index) in this.$parent.programmes"
         :key="index">
         <div class="container--workouts" v-if="programme.workouts">
@@ -142,18 +143,18 @@
             <modal :name="'feedback-client-home-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
               <div class="modal--feedback-client">
                 <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn"/>
-                <button @click="$modal.hide('feedback-client-home-' + workout.id), update_workout(programme.id, workout.id)" class="button">Close</button>
+                <button @click="$modal.hide('feedback-client-home-' + workout.id), $parent.update_workout(programme.id, workout.id)" class="button">Close</button>
               </div>
             </modal>
             <p class="wrapper--workout__header" :id="workout.name">
               <span class="text--name"><b>{{workout.name}}</b></span><br>
-              <span class="text--date">{{day(workout.date)}}</span>
+              <span class="text--date">{{$parent.day(workout.date)}}</span>
               <span class="text--date">{{workout.date}}</span>
             </p>
             <div v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
             <div class="bottom-bar">
-              <button v-if="workout.checked !== 0" @click="workout.checked = 0, update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
-              <button v-if="workout.checked === 0" @click="workout.checked = 1, update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
+              <button v-if="workout.checked !== 0" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
+              <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
               <button @click="$modal.show('feedback-client-home-' + workout.id)" class="button no-margin">Give Feedback</button>
             </div>
           </div>
@@ -188,7 +189,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
 
 export default {
@@ -197,6 +197,7 @@ export default {
   },
   data () {
     return {
+      loading: true,
       viewWorkoutsStore: [],
       maxWorkoutIndexHome: null,
       currentWorkoutIndexHome: 0,
@@ -215,8 +216,9 @@ export default {
   async mounted () {
     this.$parent.claims = await this.$auth.getUser()
     await this.$parent.get_programmes()
-    this.todaysWorkout()
-    this.initCountWorkoutsHome()
+    await this.todaysWorkout()
+    await this.initCountWorkoutsHome()
+    this.loading = false
   },
   methods: {
     todaysWorkout () {
@@ -239,54 +241,6 @@ export default {
     initCountWorkoutsHome () {
       var count = this.viewWorkoutsStore.length - 1
       this.maxWorkoutIndexHome = count
-    },
-    day (date) {
-      var weekday = new Array(7)
-      weekday[0] = 'Sun'
-      weekday[1] = 'Mon'
-      weekday[2] = 'Tue'
-      weekday[3] = 'Wed'
-      weekday[4] = 'Thu'
-      weekday[5] = 'Fri'
-      weekday[6] = 'Sat'
-      var d = new Date(date)
-      return weekday[d.getDay()]
-    },
-    async update_workout (pid, wid) {
-      this.$parent.loading = true
-      // Set auth header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
-      let x
-      // Set the programme variable to the current programme
-      for (x in this.$parent.programmes) {
-        //eslint-disable-next-line
-        if (this.$parent.programmes[x].id == pid) {
-          var programme = this.$parent.programmes[x]
-          var y
-          for (y in programme.workouts) {
-            if (programme.workouts[y].id === wid) {
-              var workoutsId = programme.workouts[y].id
-              var workoutsChecked = programme.workouts[y].checked
-              var workoutsFeedback = programme.workouts[y].feedback
-            }
-          }
-        }
-      }
-      try {
-        await axios.post(`https://api.traininblocks.com/client-workouts`,
-          {
-            'id': workoutsId,
-            'checked': workoutsChecked,
-            'feedback': workoutsFeedback
-          }
-        )
-        this.$ga.event('Workout', 'update')
-      } catch (e) {
-        console.log(e.toString())
-      }
-      await this.$parent.get_workouts()
-      this.$parent.loading = false
     }
   }
 }

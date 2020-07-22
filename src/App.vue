@@ -1011,6 +1011,65 @@ export default {
       } catch (e) {
         console.log(e.toString())
       }
+    },
+    sortWorkoutsBlock () {
+      this.programmes.forEach((block) => {
+        //eslint-disable-next-line
+        if (block.id == this.$route.params.id) {
+          block.workouts.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date)
+          })
+        }
+      })
+    },
+    async update_workout (pid, wid) {
+      this.loading = true
+      // Set auth header
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+
+      let x
+      // Set the programme variable to the current programme
+      for (x in this.programmes) {
+        //eslint-disable-next-line
+        if (this.programmes[x].id == pid) {
+          var programme = this.programmes[x]
+          var y
+          for (y in programme.workouts) {
+            if (programme.workouts[y].id === wid) {
+              var workoutsId = programme.workouts[y].id
+              var workoutsChecked = programme.workouts[y].checked
+              var workoutsFeedback = programme.workouts[y].feedback
+            }
+          }
+        }
+      }
+      try {
+        await axios.post(`https://api.traininblocks.com/client-workouts`,
+          {
+            'id': workoutsId,
+            'checked': workoutsChecked,
+            'feedback': workoutsFeedback
+          }
+        )
+        this.$ga.event('Workout', 'update')
+      } catch (e) {
+        console.log(e.toString())
+      }
+      await this.get_workouts()
+      this.sortWorkoutsBlock()
+      this.loading = false
+    },
+    day (date) {
+      var weekday = new Array(7)
+      weekday[0] = 'Sun'
+      weekday[1] = 'Mon'
+      weekday[2] = 'Tue'
+      weekday[3] = 'Wed'
+      weekday[4] = 'Thu'
+      weekday[5] = 'Fri'
+      weekday[6] = 'Sat'
+      var d = new Date(date)
+      return weekday[d.getDay()]
     }
   }
 }
