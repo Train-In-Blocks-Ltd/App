@@ -158,10 +158,10 @@
             </div>
           </div>
         </div>
-        <div v-if="viewWorkoutsStore.length !== 0">
-          <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
-          <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
-        </div>
+      </div>
+      <div v-if="viewWorkoutsStore.length !== 0">
+        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
+        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
       </div>
       <div class="spacer"/>
       <div class="container--title">
