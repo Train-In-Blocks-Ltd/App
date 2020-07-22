@@ -142,7 +142,7 @@
             <modal :name="'feedback-client-home-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
               <div class="modal--feedback-client">
                 <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn"/>
-                <button @click="$modal.hide('feedback-client-home-' + workout.id), update_workout(workout.id)" class="button">Close</button>
+                <button @click="$modal.hide('feedback-client-home-' + workout.id), update_workout(programme.id, workout.id)" class="button">Close</button>
               </div>
             </modal>
             <p class="wrapper--workout__header" :id="workout.name">
@@ -152,8 +152,8 @@
             </p>
             <div v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
             <div class="bottom-bar">
-              <button v-if="workout.checked !== 0" @click="workout.checked = 0, update_workout(workout.id)" id="button-done" class="button no-margin">Completed</button>
-              <button v-if="workout.checked === 0" @click="workout.checked = 1, update_workout(workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
+              <button v-if="workout.checked !== 0" @click="workout.checked = 0, update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
+              <button v-if="workout.checked === 0" @click="workout.checked = 1, update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
               <button @click="$modal.show('feedback-client-home-' + workout.id)" class="button no-margin">Give Feedback</button>
             </div>
           </div>
@@ -252,7 +252,7 @@ export default {
       var d = new Date(date)
       return weekday[d.getDay()]
     },
-    async update_workout (id) {
+    async update_workout (pid, wid) {
       this.$parent.loading = true
       // Set auth header
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
@@ -261,11 +261,11 @@ export default {
       // Set the programme variable to the current programme
       for (x in this.$parent.programmes) {
         //eslint-disable-next-line
-        if (this.$parent.programmes[x].id == this.$route.params.id) {
+        if (this.$parent.programmes[x].id == pid) {
           var programme = this.$parent.programmes[x]
           var y
           for (y in programme.workouts) {
-            if (programme.workouts[y].id === id) {
+            if (programme.workouts[y].id === wid) {
               var workoutsId = programme.workouts[y].id
               var workoutsChecked = programme.workouts[y].checked
               var workoutsFeedback = programme.workouts[y].feedback
@@ -286,7 +286,6 @@ export default {
         console.log(e.toString())
       }
       await this.$parent.get_workouts()
-      this.sortWorkoutsBlock()
       this.$parent.loading = false
     }
   }
