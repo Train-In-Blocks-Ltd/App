@@ -377,19 +377,8 @@
             <button class="button">Copy</button>
         </form>
       </modal>
-      <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
-        <toolkit/>
-      </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
-          <router-link :to="`/client/${this.$parent.$parent.client_details.client_id}/`">
-            <p class="text--hideable">Back</p>
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/back.svg')"/>
-          </router-link>
-          <a href="javascript:void(0)" @click="showToolkit()">
-            <p class="text--hideable">Toolkit</p>
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/toolkit.svg')"/>
-          </a>
           <a href="javascript:void(0)" @click="delete_block()">
             <p class="text--hideable">Delete Block</p>
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
@@ -459,7 +448,7 @@
                 <div class="workout--header">
                   <h3>Workouts</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
-                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="showInfo()"/>
+                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
@@ -556,7 +545,6 @@
   import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
-  import Toolkit from '../../components/Toolkit.vue'
 
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
@@ -567,8 +555,7 @@
     components: {
       LineChart,
       InlineSvg,
-      FullCalendar,
-      Toolkit
+      FullCalendar
     },
     data: function () {
       return {
@@ -708,12 +695,6 @@
         this.today()
         this.update_programme()
         this.$modal.hide('copy')
-      },
-      showInfo () {
-        this.$modal.show('info')
-      },
-      showToolkit () {
-        this.$modal.show('toolkit')
       },
       editingBlockNotes (state) {
         this.editBlockNotes = state

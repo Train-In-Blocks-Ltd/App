@@ -8,9 +8,6 @@
     background-color: white;
     transition: all 1.4s cubic-bezier(.165, .84, .44, 1)
   }
-  .openFloatingNav {
-    transform: translateX(-12rem)
-  }
 
   /* Client Info */
   .client_info {
@@ -75,6 +72,16 @@
     cursor: pointer;
     margin-left: auto
   }
+  .openFloatingNav {
+    transform: translateX(-12rem)
+  }
+  .client--options {
+    display: grid;
+    grid-gap: 1rem
+  }
+  .client--options a:hover {
+    opacity: .6
+  }
 
   /* Client Notes */
   .client_notes--header {
@@ -133,6 +140,9 @@
 
 <template>
   <div id="client" v-if="$parent.client_details">
+    <modal name="toolkit" height="auto" :draggable="true" :adaptive="true">
+      <toolkit/>
+    </modal>
     <div v-show="keepLoaded" class="floating_nav">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
         <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
@@ -142,9 +152,15 @@
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
-          <div class="archive-client">
-            <a href="javascript:void(0)" v-on:click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
-          </div>
+          <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
+        </transition>
+        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+          <a href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
+        </transition>
+        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+          <router-link :to="toURL()">
+            Back
+          </router-link>
         </transition>
       </div>
     </div>
@@ -171,10 +187,12 @@
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
   import {email, emailText} from '../components/email'
+  import Toolkit from '../components/Toolkit.vue'
 
   export default {
     components: {
-      InlineSvg
+      InlineSvg,
+      Toolkit
     },
     data: function () {
       return {
@@ -202,6 +220,13 @@
       this.$parent.client_details = null
     },
     methods: {
+      toURL () {
+        var url = '/'
+        if (window.location.href.includes('block') === true) {
+          url = `/client/${this.$route.params.client_id}`
+        }
+        return url
+      },
       async checkClient () {
         try {
           await axios.get(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${this.$parent.client_details.email}`,
