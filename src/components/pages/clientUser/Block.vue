@@ -141,6 +141,7 @@
           console.log(e.toString())
         }
         this.$parent.get_workouts()
+        this.sortWorkoutsBlock()
       }
     }
   }
