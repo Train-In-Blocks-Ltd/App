@@ -140,7 +140,7 @@
         } catch (e) {
           console.log(e.toString())
         }
-        this.$parent.get_workouts()
+        await this.$parent.get_workouts()
         this.sortWorkoutsBlock()
       }
     }
