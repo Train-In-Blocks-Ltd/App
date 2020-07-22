@@ -133,6 +133,7 @@
         <inline-svg :src="require('../../../assets/svg/today.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Today</h2>
       </div>
+      <p v-if="viewWorkoutsStore.length === 0">No workouts today...</p>
       <div v-for="(programme, index) in this.$parent.programmes"
         :key="index">
         <div class="container--workouts" v-if="programme.workouts">
@@ -157,7 +158,6 @@
             </div>
           </div>
         </div>
-        <p v-if="viewWorkoutsStore.length === 0">No workouts today...</p>
         <div v-if="viewWorkoutsStore.length !== 0">
           <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
           <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
