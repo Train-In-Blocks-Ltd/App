@@ -605,7 +605,7 @@
       padding: .4rem .5rem
     }
     .ql-editor {
-      max-height: calc(100vh - 240px)
+      max-height: calc(100vh - 300px)
     }
 
     /* Blocks Page */

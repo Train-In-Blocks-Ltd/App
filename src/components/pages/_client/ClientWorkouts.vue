@@ -17,10 +17,14 @@
     margin-left: .25rem
   }
   #blocks .block_info input.block_info--name {
+    max-width: 100%;
     font-weight: 700;
-    margin-bottom: 1rem;
+    padding: .6rem 0;
     letter-spacing: .15rem;
     font-size: 1.6rem
+  }
+  #blocks .block_info input.block_info--name:focus {
+    padding: .6rem 1rem
   }
   .floating_nav__block {
     display: grid;
@@ -32,18 +36,12 @@
     text-align: right
   }
   .floating_nav__block a {
-    display: grid;
-    grid-template-columns: 1fr 24px;
-    grid-gap: 1rem;
     color: #282828;
     text-decoration: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .floating_nav__block a:hover {
     opacity: .6
-  }
-  .text--hideable {
-    align-self: center
   }
   .message {
     margin: 1.2rem 0;
@@ -301,20 +299,15 @@
     .floating_nav__block svg {
       margin-left: auto
     }
-    .text--hideable {
-      display: none
-    }
     .form--copy {
       grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1
     }
-  }
-
-  @media (min-width: 576px) {
-    .block_info input.block_info--name.title {
-      font-size: 2rem
+    #blocks .block_info input.block_info--name {
+      font-size: 1.4rem;
+      max-width: 90%
     }
   }
 
@@ -331,6 +324,12 @@
     .calendar, .block-plan, .graph {
       margin: 4rem 0
     }
+    #blocks .block_info input.block_info--name {
+      font-size: 1.2rem
+    }
+    #client .client_info input.client_info--name {
+      font-size: 1.6rem
+    }
 
     /* Full screen editor */
     .activeWorkout {
@@ -339,7 +338,7 @@
       width: 100vw;
       position: fixed;
       background-color: white;
-      z-index: 9999;
+      z-index: 11;
       top: 0;
       left: 0;
       padding: 2rem 2rem 6rem 2rem
@@ -380,7 +379,6 @@
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
           <a href="javascript:void(0)" @click="delete_block()">
-            <p class="text--hideable">Delete Block</p>
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
           <div v-show="str != 0" class="message">
