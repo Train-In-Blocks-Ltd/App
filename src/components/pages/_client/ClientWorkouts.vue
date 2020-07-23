@@ -4,8 +4,8 @@
     margin: 0
   }
   .block_info {
-    display: grid;
-    grid-template-columns: max-content
+    display: flex;
+    flex-direction: column
   }
   #blocks .block_info label {
     grid-auto-columns: min-content;
@@ -17,10 +17,14 @@
     margin-left: .25rem
   }
   #blocks .block_info input.block_info--name {
+    max-width: 100%;
     font-weight: 700;
-    margin-bottom: 1rem;
+    padding: .6rem 0;
     letter-spacing: .15rem;
     font-size: 1.6rem
+  }
+  #blocks .block_info input.block_info--name:focus {
+    padding: .6rem 1rem
   }
   .floating_nav__block {
     display: grid;
@@ -32,18 +36,12 @@
     text-align: right
   }
   .floating_nav__block a {
-    display: grid;
-    grid-template-columns: 1fr 24px;
-    grid-gap: 1rem;
     color: #282828;
     text-decoration: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .floating_nav__block a:hover {
     opacity: .6
-  }
-  .text--hideable {
-    align-self: center
   }
   .message {
     margin: 1.2rem 0;
@@ -301,20 +299,15 @@
     .floating_nav__block svg {
       margin-left: auto
     }
-    .text--hideable {
-      display: none
-    }
     .form--copy {
       grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1
     }
-  }
-
-  @media (min-width: 576px) {
-    .block_info input.block_info--name.title {
-      font-size: 2rem
+    #blocks .block_info input.block_info--name {
+      font-size: 1.4rem;
+      max-width: 90%
     }
   }
 
@@ -331,6 +324,12 @@
     .calendar, .block-plan, .graph {
       margin: 4rem 0
     }
+    #blocks .block_info input.block_info--name {
+      font-size: 1.2rem
+    }
+    #client .client_info input.client_info--name {
+      font-size: 1.6rem
+    }
 
     /* Full screen editor */
     .activeWorkout {
@@ -339,7 +338,7 @@
       width: 100vw;
       position: fixed;
       background-color: white;
-      z-index: 9999;
+      z-index: 11;
       top: 0;
       left: 0;
       padding: 2rem 2rem 6rem 2rem
@@ -380,7 +379,6 @@
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
           <a href="javascript:void(0)" @click="delete_block()">
-            <p class="text--hideable">Delete Block</p>
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
           <div v-show="str != 0" class="message">
@@ -398,10 +396,10 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the programme info -->
               <form class="block_info">
-                <input v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 40 }"  class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
+                <input class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
                 <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/></label>
               </form>
             </div>  <!-- client_info -->
