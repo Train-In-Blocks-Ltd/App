@@ -220,7 +220,7 @@
       toURL () {
         var url = '/'
         if (window.location.href.includes('block') === true) {
-          url = `/client/${this.$route.params.client_id}`
+          url = `/client/${this.$route.params.client_id}/`
         }
         return url
       },
