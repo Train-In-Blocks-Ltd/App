@@ -182,9 +182,6 @@
   .show-workout a {
     color: blue
   }
-  .show-workout h2, .show-block-notes h2 {
-    font-size: 1.5rem
-  }
   .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
     text-decoration: none;
     margin: 0
@@ -402,6 +399,12 @@
   }
 
   /* QUILL */
+  .ql-snow .ql-editor h1 {
+    margin: 1.072rem 0
+  }
+  .ql-snow .ql-editor h2 {
+    margin: 1.245rem 0
+  }
   div.ql-toolbar.ql-snow {
     border: none
   }
@@ -741,9 +744,7 @@ export default {
               [{'header': 1}, {'header': 2}],
               ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
               [{'list': 'ordered'}, {'list': 'bullet'}],
-              [{'indent': '-1'}, {'indent': '+1'}],
-              ['link'],
-              ['clean']
+              ['link']
           ]
         }
       },

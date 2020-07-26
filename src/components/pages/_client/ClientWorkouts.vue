@@ -615,6 +615,7 @@
     async mounted () {
       await this.$parent.get_client_details()
       this.today()
+      this.removeBreaks()
       this.update_programme()
       this.scan()
     },
@@ -952,6 +953,15 @@
           sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
         }
         return sentence.join(' ')
+      },
+      removeBreaks () {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          if (this.$route.params.id === block.id) {
+            block.workouts.forEach((session) => {
+              session.replace('<p><br></p>', '')
+            })
+          }
+        })
       },
 
       // REGEX METHODS //
