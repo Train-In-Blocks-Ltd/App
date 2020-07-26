@@ -444,16 +444,16 @@
               </div> <!-- block_table -->
               <div class="workouts">
                 <div class="workout--header">
-                  <h3>Workouts</h3>
+                  <h3>Sessions</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
-                <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
-                <p v-if="$parent.loading_workouts">Loading workouts...</p>
+                <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
+                <p v-if="$parent.loading_workouts">Loading sessions...</p>
                 <div>
                   <!-- New Workout -->
-                  <button id="button--new-workout" class="button" @click="add_workout()">New workout</button>
+                  <button id="button--new-workout" class="button" @click="add_workout()">New session</button>
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
@@ -615,7 +615,6 @@
     async mounted () {
       await this.$parent.get_client_details()
       this.today()
-      this.removeBreaks()
       this.update_programme()
       this.scan()
     },
@@ -954,15 +953,6 @@
         }
         return sentence.join(' ')
       },
-      removeBreaks () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
-          if (this.$route.params.id === block.id) {
-            block.workouts.forEach((session) => {
-              session.replace('<p><br></p>', '')
-            })
-          }
-        })
-      },
 
       // REGEX METHODS //
 
@@ -1230,7 +1220,7 @@
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes,
+              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }
