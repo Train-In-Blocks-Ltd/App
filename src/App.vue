@@ -46,7 +46,7 @@
   }
 
   /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
+  #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
     overflow-x: hidden;
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
@@ -181,9 +181,6 @@
   }
   .show-workout a {
     color: blue
-  }
-  .show-workout h2, .show-block-notes h2 {
-    font-size: 1.5rem
   }
   .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
     text-decoration: none;
@@ -402,6 +399,12 @@
   }
 
   /* QUILL */
+  .ql-snow .ql-editor h1 {
+    margin: 1.072rem 0
+  }
+  .ql-snow .ql-editor h2 {
+    margin: 1.245rem 0
+  }
   div.ql-toolbar.ql-snow {
     border: none
   }
@@ -529,7 +532,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
+    #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
       padding: 4rem 10vw
     }
     .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -589,7 +592,7 @@
       width: 0;
       background-color: transparent
     }
-    #home, #block, #account, #archive, .wrapper--client, #learn, .modal--first-time-home, #logout {
+    #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
       padding: 2rem 5vw 6rem 5vw
     }
     p {
@@ -650,12 +653,12 @@
         </transition>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/learn">
-          <inline-svg :src="require('./assets/svg/learn.svg')"  class="account_nav--item--icon"/>
+        <router-link to="/help">
+          <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/learn" v-show="showNav" class="account_nav--item--text">
-            Learn
+          <router-link to="/help" v-show="showNav" class="account_nav--item--text">
+            Help
           </router-link>
         </transition>
       </div>
@@ -742,9 +745,7 @@ export default {
               [{'header': 1}, {'header': 2}],
               ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
               [{'list': 'ordered'}, {'list': 'bullet'}],
-              [{'indent': '-1'}, {'indent': '+1'}],
-              ['link'],
-              ['clean']
+              ['link']
           ]
         }
       },

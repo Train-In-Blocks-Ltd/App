@@ -187,10 +187,12 @@
     padding: 0
   }
   input.workout-name {
+    width: 40%;
     font-size: 1rem;
     font-weight: bold
   }
   input.workout-date {
+    width: fit-content;
     font-size: .8rem
   }
   .bottom-bar .button {
@@ -309,6 +311,9 @@
       font-size: 1.4rem;
       max-width: 90%
     }
+    input.workout-name {
+      width: 60%
+    }
   }
 
   @media (max-width: 576px) {
@@ -329,6 +334,11 @@
     }
     #client .client_info input.client_info--name {
       font-size: 1.6rem
+    }
+
+    /* Workout */
+    input.workout-name {
+      width: 100%
     }
 
     /* Full screen editor */
@@ -444,29 +454,29 @@
               </div> <!-- block_table -->
               <div class="workouts">
                 <div class="workout--header">
-                  <h3>Workouts</h3>
+                  <h3>Sessions</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
-                <p v-if="$parent.no_workouts">No workouts yet. You can add one below.</p>
-                <p v-if="$parent.loading_workouts">Loading workouts...</p>
+                <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
+                <p v-if="$parent.loading_workouts">Loading sessions...</p>
                 <div>
                   <!-- New Workout -->
-                  <button id="button--new-workout" class="button" @click="add_workout()">New workout</button>
+                  <button id="button--new-workout" class="button" @click="add_workout()">New session</button>
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
-                      <p class="wrapper--workout__header">
+                      <div class="wrapper--workout__header">
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
                         <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" v-model="workout.name" /><br>
+                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" pattern="[^\/]" v-model="workout.name" /><br>
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                         <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
-                      </p>
+                      </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
                       <div class="bottom-bar">
@@ -1187,6 +1197,8 @@
           this.$ga.event('Block', 'update')
           this.scan()
         } catch (e) {
+          this.$parent.$parent.loading = false
+          alert('Something went wrong, please try that again.')
           console.log(e.toString())
         }
       },
@@ -1220,13 +1232,15 @@
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes,
+              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }
           )
           this.$ga.event('Workout', 'update')
         } catch (e) {
+          this.$parent.$parent.loading = false
+          alert('Something went wrong, please try that again.')
           console.log(e.toString())
         }
         await this.$parent.force_get_workouts()
@@ -1267,6 +1281,8 @@
           this.update_programme()
           this.$ga.event('Workout', 'new')
         } catch (e) {
+          this.$parent.$parent.loading = false
+          alert('Something went wrong, please try that again.')
           console.error(`${e}`)
         }
       },
@@ -1290,6 +1306,8 @@
             this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
             this.$ga.event('Block', 'delete')
           } catch (e) {
+            this.$parent.$parent.loading = false
+            alert('Something went wrong, please try that again.')
             console.error(`${e}`)
           }
         }
