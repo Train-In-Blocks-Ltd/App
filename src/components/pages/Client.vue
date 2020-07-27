@@ -10,45 +10,42 @@
   }
 
   /* Client Info */
-  .client_info {
-    display: grid;
-    grid-gap: 1rem
-  }
-  #client .client_info label, .label--duration {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: min-content minmax(200px, 300px);
-    grid-gap: 1rem;
-    align-items: center
-  }
-  #duration, #start, .workout-date {
-    cursor: pointer
-  }
-  #client .client_info input:not([type='submit']), #duration {
+  #client .client_info input:not([type='submit']), #duration, .workout-date {
+    width: 100%;
+    cursor: pointer;
     background-color: initial;
     border: none;
-    border-bottom: 2px solid #28282800;
-    padding: .4rem 0;
-    outline-width: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    padding: .6rem 0;
+    transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
-  #client .client_info input:not([type='submit']):hover, #duration:hover {
-    border-bottom: 2px solid #28282880
+  #client .client_info input:not([type='submit']):hover, #duration:hover, .workout-date:hover {
+    opacity: .6
   }
-  #client .client_info input:not([type='submit']):focus, #duration:focus {
-    border-bottom: 2px solid #282828
+  #client .client_info input:not([type='submit']):focus, #duration:focus, .workout-date:focus {
+    opacity: 1;
+    padding: .6rem 1rem
   }
   .client_info__more-details {
-    width: 400px
+    display: grid
+  }
+  .wrapper--info {
+    display: flex
+  }
+  .wrapper--info label {
+    align-self: center;
+    margin-right: 1rem
   }
   #phone {
     width: 50%
   }
   #client .client_info input.client_info--name {
+    max-width: 100%;
     font-size: 3.75rem;
     letter-spacing: .1rem;
-    padding: .6rem 0;
     margin: 0
+  }
+  .button--verify {
+    width: fit-content
   }
 
   /* Floating Nav */
@@ -168,11 +165,11 @@
       <div class="top_grid" v-if="!blocks">
         <!-- Update the client details -->
         <form class="client_info" v-on:submit.prevent="update_client()">
-          <input v-autowidth="{ maxWidth: '600px', minWidth: '20px', comfortZone: 80 }" class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
+          <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
           <div class="client_info__more-details">
-            <label><b>Email: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/></label>
-            <label><b>Phone: </b><input class="input--forms allow-text-overflow" v-autowidth="{ maxWidth: '300px', minWidth: '20px', comfortZone: 24 }" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></label>
-            <button @click="createClient()" class="button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
+            <div class="wrapper--info"><label><b>Email: </b></label><input class="input--forms allow-text-overflow" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/></div>
+            <div class="wrapper--info"><label><b>Phone: </b></label><input class="input--forms allow-text-overflow" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></div>
+            <button @click="createClient()" class="button--verify button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
           </div>
         </form>
       </div>
@@ -224,7 +221,7 @@
       toURL () {
         var url = '/'
         if (window.location.href.includes('block') === true) {
-          url = `/client/${this.$route.params.client_id}`
+          url = `/client/${this.$route.params.client_id}/`
         }
         return url
       },
