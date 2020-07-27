@@ -187,10 +187,12 @@
     padding: 0
   }
   input.workout-name {
+    width: 40%;
     font-size: 1rem;
     font-weight: bold
   }
   input.workout-date {
+    width: fit-content;
     font-size: .8rem
   }
   .bottom-bar .button {
@@ -309,6 +311,9 @@
       font-size: 1.4rem;
       max-width: 90%
     }
+    input.workout-name {
+      width: 60%
+    }
   }
 
   @media (max-width: 576px) {
@@ -329,6 +334,11 @@
     }
     #client .client_info input.client_info--name {
       font-size: 1.6rem
+    }
+
+    /* Workout */
+    input.workout-name {
+      width: 100%
     }
 
     /* Full screen editor */
@@ -458,7 +468,7 @@
                     <!-- Loop through workouts -->
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
-                      <p class="wrapper--workout__header">
+                      <div class="wrapper--workout__header">
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
                         <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
@@ -466,7 +476,7 @@
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" pattern="[^\/]" v-model="workout.name" /><br>
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                         <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
-                      </p>
+                      </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
                       <div class="bottom-bar">
