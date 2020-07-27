@@ -478,7 +478,7 @@
                         <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                       </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
+                      <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
                       <div class="bottom-bar">
                         <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
@@ -629,6 +629,10 @@
       this.scan()
     },
     methods: {
+      removeBrackets (dataIn) {
+        var dataOut = dataIn.replace(/[[\]]/g, '')
+        return dataOut
+      },
       showFeedback (str) {
         this.feedbackStr = str
         this.$modal.show('feedback-trainer')
