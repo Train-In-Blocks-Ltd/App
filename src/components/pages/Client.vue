@@ -186,7 +186,7 @@
 <script>
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
-  import {email, emailText} from '../components/email'
+  import {email, emailText, resetEmail, resetEmailText} from '../components/email'
   import Toolkit from '../components/Toolkit.vue'
 
   export default {
@@ -204,8 +204,9 @@
         no_workouts: false,
         loading_workouts: true,
         editClientNotes: false,
-        clientAlreadyMsg: 'Give Access',
-        clientAlready: false
+        clientAlreadyMsg: 'Loading...',
+        clientAlready: true,
+        clientSuspend: null
       }
     },
     async created () {
@@ -229,7 +230,7 @@
       },
       async checkClient () {
         try {
-          await axios.get(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${this.$parent.client_details.email}`,
+          const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`,
             {
               headers: {
                 'Accept': 'application/json',
@@ -238,8 +239,14 @@
               }
             }
           )
-          this.clientAlready = true
-          this.clientAlreadyMsg = 'Activated'
+          if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'PROVISIONED') {
+            this.clientAlready = true
+            this.clientAlreadyMsg = 'Activated'
+          } else if (result.data[0].status === 'SUSPENDED') {
+            this.clientSuspend = result.data[0].id
+            this.clientAlready = false
+            this.clientAlreadyMsg = 'Give Access'
+          }
         } catch (e) {
           this.clientAlready = false
           this.clientAlreadyMsg = 'Give Access'
@@ -247,22 +254,9 @@
       },
       async createClient () {
         this.$parent.loading = true
-        try {
-          const oktaOne = await axios.post('https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?activate=false',
-            {
-              'profile': {
-                'firstName': this.$parent.client_details.email,
-                'email': this.$parent.client_details.email,
-                'login': this.$parent.client_details.email,
-                'color': '#ffffff',
-                'ga': true,
-                'client_id_db': this.$parent.client_details.client_id,
-                'user_type': 'Client'
-              },
-              'groupIds': [
-                '00gf929legrtSjxOe4x6'
-              ]
-            },
+        if (this.clientSuspend) {
+          await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${this.clientSuspend}/lifecycle/unsuspend`,
+            {},
             {
               headers: {
                 'Accept': 'application/json',
@@ -271,7 +265,7 @@
               }
             }
           )
-          const oktaTwo = await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${oktaOne.data.id}/lifecycle/activate?sendEmail=false`,
+          const password = await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`,
             {},
             {
               headers: {
@@ -290,7 +284,7 @@
                       'email': this.$parent.client_details.email
                     }
                   ],
-                  'subject': 'Welcome to Train In Blocks'
+                  'subject': 'Welcome Back to Train In Blocks'
                 }
               ],
               'from': {
@@ -299,11 +293,11 @@
               'content': [
                 {
                   'type': 'text/plain',
-                  'value': emailText(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                  'value': resetEmailText(password.data.resetPasswordUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
                 },
                 {
                   'type': 'text/html',
-                  'value': email(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                  'value': resetEmail(password.data.resetPasswordUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
                 }
               ]
             },
@@ -314,12 +308,84 @@
               }
             }
           )
-        } catch (e) {
-          console.log(e.toString())
+          alert('An activation email was sent to your client.')
+          this.checkClient()
+          this.$parent.loading = false
+        } else {
+          try {
+            const oktaOne = await axios.post('https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?activate=false',
+              {
+                'profile': {
+                  'firstName': this.$parent.client_details.email,
+                  'email': this.$parent.client_details.email,
+                  'login': this.$parent.client_details.email,
+                  'color': '#ffffff',
+                  'ga': true,
+                  'client_id_db': this.$parent.client_details.client_id,
+                  'user_type': 'Client'
+                },
+                'groupIds': [
+                  '00gf929legrtSjxOe4x6'
+                ]
+              },
+              {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.AUTH_HEADER
+                }
+              }
+            )
+            const oktaTwo = await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${oktaOne.data.id}/lifecycle/activate?sendEmail=false`,
+              {},
+              {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.AUTH_HEADER
+                }
+              }
+            )
+            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+              {
+                'personalizations': [
+                  {
+                    'to': [
+                      {
+                        'email': this.$parent.client_details.email
+                      }
+                    ],
+                    'subject': 'Welcome to Train In Blocks'
+                  }
+                ],
+                'from': {
+                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
+                },
+                'content': [
+                  {
+                    'type': 'text/plain',
+                    'value': emailText(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                  },
+                  {
+                    'type': 'text/html',
+                    'value': email(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                  }
+                ]
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.SENDGRID
+                }
+              }
+            )
+            alert('An activation email was sent to your client.')
+            this.checkClient()
+            this.$parent.loading = false
+          } catch (e) {
+            console.log(e.toString())
+          }
         }
-        alert('An activation email was sent to your client.')
-        this.checkClient()
-        this.$parent.loading = false
       },
       updateClientNotes () {
         this.update_client()
