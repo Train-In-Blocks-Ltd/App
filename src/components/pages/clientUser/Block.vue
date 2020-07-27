@@ -1,4 +1,7 @@
 <style scoped>
+  .block-notes {
+    margin-top: 4rem
+  }
   .modal--feedback-client {
     padding: 2rem
   }
