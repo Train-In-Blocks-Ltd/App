@@ -1197,6 +1197,8 @@
           this.$ga.event('Block', 'update')
           this.scan()
         } catch (e) {
+          this.$parent.$parent.loading = false
+          alert('Something went wrong, please try that again.')
           console.log(e.toString())
         }
       },
@@ -1237,6 +1239,8 @@
           )
           this.$ga.event('Workout', 'update')
         } catch (e) {
+          this.$parent.$parent.loading = false
+          alert('Something went wrong, please try that again.')
           console.log(e.toString())
         }
         await this.$parent.force_get_workouts()
@@ -1277,6 +1281,8 @@
           this.update_programme()
           this.$ga.event('Workout', 'new')
         } catch (e) {
+          this.$parent.$parent.loading = false
+          alert('Something went wrong, please try that again.')
           console.error(`${e}`)
         }
       },
@@ -1300,6 +1306,8 @@
             this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
             this.$ga.event('Block', 'delete')
           } catch (e) {
+            this.$parent.$parent.loading = false
+            alert('Something went wrong, please try that again.')
             console.error(`${e}`)
           }
         }
