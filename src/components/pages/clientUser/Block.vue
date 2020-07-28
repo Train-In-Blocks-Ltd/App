@@ -80,8 +80,12 @@
     },
     methods: {
       removeBrackets (dataIn) {
-        var dataOut = dataIn.replace(/[[\]]/g, '')
-        return dataOut
+        if (dataIn !== null) {
+          var dataOut = dataIn.replace(/[[\]]/g, '')
+          return dataOut
+        } else {
+          return dataIn
+        }
       },
       initCountWorkoutsBlock () {
         this.$parent.programmes.forEach((block) => {

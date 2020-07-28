@@ -222,8 +222,12 @@ export default {
   },
   methods: {
     removeBrackets (dataIn) {
-      var dataOut = dataIn.replace(/[[\]]/g, '')
-      return dataOut
+      if (dataIn !== null) {
+        var dataOut = dataIn.replace(/[[\]]/g, '')
+        return dataOut
+      } else {
+        return dataIn
+      }
     },
     todaysWorkout () {
       this.$parent.programmes.forEach((block) => {

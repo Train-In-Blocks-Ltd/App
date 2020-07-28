@@ -12,9 +12,14 @@
     display: inline-block;
     font-weight: bold
   }
+  .wrapper-start-date {
+    display: flex;
+    align-self: baseline;
+    align-items: center
+  }
   #duration, .block_info input#start {
     font-size: 1rem;
-    margin-left: .25rem
+    margin-left: 1rem
   }
   #blocks .block_info input.block_info--name {
     max-width: 100%;
@@ -273,7 +278,7 @@
   }
 
   /* All Modal */
-  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy {
+  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy, .modal--error-workout-page {
     padding: 2rem
   }
 
@@ -386,18 +391,21 @@
             <button class="button">Copy</button>
         </form>
       </modal>
+      <modal name="error-workout-page" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+        <div class="modal--error-workout-page">
+          <p><b>Something went wrong...</b></p><br>
+          <p>{{error.msg}}</p><br>
+          <div>
+            <button class="button" @click="retryError(), $modal.hide('error-workout-page')">Retry Last Action</button>
+            <button class="button" onclick="location.reload()">Refresh Page</button>
+          </div>
+        </div>
+      </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
           <a href="javascript:void(0)" @click="delete_block()">
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
-          <div v-show="str != 0" class="message">
-            <p>{{msg}}</p>
-          </div>
-          <div v-show="(str === undefined || str === null || str == 0 || str === []) && this.$parent.no_workouts === false" class="message--failed">
-            <p>Failed to scan</p>
-            <button @click="scan()" class="button button--failed">Retry</button>
-          </div>
         </div> <!-- floating_nav -->
       </transition>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
@@ -410,7 +418,10 @@
                <!-- Update the programme info -->
               <form class="block_info">
                 <input class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
-                <label>Start: <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/></label>
+                <div class="wrapper-start-date">
+                  <label>Start:</label>
+                  <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/>
+                </div>
               </form>
             </div>  <!-- client_info -->
           </div> <!-- top_grid -->
@@ -572,9 +583,9 @@
         weekColor: {
           backgroundColor: ''
         },
-        msgFloatingNav: 'Hide',
         response: '',
         editBlockNotes: false,
+        todayDate: '',
         new_workout: {
           name: 'Untitled',
           date: ''
@@ -599,7 +610,6 @@
         },
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
-        msg: 'Idle',
         isEditingWorkout: false,
         editWorkout: null,
         p1: '',
@@ -616,7 +626,12 @@
         movingWorkout: null,
         moveTarget: 1,
         copyTarget: 2,
-        daysDiff: 7
+        daysDiff: 7,
+        error: {
+          lastAction: null,
+          msg: null,
+          idStore: null
+        },
       }
     },
     created () {
@@ -629,9 +644,23 @@
       this.scan()
     },
     methods: {
+      retryError () {
+        switch (this.error.lastAction) {
+          case 'add_workout': this.add_workout(); break;
+          case 'update_workout': this.update_workout(this.error.idStore); break;
+          case 'delete_workout': this.delete_workout(this.error.idStore); break;
+          case 'update_programme': this.update_programme(); break;
+          case 'delete_block': this.delete_block(); break;
+          default: location.reload()
+        }
+      },
       removeBrackets (dataIn) {
-        var dataOut = dataIn.replace(/[[\]]/g, '')
-        return dataOut
+        if (dataIn !== null) {
+          var dataOut = dataIn.replace(/[[\]]/g, '')
+          return dataOut
+        } else {
+          return dataIn
+        }
       },
       showFeedback (str) {
         this.feedbackStr = str
@@ -671,14 +700,6 @@
         this.update_programme()
         this.scan()
       },
-      toggleFloatingNav () {
-        this.showFloatingNav = !this.showFloatingNav
-        if (this.msgFloatingNav === 'Hide') {
-          this.msgFloatingNav = 'Show'
-        } else {
-          this.msgFloatingNav = 'Hide'
-        }
-      },
       showCopy (maxWeek) {
         this.maxWeek = maxWeek
         this.$modal.show('copy')
@@ -710,7 +731,6 @@
       },
       editingBlockNotes (state) {
         this.editBlockNotes = state
-        this.msg = 'Editing...'
         if (state) {
           window.addEventListener('keydown', this.quickSaveBlockNotes)
         } else {
@@ -727,12 +747,10 @@
       updateBlockNotes () {
         this.update_programme()
         this.editBlockNotes = false
-        this.msg = 'Idle'
       },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
         this.editWorkout = id
-        this.msg = 'Editing...'
         if (state) {
           window.addEventListener('keydown', this.quickSaveWorkoutNotes)
         } else {
@@ -751,7 +769,6 @@
         this.isEditingWorkout = false
         this.editWorkout = null
         this.scan()
-        this.msg = 'Idle'
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
@@ -1105,6 +1122,7 @@
         var mm = String(today.getMonth() + 1).padStart(2, '0')
         var yyyy = today.getFullYear()
         this.new_workout.date = `${yyyy}-${mm}-${dd}`
+        this.todayDate = `${yyyy}-${mm}-${dd}`
       },
       addDays (date, days) {
         var d = new Date(date)
@@ -1202,7 +1220,8 @@
           this.scan()
         } catch (e) {
           this.$parent.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.error.msg = e
+          this.error.lastAction = 'update_programme'
           console.log(e.toString())
         }
       },
@@ -1231,12 +1250,15 @@
           }
         }
         try {
+          if (workoutsNotes !== null) {
+            workoutsNotes.replace(/<p><br><\/p>/gi, '')
+          }
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
+              'notes': workoutsNotes,
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }
@@ -1244,7 +1266,9 @@
           this.$ga.event('Workout', 'update')
         } catch (e) {
           this.$parent.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.error.idStore = id
+          this.error.msg = e
+          this.error.lastAction = 'update_workout'
           console.log(e.toString())
         }
         await this.$parent.force_get_workouts()
@@ -1253,7 +1277,6 @@
       async add_workout () {
         try {
           this.$parent.$parent.loading = true
-          this.msg = 'Creating...'
           // eslint-disable-next-line
           const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
             qs.stringify({
@@ -1273,20 +1296,19 @@
           // Get the workouts from the API because we've just created a new one
           await this.$parent.force_get_workouts()
           this.$parent.$parent.loading = false
-
           this.new_workout = {
             name: 'Untitled',
-            date: this.today(),
+            date: this.todayDate,
             notes: '',
             week_id: '',
             block_color: ''
           }
-          this.msg = 'Idle'
           this.update_programme()
           this.$ga.event('Workout', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.error.msg = e
+          this.error.lastAction = 'add_workout'
           console.error(`${e}`)
         }
       },
@@ -1311,7 +1333,8 @@
             this.$ga.event('Block', 'delete')
           } catch (e) {
             this.$parent.$parent.loading = false
-            alert('Something went wrong, please try that again.')
+            this.error.msg = e
+            this.error.lastAction = 'delete_block'
             console.error(`${e}`)
           }
         }
@@ -1321,15 +1344,16 @@
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             this.$parent.$parent.loading = true
-            this.msg = 'Deleting...'
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             await this.$parent.force_get_workouts()
             this.$parent.$parent.loading = false
-            this.msg = 'Idle'
             this.$ga.event('Workout', 'delete')
             this.update_programme()
           } catch (e) {
+            this.error.idStore = id
+            this.error.msg = e
+            this.error.lastAction = 'delete_workout'
             console.error(`${e}`)
           }
         }
