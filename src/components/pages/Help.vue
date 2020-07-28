@@ -11,6 +11,14 @@
     height: auto;
     width: 90%
   }
+  .text--more-help {
+    text-decoration: none;
+    color: #282828;
+    transition: .4s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .text--more-help:hover {
+    opacity: .6
+  }
 
   @media (max-width: 768px) {
     .container--guide {
@@ -24,11 +32,21 @@
       width: 60%
     }
   }
+
+  /* Mobile */
+  @media (max-width: 576px) {
+    .text--more-help:hover {
+      opacity: 1
+    }
+  }
 </style>
 
 <template>
-  <div id="learn">
+  <div id="help">
     <h1 class="main-title">Learn</h1>
+    <p>Need help with something in particular? Click <a class="text--more-help" href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank"><b>here</b></a>.</p>
+    <div class="spacer"/>
+    <h2 class="sub-title"> Guides</h2>
     <div class="container--guide">
       <div v-for="item in guides" :key="item.id" class="guide-item">
         <img class="img--gif" :src="require('../../assets/guide/gif/' + item.gif)">

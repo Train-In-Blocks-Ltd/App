@@ -151,7 +151,7 @@
               <span class="text--date">{{$parent.day(workout.date)}}</span>
               <span class="text--date">{{workout.date}}</span>
             </p>
-            <div v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
+            <div v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
             <div class="bottom-bar">
               <button v-if="workout.checked !== 0" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
@@ -221,6 +221,10 @@ export default {
     this.loading = false
   },
   methods: {
+    removeBrackets (dataIn) {
+      var dataOut = dataIn.replace(/[[\]]/g, '')
+      return dataOut
+    },
     todaysWorkout () {
       this.$parent.programmes.forEach((block) => {
         block.workouts.forEach((workout) => {

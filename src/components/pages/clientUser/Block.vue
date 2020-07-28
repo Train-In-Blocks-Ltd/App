@@ -1,4 +1,7 @@
 <style scoped>
+  .block-notes {
+    margin-top: 4rem
+  }
   .modal--feedback-client {
     padding: 2rem
   }
@@ -45,7 +48,7 @@
               <span class="text--date">{{$parent.day(workout.date)}}</span>
               <span class="text--date">{{workout.date}}</span>
             </p>
-            <div v-html="workout.notes" class="show-workout animate__animated animate__fadeIn"/>
+            <div v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
             <div class="bottom-bar">
               <button v-if="workout.checked === 1" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button">Incomplete</button>
@@ -76,6 +79,10 @@
       this.$parent.sortWorkoutsBlock()
     },
     methods: {
+      removeBrackets (dataIn) {
+        var dataOut = dataIn.replace(/[[\]]/g, '')
+        return dataOut
+      },
       initCountWorkoutsBlock () {
         this.$parent.programmes.forEach((block) => {
           //eslint-disable-next-line
