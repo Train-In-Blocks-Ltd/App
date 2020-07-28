@@ -875,10 +875,12 @@ export default {
     },
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
+        let email
         this.$router.push('/')
         for (var i = 0; i < this.posts.length; i++) {
           //eslint-disable-next-line
           if (this.posts[i].client_id == id) {
+            email = this.posts[i].email
             this.posts.splice(index, 1)
             if (this.posts.length === 0) {
               this.no_clients = true
@@ -891,6 +893,59 @@ export default {
           const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
           // eslint-disable-next-line
           this.response = response.data
+
+          const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
+            {},
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            {
+              'personalizations': [
+                {
+                  'to': [
+                    {
+                      'email': email
+                    }
+                  ],
+                  'subject': 'Account Deactivated'
+                }
+              ],
+              'from': {
+                'email': 'Train In Blocks <no-reply@traininblocks.com>'
+              },
+              'content': [
+                {
+                  'type': 'text/plain',
+                  'value': deleteEmailText()
+                },
+                {
+                  'type': 'text/html',
+                  'value': deleteEmail()
+                }
+              ]
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': process.env.SENDGRID
+              }
+            }
+          )
 
           await this.clients()
           this.clients_to_vue()
@@ -944,11 +999,9 @@ export default {
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
-        let email
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
-            email = this.archive_posts[i].email
             this.archive_posts.splice(index, 1)
             if (this.archive_posts.length === 0) {
               this.no_archive = true
@@ -959,58 +1012,6 @@ export default {
         try {
           await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
-          const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
-            {},
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
-            {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': email
-                    }
-                  ],
-                  'subject': 'Goodbye from Train In Blocks'
-                }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': deleteEmailText()
-                },
-                {
-                  'type': 'text/html',
-                  'value': deleteEmail()
-                }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
-              }
-            }
-          )
           await this.archive()
           this.archive_to_vue()
 

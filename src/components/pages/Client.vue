@@ -281,7 +281,7 @@
                       'email': this.$parent.client_details.email
                     }
                   ],
-                  'subject': 'Welcome Back to Train In Blocks'
+                  'subject': 'Welcome Back'
                 }
               ],
               'from': {

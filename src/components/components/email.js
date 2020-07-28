@@ -926,9 +926,9 @@ export function resetEmail (link) {
                                       <span style='font-family:arial,helvetica neue,helvetica,sans-serif'><span style='font-size:32px'>Welcome Back...</span></span>
                                     </h1>
                                     <br>
-                                    It's good to see you again. If you have any questions/concerns, please reach out to us at <a href='mailto:hello@traininblocks.com'>hello@traininblocks.com</a> or head over to our online support desk at <a href='https://traininblocks.atlassian.net/servicedesk/'>https://traininblocks.atlassian.net/servicedesk/</a><br>
+                                    Your trainer has re-activated your account.
                                     <br>
-                                    You just need to re-activate your account below to get started!<br>
+                                    You just need to click the link below to get started!<br>
                                     &nbsp;
                                   </td>
                                 </tr>
@@ -991,9 +991,9 @@ export function resetEmail (link) {
 export function resetEmailText (link) {
   return (`** Welcome Back...
     ------------------------------------------------------------
-    It's good to see you again. If you have any questions/concerns, please reach out to us at hello@traininblocks.com or head over to our online support desk at https://traininblocks.atlassian.net/servicedesk/
+    Your trainer has re-activated your account.
     
-    You just need to re-activate your account below to get started!
+    You just need to click the link below to get started!
     
     Re-activate Your Account (${link})
     This link expires in 7 days
@@ -1423,14 +1423,10 @@ export function deleteEmail () {
                                 <tr>
                                   <td valign='top' class='mcnTextContent' style='padding: 0px 18px 9px;line-height: 150%;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #282828;font-family: Helvetica;font-size: 16px;text-align: left;'>
                                     <h1 class='null' style='display: block;margin: 0;padding: 0;color: #202020;font-family: Helvetica;font-size: 26px;font-style: normal;font-weight: bold;line-height: 125%;letter-spacing: normal;text-align: left;'>
-                                      <span style='font-family:arial,helvetica neue,helvetica,sans-serif'><span style='font-size:32px'>Before you go...</span></span>
+                                      <span style='font-family:arial,helvetica neue,helvetica,sans-serif'><span style='font-size:32px'>Account Deactivated</span></span>
                                     </h1>
                                     <br>
-                                    We thank you for giving us a try. We are always improving our services frequently. Please reach out to us, we would love to hear about your experience and how we can make it even better.
-                                    <br>
-                                    We hope to see you again, here's a one-time <b>20% discount</b> for any plans when your return.
-                                    <br>
-                                    <b style='font-size: 1.5em'>BACK20</b>
+                                    Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.
                                     <br>
                                     &nbsp;
                                   </td>
@@ -1469,13 +1465,9 @@ export function deleteEmail () {
 }
 
 export function deleteEmailText () {
-  return (`** Before you go...
+  return (`** Account Deactivated
     ------------------------------------------------------------
-    We thank you for giving us a try. We are always improving our services frequently. Please reach out to us, we would love to hear about your experience and how we can make it even better.
-
-    We hope to see you again, here's a one-time 20% discount for any plans when your return.
-
-    BACK20
+    Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.
 
     All the best,
     
