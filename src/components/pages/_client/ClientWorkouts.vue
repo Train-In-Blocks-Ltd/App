@@ -575,6 +575,7 @@
     },
     data: function () {
       return {
+        feedbackStr: '',
         feedbackID: null,
         showBlockOptions: false,
         weekColor: {
