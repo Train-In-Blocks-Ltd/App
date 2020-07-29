@@ -582,11 +582,6 @@
       margin: auto;
       padding: 0
     }
-
-    /* Other */
-    .main-title {
-      margin: 0
-    }
   }
 
   /* For Mobile */
