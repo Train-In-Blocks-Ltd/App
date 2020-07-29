@@ -627,7 +627,7 @@
         daysDiff: 7,
         error: {
           msg: null
-        },
+        }
       }
     },
     created () {
@@ -1235,15 +1235,12 @@
           }
         }
         try {
-          if (workoutsNotes !== null) {
-            workoutsNotes.replace(/<p><br><\/p>/g, '')
-          }
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes,
+              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }

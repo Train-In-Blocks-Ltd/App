@@ -52,13 +52,6 @@
       opacity: 1
     }
   }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    #account {
-      padding: 4rem 1rem
-    }
-  }
 </style>
 
 <template>
