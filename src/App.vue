@@ -1029,23 +1029,16 @@ export default {
     },
     async get_programmes () {
       try {
-        if (localStorage.getItem('programmes')) {
-          this.programmes = JSON.parse(localStorage.getItem('programmes'))
-        } else {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+        this.programmes = programmes.data
+        var f
+        for (f in this.programmes) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
-          this.programmes = programmes.data
-          var f
-          for (f in this.programmes) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-            // eslint-disable-next-line
-            const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
+          // eslint-disable-next-line
+          const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
 
-            this.programmes[f].workouts = response_programmes.data
-
-            // Update the localstorage with the workouts
-            localStorage.setItem('programmes', JSON.stringify(this.programmes))
-          }
+          this.programmes[f].workouts = response_programmes.data
         }
       } catch (e) {
         console.log(e.toString())
@@ -1058,8 +1051,6 @@ export default {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           const response = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
           this.programmes[f].workouts = response.data
-          // Update the localstorage with the workouts
-          localStorage.setItem('programmes', JSON.stringify(this.programmes))
         }
       } catch (e) {
         console.log(e.toString())
