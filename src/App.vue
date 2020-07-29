@@ -186,7 +186,7 @@
     text-decoration: none;
     margin: 0
   }
-  .show-workout p, .show-block-notes p {
+  .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
   }
 
