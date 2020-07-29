@@ -395,10 +395,7 @@
         <div class="modal--error-workout-page">
           <p><b>Something went wrong...</b></p><br>
           <p>{{error.msg}}</p><br>
-          <div>
-            <button class="button" @click="retryError(), $modal.hide('error-workout-page')">Retry Last Action</button>
-            <button class="button" onclick="location.reload()">Refresh Page</button>
-          </div>
+          <button class="button" onclick="location.reload()">Refresh Page</button>
         </div>
       </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
@@ -495,7 +492,7 @@
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
-                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="showFeedback(workout.feedback)">Feedback</button>
+                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="feedbackID = workout.id, $modal.show('feedback-trainer')">Feedback</button>
                       </div>
                     </div>
                   </div>
@@ -578,7 +575,7 @@
     },
     data: function () {
       return {
-        feedbackStr: '',
+        feedbackID: null,
         showBlockOptions: false,
         weekColor: {
           backgroundColor: ''
@@ -628,9 +625,7 @@
         copyTarget: 2,
         daysDiff: 7,
         error: {
-          lastAction: null,
-          msg: null,
-          idStore: null
+          msg: null
         },
       }
     },
@@ -644,20 +639,9 @@
       this.scan()
     },
     methods: {
-      retryError () {
-        switch (this.error.lastAction) {
-          case 'add_workout': this.add_workout(); break;
-          case 'update_workout': this.update_workout(this.error.idStore); break;
-          case 'delete_workout': this.delete_workout(this.error.idStore); break;
-          case 'update_programme': this.update_programme(); break;
-          case 'delete_block': this.delete_block(); break;
-          default: location.reload()
-        }
-      },
       removeBrackets (dataIn) {
         if (dataIn !== null) {
-          var dataOut = dataIn.replace(/[[\]]/g, '')
-          return dataOut
+          return dataIn.replace(/[[\]]/g, '')
         } else {
           return dataIn
         }
@@ -1221,7 +1205,7 @@
         } catch (e) {
           this.$parent.$parent.loading = false
           this.error.msg = e
-          this.error.lastAction = 'update_programme'
+          this.$modal.show('error-workout-page')
           console.log(e.toString())
         }
       },
@@ -1251,7 +1235,7 @@
         }
         try {
           if (workoutsNotes !== null) {
-            workoutsNotes.replace(/<p><br><\/p>/gi, '')
+            workoutsNotes.replace(/<p><br><\/p>/g, '')
           }
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
@@ -1266,9 +1250,8 @@
           this.$ga.event('Workout', 'update')
         } catch (e) {
           this.$parent.$parent.loading = false
-          this.error.idStore = id
           this.error.msg = e
-          this.error.lastAction = 'update_workout'
+          this.$modal.show('error-workout-page')
           console.log(e.toString())
         }
         await this.$parent.force_get_workouts()
@@ -1309,7 +1292,7 @@
         } catch (e) {
           this.$parent.$parent.loading = false
           this.error.msg = e
-          this.error.lastAction = 'add_workout'
+          this.$modal.show('error-workout-page')
           console.error(`${e}`)
         }
       },
@@ -1335,7 +1318,7 @@
           } catch (e) {
             this.$parent.$parent.loading = false
             this.error.msg = e
-            this.error.lastAction = 'delete_block'
+            this.$modal.show('error-workout-page')
             console.error(`${e}`)
           }
         }
@@ -1352,9 +1335,8 @@
             this.$ga.event('Workout', 'delete')
             this.update_programme()
           } catch (e) {
-            this.error.idStore = id
             this.error.msg = e
-            this.error.lastAction = 'delete_workout'
+            this.$modal.show('error-workout-page')
             console.error(`${e}`)
           }
         }
