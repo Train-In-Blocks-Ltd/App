@@ -143,8 +143,9 @@
         try {
           this.$parent.loading = true
           // eslint-disable-next-line
-          const response_save_clients = await axios.put(`https://api.traininblocks.com/clients/${this.new_client.name}`,
+          const response_save_clients = await axios.put('https://api.traininblocks.com/clients',
             qs.stringify({
+              name: this.new_client.name,
               pt_id: this.$parent.claims.sub,
               email: this.new_client.email,
               number: this.new_client.number,
