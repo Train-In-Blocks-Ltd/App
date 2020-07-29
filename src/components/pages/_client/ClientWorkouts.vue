@@ -299,11 +299,6 @@
     margin: .4rem 0
   }
 
-  /* Modal Propeties */
-  .button--close {
-    margin-left: 11px
-  }
-
   @media (max-width: 768px) {
     .floating_nav__block a {
       grid-template-columns: 1fr
@@ -368,6 +363,12 @@
 
 <template>
     <div id="blocks">
+      <modal name="feedback-trainer" height="auto" :adaptive="true" :clickToClose="false">
+        <div class="modal--feedback-trainer">
+          <div v-html="feedbackStr" /><br>
+          <button class="button no-margin" @click="hideFeedback()">Close</button>
+        </div>
+      </modal>
       <modal name="info" height="auto" :adaptive="true">
         <div class="modal--info">
           <p><b>The Format Explained</b></p><br>
@@ -479,12 +480,6 @@
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
-                        <modal v-if="workout.id === feedbackID" name="feedback-trainer" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-                          <div class="modal--feedback-trainer">
-                            <quill v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/><br>
-                            <button class="button no-margin button--close" @click="update_workout(workout.id), $modal.hide('feedback-trainer')">Close</button>
-                          </div>
-                        </modal>
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                         <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
                         <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
@@ -500,7 +495,7 @@
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
-                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="feedbackID = workout.id, $modal.show('feedback-trainer')">Feedback</button>
+                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="showFeedback(workout.feedback)">Feedback</button>
                       </div>
                     </div>
                   </div>
@@ -583,7 +578,7 @@
     },
     data: function () {
       return {
-        feedbackID: null,
+        feedbackStr: '',
         showBlockOptions: false,
         weekColor: {
           backgroundColor: ''
@@ -661,10 +656,19 @@
       },
       removeBrackets (dataIn) {
         if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '')
+          var dataOut = dataIn.replace(/[[\]]/g, '')
+          return dataOut
         } else {
           return dataIn
         }
+      },
+      showFeedback (str) {
+        this.feedbackStr = str
+        this.$modal.show('feedback-trainer')
+      },
+      hideFeedback () {
+        this.feedbackStr = ''
+        this.$modal.hide('feedback-trainer')
       },
       toggleComplete (value) {
         var out
@@ -1241,14 +1245,13 @@
                 var workoutsNotes = programme.workouts[y].notes
                 var workoutsWeek = programme.workouts[y].week_id
                 var workoutsChecked = programme.workouts[y].checked
-                var workoutsFeedback = programme.workouts[y].feedback
               }
             }
           }
         }
         try {
           if (workoutsNotes !== null) {
-            workoutsNotes.replace(/<p><br><\/p>/g, '')
+            workoutsNotes.replace(/<p><br><\/p>/gi, '')
           }
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
@@ -1257,8 +1260,7 @@
               'date': workoutsDate,
               'notes': workoutsNotes,
               'week_id': workoutsWeek,
-              'checked': workoutsChecked,
-              'feedback': workoutsFeedback
+              'checked': workoutsChecked
             }
           )
           this.$ga.event('Workout', 'update')
