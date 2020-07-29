@@ -179,7 +179,7 @@
         } catch (e) {
           this.$parent.loading = false
           alert('Something went wrong, please try that again.')
-          console.error(`${e}`)
+          console.error(e)
         }
       }
     }

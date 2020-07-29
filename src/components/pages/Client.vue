@@ -227,7 +227,7 @@
       },
       async checkClient () {
         try {
-          const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`,
+          const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`,
             {
               headers: {
                 'Accept': 'application/json',
@@ -252,7 +252,7 @@
       async createClient () {
         this.$parent.loading = true
         if (this.clientSuspend) {
-          await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${this.clientSuspend}/lifecycle/unsuspend`,
+          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.clientSuspend}/lifecycle/unsuspend`,
             {},
             {
               headers: {
@@ -262,7 +262,7 @@
               }
             }
           )
-          const password = await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`,
+          const password = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`,
             {},
             {
               headers: {
@@ -290,11 +290,11 @@
               'content': [
                 {
                   'type': 'text/plain',
-                  'value': resetEmailText(password.data.resetPasswordUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                  'value': resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
                 },
                 {
                   'type': 'text/html',
-                  'value': resetEmail(password.data.resetPasswordUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                  'value': resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
                 }
               ]
             },
@@ -310,7 +310,7 @@
           this.$parent.loading = false
         } else {
           try {
-            const oktaOne = await axios.post('https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?activate=false',
+            const oktaOne = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?activate=false`,
               {
                 'profile': {
                   'firstName': this.$parent.client_details.email,
@@ -333,7 +333,7 @@
                 }
               }
             )
-            const oktaTwo = await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${oktaOne.data.id}/lifecycle/activate?sendEmail=false`,
+            const oktaTwo = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${oktaOne.data.id}/lifecycle/activate?sendEmail=false`,
               {},
               {
                 headers: {
@@ -361,11 +361,11 @@
                 'content': [
                   {
                     'type': 'text/plain',
-                    'value': emailText(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                    'value': emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
                   },
                   {
                     'type': 'text/html',
-                    'value': email(oktaTwo.data.activationUrl.replace('dev-183252.okta.com', 'auth.traininblocks.com'))
+                    'value': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
                   }
                 ]
               },
@@ -380,7 +380,9 @@
             this.checkClient()
             this.$parent.loading = false
           } catch (e) {
-            console.log(e.toString())
+            this.$parent.loading = false
+            alert('Something went wrong, please try that again.')
+            console.error(e)
           }
         }
       },
@@ -435,7 +437,9 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          console.log(e.toString())
+          this.$parent.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       },
       async get_workouts () {
@@ -480,7 +484,9 @@
           }
           this.loading_workouts = false
         } catch (e) {
-          console.log(e.toString())
+          this.$parent.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       },
       async force_get_client_details () {
@@ -513,7 +519,9 @@
             }
           }
         } catch (e) {
-          console.log(e.toString())
+          this.$parent.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
         await this.get_workouts()
       },
@@ -551,7 +559,9 @@
             }
           }
         } catch (e) {
-          console.log(e.toString())
+          this.$parent.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
         await this.get_workouts()
       },
@@ -572,7 +582,9 @@
           await this.$parent.clients()
           await this.$parent.clients_to_vue()
         } catch (e) {
-          console.log(e.toString())
+          this.$parent.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       }
     }

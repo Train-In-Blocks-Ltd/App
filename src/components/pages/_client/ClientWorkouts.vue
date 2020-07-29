@@ -627,7 +627,7 @@
         daysDiff: 7,
         error: {
           msg: null
-        },
+        }
       }
     },
     created () {
@@ -1207,7 +1207,7 @@
           this.$parent.$parent.loading = false
           this.error.msg = e
           this.$modal.show('error-workout-page')
-          console.log(e.toString())
+          console.error(e)
         }
       },
       async update_workout (id) {
@@ -1253,7 +1253,7 @@
           this.$parent.$parent.loading = false
           this.error.msg = e
           this.$modal.show('error-workout-page')
-          console.log(e.toString())
+          console.error(e)
         }
         await this.$parent.force_get_workouts()
         this.update_programme()
@@ -1294,7 +1294,7 @@
           this.$parent.$parent.loading = false
           this.error.msg = e
           this.$modal.show('error-workout-page')
-          console.error(`${e}`)
+          console.error(e)
         }
       },
       async delete_block () {
@@ -1320,7 +1320,7 @@
             this.$parent.$parent.loading = false
             this.error.msg = e
             this.$modal.show('error-workout-page')
-            console.error(`${e}`)
+            console.error(e)
           }
         }
       },
@@ -1336,9 +1336,10 @@
             this.$ga.event('Workout', 'delete')
             this.update_programme()
           } catch (e) {
+            this.$parent.$parent.loading = false
             this.error.msg = e
             this.$modal.show('error-workout-page')
-            console.error(`${e}`)
+            console.error(e)
           }
         }
       }

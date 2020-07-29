@@ -898,7 +898,7 @@ export default {
           // eslint-disable-next-line
           this.response = response.data
 
-          const result = await axios.get(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
+          const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
             {
               headers: {
                 'Accept': 'application/json',
@@ -907,7 +907,7 @@ export default {
               }
             }
           )
-          await axios.post(`https://cors-anywhere.herokuapp.com/https://dev-183252.okta.com/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
+          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
             {},
             {
               headers: {
@@ -958,7 +958,9 @@ export default {
           this.archive_to_vue()
           this.$ga.event('Client', 'archive')
         } catch (e) {
-          console.error(`${e}`)
+          this.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       }
     },
@@ -997,7 +999,9 @@ export default {
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
         } catch (e) {
-          console.error(`${e}`)
+          this.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       }
     },
@@ -1023,7 +1027,9 @@ export default {
           this.clients_to_vue()
           this.$ga.event('Client', 'delete')
         } catch (e) {
-          console.error(`${e}`)
+          this.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       }
     },
@@ -1041,7 +1047,9 @@ export default {
           this.programmes[f].workouts = response_programmes.data
         }
       } catch (e) {
-        console.log(e.toString())
+        this.loading = false
+        alert('Something went wrong, please try that again.')
+        console.error(e)
       }
     },
     async get_workouts () {
@@ -1053,7 +1061,9 @@ export default {
           this.programmes[f].workouts = response.data
         }
       } catch (e) {
-        console.log(e.toString())
+        this.loading = false
+        alert('Something went wrong, please try that again.')
+        console.error(e)
       }
     },
     sortWorkoutsBlock () {
@@ -1097,7 +1107,9 @@ export default {
         )
         this.$ga.event('Workout', 'update')
       } catch (e) {
-        console.log(e.toString())
+        this.loading = false
+        alert('Something went wrong, please try that again.')
+        console.error(e)
       }
       await this.get_workouts()
       this.sortWorkoutsBlock()

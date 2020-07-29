@@ -43,6 +43,13 @@
   .allow-cookies {
     align-self: center
   }
+  .check {
+    border-color: red;
+    outline-color: red
+  }
+  .error {
+    color: red
+  }
 
   @media (max-width: 768px) {
     #account {
@@ -77,10 +84,31 @@
           <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
             <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
           </div>
-        </div>
-        <div>
-          <h2>Reset your password</h2>
-          <p class="text--reset">To reset your password please logout and click on the <i>Need help signing in?</i> link on the login page.</p>
+          <div>
+            <form v-on:submit.prevent="changePass">
+              <label>
+                <p>Current Password</p>
+                <input type="password" class="input--forms" v-model="oldPassword"/>
+              </label>
+              <br>
+              <br>
+              <label>
+                <p>New Password</p>
+                <ul>
+                  <b>Requirements:</b>
+                  <li>Number (0-9)</li>
+                  <li>At least 8 characters</li>
+                  <li>Can't contain your username</li>
+                </ul>
+                <input type="password" class="input--forms" v-model="newPassword" v-on:input="checkPass" v-bind:class="{check: check}"/>
+              </label>
+              <br>
+              <br>
+              <div><input type="submit" value="Change your password" class="button" :disabled="check"/></div>
+              <p v-if="this.error" class="error">{{this.error}}</p>
+              <p v-if="this.msg">{{this.msg}}</p>
+            </form>
+          </div>
         </div>
         <div class="privacy">
           <h2>Your Privacy and Data</h2>
@@ -100,8 +128,18 @@
 
 <script>
   import axios from 'axios'
+  import {passChangeEmail, passChangeEmailText} from '../components/email'
 
   export default {
+    data: function () {
+      return {
+        oldPassword: null,
+        newPassword: null,
+        check: null,
+        error: null,
+        msg: null
+      }
+    },
     created () {
       this.$parent.setup()
     },
@@ -112,12 +150,78 @@
         this.$parent.colors.rgba.b = this.$parent.hexToRgb(e.target.value).b
         this.$parent.colors.hex = e.target.value
       },
+      checkPass () {
+        if (!this.newPassword.includes(this.$parent.claims.email) && this.newPassword.match(/[0-9]+/) && this.newPassword.length >= 8 && this.oldPassword.length >= 1) {
+          this.check = false
+        } else {
+          this.check = true
+        }
+      },
+      async changePass () {
+        try {
+          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}/credentials/change_password`,
+            {
+              'oldPassword': this.oldPassword,
+              'newPassword': this.newPassword
+            },
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          this.oldPassword = null
+          this.newPassword = null
+          this.msg = 'Password Updated Successfully'
+          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            {
+              'personalizations': [
+                {
+                  'to': [
+                    {
+                      'email': this.$parent.claims.email
+                    }
+                  ],
+                  'subject': 'Password Changed'
+                }
+              ],
+              'from': {
+                'email': 'Train In Blocks <no-reply@traininblocks.com>'
+              },
+              'content': [
+                {
+                  'type': 'text/plain',
+                  'value': passChangeEmailText()
+                },
+                {
+                  'type': 'text/html',
+                  'value': passChangeEmail()
+                }
+              ]
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': process.env.SENDGRID
+              }
+            }
+          )
+        } catch (e) {
+          this.$parent.loading = false
+          this.error = 'An error occurred. Please try again...'
+          console.error(e)
+        }
+      },
       async manageSubscription () {
         try {
           const response = await axios.post(`/.netlify/functions/create-manage-link`, { 'id': this.$parent.claims.stripeId })
           window.location.href = response.data
         } catch (e) {
-          console.log(e)
+          this.$parent.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       },
       async save () {
@@ -145,7 +249,9 @@
           )
           this.$parent.loading = false
         } catch (e) {
-          console.log(e)
+          this.$parent.loading = false
+          alert('Something went wrong, please try that again.')
+          console.error(e)
         }
       }
     }

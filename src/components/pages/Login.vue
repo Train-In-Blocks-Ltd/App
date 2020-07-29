@@ -25,6 +25,9 @@
       padding: 4rem 2rem
     }
   }
+  .error {
+    color: red
+  }
 </style>
 <style>
   .okta-form-title {
@@ -41,7 +44,7 @@
     text-align: left;
     letter-spacing: .1rem
   }
-  #okta-signin-username, #okta-signin-password, #account-recovery-username {
+  #okta-signin-username, #okta-signin-password {
     outline-width: 0;
     width: 70%;
     margin: .8rem 0;
@@ -54,7 +57,7 @@
     transition: width 1s;
     transition-timing-function: cubic-bezier(.075, .82, .165, 1)
   }
-  #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus, #account-recovery-username:hover, #account-recovery-username:focus {
+  #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus {
     width: 75%
   }
   .okta-form-input-error {
@@ -88,27 +91,9 @@
     background-color: #282828;
     color: white
   }
-  .help-links {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    margin-top: .8rem;
-    font-size: .8rem
-  }
-  .help-links li {
-    padding: .4rem 0
-  }
-  .help-links li:first-of-type {
-    padding-top: 0
-  }
-  .help-links li:last-of-type {
-    padding-bottom: 0
-  }
   .o-form-fieldset-container {
     display: grid;
-    grid-gap: 2rem
-  }
-  .auth-footer, .o-form-fieldset-container {
+    grid-gap: 2rem;
     margin-top: 2rem;
     text-align: left
   }
@@ -128,6 +113,9 @@
       font-size: 2rem
     }
   }
+  .auth-footer {
+    display: none
+  }
 </style>
 
 <template>
@@ -135,16 +123,37 @@
     <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a></p>
+    <button class="button" @click="open = !open">Forgot password?</button>
+    <form v-if="open" v-on:submit.prevent="reset">
+      <label>
+        <p>Email:</p>
+        <input type="email" v-model="email" class="input--forms" />
+        <div><input type="submit" class="button" value="Send recovery email" /></div>
+      </label>
+    </form>
+    <p v-if="success">{{success}}</p>
+    <p v-if="error" class="error">{{error}}</p>
   </div>
 </template>
 
 <script>
 import OktaSignIn from '@okta/okta-signin-widget'
 import InlineSvg from 'vue-inline-svg'
+import axios from 'axios'
+import {passEmail, passEmailText} from '../components/email'
 
 export default {
   components: {
     InlineSvg
+  },
+  data: function () {
+    return {
+      open: false,
+      email: null,
+      id: null,
+      error: null,
+      success: null
+    }
   },
   mounted: function () {
     this.$nextTick(function () {
@@ -185,6 +194,72 @@ export default {
         }
       )
     })
+  },
+  methods: {
+    async reset () {
+      try {
+        const oktaOne = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.email}"&limit=1`,
+          {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': process.env.AUTH_HEADER
+            }
+          }
+        )
+        this.id = oktaOne.data[0].id
+        const response = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.id}/lifecycle/reset_password?sendEmail=false`,
+          {},
+          {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': process.env.AUTH_HEADER
+            }
+          }
+        )
+        await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+          {
+            'personalizations': [
+              {
+                'to': [
+                  {
+                    'email': this.email
+                  }
+                ],
+                'subject': 'Password Reset'
+              }
+            ],
+            'from': {
+              'email': 'Train In Blocks <no-reply@traininblocks.com>'
+            },
+            'content': [
+              {
+                'type': 'text/plain',
+                'value': passEmailText(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              },
+              {
+                'type': 'text/html',
+                'value': passEmail(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              }
+            ]
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': process.env.SENDGRID
+            }
+          }
+        )
+        this.open = false
+        this.email = null
+        this.success = 'An email has been sent.'
+      } catch (e) {
+        this.$parent.loading = false
+        this.error = 'An error occurred. Please try again...'
+        console.error(e)
+      }
+    }
   },
   async beforeDestroy () {
     this.$ga.event('Auth', 'login')
