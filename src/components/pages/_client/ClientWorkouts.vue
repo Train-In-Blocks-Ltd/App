@@ -1255,8 +1255,9 @@
           this.$parent.$parent.loading = true
           this.msg = 'Creating...'
           // eslint-disable-next-line
-          const response_save_workouts = await axios.put(`https://api.traininblocks.com/workouts/${this.new_workout.name}`,
+          const response_save_workouts = await axios.put('https://api.traininblocks.com/workouts',
             qs.stringify({
+              name: this.new_workout.name,
               programme_id: this.$route.params.id,
               date: this.new_workout.date,
               notes: this.currentCopyWorkoutNotes,
