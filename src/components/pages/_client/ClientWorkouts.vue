@@ -492,7 +492,7 @@
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
-                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="feedbackID = workout.id, $modal.show('feedback-trainer')">Feedback</button>
+                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="feedbackID = workout.id, showFeedback(workout.feedback)">Feedback</button>
                       </div>
                     </div>
                   </div>

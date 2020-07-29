@@ -182,9 +182,12 @@
   .show-workout a {
     color: blue
   }
-  .show-workout p, .show-workout ul, .show-workout ol, .show-block-notes p, .show-block-notes ul, .show-block-notes ol {
+  .show-workout ul, .show-workout ol, .show-block-notes ul, .show-block-notes ol {
     text-decoration: none;
     margin: 0
+  }
+  .show-workout p, .show-client-notes p, .show-block-notes p {
+    margin: 1rem 0
   }
 
   /* GLOBAL: Calendar */
@@ -399,11 +402,17 @@
   }
 
   /* QUILL */
+  .ql-editor.ql-blank:before {
+    margin: 1rem 0
+  }
   .ql-snow .ql-editor h1 {
     margin: 1.072rem 0
   }
   .ql-snow .ql-editor h2 {
     margin: 1.245rem 0
+  }
+  .ql-snow .ql-editor p {
+    margin: 1rem 0
   }
   div.ql-toolbar.ql-snow {
     border: none
@@ -575,12 +584,6 @@
     }
 
     /* Other */
-    h1 {
-      font-size: 2rem;
-      margin-top: -.9rem;
-      margin-bottom: 2.5rem;
-      margin-left: 1.25rem
-    }
     .main-title {
       margin: 0
     }
