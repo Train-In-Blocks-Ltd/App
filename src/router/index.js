@@ -22,12 +22,12 @@ Vue.use(Router)
 Vue.use(Auth, {
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
-  redirectUri: window.location.host + '/implicit/callback',
+  redirectUri: 'http://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
   onSessionExpired: async function () {
-    await Vue.$auth.logout({postLogoutRedirectUri: window.location.host + '/login'})
+    await Vue.$auth.logout({postLogoutRedirectUri: 'http://' + window.location.host + '/login'})
   }
 })
 

@@ -162,7 +162,7 @@ export default {
         baseUrl: process.env.ISSUER,
         issuer: process.env.ISSUER + '/oauth2/default',
         clientId: process.env.CLIENT_ID,
-        redirectUri: window.location.host + '/implicit/callback',
+        redirectUri: 'http://' + window.location.host + '/implicit/callback',
         i18n: {
           en: {
             'primaryauth.title': '',
