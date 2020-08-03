@@ -18,8 +18,6 @@ import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
 import ClientUserComponent from '@/components/pages/clientUser/Home'
 import ClientUserBlocks from '@/components/pages/clientUser/Block'
 
-console.log(process.env.CONTEXT)
-
 Vue.use(Router)
 Vue.use(Auth, {
   issuer: process.env.ISSUER + '/oauth2/default',
