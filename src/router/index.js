@@ -27,7 +27,7 @@ Vue.use(Auth, {
   pkce: true,
   autoRenew: false,
   onSessionExpired: async function () {
-    await Vue.$auth.logout({postLogoutRedirectUri: process.env.URL + '/login'})
+    await Vue.$auth.logout({postLogoutRedirectUri: window.location.host + '/login'})
   }
 })
 
