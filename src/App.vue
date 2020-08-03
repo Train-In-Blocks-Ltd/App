@@ -717,7 +717,6 @@ export default {
       archive_error: '',
       archive_posts: {},
       no_archive: false,
-      open: false,
       error: '',
       posts: null,
       loading_clients: true,
@@ -757,7 +756,6 @@ export default {
     // Everytime the route changes, check for auth status
     '$route' (to, from) {
       this.isAuthenticated()
-      this.open = false
     }
   },
   methods: {
