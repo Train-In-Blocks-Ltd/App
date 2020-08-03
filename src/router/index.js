@@ -22,12 +22,12 @@ Vue.use(Router)
 Vue.use(Auth, {
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
-  redirectUri: process.env.URL + '/implicit/callback',
+  redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
   onSessionExpired: async function () {
-    await Vue.$auth.logout({postLogoutRedirectUri: process.env.URL + '/login'})
+    await Vue.$auth.logout({postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback'})
   }
 })
 
@@ -138,12 +138,23 @@ const onAuthRequired = async (from, to, next) => {
 }
 
 const userType = async (from, to, next) => {
-  let claims = await Vue.prototype.$auth.getUser()
-  if (claims) {
-    if (!localStorage.getItem('claims') || localStorage.getItem('claims') === 'undefined' || localStorage.getItem('claims') === 'null') {
+  let result
+  if (!localStorage.getItem('claims')) {
+    let claims = await Vue.prototype.$auth.getUser()
+    if (claims !== undefined && claims !== null) {
       localStorage.setItem('claims', JSON.stringify(claims))
+      result = claims
+    } else {
+      result = false
     }
-    let result = JSON.parse(localStorage.getItem('claims'))
+  } else {
+    if (localStorage.getItem('claims')) {
+      result = JSON.parse(localStorage.getItem('claims'))
+    } else {
+      result = false
+    }
+  }
+  if (result) {
     if (from.matched.some(record => record.meta.requiresTrainer)) {
       if (result.user_type === 'Admin') {
         next()

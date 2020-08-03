@@ -214,7 +214,6 @@ export default {
     }
   },
   async mounted () {
-    this.$parent.claims = await this.$auth.getUser()
     await this.$parent.get_programmes()
     await this.todaysWorkout()
     await this.initCountWorkoutsHome()

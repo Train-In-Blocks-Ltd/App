@@ -73,7 +73,6 @@
       }
     },
     async mounted () {
-      this.$parent.claims = await this.$auth.getUser()
       await this.$parent.get_programmes()
       this.initCountWorkoutsBlock()
       this.$parent.sortWorkoutsBlock()
