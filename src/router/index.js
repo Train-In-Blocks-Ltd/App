@@ -138,30 +138,26 @@ const onAuthRequired = async (from, to, next) => {
 }
 
 const userType = async (from, to, next) => {
-  let claims = await Vue.prototype.$auth.getUser()
-  if (claims) {
-    if (!localStorage.getItem('claims') || localStorage.getItem('claims') === 'undefined' || localStorage.getItem('claims') === 'null') {
-      localStorage.setItem('claims', JSON.stringify(claims))
+  if (!localStorage.getItem('claims') || localStorage.getItem('claims') === 'undefined' || localStorage.getItem('claims') === 'null') {
+    let claims = await Vue.prototype.$auth.getUser()
+    localStorage.setItem('claims', JSON.stringify(claims))
+  }
+  let result = JSON.parse(localStorage.getItem('claims'))
+  if (from.matched.some(record => record.meta.requiresTrainer)) {
+    if (result.user_type === 'Admin') {
+      next()
+    } else if (result.user_type === 'Client') {
+      // Navigate to Client Homepage
+      next({ path: '/clientUser' })
+    } else {
+      next()
     }
-    let result = JSON.parse(localStorage.getItem('claims'))
-    if (from.matched.some(record => record.meta.requiresTrainer)) {
-      if (result.user_type === 'Admin') {
-        next()
-      } else if (result.user_type === 'Client') {
-        // Navigate to Client Homepage
-        next({ path: '/clientUser' })
-      } else {
-        next()
-      }
-    } else if (from.matched.some(record => record.meta.requiresClient)) {
-      if (result.user_type === 'Admin') {
-        next()
-      } else if (result.user_type === 'Trainer') {
-        // Navigate to Trainer Homepage
-        next({ path: '/' })
-      } else {
-        next()
-      }
+  } else if (from.matched.some(record => record.meta.requiresClient)) {
+    if (result.user_type === 'Admin') {
+      next()
+    } else if (result.user_type === 'Trainer') {
+      // Navigate to Trainer Homepage
+      next({ path: '/' })
     } else {
       next()
     }
