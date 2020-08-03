@@ -371,8 +371,10 @@
       </modal>
       <modal name="info" height="auto" :adaptive="true">
         <div class="modal--info">
-          <p><b>The Format Explained</b></p><br>
+          <p><b>The format for tracking data</b></p><br>
           <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p>
+          <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
+          <p>See <i>Help</i> for more information</p>
         </div>
       </modal>
       <modal name="move" height="auto" :adaptive="true">

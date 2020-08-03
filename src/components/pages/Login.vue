@@ -123,11 +123,12 @@
     <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a></p>
-    <button class="button" @click="open = !open">Forgot password?</button>
+    <button class="button" v-if="!open" @click="open = !open">Forgot password?</button>
+    <button class="button" v-if="open" @click="open = !open">Close</button><br><br>
     <form v-if="open" v-on:submit.prevent="reset">
       <label>
         <p>Email:</p>
-        <input type="email" v-model="email" class="input--forms" />
+        <input type="email" v-model="email" class="input--forms" /><br><br>
         <div><input type="submit" class="button" value="Send recovery email" /></div>
       </label>
     </form>

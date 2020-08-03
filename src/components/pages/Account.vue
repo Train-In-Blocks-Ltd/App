@@ -77,31 +77,31 @@
           <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
             <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
           </div>
-          <div>
-            <form v-on:submit.prevent="changePass">
-              <label>
-                <p>Current Password</p>
-                <input type="password" class="input--forms" v-model="oldPassword"/>
-              </label>
-              <br>
-              <br>
-              <label>
-                <p>New Password</p>
-                <ul>
-                  <b>Requirements:</b>
-                  <li>Number (0-9)</li>
-                  <li>At least 8 characters</li>
-                  <li>Can't contain your username</li>
-                </ul>
-                <input type="password" class="input--forms" v-model="newPassword" v-on:input="checkPass" v-bind:class="{check: check}"/>
-              </label>
-              <br>
-              <br>
-              <div><input type="submit" value="Change your password" class="button" :disabled="check"/></div>
-              <p v-if="this.error" class="error">{{this.error}}</p>
-              <p v-if="this.msg">{{this.msg}}</p>
-            </form>
-          </div>
+        </div>
+        <div>
+          <h2>Reset your password</h2>
+          <form v-on:submit.prevent="changePass">
+            <label>
+              <p><b>Current Password</b></p>
+              <input type="password" class="input--forms" v-model="oldPassword"/>
+            </label>
+            <br>
+            <br>
+            <br>
+            <label>
+              <p><b>Requirements:</b></p>
+              <p>Number (0-9)</p>
+              <p>At least 8 characters</p>
+              <p>Can't contain your username</p><br>
+              <p><b>New Password</b></p>
+              <input type="password" class="input--forms" v-model="newPassword" v-on:input="checkPass" v-bind:class="{check: check}"/>
+            </label>
+            <br>
+            <br>
+            <div><input type="submit" value="Change your password" class="button" :disabled="check"/></div>
+            <p v-if="this.error" class="error">{{this.error}}</p>
+            <p v-if="this.msg">{{this.msg}}</p>
+          </form>
         </div>
         <div class="privacy">
           <h2>Your Privacy and Data</h2>
