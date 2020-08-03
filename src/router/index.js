@@ -18,11 +18,13 @@ import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
 import ClientUserComponent from '@/components/pages/clientUser/Home'
 import ClientUserBlocks from '@/components/pages/clientUser/Block'
 
+console.log(process.env.CONTEXT)
+
 Vue.use(Router)
 Vue.use(Auth, {
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
-  redirectUri: process.env.CONTEXT === 'branch-deploy' ? 'https://dev.app.traininblocks.com/implicit/callback' : process.env.URL + '/implicit/callback',
+  redirectUri: process.env.CONTEXT === 'dev' ? 'https://dev.app.traininblocks.com/implicit/callback' : process.env.URL + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
