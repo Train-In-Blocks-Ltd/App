@@ -22,7 +22,7 @@ Vue.use(Router)
 Vue.use(Auth, {
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
-  redirectUri: process.env.CONTEXT = 'branch-deploy' ? 'https://dev.app.traininblocks.com/implicit/callback' : process.env.URL + '/implicit/callback',
+  redirectUri: process.env.CONTEXT === 'branch-deploy' ? 'https://dev.app.traininblocks.com/implicit/callback' : process.env.URL + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
