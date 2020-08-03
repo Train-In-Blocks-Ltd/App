@@ -22,12 +22,12 @@ Vue.use(Router)
 Vue.use(Auth, {
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
-  redirectUri: 'http://' + window.location.host + '/implicit/callback',
+  redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
   onSessionExpired: async function () {
-    await Vue.$auth.logout({postLogoutRedirectUri: 'http://' + window.location.host + '/login'})
+    await Vue.$auth.logout({postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback'})
   }
 })
 
