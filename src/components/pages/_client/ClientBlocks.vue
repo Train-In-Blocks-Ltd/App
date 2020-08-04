@@ -214,13 +214,14 @@
         if (state) {
           window.addEventListener('keydown', this.quickSaveClient)
         } else {
-          this.update_client()
+          this.$parent.update_client()
           window.removeEventListener('keydown', this.quickSaveClient)
         }
       },
-      quickSaveClient (key, state) {
+      quickSaveClient (key) {
         if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.update_client()
+          this.$parent.update_client()
+          this.editClientNotes = false
           window.removeEventListener('keydown', this.quickSaveClient)
         }
       },
