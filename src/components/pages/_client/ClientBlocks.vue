@@ -139,16 +139,16 @@
 </style>
 <template>
     <div>
-      <div :class="{activeClientNotes: $parent.editClientNotes}" class="client-notes">
+      <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
         <div class="client-notes__header">
           <p><b>Client Information</b></p>
         </div>
-        <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-        <div v-if="!$parent.editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
-        <p v-if="!$parent.editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
+        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
+        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
+        <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
-          <button v-show="!$parent.editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
-          <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
+          <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
+          <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
         </div>
       </div>
       <div class="container--block-links__section">
@@ -170,17 +170,17 @@
               </router-link>
           </div>
         </div>
-        <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
+        <button v-if="!creating" class="button" @click="creation()">New Block</button>
         <p class="new-msg" v-if="!creating">{{response}}</p>
         <div v-if="creating" class="add_block_container">
           <h3>New Block</h3>
-          <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
+          <form class="form_grid add_block" name="add_programme" @submit.prevent="save()">
             <label><b>Name: </b><input class="input--forms" type="text" v-model="new_block.name" required/></label>
             <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_block.duration" required/></label>
             <label><b>Start: </b><input class="input--forms" type="date" v-model="new_block.start" required /></label>
             <div class="form_buttons">
               <input type="submit" class="button button--save" value="Save" />
-              <button class="button button--close cancel" v-on:click="close()">Close</button>
+              <button class="button button--close cancel" @click="close()">Close</button>
             </div>
           </form>
         </div>
@@ -206,21 +206,27 @@
       }
     },
     methods: {
+    
+      // CLIENT NOTES METHODS //-------------------------------------------------------------------------------
+
       editingClientNotes (state) {
-        this.$parent.editClientNotes = state
+        this.editClientNotes = state
         if (state) {
           window.addEventListener('keydown', this.quickSaveClient)
         } else {
-          this.$parent.updateClientNotes()
+          this.update_client()
           window.removeEventListener('keydown', this.quickSaveClient)
         }
       },
       quickSaveClient (key, state) {
         if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.$parent.updateClientNotes()
+          this.update_client()
           window.removeEventListener('keydown', this.quickSaveClient)
         }
       },
+
+      // BACKGROUND METHODS //-------------------------------------------------------------------------------
+
       creation () {
         this.creating = true
       },

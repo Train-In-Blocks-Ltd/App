@@ -393,7 +393,7 @@
             <button class="button">Copy</button>
         </form>
       </modal>
-      <modal name="error-workout-page" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <modal name="error-workout-page" height="auto" :adaptive="true">
         <div class="modal--error-workout-page">
           <p><b>Something went wrong...</b></p><br>
           <p>{{error.msg}}</p><br>
