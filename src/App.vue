@@ -632,6 +632,9 @@
       <div class="modal--error">
         <p><b>Something went wrong...</b></p><br>
         <p>{{errorMsg}}</p><br>
+        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
+          <button class="button" type="submit" formtarget="_blank">Let us know</button>
+        </form>
       </div>
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>

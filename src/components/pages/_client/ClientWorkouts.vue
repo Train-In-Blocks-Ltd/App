@@ -198,6 +198,7 @@
     font-weight: bold
   }
   input.workout-date {
+    cursor: pointer;
     width: fit-content;
     font-size: .8rem
   }
@@ -1264,7 +1265,7 @@
                 var workoutsId = programme.workouts[y].id
                 var workoutsName = programme.workouts[y].name
                 var workoutsDate = programme.workouts[y].date
-                var workoutsNotes = programme.workouts[y].notes
+                var workoutsNotes = programme.workouts[y].notes.replace(/<p><br><\/p>/gi, '')
                 var workoutsWeek = programme.workouts[y].week_id
                 var workoutsChecked = programme.workouts[y].checked
               }
@@ -1272,15 +1273,12 @@
           }
         }
         try {
-          if (workoutsNotes !== null) {
-            workoutsNotes.replace(/<p><br><\/p>/gi, '')
-          }
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
+              'notes': workoutsNotes,
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }

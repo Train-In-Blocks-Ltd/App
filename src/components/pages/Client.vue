@@ -10,12 +10,13 @@
   }
 
   /* Client Info */
-  #client .client_info input:not([type='submit']), #duration, .workout-date {
+  #client .client_info input:not([type='submit']), #duration {
     width: 100%;
     cursor: pointer;
     background-color: initial;
     border: none;
     padding: .6rem 0;
+    margin-left: 1rem;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   #client .client_info input:not([type='submit']):hover, #duration:hover, .workout-date:hover {
@@ -32,8 +33,9 @@
     display: flex
   }
   .wrapper--info label {
-    align-self: center;
-    margin-right: 1rem
+    display: flex;
+    width: 100%;
+    align-items: center
   }
   #phone {
     width: 50%
