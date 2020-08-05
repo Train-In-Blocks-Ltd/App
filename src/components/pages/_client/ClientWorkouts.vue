@@ -8,8 +8,9 @@
     flex-direction: column
   }
   #blocks .block_info label {
+    display: flex;
+    align-items: center;
     grid-auto-columns: min-content;
-    display: inline-block;
     font-weight: bold
   }
   .wrapper-start-date {
@@ -241,7 +242,8 @@
     font-size: 1.6rem;
     width: fit-content;
     padding: .2rem 1rem .2rem 0;
-    font-weight: bold
+    font-weight: bold;
+    margin: .4rem 0
   }
   #chart {
     margin-top: 4rem;
@@ -278,7 +280,7 @@
   }
 
   /* All Modal */
-  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy, .modal--error-workout-page {
+  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy {
     padding: 2rem
   }
 
@@ -393,13 +395,6 @@
             <button class="button">Copy</button>
         </form>
       </modal>
-      <modal name="error-workout-page" height="auto" :adaptive="true">
-        <div class="modal--error-workout-page">
-          <p><b>Something went wrong...</b></p><br>
-          <p>{{error.msg}}</p><br>
-          <button class="button" onclick="location.reload()">Refresh Page</button>
-        </div>
-      </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
           <a @click="delete_block()" aria-label="Archive this client">
@@ -512,7 +507,7 @@
                   <div class="data-select">
                     <div class="data-select__options">
                       <label for="measure">
-                        <b>Measurement: </b>
+                        <b>Measurement: </b><br>
                         <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
                           <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
                             {{option.text}}
@@ -522,7 +517,7 @@
                     </div>
                     <div class="data-select__options" v-show="showType">
                       <label for="measure-type">
-                        <b>Data type: </b>
+                        <b>Data type: </b><br>
                         <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
                           <option value="Sets">Sets</option>
                           <option value="Reps">Reps</option>
@@ -593,9 +588,6 @@
         response: '',
         editBlockNotes: false,
         todayDate: '',
-        error: {
-          msg: null
-        },
 
         // WORKOUT DATA //
 
@@ -1250,8 +1242,8 @@
           this.scan()
         } catch (e) {
           this.$parent.$parent.loading = false
-          this.error.msg = e
-          this.$modal.show('error-workout-page')
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -1288,7 +1280,7 @@
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes,
+              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }
@@ -1296,8 +1288,8 @@
           this.$ga.event('Workout', 'update')
         } catch (e) {
           this.$parent.$parent.loading = false
-          this.error.msg = e
-          this.$modal.show('error-workout-page')
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
         await this.$parent.force_get_workouts()
@@ -1337,8 +1329,8 @@
           this.$ga.event('Workout', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
-          this.error.msg = e
-          this.$modal.show('error-workout-page')
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -1363,8 +1355,8 @@
             this.$ga.event('Block', 'delete')
           } catch (e) {
             this.$parent.$parent.loading = false
-            this.error.msg = e
-            this.$modal.show('error-workout-page')
+            this.$parent.$parent.errorMsg = e
+            this.$parent.$parent.$modal.show('error')
             console.error(e)
           }
         }
@@ -1382,8 +1374,8 @@
             this.update_programme()
           } catch (e) {
             this.$parent.$parent.loading = false
-            this.error.msg = e
-            this.$modal.show('error-workout-page')
+            this.$parent.$parent.errorMsg = e
+            this.$parent.$parent.$modal.show('error')
             console.error(e)
           }
         }

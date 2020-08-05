@@ -16,6 +16,9 @@
     font-size: .6rem;
     margin: 2rem 0
   }
+  .input--forms.email-recovery {
+    width: 70%
+  }
   @media (max-width: 520px) {
     main {
       padding: 2rem 1.5rem
@@ -128,7 +131,7 @@
     <form v-if="open" @submit.prevent="reset">
       <label>
         <p>Email:</p>
-        <input type="email" v-model="email" class="input--forms" /><br><br>
+        <input type="email" v-model="email" class="input--forms email-recovery" /><br><br>
         <div><input type="submit" class="button" value="Send recovery email" /></div>
       </label>
     </form>

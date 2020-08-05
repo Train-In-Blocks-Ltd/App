@@ -206,7 +206,7 @@
       }
     },
     methods: {
-    
+
       // CLIENT NOTES METHODS //-------------------------------------------------------------------------------
 
       editingClientNotes (state) {

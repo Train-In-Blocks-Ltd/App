@@ -54,6 +54,9 @@
   .show-block-notes h1, .show-block-notes h2, .show-client-notes h1, .show-client-notes h2, .client_link__notes__content h1, .client_link__notes__content h2 {
     margin: 0
   }
+  .modal--error {
+    padding: 2rem
+  }
 
   /* Fonts */
   .main-title {
@@ -625,6 +628,12 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
+    <modal name="error" height="auto" :adaptive="true">
+      <div class="modal--error">
+        <p><b>Something went wrong...</b></p><br>
+        <p>{{errorMsg}}</p><br>
+      </div>
+    </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
@@ -730,6 +739,7 @@ export default {
       loading_clients: true,
       loading: false,
       no_clients: false,
+      errorMsg: null,
 
       // USER DATA //
 
@@ -1065,7 +1075,7 @@ export default {
         }
       }
     },
-    
+
     // DATABSE METHODS //-------------------------------------------------------------------------------
 
     async get_programmes () {

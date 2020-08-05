@@ -78,7 +78,7 @@
       this.$parent.sortWorkoutsBlock()
     },
     methods: {
-      
+
       // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
       removeBrackets (dataIn) {
