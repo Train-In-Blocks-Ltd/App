@@ -59,10 +59,10 @@
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
-      <div>
-        <label for="client-search"><b>Find a client:</b></label>
-        <input name="client-search" type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
-      </div>
+      <label>
+        <b>Find a client:</b>
+        <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
+      </label>
       <div class="container--clients">
         <div v-for="(clients, index) in $parent.posts"
           :key="index">
@@ -90,7 +90,7 @@
         <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
           <input type="submit" class="button button--save" value="Save" />
-          <button class="button button--close" v-on:click="close()">Close</button>
+          <button class="button button--close cancel" v-on:click="close()">Close</button>
         </div>
       </form>
     </div>

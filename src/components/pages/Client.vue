@@ -165,10 +165,20 @@
       <div class="top_grid" v-if="!blocks">
         <!-- Update the client details -->
         <form class="client_info" v-on:submit.prevent="update_client()">
-          <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
+          <input class="client_info--name title" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
           <div class="client_info__more-details">
-            <div class="wrapper--info"><label><b>Email: </b></label><input class="input--forms allow-text-overflow" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/></div>
-            <div class="wrapper--info"><label><b>Phone: </b></label><input class="input--forms allow-text-overflow" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></div>
+            <div class="wrapper--info">
+              <label>
+                <b>Email: </b>
+                <input class="input--forms allow-text-overflow" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/>
+              </label>
+            </div>
+            <div class="wrapper--info">
+              <label>
+                <b>Phone: </b>
+                <input class="input--forms allow-text-overflow" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" />
+              </label>
+            </div>
             <button @click="createClient()" class="button--verify button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
           </div>
         </form>

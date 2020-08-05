@@ -67,12 +67,16 @@
     <form class="details_container" v-if="$parent.claims">
         <div class="details">
           <div class="form__options">
-            <label for="email"><b>Email: </b></label>
-            <input type="email" id="email" class="input--forms" name="email" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
+            <label>
+              <b>Email: </b>
+              <input type="email" id="email" class="input--forms" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
+            </label>
           </div>
           <div class="form__options">
-            <label for="color"><b>Sidebar Colour: </b></label>
-            <input type="color" name="color" :value="$parent.colors.hex" required @blur="save()" @change="rgb($event)"/>
+            <label for="color">
+              <b>Sidebar Colour: </b>
+              <input type="color" name="color" :value="$parent.colors.hex" required @blur="save()" @change="rgb($event)"/>
+            </label>
           </div>
           <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
             <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
@@ -111,8 +115,10 @@
           <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
           <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
           <div class="form__options">
-            <label for="cookies">Allow Third Party Cookies: </label>
-            <input class="allow-cookies" type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
+            <label for="cookies">
+              Allow Third Party Cookies: 
+              <input class="allow-cookies" type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
+            </label>
           </div>
         </div>
     </form>
