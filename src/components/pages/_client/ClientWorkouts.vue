@@ -402,7 +402,7 @@
       </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
-          <a href="javascript:void(0)" @click="delete_block()">
+          <a @click="delete_block()" aria-label="Archive this client">
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
         </div> <!-- floating_nav -->
@@ -413,13 +413,15 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the programme info -->
               <form class="block_info">
-                <input class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
+                <input class="block_info--name allow-text-overflow" aria-label="Block name" type="text" name="name" v-model="programme.name" @blur="update_programme()">
                 <div class="wrapper-start-date">
-                  <label>Start:</label>
-                  <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/>
+                  <label>
+                    Start:
+                    <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/>
+                  </label>
                 </div>
               </form>
             </div>  <!-- client_info -->
@@ -465,7 +467,7 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Sessions</h3>
-                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
+                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
@@ -509,21 +511,25 @@
                 <div class="data-options">
                   <div class="data-select">
                     <div class="data-select__options">
-                      <label for="measure"><b>Measurement: </b></label>
-                      <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
-                        <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
-                          {{option.text}}
-                        </option>
-                      </select>
+                      <label for="measure">
+                        <b>Measurement: </b>
+                        <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
+                          <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
+                            {{option.text}}
+                          </option>
+                        </select>
+                      </label>
                     </div>
                     <div class="data-select__options" v-show="showType">
-                      <label for="measure-type"><b>Data type: </b></label>
-                      <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
-                        <option value="Sets">Sets</option>
-                        <option value="Reps">Reps</option>
-                        <option value="Load">Load</option>
-                        <option value="Volume">Volume</option>
-                      </select>
+                      <label for="measure-type">
+                        <b>Data type: </b>
+                        <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
+                          <option value="Sets">Sets</option>
+                          <option value="Reps">Reps</option>
+                          <option value="Load">Load</option>
+                          <option value="Volume">Volume</option>
+                        </select>
+                      </label>
                     </div>
                   </div>
                   <div v-show="showType" class="data-desc">
