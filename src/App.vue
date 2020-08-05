@@ -44,6 +44,9 @@
   .spacer {
     height: 5rem
   }
+  .notAuth {
+    margin: 0
+  }
 
   /* Global Container */
   #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
@@ -625,7 +628,7 @@
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
-  <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
+  <div id="app" :class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
@@ -692,7 +695,7 @@
         </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main @mouseover="showNav = false">
+    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>

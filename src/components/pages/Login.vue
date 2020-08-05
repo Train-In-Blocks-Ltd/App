@@ -12,9 +12,7 @@
   }
   .cookies {
     font-size: .75rem;
-    margin: 2rem 0;
-    margin-left: -10%;
-    margin-right: -10%
+    margin: 2rem 0
   }
   @media (max-width: 520px) {
     #login {
