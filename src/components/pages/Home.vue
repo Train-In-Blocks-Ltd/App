@@ -36,23 +36,6 @@
 
 <template>
   <div id="home">
-    <!-- First Time
-    <modal name="first-time-home" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-      <div class="modal--first-time-home">
-        <h1 class="main-title">Hello</h1>
-        <h2 class="sub-title">Let's add your first client</h2>
-        <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save(), $modal.hide('first-time-home')">
-        <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
-        <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
-        <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
-        <div class="form_buttons">
-          <input type="submit" class="button button--save">
-          <button class="button button--close cancel" @click="$modal.hide('first-time-home')">Another Time</button>
-        </div>
-      </form>
-      </div>
-    </modal>
-    -->
     <h1 class="main-title">Your Clients</h1>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
@@ -80,17 +63,17 @@
         </div>
       </div>
     </div>
-    <button v-if="!creating" class="button button--new-client" v-on:click="creation()">New Client</button>
+    <button v-if="!creating" class="button button--new-client" @click="creation()">New Client</button>
     <p v-if="!creating" class="new-msg">{{response}}</p>
     <div v-if="creating">
       <h3>New Client</h3>
-      <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save()">
+      <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save()">
         <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
         <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
         <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
           <input type="submit" class="button button--save" value="Save" />
-          <button class="button button--close cancel" v-on:click="close()">Close</button>
+          <button class="button button--close cancel" @click="close()">Close</button>
         </div>
       </form>
     </div>
@@ -124,13 +107,6 @@
       this.$parent.setup()
       this.$parent.client_details = null
     },
-    /*
-    mounted () {
-      if (this.$parent.posts === null) {
-        this.$modal.show('first-time-home')
-      }
-    },
-    */
     methods: {
       creation () {
         this.creating = true
@@ -178,7 +154,8 @@
           this.$ga.event('Client', 'new')
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       }

@@ -79,12 +79,12 @@
             </label>
           </div>
           <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-            <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
+            <button class="button" @click.prevent="manageSubscription">Manage Your Subscription</button>
           </div>
         </div>
         <div>
           <h2>Reset your password</h2>
-          <form v-on:submit.prevent="changePass">
+          <form @submit.prevent="changePass">
             <label>
               <p><b>Current Password</b></p>
               <input type="password" class="input--forms" v-model="oldPassword"/>
@@ -98,7 +98,7 @@
               <p>At least 8 characters</p>
               <p>Can't contain your username</p><br>
               <p><b>New Password</b></p>
-              <input type="password" class="input--forms" v-model="newPassword" v-on:input="checkPass" v-bind:class="{check: check}"/>
+              <input type="password" class="input--forms" v-model="newPassword" @input="checkPass" v-bind:class="{check: check}"/>
             </label>
             <br>
             <br>
@@ -143,12 +143,49 @@
       this.$parent.setup()
     },
     methods: {
+
+      // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+
       rgb (e) {
         this.$parent.colors.rgba.r = this.$parent.hexToRgb(e.target.value).r
         this.$parent.colors.rgba.g = this.$parent.hexToRgb(e.target.value).g
         this.$parent.colors.rgba.b = this.$parent.hexToRgb(e.target.value).b
         this.$parent.colors.hex = e.target.value
       },
+      async save () {
+        this.$parent.colors.hex = document.querySelector('input[name="color"]').value
+        this.$parent.loading = true
+        try {
+          // Trouble with access control header so use cors-anywhere
+          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
+            {
+              'profile': {
+                'login': this.$parent.claims.email,
+                'firstName': this.$parent.claims.email,
+                'email': this.$parent.claims.email,
+                'color': this.$parent.colors.hex,
+                'ga': this.$parent.claims.ga
+              }
+            },
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          this.$parent.loading = false
+        } catch (e) {
+          this.$parent.loading = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          console.error(e)
+        }
+      },
+
+      // PASSWORD METHODS //-------------------------------------------------------------------------------
+
       checkPass () {
         if (!this.newPassword.includes(this.$parent.claims.email) && this.newPassword.match(/[0-9]+/) && this.newPassword.length >= 8 && this.oldPassword.length >= 1) {
           this.check = false
@@ -219,37 +256,8 @@
           window.location.href = response.data
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
-          console.error(e)
-        }
-      },
-      async save () {
-        this.$parent.colors.hex = document.querySelector('input[name="color"]').value
-        this.$parent.loading = true
-        try {
-          // Trouble with access control header so use cors-anywhere
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
-            {
-              'profile': {
-                'login': this.$parent.claims.email,
-                'firstName': this.$parent.claims.email,
-                'email': this.$parent.claims.email,
-                'color': this.$parent.colors.hex,
-                'ga': this.$parent.claims.ga
-              }
-            },
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          this.$parent.loading = false
-        } catch (e) {
-          this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       }

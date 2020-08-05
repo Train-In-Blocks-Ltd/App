@@ -16,6 +16,9 @@
     font-size: .6rem;
     margin: 2rem 0
   }
+  .input--forms.email-recovery {
+    width: 70%
+  }
   @media (max-width: 520px) {
     main {
       padding: 2rem 1.5rem
@@ -125,10 +128,10 @@
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a></p>
     <button class="button" v-if="!open" @click="open = !open">Forgot password?</button>
     <button class="button" v-if="open" @click="open = !open">Close</button><br><br>
-    <form v-if="open" v-on:submit.prevent="reset">
+    <form v-if="open" @submit.prevent="reset">
       <label>
         <p>Email:</p>
-        <input type="email" v-model="email" class="input--forms" /><br><br>
+        <input type="email" v-model="email" class="input--forms email-recovery" /><br><br>
         <div><input type="submit" class="button" value="Send recovery email" /></div>
       </label>
     </form>
