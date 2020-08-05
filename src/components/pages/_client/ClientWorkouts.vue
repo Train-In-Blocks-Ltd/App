@@ -1274,12 +1274,15 @@
           }
         }
         try {
+          if (workoutsNotes !== null) {
+            workoutsNotes.replace(/<p><br><\/p>/gi, '')
+          }
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
+              'notes': workoutsNotes,
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }
