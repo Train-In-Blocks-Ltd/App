@@ -636,7 +636,7 @@
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
-        <router-link to="/">
+        <router-link to="/" title="Home">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
@@ -651,17 +651,17 @@
         </transition>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/help">
+        <router-link to="/help" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/help" v-show="showNav" class="account_nav--item--text">
+          <router-link to="/help" title="Help"  v-show="showNav" class="account_nav--item--text">
             Help
           </router-link>
         </transition>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/archive">
+        <router-link to="/archive" title="Archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
@@ -671,7 +671,7 @@
         </transition>
       </div>
       <div class="account_nav--item">
-        <router-link to="/account">
+        <router-link to="/account" title="Account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
@@ -681,7 +681,7 @@
         </transition>
       </div>
       <div class="account_nav--item">
-        <router-link to="/logout" @click.native="logout()">
+        <router-link to="/logout" @click.native="logout()" title="Logout">
           <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
