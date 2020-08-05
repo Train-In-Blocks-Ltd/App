@@ -10,12 +10,13 @@
   }
 
   /* Client Info */
-  #client .client_info input:not([type='submit']), #duration, .workout-date {
+  #client .client_info input:not([type='submit']), #duration {
     width: 100%;
     cursor: pointer;
     background-color: initial;
     border: none;
     padding: .6rem 0;
+    margin-left: 1rem;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   #client .client_info input:not([type='submit']):hover, #duration:hover, .workout-date:hover {
@@ -32,8 +33,9 @@
     display: flex
   }
   .wrapper--info label {
-    align-self: center;
-    margin-right: 1rem
+    display: flex;
+    width: 100%;
+    align-items: center
   }
   #phone {
     width: 50%
@@ -164,11 +166,21 @@
     <div class="wrapper--client" :class="{ openFloatingNav: showOptions }">
       <div class="top_grid" v-if="!blocks">
         <!-- Update the client details -->
-        <form class="client_info" v-on:submit.prevent="update_client()">
-          <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
+        <form class="client_info" @submit.prevent="update_client()">
+          <input class="client_info--name title" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
           <div class="client_info__more-details">
-            <div class="wrapper--info"><label><b>Email: </b></label><input class="input--forms allow-text-overflow" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/></div>
-            <div class="wrapper--info"><label><b>Phone: </b></label><input class="input--forms allow-text-overflow" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></div>
+            <div class="wrapper--info">
+              <label>
+                <b>Email: </b>
+                <input class="input--forms allow-text-overflow" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/>
+              </label>
+            </div>
+            <div class="wrapper--info">
+              <label>
+                <b>Phone: </b>
+                <input class="input--forms allow-text-overflow" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" />
+              </label>
+            </div>
             <button @click="createClient()" class="button--verify button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
           </div>
         </form>
@@ -193,6 +205,9 @@
     },
     data: function () {
       return {
+
+        // BACKGROUD DATA //
+
         keepLoaded: false,
         showOptions: false,
         no_programmes: false,
@@ -200,7 +215,9 @@
         blocks: false,
         no_workouts: false,
         loading_workouts: true,
-        editClientNotes: false,
+
+        // CLIENT STATUS DATA //
+
         clientAlreadyMsg: 'Loading...',
         clientAlready: true,
         clientSuspend: null
@@ -218,6 +235,19 @@
       this.$parent.client_details = null
     },
     methods: {
+
+      // BACKGROUND METHODS //-------------------------------------------------------------------------------
+
+      created () {
+        var x
+        for (x in this.$parent.posts) {
+          // If client matches client in route
+          if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
+            // Set client_details variable with client details
+            this.$parent.client_details = this.$parent.posts[x]
+          }
+        }
+      },
       toURL () {
         var url = '/'
         if (window.location.href.includes('block') === true) {
@@ -225,6 +255,9 @@
         }
         return url
       },
+
+      // DATABSE AND API METHODS //-------------------------------------------------------------------------------
+
       async checkClient () {
         try {
           const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`,
@@ -381,22 +414,9 @@
             this.$parent.loading = false
           } catch (e) {
             this.$parent.loading = false
-            alert('Something went wrong, please try that again.')
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
             console.error(e)
-          }
-        }
-      },
-      updateClientNotes () {
-        this.update_client()
-        this.editClientNotes = false
-      },
-      created () {
-        var x
-        for (x in this.$parent.posts) {
-          // If client matches client in route
-          if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
-            // Set client_details variable with client details
-            this.$parent.client_details = this.$parent.posts[x]
           }
         }
       },
@@ -438,7 +458,8 @@
           this.loading_workouts = false
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -485,7 +506,8 @@
           this.loading_workouts = false
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -520,7 +542,8 @@
           }
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
         await this.get_workouts()
@@ -560,7 +583,8 @@
           }
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
         await this.get_workouts()
@@ -583,7 +607,8 @@
           await this.$parent.clients_to_vue()
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       }

@@ -54,6 +54,9 @@
   .show-block-notes h1, .show-block-notes h2, .show-client-notes h1, .show-client-notes h2, .client_link__notes__content h1, .client_link__notes__content h2 {
     margin: 0
   }
+  .modal--error {
+    padding: 2rem
+  }
 
   /* Fonts */
   .main-title {
@@ -626,6 +629,15 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
+    <modal name="error" height="auto" :adaptive="true">
+      <div class="modal--error">
+        <p><b>Something went wrong...</b></p><br>
+        <p>{{errorMsg}}</p><br>
+        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
+          <button class="button" type="submit" formtarget="_blank">Let us know</button>
+        </form>
+      </div>
+    </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
@@ -637,7 +649,7 @@
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
-        <router-link to="/">
+        <router-link to="/" title="Home">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
@@ -652,17 +664,17 @@
         </transition>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/help">
+        <router-link to="/help" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/help" v-show="showNav" class="account_nav--item--text">
+          <router-link to="/help" title="Help"  v-show="showNav" class="account_nav--item--text">
             Help
           </router-link>
         </transition>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/archive">
+        <router-link to="/archive" title="Archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
@@ -672,7 +684,7 @@
         </transition>
       </div>
       <div class="account_nav--item">
-        <router-link to="/account">
+        <router-link to="/account" title="Account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
@@ -682,11 +694,11 @@
         </transition>
       </div>
       <div class="account_nav--item">
-        <router-link to="/logout" v-on:click.native="logout()">
+        <router-link to="/logout" @click.native="logout()" title="Logout">
           <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
         </router-link>
         <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/logout" v-show="showNav" v-on:click.native="logout()" class="account_nav--item--text">
+          <router-link to="/logout" v-show="showNav" @click.native="logout()" class="account_nav--item--text">
             Logout
           </router-link>
         </transition>
@@ -714,21 +726,28 @@ export default {
   },
   data: function () {
     return {
+
+      // BACKGROUND DATA //
+
       showNav: false,
+      programmes: null,
+      error: '',
       archive_error: '',
       archive_posts: {},
       no_archive: false,
-      open: false,
-      error: '',
       posts: null,
-      loading_clients: true,
-      no_clients: false,
       claims: {
         user_type: 0
       },
-      authenticated: false,
       client_details: null,
+      loading_clients: true,
       loading: false,
+      no_clients: false,
+      errorMsg: null,
+
+      // USER DATA //
+
+      authenticated: false,
       colors: {
         rgba: {
           r: null,
@@ -737,6 +756,9 @@ export default {
           a: 1
         }
       },
+
+      // QUILL DATA //
+
       config: {
         placeholder: 'Type away...',
         modules: {
@@ -747,8 +769,7 @@ export default {
               ['link']
           ]
         }
-      },
-      programmes: null
+      }
     }
   },
   created () {
@@ -758,12 +779,53 @@ export default {
     // Everytime the route changes, check for auth status
     '$route' (to, from) {
       this.isAuthenticated()
-      this.open = false
     }
   },
   methods: {
+
+    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
+    },
+    sortWorkoutsBlock () {
+      this.programmes.forEach((block) => {
+        //eslint-disable-next-line
+        if (block.id == this.$route.params.id) {
+          block.workouts.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date)
+          })
+        }
+      })
+    },
+    hexToRgb (hex) {
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null
+    },
+    day (date) {
+      var weekday = new Array(7)
+      weekday[0] = 'Sun'
+      weekday[1] = 'Mon'
+      weekday[2] = 'Tue'
+      weekday[3] = 'Wed'
+      weekday[4] = 'Thu'
+      weekday[5] = 'Fri'
+      weekday[6] = 'Sat'
+      var d = new Date(date)
+      return weekday[d.getDay()]
+    },
+    async isAuthenticated () {
+      this.authenticated = await this.$auth.isAuthenticated()
+    },
+    async logout () {
+      await this.$auth.logout()
+      await this.isAuthenticated()
+      localStorage.clear()
+      this.$ga.event('Auth', 'logout')
     },
     async setup () {
       this.claims = JSON.parse(localStorage.getItem('claims'))
@@ -794,23 +856,9 @@ export default {
       }
       await this.clients_to_vue()
     },
-    hexToRgb (hex) {
-      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null
-    },
-    async isAuthenticated () {
-      this.authenticated = await this.$auth.isAuthenticated()
-    },
-    async logout () {
-      await this.$auth.logout()
-      await this.isAuthenticated()
-      localStorage.clear()
-      this.$ga.event('Auth', 'logout')
-    },
+
+    // CLIENT METHODS //-------------------------------------------------------------------------------
+
     async clients_to_vue () {
       if (!localStorage.getItem('posts')) {
         await this.clients()
@@ -841,6 +889,37 @@ export default {
         this.error = e.toString()
       }
     },
+    async client_delete (id, index) {
+      if (confirm('Are you sure you want to delete this client?')) {
+        for (var i = 0; i < this.archive_posts.length; i++) {
+          //eslint-disable-next-line
+          if (this.archive_posts[i].client_id == id) {
+            this.archive_posts.splice(index, 1)
+            if (this.archive_posts.length === 0) {
+              this.no_archive = true
+            }
+          }
+        }
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
+
+          await this.archive()
+          this.archive_to_vue()
+
+          await this.clients()
+          this.clients_to_vue()
+          this.$ga.event('Client', 'delete')
+        } catch (e) {
+          this.loading = false
+          this.errorMsg = e
+          this.$modal.show('error')
+          console.error(e)
+        }
+      }
+    },
+
+    // CLIENT ARCHIVE METHODS //-------------------------------------------------------------------------------
 
     async archive_to_vue () {
       if (!localStorage.getItem('archive')) {
@@ -955,7 +1034,8 @@ export default {
           this.$ga.event('Client', 'archive')
         } catch (e) {
           this.loading = false
-          alert('Something went wrong, please try that again.')
+          this.errorMsg = e
+          this.$modal.show('error')
           console.error(e)
         }
       }
@@ -996,39 +1076,15 @@ export default {
           this.$ga.event('Client', 'unarchive')
         } catch (e) {
           this.loading = false
-          alert('Something went wrong, please try that again.')
+          this.errorMsg = e
+          this.$modal.show('error')
           console.error(e)
         }
       }
     },
-    async client_delete (id, index) {
-      if (confirm('Are you sure you want to delete this client?')) {
-        for (var i = 0; i < this.archive_posts.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
-            }
-          }
-        }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        try {
-          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
-          await this.archive()
-          this.archive_to_vue()
+    // DATABSE METHODS //-------------------------------------------------------------------------------
 
-          await this.clients()
-          this.clients_to_vue()
-          this.$ga.event('Client', 'delete')
-        } catch (e) {
-          this.loading = false
-          alert('Something went wrong, please try that again.')
-          console.error(e)
-        }
-      }
-    },
     async get_programmes () {
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
@@ -1044,7 +1100,8 @@ export default {
         }
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
     },
@@ -1058,19 +1115,10 @@ export default {
         }
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
-    },
-    sortWorkoutsBlock () {
-      this.programmes.forEach((block) => {
-        //eslint-disable-next-line
-        if (block.id == this.$route.params.id) {
-          block.workouts.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-          })
-        }
-      })
     },
     async update_workout (pid, wid) {
       this.loading = true
@@ -1104,24 +1152,13 @@ export default {
         this.$ga.event('Workout', 'update')
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
       await this.get_workouts()
       this.sortWorkoutsBlock()
       this.loading = false
-    },
-    day (date) {
-      var weekday = new Array(7)
-      weekday[0] = 'Sun'
-      weekday[1] = 'Mon'
-      weekday[2] = 'Tue'
-      weekday[3] = 'Wed'
-      weekday[4] = 'Thu'
-      weekday[5] = 'Fri'
-      weekday[6] = 'Sat'
-      var d = new Date(date)
-      return weekday[d.getDay()]
     }
   }
 }
