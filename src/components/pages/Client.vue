@@ -414,7 +414,8 @@
             this.$parent.loading = false
           } catch (e) {
             this.$parent.loading = false
-            alert('Something went wrong, please try that again.')
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
             console.error(e)
           }
         }
@@ -457,7 +458,8 @@
           this.loading_workouts = false
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -504,7 +506,8 @@
           this.loading_workouts = false
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -539,7 +542,8 @@
           }
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
         await this.get_workouts()
@@ -579,7 +583,8 @@
           }
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
         await this.get_workouts()
@@ -602,7 +607,8 @@
           await this.$parent.clients_to_vue()
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       }

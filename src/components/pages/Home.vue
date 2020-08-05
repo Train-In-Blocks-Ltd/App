@@ -154,7 +154,8 @@
           this.$ga.event('Client', 'new')
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       }

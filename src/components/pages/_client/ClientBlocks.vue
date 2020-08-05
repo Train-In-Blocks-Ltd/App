@@ -279,7 +279,8 @@
           this.$ga.event('Block', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
       }

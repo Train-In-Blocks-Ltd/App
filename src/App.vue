@@ -911,7 +911,8 @@ export default {
           this.$ga.event('Client', 'delete')
         } catch (e) {
           this.loading = false
-          alert('Something went wrong, please try that again.')
+          this.errorMsg = e
+          this.$modal.show('error')
           console.error(e)
         }
       }
@@ -1032,7 +1033,8 @@ export default {
           this.$ga.event('Client', 'archive')
         } catch (e) {
           this.loading = false
-          alert('Something went wrong, please try that again.')
+          this.errorMsg = e
+          this.$modal.show('error')
           console.error(e)
         }
       }
@@ -1073,7 +1075,8 @@ export default {
           this.$ga.event('Client', 'unarchive')
         } catch (e) {
           this.loading = false
-          alert('Something went wrong, please try that again.')
+          this.errorMsg = e
+          this.$modal.show('error')
           console.error(e)
         }
       }
@@ -1096,7 +1099,8 @@ export default {
         }
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
     },
@@ -1110,7 +1114,8 @@ export default {
         }
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
     },
@@ -1146,7 +1151,8 @@ export default {
         this.$ga.event('Workout', 'update')
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
       await this.get_workouts()
