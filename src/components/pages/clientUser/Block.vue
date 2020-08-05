@@ -78,6 +78,9 @@
       this.$parent.sortWorkoutsBlock()
     },
     methods: {
+
+      // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+
       removeBrackets (dataIn) {
         if (dataIn !== null) {
           var dataOut = dataIn.replace(/[[\]]/g, '')

@@ -8,8 +8,9 @@
     flex-direction: column
   }
   #blocks .block_info label {
+    display: flex;
+    align-items: center;
     grid-auto-columns: min-content;
-    display: inline-block;
     font-weight: bold
   }
   .wrapper-start-date {
@@ -197,6 +198,7 @@
     font-weight: bold
   }
   input.workout-date {
+    cursor: pointer;
     width: fit-content;
     font-size: .8rem
   }
@@ -241,7 +243,8 @@
     font-size: 1.6rem;
     width: fit-content;
     padding: .2rem 1rem .2rem 0;
-    font-weight: bold
+    font-weight: bold;
+    margin: .4rem 0
   }
   #chart {
     margin-top: 4rem;
@@ -278,7 +281,7 @@
   }
 
   /* All Modal */
-  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy, .modal--error-workout-page {
+  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy {
     padding: 2rem
   }
 
@@ -393,16 +396,9 @@
             <button class="button">Copy</button>
         </form>
       </modal>
-      <modal name="error-workout-page" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <div class="modal--error-workout-page">
-          <p><b>Something went wrong...</b></p><br>
-          <p>{{error.msg}}</p><br>
-          <button class="button" onclick="location.reload()">Refresh Page</button>
-        </div>
-      </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
-          <a href="javascript:void(0)" @click="delete_block()">
+          <a @click="delete_block()" aria-label="Archive this client">
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
         </div> <!-- floating_nav -->
@@ -413,13 +409,15 @@
         <div v-if="programme.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" name="name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the programme info -->
               <form class="block_info">
-                <input class="block_info--name allow-text-overflow" type="text" name="name" v-model="programme.name" @blur="update_programme()">
+                <input class="block_info--name allow-text-overflow" aria-label="Block name" type="text" name="name" v-model="programme.name" @blur="update_programme()">
                 <div class="wrapper-start-date">
-                  <label>Start:</label>
-                  <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/>
+                  <label>
+                    Start:
+                    <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/>
+                  </label>
                 </div>
               </form>
             </div>  <!-- client_info -->
@@ -465,7 +463,7 @@
               <div class="workouts">
                 <div class="workout--header">
                   <h3>Sessions</h3>
-                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" />
+                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
@@ -494,7 +492,7 @@
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
-                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="feedbackID = workout.id, showFeedback(workout.feedback)">Feedback</button>
+                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="showFeedback(workout.feedback)">Feedback</button>
                       </div>
                     </div>
                   </div>
@@ -509,21 +507,25 @@
                 <div class="data-options">
                   <div class="data-select">
                     <div class="data-select__options">
-                      <label for="measure"><b>Measurement: </b></label>
-                      <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
-                        <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
-                          {{option.text}}
-                        </option>
-                      </select>
+                      <label for="measure">
+                        <b>Measurement: </b><br>
+                        <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
+                          <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
+                            {{option.text}}
+                          </option>
+                        </select>
+                      </label>
                     </div>
                     <div class="data-select__options" v-show="showType">
-                      <label for="measure-type"><b>Data type: </b></label>
-                      <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
-                        <option value="Sets">Sets</option>
-                        <option value="Reps">Reps</option>
-                        <option value="Load">Load</option>
-                        <option value="Volume">Volume</option>
-                      </select>
+                      <label for="measure-type">
+                        <b>Data type: </b><br>
+                        <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
+                          <option value="Sets">Sets</option>
+                          <option value="Reps">Reps</option>
+                          <option value="Load">Load</option>
+                          <option value="Volume">Volume</option>
+                        </select>
+                      </label>
                     </div>
                   </div>
                   <div v-show="showType" class="data-desc">
@@ -577,30 +579,48 @@
     },
     data: function () {
       return {
+
+        // BLOCK DATA //
+
         feedbackStr: '',
-        feedbackID: null,
-        showBlockOptions: false,
         weekColor: {
           backgroundColor: ''
         },
         response: '',
         editBlockNotes: false,
         todayDate: '',
+
+        // WORKOUT DATA //
+
+        isEditingWorkout: false,
+        editWorkout: null,
+        movingWorkout: null,
+        moveTarget: 1,
+        copyTarget: 2,
+        daysDiff: 7,
         new_workout: {
           name: 'Untitled',
           date: ''
         },
-        showType: true,
+
+        // REGEX DATA //
+
+        str: [],
+        yData: [],
+        xLabel: [],
         dataPacketStore: [],
         regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
         regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
         regexLoadCapture: /(at|@)(.+)/gi,
         regexNumberBreakdown: /[0-9.]+/gi,
+
+        // CHART METHODS //
+
         dataCollection: null,
         options: null,
-        str: [],
-        yData: [],
-        xLabel: [],
+
+        // CALENDAR DATA //
+
         calendarToolbarHeader: {
           left: 'title',
           right: ''
@@ -610,8 +630,9 @@
         },
         calendarPlugins: [ dayGridPlugin ],
         workoutDates: [],
-        isEditingWorkout: false,
-        editWorkout: null,
+
+        // STATISTICS DATA //
+
         p1: '',
         p2: '',
         p3: '',
@@ -620,16 +641,13 @@
         selectedDataName: 'Block Overview',
         optionsForDataName: [],
         selectedDataType: 'Sets',
+        showType: true,
+
+        // MICROCYCLE DATA //
+
         allowMoreWeeks: false,
         currentWeek: 1,
-        maxWeek: '2',
-        movingWorkout: null,
-        moveTarget: 1,
-        copyTarget: 2,
-        daysDiff: 7,
-        error: {
-          msg: null
-        }
+        maxWeek: '2'
       }
     },
     created () {
@@ -642,13 +660,9 @@
       this.scan()
     },
     methods: {
-      removeBrackets (dataIn) {
-        if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '')
-        } else {
-          return dataIn
-        }
-      },
+
+      // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
+
       showFeedback (str) {
         this.feedbackStr = str
         this.$modal.show('feedback-trainer')
@@ -656,36 +670,6 @@
       hideFeedback () {
         this.feedbackStr = ''
         this.$modal.hide('feedback-trainer')
-      },
-      toggleComplete (value) {
-        var out
-        if (value === 0) {
-          out = 1
-        }
-        if (value === 1) {
-          out = 0
-        }
-        return out
-      },
-      isCompleted (value) {
-        var out
-        if (value === 0) {
-          out = 'Incomplete'
-        }
-        if (value === 1) {
-          out = 'Completed'
-        }
-        return out
-      },
-      updateBlockColor () {
-        this.$parent.$parent.client_details.programmes.forEach((programme) => {
-          // eslint-disable-next-line
-          if (programme.id == this.$route.params.id) {
-            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
-          }
-        })
-        this.update_programme()
-        this.scan()
       },
       showCopy (maxWeek) {
         this.maxWeek = maxWeek
@@ -716,25 +700,26 @@
         this.update_programme()
         this.$modal.hide('copy')
       },
-      editingBlockNotes (state) {
-        this.editBlockNotes = state
-        if (state) {
-          window.addEventListener('keydown', this.quickSaveBlockNotes)
-        } else {
-          this.updateBlockNotes()
-          window.removeEventListener('keydown', this.quickSaveBlockNotes)
-        }
+      showMove (id, maxWeek) {
+        this.movingWorkout = id
+        this.maxWeek = maxWeek
+        this.$modal.show('move')
       },
-      quickSaveBlockNotes (key, state) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updateBlockNotes()
-          window.removeEventListener('keydown', this.quickSaveBlockNotes)
-        }
+      initMove (id) {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((workout) => {
+              if (workout.id === id) {
+                workout.week_id = this.moveTarget
+              }
+            })
+          }
+        })
       },
-      updateBlockNotes () {
-        this.update_programme()
-        this.editBlockNotes = false
-      },
+
+      // WORKOUT METHODS //-------------------------------------------------------------------------------
+
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
         this.editWorkout = id
@@ -757,29 +742,64 @@
         this.editWorkout = null
         this.scan()
       },
+      toggleComplete (value) {
+        var out
+        if (value === 0) {
+          out = 1
+        }
+        if (value === 1) {
+          out = 0
+        }
+        return out
+      },
+      isCompleted (value) {
+        var out
+        if (value === 0) {
+          out = 'Incomplete'
+        }
+        if (value === 1) {
+          out = 'Completed'
+        }
+        return out
+      },
+
+      // BLOCK METHODS //-------------------------------------------------------------------------------
+
+      updateBlockColor () {
+        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+          // eslint-disable-next-line
+          if (programme.id == this.$route.params.id) {
+            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
+          }
+        })
+        this.update_programme()
+        this.scan()
+      },
+      editingBlockNotes (state) {
+        this.editBlockNotes = state
+        if (state) {
+          window.addEventListener('keydown', this.quickSaveBlockNotes)
+        } else {
+          this.updateBlockNotes()
+          window.removeEventListener('keydown', this.quickSaveBlockNotes)
+        }
+      },
+      quickSaveBlockNotes (key, state) {
+        if (key.keyCode === 13 && key.ctrlKey === true) {
+          this.updateBlockNotes()
+          window.removeEventListener('keydown', this.quickSaveBlockNotes)
+        }
+      },
+      updateBlockNotes () {
+        this.update_programme()
+        this.editBlockNotes = false
+      },
       changeWeek (weekID) {
         this.currentWeek = weekID
         this.moveTarget = weekID
       },
-      showMove (id, maxWeek) {
-        this.movingWorkout = id
-        this.maxWeek = maxWeek
-        this.$modal.show('move')
-      },
-      initMove (id) {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
-          // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((workout) => {
-              if (workout.id === id) {
-                workout.week_id = this.moveTarget
-              }
-            })
-          }
-        })
-      },
 
-      // CHART METHODS //
+      // CHART METHODS //-------------------------------------------------------------------------------
 
       fillData () {
         this.dataCollection = {
@@ -811,6 +831,7 @@
           }
         }
       },
+
       // This is called at the start and after @change. It scans the current values selected and fills the chart.
       selection () {
         this.showType = true
@@ -873,7 +894,86 @@
         }
       },
 
-      // INIT METHODS //
+      // DATE/TIME METHODS //-------------------------------------------------------------------------------
+
+      weekConfirm (dur) {
+        if (parseInt(dur) > 12 && this.allowMoreWeeks === false) {
+          if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
+            this.allowMoreWeeks = true
+          } else {
+            this.allowMoreWeeks = false
+          }
+        }
+      },
+      today () {
+        var today = new Date()
+        var dd = String(today.getDate()).padStart(2, '0')
+        var mm = String(today.getMonth() + 1).padStart(2, '0')
+        var yyyy = today.getFullYear()
+        this.new_workout.date = `${yyyy}-${mm}-${dd}`
+        this.todayDate = `${yyyy}-${mm}-${dd}`
+      },
+      addDays (date, days) {
+        var d = new Date(date)
+        d.setDate(d.getDate() + days)
+        var year = d.getFullYear()
+        var month = d.getMonth() + 1
+        var dayDate = d.getDate()
+        return `${year}-${month}-${dayDate}`
+      },
+      day (date) {
+        var weekday = new Array(7)
+        weekday[0] = 'Sun'
+        weekday[1] = 'Mon'
+        weekday[2] = 'Tue'
+        weekday[3] = 'Wed'
+        weekday[4] = 'Thu'
+        weekday[5] = 'Fri'
+        weekday[6] = 'Sat'
+        var d = new Date(date)
+        return weekday[d.getDay()]
+      },
+      programme_duration (duration) {
+        // Turn the duration of the programme into an array to render the boxes in the table
+        const arr = []
+        let i
+        for (i = 1; i < parseInt(duration, 10) + 1; i++) {
+          arr.push(i)
+        }
+        return arr
+      },
+
+      // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
+
+      accessibleColors (hex) {
+        if (hex !== undefined) {
+          hex = hex.replace('#', '')
+          var r, g, b
+          r = parseInt(hex.substring(0, 2), 16)
+          g = parseInt(hex.substring(2, 4), 16)
+          b = parseInt(hex.substring(4, 6), 16)
+          var result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
+          var color = `rgb(${result}, ${result}, ${result})`
+          return color
+        }
+      },
+      removeBrackets (dataIn) {
+        if (dataIn !== null) {
+          return dataIn.replace(/[[\]]/g, '')
+        } else {
+          return dataIn
+        }
+      },
+      sortWorkouts () {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id && this.$parent.no_workouts === false) {
+            block.workouts.sort((a, b) => {
+              return new Date(a.date) - new Date(b.date)
+            })
+          }
+        })
+      },
       scan () {
         this.dataPacketStore.length = 0
         this.workoutDates.length = 0
@@ -963,6 +1063,7 @@
           this.optionsForDataName.push({ id: continueValue + index + 1, text: item, value: item })
         })
       },
+
       // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
       properCase (string) {
         var sentence = string.toLowerCase().split(' ')
@@ -972,7 +1073,7 @@
         return sentence.join(' ')
       },
 
-      // REGEX METHODS //
+      // REGEX METHODS //-------------------------------------------------------------------------------
 
       // Extracts anything for Sets and Reps
       setsReps (protocol, dataForType) {
@@ -1011,6 +1112,7 @@
         }
         return extractedSetsReps
       },
+
       // Extracts anything for Loads
       load (protocol) {
         var tempLoadStore = []
@@ -1046,6 +1148,7 @@
         }
         return sum
       },
+
       // Extracts any other measures
       otherMeasures (protocol) {
         var data = 0
@@ -1081,75 +1184,8 @@
         this.p5 = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
       },
 
-      // OTHER METHODS //
-      accessibleColors (hex) {
-        if (hex !== undefined) {
-          hex = hex.replace('#', '')
-          var r, g, b
-          r = parseInt(hex.substring(0, 2), 16)
-          g = parseInt(hex.substring(2, 4), 16)
-          b = parseInt(hex.substring(4, 6), 16)
-          var result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
-          var color = `rgb(${result}, ${result}, ${result})`
-          return color
-        }
-      },
-      weekConfirm (dur) {
-        if (parseInt(dur) > 12 && this.allowMoreWeeks === false) {
-          if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
-            this.allowMoreWeeks = true
-          } else {
-            this.allowMoreWeeks = false
-          }
-        }
-      },
-      today () {
-        var today = new Date()
-        var dd = String(today.getDate()).padStart(2, '0')
-        var mm = String(today.getMonth() + 1).padStart(2, '0')
-        var yyyy = today.getFullYear()
-        this.new_workout.date = `${yyyy}-${mm}-${dd}`
-        this.todayDate = `${yyyy}-${mm}-${dd}`
-      },
-      addDays (date, days) {
-        var d = new Date(date)
-        d.setDate(d.getDate() + days)
-        var year = d.getFullYear()
-        var month = d.getMonth() + 1
-        var dayDate = d.getDate()
-        return `${year}-${month}-${dayDate}`
-      },
-      day (date) {
-        var weekday = new Array(7)
-        weekday[0] = 'Sun'
-        weekday[1] = 'Mon'
-        weekday[2] = 'Tue'
-        weekday[3] = 'Wed'
-        weekday[4] = 'Thu'
-        weekday[5] = 'Fri'
-        weekday[6] = 'Sat'
-        var d = new Date(date)
-        return weekday[d.getDay()]
-      },
-      programme_duration (duration) {
-        // Turn the duration of the programme into an array to render the boxes in the table
-        const arr = []
-        let i
-        for (i = 1; i < parseInt(duration, 10) + 1; i++) {
-          arr.push(i)
-        }
-        return arr
-      },
-      sortWorkouts () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
-          // eslint-disable-next-line
-          if (block.id == this.$route.params.id && this.$parent.no_workouts === false) {
-            block.workouts.sort((a, b) => {
-              return new Date(a.date) - new Date(b.date)
-            })
-          }
-        })
-      },
+      // DATABASE METHODS //-------------------------------------------------------------------------------
+
       async update_programme () {
         // Set loading status to true
         this.$parent.$parent.loading = true
@@ -1207,8 +1243,8 @@
           this.scan()
         } catch (e) {
           this.$parent.$parent.loading = false
-          this.error.msg = e
-          this.$modal.show('error-workout-page')
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -1229,7 +1265,7 @@
                 var workoutsId = programme.workouts[y].id
                 var workoutsName = programme.workouts[y].name
                 var workoutsDate = programme.workouts[y].date
-                var workoutsNotes = programme.workouts[y].notes
+                var workoutsNotes = programme.workouts[y].notes.replace(/<p><br><\/p>/gi, '')
                 var workoutsWeek = programme.workouts[y].week_id
                 var workoutsChecked = programme.workouts[y].checked
               }
@@ -1242,7 +1278,7 @@
               'id': workoutsId,
               'name': workoutsName,
               'date': workoutsDate,
-              'notes': workoutsNotes.replace(/<p><br><\/p>/gi, ''),
+              'notes': workoutsNotes,
               'week_id': workoutsWeek,
               'checked': workoutsChecked
             }
@@ -1250,8 +1286,8 @@
           this.$ga.event('Workout', 'update')
         } catch (e) {
           this.$parent.$parent.loading = false
-          this.error.msg = e
-          this.$modal.show('error-workout-page')
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
         await this.$parent.force_get_workouts()
@@ -1291,8 +1327,8 @@
           this.$ga.event('Workout', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
-          this.error.msg = e
-          this.$modal.show('error-workout-page')
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -1317,8 +1353,8 @@
             this.$ga.event('Block', 'delete')
           } catch (e) {
             this.$parent.$parent.loading = false
-            this.error.msg = e
-            this.$modal.show('error-workout-page')
+            this.$parent.$parent.errorMsg = e
+            this.$parent.$parent.$modal.show('error')
             console.error(e)
           }
         }
@@ -1336,8 +1372,8 @@
             this.update_programme()
           } catch (e) {
             this.$parent.$parent.loading = false
-            this.error.msg = e
-            this.$modal.show('error-workout-page')
+            this.$parent.$parent.errorMsg = e
+            this.$parent.$parent.$modal.show('error')
             console.error(e)
           }
         }

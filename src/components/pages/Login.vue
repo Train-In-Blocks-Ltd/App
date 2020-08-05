@@ -14,6 +14,9 @@
     font-size: .75rem;
     margin: 2rem 0
   }
+  .input--forms.email-recovery {
+    width: 70%
+  }
   @media (max-width: 520px) {
     #login {
       width: 100%;

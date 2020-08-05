@@ -220,6 +220,9 @@ export default {
     this.loading = false
   },
   methods: {
+
+    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+
     removeBrackets (dataIn) {
       if (dataIn !== null) {
         var dataOut = dataIn.replace(/[[\]]/g, '')
@@ -228,6 +231,13 @@ export default {
         return dataIn
       }
     },
+    initCountWorkoutsHome () {
+      var count = this.viewWorkoutsStore.length - 1
+      this.maxWorkoutIndexHome = count
+    },
+
+    // DATE/TIME METHODS //-------------------------------------------------------------------------------
+
     todaysWorkout () {
       this.$parent.programmes.forEach((block) => {
         block.workouts.forEach((workout) => {
@@ -244,10 +254,6 @@ export default {
       var yyyy = today.getFullYear()
       today = `${yyyy}-${mm}-${dd}`
       return today
-    },
-    initCountWorkoutsHome () {
-      var count = this.viewWorkoutsStore.length - 1
-      this.maxWorkoutIndexHome = count
     }
   }
 }
