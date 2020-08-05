@@ -99,6 +99,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: .8rem;
     letter-spacing: .1rem;
+    line-height: 1.42;
     font-weight: bold;
     color: #282828;
     background-color: white;
