@@ -976,6 +976,13 @@ export default {
           // eslint-disable-next-line
           this.response = response.data
 
+          await this.clients()
+          this.clients_to_vue()
+
+          await this.archive()
+          this.archive_to_vue()
+          this.$ga.event('Client', 'archive')
+
           const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
             {
               headers: {
@@ -985,56 +992,51 @@ export default {
               }
             }
           )
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
-            {},
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
-            {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': email
-                    }
-                  ],
-                  'subject': 'Account Deactivated'
+          if (result.data.length >= 1) {
+            await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
+              {},
+              {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.AUTH_HEADER
                 }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': deleteEmailText()
+              }
+            )
+            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+              {
+                'personalizations': [
+                  {
+                    'to': [
+                      {
+                        'email': email
+                      }
+                    ],
+                    'subject': 'Account Deactivated'
+                  }
+                ],
+                'from': {
+                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
                 },
-                {
-                  'type': 'text/html',
-                  'value': deleteEmail()
+                'content': [
+                  {
+                    'type': 'text/plain',
+                    'value': deleteEmailText()
+                  },
+                  {
+                    'type': 'text/html',
+                    'value': deleteEmail()
+                  }
+                ]
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.SENDGRID
                 }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
               }
-            }
-          )
-
-          await this.clients()
-          this.clients_to_vue()
-
-          await this.archive()
-          this.archive_to_vue()
-          this.$ga.event('Client', 'archive')
+            )
+          }
         } catch (e) {
           this.loading = false
           this.errorMsg = e
