@@ -177,42 +177,44 @@ export default {
     }
   },
   mounted () {
-    this.widget = new OktaSignIn({
-      baseUrl: process.env.ISSUER,
-      issuer: process.env.ISSUER + '/oauth2/default',
-      clientId: process.env.CLIENT_ID,
-      redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
-      i18n: {
-        en: {
-          'primaryauth.title': '',
-          'primaryauth.username.placeholder': 'Email',
-          'primaryauth.username.tooltip': 'Enter your email',
-          'primaryauth.password.placeholder': 'Password',
-          'primaryauth.password.tooltip': 'Enter your password',
-          'error.username.required': 'Please enter your email',
-          'errors.E0000004': 'That didn\'t work. Was your password correct?'
-        }
-      },
-      authParams: {
-        pkce: true,
-        display: 'page',
+    this.$nextTick(function () {
+      this.widget = new OktaSignIn({
+        baseUrl: process.env.ISSUER,
         issuer: process.env.ISSUER + '/oauth2/default',
-        scopes: ['openid', 'profile', 'email']
-      }
-    })
+        clientId: process.env.CLIENT_ID,
+        redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
+        i18n: {
+          en: {
+            'primaryauth.title': '',
+            'primaryauth.username.placeholder': 'Email',
+            'primaryauth.username.tooltip': 'Enter your email',
+            'primaryauth.password.placeholder': 'Password',
+            'primaryauth.password.tooltip': 'Enter your password',
+            'error.username.required': 'Please enter your email',
+            'errors.E0000004': 'That didn\'t work. Was your password correct?'
+          }
+        },
+        authParams: {
+          pkce: true,
+          display: 'page',
+          issuer: process.env.ISSUER + '/oauth2/default',
+          scopes: ['openid', 'profile', 'email']
+        }
+      })
 
-    this.widget.renderEl(
-      { el: '#okta-signin-container' },
-      () => {
-        /**
-         * In this flow, the success handler will not be called because we redirect
-         * to the Okta org for the authentication workflow.
-         */
-      },
-      (err) => {
-        throw err
-      }
-    )
+      this.widget.renderEl(
+        { el: '#okta-signin-container' },
+        () => {
+          /**
+           * In this flow, the success handler will not be called because we redirect
+           * to the Okta org for the authentication workflow.
+           */
+        },
+        (err) => {
+          throw err
+        }
+      )
+    })
   },
   methods: {
     async reset () {

@@ -656,7 +656,6 @@
     async mounted () {
       await this.$parent.get_client_details()
       this.today()
-      this.update_programme()
       this.scan()
     },
     methods: {
