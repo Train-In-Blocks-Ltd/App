@@ -44,6 +44,9 @@
   .spacer {
     height: 5rem
   }
+  .notAuth {
+    margin: 0
+  }
 
   /* Global Container */
   #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
@@ -102,6 +105,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: .8rem;
     letter-spacing: .1rem;
+    line-height: 1.42;
     font-weight: bold;
     color: #282828;
     background-color: white;
@@ -703,7 +707,7 @@
         </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main @mouseover="showNav = false">
+    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
