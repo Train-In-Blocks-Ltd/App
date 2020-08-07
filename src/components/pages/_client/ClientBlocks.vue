@@ -149,7 +149,7 @@
         <div class="bottom-bar">
           <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
           <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
-          <button v-show="editClientNotes" @click="editClientNotes = false" class="button button--cancel">Cancel</button>
+          <button v-show="editClientNotes" @click="cancelClientNotes()" class="button button--cancel">Cancel</button>
         </div>
       </div>
       <div class="container--block-links__section">
@@ -210,6 +210,10 @@
 
       // CLIENT NOTES METHODS //-------------------------------------------------------------------------------
 
+      cancelClientNotes () {
+        this.editClientNotes = false
+        window.removeEventListener('keydown', this.quickSaveClient)
+      },
       editingClientNotes (state) {
         this.editClientNotes = state
         if (state) {

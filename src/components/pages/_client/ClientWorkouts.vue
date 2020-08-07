@@ -453,7 +453,7 @@
                 <div class="bottom-bar">
                   <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
                   <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
-                  <button v-show="editBlockNotes" @click="editBlockNotes = false" class="button button--cancel">Cancel</button>
+                  <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="button button--cancel">Cancel</button>
                 </div>
               </div>
               <div class="wrapper--calendar">
@@ -514,7 +514,7 @@
                       <div class="bottom-bar">
                         <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
-                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editWorkout = null, isEditingWorkout = false">Cancel</button>
+                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
                         <button id="button-feedback-open" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
@@ -738,7 +738,11 @@
       },
 
       // WORKOUT METHODS //-------------------------------------------------------------------------------
-
+      cancelWorkout () {
+        this.editWorkout = null
+        this.isEditingWorkout = false
+        window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
+      },
       async createWorkout () {
         this.$parent.$parent.loading = true
         await this.add_workout()
@@ -789,6 +793,10 @@
 
       // BLOCK METHODS //-------------------------------------------------------------------------------
 
+      cancelBlockNotes () {
+        this.editBlockNotes = false
+        window.removeEventListener('keydown', this.quickSaveBlockNotes)
+      },
       updateBlockColor () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
