@@ -57,10 +57,10 @@
             <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
           </div>
           <div class="client_update">
-            <a href="javascript:void(0)" v-on:click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
+            <a href="javascript:void(0)" @click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
               <inline-svg :src="require('../../assets/svg/archive-small.svg')" class="archive__icon"/>
             </a>
-            <a href="javascript:void(0)" v-on:click="$parent.client_delete(clients.client_id, index)" title="Delete">
+            <a href="javascript:void(0)" @click="$parent.client_delete(clients.client_id, index)" title="Delete">
               <inline-svg :src="require('../../assets/svg/bin.svg')" class="archive__icon"/>
             </a>
           </div>
