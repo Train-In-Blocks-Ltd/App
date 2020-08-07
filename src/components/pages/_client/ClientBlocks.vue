@@ -1,10 +1,4 @@
 <style scoped>
-  /* Overall */
-  .container--block-links {
-    display: flex;
-    justify-content: space-between
-  }
-
   /* Client Notes */
   .client-notes {
     margin: 4rem auto;
@@ -126,12 +120,6 @@
 
   /* For Mobile */
   @media (max-width: 576px) {
-    .container--block-links {
-      grid-template: .2fr 1fr/1fr;
-      grid-template-areas:
-        'b'
-        'a'
-    }
     .blocks_grid {
       grid-template-columns: 1fr
     }

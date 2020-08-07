@@ -37,9 +37,6 @@
     width: 100%;
     align-items: center
   }
-  #phone {
-    width: 50%
-  }
   #client .client_info input.client_info--name {
     max-width: 100%;
     font-size: 3.75rem;
@@ -90,9 +87,6 @@
   .client_notes--header p {
     margin: 0;
     font-weight: bold
-  }
-  .client_notes--quill {
-    margin: 0
   }
 
   /* Responsiveness */

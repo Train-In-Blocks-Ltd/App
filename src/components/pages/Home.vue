@@ -1,8 +1,4 @@
 <style>
-  #intro {
-    font-size: 2rem;
-    margin-top: 0
-  }
   .home--container {
     display: grid;
     grid-template-rows: 8rem 1fr;
