@@ -394,8 +394,19 @@
       <modal name="info" height="auto" :adaptive="true">
         <div class="modal--info">
           <p><b>The format for tracking data</b></p><br>
-          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p>
+          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
+          <p><b>Examples</b></p><br>
+          <p><i>[Back Squat: 3x6 at 50kg]</i></p>
+          <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
+          <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
+          <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
           <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
+          <p><b>Examples</b></p><br>
+          <p><i>[Weight: 5okg]</i></p>
+          <p><i>[Vertical Jump: 43.3cm]</i></p>
+          <p><i>[Body Fat (%): 12]</i></p>
+          <p><i>[sRPE (CR10): 8]</i></p>
+          <p><i>[sRPE (Borg): 16]</i></p><br>
           <p>See <i>Help</i> for more information</p>
         </div>
       </modal>
@@ -548,8 +559,9 @@
                         <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
                           <option value="Sets">Sets</option>
                           <option value="Reps">Reps</option>
-                          <option value="Load">Load</option>
-                          <option value="Volume">Volume</option>
+                          <option v-for="option in optionsForDataType" :value="option.value" :key="option.id">
+                            {{option.text}}
+                          </option>
                         </select>
                       </label>
                     </div>
@@ -666,6 +678,7 @@
         p5: '',
         selectedDataName: 'Block Overview',
         optionsForDataName: [],
+        optionsForDataType: [],
         selectedDataType: 'Sets',
         showType: true,
 
@@ -738,6 +751,7 @@
       },
 
       // WORKOUT METHODS //-------------------------------------------------------------------------------
+
       cancelWorkout () {
         this.editWorkout = null
         this.isEditingWorkout = false
@@ -882,7 +896,12 @@
             var protocol = exerciseDataPacket[2].replace(/\s/g, '')
             if (regex.test(exerciseDataPacket[1]) === true) {
               this.xLabel.push(exerciseDataPacket[0])
-              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('at') === true) {
+              this.optionsForDataType.length = 0
+              if (exerciseDataPacket[1].includes('at')) {
+                this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
+                this.optionsForDataType.push({ id: 1, text: 'Volume', value: 'Volume' })
+              }
+              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
                 this.yData.push(this.setsReps(protocol, dataForType))
               }
               if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
@@ -892,7 +911,7 @@
                 var agg = this.setsReps(protocol, 'Reps') * this.load(protocol)
                 this.yData.push(agg)
               }
-              if (exerciseDataPacket[2].includes('at') !== true) {
+              if (exerciseDataPacket[2].includes('x') !== true) {
                 this.showType = false
                 this.yData.push(this.otherMeasures(protocol))
               }
@@ -991,7 +1010,7 @@
       },
       removeBrackets (dataIn) {
         if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '')
+          return dataIn.replace(/[[\]]/g, '').replace(/<p><br><\/p>/gi, '')
         } else {
           return dataIn
         }
