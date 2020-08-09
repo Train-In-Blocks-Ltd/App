@@ -887,6 +887,11 @@
         var dataForType = this.selectedDataType
         var dataForSum = 0
         var overviewStore = []
+        this.optionsForDataType.length = 0
+        if (dataForName === 'Block Overview') {
+          this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
+          this.optionsForDataType.push({ id: 1, text: 'Volume', value: 'Volume' })
+        }
         this.dataPacketStore.forEach((item) => {
           overviewStore.length = 0
           item.forEach((exerciseDataPacket) => {
@@ -896,8 +901,7 @@
             var protocol = exerciseDataPacket[2].replace(/\s/g, '')
             if (regex.test(exerciseDataPacket[1]) === true) {
               this.xLabel.push(exerciseDataPacket[0])
-              this.optionsForDataType.length = 0
-              if (exerciseDataPacket[1].includes('at')) {
+              if (exerciseDataPacket[1].includes('at') && this.optionsForDataType.length !== 2) {
                 this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
                 this.optionsForDataType.push({ id: 1, text: 'Volume', value: 'Volume' })
               }
