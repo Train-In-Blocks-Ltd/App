@@ -547,8 +547,8 @@
                       <label for="measure">
                         <b>Measurement: </b><br>
                         <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
-                          <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
-                            {{option.text}}
+                          <option v-for="optionName in optionsForDataName" :value="optionName.value" :key="'M' + optionName.id">
+                            {{optionName.text}}
                           </option>
                         </select>
                       </label>
@@ -559,8 +559,8 @@
                         <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
                           <option value="Sets">Sets</option>
                           <option value="Reps">Reps</option>
-                          <option v-for="option in optionsForDataType" :value="option.value" :key="option.id">
-                            {{option.text}}
+                          <option v-for="optionData in optionsForDataType" :value="optionData.value" :key="'DT-' + optionData.id">
+                            {{optionData.text}}
                           </option>
                         </select>
                       </label>
@@ -651,6 +651,7 @@
         regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
         regexLoadCapture: /(at|@)(.+)/gi,
         regexNumberBreakdown: /[0-9.]+/gi,
+        protocolError: [],
 
         // CHART METHODS //
 
@@ -890,7 +891,7 @@
         this.optionsForDataType.length = 0
         if (dataForName === 'Block Overview') {
           this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
-          this.optionsForDataType.push({ id: 1, text: 'Volume', value: 'Volume' })
+          this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
         }
         this.dataPacketStore.forEach((item) => {
           overviewStore.length = 0
@@ -901,9 +902,9 @@
             var protocol = exerciseDataPacket[2].replace(/\s/g, '')
             if (regex.test(exerciseDataPacket[1]) === true) {
               this.xLabel.push(exerciseDataPacket[0])
-              if (exerciseDataPacket[1].includes('at') && this.optionsForDataType.length !== 2) {
+              if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2) {
                 this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
-                this.optionsForDataType.push({ id: 1, text: 'Volume', value: 'Volume' })
+                this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
               }
               if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
                 this.yData.push(this.setsReps(protocol, dataForType))
@@ -1145,9 +1146,15 @@
               setStore = parseInt(match)
             }
             if (dataForType === 'Sets' && groupIndex === 1) {
+              if (match === '') {
+                return this.protocolError.push(protocol)
+              }
               extractedSetsReps = parseInt(match)
             }
             if (dataForType === 'Reps' && groupIndex === 2) {
+              if (match === '') {
+                return this.protocolError.push(protocol)
+              }
               if (match.includes('/') === true) {
                 let n
                 while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
@@ -1187,6 +1194,9 @@
                   this.regexNumberBreakdown.lastIndex++
                 }
                 n.forEach((loadMatchExact) => {
+                  if (/\d/.test(loadMatchExact) === false) {
+                    return this.protocolError.push(protocol)
+                  }
                   if (loadMatch.includes('/') === true) {
                     tempLoadStore.push(parseFloat(loadMatchExact))
                     isMultiple = true
