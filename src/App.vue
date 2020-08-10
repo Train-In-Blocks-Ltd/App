@@ -778,6 +778,7 @@ export default {
   },
   created () {
     this.isAuthenticated()
+    window.addEventListener('beforeunload', this.confirmLeave)
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -789,6 +790,13 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
+    confirmLeave (e) {
+      if (this.loading === true) {
+        const msg = 'Your changes might not be saved, are you sure you want to leave?'
+        e.returnValue = msg
+        return msg
+      }
+    },
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
     },
