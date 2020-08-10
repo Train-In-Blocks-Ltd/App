@@ -431,6 +431,7 @@
     stroke: #282828
   }
   .ql-editor {
+    grid-area: body;
     max-height: 250px;
     color: #282828;
     overflow-y: auto

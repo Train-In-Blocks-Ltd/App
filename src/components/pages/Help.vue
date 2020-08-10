@@ -65,7 +65,7 @@ export default {
     return {
       guides: [
         { id: 1, gif: 'add-client.gif', title: 'Adding a new client', text: '<p>Click the <i>New Client</i> button and fill out the form. <b>You must enter the name and email.</b> Mobile numbers are optional.</p>' },
-        { id: 2, gif: 'client-notes.gif', title: 'Adding client notes', text: '<p>Press the <i>Edit</i> button to add some information or data, then press <i>Save</i> or <i>Ctrl + Enter</i>. You can see these notes on the home page with your other clients. Your clients will also be able to see their <i>Client Notes</i>.</p>' },
+        { id: 2, gif: 'add-client-notes.gif', title: 'Adding client notes', text: '<p>Press the <i>Edit</i> button to add some information or data, then press <i>Save</i> or <i>Ctrl + Enter</i>. You can see these notes on the home page with your other clients. Your clients will also be able to see their <i>Client Notes</i>.</p>' },
         { id: 3, gif: 'add-block.gif', title: 'Adding a new block', text: '<p>Follow the same steps as <b><i>Adding a new client</i></b> as mentioned above.</p>' },
         { id: 4, gif: 'add-block-notes.gif', title: 'Adding block notes', text: '<p>Follow the same steps as <b><i>Adding client notes</i></b> as mentioned above.</p>' },
         { id: 5, gif: 'new-workout.gif', title: 'Adding a new workout', text: '<p>Press the <i>New Workout</i> button and start editing the workout. You can also save it by pressing <i>Ctrl + Enter</i>.</p>' },
