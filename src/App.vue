@@ -215,14 +215,6 @@
   .wrapper--workout__header {
     height: 6.4rem
   }
-  .wrapper--workout, .block-notes, .client-notes {
-    height: fit-content;
-    transform: translateX(-1rem)
-  }
-  .wrapper--workout__header, .block-notes__header {
-    margin: 0;
-    padding: 1rem
-  }
   .text--name {
     text-overflow: ellipsis;
     white-space: nowrap
@@ -232,7 +224,7 @@
   }
   .bottom-bar {
     height: 54px;
-    padding: .6rem 1rem
+    padding: .6rem 0
   }
   #button-done {
     background-color: green
@@ -248,15 +240,10 @@
   #button-done:hover, #button-to-do:hover {
     opacity: .6
   }
-  .activeWorkout {
-    border: 2px solid #282828;
-    width: calc(100% + 2rem)
-  }
 
   /* Show workouts */
   .show-workout, .show-block-notes {
     overflow-wrap: break-word;
-    padding: 12px 15px;
     max-height: 293px;
     color: #282828;
     line-height: 1.42;
@@ -429,20 +416,22 @@
   .ql-snow .ql-editor p {
     margin: 1rem 0
   }
-  div.ql-toolbar.ql-snow {
-    border: none
-  }
-  div.ql-container.ql-snow {
-    border: none
+  div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
+    border: none;
+    padding: 0
   }
   .ql-snow .ql-stroke {
     stroke: #282828
+  }
+  .ql-formats {
+    transform: translateX(-5px)
   }
   .ql-editor {
     grid-area: body;
     max-height: 250px;
     color: #282828;
-    overflow-y: auto
+    overflow-y: auto;
+    padding: 0
   }
   .ql-editor ul li:not(.ql-direction-rtl), .ql-editor ol {
     padding: 0
