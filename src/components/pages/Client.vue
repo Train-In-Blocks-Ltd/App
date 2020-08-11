@@ -84,10 +84,6 @@
     color: #282828;
     padding: .6rem .8rem
   }
-  .client_notes--header p {
-    margin: 0;
-    font-weight: bold
-  }
 
   /* Responsiveness */
   @media (max-width: 992px) {
@@ -121,9 +117,6 @@
   /* For Mobile */
   @media (max-width: 576px) {
     /* Overall */
-    #client .client_info input.client_info--name:focus {
-      border-bottom: 2px solid #282828
-    }
     .floating_nav {
       right: 2rem;
       top: 2rem
@@ -265,7 +258,7 @@
           )
           if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'PROVISIONED') {
             this.clientAlready = true
-            this.clientAlreadyMsg = 'Activated'
+            this.clientAlreadyMsg = 'Email Sent'
           } else if (result.data[0].status === 'SUSPENDED') {
             this.clientSuspend = result.data[0].id
             this.clientAlready = false

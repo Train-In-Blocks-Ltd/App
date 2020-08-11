@@ -63,20 +63,9 @@
     grid-gap: 6rem;
     margin-top: 4rem
   }
-
-  /* Calendar */
-  .fc-event {
-    font-size: .8rem
-  }
-  .wrapper--calender {
-    grid-area: a
-  }
   .block-notes {
     grid-area: b;
     margin: 0 0 4rem 0
-  }
-  .fc-unthemed tbody {
-    border-color: #F1F1F1
   }
 
   /* Block Table */
@@ -100,9 +89,6 @@
     font-weight: bold;
     text-align: center
   }
-  .block_table--container p {
-    margin: 1.5rem 1rem
-  }
   .block_table--container--block_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
@@ -112,9 +98,6 @@
   }
 
   /* Week */
-  .fc-view-container * {
-    font-size: .8rem
-  }
   .week-color-picker {
     margin: auto 0 auto 1rem;
     height: 28px
@@ -279,19 +262,6 @@
     margin: 2rem 0;
     width: 100%
   }
-  .add_workout_container {
-    margin: 2rem 0 0 0
-  }
-  .add_workout_container h3 {
-    margin-top: 0
-  }
-  .add_workout {
-    grid-gap: 1rem
-  }
-  .add_workout label {
-    display: grid;
-    grid-gap: .5rem
-  }
 
   /* All Modal */
   .modal--info, .modal--move, .modal--copy {
@@ -301,18 +271,6 @@
   /* Copy Modal */
   .modal--copy h3 {
     margin: 0 0 1.5rem 0
-  }
-  .form--copy {
-    display: grid;
-    grid-template-columns: .4fr 1fr;
-    grid-gap: .4rem
-  }
-  .form--copy label {
-    font-weight: bold
-  }
-  .form--copy input {
-    width: 100%;
-    margin: .4rem 0
   }
 
   @media (max-width: 992px) {
@@ -330,9 +288,6 @@
     }
     .floating_nav__block svg {
       margin-left: auto
-    }
-    .form--copy {
-      grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1

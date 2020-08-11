@@ -32,7 +32,6 @@
           <div v-if="programme.notes !== ''" v-html="programme.notes" class="show-block-notes animate animate__fadeIn" />
           <p v-if="programme.notes === ''" class="show-block-notes">No block notes added...</p>
         </div>
-        <div class="spacer"/>
         <h2 class="sub-title no-margin">Workouts</h2>
         <div class="container--workouts" v-if="programme.workouts">
           <div class="wrapper--workout" v-for="(workout, index) in programme.workouts"

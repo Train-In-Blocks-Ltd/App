@@ -2,9 +2,7 @@
   /* Client Notes */
   .client-notes {
     margin: 4rem auto;
-    height: fit-content;
-    border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1
+    height: fit-content
   }
   .client-notes__header {
     margin: 0;
@@ -26,14 +24,6 @@
     line-height: 1.42;
     overflow-y: auto;
     font-size: .8rem
-  }
-  .show-client-notes h2 {
-    font-size: 1.5rem
-  }
-  .show-client-notes p, .show-client-notes ul, .show-client-notes ol {
-    text-decoration: none;
-    margin: 0;
-    padding: 0
   }
   .activeClientNotes {
     border: 2px solid #282828
@@ -140,7 +130,7 @@
           <button v-show="editClientNotes" @click="cancelClientNotes()" class="button button--cancel">Cancel</button>
         </div>
       </div>
-      <div class="container--block-links__section">
+      <div>
         <h2 class="sub-title">Blocks</h2>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>

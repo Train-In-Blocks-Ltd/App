@@ -95,12 +95,6 @@
     }
   }
   @media (max-width: 768px) {
-    .container--block-links {
-      flex-direction: column-reverse
-    }
-    .container--block-links__section {
-      margin: 0
-    }
     .client-notes, .block_container--link {
       margin: 0;
       min-width: 0;
@@ -110,12 +104,6 @@
 
   /* For Mobile */
   @media (max-width: 576px) {
-    .container--block-links {
-      grid-template: .2fr 1fr/1fr;
-      grid-template-areas:
-        'b'
-        'a'
-    }
     .blocks_grid {
       grid-template-columns: 1fr
     }
@@ -164,7 +152,6 @@
         <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
         <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
       </div>
-      <div class="spacer"/>
       <div class="container--title">
         <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Programmes</h2>

@@ -9,7 +9,7 @@
     --animate-repeat: 1
   }
 
-  /* GLOBAL: ANIMATION */
+  /* GLOBAL: ANIMATIONS */
   .animate {
     animation-duration: 1s;
     animation-duration: var(--animate-duration);
@@ -112,21 +112,15 @@
     overflow: auto;
     height: 100vh
   }
-  .spacer {
-    height: 5rem
-  }
   .notAuth {
     margin: 0
   }
 
-  /* Global Container */
+  /* GLOBAL: CONTAINERS */
   #home, #block, #account, #archive, .wrapper--client, #help, #logout {
     overflow-x: hidden;
     min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
-  }
-  .show-block-notes h1, .show-block-notes h2, .show-client-notes h1, .show-client-notes h2, .client_link__notes__content h1, .client_link__notes__content h2 {
-    margin: 0
   }
   .modal--error {
     padding: 2rem
@@ -194,11 +188,8 @@
     color: white;
     background-color: #B80000
   }
-  button.no-margin {
-    margin: 0
-  }
 
-  /* GLOBAL: Calendar */
+  /* GLOBAL: CALENDAR */
   .fc-button {
     border-radius: 3px;
     text-transform: capitalize;
@@ -220,11 +211,11 @@
     margin-left: .4rem
   }
 
-  /* GLOBAL: Workouts */
+  /* GLOBAL: WORKOUTS AND NOTES */
   .wrapper--workout__header {
     height: 6.4rem
   }
-  .wrapper--workout, .block-notes {
+  .wrapper--workout, .block-notes, .client-notes {
     height: fit-content;
     transform: translateX(-1rem)
   }
@@ -381,58 +372,6 @@
     background-color: rgb(var(--red), var(--green), var(--blue));
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .nav a, .account_nav a {
-    color:rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
-  .nav {
-    border-bottom: .5px solid rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .1
-    );
-    border-top: .5px solid rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .1
-    );
-    overflow-y: auto;
-    margin-top: 3.75rem;
-    margin-bottom: 2.5rem
-  }
-  .sidebar ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px
-  }
-  .sidebar ::-webkit-scrollbar-track {
-    background: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .1
-    )
-  }
-  .sidebar ::-webkit-scrollbar-thumb {
-    background: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .4
-    )
-  }
-  .sidebar ::-webkit-scrollbar-thumb:hover {
-    background: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .6
-    )
-  }
 
   /* Account Navigation Items */
   .account_nav--item {
@@ -445,9 +384,6 @@
   }
   .account_nav--item:hover {
     opacity: 1
-  }
-  .account_nav--item:first-of-type {
-    padding-top: 0
   }
   .account_nav--item:last-of-type {
     padding-bottom: 0
@@ -590,9 +526,6 @@
   }
   .client_link__details p {
     margin: auto 0
-  }
-  .client_link__notes {
-    margin-top: 1rem
   }
   .client_link__notes__content {
     font-size: .8rem;
