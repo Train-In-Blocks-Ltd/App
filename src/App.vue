@@ -1,13 +1,84 @@
 <style>
-  @import '../node_modules/animate.css';
-
   /* Global */
   * {
     box-sizing: border-box
   }
   :root {
-    --animate-delay: .5s
+    --animate-delay: .5s;
+    --animate-duration: 1s;
+    --animate-repeat: 1
   }
+
+  /* GLOBAL: ANIMATION */
+  .animate {
+    animation-duration: 1s;
+    animation-duration: var(--animate-duration);
+    animation-fill-mode: both
+  }
+  .animate.animate__delay-1s {
+    animation-delay: 1s;
+    animation-delay: var(--animate-delay)
+  }
+  .animate.animate__delay-2s {
+    animation-delay: calc(1s * 2);
+    animation-delay: calc(var(--animate-delay) * 2)
+  }
+  .animate.animate__faster {
+    animation-duration: calc(1s / 2);
+    animation-duration: calc(var(--animate-duration) / 2)
+  }
+  .animate__bounceInDown {
+    animation-name: bounceInDown;
+    animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+  }
+  .animate__fadeIn {
+    animation-name: fadeIn
+  }
+  .animate__fadeOut {
+    animation-name: fadeOut
+  }
+  @keyframes bounceInDown {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -3000px, 0) scaleY(3);
+      transform: translate3d(0, -3000px, 0) scaleY(3)
+    }
+    60% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 25px, 0) scaleY(.9);
+      transform: translate3d(0, 25px, 0) scaleY(.9)
+    }
+    75% {
+      -webkit-transform: translate3d(0, -10px, 0) scaleY(.95);
+      transform: translate3d(0, -10px, 0) scaleY(.95)
+    }
+    90% {
+      -webkit-transform: translate3d(0, 5px, 0) scaleY(.985);
+      transform: translate3d(0, 5px, 0) scaleY(.985)
+    }
+    to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0)
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0
+    }
+    to {
+      opacity: 1
+    }
+  }
+  @keyframes fadeOut {
+    from {
+      opacity: 1
+    }
+    to {
+      opacity: 0
+    }
+  }
+
+  /* GLOBAL: ELEMENTS */
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -92,49 +163,61 @@
   }
 
   /* Buttons */
-  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+  button {
     user-select: none;
     cursor: pointer;
+    border-radius: 3px;
+    opacity: 1;
     text-transform: capitalize;
-    text-align: center;
     outline-width: 0;
-    border: 1px solid #E1E1E1;
-    padding: .5rem 1rem;
-    height: auto;
-    width: auto;
-    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    padding: .6rem 1.6rem;
     font-size: .8rem;
     letter-spacing: .1rem;
-    line-height: 1.42;
     font-weight: bold;
-    color: #282828;
-    background-color: white;
-    margin: 1rem 0 .5rem 0;
-    display: inline-block;
-    transition: color .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
     color: white;
     background-color: #282828;
-    text-decoration: none
+    margin: .6rem 0;
+    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
+  button:hover {
+    opacity: .6
+  }
+  button:active {
     transform: scale(.96)
-  }
-  .delete:hover, .cancel:hover {
-    color: white;
-    background-color: #B80000
   }
   button:disabled, button[disabled] {
     opacity: .6;
     cursor: default
   }
-  button:disabled:hover, button[disabled]:hover {
-    color: #282828;
-    background-color: transparent
+  .delete:hover, .cancel:hover {
+    color: white;
+    background-color: #B80000
   }
-  .button.no-margin {
+  button.no-margin {
     margin: 0
+  }
+
+  /* GLOBAL: Calendar */
+  .fc-button {
+    border-radius: 3px;
+    text-transform: capitalize;
+    font-size: .8rem;
+    font-weight: bold;
+    background-color: #282828;
+    color: white
+  }
+  .fc-button-primary:disabled {
+    background-color: #282828
+  }
+  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
+    border-color: transparent
+  }
+  .fc-view-container span {
+    font-size: .8rem
+  }
+  .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+    margin-left: .4rem
   }
 
   /* GLOBAL: Workouts */
@@ -143,8 +226,7 @@
   }
   .wrapper--workout, .block-notes {
     height: fit-content;
-    border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1
+    transform: translateX(-1rem)
   }
   .wrapper--workout__header, .block-notes__header {
     margin: 0;
@@ -175,6 +257,10 @@
   #button-done:hover, #button-to-do:hover {
     opacity: .6
   }
+  .activeWorkout {
+    border: 2px solid #282828;
+    width: calc(100% + 2rem)
+  }
 
   /* Show workouts */
   .show-workout, .show-block-notes {
@@ -197,22 +283,8 @@
     margin: 1rem 0
   }
 
-  /* GLOBAL: Calendar */
-  .fc-button {
-    border-radius: 0
-  }
-  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
-    border-color: transparent
-  }
-  .fc-view-container span {
-    font-size: .8rem
-  }
-  .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
-    margin-left: .4rem
-  }
-
   /* Remove IOS Corners */
-  input:not([type=checkbox]), button {
+  input:not([type=checkbox]) {
     border-radius: 0;
     -webkit-appearance: none
   }
@@ -644,7 +716,7 @@
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
-      <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
+      <div class="logo animate animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
         </router-link>
@@ -656,12 +728,12 @@
         <router-link to="/" title="Home">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
           <router-link to="/" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
             Home
           </router-link>
         </transition>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
           <router-link to="/clientUser" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
             Home
           </router-link>
@@ -671,7 +743,7 @@
         <router-link to="/help" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
           <router-link to="/help" title="Help"  v-show="showNav" class="account_nav--item--text">
             Help
           </router-link>
@@ -681,7 +753,7 @@
         <router-link to="/archive" title="Archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
           <router-link to="/archive" v-show="showNav" class="account_nav--item--text">
             Archive
           </router-link>
@@ -691,7 +763,7 @@
         <router-link to="/account" title="Account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
           <router-link to="/account" v-show="showNav" class="account_nav--item--text">
             Account
           </router-link>
@@ -701,7 +773,7 @@
         <router-link to="/logout" @click.native="logout()" title="Logout">
           <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
           <router-link to="/logout" v-show="showNav" @click.native="logout()" class="account_nav--item--text">
             Logout
           </router-link>
@@ -709,7 +781,7 @@
       </div>
     </nav> <!-- .sidebar -->
     <main @mouseover="showNav = false" :class="{notAuth: !authenticated}">
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
     </main>

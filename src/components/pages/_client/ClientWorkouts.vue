@@ -183,7 +183,7 @@
   }
   .container--workouts {
     display: grid;
-    grid-gap: 2rem
+    grid-gap: 6rem
   }
   input.workout-name, input.workout-date {
     text-overflow: ellipsis;
@@ -214,9 +214,6 @@
   }
   .bottom-bar .button {
     margin: 0
-  }
-  .activeWorkout {
-    border: 2px solid #282828
   }
   .newWorkout {
     border: 2px solid #00800060
@@ -426,7 +423,7 @@
             <button class="button">Copy</button>
         </form>
       </modal>
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+      <transition enter-active-class="animate animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
           <a @click="delete_block()" aria-label="Delete this block">
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
@@ -458,8 +455,8 @@
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
-                <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
+                <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn"/>
                 <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
                   <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
@@ -516,9 +513,9 @@
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                         <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                       </div>
-                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
-                      <div v-if="workout.id === showFeedback" class="show-feedback animate__animated animate__fadeIn">
+                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+                      <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
+                      <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
                       </div>

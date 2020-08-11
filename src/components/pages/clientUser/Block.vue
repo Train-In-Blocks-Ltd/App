@@ -29,7 +29,7 @@
           <div class="block-notes__header">
             <p class="block-notes__header__text"><b>Block Notes</b></p>
           </div>
-          <div v-if="programme.notes !== ''" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn" />
+          <div v-if="programme.notes !== ''" v-html="programme.notes" class="show-block-notes animate animate__fadeIn" />
           <p v-if="programme.notes === ''" class="show-block-notes">No block notes added...</p>
         </div>
         <div class="spacer"/>
@@ -39,7 +39,7 @@
             :key="index" v-show="index == currentWorkoutIndexBlock">
             <modal :name="'feedback-client-block-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
               <div class="modal--feedback-client">
-                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn"/>
+                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
                 <button @click="$modal.hide('feedback-client-block-' + workout.id), $parent.update_workout(programme.id, workout.id)" class="button">Close</button>
               </div>
             </modal>
@@ -48,7 +48,7 @@
               <span class="text--date">{{$parent.day(workout.date)}}</span>
               <span class="text--date">{{workout.date}}</span>
             </p>
-            <div v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
+            <div v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
             <div class="bottom-bar">
               <button v-if="workout.checked === 1" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button">Incomplete</button>

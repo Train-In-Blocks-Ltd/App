@@ -131,8 +131,8 @@
         <div class="client-notes__header">
           <p><b>Client Information</b></p>
         </div>
-        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
+        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn"/>
         <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
           <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
@@ -168,8 +168,8 @@
             <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_block.duration" required/></label>
             <label><b>Start: </b><input class="input--forms" type="date" v-model="new_block.start" required /></label>
             <div class="form_buttons">
-              <input type="submit" class="button button--save" value="Save" />
-              <button class="button button--close cancel" @click="close()">Close</button>
+              <button type="submit">Save</button>
+              <button class="cancel" @click="close()">Close</button>
             </div>
           </form>
         </div>

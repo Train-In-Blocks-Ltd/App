@@ -12,7 +12,6 @@
     "@fullcalendar/vue": "^4.4.2",
     "@okta/okta-signin-widget": "^4.3.0",
     "@okta/okta-vue": "^2.0.0",
-    "animate.css": "^4.1.0",
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
     "qs": "^6.9.4",

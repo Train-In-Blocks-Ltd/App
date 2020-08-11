@@ -142,7 +142,7 @@
             :key="index" v-show="workout.id == viewWorkoutsStore[currentWorkoutIndexHome] && isToday()">
             <modal :name="'feedback-client-home-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
               <div class="modal--feedback-client">
-                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn"/>
+                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
                 <button @click="$modal.hide('feedback-client-home-' + workout.id), $parent.update_workout(programme.id, workout.id)" class="button">Close</button>
               </div>
             </modal>
@@ -151,7 +151,7 @@
               <span class="text--date">{{$parent.day(workout.date)}}</span>
               <span class="text--date">{{workout.date}}</span>
             </p>
-            <div v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
+            <div v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
             <div class="bottom-bar">
               <button v-if="workout.checked !== 0" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>

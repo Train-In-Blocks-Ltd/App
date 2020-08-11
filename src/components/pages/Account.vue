@@ -102,7 +102,7 @@
             </label>
             <br>
             <br>
-            <div><input type="submit" value="Change your password" class="button" :disabled="check"/></div>
+            <button type="submit" :disabled="check">Change your password</button>
             <p v-if="this.error" class="error">{{this.error}}</p>
             <p v-if="this.msg">{{this.msg}}</p>
           </form>
