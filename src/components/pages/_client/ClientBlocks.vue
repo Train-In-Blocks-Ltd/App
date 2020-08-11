@@ -1,32 +1,7 @@
 <style scoped>
   /* Client Notes */
   .client-notes {
-    margin: 4rem auto;
-    height: fit-content
-  }
-  .client-notes__header {
-    margin: 0;
-    padding: 1rem
-  }
-  .text--date {
-    font-size: .8rem
-  }
-  .bottom-bar {
-    padding: .6rem 1rem
-  }
-  .bottom-bar .button {
-    margin: 0
-  }
-  .show-client-notes {
-    padding: 12px 15px;
-    max-height: 293px;
-    color: #282828;
-    line-height: 1.42;
-    overflow-y: auto;
-    font-size: .8rem
-  }
-  .activeClientNotes {
-    border: 2px solid #282828
+    margin: 4rem auto
   }
 
   /* Blocks */

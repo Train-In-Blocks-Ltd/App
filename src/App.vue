@@ -126,7 +126,7 @@
     padding: 2rem
   }
 
-  /* Fonts */
+  /* GLOBAL: FONTS */
   .main-title {
     margin-top: 0;
     margin-bottom: 3rem;
@@ -156,7 +156,7 @@
     text-overflow: ellipsis
   }
 
-  /* Buttons */
+  /* GLOBAL: BUTTONS */
   button {
     user-select: none;
     cursor: pointer;
@@ -241,8 +241,8 @@
     opacity: .6
   }
 
-  /* Show workouts */
-  .show-workout, .show-block-notes {
+  /* GLOBAL: SHOW WORKOUT AND NOTES */
+  .show-workout, .show-block-notes, .show-client-notes {
     overflow-wrap: break-word;
     max-height: 293px;
     color: #282828;
@@ -261,13 +261,13 @@
     margin: 1rem 0
   }
 
-  /* Remove IOS Corners */
+  /* GLOBAL: RM IOS CORNERS */
   input:not([type=checkbox]) {
     border-radius: 0;
     -webkit-appearance: none
   }
 
-  /* Inputs */
+  /* GLOBAL: INPUTS */
   .input--modal {
     width: 4rem
   }
@@ -308,7 +308,7 @@
     opacity: 1; /* Firefox */
   }
 
-  /* Forms */
+  /* GLOBAL: FORMS */
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -322,7 +322,7 @@
     grid-auto-flow: column
   }
 
-  /* Logo */
+  /* GLOBAL: LOGO */
   .logo {
     margin-bottom: auto
   }
@@ -338,8 +338,6 @@
       var(--accessible-color)
     )
   }
-
-  /* Logo Animation */
   .logo--link:hover {
     opacity: .6
   }
@@ -347,7 +345,7 @@
     transform: scale(.9)
   }
 
-  /* Navigation */
+  /* GLOBAL: NAV */
   .sidebar {
     border-right: 1px solid #E1E1E1;
     z-index: 10;
@@ -359,8 +357,6 @@
     background-color: rgb(var(--red), var(--green), var(--blue));
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
-
-  /* Account Navigation Items */
   .account_nav--item {
     display: flex;
     opacity: .6;
@@ -403,9 +399,23 @@
     )
   }
 
-  /* QUILL */
-  .ql-editor.ql-blank:before {
-    margin: 1rem 0
+  /* GLOBAL: QUILL */
+  div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
+    border: none;
+    padding: 0
+  }
+  .ql-formats {
+    transform: translateX(-5px)
+  }
+  .ql-snow .ql-stroke {
+    stroke: #282828
+  }
+  .ql-editor {
+    grid-area: body;
+    max-height: 250px;
+    color: #282828;
+    overflow-y: auto;
+    padding: 0
   }
   .ql-snow .ql-editor h1 {
     margin: 1.072rem 0
@@ -416,22 +426,8 @@
   .ql-snow .ql-editor p {
     margin: 1rem 0
   }
-  div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
-    border: none;
-    padding: 0
-  }
-  .ql-snow .ql-stroke {
-    stroke: #282828
-  }
-  .ql-formats {
-    transform: translateX(-5px)
-  }
-  .ql-editor {
-    grid-area: body;
-    max-height: 250px;
-    color: #282828;
-    overflow-y: auto;
-    padding: 0
+  .ql-editor.ql-blank:before {
+    margin: 1rem 0
   }
   .ql-editor ul li:not(.ql-direction-rtl), .ql-editor ol {
     padding: 0
@@ -446,7 +442,7 @@
     fill: #28282899
   }
 
-  /* Scrollbar */
+  /* GLOBAL: SCROLLBAR */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px
@@ -461,7 +457,7 @@
     background: #28282860
   }
 
-  /* Archive and Home page styles */
+  /* ARCHIVE AND HOME STYLES */
   .container--clients {
     display: grid;
     grid-gap: 2rem
@@ -470,7 +466,7 @@
     margin: 0
   }
 
-  /* Client Container Animation */
+  /* HOME: Client Container Animation */
   .client_container > a {
     display: grid;
     grid-gap: 1rem;
