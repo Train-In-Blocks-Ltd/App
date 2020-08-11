@@ -96,13 +96,16 @@
         <div class="client-notes__header">
           <p><b>Client Information</b></p>
         </div>
-        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn"/>
+        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :class="{expanded: isClientNotesExpanded}" :config="$parent.$parent.config"/>
+        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn" :class="{expanded: isClientNotesExpanded}"/>
         <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
-          <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
-          <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
-          <button v-show="editClientNotes" @click="cancelClientNotes()" class="button button--cancel">Cancel</button>
+          <div>
+            <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
+            <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
+            <button v-show="editClientNotes" @click="cancelClientNotes()" class="button button--cancel">Cancel</button>
+          </div>
+          <inline-svg @click="isClientNotesExpanded = !isClientNotesExpanded" class="icon--expand" :class="{expandRotate: isClientNotesExpanded}" :src="require('../../../assets/svg/expand.svg')" title="Expand"/>
         </div>
       </div>
       <div>
@@ -145,9 +148,13 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
-    data: function () {
+    components: {
+      InlineSvg
+    },
+    data () {
       return {
         response: '',
         creating: false,
@@ -156,7 +163,8 @@
           duration: '',
           start: ''
         },
-        editClientNotes: false
+        editClientNotes: false,
+        isClientNotesExpanded: false
       }
     },
     methods: {

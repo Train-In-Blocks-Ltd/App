@@ -211,8 +211,20 @@
     font-size: .8rem
   }
   .bottom-bar {
-    height: 54px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: .6rem 0
+  }
+  .icon--expand {
+    cursor: pointer;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .icon--expand:hover {
+    opacity: .6
+  }
+  .expandRotate {
+    transform: rotate(-180deg)
   }
   #button-done {
     background-color: green
@@ -249,7 +261,7 @@
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
   }
-  .show-workout.expanded, .show-block-notes.expanded, .show-client-notes.expanded {
+  .show-workout.expanded, .show-block-notes.expanded, .show-client-notes.expanded, .quill.expanded .ql-editor {
     max-height: 2000px
   }
 
@@ -395,7 +407,8 @@
     max-height: 250px;
     color: #282828;
     overflow-y: auto;
-    padding: 0
+    padding: 0;
+    transition: all 1s
   }
   .ql-snow .ql-editor h1 {
     margin: 1.072rem 0

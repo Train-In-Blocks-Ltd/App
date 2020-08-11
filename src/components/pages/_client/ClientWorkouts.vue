@@ -412,13 +412,16 @@
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
-                <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn"/>
+                <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate animate__fadeIn" :class="{expanded: isBlockNotesExpanded}" :config="$parent.$parent.config"/>
+                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn" :class="{expanded: isBlockNotesExpanded}"/>
                 <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
-                  <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
-                  <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
-                  <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="button button--cancel">Cancel</button>
+                  <div>
+                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
+                    <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
+                    <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="button button--cancel">Cancel</button>
+                  </div>
+                  <inline-svg @click="isBlockNotesExpanded = !isBlockNotesExpanded" class="icon--expand" :class="{expandRotate: isBlockNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                 </div>
               </div>
               <div class="wrapper--calendar">
@@ -470,20 +473,23 @@
                         <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                         <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                       </div>
-                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
+                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :class="{expandesd: workout.id === isSessionNotesExpanded}" :config="$parent.$parent.config"/>
+                      <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
                       <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
                       </div>
                       <div class="bottom-bar">
-                        <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
-                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
-                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
-                        <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
-                        <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
-                        <button id="button-feedback-open" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
-                        <button id="button-feedback-close" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
+                        <div>
+                          <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
+                          <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
+                          <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
+                          <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
+                          <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
+                          <button id="button-feedback-open" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
+                          <button id="button-feedback-close" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
+                        </div>
+                        <inline-svg v-show="isSessionNotesExpanded === null || workout.id === isSessionNotesExpanded" @click="toggleSessionExpand(workout.id)" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                       </div>
                     </div>
                   </div>
@@ -580,12 +586,14 @@
         },
         response: '',
         editBlockNotes: false,
+        isBlockNotesExpanded: false,
         todayDate: '',
 
         // WORKOUT DATA //
 
         isEditingWorkout: false,
         editWorkout: null,
+        isSessionNotesExpanded: null,
         movingWorkout: null,
         moveTarget: 1,
         copyTarget: 2,
@@ -716,6 +724,13 @@
         this.$parent.$parent.loading = true
         await this.add_workout()
         this.$parent.$parent.loading = false
+      },
+      toggleSessionExpand (id) {
+        if (this.isSessionNotesExpanded === null) {
+          this.isSessionNotesExpanded = id
+        } else {
+          this.isSessionNotesExpanded = null
+        }
       },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
