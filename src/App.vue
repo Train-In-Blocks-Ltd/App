@@ -90,18 +90,6 @@
     overflow: hidden
   }
   #app {
-    --accessible-color: calc(
-      (
-        (
-          (
-            (var(--red) * 299) +
-            (var(--green) * 587) +
-            (var(--blue) * 114)
-          ) / 1000
-        ) - 128
-      ) * -1000
-    );
-
     color: #282828;
     background-color: white
   }
@@ -332,11 +320,7 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    fill: white
   }
   .logo--link:hover {
     opacity: .6
@@ -354,7 +338,7 @@
     justify-content: flex-end;
     padding: 2rem 1rem;
     position: fixed;
-    background-color: rgb(var(--red), var(--green), var(--blue));
+    background-color: #282828;
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item {
@@ -372,11 +356,7 @@
     padding-bottom: 0
   }
   .account_nav--item--text {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: white;
     text-decoration: none;
     position: relative;
     border: 0;
@@ -392,11 +372,7 @@
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item--icon path:not(.transparent) {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    fill: white
   }
 
   /* GLOBAL: QUILL */
@@ -622,7 +598,7 @@
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
-  <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
+  <div id="app" v-bind:class="{'authenticated': authenticated}">
     <modal name="error" height="auto" :adaptive="true">
       <div class="modal--error">
         <p><b>Something went wrong...</b></p><br>
@@ -742,14 +718,6 @@ export default {
       // USER DATA //
 
       authenticated: false,
-      colors: {
-        rgba: {
-          r: null,
-          g: null,
-          b: null,
-          a: 1
-        }
-      },
 
       // QUILL DATA //
 
@@ -831,16 +799,6 @@ export default {
       } else {
         this.$ga.disable()
       }
-      this.colors.hex = this.claims.color
-      this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
-      this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
-      this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
-      if (!localStorage.getItem('colors')) {
-        document.getElementsByTagName('BODY')[0].style.setProperty('--red', this.colors.rgba.r)
-        document.getElementsByTagName('BODY')[0].style.setProperty('--green', this.colors.rgba.g)
-        document.getElementsByTagName('BODY')[0].style.setProperty('--blue', this.colors.rgba.b)
-      }
-      localStorage.setItem('colors', JSON.stringify(this.colors.rgba))
       var d = new Date()
       var n = d.getTime()
       if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {

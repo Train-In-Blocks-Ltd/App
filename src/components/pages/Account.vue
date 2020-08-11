@@ -72,12 +72,6 @@
               <input type="email" id="email" class="input--forms" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
             </label>
           </div>
-          <div class="form__options">
-            <label for="color">
-              <b>Sidebar Colour: </b>
-              <input type="color" name="color" :value="$parent.colors.hex" required @blur="save()" @change="rgb($event)"/>
-            </label>
-          </div>
           <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
             <button class="button" @click.prevent="manageSubscription">Manage Your Subscription</button>
           </div>
@@ -146,14 +140,7 @@
 
       // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
-      rgb (e) {
-        this.$parent.colors.rgba.r = this.$parent.hexToRgb(e.target.value).r
-        this.$parent.colors.rgba.g = this.$parent.hexToRgb(e.target.value).g
-        this.$parent.colors.rgba.b = this.$parent.hexToRgb(e.target.value).b
-        this.$parent.colors.hex = e.target.value
-      },
       async save () {
-        this.$parent.colors.hex = document.querySelector('input[name="color"]').value
         this.$parent.loading = true
         try {
           // Trouble with access control header so use cors-anywhere
@@ -163,7 +150,6 @@
                 'login': this.$parent.claims.email,
                 'firstName': this.$parent.claims.email,
                 'email': this.$parent.claims.email,
-                'color': this.$parent.colors.hex,
                 'ga': this.$parent.claims.ga
               }
             },
