@@ -236,7 +236,8 @@
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
-    font-size: .8rem
+    font-size: .8rem;
+    transition: all 1s
   }
   .show-workout a {
     color: blue
@@ -247,6 +248,9 @@
   }
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
+  }
+  .show-workout.expanded, .show-block-notes.expanded, .show-client-notes.expanded {
+    max-height: 2000px
   }
 
   /* GLOBAL: RM IOS CORNERS */

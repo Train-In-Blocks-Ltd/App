@@ -122,6 +122,7 @@
     min-width: 50px;
     height: 74px;
     width: 100%;
+    border-radius: 6px;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .week:hover {
@@ -166,7 +167,8 @@
   }
   .container--workouts {
     display: grid;
-    grid-gap: 6rem
+    grid-gap: 6rem;
+    margin-top: 4rem
   }
   input.workout-name, input.workout-date {
     text-overflow: ellipsis;
