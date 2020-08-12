@@ -282,7 +282,7 @@
   }
 
   /* All Modal */
-  .modal--info, .modal--move, .modal--copy {
+  .modal--info, .modal--move, .modal--copy, .modal--shift {
     padding: 2rem
   }
 
@@ -390,6 +390,13 @@
           <button class="button" type="submit">Move</button>
         </form>
       </modal>
+      <modal name="shift" height="auto" :adaptive="true">
+        <form @submit.prevent="shiftAcross()" class="modal--shift">
+            <label for="range">Shift workout dates by: </label>
+            <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
+            <button class="button">Shift</button>
+        </form>
+      </modal>
       <modal name="copy" height="auto" :adaptive="true">
         <form @submit.prevent="copyAcross()" class="modal--copy">
             <label for="range">From {{currentWeek}} to: </label>
@@ -406,6 +413,7 @@
           </p>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift')">Shift</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
         </div>
@@ -499,7 +507,7 @@
                         <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)">
                       </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :class="{expandesd: workout.id === isSessionNotesExpanded}" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
+                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
                       <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
@@ -628,6 +636,7 @@
           date: ''
         },
         selectedSessions: [],
+        shiftDays: 1,
 
         // REGEX DATA //
 
@@ -695,6 +704,23 @@
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
+      shiftAcross () {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              if (this.selectedSessions.includes(session.id)) {
+                console.log(session.date)
+                session.date = this.addDays(session.date, parseInt(this.shiftDays))
+                console.log(session.date)
+                this.update_workout(session.id)
+              }
+            })
+          }
+        })
+        this.$modal.hide('shift')
+        this.deselectAll()
+      },
       copyAcross () {
         var copyWorkouts = []
         let weekCount = 2
@@ -724,6 +750,7 @@
         this.update_programme()
         this.$parent.$parent.loading = false
         this.$modal.hide('copy')
+        this.deselectAll()
       },
       initMove () {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
@@ -737,9 +764,7 @@
             })
           }
         })
-        if (this.selectedSessions.length === 1) {
-          this.selectedSessions.length = 0
-        }
+        this.deselectAll()
         this.currentWeek = parseInt(this.moveTarget)
       },
 
@@ -755,7 +780,7 @@
           this.selectedSessions.forEach((sessionId) => {
             this.delete_workout(sessionId, ready)
           })
-          this.selectedSessions.length = 0
+          this.deselectAll()
         }
       },
       deselectAll () {
@@ -1048,7 +1073,7 @@
           return color
         }
       },
-      removeBrackets (dataIn) {
+      removeBracketsAndBreaks (dataIn) {
         if (dataIn !== null) {
           return dataIn.replace(/[[\]]/g, '').replace(/<p><br><\/p>/gi, '')
         } else {
@@ -1366,7 +1391,7 @@
                 var workoutsId = programme.workouts[y].id
                 var workoutsName = programme.workouts[y].name
                 var workoutsDate = programme.workouts[y].date
-                var workoutsNotes = programme.workouts[y].notes.replace(/<p><br><\/p>/gi, '')
+                var workoutsNotes = programme.workouts[y].notes
                 var workoutsWeek = programme.workouts[y].week_id
                 var workoutsChecked = programme.workouts[y].checked
               }
