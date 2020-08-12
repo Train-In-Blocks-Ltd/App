@@ -63,58 +63,61 @@
 
 <template>
   <div id="account" v-if="this.$parent.claims">
+    <modal name="reset-password" height="auto" :adaptive="true">
+      <div class="modal--reset">
+        <h2>Reset your password</h2>
+        <form @submit.prevent="changePass(), $modal.hide('reset-password')">
+          <label>
+            <p><b>Current Password</b></p>
+            <input type="password" class="input--forms" v-model="oldPassword"/>
+          </label>
+          <br>
+          <br>
+          <br>
+          <label>
+            <p><b>Requirements:</b></p>
+            <p>Number (0-9)</p>
+            <p>At least 8 characters</p>
+            <p>Can't contain your username</p><br>
+            <p><b>New Password</b></p>
+            <input type="password" class="input--forms" v-model="newPassword" @input="checkPass" v-bind:class="{check: check}"/>
+          </label>
+          <br>
+          <br>
+          <button type="submit" :disabled="check">Change your password</button>
+          <p v-if="this.error" class="error">{{this.error}}</p>
+          <p v-if="this.msg">{{this.msg}}</p>
+        </form>
+      </div>
+    </modal>
     <h1 class="main-title">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
-        <div class="details">
-          <div class="form__options">
-            <label>
-              <b>Email: </b>
-              <input type="email" id="email" class="input--forms" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
-            </label>
-          </div>
-          <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-            <button class="button" @click.prevent="manageSubscription">Manage Your Subscription</button>
-          </div>
+      <div class="details">
+        <div class="form__options">
+          <label>
+            <b>Email: </b>
+            <input type="email" id="email" class="input--forms" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
+          </label>
         </div>
-        <div>
-          <h2>Reset your password</h2>
-          <form @submit.prevent="changePass">
-            <label>
-              <p><b>Current Password</b></p>
-              <input type="password" class="input--forms" v-model="oldPassword"/>
-            </label>
-            <br>
-            <br>
-            <br>
-            <label>
-              <p><b>Requirements:</b></p>
-              <p>Number (0-9)</p>
-              <p>At least 8 characters</p>
-              <p>Can't contain your username</p><br>
-              <p><b>New Password</b></p>
-              <input type="password" class="input--forms" v-model="newPassword" @input="checkPass" v-bind:class="{check: check}"/>
-            </label>
-            <br>
-            <br>
-            <button type="submit" :disabled="check">Change your password</button>
-            <p v-if="this.error" class="error">{{this.error}}</p>
-            <p v-if="this.msg">{{this.msg}}</p>
-          </form>
+        <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
+          <button @click.prevent="manageSubscription()">Manage Your Subscription</button>
         </div>
-        <div class="privacy">
-          <h2>Your Privacy and Data</h2>
-          <p>You can find more information about our policies below:</p>
-          <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
-          <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
-          <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
-          <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
-          <div class="form__options">
-            <label for="cookies">
-              Allow Third Party Cookies: 
-              <input class="allow-cookies" type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
-            </label>
-          </div>
+        <button @click.prevent="$modal.show('reset-password')">Change Your Password</button>
+      </div>
+      <div class="privacy">
+        <h2>Your Privacy and Data</h2>
+        <p>You can find more information about our policies below:</p>
+        <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
+        <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
+        <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
+        <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
+        <div class="form__options">
+          <label for="cookies">
+            Allow Third Party Cookies: 
+            <input class="allow-cookies" type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
+          </label>
         </div>
+      </div>
     </form>
   </div>
 </template>

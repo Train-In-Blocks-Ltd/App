@@ -114,6 +114,14 @@
     padding: 2rem
   }
 
+  /* GLOBAL: MODALS */
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset {
+    padding: 2rem
+  }
+  .modal--copy h3, .modal--reset h2 {
+    margin: 0 0 1.5rem 0
+  }
+
   /* GLOBAL: FONTS */
   .main-title {
     margin-top: 0;
@@ -146,6 +154,7 @@
 
   /* GLOBAL: BUTTONS */
   button {
+    width: fit-content;
     user-select: none;
     cursor: pointer;
     border-radius: 3px;

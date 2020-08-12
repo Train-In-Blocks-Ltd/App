@@ -281,16 +281,6 @@
     width: 100%
   }
 
-  /* All Modal */
-  .modal--info, .modal--move, .modal--copy, .modal--shift {
-    padding: 2rem
-  }
-
-  /* Copy Modal */
-  .modal--copy h3 {
-    margin: 0 0 1.5rem 0
-  }
-
   @media (max-width: 992px) {
     .showingFeedback {
       grid-template-areas:
