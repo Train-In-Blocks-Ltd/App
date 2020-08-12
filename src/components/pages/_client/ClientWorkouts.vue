@@ -33,21 +33,24 @@
   #blocks .block_info input.block_info--name:focus {
     padding: .6rem 1rem
   }
-  .floating_nav__block {
+  .multi-select {
     display: grid;
-    grid-gap: 1rem;
+    grid-gap: .4rem;
     position: fixed;
     top: 6rem;
     right: 2rem;
     margin-top: 1.5rem;
-    text-align: right
+    text-align: right;
+    background-color: #FFFFFF99;
+    z-index: 99;
+    padding: 1rem 0 1rem 1rem
   }
-  .floating_nav__block a {
+  .multi-select a {
     color: #282828;
     text-decoration: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .floating_nav__block a:hover {
+  .multi-select a:hover {
     opacity: .6
   }
   .floating_nav__icon {
@@ -55,10 +58,6 @@
   }
   .section-title {
     margin: 0 0 2rem 0
-  }
-  .multi-select {
-    display: grid;
-    grid-gap: .4rem
   }
   .text--selected {
     font-size: .8rem
@@ -302,10 +301,18 @@
     }
   }
   @media (max-width: 768px) {
-    .floating_nav__block a {
+    .multi-select {
+      top: -2rem;
+      right: 0;
+      padding: 2rem;
+      width: 100%;
+      background-color: white;
+      box-shadow: 0 0 20px 10px #28282812
+    }
+    .multi-select a {
       grid-template-columns: 1fr
     }
-    .floating_nav__block svg {
+    .multi-select svg {
       margin-left: auto
     }
     #copy:hover {
@@ -321,11 +328,6 @@
   }
 
   @media (max-width: 576px) {
-    /* Overall */
-    .floating_nav__block {
-      top: 4rem
-    }
-
     /* Container */
     .block_grid {
       display: block
@@ -397,23 +399,16 @@
             <button class="button">Copy</button>
         </form>
       </modal>
-      <transition enter-active-class="animate animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-        <div v-show="!$parent.showOptions" class="floating_nav__block">
-          <a @click="delete_block()" aria-label="Delete this block">
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
-          </a>
-          <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-            <div class="multi-select" v-if="selectedSessions.length !== 0">
-              <p class="text--selected">
-                <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
-              </p>
-              <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
-              <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
-              <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
-              <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
-            </div>
-          </transition>
-        </div> <!-- floating_nav -->
+      <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+        <div class="multi-select" v-if="selectedSessions.length !== 0">
+          <p class="text--selected">
+            <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
+          </p>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
+        </div>
       </transition>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
@@ -691,6 +686,10 @@
       this.today()
       this.update_programme()
       this.scan()
+      this.$parent.showDeleteBlock = true
+    },
+    beforeDestroy () {
+      this.$parent.showDeleteBlock = false
     },
     methods: {
 
@@ -1431,33 +1430,6 @@
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)
-        }
-      },
-      async delete_block () {
-        if (confirm('Are you sure you want to delete this block?')) {
-          var programme
-          var id
-          for (programme of this.$parent.$parent.client_details.programmes) {
-            //eslint-disable-next-line
-            if (programme.id == this.$route.params.id) {
-              id = programme.id
-            }
-          }
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          try {
-            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
-
-            await this.$parent.$parent.clients()
-            this.$parent.$parent.clients_to_vue()
-
-            this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
-            this.$ga.event('Block', 'delete')
-          } catch (e) {
-            this.$parent.$parent.loading = false
-            this.$parent.$parent.errorMsg = e
-            this.$parent.$parent.$modal.show('error')
-            console.error(e)
-          }
         }
       },
       async delete_workout (id, ready) {

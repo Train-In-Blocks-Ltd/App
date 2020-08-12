@@ -138,6 +138,9 @@
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
+          <a href="javascript:void(0)" v-show="showDeleteBlock" @click="delete_block()">Delete Block</a>
+        </transition>
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
         </transition>
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
@@ -202,6 +205,7 @@
         blocks: false,
         no_workouts: false,
         loading_workouts: true,
+        showDeleteBlock: false,
 
         // CLIENT STATUS DATA //
 
@@ -597,6 +601,33 @@
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
           console.error(e)
+        }
+      },
+      async delete_block () {
+        if (confirm('Are you sure you want to delete this block?')) {
+          var programme
+          var id
+          for (programme of this.$parent.client_details.programmes) {
+            //eslint-disable-next-line
+            if (programme.id == this.$route.params.id) {
+              id = programme.id
+            }
+          }
+          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+          try {
+            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+
+            await this.$parent.clients()
+            this.$parent.clients_to_vue()
+
+            this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
+            this.$ga.event('Block', 'delete')
+          } catch (e) {
+            this.$parent.loading = false
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
+            console.error(e)
+          }
         }
       }
     }
