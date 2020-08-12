@@ -56,6 +56,10 @@
   .section-title {
     margin: 0 0 2rem 0
   }
+  .multi-select {
+    display: grid;
+    grid-gap: .4rem
+  }
   .text--selected {
     font-size: .8rem
   }
@@ -213,7 +217,8 @@
     margin: 0
   }
   .newWorkout {
-    border: 2px solid #00800060
+    background-color: #F6F6F6;
+    padding: 1rem
   }
   .incomplete {
     color: #B80000
@@ -377,7 +382,7 @@
         </div>
       </modal>
       <modal name="move" height="auto" :adaptive="true">
-        <form @submit.prevent="initMove(movingWorkout), updateWorkoutNotes(movingWorkout), $modal.hide('move')" class="modal--move">
+        <form @submit.prevent="initMove(), $modal.hide('move')" class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
           <button class="button" type="submit">Move</button>
@@ -398,11 +403,14 @@
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
           <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-            <div v-if="selectedSessions.length !== 0">
+            <div class="multi-select" v-if="selectedSessions.length !== 0">
               <p class="text--selected">
                 <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
               </p>
+              <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
+              <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
               <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
+              <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
             </div>
           </transition>
         </div> <!-- floating_nav -->
@@ -454,7 +462,7 @@
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @blur="update_programme()" @change="weekConfirm(programme.duration)"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @blur="update_programme()" @change="weekConfirm(programme.duration), maxWeek = programme.duration"/>
                   </div>
                 </div>
                 <div class="block_table--container">
@@ -473,7 +481,6 @@
                   <h3>Sessions</h3>
                   <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
                   <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
-                  <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
                 </div>
                 <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading sessions...</p>
@@ -494,7 +501,7 @@
                           <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                           <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                         </div>
-                        <input name="select-checkbox" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)">
+                        <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)">
                       </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :class="{expandesd: workout.id === isSessionNotesExpanded}" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
@@ -507,7 +514,7 @@
                           <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
                           <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                           <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
-                          <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
+                          <button id="button-move" class="button" v-show="!isEditingWorkout" @click="selectedSessions.length = 0, selectedSessions.push(workout.id), $modal.show('move')">Move</button>
                           <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="soloDelete(workout.id)">Delete</button>
                           <button id="button-feedback-open" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
                           <button id="button-feedback-close" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
@@ -689,17 +696,17 @@
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
-      showCopy (maxWeek) {
-        this.maxWeek = maxWeek
-        this.$modal.show('copy')
-      },
       copyAcross () {
         var copyWorkouts = []
         let weekCount = 2
-        this.str.forEach((workout) => {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
           // eslint-disable-next-line
-          if (workout.week_id == this.currentWeek) {
-            copyWorkouts.push({ name: workout.name, date: workout.date, notes: workout.notes })
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              if (this.selectedSessions.includes(session.id)) {
+                copyWorkouts.push({ name: session.name, date: session.date, notes: session.notes })
+              }
+            })
           }
         })
         for (; weekCount <= this.copyTarget; weekCount++) {
@@ -719,22 +726,22 @@
         this.$parent.$parent.loading = false
         this.$modal.hide('copy')
       },
-      showMove (id, maxWeek) {
-        this.movingWorkout = id
-        this.maxWeek = maxWeek
-        this.$modal.show('move')
-      },
-      initMove (id) {
+      initMove () {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
           // eslint-disable-next-line
           if (block.id == this.$route.params.id) {
             block.workouts.forEach((workout) => {
-              if (workout.id === id) {
+              if (this.selectedSessions.includes(workout.id)) {
                 workout.week_id = this.moveTarget
+                this.updateWorkoutNotes(workout.id)
               }
             })
           }
         })
+        if (this.selectedSessions.length === 1) {
+          this.selectedSessions.length = 0
+        }
+        this.currentWeek = parseInt(this.moveTarget)
       },
 
       // WORKOUT METHODS //-------------------------------------------------------------------------------
@@ -745,12 +752,27 @@
       },
       bulkDelete () {
         if (this.selectedSessions.length !== 0) {
-          var ready = confirm('Are you sure you want to delete this workout?')
+          var ready = confirm('Are you sure you want to delete all the selected workout?')
           this.selectedSessions.forEach((sessionId) => {
             this.delete_workout(sessionId, ready)
           })
           this.selectedSessions.length = 0
         }
+      },
+      deselectAll () {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              var selEl = document.getElementById('sc-' + session.id)
+              if (selEl.checked === true) {
+                selEl.checked = false
+                var idx = this.selectedSessions.indexOf(session.id)
+                this.selectedSessions.splice(idx, 1)
+              }
+            })
+          }
+        })
       },
       changeSelectCheckbox (id) {
         if (this.selectedSessions.includes(id) === false) {
@@ -1052,6 +1074,7 @@
           if (programme.id == this.$route.params.id) {
             this.weekColor.backgroundColor = programme.block_color.replace('[', '').replace(']', '').split(',')
             this.str = programme.workouts
+            this.maxWeek = programme.duration
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
                 this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
@@ -1401,6 +1424,7 @@
             block_color: ''
           }
           this.sortWorkouts()
+          this.scan()
           this.$ga.event('Workout', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
