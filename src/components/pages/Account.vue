@@ -235,7 +235,8 @@
           )
         } catch (e) {
           this.$parent.loading = false
-          this.error = 'An error occurred. Please try again...'
+          this.error = 'Please make sure that your password is correct'
+          alert('Please make sure that your password is correct')
           console.error(e)
         }
       },
