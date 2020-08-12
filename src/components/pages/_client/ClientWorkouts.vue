@@ -176,8 +176,8 @@
   }
   .select-checkbox {
     vertical-align: middle;
-    height: 1rem;
-    width: 1rem;
+    height: 1.4rem;
+    width: 1.4rem;
     cursor: pointer
   }
   .container--workouts {
