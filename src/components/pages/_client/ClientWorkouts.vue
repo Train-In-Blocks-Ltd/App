@@ -522,7 +522,9 @@
             <div class="graph">
               <div>
                 <h3 class="section-title">Statistics</h3>
-              </div>
+                <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
+                <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
+              </div><br>
               <div class="container--content">
                 <div class="data-options">
                   <div class="data-select">
@@ -938,6 +940,7 @@
         var dataForType = this.selectedDataType
         var dataForSum = 0
         var overviewStore = []
+        this.protocolError.length = 0
         this.optionsForDataType.length = 0
         if (dataForName === 'Block Overview') {
           this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
@@ -952,18 +955,18 @@
             var protocol = exerciseDataPacket[2].replace(/\s/g, '')
             if (regex.test(exerciseDataPacket[1]) === true) {
               this.xLabel.push(exerciseDataPacket[0])
-              if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2) {
+              if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
                 this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
                 this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
               }
               if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
-                this.yData.push(this.setsReps(protocol, dataForType))
+                this.yData.push(this.setsReps(exerciseDataPacket, protocol, dataForType))
               }
               if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
-                this.yData.push(this.load(protocol))
+                this.yData.push(this.load(exerciseDataPacket, protocol))
               }
               if (dataForType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
-                var agg = this.setsReps(protocol, 'Reps') * this.load(protocol)
+                var agg = this.setsReps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
                 this.yData.push(agg)
               }
               if (exerciseDataPacket[2].includes('x') !== true) {
@@ -973,13 +976,13 @@
             }
             if (dataForName === 'Block Overview' && exerciseDataPacket[2].includes('at') === true) {
               if (dataForType === 'Sets' || dataForType === 'Reps') {
-                dataForSum = this.setsReps(protocol, dataForType)
+                dataForSum = this.setsReps(exerciseDataPacket, protocol, dataForType)
               }
               if (dataForType === 'Load') {
-                dataForSum = this.load(protocol)
+                dataForSum = this.load(exerciseDataPacket, protocol)
               }
               if (dataForType === 'Volume') {
-                dataForSum = this.setsReps(protocol, 'Reps') * this.load(protocol)
+                dataForSum = this.setsReps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
               }
               overviewStore.push(dataForSum)
             }
@@ -1183,7 +1186,7 @@
       // REGEX METHODS //-------------------------------------------------------------------------------
 
       // Extracts anything for Sets and Reps
-      setsReps (protocol, dataForType) {
+      setsReps (exerciseDataPacket, protocol, dataForType) {
         var setStore = null
         var extractedSetsReps = null
         var tempSetsRepsStore = []
@@ -1198,13 +1201,13 @@
             }
             if (dataForType === 'Sets' && groupIndex === 1) {
               if (match === '') {
-                return this.protocolError.push(protocol)
+                this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
               }
               extractedSetsReps = parseInt(match)
             }
             if (dataForType === 'Reps' && groupIndex === 2) {
               if (match === '') {
-                return this.protocolError.push(protocol)
+                this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
               }
               if (match.includes('/') === true) {
                 let n
@@ -1227,17 +1230,20 @@
       },
 
       // Extracts anything for Loads
-      load (protocol) {
+      load (exerciseDataPacket, protocol) {
         var tempLoadStore = []
         let sum = 0
         let isMultiple = false
-        const sets = this.setsReps(protocol, 'Sets')
+        const sets = this.setsReps(exerciseDataPacket, protocol, 'Sets')
         let m
         while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
           if (m.index === this.regexLoadCapture.lastIndex) {
             this.regexLoadCapture.lastIndex++
           }
           m.forEach((loadMatch, groupIndex) => {
+            if (groupIndex === 2 && /\d/g.test(loadMatch) === false) {
+              this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
+            }
             if (groupIndex === 2) {
               let n
               while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
@@ -1245,9 +1251,6 @@
                   this.regexNumberBreakdown.lastIndex++
                 }
                 n.forEach((loadMatchExact) => {
-                  if (/\d/.test(loadMatchExact) === false) {
-                    return this.protocolError.push(protocol)
-                  }
                   if (loadMatch.includes('/') === true) {
                     tempLoadStore.push(parseFloat(loadMatchExact))
                     isMultiple = true

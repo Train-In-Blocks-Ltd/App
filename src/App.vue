@@ -151,6 +151,10 @@
   .allow-text-overflow {
     text-overflow: ellipsis
   }
+  .text--error {
+    font-size: .8rem;
+    color: #B80000
+  }
 
   /* GLOBAL: BUTTONS */
   button {
