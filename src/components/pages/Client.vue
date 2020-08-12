@@ -57,12 +57,12 @@
     top: 4rem;
     text-align: right
   }
-  .floating_nav a {
+  .floating_nav a, .selected-options {
     color: #282828;
     text-decoration: none
   }
-  .floating_nav a:hover {
-    opacity: .6rem
+  .floating_nav a:hover, .selected-options:hover {
+    opacity: .6
   }
   .icon--options {
     cursor: pointer;

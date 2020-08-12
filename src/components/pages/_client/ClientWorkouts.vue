@@ -56,6 +56,9 @@
   .section-title {
     margin: 0 0 2rem 0
   }
+  .text--selected {
+    font-size: .8rem
+  }
 
   /* Block Grid */
   .block_grid {
@@ -100,7 +103,8 @@
   /* Week */
   .week-color-picker {
     margin: auto 0 auto 1rem;
-    height: 28px
+    height: 28px;
+    border: #282828
   }
   .container--week {
     height: 100px;
@@ -163,7 +167,15 @@
       'bar'
   }
   .wrapper--workout__header {
-    grid-area: header
+    grid-area: header;
+    display: flex;
+    justify-content: space-between
+  }
+  .select-checkbox {
+    vertical-align: middle;
+    height: 1rem;
+    width: 1rem;
+    cursor: pointer
   }
   .container--workouts {
     display: grid;
@@ -385,6 +397,14 @@
           <a @click="delete_block()" aria-label="Delete this block">
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
+          <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+            <div v-if="selectedSessions.length !== 0">
+              <p class="text--selected">
+                <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
+              </p>
+              <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
+            </div>
+          </transition>
         </div> <!-- floating_nav -->
       </transition>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
@@ -439,7 +459,7 @@
                 </div>
                 <div class="block_table--container">
                   <div class="block_table--container--block_duration_container">
-                    <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
+                    <div @click="changeWeek(item), sortWorkouts()" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
                         <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
                         <div class="week__number">{{item}}</div>
@@ -465,13 +485,16 @@
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
-                        <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
-                        <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
-                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
-                        <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" pattern="[^\/]" v-model="workout.name" /><br>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
-                        <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
+                        <div>
+                          <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
+                          <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
+                          <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
+                          <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
+                          <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" pattern="[^\/]" v-model="workout.name" /><br>
+                          <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
+                          <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
+                        </div>
+                        <input name="select-checkbox" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)">
                       </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :class="{expandesd: workout.id === isSessionNotesExpanded}" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
@@ -485,7 +508,7 @@
                           <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                           <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
                           <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
-                          <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
+                          <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="soloDelete(workout.id)">Delete</button>
                           <button id="button-feedback-open" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
                           <button id="button-feedback-close" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
@@ -602,6 +625,7 @@
           name: 'Untitled',
           date: ''
         },
+        selectedSessions: [],
 
         // REGEX DATA //
 
@@ -714,7 +738,28 @@
       },
 
       // WORKOUT METHODS //-------------------------------------------------------------------------------
-
+      soloDelete (id) {
+        if (confirm('Are you sure you want to delete this workout?')) {
+          this.delete_workout(id, true)
+        }
+      },
+      bulkDelete () {
+        if (this.selectedSessions.length !== 0) {
+          var ready = confirm('Are you sure you want to delete this workout?')
+          this.selectedSessions.forEach((sessionId) => {
+            this.delete_workout(sessionId, ready)
+          })
+          this.selectedSessions.length = 0
+        }
+      },
+      changeSelectCheckbox (id) {
+        if (this.selectedSessions.includes(id) === false) {
+          this.selectedSessions.push(id)
+        } else {
+          var idx = this.selectedSessions.indexOf(id)
+          this.selectedSessions.splice(idx, 1)
+        }
+      },
       cancelWorkout () {
         this.editWorkout = null
         this.isEditingWorkout = false
@@ -1391,8 +1436,8 @@
           }
         }
       },
-      async delete_workout (id) {
-        if (confirm('Are you sure you want to delete this workout?')) {
+      async delete_workout (id, ready) {
+        if (ready) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             this.$parent.$parent.loading = true
