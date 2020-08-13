@@ -155,6 +155,7 @@
       async save () {
         this.$parent.colors.hex = document.querySelector('input[name="color"]').value
         this.$parent.loading = true
+        this.$parent.dontLeave = true
         try {
           // Trouble with access control header so use cors-anywhere
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
@@ -176,8 +177,10 @@
             }
           )
           this.$parent.loading = false
+          this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
+          this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
           console.error(e)
@@ -195,6 +198,8 @@
       },
       async changePass () {
         try {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}/credentials/change_password`,
             {
               'oldPassword': this.oldPassword,
@@ -244,8 +249,11 @@
               }
             }
           )
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
+          this.$parent.dontLeave = false
           this.error = 'An error occurred. Please try again...'
           console.error(e)
         }

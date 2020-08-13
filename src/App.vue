@@ -746,6 +746,7 @@ export default {
       client_details: null,
       loading_clients: true,
       loading: false,
+      dontLeave: false,
       no_clients: false,
       errorMsg: null,
 
@@ -791,7 +792,7 @@ export default {
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
     confirmLeave (e) {
-      if (this.loading === true) {
+      if (this.dontLeave === true) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
         e.returnValue = msg
         return msg
@@ -903,6 +904,8 @@ export default {
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
@@ -922,8 +925,11 @@ export default {
           await this.clients()
           this.clients_to_vue()
           this.$ga.event('Client', 'delete')
+          this.loading = false
+          this.dontLeave = false
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)
@@ -967,7 +973,8 @@ export default {
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
         let email
-        this.$router.push('/')
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.posts.length; i++) {
           //eslint-disable-next-line
           if (this.posts[i].client_id == id) {
@@ -1046,8 +1053,12 @@ export default {
               }
             )
           }
+          this.loading = false
+          this.dontLeave = false
+          this.$router.push('/')
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)
@@ -1056,6 +1067,8 @@ export default {
     },
     async client_unarchive (id, index) {
       if (confirm('Are you sure you want to unarchive this client?')) {
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
@@ -1088,8 +1101,11 @@ export default {
           await this.clients()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
+          this.loading = false
+          this.dontLeave = false
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)

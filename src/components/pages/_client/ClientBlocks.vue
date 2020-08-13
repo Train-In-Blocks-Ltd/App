@@ -243,6 +243,7 @@
       async save () {
         try {
           this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
           // eslint-disable-next-line
           const response_save_block = await axios.put('https://api.traininblocks.com/programmes',
             qs.stringify({
@@ -273,6 +274,7 @@
           await this.$parent.force_get_client_details()
 
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
 
           this.close()
 
@@ -284,6 +286,7 @@
           this.$ga.event('Block', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)

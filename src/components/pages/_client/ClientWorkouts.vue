@@ -1220,6 +1220,7 @@
       async update_programme () {
         // Set loading status to true
         this.$parent.$parent.loading = true
+        this.$parent.$parent.dontLeave = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         let x
@@ -1246,8 +1247,6 @@
               'workouts': programme.workouts
             }
           )
-          this.$parent.$parent.loading = false
-
           // Set vue client_details data to new data
           let x
           // Loop through client_details programmes
@@ -1272,8 +1271,11 @@
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
           this.$ga.event('Block', 'update')
           this.scan()
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)
@@ -1281,6 +1283,7 @@
       },
       async update_workout (id) {
         this.$parent.$parent.loading = true
+        this.$parent.$parent.dontLeave = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
@@ -1314,18 +1317,23 @@
               'checked': workoutsChecked
             }
           )
+          await this.$parent.force_get_workouts()
+          await this.update_programme()
           this.$ga.event('Workout', 'update')
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
-        await this.$parent.force_get_workouts()
-        this.update_programme()
       },
       async add_workout () {
         try {
+          this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
           // eslint-disable-next-line
           const response_save_workouts = await axios.put('https://api.traininblocks.com/workouts',
             qs.stringify({
@@ -1354,8 +1362,11 @@
           }
           this.sortWorkouts()
           this.$ga.event('Workout', 'new')
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)
@@ -1363,6 +1374,8 @@
       },
       async delete_block () {
         if (confirm('Are you sure you want to delete this block?')) {
+          this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
           var programme
           var id
           for (programme of this.$parent.$parent.client_details.programmes) {
@@ -1379,9 +1392,13 @@
             this.$parent.$parent.clients_to_vue()
 
             this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
+
             this.$ga.event('Block', 'delete')
+            this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
           } catch (e) {
             this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
             this.$parent.$parent.errorMsg = e
             this.$parent.$parent.$modal.show('error')
             console.error(e)
@@ -1393,14 +1410,18 @@
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             this.$parent.$parent.loading = true
+            this.$parent.$parent.dontLeave = true
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             await this.$parent.force_get_workouts()
-            this.$parent.$parent.loading = false
+            await this.update_programme()
+
             this.$ga.event('Workout', 'delete')
-            this.update_programme()
+            this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
           } catch (e) {
             this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
             this.$parent.$parent.errorMsg = e
             this.$parent.$parent.$modal.show('error')
             console.error(e)

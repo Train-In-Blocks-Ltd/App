@@ -218,6 +218,8 @@ export default {
   },
   methods: {
     async reset () {
+      this.$parent.loading = true
+      this.$parent.dontLeave = true
       try {
         const oktaOne = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.email}"&limit=1`,
           {
@@ -275,8 +277,11 @@ export default {
         this.open = false
         this.email = null
         this.success = 'An email has been sent.'
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
       } catch (e) {
         this.$parent.loading = false
+        this.$parent.dontLeave = false
         this.error = 'An error occurred. Please try again...'
         console.error(e)
       }
