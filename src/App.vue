@@ -113,7 +113,7 @@
     display: inline-block;
     transition: color .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+  .button:hover, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
     color: white;
     background-color: #282828;
     text-decoration: none
@@ -298,6 +298,18 @@
   }
 
   /* Navigation */
+  .skip-to-content-link {
+    height: 30px;
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-1000%);
+    transition: transform .3s;
+    z-index: 99999999999
+  }
+  .skip-to-content-link:focus {
+    transform: translateY(0%)
+  }
   .sidebar {
     border-right: 1px solid #E1E1E1;
     z-index: 10;
@@ -643,6 +655,9 @@
       </div>
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
+    <a class="skip-to-content-link" href="#main">
+      Skip to content
+    </a>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
@@ -708,7 +723,7 @@
         </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}">
+    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}" id="main">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
