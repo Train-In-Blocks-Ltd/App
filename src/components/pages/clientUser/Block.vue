@@ -39,7 +39,7 @@
             <modal :name="'feedback-client-block-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
               <div class="modal--feedback-client">
                 <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
-                <button @click="$modal.hide('feedback-client-block-' + workout.id), $parent.update_workout(programme.id, workout.id)" class="button">Close</button>
+                <button @click="$modal.hide('feedback-client-block-' + workout.id), $parent.update_workout(programme.id, workout.id)">Close</button>
               </div>
             </modal>
             <p class="wrapper--workout__header" :id="workout.name">
@@ -49,14 +49,14 @@
             </p>
             <div v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
             <div class="bottom-bar">
-              <button v-if="workout.checked === 1" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button">Completed</button>
-              <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button">Incomplete</button>
+              <button v-if="workout.checked === 1" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done">Completed</button>
+              <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do">Incomplete</button>
               <button @click="$modal.show('feedback-client-block-' + workout.id)" class="button no-margin">Give Feedback</button>
             </div>
           </div>
         </div>
-        <button class="button" v-show="currentWorkoutIndexBlock != 0" @click="currentWorkoutIndexBlock--">Back</button>
-        <button class="button" v-show="currentWorkoutIndexBlock != maxWorkoutIndexBlock" @click="currentWorkoutIndexBlock++">Next</button>
+        <button v-show="currentWorkoutIndexBlock != 0" @click="currentWorkoutIndexBlock--">Back</button>
+        <button v-show="currentWorkoutIndexBlock != maxWorkoutIndexBlock" @click="currentWorkoutIndexBlock++">Next</button>
       </div>
     </div>
   </div>

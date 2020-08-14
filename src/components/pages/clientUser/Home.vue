@@ -131,7 +131,7 @@
             <modal :name="'feedback-client-home-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
               <div class="modal--feedback-client">
                 <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
-                <button @click="$modal.hide('feedback-client-home-' + workout.id), $parent.update_workout(programme.id, workout.id)" class="button">Close</button>
+                <button @click="$modal.hide('feedback-client-home-' + workout.id), $parent.update_workout(programme.id, workout.id)">Close</button>
               </div>
             </modal>
             <p class="wrapper--workout__header" :id="workout.name">
@@ -149,8 +149,8 @@
         </div>
       </div>
       <div v-if="viewWorkoutsStore.length !== 0">
-        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
-        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
+        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--">Back</button>
+        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++">Next</button>
       </div>
       <div class="container--title">
         <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>

@@ -274,7 +274,7 @@
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
   }
-  .show-workout.expanded, .show-block-notes.expanded, .show-client-notes.expanded, .quill.expanded .ql-editor {
+  .show-workout.expanded, .quill.expanded .ql-editor {
     max-height: 2000px
   }
 
@@ -634,7 +634,7 @@
         <p><b>Something went wrong...</b></p><br>
         <p>{{errorMsg}}</p><br>
         <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
-          <button class="button" type="submit" formtarget="_blank">Let us know</button>
+          <button type="submit" formtarget="_blank">Let us know</button>
         </form>
       </div>
     </modal>

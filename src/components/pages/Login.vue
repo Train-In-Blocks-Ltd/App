@@ -141,15 +141,17 @@
     <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <div class="button--container">
-      <a class="button signup" href="https://traininblocks.com/pricing">Sign Up</a>
-      <div><button class="button" v-if="!open" @click="open = !open">Forgot password?</button></div>
+      <form action="https://traininblocks.com/pricing">
+        <button class="signup" type="submit">Sign Up</button>
+      </form>
+      <div><button v-if="!open" @click="open = !open">Forgot password?</button></div>
     </div>
     <form v-if="open" v-on:submit.prevent="reset" class="recovery">
       <label>
-        <p>Email:</p>
+        <p><b>Email:</b></p>
         <input type="email" v-model="email" class="input--forms" />
       </label>
-      <div><input type="submit" class="button" value="Send recovery email" /></div>
+      <button type="submit">Send recovery email</button>
     </form>
     <p v-if="success">{{success}}</p>
     <p v-if="error" class="error">{{error}}</p>

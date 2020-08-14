@@ -96,16 +96,15 @@
         <div class="client-notes__header">
           <p><b>Client Information</b></p>
         </div>
-        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :class="{expanded: isClientNotesExpanded}" :config="$parent.$parent.config"/>
-        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn" :class="{expanded: isClientNotesExpanded}"/>
+        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn no-max-height"/>
         <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
           <div>
             <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
             <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
-            <button v-show="editClientNotes" @click="cancelClientNotes()" class="button button--cancel">Cancel</button>
+            <button v-show="editClientNotes" @click="cancelClientNotes()" class="button cancel">Cancel</button>
           </div>
-          <inline-svg @click="isClientNotesExpanded = !isClientNotesExpanded" class="icon--expand" :class="{expandRotate: isClientNotesExpanded}" :src="require('../../../assets/svg/expand.svg')" title="Expand"/>
         </div>
       </div>
       <div>
@@ -127,7 +126,7 @@
               </router-link>
           </div>
         </div>
-        <button v-if="!creating" class="button" @click="creation()">New Block</button>
+        <button v-if="!creating" @click="creation()">New Block</button>
         <p class="new-msg" v-if="!creating">{{response}}</p>
         <div v-if="creating" class="add_block_container">
           <h3>New Block</h3>
@@ -163,8 +162,7 @@
           duration: '',
           start: ''
         },
-        editClientNotes: false,
-        isClientNotesExpanded: false
+        editClientNotes: false
       }
     },
     methods: {
