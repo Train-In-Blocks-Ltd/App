@@ -605,6 +605,8 @@
       },
       async delete_block () {
         if (confirm('Are you sure you want to delete this block?')) {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
           var programme
           var id
           for (programme of this.$parent.client_details.programmes) {
@@ -621,9 +623,13 @@
             this.$parent.clients_to_vue()
 
             this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
+
             this.$ga.event('Block', 'delete')
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
           } catch (e) {
             this.$parent.loading = false
+            this.$parent.dontLeave = false
             this.$parent.errorMsg = e
             this.$parent.$modal.show('error')
             console.error(e)
