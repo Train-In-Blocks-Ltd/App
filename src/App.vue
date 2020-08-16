@@ -113,7 +113,7 @@
     display: inline-block;
     transition: color .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+  .button:hover, .button:focus, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
     color: white;
     background-color: #282828;
     text-decoration: none
@@ -298,6 +298,18 @@
   }
 
   /* Navigation */
+  .skip-to-content-link {
+    height: 30px;
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-1000%);
+    transition: transform .3s;
+    z-index: 99999999999
+  }
+  .skip-to-content-link:focus {
+    transform: translateY(0%)
+  }
   .sidebar {
     border-right: 1px solid #E1E1E1;
     z-index: 10;
@@ -431,6 +443,7 @@
     stroke: #282828
   }
   .ql-editor {
+    grid-area: body;
     max-height: 250px;
     color: #282828;
     overflow-y: auto
@@ -642,6 +655,9 @@
       </div>
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
+    <a class="skip-to-content-link" href="#main">
+      Skip to content
+    </a>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
@@ -707,7 +723,7 @@
         </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}">
+    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}" id="main">
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
@@ -745,6 +761,7 @@ export default {
       client_details: null,
       loading_clients: true,
       loading: false,
+      dontLeave: false,
       no_clients: false,
       errorMsg: null,
 
@@ -777,6 +794,7 @@ export default {
   },
   created () {
     this.isAuthenticated()
+    window.addEventListener('beforeunload', this.confirmLeave)
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -788,6 +806,13 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
+    confirmLeave (e) {
+      if (this.dontLeave === true) {
+        const msg = 'Your changes might not be saved, are you sure you want to leave?'
+        e.returnValue = msg
+        return msg
+      }
+    },
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
     },
@@ -894,6 +919,8 @@ export default {
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
@@ -913,8 +940,11 @@ export default {
           await this.clients()
           this.clients_to_vue()
           this.$ga.event('Client', 'delete')
+          this.loading = false
+          this.dontLeave = false
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)
@@ -958,7 +988,8 @@ export default {
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
         let email
-        this.$router.push('/')
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.posts.length; i++) {
           //eslint-disable-next-line
           if (this.posts[i].client_id == id) {
@@ -1037,8 +1068,12 @@ export default {
               }
             )
           }
+          this.loading = false
+          this.dontLeave = false
+          this.$router.push('/')
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)
@@ -1047,6 +1082,8 @@ export default {
     },
     async client_unarchive (id, index) {
       if (confirm('Are you sure you want to unarchive this client?')) {
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
@@ -1079,8 +1116,11 @@ export default {
           await this.clients()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
+          this.loading = false
+          this.dontLeave = false
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)

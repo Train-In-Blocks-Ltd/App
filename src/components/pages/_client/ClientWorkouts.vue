@@ -23,6 +23,7 @@
     margin-left: 1rem
   }
   #blocks .block_info input.block_info--name {
+    margin-left: 0;
     max-width: 100%;
     font-weight: 700;
     padding: .6rem 0;
@@ -49,19 +50,8 @@
   .floating_nav__block a:hover {
     opacity: .6
   }
-  .message {
-    margin: 1.2rem 0;
-    font-size: .8rem
-  }
-  .message--failed {
-    display: grid;
-    grid-gap: .4rem;
-    margin: 2rem 0;
-    font-size: .8rem
-  }
-  .button--failed {
-    margin: 0;
-    padding: .2rem
+  .floating_nav__icon {
+    cursor: pointer
   }
   .section-title {
     margin: 0 0 2rem 0
@@ -181,6 +171,16 @@
   .workout--header {
     display: flex
   }
+  .wrapper--workout {
+    display: grid;
+    grid-template-areas:
+      'header'
+      'body'
+      'bar'
+  }
+  .wrapper--workout__header {
+    grid-area: header
+  }
   .container--workouts {
     display: grid;
     grid-gap: 2rem
@@ -202,6 +202,16 @@
     width: fit-content;
     font-size: .8rem
   }
+  .show-workout {
+    grid-area: body
+  }
+  .show-feedback {
+    padding: 12px 15px;
+    grid-area: feedback
+  }
+  .bottom-bar {
+    grid-area: bar
+  }
   .bottom-bar .button {
     margin: 0
   }
@@ -220,6 +230,12 @@
   .editingChecked {
     cursor: pointer;
     text-decoration: underline
+  }
+  .showingFeedback {
+    grid-template-areas:
+      'header header'
+      'body feedback'
+      'bar bar'
   }
 
   /* Graph */
@@ -281,7 +297,7 @@
   }
 
   /* All Modal */
-  .modal--info, .modal--feedback-trainer, .modal--move, .modal--copy {
+  .modal--info, .modal--move, .modal--copy {
     padding: 2rem
   }
 
@@ -302,6 +318,15 @@
     margin: .4rem 0
   }
 
+  @media (max-width: 992px) {
+    .showingFeedback {
+      grid-template-areas:
+        'header'
+        'body'
+        'feedback'
+        'bar'
+    }
+  }
   @media (max-width: 768px) {
     .floating_nav__block a {
       grid-template-columns: 1fr
@@ -366,12 +391,6 @@
 
 <template>
     <div id="blocks">
-      <modal name="feedback-trainer" height="auto" :adaptive="true" :clickToClose="false">
-        <div class="modal--feedback-trainer">
-          <div v-html="feedbackStr" /><br>
-          <button class="button no-margin" @click="hideFeedback()">Close</button>
-        </div>
-      </modal>
       <modal name="info" height="auto" :adaptive="true">
         <div class="modal--info">
           <p><b>The format for tracking data</b></p><br>
@@ -398,7 +417,7 @@
       </modal>
       <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
         <div v-show="!$parent.showOptions" class="floating_nav__block">
-          <a @click="delete_block()" aria-label="Archive this client">
+          <a @click="delete_block()" aria-label="Delete this block">
             <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
           </a>
         </div> <!-- floating_nav -->
@@ -434,6 +453,7 @@
                 <div class="bottom-bar">
                   <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
                   <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
+                  <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="button button--cancel">Cancel</button>
                 </div>
               </div>
               <div class="wrapper--calendar">
@@ -471,10 +491,10 @@
                 <p v-if="$parent.loading_workouts">Loading sessions...</p>
                 <div>
                   <!-- New Workout -->
-                  <button id="button--new-workout" class="button" @click="add_workout()">New session</button>
+                  <button id="button--new-workout" class="button" @click="createWorkout()">New session</button>
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                    <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
                         <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
@@ -487,12 +507,18 @@
                       </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
                       <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
+                      <div v-if="workout.id === showFeedback" class="show-feedback animate__animated animate__fadeIn">
+                        <p><b>Feedback</b></p><br>
+                        <div v-html="workout.feedback" />
+                      </div>
                       <div class="bottom-bar">
                         <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
                         <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
+                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
                         <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
                         <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
-                        <button id="button-feedback" class="button" v-if="workout.feedback !== '' && workout.feedback !== null" @click="showFeedback(workout.feedback)">Feedback</button>
+                        <button id="button-feedback-open" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
+                        <button id="button-feedback-close" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                       </div>
                     </div>
                   </div>
@@ -582,7 +608,7 @@
 
         // BLOCK DATA //
 
-        feedbackStr: '',
+        showFeedback: '',
         weekColor: {
           backgroundColor: ''
         },
@@ -662,14 +688,6 @@
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
-      showFeedback (str) {
-        this.feedbackStr = str
-        this.$modal.show('feedback-trainer')
-      },
-      hideFeedback () {
-        this.feedbackStr = ''
-        this.$modal.hide('feedback-trainer')
-      },
       showCopy (maxWeek) {
         this.maxWeek = maxWeek
         this.$modal.show('copy')
@@ -697,6 +715,7 @@
         this.new_workout.name = 'Untitled'
         this.today()
         this.update_programme()
+        this.$parent.$parent.loading = false
         this.$modal.hide('copy')
       },
       showMove (id, maxWeek) {
@@ -718,7 +737,16 @@
       },
 
       // WORKOUT METHODS //-------------------------------------------------------------------------------
-
+      cancelWorkout () {
+        this.editWorkout = null
+        this.isEditingWorkout = false
+        window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
+      },
+      async createWorkout () {
+        this.$parent.$parent.loading = true
+        await this.add_workout()
+        this.$parent.$parent.loading = false
+      },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
         this.editWorkout = id
@@ -764,6 +792,10 @@
 
       // BLOCK METHODS //-------------------------------------------------------------------------------
 
+      cancelBlockNotes () {
+        this.editBlockNotes = false
+        window.removeEventListener('keydown', this.quickSaveBlockNotes)
+      },
       updateBlockColor () {
         this.$parent.$parent.client_details.programmes.forEach((programme) => {
           // eslint-disable-next-line
@@ -1188,6 +1220,7 @@
       async update_programme () {
         // Set loading status to true
         this.$parent.$parent.loading = true
+        this.$parent.$parent.dontLeave = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         let x
@@ -1214,8 +1247,6 @@
               'workouts': programme.workouts
             }
           )
-          this.$parent.$parent.loading = false
-
           // Set vue client_details data to new data
           let x
           // Loop through client_details programmes
@@ -1240,8 +1271,11 @@
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
           this.$ga.event('Block', 'update')
           this.scan()
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)
@@ -1249,6 +1283,7 @@
       },
       async update_workout (id) {
         this.$parent.$parent.loading = true
+        this.$parent.$parent.dontLeave = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
@@ -1282,19 +1317,23 @@
               'checked': workoutsChecked
             }
           )
+          await this.$parent.force_get_workouts()
+          await this.update_programme()
           this.$ga.event('Workout', 'update')
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
-        await this.$parent.force_get_workouts()
-        this.update_programme()
       },
       async add_workout () {
         try {
           this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
           // eslint-disable-next-line
           const response_save_workouts = await axios.put('https://api.traininblocks.com/workouts',
             qs.stringify({
@@ -1314,7 +1353,6 @@
           this.response = response_save_workouts.data
           // Get the workouts from the API because we've just created a new one
           await this.$parent.force_get_workouts()
-          this.$parent.$parent.loading = false
           this.new_workout = {
             name: 'Untitled',
             date: this.todayDate,
@@ -1322,10 +1360,13 @@
             week_id: '',
             block_color: ''
           }
-          this.update_programme()
+          this.sortWorkouts()
           this.$ga.event('Workout', 'new')
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
           console.error(e)
@@ -1333,6 +1374,8 @@
       },
       async delete_block () {
         if (confirm('Are you sure you want to delete this block?')) {
+          this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
           var programme
           var id
           for (programme of this.$parent.$parent.client_details.programmes) {
@@ -1349,9 +1392,13 @@
             this.$parent.$parent.clients_to_vue()
 
             this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
+
             this.$ga.event('Block', 'delete')
+            this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
           } catch (e) {
             this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
             this.$parent.$parent.errorMsg = e
             this.$parent.$parent.$modal.show('error')
             console.error(e)
@@ -1363,14 +1410,18 @@
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             this.$parent.$parent.loading = true
+            this.$parent.$parent.dontLeave = true
             await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
 
             await this.$parent.force_get_workouts()
-            this.$parent.$parent.loading = false
+            await this.update_programme()
+
             this.$ga.event('Workout', 'delete')
-            this.update_programme()
+            this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
           } catch (e) {
             this.$parent.$parent.loading = false
+            this.$parent.$parent.dontLeave = false
             this.$parent.$parent.errorMsg = e
             this.$parent.$parent.$modal.show('error')
             console.error(e)
