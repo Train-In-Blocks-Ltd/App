@@ -699,9 +699,7 @@
           if (block.id == this.$route.params.id) {
             block.workouts.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
-                console.log(session.date)
                 session.date = this.addDays(session.date, parseInt(this.shiftDays))
-                console.log(session.date)
                 this.update_workout(session.id)
               }
             })
