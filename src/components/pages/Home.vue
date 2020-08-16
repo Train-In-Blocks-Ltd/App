@@ -114,6 +114,7 @@
         this.response = ''
         try {
           this.$parent.loading = true
+          this.$parent.dontLeave = true
           // eslint-disable-next-line
           const response_save_clients = await axios.put('https://api.traininblocks.com/clients',
             qs.stringify({
@@ -138,6 +139,7 @@
           this.$parent.clients_to_vue()
 
           this.$parent.loading = false
+          this.$parent.dontLeave = false
 
           this.close()
 
@@ -150,6 +152,7 @@
           this.$ga.event('Client', 'new')
         } catch (e) {
           this.$parent.loading = false
+          this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
           console.error(e)

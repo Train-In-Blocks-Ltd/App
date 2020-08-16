@@ -359,6 +359,18 @@
   }
 
   /* GLOBAL: NAV */
+  .skip-to-content-link {
+    height: 30px;
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-1000%);
+    transition: transform .3s;
+    z-index: 99999999999
+  }
+  .skip-to-content-link:focus {
+    transform: translateY(0%)
+  }
   .sidebar {
     border-right: 1px solid #E1E1E1;
     z-index: 10;
@@ -639,6 +651,9 @@
       </div>
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
+    <a class="skip-to-content-link" href="#main">
+      Skip to content
+    </a>
     <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
       <div class="logo animate animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
@@ -704,7 +719,7 @@
         </transition>
       </div>
     </nav> <!-- .sidebar -->
-    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}">
+    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}" id="main">
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
@@ -742,6 +757,7 @@ export default {
       client_details: null,
       loading_clients: true,
       loading: false,
+      dontLeave: false,
       no_clients: false,
       errorMsg: null,
 
@@ -766,6 +782,7 @@ export default {
   },
   created () {
     this.isAuthenticated()
+    window.addEventListener('beforeunload', this.confirmLeave)
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -777,6 +794,13 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
+    confirmLeave (e) {
+      if (this.dontLeave === true) {
+        const msg = 'Your changes might not be saved, are you sure you want to leave?'
+        e.returnValue = msg
+        return msg
+      }
+    },
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
     },
@@ -873,6 +897,8 @@ export default {
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
@@ -892,8 +918,11 @@ export default {
           await this.clients()
           this.clients_to_vue()
           this.$ga.event('Client', 'delete')
+          this.loading = false
+          this.dontLeave = false
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)
@@ -937,7 +966,8 @@ export default {
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
         let email
-        this.$router.push('/')
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.posts.length; i++) {
           //eslint-disable-next-line
           if (this.posts[i].client_id == id) {
@@ -955,6 +985,13 @@ export default {
           // eslint-disable-next-line
           this.response = response.data
 
+          await this.clients()
+          this.clients_to_vue()
+
+          await this.archive()
+          this.archive_to_vue()
+          this.$ga.event('Client', 'archive')
+
           const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
             {
               headers: {
@@ -964,58 +1001,57 @@ export default {
               }
             }
           )
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
-            {},
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
-            {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': email
-                    }
-                  ],
-                  'subject': 'Account Deactivated'
+          if (result.data.length >= 1) {
+            await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
+              {},
+              {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.AUTH_HEADER
                 }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': deleteEmailText()
+              }
+            )
+            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+              {
+                'personalizations': [
+                  {
+                    'to': [
+                      {
+                        'email': email
+                      }
+                    ],
+                    'subject': 'Account Deactivated'
+                  }
+                ],
+                'from': {
+                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
                 },
-                {
-                  'type': 'text/html',
-                  'value': deleteEmail()
+                'content': [
+                  {
+                    'type': 'text/plain',
+                    'value': deleteEmailText()
+                  },
+                  {
+                    'type': 'text/html',
+                    'value': deleteEmail()
+                  }
+                ]
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.SENDGRID
                 }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
               }
-            }
-          )
-
-          await this.clients()
-          this.clients_to_vue()
-
-          await this.archive()
-          this.archive_to_vue()
-          this.$ga.event('Client', 'archive')
+            )
+          }
+          this.loading = false
+          this.dontLeave = false
+          this.$router.push('/')
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)
@@ -1024,6 +1060,8 @@ export default {
     },
     async client_unarchive (id, index) {
       if (confirm('Are you sure you want to unarchive this client?')) {
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
@@ -1056,8 +1094,11 @@ export default {
           await this.clients()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
+          this.loading = false
+          this.dontLeave = false
         } catch (e) {
           this.loading = false
+          this.dontLeave = false
           this.errorMsg = e
           this.$modal.show('error')
           console.error(e)

@@ -275,6 +275,7 @@
       },
       async createClient () {
         this.$parent.loading = true
+        this.$parent.dontLeave = true
         if (this.clientSuspend) {
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.clientSuspend}/lifecycle/unsuspend`,
             {},
@@ -332,6 +333,7 @@
           alert('An activation email was sent to your client.')
           this.checkClient()
           this.$parent.loading = false
+          this.$parent.dontLeave = false
         } else {
           try {
             const oktaOne = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?activate=false`,
@@ -403,8 +405,10 @@
             alert('An activation email was sent to your client.')
             this.checkClient()
             this.$parent.loading = false
+            this.$parent.dontLeave = false
           } catch (e) {
             this.$parent.loading = false
+            this.$parent.dontLeave = false
             this.$parent.errorMsg = e
             this.$parent.$modal.show('error')
             console.error(e)
@@ -581,6 +585,8 @@
         await this.get_workouts()
       },
       async update_client () {
+        this.$parent.loading = true
+        this.$parent.dontLeave = true
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           // eslint-disable-next-line
@@ -596,8 +602,11 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients()
           await this.$parent.clients_to_vue()
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
+          this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
           console.error(e)
