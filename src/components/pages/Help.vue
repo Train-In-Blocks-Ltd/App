@@ -75,6 +75,9 @@ export default {
         { id: 10, gif: 'colour-code.gif', title: 'Colour coding the calendar', text: '<p>Select a microcycle which you want to colour code. Then press the colour icon above your workouts and choose a colour.</p>' }
       ]
     }
+  },
+  mounted () {
+    this.$parent.setup()
   }
 }
 </script>
