@@ -585,7 +585,6 @@
         await this.get_workouts()
       },
       async update_client () {
-        this.$parent.loading = true
         this.$parent.dontLeave = true
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
@@ -602,7 +601,6 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients()
           await this.$parent.clients_to_vue()
-          this.$parent.loading = false
           this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false

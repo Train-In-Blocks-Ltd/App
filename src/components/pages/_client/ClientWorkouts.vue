@@ -1301,8 +1301,6 @@
       // DATABASE METHODS //-------------------------------------------------------------------------------
 
       async update_programme () {
-        // Set loading status to true
-        this.$parent.$parent.loading = true
         this.$parent.$parent.dontLeave = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
@@ -1354,7 +1352,6 @@
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
           this.$ga.event('Block', 'update')
           this.scan()
-          this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
