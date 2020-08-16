@@ -637,6 +637,23 @@
       width: 200vw
     }
   }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    button:active, .button:active {
+      transform: scale(1)
+    }
+    .search, .client_container > a:before, .icon--expand, .ql-editor, .show-client-notes, .show-block-notes,.show-workout {
+      transition: none
+    }
+    .sidebar {
+      width: 12rem
+    }
+    .sidebar:hover .account_nav--item--text {
+      display: block;
+      opacity: 1
+    }
+  }
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
