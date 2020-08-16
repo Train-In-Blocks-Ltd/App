@@ -34,7 +34,7 @@
     margin-top: 1.25rem
   }
   .signup {
-    margin-left: calc(2px + 32px + 53.875px + 6px)
+    margin-left: calc(10px + 20px + 60px + 20px + 10px)
   }
   .recovery {
     margin-top: 1.25rem;

@@ -157,7 +157,7 @@
   }
 
   /* GLOBAL: BUTTONS */
-  button {
+  button, .button {
     width: fit-content;
     user-select: none;
     cursor: pointer;
@@ -175,10 +175,10 @@
     margin: .6rem 0;
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  button:hover {
+  button:hover, .button:hover {
     opacity: .6
   }
-  button:active {
+  button:active, .button:active {
     transform: scale(.96)
   }
   button:disabled, button[disabled] {
@@ -279,7 +279,7 @@
   }
 
   /* GLOBAL: RM IOS CORNERS */
-  input:not([type=checkbox]) {
+  input:not([type=checkbox]):not(#okta-signin-submit) {
     border-radius: 0;
     -webkit-appearance: none
   }
