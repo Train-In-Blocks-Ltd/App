@@ -125,7 +125,10 @@ const router = new Router({
       path: '*',
       component: NotFound
     }
-  ]
+  ],
+  scrollBehavior () {
+    document.querySelector('#main').scrollTop = 0
+  }
 })
 
 const onAuthRequired = async (from, to, next) => {
