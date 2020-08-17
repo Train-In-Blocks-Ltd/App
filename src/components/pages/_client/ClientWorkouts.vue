@@ -335,6 +335,12 @@
     input.workout-name {
       width: 100%
     }
+    .workout--header {
+      display: block
+    }
+    .button--new-workout {
+      width: 100%
+    }
 
     /* Full screen editor */
     .activeWorkout {
@@ -474,7 +480,7 @@
                     <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
                     <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   </div>
-                  <button id="button--new-workout" @click="createWorkout()">New session</button>
+                  <button class="button--new-workout" @click="createWorkout()">New session</button>
                 </div>
                 <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading sessions...</p>
@@ -512,7 +518,7 @@
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
-                        <inline-svg v-show="isSessionNotesExpanded === null || workout.id === isSessionNotesExpanded" @click="toggleSessionExpand(workout.id)" :id="'session-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
+                        <inline-svg v-show="isSessionNotesExpanded === null || workout.id === isSessionNotesExpanded" @click="toggleSessionExpand(workout.id)" :id="'expand-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                       </div>
                     </div>
                   </div>
@@ -1422,6 +1428,7 @@
           )
           await this.$parent.force_get_workouts()
           await this.update_programme()
+          this.showExpanded()
           this.$ga.event('Workout', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
