@@ -160,6 +160,11 @@
 
   /* Workouts */
   .workout--header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+  }
+  .workout--header__left {
     display: flex
   }
   .wrapper--workout {
@@ -273,12 +278,6 @@
     margin: .4rem 0 2rem 0;
     font-size: 2.4rem;
     font-weight: bold
-  }
-
-  /* Add Workout Form */
-  #button--new-workout {
-    margin: 2rem 0;
-    width: 100%
   }
 
   @media (max-width: 992px) {
@@ -470,15 +469,17 @@
               </div> <!-- block_table -->
               <div class="workouts">
                 <div class="workout--header">
-                  <h3>Sessions</h3>
-                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
-                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
+                  <div class="workout--header__left">
+                    <h3>Sessions</h3>
+                    <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
+                    <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
+                  </div>
+                  <button id="button--new-workout" @click="createWorkout()">New session</button>
                 </div>
                 <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading sessions...</p>
                 <div>
                   <!-- New Workout -->
-                  <button id="button--new-workout" @click="createWorkout()">New session</button>
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
                     <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"

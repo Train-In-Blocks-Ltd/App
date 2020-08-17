@@ -158,6 +158,7 @@
 
   /* GLOBAL: BUTTONS */
   button, .button {
+    height: fit-content;
     width: fit-content;
     user-select: none;
     cursor: pointer;
