@@ -482,7 +482,7 @@
                   <!-- New Workout -->
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
                         <div>
@@ -512,7 +512,7 @@
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
-                        <inline-svg v-show="isSessionNotesExpanded === null || workout.id === isSessionNotesExpanded" @click="toggleSessionExpand(workout.id)" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
+                        <inline-svg v-show="isSessionNotesExpanded === null || workout.id === isSessionNotesExpanded" @click="toggleSessionExpand(workout.id)" :id="'session-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                       </div>
                     </div>
                   </div>
@@ -686,6 +686,7 @@
       this.today()
       this.scan()
       this.$parent.showDeleteBlock = true
+      this.showExpanded()
     },
     beforeDestroy () {
       this.$parent.showDeleteBlock = false
@@ -757,6 +758,7 @@
       },
 
       // WORKOUT METHODS //-------------------------------------------------------------------------------
+
       soloDelete (id) {
         if (confirm('Are you sure you want to delete this workout?')) {
           this.delete_workout(id, true)
@@ -1050,6 +1052,26 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      showExpanded () {
+        var temp = []
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              temp.push(session.id)
+            })
+          }
+        })
+        temp.forEach((id) => {
+          var ele = document.getElementById('session-' + id)
+          var expandEle = document.getElementById('expand-' + id)
+          if (ele.childNodes[4].offsetHeight >= 293) {
+            expandEle.style.display = 'block'
+          } else {
+            expandEle.style.display = 'none'
+          }
+        })
+      },
       accessibleColors (hex) {
         if (hex !== undefined) {
           hex = hex.replace('#', '')
