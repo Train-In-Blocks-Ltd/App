@@ -1,6 +1,6 @@
 const stripe = require('stripe')('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')
 
-export async function handler (event, context, callback) {
+exports.handler = async function handler (event, context, callback) {
   if (event.body) {
     try {
       const link = await stripe.billingPortal.sessions.create({
