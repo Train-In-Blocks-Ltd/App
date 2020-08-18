@@ -213,6 +213,9 @@ export default {
       }
     }
   },
+  created () {
+    this.$parent.setup()
+  },
   async mounted () {
     await this.$parent.get_programmes()
     await this.todaysWorkout()

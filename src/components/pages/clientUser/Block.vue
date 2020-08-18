@@ -72,6 +72,9 @@
         currentWorkoutIndexBlock: 0
       }
     },
+    created () {
+      this.$parent.setup()
+    },
     async mounted () {
       await this.$parent.get_programmes()
       this.initCountWorkoutsBlock()
