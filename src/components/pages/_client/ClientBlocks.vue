@@ -92,6 +92,12 @@
 </style>
 <template>
     <div>
+      <modal name="help-block" height="auto" :adaptive="true">
+        <div class="modal--help-block">
+          <p><i>Blocks</i> are the different cycles within your client's programme. It contains the different microcycles of sessions.</p><br>
+          <p>You will be able to track, visualise and progress the sessions within a <i>Block</i>.</p>
+        </div>
+      </modal>
       <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
         <div class="client-notes__header">
           <p><b>Client Information</b></p>
@@ -108,7 +114,10 @@
         </div>
       </div>
       <div>
-        <h2 class="sub-title">Blocks</h2>
+        <div class="flex">
+          <h2 class="sub-title">Blocks</h2>
+          <inline-svg class="sub-title tooltip" @click="$modal.show('help-block')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
+        </div>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
         <div v-if="!this.$parent.no_programmes" class="blocks_grid">

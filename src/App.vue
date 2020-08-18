@@ -113,9 +113,24 @@
   .modal--error {
     padding: 2rem
   }
+  .flex {
+    display: flex
+  }
+
+  /* GLOBAL: TOOLTIP */
+  .tooltip {
+    cursor: pointer;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .tooltip:hover {
+    opacity: .6
+  }
+  .sub-title.tooltip {
+    margin-left: .6rem
+  }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-block {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
@@ -670,7 +685,7 @@
   <div id="app" v-bind:class="{'authenticated': authenticated}">
     <modal name="error" height="auto" :adaptive="true">
       <div class="modal--error">
-        <p><b>Something went wrong...</b></p><br>
+        <p><b>Something went wrong. Please try again...</b></p><br>
         <p>{{errorMsg}}</p><br>
         <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
           <button type="submit" formtarget="_blank">Let us know</button>
