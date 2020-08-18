@@ -405,7 +405,11 @@
     text-decoration: none;
     position: relative;
     border: 0;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    opacity: 0;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .sidebar:hover .account_nav--item--text {
+    opacity: 1
   }
   .account_nav--item a.router-link-exact-active {
     font-weight: bold
@@ -592,7 +596,7 @@
       justify-content: space-between;
       border-right: none
     }
-    .account_nav--item--text {
+    .sidebar:hover .account_nav--item--text {
       display: none
     }
     main {
@@ -653,9 +657,11 @@
     .sidebar {
       width: 12rem
     }
-    .sidebar:hover .account_nav--item--text {
-      display: block;
+    .account_nav--item--text {
       opacity: 1
+    }
+    .animate, .animate.animate__faster {
+      animation: none
     }
   }
 </style>
@@ -675,7 +681,7 @@
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
-    <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
+    <nav class="sidebar" v-if="authenticated && claims">
       <div class="logo animate animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
@@ -688,59 +694,47 @@
         <router-link to="/" title="Home">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-          <router-link to="/" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-            Home
-          </router-link>
-        </transition>
-        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-          <router-link to="/clientUser" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
-            Home
-          </router-link>
-        </transition>
+        <router-link to="/" class="account_nav--item--text" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
+          Home
+        </router-link>
+        <router-link to="/clientUser" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
+          Home
+        </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/help" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-          <router-link to="/help" title="Help"  v-show="showNav" class="account_nav--item--text">
-            Help
-          </router-link>
-        </transition>
+        <router-link to="/help" title="Help"  class="account_nav--item--text">
+          Help
+        </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/archive" title="Archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-          <router-link to="/archive" v-show="showNav" class="account_nav--item--text">
-            Archive
-          </router-link>
-        </transition>
+        <router-link to="/archive" class="account_nav--item--text">
+          Archive
+        </router-link>
       </div>
       <div class="account_nav--item">
         <router-link to="/account" title="Account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-          <router-link to="/account" v-show="showNav" class="account_nav--item--text">
-            Account
-          </router-link>
-        </transition>
+        <router-link to="/account" class="account_nav--item--text">
+          Account
+        </router-link>
       </div>
       <div class="account_nav--item">
         <router-link to="/logout" @click.native="logout()" title="Logout">
           <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
         </router-link>
-        <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-          <router-link to="/logout" v-show="showNav" @click.native="logout()" class="account_nav--item--text">
-            Logout
-          </router-link>
-        </transition>
+        <router-link to="/logout" @click.native="logout()" class="account_nav--item--text">
+          Logout
+        </router-link>
       </div>
     </nav> <!-- .sidebar -->
-    <main @mouseover="showNav = false" :class="{notAuth: !authenticated}" id="main">
+    <main :class="{notAuth: !authenticated}" id="main">
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
@@ -765,7 +759,6 @@ export default {
 
       // BACKGROUND DATA //
 
-      showNav: false,
       programmes: null,
       error: '',
       archive_error: '',
