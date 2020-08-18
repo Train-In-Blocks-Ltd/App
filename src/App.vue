@@ -182,6 +182,9 @@
   button:active, .button:active {
     transform: scale(.96)
   }
+  button:focus, .button:focus {
+    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
+  }
   button:disabled, button[disabled] {
     opacity: .6;
     cursor: default
