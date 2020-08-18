@@ -198,9 +198,12 @@
     padding: 0
   }
   input.workout-name {
-    width: 40%;
+    cursor: pointer;
     font-size: 1rem;
     font-weight: bold
+  }
+  input.workout-name:hover {
+    opacity: .6
   }
   input.workout-date {
     cursor: pointer;
@@ -233,6 +236,9 @@
   .editingChecked {
     cursor: pointer;
     text-decoration: underline
+  }
+  .editingChecked:hover {
+    opacity: .6
   }
   .showingFeedback {
     grid-template-areas:
