@@ -415,6 +415,10 @@
   .account_nav--item:last-of-type {
     padding-bottom: 0
   }
+  .account_nav--item a {
+    display: flex;
+    text-decoration: none
+  }
   .account_nav--item--text {
     color: white;
     text-decoration: none;
@@ -706,46 +710,49 @@
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
-        <router-link to="/" title="Home">
+        <router-link to="/" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
+          <p class="account_nav--item--text">
+            Home
+          </p>
         </router-link>
-        <router-link to="/" class="account_nav--item--text" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-          Home
-        </router-link>
-        <router-link to="/clientUser" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
-          Home
+        <router-link to="/clientUser" title="Home" v-if="claims.user_type === 'Client'">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
+          <p class="account_nav--item--text">
+            Home
+          </p>
         </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/help" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
-        </router-link>
-        <router-link to="/help" title="Help"  class="account_nav--item--text">
-          Help
+          <p class="account_nav--item--text">
+            Help
+          </p>
         </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/archive" title="Archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
-        </router-link>
-        <router-link to="/archive" class="account_nav--item--text">
-          Archive
+          <p class="account_nav--item--text">
+            Archive
+          </p>
         </router-link>
       </div>
       <div class="account_nav--item">
         <router-link to="/account" title="Account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
-        </router-link>
-        <router-link to="/account" class="account_nav--item--text">
-          Account
+          <p class="account_nav--item--text">
+            Account
+          </p>
         </router-link>
       </div>
       <div class="account_nav--item">
         <router-link to="/logout" @click.native="logout()" title="Logout">
           <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
-        </router-link>
-        <router-link to="/logout" @click.native="logout()" class="account_nav--item--text">
-          Logout
+          <p class="account_nav--item--text">
+            Logout
+          </p>
         </router-link>
       </div>
     </nav> <!-- .sidebar -->
