@@ -586,7 +586,7 @@
                     </div>
                   </div>
                 </div>
-                <line-chart id="chart" :chart-data="dataCollection" :options="options"/>
+                <line-chart id="chart" :chart-data="dataCollection" :options="options" aria-label="Graph"/>
               </div>
             </div>  <!-- notes -->
           </div> <!-- programme_grid -->

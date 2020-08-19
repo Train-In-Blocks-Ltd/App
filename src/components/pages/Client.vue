@@ -131,10 +131,10 @@
     </modal>
     <div v-show="keepLoaded" class="floating_nav">
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-        <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
+        <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" aria-label="Menu"/>
       </transition>
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" />
+        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">

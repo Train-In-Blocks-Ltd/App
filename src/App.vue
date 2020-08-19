@@ -700,21 +700,21 @@
     <nav class="sidebar" v-if="authenticated && claims">
       <div class="logo animate animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
         </router-link>
         <router-link to="/clientUser" class="logo--link" title="Home" v-if="claims.user_type === 'Client'">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
         <router-link to="/" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
           <p class="account_nav--item--text">
             Home
           </p>
         </router-link>
         <router-link to="/clientUser" title="Home" v-if="claims.user_type === 'Client'">
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
           <p class="account_nav--item--text">
             Home
           </p>
@@ -722,7 +722,7 @@
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/help" title="Help" >
-          <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
+          <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
             Help
           </p>
@@ -730,7 +730,7 @@
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/archive" title="Archive">
-          <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
+          <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon" aria-label="Archive"/>
           <p class="account_nav--item--text">
             Archive
           </p>
@@ -738,7 +738,7 @@
       </div>
       <div class="account_nav--item">
         <router-link to="/account" title="Account">
-          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
+          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account"/>
           <p class="account_nav--item--text">
             Account
           </p>
@@ -746,7 +746,7 @@
       </div>
       <div class="account_nav--item">
         <router-link to="/logout" @click.native="logout()" title="Logout">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
+          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon" aria-label="Logout"/>
           <p class="account_nav--item--text">
             Logout
           </p>

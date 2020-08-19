@@ -59,10 +59,10 @@
           </div>
           <div class="client_update">
             <a href="javascript:void(0)" @click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
-              <inline-svg :src="require('../../assets/svg/archive-small.svg')" class="archive__icon"/>
+              <inline-svg :src="require('../../assets/svg/archive-small.svg')" class="archive__icon" aria-label="Unarchive"/>
             </a>
             <a href="javascript:void(0)" @click="$parent.client_delete(clients.client_id, index)" title="Delete">
-              <inline-svg :src="require('../../assets/svg/bin.svg')" class="archive__icon"/>
+              <inline-svg :src="require('../../assets/svg/bin.svg')" class="archive__icon" aria-label="Delete"/>
             </a>
           </div>
         </div>
