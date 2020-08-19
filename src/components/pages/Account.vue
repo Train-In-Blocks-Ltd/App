@@ -93,16 +93,14 @@
     <h1 class="main-title">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
       <div class="details">
-        <div class="form__options">
-          <label>
-            <b>Email: </b>
-            <input type="email" id="email" class="input--forms" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
-          </label>
-        </div>
+        <p><b>Email: </b>{{$parent.claims.email}}</p><br>
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
           <button @click.prevent="manageSubscription()">Manage Your Subscription</button>
         </div>
         <button @click.prevent="$modal.show('reset-password')">Change Your Password</button>
+        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/-1">
+          <button type="submit" formtarget="_blank">Need more support?</button>
+        </form>
       </div>
       <div class="privacy">
         <h2>Your Privacy and Data</h2>
