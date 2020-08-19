@@ -149,9 +149,6 @@
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
             {
               'profile': {
-                'login': this.$parent.claims.email,
-                'firstName': this.$parent.claims.email,
-                'email': this.$parent.claims.email,
                 'ga': this.$parent.claims.ga
               }
             },
