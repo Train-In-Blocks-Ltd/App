@@ -326,9 +326,6 @@
     cursor: pointer;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
-  input[type=color]:hover, input[type=color]:focus {
-    transform: scale(1.1)
-  }
   input.title {
     margin-top: 0;
     margin-bottom: 3rem;
@@ -670,7 +667,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .icon--expand, .ql-editor, .show-client-notes, .show-block-notes,.show-workout {
+    .search, .client_container > a:before, .icon--expand, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
       transition: none
     }
     .sidebar {
