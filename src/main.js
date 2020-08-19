@@ -5,7 +5,6 @@ import VueQuill from 'vue-quill'
 import 'quill/dist/quill.snow.css'
 import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
-import VueInputAutowidth from 'vue-input-autowidth'
 
 Vue.use(VueAnalytics, {
   id: 'UA-167770206-2',
@@ -17,7 +16,6 @@ Vue.use(VueAnalytics, {
 })
 Vue.use(VueQuill)
 Vue.use(VModal)
-Vue.use(VueInputAutowidth)
 
 Vue.config.productionTip = false
 
