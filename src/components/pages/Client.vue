@@ -37,9 +37,6 @@
     width: 100%;
     align-items: center
   }
-  #phone {
-    width: 50%
-  }
   #client .client_info input.client_info--name {
     max-width: 100%;
     font-size: 3.75rem;
@@ -60,12 +57,12 @@
     top: 4rem;
     text-align: right
   }
-  .floating_nav a {
+  .floating_nav a, .selected-options {
     color: #282828;
     text-decoration: none
   }
-  .floating_nav a:hover {
-    opacity: .6rem
+  .floating_nav a:hover, .selected-options:hover {
+    opacity: .6
   }
   .icon--options {
     cursor: pointer;
@@ -86,13 +83,6 @@
   .client_notes--header {
     color: #282828;
     padding: .6rem .8rem
-  }
-  .client_notes--header p {
-    margin: 0;
-    font-weight: bold
-  }
-  .client_notes--quill {
-    margin: 0
   }
 
   /* Responsiveness */
@@ -127,9 +117,6 @@
   /* For Mobile */
   @media (max-width: 576px) {
     /* Overall */
-    #client .client_info input.client_info--name:focus {
-      border-bottom: 2px solid #282828
-    }
     .floating_nav {
       right: 2rem;
       top: 2rem
@@ -143,20 +130,23 @@
       <toolkit/>
     </modal>
     <div v-show="keepLoaded" class="floating_nav">
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
         <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
       </transition>
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
         <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" />
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
-        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
+          <a href="javascript:void(0)" v-show="showDeleteBlock" @click="delete_block()">Delete Block</a>
+        </transition>
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
         </transition>
-        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
         </transition>
-        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <router-link :to="toURL()">
             Back
           </router-link>
@@ -185,7 +175,7 @@
           </div>
         </form>
       </div>
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"></router-view>
       </transition>
     </div>
@@ -215,6 +205,7 @@
         blocks: false,
         no_workouts: false,
         loading_workouts: true,
+        showDeleteBlock: false,
 
         // CLIENT STATUS DATA //
 
@@ -271,7 +262,7 @@
           )
           if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'PROVISIONED') {
             this.clientAlready = true
-            this.clientAlreadyMsg = 'Activated'
+            this.clientAlreadyMsg = 'Email Sent'
           } else if (result.data[0].status === 'SUSPENDED') {
             this.clientSuspend = result.data[0].id
             this.clientAlready = false
@@ -594,7 +585,6 @@
         await this.get_workouts()
       },
       async update_client () {
-        this.$parent.loading = true
         this.$parent.dontLeave = true
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
@@ -611,7 +601,6 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients()
           await this.$parent.clients_to_vue()
-          this.$parent.loading = false
           this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
@@ -619,6 +608,39 @@
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
           console.error(e)
+        }
+      },
+      async delete_block () {
+        if (confirm('Are you sure you want to delete this block?')) {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
+          var programme
+          var id
+          for (programme of this.$parent.client_details.programmes) {
+            //eslint-disable-next-line
+            if (programme.id == this.$route.params.id) {
+              id = programme.id
+            }
+          }
+          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+          try {
+            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+
+            await this.$parent.clients()
+            this.$parent.clients_to_vue()
+
+            this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
+
+            this.$ga.event('Block', 'delete')
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+          } catch (e) {
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
+            console.error(e)
+          }
         }
       }
     }

@@ -1,8 +1,4 @@
 <style>
-  #intro {
-    font-size: 2rem;
-    margin-top: 0
-  }
   .home--container {
     display: grid;
     grid-template-rows: 8rem 1fr;
@@ -72,8 +68,8 @@
         <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
         <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
-          <input type="submit" class="button button--save" value="Save" />
-          <button class="button button--close cancel" @click="close()">Close</button>
+          <button type="submit">Save</button>
+          <button class="cancel" @click="close()">Close</button>
         </div>
       </form>
     </div>

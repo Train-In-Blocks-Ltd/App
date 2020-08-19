@@ -33,21 +33,24 @@
   #blocks .block_info input.block_info--name:focus {
     padding: .6rem 1rem
   }
-  .floating_nav__block {
+  .multi-select {
     display: grid;
-    grid-gap: 1rem;
+    grid-gap: .4rem;
     position: fixed;
     top: 6rem;
     right: 2rem;
     margin-top: 1.5rem;
-    text-align: right
+    text-align: right;
+    background-color: #FFFFFF99;
+    z-index: 99;
+    padding: 1rem 0 1rem 1rem
   }
-  .floating_nav__block a {
+  .multi-select a {
     color: #282828;
     text-decoration: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .floating_nav__block a:hover {
+  .multi-select a:hover {
     opacity: .6
   }
   .floating_nav__icon {
@@ -56,6 +59,9 @@
   .section-title {
     margin: 0 0 2rem 0
   }
+  .text--selected {
+    font-size: .8rem
+  }
 
   /* Block Grid */
   .block_grid {
@@ -63,20 +69,9 @@
     grid-gap: 6rem;
     margin-top: 4rem
   }
-
-  /* Calendar */
-  .fc-event {
-    font-size: .8rem
-  }
-  .wrapper--calender {
-    grid-area: a
-  }
   .block-notes {
     grid-area: b;
     margin: 0 0 4rem 0
-  }
-  .fc-unthemed tbody {
-    border-color: #F1F1F1
   }
 
   /* Block Table */
@@ -100,9 +95,6 @@
     font-weight: bold;
     text-align: center
   }
-  .block_table--container p {
-    margin: 1.5rem 1rem
-  }
   .block_table--container--block_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
@@ -112,12 +104,10 @@
   }
 
   /* Week */
-  .fc-view-container * {
-    font-size: .8rem
-  }
   .week-color-picker {
     margin: auto 0 auto 1rem;
-    height: 28px
+    height: 28px;
+    border: #282828
   }
   .container--week {
     height: 100px;
@@ -139,6 +129,7 @@
     min-width: 50px;
     height: 74px;
     width: 100%;
+    border-radius: 6px;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .week:hover {
@@ -169,6 +160,11 @@
 
   /* Workouts */
   .workout--header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+  }
+  .workout--header__left {
     display: flex
   }
   .wrapper--workout {
@@ -179,11 +175,20 @@
       'bar'
   }
   .wrapper--workout__header {
-    grid-area: header
+    grid-area: header;
+    display: flex;
+    justify-content: space-between
+  }
+  .select-checkbox {
+    vertical-align: middle;
+    height: 1.4rem;
+    width: 1.4rem;
+    cursor: pointer
   }
   .container--workouts {
     display: grid;
-    grid-gap: 2rem
+    grid-gap: 6rem;
+    margin-top: 4rem
   }
   input.workout-name, input.workout-date {
     text-overflow: ellipsis;
@@ -193,9 +198,12 @@
     padding: 0
   }
   input.workout-name {
-    width: 40%;
+    cursor: pointer;
     font-size: 1rem;
     font-weight: bold
+  }
+  input.workout-name:hover {
+    opacity: .6
   }
   input.workout-date {
     cursor: pointer;
@@ -215,11 +223,9 @@
   .bottom-bar .button {
     margin: 0
   }
-  .activeWorkout {
-    border: 2px solid #282828
-  }
   .newWorkout {
-    border: 2px solid #00800060
+    background-color: #F6F6F6;
+    padding: 1rem
   }
   .incomplete {
     color: #B80000
@@ -230,6 +236,9 @@
   .editingChecked {
     cursor: pointer;
     text-decoration: underline
+  }
+  .editingChecked:hover {
+    opacity: .6
   }
   .showingFeedback {
     grid-template-areas:
@@ -277,47 +286,6 @@
     font-weight: bold
   }
 
-  /* Add Workout Form */
-  #button--new-workout {
-    margin: 2rem 0;
-    width: 100%
-  }
-  .add_workout_container {
-    margin: 2rem 0 0 0
-  }
-  .add_workout_container h3 {
-    margin-top: 0
-  }
-  .add_workout {
-    grid-gap: 1rem
-  }
-  .add_workout label {
-    display: grid;
-    grid-gap: .5rem
-  }
-
-  /* All Modal */
-  .modal--info, .modal--move, .modal--copy {
-    padding: 2rem
-  }
-
-  /* Copy Modal */
-  .modal--copy h3 {
-    margin: 0 0 1.5rem 0
-  }
-  .form--copy {
-    display: grid;
-    grid-template-columns: .4fr 1fr;
-    grid-gap: .4rem
-  }
-  .form--copy label {
-    font-weight: bold
-  }
-  .form--copy input {
-    width: 100%;
-    margin: .4rem 0
-  }
-
   @media (max-width: 992px) {
     .showingFeedback {
       grid-template-areas:
@@ -328,14 +296,19 @@
     }
   }
   @media (max-width: 768px) {
-    .floating_nav__block a {
+    .multi-select {
+      top: -2rem;
+      right: 0;
+      padding: 2rem;
+      width: 100%;
+      background-color: white;
+      box-shadow: 0 0 20px 10px #28282812
+    }
+    .multi-select a {
       grid-template-columns: 1fr
     }
-    .floating_nav__block svg {
+    .multi-select svg {
       margin-left: auto
-    }
-    .form--copy {
-      grid-template-columns: 1fr
     }
     #copy:hover {
       opacity: 1
@@ -350,11 +323,6 @@
   }
 
   @media (max-width: 576px) {
-    /* Overall */
-    .floating_nav__block {
-      top: 4rem
-    }
-
     /* Container */
     .block_grid {
       display: block
@@ -371,6 +339,12 @@
 
     /* Workout */
     input.workout-name {
+      width: 100%
+    }
+    .workout--header {
+      display: block
+    }
+    .button--new-workout {
       width: 100%
     }
 
@@ -394,16 +368,34 @@
       <modal name="info" height="auto" :adaptive="true">
         <div class="modal--info">
           <p><b>The format for tracking data</b></p><br>
-          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p>
+          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
+          <p><b>Examples</b></p><br>
+          <p><i>[Back Squat: 3x6 at 50kg]</i></p>
+          <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
+          <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
+          <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
           <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
+          <p><b>Examples</b></p><br>
+          <p><i>[Weight: 5okg]</i></p>
+          <p><i>[Vertical Jump: 43.3cm]</i></p>
+          <p><i>[Body Fat (%): 12]</i></p>
+          <p><i>[sRPE (CR10): 8]</i></p>
+          <p><i>[sRPE (Borg): 16]</i></p><br>
           <p>See <i>Help</i> for more information</p>
         </div>
       </modal>
       <modal name="move" height="auto" :adaptive="true">
-        <form @submit.prevent="initMove(movingWorkout), updateWorkoutNotes(movingWorkout), $modal.hide('move')" class="modal--move">
+        <form @submit.prevent="initMove(), $modal.hide('move')" class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
-          <button class="button" type="submit">Move</button>
+          <button type="submit">Move</button>
+        </form>
+      </modal>
+      <modal name="shift" height="auto" :adaptive="true">
+        <form @submit.prevent="shiftAcross()" class="modal--shift">
+            <label for="range">Shift workout dates by: </label>
+            <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
+            <button>Shift</button>
         </form>
       </modal>
       <modal name="copy" height="auto" :adaptive="true">
@@ -412,15 +404,20 @@
             <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
             <label for="range">Days until next workouts: </label>
             <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
-            <button class="button">Copy</button>
+            <button>Copy</button>
         </form>
       </modal>
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-3s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-        <div v-show="!$parent.showOptions" class="floating_nav__block">
-          <a @click="delete_block()" aria-label="Delete this block">
-            <inline-svg class="floating_nav__icon" :src="require('../../../assets/svg/bin.svg')"/>
-          </a>
-        </div> <!-- floating_nav -->
+      <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+        <div class="multi-select" v-if="selectedSessions.length !== 0">
+          <p class="text--selected">
+            <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
+          </p>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift')">Shift</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
+        </div>
       </transition>
       <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
       <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
@@ -447,13 +444,15 @@
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
-                <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate__animated animate__fadeIn"/>
+                <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn no-max-height"/>
                 <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
-                  <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
-                  <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
-                  <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="button button--cancel">Cancel</button>
+                  <div>
+                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
+                    <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
+                    <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="button cancel">Cancel</button>
+                  </div>
                 </div>
               </div>
               <div class="wrapper--calendar">
@@ -466,12 +465,12 @@
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @blur="update_programme()" @change="weekConfirm(programme.duration)"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @blur="update_programme()" @change="weekConfirm(programme.duration), maxWeek = programme.duration"/>
                   </div>
                 </div>
                 <div class="block_table--container">
                   <div class="block_table--container--block_duration_container">
-                    <div @click="changeWeek(item)" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
+                    <div @click="changeWeek(item), sortWorkouts()" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
                         <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
                         <div class="week__number">{{item}}</div>
@@ -482,43 +481,50 @@
               </div> <!-- block_table -->
               <div class="workouts">
                 <div class="workout--header">
-                  <h3>Sessions</h3>
-                  <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
-                  <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
-                  <inline-svg id="copy" :src="require('../../../assets/svg/copy.svg')" @click="showCopy(programme.duration)"/>
+                  <div class="workout--header__left">
+                    <h3>Sessions</h3>
+                    <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
+                    <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
+                  </div>
+                  <button class="button--new-workout" @click="createWorkout()">New session</button>
                 </div>
                 <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading sessions...</p>
                 <div>
                   <!-- New Workout -->
-                  <button id="button--new-workout" class="button" @click="createWorkout()">New session</button>
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
-                        <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
-                        <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
-                        <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
-                        <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" pattern="[^\/]" v-model="workout.name" /><br>
-                        <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
-                        <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
+                        <div>
+                          <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
+                          <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
+                          <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
+                          <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
+                          <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" pattern="[^\/]" v-model="workout.name" /><br>
+                          <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
+                          <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
+                        </div>
+                        <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)">
                       </div>
-                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
-                      <div v-if="workout.id === showFeedback" class="show-feedback animate__animated animate__fadeIn">
+                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}" :config="$parent.$parent.config"/>
+                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
+                      <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
                       </div>
                       <div class="bottom-bar">
-                        <button id="button-edit" class="button" v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
-                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
-                        <button id="button-save" class="button" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
-                        <button id="button-move" class="button" v-show="!isEditingWorkout" @click="showMove(workout.id, programme.duration)">Move</button>
-                        <button id="button-delete" class="button delete" v-show="!isEditingWorkout" @click="delete_workout(workout.id)">Delete</button>
-                        <button id="button-feedback-open" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
-                        <button id="button-feedback-close" class="button" v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
+                        <div>
+                          <button v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
+                          <button v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
+                          <button class="cancel" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
+                          <button v-show="!isEditingWorkout" @click="selectedSessions.length = 0, selectedSessions.push(workout.id), $modal.show('move')">Move</button>
+                          <button class="delete" v-show="!isEditingWorkout" @click="soloDelete(workout.id)">Delete</button>
+                          <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
+                          <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
+                        </div>
+                        <inline-svg v-show="isSessionNotesExpanded === null || workout.id === isSessionNotesExpanded" @click="toggleSessionExpand(workout.id)" :id="'expand-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                       </div>
                     </div>
                   </div>
@@ -528,7 +534,9 @@
             <div class="graph">
               <div>
                 <h3 class="section-title">Statistics</h3>
-              </div>
+                <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
+                <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
+              </div><br>
               <div class="container--content">
                 <div class="data-options">
                   <div class="data-select">
@@ -536,8 +544,8 @@
                       <label for="measure">
                         <b>Measurement: </b><br>
                         <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
-                          <option v-for="option in optionsForDataName" :value="option.value" :key="option.id">
-                            {{option.text}}
+                          <option v-for="optionName in optionsForDataName" :value="optionName.value" :key="'M' + optionName.id">
+                            {{optionName.text}}
                           </option>
                         </select>
                       </label>
@@ -548,8 +556,9 @@
                         <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
                           <option value="Sets">Sets</option>
                           <option value="Reps">Reps</option>
-                          <option value="Load">Load</option>
-                          <option value="Volume">Volume</option>
+                          <option v-for="optionData in optionsForDataType" :value="optionData.value" :key="'DT-' + optionData.id">
+                            {{optionData.text}}
+                          </option>
                         </select>
                       </label>
                     </div>
@@ -620,6 +629,7 @@
 
         isEditingWorkout: false,
         editWorkout: null,
+        isSessionNotesExpanded: null,
         movingWorkout: null,
         moveTarget: 1,
         copyTarget: 2,
@@ -628,6 +638,8 @@
           name: 'Untitled',
           date: ''
         },
+        selectedSessions: [],
+        shiftDays: 1,
 
         // REGEX DATA //
 
@@ -639,6 +651,7 @@
         regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
         regexLoadCapture: /(at|@)(.+)/gi,
         regexNumberBreakdown: /[0-9.]+/gi,
+        protocolError: [],
 
         // CHART METHODS //
 
@@ -666,6 +679,7 @@
         p5: '',
         selectedDataName: 'Block Overview',
         optionsForDataName: [],
+        optionsForDataType: [],
         selectedDataType: 'Sets',
         showType: true,
 
@@ -683,22 +697,42 @@
       await this.$parent.get_client_details()
       this.today()
       this.scan()
+      this.$parent.showDeleteBlock = true
+      this.showExpanded()
+    },
+    beforeDestroy () {
+      this.$parent.showDeleteBlock = false
     },
     methods: {
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
-      showCopy (maxWeek) {
-        this.maxWeek = maxWeek
-        this.$modal.show('copy')
+      shiftAcross () {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              if (this.selectedSessions.includes(session.id)) {
+                session.date = this.addDays(session.date, parseInt(this.shiftDays))
+                this.update_workout(session.id)
+              }
+            })
+          }
+        })
+        this.$modal.hide('shift')
+        this.deselectAll()
       },
       copyAcross () {
         var copyWorkouts = []
         let weekCount = 2
-        this.str.forEach((workout) => {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
           // eslint-disable-next-line
-          if (workout.week_id == this.currentWeek) {
-            copyWorkouts.push({ name: workout.name, date: workout.date, notes: workout.notes })
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              if (this.selectedSessions.includes(session.id)) {
+                copyWorkouts.push({ name: session.name, date: session.date, notes: session.notes })
+              }
+            })
           }
         })
         for (; weekCount <= this.copyTarget; weekCount++) {
@@ -717,26 +751,63 @@
         this.update_programme()
         this.$parent.$parent.loading = false
         this.$modal.hide('copy')
+        this.deselectAll()
       },
-      showMove (id, maxWeek) {
-        this.movingWorkout = id
-        this.maxWeek = maxWeek
-        this.$modal.show('move')
-      },
-      initMove (id) {
+      initMove () {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
           // eslint-disable-next-line
           if (block.id == this.$route.params.id) {
             block.workouts.forEach((workout) => {
-              if (workout.id === id) {
+              if (this.selectedSessions.includes(workout.id)) {
                 workout.week_id = this.moveTarget
+                this.updateWorkoutNotes(workout.id)
+              }
+            })
+          }
+        })
+        this.deselectAll()
+        this.currentWeek = parseInt(this.moveTarget)
+      },
+
+      // WORKOUT METHODS //-------------------------------------------------------------------------------
+
+      soloDelete (id) {
+        if (confirm('Are you sure you want to delete this workout?')) {
+          this.delete_workout(id, true)
+        }
+      },
+      bulkDelete () {
+        if (this.selectedSessions.length !== 0) {
+          var ready = confirm('Are you sure you want to delete all the selected workout?')
+          this.selectedSessions.forEach((sessionId) => {
+            this.delete_workout(sessionId, ready)
+          })
+          this.deselectAll()
+        }
+      },
+      deselectAll () {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              var selEl = document.getElementById('sc-' + session.id)
+              if (selEl.checked === true) {
+                selEl.checked = false
+                var idx = this.selectedSessions.indexOf(session.id)
+                this.selectedSessions.splice(idx, 1)
               }
             })
           }
         })
       },
-
-      // WORKOUT METHODS //-------------------------------------------------------------------------------
+      changeSelectCheckbox (id) {
+        if (this.selectedSessions.includes(id) === false) {
+          this.selectedSessions.push(id)
+        } else {
+          var idx = this.selectedSessions.indexOf(id)
+          this.selectedSessions.splice(idx, 1)
+        }
+      },
       cancelWorkout () {
         this.editWorkout = null
         this.isEditingWorkout = false
@@ -746,6 +817,13 @@
         this.$parent.$parent.loading = true
         await this.add_workout()
         this.$parent.$parent.loading = false
+      },
+      toggleSessionExpand (id) {
+        if (this.isSessionNotesExpanded === null) {
+          this.isSessionNotesExpanded = id
+        } else {
+          this.isSessionNotesExpanded = null
+        }
       },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
@@ -872,6 +950,12 @@
         var dataForType = this.selectedDataType
         var dataForSum = 0
         var overviewStore = []
+        this.protocolError.length = 0
+        this.optionsForDataType.length = 0
+        if (dataForName === 'Block Overview') {
+          this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
+          this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
+        }
         this.dataPacketStore.forEach((item) => {
           overviewStore.length = 0
           item.forEach((exerciseDataPacket) => {
@@ -881,30 +965,34 @@
             var protocol = exerciseDataPacket[2].replace(/\s/g, '')
             if (regex.test(exerciseDataPacket[1]) === true) {
               this.xLabel.push(exerciseDataPacket[0])
-              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('at') === true) {
-                this.yData.push(this.setsReps(protocol, dataForType))
+              if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
+                this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
+                this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
+              }
+              if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
+                this.yData.push(this.setsReps(exerciseDataPacket, protocol, dataForType))
               }
               if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
-                this.yData.push(this.load(protocol))
+                this.yData.push(this.load(exerciseDataPacket, protocol))
               }
               if (dataForType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
-                var agg = this.setsReps(protocol, 'Reps') * this.load(protocol)
+                var agg = this.setsReps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
                 this.yData.push(agg)
               }
-              if (exerciseDataPacket[2].includes('at') !== true) {
+              if (exerciseDataPacket[2].includes('x') !== true) {
                 this.showType = false
                 this.yData.push(this.otherMeasures(protocol))
               }
             }
             if (dataForName === 'Block Overview' && exerciseDataPacket[2].includes('at') === true) {
               if (dataForType === 'Sets' || dataForType === 'Reps') {
-                dataForSum = this.setsReps(protocol, dataForType)
+                dataForSum = this.setsReps(exerciseDataPacket, protocol, dataForType)
               }
               if (dataForType === 'Load') {
-                dataForSum = this.load(protocol)
+                dataForSum = this.load(exerciseDataPacket, protocol)
               }
               if (dataForType === 'Volume') {
-                dataForSum = this.setsReps(protocol, 'Reps') * this.load(protocol)
+                dataForSum = this.setsReps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
               }
               overviewStore.push(dataForSum)
             }
@@ -976,6 +1064,26 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      showExpanded () {
+        var temp = []
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              temp.push(session.id)
+            })
+          }
+        })
+        temp.forEach((id) => {
+          var ele = document.getElementById('session-' + id)
+          var expandEle = document.getElementById('expand-' + id)
+          if (ele.childNodes[4].offsetHeight >= 293) {
+            expandEle.style.display = 'block'
+          } else {
+            expandEle.style.display = 'none'
+          }
+        })
+      },
       accessibleColors (hex) {
         if (hex !== undefined) {
           hex = hex.replace('#', '')
@@ -988,9 +1096,9 @@
           return color
         }
       },
-      removeBrackets (dataIn) {
+      removeBracketsAndBreaks (dataIn) {
         if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '')
+          return dataIn.replace(/[[\]]/g, '').replace(/<p><br><\/p>/gi, '')
         } else {
           return dataIn
         }
@@ -1013,6 +1121,7 @@
           if (programme.id == this.$route.params.id) {
             this.weekColor.backgroundColor = programme.block_color.replace('[', '').replace(']', '').split(',')
             this.str = programme.workouts
+            this.maxWeek = programme.duration
             if (this.str !== null && this.$parent.no_workouts === false) {
               this.str.forEach((object) => {
                 this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
@@ -1107,7 +1216,7 @@
       // REGEX METHODS //-------------------------------------------------------------------------------
 
       // Extracts anything for Sets and Reps
-      setsReps (protocol, dataForType) {
+      setsReps (exerciseDataPacket, protocol, dataForType) {
         var setStore = null
         var extractedSetsReps = null
         var tempSetsRepsStore = []
@@ -1121,9 +1230,15 @@
               setStore = parseInt(match)
             }
             if (dataForType === 'Sets' && groupIndex === 1) {
+              if (match === '') {
+                this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
+              }
               extractedSetsReps = parseInt(match)
             }
             if (dataForType === 'Reps' && groupIndex === 2) {
+              if (match === '') {
+                this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
+              }
               if (match.includes('/') === true) {
                 let n
                 while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
@@ -1145,17 +1260,20 @@
       },
 
       // Extracts anything for Loads
-      load (protocol) {
+      load (exerciseDataPacket, protocol) {
         var tempLoadStore = []
         let sum = 0
         let isMultiple = false
-        const sets = this.setsReps(protocol, 'Sets')
+        const sets = this.setsReps(exerciseDataPacket, protocol, 'Sets')
         let m
         while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
           if (m.index === this.regexLoadCapture.lastIndex) {
             this.regexLoadCapture.lastIndex++
           }
           m.forEach((loadMatch, groupIndex) => {
+            if (groupIndex === 2 && /\d/g.test(loadMatch) === false) {
+              this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
+            }
             if (groupIndex === 2) {
               let n
               while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
@@ -1218,8 +1336,6 @@
       // DATABASE METHODS //-------------------------------------------------------------------------------
 
       async update_programme () {
-        // Set loading status to true
-        this.$parent.$parent.loading = true
         this.$parent.$parent.dontLeave = true
         // Set auth header
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
@@ -1271,7 +1387,6 @@
           localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
           this.$ga.event('Block', 'update')
           this.scan()
-          this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
           this.$parent.$parent.loading = false
@@ -1299,7 +1414,7 @@
                 var workoutsId = programme.workouts[y].id
                 var workoutsName = programme.workouts[y].name
                 var workoutsDate = programme.workouts[y].date
-                var workoutsNotes = programme.workouts[y].notes.replace(/<p><br><\/p>/gi, '')
+                var workoutsNotes = programme.workouts[y].notes
                 var workoutsWeek = programme.workouts[y].week_id
                 var workoutsChecked = programme.workouts[y].checked
               }
@@ -1319,6 +1434,7 @@
           )
           await this.$parent.force_get_workouts()
           await this.update_programme()
+          this.showExpanded()
           this.$ga.event('Workout', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1361,6 +1477,7 @@
             block_color: ''
           }
           this.sortWorkouts()
+          this.scan()
           this.$ga.event('Workout', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1372,41 +1489,8 @@
           console.error(e)
         }
       },
-      async delete_block () {
-        if (confirm('Are you sure you want to delete this block?')) {
-          this.$parent.$parent.loading = true
-          this.$parent.$parent.dontLeave = true
-          var programme
-          var id
-          for (programme of this.$parent.$parent.client_details.programmes) {
-            //eslint-disable-next-line
-            if (programme.id == this.$route.params.id) {
-              id = programme.id
-            }
-          }
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          try {
-            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
-
-            await this.$parent.$parent.clients()
-            this.$parent.$parent.clients_to_vue()
-
-            this.$router.push({path: `/client/${this.$parent.$parent.client_details.client_id}/`})
-
-            this.$ga.event('Block', 'delete')
-            this.$parent.$parent.loading = false
-            this.$parent.$parent.dontLeave = false
-          } catch (e) {
-            this.$parent.$parent.loading = false
-            this.$parent.$parent.dontLeave = false
-            this.$parent.$parent.errorMsg = e
-            this.$parent.$parent.$modal.show('error')
-            console.error(e)
-          }
-        }
-      },
-      async delete_workout (id) {
-        if (confirm('Are you sure you want to delete this workout?')) {
+      async delete_workout (id, ready) {
+        if (ready) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             this.$parent.$parent.loading = true
