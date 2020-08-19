@@ -44,9 +44,10 @@
     <p v-if="this.$parent.no_archive">No clients are archived</p>
     <p v-if="this.$parent.archive_error"><b>{{this.$parent.archive_error}}</b></p>
     <div class="archive--container" v-if="!this.$parent.no_archive && !this.$parent.archive_error && this.$parent.archive_posts">
-      <div>
-        <label for="archived-client-search"><b>Find a client:</b></label>
-        <input name="archived-client-search" type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
+      <label>
+        <b>Find a client:</b>
+        <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
+      </label>
       </div>
       <div class="container--clients">
         <div v-for="(clients, index) in $parent.archive_posts"
