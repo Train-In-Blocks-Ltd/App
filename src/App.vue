@@ -169,7 +169,7 @@
   }
 
   /* GLOBAL: BUTTONS */
-  button, .button {
+  button, .button, #okta-signin-submit {
     height: fit-content;
     width: fit-content;
     user-select: none;
@@ -188,13 +188,13 @@
     margin: .6rem 0;
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  button:hover, .button:hover {
+  button:hover, .button:hover, #okta-signin-submit:hover {
     opacity: .6
   }
-  button:active, .button:active {
+  button:active, .button:active, #okta-signin-submit:active {
     transform: scale(.96)
   }
-  button:focus, .button:focus {
+  button:focus, .button:focus, #okta-signin-submit:focus {
     box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   button:disabled, button[disabled] {
