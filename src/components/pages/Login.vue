@@ -60,7 +60,30 @@
 <style>
   #okta-signin-submit {
     position: absolute;
-    border-radius: 3px
+    user-select: none;
+    cursor: pointer;
+    border-radius: 3px;
+    opacity: 1;
+    text-transform: capitalize;
+    outline-width: 0;
+    border: none;
+    padding: .6rem 1.6rem;
+    font-size: .8rem;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #282828;
+    margin: .6rem 0;
+    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+  }
+  #okta-signin-submit:hover {
+    opacity: .6
+  }
+  #okta-signin-submit:active {
+    transform: scale(.96)
+  }
+  #okta-signin-submit:focus {
+    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   #okta-signin-container {
     position: relative
