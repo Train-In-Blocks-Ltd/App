@@ -34,7 +34,7 @@
     margin-top: 1.25rem
   }
   .signup {
-    margin-left: calc(2px + 32px + 53.875px + 6px)
+    margin-left: calc(10px + 20px + 60px + 20px + 10px)
   }
   .recovery {
     margin-top: 1.25rem;
@@ -59,7 +59,31 @@
 </style>
 <style>
   #okta-signin-submit {
-    position: absolute
+    position: absolute;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 3px;
+    opacity: 1;
+    text-transform: capitalize;
+    outline-width: 0;
+    border: none;
+    padding: .6rem 1.6rem;
+    font-size: .8rem;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #282828;
+    margin: .6rem 0;
+    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+  }
+  #okta-signin-submit:hover {
+    opacity: .6
+  }
+  #okta-signin-submit:active {
+    transform: scale(.96)
+  }
+  #okta-signin-submit:focus {
+    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   #okta-signin-container {
     position: relative
@@ -141,19 +165,22 @@
     <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <div class="button--container">
-      <a class="button signup" href="https://traininblocks.com/pricing">Sign Up</a>
-      <div><button class="button" v-if="!open" @click="open = !open">Forgot password?</button></div>
+      <form action="https://traininblocks.com/pricing">
+        <button class="signup" type="submit">Sign Up</button>
+      </form>
+      <div><button v-if="!open" @click="open = !open">Forgot password?</button></div>
     </div>
     <form v-if="open" v-on:submit.prevent="reset" class="recovery">
       <label>
-        <p>Email:</p>
+        <p><b>Email:</b></p>
         <input type="email" v-model="email" class="input--forms" />
       </label>
-      <div><input type="submit" class="button" value="Send recovery email" /></div>
+      <button type="submit">Send recovery email</button>
     </form>
     <p v-if="success">{{success}}</p>
     <p v-if="error" class="error">{{error}}</p>
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.</p>
+    <p style="font-size: .8rem"><b>Version 1.2</b></p>
   </div>
 </template>
 

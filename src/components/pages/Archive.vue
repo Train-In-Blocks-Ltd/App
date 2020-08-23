@@ -44,26 +44,26 @@
     <p v-if="this.$parent.no_archive">No clients are archived</p>
     <p v-if="this.$parent.archive_error"><b>{{this.$parent.archive_error}}</b></p>
     <div class="archive--container" v-if="!this.$parent.no_archive && !this.$parent.archive_error && this.$parent.archive_posts">
-      <div>
-        <label for="archived-client-search"><b>Find a client:</b></label>
-        <input name="archived-client-search" type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
-      </div>
-      <div class="container--clients">
-        <div v-for="(clients, index) in $parent.archive_posts"
-          :key="index" v-show="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())" class="client_container archived">
-          <div class="client_link archived">
-            <p class="client_link__name"><b>{{clients.name}}</b></p>
-            <div class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
-            <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
-          </div>
-          <div class="client_update">
-            <a href="javascript:void(0)" @click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
-              <inline-svg :src="require('../../assets/svg/archive-small.svg')" class="archive__icon"/>
-            </a>
-            <a href="javascript:void(0)" @click="$parent.client_delete(clients.client_id, index)" title="Delete">
-              <inline-svg :src="require('../../assets/svg/bin.svg')" class="archive__icon"/>
-            </a>
-          </div>
+      <label>
+        <b>Find a client:</b>
+        <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
+      </label>
+    </div>
+    <div class="container--clients">
+      <div v-for="(clients, index) in $parent.archive_posts"
+        :key="index" v-show="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())" class="client_container archived">
+        <div class="client_link archived">
+          <p class="client_link__name"><b>{{clients.name}}</b></p>
+          <div class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
+          <div class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
+        </div>
+        <div class="client_update">
+          <a href="javascript:void(0)" @click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
+            <inline-svg :src="require('../../assets/svg/archive-small.svg')" class="archive__icon" aria-label="Unarchive"/>
+          </a>
+          <a href="javascript:void(0)" @click="$parent.client_delete(clients.client_id, index)" title="Delete">
+            <inline-svg :src="require('../../assets/svg/bin.svg')" class="archive__icon" aria-label="Delete"/>
+          </a>
         </div>
       </div>
     </div>

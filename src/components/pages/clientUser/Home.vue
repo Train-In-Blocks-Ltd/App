@@ -95,12 +95,6 @@
     }
   }
   @media (max-width: 768px) {
-    .container--block-links {
-      flex-direction: column-reverse
-    }
-    .container--block-links__section {
-      margin: 0
-    }
     .client-notes, .block_container--link {
       margin: 0;
       min-width: 0;
@@ -110,12 +104,6 @@
 
   /* For Mobile */
   @media (max-width: 576px) {
-    .container--block-links {
-      grid-template: .2fr 1fr/1fr;
-      grid-template-areas:
-        'b'
-        'a'
-    }
     .blocks_grid {
       grid-template-columns: 1fr
     }
@@ -142,8 +130,8 @@
             :key="index" v-show="workout.id == viewWorkoutsStore[currentWorkoutIndexHome] && isToday()">
             <modal :name="'feedback-client-home-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
               <div class="modal--feedback-client">
-                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate__animated animate__fadeIn"/>
-                <button @click="$modal.hide('feedback-client-home-' + workout.id), $parent.update_workout(programme.id, workout.id)" class="button">Close</button>
+                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
+                <button @click="$modal.hide('feedback-client-home-' + workout.id), $parent.update_workout(programme.id, workout.id)">Close</button>
               </div>
             </modal>
             <p class="wrapper--workout__header" :id="workout.name">
@@ -151,7 +139,7 @@
               <span class="text--date">{{$parent.day(workout.date)}}</span>
               <span class="text--date">{{workout.date}}</span>
             </p>
-            <div v-html="removeBrackets(workout.notes)" class="show-workout animate__animated animate__fadeIn"/>
+            <div v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
             <div class="bottom-bar">
               <button v-if="workout.checked !== 0" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
               <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
@@ -161,10 +149,9 @@
         </div>
       </div>
       <div v-if="viewWorkoutsStore.length !== 0">
-        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--" class="button">Back</button>
-        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++" class="button">Next</button>
+        <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--">Back</button>
+        <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++">Next</button>
       </div>
-      <div class="spacer"/>
       <div class="container--title">
         <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Programmes</h2>
