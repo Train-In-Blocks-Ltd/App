@@ -154,9 +154,6 @@
   h3 {
     font-size: 2rem
   }
-  ul, ol {
-    padding-left: 1rem
-  }
   p {
     margin: 0
   }
@@ -469,10 +466,8 @@
     margin: 1rem 0
   }
   .ql-editor.ql-blank:before {
-    margin: 1rem 0
-  }
-  .ql-editor ul li:not(.ql-direction-rtl), .ql-editor ol {
-    padding: 0
+    margin: 1rem 0;
+    left: 0
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: #28282899

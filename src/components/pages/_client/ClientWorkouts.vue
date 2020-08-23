@@ -1070,7 +1070,7 @@
           if (block.id == this.$route.params.id) {
             block.workouts.forEach((session) => {
               if (session.notes) {
-                if (session.notes.length > 2000) {
+                if (session.notes.length > 1400) {
                   session.overflow = true
                 } else {
                   session.overflow = false
