@@ -294,6 +294,9 @@
         'feedback'
         'bar'
     }
+    .show-feedback {
+      padding: 1rem 0
+    }
   }
   @media (max-width: 768px) {
     .multi-select {

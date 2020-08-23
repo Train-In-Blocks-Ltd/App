@@ -629,7 +629,7 @@
       background-color: transparent
     }
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 6rem 5vw
+      padding: 2rem 5vw 20rem 5vw
     }
     p {
       font-size: .8rem

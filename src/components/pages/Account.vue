@@ -116,7 +116,8 @@
           </label>
         </div>
       </div>
-    </form>
+    </form><br><br>
+    <p style="font-size: .8rem"><b>Version 1.2</b></p>
   </div>
 </template>
 
