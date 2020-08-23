@@ -295,7 +295,7 @@
   }
 
   /* GLOBAL: RM IOS CORNERS */
-  input:not([type=checkbox]):not(#okta-signin-submit) {
+  input:not([type=checkbox]) {
     border-radius: 0;
     -webkit-appearance: none
   }

@@ -59,7 +59,8 @@
 </style>
 <style>
   #okta-signin-submit {
-    position: absolute
+    position: absolute;
+    border-radius: 3px
   }
   #okta-signin-container {
     position: relative
