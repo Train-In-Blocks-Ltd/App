@@ -107,9 +107,9 @@
         <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
           <div>
-            <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
-            <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
-            <button v-show="editClientNotes" @click="cancelClientNotes()" class="button cancel">Cancel</button>
+            <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button--edit">Edit</button>
+            <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button--save">Save</button>
+            <button v-show="editClientNotes" @click="cancelClientNotes()" class="cancel">Cancel</button>
           </div>
         </div>
       </div>

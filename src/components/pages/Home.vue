@@ -59,7 +59,7 @@
         </div>
       </div>
     </div>
-    <button v-if="!creating" class="button button--new-client" @click="creation()">New Client</button>
+    <button v-if="!creating" class="button--new-client" @click="creation()">New Client</button>
     <p v-if="!creating" class="new-msg">{{response}}</p>
     <div v-if="creating">
       <h3>New Client</h3>
