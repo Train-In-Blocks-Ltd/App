@@ -19,8 +19,9 @@
   }
   @media (max-width: 520px) {
     #login {
+      min-height: 100%;
       width: 100%;
-      padding: 0 2rem
+      padding: 2rem
     }
     .cookies {
       margin-left: 0;
