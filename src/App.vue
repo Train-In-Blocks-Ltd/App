@@ -349,7 +349,8 @@
     display: grid;
     grid-gap: 1rem;
     place-content: start;
-    grid-auto-flow: column
+    grid-auto-flow: column;
+    margin-bottom: 1rem
   }
 
   /* GLOBAL: LOGO */
