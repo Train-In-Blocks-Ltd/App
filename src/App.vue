@@ -207,7 +207,7 @@
   }
 
   /* GLOBAL: CALENDAR */
-  .fc-button {
+  button.fc-button {
     border-radius: 3px;
     text-transform: capitalize;
     font-size: .8rem;
@@ -215,7 +215,7 @@
     background-color: #282828;
     color: white
   }
-  .fc-button-primary:disabled {
+  button.fc-button-primary:disabled {
     background-color: #282828
   }
   .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
@@ -224,7 +224,7 @@
   .fc-view-container span {
     font-size: .8rem
   }
-  .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+  button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-button.fc-button-primary, button.fc-dayGridWeek-button.fc-button.fc-button-primary, button.fc-dayGridMonth-button.fc-button.fc-button-primary {
     margin-left: .4rem
   }
 
@@ -349,7 +349,8 @@
     display: grid;
     grid-gap: 1rem;
     place-content: start;
-    grid-auto-flow: column
+    grid-auto-flow: column;
+    margin-bottom: 1rem
   }
 
   /* GLOBAL: LOGO */
@@ -577,11 +578,11 @@
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 4rem 10vw
+      padding: 4rem 10vw;
+      overflow-x: hidden
     }
-    .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
-      background-color: transparent;
-      color: #282828
+    button:hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+      opacity: 1
     }
   }
   @media (min-width: 768px) {
@@ -629,7 +630,7 @@
       background-color: transparent
     }
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 20rem 5vw
+      padding: 2rem 5vw 10rem 5vw
     }
     p {
       font-size: .8rem
