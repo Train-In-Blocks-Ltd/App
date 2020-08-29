@@ -1,4 +1,7 @@
 <style scoped>
+  .wrapper--workout__header.client-side {
+    height: 3.2rem
+  }
   .block-notes {
     margin-top: 4rem
   }
@@ -42,16 +45,20 @@
                 <button @click="$modal.hide('feedback-client-block-' + workout.id), $parent.update_workout(programme.id, workout.id)">Close</button>
               </div>
             </modal>
-            <p class="wrapper--workout__header" :id="workout.name">
-              <span class="text--name"><b>{{workout.name}}</b></span><br>
-              <span class="text--date">{{$parent.day(workout.date)}}</span>
-              <span class="text--date">{{workout.date}}</span>
-            </p>
+            <div class="wrapper--workout__header client-side" :id="workout.name">
+              <div>
+                <span class="text--name"><b>{{workout.name}}</b></span><br>
+                <span class="text--date">{{$parent.day(workout.date)}}</span>
+                <span class="text--date">{{workout.date}}</span>
+              </div>
+            </div>
             <div v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
             <div class="bottom-bar">
-              <button v-if="workout.checked === 1" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done">Completed</button>
-              <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do">Incomplete</button>
-              <button @click="$modal.show('feedback-client-block-' + workout.id)" class="button no-margin">Give Feedback</button>
+              <div>
+                <button v-if="workout.checked === 1" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done">Completed</button>
+                <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do">Incomplete</button>
+                <button @click="$modal.show('feedback-client-block-' + workout.id)" class="no-margin">Give Feedback</button>
+              </div>
             </div>
           </div>
         </div>
