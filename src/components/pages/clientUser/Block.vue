@@ -62,8 +62,13 @@
             </div>
           </div>
         </div>
-        <button v-show="currentWorkoutIndexBlock != 0" @click="currentWorkoutIndexBlock--">Back</button>
-        <button v-show="currentWorkoutIndexBlock != maxWorkoutIndexBlock" @click="currentWorkoutIndexBlock++">Next</button>
+        <div class="container--session-control">
+          <div>
+            <button v-show="currentWorkoutIndexBlock != 0" @click="currentWorkoutIndexBlock--">Back</button>
+            <button v-show="currentWorkoutIndexBlock != maxWorkoutIndexBlock" @click="currentWorkoutIndexBlock++">Next</button>
+          </div>
+          <p class="session-counter">{{currentWorkoutIndexBlock + 1}}/{{maxWorkoutIndexBlock + 1}}</p>
+        </div>
       </div>
     </div>
   </div>

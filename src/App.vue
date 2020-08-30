@@ -560,6 +560,17 @@
     width: 100%
   }
 
+  /* GLOBAL: CLIENT-SIDE */
+  .container--session-control {
+    display: flex;
+    justify-content: space-between
+  }
+  .session-counter {
+    align-self: center;
+    font-size: 1rem;
+    font-weight: bold
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
