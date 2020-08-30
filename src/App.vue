@@ -245,16 +245,6 @@
     align-items: center;
     padding: .6rem 0
   }
-  .icon--expand {
-    cursor: pointer;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .icon--expand:hover {
-    opacity: .6
-  }
-  .expandRotate {
-    transform: rotate(-180deg)
-  }
   #button-done {
     background-color: green
   }
@@ -273,7 +263,6 @@
   /* GLOBAL: SHOW WORKOUT AND NOTES */
   .show-workout, .show-block-notes, .show-client-notes {
     overflow-wrap: break-word;
-    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
@@ -289,9 +278,6 @@
   }
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
-  }
-  .show-workout.expanded, .quill.expanded .ql-editor {
-    max-height: 2000px
   }
 
   /* GLOBAL: RM IOS CORNERS */
@@ -451,7 +437,6 @@
   }
   .ql-editor {
     grid-area: body;
-    max-height: 250px;
     color: #282828;
     overflow-y: auto;
     padding: 0;
@@ -644,9 +629,6 @@
     .sub-title {
       font-size: 1.6rem
     }
-    .ql-editor {
-      max-height: calc(100vh - 300px)
-    }
 
     /* Blocks Page */
     .fc-view-container {
@@ -666,7 +648,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .icon--expand, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
       transition: none
     }
     .sidebar {
