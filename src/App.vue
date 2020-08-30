@@ -621,6 +621,9 @@
     .account_nav--item--text {
       display: none
     }
+    .account_nav--item--icon {
+      margin: 0
+    }
   }
 
   /* For Mobile */
@@ -630,7 +633,7 @@
       background-color: transparent
     }
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 10rem 5vw
+      padding: 2rem 5vw 4rem 5vw
     }
     p {
       font-size: .8rem
@@ -703,6 +706,18 @@
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
+        <a href="javascript:void(0)" @click="fullscreen()" title="Fullscreen">
+          <inline-svg v-show="!isFullscreen" :src="require('./assets/svg/enter-fullscreen.svg')" class="account_nav--item--icon" aria-label="Fullscreen"/>
+          <inline-svg v-show="isFullscreen" :src="require('./assets/svg/leave-fullscreen.svg')" class="account_nav--item--icon" aria-label="Fullscreen"/>
+          <p v-show="!isFullscreen" class="account_nav--item--text">
+            Fullscreen
+          </p>
+          <p v-show="isFullscreen" class="account_nav--item--text">
+            Window
+          </p>
+        </a>
+      </div>
+      <div class="account_nav--item">
         <router-link to="/" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
           <p class="account_nav--item--text">
@@ -774,6 +789,7 @@ export default {
 
       // BACKGROUND DATA //
 
+      isFullscreen: false,
       programmes: null,
       error: '',
       archive_error: '',
@@ -813,6 +829,15 @@ export default {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
   },
+  mounted () {
+    document.addEventListener('fullscreenchange', (event) => {
+      if (document.fullscreenElement) {
+        this.isFullscreen = true
+      } else {
+        this.isFullscreen = false
+      }
+    })
+  },
   watch: {
     // Everytime the route changes, check for auth status
     '$route' (to, from) {
@@ -823,6 +848,30 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
+    fullscreen () {
+      var elem = document.documentElement
+      if (!this.isFullscreen) {
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen()
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+          elem.mozRequestFullScreen()
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+          elem.webkitRequestFullscreen()
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+          elem.msRequestFullscreen()
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.mozCancelFullScreen) { /* Firefox */
+          document.mozCancelFullScreen()
+        } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+          document.webkitExitFullscreen()
+        } else if (document.msExitFullscreen) { /* IE/Edge */
+          document.msExitFullscreen()
+        }
+      }
+    },
     confirmLeave (e) {
       if (this.dontLeave === true) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
