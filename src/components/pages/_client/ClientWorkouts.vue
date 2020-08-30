@@ -294,6 +294,9 @@
         'feedback'
         'bar'
     }
+    .show-feedback {
+      padding: 1rem 0
+    }
   }
   @media (max-width: 768px) {
     .multi-select {
@@ -449,9 +452,9 @@
                 <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button button--edit">Edit</button>
-                    <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button button--save">Save</button>
-                    <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="button cancel">Cancel</button>
+                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button--edit">Edit</button>
+                    <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button--save">Save</button>
+                    <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -524,7 +527,7 @@
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
-                        <inline-svg v-show="isSessionNotesExpanded === null || workout.id === isSessionNotesExpanded" @click="toggleSessionExpand(workout.id)" :id="'expand-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
+                        <inline-svg v-show="isSessionNotesExpanded === workout.id || isSessionNotesExpanded === null && workout.overflow" @click="toggleSessionExpand(workout.id)" :id="'expand-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                       </div>
                     </div>
                   </div>
@@ -1065,22 +1068,20 @@
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
       showExpanded () {
-        var temp = []
         this.$parent.$parent.client_details.programmes.forEach((block) => {
           // eslint-disable-next-line
           if (block.id == this.$route.params.id) {
             block.workouts.forEach((session) => {
-              temp.push(session.id)
+              if (session.notes) {
+                if (session.notes.length > 1400) {
+                  session.overflow = true
+                } else {
+                  session.overflow = false
+                }
+              } else {
+                session.overflow = false
+              }
             })
-          }
-        })
-        temp.forEach((id) => {
-          var ele = document.getElementById('session-' + id)
-          var expandEle = document.getElementById('expand-' + id)
-          if (ele.childNodes[4].offsetHeight >= 293) {
-            expandEle.style.display = 'block'
-          } else {
-            expandEle.style.display = 'none'
           }
         })
       },
@@ -1434,7 +1435,7 @@
           )
           await this.$parent.force_get_workouts()
           await this.update_programme()
-          this.showExpanded()
+          await this.showExpanded()
           this.$ga.event('Workout', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1478,6 +1479,7 @@
           }
           this.sortWorkouts()
           this.scan()
+          this.showExpanded()
           this.$ga.event('Workout', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false

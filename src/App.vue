@@ -154,9 +154,6 @@
   h3 {
     font-size: 2rem
   }
-  ul, ol {
-    padding-left: 1rem
-  }
   p {
     margin: 0
   }
@@ -172,7 +169,7 @@
   }
 
   /* GLOBAL: BUTTONS */
-  button, .button {
+  button {
     height: fit-content;
     width: fit-content;
     user-select: none;
@@ -191,13 +188,13 @@
     margin: .6rem 0;
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  button:hover, .button:hover {
+  button:hover {
     opacity: .6
   }
-  button:active, .button:active {
+  button:active {
     transform: scale(.96)
   }
-  button:focus, .button:focus {
+  button:focus {
     box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   button:disabled, button[disabled] {
@@ -210,7 +207,7 @@
   }
 
   /* GLOBAL: CALENDAR */
-  .fc-button {
+  button.fc-button {
     border-radius: 3px;
     text-transform: capitalize;
     font-size: .8rem;
@@ -218,7 +215,7 @@
     background-color: #282828;
     color: white
   }
-  .fc-button-primary:disabled {
+  button.fc-button-primary:disabled {
     background-color: #282828
   }
   .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
@@ -227,7 +224,7 @@
   .fc-view-container span {
     font-size: .8rem
   }
-  .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+  button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-button.fc-button-primary, button.fc-dayGridWeek-button.fc-button.fc-button-primary, button.fc-dayGridMonth-button.fc-button.fc-button-primary {
     margin-left: .4rem
   }
 
@@ -298,7 +295,7 @@
   }
 
   /* GLOBAL: RM IOS CORNERS */
-  input:not([type=checkbox]):not(#okta-signin-submit) {
+  input:not([type=checkbox]) {
     border-radius: 0;
     -webkit-appearance: none
   }
@@ -352,7 +349,8 @@
     display: grid;
     grid-gap: 1rem;
     place-content: start;
-    grid-auto-flow: column
+    grid-auto-flow: column;
+    margin-bottom: 1rem
   }
 
   /* GLOBAL: LOGO */
@@ -469,10 +467,8 @@
     margin: 1rem 0
   }
   .ql-editor.ql-blank:before {
-    margin: 1rem 0
-  }
-  .ql-editor ul li:not(.ql-direction-rtl), .ql-editor ol {
-    padding: 0
+    margin: 1rem 0;
+    left: 0
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: #28282899
@@ -582,11 +578,11 @@
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 4rem 10vw
+      padding: 4rem 10vw;
+      overflow-x: hidden
     }
-    .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
-      background-color: transparent;
-      color: #282828
+    button:hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+      opacity: 1
     }
   }
   @media (min-width: 768px) {
@@ -622,6 +618,9 @@
       margin: auto;
       padding: 0
     }
+    .account_nav--item--text {
+      display: none
+    }
   }
 
   /* For Mobile */
@@ -631,7 +630,7 @@
       background-color: transparent
     }
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 6rem 5vw
+      padding: 2rem 5vw 10rem 5vw
     }
     p {
       font-size: .8rem
@@ -641,9 +640,6 @@
     }
     .sub-title {
       font-size: 1.6rem
-    }
-    .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
-      padding: .4rem .5rem
     }
     .ql-editor {
       max-height: calc(100vh - 300px)
