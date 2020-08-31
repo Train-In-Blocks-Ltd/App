@@ -279,6 +279,9 @@
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
   }
+  .wrapper--workout__header.client-side {
+    height: 3.2rem
+  }
 
   /* GLOBAL: RM IOS CORNERS */
   input:not([type=checkbox]) {

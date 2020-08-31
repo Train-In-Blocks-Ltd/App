@@ -132,11 +132,11 @@
                 <button class="cancel" @click="$modal.hide('feedback-client-home-' + workout.id)">Cancel</button>
               </div>
             </modal>
-            <p class="wrapper--workout__header" :id="workout.name">
+            <div class="wrapper--workout__header client-side" :id="workout.name">
               <span class="text--name"><b>{{workout.name}}</b></span><br>
               <span class="text--date">{{$parent.day(workout.date)}}</span>
               <span class="text--date">{{workout.date}}</span>
-            </p>
+            </div>
             <div v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
             <div class="bottom-bar">
               <div>
