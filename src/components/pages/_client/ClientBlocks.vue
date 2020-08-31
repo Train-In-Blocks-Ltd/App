@@ -115,7 +115,10 @@
       </div>
       <div>
         <div class="flex">
-          <h2 class="sub-title">Blocks</h2>
+          <div class="container--title">
+            <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
+            <h2 class="sub-title no-margin">Blocks</h2>
+          </div>
           <inline-svg class="sub-title tooltip" @click="$modal.show('help-block')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
         </div>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>

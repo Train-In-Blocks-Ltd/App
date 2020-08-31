@@ -1,18 +1,5 @@
 
 <style scoped>
-  /* Overall */
-  .container--title {
-    display: flex;
-    margin: 2rem 0
-  }
-  .sub-title.no-margin {
-    margin: 0
-  }
-
-  /* SVG */
-  .title-icon {
-    margin: auto .6rem auto 0
-  }
 
   /* Blocks */
   .blocks_grid {

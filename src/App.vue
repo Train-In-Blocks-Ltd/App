@@ -116,6 +116,10 @@
   .flex {
     display: flex
   }
+  .container--title {
+    display: flex;
+    margin: 2rem 0
+  }
 
   /* GLOBAL: TOOLTIP */
   .tooltip {
@@ -137,6 +141,11 @@
     margin: 0 0 1.5rem 0
   }
 
+  /* GLOBAL: SVG */
+  .title-icon {
+    margin: auto .6rem auto 0
+  }
+
   /* GLOBAL: FONTS */
   .main-title {
     margin-top: 0;
@@ -150,6 +159,9 @@
     font-size: 2.5rem;
     letter-spacing: .15rem;
     margin: 1.75rem 0
+  }
+  .sub-title.no-margin {
+    margin: 0
   }
   h3 {
     font-size: 2rem
@@ -592,6 +604,12 @@
     }
     .sidebar:hover {
       width: 12rem
+    }
+  }
+  @media (min-width: 768px) {
+    .title-icon {
+      height: 48px;
+      width: 48px
     }
   }
   @media (max-width: 768px) {
