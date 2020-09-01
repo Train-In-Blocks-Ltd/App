@@ -82,12 +82,11 @@
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    min-height: 100vh;
+    min-height: 100%;
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    letter-spacing: .1rem;
-    overflow: hidden
+    letter-spacing: .1rem
   }
   #app {
     color: #282828;
@@ -96,9 +95,7 @@
   main {
     margin-left: calc(38px + 2rem);
     display: grid;
-    align-items: start;
-    overflow: auto;
-    height: 100vh
+    align-items: start
   }
   .notAuth {
     margin: 0
@@ -106,8 +103,6 @@
 
   /* GLOBAL: CONTAINERS */
   #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-    overflow-x: hidden;
-    min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -720,18 +715,6 @@
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
-        <a href="javascript:void(0)" @click="fullscreen()" title="Fullscreen">
-          <inline-svg v-show="!isFullscreen" :src="require('./assets/svg/enter-fullscreen.svg')" class="account_nav--item--icon" aria-label="Fullscreen"/>
-          <inline-svg v-show="isFullscreen" :src="require('./assets/svg/leave-fullscreen.svg')" class="account_nav--item--icon" aria-label="Fullscreen"/>
-          <p v-show="!isFullscreen" class="account_nav--item--text">
-            Fullscreen
-          </p>
-          <p v-show="isFullscreen" class="account_nav--item--text">
-            Window
-          </p>
-        </a>
-      </div>
-      <div class="account_nav--item">
         <router-link to="/" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
           <p class="account_nav--item--text">
@@ -803,7 +786,6 @@ export default {
 
       // BACKGROUND DATA //
 
-      isFullscreen: false,
       programmes: null,
       error: '',
       archive_error: '',
@@ -843,15 +825,6 @@ export default {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
   },
-  mounted () {
-    document.addEventListener('fullscreenchange', (event) => {
-      if (document.fullscreenElement) {
-        this.isFullscreen = true
-      } else {
-        this.isFullscreen = false
-      }
-    })
-  },
   watch: {
     // Everytime the route changes, check for auth status
     '$route' (to, from) {
@@ -862,30 +835,6 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
-    fullscreen () {
-      var elem = document.documentElement
-      if (!this.isFullscreen) {
-        if (elem.requestFullscreen) {
-          elem.requestFullscreen()
-        } else if (elem.mozRequestFullScreen) { /* Firefox */
-          elem.mozRequestFullScreen()
-        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-          elem.webkitRequestFullscreen()
-        } else if (elem.msRequestFullscreen) { /* IE/Edge */
-          elem.msRequestFullscreen()
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen()
-        } else if (document.mozCancelFullScreen) { /* Firefox */
-          document.mozCancelFullScreen()
-        } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-          document.webkitExitFullscreen()
-        } else if (document.msExitFullscreen) { /* IE/Edge */
-          document.msExitFullscreen()
-        }
-      }
-    },
     confirmLeave (e) {
       if (this.dontLeave === true) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
