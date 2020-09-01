@@ -103,7 +103,7 @@
           <p><b>Client Information</b></p>
         </div>
         <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn no-max-height"/>
+        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn"/>
         <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
           <div>
@@ -115,7 +115,10 @@
       </div>
       <div>
         <div class="flex">
-          <h2 class="sub-title">Blocks</h2>
+          <div class="container--title">
+            <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
+            <h2 class="sub-title no-margin">Blocks</h2>
+          </div>
           <inline-svg class="sub-title tooltip" @click="$modal.show('help-block')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
         </div>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>

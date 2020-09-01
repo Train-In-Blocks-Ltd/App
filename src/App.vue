@@ -82,12 +82,11 @@
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    min-height: 100vh;
+    min-height: 100%;
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    letter-spacing: .1rem;
-    overflow: hidden
+    letter-spacing: .1rem
   }
   #app {
     color: #282828;
@@ -96,9 +95,7 @@
   main {
     margin-left: calc(38px + 2rem);
     display: grid;
-    align-items: start;
-    overflow: auto;
-    height: 100vh
+    align-items: start
   }
   .notAuth {
     margin: 0
@@ -106,8 +103,6 @@
 
   /* GLOBAL: CONTAINERS */
   #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-    overflow-x: hidden;
-    min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -115,6 +110,10 @@
   }
   .flex {
     display: flex
+  }
+  .container--title {
+    display: flex;
+    margin: 2rem 0
   }
 
   /* GLOBAL: TOOLTIP */
@@ -137,6 +136,11 @@
     margin: 0 0 1.5rem 0
   }
 
+  /* GLOBAL: SVG */
+  .title-icon {
+    margin: auto .6rem auto 0
+  }
+
   /* GLOBAL: FONTS */
   .main-title {
     margin-top: 0;
@@ -150,6 +154,9 @@
     font-size: 2.5rem;
     letter-spacing: .15rem;
     margin: 1.75rem 0
+  }
+  .sub-title.no-margin {
+    margin: 0
   }
   h3 {
     font-size: 2rem
@@ -245,16 +252,6 @@
     align-items: center;
     padding: .6rem 0
   }
-  .icon--expand {
-    cursor: pointer;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .icon--expand:hover {
-    opacity: .6
-  }
-  .expandRotate {
-    transform: rotate(-180deg)
-  }
   #button-done {
     background-color: green
   }
@@ -273,7 +270,6 @@
   /* GLOBAL: SHOW WORKOUT AND NOTES */
   .show-workout, .show-block-notes, .show-client-notes {
     overflow-wrap: break-word;
-    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
@@ -290,8 +286,8 @@
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
   }
-  .show-workout.expanded, .quill.expanded .ql-editor {
-    max-height: 2000px
+  .wrapper--workout__header.client-side {
+    height: 3.2rem
   }
 
   /* GLOBAL: RM IOS CORNERS */
@@ -451,7 +447,6 @@
   }
   .ql-editor {
     grid-area: body;
-    max-height: 250px;
     color: #282828;
     overflow-y: auto;
     padding: 0;
@@ -575,6 +570,17 @@
     width: 100%
   }
 
+  /* GLOBAL: CLIENT-SIDE */
+  .container--session-control {
+    display: flex;
+    justify-content: space-between
+  }
+  .session-counter {
+    align-self: center;
+    font-size: 1rem;
+    font-weight: bold
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
@@ -593,6 +599,12 @@
     }
     .sidebar:hover {
       width: 12rem
+    }
+  }
+  @media (min-width: 768px) {
+    .title-icon {
+      height: 48px;
+      width: 48px
     }
   }
   @media (max-width: 768px) {
@@ -621,6 +633,9 @@
     .account_nav--item--text {
       display: none
     }
+    .account_nav--item--icon {
+      margin: 0
+    }
   }
 
   /* For Mobile */
@@ -630,7 +645,7 @@
       background-color: transparent
     }
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 10rem 5vw
+      padding: 2rem 5vw 4rem 5vw
     }
     p {
       font-size: .8rem
@@ -640,9 +655,6 @@
     }
     .sub-title {
       font-size: 1.6rem
-    }
-    .ql-editor {
-      max-height: calc(100vh - 300px)
     }
 
     /* Blocks Page */
@@ -663,7 +675,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .icon--expand, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
       transition: none
     }
     .sidebar {

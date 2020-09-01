@@ -174,6 +174,13 @@
       'body'
       'bar'
   }
+  .wrapper--workout:after {
+    content: '';
+    height: 1px;
+    width: 40%;
+    background-color: #282828;
+    margin-top: 6rem
+  }
   .wrapper--workout__header {
     grid-area: header;
     display: flex;
@@ -448,7 +455,7 @@
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn no-max-height"/>
+                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn"/>
                 <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
                   <div>
@@ -511,8 +518,8 @@
                         </div>
                         <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
                       </div>
-                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
+                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn"/>
                       <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
@@ -527,7 +534,6 @@
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
-                        <inline-svg v-show="isSessionNotesExpanded === workout.id || isSessionNotesExpanded === null && workout.overflow" @click="toggleSessionExpand(workout.id)" :id="'expand-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                       </div>
                     </div>
                   </div>
@@ -632,7 +638,6 @@
 
         isEditingWorkout: false,
         editWorkout: null,
-        isSessionNotesExpanded: null,
         movingWorkout: null,
         moveTarget: 1,
         copyTarget: 2,
@@ -701,7 +706,6 @@
       this.today()
       this.scan()
       this.$parent.showDeleteBlock = true
-      this.showExpanded()
     },
     beforeDestroy () {
       this.$parent.showDeleteBlock = false
@@ -820,13 +824,6 @@
         this.$parent.$parent.loading = true
         await this.add_workout()
         this.$parent.$parent.loading = false
-      },
-      toggleSessionExpand (id) {
-        if (this.isSessionNotesExpanded === null) {
-          this.isSessionNotesExpanded = id
-        } else {
-          this.isSessionNotesExpanded = null
-        }
       },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
@@ -1067,24 +1064,6 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
-      showExpanded () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
-          // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((session) => {
-              if (session.notes) {
-                if (session.notes.length > 1400) {
-                  session.overflow = true
-                } else {
-                  session.overflow = false
-                }
-              } else {
-                session.overflow = false
-              }
-            })
-          }
-        })
-      },
       accessibleColors (hex) {
         if (hex !== undefined) {
           hex = hex.replace('#', '')
@@ -1435,7 +1414,6 @@
           )
           await this.$parent.force_get_workouts()
           await this.update_programme()
-          await this.showExpanded()
           this.$ga.event('Workout', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1479,7 +1457,6 @@
           }
           this.sortWorkouts()
           this.scan()
-          this.showExpanded()
           this.$ga.event('Workout', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
