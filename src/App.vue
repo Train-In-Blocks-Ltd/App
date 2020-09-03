@@ -155,7 +155,7 @@
     letter-spacing: .15rem;
     margin: 1.75rem 0
   }
-  .sub-title.no-margin {
+  .no-margin {
     margin: 0
   }
   h3 {
@@ -675,7 +675,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand {
       transition: none
     }
     .sidebar {

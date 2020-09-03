@@ -62,6 +62,15 @@
   .text--selected {
     font-size: .8rem
   }
+  .icon--expand {
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: .2rem;
+    transition: all .6s
+  }
+  .expanded {
+    transform: rotate(180deg)
+  }
 
   /* Block Grid */
   .block_grid {
@@ -178,8 +187,7 @@
     content: '';
     height: 1px;
     width: 40%;
-    background-color: #282828;
-    margin-top: 6rem
+    background-color: #282828
   }
   .wrapper--workout__header {
     grid-area: header;
@@ -225,7 +233,8 @@
     grid-area: feedback
   }
   .bottom-bar {
-    grid-area: bar
+    grid-area: bar;
+    margin-bottom: 6rem
   }
   .bottom-bar .button {
     margin: 0
@@ -516,15 +525,18 @@
                           <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                           <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                         </div>
-                        <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
+                        <div>
+                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(workout.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(workout.id)"/>
+                          <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
+                        </div>
                       </div>
-                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn"/>
+                      <quill v-if="workout.id === editWorkout && expandedSessions.includes(workout.id)" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+                      <div v-if="workout.id !== editWorkout && expandedSessions.includes(workout.id)" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn"/>
                       <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
                       </div>
-                      <div class="bottom-bar">
+                      <div class="bottom-bar" v-if="expandedSessions.includes(workout.id)">
                         <div>
                           <button v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
                           <button v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
@@ -633,6 +645,7 @@
         response: '',
         editBlockNotes: false,
         todayDate: '',
+        expandedSessions: [],
 
         // WORKOUT DATA //
 
@@ -870,6 +883,16 @@
 
       // BLOCK METHODS //-------------------------------------------------------------------------------
 
+      toggleExpandedSessions (id) {
+        if (this.expandedSessions.includes(id)) {
+          const index = this.expandedSessions.indexOf(id)
+          if (index > -1) {
+            this.expandedSessions.splice(index, 1)
+          }
+        } else {
+          this.expandedSessions.push(id)
+        }
+      },
       cancelBlockNotes () {
         this.editBlockNotes = false
         window.removeEventListener('keydown', this.quickSaveBlockNotes)
