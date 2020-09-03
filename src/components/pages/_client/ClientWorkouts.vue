@@ -519,7 +519,7 @@
                         <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
                       </div>
                       <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn"/>
+                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" class="show-workout animate animate__fadeIn"/>
                       <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
