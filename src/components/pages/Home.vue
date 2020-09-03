@@ -1,4 +1,10 @@
 <style>
+  .home-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    align-items: center
+  }
   .home--container {
     display: grid;
     grid-template-rows: 8rem 1fr;
@@ -32,7 +38,10 @@
 
 <template>
   <div id="home">
-    <h1 class="main-title">Your Clients</h1>
+    <div class="home-top">
+      <h1 class="main-title no-margin">Your Clients</h1>
+      <button>Install App</button>
+    </div>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
