@@ -240,8 +240,7 @@
     margin: 0
   }
   .newWorkout {
-    background-color: #F6F6F6;
-    padding: 1rem
+    color: #B80000
   }
   .incomplete {
     color: #B80000
@@ -513,11 +512,11 @@
                   <!-- New Workout -->
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
                         <div>
-                          <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
+                          <span v-if="workout.id !== editWorkout" class="text--name" :class="{newWorkout: workout.name == 'Untitled' && !isEditingWorkout}"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                           <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
                           <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
                           <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
