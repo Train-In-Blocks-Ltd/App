@@ -528,7 +528,6 @@
   }
   .client_link {
     padding: 1rem 0;
-    width: 95%;
     overflow-x: auto
   }
   .client_link svg {
