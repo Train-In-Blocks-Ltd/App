@@ -119,7 +119,7 @@
               <div>
                 <button v-if="workout.checked !== 0" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
                 <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
-                <button @click="giveFeedback = workout.id" class="button no-margin">Give Feedback</button>
+                <button v-if="giveFeedback !== workout.id" @click="giveFeedback = workout.id">Give Feedback</button>
               </div>
             </div><br>
             <div v-if="giveFeedback === workout.id">
