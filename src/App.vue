@@ -817,12 +817,35 @@ export default {
               ['link']
           ]
         }
-      }
+      },
+
+      // PWA //
+
+      deferredPrompt: null,
+      displayMode: 'browser tab',
+      canInstall: false
     }
   },
   created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
+  },
+  mounted () {
+    const self = this
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault()
+      // Stash the event so it can be triggered later.
+      self.deferredPrompt = e
+      // Update UI notify the user they can install the PWA
+      this.canInstall = true
+    })
+    if (navigator.standalone) {
+      this.displayMode = 'standalone-ios'
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.displayMode = 'standalone'
+    }
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -831,6 +854,21 @@ export default {
     }
   },
   methods: {
+    // PWA //--------------------------------------------------------------------------------------------------------
+    installPWA () {
+      // Hide the app provided install promotion
+      this.canInstall = false
+      // Show the install prompt
+      this.deferredPrompt.prompt()
+      // Wait for the user to respond to the prompt
+      this.deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt')
+        } else {
+          console.log('User dismissed the install prompt')
+        }
+      })
+    },
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 

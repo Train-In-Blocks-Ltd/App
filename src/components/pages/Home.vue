@@ -40,7 +40,9 @@
   <div id="home">
     <div class="home-top">
       <h1 class="main-title no-margin">Your Clients</h1>
-      <button>Install App</button>
+      <button @click="$parent.installPWA" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+        Install App
+      </button>
     </div>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
