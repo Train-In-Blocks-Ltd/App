@@ -631,6 +631,9 @@
     main {
       margin: 0
     }
+    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+      padding: 2rem 5vw 4rem 5vw
+    }
     .account_nav--item {
       margin: auto;
       padding: 0
@@ -641,6 +644,20 @@
     .account_nav--item--icon {
       margin: 0
     }
+    .ql-snow .ql-formats button {
+      margin: .2rem
+    }
+    .ql-snow .ql-formats {
+      display: grid;
+      position: fixed;
+      top: 5rem;
+      right: 0;
+      z-index: 2;
+      background-color: #28282810;
+      padding: .6rem 0;
+      border-radius: 3px;
+      margin-right: 21px
+    }
   }
 
   /* For Mobile */
@@ -648,9 +665,6 @@
     ::-webkit-scrollbar {
       width: 0;
       background-color: transparent
-    }
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 4rem 5vw
     }
     p {
       font-size: .8rem
@@ -817,10 +831,7 @@ export default {
         placeholder: 'Type away...',
         modules: {
           toolbar: [
-              [{'header': 1}, {'header': 2}],
-              ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
-              [{'list': 'ordered'}, {'list': 'bullet'}],
-              ['link']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
           ]
         }
       },

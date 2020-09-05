@@ -365,19 +365,6 @@
     .button--new-workout {
       width: 100%
     }
-
-    /* Full screen editor */
-    .activeWorkout {
-      border: none;
-      height: 100vh;
-      width: 100vw;
-      position: fixed;
-      background-color: white;
-      z-index: 11;
-      top: 0;
-      left: 0;
-      padding: 2rem 2rem 6rem 2rem
-    }
   }
 </style>
 
@@ -458,7 +445,7 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
+              <div class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
@@ -512,7 +499,7 @@
                   <!-- New Workout -->
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
                         <div>
@@ -537,7 +524,7 @@
                       </div>
                       <div class="bottom-bar" v-if="expandedSessions.includes(workout.id)">
                         <div>
-                          <button v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
+                          <button v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true), cancelBlockNotes()">Edit</button>
                           <button v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                           <button class="cancel" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
                           <button class="delete" v-show="!isEditingWorkout" @click="soloDelete(workout.id)">Delete</button>
