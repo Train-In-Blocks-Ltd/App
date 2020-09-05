@@ -454,7 +454,7 @@
                 <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button--edit">Edit</button>
+                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true), cancelWorkout()" class="button--edit">Edit</button>
                     <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button--save">Save</button>
                     <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="cancel">Cancel</button>
                   </div>
