@@ -115,6 +115,12 @@
     display: flex;
     margin: 2rem 0
   }
+  .home-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    align-items: center
+  }
 
   /* GLOBAL: TOOLTIP */
   .tooltip {

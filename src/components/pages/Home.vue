@@ -1,10 +1,4 @@
 <style>
-  .home-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4rem;
-    align-items: center
-  }
   .home--container {
     display: grid;
     grid-template-rows: 8rem 1fr;
@@ -40,7 +34,7 @@
   <div id="home">
     <div class="home-top">
       <h1 class="main-title no-margin">Your Clients</h1>
-      <button @click="$parent.installPWA" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+      <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
         Install App
       </button>
     </div>

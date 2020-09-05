@@ -100,7 +100,12 @@
 <template>
   <div id="home">
     <div class="container--client">
-      <h1 class="main-title">Home</h1>
+      <div class="home-top">
+        <h1 class="main-title no-margin">Home</h1>
+        <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+          Install App
+        </button>
+      </div>
       <div class="container--title">
         <inline-svg :src="require('../../../assets/svg/today.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Today</h2>
