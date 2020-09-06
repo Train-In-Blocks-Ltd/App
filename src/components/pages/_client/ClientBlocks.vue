@@ -165,6 +165,9 @@
     components: {
       InlineSvg
     },
+    created () {
+      this.$parent.checkClient()
+    },
     data () {
       return {
         response: '',

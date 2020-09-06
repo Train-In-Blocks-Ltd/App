@@ -209,7 +209,6 @@
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
-      this.checkClient()
       this.keepLoaded = true
     },
     beforeDestroy () {
