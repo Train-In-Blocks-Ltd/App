@@ -704,6 +704,14 @@
       this.today()
       this.scan()
       this.$parent.showDeleteBlock = true
+      document.querySelectorAll('.ql-editor p > br:first-child:last-child').forEach((br) => {
+        br.parentNode.remove()
+      })
+    },
+    updated () {
+      document.querySelectorAll('.ql-editor p > br:first-child:last-child').forEach((br) => {
+        br.parentNode.remove()
+      })
     },
     beforeDestroy () {
       this.$parent.showDeleteBlock = false
@@ -1086,7 +1094,7 @@
       },
       removeBracketsAndBreaks (dataIn) {
         if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '').replace(/<p><br><\/p>/gi, '')
+          return dataIn.replace(/[[\]]/g, '')
         } else {
           return dataIn
         }
