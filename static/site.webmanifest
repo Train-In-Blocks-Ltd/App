@@ -1,6 +1,6 @@
 {
     "scope": "/",
-    "start_url": "/",
+    "start_url": "/?utm_source=native",
     "name": "Train In Blocks",
     "short_name": "Train In Blocks",
     "theme_color": "#ffffff",
@@ -56,5 +56,15 @@
             "type": "image/png",
             "purpose": "any maskable"
         }
-    ]
+    ],
+    "shortcuts": [
+        {
+          "name": "Get Help",
+          "url": "/help?utm_source=native"
+        },
+        {
+          "name": "Manage Account",
+          "url": "/account?utm_source=native"
+        }
+      ]
 }
