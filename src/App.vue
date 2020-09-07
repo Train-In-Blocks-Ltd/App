@@ -830,6 +830,9 @@ export default {
       config: {
         placeholder: 'Type away...',
         modules: {
+          clipboard: {
+            matchVisual: false
+          },
           toolbar: [
             [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
           ]
