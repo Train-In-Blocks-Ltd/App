@@ -115,6 +115,12 @@
     display: flex;
     margin: 2rem 0
   }
+  .home-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    align-items: center
+  }
 
   /* GLOBAL: TOOLTIP */
   .tooltip {
@@ -155,7 +161,7 @@
     letter-spacing: .15rem;
     margin: 1.75rem 0
   }
-  .sub-title.no-margin {
+  .no-margin {
     margin: 0
   }
   h3 {
@@ -528,7 +534,6 @@
   }
   .client_link {
     padding: 1rem 0;
-    width: 95%;
     overflow-x: auto
   }
   .client_link svg {
@@ -626,6 +631,9 @@
     main {
       margin: 0
     }
+    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+      padding: 2rem 5vw 4rem 5vw
+    }
     .account_nav--item {
       margin: auto;
       padding: 0
@@ -636,6 +644,27 @@
     .account_nav--item--icon {
       margin: 0
     }
+    .ql-snow .ql-formats button {
+      margin: .2rem
+    }
+    .ql-snow .ql-formats {
+      display: flex;
+      justify-content: space-evenly;
+      position: fixed;
+      bottom: 60.8px;
+      left: 0;
+      z-index: 99;
+      background-color: white;
+      border-radius: 3px;
+      box-shadow: 0 0 20px 10px #28282810;
+      width: 100vw;
+      padding: .6rem;
+      overflow-x: auto
+    }
+    .ql-formats {
+      margin: 0;
+      transform: none
+    }
   }
 
   /* For Mobile */
@@ -643,9 +672,6 @@
     ::-webkit-scrollbar {
       width: 0;
       background-color: transparent
-    }
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 4rem 5vw
     }
     p {
       font-size: .8rem
@@ -669,13 +695,18 @@
       width: 200vw
     }
   }
+  @media (max-width: 380px) {
+    .ql-snow .ql-formats button {
+      margin: .05rem
+    }
+  }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand {
       transition: none
     }
     .sidebar {
@@ -811,19 +842,42 @@ export default {
       config: {
         placeholder: 'Type away...',
         modules: {
+          clipboard: {
+            matchVisual: false
+          },
           toolbar: [
-              [{'header': 1}, {'header': 2}],
-              ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
-              [{'list': 'ordered'}, {'list': 'bullet'}],
-              ['link']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
           ]
         }
-      }
+      },
+
+      // PWA //
+
+      deferredPrompt: null,
+      displayMode: 'browser tab',
+      canInstall: false
     }
   },
   created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
+  },
+  mounted () {
+    const self = this
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault()
+      // Stash the event so it can be triggered later.
+      self.deferredPrompt = e
+      // Update UI notify the user they can install the PWA
+      this.canInstall = true
+    })
+    if (navigator.standalone) {
+      this.displayMode = 'standalone-ios'
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.displayMode = 'standalone'
+    }
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -832,6 +886,21 @@ export default {
     }
   },
   methods: {
+    // PWA //--------------------------------------------------------------------------------------------------------
+    installPWA () {
+      // Hide the app provided install promotion
+      this.canInstall = false
+      // Show the install prompt
+      this.deferredPrompt.prompt()
+      // Wait for the user to respond to the prompt
+      this.deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt')
+        } else {
+          console.log('User dismissed the install prompt')
+        }
+      })
+    },
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 

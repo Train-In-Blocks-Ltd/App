@@ -61,11 +61,6 @@
     margin-bottom: 0
   }
 
-  /* Modal */
-  .modal--feedback-client {
-    padding: 2rem
-  }
-
   @media (min-width: 1024px) {
     .block_container--link {
       grid-template: 1fr/1fr 1fr;
@@ -91,16 +86,18 @@
     .blocks_grid {
       grid-template-columns: 1fr
     }
-    .modal--feedback-client {
-      padding: 1rem
-    }
   }
 </style>
 
 <template>
   <div id="home">
     <div class="container--client">
-      <h1 class="main-title">Home</h1>
+      <div class="home-top">
+        <h1 class="main-title no-margin">Home</h1>
+        <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+          Install App
+        </button>
+      </div>
       <div class="container--title">
         <inline-svg :src="require('../../../assets/svg/today.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Today</h2>
@@ -112,13 +109,6 @@
         <div class="container--workouts" v-if="programme.workouts">
           <div class="wrapper--workout" v-for="(workout, index) in programme.workouts"
             :key="index" v-show="workout.id == viewWorkoutsStore[currentWorkoutIndexHome] && isToday()">
-            <modal :name="'feedback-client-home-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-              <div class="modal--feedback-client">
-                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
-                <button @click="$modal.hide('feedback-client-home-' + workout.id), $parent.update_workout(programme.id, workout.id)">Save</button>
-                <button class="cancel" @click="$modal.hide('feedback-client-home-' + workout.id)">Cancel</button>
-              </div>
-            </modal>
             <div class="wrapper--workout__header client-side" :id="workout.name">
               <span class="text--name"><b>{{workout.name}}</b></span><br>
               <span class="text--date">{{$parent.day(workout.date)}}</span>
@@ -129,8 +119,14 @@
               <div>
                 <button v-if="workout.checked !== 0" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
                 <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
-                <button @click="$modal.show('feedback-client-home-' + workout.id)" class="button no-margin">Give Feedback</button>
+                <button v-if="giveFeedback !== workout.id" @click="giveFeedback = workout.id">Give Feedback</button>
               </div>
+            </div><br>
+            <div v-if="giveFeedback === workout.id">
+              <h2>Feedback</h2>
+              <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
+              <button @click="giveFeedback = null, $parent.update_workout(programme.id, workout.id)">Save</button>
+              <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
           </div>
         </div>
@@ -174,6 +170,7 @@ export default {
   },
   data () {
     return {
+      giveFeedback: null,
       loading: true,
       viewWorkoutsStore: [],
       maxWorkoutIndexHome: null,

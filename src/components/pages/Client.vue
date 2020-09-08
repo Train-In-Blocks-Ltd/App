@@ -54,7 +54,7 @@
     grid-gap: 2rem;
     position: fixed;
     right: 2rem;
-    top: 4rem;
+    top: 2rem;
     text-align: right
   }
   .floating_nav a, .selected-options {
@@ -111,15 +111,6 @@
     .client_info {
       grid-gap: 0;
       width: 90vw
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    /* Overall */
-    .floating_nav {
-      right: 2rem;
-      top: 2rem
     }
   }
 </style>
@@ -218,7 +209,6 @@
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
-      this.checkClient()
       this.keepLoaded = true
     },
     beforeDestroy () {

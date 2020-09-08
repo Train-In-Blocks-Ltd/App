@@ -5,16 +5,6 @@
   .block-notes {
     margin-top: 4rem
   }
-  .modal--feedback-client {
-    padding: 2rem
-  }
-
-  /* Mobile */
-  @media (max-width: 576px) {
-    .modal--feedback-client {
-      padding: 1rem
-    }
-  }
 </style>
 
 <template>
@@ -38,13 +28,6 @@
         <div class="container--workouts" v-if="programme.workouts">
           <div class="wrapper--workout" v-for="(workout, index) in programme.workouts"
             :key="index" v-show="index == currentWorkoutIndexBlock">
-            <modal :name="'feedback-client-block-' + workout.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-              <div class="modal--feedback-client">
-                <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
-                <button @click="$modal.hide('feedback-client-block-' + workout.id), $parent.update_workout(programme.id, workout.id)">Close</button>
-                <button class="cancel" @click="$modal.hide('feedback-client-block-' + workout.id)">Cancel</button>
-              </div>
-            </modal>
             <div class="wrapper--workout__header client-side" :id="workout.name">
               <div>
                 <span class="text--name"><b>{{workout.name}}</b></span><br>
@@ -57,8 +40,14 @@
               <div>
                 <button v-if="workout.checked === 1" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done">Completed</button>
                 <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do">Incomplete</button>
-                <button @click="$modal.show('feedback-client-block-' + workout.id)" class="no-margin">Give Feedback</button>
+                <button v-if="giveFeedback !== workout.id" @click="giveFeedback = workout.id">Give Feedback</button>
               </div>
+            </div><br>
+            <div v-if="giveFeedback === workout.id">
+              <h2>Feedback</h2>
+              <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
+              <button @click="giveFeedback = null, $parent.update_workout(programme.id, workout.id)">Save</button>
+              <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
           </div>
         </div>
@@ -86,6 +75,7 @@
     },
     data () {
       return {
+        giveFeedback: null,
         editWorkout: null,
         maxWorkoutIndexBlock: null,
         currentWorkoutIndexBlock: 0,
