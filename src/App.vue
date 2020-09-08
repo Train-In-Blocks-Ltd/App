@@ -648,15 +648,22 @@
       margin: .2rem
     }
     .ql-snow .ql-formats {
-      display: grid;
+      display: flex;
+      justify-content: space-evenly;
       position: fixed;
-      top: 5rem;
-      right: 0;
-      z-index: 2;
-      background-color: #28282810;
-      padding: .6rem 0;
+      bottom: 60.8px;
+      left: 0;
+      z-index: 99;
+      background-color: white;
       border-radius: 3px;
-      margin-right: 21px
+      box-shadow: 0 0 20px 10px #28282810;
+      width: 100vw;
+      padding: .6rem;
+      overflow-x: auto
+    }
+    .ql-formats {
+      margin: 0;
+      transform: none
     }
   }
 
@@ -834,7 +841,7 @@ export default {
             matchVisual: false
           },
           toolbar: [
-            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'image', 'link']
           ]
         }
       },
