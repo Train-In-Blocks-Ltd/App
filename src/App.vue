@@ -695,6 +695,11 @@
       width: 200vw
     }
   }
+  @media (max-width: 380px) {
+    .ql-snow .ql-formats button {
+      margin: .05rem
+    }
+  }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
