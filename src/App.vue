@@ -82,12 +82,11 @@
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    min-height: 100vh;
+    min-height: 100%;
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    letter-spacing: .1rem;
-    overflow: hidden
+    letter-spacing: .1rem
   }
   #app {
     color: #282828;
@@ -96,9 +95,7 @@
   main {
     margin-left: calc(38px + 2rem);
     display: grid;
-    align-items: start;
-    overflow: auto;
-    height: 100vh
+    align-items: start
   }
   .notAuth {
     margin: 0
@@ -106,8 +103,6 @@
 
   /* GLOBAL: CONTAINERS */
   #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-    overflow-x: hidden;
-    min-height: 100vh;
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -115,6 +110,16 @@
   }
   .flex {
     display: flex
+  }
+  .container--title {
+    display: flex;
+    margin: 2rem 0
+  }
+  .home-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    align-items: center
   }
 
   /* GLOBAL: TOOLTIP */
@@ -137,6 +142,11 @@
     margin: 0 0 1.5rem 0
   }
 
+  /* GLOBAL: SVG */
+  .title-icon {
+    margin: auto .6rem auto 0
+  }
+
   /* GLOBAL: FONTS */
   .main-title {
     margin-top: 0;
@@ -150,6 +160,9 @@
     font-size: 2.5rem;
     letter-spacing: .15rem;
     margin: 1.75rem 0
+  }
+  .no-margin {
+    margin: 0
   }
   h3 {
     font-size: 2rem
@@ -245,16 +258,6 @@
     align-items: center;
     padding: .6rem 0
   }
-  .icon--expand {
-    cursor: pointer;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .icon--expand:hover {
-    opacity: .6
-  }
-  .expandRotate {
-    transform: rotate(-180deg)
-  }
   #button-done {
     background-color: green
   }
@@ -273,7 +276,6 @@
   /* GLOBAL: SHOW WORKOUT AND NOTES */
   .show-workout, .show-block-notes, .show-client-notes {
     overflow-wrap: break-word;
-    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
@@ -290,8 +292,8 @@
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
   }
-  .show-workout.expanded, .quill.expanded .ql-editor {
-    max-height: 2000px
+  .wrapper--workout__header.client-side {
+    height: 3.2rem
   }
 
   /* GLOBAL: RM IOS CORNERS */
@@ -451,7 +453,6 @@
   }
   .ql-editor {
     grid-area: body;
-    max-height: 250px;
     color: #282828;
     overflow-y: auto;
     padding: 0;
@@ -533,7 +534,6 @@
   }
   .client_link {
     padding: 1rem 0;
-    width: 95%;
     overflow-x: auto
   }
   .client_link svg {
@@ -575,6 +575,17 @@
     width: 100%
   }
 
+  /* GLOBAL: CLIENT-SIDE */
+  .container--session-control {
+    display: flex;
+    justify-content: space-between
+  }
+  .session-counter {
+    align-self: center;
+    font-size: 1rem;
+    font-weight: bold
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
@@ -593,6 +604,12 @@
     }
     .sidebar:hover {
       width: 12rem
+    }
+  }
+  @media (min-width: 768px) {
+    .title-icon {
+      height: 48px;
+      width: 48px
     }
   }
   @media (max-width: 768px) {
@@ -614,12 +631,39 @@
     main {
       margin: 0
     }
+    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+      padding: 2rem 5vw 4rem 5vw
+    }
     .account_nav--item {
       margin: auto;
       padding: 0
     }
     .account_nav--item--text {
       display: none
+    }
+    .account_nav--item--icon {
+      margin: 0
+    }
+    .ql-snow .ql-formats button {
+      margin: .2rem
+    }
+    .ql-snow .ql-formats {
+      display: flex;
+      justify-content: space-evenly;
+      position: fixed;
+      bottom: 60.8px;
+      left: 0;
+      z-index: 99;
+      background-color: white;
+      border-radius: 3px;
+      box-shadow: 0 0 20px 10px #28282810;
+      width: 100vw;
+      padding: .6rem;
+      overflow-x: auto
+    }
+    .ql-formats {
+      margin: 0;
+      transform: none
     }
   }
 
@@ -629,9 +673,6 @@
       width: 0;
       background-color: transparent
     }
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 2rem 5vw 10rem 5vw
-    }
     p {
       font-size: .8rem
     }
@@ -640,9 +681,6 @@
     }
     .sub-title {
       font-size: 1.6rem
-    }
-    .ql-editor {
-      max-height: calc(100vh - 300px)
     }
 
     /* Blocks Page */
@@ -657,13 +695,18 @@
       width: 200vw
     }
   }
+  @media (max-width: 380px) {
+    .ql-snow .ql-formats button {
+      margin: .05rem
+    }
+  }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .icon--expand, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand {
       transition: none
     }
     .sidebar {
@@ -799,19 +842,42 @@ export default {
       config: {
         placeholder: 'Type away...',
         modules: {
+          clipboard: {
+            matchVisual: false
+          },
           toolbar: [
-              [{'header': 1}, {'header': 2}],
-              ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
-              [{'list': 'ordered'}, {'list': 'bullet'}],
-              ['link']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
           ]
         }
-      }
+      },
+
+      // PWA //
+
+      deferredPrompt: null,
+      displayMode: 'browser tab',
+      canInstall: false
     }
   },
   created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
+  },
+  mounted () {
+    const self = this
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault()
+      // Stash the event so it can be triggered later.
+      self.deferredPrompt = e
+      // Update UI notify the user they can install the PWA
+      this.canInstall = true
+    })
+    if (navigator.standalone) {
+      this.displayMode = 'standalone-ios'
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.displayMode = 'standalone'
+    }
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -820,6 +886,21 @@ export default {
     }
   },
   methods: {
+    // PWA //--------------------------------------------------------------------------------------------------------
+    installPWA () {
+      // Hide the app provided install promotion
+      this.canInstall = false
+      // Show the install prompt
+      this.deferredPrompt.prompt()
+      // Wait for the user to respond to the prompt
+      this.deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt')
+        } else {
+          console.log('User dismissed the install prompt')
+        }
+      })
+    },
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 

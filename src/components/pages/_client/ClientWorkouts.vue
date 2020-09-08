@@ -62,6 +62,15 @@
   .text--selected {
     font-size: .8rem
   }
+  .icon--expand {
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: .2rem;
+    transition: all .6s
+  }
+  .expanded {
+    transform: rotate(180deg)
+  }
 
   /* Block Grid */
   .block_grid {
@@ -174,6 +183,12 @@
       'body'
       'bar'
   }
+  .wrapper--workout:after {
+    content: '';
+    height: 1px;
+    width: 40%;
+    background-color: #282828
+  }
   .wrapper--workout__header {
     grid-area: header;
     display: flex;
@@ -218,14 +233,14 @@
     grid-area: feedback
   }
   .bottom-bar {
-    grid-area: bar
+    grid-area: bar;
+    margin-bottom: 6rem
   }
   .bottom-bar .button {
     margin: 0
   }
   .newWorkout {
-    background-color: #F6F6F6;
-    padding: 1rem
+    color: #B80000
   }
   .incomplete {
     color: #B80000
@@ -350,19 +365,6 @@
     .button--new-workout {
       width: 100%
     }
-
-    /* Full screen editor */
-    .activeWorkout {
-      border: none;
-      height: 100vh;
-      width: 100vw;
-      position: fixed;
-      background-color: white;
-      z-index: 11;
-      top: 0;
-      left: 0;
-      padding: 2rem 2rem 6rem 2rem
-    }
   }
 </style>
 
@@ -390,7 +392,7 @@
       <modal name="move" height="auto" :adaptive="true">
         <form @submit.prevent="initMove(), $modal.hide('move')" class="modal--move">
           <label for="range">Move to:</label>
-          <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/>
+          <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/><br><br>
           <button type="submit">Move</button>
         </form>
       </modal>
@@ -443,16 +445,16 @@
           </div> <!-- top_grid -->
           <div class="block_grid">
             <div class="calendar">
-              <div :class="{activeWorkout: editBlockNotes}" class="block-notes">
+              <div class="block-notes">
                 <div class="block-notes__header">
                   <p class="block-notes__header__text"><b>Block Notes</b></p>
                 </div>
                 <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn no-max-height"/>
+                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn"/>
                 <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true)" class="button--edit">Edit</button>
+                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true), cancelWorkout()" class="button--edit">Edit</button>
                     <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button--save">Save</button>
                     <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="cancel">Cancel</button>
                   </div>
@@ -497,11 +499,11 @@
                   <!-- New Workout -->
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
-                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{activeWorkout: workout.id === editWorkout, newWorkout: workout.name == 'Untitled' && !isEditingWorkout, showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
                       :key="index">
                       <div class="wrapper--workout__header">
                         <div>
-                          <span v-if="workout.id !== editWorkout" class="text--name"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
+                          <span v-if="workout.id !== editWorkout" class="text--name" :class="{newWorkout: workout.name == 'Untitled' && !isEditingWorkout}"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
                           <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
                           <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
                           <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
@@ -509,25 +511,26 @@
                           <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                           <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                         </div>
-                        <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
+                        <div>
+                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(workout.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(workout.id)"/>
+                          <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
+                        </div>
                       </div>
-                      <quill v-if="workout.id === editWorkout" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn" :class="{expanded: workout.id === isSessionNotesExpanded}"/>
+                      <quill v-if="workout.id === editWorkout && expandedSessions.includes(workout.id)" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+                      <div v-if="workout.id !== editWorkout && expandedSessions.includes(workout.id)" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn"/>
                       <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="workout.feedback" />
                       </div>
-                      <div class="bottom-bar">
+                      <div class="bottom-bar" v-if="expandedSessions.includes(workout.id)">
                         <div>
-                          <button v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true)">Edit</button>
+                          <button v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true), cancelBlockNotes()">Edit</button>
                           <button v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
                           <button class="cancel" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
-                          <button v-show="!isEditingWorkout" @click="selectedSessions.length = 0, selectedSessions.push(workout.id), $modal.show('move')">Move</button>
                           <button class="delete" v-show="!isEditingWorkout" @click="soloDelete(workout.id)">Delete</button>
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
                           <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
-                        <inline-svg v-show="isSessionNotesExpanded === workout.id || isSessionNotesExpanded === null && workout.overflow" @click="toggleSessionExpand(workout.id)" :id="'expand-' + workout.id" class="icon--expand" :class="{expandRotate: workout.id === isSessionNotesExpanded}" :src="require('../../../assets/svg/expand.svg')"/>
                       </div>
                     </div>
                   </div>
@@ -627,12 +630,12 @@
         response: '',
         editBlockNotes: false,
         todayDate: '',
+        expandedSessions: [],
 
         // WORKOUT DATA //
 
         isEditingWorkout: false,
         editWorkout: null,
-        isSessionNotesExpanded: null,
         movingWorkout: null,
         moveTarget: 1,
         copyTarget: 2,
@@ -700,8 +703,6 @@
       await this.$parent.get_client_details()
       this.today()
       this.scan()
-      this.$parent.showDeleteBlock = true
-      this.showExpanded()
     },
     beforeDestroy () {
       this.$parent.showDeleteBlock = false
@@ -821,13 +822,6 @@
         await this.add_workout()
         this.$parent.$parent.loading = false
       },
-      toggleSessionExpand (id) {
-        if (this.isSessionNotesExpanded === null) {
-          this.isSessionNotesExpanded = id
-        } else {
-          this.isSessionNotesExpanded = null
-        }
-      },
       editingWorkoutNotes (id, state) {
         this.isEditingWorkout = state
         this.editWorkout = id
@@ -873,6 +867,16 @@
 
       // BLOCK METHODS //-------------------------------------------------------------------------------
 
+      toggleExpandedSessions (id) {
+        if (this.expandedSessions.includes(id)) {
+          const index = this.expandedSessions.indexOf(id)
+          if (index > -1) {
+            this.expandedSessions.splice(index, 1)
+          }
+        } else {
+          this.expandedSessions.push(id)
+        }
+      },
       cancelBlockNotes () {
         this.editBlockNotes = false
         window.removeEventListener('keydown', this.quickSaveBlockNotes)
@@ -1067,24 +1071,6 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
-      showExpanded () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
-          // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((session) => {
-              if (session.notes) {
-                if (session.notes.length > 1400) {
-                  session.overflow = true
-                } else {
-                  session.overflow = false
-                }
-              } else {
-                session.overflow = false
-              }
-            })
-          }
-        })
-      },
       accessibleColors (hex) {
         if (hex !== undefined) {
           hex = hex.replace('#', '')
@@ -1099,7 +1085,7 @@
       },
       removeBracketsAndBreaks (dataIn) {
         if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '').replace(/<p><br><\/p>/gi, '')
+          return dataIn.replace(/[[\]]/g, '')
         } else {
           return dataIn
         }
@@ -1435,7 +1421,6 @@
           )
           await this.$parent.force_get_workouts()
           await this.update_programme()
-          await this.showExpanded()
           this.$ga.event('Workout', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1479,7 +1464,6 @@
           }
           this.sortWorkouts()
           this.scan()
-          this.showExpanded()
           this.$ga.event('Workout', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
