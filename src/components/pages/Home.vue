@@ -116,51 +116,57 @@
         this.creating = false
       },
       async save () {
-        this.response = ''
-        try {
-          this.$parent.loading = true
-          this.$parent.dontLeave = true
-          // eslint-disable-next-line
-          const response_save_clients = await axios.put('https://api.traininblocks.com/clients',
-            qs.stringify({
-              name: this.new_client.name,
-              pt_id: this.$parent.claims.sub,
-              email: this.new_client.email,
-              number: this.new_client.number,
-              notes: this.new_client.notes
-            }),
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
-          // eslint-disable-next-line
-          this.response = 'Added New Client'
-          this.$parent.responseDelay()
-
-          await this.$parent.clients()
-          this.$parent.clients_to_vue()
-
-          this.$parent.loading = false
-          this.$parent.dontLeave = false
-
-          this.close()
-
-          this.new_client = {
-            name: '',
-            email: '',
-            number: '',
-            notes: ''
-          }
-          this.$ga.event('Client', 'new')
-        } catch (e) {
-          this.$parent.loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
+        if (this.new_client.email === this.$parent.claims.email) {
+          this.$parent.errorMsg = 'You cannot create a client with your own email address!'
           this.$parent.$modal.show('error')
-          console.error(e)
+          console.error('You cannot create a client with your own email address!')
+        } else {
+          this.response = ''
+          try {
+            this.$parent.loading = true
+            this.$parent.dontLeave = true
+            // eslint-disable-next-line
+            const response_save_clients = await axios.put('https://api.traininblocks.com/clients',
+              qs.stringify({
+                name: this.new_client.name,
+                pt_id: this.$parent.claims.sub,
+                email: this.new_client.email,
+                number: this.new_client.number,
+                notes: this.new_client.notes
+              }),
+              {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                }
+              }
+            )
+            // eslint-disable-next-line
+            this.response = 'Added New Client'
+            this.$parent.responseDelay()
+
+            await this.$parent.clients()
+            this.$parent.clients_to_vue()
+
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+
+            this.close()
+
+            this.new_client = {
+              name: '',
+              email: '',
+              number: '',
+              notes: ''
+            }
+            this.$ga.event('Client', 'new')
+          } catch (e) {
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
+            console.error(e)
+          }
         }
       }
     }
