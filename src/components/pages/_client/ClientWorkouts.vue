@@ -1,4 +1,29 @@
 <style scoped>
+  /* Animation */
+  .open-stats-animation {
+    width: 100vw
+  }
+  .open-stats-animation .section--a, .open-stats-animation .section--b {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    background-color: #282828;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .open-stats-animation .section--a {
+    height: 50vh
+  }
+  .open-stats-animation .section--b {
+    height: 50vh;
+    top: 50%;
+    transition-delay: .4s
+  }
+  .open-stats-animation .section--a.openedStats, .open-stats-animation .section--b.openedStats {
+    width: 100%;
+    z-index: 2
+  }
+
   /* Block Info */
   .client_info--name.title {
     margin: 0
@@ -412,6 +437,13 @@
             <button>Copy</button>
         </form>
       </modal>
+      <div class="icon--open-stats" v-show="!showOptions" @click="showOptions = true, isStatsOpen = true" aria-label="Menu">
+        <p class="text">Statistics</p>
+      </div>
+      <div class="open-stats-animation">
+        <div :class="{openedStats: isStatsOpen}" class="section--a" />
+        <div :class="{openedStats: isStatsOpen}" class="section--b"/>
+      </div>
       <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <div class="multi-select" v-if="selectedSessions.length !== 0">
           <p class="text--selected">
@@ -623,6 +655,7 @@
 
         // BLOCK DATA //
 
+        isStatsOpen: false,
         showFeedback: '',
         weekColor: {
           backgroundColor: ''

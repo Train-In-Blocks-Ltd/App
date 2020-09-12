@@ -173,6 +173,9 @@
   svg path:not(.transparent) {
     fill: #282828
   }
+  svg.white-svg path {
+    fill: white
+  }
   .allow-text-overflow {
     text-overflow: ellipsis
   }
@@ -388,7 +391,6 @@
     transform: translateY(0%)
   }
   .sidebar {
-    border-right: 1px solid #E1E1E1;
     z-index: 10;
     display: flex;
     flex-direction: column;
