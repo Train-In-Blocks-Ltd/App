@@ -585,6 +585,64 @@
     font-weight: bold
   }
 
+  /* GLOBAL: SPLASH */
+  .splash {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0
+  }
+  .box {
+    position: relative;
+    top: calc(50% - 8rem);
+    border: .25rem solid #282828;
+    height: 8rem;
+    width: 8rem;
+    outline: 0;
+    overflow: hidden;
+    background-color: #282828;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: flashing 1s ease-in-out alternate-reverse infinite
+  }
+  .box:after {
+    content: '';
+    position: absolute;
+    background: white;
+    height: 16rem;
+    width: 16rem;
+    bottom: -50%;
+    left: -50%;
+    border-radius: 35%;
+    animation: spin 6s ease-in-out forwards
+  }
+  .box .logo--svg {
+    height: 50%;
+    width: auto
+  }
+  @keyframes spin {
+    0% {
+      transform: translateY(0) rotate(0deg)
+    }
+    100% {
+      transform: translateY(-100%) rotate(500deg)
+    }
+  }
+  @keyframes flashing {
+    0% {
+      opacity: .7
+    }
+    100% {
+      opacity: 1
+    }
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #block, #account, #archive, .wrapper--client, #help, #logout {
@@ -722,6 +780,13 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
+    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+      <div v-show="splashing" class="splash">
+        <div class="box">
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" />
+        </div>
+      </div>
+    </transition>
     <modal name="error" height="auto" :adaptive="true">
       <div class="modal--error">
         <p><b>Something went wrong. Please try again...</b></p><br>
@@ -816,6 +881,7 @@ export default {
 
       // BACKGROUND DATA //
 
+      splashing: true,
       programmes: null,
       error: '',
       archive_error: '',
@@ -877,6 +943,9 @@ export default {
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.displayMode = 'standalone'
     }
+    setTimeout(() => {
+      this.splashing = false
+    }, 6000)
   },
   watch: {
     // Everytime the route changes, check for auth status
