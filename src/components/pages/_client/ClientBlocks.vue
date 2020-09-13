@@ -75,20 +75,6 @@
     display: grid;
     grid-gap: .5rem
   }
-
-  @media (min-width: 1024px) {
-    .block_container--link {
-      grid-template: 1fr/.8fr 1fr;
-      grid-gap: 2rem
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    .blocks_grid {
-      grid-template-columns: 1fr
-    }
-  }
 </style>
 <template>
     <div>

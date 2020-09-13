@@ -70,6 +70,7 @@
     margin-left: auto
   }
   .icon--open-options, .icon--open-stats {
+    display: flex;
     cursor: pointer;
     position: fixed;
     right: 0;
@@ -87,13 +88,22 @@
     width: 6rem;
     text-align: center
   }
+  .icon--open-options svg, .icon--open-stats svg {
+    opacity: 1
+  }
+  .icon--open-options:hover svg, .icon--open-stats:hover svg {
+    opacity: 0
+  }
   .icon--open-options .text, .icon--open-stats .text {
     font-size: .8rem;
+    display: none;
     opacity: 0;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .icon--open-options:hover .text, .icon--open-stats:hover .text {
-    opacity: 1
+    display: block;
+    opacity: 1;
+    align-self: center
   }
   .openFloatingNav {
     transform: translateX(-12rem)
@@ -149,6 +159,7 @@
     </modal>
     <div v-show="keepLoaded" class="floating_nav">
       <div class="icon--open-options" v-show="!showOptions" @click="showOptions = true" aria-label="Menu">
+        <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options"/>
         <p class="text">Options</p>
       </div>
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">

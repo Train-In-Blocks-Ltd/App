@@ -102,7 +102,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #block, #account, #archive, .wrapper--client, #help, #logout, .graph {
+  #home, #block, #account, #archive, .wrapper--client, #help, #logout {
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -705,7 +705,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats {
       transition: none
     }
     .sidebar {

@@ -14,7 +14,7 @@
   .section--b {
     height: 50%;
     top: 50%;
-    transition-delay: .4s
+    transition-delay: .2s
   }
   .section--a.openedStats,  .section--b.openedStats {
     width: 100%;
@@ -92,9 +92,9 @@
     cursor: pointer;
     vertical-align: middle;
     margin-right: .2rem;
-    transition: all .6s
+    transition: all .4s
   }
-  .expanded {
+  .icon--expand.expanded {
     transform: rotate(180deg)
   }
 
@@ -291,6 +291,7 @@
   /* Graph */
   .graph {
     position: fixed;
+    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
     left: 0;
     z-index: 2;
@@ -322,7 +323,7 @@
     margin: .4rem 0
   }
   #chart {
-    margin-top: 4rem;
+    margin: 4rem 0;
     position: relative
   }
   .data-desc {
@@ -337,6 +338,9 @@
   }
 
   @media (max-width: 992px) {
+    .graph {
+      padding: 4rem 10vw
+    }
     .showingFeedback {
       grid-template-areas:
         'header'
@@ -349,6 +353,9 @@
     }
   }
   @media (max-width: 768px) {
+    .graph {
+      padding: 2rem 5vw 4rem 5vw
+    }
     .multi-select {
       top: -2rem;
       right: 0;
@@ -380,7 +387,7 @@
     .block_grid {
       display: block
     }
-    .calendar, .block-plan, .graph {
+    .calendar, .block-plan {
       margin: 4rem 0
     }
     #blocks .block_info input.block_info--name {
@@ -448,6 +455,7 @@
         </form>
       </modal>
       <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true" aria-label="Menu">
+        <inline-svg :src="require('../../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
       </div>
       <div class="open-stats-animation">
