@@ -601,6 +601,7 @@
     position: relative;
     top: calc(50% - 8rem);
     border: .25rem solid #282828;
+    border-radius: 3px;
     height: 8rem;
     width: 8rem;
     outline: 0;
