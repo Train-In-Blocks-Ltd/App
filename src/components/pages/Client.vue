@@ -1,12 +1,12 @@
 <style>
   #client {
     overflow-x: hidden;
-    background-color: #282828;
+    background-color: #F4F4F4;
     position: relative
   }
   .wrapper--client {
     background-color: white;
-    border-right: 6px solid #282828;
+    border-right: 6px solid #F4F4F4;
     transition: all 1.4s cubic-bezier(.165, .84, .44, 1)
   }
 
@@ -77,7 +77,7 @@
     width: calc(3rem);
     padding: .4rem 1rem .4rem .6rem;
     border-radius: 3px 0 0 3px;
-    background-color: #282828;
+    background-color: #F4F4F4;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   div.icon--open-stats {
@@ -90,7 +90,6 @@
   .icon--open-options .text, .icon--open-stats .text {
     font-size: .8rem;
     opacity: 0;
-    color: white;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .icon--open-options:hover .text, .icon--open-stats:hover .text {
@@ -102,9 +101,6 @@
   .client--options {
     display: grid;
     grid-gap: 1rem
-  }
-  .client--options a {
-    color: white
   }
   .client--options a:hover {
     opacity: .6
@@ -156,7 +152,7 @@
         <p class="text">Options</p>
       </div>
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options white-svg" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
+        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">

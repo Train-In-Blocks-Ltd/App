@@ -102,7 +102,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+  #home, #block, #account, #archive, .wrapper--client, #help, #logout, .graph {
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -172,9 +172,6 @@
   }
   svg path:not(.transparent) {
     fill: #282828
-  }
-  svg.white-svg path {
-    fill: white
   }
   .allow-text-overflow {
     text-overflow: ellipsis

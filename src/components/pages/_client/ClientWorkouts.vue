@@ -1,25 +1,22 @@
 <style scoped>
   /* Animation */
-  .open-stats-animation {
-    width: 100vw
-  }
-  .open-stats-animation .section--a, .open-stats-animation .section--b {
+  .section--a, .section--b {
     position: fixed;
     top: 0;
     right: 0;
     width: 0;
-    background-color: #282828;
+    background-color: #F4F4F4;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .open-stats-animation .section--a {
-    height: 50vh
+  .section--a {
+    height: 50%
   }
-  .open-stats-animation .section--b {
-    height: 50vh;
+  .section--b {
+    height: 50%;
     top: 50%;
     transition-delay: .4s
   }
-  .open-stats-animation .section--a.openedStats, .open-stats-animation .section--b.openedStats {
+  .section--a.openedStats,  .section--b.openedStats {
     width: 100%;
     z-index: 2
   }
@@ -80,6 +77,10 @@
   }
   .floating_nav__icon {
     cursor: pointer
+  }
+  .section--top {
+    display: flex;
+    justify-content: space-between
   }
   .section-title {
     margin: 0 0 2rem 0
@@ -288,6 +289,15 @@
   }
 
   /* Graph */
+  .graph {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    overflow-x: auto
+  }
   .container--content {
     display: flex;
     flex-direction: column
@@ -437,7 +447,7 @@
             <button>Copy</button>
         </form>
       </modal>
-      <div class="icon--open-stats" v-show="!showOptions" @click="showOptions = true, isStatsOpen = true" aria-label="Menu">
+      <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true" aria-label="Menu">
         <p class="text">Statistics</p>
       </div>
       <div class="open-stats-animation">
@@ -569,64 +579,69 @@
                 </div>
               </div><!-- workouts -->
             </div>
-            <div class="graph">
-              <div>
-                <h3 class="section-title">Statistics</h3>
-                <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
-                <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
-              </div><br>
-              <div class="container--content">
-                <div class="data-options">
-                  <div class="data-select">
-                    <div class="data-select__options">
-                      <label for="measure">
-                        <b>Measurement: </b><br>
-                        <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
-                          <option v-for="optionName in optionsForDataName" :value="optionName.value" :key="'M' + optionName.id">
-                            {{optionName.text}}
-                          </option>
-                        </select>
-                      </label>
-                    </div>
-                    <div class="data-select__options" v-show="showType">
-                      <label for="measure-type">
-                        <b>Data type: </b><br>
-                        <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
-                          <option value="Sets">Sets</option>
-                          <option value="Reps">Reps</option>
-                          <option v-for="optionData in optionsForDataType" :value="optionData.value" :key="'DT-' + optionData.id">
-                            {{optionData.text}}
-                          </option>
-                        </select>
-                      </label>
-                    </div>
-                  </div>
-                  <div v-show="showType" class="data-desc">
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
-                      <p class="data-desc__value">{{ p1.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p2.desc }}</b></p>
-                      <p class="data-desc__value">{{ p2.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p3.desc }}</b></p>
-                      <p class="data-desc__value">{{ p3.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p4.desc }}</b></p>
-                      <p class="data-desc__value">{{ p4.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc">{{ p5.desc }}</p>
-                      <p class="data-desc__value">{{ p5.value }}</p>
-                    </div>
-                  </div>
+            <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+              <div class="graph" v-if="isStatsOpen">
+                <div class="section--top">
+                  <h3 class="section-title">Statistics</h3>
+                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false" class="icon--options" :src="require('../../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
-                <line-chart id="chart" :chart-data="dataCollection" :options="options" aria-label="Graph"/>
+                <div>
+                  <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
+                  <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
+                </div><br>
+                <div class="container--content">
+                  <div class="data-options">
+                    <div class="data-select">
+                      <div class="data-select__options">
+                        <label for="measure">
+                          <b>Measurement: </b><br>
+                          <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
+                            <option v-for="optionName in optionsForDataName" :value="optionName.value" :key="'M' + optionName.id">
+                              {{optionName.text}}
+                            </option>
+                          </select>
+                        </label>
+                      </div>
+                      <div class="data-select__options" v-show="showType">
+                        <label for="measure-type">
+                          <b>Data type: </b><br>
+                          <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
+                            <option value="Sets">Sets</option>
+                            <option value="Reps">Reps</option>
+                            <option v-for="optionData in optionsForDataType" :value="optionData.value" :key="'DT-' + optionData.id">
+                              {{optionData.text}}
+                            </option>
+                          </select>
+                        </label>
+                      </div>
+                    </div>
+                    <div v-show="showType" class="data-desc">
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
+                        <p class="data-desc__value">{{ p1.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p2.desc }}</b></p>
+                        <p class="data-desc__value">{{ p2.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p3.desc }}</b></p>
+                        <p class="data-desc__value">{{ p3.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p4.desc }}</b></p>
+                        <p class="data-desc__value">{{ p4.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc">{{ p5.desc }}</p>
+                        <p class="data-desc__value">{{ p5.value }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <line-chart id="chart" :chart-data="dataCollection" :options="options" aria-label="Graph"/>
+                </div>
               </div>
-            </div>  <!-- notes -->
+            </transition>
           </div> <!-- programme_grid -->
         </div>
       </div>
