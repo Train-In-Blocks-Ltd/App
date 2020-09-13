@@ -27,39 +27,11 @@
     animation-duration: calc(1s / 2);
     animation-duration: calc(var(--animate-duration) / 2)
   }
-  .animate__bounceInDown {
-    animation-name: bounceInDown;
-    animation-timing-function: cubic-bezier(.215, .61, .355, 1)
-  }
   .animate__fadeIn {
     animation-name: fadeIn
   }
   .animate__fadeOut {
     animation-name: fadeOut
-  }
-  @keyframes bounceInDown {
-    0% {
-      opacity: 0;
-      -webkit-transform: translate3d(0, -3000px, 0) scaleY(3);
-      transform: translate3d(0, -3000px, 0) scaleY(3)
-    }
-    60% {
-      opacity: 1;
-      -webkit-transform: translate3d(0, 25px, 0) scaleY(.9);
-      transform: translate3d(0, 25px, 0) scaleY(.9)
-    }
-    75% {
-      -webkit-transform: translate3d(0, -10px, 0) scaleY(.95);
-      transform: translate3d(0, -10px, 0) scaleY(.95)
-    }
-    90% {
-      -webkit-transform: translate3d(0, 5px, 0) scaleY(.985);
-      transform: translate3d(0, 5px, 0) scaleY(.985)
-    }
-    to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0)
-    }
   }
   @keyframes fadeIn {
     from {
@@ -802,7 +774,7 @@
       Skip to content
     </a>
     <nav class="sidebar" v-if="authenticated && claims">
-      <div class="logo animate animate__bounceInDown animate__delay-2s">
+      <div class="logo">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
         </router-link>

@@ -70,6 +70,7 @@
     margin-left: auto
   }
   .icon--open-options, .icon--open-stats {
+    z-index: 2;
     display: flex;
     cursor: pointer;
     position: fixed;
