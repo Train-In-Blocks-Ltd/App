@@ -60,7 +60,8 @@
   }
   .floating_nav a, .selected-options {
     color: #282828;
-    text-decoration: none
+    text-decoration: none;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   .floating_nav a:hover, .selected-options:hover {
     opacity: .6

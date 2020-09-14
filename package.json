@@ -23,8 +23,7 @@
     "vue-js-modal": "^2.0.0-rc.6",
     "vue-loading-overlay": "^3.3.2",
     "vue-quill": "git+https://github.com/Train-In-Blocks-Ltd/vue-quill.git",
-    "vue-router": "^3.4.0",
-    "vue2-touch-events": "^2.3.2"
+    "vue-router": "^3.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

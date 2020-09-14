@@ -91,7 +91,7 @@
   .icon--expand {
     cursor: pointer;
     vertical-align: middle;
-    margin-right: .2rem;
+    margin-top: .8rem;
     transition: all .4s
   }
   .icon--expand.expanded {
@@ -202,6 +202,17 @@
   .workout--header__left {
     display: flex
   }
+  .expand-all {
+    text-align: right;
+    margin: 2rem 0;
+    font-size: .8rem;
+    cursor: pointer;
+    opacity: 1;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .expand-all:hover {
+    opacity: .6
+  }
   .wrapper--workout {
     display: grid;
     grid-template-areas:
@@ -220,6 +231,11 @@
     display: flex;
     justify-content: space-between
   }
+  .header-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center
+  }
   .select-checkbox {
     vertical-align: middle;
     height: 1.4rem;
@@ -228,8 +244,7 @@
   }
   .container--workouts {
     display: grid;
-    grid-gap: 6rem;
-    margin-top: 4rem
+    grid-gap: 6rem
   }
   input.workout-name, input.workout-date {
     text-overflow: ellipsis;
@@ -546,6 +561,7 @@
                 <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
                 <p v-if="$parent.loading_workouts">Loading sessions...</p>
                 <div>
+                  <p class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
                   <!-- New Workout -->
                   <div class="container--workouts" v-if="!$parent.no_workouts">
                     <!-- Loop through workouts -->
@@ -561,9 +577,9 @@
                           <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
                           <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
                         </div>
-                        <div>
-                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(workout.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(workout.id)"/>
+                        <div class="header-options">
                           <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
+                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(workout.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(workout.id)"/>
                         </div>
                       </div>
                       <quill v-if="workout.id === editWorkout && expandedSessions.includes(workout.id)" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
@@ -1127,6 +1143,31 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      expandAll (toExpand) {
+        this.$parent.$parent.client_details.programmes.forEach((block) => {
+          // eslint-disable-next-line
+          if (block.id == this.$route.params.id) {
+            block.workouts.forEach((session) => {
+              if (toExpand === 'Expand') {
+                this.expandedSessions.push(session.id)
+              } else {
+                let x = 0
+                let y = this.expandedSessions.length
+                for (; x < y; x++ ) {
+                  this.expandedSessions.pop()
+                }
+              }
+            })
+          }
+        })
+      },
+      expandText (array) {
+        if (array.length !== 0) {
+          return 'Collapse'
+        } else {
+          return 'Expand'
+        }
+      },
       accessibleColors (hex) {
         if (hex !== undefined) {
           hex = hex.replace('#', '')
