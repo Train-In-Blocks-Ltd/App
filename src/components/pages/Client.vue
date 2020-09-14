@@ -71,6 +71,7 @@
     margin-left: auto
   }
   .icon--open-options, .icon--open-stats {
+    user-select: none;
     z-index: 2;
     display: flex;
     cursor: pointer;

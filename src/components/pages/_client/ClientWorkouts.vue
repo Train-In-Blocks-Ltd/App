@@ -366,6 +366,9 @@
     .show-feedback {
       padding: 1rem 0
     }
+    .expand-all:hover {
+      opacity: 1
+    }
   }
   @media (max-width: 768px) {
     .graph {

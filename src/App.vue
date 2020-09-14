@@ -93,6 +93,9 @@
     margin-bottom: 4rem;
     align-items: center
   }
+  .wrapper--calendar {
+    user-select: none
+  }
 
   /* GLOBAL: TOOLTIP */
   .tooltip {
@@ -247,6 +250,7 @@
 
   /* GLOBAL: SHOW WORKOUT AND NOTES */
   .show-workout, .show-block-notes, .show-client-notes {
+    outline-width: 0;
     overflow-wrap: break-word;
     color: #282828;
     line-height: 1.42;
@@ -388,6 +392,7 @@
     text-decoration: none
   }
   .account_nav--item--text {
+    user-select: none;
     color: white;
     text-decoration: none;
     position: relative;
@@ -458,13 +463,14 @@
     height: 10px
   }
   ::-webkit-scrollbar-track {
-    background: #28282815
+    background-color: #28282821
   }
   ::-webkit-scrollbar-thumb {
-    background: #28282850
+    background-color: #28282890;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #28282860
+    background-color: #28282860
   }
 
   /* ARCHIVE AND HOME STYLES */
