@@ -74,7 +74,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+  #home, #block, #account, #archive, .wrapper--client, #help, #logout, #templates {
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -623,7 +623,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+    #home, #block, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -666,7 +666,7 @@
     main {
       margin: 0
     }
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+    #home, #block, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -809,6 +809,14 @@
           </p>
         </router-link>
       </div>
+      <div class="account_nav--item">
+        <router-link to="/templates" title="Templates">
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon" aria-label="Templates"/>
+          <p class="account_nav--item--text">
+            Templates
+          </p>
+        </router-link>
+      </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/archive" title="Archive">
           <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon" aria-label="Archive"/>
@@ -822,14 +830,6 @@
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account"/>
           <p class="account_nav--item--text">
             Account
-          </p>
-        </router-link>
-      </div>
-      <div class="account_nav--item">
-        <router-link to="/logout" @click.native="logout()" title="Logout">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon" aria-label="Logout"/>
-          <p class="account_nav--item--text">
-            Logout
           </p>
         </router-link>
       </div>

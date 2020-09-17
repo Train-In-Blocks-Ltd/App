@@ -11,6 +11,7 @@ import ClientComponent from '@/components/pages/Client'
 import NotFound from '@/components/pages/NotFound'
 import ArchiveComponent from '@/components/pages/Archive'
 import HelpComponent from '@/components/pages/Help'
+import TemplateComponent from '@/components/pages/Templates'
 
 import ClientBlocks from '@/components/pages/_client/ClientBlocks'
 import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
@@ -64,6 +65,14 @@ const router = new Router({
     {
       path: '/help',
       component: HelpComponent,
+      meta: {
+        requiresAuth: true,
+        requiresTrainer: true
+      }
+    },
+    {
+      path: '/templates',
+      component: TemplateComponent,
       meta: {
         requiresAuth: true,
         requiresTrainer: true
