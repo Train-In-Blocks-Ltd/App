@@ -80,8 +80,8 @@
     <div>
       <modal name="help-block" height="auto" :adaptive="true">
         <div class="modal--help-block">
-          <p><i>Blocks</i> are the different cycles within your client's programme. It contains the different microcycles of sessions.</p><br>
-          <p>You will be able to track, visualise and progress the sessions within a <i>Block</i>.</p>
+          <p><i>Plans</i> are the different cycles within your client's programme. It contains the different microcycles of sessions.</p><br>
+          <p>You will be able to track, visualise and progress the sessions within a plan.</p>
         </div>
       </modal>
       <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
@@ -103,7 +103,7 @@
         <div class="flex">
           <div class="container--title">
             <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
-            <h2 class="sub-title no-margin">Blocks</h2>
+            <h2 class="sub-title no-margin">Plans</h2>
           </div>
           <inline-svg class="sub-title tooltip" @click="$modal.show('help-block')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
         </div>
@@ -124,10 +124,10 @@
               </router-link>
           </div>
         </div>
-        <button v-if="!creating" @click="creation()">New Block</button>
+        <button v-if="!creating" @click="creation()">New Plan</button>
         <p class="new-msg" v-if="!creating">{{response}}</p>
         <div v-if="creating" class="add_block_container">
-          <h3>New Block</h3>
+          <h3>New Plan</h3>
           <form class="form_grid add_block" name="add_programme" @submit.prevent="save()">
             <label><b>Name: </b><input class="input--forms" type="text" v-model="new_block.name" required/></label>
             <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_block.duration" required/></label>
