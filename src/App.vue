@@ -417,16 +417,6 @@
   }
 
   /* GLOBAL: QUILL */
-  div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
-    border: none;
-    padding: 0
-  }
-  .ql-formats {
-    transform: translateX(-5px)
-  }
-  .ql-snow .ql-stroke {
-    stroke: #282828
-  }
   .ql-editor {
     grid-area: body;
     color: #282828;
@@ -434,27 +424,18 @@
     padding: 0;
     transition: all 1s
   }
-  .ql-snow .ql-editor h1 {
+  div.ql-editor h1 {
     margin: 1.072rem 0
   }
-  .ql-snow .ql-editor h2 {
+  div.ql-editor h2 {
     margin: 1.245rem 0
   }
-  .ql-snow .ql-editor p {
+  div.ql-editor p {
     margin: 1rem 0
   }
   .ql-editor.ql-blank:before {
     margin: 1rem 0;
     left: 0
-  }
-  .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    color: #28282899
-  }
-  .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow.ql-toolbar button:hover .ql-stroke-miter, .ql-snow .ql-toolbar button:hover .ql-stroke-miter, .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
-    stroke: #28282899
-  }
-  .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
-    fill: #28282899
   }
 
   /* GLOBAL: SCROLLBAR */
@@ -679,27 +660,6 @@
     .account_nav--item--icon {
       margin: 0
     }
-    .ql-snow .ql-formats button {
-      margin: .2rem
-    }
-    .ql-snow .ql-formats {
-      display: flex;
-      justify-content: space-evenly;
-      position: fixed;
-      bottom: 60.8px;
-      left: 0;
-      z-index: 99;
-      background-color: white;
-      border-radius: 3px;
-      box-shadow: 0 0 20px 10px #28282810;
-      width: 100vw;
-      padding: .6rem;
-      overflow-x: auto
-    }
-    .ql-formats {
-      margin: 0;
-      transform: none
-    }
   }
 
   /* For Mobile */
@@ -728,11 +688,6 @@
     }
     .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
       width: 200vw
-    }
-  }
-  @media (max-width: 380px) {
-    .ql-snow .ql-formats button {
-      margin: .05rem
     }
   }
 
@@ -883,6 +838,7 @@ export default {
       // QUILL DATA //
 
       config: {
+        theme: 'bubble',
         placeholder: 'Type away...',
         modules: {
           clipboard: {

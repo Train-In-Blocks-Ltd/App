@@ -174,17 +174,7 @@ export default {
       loading: true,
       viewWorkoutsStore: [],
       maxWorkoutIndexHome: null,
-      currentWorkoutIndexHome: 0,
-      config: {
-        modules: {
-          toolbar: [
-            [{'header': 1}, {'header': 2}],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{'script': 'sub'}, {'script': 'super'}]
-          ]
-        },
-        placeholder: 'Type away...'
-      }
+      currentWorkoutIndexHome: 0
     }
   },
   created () {
