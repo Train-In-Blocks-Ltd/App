@@ -1156,7 +1156,7 @@
               } else {
                 let x = 0
                 let y = this.expandedSessions.length
-                for (; x < y; x++ ) {
+                for (; x < y; x++) {
                   this.expandedSessions.pop()
                 }
               }

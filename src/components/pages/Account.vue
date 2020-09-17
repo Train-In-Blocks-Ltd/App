@@ -117,7 +117,7 @@
         </div>
       </div>
     </form><br><br>
-    <p style="font-size: .8rem"><b>Version 1.2</b></p>
+    <p style="font-size: .8rem"><b>Version 1.4</b></p>
   </div>
 </template>
 

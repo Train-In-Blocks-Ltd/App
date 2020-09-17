@@ -466,8 +466,7 @@
     background-color: #28282821
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #28282890;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+    background-color: #28282890
   }
   ::-webkit-scrollbar-thumb:hover {
     background-color: #28282860
