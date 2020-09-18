@@ -58,7 +58,7 @@
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    letter-spacing: .1rem
+    letter-spacing: 1px
   }
   #app {
     color: #282828;

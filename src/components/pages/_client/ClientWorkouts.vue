@@ -1146,6 +1146,16 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      pasteHtmlAtCaret (html) {
+        let caretPosition = document.getSelection()
+        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-bubble') {
+          if (caretPosition.focusNode.nodeType !== 3) {
+            caretPosition.focusNode.insertAdjacentHTML('afterend', html)
+          } else {
+            caretPosition.focusNode.parentNode.insertAdjacentHTML('afterend', html)
+          }
+        }
+      },
       expandAll (toExpand) {
         this.$parent.$parent.client_details.programmes.forEach((block) => {
           // eslint-disable-next-line
