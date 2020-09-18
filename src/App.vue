@@ -145,7 +145,7 @@
   p {
     margin: 0
   }
-  svg path:not(.transparent) {
+  svg path:not(.account_nav--item--icon.transparent) {
     fill: #282828
   }
   .allow-text-overflow {
@@ -412,7 +412,7 @@
     vertical-align: bottom;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .account_nav--item--icon path:not(.transparent) {
+  .account_nav--item--icon:not(.transparent) path {
     fill: white
   }
 
@@ -766,7 +766,7 @@
       </div>
       <div class="account_nav--item">
         <router-link to="/templates" title="Templates">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon" aria-label="Templates"/>
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon transparent" aria-label="Templates"/>
           <p class="account_nav--item--text">
             Templates
           </p>
