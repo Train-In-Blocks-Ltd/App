@@ -41,16 +41,16 @@
 <template>
   <div id="archive">
     <h1 class="main-title">Archive</h1>
-    <p v-if="this.$parent.no_archive">No clients are archived</p>
-    <p v-if="this.$parent.archive_error"><b>{{this.$parent.archive_error}}</b></p>
-    <div class="archive--container" v-if="!this.$parent.no_archive && !this.$parent.archive_error && this.$parent.archive_posts">
+    <p v-if="this.$parent.archive.no_archive">No clients are archived</p>
+    <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
+    <div class="archive--container" v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients">
       <label>
         <b>Find a client:</b>
         <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
       </label>
     </div>
     <div class="container--clients">
-      <div v-for="(clients, index) in $parent.archive_posts"
+      <div v-for="(clients, index) in $parent.archive.clients"
         :key="index" v-show="(!search) || ((clients.name).toLowerCase()).includes(search.toLowerCase())" class="client_container archived">
         <div class="client_link archived">
           <p class="client_link__name"><b>{{clients.name}}</b></p>

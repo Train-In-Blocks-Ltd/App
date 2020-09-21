@@ -3,17 +3,17 @@
   .modal--toolkit {
     padding: 2rem
   }
-  .workout_toolkit--content {
+  .session_toolkit--content {
     margin: 2rem 0
   }
-  .workout_toolkit--content > div {
+  .session_toolkit--content > div {
     display: grid;
     grid-gap: 1rem
   }
-  .workout_toolkit--content label {
+  .session_toolkit--content label {
     font-weight: bold
   }
-  .workout_toolkit--select {
+  .session_toolkit--select {
     background-color: transparent;
     border: 0;
     font-size: 1.6rem;
@@ -21,7 +21,7 @@
     padding: .2rem 1rem .2rem 0;
     font-weight: bold
   }
-  .workout_toolkit--content input {
+  .session_toolkit--content input {
     width: 4rem
   }
   .modal--toolkit-close {
@@ -29,10 +29,10 @@
   }
 
   @media (max-width: 576px) {
-    .workout_toolkit--content label, .workout_toolkit--content input {
+    .session_toolkit--content label, .session_toolkit--content input {
       font-size: .8rem
     }
-    .workout_toolkit--select {
+    .session_toolkit--select {
       font-size: 1.2rem;
       width: 100%
     }
@@ -47,7 +47,7 @@
 
 <template>
   <div class="modal--toolkit" >
-    <select class="workout_toolkit--select" @change="get_toolkit()">
+    <select class="session_toolkit--select" @change="get_toolkit()">
       <option>Select a Calculator</option>
       <option>Maximal Heart Rate (Tanaka)</option>
       <option>Maximal Heart Rate (Gellish)</option>
@@ -55,7 +55,7 @@
       <option>Heart Rate Reserve</option>
       <option>Body Mass Index</option>
     </select>
-    <div class="workout_toolkit--content">
+    <div class="session_toolkit--content">
       <div v-if="toolkit_calcs.mhr_tanaka.view">
         <div>
           <label for="tanaka_age">Age: </label>
@@ -142,7 +142,7 @@
       }
     },
     methods: {
-      /* Various workout calculators */
+      /* Various session calculators */
       mhr_tanaka_calc () {
         this.toolkit_calcs.mhr_tanaka.value = 220 - Number(document.querySelector('#tanaka_age').value)
       },
@@ -165,13 +165,13 @@
         this.toolkit_calcs.hrtz.view = false
         this.toolkit_calcs.hrr.view = false
         this.toolkit_calcs.bmi.view = false
-        document.querySelectorAll('.workout_toolkit--content input').forEach(e => {
+        document.querySelectorAll('.session_toolkit--content input').forEach(e => {
           e.value = null
         })
       },
       /* Selects the correct calculator depending on the select */
       get_toolkit () {
-        const select = document.querySelector('.workout_toolkit--select').value
+        const select = document.querySelector('.session_toolkit--select').value
         if (select === 'Maximal Heart Rate (Tanaka)') {
           this.close_toolkit()
           this.toolkit_calcs.mhr_tanaka.view = true

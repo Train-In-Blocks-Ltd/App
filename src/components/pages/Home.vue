@@ -39,16 +39,15 @@
       </button>
     </div>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
-    <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
-    <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
+    <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
       <label>
         <b>Find a client:</b>
         <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
       </label>
       <div class="container--clients">
-        <div v-for="(clients, index) in $parent.posts"
+        <div v-for="(clients, index) in $parent.clients"
           :key="index">
           <!-- Perform case insensitive search -->
           <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
@@ -90,7 +89,7 @@
     components: {
       InlineSvg
     },
-    data: function () {
+    data () {
       return {
         response: '',
         creating: false,
@@ -100,8 +99,7 @@
           number: '',
           notes: ''
         },
-        search: '',
-        msg: ''
+        search: ''
       }
     },
     created () {
@@ -125,8 +123,7 @@
           try {
             this.$parent.loading = true
             this.$parent.dontLeave = true
-            // eslint-disable-next-line
-            const response_save_clients = await axios.put('https://api.traininblocks.com/clients',
+            await axios.put('https://api.traininblocks.com/clients',
               qs.stringify({
                 name: this.new_client.name,
                 pt_id: this.$parent.claims.sub,
@@ -145,7 +142,7 @@
             this.response = 'Added New Client'
             this.$parent.responseDelay()
 
-            await this.$parent.clients()
+            await this.$parent.clients_f()
             this.$parent.clients_to_vue()
 
             this.$parent.loading = false
