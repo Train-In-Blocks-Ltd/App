@@ -1277,7 +1277,6 @@ export default {
         )
         this.$ga.event('Workout', 'update')
         var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
-        console.log(client)
         if (client.data[0].notifications === 1) {
           if (workoutsFeedback !== null) {
             var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
