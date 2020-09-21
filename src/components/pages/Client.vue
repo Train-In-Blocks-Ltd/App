@@ -316,7 +316,6 @@
                   'firstName': this.$parent.client_details.email,
                   'email': this.$parent.client_details.email,
                   'login': this.$parent.client_details.email,
-                  'color': '#ffffff',
                   'ga': true,
                   'client_id_db': this.$parent.client_details.client_id,
                   'user_type': 'Client'
