@@ -102,7 +102,7 @@ const webpackConfig = merge(baseWebpackConfig, {
           module.resource &&
           /\.js$/.test(module.resource) &&
           module.resource.indexOf(
-            path.join(__dirname, '../node_modules/@okta/okta-signin-widget')
+            path.join(__dirname, '../node_modules/@okta')
           ) === 0
         )
       }
