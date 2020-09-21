@@ -1276,50 +1276,53 @@ export default {
           }
         )
         this.$ga.event('Workout', 'update')
-        if (workoutsFeedback !== null) {
-          var ptId = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
-          var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${ptId.data[0].pt_id}"&limit=1`,
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
-            {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': ptEmail.data[0].credentials.emails[0].value
-                    }
-                  ],
-                  'subject': this.claims.email + ' has submitted feedback for ' + workoutsName
+        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+        console.log(client)
+        if (client.data[0].notifications === 1) {
+          if (workoutsFeedback !== null) {
+            var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
+              {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.AUTH_HEADER
                 }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': feedbackEmailText(this.claims.client_id_db, pid)
+              }
+            )
+            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+              {
+                'personalizations': [
+                  {
+                    'to': [
+                      {
+                        'email': ptEmail.data[0].credentials.emails[0].value
+                      }
+                    ],
+                    'subject': this.claims.email + ' has submitted feedback for ' + workoutsName
+                  }
+                ],
+                'from': {
+                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
                 },
-                {
-                  'type': 'text/html',
-                  'value': feedbackEmail(this.claims.client_id_db, pid)
+                'content': [
+                  {
+                    'type': 'text/plain',
+                    'value': feedbackEmailText(this.claims.client_id_db, pid)
+                  },
+                  {
+                    'type': 'text/html',
+                    'value': feedbackEmail(this.claims.client_id_db, pid)
+                  }
+                ]
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.SENDGRID
                 }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
               }
-            }
-          )
+            )
+          }
         }
       } catch (e) {
         this.loading = false
