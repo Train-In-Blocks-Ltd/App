@@ -10,12 +10,13 @@
   }
 
   /* Client Info */
-  #client .client_info input:not([type='submit']), #duration, .workout-date {
+  #client .client_info input:not([type='submit']), #duration {
     width: 100%;
     cursor: pointer;
     background-color: initial;
     border: none;
     padding: .6rem 0;
+    margin-left: 1rem;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   #client .client_info input:not([type='submit']):hover, #duration:hover, .workout-date:hover {
@@ -32,11 +33,9 @@
     display: flex
   }
   .wrapper--info label {
-    align-self: center;
-    margin-right: 1rem
-  }
-  #phone {
-    width: 50%
+    display: flex;
+    width: 100%;
+    align-items: center
   }
   #client .client_info input.client_info--name {
     max-width: 100%;
@@ -55,15 +54,15 @@
     grid-gap: 2rem;
     position: fixed;
     right: 2rem;
-    top: 4rem;
+    top: 2rem;
     text-align: right
   }
-  .floating_nav a {
+  .floating_nav a, .selected-options {
     color: #282828;
     text-decoration: none
   }
-  .floating_nav a:hover {
-    opacity: .6rem
+  .floating_nav a:hover, .selected-options:hover {
+    opacity: .6
   }
   .icon--options {
     cursor: pointer;
@@ -84,13 +83,6 @@
   .client_notes--header {
     color: #282828;
     padding: .6rem .8rem
-  }
-  .client_notes--header p {
-    margin: 0;
-    font-weight: bold
-  }
-  .client_notes--quill {
-    margin: 0
   }
 
   /* Responsiveness */
@@ -121,18 +113,6 @@
       width: 90vw
     }
   }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    /* Overall */
-    #client .client_info input.client_info--name:focus {
-      border-bottom: 2px solid #282828
-    }
-    .floating_nav {
-      right: 2rem;
-      top: 2rem
-    }
-  }
 </style>
 
 <template>
@@ -141,20 +121,23 @@
       <toolkit/>
     </modal>
     <div v-show="keepLoaded" class="floating_nav">
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
-        <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" />
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
+        <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" aria-label="Menu"/>
       </transition>
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster">
-        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" />
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
+        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
-        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
+          <a href="javascript:void(0)" v-show="showDeleteBlock" @click="delete_block()">Delete Block</a>
+        </transition>
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
         </transition>
-        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
         </transition>
-        <transition enter-active-class="animate__animated animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOutRight animate__faster">
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <router-link :to="toURL()">
             Back
           </router-link>
@@ -164,16 +147,26 @@
     <div class="wrapper--client" :class="{ openFloatingNav: showOptions }">
       <div class="top_grid" v-if="!blocks">
         <!-- Update the client details -->
-        <form class="client_info" v-on:submit.prevent="update_client()">
-          <input class="client_info--name title" type="text" name="name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
+        <form class="client_info" @submit.prevent="update_client()">
+          <input class="client_info--name title" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
           <div class="client_info__more-details">
-            <div class="wrapper--info"><label><b>Email: </b></label><input class="input--forms allow-text-overflow" type="email" name="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/></div>
-            <div class="wrapper--info"><label><b>Phone: </b></label><input class="input--forms allow-text-overflow" type="tel" name="number" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" /></div>
+            <div class="wrapper--info">
+              <label>
+                <b>Email: </b>
+                <input class="input--forms allow-text-overflow" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/>
+              </label>
+            </div>
+            <div class="wrapper--info">
+              <label>
+                <b>Phone: </b>
+                <input class="input--forms allow-text-overflow" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" />
+              </label>
+            </div>
             <button @click="createClient()" class="button--verify button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
           </div>
         </form>
       </div>
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"></router-view>
       </transition>
     </div>
@@ -193,6 +186,9 @@
     },
     data: function () {
       return {
+
+        // BACKGROUD DATA //
+
         keepLoaded: false,
         showOptions: false,
         no_programmes: false,
@@ -200,7 +196,10 @@
         blocks: false,
         no_workouts: false,
         loading_workouts: true,
-        editClientNotes: false,
+        showDeleteBlock: false,
+
+        // CLIENT STATUS DATA //
+
         clientAlreadyMsg: 'Loading...',
         clientAlready: true,
         clientSuspend: null
@@ -210,7 +209,6 @@
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
-      this.checkClient()
       this.keepLoaded = true
     },
     beforeDestroy () {
@@ -218,6 +216,19 @@
       this.$parent.client_details = null
     },
     methods: {
+
+      // BACKGROUND METHODS //-------------------------------------------------------------------------------
+
+      created () {
+        var x
+        for (x in this.$parent.posts) {
+          // If client matches client in route
+          if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
+            // Set client_details variable with client details
+            this.$parent.client_details = this.$parent.posts[x]
+          }
+        }
+      },
       toURL () {
         var url = '/'
         if (window.location.href.includes('block') === true) {
@@ -225,6 +236,9 @@
         }
         return url
       },
+
+      // DATABSE AND API METHODS //-------------------------------------------------------------------------------
+
       async checkClient () {
         try {
           const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`,
@@ -238,7 +252,7 @@
           )
           if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'PROVISIONED') {
             this.clientAlready = true
-            this.clientAlreadyMsg = 'Activated'
+            this.clientAlreadyMsg = 'Email Sent'
           } else if (result.data[0].status === 'SUSPENDED') {
             this.clientSuspend = result.data[0].id
             this.clientAlready = false
@@ -251,6 +265,7 @@
       },
       async createClient () {
         this.$parent.loading = true
+        this.$parent.dontLeave = true
         if (this.clientSuspend) {
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.clientSuspend}/lifecycle/unsuspend`,
             {},
@@ -308,6 +323,7 @@
           alert('An activation email was sent to your client.')
           this.checkClient()
           this.$parent.loading = false
+          this.$parent.dontLeave = false
         } else {
           try {
             const oktaOne = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?activate=false`,
@@ -378,24 +394,13 @@
             alert('An activation email was sent to your client.')
             this.checkClient()
             this.$parent.loading = false
+            this.$parent.dontLeave = false
           } catch (e) {
             this.$parent.loading = false
-            alert('Something went wrong, please try that again.')
+            this.$parent.dontLeave = false
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
             console.error(e)
-          }
-        }
-      },
-      updateClientNotes () {
-        this.update_client()
-        this.editClientNotes = false
-      },
-      created () {
-        var x
-        for (x in this.$parent.posts) {
-          // If client matches client in route
-          if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
-            // Set client_details variable with client details
-            this.$parent.client_details = this.$parent.posts[x]
           }
         }
       },
@@ -437,7 +442,8 @@
           this.loading_workouts = false
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -484,7 +490,8 @@
           this.loading_workouts = false
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       },
@@ -519,7 +526,8 @@
           }
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
         await this.get_workouts()
@@ -559,12 +567,14 @@
           }
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
         await this.get_workouts()
       },
       async update_client () {
+        this.$parent.dontLeave = true
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           // eslint-disable-next-line
@@ -580,10 +590,46 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients()
           await this.$parent.clients_to_vue()
+          this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.dontLeave = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
+        }
+      },
+      async delete_block () {
+        if (confirm('Are you sure you want to delete this block?')) {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
+          var programme
+          var id
+          for (programme of this.$parent.client_details.programmes) {
+            //eslint-disable-next-line
+            if (programme.id == this.$route.params.id) {
+              id = programme.id
+            }
+          }
+          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+          try {
+            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+
+            await this.$parent.clients()
+            this.$parent.clients_to_vue()
+
+            this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
+
+            this.$ga.event('Block', 'delete')
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+          } catch (e) {
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
+            console.error(e)
+          }
         }
       }
     }

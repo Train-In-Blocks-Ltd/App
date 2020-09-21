@@ -1,48 +1,7 @@
 <style scoped>
-  /* Overall */
-  .container--block-links {
-    display: flex;
-    justify-content: space-between
-  }
-
   /* Client Notes */
   .client-notes {
-    margin: 4rem auto;
-    height: fit-content;
-    border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1
-  }
-  .client-notes__header {
-    margin: 0;
-    padding: 1rem
-  }
-  .text--date {
-    font-size: .8rem
-  }
-  .bottom-bar {
-    padding: .6rem 1rem
-  }
-  .bottom-bar .button {
-    margin: 0
-  }
-  .show-client-notes {
-    padding: 12px 15px;
-    max-height: 293px;
-    color: #282828;
-    line-height: 1.42;
-    overflow-y: auto;
-    font-size: .8rem
-  }
-  .show-client-notes h2 {
-    font-size: 1.5rem
-  }
-  .show-client-notes p, .show-client-notes ul, .show-client-notes ol {
-    text-decoration: none;
-    margin: 0;
-    padding: 0
-  }
-  .activeClientNotes {
-    border: 2px solid #282828
+    margin: 4rem auto
   }
 
   /* Blocks */
@@ -126,12 +85,6 @@
 
   /* For Mobile */
   @media (max-width: 576px) {
-    .container--block-links {
-      grid-template: .2fr 1fr/1fr;
-      grid-template-areas:
-        'b'
-        'a'
-    }
     .blocks_grid {
       grid-template-columns: 1fr
     }
@@ -139,20 +92,35 @@
 </style>
 <template>
     <div>
-      <div :class="{activeClientNotes: $parent.editClientNotes}" class="client-notes">
+      <modal name="help-block" height="auto" :adaptive="true">
+        <div class="modal--help-block">
+          <p><i>Blocks</i> are the different cycles within your client's programme. It contains the different microcycles of sessions.</p><br>
+          <p>You will be able to track, visualise and progress the sessions within a <i>Block</i>.</p>
+        </div>
+      </modal>
+      <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
         <div class="client-notes__header">
           <p><b>Client Information</b></p>
         </div>
-        <quill v-show="$parent.editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate__animated animate__fadeIn" :config="$parent.$parent.config"/>
-        <div v-if="!$parent.editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate__animated animate__fadeIn"/>
-        <p v-if="!$parent.editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
+        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn"/>
+        <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
-          <button v-show="!$parent.editClientNotes" @click="editingClientNotes(true)" class="button button--edit">Edit</button>
-          <button v-show="$parent.editClientNotes" @click="editingClientNotes(false)" class="button button--save">Save</button>
+          <div>
+            <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button--edit">Edit</button>
+            <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button--save">Save</button>
+            <button v-show="editClientNotes" @click="cancelClientNotes()" class="cancel">Cancel</button>
+          </div>
         </div>
       </div>
-      <div class="container--block-links__section">
-        <h2 class="sub-title">Blocks</h2>
+      <div>
+        <div class="flex">
+          <div class="container--title">
+            <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
+            <h2 class="sub-title no-margin">Blocks</h2>
+          </div>
+          <inline-svg class="sub-title tooltip" @click="$modal.show('help-block')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
+        </div>
         <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
         <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
         <div v-if="!this.$parent.no_programmes" class="blocks_grid">
@@ -170,17 +138,17 @@
               </router-link>
           </div>
         </div>
-        <button v-if="!creating" class="button" v-on:click="creation()">New Block</button>
+        <button v-if="!creating" @click="creation()">New Block</button>
         <p class="new-msg" v-if="!creating">{{response}}</p>
         <div v-if="creating" class="add_block_container">
           <h3>New Block</h3>
-          <form class="form_grid add_block" name="add_programme" v-on:submit.prevent="save()">
+          <form class="form_grid add_block" name="add_programme" @submit.prevent="save()">
             <label><b>Name: </b><input class="input--forms" type="text" v-model="new_block.name" required/></label>
             <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_block.duration" required/></label>
             <label><b>Start: </b><input class="input--forms" type="date" v-model="new_block.start" required /></label>
             <div class="form_buttons">
-              <input type="submit" class="button button--save" value="Save" />
-              <button class="button button--close cancel" v-on:click="close()">Close</button>
+              <button type="submit">Save</button>
+              <button class="cancel" @click="close()">Close</button>
             </div>
           </form>
         </div>
@@ -191,9 +159,16 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
-    data: function () {
+    components: {
+      InlineSvg
+    },
+    created () {
+      this.$parent.checkClient()
+    },
+    data () {
       return {
         response: '',
         creating: false,
@@ -206,21 +181,32 @@
       }
     },
     methods: {
+
+      // CLIENT NOTES METHODS //-------------------------------------------------------------------------------
+
+      cancelClientNotes () {
+        this.editClientNotes = false
+        window.removeEventListener('keydown', this.quickSaveClient)
+      },
       editingClientNotes (state) {
-        this.$parent.editClientNotes = state
+        this.editClientNotes = state
         if (state) {
           window.addEventListener('keydown', this.quickSaveClient)
         } else {
-          this.$parent.updateClientNotes()
+          this.$parent.update_client()
           window.removeEventListener('keydown', this.quickSaveClient)
         }
       },
-      quickSaveClient (key, state) {
+      quickSaveClient (key) {
         if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.$parent.updateClientNotes()
+          this.$parent.update_client()
+          this.editClientNotes = false
           window.removeEventListener('keydown', this.quickSaveClient)
         }
       },
+
+      // BACKGROUND METHODS //-------------------------------------------------------------------------------
+
       creation () {
         this.creating = true
       },
@@ -231,6 +217,7 @@
       async save () {
         try {
           this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
           // eslint-disable-next-line
           const response_save_block = await axios.put('https://api.traininblocks.com/programmes',
             qs.stringify({
@@ -261,6 +248,7 @@
           await this.$parent.force_get_client_details()
 
           this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
 
           this.close()
 
@@ -272,7 +260,9 @@
           this.$ga.event('Block', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.$parent.dontLeave = false
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
           console.error(e)
         }
       }

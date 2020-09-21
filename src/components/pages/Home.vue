@@ -1,8 +1,4 @@
 <style>
-  #intro {
-    font-size: 2rem;
-    margin-top: 0
-  }
   .home--container {
     display: grid;
     grid-template-rows: 8rem 1fr;
@@ -36,33 +32,21 @@
 
 <template>
   <div id="home">
-    <!-- First Time
-    <modal name="first-time-home" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-      <div class="modal--first-time-home">
-        <h1 class="main-title">Hello</h1>
-        <h2 class="sub-title">Let's add your first client</h2>
-        <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save(), $modal.hide('first-time-home')">
-        <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
-        <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
-        <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
-        <div class="form_buttons">
-          <input type="submit" class="button button--save">
-          <button class="button button--close cancel" @click="$modal.hide('first-time-home')">Another Time</button>
-        </div>
-      </form>
-      </div>
-    </modal>
-    -->
-    <h1 class="main-title">Your Clients</h1>
+    <div class="home-top">
+      <h1 class="main-title no-margin">Your Clients</h1>
+      <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+        Install App
+      </button>
+    </div>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.loading_clients">Loading clients...</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.posts">
-      <div>
-        <label for="client-search"><b>Find a client:</b></label>
-        <input name="client-search" type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
-      </div>
+      <label>
+        <b>Find a client:</b>
+        <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
+      </label>
       <div class="container--clients">
         <div v-for="(clients, index) in $parent.posts"
           :key="index">
@@ -80,17 +64,17 @@
         </div>
       </div>
     </div>
-    <button v-if="!creating" class="button button--new-client" v-on:click="creation()">New Client</button>
+    <button v-if="!creating" class="button--new-client" @click="creation()">New Client</button>
     <p v-if="!creating" class="new-msg">{{response}}</p>
     <div v-if="creating">
       <h3>New Client</h3>
-      <form name="add_client" class="form_grid add_client" spellcheck="false" v-on:submit.prevent="save()">
+      <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save()">
         <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
         <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
         <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
         <div class="form_buttons">
-          <input type="submit" class="button button--save" value="Save" />
-          <button class="button button--close" v-on:click="close()">Close</button>
+          <button type="submit">Save</button>
+          <button class="cancel" @click="close()">Close</button>
         </div>
       </form>
     </div>
@@ -124,13 +108,6 @@
       this.$parent.setup()
       this.$parent.client_details = null
     },
-    /*
-    mounted () {
-      if (this.$parent.posts === null) {
-        this.$modal.show('first-time-home')
-      }
-    },
-    */
     methods: {
       creation () {
         this.creating = true
@@ -139,47 +116,57 @@
         this.creating = false
       },
       async save () {
-        this.response = ''
-        try {
-          this.$parent.loading = true
-          // eslint-disable-next-line
-          const response_save_clients = await axios.put('https://api.traininblocks.com/clients',
-            qs.stringify({
-              name: this.new_client.name,
-              pt_id: this.$parent.claims.sub,
-              email: this.new_client.email,
-              number: this.new_client.number,
-              notes: this.new_client.notes
-            }),
-            {
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+        if (this.new_client.email === this.$parent.claims.email) {
+          this.$parent.errorMsg = 'You cannot create a client with your own email address!'
+          this.$parent.$modal.show('error')
+          console.error('You cannot create a client with your own email address!')
+        } else {
+          this.response = ''
+          try {
+            this.$parent.loading = true
+            this.$parent.dontLeave = true
+            // eslint-disable-next-line
+            const response_save_clients = await axios.put('https://api.traininblocks.com/clients',
+              qs.stringify({
+                name: this.new_client.name,
+                pt_id: this.$parent.claims.sub,
+                email: this.new_client.email,
+                number: this.new_client.number,
+                notes: this.new_client.notes
+              }),
+              {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                }
               }
+            )
+            // eslint-disable-next-line
+            this.response = 'Added New Client'
+            this.$parent.responseDelay()
+
+            await this.$parent.clients()
+            this.$parent.clients_to_vue()
+
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+
+            this.close()
+
+            this.new_client = {
+              name: '',
+              email: '',
+              number: '',
+              notes: ''
             }
-          )
-          // eslint-disable-next-line
-          this.response = 'Added New Client'
-          this.$parent.responseDelay()
-
-          await this.$parent.clients()
-          this.$parent.clients_to_vue()
-
-          this.$parent.loading = false
-
-          this.close()
-
-          this.new_client = {
-            name: '',
-            email: '',
-            number: '',
-            notes: ''
+            this.$ga.event('Client', 'new')
+          } catch (e) {
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
+            console.error(e)
           }
-          this.$ga.event('Client', 'new')
-        } catch (e) {
-          this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
-          console.error(e)
         }
       }
     }

@@ -63,59 +63,61 @@
 
 <template>
   <div id="account" v-if="this.$parent.claims">
+    <modal name="reset-password" height="auto" :adaptive="true">
+      <div class="modal--reset">
+        <h2>Reset your password</h2>
+        <form @submit.prevent="changePass(), $modal.hide('reset-password')">
+          <label>
+            <p><b>Current Password</b></p>
+            <input type="password" class="input--forms" v-model="oldPassword"/>
+          </label>
+          <br>
+          <br>
+          <br>
+          <label>
+            <p><b>Requirements:</b></p>
+            <p>Number (0-9)</p>
+            <p>At least 8 characters</p>
+            <p>Can't contain your username</p><br>
+            <p><b>New Password</b></p>
+            <input type="password" class="input--forms" v-model="newPassword" @input="checkPass" v-bind:class="{check: check}"/>
+          </label>
+          <br>
+          <br>
+          <button type="submit" :disabled="check">Change your password</button>
+          <p v-if="this.error" class="error">{{this.error}}</p>
+          <p v-if="this.msg">{{this.msg}}</p>
+        </form>
+      </div>
+    </modal>
     <h1 class="main-title">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
-        <div class="details">
-          <div class="form__options">
-            <label for="email"><b>Email: </b></label>
-            <input type="email" id="email" class="input--forms" name="email" autocomplete="email" v-autowidth="{ maxWidth: '400px', minWidth: '20px', comfortZone: 24 }" v-model="$parent.claims.email" required @blur="save()"/>
-          </div>
-          <div class="form__options">
-            <label for="color"><b>Sidebar Colour: </b></label>
-            <input type="color" name="color" :value="$parent.colors.hex" required @blur="save()" @change="rgb($event)"/>
-          </div>
-          <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-            <button class="button" v-on:click.prevent="manageSubscription">Manage Your Subscription</button>
-          </div>
+      <div class="details">
+        <p><b>Email: </b>{{$parent.claims.email}}</p><br>
+        <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
+          <button @click.prevent="manageSubscription()">Manage Your Subscription</button>
         </div>
-        <div>
-          <h2>Reset your password</h2>
-          <form v-on:submit.prevent="changePass">
-            <label>
-              <p><b>Current Password</b></p>
-              <input type="password" class="input--forms" v-model="oldPassword"/>
-            </label>
-            <br>
-            <br>
-            <br>
-            <label>
-              <p><b>Requirements:</b></p>
-              <p>Number (0-9)</p>
-              <p>At least 8 characters</p>
-              <p>Can't contain your username</p><br>
-              <p><b>New Password</b></p>
-              <input type="password" class="input--forms" v-model="newPassword" v-on:input="checkPass" v-bind:class="{check: check}"/>
-            </label>
-            <br>
-            <br>
-            <div><input type="submit" value="Change your password" class="button" :disabled="check"/></div>
-            <p v-if="this.error" class="error">{{this.error}}</p>
-            <p v-if="this.msg">{{this.msg}}</p>
-          </form>
-        </div>
-        <div class="privacy">
-          <h2>Your Privacy and Data</h2>
-          <p>You can find more information about our policies below:</p>
-          <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
-          <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
-          <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
-          <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
-          <div class="form__options">
-            <label for="cookies">Allow Third Party Cookies: </label>
+        <button @click.prevent="$modal.show('reset-password')">Change Your Password</button>
+        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/-1">
+          <button type="submit" formtarget="_blank">Need more support?</button>
+        </form>
+      </div>
+      <div class="privacy">
+        <h2>Your Privacy and Data</h2>
+        <p>You can find more information about our policies below:</p>
+        <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
+        <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
+        <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
+        <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
+        <div class="form__options">
+          <label for="cookies">
+            Allow Third Party Cookies: 
             <input class="allow-cookies" type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
-          </div>
+          </label>
         </div>
-    </form>
+      </div>
+    </form><br><br>
+    <p style="font-size: .8rem"><b>Version 1.2</b></p>
   </div>
 </template>
 
@@ -137,12 +139,41 @@
       this.$parent.setup()
     },
     methods: {
-      rgb (e) {
-        this.$parent.colors.rgba.r = this.$parent.hexToRgb(e.target.value).r
-        this.$parent.colors.rgba.g = this.$parent.hexToRgb(e.target.value).g
-        this.$parent.colors.rgba.b = this.$parent.hexToRgb(e.target.value).b
-        this.$parent.colors.hex = e.target.value
+
+      // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+
+      async save () {
+        this.$parent.loading = true
+        this.$parent.dontLeave = true
+        try {
+          // Trouble with access control header so use cors-anywhere
+          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
+            {
+              'profile': {
+                'ga': this.$parent.claims.ga
+              }
+            },
+            {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': process.env.AUTH_HEADER
+              }
+            }
+          )
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+        } catch (e) {
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          console.error(e)
+        }
       },
+
+      // PASSWORD METHODS //-------------------------------------------------------------------------------
+
       checkPass () {
         if (!this.newPassword.includes(this.$parent.claims.email) && this.newPassword.match(/[0-9]+/) && this.newPassword.length >= 8 && this.oldPassword.length >= 1) {
           this.check = false
@@ -152,6 +183,8 @@
       },
       async changePass () {
         try {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}/credentials/change_password`,
             {
               'oldPassword': this.oldPassword,
@@ -201,9 +234,13 @@
               }
             }
           )
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
-          this.error = 'An error occurred. Please try again...'
+          this.error = 'Please make sure that your password is correct'
+          alert('Please make sure that your password is correct')
+          this.$parent.dontLeave = false
           console.error(e)
         }
       },
@@ -213,37 +250,8 @@
           window.location.href = response.data
         } catch (e) {
           this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
-          console.error(e)
-        }
-      },
-      async save () {
-        this.$parent.colors.hex = document.querySelector('input[name="color"]').value
-        this.$parent.loading = true
-        try {
-          // Trouble with access control header so use cors-anywhere
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
-            {
-              'profile': {
-                'login': this.$parent.claims.email,
-                'firstName': this.$parent.claims.email,
-                'email': this.$parent.claims.email,
-                'color': this.$parent.colors.hex,
-                'ga': this.$parent.claims.ga
-              }
-            },
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          this.$parent.loading = false
-        } catch (e) {
-          this.$parent.loading = false
-          alert('Something went wrong, please try that again.')
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
           console.error(e)
         }
       }

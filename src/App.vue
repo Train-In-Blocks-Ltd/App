@@ -1,61 +1,153 @@
 <style>
-  @import '../node_modules/animate.css';
-
   /* Global */
   * {
     box-sizing: border-box
   }
   :root {
-    --animate-delay: .5s
+    --animate-delay: .5s;
+    --animate-duration: 1s;
+    --animate-repeat: 1
   }
+
+  /* GLOBAL: ANIMATIONS */
+  .animate {
+    animation-duration: 1s;
+    animation-duration: var(--animate-duration);
+    animation-fill-mode: both
+  }
+  .animate.animate__delay-1s {
+    animation-delay: 1s;
+    animation-delay: var(--animate-delay)
+  }
+  .animate.animate__delay-2s {
+    animation-delay: calc(1s * 2);
+    animation-delay: calc(var(--animate-delay) * 2)
+  }
+  .animate.animate__faster {
+    animation-duration: calc(1s / 2);
+    animation-duration: calc(var(--animate-duration) / 2)
+  }
+  .animate__bounceInDown {
+    animation-name: bounceInDown;
+    animation-timing-function: cubic-bezier(.215, .61, .355, 1)
+  }
+  .animate__fadeIn {
+    animation-name: fadeIn
+  }
+  .animate__fadeOut {
+    animation-name: fadeOut
+  }
+  @keyframes bounceInDown {
+    0% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -3000px, 0) scaleY(3);
+      transform: translate3d(0, -3000px, 0) scaleY(3)
+    }
+    60% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 25px, 0) scaleY(.9);
+      transform: translate3d(0, 25px, 0) scaleY(.9)
+    }
+    75% {
+      -webkit-transform: translate3d(0, -10px, 0) scaleY(.95);
+      transform: translate3d(0, -10px, 0) scaleY(.95)
+    }
+    90% {
+      -webkit-transform: translate3d(0, 5px, 0) scaleY(.985);
+      transform: translate3d(0, 5px, 0) scaleY(.985)
+    }
+    to {
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0)
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0
+    }
+    to {
+      opacity: 1
+    }
+  }
+  @keyframes fadeOut {
+    from {
+      opacity: 1
+    }
+    to {
+      opacity: 0
+    }
+  }
+
+  /* GLOBAL: ELEMENTS */
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
-    min-height: 100vh;
+    min-height: 100%;
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    letter-spacing: .1rem;
-    overflow: hidden
+    letter-spacing: .1rem
   }
   #app {
-    --accessible-color: calc(
-      (
-        (
-          (
-            (var(--red) * 299) +
-            (var(--green) * 587) +
-            (var(--blue) * 114)
-          ) / 1000
-        ) - 128
-      ) * -1000
-    );
-
     color: #282828;
     background-color: white
   }
   main {
     margin-left: calc(38px + 2rem);
     display: grid;
-    align-items: start;
-    overflow: auto;
-    height: 100vh
+    align-items: start
   }
-  .spacer {
-    height: 5rem
-  }
-
-  /* Global Container */
-  #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
-    overflow-x: hidden;
-    min-height: 100vh;
-    padding: 4rem 20vw 10rem 20vw
-  }
-  .show-block-notes h1, .show-block-notes h2, .show-client-notes h1, .show-client-notes h2, .client_link__notes__content h1, .client_link__notes__content h2 {
+  .notAuth {
     margin: 0
   }
 
-  /* Fonts */
+  /* GLOBAL: CONTAINERS */
+  #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+    padding: 4rem 20vw 10rem 20vw
+  }
+  .modal--error {
+    padding: 2rem
+  }
+  .flex {
+    display: flex
+  }
+  .container--title {
+    display: flex;
+    margin: 2rem 0
+  }
+  .home-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+    align-items: center
+  }
+
+  /* GLOBAL: TOOLTIP */
+  .tooltip {
+    cursor: pointer;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .tooltip:hover {
+    opacity: .6
+  }
+  .sub-title.tooltip {
+    margin-left: .6rem
+  }
+
+  /* GLOBAL: MODALS */
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-block {
+    padding: 2rem
+  }
+  .modal--copy h3, .modal--reset h2 {
+    margin: 0 0 1.5rem 0
+  }
+
+  /* GLOBAL: SVG */
+  .title-icon {
+    margin: auto .6rem auto 0
+  }
+
+  /* GLOBAL: FONTS */
   .main-title {
     margin-top: 0;
     margin-bottom: 3rem;
@@ -69,11 +161,11 @@
     letter-spacing: .15rem;
     margin: 1.75rem 0
   }
+  .no-margin {
+    margin: 0
+  }
   h3 {
     font-size: 2rem
-  }
-  ul, ol {
-    padding-left: 1rem
   }
   p {
     margin: 0
@@ -84,64 +176,74 @@
   .allow-text-overflow {
     text-overflow: ellipsis
   }
+  .text--error {
+    font-size: .8rem;
+    color: #B80000
+  }
 
-  /* Buttons */
-  .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
+  /* GLOBAL: BUTTONS */
+  button {
+    height: fit-content;
+    width: fit-content;
     user-select: none;
     cursor: pointer;
+    border-radius: 3px;
+    opacity: 1;
     text-transform: capitalize;
-    text-align: center;
     outline-width: 0;
-    border: 1px solid #E1E1E1;
-    padding: .5rem 1rem;
-    height: auto;
-    width: auto;
-    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    padding: .6rem 1.6rem;
     font-size: .8rem;
     letter-spacing: .1rem;
     font-weight: bold;
-    color: #282828;
-    background-color: white;
-    margin: 1rem 0 .5rem 0;
-    display: inline-block;
-    transition: color .4s, background-color .4s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
     color: white;
     background-color: #282828;
-    text-decoration: none
+    margin: .6rem 0;
+    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  .button:active, .fc-today-button.fc-button.fc-button-primary:not(:disabled):active, .fc-prev-button.fc-button.fc-button-primary:active, .fc-next-button.fc-button.fc-button-primary:active, .fc-dayGridWeek-button.fc-button.fc-button-primary:active, .fc-dayGridMonth-button.fc-button.fc-button-primary:active {
+  button:hover {
+    opacity: .6
+  }
+  button:active {
     transform: scale(.96)
   }
-  .delete:hover, .cancel:hover {
-    color: white;
-    background-color: #B80000
+  button:focus {
+    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   button:disabled, button[disabled] {
     opacity: .6;
     cursor: default
   }
-  button:disabled:hover, button[disabled]:hover {
-    color: #282828;
-    background-color: transparent
-  }
-  .button.no-margin {
-    margin: 0
+  .delete:hover, .cancel:hover {
+    color: white;
+    background-color: #B80000
   }
 
-  /* GLOBAL: Workouts */
+  /* GLOBAL: CALENDAR */
+  button.fc-button {
+    border-radius: 3px;
+    text-transform: capitalize;
+    font-size: .8rem;
+    font-weight: bold;
+    background-color: #282828;
+    color: white
+  }
+  button.fc-button-primary:disabled {
+    background-color: #282828
+  }
+  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
+    border-color: transparent
+  }
+  .fc-view-container span {
+    font-size: .8rem
+  }
+  button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-button.fc-button-primary, button.fc-dayGridWeek-button.fc-button.fc-button-primary, button.fc-dayGridMonth-button.fc-button.fc-button-primary {
+    margin-left: .4rem
+  }
+
+  /* GLOBAL: WORKOUTS AND NOTES */
   .wrapper--workout__header {
     height: 6.4rem
-  }
-  .wrapper--workout, .block-notes {
-    height: fit-content;
-    border-left: 1px solid #E1E1E1;
-    border-bottom: 1px solid #E1E1E1
-  }
-  .wrapper--workout__header, .block-notes__header {
-    margin: 0;
-    padding: 1rem
   }
   .text--name {
     text-overflow: ellipsis;
@@ -151,8 +253,10 @@
     font-size: .8rem
   }
   .bottom-bar {
-    height: 54px;
-    padding: .6rem 1rem
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .6rem 0
   }
   #button-done {
     background-color: green
@@ -169,15 +273,14 @@
     opacity: .6
   }
 
-  /* Show workouts */
-  .show-workout, .show-block-notes {
+  /* GLOBAL: SHOW WORKOUT AND NOTES */
+  .show-workout, .show-block-notes, .show-client-notes {
     overflow-wrap: break-word;
-    padding: 12px 15px;
-    max-height: 293px;
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
-    font-size: .8rem
+    font-size: .8rem;
+    transition: all 1s
   }
   .show-workout a {
     color: blue
@@ -189,28 +292,17 @@
   .show-workout p, .show-client-notes p, .show-block-notes p {
     margin: 1rem 0
   }
-
-  /* GLOBAL: Calendar */
-  .fc-button {
-    border-radius: 0
-  }
-  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
-    border-color: transparent
-  }
-  .fc-view-container span {
-    font-size: .8rem
-  }
-  .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
-    margin-left: .4rem
+  .wrapper--workout__header.client-side {
+    height: 3.2rem
   }
 
-  /* Remove IOS Corners */
-  input:not([type=checkbox]), button {
+  /* GLOBAL: RM IOS CORNERS */
+  input:not([type=checkbox]) {
     border-radius: 0;
     -webkit-appearance: none
   }
 
-  /* Inputs */
+  /* GLOBAL: INPUTS */
   .input--modal {
     width: 4rem
   }
@@ -233,9 +325,6 @@
     cursor: pointer;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
-  input[type=color]:hover, input[type=color]:focus {
-    transform: scale(1.1)
-  }
   input.title {
     margin-top: 0;
     margin-bottom: 3rem;
@@ -251,7 +340,7 @@
     opacity: 1; /* Firefox */
   }
 
-  /* Forms */
+  /* GLOBAL: FORMS */
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -262,10 +351,11 @@
     display: grid;
     grid-gap: 1rem;
     place-content: start;
-    grid-auto-flow: column
+    grid-auto-flow: column;
+    margin-bottom: 1rem
   }
 
-  /* Logo */
+  /* GLOBAL: LOGO */
   .logo {
     margin-bottom: auto
   }
@@ -275,14 +365,8 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    fill: white
   }
-
-  /* Logo Animation */
   .logo--link:hover {
     opacity: .6
   }
@@ -290,7 +374,19 @@
     transform: scale(.9)
   }
 
-  /* Navigation */
+  /* GLOBAL: NAV */
+  .skip-to-content-link {
+    height: 30px;
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-1000%);
+    transition: transform .3s;
+    z-index: 99999999999
+  }
+  .skip-to-content-link:focus {
+    transform: translateY(0%)
+  }
   .sidebar {
     border-right: 1px solid #E1E1E1;
     z-index: 10;
@@ -299,63 +395,9 @@
     justify-content: flex-end;
     padding: 2rem 1rem;
     position: fixed;
-    background-color: rgb(var(--red), var(--green), var(--blue));
+    background-color: #282828;
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .nav a, .account_nav a {
-    color:rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
-  }
-  .nav {
-    border-bottom: .5px solid rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .1
-    );
-    border-top: .5px solid rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .1
-    );
-    overflow-y: auto;
-    margin-top: 3.75rem;
-    margin-bottom: 2.5rem
-  }
-  .sidebar ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px
-  }
-  .sidebar ::-webkit-scrollbar-track {
-    background: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .1
-    )
-  }
-  .sidebar ::-webkit-scrollbar-thumb {
-    background: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .4
-    )
-  }
-  .sidebar ::-webkit-scrollbar-thumb:hover {
-    background: rgba(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color),
-      .6
-    )
-  }
-
-  /* Account Navigation Items */
   .account_nav--item {
     display: flex;
     opacity: .6;
@@ -367,22 +409,23 @@
   .account_nav--item:hover {
     opacity: 1
   }
-  .account_nav--item:first-of-type {
-    padding-top: 0
-  }
   .account_nav--item:last-of-type {
     padding-bottom: 0
   }
+  .account_nav--item a {
+    display: flex;
+    text-decoration: none
+  }
   .account_nav--item--text {
-    color: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    );
+    color: white;
     text-decoration: none;
     position: relative;
     border: 0;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    opacity: 0;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .sidebar:hover .account_nav--item--text {
+    opacity: 1
   }
   .account_nav--item a.router-link-exact-active {
     font-weight: bold
@@ -394,16 +437,26 @@
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item--icon path:not(.transparent) {
-    fill: rgb(
-      var(--accessible-color),
-      var(--accessible-color),
-      var(--accessible-color)
-    )
+    fill: white
   }
 
-  /* QUILL */
-  .ql-editor.ql-blank:before {
-    margin: 1rem 0
+  /* GLOBAL: QUILL */
+  div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
+    border: none;
+    padding: 0
+  }
+  .ql-formats {
+    transform: translateX(-5px)
+  }
+  .ql-snow .ql-stroke {
+    stroke: #282828
+  }
+  .ql-editor {
+    grid-area: body;
+    color: #282828;
+    overflow-y: auto;
+    padding: 0;
+    transition: all 1s
   }
   .ql-snow .ql-editor h1 {
     margin: 1.072rem 0
@@ -414,22 +467,9 @@
   .ql-snow .ql-editor p {
     margin: 1rem 0
   }
-  div.ql-toolbar.ql-snow {
-    border: none
-  }
-  div.ql-container.ql-snow {
-    border: none
-  }
-  .ql-snow .ql-stroke {
-    stroke: #282828
-  }
-  .ql-editor {
-    max-height: 250px;
-    color: #282828;
-    overflow-y: auto
-  }
-  .ql-editor ul li:not(.ql-direction-rtl), .ql-editor ol {
-    padding: 0
+  .ql-editor.ql-blank:before {
+    margin: 1rem 0;
+    left: 0
   }
   .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
     color: #28282899
@@ -441,7 +481,7 @@
     fill: #28282899
   }
 
-  /* Scrollbar */
+  /* GLOBAL: SCROLLBAR */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px
@@ -456,7 +496,7 @@
     background: #28282860
   }
 
-  /* Archive and Home page styles */
+  /* ARCHIVE AND HOME STYLES */
   .container--clients {
     display: grid;
     grid-gap: 2rem
@@ -465,7 +505,7 @@
     margin: 0
   }
 
-  /* Client Container Animation */
+  /* HOME: Client Container Animation */
   .client_container > a {
     display: grid;
     grid-gap: 1rem;
@@ -494,7 +534,6 @@
   }
   .client_link {
     padding: 1rem 0;
-    width: 95%;
     overflow-x: auto
   }
   .client_link svg {
@@ -510,9 +549,6 @@
   }
   .client_link__details p {
     margin: auto 0
-  }
-  .client_link__notes {
-    margin-top: 1rem
   }
   .client_link__notes__content {
     font-size: .8rem;
@@ -539,14 +575,25 @@
     width: 100%
   }
 
+  /* GLOBAL: CLIENT-SIDE */
+  .container--session-control {
+    display: flex;
+    justify-content: space-between
+  }
+  .session-counter {
+    align-self: center;
+    font-size: 1rem;
+    font-weight: bold
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
-      padding: 4rem 10vw
+    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+      padding: 4rem 10vw;
+      overflow-x: hidden
     }
-    .button:hover, .fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, .fc-prev-button.fc-button.fc-button-primary:hover, .fc-next-button.fc-button.fc-button-primary:hover, .fc-dayGridWeek-button.fc-button.fc-button-primary:hover, .fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
-      background-color: transparent;
-      color: #282828
+    button:hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+      opacity: 1
     }
   }
   @media (min-width: 768px) {
@@ -557,6 +604,12 @@
     }
     .sidebar:hover {
       width: 12rem
+    }
+  }
+  @media (min-width: 768px) {
+    .title-icon {
+      height: 48px;
+      width: 48px
     }
   }
   @media (max-width: 768px) {
@@ -572,15 +625,45 @@
       justify-content: space-between;
       border-right: none
     }
-    .account_nav--item--text {
+    .sidebar:hover .account_nav--item--text {
       display: none
     }
     main {
       margin: 0
     }
+    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+      padding: 2rem 5vw 4rem 5vw
+    }
     .account_nav--item {
       margin: auto;
       padding: 0
+    }
+    .account_nav--item--text {
+      display: none
+    }
+    .account_nav--item--icon {
+      margin: 0
+    }
+    .ql-snow .ql-formats button {
+      margin: .2rem
+    }
+    .ql-snow .ql-formats {
+      display: flex;
+      justify-content: space-evenly;
+      position: fixed;
+      bottom: 60.8px;
+      left: 0;
+      z-index: 99;
+      background-color: white;
+      border-radius: 3px;
+      box-shadow: 0 0 20px 10px #28282810;
+      width: 100vw;
+      padding: .6rem;
+      overflow-x: auto
+    }
+    .ql-formats {
+      margin: 0;
+      transform: none
     }
   }
 
@@ -590,9 +673,6 @@
       width: 0;
       background-color: transparent
     }
-    #home, #block, #account, #archive, .wrapper--client, #help, .modal--first-time-home, #logout {
-      padding: 2rem 5vw 6rem 5vw
-    }
     p {
       font-size: .8rem
     }
@@ -601,12 +681,6 @@
     }
     .sub-title {
       font-size: 1.6rem
-    }
-    .button, .fc-today-button.fc-button.fc-button-primary, .fc-prev-button.fc-button.fc-button-primary, .fc-next-button.fc-button.fc-button-primary, .fc-dayGridWeek-button.fc-button.fc-button-primary, .fc-dayGridMonth-button.fc-button.fc-button-primary {
-      padding: .4rem .5rem
-    }
-    .ql-editor {
-      max-height: calc(100vh - 300px)
     }
 
     /* Blocks Page */
@@ -621,78 +695,105 @@
       width: 200vw
     }
   }
+  @media (max-width: 380px) {
+    .ql-snow .ql-formats button {
+      margin: .05rem
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    button:active, .button:active {
+      transform: scale(1)
+    }
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand {
+      transition: none
+    }
+    .sidebar {
+      width: 12rem
+    }
+    .account_nav--item--text {
+      opacity: 1
+    }
+    .animate, .animate.animate__faster {
+      animation: none
+    }
+  }
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
-  <div id="app" v-bind:class="{'authenticated': authenticated}" v-bind:style="{'--red': colors.rgba.r, '--green': colors.rgba.g, '--blue': colors.rgba.b}">
+  <div id="app" v-bind:class="{'authenticated': authenticated}">
+    <modal name="error" height="auto" :adaptive="true">
+      <div class="modal--error">
+        <p><b>Something went wrong. Please try again...</b></p><br>
+        <p>{{errorMsg}}</p><br>
+        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
+          <button type="submit" formtarget="_blank">Let us know</button>
+        </form>
+      </div>
+    </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
-    <nav @mouseover="showNav = true" class="sidebar" v-if="authenticated && claims">
-      <div class="logo animate__animated animate__bounceInDown animate__delay-2s">
+    <a class="skip-to-content-link" href="#main">
+      Skip to content
+    </a>
+    <nav class="sidebar" v-if="authenticated && claims">
+      <div class="logo animate animate__bounceInDown animate__delay-2s">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
         </router-link>
         <router-link to="/clientUser" class="logo--link" title="Home" v-if="claims.user_type === 'Client'">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg"/>
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
-        <router-link to="/">
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon"/>
+        <router-link to="/" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
+          <p class="account_nav--item--text">
+            Home
+          </p>
         </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
+        <router-link to="/clientUser" title="Home" v-if="claims.user_type === 'Client'">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
+          <p class="account_nav--item--text">
             Home
-          </router-link>
-        </transition>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/clientUser" v-show="showNav" class="account_nav--item--text" v-if="claims.user_type === 'Client'">
-            Home
-          </router-link>
-        </transition>
+          </p>
+        </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/help">
-          <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon"/>
-        </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/help" v-show="showNav" class="account_nav--item--text">
+        <router-link to="/help" title="Help" >
+          <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
+          <p class="account_nav--item--text">
             Help
-          </router-link>
-        </transition>
+          </p>
+        </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/archive">
-          <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon"/>
-        </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/archive" v-show="showNav" class="account_nav--item--text">
+        <router-link to="/archive" title="Archive">
+          <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon" aria-label="Archive"/>
+          <p class="account_nav--item--text">
             Archive
-          </router-link>
-        </transition>
+          </p>
+        </router-link>
       </div>
       <div class="account_nav--item">
-        <router-link to="/account">
-          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon"/>
-        </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/account" v-show="showNav" class="account_nav--item--text">
+        <router-link to="/account" title="Account">
+          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account"/>
+          <p class="account_nav--item--text">
             Account
-          </router-link>
-        </transition>
+          </p>
+        </router-link>
       </div>
       <div class="account_nav--item">
-        <router-link to="/logout" v-on:click.native="logout()">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon"/>
-        </router-link>
-        <transition enter-active-class="animate__animated animate__fadeIn animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
-          <router-link to="/logout" v-show="showNav" v-on:click.native="logout()" class="account_nav--item--text">
+        <router-link to="/logout" @click.native="logout()" title="Logout">
+          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon" aria-label="Logout"/>
+          <p class="account_nav--item--text">
             Logout
-          </router-link>
-        </transition>
+          </p>
+        </router-link>
       </div>
     </nav> <!-- .sidebar -->
-    <main @mouseover="showNav = false">
-      <transition enter-active-class="animate__animated animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate__animated animate__fadeOut animate__faster">
+    <main :class="{notAuth: !authenticated}" id="main">
+      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <router-view :key="$route.fullPath"/>
       </transition>
     </main>
@@ -713,56 +814,136 @@ export default {
   },
   data: function () {
     return {
-      showNav: false,
+
+      // BACKGROUND DATA //
+
+      programmes: null,
+      error: '',
       archive_error: '',
       archive_posts: {},
       no_archive: false,
-      open: false,
-      error: '',
       posts: null,
-      loading_clients: true,
-      no_clients: false,
       claims: {
         user_type: 0
       },
-      authenticated: false,
       client_details: null,
+      loading_clients: true,
       loading: false,
-      colors: {
-        rgba: {
-          r: null,
-          g: null,
-          b: null,
-          a: 1
-        }
-      },
+      dontLeave: false,
+      no_clients: false,
+      errorMsg: null,
+
+      // USER DATA //
+
+      authenticated: false,
+
+      // QUILL DATA //
+
       config: {
         placeholder: 'Type away...',
         modules: {
+          clipboard: {
+            matchVisual: false
+          },
           toolbar: [
-              [{'header': 1}, {'header': 2}],
-              ['bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}],
-              [{'list': 'ordered'}, {'list': 'bullet'}],
-              ['link']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
           ]
         }
       },
-      programmes: null
+
+      // PWA //
+
+      deferredPrompt: null,
+      displayMode: 'browser tab',
+      canInstall: false
     }
   },
   created () {
     this.isAuthenticated()
+    window.addEventListener('beforeunload', this.confirmLeave)
+  },
+  mounted () {
+    const self = this
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault()
+      // Stash the event so it can be triggered later.
+      self.deferredPrompt = e
+      // Update UI notify the user they can install the PWA
+      this.canInstall = true
+    })
+    if (navigator.standalone) {
+      this.displayMode = 'standalone-ios'
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.displayMode = 'standalone'
+    }
   },
   watch: {
     // Everytime the route changes, check for auth status
     '$route' (to, from) {
       this.isAuthenticated()
-      this.open = false
     }
   },
   methods: {
+    // PWA //--------------------------------------------------------------------------------------------------------
+    installPWA () {
+      // Hide the app provided install promotion
+      this.canInstall = false
+      // Show the install prompt
+      this.deferredPrompt.prompt()
+      // Wait for the user to respond to the prompt
+      this.deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt')
+        } else {
+          console.log('User dismissed the install prompt')
+        }
+      })
+    },
+
+    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+
+    confirmLeave (e) {
+      if (this.dontLeave === true) {
+        const msg = 'Your changes might not be saved, are you sure you want to leave?'
+        e.returnValue = msg
+        return msg
+      }
+    },
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
+    },
+    sortWorkoutsBlock () {
+      this.programmes.forEach((block) => {
+        //eslint-disable-next-line
+        if (block.id == this.$route.params.id) {
+          block.workouts.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date)
+          })
+        }
+      })
+    },
+    day (date) {
+      var weekday = new Array(7)
+      weekday[0] = 'Sun'
+      weekday[1] = 'Mon'
+      weekday[2] = 'Tue'
+      weekday[3] = 'Wed'
+      weekday[4] = 'Thu'
+      weekday[5] = 'Fri'
+      weekday[6] = 'Sat'
+      var d = new Date(date)
+      return weekday[d.getDay()]
+    },
+    async isAuthenticated () {
+      this.authenticated = await this.$auth.isAuthenticated()
+    },
+    async logout () {
+      await this.$auth.logout()
+      await this.isAuthenticated()
+      localStorage.clear()
+      this.$ga.event('Auth', 'logout')
     },
     async setup () {
       this.claims = JSON.parse(localStorage.getItem('claims'))
@@ -774,16 +955,6 @@ export default {
       } else {
         this.$ga.disable()
       }
-      this.colors.hex = this.claims.color
-      this.colors.rgba.r = await this.hexToRgb(this.claims.color).r
-      this.colors.rgba.g = await this.hexToRgb(this.claims.color).g
-      this.colors.rgba.b = await this.hexToRgb(this.claims.color).b
-      if (!localStorage.getItem('colors')) {
-        document.getElementsByTagName('BODY')[0].style.setProperty('--red', this.colors.rgba.r)
-        document.getElementsByTagName('BODY')[0].style.setProperty('--green', this.colors.rgba.g)
-        document.getElementsByTagName('BODY')[0].style.setProperty('--blue', this.colors.rgba.b)
-      }
-      localStorage.setItem('colors', JSON.stringify(this.colors.rgba))
       var d = new Date()
       var n = d.getTime()
       if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
@@ -793,23 +964,9 @@ export default {
       }
       await this.clients_to_vue()
     },
-    hexToRgb (hex) {
-      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null
-    },
-    async isAuthenticated () {
-      this.authenticated = await this.$auth.isAuthenticated()
-    },
-    async logout () {
-      await this.$auth.logout()
-      await this.isAuthenticated()
-      localStorage.clear()
-      this.$ga.event('Auth', 'logout')
-    },
+
+    // CLIENT METHODS //-------------------------------------------------------------------------------
+
     async clients_to_vue () {
       if (!localStorage.getItem('posts')) {
         await this.clients()
@@ -840,6 +997,42 @@ export default {
         this.error = e.toString()
       }
     },
+    async client_delete (id, index) {
+      if (confirm('Are you sure you want to delete this client?')) {
+        this.loading = true
+        this.dontLeave = true
+        for (var i = 0; i < this.archive_posts.length; i++) {
+          //eslint-disable-next-line
+          if (this.archive_posts[i].client_id == id) {
+            this.archive_posts.splice(index, 1)
+            if (this.archive_posts.length === 0) {
+              this.no_archive = true
+            }
+          }
+        }
+        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+        try {
+          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
+
+          await this.archive()
+          this.archive_to_vue()
+
+          await this.clients()
+          this.clients_to_vue()
+          this.$ga.event('Client', 'delete')
+          this.loading = false
+          this.dontLeave = false
+        } catch (e) {
+          this.loading = false
+          this.dontLeave = false
+          this.errorMsg = e
+          this.$modal.show('error')
+          console.error(e)
+        }
+      }
+    },
+
+    // CLIENT ARCHIVE METHODS //-------------------------------------------------------------------------------
 
     async archive_to_vue () {
       if (!localStorage.getItem('archive')) {
@@ -875,7 +1068,8 @@ export default {
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
         let email
-        this.$router.push('/')
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.posts.length; i++) {
           //eslint-disable-next-line
           if (this.posts[i].client_id == id) {
@@ -893,6 +1087,13 @@ export default {
           // eslint-disable-next-line
           this.response = response.data
 
+          await this.clients()
+          this.clients_to_vue()
+
+          await this.archive()
+          this.archive_to_vue()
+          this.$ga.event('Client', 'archive')
+
           const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
             {
               headers: {
@@ -902,65 +1103,67 @@ export default {
               }
             }
           )
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
-            {},
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
-            {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': email
-                    }
-                  ],
-                  'subject': 'Account Deactivated'
+          if (result.data.length >= 1) {
+            await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
+              {},
+              {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.AUTH_HEADER
                 }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': deleteEmailText()
+              }
+            )
+            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+              {
+                'personalizations': [
+                  {
+                    'to': [
+                      {
+                        'email': email
+                      }
+                    ],
+                    'subject': 'Account Deactivated'
+                  }
+                ],
+                'from': {
+                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
                 },
-                {
-                  'type': 'text/html',
-                  'value': deleteEmail()
+                'content': [
+                  {
+                    'type': 'text/plain',
+                    'value': deleteEmailText()
+                  },
+                  {
+                    'type': 'text/html',
+                    'value': deleteEmail()
+                  }
+                ]
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.SENDGRID
                 }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
               }
-            }
-          )
-
-          await this.clients()
-          this.clients_to_vue()
-
-          await this.archive()
-          this.archive_to_vue()
-          this.$ga.event('Client', 'archive')
+            )
+          }
+          this.loading = false
+          this.dontLeave = false
+          this.$router.push('/')
         } catch (e) {
           this.loading = false
-          alert('Something went wrong, please try that again.')
+          this.dontLeave = false
+          this.errorMsg = e
+          this.$modal.show('error')
           console.error(e)
         }
       }
     },
     async client_unarchive (id, index) {
       if (confirm('Are you sure you want to unarchive this client?')) {
+        this.loading = true
+        this.dontLeave = true
         for (var i = 0; i < this.archive_posts.length; i++) {
           //eslint-disable-next-line
           if (this.archive_posts[i].client_id == id) {
@@ -993,41 +1196,20 @@ export default {
           await this.clients()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
+          this.loading = false
+          this.dontLeave = false
         } catch (e) {
           this.loading = false
-          alert('Something went wrong, please try that again.')
+          this.dontLeave = false
+          this.errorMsg = e
+          this.$modal.show('error')
           console.error(e)
         }
       }
     },
-    async client_delete (id, index) {
-      if (confirm('Are you sure you want to delete this client?')) {
-        for (var i = 0; i < this.archive_posts.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
-            }
-          }
-        }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        try {
-          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
-          await this.archive()
-          this.archive_to_vue()
+    // DATABSE METHODS //-------------------------------------------------------------------------------
 
-          await this.clients()
-          this.clients_to_vue()
-          this.$ga.event('Client', 'delete')
-        } catch (e) {
-          this.loading = false
-          alert('Something went wrong, please try that again.')
-          console.error(e)
-        }
-      }
-    },
     async get_programmes () {
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
@@ -1043,7 +1225,8 @@ export default {
         }
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
     },
@@ -1057,19 +1240,10 @@ export default {
         }
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
-    },
-    sortWorkoutsBlock () {
-      this.programmes.forEach((block) => {
-        //eslint-disable-next-line
-        if (block.id == this.$route.params.id) {
-          block.workouts.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-          })
-        }
-      })
     },
     async update_workout (pid, wid) {
       this.loading = true
@@ -1103,24 +1277,13 @@ export default {
         this.$ga.event('Workout', 'update')
       } catch (e) {
         this.loading = false
-        alert('Something went wrong, please try that again.')
+        this.errorMsg = e
+        this.$modal.show('error')
         console.error(e)
       }
       await this.get_workouts()
       this.sortWorkoutsBlock()
       this.loading = false
-    },
-    day (date) {
-      var weekday = new Array(7)
-      weekday[0] = 'Sun'
-      weekday[1] = 'Mon'
-      weekday[2] = 'Tue'
-      weekday[3] = 'Wed'
-      weekday[4] = 'Thu'
-      weekday[5] = 'Fri'
-      weekday[6] = 'Sat'
-      var d = new Date(date)
-      return weekday[d.getDay()]
     }
   }
 }

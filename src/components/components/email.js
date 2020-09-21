@@ -448,11 +448,6 @@ export function email (link) {
                             </table>
                           </td>
                         </tr>
-                        <tr>
-                          <td>
-                            <p style='text-align: center'>This link expires in 7 days</p>
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                     <table border='0' cellpadding='0' cellspacing='0' width='100%' class='mcnTextBlock' style='min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;'>
@@ -495,7 +490,6 @@ export function emailText (link) {
     You just need to activate your account below to get started!
     
     Activate Your Account (${link})
-    This link expires in 7 days
 
     All the best,
     
@@ -953,11 +947,6 @@ export function resetEmail (link) {
                             </table>
                           </td>
                         </tr>
-                        <tr>
-                          <td>
-                            <p style='text-align: center'>This link expires in 7 days</p>
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                     <table border='0' cellpadding='0' cellspacing='0' width='100%' class='mcnTextBlock' style='min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;'>
@@ -996,7 +985,6 @@ export function resetEmailText (link) {
     You just need to click the link below to get started!
     
     Re-activate Your Account (${link})
-    This link expires in 7 days
 
     All the best,
     
@@ -2393,11 +2381,6 @@ export function passEmail (link) {
                             </table>
                           </td>
                         </tr>
-                        <tr>
-                          <td>
-                            <p style='text-align: center'>This link expires in 7 days</p>
-                          </td>
-                        </tr>
                       </tbody>
                     </table>
                     <table border='0' cellpadding='0' cellspacing='0' width='100%' class='mcnTextBlock' style='min-width: 100%;border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;'>
@@ -2434,7 +2417,6 @@ export function passEmailText (link) {
     We've received a request to reset your password. Please click the link below.
     
     Reset Password (${link})
-    This link expires in 7 days
 
     All the best,
     
