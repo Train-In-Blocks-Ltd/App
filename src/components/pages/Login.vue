@@ -321,7 +321,7 @@ export default {
     this.$ga.event('Auth', 'login')
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
-    await this.$parent.clients()
+    await this.$parent.clients_f()
   },
   destroyed () {
     // Remove the widget from the DOM on path change

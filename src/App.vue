@@ -74,7 +74,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #block, #account, #archive, .wrapper--client, #help, #logout, #templates {
+  #home, #plan, #account, #archive, .wrapper--client, #help, #logout {
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -110,7 +110,7 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-block {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-plan {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
@@ -216,8 +216,8 @@
     margin-left: .4rem
   }
 
-  /* GLOBAL: WORKOUTS AND NOTES */
-  .wrapper--workout__header {
+  /* GLOBAL: SESSIONS AND NOTES */
+  .wrapper--session__header {
     height: 6.4rem
   }
   .text--name {
@@ -248,8 +248,8 @@
     opacity: .6
   }
 
-  /* GLOBAL: SHOW WORKOUT AND NOTES */
-  .show-workout, .show-block-notes, .show-client-notes {
+  /* GLOBAL: SHOW session AND NOTES */
+  .show-session, .show-plan-notes, .show-client-notes {
     outline-width: 0;
     overflow-wrap: break-word;
     color: #282828;
@@ -258,17 +258,17 @@
     font-size: .8rem;
     transition: all 1s
   }
-  .show-workout a {
+  .show-session a {
     color: blue
   }
-  .show-workout ul, .show-workout ol, .show-block-notes ul, .show-block-notes ol {
+  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol {
     text-decoration: none;
     margin: 0
   }
-  .show-workout p, .show-client-notes p, .show-block-notes p {
+  .show-session p, .show-client-notes p, .show-plan-notes p {
     margin: 1rem 0
   }
-  .wrapper--workout__header.client-side {
+  .wrapper--session__header.client-side {
     height: 3.2rem
   }
 
@@ -604,7 +604,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -647,7 +647,7 @@
     main {
       margin: 0
     }
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -678,7 +678,7 @@
       font-size: 1.6rem
     }
 
-    /* Blocks Page */
+    /* plans Page */
     .fc-view-container {
       width: 90vw;
       overflow-x: auto
@@ -696,7 +696,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats {
       transition: none
     }
     .sidebar {
@@ -809,35 +809,30 @@ export default {
     InlineSvg,
     Loading
   },
-  data: function () {
+  data () {
     return {
-
-      // BACKGROUND DATA //
-
       splashing: true,
-      programmes: null,
-      error: '',
-      archive_error: '',
-      archive_posts: {},
-      no_archive: false,
-      posts: null,
+      archive: {
+        clients: {},
+        no_archive: false
+      },
+      clients: null,
+      no_clients: false,
       claims: {
         user_type: 0
       },
       client_details: null,
-      loading_clients: true,
+      clientUser: {
+        plans: null
+      },
+
+      // BACKGROUND DATA //
+      
+      errorMsg: null,
       loading: false,
       dontLeave: false,
-      no_clients: false,
-      errorMsg: null,
-
-      // USER DATA //
-
       authenticated: false,
-
-      // QUILL DATA //
-
-      config: {
+      quill_config: {
         theme: 'bubble',
         placeholder: 'Type away...',
         modules: {
@@ -845,16 +840,15 @@ export default {
             matchVisual: false
           },
           toolbar: [
-            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
           ]
         }
       },
-
-      // PWA //
-
-      deferredPrompt: null,
-      displayMode: 'browser tab',
-      canInstall: false
+      pwa: {
+        deferredPrompt: null,
+        displayMode: 'browser tab',
+        canInstall: false
+      }
     }
   },
   created () {
@@ -916,11 +910,11 @@ export default {
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
     },
-    sortWorkoutsBlock () {
-      this.programmes.forEach((block) => {
+    sortSessionsPlan () {
+      this.clientUser.plans.forEach((plan) => {
         //eslint-disable-next-line
-        if (block.id == this.$route.params.id) {
-          block.workouts.sort((a, b) => {
+        if (plan.id == this.$route.params.id) {
+          plan.sessions.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
           })
         }
@@ -960,7 +954,7 @@ export default {
       var d = new Date()
       var n = d.getTime()
       if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.clients()
+        await this.clients_f()
         localStorage.setItem('firstLoaded', true)
         localStorage.setItem('loadTime', n)
       }
@@ -970,18 +964,18 @@ export default {
     // CLIENT METHODS //-------------------------------------------------------------------------------
 
     async clients_to_vue () {
-      if (!localStorage.getItem('posts')) {
-        await this.clients()
+      this.loading = true
+      if (!localStorage.getItem('clients')) {
+        await this.clients_f()
       }
-      this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+      this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
         var textA = a.name.toUpperCase()
         var textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
-      this.loading_clients = false
+      this.loading = false
     },
-    async clients () {
-      this.error = false
+    async clients_f () {
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       try {
         const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
@@ -989,26 +983,27 @@ export default {
           this.no_clients = true
         } else {
           this.no_clients = false
-          this.error = false
         }
-        localStorage.setItem('posts', JSON.stringify(response.data))
-        this.loading_clients = false
+        localStorage.setItem('clients', JSON.stringify(response.data))
+        this.loading = false
       } catch (e) {
         this.no_clients = false
-        this.loading_clients = false
-        this.error = e.toString()
+        this.loading = false
+        this.errorMsg = e.toString()
+        this.$modal.show('error')
+        console.error(e)
       }
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.archive_posts.length; i++) {
+        for (var i = 0; i < this.archive.clients.length; i++) {
           //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
+          if (this.archive.clients[i].client_id == id) {
+            this.archive.clients.splice(index, 1)
+            if (this.archive.clients.length === 0) {
+              this.archive.no_archive = true
             }
           }
         }
@@ -1016,10 +1011,10 @@ export default {
         try {
           await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'delete')
           this.loading = false
@@ -1027,7 +1022,7 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
           console.error(e)
         }
@@ -1037,34 +1032,34 @@ export default {
     // CLIENT ARCHIVE METHODS //-------------------------------------------------------------------------------
 
     async archive_to_vue () {
+      this.loading = true
       if (!localStorage.getItem('archive')) {
-        await this.archive()
+        await this.archive_f()
       }
       if (JSON.parse(localStorage.getItem('archive')).length === 0) {
-        this.no_archive = true
+        this.archive.no_archive = true
       } else {
-        this.archive_posts = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
+        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
           var textA = a.name.toUpperCase()
           var textB = b.name.toUpperCase()
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
       }
+      this.loading = false
     },
-    async archive () {
-      this.archive_error = false
+    async archive_f () {
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       try {
         const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
         if (response.data.length === 0) {
-          this.no_archive = true
+          this.archive.no_archive = true
         } else {
-          this.no_archive = false
-          this.archive_error = false
+          this.archive.no_archive = false
         }
         localStorage.setItem('archive', JSON.stringify(response.data))
       } catch (e) {
-        this.no_archive = false
-        this.archive_error = e.toString()
+        this.archive.no_archive = false
+        this.error = e.toString()
       }
     },
     async client_archive (id, index) {
@@ -1072,12 +1067,12 @@ export default {
         let email
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.posts.length; i++) {
+        for (var i = 0; i < this.clients.length; i++) {
           //eslint-disable-next-line
-          if (this.posts[i].client_id == id) {
-            email = this.posts[i].email
-            this.posts.splice(index, 1)
-            if (this.posts.length === 0) {
+          if (this.clients[i].client_id == id) {
+            email = this.clients[i].email
+            this.clients.splice(index, 1)
+            if (this.clients.length === 0) {
               this.no_clients = true
             }
           }
@@ -1089,10 +1084,10 @@ export default {
           // eslint-disable-next-line
           this.response = response.data
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
           this.$ga.event('Client', 'archive')
 
@@ -1156,7 +1151,7 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
           console.error(e)
         }
@@ -1166,22 +1161,22 @@ export default {
       if (confirm('Are you sure you want to unarchive this client?')) {
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.archive_posts.length; i++) {
+        for (var i = 0; i < this.archive.clients.length; i++) {
           //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            var arr = JSON.parse(localStorage.getItem('posts'))
-            arr.push(this.archive_posts[i])
+          if (this.archive.clients[i].client_id == id) {
+            var arr = JSON.parse(localStorage.getItem('clients'))
+            arr.push(this.archive.clients[i])
 
-            localStorage.setItem('posts', JSON.stringify(arr))
-            this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+            localStorage.setItem('clients', JSON.stringify(arr))
+            this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
               var textA = a.name.toUpperCase()
               var textB = b.name.toUpperCase()
               return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
             })
 
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
+            this.archive.clients.splice(index, 1)
+            if (this.archive.clients.length === 0) {
+              this.archive.no_archive = true
             }
           }
         }
@@ -1192,10 +1187,10 @@ export default {
           // eslint-disable-next-line
           this.response = response.data
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
           this.loading = false
@@ -1203,67 +1198,69 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
           console.error(e)
         }
       }
     },
 
-    // DATABSE METHODS //-------------------------------------------------------------------------------
+    // DATABASE METHODS //-------------------------------------------------------------------------------
 
-    async get_programmes () {
+    async get_plans () {
       try {
         axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
-        this.programmes = programmes.data
+        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+        this.clientUser.plans = plans.data
         var f
-        for (f in this.programmes) {
+        for (f in this.clientUser.plans) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           // eslint-disable-next-line
-          const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
+          const response_plans = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
 
-          this.programmes[f].workouts = response_programmes.data
+          this.clientUser.plans[f].sessions = response_plans.data
         }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
         console.error(e)
       }
     },
-    async get_workouts () {
+    async get_sessions () {
       try {
         var f
-        for (f in this.programmes) {
+        for (f in this.clientUser.plans) {
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
-          this.programmes[f].workouts = response.data
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
+          this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
         console.error(e)
       }
     },
-    async update_workout (pid, wid) {
+    async update_session (pid, wid) {
       this.loading = true
       // Set auth header
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
 
       let x
-      // Set the programme variable to the current programme
-      for (x in this.programmes) {
+      // Set the plan variable to the current plan
+      for (x in this.clientUser.plans) {
         //eslint-disable-next-line
-        if (this.programmes[x].id == pid) {
-          var programme = this.programmes[x]
+        if (this.clientUser.plans[x].id == pid) {
+          var plan = this.clientUser.plans[x]
           var y
-          for (y in programme.workouts) {
-            if (programme.workouts[y].id === wid) {
-              var workoutsId = programme.workouts[y].id
-              var workoutsChecked = programme.workouts[y].checked
-              var workoutsFeedback = programme.workouts[y].feedback
+          for (y in plan.sessions) {
+            if (plan.sessions[y].id === wid) {
+              var sessionId = plan.sessions[y].id
+              var sessionChecked = plan.sessions[y].checked
+              var sessionFeedback = plan.sessions[y].feedback
             }
           }
         }
@@ -1271,21 +1268,21 @@ export default {
       try {
         await axios.post(`https://api.traininblocks.com/client-workouts`,
           {
-            'id': workoutsId,
-            'checked': workoutsChecked,
-            'feedback': workoutsFeedback
+            'id': sessionId,
+            'checked': sessionChecked,
+            'feedback': sessionFeedback
           }
         )
-        this.$ga.event('Workout', 'update')
+        this.$ga.event('Session', 'update')
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
         console.error(e)
       }
-      await this.get_workouts()
-      this.sortWorkoutsBlock()
       this.loading = false
+      this.dontLeave = false
     }
   }
 }
