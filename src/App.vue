@@ -74,7 +74,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #plan, #account, #archive, .wrapper--client, #help, #logout {
+  #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -827,7 +827,7 @@ export default {
       },
 
       // BACKGROUND DATA //
-      
+
       errorMsg: null,
       loading: false,
       dontLeave: false,

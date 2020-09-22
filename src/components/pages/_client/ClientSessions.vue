@@ -280,7 +280,7 @@
   .bottom-bar .button {
     margin: 0
   }
-  .newsession {
+  .newSession {
     color: #B80000
   }
   .incomplete {
@@ -415,7 +415,7 @@
       font-size: 1.6rem
     }
 
-    /* session */
+    /* Session */
     input.session-name {
       width: 100%
     }
@@ -543,7 +543,7 @@
                 </div>
                 <div class="session_table--container">
                   <div class="session_table--container--session_duration_container">
-                    <div @click="changeWeek(item), sortsessions()" v-for="item in plan_duration(plan.duration)" :key="item" class="container--week">
+                    <div @click="changeWeek(item), sortSessions()" v-for="item in plan_duration(plan.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
                         <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
                         <div class="week__number">{{item}}</div>
@@ -572,7 +572,7 @@
                       :key="index">
                       <div class="wrapper--session__header">
                         <div>
-                          <span v-if="session.id !== editsession" class="text--name" :class="{newsession: session.name == 'Untitled' && !isEditingsession}"><b>{{session.name}}</b></span><br v-if="session.id !== editsession">
+                          <span v-if="session.id !== editsession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingsession}"><b>{{session.name}}</b></span><br v-if="session.id !== editsession">
                           <span v-if="session.id !== editsession" class="text--date">{{day(session.date)}}</span>
                           <span v-if="session.id !== editsession" class="text--date">{{session.date}}</span><br v-if="session.id !== editsession">
                           <span v-if="session.id !== editsession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{isCompleted(session.checked)}}</span>
@@ -1157,10 +1157,10 @@
         }
       },
       expandAll (toExpand) {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               if (toExpand === 'Expand') {
                 this.expandedSessions.push(session.id)
               } else {
@@ -1201,10 +1201,10 @@
         }
       },
       sortSessions () {
-        this.$parent.$parent.client_details.plans.forEach((session) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (session.id == this.$route.params.id && this.$parent.no_sessions === false) {
-            session.sessions.sort((a, b) => {
+          if (plan.id == this.$route.params.id && this.$parent.no_sessions === false) {
+            plan.sessions.sort((a, b) => {
               return new Date(a.date) - new Date(b.date)
             })
           }
@@ -1446,7 +1446,7 @@
           }
         }
         try {
-          this.sortsessions()
+          this.sortSessions()
           // eslint-disable-next-line
           const response_update_plan = await axios.post(`https://api.traininblocks.com/programmes`,
             {
@@ -1572,7 +1572,7 @@
             week_id: '',
             block_color: ''
           }
-          this.sortsessions()
+          this.sortSessions()
           this.scan()
           this.$ga.event('Session', 'new')
           this.$parent.$parent.loading = false
