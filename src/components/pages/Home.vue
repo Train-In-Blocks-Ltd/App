@@ -82,7 +82,6 @@
 
 <script>
   import axios from 'axios'
-  import qs from 'qs'
   import InlineSvg from 'vue-inline-svg'
 
   export default {
@@ -124,13 +123,13 @@
             this.$parent.loading = true
             this.$parent.dontLeave = true
             await axios.put('https://api.traininblocks.com/clients',
-              qs.stringify({
-                name: this.new_client.name,
-                pt_id: this.$parent.claims.sub,
-                email: this.new_client.email,
-                number: this.new_client.number,
-                notes: this.new_client.notes
-              }),
+              {
+                'name': this.new_client.name,
+                'pt_id': this.$parent.claims.sub,
+                'email': this.new_client.email,
+                'number': this.new_client.number,
+                'notes': this.new_client.notes
+              },
               {
                 headers: {
                   'Content-Type': 'application/x-www-form-urlencoded',

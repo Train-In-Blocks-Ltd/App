@@ -677,7 +677,6 @@
 
 <script>
   import axios from 'axios'
-  import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
 
@@ -1447,17 +1446,15 @@
         }
         try {
           this.sortSessions()
-          // eslint-disable-next-line
-          const response_update_plan = await axios.post(`https://api.traininblocks.com/programmes`,
+          const response = await axios.post(`https://api.traininblocks.com/programmes`,
             {
               'id': plan.id,
               'name': plan.name,
-              'description': plan.description,
               'duration': plan.duration,
               'start': plan.start,
               'notes': plan.notes,
               'block_color': plan.block_color,
-              'sessions': plan.sessions
+              'type': plan.type
             }
           )
           // Set vue client_details data to new data
@@ -1465,7 +1462,7 @@
           // Loop through client_details plans
           for (x in this.$parent.$parent.client_details.plans) {
             if (this.$parent.$parent.client_details.plans[x].id === this.$route.params.id) {
-              this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, response_update_plan.data)).replace('{"0":', '').replace('}}', '}'))
+              this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
             }
           }
           // Set vue client plans data to new data
@@ -1475,7 +1472,7 @@
             if (this.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
               for (y in this.$parent.$parent.clients[x].plans[y]) {
                 if (this.$parent.$parent.clients[x].plans[y].id === this.$route.params.id) {
-                  this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, response_update_plan.data)).replace('{"0":', '').replace('}}', '}'))
+                  this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
                 }
               }
             }
@@ -1546,15 +1543,14 @@
         try {
           this.$parent.$parent.loading = true
           this.$parent.$parent.dontLeave = true
-          // eslint-disable-next-line
-          const response_save_sessions = await axios.put('https://api.traininblocks.com/workouts',
-            qs.stringify({
-              name: this.new_session.name,
-              programme_id: this.$route.params.id,
-              date: this.new_session.date,
-              notes: this.currentCopysessionNotes,
-              week_id: this.currentWeek
-            }),
+          const response = await axios.put('https://api.traininblocks.com/workouts',
+            {
+              'name': this.new_session.name,
+              'programme_id': this.$route.params.id,
+              'date': this.new_session.date,
+              'notes': this.currentCopysessionNotes,
+              'week_id': this.currentWeek
+            },
             {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -1562,7 +1558,7 @@
               }
             }
           )
-          this.response = response_save_sessions.data
+          this.response = response.data
           // Get the sessions from the API because we've just created a new one
           await this.$parent.force_get_sessions()
           this.new_session = {
