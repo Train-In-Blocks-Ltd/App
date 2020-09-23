@@ -50,23 +50,7 @@
   .error {
     color: red
   }
-  .log-out {
-    color: red;
-    width: fit-content;
-    text-decoration: none;
-    cursor: pointer;
-    opacity: 1;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .log-out:hover {
-    opacity: .6
-  }
 
-  @media (max-width: 992px) {
-    .log-out:hover {
-      opacity: 1
-    }
-  }
   @media (max-width: 768px) {
     #account {
       width: 90vw
@@ -132,9 +116,6 @@
           </label>
         </div>
       </div>
-      <router-link class="log-out" to="/logout" @click.native="logout()" title="Logout">
-        Logout
-      </router-link>
     </form><br><br>
     <p style="font-size: .8rem"><b>Version 1.4</b></p>
   </div>

@@ -248,8 +248,8 @@
     opacity: .6
   }
 
-  /* GLOBAL: SHOW session AND NOTES */
-  .show-session, .show-plan-notes, .show-client-notes {
+  /* GLOBAL: SHOW AND NOTES */
+  .show-session, .show-plan-notes, .show-client-notes, .show-template-notes {
     outline-width: 0;
     overflow-wrap: break-word;
     color: #282828;
@@ -258,14 +258,14 @@
     font-size: .8rem;
     transition: all 1s
   }
-  .show-session a {
+  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template-notes a {
     color: blue
   }
-  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol {
+  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template-notes ul, .show-template-notes ol{
     text-decoration: none;
     margin: 0
   }
-  .show-session p, .show-client-notes p, .show-plan-notes p {
+  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template-notes p {
     margin: 1rem 0
   }
   .wrapper--session__header.client-side {
@@ -714,7 +714,7 @@
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
     <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div v-show="splashing" class="splash">
+      <div v-show="splashing && authenticated" class="splash">
         <div class="box">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" />
         </div>
@@ -785,6 +785,14 @@
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account"/>
           <p class="account_nav--item--text">
             Account
+          </p>
+        </router-link>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/logout" @click.native="logout()" title="Logout">
+          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon" aria-label="Logout"/>
+          <p class="account_nav--item--text">
+            Logout
           </p>
         </router-link>
       </div>

@@ -193,7 +193,7 @@
     transform: scale(.9)
   }
 
-  /* sessions */
+  /* Sessions */
   .session--header {
     display: flex;
     justify-content: space-between;
@@ -517,14 +517,14 @@
                 <div class="plan-notes__header">
                   <p class="plan-notes__header__text"><b>Plan Notes</b></p>
                 </div>
-                <quill v-show="editSessionNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                <div v-if="!editSessionNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
-                <p v-if="!editSessionNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
+                <quill v-show="editingPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+                <div v-if="!editingPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
+                <p v-if="!editingPlanNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="!editSessionNotes" @click="editingSessionNotes(true), cancelsession()" class="button--edit">Edit</button>
-                    <button v-show="editSessionNotes" @click="editingSessionNotes(false)" class="button--save">Save</button>
-                    <button v-show="editSessionNotes" @click="cancelSessionNotes()" class="cancel">Cancel</button>
+                    <button v-show="!editingPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()" class="button--edit">Edit</button>
+                    <button v-show="editingPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
+                    <button v-show="editingPlanNotes" @click="cancelPlanNotes()" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -559,7 +559,7 @@
                     <input @blur="updateSessionColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
                     <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   </div>
-                  <button class="button--new-session" @click="createsession()">New session</button>
+                  <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
                 <p v-if="$parent.no_sessions">No sessions yet. You can add one below.</p>
                 <p v-if="$parent.loading_sessions">Loading sessions...</p>
@@ -572,31 +572,31 @@
                       :key="index">
                       <div class="wrapper--session__header">
                         <div>
-                          <span v-if="session.id !== editsession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingsession}"><b>{{session.name}}</b></span><br v-if="session.id !== editsession">
-                          <span v-if="session.id !== editsession" class="text--date">{{day(session.date)}}</span>
-                          <span v-if="session.id !== editsession" class="text--date">{{session.date}}</span><br v-if="session.id !== editsession">
-                          <span v-if="session.id !== editsession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{isCompleted(session.checked)}}</span>
-                          <input @blur="scan()" v-if="session.id === editsession" class="session-name" type="text" name="session-name" pattern="[^\/]" v-model="session.name" /><br>
-                          <input @blur="scan()" v-if="session.id === editsession" class="session-date" type="date" name="session-date" v-model="session.date" /><br>
-                          <span @click="session.checked = toggleComplete(session.checked)" v-if="session.id === editsession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editsession}" class="text--checked">{{isCompleted(session.checked)}}</span>
+                          <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{session.name}}</b></span><br v-if="session.id !== editSession">
+                          <span v-if="session.id !== editSession" class="text--date">{{day(session.date)}}</span>
+                          <span v-if="session.id !== editSession" class="text--date">{{session.date}}</span><br v-if="session.id !== editSession">
+                          <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{isCompleted(session.checked)}}</span>
+                          <input @blur="scan()" v-if="session.id === editSession" class="session-name" type="text" name="session-name" pattern="[^\/]" v-model="session.name" /><br>
+                          <input @blur="scan()" v-if="session.id === editSession" class="session-date" type="date" name="session-date" v-model="session.date" /><br>
+                          <span @click="session.checked = toggleComplete(session.checked)" v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked">{{isCompleted(session.checked)}}</span>
                         </div>
                         <div class="header-options">
                           <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
                           <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
-                      <quill v-if="session.id === editsession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                      <div v-if="session.id !== editsession && expandedSessions.includes(session.id)" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
+                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id)" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
                       <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
                         <div>
-                          <button v-show="!isEditingsession" v-if="session.id !== editsession" @click="editingsessionNotes(session.id, true), cancelSessionNotes()">Edit</button>
-                          <button v-if="session.id === editsession" @click="editingsessionNotes(session.id, false)">Save</button>
-                          <button class="cancel" v-if="session.id === editsession" @click="cancelsession()">Cancel</button>
-                          <button class="delete" v-show="!isEditingsession" @click="soloDelete(session.id)">Delete</button>
+                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
+                          <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
+                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes()">Cancel</button>
+                          <button class="delete" v-show="!isEditingSession" @click="soloDelete(session.id)">Delete</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
@@ -703,15 +703,15 @@
           backgroundColor: ''
         },
         response: '',
-        editSessionNotes: false,
+        editingPlanNotes: false,
         todayDate: '',
         expandedSessions: [],
 
-        // session DATA //
+        // SESSION DATA //
 
-        isEditingsession: false,
-        editsession: null,
-        movingsession: null,
+        isEditingSession: false,
+        editSession: null,
+        movingSession: null,
         moveTarget: 1,
         copyTarget: 2,
         daysDiff: 7,
@@ -787,10 +787,10 @@
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
       shiftAcross () {
-        this.$parent.$parent.client_details.plans.forEach((session) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (session.id == this.$route.params.id) {
-            session.sessions.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 session.date = this.addDays(session.date, parseInt(this.shiftDays))
                 this.update_session(session.id)
@@ -804,10 +804,10 @@
       copyAcross () {
         var copysessions = []
         let weekCount = 2
-        this.$parent.$parent.client_details.plans.forEach((session) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (session.id == this.$route.params.id) {
-            session.sessions.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 copysessions.push({ name: session.name, date: session.date, notes: session.notes })
               }
@@ -833,13 +833,13 @@
         this.deselectAll()
       },
       initMove () {
-        this.$parent.$parent.client_details.plans.forEach((session) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (session.id == this.$route.params.id) {
-            session.sessions.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 session.week_id = this.moveTarget
-                this.updatesessionNotes(session.id)
+                this.updateSessionNotes(session.id)
               }
             })
           }
@@ -848,7 +848,7 @@
         this.currentWeek = parseInt(this.moveTarget)
       },
 
-      // session METHODS //-------------------------------------------------------------------------------
+      // SESSION METHODS //-------------------------------------------------------------------------------
 
       soloDelete (id) {
         if (confirm('Are you sure you want to delete this session?')) {
@@ -865,10 +865,10 @@
         }
       },
       deselectAll () {
-        this.$parent.$parent.client_details.plans.forEach((session) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (session.id == this.$route.params.id) {
-            session.sessions.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               var selEl = document.getElementById('sc-' + session.id)
               if (selEl.checked === true) {
                 selEl.checked = false
@@ -887,36 +887,36 @@
           this.selectedSessions.splice(idx, 1)
         }
       },
-      cancelsession () {
-        this.editsession = null
-        this.isEditingsession = false
-        window.removeEventListener('keydown', this.quickSavesessionNotes)
+      cancelSessionNotes () {
+        this.editSession = null
+        this.isEditingSession = false
+        window.removeEventListener('keydown', this.quickSaveSessionNotes)
       },
-      async createsession () {
+      async createSession () {
         this.$parent.$parent.loading = true
         await this.add_session()
         this.$parent.$parent.loading = false
       },
-      editingsessionNotes (id, state) {
-        this.isEditingsession = state
-        this.editsession = id
+      editingSessionNotes (id, state) {
+        this.isEditingSession = state
+        this.editSession = id
         if (state) {
-          window.addEventListener('keydown', this.quickSavesessionNotes)
+          window.addEventListener('keydown', this.quickSaveSessionNotes)
         } else {
-          this.updatesessionNotes(id)
-          window.removeEventListener('keydown', this.quickSavesessionNotes)
+          this.updateSessionNotes(id)
+          window.removeEventListener('keydown', this.quickSaveSessionNotes)
         }
       },
-      quickSavesessionNotes (key, state) {
+      quickSaveSessionNotes (key, state) {
         if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updatesessionNotes(this.editsession)
-          window.removeEventListener('keydown', this.quickSavesessionNotes)
+          this.updateSessionNotes(this.editSession)
+          window.removeEventListener('keydown', this.quickSaveSessionNotes)
         }
       },
-      updatesessionNotes (id) {
+      updateSessionNotes (id) {
         this.update_session(id)
-        this.isEditingsession = false
-        this.editsession = null
+        this.isEditingSession = false
+        this.editSession = null
         this.scan()
       },
       toggleComplete (value) {
@@ -952,9 +952,9 @@
           this.expandedSessions.push(id)
         }
       },
-      cancelSessionNotes () {
-        this.editSessionNotes = false
-        window.removeEventListener('keydown', this.quickSaveSessionNotes)
+      cancelPlanNotes () {
+        this.editingPlanNotes = false
+        window.removeEventListener('keydown', this.quickSavePlanNotes)
       },
       updateSessionColor () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
@@ -966,24 +966,24 @@
         this.update_plan()
         this.scan()
       },
-      editingSessionNotes (state) {
-        this.editSessionNotes = state
+      editingPlanNotes (state) {
+        this.editingPlanNotes = state
         if (state) {
-          window.addEventListener('keydown', this.quickSaveSessionNotes)
+          window.addEventListener('keydown', this.quickSavePlanNotes)
         } else {
-          this.updateSessionNotes()
-          window.removeEventListener('keydown', this.quickSaveSessionNotes)
+          this.updatePlanNotes()
+          window.removeEventListener('keydown', this.quickSavePlanNotes)
         }
       },
-      quickSaveSessionNotes (key, state) {
+      quickSavePlanNotes (key, state) {
         if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updateSessionNotes()
-          window.removeEventListener('keydown', this.quickSaveSessionNotes)
+          this.updatePlanNotes()
+          window.removeEventListener('keydown', this.quickSavePlanNotes)
         }
       },
-      updateSessionNotes () {
+      updatePlanNotes () {
         this.update_plan()
-        this.editSessionNotes = false
+        this.editingPlanNotes = false
       },
       changeWeek (weekID) {
         this.currentWeek = weekID

@@ -168,7 +168,7 @@
     <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <div class="button--container">
-      <form action="https://traininblocks.com/pricing">
+      <form action="https://traininblocks.com">
         <button class="signup" type="submit">Sign Up</button>
       </form>
       <div><button v-if="!open" @click="open = !open">Forgot password?</button></div>
