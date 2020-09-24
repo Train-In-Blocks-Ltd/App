@@ -772,6 +772,7 @@
     },
     created () {
       this.$parent.sessions = true
+      this.$parent.showDeletePlan = true
     },
     async mounted () {
       await this.$parent.get_client_details()
@@ -779,7 +780,7 @@
       this.scan()
     },
     beforeDestroy () {
-      this.$parent.showDeleteSession = false
+      this.$parent.showDeletePlan = false
     },
     methods: {
 
