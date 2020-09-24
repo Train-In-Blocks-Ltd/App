@@ -100,7 +100,7 @@
     <p class="expand-all" @click="expandAll(expandText(expandedTemplates))">{{ expandText(expandedTemplates) }} all</p>
     <button @click="saveTemplate()">Press</button>
     <div class="container--template-notes">
-      <div class="template-notes" v-for="(item, index) in testArray" :key="'temp-' + index">
+      <div class="template-notes" v-for="(item, index) in storedTemplates" :key="'temp-' + index">
         <div class="template-notes__header">
           <p class="template-notes__header__text"><b>{{item.name}}</b></p>
           <div class="header-options">
@@ -132,12 +132,17 @@
     },
     data () {
       return {
-        testArray: [{name: 'Name 1', html: '<p>html 1</p>'}, {name: 'Name 2', html: '<p>html 2</p>'}, {name: 'Name 3', html: '<p>html 3</p>'}],
         isEditingTemplate: false,
         editTemplate: null,
         expandedTemplates: [],
-        selectedTemplates: []
+        selectedTemplates: [],
+        storedTemplates: []
       }
+    },
+    created () {
+      this.$parent.claims.templates.replace(/\},/g, '}},').split('},').forEach((item) => {
+        this.storedTemplates.push(JSON.parse(item))
+      })
     },
     methods: {
 
@@ -152,7 +157,7 @@
         }
       },
       expandAll (toExpand) {
-        this.testArray.forEach((item, index) => {
+        this.$parent.claims.templates.forEach((item, index) => {
           if (toExpand === 'Expand') {
             this.expandedTemplates.push(index)
           } else {
@@ -172,7 +177,7 @@
         }
       },
       deselectAll () {
-        this.testArray.forEach((item, index) => {
+        this.$parent.claims.templates.forEach((item, index) => {
           var selEl = document.getElementById('temp-sc-' + index)
           if (selEl.checked === true) {
             selEl.checked = false
@@ -223,7 +228,7 @@
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
             {
               'profile': {
-                'templates': JSON.stringify(this.testArray).replace(/[[\]]/g, '')
+                'templates': JSON.stringify(this.storedTemplates).replace(/[[\]]/g, '')
               }
             },
             {

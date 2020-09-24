@@ -1301,6 +1301,7 @@ export default {
           for (y in plan.sessions) {
             if (plan.sessions[y].id === wid) {
               var sessionId = plan.sessions[y].id
+              var sessionName = plan.sessions[y].name
               var sessionChecked = plan.sessions[y].checked
               var sessionFeedback = plan.sessions[y].feedback
             }
@@ -1311,6 +1312,7 @@ export default {
         await axios.post(`https://api.traininblocks.com/client-workouts`,
           {
             'id': sessionId,
+            'name': sessionName,
             'checked': sessionChecked,
             'feedback': sessionFeedback
           }
@@ -1318,7 +1320,7 @@ export default {
         this.$ga.event('Session', 'update')
         var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
         if (client.data[0].notifications === 1) {
-          if (workoutsFeedback !== null) {
+          if (sessionFeedback !== null) {
             var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
               {
                 headers: {
@@ -1337,7 +1339,7 @@ export default {
                         'email': ptEmail.data[0].credentials.emails[0].value
                       }
                     ],
-                    'subject': this.claims.email + ' has submitted feedback for ' + workoutsName
+                    'subject': this.claims.email + ' has submitted feedback for ' + sessionName
                   }
                 ],
                 'from': {
