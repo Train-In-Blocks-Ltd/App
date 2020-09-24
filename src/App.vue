@@ -258,10 +258,13 @@
     font-size: .8rem;
     transition: all 1s
   }
+  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
+    max-width: 100%
+  }
   .show-session a, .show-plan-notes a, .show-client-notes a, .show-template-notes a {
     color: blue
   }
-  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template-notes ul, .show-template-notes ol{
+  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template-notes ul, .show-template-notes ol {
     text-decoration: none;
     margin: 0
   }
@@ -417,6 +420,26 @@
   }
 
   /* GLOBAL: QUILL */
+  .ql-toolbar.ql-snow {
+    border: none;
+    padding: .4rem .6rem .4rem .6rem;
+    position: fixed;
+    top: 25%;
+    right: 0;
+    border-radius: 3px;
+    background-color: #F4F4F4;
+    z-index: 2
+  }
+  .ql-toolbar.ql-snow .ql-formats {
+    display: grid;
+    margin: 0
+  }
+  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+    margin: .4rem 0
+  }
+  .ui.attached.segment.ql-container.ql-snow {
+    border: none
+  }
   .ql-editor {
     grid-area: body;
     color: #282828;
@@ -432,6 +455,9 @@
   }
   div.ql-editor p {
     margin: 1rem 0
+  }
+  div.ql-editor img {
+    display: none
   }
   .ql-editor.ql-blank:before {
     margin: 1rem 0;
@@ -621,14 +647,22 @@
     .sidebar:hover {
       width: 12rem
     }
-  }
-  @media (min-width: 768px) {
     .title-icon {
       height: 48px;
       width: 48px
     }
   }
   @media (max-width: 768px) {
+    /* Containers */
+    .quill {
+      width: 90%
+    }
+
+    /* Quill */
+    .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+      margin: .2rem 0
+    }
+
     /* Sidebar */
     .logo {
       display: none
@@ -841,7 +875,7 @@ export default {
       dontLeave: false,
       authenticated: false,
       quill_config: {
-        theme: 'bubble',
+        theme: 'snow',
         placeholder: 'Type away...',
         modules: {
           clipboard: {

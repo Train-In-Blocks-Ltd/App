@@ -4,11 +4,15 @@
     grid-template-rows: 8rem 1fr;
     margin-bottom: 2rem
   }
-  .client_link__notes__content h1, .block_container--link__block-notes h1 {
+  .client_link__notes__content h1, .plan_container--link__plan-notes h1 {
     font-size: 1.2rem
   }
-  .client_link__notes__content h2, .block_container--link__block-notes h2 {
+  .client_link__notes__content h2, .plan_container--link__plan-notes h2 {
     font-size: 1rem
+  }
+  .client_link__notes__content img, .plan_container--link__plan-notes img {
+    margin: 1rem 0;
+    max-width: 100%
   }
 
   /* Add Client Form */
