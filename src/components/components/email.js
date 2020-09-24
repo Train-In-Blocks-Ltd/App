@@ -421,7 +421,7 @@ export function email (link) {
                                       <span style='font-family:arial,helvetica neue,helvetica,sans-serif'><span style='font-size:32px'>Almost there...</span></span>
                                     </h1>
                                     <br>
-                                    Welcome to Train In Blocks. We provide an affordable means of creating a bespoke exercise programme - quickly and effectively. Combined with your skills and knowledge, you can start generating more leads and revenue for your personal training/coaching business.<br>
+                                    Welcome to Train In Blocks. We provide an affordable means of creating a bespoke exercise plan - quickly and effectively. Combined with your skills and knowledge, you can start generating more leads and revenue for your personal training/coaching business.<br>
                                     <br>
                                     You just need to activate your account below to get started!<br>
                                     &nbsp;
@@ -483,7 +483,7 @@ export function emailText (link) {
     `** Almost there...
     ------------------------------------------------------------
     Welcome to Train In Blocks. We provide an affordable means of creating a be=
-    spoke exercise programme - quickly and effectively. Combined with your skil=
+    spoke exercise plan - quickly and effectively. Combined with your skil=
     ls and knowledge, you can start generating more leads and revenue for your =
     personal training/coaching business.
     

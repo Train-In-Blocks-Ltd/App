@@ -168,7 +168,7 @@
     <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <div class="button--container">
-      <form action="https://traininblocks.com/pricing">
+      <form action="https://traininblocks.com">
         <button class="signup" type="submit">Sign Up</button>
       </form>
       <div><button v-if="!open" @click="open = !open">Forgot password?</button></div>
@@ -183,7 +183,7 @@
     <p v-if="success">{{success}}</p>
     <p v-if="error" class="error">{{error}}</p>
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.</p>
-    <p style="font-size: .8rem"><b>Version 1.2</b></p>
+    <p style="font-size: .8rem"><b>Version 1.4</b></p>
   </div>
 </template>
 
@@ -321,7 +321,7 @@ export default {
     this.$ga.event('Auth', 'login')
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
-    await this.$parent.clients()
+    await this.$parent.clients_f()
   },
   destroyed () {
     // Remove the widget from the DOM on path change

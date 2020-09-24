@@ -6,6 +6,7 @@
   }
   .wrapper--client {
     background-color: white;
+    border-right: 6px solid #F4F4F4;
     transition: all 1.4s cubic-bezier(.165, .84, .44, 1)
   }
 
@@ -19,10 +20,10 @@
     margin-left: 1rem;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
-  #client .client_info input:not([type='submit']):hover, #duration:hover, .workout-date:hover {
+  #client .client_info input:not([type='submit']):hover, #duration:hover, .session-date:hover {
     opacity: .6
   }
-  #client .client_info input:not([type='submit']):focus, #duration:focus, .workout-date:focus {
+  #client .client_info input:not([type='submit']):focus, #duration:focus, .session-date:focus {
     opacity: 1;
     padding: .6rem 1rem
   }
@@ -59,7 +60,8 @@
   }
   .floating_nav a, .selected-options {
     color: #282828;
-    text-decoration: none
+    text-decoration: none;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   .floating_nav a:hover, .selected-options:hover {
     opacity: .6
@@ -67,6 +69,44 @@
   .icon--options {
     cursor: pointer;
     margin-left: auto
+  }
+  .icon--open-options, .icon--open-stats {
+    user-select: none;
+    z-index: 2;
+    display: flex;
+    cursor: pointer;
+    position: fixed;
+    right: 0;
+    top: 2rem;
+    width: calc(3rem);
+    padding: .4rem 1rem .4rem .6rem;
+    border-radius: 3px 0 0 3px;
+    background-color: #F4F4F4;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  div.icon--open-stats {
+    top: 4.4rem
+  }
+  .icon--open-options:hover, .icon--open-stats:hover {
+    width: 6rem;
+    text-align: center
+  }
+  .icon--open-options svg, .icon--open-stats svg {
+    opacity: 1
+  }
+  .icon--open-options:hover svg, .icon--open-stats:hover svg {
+    opacity: 0
+  }
+  .icon--open-options .text, .icon--open-stats .text {
+    font-size: .8rem;
+    display: none;
+    opacity: 0;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .icon--open-options:hover .text, .icon--open-stats:hover .text {
+    display: block;
+    opacity: 1;
+    align-self: center
   }
   .openFloatingNav {
     transform: translateX(-12rem)
@@ -121,15 +161,16 @@
       <toolkit/>
     </modal>
     <div v-show="keepLoaded" class="floating_nav">
-      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-        <inline-svg v-show="!showOptions" @click="showOptions = true" class="icon--options" :src="require('../../assets/svg/hamburger.svg')" aria-label="Menu"/>
-      </transition>
+      <div class="icon--open-options" v-show="!showOptions" @click="showOptions = true" aria-label="Menu">
+        <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options"/>
+        <p class="text">Options</p>
+      </div>
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
         <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
       </transition>
-      <div class="client--options" v-for="(clients, index) in $parent.posts" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
+      <div class="client--options" v-for="(clients, index) in $parent.clients" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
-          <a href="javascript:void(0)" v-show="showDeleteBlock" @click="delete_block()">Delete Block</a>
+          <a href="javascript:void(0)" v-show="showDeletePlan" @click="delete_plan()">Delete Plan</a>
         </transition>
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
@@ -145,7 +186,7 @@
       </div>
     </div>
     <div class="wrapper--client" :class="{ openFloatingNav: showOptions }">
-      <div class="top_grid" v-if="!blocks">
+      <div class="top_grid" v-if="!sessions">
         <!-- Update the client details -->
         <form class="client_info" @submit.prevent="update_client()">
           <input class="client_info--name title" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
@@ -185,19 +226,18 @@
       InlineSvg,
       Toolkit
     },
-    data: function () {
+    data () {
       return {
 
         // BACKGROUD DATA //
 
         keepLoaded: false,
         showOptions: false,
-        no_programmes: false,
-        loading_programmes: true,
-        blocks: false,
-        no_workouts: false,
-        loading_workouts: true,
-        showDeleteBlock: false,
+        no_plans: false,
+        loading_plans: true,
+        sessions: false,
+        no_sessions: false,
+        showDeletePlan: false,
 
         // CLIENT STATUS DATA //
 
@@ -207,10 +247,12 @@
       }
     },
     async created () {
+      this.loading = true
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
       this.keepLoaded = true
+      this.loading = false
     },
     beforeDestroy () {
       this.keepLoaded = false
@@ -222,17 +264,17 @@
 
       created () {
         var x
-        for (x in this.$parent.posts) {
+        for (x in this.$parent.clients) {
           // If client matches client in route
-          if (this.$parent.posts[x].client_id === this.$route.params.client_id) {
+          if (this.$parent.clients[x].client_id === this.$route.params.client_id) {
             // Set client_details variable with client details
-            this.$parent.client_details = this.$parent.posts[x]
+            this.$parent.client_details = this.$parent.clients[x]
           }
         }
       },
       toURL () {
         var url = '/'
-        if (window.location.href.includes('block') === true) {
+        if (window.location.href.includes('session') === true) {
           url = `/client/${this.$route.params.client_id}/`
         }
         return url
@@ -406,42 +448,42 @@
           }
         }
       },
-      async force_get_workouts () {
+      async force_get_sessions () {
         try {
-          // Loop through programmes
+          // Loop through plans
           var f
-          for (f in this.$parent.client_details.programmes) {
-            // If programme matches programme in route
+          for (f in this.$parent.client_details.plans) {
+            // If plan matches plan in route
             // eslint-disable-next-line
-            if (this.$parent.client_details.programmes[f].id == this.$route.params.id) {
+            if (this.$parent.client_details.plans[f].id == this.$route.params.id) {
               axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
               // eslint-disable-next-line
-              const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.programmes[f].id}`)
-              // If there are no workouts
-              if (response_programmes.data.length === 0) {
-                this.no_workouts = true
-                this.$parent.client_details.programmes[f].workouts = false
-                // If there are workouts set the client_details to include workouts
+              const response_plans = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
+              // If there are no sessions
+              if (response_plans.data.length === 0) {
+                this.no_sessions = true
+                this.$parent.client_details.plans[f].sessions = false
+                // If there are sessions set the client_details to include sessions
               } else {
-                this.no_workouts = false
-                this.$parent.client_details.programmes[f].workouts = response_programmes.data
+                this.no_sessions = false
+                this.$parent.client_details.plans[f].sessions = response_plans.data
               }
-              // Sync client_details with posts
+              // Sync client_details with clients
               // Loop through clients
-              //eslint-disable-next-line
+              // eslint-disable-next-line
               var y
-              for (y in this.$parent.posts) {
+              for (y in this.$parent.clients) {
                 // If client matches client in route
                 //eslint-disable-next-line
-                if (this.$parent.posts[f].client_id == this.$route.params.client_id) {
-                  this.$parent.posts[f] = this.$parent.client_details
+                if (this.$parent.clients[f].client_id == this.$route.params.client_id) {
+                  this.$parent.clients[f] = this.$parent.client_details
                 }
               }
-              // Update the localstorage with the workouts
-              localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+              // Update the localstorage with the sessions
+              localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
             }
           }
-          this.loading_workouts = false
+          this.$parent.loading = false
         } catch (e) {
           this.$parent.loading = false
           this.$parent.errorMsg = e
@@ -449,47 +491,47 @@
           console.error(e)
         }
       },
-      async get_workouts () {
+      async get_sessions () {
         try {
-          // Loop through programmes
+          // Loop through plans
           var f
-          for (f in this.$parent.client_details.programmes) {
-            // If programme matches programme in route
+          for (f in this.$parent.client_details.plans) {
+            // If plan matches plan in route
             // eslint-disable-next-line
-            if (this.$parent.client_details.programmes[f].id == this.$route.params.id) {
-              // If client_details.programmes.workouts is set to false
-              if (this.$parent.client_details.programmes[f].workouts === false) {
-                this.no_workouts = true
-              // If client_details.programmes.workouts is not set then query the API
-              } else if (!this.$parent.client_details.programmes[f].workouts) {
+            if (this.$parent.client_details.plans[f].id == this.$route.params.id) {
+              // If client_details.plans.sessions is set to false
+              if (this.$parent.client_details.plans[f].sessions === false) {
+                this.no_sessions = true
+              // If client_details.plans.sessions is not set then query the API
+              } else if (!this.$parent.client_details.plans[f].sessions) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
                 // eslint-disable-next-line
-                const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.programmes[f].id}`)
-                // If there are no workouts
-                if (response_programmes.data.length === 0) {
-                  this.no_workouts = true
-                  this.$parent.client_details.programmes[f].workouts = false
-                  // If there are workouts set the client_details to include workouts
+                const response_plans = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
+                // If there are no sessions
+                if (response_plans.data.length === 0) {
+                  this.no_sessions = true
+                  this.$parent.client_details.plans[f].sessions = false
+                  // If there are sessions set the client_details to include sessions
                 } else {
-                  this.$parent.client_details.programmes[f].workouts = response_programmes.data
+                  this.$parent.client_details.plans[f].sessions = response_plans.data
                 }
-                // Sync client_details with posts
+                // Sync client_details with clients
                 // Loop through clients
-                //eslint-disable-next-line
+                // eslint-disable-next-line
                 var y
-                for (y in this.$parent.posts) {
+                for (y in this.$parent.clients) {
                   // If client matches client in route
                   //eslint-disable-next-line
-                  if (this.$parent.posts[f].client_id == this.$route.params.client_id) {
-                    this.$parent.posts[f] = this.$parent.client_details
+                  if (this.$parent.clients[f].client_id == this.$route.params.client_id) {
+                    this.$parent.clients[f] = this.$parent.client_details
                   }
                 }
-                // Update the localstorage with the workouts
-                localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+                // Update the localstorage with the sessions
+                localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
               }
             }
           }
-          this.loading_workouts = false
+          this.$parent.loading = false
         } catch (e) {
           this.$parent.loading = false
           this.$parent.errorMsg = e
@@ -501,29 +543,29 @@
         try {
           // Loop through clients
           var x
-          for (x in this.$parent.posts) {
+          for (x in this.$parent.clients) {
             // If client matches client in route
             // eslint-disable-next-line
-            if (this.$parent.posts[x].client_id == this.$route.params.client_id) {
+            if (this.$parent.clients[x].client_id == this.$route.params.client_id) {
               // Set client_details variable with client details
-              this.$parent.client_details = this.$parent.posts[x]
-              // Query API for programmes
+              this.$parent.client_details = this.$parent.clients[x]
+              // Query API for plans
               axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
               // eslint-disable-next-line
-              const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
-              // If there are no programmes
-              if (response_programmes.data.length === 0) {
-                this.no_programmes = true
-                this.$parent.posts[x].programmes = false
-                // If there are programmes set the posts to include programmes
+              const response_plans = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
+              // If there are no plans
+              if (response_plans.data.length === 0) {
+                this.no_plans = true
+                this.$parent.clients[x].plans = false
+                // If there are plans set the clients to include plans
               } else {
-                this.no_programmes = false
-                this.$parent.posts[x].programmes = response_programmes.data
-                // Update the localstorage with the programmes
-                localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+                this.no_plans = false
+                this.$parent.clients[x].plans = response_plans.data
+                // Update the localstorage with the plans
+                localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
               }
-              this.$parent.client_details = this.$parent.posts[x]
-              this.loading_programmes = false
+              this.$parent.client_details = this.$parent.clients[x]
+              this.loading_plans = false
             }
           }
         } catch (e) {
@@ -532,39 +574,39 @@
           this.$parent.$modal.show('error')
           console.error(e)
         }
-        await this.get_workouts()
+        await this.get_sessions()
       },
       async get_client_details () {
         try {
           // Loop through clients
           var x
-          for (x in this.$parent.posts) {
+          for (x in this.$parent.clients) {
             // If client matches client in route
             //eslint-disable-next-line
-            if (this.$parent.posts[x].client_id == this.$route.params.client_id) {
+            if (this.$parent.clients[x].client_id == this.$route.params.client_id) {
               // Set client_details variable with client details
-              this.$parent.client_details = this.$parent.posts[x]
-              // If client_details.programmes is set to false
-              if (this.$parent.posts[x].programmes === false) {
-                this.no_programmes = true
-              // If client_details.programmes is not set then query the API
-              } else if (!this.$parent.posts[x].programmes) {
+              this.$parent.client_details = this.$parent.clients[x]
+              // If client_details.plans is set to false
+              if (this.$parent.clients[x].plans === false) {
+                this.no_plans = true
+              // If client_details.plans is not set then query the API
+              } else if (!this.$parent.clients[x].plans) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
                 // eslint-disable-next-line
-                const response_programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.posts[x].client_id}`)
-                // If there are no programmes
-                if (response_programmes.data.length === 0) {
-                  this.no_programmes = true
-                  this.$parent.posts[x].programmes = false
-                  // If there are programmes set the posts to include programmes
+                const response_plans = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
+                // If there are no plans
+                if (response_plans.data.length === 0) {
+                  this.no_plans = true
+                  this.$parent.clients[x].plans = false
+                  // If there are plans set the clients to include plans
                 } else {
-                  this.$parent.posts[x].programmes = response_programmes.data
-                  // Update the localstorage with the programmes
-                  localStorage.setItem('posts', JSON.stringify(this.$parent.posts))
+                  this.$parent.clients[x].plans = response_plans.data
+                  // Update the localstorage with the plans
+                  localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
                 }
               }
-              this.$parent.client_details = this.$parent.posts[x]
-              this.loading_programmes = false
+              this.$parent.client_details = this.$parent.clients[x]
+              this.loading_plans = false
             }
           }
         } catch (e) {
@@ -573,7 +615,7 @@
           this.$parent.$modal.show('error')
           console.error(e)
         }
-        await this.get_workouts()
+        await this.get_sessions()
       },
       async update_client () {
         this.$parent.dontLeave = true
@@ -590,7 +632,7 @@
             }
           )
           // Get the client information again as we have just updated the client
-          await this.$parent.clients()
+          await this.$parent.clients_f()
           await this.$parent.clients_to_vue()
           this.$parent.dontLeave = false
         } catch (e) {
@@ -601,28 +643,28 @@
           console.error(e)
         }
       },
-      async delete_block () {
-        if (confirm('Are you sure you want to delete this block?')) {
+      async delete_plan () {
+        if (confirm('Are you sure you want to delete this plan?')) {
           this.$parent.loading = true
           this.$parent.dontLeave = true
-          var programme
+          var plan
           var id
-          for (programme of this.$parent.client_details.programmes) {
+          for (plan of this.$parent.client_details.plans) {
             //eslint-disable-next-line
-            if (programme.id == this.$route.params.id) {
-              id = programme.id
+            if (plan.id == this.$route.params.id) {
+              id = plan.id
             }
           }
           axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
 
-            await this.$parent.clients()
+            await this.$parent.clients_f()
             this.$parent.clients_to_vue()
 
             this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
 
-            this.$ga.event('Block', 'delete')
+            this.$ga.event('Session', 'delete')
             this.$parent.loading = false
             this.$parent.dontLeave = false
           } catch (e) {

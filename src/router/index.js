@@ -11,12 +11,13 @@ import ClientComponent from '@/components/pages/Client'
 import NotFound from '@/components/pages/NotFound'
 import ArchiveComponent from '@/components/pages/Archive'
 import HelpComponent from '@/components/pages/Help'
+import TemplateComponent from '@/components/pages/Templates'
 
-import ClientBlocks from '@/components/pages/_client/ClientBlocks'
-import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
+import ClientPlans from '@/components/pages/_client/ClientPlans'
+import ClientSessions from '@/components/pages/_client/ClientSessions'
 
 import ClientUserComponent from '@/components/pages/clientUser/Home'
-import ClientUserBlocks from '@/components/pages/clientUser/Block'
+import ClientUserPlans from '@/components/pages/clientUser/Plans'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -70,6 +71,14 @@ const router = new Router({
       }
     },
     {
+      path: '/templates',
+      component: TemplateComponent,
+      meta: {
+        requiresAuth: true,
+        requiresTrainer: true
+      }
+    },
+    {
       path: '/client/:client_id',
       component: ClientComponent,
       meta: {
@@ -79,17 +88,17 @@ const router = new Router({
       children: [
         {
           path: '',
-          component: ClientBlocks,
-          name: 'blocks',
+          component: ClientPlans,
+          name: 'plans',
           meta: {
             requiresAuth: true,
             requiresTrainer: true
           }
         },
         {
-          path: 'block/:id',
-          component: ClientWorkouts,
-          name: 'workouts',
+          path: 'plan/:id',
+          component: ClientSessions,
+          name: 'sessions',
           meta: {
             requiresAuth: true,
             requiresTrainer: true
@@ -106,8 +115,8 @@ const router = new Router({
       }
     },
     {
-      path: '/clientUser/block/:id',
-      component: ClientUserBlocks,
+      path: '/clientUser/plan/:id',
+      component: ClientUserPlans,
       meta: {
         requiresAuth: true,
         requiresClient: true

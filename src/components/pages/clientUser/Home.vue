@@ -1,19 +1,18 @@
 
 <style scoped>
-
-  /* Blocks */
-  .blocks_grid {
+  /* Plans */
+  .plans_grid {
     display: grid;
     grid-gap: 2rem;
     margin-bottom: 2rem
   }
-  .block_container:first-of-type {
+  .plan_container:first-of-type {
     margin-left: 0
   }
-  .block_container:last-of-type {
+  .plan_container:last-of-type {
     margin-right: 0
   }
-  .block_container--link {
+  .plan_container--link {
     display: grid;
     position: relative;
     grid-gap: 1rem;
@@ -25,7 +24,7 @@
     padding: 1rem 0;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
-  .block_container--link:before {
+  .plan_container--link:before {
     content: '';
     position: absolute;
     opacity: .4;
@@ -36,33 +35,33 @@
     background-color: #282828;
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
-  .block_container--link:hover:before {
+  .plan_container--link:hover:before {
     width: 100%;
     opacity: 1
   }
-  .block_container--link__block-notes {
+  .plan_container--link__plan-notes {
     font-size: .8rem
   }
-  .block_container--link h3 {
+  .plan_container--link h3 {
     margin-top: 0;
     font-size: 1.4rem;
     margin-bottom: 0;
     overflow: hidden;
     text-overflow: ellipsis
   }
-  .more-block-info {
+  .more-plan-info {
     margin-top: 1rem
   }
-  .block_container--link p {
+  .plan_container--link p {
     font-size: .8rem;
     font-weight: 500
   }
-  .block_container--link p:last-of-type {
+  .plan_container--link p:last-of-type {
     margin-bottom: 0
   }
 
   @media (min-width: 1024px) {
-    .block_container--link {
+    .plan_container--link {
       grid-template: 1fr/1fr 1fr;
       grid-gap: 2rem
     }
@@ -74,7 +73,7 @@
     }
   }
   @media (max-width: 768px) {
-    .client-notes, .block_container--link {
+    .client-notes, .plan_container--link {
       margin: 0;
       min-width: 0;
       width: 100%
@@ -83,7 +82,7 @@
 
   /* For Mobile */
   @media (max-width: 576px) {
-    .blocks_grid {
+    .plans_grid {
       grid-template-columns: 1fr
     }
   }
@@ -102,58 +101,57 @@
         <inline-svg :src="require('../../../assets/svg/today.svg')" class="title-icon"/>
         <h2 class="sub-title no-margin">Today</h2>
       </div>
-      <p v-if="viewWorkoutsStore.length === 0 && loading === false">No workouts today...</p>
-      <p v-if="loading === true">Loading workouts...</p>
-      <div v-for="(programme, index) in this.$parent.programmes"
-        :key="index">
-        <div class="container--workouts" v-if="programme.workouts">
-          <div class="wrapper--workout" v-for="(workout, index) in programme.workouts"
-            :key="index" v-show="workout.id == viewWorkoutsStore[currentWorkoutIndexHome] && isToday()">
-            <div class="wrapper--workout__header client-side" :id="workout.name">
-              <span class="text--name"><b>{{workout.name}}</b></span><br>
-              <span class="text--date">{{$parent.day(workout.date)}}</span>
-              <span class="text--date">{{workout.date}}</span>
+      <p v-if="viewSessionsStore.length === 0 && loading === false">No sessions today...</p>
+      <p v-if="loading === true">Loading sessions...</p>
+      <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
+        <div class="container--sessions" v-if="plan.sessions">
+          <div class="wrapper--session" v-for="(session, index) in plan.sessions"
+            :key="index" v-show="session.id == viewSessionsStore[currentSessionIndexHome] && isToday()">
+            <div class="wrapper--session__header client-side" :id="session.name">
+              <span class="text--name"><b>{{session.name}}</b></span><br>
+              <span class="text--date">{{$parent.day(session.date)}}</span>
+              <span class="text--date">{{session.date}}</span>
             </div>
-            <div v-html="removeBrackets(workout.notes)" class="show-workout animate animate__fadeIn"/>
+            <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
             <div class="bottom-bar">
               <div>
-                <button v-if="workout.checked !== 0" @click="workout.checked = 0, $parent.update_workout(programme.id, workout.id)" id="button-done" class="button no-margin">Completed</button>
-                <button v-if="workout.checked === 0" @click="workout.checked = 1, $parent.update_workout(programme.id, workout.id)" id="button-to-do" class="button no-margin">Incomplete</button>
-                <button v-if="giveFeedback !== workout.id" @click="giveFeedback = workout.id">Give Feedback</button>
+                <button v-if="session.checked !== 0" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button-done" class="button no-margin">Completed</button>
+                <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="button-to-do" class="button no-margin">Incomplete</button>
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id">Give Feedback</button>
               </div>
             </div><br>
-            <div v-if="giveFeedback === workout.id">
+            <div v-if="giveFeedback === session.id">
               <h2>Feedback</h2>
-              <quill :config="$parent.config" v-model="workout.feedback" output="html" class="quill animate animate__fadeIn"/>
-              <button @click="giveFeedback = null, $parent.update_workout(programme.id, workout.id)">Save</button>
+              <quill :config="$parent.quill_config" v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
+              <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
               <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
           </div>
         </div>
       </div>
-      <div v-if="viewWorkoutsStore.length !== 0" class="container--session-control">
+      <div v-if="viewSessionsStore.length !== 0" class="container--session-control">
         <div>
-          <button v-show="currentWorkoutIndexHome != 0" @click="currentWorkoutIndexHome--">Back</button>
-          <button v-show="currentWorkoutIndexHome != maxWorkoutIndexHome" @click="currentWorkoutIndexHome++">Next</button>
+          <button v-show="currentSessionIndexHome != 0" @click="currentSessionIndexHome--">Back</button>
+          <button v-show="currentSessionIndexHome != maxSessionIndexHome" @click="currentSessionIndexHome++">Next</button>
         </div>
-        <p class="session-counter">{{currentWorkoutIndexHome + 1}}/{{maxWorkoutIndexHome + 1}}</p>
+        <p class="session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
       </div>
       <div class="container--title">
-        <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
-        <h2 class="sub-title no-margin">Programmes</h2>
+        <inline-svg :src="require('../../../assets/svg/plan.svg')" class="title-icon"/>
+        <h2 class="sub-title no-margin">Plans</h2>
       </div>
-      <div class="blocks_grid">
-        <div v-for="(block, index) in this.$parent.programmes"
-          :key="'block-' + index" class="block_container">
-          <router-link class="block_container--link" :to="'/clientUser/block/' + block.id">
-            <div class="block_container--link__info">
-              <h3>{{block.name}}</h3>
-              <div class="more-block-info">
-                <p><b>Duration: </b>{{block.duration}}</p>
-                <p><b>Start: </b>{{block.start}}</p>
+      <div class="plans_grid">
+        <div v-for="(plan, index) in this.$parent.clientUser.plans"
+          :key="'plan-' + index" class="plan_container">
+          <router-link class="plan_container--link" :to="'/clientUser/plan/' + plan.id">
+            <div class="plan_container--link__info">
+              <h3>{{plan.name}}</h3>
+              <div class="more-plan-info">
+                <p><b>Duration: </b>{{plan.duration}}</p>
+                <p><b>Start: </b>{{plan.start}}</p>
               </div>
             </div>
-            <div v-html="block.notes" class="block_container--link__block-notes" />
+            <div v-html="plan.notes" class="plan_container--link__plan-notes" />
           </router-link>
         </div>
       </div>
@@ -172,28 +170,18 @@ export default {
     return {
       giveFeedback: null,
       loading: true,
-      viewWorkoutsStore: [],
-      maxWorkoutIndexHome: null,
-      currentWorkoutIndexHome: 0,
-      config: {
-        modules: {
-          toolbar: [
-            [{'header': 1}, {'header': 2}],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{'script': 'sub'}, {'script': 'super'}]
-          ]
-        },
-        placeholder: 'Type away...'
-      }
+      viewSessionsStore: [],
+      maxSessionIndexHome: null,
+      currentSessionIndexHome: 0
     }
   },
   created () {
     this.$parent.setup()
   },
   async mounted () {
-    await this.$parent.get_programmes()
-    await this.todaysWorkout()
-    await this.initCountWorkoutsHome()
+    await this.$parent.get_plans()
+    await this.todayssession()
+    await this.initCountsessionsHome()
     this.loading = false
   },
   methods: {
@@ -208,18 +196,18 @@ export default {
         return dataIn
       }
     },
-    initCountWorkoutsHome () {
-      var count = this.viewWorkoutsStore.length - 1
-      this.maxWorkoutIndexHome = count
+    initCountsessionsHome () {
+      var count = this.viewSessionsStore.length - 1
+      this.maxSessionIndexHome = count
     },
 
     // DATE/TIME METHODS //-------------------------------------------------------------------------------
 
-    todaysWorkout () {
-      this.$parent.programmes.forEach((block) => {
-        block.workouts.forEach((workout) => {
-          if (workout.date === this.isToday()) {
-            this.viewWorkoutsStore.push(workout.id)
+    todayssession () {
+      this.$parent.clientUser.plans.forEach((plan) => {
+        plan.sessions.forEach((session) => {
+          if (session.date === this.isToday()) {
+            this.viewSessionsStore.push(session.id)
           }
         })
       })
