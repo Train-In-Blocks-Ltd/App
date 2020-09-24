@@ -204,6 +204,7 @@
               </label>
             </div>
             <button @click="createClient()" class="button--verify button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
+            <button @click="$parent.client_details.notifications = 0, update_client()" v-if="clientAlready && clientAlreadyMsg !== 'Loading...'" class="button--verify button">Disable email notifications</button>
           </div>
         </form>
       </div>
