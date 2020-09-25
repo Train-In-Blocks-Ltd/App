@@ -1361,7 +1361,7 @@ export default {
           }
         )
         if (client.data[0].notifications === 1) {
-          if (workoutsFeedback !== null) {
+          if (sessionFeedback !== null) {
             var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
               {
                 headers: {
