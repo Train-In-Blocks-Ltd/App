@@ -240,7 +240,8 @@
             }
           }
           // Get the new plans
-          await this.$parent.force_get_client_details()
+          var force = true
+          await this.$parent.get_client_details(force)
 
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false

@@ -670,11 +670,11 @@
       InlineSvg,
       FullCalendar
     },
-    data: function () {
+    data () {
       return {
+        force: true,
 
         // BLOCK DATA //
-
         isStatsOpen: false,
         showFeedback: '',
         weekColor: {
@@ -686,7 +686,6 @@
         expandedSessions: [],
 
         // SESSION DATA //
-
         isEditingSession: false,
         editSession: null,
         movingSession: null,
@@ -701,7 +700,6 @@
         shiftDays: 1,
 
         // REGEX DATA //
-
         str: [],
         yData: [],
         xLabel: [],
@@ -713,12 +711,10 @@
         protocolError: [],
 
         // CHART METHODS //
-
         dataCollection: null,
         options: null,
 
         // CALENDAR DATA //
-
         calendarToolbarHeader: {
           left: 'title',
           right: ''
@@ -730,7 +726,6 @@
         sessionDates: [],
 
         // STATISTICS DATA //
-
         p1: '',
         p2: '',
         p3: '',
@@ -743,7 +738,6 @@
         showType: true,
 
         // MICROCYCLE DATA //
-
         allowMoreWeeks: false,
         currentWeek: 1,
         maxWeek: '2'
@@ -1413,12 +1407,9 @@
 
       async update_plan () {
         this.$parent.$parent.dontLeave = true
-        // Set auth header
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        let x
         var plan
         // Set the plan variable to the current plan
-        for (x in this.$parent.$parent.client_details.plans) {
+        for (var x in this.$parent.$parent.client_details.plans) {
           // eslint-disable-next-line
           if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
             plan = this.$parent.$parent.client_details.plans[x]
@@ -1435,6 +1426,11 @@
               'notes': plan.notes,
               'block_color': plan.block_color,
               'type': plan.type
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
             }
           )
           // Set vue client_details data to new data
@@ -1473,12 +1469,8 @@
       async update_session (id) {
         this.$parent.$parent.loading = true
         this.$parent.$parent.dontLeave = true
-        // Set auth header
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
-        let x
         // Set the plan variable to the current plan
-        for (x in this.$parent.$parent.client_details.plans) {
+        for (var x in this.$parent.$parent.client_details.plans) {
           //eslint-disable-next-line
           if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
             var plan = this.$parent.$parent.client_details.plans[x]
@@ -1504,9 +1496,14 @@
               'notes': sessionsNotes,
               'week_id': sessionsWeek,
               'checked': sessionsChecked
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
             }
           )
-          await this.$parent.force_get_sessions()
+          await this.$parent.get_sessions(this.force)
           await this.update_plan()
           this.$ga.event('Session', 'update')
           this.$parent.$parent.loading = false
@@ -1540,7 +1537,7 @@
           )
           this.response = response.data
           // Get the sessions from the API because we've just created a new one
-          await this.$parent.force_get_sessions()
+          await this.$parent.get_sessions(this.force)
           this.new_session = {
             name: 'Untitled',
             date: this.todayDate,
@@ -1563,13 +1560,17 @@
       },
       async delete_session (id, ready) {
         if (ready) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             this.$parent.$parent.loading = true
             this.$parent.$parent.dontLeave = true
-            await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
-
-            await this.$parent.force_get_sessions()
+            await axios.delete(`https://api.traininblocks.com/workouts/${id}`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                }
+              }
+            )
+            await this.$parent.get_sessions(this.force)
             await this.update_plan()
 
             this.$ga.event('Session', 'delete')
