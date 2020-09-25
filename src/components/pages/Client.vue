@@ -170,7 +170,7 @@
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.clients" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
-          <a href="javascript:void(0)" v-show="showDeleteSession" @click="delete_session()">Delete Session</a>
+          <a href="javascript:void(0)" v-show="showDeletePlan" @click="delete_plan()">Delete Plan</a>
         </transition>
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
@@ -204,6 +204,7 @@
               </label>
             </div>
             <button @click="createClient()" class="button--verify button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
+            <button @click="$parent.client_details.notifications = 0, update_client()" v-if="clientAlready && clientAlreadyMsg !== 'Loading...'" class="button--verify button">Disable email notifications</button>
           </div>
         </form>
       </div>
@@ -236,7 +237,7 @@
         loading_plans: true,
         sessions: false,
         no_sessions: false,
-        showDeleteSession: false,
+        showDeletePlan: false,
 
         // CLIENT STATUS DATA //
 
@@ -642,8 +643,8 @@
           console.error(e)
         }
       },
-      async delete_session () {
-        if (confirm('Are you sure you want to delete this session?')) {
+      async delete_plan () {
+        if (confirm('Are you sure you want to delete this plan?')) {
           this.$parent.loading = true
           this.$parent.dontLeave = true
           var plan

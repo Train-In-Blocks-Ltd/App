@@ -98,6 +98,7 @@
     </transition>
     <h1 class="main-title">Templates</h1>
     <p class="expand-all" @click="expandAll(expandText(expandedTemplates))">{{ expandText(expandedTemplates) }} all</p>
+    <button @click="saveTemplate()">Press</button>
     <div class="container--template-notes">
       <div class="template-notes" v-for="(item, index) in testArray" :key="'temp-' + index">
         <div class="template-notes__header">
@@ -222,7 +223,7 @@
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
             {
               'profile': {
-                'templates': this.$parent.claims.templates
+                'templates': JSON.stringify(this.testArray).replace(/[[\]]/g, '')
               }
             },
             {

@@ -59,13 +59,14 @@
     display: grid;
     grid-gap: .4rem;
     position: fixed;
-    top: 6rem;
-    right: 2rem;
-    margin-top: 1.5rem;
+    top: 0;
+    right: 0;
     text-align: right;
-    background-color: #FFFFFF99;
-    z-index: 99;
-    padding: 1rem 0 1rem 1rem
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810;
+    width: 100%;
+    z-index: 9;
+    padding: 2rem
   }
   .multi-select a {
     color: #282828;
@@ -270,7 +271,8 @@
     grid-area: body
   }
   .show-feedback {
-    padding: 12px 15px;
+    margin: 1rem 0;
+    padding: 0;
     grid-area: feedback
   }
   .bottom-bar {
@@ -298,9 +300,10 @@
   }
   .showingFeedback {
     grid-template-areas:
-      'header header'
-      'body feedback'
-      'bar bar'
+      'header'
+      'body'
+      'feedback'
+      'bar'
   }
 
   /* Graph */
@@ -356,16 +359,6 @@
     .graph {
       padding: 4rem 10vw
     }
-    .showingFeedback {
-      grid-template-areas:
-        'header'
-        'body'
-        'feedback'
-        'bar'
-    }
-    .show-feedback {
-      padding: 1rem 0
-    }
     .expand-all:hover {
       opacity: 1
     }
@@ -373,20 +366,6 @@
   @media (max-width: 768px) {
     .graph {
       padding: 2rem 5vw 4rem 5vw
-    }
-    .multi-select {
-      top: -2rem;
-      right: 0;
-      padding: 2rem;
-      width: 100%;
-      background-color: white;
-      box-shadow: 0 0 20px 10px #28282812
-    }
-    .multi-select a {
-      grid-template-columns: 1fr
-    }
-    .multi-select svg {
-      margin-left: auto
     }
     #copy:hover {
       opacity: 1
@@ -517,14 +496,14 @@
                 <div class="plan-notes__header">
                   <p class="plan-notes__header__text"><b>Plan Notes</b></p>
                 </div>
-                <quill v-show="editingPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                <div v-if="!editingPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
-                <p v-if="!editingPlanNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
+                <quill v-show="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+                <div v-if="!editPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
+                <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="!editingPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()" class="button--edit">Edit</button>
-                    <button v-show="editingPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
-                    <button v-show="editingPlanNotes" @click="cancelPlanNotes()" class="cancel">Cancel</button>
+                    <button v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()" class="button--edit">Edit</button>
+                    <button v-show="editPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
+                    <button v-show="editPlanNotes" @click="cancelPlanNotes()" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -702,7 +681,7 @@
           backgroundColor: ''
         },
         response: '',
-        editingPlanNotes: false,
+        editPlanNotes: false,
         todayDate: '',
         expandedSessions: [],
 
@@ -772,6 +751,7 @@
     },
     created () {
       this.$parent.sessions = true
+      this.$parent.showDeletePlan = true
     },
     async mounted () {
       await this.$parent.get_client_details()
@@ -779,7 +759,7 @@
       this.scan()
     },
     beforeDestroy () {
-      this.$parent.showDeleteSession = false
+      this.$parent.showDeletePlan = false
     },
     methods: {
 
@@ -952,7 +932,7 @@
         }
       },
       cancelPlanNotes () {
-        this.editingPlanNotes = false
+        this.editPlanNotes = false
         window.removeEventListener('keydown', this.quickSavePlanNotes)
       },
       updateSessionColor () {
@@ -966,7 +946,7 @@
         this.scan()
       },
       editingPlanNotes (state) {
-        this.editingPlanNotes = state
+        this.editPlanNotes = state
         if (state) {
           window.addEventListener('keydown', this.quickSavePlanNotes)
         } else {
@@ -982,7 +962,7 @@
       },
       updatePlanNotes () {
         this.update_plan()
-        this.editingPlanNotes = false
+        this.editPlanNotes = false
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
@@ -1147,7 +1127,7 @@
 
       pasteHtmlAtCaret (html) {
         let caretPosition = document.getSelection()
-        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-bubble') {
+        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
           if (caretPosition.focusNode.nodeType !== 3) {
             caretPosition.focusNode.insertAdjacentHTML('afterend', html)
           } else {
