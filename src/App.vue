@@ -1018,9 +1018,14 @@ export default {
       this.loading = false
     },
     async clients_f () {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
         if (response.data.length === 0) {
           this.no_clients = true
         } else {
@@ -1049,9 +1054,14 @@ export default {
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
+          await axios.delete(`https://api.traininblocks.com/clients/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
 
           await this.archive_f()
           this.archive_to_vue()
@@ -1090,9 +1100,14 @@ export default {
       this.loading = false
     },
     async archive_f () {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
         if (response.data.length === 0) {
           this.archive.no_archive = true
         } else {
@@ -1119,10 +1134,14 @@ export default {
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
-          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
+          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
           // eslint-disable-next-line
           this.response = response.data
 
@@ -1222,11 +1241,14 @@ export default {
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
-          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-          // eslint-disable-next-line
+          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
           this.response = response.data
 
           await this.archive_f()
@@ -1251,16 +1273,24 @@ export default {
 
     async get_plans () {
       try {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
         this.clientUser.plans = plans.data
         var f
         for (f in this.clientUser.plans) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          // eslint-disable-next-line
-          const response_plans = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
-
-          this.clientUser.plans[f].sessions = response_plans.data
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
+          this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
         this.loading = false
@@ -1274,8 +1304,13 @@ export default {
       try {
         var f
         for (f in this.clientUser.plans) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
@@ -1288,13 +1323,10 @@ export default {
     },
     async update_session (pid, wid) {
       this.loading = true
-      // Set auth header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
-      let x
       // Set the plan variable to the current plan
+      let x
       for (x in this.clientUser.plans) {
-        //eslint-disable-next-line
+        // eslint-disable-next-line
         if (this.clientUser.plans[x].id == pid) {
           var plan = this.clientUser.plans[x]
           var y
@@ -1304,12 +1336,18 @@ export default {
               var sessionName = plan.sessions[y].name
               var sessionChecked = plan.sessions[y].checked
               var sessionFeedback = plan.sessions[y].feedback
+              var sessionName = plan.sessions[y].name
             }
           }
         }
       }
       try {
         await axios.post(`https://api.traininblocks.com/client-workouts`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          },
           {
             'id': sessionId,
             'name': sessionName,
@@ -1318,10 +1356,21 @@ export default {
           }
         )
         this.$ga.event('Session', 'update')
-        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
         if (client.data[0].notifications === 1) {
           if (sessionFeedback !== null) {
             var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                }
+              },
               {
                 headers: {
                   'Accept': 'application/json',

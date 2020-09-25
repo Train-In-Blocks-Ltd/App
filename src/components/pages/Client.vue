@@ -448,50 +448,7 @@
           }
         }
       },
-      async force_get_sessions () {
-        try {
-          // Loop through plans
-          var f
-          for (f in this.$parent.client_details.plans) {
-            // If plan matches plan in route
-            // eslint-disable-next-line
-            if (this.$parent.client_details.plans[f].id == this.$route.params.id) {
-              axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-              // eslint-disable-next-line
-              const response_plans = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
-              // If there are no sessions
-              if (response_plans.data.length === 0) {
-                this.no_sessions = true
-                this.$parent.client_details.plans[f].sessions = false
-                // If there are sessions set the client_details to include sessions
-              } else {
-                this.no_sessions = false
-                this.$parent.client_details.plans[f].sessions = response_plans.data
-              }
-              // Sync client_details with clients
-              // Loop through clients
-              // eslint-disable-next-line
-              var y
-              for (y in this.$parent.clients) {
-                // If client matches client in route
-                //eslint-disable-next-line
-                if (this.$parent.clients[f].client_id == this.$route.params.client_id) {
-                  this.$parent.clients[f] = this.$parent.client_details
-                }
-              }
-              // Update the localstorage with the sessions
-              localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-            }
-          }
-          this.$parent.loading = false
-        } catch (e) {
-          this.$parent.loading = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          console.error(e)
-        }
-      },
-      async get_sessions () {
+      async get_sessions (force) {
         try {
           // Loop through plans
           var f
@@ -500,28 +457,32 @@
             // eslint-disable-next-line
             if (this.$parent.client_details.plans[f].id == this.$route.params.id) {
               // If client_details.plans.sessions is set to false
-              if (this.$parent.client_details.plans[f].sessions === false) {
+              if (this.$parent.client_details.plans[f].sessions === false && !force) {
                 this.no_sessions = true
               // If client_details.plans.sessions is not set then query the API
-              } else if (!this.$parent.client_details.plans[f].sessions) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-                // eslint-disable-next-line
-                const response_plans = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
+              } else if (!this.$parent.client_details.plans[f].sessions || force === true) {
+                const response = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`,
+                  {
+                    headers: {
+                      'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                    }
+                  }
+                )
                 // If there are no sessions
-                if (response_plans.data.length === 0) {
+                if (response.data.length === 0) {
                   this.no_sessions = true
                   this.$parent.client_details.plans[f].sessions = false
                   // If there are sessions set the client_details to include sessions
                 } else {
-                  this.$parent.client_details.plans[f].sessions = response_plans.data
+                  this.no_sessions = false
+                  this.$parent.client_details.plans[f].sessions = response.data
                 }
                 // Sync client_details with clients
                 // Loop through clients
                 // eslint-disable-next-line
-                var y
-                for (y in this.$parent.clients) {
+                for (var y in this.$parent.clients) {
                   // If client matches client in route
-                  //eslint-disable-next-line
+                  // eslint-disable-next-line
                   if (this.$parent.clients[f].client_id == this.$route.params.client_id) {
                     this.$parent.clients[f] = this.$parent.client_details
                   }
@@ -539,7 +500,7 @@
           console.error(e)
         }
       },
-      async force_get_client_details () {
+      async get_client_details (force) {
         try {
           // Loop through clients
           var x
@@ -549,58 +510,26 @@
             if (this.$parent.clients[x].client_id == this.$route.params.client_id) {
               // Set client_details variable with client details
               this.$parent.client_details = this.$parent.clients[x]
-              // Query API for plans
-              axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-              // eslint-disable-next-line
-              const response_plans = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
-              // If there are no plans
-              if (response_plans.data.length === 0) {
-                this.no_plans = true
-                this.$parent.clients[x].plans = false
-                // If there are plans set the clients to include plans
-              } else {
-                this.no_plans = false
-                this.$parent.clients[x].plans = response_plans.data
-                // Update the localstorage with the plans
-                localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-              }
-              this.$parent.client_details = this.$parent.clients[x]
-              this.loading_plans = false
-            }
-          }
-        } catch (e) {
-          this.$parent.loading = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          console.error(e)
-        }
-        await this.get_sessions()
-      },
-      async get_client_details () {
-        try {
-          // Loop through clients
-          var x
-          for (x in this.$parent.clients) {
-            // If client matches client in route
-            //eslint-disable-next-line
-            if (this.$parent.clients[x].client_id == this.$route.params.client_id) {
-              // Set client_details variable with client details
-              this.$parent.client_details = this.$parent.clients[x]
               // If client_details.plans is set to false
-              if (this.$parent.clients[x].plans === false) {
+              if (this.$parent.clients[x].plans === false && !force) {
                 this.no_plans = true
               // If client_details.plans is not set then query the API
-              } else if (!this.$parent.clients[x].plans) {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-                // eslint-disable-next-line
-                const response_plans = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
+              } else if (!this.$parent.clients[x].plans || force === true) {
+                const response = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`,
+                  {
+                    headers: {
+                      'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                    }
+                  }
+                )
                 // If there are no plans
-                if (response_plans.data.length === 0) {
+                if (response.data.length === 0) {
                   this.no_plans = true
                   this.$parent.clients[x].plans = false
                   // If there are plans set the clients to include plans
                 } else {
-                  this.$parent.clients[x].plans = response_plans.data
+                  this.no_plans = false
+                  this.$parent.clients[x].plans = response.data
                   // Update the localstorage with the plans
                   localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
                 }
@@ -619,16 +548,19 @@
       },
       async update_client () {
         this.$parent.dontLeave = true
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
-          const response_update_clients = await axios.post(`https://api.traininblocks.com/clients`,
+          await axios.post(`https://api.traininblocks.com/clients`,
             {
               'id': this.$parent.client_details.client_id,
               'name': this.$parent.client_details.name,
               'email': this.$parent.client_details.email,
               'number': this.$parent.client_details.number,
               'notes': this.$parent.client_details.notes
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
             }
           )
           // Get the client information again as we have just updated the client
@@ -655,9 +587,14 @@
               id = plan.id
             }
           }
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
-            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+            await axios.delete(`https://api.traininblocks.com/programmes/${id}`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                }
+              }
+            )
 
             await this.$parent.clients_f()
             this.$parent.clients_to_vue()
