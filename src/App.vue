@@ -1335,6 +1335,7 @@ export default {
               var sessionId = plan.sessions[y].id
               var sessionChecked = plan.sessions[y].checked
               var sessionFeedback = plan.sessions[y].feedback
+              var sessionName = plan.sessions[y].name
             }
           }
         }
@@ -1385,7 +1386,7 @@ export default {
                         'email': ptEmail.data[0].credentials.emails[0].value
                       }
                     ],
-                    'subject': this.claims.email + ' has submitted feedback for ' + workoutsName
+                    'subject': this.claims.email + ' has submitted feedback for ' + sessionName
                   }
                 ],
                 'from': {
