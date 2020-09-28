@@ -219,35 +219,6 @@
         this.editTemplate = null
         this.isEditingTemplate = false
         window.removeEventListener('keydown', this.quickSaveTemplateNotes)
-      },
-      async saveTemplate () {
-        this.$parent.loading = true
-        this.$parent.dontLeave = true
-        try {
-          // Trouble with access control header so use cors-anywhere
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
-            {
-              'profile': {
-                'templates': JSON.stringify(this.storedTemplates).replace(/[[\]]/g, '')
-              }
-            },
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
-            }
-          )
-          this.$parent.loading = false
-          this.$parent.dontLeave = false
-        } catch (e) {
-          this.$parent.loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          console.error(e)
-        }
       }
     }
   }
