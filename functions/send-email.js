@@ -35,7 +35,7 @@ exports.handler = async function handler (event, context, callback) {
       return callback(null, {
         statusCode: 200,
         headers: headers,
-        body: 'Email sent successfully'
+        body: {response: 'Email sent successfully'}
       })
     } catch (e) {
       return callback(null, {
