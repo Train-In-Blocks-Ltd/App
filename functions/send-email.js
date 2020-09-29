@@ -23,13 +23,12 @@ exports.handler = async function handler (event, context, callback) {
   } else if (event.body) {
     try {
       sendgrid.setApiKey(key)
-      const data = JSON.parse(event.body)
       const msg = {
-        to: data.to,
+        to: JSON.parse(event.body).to,
         from: 'Train In Blocks <no-reply@traininblocks.com>',
-        subject: data.subject,
-        text: data.text,
-        html: data.html
+        subject: JSON.parse(event.body).subject,
+        text: JSON.parse(event.body).text,
+        html: JSON.parse(event.body).html
       }
       await sendgrid.send(msg)
       return callback(null, {

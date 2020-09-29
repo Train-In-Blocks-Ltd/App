@@ -221,7 +221,11 @@
       },
       async manageSubscription () {
         try {
-          const response = await axios.post(`/.netlify/functions/create-manage-link`, { 'id': this.$parent.claims.stripeId })
+          const response = await axios.post('/.netlify/functions/create-manage-link',
+            { 
+              'id': this.$parent.claims.stripeId
+            }
+          )
           window.location.href = response.data
         } catch (e) {
           this.$parent.loading = false
