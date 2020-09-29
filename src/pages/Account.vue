@@ -183,20 +183,20 @@
         try {
           this.$parent.loading = true
           this.$parent.dontLeave = true
-          this.error = ''
+          this.password.error = ''
           await axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {
-                'password.old': this.password.old,
-                'password.new': this.password.new
+                'oldPassword': this.password.old,
+                'newPassword': this.password.new
               },
               url: `${this.$parent.claims.sub}/credentials/change_password`
             }
           )
-          this.oldPassword = null
-          this.newPassword = null
-          this.msg = 'Password Updated Successfully'
+          this.password.old = null
+          this.password.new = null
+          this.password.msg = 'Password Updated Successfully'
           await axios.post('/.netlify/functions/send-email',
             {
               'to': this.$parent.claims.email,
