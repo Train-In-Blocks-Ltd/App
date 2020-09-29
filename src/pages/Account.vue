@@ -148,19 +148,15 @@
         this.$parent.loading = true
         this.$parent.dontLeave = true
         try {
-          // Trouble with access control header so use cors-anywhere
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}`,
+          await axios.post('/.netlify/functions/okta',
             {
-              'profile': {
-                'ga': this.$parent.claims.ga
-              }
-            },
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'POST',
+              body: {
+                'profile': {
+                  'ga': this.$parent.claims.ga
+                }
+              },
+              url: `${this.$parent.claims.sub}`
             }
           )
           this.$parent.loading = false
@@ -188,17 +184,14 @@
           this.$parent.loading = true
           this.$parent.dontLeave = true
           this.error = ''
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}/credentials/change_password`,
+          await axios.post('/.netlify/functions/okta',
             {
-              'password.old': this.password.old,
-              'password.new': this.password.new
-            },
-            {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'POST',
+              body: {
+                'password.old': this.password.old,
+                'password.new': this.password.new
+              },
+              url: `${this.$parent.claims.sub}/credentials/change_password`
             }
           )
           this.oldPassword = null

@@ -276,13 +276,10 @@
 
       async checkClient () {
         try {
-          const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`,
+          const result = await axios.post('/.netlify/functions/okta',
             {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'GET',
+              url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
             }
           )
           if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'PROVISIONED') {
@@ -302,24 +299,18 @@
         this.$parent.loading = true
         this.$parent.dontLeave = true
         if (this.clientSuspend) {
-          await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.clientSuspend}/lifecycle/unsuspend`,
-            {},
+          await axios.post('/.netlify/functions/okta',
             {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'POST',
+              body: {},
+              url: `${this.clientSuspend}/lifecycle/unsuspend`
             }
           )
-          const password = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`,
-            {},
+          const password = await axios.post('/.netlify/functions/okta',
             {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'POST',
+              body: {},
+              url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`
             }
           )
           await axios.post('/.netlify/functions/send-email',
@@ -336,37 +327,30 @@
           this.$parent.dontLeave = false
         } else {
           try {
-            const oktaOne = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?activate=false`,
+            const oktaOne = await axios.post('/.netlify/functions/okta',
               {
-                'profile': {
-                  'firstName': this.$parent.client_details.email,
-                  'email': this.$parent.client_details.email,
-                  'login': this.$parent.client_details.email,
-                  'color': '#ffffff',
-                  'ga': true,
-                  'client_id_db': this.$parent.client_details.client_id,
-                  'user_type': 'Client'
+                type: 'POST',
+                body: {
+                  'profile': {
+                    'firstName': this.$parent.client_details.email,
+                    'email': this.$parent.client_details.email,
+                    'login': this.$parent.client_details.email,
+                    'ga': true,
+                    'client_id_db': this.$parent.client_details.client_id,
+                    'user_type': 'Client'
+                  },
+                  'groupIds': [
+                    '00gf929legrtSjxOe4x6'
+                  ]
                 },
-                'groupIds': [
-                  '00gf929legrtSjxOe4x6'
-                ]
-              },
-              {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.AUTH_HEADER
-                }
+                url: `?activate=false`
               }
             )
-            const oktaTwo = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${oktaOne.data.id}/lifecycle/activate?sendEmail=false`,
-              {},
+            const oktaTwo = await axios.post('/.netlify/functions/okta',
               {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.AUTH_HEADER
-                }
+                type: 'POST',
+                body: {},
+                url: `${oktaOne.data.id}/lifecycle/activate?sendEmail=false`
               }
             )
             await axios.post('/.netlify/functions/send-email',

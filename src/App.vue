@@ -1130,24 +1130,18 @@ export default {
           this.archive_to_vue()
           this.$ga.event('Client', 'archive')
 
-          const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
+          const result = await axios.post('/.netlify/functions/okta',
             {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'GET',
+              url: `?filter=profile.email+eq+"${email}"&limit=1`
             }
           )
           if (result.data.length >= 1) {
-            await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
-              {},
+            await axios.post('/.netlify/functions/okta',
               {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.AUTH_HEADER
-                }
+                type: 'POST',
+                body: {},
+                url: `${result.data[0].id}/lifecycle/suspend`
               }
             )
             await axios.post('/.netlify/functions/send-email',
@@ -1317,18 +1311,10 @@ export default {
         )
         if (client.data[0].notifications === 1) {
           if (sessionFeedback !== null) {
-            var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
+            const ptEmail = await axios.post('/.netlify/functions/okta',
               {
-                headers: {
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              },
-              {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.AUTH_HEADER
-                }
+                type: 'GET',
+                url: `?filter=id+eq+"${client.data[0].pt_id}"&limit=1`
               }
             )
             await axios.post('/.netlify/functions/send-email',
