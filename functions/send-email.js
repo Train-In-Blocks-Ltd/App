@@ -24,6 +24,7 @@ exports.handler = async function handler (event, context, callback) {
     try {
       const data = event.body
       sendgrid.setApiKey(key)
+      /*
       const msg = {
         to: data.to,
         from: 'Train In Blocks <no-reply@traininblocks.com>',
@@ -32,10 +33,11 @@ exports.handler = async function handler (event, context, callback) {
         html: data.html
       }
       await sendgrid.send(msg)
+      */
       return callback(null, {
         statusCode: 200,
         headers: headers,
-        body: data.to
+        body: data.to, data
       })
     } catch (e) {
       return callback(null, {
