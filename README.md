@@ -26,6 +26,18 @@ npm run start
 npm run build
 ```
 
+### Test locally with Netlify Dev
+
+```
+npm install netlify-cli -g
+
+netlify login
+
+netlify link
+
+netlify dev --port 8080
+```
+
 ## Browser support
 
 We support the latest 2 versions of all major browsers.
