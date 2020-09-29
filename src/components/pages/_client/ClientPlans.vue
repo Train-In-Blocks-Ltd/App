@@ -3,6 +3,26 @@
   .client-notes {
     margin: 4rem auto
   }
+  .client-notes__header {
+    display: flex
+  }
+  .a--client-notes {
+    color: #282828;
+    font-size: .8rem;
+    margin-left: 1rem;
+    align-self: center;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .a--client-notes:hover {
+    opacity: .6
+  }
+  .client-notes-msg {
+    margin: 1rem 0
+  }
+  .plan_link__notes__content {
+    font-size: .8rem;
+    margin-top: .4rem
+  }
 
   /* Plans */
   .plans_grid {
@@ -10,62 +30,12 @@
     grid-gap: 2rem;
     margin-bottom: 2rem
   }
-  .plan_container:first-of-type {
-    margin-left: 0
-  }
-  .plan_container:last-of-type {
-    margin-right: 0
-  }
-  .plan_container--link {
-    display: grid;
-    position: relative;
-    grid-gap: 1rem;
-    text-decoration: none;
-    color: #282828;
-    padding: 1rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .plan_container--link:before {
-    content: '';
-    position: absolute;
-    opacity: .4;
-    width: 95%;
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: #282828;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .plan_container--link:hover:before {
-    width: 100%;
-    opacity: 1
-  }
-  .plan_container--link__plan-notes {
-    font-size: .8rem
-  }
-  .plan_container--link h3 {
-    margin-top: 0;
-    font-size: 1.4rem;
-    margin-bottom: 0;
-    overflow: hidden;
-    text-overflow: ellipsis
-  }
-  .more-plan-info {
-    margin-top: 1rem
-  }
-  .plan_container--link p {
-    font-size: .8rem;
-    font-weight: 500
-  }
-  .plan_container--link p:last-of-type {
-    margin-bottom: 0
-  }
 
   /* Add plan Form */
-  .add_plan_container {
+  .add_plan_link {
     padding-top: 1rem
   }
-  .add_plan_container h3 {
+  .add_plan_link h3 {
     margin-top: 0
   }
   .add_plan {
@@ -78,55 +48,44 @@
 </style>
 <template>
     <div>
-      <modal name="help-plan" height="auto" :adaptive="true">
-        <div class="modal--help-plan">
-          <p><i>Plans</i> are the different cycles within your client's plan. It contains the different microcycles of sessions.</p><br>
-          <p>You will be able to track, visualise and progress the Plan.</p>
-        </div>
-      </modal>
       <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
         <div class="client-notes__header">
-          <p><b>Client Information</b></p>
+          <p class="text--small">Client Information</p>
+          <a
+            href="javascript:void(0)"
+            v-show="!editClientNotes"
+            @click="editingClientNotes(true)"
+            class="a--client-notes"
+          >
+            Edit
+          </a>
         </div>
         <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
         <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn"/>
-        <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
+        <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="client-notes-msg">No client notes added...</p>
         <div class="bottom-bar">
           <div>
-            <button v-show="!editClientNotes" @click="editingClientNotes(true)" class="button--edit">Edit</button>
             <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button--save">Save</button>
             <button v-show="editClientNotes" @click="cancelClientNotes()" class="cancel">Cancel</button>
           </div>
         </div>
       </div>
       <div>
-        <div class="flex">
-          <div class="container--title">
-            <inline-svg :src="require('../../../assets/svg/plan.svg')" class="title-icon"/>
-            <h2 class="sub-title no-margin">Plans</h2>
-          </div>
-          <inline-svg class="sub-title tooltip" @click="$modal.show('help-plan')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
-        </div>
         <p v-if="this.$parent.no_plans">No plans yet. You can add one below.</p>
         <p v-if="this.$parent.loading_plans">Loading plans...</p>
         <div v-if="!this.$parent.no_plans" class="plans_grid">
-          <div v-for="(plan, index) in this.$parent.$parent.client_details.plans"
-              :key="index" class="plan_container">
-              <router-link class="plan_container--link" :to="'plan/' + plan.id">
-                <div class="plan_container--link__info">
-                  <h3>{{plan.name}}</h3>
-                  <div class="more-plan-info">
-                    <p><b>Duration: </b>{{plan.duration}}</p>
-                    <p><b>Start: </b>{{plan.start}}</p>
-                  </div>
-                </div>
-                <div v-html="plan.notes" class="plan_container--link__plan-notes" />
-              </router-link>
-          </div>
+          <router-link
+            class="plan_link" :to="'plan/' + plan.id"
+            v-for="(plan, index) in this.$parent.$parent.client_details.plans"
+            :key="index"
+          >
+            <h3 class="text--small plan-name">{{plan.name}}</h3>
+            <div v-html="plan.notes" class="plan_link__notes__content" />
+          </router-link>
         </div>
         <button v-if="!creating" @click="creation()">New Plan</button>
         <p class="new-msg" v-if="!creating">{{response}}</p>
-        <div v-if="creating" class="add_plan_container">
+        <div v-if="creating" class="add_plan_link">
           <h3>New Plan</h3>
           <form class="form_grid add_plan" name="add_plan" @submit.prevent="save()">
             <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>

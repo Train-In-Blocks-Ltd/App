@@ -75,7 +75,7 @@
 
   /* GLOBAL: CONTAINERS */
   #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
-    padding: 4rem 20vw 10rem 20vw
+    padding: 2rem 10vw 10rem
   }
   .modal--error {
     padding: 2rem
@@ -87,30 +87,12 @@
     display: flex;
     margin: 2rem 0
   }
-  .home-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4rem;
-    align-items: center
-  }
   .wrapper--calendar {
     user-select: none
   }
 
-  /* GLOBAL: TOOLTIP */
-  .tooltip {
-    cursor: pointer;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .tooltip:hover {
-    opacity: .6
-  }
-  .sub-title.tooltip {
-    margin-left: .6rem
-  }
-
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-plan {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
@@ -123,18 +105,15 @@
   }
 
   /* GLOBAL: FONTS */
-  .main-title {
+  .text--large {
     margin-top: 0;
-    margin-bottom: 3rem;
-    font-weight: bold;
-    font-size: 3.75rem;
-    text-transform: capitalize;
-    letter-spacing: .15rem
+    font-size: 2.6rem
   }
-  .sub-title {
-    font-size: 2.5rem;
-    letter-spacing: .15rem;
-    margin: 1.75rem 0
+  .text--small {
+    font-size: 1.6rem
+  }
+  .grey {
+    color: #28282894
   }
   .no-margin {
     margin: 0
@@ -147,6 +126,9 @@
   }
   svg path:not(.account_nav--item--icon.transparent) {
     fill: #282828
+  }
+  .account_nav--item--icon.transparent path {
+    stroke: #282828
   }
   .allow-text-overflow {
     text-overflow: ellipsis
@@ -170,7 +152,6 @@
     padding: .6rem 1.6rem;
     font-size: .8rem;
     letter-spacing: .1rem;
-    font-weight: bold;
     color: white;
     background-color: #282828;
     margin: .6rem 0;
@@ -199,7 +180,6 @@
     border-radius: 3px;
     text-transform: capitalize;
     font-size: .8rem;
-    font-weight: bold;
     background-color: #282828;
     color: white
   }
@@ -255,11 +235,12 @@
     color: #282828;
     line-height: 1.42;
     overflow-y: auto;
-    font-size: .8rem;
     transition: all 1s
   }
   .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
-    max-width: 100%
+    max-width: 100%;
+    border-radius: 3px;
+    margin: 1rem 0
   }
   .show-session a, .show-plan-notes a, .show-client-notes a, .show-template-notes a {
     color: blue
@@ -307,7 +288,6 @@
   input.title {
     margin-top: 0;
     margin-bottom: 3rem;
-    font-weight: bold;
     font-size: 3.75rem;
     text-transform: capitalize;
     letter-spacing: .15rem;
@@ -344,7 +324,7 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
-    fill: white
+    fill: #282828
   }
   .logo--link:hover {
     opacity: .6
@@ -373,7 +353,8 @@
     justify-content: flex-end;
     padding: 2rem 1rem;
     position: fixed;
-    background-color: #282828;
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810;
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item {
@@ -396,7 +377,7 @@
   }
   .account_nav--item--text {
     user-select: none;
-    color: white;
+    color: #282828;
     text-decoration: none;
     position: relative;
     border: 0;
@@ -407,7 +388,7 @@
     opacity: 1
   }
   .account_nav--item a.router-link-exact-active {
-    font-weight: bold
+    opacity: 1
   }
   .account_nav--item--icon {
     margin: 0 .4rem 0 0;
@@ -416,10 +397,13 @@
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item--icon:not(.transparent) path {
-    fill: white
+    fill: #282828
   }
 
   /* GLOBAL: QUILL */
+  div.ql-container {
+    font-size: 16px
+  }
   .ql-toolbar.ql-snow {
     border: none;
     padding: .4rem .6rem .4rem .6rem;
@@ -488,74 +472,52 @@
     margin: 0
   }
 
-  /* HOME: Client Container Animation */
-  .client_container > a {
+  /* GLOBAL: LINK CONTAINERS */
+  .client_link, .plan_link {
     display: grid;
+    padding: 2rem;
     grid-gap: 1rem;
-    position: relative;
     font-weight: 400;
     color: #282828;
-    text-decoration: none
+    text-decoration: none;
+    box-shadow: 0 0 20px 10px #28282810;
+    border-radius: 3px;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_container > a:not(.archived):hover {
-    color: #282828
+  .client_link:not(.archived):hover, .plan_link:hover {
+    transform: scale(1.02)
   }
-  .client_container > a:before {
-    content: '';
-    position: absolute;
-    opacity: .4;
-    width: 95%;
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: #282828;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
+  .client_link:not(.archived):active, .plan_link:active {
+    transform: scale(1)
   }
-  .client_container > a:not(.archived):hover:before {
-    width: 100%;
-    opacity: 1
-  }
-  .client_link {
-    padding: 1rem 0;
-    overflow-x: auto
-  }
-  .client_link svg {
-    width: 20px
-  }
-  .client_link__name {
-    font-size: 1.4rem
-  }
-  .client_link__details {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    grid-gap: 1rem
-  }
-  .client_link__details p {
-    margin: auto 0
-  }
-  .client_link__notes__content {
+  .client_link__notes__content, .plan_link__notes__content {
     font-size: .8rem;
     margin-top: .4rem
   }
-  .search {
-    border: none;
-    outline-width: 0;
-    width: 95%;
-    font-size: 1.6rem;
-    letter-spacing: .1rem;
-    font-weight: bold;
-    border-bottom: 2px solid #282828;
-    padding: .6rem 0;
+  .client_link__notes__content *, .plan_link__notes__content * {
+    color: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content * {
+    color: #282828
+  }
+  .client_link__notes__content p, .plan_link__notes__content p {
+    margin: .4rem 0
+  }
+  .client_name, .plan-name {
+    margin: 0
+  }
+  .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
+    font-size: 1rem
+  }
+  .client_link__notes__content img, .plan_container--link__plan-notes img {
     margin: 1rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+    max-width: 100%;
+    opacity: .6;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .search:hover {
-    border-bottom: 2px solid #28282880;
-    width: 100%
-  }
-  .search:focus {
-    border-bottom: 2px solid #282828;
-    width: 100%
+  .client_link:hover .client_link__notes__content img, .plan_link:hover .plan_container--link__plan-notes img {
+    opacity: 1
   }
 
   /* GLOBAL: CLIENT-SIDE */
@@ -565,8 +527,7 @@
   }
   .session-counter {
     align-self: center;
-    font-size: 1rem;
-    font-weight: bold
+    font-size: 1rem
   }
 
   /* GLOBAL: SPLASH */
@@ -611,6 +572,10 @@
     height: 50%;
     width: auto
   }
+  .box svg.logo--svg path {
+    fill: white
+  }
+
   @keyframes spin {
     0% {
       transform: translateY(0) rotate(0deg)
@@ -694,6 +659,11 @@
     .account_nav--item--icon {
       margin: 0
     }
+
+    /* Client links */
+    .client_link:not(.archived):hover {
+      transform: scale(1)
+    }
   }
 
   /* For Mobile */
@@ -705,11 +675,11 @@
     p {
       font-size: .8rem
     }
-    .main-title {
-      font-size: 2.4rem
+    .text--large {
+      font-size: 2rem
     }
-    .sub-title {
-      font-size: 1.6rem
+    .text--small {
+      font-size: 1.2rem
     }
 
     /* plans Page */
@@ -942,6 +912,14 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
+    willBodyScroll (state) {
+      const body = document.getElementsByTagName("body")[0]
+      if (state) {
+        body.style.overflow = 'auto'
+      } else {
+        body.style.overflow = 'hidden'
+      } 
+    },
     confirmLeave (e) {
       if (this.dontLeave === true) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'

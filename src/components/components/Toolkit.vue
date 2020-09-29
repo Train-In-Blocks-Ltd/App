@@ -10,16 +10,12 @@
     display: grid;
     grid-gap: 1rem
   }
-  .session_toolkit--content label {
-    font-weight: bold
-  }
   .session_toolkit--select {
     background-color: transparent;
     border: 0;
     font-size: 1.6rem;
     width: fit-content;
-    padding: .2rem 1rem .2rem 0;
-    font-weight: bold
+    padding: .2rem 1rem .2rem 0
   }
   .session_toolkit--content input {
     width: 4rem

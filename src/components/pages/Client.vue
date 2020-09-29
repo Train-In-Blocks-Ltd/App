@@ -17,7 +17,6 @@
     background-color: initial;
     border: none;
     padding: .6rem 0;
-    margin-left: 1rem;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   #client .client_info input:not([type='submit']):hover, #duration:hover, .session-date:hover {
@@ -30,18 +29,8 @@
   .client_info__more-details {
     display: grid
   }
-  .wrapper--info {
-    display: flex
-  }
-  .wrapper--info label {
-    display: flex;
-    width: 100%;
-    align-items: center
-  }
   #client .client_info input.client_info--name {
     max-width: 100%;
-    font-size: 3.75rem;
-    letter-spacing: .1rem;
     margin: 0
   }
   .button--verify {
@@ -170,13 +159,13 @@
       </transition>
       <div class="client--options" v-for="(clients, index) in $parent.clients" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
+          <a href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
+        </transition>
+        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" v-show="showDeletePlan" @click="delete_plan()">Delete Plan</a>
         </transition>
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
-        </transition>
-        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
-          <a href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
         </transition>
         <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
           <router-link :to="toURL()">
@@ -189,22 +178,25 @@
       <div class="top_grid" v-if="!sessions">
         <!-- Update the client details -->
         <form class="client_info" @submit.prevent="update_client()">
-          <input class="client_info--name title" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
+          <input class="client_info--name text--large" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
           <div class="client_info__more-details">
-            <div class="wrapper--info">
-              <label>
-                <b>Email: </b>
-                <input class="input--forms allow-text-overflow" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/>
-              </label>
+            <input class="input--forms allow-text-overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/>
+            <input class="input--forms allow-text-overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
+            <div>
+              <button
+                @click="createClient()" class="button--verify button"
+                :disabled="clientAlready"
+              >
+                {{ clientAlreadyMsg }}
+              </button>
+              <button
+                @click="$parent.client_details.notifications = 0, update_client()"
+                v-if="clientAlready && clientAlreadyMsg !== 'Loading...'"
+                class="button--verify button"
+              >
+                Disable email notifications
+              </button>
             </div>
-            <div class="wrapper--info">
-              <label>
-                <b>Phone: </b>
-                <input class="input--forms allow-text-overflow" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone" />
-              </label>
-            </div>
-            <button @click="createClient()" class="button--verify button" :disabled="clientAlready">{{ clientAlreadyMsg }}</button>
-            <button @click="$parent.client_details.notifications = 0, update_client()" v-if="clientAlready && clientAlreadyMsg !== 'Loading...'" class="button--verify button">Disable email notifications</button>
           </div>
         </form>
       </div>
