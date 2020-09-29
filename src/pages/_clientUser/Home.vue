@@ -95,7 +95,7 @@
         Install App
       </button>
       <div class="container--title">
-        <inline-svg :src="require('../../../assets/svg/today.svg')" class="title-icon"/>
+        <inline-svg :src="require('../../assets/svg/today.svg')" class="title-icon"/>
         <h2 class="text--small no-margin">Today</h2>
       </div>
       <p v-if="viewSessionsStore.length === 0 && loading === false">No sessions today...</p>
@@ -134,7 +134,7 @@
         <p class="session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
       </div>
       <div class="container--title">
-        <inline-svg :src="require('../../../assets/svg/plan.svg')" class="title-icon"/>
+        <inline-svg :src="require('../../assets/svg/plan.svg')" class="title-icon"/>
         <h2 class="text--small no-margin">Plans</h2>
       </div>
       <div class="plans_grid">
