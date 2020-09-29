@@ -201,37 +201,12 @@
           this.oldPassword = null
           this.newPassword = null
           this.msg = 'Password Updated Successfully'
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+          await axios.post('/.netlify/functions/send-email',
             {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': this.$parent.claims.email
-                    }
-                  ],
-                  'subject': 'Password Changed'
-                }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': passChangeEmailText()
-                },
-                {
-                  'type': 'text/html',
-                  'value': passChangeEmail()
-                }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
-              }
+              'to': this.$parent.claims.email,
+              'subject': 'Password Changed',
+              'text': passChangeEmailText(),
+              'html': passChangeEmail()
             }
           )
           this.$parent.loading = false
