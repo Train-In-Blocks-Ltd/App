@@ -4,15 +4,45 @@
     grid-template-rows: 8rem 1fr;
     margin-bottom: 2rem
   }
-  .client_link__notes__content h1, .plan_container--link__plan-notes h1 {
-    font-size: 1.2rem
+  .client_link svg {
+    width: 20px;
+    fill: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link__notes__content h2, .plan_container--link__plan-notes h2 {
-    font-size: 1rem
+  .client_link:hover svg {
+    fill: #282828
   }
-  .client_link__notes__content img, .plan_container--link__plan-notes img {
+  .client_link__details {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    grid-gap: 1rem
+  }
+  .client_link__details p {
+    margin: auto 0;
+    color: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:hover .client_link__details p {
+    color: #282828
+  }
+  .search {
+    border: none;
+    outline-width: 0;
+    width: 95%;
+    font-size: 1.6rem;
+    letter-spacing: .1rem;
+    border-bottom: 2px solid #282828;
+    padding: .6rem 0;
     margin: 1rem 0;
-    max-width: 100%
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .search:hover {
+    border-bottom: 2px solid #28282880;
+    width: 100%
+  }
+  .search:focus {
+    border-bottom: 2px solid #282828;
+    width: 100%
   }
 
   /* Add Client Form */
@@ -36,12 +66,9 @@
 
 <template>
   <div id="home">
-    <div class="home-top">
-      <h1 class="main-title no-margin">Your Clients</h1>
-      <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
-        Install App
-      </button>
-    </div>
+    <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+      Install App
+    </button>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
@@ -51,20 +78,24 @@
         <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
       </label>
       <div class="container--clients">
-        <div v-for="(clients, index) in $parent.clients"
-          :key="index">
-          <!-- Perform case insensitive search -->
-          <div v-if="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())" class="client_container" :id="'a' + clients.client_id">
-            <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
-              <div>
-                <p class="client_link__name"><b>{{clients.name}}</b>
-                <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
-                <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
-              </div>
-              <div v-if="clients.notes !== ''" v-html="clients.notes" class="client_link__notes__content" />
-            </router-link>
+        <!-- Perform case insensitive search -->
+        <router-link 
+          class="client_link" :to="'/client/'+clients.client_id+'/'"
+          v-show="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())"
+          :id="'a' + clients.client_id"
+          v-for="(clients, index) in $parent.clients" :key="index"
+        >
+          <div>
+            <p class="text--small client-name">{{clients.name}}</p>
+            <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/email.svg')" />
+              <p>{{clients.email}}</p>
+            </div>
+            <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/mobile.svg')" />
+              <p>{{clients.number}}</p>
+            </div>
           </div>
-        </div>
+          <div v-if="clients.notes !== ''" v-html="clients.notes" class="client_link__notes__content" />
+        </router-link>
       </div>
     </div>
     <button v-if="!creating" class="button--new-client" @click="creation()">New Client</button>

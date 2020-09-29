@@ -13,7 +13,7 @@
       :key="index">
       <div v-if="plan.id == $route.params.id">
         <div class="session--header">
-          <h2 class="main-title">{{plan.name}}</h2>
+          <h2 class="text--large">{{plan.name}}</h2>
         </div>
         <div class="plan-notes">
           <div class="plan-notes__header">

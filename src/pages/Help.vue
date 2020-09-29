@@ -43,9 +43,9 @@
 
 <template>
   <div id="help">
-    <h1 class="main-title">Learn</h1>
+    <h1 class="text--large">Learn</h1>
     <p>Need help with something in particular? Click <a class="text--more-help" href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank"><b>here</b></a>.</p>
-    <h2 class="sub-title"> Guides</h2>
+    <h2 class="text--small"> Guides</h2>
     <div class="container--guide">
       <div v-for="item in guides" :key="item.id" class="guide-item">
         <img class="img--gif" :src="require('../assets/guide/gif/' + item.gif)" alt="">

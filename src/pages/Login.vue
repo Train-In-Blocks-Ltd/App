@@ -1,6 +1,5 @@
 <style scoped>
   a {
-    font-weight: bold;
     text-decoration: none;
     color: #282828
   }
@@ -73,7 +72,6 @@
     padding: .6rem 1.6rem;
     font-size: .8rem;
     letter-spacing: .1rem;
-    font-weight: bold;
     color: white;
     background-color: #282828;
     margin: .6rem 0;
@@ -104,7 +102,6 @@
     fill: #282828
   }
   .okta-form-label {
-    font-weight: bold;
     text-align: left;
     letter-spacing: .1rem
   }

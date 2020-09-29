@@ -91,15 +91,12 @@
 <template>
   <div id="home">
     <div class="container--client">
-      <div class="home-top">
-        <h1 class="main-title no-margin">Home</h1>
-        <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
-          Install App
-        </button>
-      </div>
+      <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+        Install App
+      </button>
       <div class="container--title">
         <inline-svg :src="require('../../assets/svg/today.svg')" class="title-icon"/>
-        <h2 class="sub-title no-margin">Today</h2>
+        <h2 class="text--small no-margin">Today</h2>
       </div>
       <p v-if="viewSessionsStore.length === 0 && loading === false">No sessions today...</p>
       <p v-if="loading === true">Loading sessions...</p>
@@ -138,7 +135,7 @@
       </div>
       <div class="container--title">
         <inline-svg :src="require('../../assets/svg/plan.svg')" class="title-icon"/>
-        <h2 class="sub-title no-margin">Plans</h2>
+        <h2 class="text--small no-margin">Plans</h2>
       </div>
       <div class="plans_grid">
         <div v-for="(plan, index) in this.$parent.clientUser.plans"

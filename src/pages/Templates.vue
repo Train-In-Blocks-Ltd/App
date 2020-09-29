@@ -87,6 +87,7 @@
 
 <template>
   <div id="templates">
+    <!--
     <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
       <div class="multi-select" v-if="selectedTemplates.length !== 0">
         <p class="text--selected">
@@ -96,7 +97,7 @@
         <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect all</a>
       </div>
     </transition>
-    <h1 class="main-title">Templates</h1>
+    <h1 class="text--large">Templates</h1>
     <p class="expand-all" @click="expandAll(expandText(expandedTemplates))">{{ expandText(expandedTemplates) }} all</p>
     <button @click="saveTemplate()">Press</button>
     <div class="container--template-notes">
@@ -118,7 +119,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -129,21 +130,7 @@
   export default {
     components: {
       InlineSvg
-    },
-    data () {
-      return {
-        isEditingTemplate: false,
-        editTemplate: null,
-        expandedTemplates: [],
-        selectedTemplates: [],
-        storedTemplates: []
-      }
-    },
-    created () {
-      this.$parent.claims.templates.replace(/\},/g, '}},').split('},').forEach((item) => {
-        this.storedTemplates.push(JSON.parse(item))
-      })
-    },
+    }/*
     methods: {
 
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
@@ -220,6 +207,6 @@
         this.isEditingTemplate = false
         window.removeEventListener('keydown', this.quickSaveTemplateNotes)
       }
-    }
+    } */
   }
 </script>

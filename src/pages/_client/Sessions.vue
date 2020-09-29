@@ -22,9 +22,6 @@
   }
 
   /* Session Info */
-  .client_info--name.title {
-    margin: 0
-  }
   .session_info {
     display: flex;
     flex-direction: column
@@ -32,28 +29,11 @@
   #sessions .session_info label {
     display: flex;
     align-items: center;
-    grid-auto-columns: min-content;
-    font-weight: bold
-  }
-  .wrapper-start-date {
-    display: flex;
-    align-self: baseline;
-    align-items: center
+    grid-auto-columns: min-content
   }
   #duration, .session_info input#start {
     font-size: 1rem;
     margin-left: 1rem
-  }
-  #sessions .session_info input.session_info--name {
-    margin-left: 0;
-    max-width: 100%;
-    font-weight: 700;
-    padding: .6rem 0;
-    letter-spacing: .15rem;
-    font-size: 1.6rem
-  }
-  #sessions .session_info input.session_info--name:focus {
-    padding: .6rem 1rem
   }
   .multi-select {
     display: grid;
@@ -128,7 +108,6 @@
   .session_table--container {
     display: inline-block;
     width: 100%;
-    font-weight: bold;
     text-align: center
   }
   .session_table--container--session_duration_container {
@@ -256,8 +235,7 @@
   }
   input.session-name {
     cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold
+    font-size: 1rem
   }
   input.session-name:hover {
     opacity: .6
@@ -337,7 +315,6 @@
     font-size: 1.6rem;
     width: fit-content;
     padding: .2rem 1rem .2rem 0;
-    font-weight: bold;
     margin: .4rem 0
   }
   #chart {
@@ -351,8 +328,7 @@
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
-    font-size: 2.4rem;
-    font-weight: bold
+    font-size: 2.4rem
   }
 
   @media (max-width: 992px) {
@@ -370,10 +346,6 @@
     #copy:hover {
       opacity: 1
     }
-    #sessions .session_info input.session_info--name {
-      font-size: 1.4rem;
-      max-width: 90%
-    }
     input.session-name {
       width: 60%
     }
@@ -386,12 +358,6 @@
     }
     .calendar, .session-plan {
       margin: 4rem 0
-    }
-    #sessions .session_info input.session_info--name {
-      font-size: 1.2rem
-    }
-    #client .client_info input.client_info--name {
-      font-size: 1.6rem
     }
 
     /* Session */
@@ -451,7 +417,7 @@
             <button>Copy</button>
         </form>
       </modal>
-      <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true" aria-label="Menu">
+      <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
         <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
       </div>
@@ -477,16 +443,10 @@
         <div v-if="plan.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="text--large allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the plan info -->
               <form class="session_info">
-                <input class="session_info--name allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
-                <div class="wrapper-start-date">
-                  <label>
-                    Start:
-                    <input id="start" type="date" name="start" v-model="plan.start" required @blur="update_plan()"/>
-                  </label>
-                </div>
+                <input class="text--small allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
               </form>
             </div>  <!-- client_info -->
           </div> <!-- top_grid -->
@@ -589,7 +549,7 @@
               <div class="graph" v-if="isStatsOpen">
                 <div class="section--top">
                   <h3 class="section-title">Statistics</h3>
-                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
+                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
                 <div>
                   <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>

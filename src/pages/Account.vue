@@ -90,7 +90,7 @@
         </form>
       </div>
     </modal>
-    <h1 class="main-title">Your Account</h1>
+    <h1 class="text--large">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
       <div class="details">
         <p><b>Email: </b>{{$parent.claims.email}}</p><br>
