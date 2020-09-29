@@ -36,7 +36,7 @@ exports.handler = async function handler (event, context, callback) {
       return callback(null, {
         statusCode: 200,
         headers: headers,
-        body: JSON.parse(event.body)
+        body: event.body.to
       })
     } catch (e) {
       return callback(null, {
