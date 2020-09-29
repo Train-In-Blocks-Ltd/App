@@ -19,10 +19,6 @@
   .client-notes-msg {
     margin: 1rem 0
   }
-  .plan_link__notes__content {
-    font-size: .8rem;
-    margin-top: .4rem
-  }
 
   /* Plans */
   .plans_grid {

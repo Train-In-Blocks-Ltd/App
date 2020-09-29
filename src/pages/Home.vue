@@ -1,18 +1,68 @@
 <style>
+  /* GLOBAL: LINK CONTAINERS */
+  .client_link, .plan_link {
+    display: grid;
+    padding: 2rem;
+    grid-gap: 1rem;
+    font-weight: 400;
+    color: #282828;
+    text-decoration: none;
+    box-shadow: 0 0 20px 10px #28282810;
+    border-radius: 3px;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:not(.archived):hover, .plan_link:hover {
+    transform: scale(1.02)
+  }
+  .client_link:not(.archived):active, .plan_link:active {
+    transform: scale(1)
+  }
+  .client_link__notes__content, .plan_link__notes__content {
+    font-size: .8rem;
+    margin-top: .4rem
+  }
+  .client_link__notes__content *, .plan_link__notes__content * {
+    color: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content * {
+    color: #282828
+  }
+  .client_link__notes__content p, .plan_link__notes__content p {
+    margin: .4rem 0
+  }
+  .client_name, .plan-name {
+    margin: 0
+  }
+  .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
+    font-size: 1rem
+  }
+  .client_link__notes__content img, .plan_container--link__plan-notes img {
+    margin: 1rem 0;
+    max-width: 100%;
+    border-radius: 3px;
+    opacity: .6;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:hover .client_link__notes__content img, .plan_link:hover .plan_container--link__plan-notes img {
+    opacity: 1
+  }
+
+  /* Containers */
   .home--container {
     display: grid;
     grid-template-rows: 8rem 1fr;
     margin-bottom: 2rem
   }
+
+  /* Search */
   .search {
     border: none;
     outline-width: 0;
-    width: 95%;
-    font-size: 1.6rem;
-    letter-spacing: .1rem;
+    width: 90%;
     border-bottom: 2px solid #282828;
     padding: .6rem 0;
-    margin: 1rem 0;
+    margin: auto;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   .search:hover {
@@ -27,7 +77,7 @@
     text-decoration: none
   }
 
-  /* Add Client Form */
+  /* Add New Client */
   .add_client {
     grid-gap: 1rem
   }
@@ -55,10 +105,7 @@
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
-      <label>
-        <b>Find a client:</b>
-        <input type="search" rel="search" placeholder="Name" class="search" autocomplete="name" v-model="search"/>
-      </label>
+      <input type="search" rel="search" placeholder="Find a client" class="text--small search" autocomplete="name" aria-label="Find a client" v-model="search"/>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
         <router-link
@@ -68,7 +115,7 @@
           :id="'a' + clients.client_id"
           v-for="(clients, index) in $parent.clients" :key="index"
         >
-          <client-link :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes"/>
+          <client-link class="client_link" :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes"/>
         </router-link>
       </div>
     </div>
