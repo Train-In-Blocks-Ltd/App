@@ -452,7 +452,7 @@
         </form>
       </modal>
       <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true" aria-label="Menu">
-        <inline-svg :src="require('../../../assets/svg/stats.svg')" aria-label="Statistics"/>
+        <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
       </div>
       <div class="open-stats-animation">
@@ -536,7 +536,7 @@
                   <div class="session--header__left">
                     <h3>Sessions</h3>
                     <input @blur="updateSessionColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
-                    <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
@@ -561,7 +561,7 @@
                         </div>
                         <div class="header-options">
                           <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
-                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
+                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
@@ -589,7 +589,7 @@
               <div class="graph" v-if="isStatsOpen">
                 <div class="section--top">
                   <h3 class="section-title">Statistics</h3>
-                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false" class="icon--options" :src="require('../../../assets/svg/close.svg')" aria-label="Close"/>
+                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
                 <div>
                   <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>

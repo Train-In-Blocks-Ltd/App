@@ -48,7 +48,7 @@
     <h2 class="sub-title"> Guides</h2>
     <div class="container--guide">
       <div v-for="item in guides" :key="item.id" class="guide-item">
-        <img class="img--gif" :src="require('../../assets/guide/gif/' + item.gif)" alt="">
+        <img class="img--gif" :src="require('../assets/guide/gif/' + item.gif)" alt="">
         <div>
           <h2>{{ item.title }}</h2>
           <div v-html="item.text"/>

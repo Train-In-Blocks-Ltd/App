@@ -105,7 +105,7 @@
           <p class="template-notes__header__text"><b>{{item.name}}</b></p>
           <div class="header-options">
             <input name="select-checkbox" :id="'temp-sc-' + index" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(index)" aria-label="Select this template">
-            <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(index)}" :src="require('../../assets/svg/expand.svg')" @click="toggleExpandedTemplates(index)"/>
+            <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(index)}" :src="require('../assets/svg/expand.svg')" @click="toggleExpandedTemplates(index)"/>
           </div>
         </div>
         <quill v-show="isEditingTemplate && expandedTemplates.includes(index)" v-model="item.html" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
@@ -124,7 +124,7 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
-  import axios from 'axios'
+  // import axios from 'axios'
 
   export default {
     components: {

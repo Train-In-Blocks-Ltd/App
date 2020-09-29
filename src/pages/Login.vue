@@ -165,7 +165,7 @@
 
 <template>
   <div id="login" v-if="!this.$parent.authenticated">
-    <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
+    <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <div class="button--container">
       <form action="https://traininblocks.com">

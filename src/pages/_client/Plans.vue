@@ -102,10 +102,10 @@
       <div>
         <div class="flex">
           <div class="container--title">
-            <inline-svg :src="require('../../../assets/svg/plan.svg')" class="title-icon"/>
+            <inline-svg :src="require('../../assets/svg/plan.svg')" class="title-icon"/>
             <h2 class="sub-title no-margin">Plans</h2>
           </div>
-          <inline-svg class="sub-title tooltip" @click="$modal.show('help-plan')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
+          <inline-svg class="sub-title tooltip" @click="$modal.show('help-plan')" :src="require('../../assets/svg/help-tooltip.svg')"/>
         </div>
         <p v-if="this.$parent.no_plans">No plans yet. You can add one below.</p>
         <p v-if="this.$parent.loading_plans">Loading plans...</p>

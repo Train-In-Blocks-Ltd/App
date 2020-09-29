@@ -58,8 +58,8 @@
             <router-link class="client_link" :to="'/client/'+clients.client_id+'/'">
               <div>
                 <p class="client_link__name"><b>{{clients.name}}</b>
-                <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
-                <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
+                <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/email.svg')" /><p>{{clients.email}}</p></div>
+                <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/mobile.svg')" /><p>{{clients.number}}</p></div>
               </div>
               <div v-if="clients.notes !== ''" v-html="clients.notes" class="client_link__notes__content" />
             </router-link>
