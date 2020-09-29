@@ -1,13 +1,35 @@
 <style scoped>
-  /* Block Info */
+  /* Animation */
+  .section--a, .section--b {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    background-color: #F4F4F4;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .section--a {
+    height: 50%
+  }
+  .section--b {
+    height: 50%;
+    top: 50%;
+    transition-delay: .2s
+  }
+  .section--a.openedStats,  .section--b.openedStats {
+    width: 100%;
+    z-index: 2
+  }
+
+  /* Session Info */
   .client_info--name.title {
     margin: 0
   }
-  .block_info {
+  .session_info {
     display: flex;
     flex-direction: column
   }
-  #blocks .block_info label {
+  #sessions .session_info label {
     display: flex;
     align-items: center;
     grid-auto-columns: min-content;
@@ -18,11 +40,11 @@
     align-self: baseline;
     align-items: center
   }
-  #duration, .block_info input#start {
+  #duration, .session_info input#start {
     font-size: 1rem;
     margin-left: 1rem
   }
-  #blocks .block_info input.block_info--name {
+  #sessions .session_info input.session_info--name {
     margin-left: 0;
     max-width: 100%;
     font-weight: 700;
@@ -30,20 +52,21 @@
     letter-spacing: .15rem;
     font-size: 1.6rem
   }
-  #blocks .block_info input.block_info--name:focus {
+  #sessions .session_info input.session_info--name:focus {
     padding: .6rem 1rem
   }
   .multi-select {
     display: grid;
     grid-gap: .4rem;
     position: fixed;
-    top: 6rem;
-    right: 2rem;
-    margin-top: 1.5rem;
+    top: 0;
+    right: 0;
     text-align: right;
-    background-color: #FFFFFF99;
-    z-index: 99;
-    padding: 1rem 0 1rem 1rem
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810;
+    width: 100%;
+    z-index: 9;
+    padding: 2rem
   }
   .multi-select a {
     color: #282828;
@@ -56,6 +79,10 @@
   .floating_nav__icon {
     cursor: pointer
   }
+  .section--top {
+    display: flex;
+    justify-content: space-between
+  }
   .section-title {
     margin: 0 0 2rem 0
   }
@@ -65,29 +92,29 @@
   .icon--expand {
     cursor: pointer;
     vertical-align: middle;
-    margin-right: .2rem;
-    transition: all .6s
+    margin-top: .8rem;
+    transition: all .4s
   }
-  .expanded {
+  .icon--expand.expanded {
     transform: rotate(180deg)
   }
 
-  /* Block Grid */
-  .block_grid {
+  /* session Grid */
+  .session_grid {
     display: grid;
     grid-gap: 6rem;
     margin-top: 4rem
   }
-  .block-notes {
+  .plan-notes {
     grid-area: b;
     margin: 0 0 4rem 0
   }
 
-  /* Block Table */
-  .block_table__header h3 {
+  /* session Table */
+  .session_table__header h3 {
     margin: 0
   }
-  .block_table__header {
+  .session_table__header {
     display: grid;
     margin: 0 0 4rem 0;
     grid-gap: 1rem
@@ -95,16 +122,16 @@
   #duration {
     width: 4rem
   }
-  .block_table {
+  .session_table {
     height: fit-content
   }
-  .block_table--container {
+  .session_table--container {
     display: inline-block;
     width: 100%;
     font-weight: bold;
     text-align: center
   }
-  .block_table--container--block_duration_container {
+  .session_table--container--session_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
     grid-template-columns: repeat(auto-fill, 50px);
@@ -167,32 +194,48 @@
     transform: scale(.9)
   }
 
-  /* Workouts */
-  .workout--header {
+  /* Sessions */
+  .session--header {
     display: flex;
     justify-content: space-between;
     align-items: center
   }
-  .workout--header__left {
+  .session--header__left {
     display: flex
   }
-  .wrapper--workout {
+  .expand-all {
+    text-align: right;
+    margin: 2rem 0;
+    font-size: .8rem;
+    cursor: pointer;
+    opacity: 1;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .expand-all:hover {
+    opacity: .6
+  }
+  .wrapper--session {
     display: grid;
     grid-template-areas:
       'header'
       'body'
       'bar'
   }
-  .wrapper--workout:after {
+  .wrapper--session:after {
     content: '';
     height: 1px;
     width: 40%;
     background-color: #282828
   }
-  .wrapper--workout__header {
+  .wrapper--session__header {
     grid-area: header;
     display: flex;
     justify-content: space-between
+  }
+  .header-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center
   }
   .select-checkbox {
     vertical-align: middle;
@@ -200,36 +243,36 @@
     width: 1.4rem;
     cursor: pointer
   }
-  .container--workouts {
+  .container--sessions {
     display: grid;
-    grid-gap: 6rem;
-    margin-top: 4rem
+    grid-gap: 6rem
   }
-  input.workout-name, input.workout-date {
+  input.session-name, input.session-date {
     text-overflow: ellipsis;
     border: 0;
     border-bottom: 1px solid #282828;
     outline-width: 0;
     padding: 0
   }
-  input.workout-name {
+  input.session-name {
     cursor: pointer;
     font-size: 1rem;
     font-weight: bold
   }
-  input.workout-name:hover {
+  input.session-name:hover {
     opacity: .6
   }
-  input.workout-date {
+  input.session-date {
     cursor: pointer;
     width: fit-content;
     font-size: .8rem
   }
-  .show-workout {
+  .show-session {
     grid-area: body
   }
   .show-feedback {
-    padding: 12px 15px;
+    margin: 1rem 0;
+    padding: 0;
     grid-area: feedback
   }
   .bottom-bar {
@@ -239,7 +282,7 @@
   .bottom-bar .button {
     margin: 0
   }
-  .newWorkout {
+  .newSession {
     color: #B80000
   }
   .incomplete {
@@ -257,12 +300,23 @@
   }
   .showingFeedback {
     grid-template-areas:
-      'header header'
-      'body feedback'
-      'bar bar'
+      'header'
+      'body'
+      'feedback'
+      'bar'
   }
 
   /* Graph */
+  .graph {
+    position: fixed;
+    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
+    top: 0;
+    left: 0;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    overflow-x: auto
+  }
   .container--content {
     display: flex;
     flex-direction: column
@@ -287,7 +341,7 @@
     margin: .4rem 0
   }
   #chart {
-    margin-top: 4rem;
+    margin: 4rem 0;
     position: relative
   }
   .data-desc {
@@ -302,74 +356,59 @@
   }
 
   @media (max-width: 992px) {
-    .showingFeedback {
-      grid-template-areas:
-        'header'
-        'body'
-        'feedback'
-        'bar'
+    .graph {
+      padding: 4rem 10vw
     }
-    .show-feedback {
-      padding: 1rem 0
+    .expand-all:hover {
+      opacity: 1
     }
   }
   @media (max-width: 768px) {
-    .multi-select {
-      top: -2rem;
-      right: 0;
-      padding: 2rem;
-      width: 100%;
-      background-color: white;
-      box-shadow: 0 0 20px 10px #28282812
-    }
-    .multi-select a {
-      grid-template-columns: 1fr
-    }
-    .multi-select svg {
-      margin-left: auto
+    .graph {
+      padding: 2rem 5vw 4rem 5vw
     }
     #copy:hover {
       opacity: 1
     }
-    #blocks .block_info input.block_info--name {
+    #sessions .session_info input.session_info--name {
       font-size: 1.4rem;
       max-width: 90%
     }
-    input.workout-name {
+    input.session-name {
       width: 60%
     }
   }
 
   @media (max-width: 576px) {
     /* Container */
-    .block_grid {
+    .session_grid {
       display: block
     }
-    .calendar, .block-plan, .graph {
+    .calendar, .session-plan {
       margin: 4rem 0
     }
-    #blocks .block_info input.block_info--name {
+    #sessions .session_info input.session_info--name {
       font-size: 1.2rem
     }
     #client .client_info input.client_info--name {
       font-size: 1.6rem
     }
 
-    /* Workout */
-    input.workout-name {
+    /* Session */
+    input.session-name {
       width: 100%
     }
-    .workout--header {
+    .session--header {
       display: block
     }
-    .button--new-workout {
+    .button--new-session {
       width: 100%
     }
   }
 </style>
 
 <template>
-    <div id="blocks">
+    <div id="sessions">
       <modal name="info" height="auto" :adaptive="true">
         <div class="modal--info">
           <p><b>The format for tracking data</b></p><br>
@@ -398,7 +437,7 @@
       </modal>
       <modal name="shift" height="auto" :adaptive="true">
         <form @submit.prevent="shiftAcross()" class="modal--shift">
-            <label for="range">Shift workout dates by: </label>
+            <label for="range">Shift session dates by: </label>
             <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
             <button>Shift</button>
         </form>
@@ -407,11 +446,19 @@
         <form @submit.prevent="copyAcross()" class="modal--copy">
             <label for="range">From {{currentWeek}} to: </label>
             <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
-            <label for="range">Days until next workouts: </label>
+            <label for="range">Days until next sessions: </label>
             <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
             <button>Copy</button>
         </form>
       </modal>
+      <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true" aria-label="Menu">
+        <inline-svg :src="require('../../../assets/svg/stats.svg')" aria-label="Statistics"/>
+        <p class="text">Statistics</p>
+      </div>
+      <div class="open-stats-animation">
+        <div :class="{openedStats: isStatsOpen}" class="section--a" />
+        <div :class="{openedStats: isStatsOpen}" class="section--b"/>
+      </div>
       <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <div class="multi-select" v-if="selectedSessions.length !== 0">
           <p class="text--selected">
@@ -424,58 +471,58 @@
           <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
         </div>
       </transition>
-      <!-- Loop through programmes and v-if programme matches route so that programme data object is available throughout -->
-      <div v-for="(programme, index) in this.$parent.$parent.client_details.programmes"
+      <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
+      <div v-for="(plan, index) in this.$parent.$parent.client_details.plans"
         :key="index">
-        <div v-if="programme.id == $route.params.id">
+        <div v-if="plan.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
               <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
-               <!-- Update the programme info -->
-              <form class="block_info">
-                <input class="block_info--name allow-text-overflow" aria-label="Block name" type="text" name="name" v-model="programme.name" @blur="update_programme()">
+               <!-- Update the plan info -->
+              <form class="session_info">
+                <input class="session_info--name allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
                 <div class="wrapper-start-date">
                   <label>
                     Start:
-                    <input id="start" type="date" name="start" v-model="programme.start" required @blur="update_programme()"/>
+                    <input id="start" type="date" name="start" v-model="plan.start" required @blur="update_plan()"/>
                   </label>
                 </div>
               </form>
             </div>  <!-- client_info -->
           </div> <!-- top_grid -->
-          <div class="block_grid">
+          <div class="session_grid">
             <div class="calendar">
-              <div class="block-notes">
-                <div class="block-notes__header">
-                  <p class="block-notes__header__text"><b>Block Notes</b></p>
+              <div class="plan-notes">
+                <div class="plan-notes__header">
+                  <p class="plan-notes__header__text"><b>Plan Notes</b></p>
                 </div>
-                <quill v-show="editBlockNotes" v-model="programme.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                <div v-if="!editBlockNotes  && programme.notes !== '' && programme.notes !== null" v-html="programme.notes" class="show-block-notes animate animate__fadeIn"/>
-                <p v-if="!editBlockNotes && (programme.notes === '' || programme.notes === null)" class="show-block-notes">No block notes added...</p>
+                <quill v-show="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+                <div v-if="!editPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
+                <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="!editBlockNotes" @click="editingBlockNotes(true), cancelWorkout()" class="button--edit">Edit</button>
-                    <button v-show="editBlockNotes" @click="editingBlockNotes(false)" class="button--save">Save</button>
-                    <button v-show="editBlockNotes" @click="cancelBlockNotes()" class="cancel">Cancel</button>
+                    <button v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()" class="button--edit">Edit</button>
+                    <button v-show="editPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
+                    <button v-show="editPlanNotes" @click="cancelPlanNotes()" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <FullCalendar defaultView="dayGridMonth" :firstDay="1" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="workoutDates" />
+                <FullCalendar defaultView="dayGridMonth" :firstDay="1" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="sessionDates" />
               </div>
             </div>
-            <div class="block-plan">
-              <div class="block_table">
-                <div class="block_table__header">
+            <div class="session-plan">
+              <div class="session_table">
+                <div class="session_table__header">
                   <h3>Microcycles</h3>
                   <div class="wrapper-duration">
                     <label for="duration"><b>Duration: </b></label>
-                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="programme.duration" min="1" required @blur="update_programme()" @change="weekConfirm(programme.duration), maxWeek = programme.duration"/>
+                    <input id="duration" type="number" name="duration" inputmode="decimal" v-model="plan.duration" min="1" required @blur="update_plan()" @change="weekConfirm(plan.duration), maxWeek = plan.duration"/>
                   </div>
                 </div>
-                <div class="block_table--container">
-                  <div class="block_table--container--block_duration_container">
-                    <div @click="changeWeek(item), sortWorkouts()" v-for="item in programme_duration(programme.duration)" :key="item" class="container--week">
+                <div class="session_table--container">
+                  <div class="session_table--container--session_duration_container">
+                    <div @click="changeWeek(item), sortSessions()" v-for="item in plan_duration(plan.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
                         <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
                         <div class="week__number">{{item}}</div>
@@ -483,119 +530,125 @@
                     </div>
                   </div>
                 </div>
-              </div> <!-- block_table -->
-              <div class="workouts">
-                <div class="workout--header">
-                  <div class="workout--header__left">
+              </div> <!-- session_table -->
+              <div class="sessions">
+                <div class="session--header">
+                  <div class="session--header__left">
                     <h3>Sessions</h3>
-                    <input @blur="updateBlockColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
+                    <input @blur="updateSessionColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
                     <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
                   </div>
-                  <button class="button--new-workout" @click="createWorkout()">New session</button>
+                  <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
-                <p v-if="$parent.no_workouts">No sessions yet. You can add one below.</p>
-                <p v-if="$parent.loading_workouts">Loading sessions...</p>
+                <p v-if="$parent.no_sessions">No sessions yet. You can add one below.</p>
+                <p v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
-                  <!-- New Workout -->
-                  <div class="container--workouts" v-if="!$parent.no_workouts">
-                    <!-- Loop through workouts -->
-                    <div :id="'session-' + workout.id" class="wrapper--workout" :class="{showingFeedback: workout.id === showFeedback}" v-show="workout.week_id === currentWeek" v-for="(workout, index) in programme.workouts"
+                  <p class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
+                  <!-- New session -->
+                  <div class="container--sessions" v-if="!$parent.no_sessions">
+                    <!-- Loop through sessions -->
+                    <div :id="'session-' + session.id" class="wrapper--session" :class="{showingFeedback: session.id === showFeedback}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
                       :key="index">
-                      <div class="wrapper--workout__header">
+                      <div class="wrapper--session__header">
                         <div>
-                          <span v-if="workout.id !== editWorkout" class="text--name" :class="{newWorkout: workout.name == 'Untitled' && !isEditingWorkout}"><b>{{workout.name}}</b></span><br v-if="workout.id !== editWorkout">
-                          <span v-if="workout.id !== editWorkout" class="text--date">{{day(workout.date)}}</span>
-                          <span v-if="workout.id !== editWorkout" class="text--date">{{workout.date}}</span><br v-if="workout.id !== editWorkout">
-                          <span v-if="workout.id !== editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1}" class="text--checked">{{isCompleted(workout.checked)}}</span>
-                          <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-name" type="text" name="workout-name" pattern="[^\/]" v-model="workout.name" /><br>
-                          <input @blur="scan()" v-if="workout.id === editWorkout" class="workout-date" type="date" name="workout-date" v-model="workout.date" /><br>
-                          <span @click="workout.checked = toggleComplete(workout.checked)" v-if="workout.id === editWorkout" :class="{incomplete: workout.checked === 0, completed: workout.checked === 1, editingChecked: workout.id === editWorkout}" class="text--checked">{{isCompleted(workout.checked)}}</span>
+                          <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{session.name}}</b></span><br v-if="session.id !== editSession">
+                          <span v-if="session.id !== editSession" class="text--date">{{day(session.date)}}</span>
+                          <span v-if="session.id !== editSession" class="text--date">{{session.date}}</span><br v-if="session.id !== editSession">
+                          <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{isCompleted(session.checked)}}</span>
+                          <input @blur="scan()" v-if="session.id === editSession" class="session-name" type="text" name="session-name" pattern="[^\/]" v-model="session.name" /><br>
+                          <input @blur="scan()" v-if="session.id === editSession" class="session-date" type="date" name="session-date" v-model="session.date" /><br>
+                          <span @click="session.checked = toggleComplete(session.checked)" v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked">{{isCompleted(session.checked)}}</span>
                         </div>
-                        <div>
-                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(workout.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(workout.id)"/>
-                          <input name="select-checkbox" :id="'sc-' + workout.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(workout.id)" aria-label="Select this workout">
+                        <div class="header-options">
+                          <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
+                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
-                      <quill v-if="workout.id === editWorkout && expandedSessions.includes(workout.id)" v-model="workout.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
-                      <div v-if="workout.id !== editWorkout && expandedSessions.includes(workout.id)" v-html="removeBracketsAndBreaks(workout.notes)" tabindex="0" class="show-workout animate animate__fadeIn"/>
-                      <div v-if="workout.id === showFeedback" class="show-feedback animate animate__fadeIn">
+                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id)" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
+                      <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
-                        <div v-html="workout.feedback" />
+                        <div v-html="session.feedback" />
                       </div>
-                      <div class="bottom-bar" v-if="expandedSessions.includes(workout.id)">
+                      <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
                         <div>
-                          <button v-show="!isEditingWorkout" v-if="workout.id !== editWorkout" @click="editingWorkoutNotes(workout.id, true), cancelBlockNotes()">Edit</button>
-                          <button v-if="workout.id === editWorkout" @click="editingWorkoutNotes(workout.id, false)">Save</button>
-                          <button class="cancel" v-if="workout.id === editWorkout" @click="cancelWorkout()">Cancel</button>
-                          <button class="delete" v-show="!isEditingWorkout" @click="soloDelete(workout.id)">Delete</button>
-                          <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id !== showFeedback" @click="showFeedback = workout.id">Feedback</button>
-                          <button v-if="workout.feedback !== '' && workout.feedback !== null && workout.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
+                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
+                          <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
+                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes()">Cancel</button>
+                          <button class="delete" v-show="!isEditingSession" @click="soloDelete(session.id)">Delete</button>
+                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
+                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div><!-- workouts -->
+              </div><!-- sessions -->
             </div>
-            <div class="graph">
-              <div>
-                <h3 class="section-title">Statistics</h3>
-                <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
-                <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
-              </div><br>
-              <div class="container--content">
-                <div class="data-options">
-                  <div class="data-select">
-                    <div class="data-select__options">
-                      <label for="measure">
-                        <b>Measurement: </b><br>
-                        <select v-model="selectedDataName" @change="sortWorkouts(), scan(), selection()" name="measure">
-                          <option v-for="optionName in optionsForDataName" :value="optionName.value" :key="'M' + optionName.id">
-                            {{optionName.text}}
-                          </option>
-                        </select>
-                      </label>
-                    </div>
-                    <div class="data-select__options" v-show="showType">
-                      <label for="measure-type">
-                        <b>Data type: </b><br>
-                        <select v-model="selectedDataType" @change="sortWorkouts(), scan(), selection()" name="measure-type">
-                          <option value="Sets">Sets</option>
-                          <option value="Reps">Reps</option>
-                          <option v-for="optionData in optionsForDataType" :value="optionData.value" :key="'DT-' + optionData.id">
-                            {{optionData.text}}
-                          </option>
-                        </select>
-                      </label>
-                    </div>
-                  </div>
-                  <div v-show="showType" class="data-desc">
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
-                      <p class="data-desc__value">{{ p1.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p2.desc }}</b></p>
-                      <p class="data-desc__value">{{ p2.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p3.desc }}</b></p>
-                      <p class="data-desc__value">{{ p3.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc"><b>{{ p4.desc }}</b></p>
-                      <p class="data-desc__value">{{ p4.value }}</p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc">{{ p5.desc }}</p>
-                      <p class="data-desc__value">{{ p5.value }}</p>
-                    </div>
-                  </div>
+            <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+              <div class="graph" v-if="isStatsOpen">
+                <div class="section--top">
+                  <h3 class="section-title">Statistics</h3>
+                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false" class="icon--options" :src="require('../../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
-                <line-chart id="chart" :chart-data="dataCollection" :options="options" aria-label="Graph"/>
+                <div>
+                  <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
+                  <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
+                </div><br>
+                <div class="container--content">
+                  <div class="data-options">
+                    <div class="data-select">
+                      <div class="data-select__options">
+                        <label for="measure">
+                          <b>Measurement: </b><br>
+                          <select v-model="selectedDataName" @change="sortSessions(), scan(), selection()" name="measure">
+                            <option v-for="optionName in optionsForDataName" :value="optionName.value" :key="'M' + optionName.id">
+                              {{optionName.text}}
+                            </option>
+                          </select>
+                        </label>
+                      </div>
+                      <div class="data-select__options" v-show="showType">
+                        <label for="measure-type">
+                          <b>Data type: </b><br>
+                          <select v-model="selectedDataType" @change="sortSessions(), scan(), selection()" name="measure-type">
+                            <option value="Sets">Sets</option>
+                            <option value="Reps">Reps</option>
+                            <option v-for="optionData in optionsForDataType" :value="optionData.value" :key="'DT-' + optionData.id">
+                              {{optionData.text}}
+                            </option>
+                          </select>
+                        </label>
+                      </div>
+                    </div>
+                    <div v-show="showType" class="data-desc">
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
+                        <p class="data-desc__value">{{ p1.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p2.desc }}</b></p>
+                        <p class="data-desc__value">{{ p2.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p3.desc }}</b></p>
+                        <p class="data-desc__value">{{ p3.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc"><b>{{ p4.desc }}</b></p>
+                        <p class="data-desc__value">{{ p4.value }}</p>
+                      </div>
+                      <div class="container--data-desc">
+                        <p class="data-desc__desc">{{ p5.desc }}</p>
+                        <p class="data-desc__value">{{ p5.value }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <line-chart id="chart" :chart-data="dataCollection" :options="options" aria-label="Graph"/>
+                </div>
               </div>
-            </div>  <!-- notes -->
-          </div> <!-- programme_grid -->
+            </transition>
+          </div> <!-- plan_grid -->
         </div>
       </div>
     </div>
@@ -603,7 +656,6 @@
 
 <script>
   import axios from 'axios'
-  import qs from 'qs'
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
 
@@ -618,29 +670,29 @@
       InlineSvg,
       FullCalendar
     },
-    data: function () {
+    data () {
       return {
+        force: true,
 
         // BLOCK DATA //
-
+        isStatsOpen: false,
         showFeedback: '',
         weekColor: {
           backgroundColor: ''
         },
         response: '',
-        editBlockNotes: false,
+        editPlanNotes: false,
         todayDate: '',
         expandedSessions: [],
 
-        // WORKOUT DATA //
-
-        isEditingWorkout: false,
-        editWorkout: null,
-        movingWorkout: null,
+        // SESSION DATA //
+        isEditingSession: false,
+        editSession: null,
+        movingSession: null,
         moveTarget: 1,
         copyTarget: 2,
         daysDiff: 7,
-        new_workout: {
+        new_session: {
           name: 'Untitled',
           date: ''
         },
@@ -648,7 +700,6 @@
         shiftDays: 1,
 
         // REGEX DATA //
-
         str: [],
         yData: [],
         xLabel: [],
@@ -660,12 +711,10 @@
         protocolError: [],
 
         // CHART METHODS //
-
         dataCollection: null,
         options: null,
 
         // CALENDAR DATA //
-
         calendarToolbarHeader: {
           left: 'title',
           right: ''
@@ -674,30 +723,29 @@
           right: 'today prev, next'
         },
         calendarPlugins: [ dayGridPlugin ],
-        workoutDates: [],
+        sessionDates: [],
 
         // STATISTICS DATA //
-
         p1: '',
         p2: '',
         p3: '',
         p4: '',
         p5: '',
-        selectedDataName: 'Block Overview',
+        selectedDataName: 'Session Overview',
         optionsForDataName: [],
         optionsForDataType: [],
         selectedDataType: 'Sets',
         showType: true,
 
         // MICROCYCLE DATA //
-
         allowMoreWeeks: false,
         currentWeek: 1,
         maxWeek: '2'
       }
     },
     created () {
-      this.$parent.blocks = true
+      this.$parent.sessions = true
+      this.$parent.showDeletePlan = true
     },
     async mounted () {
       await this.$parent.get_client_details()
@@ -705,20 +753,20 @@
       this.scan()
     },
     beforeDestroy () {
-      this.$parent.showDeleteBlock = false
+      this.$parent.showDeletePlan = false
     },
     methods: {
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
       shiftAcross () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 session.date = this.addDays(session.date, parseInt(this.shiftDays))
-                this.update_workout(session.id)
+                this.update_session(session.id)
               }
             })
           }
@@ -727,44 +775,44 @@
         this.deselectAll()
       },
       copyAcross () {
-        var copyWorkouts = []
+        var copysessions = []
         let weekCount = 2
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
-                copyWorkouts.push({ name: session.name, date: session.date, notes: session.notes })
+                copysessions.push({ name: session.name, date: session.date, notes: session.notes })
               }
             })
           }
         })
         for (; weekCount <= this.copyTarget; weekCount++) {
           this.currentWeek = weekCount
-          copyWorkouts.forEach((workout) => {
-            this.new_workout.name = workout.name
-            this.new_workout.date = this.addDays(workout.date, this.daysDiff * (weekCount - 1))
-            this.currentCopyWorkoutNotes = workout.notes
-            this.add_workout()
+          copysessions.forEach((session) => {
+            this.new_session.name = session.name
+            this.new_session.date = this.addDays(session.date, this.daysDiff * (weekCount - 1))
+            this.currentCopysessionNotes = session.notes
+            this.add_session()
           })
         }
-        this.currentCopyWorkoutNotes = ''
+        this.currentCopysessionNotes = ''
         this.copyTarget = 1
-        this.new_workout.name = 'Untitled'
+        this.new_session.name = 'Untitled'
         this.today()
-        this.update_programme()
+        this.update_plan()
         this.$parent.$parent.loading = false
         this.$modal.hide('copy')
         this.deselectAll()
       },
       initMove () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((workout) => {
-              if (this.selectedSessions.includes(workout.id)) {
-                workout.week_id = this.moveTarget
-                this.updateWorkoutNotes(workout.id)
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
+              if (this.selectedSessions.includes(session.id)) {
+                session.week_id = this.moveTarget
+                this.updateSessionNotes(session.id)
               }
             })
           }
@@ -773,27 +821,27 @@
         this.currentWeek = parseInt(this.moveTarget)
       },
 
-      // WORKOUT METHODS //-------------------------------------------------------------------------------
+      // SESSION METHODS //-------------------------------------------------------------------------------
 
       soloDelete (id) {
-        if (confirm('Are you sure you want to delete this workout?')) {
-          this.delete_workout(id, true)
+        if (confirm('Are you sure you want to delete this session?')) {
+          this.delete_session(id, true)
         }
       },
       bulkDelete () {
         if (this.selectedSessions.length !== 0) {
-          var ready = confirm('Are you sure you want to delete all the selected workout?')
+          var ready = confirm('Are you sure you want to delete all the selected session?')
           this.selectedSessions.forEach((sessionId) => {
-            this.delete_workout(sessionId, ready)
+            this.delete_session(sessionId, ready)
           })
           this.deselectAll()
         }
       },
       deselectAll () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (block.id == this.$route.params.id) {
-            block.workouts.forEach((session) => {
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
               var selEl = document.getElementById('sc-' + session.id)
               if (selEl.checked === true) {
                 selEl.checked = false
@@ -812,36 +860,36 @@
           this.selectedSessions.splice(idx, 1)
         }
       },
-      cancelWorkout () {
-        this.editWorkout = null
-        this.isEditingWorkout = false
-        window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
+      cancelSessionNotes () {
+        this.editSession = null
+        this.isEditingSession = false
+        window.removeEventListener('keydown', this.quickSaveSessionNotes)
       },
-      async createWorkout () {
+      async createSession () {
         this.$parent.$parent.loading = true
-        await this.add_workout()
+        await this.add_session()
         this.$parent.$parent.loading = false
       },
-      editingWorkoutNotes (id, state) {
-        this.isEditingWorkout = state
-        this.editWorkout = id
+      editingSessionNotes (id, state) {
+        this.isEditingSession = state
+        this.editSession = id
         if (state) {
-          window.addEventListener('keydown', this.quickSaveWorkoutNotes)
+          window.addEventListener('keydown', this.quickSaveSessionNotes)
         } else {
-          this.updateWorkoutNotes(id)
-          window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
+          this.updateSessionNotes(id)
+          window.removeEventListener('keydown', this.quickSaveSessionNotes)
         }
       },
-      quickSaveWorkoutNotes (key, state) {
+      quickSaveSessionNotes (key, state) {
         if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updateWorkoutNotes(this.editWorkout)
-          window.removeEventListener('keydown', this.quickSaveWorkoutNotes)
+          this.updateSessionNotes(this.editSession)
+          window.removeEventListener('keydown', this.quickSaveSessionNotes)
         }
       },
-      updateWorkoutNotes (id) {
-        this.update_workout(id)
-        this.isEditingWorkout = false
-        this.editWorkout = null
+      updateSessionNotes (id) {
+        this.update_session(id)
+        this.isEditingSession = false
+        this.editSession = null
         this.scan()
       },
       toggleComplete (value) {
@@ -877,38 +925,38 @@
           this.expandedSessions.push(id)
         }
       },
-      cancelBlockNotes () {
-        this.editBlockNotes = false
-        window.removeEventListener('keydown', this.quickSaveBlockNotes)
+      cancelPlanNotes () {
+        this.editPlanNotes = false
+        window.removeEventListener('keydown', this.quickSavePlanNotes)
       },
-      updateBlockColor () {
-        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+      updateSessionColor () {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (programme.id == this.$route.params.id) {
-            programme.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
+          if (plan.id == this.$route.params.id) {
+            plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
           }
         })
-        this.update_programme()
+        this.update_plan()
         this.scan()
       },
-      editingBlockNotes (state) {
-        this.editBlockNotes = state
+      editingPlanNotes (state) {
+        this.editPlanNotes = state
         if (state) {
-          window.addEventListener('keydown', this.quickSaveBlockNotes)
+          window.addEventListener('keydown', this.quickSavePlanNotes)
         } else {
-          this.updateBlockNotes()
-          window.removeEventListener('keydown', this.quickSaveBlockNotes)
+          this.updatePlanNotes()
+          window.removeEventListener('keydown', this.quickSavePlanNotes)
         }
       },
-      quickSaveBlockNotes (key, state) {
+      quickSavePlanNotes (key, state) {
         if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updateBlockNotes()
-          window.removeEventListener('keydown', this.quickSaveBlockNotes)
+          this.updatePlanNotes()
+          window.removeEventListener('keydown', this.quickSavePlanNotes)
         }
       },
-      updateBlockNotes () {
-        this.update_programme()
-        this.editBlockNotes = false
+      updatePlanNotes () {
+        this.update_plan()
+        this.editPlanNotes = false
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
@@ -959,7 +1007,7 @@
         var overviewStore = []
         this.protocolError.length = 0
         this.optionsForDataType.length = 0
-        if (dataForName === 'Block Overview') {
+        if (dataForName === 'Session Overview') {
           this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
           this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
         }
@@ -991,7 +1039,7 @@
                 this.yData.push(this.otherMeasures(protocol))
               }
             }
-            if (dataForName === 'Block Overview' && exerciseDataPacket[2].includes('at') === true) {
+            if (dataForName === 'Session Overview' && exerciseDataPacket[2].includes('at') === true) {
               if (dataForType === 'Sets' || dataForType === 'Reps') {
                 dataForSum = this.setsReps(exerciseDataPacket, protocol, dataForType)
               }
@@ -1004,14 +1052,14 @@
               overviewStore.push(dataForSum)
             }
           })
-          if (dataForName === 'Block Overview' && overviewStore.length !== 0) {
+          if (dataForName === 'Session Overview' && overviewStore.length !== 0) {
             this.yData.push(overviewStore.reduce((a, b) => a + b))
           }
         })
-        if (dataForName === 'Block Overview') {
+        if (dataForName === 'Session Overview') {
           let x = 1
           for (; x <= this.yData.length; x++) {
-            this.xLabel.push('Workout ' + x)
+            this.xLabel.push('session ' + x)
           }
         }
         if (this.yData.length !== 0) {
@@ -1024,7 +1072,7 @@
 
       weekConfirm (dur) {
         if (parseInt(dur) > 12 && this.allowMoreWeeks === false) {
-          if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new block.')) {
+          if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new session.')) {
             this.allowMoreWeeks = true
           } else {
             this.allowMoreWeeks = false
@@ -1036,7 +1084,7 @@
         var dd = String(today.getDate()).padStart(2, '0')
         var mm = String(today.getMonth() + 1).padStart(2, '0')
         var yyyy = today.getFullYear()
-        this.new_workout.date = `${yyyy}-${mm}-${dd}`
+        this.new_session.date = `${yyyy}-${mm}-${dd}`
         this.todayDate = `${yyyy}-${mm}-${dd}`
       },
       addDays (date, days) {
@@ -1059,8 +1107,8 @@
         var d = new Date(date)
         return weekday[d.getDay()]
       },
-      programme_duration (duration) {
-        // Turn the duration of the programme into an array to render the boxes in the table
+      plan_duration (duration) {
+        // Turn the duration of the plan into an array to render the boxes in the table
         const arr = []
         let i
         for (i = 1; i < parseInt(duration, 10) + 1; i++) {
@@ -1071,6 +1119,41 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      pasteHtmlAtCaret (html) {
+        let caretPosition = document.getSelection()
+        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
+          if (caretPosition.focusNode.nodeType !== 3) {
+            caretPosition.focusNode.insertAdjacentHTML('afterend', html)
+          } else {
+            caretPosition.focusNode.parentNode.insertAdjacentHTML('afterend', html)
+          }
+        }
+      },
+      expandAll (toExpand) {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
+          // eslint-disable-next-line
+          if (plan.id == this.$route.params.id) {
+            plan.sessions.forEach((session) => {
+              if (toExpand === 'Expand') {
+                this.expandedSessions.push(session.id)
+              } else {
+                let x = 0
+                let y = this.expandedSessions.length
+                for (; x < y; x++) {
+                  this.expandedSessions.pop()
+                }
+              }
+            })
+          }
+        })
+      },
+      expandText (array) {
+        if (array.length !== 0) {
+          return 'Collapse'
+        } else {
+          return 'Expand'
+        }
+      },
       accessibleColors (hex) {
         if (hex !== undefined) {
           hex = hex.replace('#', '')
@@ -1090,11 +1173,11 @@
           return dataIn
         }
       },
-      sortWorkouts () {
-        this.$parent.$parent.client_details.programmes.forEach((block) => {
+      sortSessions () {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (block.id == this.$route.params.id && this.$parent.no_workouts === false) {
-            block.workouts.sort((a, b) => {
+          if (plan.id == this.$route.params.id && this.$parent.no_sessions === false) {
+            plan.sessions.sort((a, b) => {
               return new Date(a.date) - new Date(b.date)
             })
           }
@@ -1102,16 +1185,16 @@
       },
       scan () {
         this.dataPacketStore.length = 0
-        this.workoutDates.length = 0
-        this.$parent.$parent.client_details.programmes.forEach((programme) => {
+        this.sessionDates.length = 0
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
           // eslint-disable-next-line
-          if (programme.id == this.$route.params.id) {
-            this.weekColor.backgroundColor = programme.block_color.replace('[', '').replace(']', '').split(',')
-            this.str = programme.workouts
-            this.maxWeek = programme.duration
-            if (this.str !== null && this.$parent.no_workouts === false) {
+          if (plan.id == this.$route.params.id) {
+            this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
+            this.str = plan.sessions
+            this.maxWeek = plan.duration
+            if (this.str !== null && this.$parent.no_sessions === false) {
               this.str.forEach((object) => {
-                this.workoutDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
+                this.sessionDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
                 if (object.notes !== null) {
                   var pulledProtocols = this.pullProtocols(object.name, object.notes)
                   this.dataPacketStore.push(this.chunkArray(pulledProtocols))
@@ -1128,7 +1211,7 @@
       },
 
       // Extracts the protocols and measures and stores it all into a temporary array
-      pullProtocols (workoutName, text) {
+      pullProtocols (sessionName, text) {
         var textNoHTML = text.replace(/<[^>]*>?/gm, '')
         var tempStore = []
         let m
@@ -1138,7 +1221,7 @@
           }
           m.forEach((match, groupIndex) => {
             if (groupIndex === 0) {
-              tempStore.push(workoutName)
+              tempStore.push(sessionName)
             }
             if (groupIndex === 1 || groupIndex === 2) {
               tempStore.push(match)
@@ -1164,7 +1247,7 @@
 
       // Init the dropdown selection with validation
       dropdownInit () {
-        this.optionsForDataName = [{ id: 0, text: 'Block Overview', value: 'Block Overview' }]
+        this.optionsForDataName = [{ id: 0, text: 'Session Overview', value: 'Session Overview' }]
         var tempItemStore = []
         var tempItemStoreLate = []
         var continueValue = 0
@@ -1322,57 +1405,57 @@
 
       // DATABASE METHODS //-------------------------------------------------------------------------------
 
-      async update_programme () {
+      async update_plan () {
         this.$parent.$parent.dontLeave = true
-        // Set auth header
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        let x
-        var programme
-        // Set the programme variable to the current programme
-        for (x in this.$parent.$parent.client_details.programmes) {
+        var plan
+        // Set the plan variable to the current plan
+        for (var x in this.$parent.$parent.client_details.plans) {
           // eslint-disable-next-line
-          if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
-            programme = this.$parent.$parent.client_details.programmes[x]
+          if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
+            plan = this.$parent.$parent.client_details.plans[x]
           }
         }
         try {
-          this.sortWorkouts()
-          // eslint-disable-next-line
-          const response_update_programme = await axios.post(`https://api.traininblocks.com/programmes`,
+          this.sortSessions()
+          const response = await axios.post(`https://api.traininblocks.com/programmes`,
             {
-              'id': programme.id,
-              'name': programme.name,
-              'description': programme.description,
-              'duration': programme.duration,
-              'start': programme.start,
-              'notes': programme.notes,
-              'block_color': programme.block_color,
-              'workouts': programme.workouts
+              'id': plan.id,
+              'name': plan.name,
+              'duration': plan.duration,
+              'start': plan.start,
+              'notes': plan.notes,
+              'block_color': plan.block_color,
+              'type': plan.type
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
             }
           )
           // Set vue client_details data to new data
           let x
-          // Loop through client_details programmes
-          for (x in this.$parent.$parent.client_details.programmes) {
-            if (this.$parent.$parent.client_details.programmes[x].id === this.$route.params.id) {
-              this.$parent.$parent.client_details.programmes[x] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}', '}'))
+          // Loop through client_details plans
+          for (x in this.$parent.$parent.client_details.plans) {
+            if (this.$parent.$parent.client_details.plans[x].id === this.$route.params.id) {
+              this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
             }
           }
-          // Set vue client programmes data to new data
+          // Set vue client plans data to new data
           x = 0
           let y
-          for (x in this.$parent.$parent.posts) {
-            if (this.$parent.$parent.posts[x].client_id === this.$route.params.client_id) {
-              for (y in this.$parent.$parent.posts[x].programmes[y]) {
-                if (this.$parent.$parent.posts[x].programmes[y].id === this.$route.params.id) {
-                  this.$parent.$parent.posts[x].programmes[y] = JSON.parse(JSON.stringify(Object.assign({}, response_update_programme.data)).replace('{"0":', '').replace('}}', '}'))
+          for (x in this.$parent.$parent.clients) {
+            if (this.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
+              for (y in this.$parent.$parent.clients[x].plans[y]) {
+                if (this.$parent.$parent.clients[x].plans[y].id === this.$route.params.id) {
+                  this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
                 }
               }
             }
           }
-          // Update the localstorage with the programmes
-          localStorage.setItem('posts', JSON.stringify(this.$parent.$parent.posts))
-          this.$ga.event('Block', 'update')
+          // Update the localstorage with the plans
+          localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.clients))
+          this.$ga.event('Session', 'update')
           this.scan()
           this.$parent.$parent.dontLeave = false
         } catch (e) {
@@ -1383,27 +1466,23 @@
           console.error(e)
         }
       },
-      async update_workout (id) {
+      async update_session (id) {
         this.$parent.$parent.loading = true
         this.$parent.$parent.dontLeave = true
-        // Set auth header
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
-        let x
-        // Set the programme variable to the current programme
-        for (x in this.$parent.$parent.client_details.programmes) {
+        // Set the plan variable to the current plan
+        for (var x in this.$parent.$parent.client_details.plans) {
           //eslint-disable-next-line
-          if (this.$parent.$parent.client_details.programmes[x].id == this.$route.params.id) {
-            var programme = this.$parent.$parent.client_details.programmes[x]
+          if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
+            var plan = this.$parent.$parent.client_details.plans[x]
             var y
-            for (y in programme.workouts) {
-              if (programme.workouts[y].id === id) {
-                var workoutsId = programme.workouts[y].id
-                var workoutsName = programme.workouts[y].name
-                var workoutsDate = programme.workouts[y].date
-                var workoutsNotes = programme.workouts[y].notes
-                var workoutsWeek = programme.workouts[y].week_id
-                var workoutsChecked = programme.workouts[y].checked
+            for (y in plan.sessions) {
+              if (plan.sessions[y].id === id) {
+                var sessionsId = plan.sessions[y].id
+                var sessionsName = plan.sessions[y].name
+                var sessionsDate = plan.sessions[y].date
+                var sessionsNotes = plan.sessions[y].notes
+                var sessionsWeek = plan.sessions[y].week_id
+                var sessionsChecked = plan.sessions[y].checked
               }
             }
           }
@@ -1411,17 +1490,22 @@
         try {
           await axios.post(`https://api.traininblocks.com/workouts`,
             {
-              'id': workoutsId,
-              'name': workoutsName,
-              'date': workoutsDate,
-              'notes': workoutsNotes,
-              'week_id': workoutsWeek,
-              'checked': workoutsChecked
+              'id': sessionsId,
+              'name': sessionsName,
+              'date': sessionsDate,
+              'notes': sessionsNotes,
+              'week_id': sessionsWeek,
+              'checked': sessionsChecked
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
             }
           )
-          await this.$parent.force_get_workouts()
-          await this.update_programme()
-          this.$ga.event('Workout', 'update')
+          await this.$parent.get_sessions(this.force)
+          await this.update_plan()
+          this.$ga.event('Session', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
@@ -1432,39 +1516,38 @@
           console.error(e)
         }
       },
-      async add_workout () {
+      async add_session () {
         try {
           this.$parent.$parent.loading = true
           this.$parent.$parent.dontLeave = true
-          // eslint-disable-next-line
-          const response_save_workouts = await axios.put('https://api.traininblocks.com/workouts',
-            qs.stringify({
-              name: this.new_workout.name,
-              programme_id: this.$route.params.id,
-              date: this.new_workout.date,
-              notes: this.currentCopyWorkoutNotes,
-              week_id: this.currentWeek
-            }),
+          const response = await axios.put('https://api.traininblocks.com/workouts',
+            {
+              'name': this.new_session.name,
+              'programme_id': this.$route.params.id,
+              'date': this.new_session.date,
+              'notes': this.currentCopysessionNotes,
+              'week_id': this.currentWeek
+            },
             {
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
               }
             }
           )
-          this.response = response_save_workouts.data
-          // Get the workouts from the API because we've just created a new one
-          await this.$parent.force_get_workouts()
-          this.new_workout = {
+          this.response = response.data
+          // Get the sessions from the API because we've just created a new one
+          await this.$parent.get_sessions(this.force)
+          this.new_session = {
             name: 'Untitled',
             date: this.todayDate,
             notes: '',
             week_id: '',
             block_color: ''
           }
-          this.sortWorkouts()
+          this.sortSessions()
           this.scan()
-          this.$ga.event('Workout', 'new')
+          this.$ga.event('Session', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
@@ -1475,18 +1558,22 @@
           console.error(e)
         }
       },
-      async delete_workout (id, ready) {
+      async delete_session (id, ready) {
         if (ready) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
           try {
             this.$parent.$parent.loading = true
             this.$parent.$parent.dontLeave = true
-            await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
+            await axios.delete(`https://api.traininblocks.com/workouts/${id}`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                }
+              }
+            )
+            await this.$parent.get_sessions(this.force)
+            await this.update_plan()
 
-            await this.$parent.force_get_workouts()
-            await this.update_programme()
-
-            this.$ga.event('Workout', 'delete')
+            this.$ga.event('Session', 'delete')
             this.$parent.$parent.loading = false
             this.$parent.$parent.dontLeave = false
           } catch (e) {

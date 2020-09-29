@@ -27,39 +27,11 @@
     animation-duration: calc(1s / 2);
     animation-duration: calc(var(--animate-duration) / 2)
   }
-  .animate__bounceInDown {
-    animation-name: bounceInDown;
-    animation-timing-function: cubic-bezier(.215, .61, .355, 1)
-  }
   .animate__fadeIn {
     animation-name: fadeIn
   }
   .animate__fadeOut {
     animation-name: fadeOut
-  }
-  @keyframes bounceInDown {
-    0% {
-      opacity: 0;
-      -webkit-transform: translate3d(0, -3000px, 0) scaleY(3);
-      transform: translate3d(0, -3000px, 0) scaleY(3)
-    }
-    60% {
-      opacity: 1;
-      -webkit-transform: translate3d(0, 25px, 0) scaleY(.9);
-      transform: translate3d(0, 25px, 0) scaleY(.9)
-    }
-    75% {
-      -webkit-transform: translate3d(0, -10px, 0) scaleY(.95);
-      transform: translate3d(0, -10px, 0) scaleY(.95)
-    }
-    90% {
-      -webkit-transform: translate3d(0, 5px, 0) scaleY(.985);
-      transform: translate3d(0, 5px, 0) scaleY(.985)
-    }
-    to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0)
-    }
   }
   @keyframes fadeIn {
     from {
@@ -86,7 +58,7 @@
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    letter-spacing: .1rem
+    letter-spacing: 1px
   }
   #app {
     color: #282828;
@@ -102,7 +74,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+  #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
     padding: 4rem 20vw 10rem 20vw
   }
   .modal--error {
@@ -121,6 +93,9 @@
     margin-bottom: 4rem;
     align-items: center
   }
+  .wrapper--calendar {
+    user-select: none
+  }
 
   /* GLOBAL: TOOLTIP */
   .tooltip {
@@ -135,7 +110,7 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-block {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-plan {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
@@ -170,7 +145,7 @@
   p {
     margin: 0
   }
-  svg path:not(.transparent) {
+  svg path:not(.account_nav--item--icon.transparent) {
     fill: #282828
   }
   .allow-text-overflow {
@@ -241,8 +216,8 @@
     margin-left: .4rem
   }
 
-  /* GLOBAL: WORKOUTS AND NOTES */
-  .wrapper--workout__header {
+  /* GLOBAL: SESSIONS AND NOTES */
+  .wrapper--session__header {
     height: 6.4rem
   }
   .text--name {
@@ -273,8 +248,9 @@
     opacity: .6
   }
 
-  /* GLOBAL: SHOW WORKOUT AND NOTES */
-  .show-workout, .show-block-notes, .show-client-notes {
+  /* GLOBAL: SHOW AND NOTES */
+  .show-session, .show-plan-notes, .show-client-notes, .show-template-notes {
+    outline-width: 0;
     overflow-wrap: break-word;
     color: #282828;
     line-height: 1.42;
@@ -282,17 +258,20 @@
     font-size: .8rem;
     transition: all 1s
   }
-  .show-workout a {
+  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
+    max-width: 100%
+  }
+  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template-notes a {
     color: blue
   }
-  .show-workout ul, .show-workout ol, .show-block-notes ul, .show-block-notes ol {
+  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template-notes ul, .show-template-notes ol {
     text-decoration: none;
     margin: 0
   }
-  .show-workout p, .show-client-notes p, .show-block-notes p {
+  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template-notes p {
     margin: 1rem 0
   }
-  .wrapper--workout__header.client-side {
+  .wrapper--session__header.client-side {
     height: 3.2rem
   }
 
@@ -388,7 +367,6 @@
     transform: translateY(0%)
   }
   .sidebar {
-    border-right: 1px solid #E1E1E1;
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -417,6 +395,7 @@
     text-decoration: none
   }
   .account_nav--item--text {
+    user-select: none;
     color: white;
     text-decoration: none;
     position: relative;
@@ -436,20 +415,30 @@
     vertical-align: bottom;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .account_nav--item--icon path:not(.transparent) {
+  .account_nav--item--icon:not(.transparent) path {
     fill: white
   }
 
   /* GLOBAL: QUILL */
-  div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
+  .ql-toolbar.ql-snow {
     border: none;
-    padding: 0
+    padding: .4rem .6rem .4rem .6rem;
+    position: fixed;
+    top: 25%;
+    right: 0;
+    border-radius: 3px;
+    background-color: #F4F4F4;
+    z-index: 2
   }
-  .ql-formats {
-    transform: translateX(-5px)
+  .ql-toolbar.ql-snow .ql-formats {
+    display: grid;
+    margin: 0
   }
-  .ql-snow .ql-stroke {
-    stroke: #282828
+  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+    margin: .4rem 0
+  }
+  .ui.attached.segment.ql-container.ql-snow {
+    border: none
   }
   .ql-editor {
     grid-area: body;
@@ -458,27 +447,21 @@
     padding: 0;
     transition: all 1s
   }
-  .ql-snow .ql-editor h1 {
+  div.ql-editor h1 {
     margin: 1.072rem 0
   }
-  .ql-snow .ql-editor h2 {
+  div.ql-editor h2 {
     margin: 1.245rem 0
   }
-  .ql-snow .ql-editor p {
+  div.ql-editor p {
     margin: 1rem 0
+  }
+  div.ql-editor img {
+    display: none
   }
   .ql-editor.ql-blank:before {
     margin: 1rem 0;
     left: 0
-  }
-  .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    color: #28282899
-  }
-  .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow.ql-toolbar button:hover .ql-stroke-miter, .ql-snow .ql-toolbar button:hover .ql-stroke-miter, .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
-    stroke: #28282899
-  }
-  .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
-    fill: #28282899
   }
 
   /* GLOBAL: SCROLLBAR */
@@ -487,13 +470,13 @@
     height: 10px
   }
   ::-webkit-scrollbar-track {
-    background: #28282815
+    background-color: #28282821
   }
   ::-webkit-scrollbar-thumb {
-    background: #28282850
+    background-color: #28282890
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #28282860
+    background-color: #28282860
   }
 
   /* ARCHIVE AND HOME STYLES */
@@ -586,9 +569,68 @@
     font-weight: bold
   }
 
+  /* GLOBAL: SPLASH */
+  .splash {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0
+  }
+  .box {
+    position: relative;
+    top: calc(50% - 8rem);
+    border: .25rem solid #282828;
+    border-radius: 3px;
+    height: 8rem;
+    width: 8rem;
+    outline: 0;
+    overflow: hidden;
+    background-color: #282828;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: flashing 1s ease-in-out alternate-reverse infinite
+  }
+  .box:after {
+    content: '';
+    position: absolute;
+    background: white;
+    height: 16rem;
+    width: 16rem;
+    bottom: -50%;
+    left: -50%;
+    border-radius: 35%;
+    animation: spin 6s ease-in-out forwards
+  }
+  .box .logo--svg {
+    height: 50%;
+    width: auto
+  }
+  @keyframes spin {
+    0% {
+      transform: translateY(0) rotate(0deg)
+    }
+    100% {
+      transform: translateY(-100%) rotate(500deg)
+    }
+  }
+  @keyframes flashing {
+    0% {
+      opacity: .7
+    }
+    100% {
+      opacity: 1
+    }
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -605,14 +647,22 @@
     .sidebar:hover {
       width: 12rem
     }
-  }
-  @media (min-width: 768px) {
     .title-icon {
       height: 48px;
       width: 48px
     }
   }
   @media (max-width: 768px) {
+    /* Containers */
+    .quill {
+      width: 90%
+    }
+
+    /* Quill */
+    .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
+      margin: .2rem 0
+    }
+
     /* Sidebar */
     .logo {
       display: none
@@ -631,7 +681,7 @@
     main {
       margin: 0
     }
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -643,27 +693,6 @@
     }
     .account_nav--item--icon {
       margin: 0
-    }
-    .ql-snow .ql-formats button {
-      margin: .2rem
-    }
-    .ql-snow .ql-formats {
-      display: flex;
-      justify-content: space-evenly;
-      position: fixed;
-      bottom: 60.8px;
-      left: 0;
-      z-index: 99;
-      background-color: white;
-      border-radius: 3px;
-      box-shadow: 0 0 20px 10px #28282810;
-      width: 100vw;
-      padding: .6rem;
-      overflow-x: auto
-    }
-    .ql-formats {
-      margin: 0;
-      transform: none
     }
   }
 
@@ -683,7 +712,7 @@
       font-size: 1.6rem
     }
 
-    /* Blocks Page */
+    /* plans Page */
     .fc-view-container {
       width: 90vw;
       overflow-x: auto
@@ -695,18 +724,13 @@
       width: 200vw
     }
   }
-  @media (max-width: 380px) {
-    .ql-snow .ql-formats button {
-      margin: .05rem
-    }
-  }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats {
       transition: none
     }
     .sidebar {
@@ -723,6 +747,13 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
+    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+      <div v-show="splashing && authenticated" class="splash">
+        <div class="box">
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" />
+        </div>
+      </div>
+    </transition>
     <modal name="error" height="auto" :adaptive="true">
       <div class="modal--error">
         <p><b>Something went wrong. Please try again...</b></p><br>
@@ -737,7 +768,7 @@
       Skip to content
     </a>
     <nav class="sidebar" v-if="authenticated && claims">
-      <div class="logo animate animate__bounceInDown animate__delay-2s">
+      <div class="logo">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
         </router-link>
@@ -764,6 +795,14 @@
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
             Help
+          </p>
+        </router-link>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/templates" title="Templates">
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon transparent" aria-label="Templates"/>
+          <p class="account_nav--item--text">
+            Templates
           </p>
         </router-link>
       </div>
@@ -805,57 +844,53 @@ import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import {deleteEmail, deleteEmailText} from './components/components/email'
+import {deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText} from './components/components/email'
 
 export default {
   components: {
     InlineSvg,
     Loading
   },
-  data: function () {
+  data () {
     return {
-
-      // BACKGROUND DATA //
-
-      programmes: null,
-      error: '',
-      archive_error: '',
-      archive_posts: {},
-      no_archive: false,
-      posts: null,
+      splashing: true,
+      archive: {
+        clients: {},
+        no_archive: false
+      },
+      clients: null,
+      no_clients: false,
       claims: {
         user_type: 0
       },
       client_details: null,
-      loading_clients: true,
+      clientUser: {
+        plans: null
+      },
+
+      // BACKGROUND DATA //
+
+      errorMsg: null,
       loading: false,
       dontLeave: false,
-      no_clients: false,
-      errorMsg: null,
-
-      // USER DATA //
-
       authenticated: false,
-
-      // QUILL DATA //
-
-      config: {
+      quill_config: {
+        theme: 'snow',
         placeholder: 'Type away...',
         modules: {
           clipboard: {
             matchVisual: false
           },
           toolbar: [
-            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
           ]
         }
       },
-
-      // PWA //
-
-      deferredPrompt: null,
-      displayMode: 'browser tab',
-      canInstall: false
+      pwa: {
+        deferredPrompt: null,
+        displayMode: 'browser tab',
+        canInstall: false
+      }
     }
   },
   created () {
@@ -878,6 +913,9 @@ export default {
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.displayMode = 'standalone'
     }
+    setTimeout(() => {
+      this.splashing = false
+    }, 6000)
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -914,11 +952,11 @@ export default {
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
     },
-    sortWorkoutsBlock () {
-      this.programmes.forEach((block) => {
+    sortSessionsPlan () {
+      this.clientUser.plans.forEach((plan) => {
         //eslint-disable-next-line
-        if (block.id == this.$route.params.id) {
-          block.workouts.sort((a, b) => {
+        if (plan.id == this.$route.params.id) {
+          plan.sessions.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
           })
         }
@@ -958,7 +996,7 @@ export default {
       var d = new Date()
       var n = d.getTime()
       if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.clients()
+        await this.clients_f()
         localStorage.setItem('firstLoaded', true)
         localStorage.setItem('loadTime', n)
       }
@@ -968,56 +1006,67 @@ export default {
     // CLIENT METHODS //-------------------------------------------------------------------------------
 
     async clients_to_vue () {
-      if (!localStorage.getItem('posts')) {
-        await this.clients()
+      this.loading = true
+      if (!localStorage.getItem('clients')) {
+        await this.clients_f()
       }
-      this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+      this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
         var textA = a.name.toUpperCase()
         var textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
-      this.loading_clients = false
+      this.loading = false
     },
-    async clients () {
-      this.error = false
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+    async clients_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
         if (response.data.length === 0) {
           this.no_clients = true
         } else {
           this.no_clients = false
-          this.error = false
         }
-        localStorage.setItem('posts', JSON.stringify(response.data))
-        this.loading_clients = false
+        localStorage.setItem('clients', JSON.stringify(response.data))
+        this.loading = false
       } catch (e) {
         this.no_clients = false
-        this.loading_clients = false
-        this.error = e.toString()
+        this.loading = false
+        this.errorMsg = e.toString()
+        this.$modal.show('error')
+        console.error(e)
       }
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.archive_posts.length; i++) {
+        for (var i = 0; i < this.archive.clients.length; i++) {
           //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
+          if (this.archive.clients[i].client_id == id) {
+            this.archive.clients.splice(index, 1)
+            if (this.archive.clients.length === 0) {
+              this.archive.no_archive = true
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
+          await axios.delete(`https://api.traininblocks.com/clients/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'delete')
           this.loading = false
@@ -1025,7 +1074,7 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
           console.error(e)
         }
@@ -1035,34 +1084,39 @@ export default {
     // CLIENT ARCHIVE METHODS //-------------------------------------------------------------------------------
 
     async archive_to_vue () {
+      this.loading = true
       if (!localStorage.getItem('archive')) {
-        await this.archive()
+        await this.archive_f()
       }
       if (JSON.parse(localStorage.getItem('archive')).length === 0) {
-        this.no_archive = true
+        this.archive.no_archive = true
       } else {
-        this.archive_posts = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
+        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
           var textA = a.name.toUpperCase()
           var textB = b.name.toUpperCase()
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
       }
+      this.loading = false
     },
-    async archive () {
-      this.archive_error = false
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+    async archive_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
         if (response.data.length === 0) {
-          this.no_archive = true
+          this.archive.no_archive = true
         } else {
-          this.no_archive = false
-          this.archive_error = false
+          this.archive.no_archive = false
         }
         localStorage.setItem('archive', JSON.stringify(response.data))
       } catch (e) {
-        this.no_archive = false
-        this.archive_error = e.toString()
+        this.archive.no_archive = false
+        this.error = e.toString()
       }
     },
     async client_archive (id, index) {
@@ -1070,27 +1124,31 @@ export default {
         let email
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.posts.length; i++) {
+        for (var i = 0; i < this.clients.length; i++) {
           //eslint-disable-next-line
-          if (this.posts[i].client_id == id) {
-            email = this.posts[i].email
-            this.posts.splice(index, 1)
-            if (this.posts.length === 0) {
+          if (this.clients[i].client_id == id) {
+            email = this.clients[i].email
+            this.clients.splice(index, 1)
+            if (this.clients.length === 0) {
               this.no_clients = true
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
-          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
+          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
           // eslint-disable-next-line
           this.response = response.data
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
           this.$ga.event('Client', 'archive')
 
@@ -1154,7 +1212,7 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
           console.error(e)
         }
@@ -1164,36 +1222,39 @@ export default {
       if (confirm('Are you sure you want to unarchive this client?')) {
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.archive_posts.length; i++) {
+        for (var i = 0; i < this.archive.clients.length; i++) {
           //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            var arr = JSON.parse(localStorage.getItem('posts'))
-            arr.push(this.archive_posts[i])
+          if (this.archive.clients[i].client_id == id) {
+            var arr = JSON.parse(localStorage.getItem('clients'))
+            arr.push(this.archive.clients[i])
 
-            localStorage.setItem('posts', JSON.stringify(arr))
-            this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+            localStorage.setItem('clients', JSON.stringify(arr))
+            this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
               var textA = a.name.toUpperCase()
               var textB = b.name.toUpperCase()
               return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
             })
 
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
+            this.archive.clients.splice(index, 1)
+            if (this.archive.clients.length === 0) {
+              this.archive.no_archive = true
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
-          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-          // eslint-disable-next-line
+          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
           this.response = response.data
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
           this.loading = false
@@ -1201,67 +1262,81 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
           console.error(e)
         }
       }
     },
 
-    // DATABSE METHODS //-------------------------------------------------------------------------------
+    // DATABASE METHODS //-------------------------------------------------------------------------------
 
-    async get_programmes () {
+    async get_plans () {
       try {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
-        this.programmes = programmes.data
+        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
+        this.clientUser.plans = plans.data
         var f
-        for (f in this.programmes) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          // eslint-disable-next-line
-          const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
-
-          this.programmes[f].workouts = response_programmes.data
+        for (f in this.clientUser.plans) {
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
+          this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
         console.error(e)
       }
     },
-    async get_workouts () {
+    async get_sessions () {
       try {
         var f
-        for (f in this.programmes) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
-          this.programmes[f].workouts = response.data
+        for (f in this.clientUser.plans) {
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+              }
+            }
+          )
+          this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
         console.error(e)
       }
     },
-    async update_workout (pid, wid) {
+    async update_session (pid, wid) {
       this.loading = true
-      // Set auth header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
+      // Set the plan variable to the current plan
       let x
-      // Set the programme variable to the current programme
-      for (x in this.programmes) {
-        //eslint-disable-next-line
-        if (this.programmes[x].id == pid) {
-          var programme = this.programmes[x]
+      for (x in this.clientUser.plans) {
+        // eslint-disable-next-line
+        if (this.clientUser.plans[x].id == pid) {
+          var plan = this.clientUser.plans[x]
           var y
-          for (y in programme.workouts) {
-            if (programme.workouts[y].id === wid) {
-              var workoutsId = programme.workouts[y].id
-              var workoutsChecked = programme.workouts[y].checked
-              var workoutsFeedback = programme.workouts[y].feedback
+          for (y in plan.sessions) {
+            if (plan.sessions[y].id === wid) {
+              var sessionId = plan.sessions[y].id
+              var sessionName = plan.sessions[y].name
+              var sessionChecked = plan.sessions[y].checked
+              var sessionFeedback = plan.sessions[y].feedback
+              var sessionName = plan.sessions[y].name
             }
           }
         }
@@ -1269,21 +1344,85 @@ export default {
       try {
         await axios.post(`https://api.traininblocks.com/client-workouts`,
           {
-            'id': workoutsId,
-            'checked': workoutsChecked,
-            'feedback': workoutsFeedback
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          },
+          {
+            'id': sessionId,
+            'name': sessionName,
+            'checked': sessionChecked,
+            'feedback': sessionFeedback
           }
         )
-        this.$ga.event('Workout', 'update')
+        this.$ga.event('Session', 'update')
+        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+            }
+          }
+        )
+        if (client.data[0].notifications === 1) {
+          if (sessionFeedback !== null) {
+            var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
+              {
+                headers: {
+                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
+                }
+              },
+              {
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.AUTH_HEADER
+                }
+              }
+            )
+            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+              {
+                'personalizations': [
+                  {
+                    'to': [
+                      {
+                        'email': ptEmail.data[0].credentials.emails[0].value
+                      }
+                    ],
+                    'subject': this.claims.email + ' has submitted feedback for ' + sessionName
+                  }
+                ],
+                'from': {
+                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
+                },
+                'content': [
+                  {
+                    'type': 'text/plain',
+                    'value': feedbackEmailText(this.claims.client_id_db, pid)
+                  },
+                  {
+                    'type': 'text/html',
+                    'value': feedbackEmail(this.claims.client_id_db, pid)
+                  }
+                ]
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': process.env.SENDGRID
+                }
+              }
+            )
+          }
+        }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
         console.error(e)
       }
-      await this.get_workouts()
-      this.sortWorkoutsBlock()
       this.loading = false
+      this.dontLeave = false
     }
   }
 }

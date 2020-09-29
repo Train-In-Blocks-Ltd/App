@@ -4,19 +4,19 @@
     margin: 4rem auto
   }
 
-  /* Blocks */
-  .blocks_grid {
+  /* Plans */
+  .plans_grid {
     display: grid;
     grid-gap: 2rem;
     margin-bottom: 2rem
   }
-  .block_container:first-of-type {
+  .plan_container:first-of-type {
     margin-left: 0
   }
-  .block_container:last-of-type {
+  .plan_container:last-of-type {
     margin-right: 0
   }
-  .block_container--link {
+  .plan_container--link {
     display: grid;
     position: relative;
     grid-gap: 1rem;
@@ -25,7 +25,7 @@
     padding: 1rem 0;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
-  .block_container--link:before {
+  .plan_container--link:before {
     content: '';
     position: absolute;
     opacity: .4;
@@ -36,73 +36,59 @@
     background-color: #282828;
     transition: all .6s cubic-bezier(.075, .82, .165, 1)
   }
-  .block_container--link:hover:before {
+  .plan_container--link:hover:before {
     width: 100%;
     opacity: 1
   }
-  .block_container--link__block-notes {
+  .plan_container--link__plan-notes {
     font-size: .8rem
   }
-  .block_container--link h3 {
+  .plan_container--link h3 {
     margin-top: 0;
     font-size: 1.4rem;
     margin-bottom: 0;
     overflow: hidden;
     text-overflow: ellipsis
   }
-  .more-block-info {
+  .more-plan-info {
     margin-top: 1rem
   }
-  .block_container--link p {
+  .plan_container--link p {
     font-size: .8rem;
     font-weight: 500
   }
-  .block_container--link p:last-of-type {
+  .plan_container--link p:last-of-type {
     margin-bottom: 0
   }
 
-  /* Add Block Form */
-  .add_block_container {
+  /* Add plan Form */
+  .add_plan_container {
     padding-top: 1rem
   }
-  .add_block_container h3 {
+  .add_plan_container h3 {
     margin-top: 0
   }
-  .add_block {
+  .add_plan {
     grid-gap: 1rem
   }
-  .add_block label {
+  .add_plan label {
     display: grid;
     grid-gap: .5rem
-  }
-
-  @media (min-width: 1024px) {
-    .block_container--link {
-      grid-template: 1fr/.8fr 1fr;
-      grid-gap: 2rem
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    .blocks_grid {
-      grid-template-columns: 1fr
-    }
   }
 </style>
 <template>
     <div>
-      <modal name="help-block" height="auto" :adaptive="true">
-        <div class="modal--help-block">
-          <p><i>Blocks</i> are the different cycles within your client's programme. It contains the different microcycles of sessions.</p><br>
-          <p>You will be able to track, visualise and progress the sessions within a <i>Block</i>.</p>
+      <modal name="help-plan" height="auto" :adaptive="true">
+        <div class="modal--help-plan">
+          <p><i>Plans</i> are the different cycles within your client's plan. It contains the different microcycles of sessions.</p><br>
+          <p>You will be able to track, visualise and progress the Plan.</p>
         </div>
       </modal>
       <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
         <div class="client-notes__header">
           <p><b>Client Information</b></p>
         </div>
-        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.config"/>
+        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
         <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn"/>
         <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="show-client-notes">No client notes added...</p>
         <div class="bottom-bar">
@@ -116,36 +102,43 @@
       <div>
         <div class="flex">
           <div class="container--title">
-            <inline-svg :src="require('../../../assets/svg/programme.svg')" class="title-icon"/>
-            <h2 class="sub-title no-margin">Blocks</h2>
+            <inline-svg :src="require('../../../assets/svg/plan.svg')" class="title-icon"/>
+            <h2 class="sub-title no-margin">Plans</h2>
           </div>
-          <inline-svg class="sub-title tooltip" @click="$modal.show('help-block')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
+          <inline-svg class="sub-title tooltip" @click="$modal.show('help-plan')" :src="require('../../../assets/svg/help-tooltip.svg')"/>
         </div>
-        <p v-if="this.$parent.no_programmes">No programmes yet. You can add one below.</p>
-        <p v-if="this.$parent.loading_programmes">Loading programmes...</p>
-        <div v-if="!this.$parent.no_programmes" class="blocks_grid">
-          <div v-for="(block, index) in this.$parent.$parent.client_details.programmes"
-              :key="index" class="block_container">
-              <router-link class="block_container--link" :to="'block/' + block.id">
-                <div class="block_container--link__info">
-                  <h3>{{block.name}}</h3>
-                  <div class="more-block-info">
-                    <p><b>Duration: </b>{{block.duration}}</p>
-                    <p><b>Start: </b>{{block.start}}</p>
+        <p v-if="this.$parent.no_plans">No plans yet. You can add one below.</p>
+        <p v-if="this.$parent.loading_plans">Loading plans...</p>
+        <div v-if="!this.$parent.no_plans" class="plans_grid">
+          <div v-for="(plan, index) in this.$parent.$parent.client_details.plans"
+              :key="index" class="plan_container">
+              <router-link class="plan_container--link" :to="'plan/' + plan.id">
+                <div class="plan_container--link__info">
+                  <h3>{{plan.name}}</h3>
+                  <div class="more-plan-info">
+                    <p><b>Duration: </b>{{plan.duration}}</p>
+                    <p><b>Start: </b>{{plan.start}}</p>
                   </div>
                 </div>
-                <div v-html="block.notes" class="block_container--link__block-notes" />
+                <div v-html="plan.notes" class="plan_container--link__plan-notes" />
               </router-link>
           </div>
         </div>
-        <button v-if="!creating" @click="creation()">New Block</button>
+        <button v-if="!creating" @click="creation()">New Plan</button>
         <p class="new-msg" v-if="!creating">{{response}}</p>
-        <div v-if="creating" class="add_block_container">
-          <h3>New Block</h3>
-          <form class="form_grid add_block" name="add_programme" @submit.prevent="save()">
-            <label><b>Name: </b><input class="input--forms" type="text" v-model="new_block.name" required/></label>
-            <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_block.duration" required/></label>
-            <label><b>Start: </b><input class="input--forms" type="date" v-model="new_block.start" required /></label>
+        <div v-if="creating" class="add_plan_container">
+          <h3>New Plan</h3>
+          <form class="form_grid add_plan" name="add_plan" @submit.prevent="save()">
+            <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>
+            <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/></label>
+            <label><b>Start: </b><input class="input--forms" type="date" v-model="new_plan.start" required /></label>
+            <label><b>Type: </b>
+              <select class="input--forms" v-model="new_plan.type" required>
+                <option value="" disabled selected>Select a type</option>
+                <option value="nutrition">Nutrition</option>
+                <option value="exercise">Exercise</option>
+              </select>
+            </label>
             <div class="form_buttons">
               <button type="submit">Save</button>
               <button class="cancel" @click="close()">Close</button>
@@ -158,7 +151,6 @@
 
 <script>
   import axios from 'axios'
-  import qs from 'qs'
   import InlineSvg from 'vue-inline-svg'
 
   export default {
@@ -166,16 +158,19 @@
       InlineSvg
     },
     created () {
+      this.loading = true
       this.$parent.checkClient()
+      this.loading = false
     },
     data () {
       return {
         response: '',
         creating: false,
-        new_block: {
+        new_plan: {
           name: '',
           duration: '',
-          start: ''
+          start: '',
+          type: ''
         },
         editClientNotes: false
       }
@@ -218,46 +213,48 @@
         try {
           this.$parent.$parent.loading = true
           this.$parent.$parent.dontLeave = true
-          // eslint-disable-next-line
-          const response_save_block = await axios.put('https://api.traininblocks.com/programmes',
-            qs.stringify({
-              name: this.new_block.name,
-              client_id: this.$parent.$parent.client_details.client_id,
-              duration: this.new_block.duration,
-              start: this.new_block.start,
-              block_color: ''
-            }),
+          await axios.put('https://api.traininblocks.com/programmes',
+            {
+              'name': this.new_plan.name,
+              'client_id': this.$parent.$parent.client_details.client_id,
+              'duration': this.new_plan.duration,
+              'start': this.new_plan.start,
+              'type': this.new_plan.type,
+              'block_color': ''
+            },
             {
               headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
               }
             }
           )
-          this.response = 'Added New Block'
+          this.response = 'Added New Plan'
           this.$parent.$parent.responseDelay()
 
-          // Set old programmes to null so that they can be repopulated
+          // Set old plans to null so that they can be repopulated
           var x
-          for (x in this.$parent.$parent.posts) {
-            if (this.$parent.$parent.posts[x].client_id === this.$route.params.client_id) {
-              this.$parent.$parent.posts[x].programmes = null
+          for (x in this.$parent.$parent.clients) {
+            if (this.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
+              this.$parent.$parent.clients[x].plans = null
             }
           }
-          // Get the new programmes
-          await this.$parent.force_get_client_details()
+          // Get the new plans
+          var force = true
+          await this.$parent.get_client_details(force)
 
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
 
           this.close()
 
-          this.new_block = {
+          this.new_plan = {
             name: '',
             duration: '',
-            start: ''
+            start: '',
+            type: ''
           }
-          this.$ga.event('Block', 'new')
+          this.$ga.event('Plan', 'new')
         } catch (e) {
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false

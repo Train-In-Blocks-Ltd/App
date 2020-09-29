@@ -69,7 +69,7 @@
         <form @submit.prevent="changePass()">
           <label>
             <p><b>Current Password</b></p>
-            <input type="password" class="input--forms" v-model="oldPassword"/>
+            <input type="password" class="input--forms" v-model="password.old"/>
           </label>
           <br>
           <br>
@@ -80,13 +80,13 @@
             <p>At least 8 characters</p>
             <p>Can't contain your username</p><br>
             <p><b>New Password</b></p>
-            <input type="password" class="input--forms" v-model="newPassword" @input="checkPass" v-bind:class="{check: check}"/>
+            <input type="password" class="input--forms" v-model="password.new" @input="checkPass" v-bind:class="{check: password.check}"/>
           </label>
           <br>
           <br>
-          <button type="submit" :disabled="check">Change your password</button>
-          <p v-if="this.error" class="error">{{this.error}}</p>
-          <p v-if="this.msg">{{this.msg}}</p>
+          <button type="submit" :disabled="password.check">Change your password</button>
+          <p v-if="this.password.error" class="error">{{this.password.error}}</p>
+          <p v-if="this.password.msg">{{this.password.msg}}</p>
         </form>
       </div>
     </modal>
@@ -117,7 +117,7 @@
         </div>
       </div>
     </form><br><br>
-    <p style="font-size: .8rem"><b>Version 1.2</b></p>
+    <p style="font-size: .8rem"><b>Version 1.4</b></p>
   </div>
 </template>
 
@@ -126,13 +126,15 @@
   import {passChangeEmail, passChangeEmailText} from '../components/email'
 
   export default {
-    data: function () {
+    data () {
       return {
-        oldPassword: null,
-        newPassword: null,
-        check: null,
-        error: null,
-        msg: null
+        password: {
+          old: null,
+          new: null,
+          check: null,
+          error: null,
+          msg: null
+        }
       }
     },
     created () {
@@ -175,10 +177,10 @@
       // PASSWORD METHODS //-------------------------------------------------------------------------------
 
       checkPass () {
-        if (!this.newPassword.includes(this.$parent.claims.email) && this.newPassword.match(/[0-9]+/) && this.newPassword.length >= 8 && this.oldPassword.length >= 1) {
-          this.check = false
+        if (!this.password.new.includes(this.$parent.claims.email) && this.password.new.match(/[0-9]+/) && this.password.new.length >= 8 && this.password.old.length >= 1) {
+          this.password.check = false
         } else {
-          this.check = true
+          this.password.check = true
         }
       },
       async changePass () {
@@ -188,8 +190,8 @@
           this.error = ''
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}/credentials/change_password`,
             {
-              'oldPassword': this.oldPassword,
-              'newPassword': this.newPassword
+              'password.old': this.password.old,
+              'password.new': this.password.new
             },
             {
               headers: {
@@ -214,7 +216,7 @@
           this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
-          this.error = 'Something went wrong. Please make sure that your password is correct'
+          this.password.error = 'Something went wrong. Please make sure that your password is correct'
           this.$parent.dontLeave = false
           console.error(e)
         }
@@ -229,6 +231,7 @@
           window.location.href = response.data
         } catch (e) {
           this.$parent.loading = false
+          this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
           console.error(e)
