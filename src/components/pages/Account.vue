@@ -222,7 +222,7 @@
       async manageSubscription () {
         try {
           const response = await axios.post('/.netlify/functions/create-manage-link',
-            { 
+            {
               'id': this.$parent.claims.stripeId
             }
           )

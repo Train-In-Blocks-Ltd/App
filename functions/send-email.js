@@ -22,6 +22,7 @@ exports.handler = async function handler (event, context, callback) {
     })
   } else if (event.body) {
     try {
+      /*
       sendgrid.setApiKey(key)
       const msg = {
         to: event.body.to,
@@ -31,10 +32,11 @@ exports.handler = async function handler (event, context, callback) {
         html: event.body.html
       }
       await sendgrid.send(msg)
+      */
       return callback(null, {
         statusCode: 200,
         headers: headers,
-        body: 'Message Sent'
+        body: event.body
       })
     } catch (e) {
       return callback(null, {
