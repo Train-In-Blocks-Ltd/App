@@ -130,7 +130,7 @@
   export default {
     components: {
       InlineSvg
-    } /*
+    }/*
     methods: {
 
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
@@ -207,6 +207,6 @@
         this.isEditingTemplate = false
         window.removeEventListener('keydown', this.quickSaveTemplateNotes)
       }
-    }*/
+    } */
   }
 </script>

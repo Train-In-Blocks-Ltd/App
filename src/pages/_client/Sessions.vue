@@ -418,7 +418,7 @@
         </form>
       </modal>
       <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
-        <inline-svg :src="require('../../../assets/svg/stats.svg')" aria-label="Statistics"/>
+        <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
       </div>
       <div class="open-stats-animation">
@@ -549,7 +549,7 @@
               <div class="graph" v-if="isStatsOpen">
                 <div class="section--top">
                   <h3 class="section-title">Statistics</h3>
-                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" class="icon--options" :src="require('../../../assets/svg/close.svg')" aria-label="Close"/>
+                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
                 <div>
                   <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>

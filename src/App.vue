@@ -913,12 +913,12 @@ export default {
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
     willBodyScroll (state) {
-      const body = document.getElementsByTagName("body")[0]
+      const body = document.getElementsByTagName('body')[0]
       if (state) {
         body.style.overflow = 'auto'
       } else {
         body.style.overflow = 'hidden'
-      } 
+      }
     },
     confirmLeave (e) {
       if (this.dontLeave === true) {
