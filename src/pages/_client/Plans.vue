@@ -1,7 +1,7 @@
 <style scoped>
   /* Client Notes */
   .client-notes {
-    margin: 4rem auto
+    margin-top: 4rem
   }
   .client-notes__header {
     display: flex
@@ -19,12 +19,12 @@
   .client-notes-msg {
     margin: 1rem 0
   }
-  .plan_link__notes__content {
-    font-size: .8rem;
-    margin-top: .4rem
-  }
 
   /* Plans */
+  .plan-top-bar {
+    display: flex;
+    justify-content: flex-end
+  }
   .plans_grid {
     display: grid;
     grid-gap: 2rem;
@@ -32,6 +32,9 @@
   }
 
   /* Add plan Form */
+  .button--new-plan {
+    margin: 1rem 0 2rem 0
+  }
   .add_plan_link {
     padding-top: 1rem
   }
@@ -48,6 +51,29 @@
 </style>
 <template>
     <div>
+      <modal name="new-plan" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+        <div class="modal--new-plan">
+          <div class="wrapper--centered-item">
+            <h3>New Plan</h3>
+            <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.willBodyScroll(true)">
+              <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>
+              <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/></label>
+              <label><b>Start: </b><input class="input--forms" type="date" v-model="new_plan.start" required /></label>
+              <label><b>Type: </b>
+                <select class="input--forms" v-model="new_plan.type" required>
+                  <option value="" disabled selected>Select a type</option>
+                  <option value="nutrition">Nutrition</option>
+                  <option value="exercise">Exercise</option>
+                </select>
+              </label>
+              <div class="form_buttons">
+                <button type="submit">Save</button>
+                <button class="cancel" @click.prevent="response = '', $modal.hide('new-plan'), $parent.willBodyScroll(true)">Close</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </modal>
       <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
         <div class="client-notes__header">
           <p class="text--small">Client Information</p>
@@ -71,7 +97,11 @@
         </div>
       </div>
       <div>
-        <p v-if="this.$parent.no_plans">No plans yet. You can add one below.</p>
+        <div class="plan-top-bar">
+          <button class="button--new-plan" @click="$modal.show('new-plan'), $parent.willBodyScroll(false)">New Plan</button>
+        </div>
+        <p class="new-msg" v-if="response !== ''">{{response}}</p>
+        <p v-if="this.$parent.no_plans">No plans created :(</p>
         <p v-if="this.$parent.loading_plans">Loading plans...</p>
         <div v-if="!this.$parent.no_plans" class="plans_grid">
           <router-link
@@ -82,27 +112,6 @@
             <h3 class="text--small plan-name">{{plan.name}}</h3>
             <div v-html="plan.notes" class="plan_link__notes__content" />
           </router-link>
-        </div>
-        <button v-if="!creating" @click="creation()">New Plan</button>
-        <p class="new-msg" v-if="!creating">{{response}}</p>
-        <div v-if="creating" class="add_plan_link">
-          <h3>New Plan</h3>
-          <form class="form_grid add_plan" name="add_plan" @submit.prevent="save()">
-            <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>
-            <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/></label>
-            <label><b>Start: </b><input class="input--forms" type="date" v-model="new_plan.start" required /></label>
-            <label><b>Type: </b>
-              <select class="input--forms" v-model="new_plan.type" required>
-                <option value="" disabled selected>Select a type</option>
-                <option value="nutrition">Nutrition</option>
-                <option value="exercise">Exercise</option>
-              </select>
-            </label>
-            <div class="form_buttons">
-              <button type="submit">Save</button>
-              <button class="cancel" @click="close()">Close</button>
-            </div>
-          </form>
         </div>
       </div>
     </div>
@@ -161,13 +170,6 @@
 
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
 
-      creation () {
-        this.creating = true
-      },
-      close () {
-        this.creating = false
-        this.response = ''
-      },
       async save () {
         try {
           this.$parent.$parent.loading = true

@@ -75,10 +75,7 @@
 
   /* GLOBAL: CONTAINERS */
   #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
-    padding: 2rem 10vw 10rem
-  }
-  .modal--error {
-    padding: 2rem
+    padding: 2rem 10vw
   }
   .flex {
     display: flex
@@ -92,11 +89,14 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
     margin: 0 0 1.5rem 0
+  }
+  div.vm--modal {
+    min-width: 100%
   }
 
   /* GLOBAL: SVG */
@@ -303,7 +303,6 @@
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 300px;
     margin: 0
   }
   .form_buttons {
@@ -312,6 +311,10 @@
     place-content: start;
     grid-auto-flow: column;
     margin-bottom: 1rem
+  }
+  .wrapper--centered-item {
+    margin: 0 auto;
+    max-width: 300px
   }
 
   /* GLOBAL: LOGO */
@@ -324,6 +327,10 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
+    fill: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .sidebar:hover svg.logo--svg path {
     fill: #282828
   }
   .logo--link:hover {
@@ -470,54 +477,6 @@
   }
   .client_container p {
     margin: 0
-  }
-
-  /* GLOBAL: LINK CONTAINERS */
-  .client_link, .plan_link {
-    display: grid;
-    padding: 2rem;
-    grid-gap: 1rem;
-    font-weight: 400;
-    color: #282828;
-    text-decoration: none;
-    box-shadow: 0 0 20px 10px #28282810;
-    border-radius: 3px;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:not(.archived):hover, .plan_link:hover {
-    transform: scale(1.02)
-  }
-  .client_link:not(.archived):active, .plan_link:active {
-    transform: scale(1)
-  }
-  .client_link__notes__content, .plan_link__notes__content {
-    font-size: .8rem;
-    margin-top: .4rem
-  }
-  .client_link__notes__content *, .plan_link__notes__content * {
-    color: #28282890;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content * {
-    color: #282828
-  }
-  .client_link__notes__content p, .plan_link__notes__content p {
-    margin: .4rem 0
-  }
-  .client_name, .plan-name {
-    margin: 0
-  }
-  .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
-    font-size: 1rem
-  }
-  .client_link__notes__content img, .plan_container--link__plan-notes img {
-    margin: 1rem 0;
-    max-width: 100%;
-    opacity: .6;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:hover .client_link__notes__content img, .plan_link:hover .plan_container--link__plan-notes img {
-    opacity: 1
   }
 
   /* GLOBAL: CLIENT-SIDE */
@@ -695,7 +654,7 @@
     }
   }
 
-  /* Reduced motion */
+  /* GLOBAL: REDUCED MOTION */
   @media (prefers-reduced-motion: reduce) {
     button:active, .button:active {
       transform: scale(1)
@@ -724,7 +683,7 @@
         </div>
       </div>
     </transition>
-    <modal name="error" height="auto" :adaptive="true">
+    <modal name="error" height="auto">
       <div class="modal--error">
         <p><b>Something went wrong. Please try again...</b></p><br>
         <p>{{errorMsg}}</p><br>
