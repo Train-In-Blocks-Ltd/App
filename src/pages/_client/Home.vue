@@ -210,8 +210,8 @@
 <script>
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
-  import {email, emailText, resetEmail, resetEmailText} from '../components/email'
-  import Toolkit from '../components/Toolkit.vue'
+  import {email, emailText, resetEmail, resetEmailText} from '../../components/email'
+  import Toolkit from '../../components/Toolkit.vue'
 
   export default {
     components: {

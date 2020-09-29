@@ -814,7 +814,7 @@ import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import {deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText} from './components/components/email'
+import {deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText} from './components/email'
 
 export default {
   components: {
@@ -1314,7 +1314,6 @@ export default {
               var sessionName = plan.sessions[y].name
               var sessionChecked = plan.sessions[y].checked
               var sessionFeedback = plan.sessions[y].feedback
-              var sessionName = plan.sessions[y].name
             }
           }
         }

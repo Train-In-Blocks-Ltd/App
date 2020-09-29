@@ -87,10 +87,10 @@
         >
           <div>
             <p class="text--small client-name">{{clients.name}}</p>
-            <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../../assets/svg/email.svg')" />
+            <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/email.svg')" />
               <p>{{clients.email}}</p>
             </div>
-            <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../../assets/svg/mobile.svg')" />
+            <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/mobile.svg')" />
               <p>{{clients.number}}</p>
             </div>
           </div>
