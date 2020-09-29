@@ -3,7 +3,6 @@ const stripe = require('stripe')('sk_live_51GLXT9BYbiJubfJM086mx3T1R8ZSPVoTy4ret
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
   'Content-Type': 'application/json; charset=UTF-8',
   'X-Frame-Options': 'DENY',
   'Strict-Transport-Security': 'max-age=15552000; preload',
@@ -13,7 +12,13 @@ const headers = {
 }
 
 exports.handler = async function handler (event, context, callback) {
-  if (JSON.parse(event.body).id) {
+  if (handler.httpMethod === 'OPTIONS') {
+    return callback(null, {
+      statusCode: 200,
+      headers: headers,
+      body: ''
+    })
+  } else if (event.body) {
     try {
       const link = await stripe.billingPortal.sessions.create({
         customer: JSON.parse(event.body).id,
@@ -22,7 +27,7 @@ exports.handler = async function handler (event, context, callback) {
       return callback(null, {
         statusCode: 200,
         headers: headers,
-        body: JSON.stringify(link.url)
+        body: link.url
       })
     } catch (e) {
       return callback(null, {
@@ -31,12 +36,6 @@ exports.handler = async function handler (event, context, callback) {
         body: ''
       })
     }
-  } else if (handler.httpMethod === 'OPTIONS') {
-    return callback(null, {
-      statusCode: 200,
-      headers: headers,
-      body: ''
-    })
   } else {
     return callback(null, {
       statusCode: 401,
