@@ -330,37 +330,12 @@
               }
             }
           )
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+          await axios.post('/.netlify/functions/send-email',
             {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': this.$parent.client_details.email
-                    }
-                  ],
-                  'subject': 'Welcome Back'
-                }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-                },
-                {
-                  'type': 'text/html',
-                  'value': resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-                }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
-              }
+              'to': this.$parent.client_details.email,
+              'subject': 'Welcome Back to Train In Blocks',
+              'text': resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+              'html': resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
           alert('An activation email was sent to your client.')
@@ -402,37 +377,12 @@
                 }
               }
             )
-            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            await axios.post('/.netlify/functions/send-email',
               {
-                'personalizations': [
-                  {
-                    'to': [
-                      {
-                        'email': this.$parent.client_details.email
-                      }
-                    ],
-                    'subject': 'Welcome to Train In Blocks'
-                  }
-                ],
-                'from': {
-                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
-                },
-                'content': [
-                  {
-                    'type': 'text/plain',
-                    'value': emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-                  },
-                  {
-                    'type': 'text/html',
-                    'value': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-                  }
-                ]
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.SENDGRID
-                }
+                'to': this.$parent.client_details.email,
+                'subject': 'Welcome to Train In Blocks',
+                'text': emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+                'html': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
               }
             )
             alert('An activation email was sent to your client.')

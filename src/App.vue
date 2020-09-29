@@ -1172,37 +1172,12 @@ export default {
                 }
               }
             )
-            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            await axios.post('/.netlify/functions/send-email',
               {
-                'personalizations': [
-                  {
-                    'to': [
-                      {
-                        'email': email
-                      }
-                    ],
-                    'subject': 'Account Deactivated'
-                  }
-                ],
-                'from': {
-                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
-                },
-                'content': [
-                  {
-                    'type': 'text/plain',
-                    'value': deleteEmailText()
-                  },
-                  {
-                    'type': 'text/html',
-                    'value': deleteEmail()
-                  }
-                ]
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.SENDGRID
-                }
+                'to': email,
+                'subject': 'Account Deactivated',
+                'text': deleteEmailText(),
+                'html': deleteEmail()
               }
             )
           }
@@ -1378,37 +1353,12 @@ export default {
                 }
               }
             )
-            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            await axios.post('/.netlify/functions/send-email',
               {
-                'personalizations': [
-                  {
-                    'to': [
-                      {
-                        'email': ptEmail.data[0].credentials.emails[0].value
-                      }
-                    ],
-                    'subject': this.claims.email + ' has submitted feedback for ' + sessionName
-                  }
-                ],
-                'from': {
-                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
-                },
-                'content': [
-                  {
-                    'type': 'text/plain',
-                    'value': feedbackEmailText(this.claims.client_id_db, pid)
-                  },
-                  {
-                    'type': 'text/html',
-                    'value': feedbackEmail(this.claims.client_id_db, pid)
-                  }
-                ]
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.SENDGRID
-                }
+                'to': ptEmail.data[0].credentials.emails[0].value,
+                'subject': this.claims.email + ' has submitted feedback for ' + sessionName,
+                'text': feedbackEmailText(this.claims.client_id_db, pid),
+                'html': feedbackEmail(this.claims.client_id_db, pid)
               }
             )
           }
