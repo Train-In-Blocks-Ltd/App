@@ -268,37 +268,12 @@ export default {
             }
           }
         )
-        await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+        await axios.post('/.netlify/functions/send-email',
           {
-            'personalizations': [
-              {
-                'to': [
-                  {
-                    'email': this.email
-                  }
-                ],
-                'subject': 'Password Reset'
-              }
-            ],
-            'from': {
-              'email': 'Train In Blocks <no-reply@traininblocks.com>'
-            },
-            'content': [
-              {
-                'type': 'text/plain',
-                'value': passEmailText(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-              },
-              {
-                'type': 'text/html',
-                'value': passEmail(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-              }
-            ]
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': process.env.SENDGRID
-            }
+            'to': this.email,
+            'subject': 'Password Reset',
+            'text': passEmailText(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+            'html': passEmail(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
           }
         )
         this.open = false
