@@ -1,4 +1,4 @@
-const key = 'Bearer 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'
+const key = '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'
 
 const sendgrid = require('@sendgrid/mail')
 
@@ -35,13 +35,13 @@ exports.handler = async function handler (event, context, callback) {
       return callback(null, {
         statusCode: 200,
         headers: headers,
-        body: {response: 'Email sent successfully'}
+        body: 'Email sent successfully'
       })
     } catch (e) {
       return callback(null, {
         statusCode: 502,
         headers: headers,
-        body: e
+        body: JSON.stringify(e)
       })
     }
   } else {

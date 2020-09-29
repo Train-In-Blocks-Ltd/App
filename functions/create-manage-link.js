@@ -33,7 +33,7 @@ exports.handler = async function handler (event, context, callback) {
       return callback(null, {
         statusCode: 502,
         headers: headers,
-        body: e
+        body: JSON.stringify(e)
       })
     }
   } else {
