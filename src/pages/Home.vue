@@ -78,6 +78,10 @@
   }
 
   /* Add New Client */
+  .button--new-client {
+    margin: 1rem 0 2rem 0;
+    justify-self: right
+  }
   .add_client {
     grid-gap: 1rem
   }
@@ -98,6 +102,22 @@
 
 <template>
   <div id="home">
+    <modal name="new-client" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <div class="modal--new-client">
+        <div class="wrapper--new-item-form">
+          <h3>New Client</h3>
+          <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save(), $modal.hide('new-client'), $parent.willBodyScroll(true)">
+            <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
+            <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
+            <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
+            <div class="form_buttons">
+              <button type="submit">Save</button>
+              <button class="cancel" @click.prevent="$modal.hide('new-client'), $parent.willBodyScroll(true)">Close</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </modal>
     <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
       Install App
     </button>
@@ -106,6 +126,8 @@
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
       <input type="search" rel="search" placeholder="Find a client" class="text--small search" autocomplete="name" aria-label="Find a client" v-model="search"/>
+      <button class="button--new-client" @click="$modal.show('new-client'), $parent.willBodyScroll(false)">New Client</button>
+      <p v-if="response !== ''" class="new-msg">{{response}}</p>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
         <router-link
@@ -118,20 +140,6 @@
           <client-link class="client_link" :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes"/>
         </router-link>
       </div>
-    </div>
-    <button v-if="!creating" class="button--new-client" @click="creation()">New Client</button>
-    <p v-if="!creating" class="new-msg">{{response}}</p>
-    <div v-if="creating">
-      <h3>New Client</h3>
-      <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save()">
-        <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
-        <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
-        <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
-        <div class="form_buttons">
-          <button type="submit">Save</button>
-          <button class="cancel" @click="close()">Close</button>
-        </div>
-      </form>
     </div>
   </div>
 </template>
@@ -149,7 +157,6 @@
     data () {
       return {
         response: '',
-        creating: false,
         new_client: {
           name: '',
           email: '',
@@ -164,12 +171,6 @@
       this.$parent.client_details = null
     },
     methods: {
-      creation () {
-        this.creating = true
-      },
-      close () {
-        this.creating = false
-      },
       async save () {
         if (this.new_client.email === this.$parent.claims.email) {
           this.$parent.errorMsg = 'You cannot create a client with your own email address!'

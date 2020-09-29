@@ -75,10 +75,7 @@
 
   /* GLOBAL: CONTAINERS */
   #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
-    padding: 2rem 10vw 10rem
-  }
-  .modal--error {
-    padding: 2rem
+    padding: 2rem 10vw
   }
   .flex {
     display: flex
@@ -92,11 +89,14 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
     margin: 0 0 1.5rem 0
+  }
+  div.vm--modal {
+    min-width: 100%
   }
 
   /* GLOBAL: SVG */
@@ -303,7 +303,6 @@
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 300px;
     margin: 0
   }
   .form_buttons {
@@ -312,6 +311,10 @@
     place-content: start;
     grid-auto-flow: column;
     margin-bottom: 1rem
+  }
+  .wrapper--new-item-form {
+    margin: 0 auto;
+    max-width: 300px
   }
 
   /* GLOBAL: LOGO */
@@ -324,6 +327,10 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
+    fill: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .sidebar:hover svg.logo--svg path {
     fill: #282828
   }
   .logo--link:hover {
