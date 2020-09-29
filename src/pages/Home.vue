@@ -4,27 +4,6 @@
     grid-template-rows: 8rem 1fr;
     margin-bottom: 2rem
   }
-  .client_link svg {
-    width: 20px;
-    fill: #28282890;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:hover svg {
-    fill: #282828
-  }
-  .client_link__details {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    grid-gap: 1rem
-  }
-  .client_link__details p {
-    margin: auto 0;
-    color: #28282890;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:hover .client_link__details p {
-    color: #282828
-  }
   .search {
     border: none;
     outline-width: 0;
@@ -43,6 +22,9 @@
   .search:focus {
     border-bottom: 2px solid #282828;
     width: 100%
+  }
+  .wrapper--client-link {
+    text-decoration: none
   }
 
   /* Add Client Form */
@@ -79,22 +61,14 @@
       </label>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
-        <router-link 
-          class="client_link" :to="'/client/'+clients.client_id+'/'"
+        <router-link
+          class="wrapper--client-link"
+          :to="'/client/'+clients.client_id+'/'"
           v-show="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())"
           :id="'a' + clients.client_id"
           v-for="(clients, index) in $parent.clients" :key="index"
         >
-          <div>
-            <p class="text--small client-name">{{clients.name}}</p>
-            <div v-if="clients.email !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/email.svg')" />
-              <p>{{clients.email}}</p>
-            </div>
-            <div v-if="clients.number !== ''" class="client_link__details"><inline-svg :src="require('../assets/svg/mobile.svg')" />
-              <p>{{clients.number}}</p>
-            </div>
-          </div>
-          <div v-if="clients.notes !== ''" v-html="clients.notes" class="client_link__notes__content" />
+          <client-link :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes"/>
         </router-link>
       </div>
     </div>
@@ -118,10 +92,12 @@
 <script>
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
+  import ClientLink from '../components/clientLink'
 
   export default {
     components: {
-      InlineSvg
+      InlineSvg,
+      ClientLink
     },
     data () {
       return {
