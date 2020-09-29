@@ -1,4 +1,6 @@
-const stripe = require('stripe')('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')
+const key = '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'
+
+const sendgrid = require('@sendgrid/mail')
 
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -20,14 +22,20 @@ exports.handler = async function handler (event, context, callback) {
     })
   } else if (event.body) {
     try {
-      const link = await stripe.billingPortal.sessions.create({
-        customer: JSON.parse(event.body).id,
-        return_url: 'https://app.traininblocks.com/account'
-      })
+      var data = JSON.parse(event.body)
+      sendgrid.setApiKey(key)
+      const msg = {
+        to: data.to,
+        from: 'Train In Blocks <no-reply@traininblocks.com>',
+        subject: data.subject,
+        text: data.text,
+        html: data.html
+      }
+      await sendgrid.send(msg)
       return callback(null, {
         statusCode: 200,
         headers: headers,
-        body: link.url
+        body: 'Email sent successfully'
       })
     } catch (e) {
       return callback(null, {

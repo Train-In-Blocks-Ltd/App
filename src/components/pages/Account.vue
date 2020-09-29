@@ -66,7 +66,7 @@
     <modal name="reset-password" height="auto" :adaptive="true">
       <div class="modal--reset">
         <h2>Reset your password</h2>
-        <form @submit.prevent="changePass(), $modal.hide('reset-password')">
+        <form @submit.prevent="changePass()">
           <label>
             <p><b>Current Password</b></p>
             <input type="password" class="input--forms" v-model="password.old"/>
@@ -187,6 +187,7 @@
         try {
           this.$parent.loading = true
           this.$parent.dontLeave = true
+          this.error = ''
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}/credentials/change_password`,
             {
               'password.old': this.password.old,
@@ -200,55 +201,33 @@
               }
             }
           )
-          this.password.old = null
-          this.password.new = null
-          this.password.msg = 'Password Updated Successfully'
-          await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+          this.oldPassword = null
+          this.newPassword = null
+          this.msg = 'Password Updated Successfully'
+          await axios.post('/.netlify/functions/send-email',
             {
-              'personalizations': [
-                {
-                  'to': [
-                    {
-                      'email': this.$parent.claims.email
-                    }
-                  ],
-                  'subject': 'Password Changed'
-                }
-              ],
-              'from': {
-                'email': 'Train In Blocks <no-reply@traininblocks.com>'
-              },
-              'content': [
-                {
-                  'type': 'text/plain',
-                  'value': passChangeEmailText()
-                },
-                {
-                  'type': 'text/html',
-                  'value': passChangeEmail()
-                }
-              ]
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': process.env.SENDGRID
-              }
+              'to': this.$parent.claims.email,
+              'subject': 'Password Changed',
+              'text': passChangeEmailText(),
+              'html': passChangeEmail()
             }
           )
           this.$parent.loading = false
           this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
+          this.password.error = 'Something went wrong. Please make sure that your password is correct'
           this.$parent.dontLeave = false
-          this.password.error = 'Please make sure that your password is correct'
-          alert('Please make sure that your password is correct')
           console.error(e)
         }
       },
       async manageSubscription () {
         try {
-          const response = await axios.post(`/.netlify/functions/create-manage-link`, { 'id': this.$parent.claims.stripeId })
+          const response = await axios.post('/.netlify/functions/create-manage-link',
+            {
+              'id': this.$parent.claims.stripeId
+            }
+          )
           window.location.href = response.data
         } catch (e) {
           this.$parent.loading = false
