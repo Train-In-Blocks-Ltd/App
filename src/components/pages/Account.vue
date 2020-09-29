@@ -185,6 +185,7 @@
         try {
           this.$parent.loading = true
           this.$parent.dontLeave = true
+          this.error = ''
           await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.$parent.claims.sub}/credentials/change_password`,
             {
               'oldPassword': this.oldPassword,
@@ -213,8 +214,7 @@
           this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false
-          this.error = 'Please make sure that your password is correct'
-          alert('Please make sure that your password is correct')
+          this.error = 'Something went wrong. Please make sure that your password is correct'
           this.$parent.dontLeave = false
           console.error(e)
         }
