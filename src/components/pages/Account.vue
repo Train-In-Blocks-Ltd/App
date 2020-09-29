@@ -66,7 +66,7 @@
     <modal name="reset-password" height="auto" :adaptive="true">
       <div class="modal--reset">
         <h2>Reset your password</h2>
-        <form @submit.prevent="changePass(), $modal.hide('reset-password')">
+        <form @submit.prevent="changePass()">
           <label>
             <p><b>Current Password</b></p>
             <input type="password" class="input--forms" v-model="oldPassword"/>
