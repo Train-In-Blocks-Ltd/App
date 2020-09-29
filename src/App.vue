@@ -89,7 +89,7 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
@@ -312,7 +312,7 @@
     grid-auto-flow: column;
     margin-bottom: 1rem
   }
-  .wrapper--new-item-form {
+  .wrapper--centered-item {
     margin: 0 auto;
     max-width: 300px
   }
@@ -683,7 +683,7 @@
         </div>
       </div>
     </transition>
-    <modal name="error" height="auto" :adaptive="true">
+    <modal name="error" height="auto">
       <div class="modal--error">
         <p><b>Something went wrong. Please try again...</b></p><br>
         <p>{{errorMsg}}</p><br>

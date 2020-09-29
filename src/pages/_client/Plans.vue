@@ -1,7 +1,7 @@
 <style scoped>
   /* Client Notes */
   .client-notes {
-    margin: 4rem auto
+    margin-top: 4rem
   }
   .client-notes__header {
     display: flex
@@ -53,7 +53,7 @@
     <div>
       <modal name="new-plan" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <div class="modal--new-plan">
-          <div class="wrapper--new-item-form">
+          <div class="wrapper--centered-item">
             <h3>New Plan</h3>
             <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.willBodyScroll(true)">
               <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>

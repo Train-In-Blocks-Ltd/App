@@ -63,7 +63,7 @@
 
 <template>
   <div id="account" v-if="this.$parent.claims">
-    <modal name="reset-password" height="auto" :adaptive="true">
+    <modal name="reset-password" height="auto">
       <div class="modal--reset">
         <h2>Reset your password</h2>
         <form @submit.prevent="changePass()">

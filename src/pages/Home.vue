@@ -51,18 +51,21 @@
   /* Containers */
   .home--container {
     display: grid;
-    grid-template-rows: 8rem 1fr;
     margin-bottom: 2rem
+  }
+  .home-top-bar {
+    display: flex;
+    justify-content: flex-end
   }
 
   /* Search */
   .search {
     border: none;
     outline-width: 0;
-    width: 90%;
+    width: 80%;
     border-bottom: 2px solid #282828;
     padding: .6rem 0;
-    margin: auto;
+    margin: 2rem auto 4rem auto;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   .search:hover {
@@ -78,10 +81,6 @@
   }
 
   /* Add New Client */
-  .button--new-client {
-    margin: 1rem 0 2rem 0;
-    justify-self: right
-  }
   .add_client {
     grid-gap: 1rem
   }
@@ -104,7 +103,7 @@
   <div id="home">
     <modal name="new-client" height="100%" width="100%" :adaptive="true" :clickToClose="false">
       <div class="modal--new-client">
-        <div class="wrapper--new-item-form">
+        <div class="wrapper--centered-item">
           <h3>New Client</h3>
           <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save(), $modal.hide('new-client'), $parent.willBodyScroll(true)">
             <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
@@ -118,15 +117,17 @@
         </div>
       </div>
     </modal>
-    <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
-      Install App
-    </button>
     <p v-if="this.$parent.no_clients">No clients yet. You can add one below.</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
+      <div class="home-top-bar">
+        <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
+          Install App
+        </button>
+        <button @click="$modal.show('new-client'), $parent.willBodyScroll(false)">New Client</button>
+      </div>
       <input type="search" rel="search" placeholder="Find a client" class="text--small search" autocomplete="name" aria-label="Find a client" v-model="search"/>
-      <button class="button--new-client" @click="$modal.show('new-client'), $parent.willBodyScroll(false)">New Client</button>
       <p v-if="response !== ''" class="new-msg">{{response}}</p>
       <div class="container--clients">
         <!-- Perform case insensitive search -->

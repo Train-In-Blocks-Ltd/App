@@ -375,7 +375,7 @@
 
 <template>
     <div id="sessions">
-      <modal name="info" height="auto" :adaptive="true">
+      <modal name="info" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <div class="modal--info">
           <p><b>The format for tracking data</b></p><br>
           <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
@@ -394,21 +394,21 @@
           <p>See <i>Help</i> for more information</p>
         </div>
       </modal>
-      <modal name="move" height="auto" :adaptive="true">
+      <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <form @submit.prevent="initMove(), $modal.hide('move')" class="modal--move">
           <label for="range">Move to:</label>
           <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/><br><br>
           <button type="submit">Move</button>
         </form>
       </modal>
-      <modal name="shift" height="auto" :adaptive="true">
+      <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <form @submit.prevent="shiftAcross()" class="modal--shift">
             <label for="range">Shift session dates by: </label>
             <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
             <button>Shift</button>
         </form>
       </modal>
-      <modal name="copy" height="auto" :adaptive="true">
+      <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <form @submit.prevent="copyAcross()" class="modal--copy">
             <label for="range">From {{currentWeek}} to: </label>
             <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
