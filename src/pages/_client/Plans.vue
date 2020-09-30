@@ -55,7 +55,7 @@
         <div class="modal--new-plan">
           <div class="wrapper--centered-item">
             <h3>New Plan</h3>
-            <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.willBodyScroll(true)">
+            <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.$parent.willBodyScroll(true)">
               <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>
               <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/></label>
               <label><b>Start: </b><input class="input--forms" type="date" v-model="new_plan.start" required /></label>
@@ -68,7 +68,7 @@
               </label>
               <div class="form_buttons">
                 <button type="submit">Save</button>
-                <button class="cancel" @click.prevent="response = '', $modal.hide('new-plan'), $parent.willBodyScroll(true)">Close</button>
+                <button class="cancel" @click.prevent="response = '', $modal.hide('new-plan'), $parent.$parent.willBodyScroll(true)">Close</button>
               </div>
             </form>
           </div>
@@ -98,7 +98,7 @@
       </div>
       <div>
         <div class="plan-top-bar">
-          <button class="button--new-plan" @click="$modal.show('new-plan'), $parent.willBodyScroll(false)">New Plan</button>
+          <button class="button--new-plan" @click="$modal.show('new-plan'), $parent.$parent.willBodyScroll(false)">New Plan</button>
         </div>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
         <p v-if="this.$parent.no_plans">No plans created :(</p>

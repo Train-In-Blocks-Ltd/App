@@ -26,7 +26,8 @@
   #client .client_info input:not([type='submit']):focus, #duration:focus, .session-date:focus {
     opacity: 1;
     border: 1px solid #282828;
-    padding: .6rem 1.4rem
+    padding: .6rem 1.4rem;
+    cursor: text
   }
   .client_info__more-details {
     display: grid;

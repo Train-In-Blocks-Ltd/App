@@ -74,7 +74,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
+  #home, #account, #archive, .wrapper--client, #help, #logout, #templates {
     padding: 2rem 10vw
   }
   .flex {
@@ -274,8 +274,7 @@
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
     resize: none;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: .1rem
+    font-family: Arial, Helvetica, sans-serif
   }
   input[type=color] {
     margin: 0 .4rem;
@@ -284,15 +283,6 @@
     outline-width: 0;
     cursor: pointer;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  input.title {
-    margin-top: 0;
-    margin-bottom: 3rem;
-    font-size: 3.75rem;
-    text-transform: capitalize;
-    letter-spacing: .15rem;
-    white-space: nowrap;
-    text-overflow: ellipsis
   }
   ::placeholder {
     color: #28282899;
@@ -554,7 +544,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -605,7 +595,7 @@
     main {
       margin: 0
     }
-    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
