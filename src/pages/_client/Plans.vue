@@ -101,8 +101,8 @@
           <button class="button--new-plan" @click="$modal.show('new-plan'), $parent.$parent.willBodyScroll(false)">New Plan</button>
         </div>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
-        <p v-if="this.$parent.no_plans">No plans created :(</p>
-        <p v-if="this.$parent.loading_plans">Loading plans...</p>
+        <p class="text--small grey .text--no-plans" v-if="this.$parent.no_plans">No plans created yet :(</p>
+        <p class="text--small grey .text--loading" v-if="this.$parent.loading_plans">Loading plans...</p>
         <div v-if="!this.$parent.no_plans" class="plans_grid">
           <router-link
             class="plan_link" :to="'plan/' + plan.id"

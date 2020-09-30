@@ -63,31 +63,34 @@
 
 <template>
   <div id="account" v-if="this.$parent.claims">
-    <modal name="reset-password" height="auto">
+    <modal name="reset-password" height="100%" width="100%" :adaptive="true" :clickToClose="false">
       <div class="modal--reset">
-        <h2>Reset your password</h2>
-        <form @submit.prevent="changePass()">
-          <label>
-            <p><b>Current Password</b></p>
-            <input type="password" class="input--forms" v-model="password.old"/>
-          </label>
-          <br>
-          <br>
-          <br>
-          <label>
-            <p><b>Requirements:</b></p>
-            <p>Number (0-9)</p>
-            <p>At least 8 characters</p>
-            <p>Can't contain your username</p><br>
-            <p><b>New Password</b></p>
-            <input type="password" class="input--forms" v-model="password.new" @input="checkPass" v-bind:class="{check: password.check}"/>
-          </label>
-          <br>
-          <br>
-          <button type="submit" :disabled="password.check">Change your password</button>
-          <p v-if="this.password.error" class="error">{{this.password.error}}</p>
-          <p v-if="this.password.msg">{{this.password.msg}}</p>
-        </form>
+        <div class="wrapper--centered-item"> 
+          <h2>Reset your password</h2>
+          <form @submit.prevent="changePass(), $parent.willBodyScroll(true)">
+            <label>
+              <p><b>Current Password</b></p>
+              <input type="password" class="input--forms" v-model="password.old"/>
+            </label>
+            <br>
+            <br>
+            <br>
+            <label>
+              <p><b>Requirements:</b></p>
+              <p>Number (0-9)</p>
+              <p>At least 8 characters</p>
+              <p>Can't contain your username</p><br>
+              <p><b>New Password</b></p>
+              <input type="password" class="input--forms" v-model="password.new" @input="checkPass" v-bind:class="{check: password.check}"/>
+            </label>
+            <br>
+            <br>
+            <button type="submit" :disabled="password.check">Change your password</button>
+            <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.willBodyScroll(true)">Close</button>
+            <p v-if="this.password.error" class="error">{{this.password.error}}</p>
+            <p v-if="this.password.msg">{{this.password.msg}}</p>
+          </form>
+        </div>
       </div>
     </modal>
     <h1 class="text--large">Your Account</h1>
@@ -97,10 +100,7 @@
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
           <button @click.prevent="manageSubscription()">Manage Your Subscription</button>
         </div>
-        <button @click.prevent="$modal.show('reset-password')">Change Your Password</button>
-        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/-1">
-          <button type="submit" formtarget="_blank">Need more support?</button>
-        </form>
+        <button @click.prevent="$modal.show('reset-password'), $parent.willBodyScroll(false)">Change Your Password</button>
       </div>
       <div class="privacy">
         <h2>Your Privacy and Data</h2>

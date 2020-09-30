@@ -7,11 +7,6 @@
   .plans_grid {
     margin: 4rem 0
   }
-
-  /* Content */
-  .text--no-sessions {
-    margin: 2rem 0 4rem 0
-  }
 </style>
 
 <template>

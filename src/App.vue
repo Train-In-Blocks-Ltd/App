@@ -137,6 +137,9 @@
     font-size: .8rem;
     color: #B80000
   }
+  .text--no-sessions, .text--loading, .text--no-plans, .text--no-clients {
+    margin: 2rem 0 4rem 0
+  }
 
   /* GLOBAL: BUTTONS */
   button {
@@ -520,7 +523,7 @@
     bottom: -50%;
     left: -50%;
     border-radius: 35%;
-    animation: spin 6s ease-in-out forwards
+    animation: spin 5s forwards
   }
   .box .logo--svg {
     height: 50%;
@@ -806,7 +809,7 @@ export default {
             matchVisual: false
           },
           toolbar: [
-            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
+            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
           ]
         }
       },
@@ -820,6 +823,11 @@ export default {
   created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
+  },
+  beforeMount () {
+    setTimeout(() => {
+      this.splashing = false
+    }, 3000)
   },
   mounted () {
     const self = this
@@ -837,9 +845,6 @@ export default {
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.displayMode = 'standalone'
     }
-    setTimeout(() => {
-      this.splashing = false
-    }, 6000)
   },
   watch: {
     // Everytime the route changes, check for auth status

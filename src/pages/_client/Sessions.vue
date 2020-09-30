@@ -547,7 +547,7 @@
                           <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
                           <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes()">Cancel</button>
-                          <button class="delete" v-show="!isEditingSession" @click="soloDelete(session.id)">Delete</button>
+                          <button class="delete" v-show="isEditingSession" @click="soloDelete(session.id)">Delete</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
