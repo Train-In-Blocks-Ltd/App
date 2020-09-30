@@ -49,13 +49,21 @@
   }
 
   /* Containers */
+  #home {
+    border-right: 6px solid #F4F4F4
+  }
   .home--container {
     display: grid;
     margin-bottom: 2rem
   }
-  .home-top-bar {
-    display: flex;
-    justify-content: flex-end
+  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new {
+    position: fixed;
+    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
+    top: 0;
+    left: 0;
+    z-index: 3;
+    height: 100%;
+    width: 100%
   }
 
   /* Search */
@@ -65,16 +73,17 @@
     width: 80%;
     border-bottom: 2px solid #282828;
     padding: .6rem 0;
-    margin: 2rem auto 4rem auto;
+    opacity: .6;
+    margin: 0 auto 4rem 0;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   .search:hover {
-    border-bottom: 2px solid #28282880;
-    width: 100%
+    width: 100%;
+    opacity: 1
   }
   .search:focus {
-    border-bottom: 2px solid #282828;
-    width: 100%
+    width: 100%;
+    opacity: 1
   }
   .wrapper--client-link {
     text-decoration: none
@@ -101,32 +110,41 @@
 
 <template>
   <div id="home">
-    <modal name="new-client" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-      <div class="modal--new-client">
-        <div class="wrapper--centered-item">
-          <h3>New Client</h3>
-          <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save(), $modal.hide('new-client'), $parent.willBodyScroll(true)">
-            <label><b>Name: </b><input class="input--forms" type="text" autocomplete="name" v-model="new_client.name" required/></label>
-            <label><b>Email: </b><input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required/></label>
-            <label><b>Mobile: </b><input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" /></label>
-            <div class="form_buttons">
-              <button type="submit">Save</button>
-              <button class="cancel" @click.prevent="$modal.hide('new-client'), $parent.willBodyScroll(true)">Close</button>
-            </div>
-          </form>
-        </div>
+    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+      <div class="wrapper--new-client" v-if="isNewClientOpen">
+        <new-client />
       </div>
-    </modal>
+    </transition>
+    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+      <div class="wrapper--whats-new" v-if="isWhatsNewOpen">
+        <whats-new />
+      </div>
+    </transition>
+    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+      <div class="wrapper--install-PWA" v-if="isInstallOpen">
+        <install-app />
+      </div>
+    </transition>
+    <div class="icon--open-new-client" v-if="!isNewClientOpen" @click="isNewClientOpen = true, $parent.willBodyScroll(false)" aria-label="New Client">
+      <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client"/>
+      <p class="text">New Client</p>
+    </div>
+    <div class="icon--open-whats-new" v-if="!isWhatsNewOpen" @click="isWhatsNewOpen = true, $parent.willBodyScroll(false)" aria-label="What's New">
+      <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New"/>
+      <p class="text">What's New</p>
+    </div>
+    <div class="icon--open-install-pwa" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
+      <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App"/>
+      <p class="text">Install</p>
+    </div>
+    <div>
+      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--a" />
+      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--b"/>
+    </div>
     <p class="text--small grey text--no-clients" v-if="this.$parent.no_clients">No clients added yet :(</p>
     <p class="text--small grey text--loading" v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
-      <div class="home-top-bar">
-        <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
-          Install App
-        </button>
-        <button @click="$modal.show('new-client'), $parent.willBodyScroll(false)">New Client</button>
-      </div>
       <input type="search" rel="search" placeholder="Find a client" class="text--small search" autocomplete="name" aria-label="Find a client" v-model="search"/>
       <p v-if="response !== ''" class="new-msg">{{response}}</p>
       <div class="container--clients">
@@ -149,82 +167,30 @@
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
   import ClientLink from '../components/clientLink'
+  import NewClient from '../components/newClient'
+  import WhatsNew from  '../components/whatsNew'
+  import InstallApp from '../components/installPWA'
 
   export default {
     components: {
       InlineSvg,
-      ClientLink
+      ClientLink,
+      NewClient,
+      WhatsNew,
+      InstallApp
     },
     data () {
       return {
         response: '',
-        new_client: {
-          name: '',
-          email: '',
-          number: '',
-          notes: ''
-        },
-        search: ''
+        search: '',
+        isNewClientOpen: false,
+        isInstallOpen: false,
+        isWhatsNewOpen: false
       }
     },
     created () {
       this.$parent.setup()
       this.$parent.client_details = null
-    },
-    methods: {
-      async save () {
-        if (this.new_client.email === this.$parent.claims.email) {
-          this.$parent.errorMsg = 'You cannot create a client with your own email address!'
-          this.$parent.$modal.show('error')
-          console.error('You cannot create a client with your own email address!')
-        } else {
-          this.response = ''
-          try {
-            this.$parent.loading = true
-            this.$parent.dontLeave = true
-            await axios.put('https://api.traininblocks.com/clients',
-              {
-                'name': this.new_client.name,
-                'pt_id': this.$parent.claims.sub,
-                'email': this.new_client.email,
-                'number': this.new_client.number,
-                'notes': this.new_client.notes
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              }
-            )
-            // eslint-disable-next-line
-            this.response = 'Added New Client'
-            this.$parent.responseDelay()
-
-            await this.$parent.clients_f()
-            this.$parent.clients_to_vue()
-
-            this.$parent.loading = false
-            this.$parent.dontLeave = false
-
-            this.close()
-
-            this.new_client = {
-              name: '',
-              email: '',
-              number: '',
-              notes: ''
-            }
-            this.$ga.event('Client', 'new')
-          } catch (e) {
-            this.$parent.loading = false
-            this.$parent.dontLeave = false
-            this.$parent.errorMsg = e
-            this.$parent.$modal.show('error')
-            console.error(e)
-          }
-        }
-      }
     }
   }
 </script>

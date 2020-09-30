@@ -69,44 +69,6 @@
     cursor: pointer;
     margin-left: auto
   }
-  .icon--open-options, .icon--open-stats {
-    user-select: none;
-    z-index: 2;
-    display: flex;
-    cursor: pointer;
-    position: fixed;
-    right: 0;
-    top: 2rem;
-    width: calc(3rem);
-    padding: .4rem 1rem .4rem .6rem;
-    border-radius: 3px 0 0 3px;
-    background-color: #F4F4F4;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
-  }
-  div.icon--open-stats {
-    top: 4.4rem
-  }
-  .icon--open-options:hover, .icon--open-stats:hover {
-    width: 6rem;
-    text-align: center
-  }
-  .icon--open-options svg, .icon--open-stats svg {
-    opacity: 1
-  }
-  .icon--open-options:hover svg, .icon--open-stats:hover svg {
-    opacity: 0
-  }
-  .icon--open-options .text, .icon--open-stats .text {
-    font-size: .8rem;
-    display: none;
-    opacity: 0;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .icon--open-options:hover .text, .icon--open-stats:hover .text {
-    display: block;
-    opacity: 1;
-    align-self: center
-  }
   .client--options {
     display: grid;
     grid-gap: 1rem

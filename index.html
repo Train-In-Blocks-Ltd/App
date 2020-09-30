@@ -27,6 +27,86 @@
     <meta name="twitter:description" content="Please sign in to view content." />
   </head>
   <body>
+    <style>
+      /* GLOBAL: SPLASH */
+      #splash {
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        display: flex;
+        justify-content: space-around;
+        z-index: 9999;
+        position: fixed;
+        top: 0;
+        left: 0
+      }
+      .box {
+        position: relative;
+        top: calc(50% - 8rem);
+        border: .25rem solid #282828;
+        border-radius: 3px;
+        height: 8rem;
+        width: 8rem;
+        outline: 0;
+        overflow: hidden;
+        background-color: #282828;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: flashing 1s ease-in-out alternate-reverse infinite
+      }
+      .box:after {
+        content: '';
+        position: absolute;
+        background: white;
+        height: 16rem;
+        width: 16rem;
+        bottom: -50%;
+        left: -50%;
+        border-radius: 40%;
+        animation: spin 5s forwards
+      }
+      .box .logo--svg {
+        height: 50%;
+        width: auto
+      }
+      .box svg.logo--svg path {
+        fill: white
+      }
+
+      @keyframes spin {
+        0% {
+          transform: translateY(0) rotate(0deg)
+        }
+        100% {
+          transform: translateY(-100%) rotate(500deg)
+        }
+      }
+      @keyframes flashing {
+        0% {
+          opacity: .7
+        }
+        100% {
+          opacity: 1
+        }
+      }
+    </style>
+    <div id="splash">
+      <div class="box">
+        <svg class="logo--svg" width="38" height="38" viewBox="0 0 38 38" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+          <g id="Icon">
+            <path d="M0 0L38 0L38 15L15 15L15 38L0 38L0 0Z" id="Rectangle" fill="#282828" stroke="none" />
+            <path d="M0 0L14 0L14 14L0 14L0 0Z" transform="translate(24 24)" id="Rectangle-2" fill="#282828" stroke="none" />
+          </g>
+        </svg>
+      </div>
+    </div>
+    <script>
+      setTimeout(() => {
+        const splash = document.getElementById('splash')
+        splash.style.display = 'none'
+      }, 4000)
+    </script>
     <div id="app"></div>
     <noscript>JavaScript is required to run this app. Please enable it.</noscript>
     <script>

@@ -49,6 +49,26 @@
       opacity: 0
     }
   }
+  .section--a, .section--b {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    background-color: #F4F4F4;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .section--a {
+    height: 50%
+  }
+  .section--b {
+    height: 50%;
+    top: 50%;
+    transition-delay: .2s
+  }
+  .section--a.openedSections,  .section--b.openedSections {
+    width: 100%;
+    z-index: 2
+  }
 
   /* GLOBAL: ELEMENTS */
   body {
@@ -276,6 +296,7 @@
   .input--forms, .input--toolkit, .input--modal {
     padding: .4rem;
     font-size: 1rem;
+    background-color: transparent;
     border: none;
     border-bottom: 1px solid #282828
   }
@@ -405,6 +426,50 @@
     fill: #282828
   }
 
+  /* GLOBAL: EXTRA OPTIONS */
+  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new {
+    user-select: none;
+    z-index: 2;
+    display: flex;
+    cursor: pointer;
+    position: fixed;
+    right: 0;
+    top: 2rem;
+    width: calc(3rem);
+    padding: .4rem 1rem .4rem .6rem;
+    border-radius: 3px 0 0 3px;
+    background-color: #F4F4F4;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  div.icon--open-stats, div.icon--open-whats-new {
+    top: 4.4rem
+  }
+  div.icon--open-install-pwa {
+    top: 6.8rem
+  }
+  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install-pwa:hover {
+    width: 6rem;
+    justify-content: center;
+    text-align: center
+  }
+  .icon--open-new-client:hover, .icon--open-whats-new:hover {
+    width: 8rem;
+    justify-content: center;
+    text-align: center
+  }
+  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg {
+    display: none
+  }
+  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text {
+    font-size: .8rem;
+    display: none;
+    white-space: nowrap;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text {
+    display: block
+  }
+
   /* GLOBAL: QUILL */
   div.ql-container {
     font-size: 16px
@@ -485,69 +550,6 @@
   .session-counter {
     align-self: center;
     font-size: 1rem
-  }
-
-  /* GLOBAL: SPLASH */
-  .splash {
-    height: 100%;
-    width: 100%;
-    background-color: white;
-    display: flex;
-    justify-content: space-around;
-    z-index: 9999;
-    position: fixed;
-    top: 0;
-    left: 0
-  }
-  .box {
-    position: relative;
-    top: calc(50% - 8rem);
-    border: .25rem solid #282828;
-    border-radius: 3px;
-    height: 8rem;
-    width: 8rem;
-    outline: 0;
-    overflow: hidden;
-    background-color: #282828;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: flashing 1s ease-in-out alternate-reverse infinite
-  }
-  .box:after {
-    content: '';
-    position: absolute;
-    background: white;
-    height: 16rem;
-    width: 16rem;
-    bottom: -50%;
-    left: -50%;
-    border-radius: 35%;
-    animation: spin 5s forwards
-  }
-  .box .logo--svg {
-    height: 50%;
-    width: auto
-  }
-  .box svg.logo--svg path {
-    fill: white
-  }
-
-  @keyframes spin {
-    0% {
-      transform: translateY(0) rotate(0deg)
-    }
-    100% {
-      transform: translateY(-100%) rotate(500deg)
-    }
-  }
-  @keyframes flashing {
-    0% {
-      opacity: .7
-    }
-    100% {
-      opacity: 1
-    }
   }
 
   /* Responsive Design */
@@ -657,7 +659,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa {
       transition: none
     }
     .sidebar {
@@ -674,13 +676,6 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div v-show="splashing && authenticated" class="splash">
-        <div class="box">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" />
-        </div>
-      </div>
-    </transition>
     <modal name="error" height="auto">
       <div class="modal--error">
         <p><b>Something went wrong. Please try again...</b></p><br>
@@ -780,7 +775,6 @@ export default {
   },
   data () {
     return {
-      splashing: true,
       archive: {
         clients: {},
         no_archive: false
@@ -823,11 +817,6 @@ export default {
   created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
-  },
-  beforeMount () {
-    setTimeout(() => {
-      this.splashing = false
-    }, 3000)
   },
   mounted () {
     const self = this

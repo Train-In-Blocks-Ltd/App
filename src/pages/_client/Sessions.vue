@@ -1,26 +1,4 @@
 <style scoped>
-  /* Animation */
-  .section--a, .section--b {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 0;
-    background-color: #F4F4F4;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .section--a {
-    height: 50%
-  }
-  .section--b {
-    height: 50%;
-    top: 50%;
-    transition-delay: .2s
-  }
-  .section--a.openedStats,  .section--b.openedStats {
-    width: 100%;
-    z-index: 2
-  }
-
   /* Client */
   .client_info {
     display: grid;
@@ -291,8 +269,7 @@
     left: 0;
     z-index: 2;
     height: 100%;
-    width: 100%;
-    overflow-x: auto
+    width: 100%
   }
   .container--content {
     display: flex;
@@ -432,9 +409,9 @@
         <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
       </div>
-      <div class="open-stats-animation">
-        <div :class="{openedStats: isStatsOpen}" class="section--a" />
-        <div :class="{openedStats: isStatsOpen}" class="section--b"/>
+      <div>
+        <div :class="{openedSections: isStatsOpen}" class="section--a" />
+        <div :class="{openedSections: isStatsOpen}" class="section--b"/>
       </div>
       <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <div class="multi-select" v-if="selectedSessions.length !== 0">
