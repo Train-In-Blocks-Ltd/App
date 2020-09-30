@@ -35,6 +35,8 @@ netlify login
 
 netlify link
 
+npm run build
+
 netlify dev --port 8080
 ```
 
