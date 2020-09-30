@@ -1,90 +1,16 @@
 
 <style scoped>
-  /* Plans */
+
+  /* SEE PLANS.VUE */
+
+  /* Containers */
   .plans_grid {
-    display: grid;
-    grid-gap: 2rem;
-    margin-bottom: 2rem
-  }
-  .plan_container:first-of-type {
-    margin-left: 0
-  }
-  .plan_container:last-of-type {
-    margin-right: 0
-  }
-  .plan_container--link {
-    display: grid;
-    position: relative;
-    grid-gap: 1rem;
-    width: 95%;
-    max-width: 600px;
-    min-width: 400px;
-    text-decoration: none;
-    color: #282828;
-    padding: 1rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .plan_container--link:before {
-    content: '';
-    position: absolute;
-    opacity: .4;
-    width: 95%;
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: #282828;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .plan_container--link:hover:before {
-    width: 100%;
-    opacity: 1
-  }
-  .plan_container--link__plan-notes {
-    font-size: .8rem
-  }
-  .plan_container--link h3 {
-    margin-top: 0;
-    font-size: 1.4rem;
-    margin-bottom: 0;
-    overflow: hidden;
-    text-overflow: ellipsis
-  }
-  .more-plan-info {
-    margin-top: 1rem
-  }
-  .plan_container--link p {
-    font-size: .8rem;
-    font-weight: 500
-  }
-  .plan_container--link p:last-of-type {
-    margin-bottom: 0
+    margin: 4rem 0
   }
 
-  @media (min-width: 1024px) {
-    .plan_container--link {
-      grid-template: 1fr/1fr 1fr;
-      grid-gap: 2rem
-    }
-  }
-  @media (min-width: 768px) {
-    .title-icon {
-      height: 48px;
-      width: 48px
-    }
-  }
-  @media (max-width: 768px) {
-    .client-notes, .plan_container--link {
-      margin: 0;
-      min-width: 0;
-      width: 100%
-    }
-  }
-
-  /* For Mobile */
-  @media (max-width: 576px) {
-    .plans_grid {
-      grid-template-columns: 1fr
-    }
+  /* Content */
+  .text--no-sessions {
+    margin: 2rem 0 4rem 0
   }
 </style>
 
@@ -94,12 +20,9 @@
       <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
         Install App
       </button>
-      <div class="container--title">
-        <inline-svg :src="require('../../assets/svg/today.svg')" class="title-icon"/>
-        <h2 class="text--small no-margin">Today</h2>
-      </div>
-      <p v-if="viewSessionsStore.length === 0 && loading === false">No sessions today...</p>
-      <p v-if="loading === true">Loading sessions...</p>
+      <p class="text--large">Today</p>
+      <p class="text--small text--no-sessions grey" v-if="viewSessionsStore.length === 0 && loading === false">No sessions today...</p>
+      <p class="text--small text--loading grey" v-if="loading === true">Loading sessions...</p>
       <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
         <div class="container--sessions" v-if="plan.sessions">
           <div class="wrapper--session" v-for="(session, index) in plan.sessions"
@@ -133,22 +56,13 @@
         </div>
         <p class="session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
       </div>
-      <div class="container--title">
-        <inline-svg :src="require('../../assets/svg/plan.svg')" class="title-icon"/>
-        <h2 class="text--small no-margin">Plans</h2>
-      </div>
+      <p class="text--large">Plans</p>
       <div class="plans_grid">
         <div v-for="(plan, index) in this.$parent.clientUser.plans"
           :key="'plan-' + index" class="plan_container">
-          <router-link class="plan_container--link" :to="'/clientUser/plan/' + plan.id">
-            <div class="plan_container--link__info">
-              <h3>{{plan.name}}</h3>
-              <div class="more-plan-info">
-                <p><b>Duration: </b>{{plan.duration}}</p>
-                <p><b>Start: </b>{{plan.start}}</p>
-              </div>
-            </div>
-            <div v-html="plan.notes" class="plan_container--link__plan-notes" />
+          <router-link class="plan_link" :to="'/clientUser/plan/' + plan.id">
+            <p class="text--small plan-name">{{plan.name}}</p>
+            <div v-html="plan.notes" class="plan_link__notes__content" />
           </router-link>
         </div>
       </div>

@@ -21,17 +21,23 @@
     z-index: 2
   }
 
-  /* Session Info */
-  .session_info {
+  /* Client */
+  .client_info {
+    display: grid;
+    grid-gap: 1rem
+  }
+
+  /* Plan Info */
+  .plan_info {
     display: flex;
     flex-direction: column
   }
-  #sessions .session_info label {
+  #plan .plan_info label {
     display: flex;
     align-items: center;
     grid-auto-columns: min-content
   }
-  #duration, .session_info input#start {
+  #duration, .plan_info input#start {
     font-size: 1rem;
     margin-left: 1rem
   }
@@ -79,8 +85,8 @@
     transform: rotate(180deg)
   }
 
-  /* session Grid */
-  .session_grid {
+  /* Plan Grid */
+  .plan_grid {
     display: grid;
     grid-gap: 6rem;
     margin-top: 4rem
@@ -89,38 +95,54 @@
     grid-area: b;
     margin: 0 0 4rem 0
   }
+  .plan-notes__header {
+    display: flex
+  }
+  .a--plan-notes {
+    color: #282828;
+    font-size: .8rem;
+    margin-left: 1rem;
+    align-self: center;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .a--plan-notes:hover {
+    opacity: .6
+  }
 
-  /* session Table */
-  .session_table__header h3 {
+  /* Plan Table */
+  .plan_table__header h3 {
     margin: 0
   }
-  .session_table__header {
+  .plan_table__header {
     display: grid;
     margin: 0 0 4rem 0;
     grid-gap: 1rem
   }
   #duration {
-    width: 4rem
+    width: 6rem
   }
-  .session_table {
+  .plan_table {
     height: fit-content
   }
-  .session_table--container {
+  .plan_table--container {
     display: inline-block;
     width: 100%;
     text-align: center
   }
-  .session_table--container--session_duration_container {
+  .plan_table--container--plan_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
     grid-template-columns: repeat(auto-fill, 50px);
     border: none;
     padding: 0
   }
+  #info {
+    fill: #282828
+  }
 
   /* Week */
   .week-color-picker {
-    margin: auto 0 auto 1rem;
+    margin: auto 0;
     height: 28px;
     border: #282828
   }
@@ -195,19 +217,11 @@
   }
   .wrapper--session {
     display: grid;
-    grid-template-areas:
-      'header'
-      'body'
-      'bar'
-  }
-  .wrapper--session:after {
-    content: '';
-    height: 1px;
-    width: 40%;
-    background-color: #282828
+    box-shadow: 0 0 20px 10px #28282810;
+    padding: 2rem;
+    border-radius: 3px
   }
   .wrapper--session__header {
-    grid-area: header;
     display: flex;
     justify-content: space-between
   }
@@ -224,7 +238,7 @@
   }
   .container--sessions {
     display: grid;
-    grid-gap: 6rem
+    grid-gap: 4rem
   }
   input.session-name, input.session-date {
     text-overflow: ellipsis;
@@ -245,17 +259,9 @@
     width: fit-content;
     font-size: .8rem
   }
-  .show-session {
-    grid-area: body
-  }
   .show-feedback {
     margin: 1rem 0;
-    padding: 0;
-    grid-area: feedback
-  }
-  .bottom-bar {
-    grid-area: bar;
-    margin-bottom: 6rem
+    padding: 0
   }
   .bottom-bar .button {
     margin: 0
@@ -275,13 +281,6 @@
   }
   .editingChecked:hover {
     opacity: .6
-  }
-  .showingFeedback {
-    grid-template-areas:
-      'header'
-      'body'
-      'feedback'
-      'bar'
   }
 
   /* Graph */
@@ -353,10 +352,10 @@
 
   @media (max-width: 576px) {
     /* Container */
-    .session_grid {
+    .plan_grid {
       display: block
     }
-    .calendar, .session-plan {
+    .calendar, .wrapper-plan {
       margin: 4rem 0
     }
 
@@ -374,47 +373,59 @@
 </style>
 
 <template>
-    <div id="sessions">
+    <div id="plan">
       <modal name="info" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <div class="modal--info">
-          <p><b>The format for tracking data</b></p><br>
-          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Back Squat: 3x6 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
-          <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Weight: 5okg]</i></p>
-          <p><i>[Vertical Jump: 43.3cm]</i></p>
-          <p><i>[Body Fat (%): 12]</i></p>
-          <p><i>[sRPE (CR10): 8]</i></p>
-          <p><i>[sRPE (Borg): 16]</i></p><br>
-          <p>See <i>Help</i> for more information</p>
+          <div class="wrapper--centered-item">
+            <p><b>The format for tracking data</b></p><br>
+            <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
+            <p><b>Examples</b></p><br>
+            <p><i>[Back Squat: 3x6 at 50kg]</i></p>
+            <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
+            <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
+            <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
+            <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
+            <p><b>Examples</b></p><br>
+            <p><i>[Weight: 5okg]</i></p>
+            <p><i>[Vertical Jump: 43.3cm]</i></p>
+            <p><i>[Body Fat (%): 12]</i></p>
+            <p><i>[sRPE (CR10): 8]</i></p>
+            <p><i>[sRPE (Borg): 16]</i></p><br>
+            <p>See <i>Help</i> for more information</p><br>
+            <button class="cancel" @click="$modal.hide('info'), $parent.$parent.willBodyScroll(true)">Close</button>
+          </div>
         </div>
       </modal>
       <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <form @submit.prevent="initMove(), $modal.hide('move')" class="modal--move">
-          <label for="range">Move to:</label>
-          <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/><br><br>
-          <button type="submit">Move</button>
+        <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
+          <div class="wrapper--centered-item">
+            <label for="range">Move to:</label>
+            <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/><br><br>
+            <button type="submit">Move</button>
+            <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+          </div>
         </form>
       </modal>
       <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <form @submit.prevent="shiftAcross()" class="modal--shift">
+        <form @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)" class="modal--shift">
+          <div class="wrapper--centered-item">
             <label for="range">Shift session dates by: </label>
             <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
-            <button>Shift</button>
+            <button type="submit">Shift</button>
+            <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+          </div>
         </form>
       </modal>
       <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <form @submit.prevent="copyAcross()" class="modal--copy">
-            <label for="range">From {{currentWeek}} to: </label>
-            <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
-            <label for="range">Days until next sessions: </label>
-            <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
-            <button>Copy</button>
+        <form @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)" class="modal--copy">
+            <div class="wrapper--centered-item">
+              <label for="range">From {{currentWeek}} to: </label>
+              <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
+              <label for="range">Days until next sessions: </label>
+              <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
+              <button type="submit">Copy</button>
+              <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+            </div>
         </form>
       </modal>
       <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
@@ -430,9 +441,9 @@
           <p class="text--selected">
             <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
           </p>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift')">Shift</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy'), $parent.$parent.willBodyScroll(false)">Copy Across</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.willBodyScroll(false)">Move</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.willBodyScroll(false)">Shift</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
         </div>
@@ -445,23 +456,25 @@
             <div class="client_info">
               <input @blur="$parent.update_client()" class="text--large allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the plan info -->
-              <form class="session_info">
+              <form class="plan_info">
                 <input class="text--small allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
               </form>
             </div>  <!-- client_info -->
           </div> <!-- top_grid -->
-          <div class="session_grid">
+          <div class="plan_grid">
             <div class="calendar">
               <div class="plan-notes">
                 <div class="plan-notes__header">
-                  <p class="plan-notes__header__text"><b>Plan Notes</b></p>
+                  <p class="text--small">Plan Notes</p>
+                  <a class="a--plan-notes" href="javascript:void(0)" v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()">
+                    Edit
+                  </a>
                 </div>
                 <quill v-show="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
                 <div v-if="!editPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
                 <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()" class="button--edit">Edit</button>
                     <button v-show="editPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
                     <button v-show="editPlanNotes" @click="cancelPlanNotes()" class="cancel">Cancel</button>
                   </div>
@@ -471,17 +484,17 @@
                 <FullCalendar defaultView="dayGridMonth" :firstDay="1" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="sessionDates" />
               </div>
             </div>
-            <div class="session-plan">
-              <div class="session_table">
-                <div class="session_table__header">
-                  <h3>Microcycles</h3>
+            <div class="wrapper-plan">
+              <div class="plan_table">
+                <div class="plan_table__header">
+                  <p class="text--small">Microcycles</p>
                   <div class="wrapper-duration">
-                    <label for="duration"><b>Duration: </b></label>
+                    <label for="duration">Duration: </label>
                     <input id="duration" type="number" name="duration" inputmode="decimal" v-model="plan.duration" min="1" required @blur="update_plan()" @change="weekConfirm(plan.duration), maxWeek = plan.duration"/>
                   </div>
                 </div>
-                <div class="session_table--container">
-                  <div class="session_table--container--session_duration_container">
+                <div class="plan_table--container">
+                  <div class="plan_table--container--plan_duration_container">
                     <div @click="changeWeek(item), sortSessions()" v-for="item in plan_duration(plan.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
                         <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
@@ -490,13 +503,12 @@
                     </div>
                   </div>
                 </div>
-              </div> <!-- session_table -->
+              </div> <!-- plan_table -->
               <div class="sessions">
                 <div class="session--header">
                   <div class="session--header__left">
-                    <h3>Sessions</h3>
                     <input @blur="updateSessionColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
-                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.willBodyScroll(false)"/>
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>

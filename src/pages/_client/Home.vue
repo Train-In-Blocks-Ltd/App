@@ -1,13 +1,7 @@
 <style>
   #client {
     overflow-x: hidden;
-    background-color: #F4F4F4;
-    position: relative
-  }
-  .wrapper--client {
-    background-color: white;
-    border-right: 6px solid #F4F4F4;
-    transition: all 1.4s cubic-bezier(.165, .84, .44, 1)
+    border-right: 6px solid #F4F4F4
   }
 
   /* Client Info */
@@ -26,7 +20,8 @@
   #client .client_info input:not([type='submit']):focus, #duration:focus, .session-date:focus {
     opacity: 1;
     border: 1px solid #282828;
-    padding: .6rem 1.4rem
+    padding: .6rem 1.4rem;
+    cursor: text
   }
   .client_info__more-details {
     display: grid;
@@ -41,13 +36,25 @@
   }
 
   /* Floating Nav */
-  .floating_nav {
+  .wrapper--floating_nav {
+    background-color: #F4F4F4;
+    width: 0;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 0;
     z-index: 2;
+    box-shadow: 0 0 20px 10px #28282810;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .wrapper--floating_nav.openFloatingNav {
+    width: 14rem;
+    padding: 2rem
+  }
+  .floating_nav {
     display: grid;
     grid-gap: 2rem;
-    position: fixed;
-    right: 2rem;
-    top: 2rem;
     text-align: right
   }
   .floating_nav a, .selected-options {
@@ -100,9 +107,6 @@
     opacity: 1;
     align-self: center
   }
-  .openFloatingNav {
-    transform: translateX(-12rem)
-  }
   .client--options {
     display: grid;
     grid-gap: 1rem
@@ -152,61 +156,52 @@
     <modal name="toolkit" height="100%" width="100%" :adaptive="true" :clickToClose="false">
       <toolkit/>
     </modal>
-    <div v-show="keepLoaded" class="floating_nav">
-      <div class="icon--open-options" v-show="!showOptions" @click="showOptions = true" aria-label="Menu">
-        <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options"/>
-        <p class="text">Options</p>
-      </div>
-      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-        <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
-      </transition>
-      <div class="client--options" v-for="(clients, index) in $parent.clients" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
-        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
-          <a href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
+    <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
+      <div v-show="keepLoaded" class="floating_nav">
+        <div class="icon--open-options" v-show="!showOptions" @click="showOptions = true" aria-label="Menu">
+          <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options"/>
+          <p class="text">Options</p>
+        </div>
+        <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
+          <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
         </transition>
-        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
-          <a href="javascript:void(0)" v-show="showDeletePlan" @click="delete_plan()">Delete Plan</a>
-        </transition>
-        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
-          <a href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
-        </transition>
-        <transition enter-active-class="animate animate__fadeInRight animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOutRight animate__faster">
-          <router-link :to="toURL()">
-            Back
-          </router-link>
-        </transition>
-      </div>
-    </div>
-    <div class="wrapper--client" :class="{ openFloatingNav: showOptions }">
-      <div class="top_grid" v-if="!sessions">
-        <!-- Update the client details -->
-        <form class="client_info" @submit.prevent="update_client()">
-          <input class="client_info--name text--large" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
-          <div class="client_info__more-details">
-            <input class="input--forms allow-text-overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/>
-            <input class="input--forms allow-text-overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
-            <div>
-              <button
-                @click="createClient()" class="button--verify button"
-                :disabled="clientAlready"
-              >
-                {{ clientAlreadyMsg }}
-              </button>
-              <button
-                @click="$parent.client_details.notifications = 0, update_client()"
-                v-if="clientAlready && clientAlreadyMsg !== 'Loading...'"
-                class="button--verify button"
-              >
-                Disable email notifications
-              </button>
-            </div>
+        <transition-group enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
+          <div class="client--options" v-for="(clients, index) in $parent.clients" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
+            <a v-show="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
+            <a href="javascript:void(0)" v-show="showDeletePlan" @click="delete_plan()">Delete Plan</a>
+            <a v-show="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
           </div>
-        </form>
+        </transition-group>
       </div>
-      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-        <router-view :key="$route.fullPath"></router-view>
-      </transition>
     </div>
+    <div class="top_grid" v-if="!sessions">
+      <!-- Update the client details -->
+      <form class="client_info" @submit.prevent="update_client()">
+        <input class="client_info--name text--large" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
+        <div class="client_info__more-details">
+          <input class="input--forms allow-text-overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client()"/>
+          <input class="input--forms allow-text-overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
+          <div>
+            <button
+              @click="createClient()" class="button--verify button"
+              :disabled="clientAlready"
+            >
+              {{ clientAlreadyMsg }}
+            </button>
+            <button
+              @click="$parent.client_details.notifications = 0, update_client()"
+              v-if="clientAlready && clientAlreadyMsg !== 'Loading...'"
+              class="button--verify button"
+            >
+              Disable email notifications
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+      <router-view :key="$route.fullPath"></router-view>
+    </transition>
   </div>
 </template>
 
