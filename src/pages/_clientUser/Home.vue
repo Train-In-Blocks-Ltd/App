@@ -1,11 +1,58 @@
-
 <style scoped>
-
-  /* SEE PLANS.VUE */
+  /* Link Container */
+  .plan_link {
+    display: grid;
+    padding: 2rem;
+    grid-gap: 1rem;
+    font-weight: 400;
+    color: #282828;
+    text-decoration: none;
+    box-shadow: 0 0 20px 10px #28282810;
+    border-radius: 3px;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .plan_link:hover {
+    transform: scale(1.02)
+  }
+  .plan_link:active {
+    transform: scale(1)
+  }
+  .plan_link__notes__content {
+    font-size: .8rem;
+    margin-top: .4rem
+  }
+  .plan_link__notes__content * {
+    color: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .plan_link:hover .plan_link__notes__content * {
+    color: #282828
+  }
+  .plan_link__notes__content p {
+    margin: .4rem 0
+  }
+  .plan-name {
+    margin: 0
+  }
+  .plan_link__notes__content h1, .plan_link__notes__content h2 {
+    font-size: 1rem
+  }
+  .plan_link img {
+    margin: 1rem 0;
+    max-width: 100%;
+    border-radius: 3px;
+    opacity: .6;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .plan_link:hover img {
+    opacity: 1
+  }
 
   /* Containers */
-  .plans_grid {
-    margin: 4rem 0
+  .plan_grid {
+    display: grid;
+    grid-gap: 4rem;
+    margin: 2rem 0
   }
 </style>
 
@@ -52,14 +99,11 @@
         <p class="session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
       </div>
       <p class="text--large">Plans</p>
-      <div class="plans_grid">
-        <div v-for="(plan, index) in this.$parent.clientUser.plans"
-          :key="'plan-' + index" class="plan_container">
-          <router-link class="plan_link" :to="'/clientUser/plan/' + plan.id">
-            <p class="text--small plan-name">{{plan.name}}</p>
-            <div v-html="plan.notes" class="plan_link__notes__content" />
-          </router-link>
-        </div>
+      <div class="plan_grid">
+        <router-link v-for="(plan, index) in this.$parent.clientUser.plans" :key="'plan-' + index" class="plan_link" :to="'/clientUser/plan/' + plan.id">
+          <p class="text--small plan-name">{{plan.name}}</p>
+          <div v-html="plan.notes" class="plan_link__notes__content" />
+        </router-link>
       </div>
     </div>
   </div>

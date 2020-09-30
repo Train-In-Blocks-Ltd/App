@@ -64,11 +64,6 @@
   }
 
   /* Plan Grid */
-  .plan_grid {
-    display: grid;
-    grid-gap: 6rem;
-    margin-top: 4rem
-  }
   .plan-notes {
     grid-area: b;
     margin: 0 0 4rem 0
@@ -489,7 +484,7 @@
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
-                <p v-if="$parent.no_sessions">No sessions yet. You can add one below.</p>
+                <p v-if="$parent.no_sessions">No sessions added yet :(</p>
                 <p v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
                   <p class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>

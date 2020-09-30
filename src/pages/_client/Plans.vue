@@ -25,10 +25,10 @@
     display: flex;
     justify-content: flex-end
   }
-  .plans_grid {
+  .plan_grid {
     display: grid;
-    grid-gap: 2rem;
-    margin-bottom: 2rem
+    grid-gap: 4rem;
+    margin: 2rem 0
   }
 
   /* Add plan Form */

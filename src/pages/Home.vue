@@ -37,14 +37,14 @@
   .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
     font-size: 1rem
   }
-  .client_link__notes__content img, .plan_container--link__plan-notes img {
+  .client_link__notes__content img, .plan_link img {
     margin: 1rem 0;
     max-width: 100%;
     border-radius: 3px;
     opacity: .6;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover .client_link__notes__content img, .plan_link:hover .plan_container--link__plan-notes img {
+  .client_link:hover .client_link__notes__content img, .plan_link:hover .plan_link:hover img {
     opacity: 1
   }
 
