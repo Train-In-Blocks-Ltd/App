@@ -9,7 +9,6 @@ import ProfileComponent from '@/pages/Account'
 import LogoutComponent from '@/pages/Logout'
 import NotFound from '@/pages/NotFound'
 import ArchiveComponent from '@/pages/Archive'
-import HelpComponent from '@/pages/Help'
 import TemplateComponent from '@/pages/Templates'
 
 import ClientComponent from '@/pages/_client/Home'
@@ -60,14 +59,6 @@ const router = new Router({
       component: ProfileComponent,
       meta: {
         requiresAuth: true
-      }
-    },
-    {
-      path: '/help',
-      component: HelpComponent,
-      meta: {
-        requiresAuth: true,
-        requiresTrainer: true
       }
     },
     {

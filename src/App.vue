@@ -74,7 +74,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #client, #account, #archive, .wrapper--client, #help, #logout, #templates {
+  #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
     padding: 2rem 10vw
   }
   .flex {
@@ -549,7 +549,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #client, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -600,7 +600,7 @@
     main {
       margin: 0
     }
-    #home, #client, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -715,12 +715,12 @@
         </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/help" title="Help" >
+        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
             Help
           </p>
-        </router-link>
+        </a>
       </div>
       <div class="account_nav--item">
         <router-link to="/templates" title="Templates">
