@@ -248,24 +248,17 @@ export default {
       this.$parent.loading = true
       this.$parent.dontLeave = true
       try {
-        const oktaOne = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.email}"&limit=1`,
+        const oktaOne = await axios.post('/.netlify/functions/okta',
           {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': process.env.AUTH_HEADER
-            }
+            type: 'GET',
+            url: `?filter=profile.email+eq+"${this.email}"&limit=1`
           }
         )
         this.id = oktaOne.data[0].id
-        const response = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.id}/lifecycle/reset_password?sendEmail=false`,
-          {},
+        const response = await axios.post('/.netlify/functions/okta',
           {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': process.env.AUTH_HEADER
-            }
+            body: {},
+            url: `${this.id}/lifecycle/reset_password?sendEmail=false`
           }
         )
         await axios.post('/.netlify/functions/send-email',

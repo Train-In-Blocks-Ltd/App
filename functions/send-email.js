@@ -14,7 +14,7 @@ const headers = {
 }
 
 exports.handler = async function handler (event, context, callback) {
-  if (handler.httpMethod === 'OPTIONS') {
+  if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
       headers: headers,
