@@ -415,39 +415,39 @@
             <p><i>[sRPE (CR10): 8]</i></p>
             <p><i>[sRPE (Borg): 16]</i></p><br>
             <p>See <i>Help</i> for more information</p><br>
-            <button class="cancel" @click="$modal.hide('info')">Close</button>
+            <button class="cancel" @click="$modal.hide('info'), $parent.$parent.willBodyScroll(true)">Close</button>
           </div>
         </div>
       </modal>
       <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <form @submit.prevent="initMove(), $modal.hide('move')" class="modal--move">
+        <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
           <div class="wrapper--centered-item">
             <label for="range">Move to:</label>
             <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/><br><br>
             <button type="submit">Move</button>
-            <button class="cancel" @click.prevent="$modal.hide('move')">Cancel</button>
+            <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">Cancel</button>
           </div>
         </form>
       </modal>
       <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <form @submit.prevent="shiftAcross()" class="modal--shift">
+        <form @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)" class="modal--shift">
           <div class="wrapper--centered-item">
             <label for="range">Shift session dates by: </label>
             <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
             <button type="submit">Shift</button>
-            <button class="cancel" @click.prevent="$modal.hide('shift')">Cancel</button>
+            <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">Cancel</button>
           </div>
         </form>
       </modal>
       <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <form @submit.prevent="copyAcross()" class="modal--copy">
+        <form @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)" class="modal--copy">
             <div class="wrapper--centered-item">
               <label for="range">From {{currentWeek}} to: </label>
               <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
               <label for="range">Days until next sessions: </label>
               <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
               <button type="submit">Copy</button>
-              <button class="cancel" @click.prevent="$modal.hide('copy')">Cancel</button>
+              <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.willBodyScroll(true)">Cancel</button>
             </div>
         </form>
       </modal>
@@ -464,9 +464,9 @@
           <p class="text--selected">
             <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
           </p>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift')">Shift</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy'), $parent.$parent.willBodyScroll(false)">Copy Across</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.willBodyScroll(false)">Move</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.willBodyScroll(false)">Shift</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
         </div>
@@ -531,7 +531,7 @@
                 <div class="session--header">
                   <div class="session--header__left">
                     <input @blur="updateSessionColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
-                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.willBodyScroll(false)"/>
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
