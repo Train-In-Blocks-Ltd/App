@@ -1,4 +1,4 @@
-<style scoped>
+<style>
   /* Client Notes */
   .client-notes {
     margin-top: 4rem

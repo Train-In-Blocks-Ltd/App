@@ -74,7 +74,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #account, #archive, .wrapper--client, #help, #logout, #templates {
+  #home, #client, #account, #archive, .wrapper--client, #help, #logout, #templates {
     padding: 2rem 10vw
   }
   .flex {
@@ -176,6 +176,10 @@
   }
 
   /* GLOBAL: CALENDAR */
+  div.fc-toolbar h2 {
+    font-weight: lighter;
+    font-size: 1.6rem
+  }
   button.fc-button {
     border-radius: 3px;
     text-transform: capitalize;
@@ -304,6 +308,7 @@
   }
   .wrapper--centered-item {
     margin: 0 auto;
+    position: relative;
     max-width: 300px
   }
 
@@ -544,7 +549,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -595,7 +600,7 @@
     main {
       margin: 0
     }
-    #home, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #help, #logout, #templates {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {

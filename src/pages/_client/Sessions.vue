@@ -217,19 +217,11 @@
   }
   .wrapper--session {
     display: grid;
-    grid-template-areas:
-      'header'
-      'body'
-      'bar'
-  }
-  .wrapper--session:after {
-    content: '';
-    height: 1px;
-    width: 40%;
-    background-color: #282828
+    box-shadow: 0 0 20px 10px #28282810;
+    padding: 2rem;
+    border-radius: 3px
   }
   .wrapper--session__header {
-    grid-area: header;
     display: flex;
     justify-content: space-between
   }
@@ -246,7 +238,7 @@
   }
   .container--sessions {
     display: grid;
-    grid-gap: 6rem
+    grid-gap: 4rem
   }
   input.session-name, input.session-date {
     text-overflow: ellipsis;
@@ -267,17 +259,9 @@
     width: fit-content;
     font-size: .8rem
   }
-  .show-session {
-    grid-area: body
-  }
   .show-feedback {
     margin: 1rem 0;
-    padding: 0;
-    grid-area: feedback
-  }
-  .bottom-bar {
-    grid-area: bar;
-    margin-bottom: 6rem
+    padding: 0
   }
   .bottom-bar .button {
     margin: 0
@@ -297,13 +281,6 @@
   }
   .editingChecked:hover {
     opacity: .6
-  }
-  .showingFeedback {
-    grid-template-areas:
-      'header'
-      'body'
-      'feedback'
-      'bar'
   }
 
   /* Graph */
@@ -510,9 +487,9 @@
             <div class="wrapper-plan">
               <div class="plan_table">
                 <div class="plan_table__header">
-                  <h3>Microcycles</h3>
+                  <p class="text--small">Microcycles</p>
                   <div class="wrapper-duration">
-                    <label for="duration"><b>Duration: </b></label>
+                    <label for="duration">Duration: </label>
                     <input id="duration" type="number" name="duration" inputmode="decimal" v-model="plan.duration" min="1" required @blur="update_plan()" @change="weekConfirm(plan.duration), maxWeek = plan.duration"/>
                   </div>
                 </div>
