@@ -41,7 +41,7 @@
 <template>
   <div id="archive">
     <h1 class="text--large">Archive</h1>
-    <p v-if="this.$parent.archive.no_archive">No clients are archived</p>
+    <p class="text--small grey" v-if="this.$parent.archive.no_archive">No clients are archived :)</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <div class="archive--container" v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients">
       <label>

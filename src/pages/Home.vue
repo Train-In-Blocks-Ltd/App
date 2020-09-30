@@ -56,7 +56,7 @@
     display: grid;
     margin-bottom: 2rem
   }
-  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new {
+  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
     position: fixed;
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;

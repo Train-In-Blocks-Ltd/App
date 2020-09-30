@@ -65,8 +65,7 @@
 
   /* Plan Grid */
   .plan-notes {
-    grid-area: b;
-    margin: 0 0 4rem 0
+    margin: 4rem 0
   }
   .plan-notes__header {
     display: flex
@@ -444,7 +443,7 @@
                 </div>
                 <quill v-show="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
                 <div v-if="!editPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
-                <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
+                <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="text--small grey text--no-plan-notes">No plan notes added...</p>
                 <div class="bottom-bar">
                   <div>
                     <button v-show="editPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
@@ -484,8 +483,8 @@
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
-                <p v-if="$parent.no_sessions">No sessions added yet :(</p>
-                <p v-if="$parent.loading_sessions">Loading sessions...</p>
+                <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions added yet :(</p>
+                <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
                   <p class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
                   <!-- New session -->

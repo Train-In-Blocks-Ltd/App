@@ -157,7 +157,7 @@
     font-size: .8rem;
     color: #B80000
   }
-  .text--no-sessions, .text--loading, .text--no-plans, .text--no-clients {
+  .text--no-sessions, .text--loading, .text--no-plans, .text--no-clients, .text--no-client-notes, .text--no-plan-notes {
     margin: 2rem 0 4rem 0
   }
 
@@ -321,7 +321,8 @@
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
-    margin: 0
+    margin: auto;
+    max-width: 300px
   }
   .form_buttons {
     display: grid;
@@ -427,7 +428,7 @@
   }
 
   /* GLOBAL: EXTRA OPTIONS */
-  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new {
+  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new, .icon--open-new-plan {
     user-select: none;
     z-index: 2;
     display: flex;
@@ -441,7 +442,7 @@
     background-color: #F4F4F4;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  div.icon--open-stats, div.icon--open-whats-new {
+  div.icon--open-stats, div.icon--open-whats-new, .icon--open-new-plan {
     top: 4.4rem
   }
   div.icon--open-install-pwa {
@@ -452,21 +453,21 @@
     justify-content: center;
     text-align: center
   }
-  .icon--open-new-client:hover, .icon--open-whats-new:hover {
+  .icon--open-new-client:hover, .icon--open-whats-new:hover, .icon--open-new-plan:hover {
     width: 8rem;
     justify-content: center;
     text-align: center
   }
-  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg {
+  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg, .icon--open-new-plan:hover svg {
     display: none
   }
-  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text {
+  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text, .icon--open-new-plan .text {
     font-size: .8rem;
     display: none;
     white-space: nowrap;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text {
+  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text, .icon--open-new-plan:hover .text {
     display: block
   }
 
@@ -659,7 +660,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-new-plan {
       transition: none
     }
     .sidebar {
