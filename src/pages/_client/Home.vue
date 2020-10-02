@@ -347,13 +347,7 @@
                 this.no_sessions = true
               // If client_details.plans.sessions is not set then query the API
               } else if (!this.$parent.client_details.plans[f].sessions || force === true) {
-                const response = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`,
-                  {
-                    headers: {
-                      'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                    }
-                  }
-                )
+                const response = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
                 // If there are no sessions
                 if (response.data.length === 0) {
                   this.no_sessions = true
@@ -401,13 +395,7 @@
                 this.no_plans = true
               // If client_details.plans is not set then query the API
               } else if (!this.$parent.clients[x].plans || force === true) {
-                const response = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`,
-                  {
-                    headers: {
-                      'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                    }
-                  }
-                )
+                const response = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
                 // If there are no plans
                 if (response.data.length === 0) {
                   this.no_plans = true
@@ -442,11 +430,6 @@
               'email': this.$parent.client_details.email,
               'number': this.$parent.client_details.number,
               'notes': this.$parent.client_details.notes
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           // Get the client information again as we have just updated the client
@@ -474,13 +457,7 @@
             }
           }
           try {
-            await axios.delete(`https://api.traininblocks.com/programmes/${id}`,
-              {
-                headers: {
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              }
-            )
+            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
 
             await this.$parent.clients_f()
             this.$parent.clients_to_vue()

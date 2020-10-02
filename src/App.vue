@@ -947,13 +947,7 @@ export default {
     },
     async clients_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
         if (response.data.length === 0) {
           this.no_clients = true
         } else {
@@ -983,13 +977,7 @@ export default {
           }
         }
         try {
-          await axios.delete(`https://api.traininblocks.com/clients/${id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
           await this.archive_f()
           this.archive_to_vue()
@@ -1029,13 +1017,7 @@ export default {
     },
     async archive_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
         if (response.data.length === 0) {
           this.archive.no_archive = true
         } else {
@@ -1063,13 +1045,7 @@ export default {
           }
         }
         try {
-          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
           // eslint-disable-next-line
           this.response = response.data
 
@@ -1139,13 +1115,7 @@ export default {
           }
         }
         try {
-          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
           this.response = response.data
 
           await this.archive_f()
@@ -1170,23 +1140,11 @@ export default {
 
     async get_plans () {
       try {
-        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
         this.clientUser.plans = plans.data
         var f
         for (f in this.clientUser.plans) {
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
@@ -1201,13 +1159,7 @@ export default {
       try {
         var f
         for (f in this.clientUser.plans) {
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
@@ -1240,11 +1192,6 @@ export default {
       try {
         await axios.post(`https://api.traininblocks.com/client-workouts`,
           {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          },
-          {
             'id': sessionId,
             'name': sessionName,
             'checked': sessionChecked,
@@ -1252,13 +1199,7 @@ export default {
           }
         )
         this.$ga.event('Session', 'update')
-        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
         if (client.data[0].notifications === 1) {
           if (sessionFeedback !== null) {
             const ptEmail = await axios.post('/.netlify/functions/okta',

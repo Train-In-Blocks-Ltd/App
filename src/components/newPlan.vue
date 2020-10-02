@@ -43,12 +43,6 @@
               'start': this.new_plan.start,
               'type': this.new_plan.type,
               'block_color': ''
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           this.response = 'Added New Plan'

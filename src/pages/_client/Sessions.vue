@@ -1369,11 +1369,6 @@
               'notes': plan.notes,
               'block_color': plan.block_color,
               'type': plan.type
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           // Set vue client_details data to new data
@@ -1439,11 +1434,6 @@
               'notes': sessionsNotes,
               'week_id': sessionsWeek,
               'checked': sessionsChecked
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           await this.$parent.get_sessions(this.force)
@@ -1470,12 +1460,6 @@
               'date': this.new_session.date,
               'notes': this.currentCopysessionNotes,
               'week_id': this.currentWeek
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           this.response = response.data
@@ -1506,13 +1490,7 @@
           try {
             this.$parent.$parent.loading = true
             this.$parent.$parent.dontLeave = true
-            await axios.delete(`https://api.traininblocks.com/workouts/${id}`,
-              {
-                headers: {
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              }
-            )
+            await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
             await this.$parent.get_sessions(this.force)
             await this.update_plan()
 

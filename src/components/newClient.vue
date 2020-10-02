@@ -41,15 +41,8 @@
                 'email': this.new_client.email,
                 'number': this.new_client.number,
                 'notes': this.new_client.notes
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
               }
             )
-            // eslint-disable-next-line
             this.$parent.response = 'Added New Client'
             this.$parent.$parent.responseDelay()
 
