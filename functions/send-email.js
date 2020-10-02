@@ -1,4 +1,4 @@
-const key = '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'
+const key = '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'
 const axios = require('axios')
 const qs = require('querystring')
 const sendgrid = require('@sendgrid/mail')
