@@ -1,5 +1,6 @@
+const axios = require('axios')
+const qs = require('querystring')
 const stripe = require('stripe')('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')
-
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -12,13 +13,24 @@ const headers = {
 }
 
 exports.handler = async function handler (event, context, callback) {
+  const access_token = event.headers.authorization.split(' ')
+  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6', qs.stringify({
+    token: access_token[1],
+    token_type_hint: 'access_token'
+  }),
+  {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
       headers: headers,
       body: ''
     })
-  } else if (event.body) {
+  } else if (event.body && response.data.active === true) {
     try {
       const link = await stripe.billingPortal.sessions.create({
         customer: JSON.parse(event.body).id,

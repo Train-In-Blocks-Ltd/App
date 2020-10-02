@@ -819,7 +819,8 @@ export default {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
   },
-  mounted () {
+  async mounted () {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile

@@ -1,4 +1,5 @@
 const axios = require('axios')
+const qs = require('querystring')
 const auth_header = 'SSWS 00HqfFqOGTIaDz0MENWiQ_mVVe7-a2OWJaLrB4L6a6'
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -12,13 +13,24 @@ const headers = {
 }
 
 exports.handler = async function handler (event, context, callback) {
+  const access_token = event.headers.authorization.split(' ')
+  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6', qs.stringify({
+    token: access_token[1],
+    token_type_hint: 'access_token'
+  }),
+  {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
       headers: headers,
       body: ''
     })
-  } else if (event.body) {
+  } else if (event.body && response.data.active === true) {
     const data = JSON.parse(event.body)
     if (data.type === 'POST') {
       try {
@@ -43,7 +55,7 @@ exports.handler = async function handler (event, context, callback) {
           body: JSON.stringify(e)
         })
       }
-    } else if (data.type === 'GET') {
+    } else if (data.type === 'GET' && response.data.active === true) {
       try {
         const response = await axios.get("https://dev-183252.okta.com/api/v1/users/" + data.url,
           {
