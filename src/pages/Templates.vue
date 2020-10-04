@@ -125,16 +125,34 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
-  // import axios from 'axios'
+  import axios from 'axios'
 
   export default {
     components: {
       InlineSvg
-    }/*
+    },
     methods: {
-
+      async new () {
+        const response = await axios.put('https://api.traininblocks.com/templates',
+          {
+            pt_id: this.$parent.claims.sub,
+            template: this.template
+          }
+        )
+      },
+      async update () {
+        const response = await axios.post('https://api.traininblocks.com/templates',
+          {
+            id: this.id,
+            template: this.template
+          }
+        )
+      },
+      async get () {
+        const response = await axios.get(`https://api.traininblocks.com/templates/${this.$parent.claims.sub}`)
+      }
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
-
+      /*
       changeSelectCheckbox (id) {
         if (this.selectedTemplates.includes(id) === false) {
           this.selectedTemplates.push(id)
@@ -207,6 +225,7 @@
         this.isEditingTemplate = false
         window.removeEventListener('keydown', this.quickSaveTemplateNotes)
       }
-    } */
+       */
+    }
   }
 </script>
