@@ -130,8 +130,8 @@ export default {
   },
   async mounted () {
     await this.$parent.get_plans()
-    await this.todayssession()
-    await this.initCountsessionsHome()
+    await this.todaysSession()
+    await this.initCountSessionsHome()
     this.loading = false
   },
   methods: {
@@ -146,14 +146,14 @@ export default {
         return dataIn
       }
     },
-    initCountsessionsHome () {
+    initCountSessionsHome () {
       var count = this.viewSessionsStore.length - 1
       this.maxSessionIndexHome = count
     },
 
     // DATE/TIME METHODS //-------------------------------------------------------------------------------
 
-    todayssession () {
+    todaysSession () {
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {
           if (session.date === this.isToday()) {

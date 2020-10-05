@@ -27,7 +27,7 @@
         </div>
         <div class="container--sessions" v-if="plan.sessions">
           <div class="wrapper--session" v-for="(session, index) in plan.sessions"
-            :key="index" v-show="index == currentsessionIndexPlan">
+            :key="index" v-show="index == currentSessionIndexPlan">
             <div class="wrapper--session__header client-side" :id="session.name">
               <div>
                 <span class="text--name"><b>{{session.name}}</b></span><br>
@@ -53,10 +53,10 @@
         </div>
         <div class="container--session-control">
           <div>
-            <button v-show="currentsessionIndexPlan != 0" @click="currentsessionIndexPlan--">Back</button>
-            <button v-show="currentsessionIndexPlan != maxsessionIndexPlan" @click="currentsessionIndexPlan++">Next</button>
+            <button v-show="currentSessionIndexPlan != 0" @click="currentSessionIndexPlan--">Back</button>
+            <button v-show="currentSessionIndexPlan != maxSessionIndexPlan" @click="currentSessionIndexPlan++">Next</button>
           </div>
-          <p class="session-counter">{{currentsessionIndexPlan + 1}}/{{maxsessionIndexPlan + 1}}</p>
+          <p class="session-counter">{{currentSessionIndexPlan + 1}}/{{maxSessionIndexPlan + 1}}</p>
         </div>
       </div>
     </div>
@@ -76,9 +76,8 @@
     data () {
       return {
         giveFeedback: null,
-        editsession: null,
-        maxsessionIndexPlan: null,
-        currentsessionIndexPlan: 0,
+        maxSessionIndexPlan: null,
+        currentSessionIndexPlan: 0,
 
         // CALENDAR DATA //
 
@@ -99,7 +98,7 @@
     async mounted () {
       this.$parent.loading = true
       await this.$parent.get_plans()
-      await this.initCountsessionsPlan()
+      await this.initCountSessionsPlan()
       await this.$parent.sortSessionsPlan()
       await this.scan()
       this.$parent.loading = false
@@ -142,11 +141,11 @@
           return dataIn
         }
       },
-      initCountsessionsPlan () {
+      initCountSessionsPlan () {
         this.$parent.clientUser.plans.forEach((plan) => {
           //eslint-disable-next-line
           if (plan.id == this.$route.params.id) {
-            this.maxsessionIndexPlan = plan.sessions.length - 1
+            this.maxSessionIndexPlan = plan.sessions.length - 1
           }
         })
       }

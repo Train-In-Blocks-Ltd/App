@@ -171,7 +171,8 @@
   import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
   import {email, emailText, resetEmail, resetEmailText} from '../../components/email'
-  import Toolkit from '../../components/Toolkit.vue'
+  import Toolkit from '../../components/Toolkit'
+  import AlertModal from '../../components/alertModal'
 
   export default {
     components: {
@@ -281,7 +282,14 @@
               'html': resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
-          alert('An activation email was sent to your client.')
+          this.$modal.show(
+            AlertModal,
+            {msg: 'An activation email was sent to your client.'},
+            { height: '100%' },
+            { width: '100%' },
+            { adaptive: true },
+            { clickToClose: false }
+          )
           this.checkClient()
           this.$parent.loading = false
           this.$parent.dontLeave = false
@@ -321,7 +329,14 @@
                 'html': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
               }
             )
-            alert('An activation email was sent to your client.')
+            this.$modal.show(
+              AlertModal,
+              {msg: 'An activation email was sent to your client.'},
+              { height: '100%' },
+              { width: '100%' },
+              { adaptive: true },
+              { clickToClose: false }
+            )
             this.checkClient()
             this.$parent.loading = false
             this.$parent.dontLeave = false
