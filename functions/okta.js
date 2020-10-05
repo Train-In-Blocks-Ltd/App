@@ -1,6 +1,6 @@
 const axios = require('axios')
 const qs = require('querystring')
-const auth_header = 'SSWS 00r26hoJMP9lITIbqrR596dGTWAL0I8lFljhdxfaBV'
+const authHeader = 'SSWS 00r26hoJMP9lITIbqrR596dGTWAL0I8lFljhdxfaBV'
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -13,17 +13,19 @@ const headers = {
 }
 
 exports.handler = async function handler (event, context, callback) {
-  const access_token = event.headers.authorization.split(' ')
-  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6', qs.stringify({
-    token: access_token[1],
-    token_type_hint: 'access_token'
-  }),
-  {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
+  const accessToken = event.headers.authorization.split(' ')
+  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+    qs.stringify({
+      token: accessToken[1],
+      token_type_hint: 'access_token'
+    }),
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     }
-  })
+  )
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
@@ -34,12 +36,12 @@ exports.handler = async function handler (event, context, callback) {
     const data = JSON.parse(event.body)
     if (data.type === 'POST') {
       try {
-        const response = await axios.post("https://dev-183252.okta.com/api/v1/users/" + data.url, data.body,
+        const response = await axios.post('https://dev-183252.okta.com/api/v1/users/' + data.url, data.body,
           {
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': auth_header
+              'Authorization': authHeader
             }
           }
         )
@@ -57,12 +59,12 @@ exports.handler = async function handler (event, context, callback) {
       }
     } else if (data.type === 'GET' && response.data.active === true) {
       try {
-        const response = await axios.get("https://dev-183252.okta.com/api/v1/users/" + data.url,
+        const response = await axios.get('https://dev-183252.okta.com/api/v1/users/' + data.url,
           {
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': auth_header
+              'Authorization': authHeader
             }
           }
         )

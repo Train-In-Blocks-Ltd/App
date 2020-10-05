@@ -13,17 +13,19 @@ const headers = {
 }
 
 exports.handler = async function handler (event, context, callback) {
-  const access_token = event.headers.authorization.split(' ')
-  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6', qs.stringify({
-    token: access_token[1],
-    token_type_hint: 'access_token'
-  }),
-  {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
+  const accessToken = event.headers.authorization.split(' ')
+  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+    qs.stringify({
+      token: accessToken[1],
+      token_type_hint: 'access_token'
+    }),
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     }
-  })
+  )
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
