@@ -42,6 +42,10 @@
   }
 
   /* Containers */
+  .wrapper--template-top {
+    display: flex;
+    justify-content: flex-end
+  }
   .container--template-notes {
     display: grid;
     grid-gap: 6rem
@@ -87,39 +91,32 @@
 
 <template>
   <div id="templates">
-    <!--
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div class="multi-select" v-if="selectedTemplates.length !== 0">
-        <p class="text--selected">
-          <b>Selected {{selectedTemplates.length}} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="text--selected selected-options">Delete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect all</a>
-      </div>
-    </transition>
-    <h1 class="text--large">Templates</h1>
-    <p class="expand-all" @click="expandAll(expandText(expandedTemplates))">{{ expandText(expandedTemplates) }} all</p>
-    <button @click="saveTemplate()">Press</button>
-    <div class="container--template-notes">
-      <div class="template-notes" v-for="(item, index) in storedTemplates" :key="'temp-' + index">
-        <div class="template-notes__header">
-          <p class="template-notes__header__text"><b>{{item.name}}</b></p>
-          <div class="header-options">
-            <input name="select-checkbox" :id="'temp-sc-' + index" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(index)" aria-label="Select this template">
-            <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(index)}" :src="require('../assets/svg/expand.svg')" @click="toggleExpandedTemplates(index)"/>
-          </div>
+    <div class="wrapper--template-top">
+      <button>New Template</button>
+    </div>
+    <div :id="'template-' + template.id" class="wrapper--template" v-for="(template, index) in templates"
+      :key="index">
+      <div class="wrapper--template__header">
+        <div>
+          <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{template.name}}</b></span><br v-if="template.id !== editTemplate">
+          <input v-if="template.id === editTemplate" class="template-name" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
         </div>
-        <quill v-show="isEditingTemplate && expandedTemplates.includes(index)" v-model="item.html" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
-        <div v-if="!isEditingTemplate && expandedTemplates.includes(index)" v-html="item.html" class="show-template-notes animate animate__fadeIn"/>
-        <div class="bottom-bar" v-if="expandedTemplates.includes(index)">
-          <div>
-            <button v-show="!isEditingTemplate" @click="editingTemplateNotes(index, true)" class="button--edit">Edit</button>
-            <button v-show="isEditingTemplate && editTemplate === index" @click="editingTemplateNotes(index, false)" class="button--save">Save</button>
-            <button v-show="isEditingTemplate && editTemplate === index" @click="cancelTemplateNotes()" class="cancel">Cancel</button>
-          </div>
+        <div class="header-options">
+          <input name="select-checkbox" :id="'sc-' + template.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(template.id)" aria-label="Select this template">
+          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
         </div>
       </div>
-    </div> -->
+      <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
+      <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id)" v-html="removeBracketsAndBreaks(template.notes)" tabindex="0" class="show-template animate animate__fadeIn"/>
+      <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
+        <div>
+          <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true)">Edit</button>
+          <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
+          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes()">Cancel</button>
+          <button class="delete" v-show="isEditingTemplate" @click="soloDelete(template.id)">Delete</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -131,12 +128,107 @@
     components: {
       InlineSvg
     },
+    data () {
+      return {
+
+        // TEMPLATE DATA //
+        isEditingTemplate: false,
+        editTemplate: null,
+        new_template: {
+          name: 'Untitled',
+          note: ''
+        },
+        selectedTemplates: []
+      }
+    },
     methods: {
+
+      // BACKGROUND METHODS //-------------------------------------------------------------------------------
+
+      soloDelete (id) {
+        if (confirm('Are you sure you want to delete this template?')) {
+          this.delete_template(id, true)
+        }
+      },
+      bulkDelete () {
+        if (this.selectedTemplates.length !== 0) {
+          var ready = confirm('Are you sure you want to delete all the selected template?')
+          this.selectedTemplates.forEach((templateId) => {
+            this.delete_template(templateId, ready)
+          })
+          this.deselectAll()
+        }
+      },
+      deselectAll () {
+        this.templates.forEach((template) => {
+          var selEl = document.getElementById('sc-' + template.id)
+          if (selEl.checked === true) {
+            selEl.checked = false
+            var idx = this.selectedTemplates.indexOf(template.id)
+            this.selectedTemplates.splice(idx, 1)
+          }
+        })
+      },
+      changeSelectCheckbox (id) {
+        if (this.selectedTemplates.includes(id) === false) {
+          this.selectedTemplates.push(id)
+        } else {
+          var idx = this.selectedTemplates.indexOf(id)
+          this.selectedTemplates.splice(idx, 1)
+        }
+      },
+      toggleExpandedTemplates (id) {
+        if (this.expandedTemplates.includes(id)) {
+          const index = this.expandedTemplates.indexOf(id)
+          if (index > -1) {
+            this.expandedTemplates.splice(index, 1)
+          }
+        } else {
+          this.expandedTemplates.push(id)
+        }
+      },
+      removeBracketsAndBreaks (dataIn) {
+        if (dataIn !== null) {
+          return dataIn.replace(/[[\]]/g, '')
+        } else {
+          return dataIn
+        }
+      },
+      editingTemplateNotes (id, state) {
+        this.isEditingTemplate = state
+        this.editTemplate = id
+        if (state) {
+          window.addEventListener('keydown', this.quickSaveTemplateNotes)
+        } else {
+          this.updateTemplateNotes(id)
+          window.removeEventListener('keydown', this.quickSaveTemplateNotes)
+        }
+      },
+      quickSaveTemplateNotes (key, state) {
+        if (key.keyCode === 13 && key.ctrlKey === true) {
+          this.updateTemplateNotes(this.editTemplate)
+          window.removeEventListener('keydown', this.quickSaveTemplateNotes)
+        }
+      },
+      updateTemplateNotes (id) {
+        // UPDATE TEMPLATE
+        this.isEditingTemplate = false
+        this.editTemplate = null
+      },
+      cancelTemplateNotes () {
+        this.editTemplate = null
+        this.isEditingTemplate = false
+        window.removeEventListener('keydown', this.quickSaveTemplateNotes)
+      },
+
+      // DATABASE METHODS //-------------------------------------------------------------------------------
+
       async new () {
         const response = await axios.put('https://api.traininblocks.com/templates',
           {
             pt_id: this.$parent.claims.sub,
-            template: this.template
+            name: this.new_template.name,
+            template: this.new_template.note
           }
         )
       },
@@ -151,81 +243,6 @@
       async get () {
         const response = await axios.get(`https://api.traininblocks.com/templates/${this.$parent.claims.sub}`)
       }
-      // BACKGROUND METHODS //-------------------------------------------------------------------------------
-      /*
-      changeSelectCheckbox (id) {
-        if (this.selectedTemplates.includes(id) === false) {
-          this.selectedTemplates.push(id)
-        } else {
-          var idx = this.selectedTemplates.indexOf(id)
-          this.selectedTemplates.splice(idx, 1)
-        }
-      },
-      expandAll (toExpand) {
-        this.$parent.claims.templates.forEach((item, index) => {
-          if (toExpand === 'Expand') {
-            this.expandedTemplates.push(index)
-          } else {
-            let x = 0
-            let y = this.expandedTemplates.length
-            for (; x < y; x++) {
-              this.expandedTemplates.pop()
-            }
-          }
-        })
-      },
-      expandText (array) {
-        if (array.length !== 0) {
-          return 'Collapse'
-        } else {
-          return 'Expand'
-        }
-      },
-      deselectAll () {
-        this.$parent.claims.templates.forEach((item, index) => {
-          var selEl = document.getElementById('temp-sc-' + index)
-          if (selEl.checked === true) {
-            selEl.checked = false
-            var idx = this.selectedTemplates.indexOf(index)
-            this.selectedTemplates.splice(idx, 1)
-          }
-        })
-      },
-
-      // TEMPLATES METHODS //-------------------------------------------------------------------------------
-
-      toggleExpandedTemplates (id) {
-        if (this.expandedTemplates.includes(id)) {
-          const index = this.expandedTemplates.indexOf(id)
-          if (index > -1) {
-            this.expandedTemplates.splice(index, 1)
-          }
-        } else {
-          this.expandedTemplates.push(id)
-        }
-      },
-      editingTemplateNotes (id, state) {
-        this.isEditingTemplate = state
-        this.editTemplate = id
-        if (state) {
-          window.addEventListener('keydown', this.quickSaveTemplateNotes)
-        } else {
-          // UPDATE
-          window.removeEventListener('keydown', this.quickSaveTemplateNotes)
-        }
-      },
-      quickSaveTemplateNotes (key, state) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          // UPDATE
-          window.removeEventListener('keydown', this.quickSaveTemplateNotes)
-        }
-      },
-      cancelTemplateNotes () {
-        this.editTemplate = null
-        this.isEditingTemplate = false
-        window.removeEventListener('keydown', this.quickSaveTemplateNotes)
-      }
-       */
     }
   }
 </script>
