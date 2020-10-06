@@ -130,7 +130,6 @@
     },
     data () {
       return {
-
         // TEMPLATE DATA //
         isEditingTemplate: false,
         editTemplate: null,
@@ -142,9 +141,7 @@
       }
     },
     methods: {
-
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
-
       soloDelete (id) {
         if (confirm('Are you sure you want to delete this template?')) {
           this.delete_template(id, true)
@@ -222,26 +219,44 @@
       },
 
       // DATABASE METHODS //-------------------------------------------------------------------------------
-
+      /*
+        Need to use these to update create and get the templates
+        Need to add in store in local storage methods
+        Need to create vue data to store the responses in
+      */
       async new () {
-        const response = await axios.put('https://api.traininblocks.com/templates',
-          {
-            pt_id: this.$parent.claims.sub,
-            name: this.new_template.name,
-            template: this.new_template.note
-          }
-        )
+        try {
+          const response = await axios.put('https://api.traininblocks.com/templates',
+            {
+              pt_id: this.$parent.claims.sub,
+              name: this.new_template.name,
+              template: this.new_template.note
+            }
+          )
+        } catch (e) {
+          // error stuff
+        }
       },
       async update () {
-        const response = await axios.post('https://api.traininblocks.com/templates',
-          {
-            id: this.id,
-            template: this.template
-          }
-        )
+        try {
+          const response = await axios.post('https://api.traininblocks.com/templates',
+            {
+              id: this.template.id,
+              template: this.template.name,
+              name: this.template.name
+            }
+          )
+        } catch (e) {
+          // error stuff
+        }
       },
       async get () {
-        const response = await axios.get(`https://api.traininblocks.com/templates/${this.$parent.claims.sub}`)
+        try {
+          const response = await axios.get(`https://api.traininblocks.com/templates/${this.$parent.claims.sub}`)
+          this.templates = response.data
+        } catch (e) {
+          // error stuff
+        }
       }
     }
   }
