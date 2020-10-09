@@ -94,7 +94,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
+  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #plan {
     padding: 2rem 10vw
   }
   .flex {
@@ -106,6 +106,9 @@
   }
   .wrapper--calendar {
     user-select: none
+  }
+  .full-width-bar {
+    width: 100%
   }
 
   /* GLOBAL: MODALS */
@@ -555,7 +558,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #plan {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -606,7 +609,7 @@
     main {
       margin: 0
     }
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #plan {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -641,8 +644,11 @@
     .text--small {
       font-size: 1.2rem
     }
+    .button--state, .button--feedback {
+      width: 100%
+    }
 
-    /* plans Page */
+    /* Plans Page */
     .fc-view-container {
       width: 90vw;
       overflow-x: auto
@@ -652,6 +658,9 @@
     }
     .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
       width: 200vw
+    }
+    div.fc-toolbar h2 {
+      font-size: 1rem
     }
   }
 
@@ -805,7 +814,7 @@ export default {
             matchVisual: false
           },
           toolbar: [
-            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
+            ['bold', 'italic', 'underline', {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
           ]
         }
       },

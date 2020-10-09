@@ -76,10 +76,10 @@
             </div>
             <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
             <div class="bottom-bar">
-              <div>
-                <button v-if="session.checked !== 0" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button-done" class="button no-margin">Completed</button>
-                <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="button-to-do" class="button no-margin">Incomplete</button>
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id">Give Feedback</button>
+              <div class="full-width-bar">
+                <button v-if="session.checked !== 0" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" class="button--state no-margin">Completed</button>
+                <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" class="button--state no-margin">Click to complete</button>
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
             </div><br>
             <div v-if="giveFeedback === session.id">
@@ -102,7 +102,6 @@
       <div class="plan_grid">
         <router-link v-for="(plan, index) in this.$parent.clientUser.plans" :key="'plan-' + index" class="plan_link" :to="'/clientUser/plan/' + plan.id">
           <p class="text--small plan-name">{{plan.name}}</p>
-          <div v-html="plan.notes" class="plan_link__notes__content" />
         </router-link>
       </div>
     </div>

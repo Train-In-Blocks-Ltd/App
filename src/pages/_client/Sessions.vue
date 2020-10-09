@@ -263,7 +263,8 @@
     left: 0;
     z-index: 2;
     height: 100%;
-    width: 100%
+    width: 100%;
+    overflow-y: auto
   }
   .container--content {
     display: flex;
@@ -472,7 +473,15 @@
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <FullCalendar defaultView="dayGridMonth" :firstDay="1" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="sessionDates" />
+                <FullCalendar
+                  defaultView="dayGridMonth"
+                  :firstDay="1"
+                  :plugins="calendarPlugins"
+                  :header="calendarToolbarHeader"
+                  :footer="calendarToolbarFooter" 
+                  :events="sessionDates"
+                  :views="calendarViews"
+                />
               </div>
             </div>
             <div class="wrapper-plan">
@@ -684,10 +693,18 @@
           right: ''
         },
         calendarToolbarFooter: {
+          left: 'dayGridMonth, dayGridThreeDay',
           right: 'today prev, next'
         },
         calendarPlugins: [ dayGridPlugin ],
         sessionDates: [],
+        calendarViews: {
+          dayGridThreeDay: {
+            type: 'dayGrid',
+            duration: { days: 3 },
+            buttonText: '3 day'
+          }
+        },
 
         // STATISTICS DATA //
         p1: '',
