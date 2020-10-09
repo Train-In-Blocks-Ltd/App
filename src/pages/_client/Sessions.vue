@@ -695,7 +695,7 @@
         p3: '',
         p4: '',
         p5: '',
-        selectedDataName: 'Session Overview',
+        selectedDataName: 'Plan Overview',
         optionsForDataName: [],
         optionsForDataType: [],
         selectedDataType: 'Sets',
@@ -966,7 +966,7 @@
         var overviewStore = []
         this.protocolError.length = 0
         this.optionsForDataType.length = 0
-        if (dataForName === 'Session Overview') {
+        if (dataForName === 'Plan Overview') {
           this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
           this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
         }
@@ -998,7 +998,7 @@
                 this.yData.push(this.otherMeasures(protocol))
               }
             }
-            if (dataForName === 'Session Overview' && exerciseDataPacket[2].includes('at') === true) {
+            if (dataForName === 'Plan Overview' && exerciseDataPacket[2].includes('at') === true) {
               if (dataForType === 'Sets' || dataForType === 'Reps') {
                 dataForSum = this.setsReps(exerciseDataPacket, protocol, dataForType)
               }
@@ -1011,11 +1011,11 @@
               overviewStore.push(dataForSum)
             }
           })
-          if (dataForName === 'Session Overview' && overviewStore.length !== 0) {
+          if (dataForName === 'Plan Overview' && overviewStore.length !== 0) {
             this.yData.push(overviewStore.reduce((a, b) => a + b))
           }
         })
-        if (dataForName === 'Session Overview') {
+        if (dataForName === 'Plan Overview') {
           let x = 1
           for (; x <= this.yData.length; x++) {
             this.xLabel.push('session ' + x)
@@ -1206,7 +1206,7 @@
 
       // Init the dropdown selection with validation
       dropdownInit () {
-        this.optionsForDataName = [{ id: 0, text: 'Session Overview', value: 'Session Overview' }]
+        this.optionsForDataName = [{ id: 0, text: 'Plan Overview', value: 'Plan Overview' }]
         var tempItemStore = []
         var tempItemStoreLate = []
         var continueValue = 0
