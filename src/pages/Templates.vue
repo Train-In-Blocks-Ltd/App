@@ -92,9 +92,9 @@
 <template>
   <div id="templates">
     <div class="wrapper--template-top">
-      <button>New Template</button>
+      <button @click="newTemplate()">New Template</button>
     </div>
-    <div :id="'template-' + template.id" class="wrapper--template" v-for="(template, index) in templates"
+    <div :id="'template-' + template.id" class="wrapper--template" v-for="(template, index) in $parent.templates"
       :key="index">
       <div class="wrapper--template__header">
         <div>
@@ -113,7 +113,7 @@
           <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true)">Edit</button>
           <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
           <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes()">Cancel</button>
-          <button class="delete" v-show="isEditingTemplate" @click="soloDelete(template.id)">Delete</button>
+          <button class="delete" v-show="isEditingTemplate" @click="deleteTemplate(template.id)">Delete</button>
         </div>
       </div>
     </div>
@@ -140,14 +140,17 @@
         selectedTemplates: []
       }
     },
+    async mounted () {
+      await this.getTemplates()
+    },
     methods: {
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
-      soloDelete (id) {
+      deleteTemplate (id) {
         if (confirm('Are you sure you want to delete this template?')) {
           this.delete_template(id, true)
         }
       },
-      bulkDelete () {
+      deleteMultiTemplates () {
         if (this.selectedTemplates.length !== 0) {
           var ready = confirm('Are you sure you want to delete all the selected template?')
           this.selectedTemplates.forEach((templateId) => {
@@ -208,7 +211,7 @@
         }
       },
       updateTemplateNotes (id) {
-        // UPDATE TEMPLATE
+        this.updateTemplate(id)
         this.isEditingTemplate = false
         this.editTemplate = null
       },
@@ -224,8 +227,10 @@
         Need to add in store in local storage methods
         Need to create vue data to store the responses in
       */
-      async new () {
+      async newTemplate () {
         try {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
           const response = await axios.put('https://api.traininblocks.com/templates',
             {
               pt_id: this.$parent.claims.sub,
@@ -233,29 +238,55 @@
               template: this.new_template.note
             }
           )
+          await this.getTemplates()
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
         } catch (e) {
-          // error stuff
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          console.error(e)
         }
       },
-      async update () {
+      async updateTemplate (id) {
         try {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
+          this.$parent.templates.forEach((item) => {
+            //eslint-disable-next-line
+            if (item.id == id) {
+              templateName = item.name
+              templateContent = item.template
+            }
+          })
           const response = await axios.post('https://api.traininblocks.com/templates',
             {
-              id: this.template.id,
-              template: this.template.name,
-              name: this.template.name
+              name: templateName,
+              template: templateContent
             }
           )
+          await this.getTemplates()
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
         } catch (e) {
-          // error stuff
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          console.error(e)
         }
       },
-      async get () {
+      async getTemplates () {
         try {
           const response = await axios.get(`https://api.traininblocks.com/templates/${this.$parent.claims.sub}`)
           this.templates = response.data
         } catch (e) {
-          // error stuff
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          console.error(e)
         }
       }
     }

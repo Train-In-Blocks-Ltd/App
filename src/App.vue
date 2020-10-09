@@ -109,7 +109,7 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--insert-snippet {
     padding: 2rem
   }
   .modal--copy h3, .modal--reset h2 {
@@ -792,6 +792,7 @@ export default {
 
       // BACKGROUND DATA //
 
+      templates: null,
       errorMsg: null,
       loading: false,
       dontLeave: false,

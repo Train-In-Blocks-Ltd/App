@@ -367,6 +367,26 @@
           </div>
         </div>
       </modal>
+      <!-- template ready
+      <modal name="insert-snippet" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+        <div class="modal--insert-snippet">
+          <div class="wrapper--centered-item">
+            <select v-model="selectedHTML">
+              <option value="" disabled selected>Select a template</option>
+              <option
+                v-for="(item, index) in $parent.$parent.templates"
+                :key="index"
+                :value="item.name"
+              >
+                {{item.name}}
+              </option>
+            </select><br>
+            <div v-html="item.template" class="show-html" />    
+            <button @click="pasteHtmlAtCaret(selectedHTML)">Insert</button>
+            <button class="cancel" @click.prevent="$modal.hide('insert-snippet'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+          </div>
+        </div>
+      </modal> -->
       <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
           <div class="wrapper--centered-item">
@@ -518,7 +538,7 @@
                           <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
                           <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes()">Cancel</button>
-                          <button class="delete" v-show="isEditingSession" @click="soloDelete(session.id)">Delete</button>
+                          <button v-show="isEditingSession" @click="$modal.show('insert-snippet'), $parent.$parent.willBodyScroll(false)">Templates</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
@@ -641,6 +661,7 @@
         },
         selectedSessions: [],
         shiftDays: 1,
+        selectedHTML: '',
 
         // REGEX DATA //
         str: [],
@@ -766,11 +787,6 @@
 
       // SESSION METHODS //-------------------------------------------------------------------------------
 
-      soloDelete (id) {
-        if (confirm('Are you sure you want to delete this session?')) {
-          this.delete_session(id, true)
-        }
-      },
       bulkDelete () {
         if (this.selectedSessions.length !== 0) {
           var ready = confirm('Are you sure you want to delete all the selected session?')
