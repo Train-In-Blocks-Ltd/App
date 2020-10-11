@@ -231,7 +231,7 @@
         try {
           this.$parent.loading = true
           this.$parent.dontLeave = true
-          const response = await axios.put('https://api.traininblocks.com/templates',
+          await axios.put('https://api.traininblocks.com/templates',
             {
               pt_id: this.$parent.claims.sub,
               name: this.new_template.name,
@@ -251,16 +251,20 @@
       },
       async updateTemplate (id) {
         try {
+          let templateName
+          let templateContent
           this.$parent.loading = true
           this.$parent.dontLeave = true
-          this.$parent.templates.forEach((item) => {
-            //eslint-disable-next-line
-            if (item.id == id) {
-              templateName = item.name
-              templateContent = item.template
-            }
-          })
-          const response = await axios.post('https://api.traininblocks.com/templates',
+          if (this.$parent.templates.length !== 0) {
+            this.$parent.templates.forEach((item) => {
+              //eslint-disable-next-line
+              if (item.id == id) {
+                templateName = item.name
+                templateContent = item.template
+              }
+            })
+          }
+          await axios.post('https://api.traininblocks.com/templates',
             {
               name: templateName,
               template: templateContent

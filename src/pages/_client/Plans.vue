@@ -101,7 +101,6 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
   import NewPlan from '../../components/newPlan'
 

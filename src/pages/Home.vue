@@ -167,11 +167,10 @@
 </template>
 
 <script>
-  import axios from 'axios'
   import InlineSvg from 'vue-inline-svg'
   import ClientLink from '../components/clientLink'
   import NewClient from '../components/newClient'
-  import WhatsNew from  '../components/whatsNew'
+  import WhatsNew from '../components/whatsNew'
   import InstallApp from '../components/installPWA'
 
   export default {
