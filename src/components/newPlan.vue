@@ -3,7 +3,6 @@
     <p class="text--large">New Plan</p>
     <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>
     <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/></label>
-    <label><b>Start: </b><input class="input--forms" type="date" v-model="new_plan.start" required /></label>
     <label><b>Type: </b>
       <select class="input--forms" v-model="new_plan.type" required>
         <option value="" disabled selected>Select a type</option>
@@ -25,7 +24,6 @@
         new_plan: {
           name: '',
           duration: '',
-          start: '',
           type: ''
         }
       }
@@ -40,7 +38,6 @@
               'name': this.new_plan.name,
               'client_id': this.$parent.$parent.$parent.client_details.client_id,
               'duration': this.new_plan.duration,
-              'start': this.new_plan.start,
               'type': this.new_plan.type,
               'block_color': ''
             }
@@ -67,7 +64,6 @@
           this.new_plan = {
             name: '',
             duration: '',
-            start: '',
             type: ''
           }
           this.$ga.event('Plan', 'new')

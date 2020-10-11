@@ -15,7 +15,8 @@
     align-items: center;
     grid-auto-columns: min-content
   }
-  #duration, .plan_info input#start {
+  #duration {
+    width: 6rem;
     font-size: 1rem;
     margin-left: 1rem
   }
@@ -89,9 +90,6 @@
     display: grid;
     margin: 0 0 4rem 0;
     grid-gap: 1rem
-  }
-  #duration {
-    width: 6rem
   }
   .plan_table {
     height: fit-content
@@ -1398,7 +1396,6 @@
               'id': plan.id,
               'name': plan.name,
               'duration': plan.duration,
-              'start': plan.start,
               'notes': plan.notes,
               'block_color': plan.block_color,
               'type': plan.type

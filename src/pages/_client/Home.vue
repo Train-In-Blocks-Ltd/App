@@ -44,7 +44,7 @@
     right: 0;
     top: 0;
     padding: 0;
-    z-index: 2;
+    z-index: 4;
     box-shadow: 0 0 20px 10px #28282810;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }

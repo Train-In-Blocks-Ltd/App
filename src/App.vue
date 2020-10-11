@@ -222,9 +222,6 @@
   .fc-view-container span {
     font-size: .8rem
   }
-  button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-button.fc-button-primary, button.fc-dayGridWeek-button.fc-button.fc-button-primary, button.fc-dayGridMonth-button.fc-button.fc-button-primary {
-    margin-left: .4rem
-  }
 
   /* GLOBAL: SESSIONS AND NOTES */
   .wrapper--session__header {
@@ -1180,7 +1177,7 @@ export default {
         console.error(e)
       }
     },
-    async update_session (pid, wid) {
+    async update_session (pid, sid) {
       this.loading = true
       // Set the plan variable to the current plan
       let x
@@ -1190,7 +1187,7 @@ export default {
           var plan = this.clientUser.plans[x]
           var y
           for (y in plan.sessions) {
-            if (plan.sessions[y].id === wid) {
+            if (plan.sessions[y].id === sid) {
               var sessionId = plan.sessions[y].id
               var sessionName = plan.sessions[y].name
               var sessionChecked = plan.sessions[y].checked

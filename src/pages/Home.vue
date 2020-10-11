@@ -105,6 +105,9 @@
     .home--container {
       width: 100%
     }
+    .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+      padding: 4rem 10vw 10rem 10vw
+    }
   }
 </style>
 
