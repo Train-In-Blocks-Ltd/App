@@ -128,7 +128,7 @@
           <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
         </transition>
         <transition-group enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-          <div class="client--options" v-for="(clients, index) in $parent.clients" :key="index" v-show="clients.client_id == $route.params.client_id && showOptions">
+          <div class="client--options" v-for="clients in $parent.clients" :key="clients.client_id" v-show="clients.client_id == $route.params.client_id && showOptions">
             <a v-show="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
             <a href="javascript:void(0)" v-show="showDeletePlan" @click="delete_plan()">Delete Plan</a>
             <a v-show="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
