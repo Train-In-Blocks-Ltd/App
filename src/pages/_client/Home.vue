@@ -355,8 +355,7 @@
           var f
           for (f in this.$parent.client_details.plans) {
             // If plan matches plan in route
-            // eslint-disable-next-line
-            if (this.$parent.client_details.plans[f].id == this.$route.params.id) {
+            if (this.$parent.client_details.plans[f].id === parseInt(this.$route.params.id)) {
               // If client_details.plans.sessions is set to false
               if (this.$parent.client_details.plans[f].sessions === false && !force) {
                 this.no_sessions = true
@@ -377,8 +376,7 @@
                 // eslint-disable-next-line
                 for (var y in this.$parent.clients) {
                   // If client matches client in route
-                  // eslint-disable-next-line
-                  if (this.$parent.clients[f].client_id == this.$route.params.client_id) {
+                  if (this.$parent.clients[f].client_id === parseInt(this.$route.params.client_id)) {
                     this.$parent.clients[f] = this.$parent.client_details
                   }
                 }
@@ -401,8 +399,7 @@
           var x
           for (x in this.$parent.clients) {
             // If client matches client in route
-            // eslint-disable-next-line
-            if (this.$parent.clients[x].client_id == this.$route.params.client_id) {
+            if (this.$parent.clients[x].client_id === parseInt(this.$route.params.client_id)) {
               // Set client_details variable with client details
               this.$parent.client_details = this.$parent.clients[x]
               // If client_details.plans is set to false
@@ -466,8 +463,7 @@
           var plan
           var id
           for (plan of this.$parent.client_details.plans) {
-            //eslint-disable-next-line
-            if (plan.id == this.$route.params.id) {
+            if (plan.id === parseInt(this.$route.params.id)) {
               id = plan.id
             }
           }

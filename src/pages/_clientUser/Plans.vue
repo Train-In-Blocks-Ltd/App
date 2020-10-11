@@ -21,8 +21,7 @@
 
 <template>
   <div id="plan">
-    <div v-for="(plan, index) in $parent.clientUser.plans"
-      :key="index">
+    <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id">
         <div class="session--header">
           <p class="text--small">{{plan.name}}</p>
@@ -56,9 +55,9 @@
             </div>
             <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
             <div class="bottom-bar">
-              <div class="full-width-bar">
-                <button v-show="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button-done" class="button--state">Completed</button>
-                <button v-show="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="button-to-do" class="button--state">Click to complete</button>
+              <div class="full-width-bar" :key="check">
+                <button v-if="session.checked === 1" @click="complete(plan.id, session.id)" id="button-done" class="button--state">Completed</button>
+                <button v-if="session.checked === 0" @click="complete(plan.id, session.id)" id="button-to-do" class="button--state">Click to complete</button>
                 <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
             </div><br>
@@ -94,6 +93,8 @@
     },
     data () {
       return {
+        check: null,
+
         giveFeedback: null,
         maxSessionIndexPlan: null,
         currentSessionIndexPlan: 0,
@@ -131,14 +132,31 @@
       this.$parent.loading = false
     },
     methods: {
+      complete (p, s) {
+        for (const plan of this.$parent.clientUser.plans) {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            for (let session of plan.sessions) {
+              if (session.id === s) {
+                if (session.checked === 0) {
+                  session.checked = 1
+                  this.check = 1
+                } else {
+                  session.checked = 0
+                  this.check = 0
+                }
+              }
+            }
+          }
+        }
+        this.$parent.update_session(p, s)
+      },
 
       // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
       scan () {
         this.sessionDates.length = 0
         this.$parent.clientUser.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             var weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
             if (plan.sessions !== null) {
               plan.sessions.forEach((session) => {
@@ -170,8 +188,7 @@
       },
       initCountSessionsPlan () {
         this.$parent.clientUser.plans.forEach((plan) => {
-          //eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             this.maxSessionIndexPlan = plan.sessions.length - 1
           }
         })

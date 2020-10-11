@@ -740,8 +740,7 @@
 
       shiftAcross () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 session.date = this.addDays(session.date, parseInt(this.shiftDays))
@@ -757,8 +756,7 @@
         var copysessions = []
         let weekCount = 2
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 copysessions.push({ name: session.name, date: session.date, notes: session.notes })
@@ -786,8 +784,7 @@
       },
       initMove () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 session.week_id = this.moveTarget
@@ -813,8 +810,7 @@
       },
       deselectAll () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               var selEl = document.getElementById('sc-' + session.id)
               if (selEl.checked === true) {
@@ -905,8 +901,7 @@
       },
       updateSessionColor () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
           }
         })
@@ -1105,8 +1100,7 @@
       },
       expandAll (toExpand) {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (toExpand === 'Expand') {
                 this.expandedSessions.push(session.id)
@@ -1149,8 +1143,7 @@
       },
       sortSessions () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id && this.$parent.no_sessions === false) {
+          if (plan.id === parseInt(this.$route.params.id) && this.$parent.no_sessions === false) {
             plan.sessions.sort((a, b) => {
               return new Date(a.date) - new Date(b.date)
             })
@@ -1161,8 +1154,7 @@
         this.dataPacketStore.length = 0
         this.sessionDates.length = 0
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
             this.str = plan.sessions
             this.maxWeek = plan.duration
@@ -1384,8 +1376,7 @@
         var plan
         // Set the plan variable to the current plan
         for (var x in this.$parent.$parent.client_details.plans) {
-          // eslint-disable-next-line
-          if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
+          if (this.$parent.$parent.client_details.plans[x].id === parseInt(this.$route.params.id)) {
             plan = this.$parent.$parent.client_details.plans[x]
           }
         }
@@ -1439,8 +1430,7 @@
         this.$parent.$parent.dontLeave = true
         // Set the plan variable to the current plan
         for (var x in this.$parent.$parent.client_details.plans) {
-          //eslint-disable-next-line
-          if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
+          if (this.$parent.$parent.client_details.plans[x].id === parseInt(this.$route.params.id)) {
             var plan = this.$parent.$parent.client_details.plans[x]
             var y
             for (y in plan.sessions) {

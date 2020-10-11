@@ -889,8 +889,7 @@ export default {
     },
     sortSessionsPlan () {
       this.clientUser.plans.forEach((plan) => {
-        //eslint-disable-next-line
-        if (plan.id == this.$route.params.id) {
+        if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
           })
@@ -975,8 +974,7 @@ export default {
         this.loading = true
         this.dontLeave = true
         for (var i = 0; i < this.archive.clients.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive.clients[i].client_id == id) {
+          if (this.archive.clients[i].client_id === id) {
             this.archive.clients.splice(index, 1)
             if (this.archive.clients.length === 0) {
               this.archive.no_archive = true
@@ -1042,8 +1040,7 @@ export default {
         this.loading = true
         this.dontLeave = true
         for (var i = 0; i < this.clients.length; i++) {
-          //eslint-disable-next-line
-          if (this.clients[i].client_id == id) {
+          if (this.clients[i].client_id === id) {
             email = this.clients[i].email
             this.clients.splice(index, 1)
             if (this.clients.length === 0) {
@@ -1053,7 +1050,6 @@ export default {
         }
         try {
           const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
-          // eslint-disable-next-line
           this.response = response.data
 
           await this.clients_f()
@@ -1103,8 +1099,7 @@ export default {
         this.loading = true
         this.dontLeave = true
         for (var i = 0; i < this.archive.clients.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive.clients[i].client_id == id) {
+          if (this.archive.clients[i].client_id === id) {
             var arr = JSON.parse(localStorage.getItem('clients'))
             arr.push(this.archive.clients[i])
 
@@ -1182,8 +1177,7 @@ export default {
       // Set the plan variable to the current plan
       let x
       for (x in this.clientUser.plans) {
-        // eslint-disable-next-line
-        if (this.clientUser.plans[x].id == pid) {
+        if (this.clientUser.plans[x].id === pid) {
           var plan = this.clientUser.plans[x]
           var y
           for (y in plan.sessions) {
