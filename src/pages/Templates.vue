@@ -239,6 +239,10 @@
             }
           )
           await this.getTemplates()
+          this.new_template = {
+            name: 'Untitled',
+            note: ''
+          }
           this.$parent.loading = false
           this.$parent.dontLeave = false
         } catch (e) {
