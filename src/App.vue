@@ -811,7 +811,7 @@ export default {
             matchVisual: false
           },
           toolbar: [
-            ['bold', 'italic', 'underline', {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
+            ['bold', 'italic', 'underline', {'list': 'ordered'}, {'list': 'bullet'}, { 'list': 'check' }, 'link', 'image']
           ]
         }
       },
