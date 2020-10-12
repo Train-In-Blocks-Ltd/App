@@ -684,12 +684,14 @@
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
     <modal name="error" height="100%" width='100%' :adaptive="true" :clickToClose="false">
-      <div class="modal--error">
-        <p><b>Something went wrong. Please try again...</b></p><br>
-        <p>{{errorMsg}}</p><br>
-        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
-          <button type="submit" formtarget="_blank">Let us know</button>
-        </form>
+      <div class="wrapper--centered-item">
+        <div class="modal--error">
+          <p><b>Something went wrong. Please try again...</b></p><br>
+          <p>{{errorMsg}}</p><br>
+          <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
+            <button type="submit" formtarget="_blank">Let us know</button>
+          </form>
+        </div>
       </div>
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
