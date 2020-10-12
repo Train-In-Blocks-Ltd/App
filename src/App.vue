@@ -121,6 +121,12 @@
   div.vm--modal {
     min-width: 100%
   }
+  .modal--bottom-bar {
+    display: flex
+  }
+  .modal--bottom-bar button {
+    margin-right: .6rem
+  }
 
   /* GLOBAL: SVG */
   .title-icon {
@@ -334,7 +340,7 @@
   .wrapper--centered-item {
     margin: 0 auto;
     position: relative;
-    max-width: 300px
+    max-width: 500px
   }
 
   /* GLOBAL: LOGO */
@@ -644,6 +650,9 @@
     .button--state, .button--feedback {
       width: 100%
     }
+    .wrapper--centered-item {
+      max-width: 300px
+    }
 
     /* Plans Page */
     .fc-view-container {
@@ -688,9 +697,12 @@
         <div class="modal--error">
           <p><b>Something went wrong. Please try again...</b></p><br>
           <p>{{errorMsg}}</p><br>
-          <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
-            <button type="submit" formtarget="_blank">Let us know</button>
-          </form>
+          <div class="modal--bottom-bar">
+            <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
+              <button type="submit" formtarget="_blank">Let us know</button>
+            </form>
+            <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">Close</button> 
+          </div>
         </div>
       </div>
     </modal>
