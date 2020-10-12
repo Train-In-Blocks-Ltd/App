@@ -212,20 +212,21 @@
   }
   input.session-name, input.session-date {
     text-overflow: ellipsis;
+    letter-spacing: 1px;
     border: 0;
     border-bottom: 1px solid #282828;
     outline-width: 0;
-    padding: 0
+    cursor: pointer;
+    padding: 0;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   input.session-name {
-    cursor: pointer;
     font-size: 1rem
   }
   input.session-name:hover {
     opacity: .6
   }
   input.session-date {
-    cursor: pointer;
     width: fit-content;
     font-size: .8rem
   }
@@ -535,16 +536,17 @@
                         </div>
                         <div class="header-options">
                           <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
-                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
+                          <inline-svg v-if="session.notes !== null" id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id)" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
+                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
+                      <p v-if="session.id !== editSession && session.notes === null" class="grey text--no-content">No content yet :(</p>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
-                      <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
+                      <div class="bottom-bar" v-if="expandedSessions.includes(session.id) | session.notes === null">
                         <div>
                           <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
@@ -773,11 +775,11 @@
           copysessions.forEach((session) => {
             this.new_session.name = session.name
             this.new_session.date = this.addDays(session.date, this.daysDiff * (weekCount - 1))
-            this.currentCopysessionNotes = session.notes
+            this.currentCopySessionNotes = session.notes
             this.add_session()
           })
         }
-        this.currentCopysessionNotes = ''
+        this.currentCopySessionNotes = ''
         this.copyTarget = 1
         this.new_session.name = 'Untitled'
         this.today()
@@ -1482,7 +1484,7 @@
               'name': this.new_session.name,
               'programme_id': this.$route.params.id,
               'date': this.new_session.date,
-              'notes': this.currentCopysessionNotes,
+              'notes': this.currentCopySessionNotes,
               'week_id': this.currentWeek
             }
           )
@@ -1492,7 +1494,7 @@
           this.new_session = {
             name: 'Untitled',
             date: this.todayDate,
-            notes: '',
+            notes: null,
             week_id: '',
             block_color: ''
           }

@@ -6,11 +6,14 @@
     display: grid;
     grid-gap: .4rem;
     position: fixed;
-    right: 2rem;
+    top: 0;
+    right: 0;
     text-align: right;
-    background-color: #FFFFFF99;
-    z-index: 99;
-    padding: 1rem 0 1rem 1rem
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810;
+    width: 100%;
+    z-index: 9;
+    padding: 2rem
   }
   .multi-select a {
     color: #282828;
@@ -44,13 +47,21 @@
   /* Containers */
   .wrapper--template-top {
     display: flex;
-    justify-content: flex-end
+    justify-content: flex-end;
+    margin-bottom: 4rem
   }
-  .container--template-notes {
+  .container--templates {
     display: grid;
-    grid-gap: 6rem
+    grid-gap: 4rem;
+    margin: 4rem 0
   }
-  .template-notes__header {
+  .wrapper--template {
+    display: grid;
+    box-shadow: 0 0 20px 10px #28282810;
+    padding: 2rem;
+    border-radius: 3px
+  }
+  .wrapper--template__header {
     display: flex;
     justify-content: space-between
   }
@@ -58,6 +69,25 @@
     display: flex;
     flex-direction: column;
     align-items: center
+  }
+
+  /* Inputs */
+  input.template-name {
+    text-overflow: ellipsis;
+    letter-spacing: 1px;
+    border: 0;
+    border-bottom: 1px solid #282828;
+    font-size: 1rem;
+    outline-width: 0;
+    cursor: pointer;
+    padding: 0;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  input.template-name:hover {
+    opacity: .6
+  }
+  .newTemplate {
+    color: #B80000
   }
 
   /* Icons */
@@ -86,34 +116,53 @@
     .multi-select svg {
       margin-left: auto
     }
+    input.template-name {
+      width: 60%
+    }
+  }
+  @media (max-width: 576px) {
+    input.template-name {
+      width: 100%
+    }
   }
 </style>
 
 <template>
   <div id="templates">
+    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+      <div class="multi-select" v-if="selectedTemplates.length !== 0">
+        <p class="text--selected">
+          <b>Selected {{selectedTemplates.length}} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
+        </p>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiTemplates()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
+      </div>
+    </transition>
     <div class="wrapper--template-top">
       <button @click="newTemplate()">New Template</button>
     </div>
-    <div :id="'template-' + template.id" class="wrapper--template" v-for="(template, index) in $parent.templates"
-      :key="index">
-      <div class="wrapper--template__header">
-        <div>
-          <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{template.name}}</b></span><br v-if="template.id !== editTemplate">
-          <input v-if="template.id === editTemplate" class="template-name" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
+    <div class="container--templates">
+      <div :id="'template-' + template.id" class="wrapper--template" v-for="(template, index) in $parent.templates"
+        :key="index">
+        <div class="wrapper--template__header">
+          <div>
+            <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{template.name}}</b></span><br v-if="template.id !== editTemplate">
+            <input v-if="template.id === editTemplate" class="template-name" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
+          </div>
+          <div class="header-options">
+            <input name="select-checkbox" :id="'sc-' + template.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(template.id)" aria-label="Select this template">
+            <inline-svg v-if="template.template !== ''" id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
+          </div>
         </div>
-        <div class="header-options">
-          <input name="select-checkbox" :id="'sc-' + template.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(template.id)" aria-label="Select this template">
-          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
-        </div>
-      </div>
-      <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
-      <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id)" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
-      <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
-        <div>
-          <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true)">Edit</button>
-          <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
-          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes()">Cancel</button>
-          <button class="delete" v-show="isEditingTemplate" @click="deleteTemplate(template.id)">Delete</button>
+        <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
+        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
+        <p v-if="template.id !== editTemplate && template.template === ''" class="grey text--no-content">No content yet :(</p>
+        <div class="bottom-bar" v-if="expandedTemplates.includes(template.id) | template.template === ''">
+          <div>
+            <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true)">Edit</button>
+            <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
+            <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes()">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
@@ -148,12 +197,9 @@
       await this.getTemplates()
     },
     methods: {
+
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
-      deleteTemplate (id) {
-        if (confirm('Are you sure you want to delete this template?')) {
-          this.delete_template(id, true)
-        }
-      },
+
       deleteMultiTemplates () {
         if (this.selectedTemplates.length !== 0) {
           var ready = confirm('Are you sure you want to delete all the selected template?')
@@ -164,7 +210,7 @@
         }
       },
       deselectAll () {
-        this.templates.forEach((template) => {
+        this.$parent.templates.forEach((template) => {
           var selEl = document.getElementById('sc-' + template.id)
           if (selEl.checked === true) {
             selEl.checked = false
@@ -238,7 +284,7 @@
             {
               pt_id: this.$parent.claims.sub,
               name: this.new_template.name,
-              template: this.new_template.note
+              template: this.new_template.template
             }
           )
           await this.getTemplates()
@@ -264,7 +310,7 @@
           this.$parent.dontLeave = true
           if (this.$parent.templates.length !== 0) {
             this.$parent.templates.forEach((item) => {
-              if (item.id === id) {
+              if (item.id == id) {
                 templateName = item.name
                 templateContent = item.template
               }
@@ -297,6 +343,24 @@
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
           console.error(e)
+        }
+      },
+      async delete_template (id, ready) {
+        if (ready) {
+          try {
+            this.$parent.loading = true
+            this.$parent.dontLeave = true
+            await axios.delete(`https://api.traininblocks.com/templates/${id}`)
+            await this.getTemplates()
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+          } catch (e) {
+            this.$parent.loading = false
+            this.$parent.dontLeave = false
+            this.$parent.errorMsg = e
+            this.$parent.$modal.show('error')
+            console.error(e)
+          }
         }
       }
     }

@@ -94,7 +94,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #plan {
+  #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
     padding: 2rem 10vw
   }
   .flex {
@@ -168,6 +168,9 @@
   }
   .text--no-sessions, .text--loading, .text--no-plans, .text--no-clients, .text--no-client-notes, .text--no-plan-notes {
     margin: 2rem 0 4rem 0
+  }
+  .text--no-content {
+    margin: 1rem 0
   }
 
   /* GLOBAL: BUTTONS */
@@ -561,7 +564,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #plan {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -612,7 +615,7 @@
     main {
       margin: 0
     }
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #plan {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
