@@ -683,7 +683,7 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
-    <modal name="error" height="auto">
+    <modal name="error" height="100%" width='100%' :adaptive="true" :clickToClose="false">
       <div class="modal--error">
         <p><b>Something went wrong. Please try again...</b></p><br>
         <p>{{errorMsg}}</p><br>
