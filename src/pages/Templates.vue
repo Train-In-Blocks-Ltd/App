@@ -317,7 +317,7 @@
           this.$parent.dontLeave = true
           if (this.$parent.templates.length !== 0) {
             this.$parent.templates.forEach((item) => {
-              if (item.id == id) {
+              if (item.id === id) {
                 templateName = item.name
                 templateContent = item.template
               }
