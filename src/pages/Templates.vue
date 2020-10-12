@@ -106,8 +106,8 @@
           <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
         </div>
       </div>
-      <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
-      <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id)" v-html="removeBracketsAndBreaks(template.notes)" tabindex="0" class="show-template animate animate__fadeIn"/>
+      <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
+      <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id)" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
       <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
         <div>
           <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true)">Edit</button>
@@ -137,8 +137,12 @@
           name: 'Untitled',
           note: ''
         },
-        selectedTemplates: []
+        selectedTemplates: [],
+        expandedTemplates: []
       }
+    },
+    created () {
+      this.$parent.setup()
     },
     async mounted () {
       await this.getTemplates()
@@ -223,9 +227,8 @@
 
       // DATABASE METHODS //-------------------------------------------------------------------------------
       /*
-        Need to use these to update create and get the templates
         Need to add in store in local storage methods
-        Need to create vue data to store the responses in
+        Need to add delete method
       */
       async newTemplate () {
         try {
@@ -287,7 +290,7 @@
       async getTemplates () {
         try {
           const response = await axios.get(`https://api.traininblocks.com/templates/${this.$parent.claims.sub}`)
-          this.templates = response.data
+          this.$parent.templates = response.data
         } catch (e) {
           this.$parent.loading = false
           this.$parent.dontLeave = false

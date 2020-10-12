@@ -178,7 +178,7 @@
         isWhatsNewOpen: false
       }
     },
-    created () {
+    mounted () {
       this.$parent.setup()
       this.$parent.client_details = null
     }
