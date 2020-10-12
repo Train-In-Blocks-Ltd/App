@@ -151,13 +151,13 @@
           </div>
           <div class="header-options">
             <input name="select-checkbox" :id="'sc-' + template.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(template.id)" aria-label="Select this template">
-            <inline-svg v-if="template.template !== ''" id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
+            <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
           </div>
         </div>
         <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
         <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
-        <p v-if="template.id !== editTemplate && template.template === ''" class="grey text--no-content">No content yet :(</p>
-        <div class="bottom-bar" v-if="expandedTemplates.includes(template.id) | template.template === ''">
+        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template === ''" class="grey text--no-content">No content yet :(</p>
+        <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
           <div>
             <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true)">Edit</button>
             <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
@@ -195,11 +195,18 @@
     },
     async mounted () {
       await this.getTemplates()
+      this.checkForNew()
     },
     methods: {
 
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
-
+      checkForNew () {
+        this.$parent.templates.forEach((template) => {
+          if (template.template === '') {
+            this.expandedTemplates.push(template.id)
+          }
+        })
+      },
       deleteMultiTemplates () {
         if (this.selectedTemplates.length !== 0) {
           var ready = confirm('Are you sure you want to delete all the selected template?')

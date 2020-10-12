@@ -536,17 +536,17 @@
                         </div>
                         <div class="header-options">
                           <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
-                          <inline-svg v-if="session.notes !== null" id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
+                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
                       <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
-                      <p v-if="session.id !== editSession && session.notes === null" class="grey text--no-content">No content yet :(</p>
+                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes === null" class="grey text--no-content">No content yet :(</p>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
-                      <div class="bottom-bar" v-if="expandedSessions.includes(session.id) | session.notes === null">
+                      <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
                         <div>
                           <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
@@ -736,6 +736,7 @@
       await this.$parent.get_client_details()
       this.today()
       this.scan()
+      this.checkForNew()
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
@@ -891,6 +892,17 @@
 
       // BLOCK METHODS //-------------------------------------------------------------------------------
 
+      checkForNew () {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            plan.sessions.forEach((session) => {
+              if (session.notes === null) {
+                this.expandedSessions.push(session.id)
+              }
+            })
+          }
+        })
+      },
       toggleExpandedSessions (id) {
         if (this.expandedSessions.includes(id)) {
           const index = this.expandedSessions.indexOf(id)
