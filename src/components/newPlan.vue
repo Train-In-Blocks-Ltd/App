@@ -1,9 +1,16 @@
 <template>
   <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">
     <p class="text--large">New Plan</p>
-    <label><b>Name: </b><input class="input--forms" type="text" v-model="new_plan.name" required/></label>
-    <label><b>Duration: </b><input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/></label>
-    <label><b>Type: </b>
+    <label>
+      <b>Name: </b>
+      <input class="input--forms" ref="name" type="text" v-model="new_plan.name" required/>
+    </label>
+    <label>
+      <b>Duration: </b>
+      <input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/>
+    </label>
+    <label>
+      <b>Type: </b>
       <select class="input--forms" v-model="new_plan.type" required>
         <option value="" disabled selected>Select a type</option>
         <option value="nutrition">Nutrition</option>
@@ -29,6 +36,9 @@
           type: ''
         }
       }
+    },
+    mounted () {
+      this.$refs.name.focus()
     },
     methods: {
       async save () {

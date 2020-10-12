@@ -63,14 +63,14 @@
 
 <template>
   <div id="account" v-if="this.$parent.claims">
-    <modal name="reset-password" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+    <modal name="reset-password" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.pass.focus()">
       <div class="modal--reset">
         <div class="wrapper--centered-item"> 
           <h2>Reset your password</h2>
           <form @submit.prevent="changePass(), $parent.willBodyScroll(true)">
             <label>
               <p><b>Current Password</b></p>
-              <input type="password" class="input--forms" v-model="password.old"/>
+              <input type="password" class="input--forms" ref="pass" v-model="password.old" />
             </label>
             <br>
             <br>
@@ -96,7 +96,8 @@
     <h1 class="text--large">Your Account</h1>
     <form class="details_container" v-if="$parent.claims">
       <div class="details">
-        <p><b>Email: </b>{{$parent.claims.email}}</p><br>
+        <p><b>Email: </b>{{$parent.claims.email}}</p>
+        <br>
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
           <button @click.prevent="manageSubscription()">Manage Your Subscription</button>
         </div>

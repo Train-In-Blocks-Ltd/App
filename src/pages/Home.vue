@@ -89,18 +89,6 @@
     text-decoration: none
   }
 
-  /* Add New Client */
-  .add_client {
-    grid-gap: 1rem
-  }
-  .add_client label {
-    display: grid;
-    grid-gap: .5rem
-  }
-  .new-msg {
-    margin: 2rem 0
-  }
-
   @media (max-width: 768px) {
     .home--container {
       width: 100%

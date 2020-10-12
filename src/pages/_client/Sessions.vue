@@ -367,10 +367,10 @@
         </div>
       </modal>
       <!-- template ready
-      <modal name="insert-snippet" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <modal name="insert-snippet" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.select.focus()">
         <div class="modal--insert-snippet">
           <div class="wrapper--centered-item">
-            <select v-model="selectedHTML">
+            <select v-model="selectedHTML" ref="select">
               <option value="" disabled selected>Select a template</option>
               <option
                 v-for="(item, index) in $parent.$parent.templates"
@@ -386,31 +386,35 @@
           </div>
         </div>
       </modal> -->
-      <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
         <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
           <div class="wrapper--centered-item">
             <label for="range">Move to:</label>
-            <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/><br><br>
+            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required />
+            <br>
+            <br>
             <button type="submit">Move</button>
             <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">Cancel</button>
           </div>
         </form>
       </modal>
-      <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
         <form @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)" class="modal--shift">
           <div class="wrapper--centered-item">
             <label for="range">Shift session dates by: </label>
-            <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
+            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="shiftDays" min="1" required />
+            <br>
             <button type="submit">Shift</button>
             <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">Cancel</button>
           </div>
         </form>
       </modal>
-      <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
         <form @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)" class="modal--copy">
             <div class="wrapper--centered-item">
               <label for="range">From {{currentWeek}} to: </label>
-              <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
+              <input class="input--modal" id="range"  name="range" ref="range" type="number" v-model="copyTarget" :min="currentWeek + 1" :max="maxWeek" required />
+              <br>
               <label for="range">Days until next sessions: </label>
               <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
               <button type="submit">Copy</button>

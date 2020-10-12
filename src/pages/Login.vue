@@ -173,7 +173,7 @@
     <form v-if="open" v-on:submit.prevent="reset" class="recovery">
       <label>
         <p><b>Email:</b></p>
-        <input type="email" v-model="email" class="input--forms" />
+        <input type="email" v-model="email" class="input--forms" autofocus/>
       </label>
       <button type="submit">Send recovery email</button>
     </form>
