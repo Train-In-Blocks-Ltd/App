@@ -70,6 +70,69 @@
     z-index: 2
   }
 
+  /* GLOBAL: SPLASH */
+  #splash {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0
+  }
+  .box {
+    position: relative;
+    top: calc(50% - 8rem);
+    border: .25rem solid #282828;
+    border-radius: 3px;
+    height: 8rem;
+    width: 8rem;
+    outline: 0;
+    overflow: hidden;
+    background-color: #282828;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: flashing 1s ease-in-out alternate-reverse infinite
+  }
+  .box:after {
+    content: '';
+    position: absolute;
+    background: white;
+    height: 16rem;
+    width: 16rem;
+    bottom: -50%;
+    left: -50%;
+    border-radius: 40%;
+    animation: spin 5s forwards
+  }
+  .box .logo--svg {
+    height: 50%;
+    width: auto
+  }
+  .box svg.logo--svg path {
+    fill: white
+  }
+
+  @keyframes spin {
+    0% {
+      transform: translateY(0) rotate(0deg)
+    }
+    100% {
+      transform: translateY(-100%) rotate(500deg)
+    }
+  }
+  @keyframes flashing {
+    0% {
+      opacity: .7
+    }
+    100% {
+      opacity: 1
+    }
+  }
+
   /* GLOBAL: ELEMENTS */
   body {
     font-family: Arial, Helvetica, sans-serif;
@@ -94,7 +157,7 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
+  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
     padding: 2rem 10vw
   }
   .flex {
@@ -564,7 +627,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
@@ -615,7 +678,7 @@
     main {
       margin: 0
     }
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -815,6 +878,7 @@ export default {
 
       // BACKGROUND DATA //
 
+      splashed: false,
       templates: null,
       errorMsg: null,
       loading: false,

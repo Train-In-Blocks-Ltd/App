@@ -58,6 +58,16 @@
 
 <template>
   <div id="home">
+    <div v-if="!$parent.splashed" id="splash">
+      <div class="box">
+        <svg class="logo--svg" width="38" height="38" viewBox="0 0 38 38" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+          <g id="Icon">
+            <path d="M0 0L38 0L38 15L15 15L15 38L0 38L0 0Z" id="Rectangle" fill="#282828" stroke="none" />
+            <path d="M0 0L14 0L14 14L0 14L0 0Z" transform="translate(24 24)" id="Rectangle-2" fill="#282828" stroke="none" />
+          </g>
+        </svg>
+      </div>
+    </div>
     <div class="container--client">
       <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
         Install App
@@ -126,6 +136,9 @@ export default {
   },
   created () {
     this.$parent.setup()
+    setTimeout(() => {
+      this.$parent.splashed = true
+    }, 4000)
   },
   async mounted () {
     await this.$parent.get_plans()

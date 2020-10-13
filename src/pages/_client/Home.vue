@@ -200,6 +200,7 @@
       }
     },
     async created () {
+      this.$parent.splashed = true
       this.loading = true
       this.created()
       await this.$parent.setup()

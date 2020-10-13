@@ -730,6 +730,7 @@
       }
     },
     created () {
+      this.$parent.$parent.splashed = true
       this.$parent.sessions = true
       this.$parent.showDeletePlan = true
     },

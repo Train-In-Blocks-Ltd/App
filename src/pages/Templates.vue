@@ -193,6 +193,7 @@
     },
     created () {
       this.$parent.setup()
+      this.$parent.splashed = true
     },
     async mounted () {
       await this.getTemplates()

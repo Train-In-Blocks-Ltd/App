@@ -20,7 +20,7 @@
 </style>
 
 <template>
-  <div id="plan">
+  <div id="client-plan">
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id">
         <div class="session--header">
@@ -122,6 +122,7 @@
     },
     created () {
       this.$parent.setup()
+      this.$parent.splashed = true
     },
     async mounted () {
       this.$parent.loading = true
