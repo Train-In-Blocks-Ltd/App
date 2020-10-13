@@ -66,7 +66,7 @@
           <a
             href="javascript:void(0)"
             v-show="!editClientNotes"
-            @click="editingClientNotes(true)"
+            @click="editingClientNotes(true), tempQuillStore = $parent.$parent.client_details.notes"
             class="a--client-notes"
           >
             Edit
@@ -78,7 +78,7 @@
         <div class="bottom-bar">
           <div>
             <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button--save">Save</button>
-            <button v-show="editClientNotes" @click="cancelClientNotes()" class="cancel">Cancel</button>
+            <button v-show="editClientNotes" @click="cancelClientNotes(), $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
           </div>
         </div>
       </div>
@@ -116,6 +116,7 @@
     },
     data () {
       return {
+        tempQuillStore: null,
         response: '',
         editClientNotes: false,
         isNewPlanOpen: false

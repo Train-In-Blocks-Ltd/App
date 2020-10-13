@@ -159,9 +159,9 @@
         <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template === ''" class="grey text--no-content">No content yet :(</p>
         <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
           <div>
-            <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true)">Edit</button>
+            <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
             <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
-            <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes()">Cancel</button>
+            <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempQuillStore">Cancel</button>
           </div>
         </div>
       </div>
@@ -180,6 +180,7 @@
     data () {
       return {
         // TEMPLATE DATA //
+        tempQuillStore: null,
         isEditingTemplate: false,
         editTemplate: null,
         new_template: {

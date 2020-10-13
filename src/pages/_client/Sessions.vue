@@ -461,7 +461,7 @@
               <div class="plan-notes">
                 <div class="plan-notes__header">
                   <p class="text--small">Plan Notes</p>
-                  <a class="a--plan-notes" href="javascript:void(0)" v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()">
+                  <a class="a--plan-notes" href="javascript:void(0)" v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes(), tempQuillStore = plan.notes">
                     Edit
                   </a>
                 </div>
@@ -471,7 +471,7 @@
                 <div class="bottom-bar">
                   <div>
                     <button v-show="editPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
-                    <button v-show="editPlanNotes" @click="cancelPlanNotes()" class="cancel">Cancel</button>
+                    <button v-show="editPlanNotes" @click="cancelPlanNotes(), plan.notes = tempQuillStore" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -548,9 +548,9 @@
                       </div>
                       <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
                         <div>
-                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
+                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes(), tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
-                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes()">Cancel</button>
+                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore">Cancel</button>
                           <button v-show="isEditingSession" @click="$modal.show('insert-snippet'), $parent.$parent.willBodyScroll(false)">Templates</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
@@ -649,6 +649,7 @@
     data () {
       return {
         force: true,
+        tempQuillStore: null,
 
         // BLOCK DATA //
         isStatsOpen: false,
