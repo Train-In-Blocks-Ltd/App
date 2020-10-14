@@ -256,17 +256,8 @@
       editingTemplateNotes (id, state) {
         this.isEditingTemplate = state
         this.editTemplate = id
-        if (state) {
-          window.addEventListener('keydown', this.quickSaveTemplateNotes)
-        } else {
+        if (!state) {
           this.updateTemplateNotes(id)
-          window.removeEventListener('keydown', this.quickSaveTemplateNotes)
-        }
-      },
-      quickSaveTemplateNotes (key, state) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updateTemplateNotes(this.editTemplate)
-          window.removeEventListener('keydown', this.quickSaveTemplateNotes)
         }
       },
       updateTemplateNotes (id) {
@@ -277,7 +268,6 @@
       cancelTemplateNotes () {
         this.editTemplate = null
         this.isEditingTemplate = false
-        window.removeEventListener('keydown', this.quickSaveTemplateNotes)
       },
 
       // DATABASE METHODS //-------------------------------------------------------------------------------

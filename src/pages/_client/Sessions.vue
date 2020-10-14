@@ -847,7 +847,7 @@
       editingSessionNotes (id, state) {
         this.isEditingSession = state
         this.editSession = id
-        if (state === false) {
+        if (!state) {
           this.updateSessionNotes(id)
         }
       },

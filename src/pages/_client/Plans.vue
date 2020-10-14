@@ -66,7 +66,7 @@
           <a
             href="javascript:void(0)"
             v-show="!editClientNotes"
-            @click="editingClientNotes(true), tempQuillStore = $parent.$parent.client_details.notes"
+            @click="editClientNotes = true, tempQuillStore = $parent.$parent.client_details.notes"
             class="a--client-notes"
           >
             Edit
@@ -77,8 +77,8 @@
         <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="text--small grey text--no-client-notes">No client notes added...</p>
         <div class="bottom-bar">
           <div>
-            <button v-show="editClientNotes" @click="editingClientNotes(false)" class="button--save">Save</button>
-            <button v-show="editClientNotes" @click="cancelClientNotes(), $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
+            <button v-show="editClientNotes" @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
+            <button v-show="editClientNotes" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
           </div>
         </div>
       </div>
@@ -120,31 +120,6 @@
         response: '',
         editClientNotes: false,
         isNewPlanOpen: false
-      }
-    },
-    methods: {
-
-      // CLIENT NOTES METHODS //-------------------------------------------------------------------------------
-
-      cancelClientNotes () {
-        this.editClientNotes = false
-        window.removeEventListener('keydown', this.quickSaveClient)
-      },
-      editingClientNotes (state) {
-        this.editClientNotes = state
-        if (state) {
-          window.addEventListener('keydown', this.quickSaveClient)
-        } else {
-          this.$parent.update_client()
-          window.removeEventListener('keydown', this.quickSaveClient)
-        }
-      },
-      quickSaveClient (key) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.$parent.update_client()
-          this.editClientNotes = false
-          window.removeEventListener('keydown', this.quickSaveClient)
-        }
       }
     }
   }
