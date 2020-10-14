@@ -461,7 +461,7 @@
               <div class="plan-notes">
                 <div class="plan-notes__header">
                   <p class="text--small">Plan Notes</p>
-                  <a class="a--plan-notes" href="javascript:void(0)" v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes(), tempQuillStore = plan.notes">
+                  <a class="a--plan-notes" href="javascript:void(0)" v-show="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
                     Edit
                   </a>
                 </div>
@@ -470,8 +470,8 @@
                 <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="text--small grey text--no-plan-notes">No plan notes added...</p>
                 <div class="bottom-bar">
                   <div>
-                    <button v-show="editPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
-                    <button v-show="editPlanNotes" @click="cancelPlanNotes(), plan.notes = tempQuillStore" class="cancel">Cancel</button>
+                    <button v-show="editPlanNotes" @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
+                    <button v-show="editPlanNotes" @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -839,11 +839,6 @@
           this.selectedSessions.splice(idx, 1)
         }
       },
-      cancelSessionNotes () {
-        this.editSession = null
-        this.isEditingSession = false
-        window.removeEventListener('keydown', this.quickSaveSessionNotes)
-      },
       async createSession () {
         this.$parent.$parent.loading = true
         await this.add_session()
@@ -852,21 +847,17 @@
       editingSessionNotes (id, state) {
         this.isEditingSession = state
         this.editSession = id
-        if (state) {
-          window.addEventListener('keydown', this.quickSaveSessionNotes)
-        } else {
+        if (state === false) {
           this.updateSessionNotes(id)
-          window.removeEventListener('keydown', this.quickSaveSessionNotes)
-        }
-      },
-      quickSaveSessionNotes (key, state) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updateSessionNotes(this.editSession)
-          window.removeEventListener('keydown', this.quickSaveSessionNotes)
         }
       },
       updateSessionNotes (id) {
         this.update_session(id)
+        this.isEditingSession = false
+        this.editSession = null
+        this.scan()
+      },
+      cancelSessionNotes () {
         this.isEditingSession = false
         this.editSession = null
         this.scan()
@@ -915,10 +906,6 @@
           this.expandedSessions.push(id)
         }
       },
-      cancelPlanNotes () {
-        this.editPlanNotes = false
-        window.removeEventListener('keydown', this.quickSavePlanNotes)
-      },
       updateSessionColor () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
@@ -927,25 +914,6 @@
         })
         this.update_plan()
         this.scan()
-      },
-      editingPlanNotes (state) {
-        this.editPlanNotes = state
-        if (state) {
-          window.addEventListener('keydown', this.quickSavePlanNotes)
-        } else {
-          this.updatePlanNotes()
-          window.removeEventListener('keydown', this.quickSavePlanNotes)
-        }
-      },
-      quickSavePlanNotes (key, state) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updatePlanNotes()
-          window.removeEventListener('keydown', this.quickSavePlanNotes)
-        }
-      },
-      updatePlanNotes () {
-        this.update_plan()
-        this.editPlanNotes = false
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
@@ -1442,6 +1410,7 @@
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
@@ -1486,6 +1455,7 @@
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
@@ -1522,6 +1492,7 @@
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
@@ -1542,6 +1513,7 @@
             this.$parent.$parent.dontLeave = false
             this.$parent.$parent.errorMsg = e
             this.$parent.$parent.$modal.show('error')
+            this.$parent.$parent.willBodyScroll(false)
             console.error(e)
           }
         }

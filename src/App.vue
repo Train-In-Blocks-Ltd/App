@@ -1047,6 +1047,7 @@ export default {
         this.loading = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
@@ -1078,6 +1079,7 @@ export default {
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1171,6 +1173,7 @@ export default {
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1214,6 +1217,7 @@ export default {
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1235,6 +1239,7 @@ export default {
         this.dontLeave = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
@@ -1250,6 +1255,7 @@ export default {
         this.dontLeave = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
@@ -1305,6 +1311,7 @@ export default {
         this.dontLeave = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
       this.loading = false

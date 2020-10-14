@@ -346,6 +346,7 @@
             this.$parent.dontLeave = false
             this.$parent.errorMsg = e
             this.$parent.$modal.show('error')
+            this.$parent.willBodyScroll(false)
             console.error(e)
           }
         }
@@ -391,6 +392,7 @@
           this.$parent.loading = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
+          this.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
@@ -429,6 +431,7 @@
           this.$parent.loading = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
+          this.$parent.willBodyScroll(false)
           console.error(e)
         }
         await this.get_sessions()
@@ -454,6 +457,7 @@
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
+          this.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
@@ -484,6 +488,7 @@
             this.$parent.dontLeave = false
             this.$parent.errorMsg = e
             this.$parent.$modal.show('error')
+            this.$parent.willBodyScroll(false)
             console.error(e)
           }
         }

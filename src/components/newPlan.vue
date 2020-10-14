@@ -84,6 +84,7 @@
           this.$parent.$parent.$parent.dontLeave = false
           this.$parent.$parent.$parent.errorMsg = e
           this.$parent.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.$parent.willBodyScroll(false)
           console.error(e)
         }
       }
