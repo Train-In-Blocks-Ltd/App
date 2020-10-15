@@ -211,11 +211,12 @@
       },
       deleteMultiTemplates () {
         if (this.selectedTemplates.length !== 0) {
-          var ready = confirm('Are you sure you want to delete all the selected template?')
-          this.selectedTemplates.forEach((templateId) => {
-            this.delete_template(templateId, ready)
-          })
-          this.deselectAll()
+          if (confirm('Are you sure you want to delete all the selected template?')) {
+            this.selectedTemplates.forEach((templateId) => {
+              this.delete_template(templateId)
+            })
+            this.deselectAll()
+          }
         }
       },
       deselectAll () {
@@ -347,23 +348,21 @@
           console.error(e)
         }
       },
-      async delete_template (id, ready) {
-        if (ready) {
-          try {
-            this.$parent.loading = true
-            this.$parent.dontLeave = true
-            await axios.delete(`https://api.traininblocks.com/templates/${id}`)
-            await this.getTemplates()
-            this.$parent.loading = false
-            this.$parent.dontLeave = false
-          } catch (e) {
-            this.$parent.loading = false
-            this.$parent.dontLeave = false
-            this.$parent.errorMsg = e
-            this.$parent.$modal.show('error')
-            this.$parent.willBodyScroll(false)
-            console.error(e)
-          }
+      async delete_template (id) {
+        try {
+          this.$parent.loading = true
+          this.$parent.dontLeave = true
+          await axios.delete(`https://api.traininblocks.com/templates/${id}`)
+          await this.getTemplates()
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+        } catch (e) {
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          this.$parent.willBodyScroll(false)
+          console.error(e)
         }
       }
     }

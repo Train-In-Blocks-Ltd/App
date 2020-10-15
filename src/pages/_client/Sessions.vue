@@ -810,11 +810,12 @@
 
       bulkDelete () {
         if (this.selectedSessions.length !== 0) {
-          var ready = confirm('Are you sure you want to delete all the selected session?')
-          this.selectedSessions.forEach((sessionId) => {
-            this.delete_session(sessionId, ready)
-          })
-          this.deselectAll()
+          if (confirm('Are you sure you want to delete all the selected session?')) {
+            this.selectedSessions.forEach((sessionId) => {
+              this.delete_session(sessionId)
+            })
+            this.deselectAll()
+          }
         }
       },
       deselectAll () {
@@ -1496,26 +1497,24 @@
           console.error(e)
         }
       },
-      async delete_session (id, ready) {
-        if (ready) {
-          try {
-            this.$parent.$parent.loading = true
-            this.$parent.$parent.dontLeave = true
-            await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
-            await this.$parent.get_sessions(this.force)
-            await this.update_plan()
+      async delete_session (id) {
+        try {
+          this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
+          await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
+          await this.$parent.get_sessions(this.force)
+          await this.update_plan()
 
-            this.$ga.event('Session', 'delete')
-            this.$parent.$parent.loading = false
-            this.$parent.$parent.dontLeave = false
-          } catch (e) {
-            this.$parent.$parent.loading = false
-            this.$parent.$parent.dontLeave = false
-            this.$parent.$parent.errorMsg = e
-            this.$parent.$parent.$modal.show('error')
-            this.$parent.$parent.willBodyScroll(false)
-            console.error(e)
-          }
+          this.$ga.event('Session', 'delete')
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
+        } catch (e) {
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
+          console.error(e)
         }
       }
     }
