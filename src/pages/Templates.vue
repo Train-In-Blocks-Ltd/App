@@ -142,6 +142,7 @@
       <button @click="newTemplate()">New Template</button>
     </div>
     <div class="container--templates">
+      <p v-if="$parent.templates.length === 0" class="text--small grey">No templates yet :(</p>
       <div :id="'template-' + template.id" class="wrapper--template" v-for="(template, index) in $parent.templates"
         :key="index">
         <div class="wrapper--template__header">
@@ -155,8 +156,8 @@
           </div>
         </div>
         <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
-        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
-        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template === ''" class="grey text--no-content">No content yet :(</p>
+        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
+        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no-content">No content yet :(</p>
         <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
           <div>
             <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
@@ -185,7 +186,7 @@
         editTemplate: null,
         new_template: {
           name: 'Untitled',
-          note: ''
+          note: null
         },
         selectedTemplates: [],
         expandedTemplates: []
@@ -203,8 +204,9 @@
 
       // BACKGROUND METHODS //-------------------------------------------------------------------------------
       checkForNew () {
+        this.expandedTemplates.length = 0
         this.$parent.templates.forEach((template) => {
-          if (template.template === '') {
+          if (template.template === null || template.template === '<p><br></p>') {
             this.expandedTemplates.push(template.id)
           }
         })
@@ -288,9 +290,10 @@
             }
           )
           await this.getTemplates()
+          this.checkForNew()
           this.new_template = {
             name: 'Untitled',
-            note: ''
+            note: null
           }
           this.$parent.loading = false
           this.$parent.dontLeave = false

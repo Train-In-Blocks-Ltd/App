@@ -10,8 +10,10 @@
   .session_toolkit--select {
     background-color: transparent;
     border: 0;
+    font-size: 1.6rem;
     width: fit-content;
-    padding: .2rem 1rem .2rem 0
+    padding: .2rem 1rem .2rem 0;
+    margin: .4rem 0
   }
   .session_toolkit--content input {
     width: 4rem

@@ -73,8 +73,17 @@
           </a>
         </div>
         <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-        <div v-if="!editClientNotes && $parent.$parent.client_details.notes !== ''" v-html="$parent.$parent.client_details.notes" class="show-client-notes animate animate__fadeIn"/>
-        <p v-if="!editClientNotes && $parent.$parent.client_details.notes === ''" class="text--small grey text--no-client-notes">No client notes added...</p>
+        <div
+          v-if="!editClientNotes && $parent.$parent.client_details.notes !== '<p><br></p>' && $parent.$parent.client_details.notes !== null"
+          v-html="$parent.$parent.client_details.notes"
+          class="show-client-notes animate animate__fadeIn"
+        />
+        <p
+          v-if="!editClientNotes && ($parent.$parent.client_details.notes === '<p><br></p>' || $parent.$parent.client_details.notes === null)"
+          class="text--small grey text--no-client-notes"
+        >
+          No client notes yet :(
+        </p>
         <div class="bottom-bar">
           <div>
             <button v-show="editClientNotes" @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>

@@ -16,11 +16,11 @@
   <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)">
     <p class="text--large">New Client</p>
     <label>
-      <b>Name: </b>
+      <b>Name*: </b>
       <input class="input--forms" ref="name" type="text" autocomplete="name" v-model="new_client.name" required />
     </label>
     <label>
-      <b>Email: </b>
+      <b>Email*: </b>
       <input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required />
     </label>
     <label>
@@ -79,8 +79,6 @@
 
             this.$parent.$parent.loading = false
             this.$parent.$parent.dontLeave = false
-
-            this.close()
 
             this.new_client = {
               name: '',

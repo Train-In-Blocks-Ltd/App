@@ -67,7 +67,7 @@
   }
   .section--a.openedSections,  .section--b.openedSections {
     width: 100%;
-    z-index: 2
+    z-index: 4
   }
 
   /* GLOBAL: SPLASH */
@@ -547,25 +547,15 @@
   div.ql-container {
     font-size: 16px
   }
-  .ql-toolbar.ql-snow {
-    border: none;
-    padding: .4rem .6rem .4rem .6rem;
-    position: fixed;
-    top: 25%;
-    right: 0;
-    border-radius: 3px;
-    background-color: #F4F4F4;
-    z-index: 2
-  }
-  .ql-toolbar.ql-snow .ql-formats {
-    display: grid;
-    margin: 0
-  }
-  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
-    margin: .4rem 0
-  }
   .ui.attached.segment.ql-container.ql-snow {
     border: none
+  }
+  .ql-toolbar.ql-snow {
+    padding: 0;
+    border: none
+  }
+  .ql-toolbar.ql-snow button {
+    padding-left: 0
   }
   .ql-editor {
     grid-area: body;
@@ -705,6 +695,20 @@
     }
 
     /* Quill */
+    .ql-toolbar.ql-snow {
+      border: none;
+      padding: .4rem .6rem .4rem .6rem;
+      position: fixed;
+      top: 25%;
+      right: 0;
+      border-radius: 3px;
+      background-color: #F4F4F4;
+      z-index: 2
+    }
+    .ql-toolbar.ql-snow .ql-formats {
+      display: grid;
+      margin: 0
+    }
     .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
       margin: .2rem 0
     }
@@ -825,7 +829,7 @@
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
-    <nav class="sidebar" v-if="authenticated && claims">
+    <nav class="sidebar" v-if="authenticated && claims && splashed">
       <div class="logo">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>

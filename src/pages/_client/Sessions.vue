@@ -260,7 +260,7 @@
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 5;
     height: 100%;
     width: 100%;
     overflow-y: auto
@@ -466,8 +466,16 @@
                   </a>
                 </div>
                 <quill v-show="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                <div v-if="!editPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
-                <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="text--small grey text--no-plan-notes">No plan notes added...</p>
+                <div
+                  v-if="!editPlanNotes  && plan.notes !== '<p><br></p>' && plan.notes !== null"
+                  v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"
+                />
+                <p
+                  v-if="!editPlanNotes && (plan.notes === '<p><br></p>' || plan.notes === null)"
+                  class="text--small grey text--no-plan-notes"
+                >
+                  No plan notes yet :(
+                </p>
                 <div class="bottom-bar">
                   <div>
                     <button v-show="editPlanNotes" @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
@@ -540,8 +548,8 @@
                         </div>
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
-                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes === null" class="grey text--no-content">No content yet :(</p>
+                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
+                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">No content yet :(</p>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
@@ -551,7 +559,7 @@
                           <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
                           <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore">Cancel</button>
-                          <button v-show="isEditingSession" @click="$modal.show('insert-snippet'), $parent.$parent.willBodyScroll(false)">Templates</button>
+                          <button v-show="isEditingSession && session.id === editSession" @click="$modal.show('insert-snippet'), $parent.$parent.willBodyScroll(false)">Templates</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
                         </div>
@@ -890,7 +898,7 @@
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
-              if (session.notes === null) {
+              if (session.notes === null || session.notes === '<p><br></p>') {
                 this.expandedSessions.push(session.id)
               }
             })
