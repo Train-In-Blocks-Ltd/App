@@ -548,7 +548,7 @@
                       </div>
                       <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
                         <div>
-                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes(), tempQuillStore = session.notes">Edit</button>
+                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
                           <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore">Cancel</button>
                           <button v-show="isEditingSession" @click="$modal.show('insert-snippet'), $parent.$parent.willBodyScroll(false)">Templates</button>
