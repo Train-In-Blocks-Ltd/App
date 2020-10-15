@@ -2,11 +2,11 @@
   <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">
     <p class="text--large">New Plan</p>
     <label>
-      <b>Name*: </b>
+      <b>Name*</b>
       <input class="input--forms" ref="name" type="text" v-model="new_plan.name" required/>
     </label>
     <label>
-      <b>Duration*: </b>
+      <b>Duration*</b>
       <input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/>
     </label>
     <!-- PLAN TYPE

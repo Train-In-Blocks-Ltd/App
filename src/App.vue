@@ -273,6 +273,26 @@
     background-color: #B80000
   }
 
+  /* GLOBAL: SEARCH */
+  .search {
+    border: none;
+    outline-width: 0;
+    width: 80%;
+    border-bottom: 2px solid #282828;
+    padding: .6rem 0;
+    opacity: .6;
+    margin: 0 auto 4rem 0;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .search:hover {
+    width: 100%;
+    opacity: 1
+  }
+  .search:focus {
+    width: 100%;
+    opacity: 1
+  }
+
   /* GLOBAL: CALENDAR */
   div.fc-toolbar h2 {
     font-weight: lighter;
@@ -686,6 +706,10 @@
     .title-icon {
       height: 48px;
       width: 48px
+    }
+    .client_link.archived {
+      display: flex;
+      justify-content: space-between
     }
   }
   @media (max-width: 768px) {

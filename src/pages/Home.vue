@@ -16,26 +16,6 @@
     height: 100%;
     width: 100%
   }
-
-  /* Search */
-  .search {
-    border: none;
-    outline-width: 0;
-    width: 80%;
-    border-bottom: 2px solid #282828;
-    padding: .6rem 0;
-    opacity: .6;
-    margin: 0 auto 4rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .search:hover {
-    width: 100%;
-    opacity: 1
-  }
-  .search:focus {
-    width: 100%;
-    opacity: 1
-  }
   .wrapper--client-link {
     text-decoration: none
   }

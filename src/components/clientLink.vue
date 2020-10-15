@@ -24,6 +24,13 @@
   .client_link:hover .client_link__details p {
     color: #282828
   }
+
+  @media (min-width: 768px) {
+    .client_link__options {
+      display: flex;
+      flex-direction: column
+    }
+  }
 </style>
 
 <template>
@@ -39,7 +46,15 @@
         <p>{{number}}</p>
       </div>
     </div>
-    <div v-if="notes !== ''" v-html="notes" class="client_link__notes__content" />
+    <div v-if="notes !== '' && !archive" v-html="notes" class="client_link__notes__content" />
+    <div v-if="archive" class="client_link__options">
+      <a href="javascript:void(0)" @click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
+        <inline-svg :src="require('../assets/svg/archive-small.svg')" class="archive__icon" aria-label="Unarchive"/>
+      </a>
+      <a href="javascript:void(0)" @click="$parent.client_delete(clients.client_id, index)" title="Delete">
+        <inline-svg :src="require('../assets/svg/bin.svg')" class="archive__icon" aria-label="Delete"/>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -50,6 +65,6 @@
     components: {
       InlineSvg
     },
-    props: ['name', 'email', 'number', 'notes']
+    props: ['name', 'email', 'number', 'notes', 'archive']
   }
 </script>
