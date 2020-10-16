@@ -35,7 +35,6 @@
         new_plan: {
           name: '',
           duration: '',
-          start: '',
           type: ''
         }
       }
@@ -44,6 +43,14 @@
       this.$refs.name.focus()
     },
     methods: {
+      today () {
+        var today = new Date()
+        var dd = String(today.getDate()).padStart(2, '0')
+        var mm = String(today.getMonth() + 1).padStart(2, '0')
+        var yyyy = today.getFullYear()
+
+        return yyyy + '-' + mm + '-' + dd
+      },
       async save () {
         try {
           this.$parent.$parent.$parent.loading = true
@@ -53,7 +60,7 @@
               'name': this.new_plan.name,
               'client_id': this.$parent.$parent.$parent.client_details.client_id,
               'duration': this.new_plan.duration,
-              'start': this.new_plan.start,
+              'start': this.today(),
               'type': this.new_plan.type,
               'block_color': ''
             }
@@ -78,7 +85,6 @@
           this.new_plan = {
             name: '',
             duration: '',
-            start: '',
             type: ''
           }
           this.$ga.event('Plan', 'new')
