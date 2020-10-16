@@ -390,10 +390,10 @@
       <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
         <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
           <div class="wrapper--centered-item">
+            <p class="text--small">Move to a different microcycle</p>
+            <p class="text--small grey">This will change the colour code assigned to the sessions</p><br><br><br>
             <label for="range">Move to:</label>
-            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required />
-            <br>
-            <br>
+            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required /><br><br>
             <button type="submit">Move</button>
             <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">Cancel</button>
           </div>
@@ -402,9 +402,10 @@
       <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
         <form @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)" class="modal--shift">
           <div class="wrapper--centered-item">
+            <p class="text--small">Shift the dates of the sessions</p>
+            <p class="text--small grey">This will move the dates ahead or behind by the specified amount</p><br><br><br>
             <label for="range">Shift session dates by: </label>
-            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="shiftDays" min="1" required />
-            <br>
+            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="shiftDays" min="1" required /><br><br>
             <button type="submit">Shift</button>
             <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">Cancel</button>
           </div>
@@ -413,11 +414,13 @@
       <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
         <form @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)" class="modal--copy">
             <div class="wrapper--centered-item">
+              <p class="text--small">Copy across to different microcycles</p>
+              <p class="text--small grey">All you'll have to do is to change and progress each session</p><br><br><br>
               <label for="range">From {{currentWeek}} to: </label>
               <input class="input--modal" id="range"  name="range" ref="range" type="number" v-model="copyTarget" :min="currentWeek + 1" :max="maxWeek" required />
               <br>
               <label for="range">Days until next sessions: </label>
-              <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
+              <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br><br>
               <button type="submit">Copy</button>
               <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.willBodyScroll(true)">Cancel</button>
             </div>

@@ -35,9 +35,17 @@
         :to="'/client/'+clients.client_id+'/'"
         v-show="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())"
         :id="'a' + clients.client_id"
-        v-for="(clients, index) in $parent.clients" :key="index"
+        v-for="(clients, index) in $parent.archive.clients" :key="index"
       >
-        <client-link class="client_link archived" :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes" :archive="true"/>
+        <client-link
+          class="client_link archived"
+          :name="clients.name"
+          :email="clients.email"
+          :number="clients.number"
+          :notes="clients.notes"
+          :clientId="clients.client_id"
+          :clientIndex="index"
+          :archive="true"/>
       </div>
     </div>
   </div>

@@ -48,10 +48,10 @@
     </div>
     <div v-if="notes !== '' && !archive" v-html="notes" class="client_link__notes__content" />
     <div v-if="archive" class="client_link__options">
-      <a href="javascript:void(0)" @click="$parent.client_unarchive(clients.client_id, index)" title="Unarchive">
+      <a href="javascript:void(0)" @click="$parent.$parent.client_unarchive(clientId, clientIndex)" title="Unarchive">
         <inline-svg :src="require('../assets/svg/archive-small.svg')" class="archive__icon" aria-label="Unarchive"/>
       </a>
-      <a href="javascript:void(0)" @click="$parent.client_delete(clients.client_id, index)" title="Delete">
+      <a href="javascript:void(0)" @click="$parent.$parent.client_delete(clientId, clientIndex)" title="Delete">
         <inline-svg :src="require('../assets/svg/bin.svg')" class="archive__icon" aria-label="Delete"/>
       </a>
     </div>
@@ -65,6 +65,6 @@
     components: {
       InlineSvg
     },
-    props: ['name', 'email', 'number', 'notes', 'archive']
+    props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex']
   }
 </script>

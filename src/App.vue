@@ -176,7 +176,9 @@
 
   /* GLOBAL: MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--insert-snippet {
-    padding: 2rem
+    padding: 2rem;
+    display: flex;
+    height: 100%
   }
   .modal--copy h3, .modal--reset h2 {
     margin: 0 0 1.5rem 0
@@ -424,8 +426,7 @@
     margin-bottom: 1rem
   }
   .wrapper--centered-item {
-    margin: 0 auto;
-    position: relative;
+    margin: auto;
     max-width: 500px
   }
 
