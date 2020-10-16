@@ -157,6 +157,13 @@
             >
               Disable email notifications
             </button>
+            <button
+              @click="$parent.client_details.notifications = 1, update_client()"
+              v-if="!clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Give Access'"
+              class="button--verify button"
+            >
+              Enable email notifications
+            </button>
           </div>
         </div>
       </form>
