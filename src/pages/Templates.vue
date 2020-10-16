@@ -193,9 +193,11 @@
       }
     },
     created () {
+      this.$parent.loading = true
       this.$parent.setup()
       this.$parent.splashed = true
       this.$parent.willBodyScroll(true)
+      this.$parent.loading = false
     },
     async mounted () {
       await this.getTemplates()

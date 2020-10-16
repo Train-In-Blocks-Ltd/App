@@ -207,13 +207,13 @@
       }
     },
     async created () {
+      this.$parent.loading = true
       this.$parent.splashed = true
-      this.loading = true
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
       this.keepLoaded = true
-      this.loading = false
+      this.$parent.loading = false
     },
     beforeDestroy () {
       this.keepLoaded = false
@@ -456,6 +456,7 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients_f()
           await this.$parent.clients_to_vue()
+          this.$parent.loading = false
           this.$parent.dontLeave = false
         } catch (e) {
           this.$parent.loading = false

@@ -121,8 +121,10 @@
       }
     },
     created () {
+      this.$parent.loading = true
       this.$parent.setup()
       this.$parent.splashed = true
+      this.$parent.loading = false
     },
     async mounted () {
       this.$parent.loading = true

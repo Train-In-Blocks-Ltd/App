@@ -139,8 +139,10 @@
       }
     },
     created () {
+      this.$parent.loading = true
       this.$parent.setup()
       this.$parent.willBodyScroll(true)
+      this.$parent.loading = false
     },
     methods: {
 

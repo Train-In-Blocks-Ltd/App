@@ -1096,7 +1096,6 @@ export default {
     // CLIENT METHODS //-------------------------------------------------------------------------------
 
     async clients_to_vue () {
-      this.loading = true
       if (!localStorage.getItem('clients')) {
         await this.clients_f()
       }
@@ -1105,7 +1104,6 @@ export default {
         var textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
-      this.loading = false
     },
     async clients_f () {
       try {
@@ -1116,7 +1114,6 @@ export default {
           this.no_clients = false
         }
         localStorage.setItem('clients', JSON.stringify(response.data))
-        this.loading = false
       } catch (e) {
         this.no_clients = false
         this.loading = false
@@ -1142,7 +1139,6 @@ export default {
           await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
           await this.archive_f()
-          this.loading = true
           this.archive_to_vue()
 
           await this.clients_f()
@@ -1164,7 +1160,6 @@ export default {
     // CLIENT ARCHIVE METHODS //-------------------------------------------------------------------------------
 
     async archive_to_vue () {
-      this.loading = true
       if (!localStorage.getItem('archive')) {
         await this.archive_f()
       }
@@ -1177,7 +1172,6 @@ export default {
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
       }
-      this.loading = false
     },
     async archive_f () {
       try {
@@ -1212,7 +1206,6 @@ export default {
           this.response = response.data
 
           await this.clients_f()
-          this.loading = true
           this.clients_to_vue()
 
           await this.archive_f()

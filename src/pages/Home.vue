@@ -126,8 +126,10 @@
       this.$parent.willBodyScroll(true)
     },
     mounted () {
+      this.$parent.loading = true
       this.$parent.setup()
       this.$parent.client_details = null
+      this.$parent.loading = false
     }
   }
 </script>

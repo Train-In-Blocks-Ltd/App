@@ -86,10 +86,12 @@ export default {
     }
   },
   created () {
+    this.$parent.loading = true
     this.$parent.setup()
     setTimeout(() => {
       this.$parent.splashed = true
     }, 4000)
+    this.$parent.loading = false
   },
   async mounted () {
     await this.$parent.get_plans()
