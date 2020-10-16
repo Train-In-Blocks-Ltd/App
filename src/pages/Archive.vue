@@ -71,6 +71,7 @@
       setTimeout(() => {
         this.$parent.splashed = true
       }, 4000)
+      this.$parent.willBodyScroll(true)
     }
   }
 </script>

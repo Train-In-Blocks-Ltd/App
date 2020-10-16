@@ -292,9 +292,7 @@
           )
           this.$modal.show(
             AlertModal,
-            {msg: 'An activation email was sent to your client.'},
-            { height: '100%' },
-            { width: '100%' },
+            { msg: 'An activation email was sent to your client.' },
             { adaptive: true },
             { clickToClose: false }
           )

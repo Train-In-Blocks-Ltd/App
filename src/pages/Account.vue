@@ -140,6 +140,7 @@
     },
     created () {
       this.$parent.setup()
+      this.$parent.willBodyScroll(true)
     },
     methods: {
 

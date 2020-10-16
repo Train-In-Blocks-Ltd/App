@@ -175,15 +175,12 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--insert-snippet {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--insert-snippet, .modal--alert {
     padding: 2rem;
     display: flex;
     height: 100%
   }
-  .modal--copy h3, .modal--reset h2 {
-    margin: 0 0 1.5rem 0
-  }
-  div.vm--modal {
+  div.vm--modal:not(div.vm--modal .modal--alert) {
     min-width: 100%
   }
   .modal--bottom-bar {
@@ -1145,6 +1142,7 @@ export default {
           await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
           await this.archive_f()
+          this.loading = true
           this.archive_to_vue()
 
           await this.clients_f()
@@ -1214,6 +1212,7 @@ export default {
           this.response = response.data
 
           await this.clients_f()
+          this.loading = true
           this.clients_to_vue()
 
           await this.archive_f()

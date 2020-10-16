@@ -195,6 +195,7 @@
     created () {
       this.$parent.setup()
       this.$parent.splashed = true
+      this.$parent.willBodyScroll(true)
     },
     async mounted () {
       await this.getTemplates()
