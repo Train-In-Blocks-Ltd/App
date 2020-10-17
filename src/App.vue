@@ -981,7 +981,6 @@ export default {
   async created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
     const self = this
@@ -1083,13 +1082,7 @@ export default {
       } else {
         this.$ga.disable()
       }
-      var d = new Date()
-      var n = d.getTime()
-      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.clients_f()
-        localStorage.setItem('firstLoaded', true)
-        localStorage.setItem('loadTime', n)
-      }
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
 
