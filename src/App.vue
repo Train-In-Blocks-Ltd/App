@@ -981,6 +981,7 @@ export default {
   async created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
     const self = this
