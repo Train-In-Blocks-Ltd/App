@@ -73,7 +73,7 @@
       <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--a" />
       <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--b"/>
     </div>
-    <p class="text--small grey text--no-clients" v-if="this.$parent.no_clients">No clients added yet :(</p>
+    <p class="text--small grey text--no-clients" v-if="this.$parent.no_clients">No clients added yet, use the button on the top-right of your screen.</p>
     <p class="text--small grey text--loading" v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
