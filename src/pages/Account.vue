@@ -1,7 +1,6 @@
 <style scoped>
   .details {
-    display: grid;
-    grid-gap: 1rem 0
+    display: grid
   }
   .privacy {
     display: grid

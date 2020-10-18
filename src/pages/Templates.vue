@@ -44,6 +44,9 @@
   }
 
   /* Containers */
+  .activeState {
+    border: 2px solid #28282860
+  }
   .wrapper--template-top {
     display: flex;
     justify-content: flex-end;
@@ -142,7 +145,11 @@
     </div>
     <div class="container--templates" v-if="$parent.templates">
       <p v-if="$parent.templates.length === 0" class="text--small grey">No templates yet :(</p>
-      <div :id="'template-' + template.id" class="wrapper--template" v-for="(template, index) in $parent.templates"
+      <div
+        :id="'template-' + template.id"
+        class="wrapper--template"
+        :class="{ activeState: template.id === editTemplate }"
+        v-for="(template, index) in $parent.templates"
         :key="index">
         <div class="wrapper--template__header">
           <div>

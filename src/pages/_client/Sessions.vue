@@ -166,6 +166,9 @@
   }
 
   /* Sessions */
+  .activeState {
+    border: 2px solid #28282860
+  }
   .session--header {
     display: flex;
     justify-content: space-between;
@@ -185,7 +188,7 @@
   .expand-all:hover {
     opacity: .6
   }
-  .wrapper--session {
+  .wrapper--session, .plan-notes {
     display: grid;
     box-shadow: 0 0 20px 10px #28282810;
     padding: 2rem;
@@ -444,7 +447,7 @@
           </div> <!-- top_grid -->
           <div class="plan_grid">
             <div class="calendar">
-              <div class="plan-notes">
+              <div class="plan-notes" :class="{ activeState: editPlanNotes }">
                 <div class="plan-notes__header">
                   <p class="text--small">Plan Notes</p>
                   <a class="a--plan-notes" href="javascript:void(0)" v-show="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
@@ -460,12 +463,12 @@
                   v-if="!editPlanNotes && (plan.notes === '<p><br></p>' || plan.notes === null)"
                   class="text--small grey text--no-plan-notes"
                 >
-                  No plan notes yet :(
+                  What do you want to achieve in this plan?
                 </p>
-                <div class="bottom-bar">
+                <div v-show="editPlanNotes" class="bottom-bar">
                   <div>
-                    <button v-show="editPlanNotes" @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
-                    <button v-show="editPlanNotes" @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
+                    <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
+                    <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
@@ -516,7 +519,7 @@
                   <!-- New session -->
                   <div class="container--sessions" v-if="!$parent.no_sessions">
                     <!-- Loop through sessions -->
-                    <div :id="'session-' + session.id" class="wrapper--session" :class="{showingFeedback: session.id === showFeedback}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
+                    <div :id="'session-' + session.id" class="wrapper--session" :class="{activeState: session.id === editSession}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
                       :key="index">
                       <div class="wrapper--session__header">
                         <div>

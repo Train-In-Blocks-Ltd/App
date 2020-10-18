@@ -1,7 +1,13 @@
 <style>
   /* Client Notes */
+  .activeState {
+    border: 2px solid #28282860
+  }
   .client-notes {
-    margin-top: 4rem
+    margin: 4rem 0;
+    padding: 2rem;
+    border-radius: 3px;
+    box-shadow: 0 0 20px 10px #28282810
   }
   .client-notes__header {
     display: flex
@@ -57,10 +63,10 @@
         <p class="text">New Plan</p>
       </div>
       <div>
-        <div :class="{openedSections: isNewPlanOpen}" class="section--a" />
-        <div :class="{openedSections: isNewPlanOpen}" class="section--b"/>
+        <div :class="{ openedSections: isNewPlanOpen }" class="section--a" />
+        <div :class="{ openedSections: isNewPlanOpen }" class="section--b"/>
       </div>
-      <div :class="{activeClientNotes: editClientNotes}" class="client-notes">
+      <div :class="{ activeState: editClientNotes }" class="client-notes">
         <div class="client-notes__header">
           <p class="text--small">Client Information</p>
           <a
@@ -82,12 +88,12 @@
           v-if="!editClientNotes && ($parent.$parent.client_details.notes === '<p><br></p>' || $parent.$parent.client_details.notes === null)"
           class="text--small grey text--no-client-notes"
         >
-          No client notes yet :(
+          What goals does your client have? What physical measures have you taken?
         </p>
-        <div class="bottom-bar">
+        <div v-show="editClientNotes" class="bottom-bar">
           <div>
-            <button v-show="editClientNotes" @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
-            <button v-show="editClientNotes" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
+            <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
+            <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
           </div>
         </div>
       </div>

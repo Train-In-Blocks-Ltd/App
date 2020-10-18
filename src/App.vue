@@ -228,7 +228,10 @@
     font-size: .8rem;
     color: #B80000
   }
-  .text--no-sessions, .text--loading, .text--no-plans, .text--no-clients, .text--no-client-notes, .text--no-plan-notes {
+  .text--no-client-notes, .text--no-plan-notes {
+    margin: 2rem 0
+  }
+  .text--no-sessions, .text--loading, .text--no-plans, .text--no-clients {
     margin: 2rem 0 4rem 0
   }
   .text--no-content {
@@ -693,7 +696,7 @@
   }
 
   /* Responsive Design */
-  @media (max-width: 992px) {
+  @media (min-width: 992px) {
     #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
       padding: 4rem 10vw;
       overflow-x: hidden
