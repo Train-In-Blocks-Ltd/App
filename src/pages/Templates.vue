@@ -1,4 +1,3 @@
-
 <style scoped>
 
   /* Select */
@@ -200,7 +199,7 @@
       this.$parent.loading = false
     },
     async mounted () {
-      await this.getTemplates()
+      await this.$parent.getTemplates()
       this.checkForNew()
     },
     methods: {
@@ -292,7 +291,7 @@
               template: this.new_template.template
             }
           )
-          await this.getTemplates()
+          await this.$parent.getTemplates()
           this.checkForNew()
           this.new_template = {
             name: 'Untitled',
@@ -330,22 +329,9 @@
               id: id
             }
           )
-          await this.getTemplates()
+          await this.$parent.getTemplates()
           this.$parent.loading = false
           this.$parent.dontLeave = false
-        } catch (e) {
-          this.$parent.loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
-        }
-      },
-      async getTemplates () {
-        try {
-          const response = await axios.get(`https://api.traininblocks.com/templates/${this.$parent.claims.sub}`)
-          this.$parent.templates = response.data
         } catch (e) {
           this.$parent.loading = false
           this.$parent.dontLeave = false
@@ -360,7 +346,7 @@
           this.$parent.loading = true
           this.$parent.dontLeave = true
           await axios.delete(`https://api.traininblocks.com/templates/${id}`)
-          await this.getTemplates()
+          await this.$parent.getTemplates()
           this.$parent.loading = false
           this.$parent.dontLeave = false
         } catch (e) {

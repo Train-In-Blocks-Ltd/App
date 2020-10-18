@@ -230,6 +230,9 @@
     width: fit-content;
     font-size: .8rem
   }
+  .wrapper--template-options {
+    margin: 2rem 0
+  }
   .show-feedback {
     margin: 1rem 0;
     padding: 0
@@ -367,26 +370,6 @@
           </div>
         </div>
       </modal>
-      <!-- template ready
-      <modal name="insert-snippet" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.select.focus()">
-        <div class="modal--insert-snippet">
-          <div class="wrapper--centered-item">
-            <select v-model="selectedHTML" ref="select">
-              <option value="" disabled selected>Select a template</option>
-              <option
-                v-for="(item, index) in $parent.$parent.templates"
-                :key="index"
-                :value="item.name"
-              >
-                {{item.name}}
-              </option>
-            </select><br>
-            <div v-html="item.template" class="show-html" />    
-            <button @click="pasteHtmlAtCaret(selectedHTML)">Insert</button>
-            <button class="cancel" @click.prevent="$modal.hide('insert-snippet'), $parent.$parent.willBodyScroll(true)">Cancel</button>
-          </div>
-        </div>
-      </modal> -->
       <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
         <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
           <div class="wrapper--centered-item">
@@ -553,6 +536,18 @@
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
                       <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
                       <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">No content yet :(</p>
+                      <div
+                        v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
+                        class="wrapper--template-options"
+                      >
+                        <p>Click where you want the template to insert before using the buttons.</p><br>
+                        <div
+                          v-for="(item, index) in $parent.$parent.templates"
+                          :key="index"
+                        >
+                          <button class="opposite" :disabled="!caretIsInEditor" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
+                        </div>
+                      </div>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
@@ -561,10 +556,11 @@
                         <div>
                           <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
-                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore">Cancel</button>
-                          <button v-show="isEditingSession && session.id === editSession" @click="$modal.show('insert-snippet'), $parent.$parent.willBodyScroll(false)">Templates</button>
+                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore, showTemplates = false">Cancel</button>
+                          <button v-if="isEditingSession && session.id === editSession && !showTemplates" @click="showTemplates = true">Templates</button>
+                          <button v-if="isEditingSession && session.id === editSession && showTemplates" @click="showTemplates = false" class="cancel">Close Templates</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
-                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
+                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null" class="cancel">Close Feedback</button>
                         </div>
                       </div>
                     </div>
@@ -661,6 +657,8 @@
       return {
         force: true,
         tempQuillStore: null,
+        showTemplates: false,
+        caretIsInEditor: false,
 
         // BLOCK DATA //
         isStatsOpen: false,
@@ -747,12 +745,15 @@
     },
     async mounted () {
       await this.$parent.get_client_details()
+      this.$parent.$parent.getTemplates()
       this.today()
       this.scan()
       this.checkForNew()
+      this.setListenerForEditor(true)
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
+      this.setListenerForEditor(false)
     },
     methods: {
 
@@ -1088,6 +1089,21 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      setListenerForEditor (state) {
+        if (state) {
+          document.addEventListener('click', this.checkCaretPos)
+        } else {
+          document.removeEventListener('click', this.checkCaretPos)
+        }
+      },
+      checkCaretPos () {
+        let caretPosition = document.getSelection()
+        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
+          this.caretIsInEditor = true
+        } else {
+          this.caretIsInEditor = false
+        }
+      },
       pasteHtmlAtCaret (html) {
         let caretPosition = document.getSelection()
         if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {

@@ -175,7 +175,7 @@
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--insert-snippet, .modal--alert {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--alert {
     padding: 2rem;
     display: flex;
     height: 100%
@@ -252,12 +252,12 @@
     color: white;
     background-color: #282828;
     margin: .6rem 0;
-    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  button:hover {
+  button:hover:not(:disabled) {
     opacity: .6
   }
-  button:active {
+  button:active:not(:disabled) {
     transform: scale(.96)
   }
   button:focus {
@@ -270,6 +270,15 @@
   .delete:hover, .cancel:hover {
     color: white;
     background-color: #B80000
+  }
+  button.opposite {
+    border: 2px solid #282828;
+    color: #282828;
+    background-color: transparent
+  }
+  button.opposite:not(:disabled):hover {
+    color: white;
+    background-color: #282828
   }
 
   /* GLOBAL: SEARCH */
@@ -329,7 +338,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .6rem 0
+    padding: .6rem 0;
+    margin-top: 1rem
   }
   #button-done {
     background-color: green
@@ -688,7 +698,7 @@
       padding: 4rem 10vw;
       overflow-x: hidden
     }
-    button:hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+    button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       opacity: 1
     }
   }
@@ -1380,7 +1390,20 @@ export default {
       }
       this.loading = false
       this.dontLeave = false
-    }
+    },
+    async getTemplates () {
+      try {
+        const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+        this.templates = response.data
+      } catch (e) {
+        this.loading = false
+        this.dontLeave = false
+        this.errorMsg = e
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
+      }
+    },
   }
 }
 </script>
