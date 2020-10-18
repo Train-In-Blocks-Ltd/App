@@ -648,21 +648,15 @@
     border-radius: 3px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:not(.archived):hover, .plan_link:hover {
-    transform: scale(1.02)
-  }
-  .client_link:not(.archived):active, .plan_link:active {
-    transform: scale(1)
-  }
   .client_link__notes__content, .plan_link__notes__content {
     font-size: .8rem;
     margin-top: .4rem
   }
-  .client_link__notes__content *, .plan_link__notes__content * {
+  .client_link__notes__content *, .plan_link__notes__content *, .plan-name {
     color: #28282890;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content * {
+  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content *, .plan_link:hover .plan-name {
     color: #282828
   }
   .client_link__notes__content p, .plan_link__notes__content p {
@@ -778,11 +772,6 @@
     }
     .account_nav--item--icon {
       margin: 0
-    }
-
-    /* Client links */
-    .client_link:not(.archived):hover {
-      transform: scale(1)
     }
   }
 
@@ -1406,7 +1395,7 @@ export default {
         this.willBodyScroll(false)
         console.error(e)
       }
-    },
+    }
   }
 }
 </script>

@@ -512,7 +512,7 @@
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
-                <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions added yet :(</p>
+                <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
                 <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
                   <p v-if="plan.sessions !== null" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
@@ -538,7 +538,7 @@
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
                       <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
-                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">No content yet :(</p>
+                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
                       <div
                         v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
                         class="wrapper--template-options"

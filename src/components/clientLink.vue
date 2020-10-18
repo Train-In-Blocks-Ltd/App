@@ -16,12 +16,12 @@
     grid-template-columns: 20px 1fr;
     grid-gap: 1rem
   }
-  .client_link__details p {
+  .client_link__details p, .name {
     margin: auto 0;
     color: #28282890;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover .client_link__details p {
+  .client_link:hover .client_link__details p, .client_link:hover .name {
     color: #282828
   }
 
@@ -36,7 +36,7 @@
 <template>
   <div>
     <div>
-      <p class="text--small">{{name}}</p>
+      <p class="text--small name">{{name}}</p>
       <div v-if="email !== ''" class="client_link__details">
         <inline-svg :src="require('../assets/svg/email.svg')" />
         <p>{{email}}</p>

@@ -99,7 +99,7 @@
       </div>
       <div>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
-        <p class="text--small grey .text--no-plans" v-if="this.$parent.no_plans">No plans created yet :(</p>
+        <p class="text--small grey .text--no-plans" v-if="this.$parent.no_plans">No plans yet :(</p>
         <p class="text--small grey .text--loading" v-if="this.$parent.loading_plans">Loading plans...</p>
         <div v-if="!this.$parent.no_plans" class="plan_grid">
           <router-link
@@ -107,7 +107,7 @@
             v-for="(plan, index) in this.$parent.$parent.client_details.plans"
             :key="index"
           >
-            <h3 class="text--small plan-name">{{plan.name}}</h3>
+            <p class="text--small plan-name">{{plan.name}}</p>
             <div v-html="plan.notes" class="plan_link__notes__content" />
           </router-link>
         </div>
