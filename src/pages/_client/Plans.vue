@@ -99,7 +99,7 @@
       </div>
       <div>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
-        <p class="text--small grey .text--no-plans" v-if="this.$parent.no_plans">No plans yet :(</p>
+        <p class="text--small grey .text--no-plans" v-if="this.$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
         <p class="text--small grey .text--loading" v-if="this.$parent.loading_plans">Loading plans...</p>
         <div v-if="!this.$parent.no_plans" class="plan_grid">
           <router-link
