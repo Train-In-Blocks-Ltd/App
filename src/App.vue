@@ -604,9 +604,6 @@
   div.ql-editor p {
     margin: 1rem 0
   }
-  div.ql-editor img {
-    display: none
-  }
   .ql-editor.ql-blank:before {
     margin: 1rem 0;
     left: 0
