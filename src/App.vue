@@ -369,7 +369,7 @@
     transition: all 1s
   }
   .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
-    max-width: 100%;
+    max-width: 60%;
     border-radius: 3px;
     margin: 1rem 0
   }
@@ -595,6 +595,9 @@
     padding: 0;
     transition: all 1s
   }
+  .ql-editor img {
+    max-width: 60%
+  }
   div.ql-editor h1 {
     margin: 1.072rem 0
   }
@@ -667,7 +670,7 @@
   }
   .client_link__notes__content img, .plan_link img {
     margin: 1rem 0;
-    max-width: 100%;
+    max-width: 60%;
     border-radius: 3px;
     opacity: .6;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -719,6 +722,12 @@
     .quill {
       width: 90%
     }
+    .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
+      max-width: 100%
+    }
+    .client_link__notes__content img, .plan_link img {
+      max-width: 100%;
+    }
 
     /* Quill */
     .ql-toolbar.ql-snow {
@@ -737,6 +746,9 @@
     }
     .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
       margin: .2rem 0
+    }
+    .ql-editor img {
+      max-width: 100%
     }
 
     /* Sidebar */
