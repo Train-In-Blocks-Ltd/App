@@ -377,7 +377,7 @@
   }
 
   /* GLOBAL: SHOW AND NOTES */
-  .show-session, .show-plan-notes, .show-client-notes, .show-template-notes {
+  .show-session, .show-plan-notes, .show-client-notes, .show-template {
     outline-width: 0;
     overflow-wrap: break-word;
     color: #282828;
@@ -385,19 +385,19 @@
     overflow-y: auto;
     transition: all 1s
   }
-  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
+  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img {
     max-width: 60%;
     border-radius: 3px;
     margin: 1rem 0
   }
-  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template-notes a {
+  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template a {
     color: blue
   }
-  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template-notes ul, .show-template-notes ol {
+  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template ul, .show-template ol {
     text-decoration: none;
     margin: 0
   }
-  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template-notes p {
+  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template p {
     margin: 1rem 0
   }
   .wrapper--session__header.client-side {
@@ -742,7 +742,7 @@
     .quill {
       width: 90%
     }
-    .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
+    .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img {
       max-width: 100%
     }
     .client_link__notes__content img, .plan_link img {

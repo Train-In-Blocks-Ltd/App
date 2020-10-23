@@ -438,6 +438,8 @@
           <p class="text--selected">
             <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
           </p>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkChecked(1)">Complete</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkChecked(0)">Incomplete</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy'), $parent.$parent.willBodyScroll(false)">Copy Across</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.willBodyScroll(false)">Move</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.willBodyScroll(false)">Shift</a>
@@ -776,7 +778,10 @@
       this.scan()
       this.checkForNew()
       this.adherence()
-      this.setListenerForEditor(true)
+      // Needed to prevent an error that occurs on the fastest first click
+      setTimeout(() => {
+        this.setListenerForEditor(true)
+      }, 2000)
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
@@ -846,10 +851,34 @@
       },
 
       // SESSION METHODS //-------------------------------------------------------------------------------
-
+      
+      bulkChecked (state) {
+        function checkedState (dataIn) {
+          if (dataIn === 1) {
+            return 'complete'
+          } else {
+            return 'incomplete'
+          }
+        }
+        if (this.selectedSessions.length !== 0) {
+          if (confirm('Are you sure that you want to ' + checkedState(state) + ' all the selected sessions?')) {
+            this.$parent.$parent.client_details.plans.forEach((plan) => {
+              if (plan.id === parseInt(this.$route.params.id)) {
+                plan.sessions.forEach((session) => {
+                  if (this.selectedSessions.includes(session.id)) {
+                    session.checked = state
+                    this.update_session(session.id)
+                  }
+                })
+              }
+            })
+            this.deselectAll()
+          }
+        }
+      },
       bulkDelete () {
         if (this.selectedSessions.length !== 0) {
-          if (confirm('Are you sure you want to delete all the selected session?')) {
+          if (confirm('Are you sure that you want to delete all the selected sessions?')) {
             this.selectedSessions.forEach((sessionId) => {
               this.delete_session(sessionId)
             })
