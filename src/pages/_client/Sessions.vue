@@ -15,6 +15,24 @@
     align-items: center;
     grid-auto-columns: min-content
   }
+  .wrapper--progress-bar {
+    user-select: none;
+    border: 1px solid #28282840;
+    border-radius: 3px;
+    transition: .4s all cubic-bezier(.165, .84, .44, 1)
+  }
+  #progress-bar {
+    border-radius: 3px;
+    padding: .3rem 1rem;
+    background-color: #00800020;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
+  }
+  #progress-bar.fullBar {
+    background-color: #49AB59
+  }
+  #progress-bar.fullBar p {
+    color: white
+  }
   #duration {
     width: 6rem;
     font-size: 1rem;
@@ -438,7 +456,12 @@
               <form class="plan_info">
                 <input class="text--small allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
               </form>
-            </div>  <!-- client_info -->
+            </div><br>  <!-- client_info -->
+            <div class="wrapper--progress-bar">
+              <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal }">
+                <p class="grey">Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions</p>
+              </div>
+            </div>
           </div> <!-- top_grid -->
           <div class="plan_grid">
             <div class="calendar">
@@ -662,6 +685,8 @@
         caretIsInEditor: false,
 
         // BLOCK DATA //
+        sessionsDone: 0,
+        sessionsTotal: null,
         isStatsOpen: false,
         showFeedback: '',
         weekColor: {
@@ -750,6 +775,7 @@
       this.today()
       this.scan()
       this.checkForNew()
+      this.adherence()
       this.setListenerForEditor(true)
     },
     beforeDestroy () {
@@ -1090,6 +1116,22 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      adherence () {
+        this.sessionsDone = 0
+        this.sessionsTotal = null
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            this.sessionsTotal = plan.sessions.length
+            plan.sessions.forEach((session) => {
+              if (session.checked === 1) {
+                this.sessionsDone++
+              }
+            })
+          }
+        })
+        const bar = document.getElementById('progress-bar')
+        bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+      },
       setListenerForEditor (state) {
         if (state) {
           document.addEventListener('click', this.checkCaretPos)
@@ -1477,6 +1519,7 @@
           )
           await this.$parent.get_sessions(this.force)
           await this.update_plan()
+          this.adherence()
           this.$ga.event('Session', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1515,6 +1558,7 @@
           this.sortSessions()
           this.scan()
           this.checkForNew()
+          this.adherence()
           this.$ga.event('Session', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
