@@ -180,7 +180,9 @@
     display: flex;
     height: 100%
   }
-  div.vm--modal:not(div.vm--modal .modal--alert) {
+  div.vm--modal {
+    /* stylelint-disable-next-line */
+    left: 0!important;
     min-width: 100%
   }
   .modal--bottom-bar {
@@ -231,8 +233,11 @@
   .text--no-client-notes, .text--no-plan-notes {
     margin: 2rem 0
   }
-  .text--no-sessions, .text--loading, .text--no-plans, .text--no-clients {
+  .text--loading, .text--no-clients {
     margin: 2rem 0 4rem 0
+  }
+  .text--no-plans, .text--no-sessions {
+    margin: 2rem 0 8rem 0
   }
   .text--no-content {
     margin: 1rem 0
@@ -595,7 +600,7 @@
     padding: 0;
     transition: all 1s
   }
-  .ql-editor img {
+  .ql-snow .ql-editor img {
     max-width: 60%
   }
   div.ql-editor h1 {
@@ -690,7 +695,7 @@
   }
 
   /* Responsive Design */
-  @media (min-width: 992px) {
+  @media (max-width: 992px) {
     #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
       padding: 4rem 10vw;
       overflow-x: hidden
@@ -726,7 +731,7 @@
       max-width: 100%
     }
     .client_link__notes__content img, .plan_link img {
-      max-width: 100%;
+      max-width: 100%
     }
 
     /* Quill */
