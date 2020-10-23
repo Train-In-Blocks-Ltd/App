@@ -5,6 +5,13 @@
     grid-gap: 2rem;
     margin: 2rem 0
   }
+  .wrapper--session {
+    display: grid;
+    margin: 2rem 0;
+    box-shadow: 0 0 20px 10px #28282810;
+    padding: 2rem;
+    border-radius: 3px
+  }
 </style>
 
 <template>
@@ -57,12 +64,19 @@
           <button v-show="currentSessionIndexHome != 0" @click="currentSessionIndexHome--">Back</button>
           <button v-show="currentSessionIndexHome != maxSessionIndexHome" @click="currentSessionIndexHome++">Next</button>
         </div>
-        <p class="session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
+        <p class="text--small session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
       </div>
       <p class="text--large">Plans</p>
       <div class="plan_grid">
-        <router-link v-for="(plan, index) in this.$parent.clientUser.plans" :key="'plan-' + index" class="plan_link" :to="'/clientUser/plan/' + plan.id">
+        <router-link
+          v-for="(plan, index) in this.$parent.clientUser.plans"
+          :key="'plan-' + index"
+          class="plan_link"
+          :to="'/clientUser/plan/' + plan.id"
+        >
           <p class="text--small plan-name">{{plan.name}}</p>
+          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">No plan notes added.</p>
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="plan_link__notes__content" />
         </router-link>
       </div>
     </div>

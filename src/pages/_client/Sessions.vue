@@ -27,6 +27,9 @@
     background-color: #00800020;
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
+  #progress-bar p {
+    white-space: nowrap
+  }
   #progress-bar.fullBar {
     background-color: #49AB59
   }

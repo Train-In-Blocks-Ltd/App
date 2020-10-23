@@ -1,6 +1,10 @@
 <style scoped>
-  .plan-notes {
-    margin-top: 4rem
+  .wrapper--session, .plan-notes {
+    display: grid;
+    margin: 4rem 0;
+    box-shadow: 0 0 20px 10px #28282810;
+    padding: 2rem;
+    border-radius: 3px
   }
   .container--sessions {
     margin-top: 6rem
@@ -18,14 +22,14 @@
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id">
         <div class="session--header">
-          <p class="text--small">{{plan.name}}</p>
+          <p class="text--large">{{plan.name}}</p>
         </div>
         <div class="plan-notes">
           <div class="plan-notes__header">
             <p class="text--small">Plan Notes</p>
           </div>
-          <div v-if="plan.notes !== ''" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn" />
-          <p v-if="plan.notes === ''" class="show-plan-notes text--small grey">No plan notes added...</p>
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn" />
+          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show-plan-notes text--small grey">No plan notes added...</p>
         </div>
         <div class="wrapper--calendar">
           <FullCalendar
@@ -56,7 +60,7 @@
               </div>
             </div><br>
             <div v-if="giveFeedback === session.id">
-              <p>Feedback</p>
+              <p><b>Feedback</b></p>
               <quill :config="$parent.quill_config" v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
               <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
               <button class="cancel" @click="giveFeedback = null">Cancel</button>
@@ -68,7 +72,7 @@
             <button v-show="currentSessionIndexPlan != 0" @click="currentSessionIndexPlan--">Back</button>
             <button v-show="currentSessionIndexPlan != maxSessionIndexPlan" @click="currentSessionIndexPlan++">Next</button>
           </div>
-          <p class="session-counter">{{currentSessionIndexPlan + 1}}/{{maxSessionIndexPlan + 1}}</p>
+          <p class="text--small session-counter">{{currentSessionIndexPlan + 1}}/{{maxSessionIndexPlan + 1}}</p>
         </div>
       </div>
     </div>

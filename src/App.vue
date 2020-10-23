@@ -380,7 +380,6 @@
   .show-session, .show-plan-notes, .show-client-notes, .show-template {
     outline-width: 0;
     overflow-wrap: break-word;
-    color: #282828;
     line-height: 1.42;
     overflow-y: auto;
     transition: all 1s
