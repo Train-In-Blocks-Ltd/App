@@ -25,7 +25,7 @@
 
 <template>
   <div id="archive">
-    <h1 class="text--large">Archive</h1>
+    <p class="text--large">Archive</p>
     <p class="text--small grey" v-if="this.$parent.archive.no_archive">No clients are archived :)</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <input v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients" type="search" rel="search" placeholder="Name" class="search text--small" autocomplete="name" v-model="search"/>

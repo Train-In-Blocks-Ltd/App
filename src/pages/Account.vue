@@ -65,7 +65,7 @@
     <modal name="reset-password" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.pass.focus()">
       <div class="modal--reset">
         <div class="wrapper--centered-item"> 
-          <h2>Reset your password</h2>
+          <p class="text--small">Reset your password</p>
           <form @submit.prevent="changePass(), $parent.willBodyScroll(true)">
             <label>
               <p><b>Current Password</b></p>
@@ -92,7 +92,7 @@
         </div>
       </div>
     </modal>
-    <h1 class="text--large">Your Account</h1>
+    <p class="text--large">Your Account</p>
     <form class="details_container" v-if="$parent.claims">
       <div class="details">
         <p><b>Email: </b>{{$parent.claims.email}}</p>
@@ -103,7 +103,7 @@
         <button @click.prevent="$modal.show('reset-password'), $parent.willBodyScroll(false)">Change Your Password</button>
       </div>
       <div class="privacy">
-        <h2>Your Privacy and Data</h2>
+        <p class="text--small">Your Privacy and Data</p>
         <p>You can find more information about our policies below:</p>
         <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
         <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>

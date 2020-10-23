@@ -44,7 +44,7 @@
               </div>
             </div><br>
             <div v-if="giveFeedback === session.id">
-              <h2>Feedback</h2>
+              <p><b>Feedback</b></p>
               <quill :config="$parent.quill_config" v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
               <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
               <button class="cancel" @click="giveFeedback = null">Cancel</button>

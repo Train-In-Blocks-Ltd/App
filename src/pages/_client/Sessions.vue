@@ -307,17 +307,12 @@
     font-size: 2.4rem
   }
 
-  @media (max-width: 992px) {
-    .graph {
-      padding: 4rem 10vw
-    }
-    .expand-all:hover {
-      opacity: 1
-    }
-  }
   @media (max-width: 768px) {
     .graph {
       padding: 2rem 5vw 4rem 5vw
+    }
+    .expand-all:hover {
+      opacity: 1
     }
     #copy:hover {
       opacity: 1
@@ -543,15 +538,18 @@
                         v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
                         class="wrapper--template-options"
                       >
-                        <p>Click where you want the template to insert before using the buttons.</p><br>
+                        <hr>
+                        <p v-if="$parent.$parent.templates.length !== 0"><b>Click where you want the template to insert before using the buttons.</b></p><br>
+                        <p v-if="$parent.$parent.templates.length === 0"><b>Nothing yet. Go to the templates page to add some shortcuts.</b></p><br>
                         <div
                           v-for="(item, index) in $parent.$parent.templates"
                           :key="index"
                         >
-                          <button class="opposite" :disabled="!caretIsInEditor" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
+                          <button class="opposite" :disabled="!caretIsInEditor || item.template === null || item.template === '<p><br></p>' || item.template === ''" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
                         </div>
                       </div>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
+                        <hr><br>
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
@@ -574,7 +572,7 @@
             <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
               <div class="graph" v-if="isStatsOpen">
                 <div class="section--top">
-                  <h3 class="section-title">Statistics</h3>
+                  <p class="text--large section-title">Statistics</p>
                   <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
                 <div>
@@ -1516,6 +1514,7 @@
           }
           this.sortSessions()
           this.scan()
+          this.checkForNew()
           this.$ga.event('Session', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false

@@ -1,7 +1,4 @@
 <style scoped>
-  .wrapper--calendar {
-    margin: 6rem 0
-  }
   .plan-notes {
     margin-top: 4rem
   }
@@ -10,9 +7,6 @@
   }
 
   @media (max-width: 576px) {
-    .wrapper--calendar {
-      margin: 2rem 0
-    }
     .plan-notes {
       margin-top: 2rem
     }

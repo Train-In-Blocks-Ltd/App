@@ -168,10 +168,14 @@
     margin: 2rem 0
   }
   .wrapper--calendar {
+    margin: 6rem 0;
     user-select: none
   }
   .full-width-bar {
     width: 100%
+  }
+  #line-chart {
+    padding: 8vw
   }
 
   /* GLOBAL: MODALS */
@@ -326,6 +330,14 @@
   }
   .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
     border-color: transparent
+  }
+  .fc-scroller.fc-day-grid-container {
+    /* stylelint-disable-next-line */
+    height: auto!important
+  }
+  .fc-row.fc-week.fc-widget-content {
+    /* stylelint-disable-next-line */
+    height: auto!important
   }
   .fc-view-container span {
     font-size: .8rem
@@ -703,6 +715,9 @@
     button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       opacity: 1
     }
+    #line-chart {
+      padding: 0
+    }
   }
   @media (min-width: 768px) {
     .sidebar {
@@ -809,6 +824,9 @@
     }
     .wrapper--centered-item {
       max-width: 300px
+    }
+    .wrapper--calendar {
+      margin: 2rem 0
     }
 
     /* Plans Page */

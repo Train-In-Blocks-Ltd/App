@@ -98,6 +98,7 @@
         </div>
       </div>
       <div>
+        <p class="text--large">Plans</p>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
         <p class="text--small grey text--no-plans" v-if="this.$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
         <p class="text--small grey text--loading" v-if="this.$parent.loading_plans">Loading plans...</p>
@@ -108,7 +109,8 @@
             :key="index"
           >
             <p class="text--small plan-name">{{plan.name}}</p>
-            <div v-html="plan.notes" class="plan_link__notes__content" />
+            <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">What's the purpose of this plan? Head over to this page and edit it.</p>
+            <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="plan_link__notes__content" />
           </router-link>
         </div>
       </div>
