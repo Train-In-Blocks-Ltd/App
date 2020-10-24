@@ -260,6 +260,7 @@
             this.clientAlready = false
             this.clientAlreadyMsg = 'Give Access'
           }
+          return result
         } catch (e) {
           this.clientAlready = false
           this.clientAlreadyMsg = 'Give Access'
@@ -346,7 +347,7 @@
               { adaptive: true },
               { clickToClose: false }
             )
-            this.checkClient()
+            await this.checkClient()
             this.$parent.loading = false
             this.$parent.dontLeave = false
           } catch (e) {

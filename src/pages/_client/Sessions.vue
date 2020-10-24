@@ -633,7 +633,7 @@
                         </label>
                       </div>
                     </div>
-                    <div v-show="showType" class="data-desc">
+                    <div v-show="showType && p1.desc" class="data-desc">
                       <div class="container--data-desc">
                         <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
                         <p class="data-desc__value">{{ p1.value }}</p>
