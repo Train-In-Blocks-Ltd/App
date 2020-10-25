@@ -854,7 +854,6 @@
       },
 
       // SESSION METHODS //-------------------------------------------------------------------------------
-      
       bulkChecked (state) {
         function checkedState (dataIn) {
           if (dataIn === 1) {
