@@ -152,14 +152,14 @@
             </button>
             <button
               @click="$parent.client_details.notifications = 0, update_client()"
-              v-if="clientAlready && clientAlreadyMsg !== 'Loading...'"
+              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && $parent.client_details.notifications === 1"
               class="button--verify"
             >
               Disable email notifications
             </button>
             <button
               @click="$parent.client_details.notifications = 1, update_client()"
-              v-if="!clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Give Access'"
+              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && $parent.client_details.notifications === 0"
               class="button--verify"
             >
               Enable email notifications
@@ -447,6 +447,7 @@
       },
       async update_client () {
         this.$parent.dontLeave = true
+        this.$parent.loading = true
         try {
           await axios.post(`https://api.traininblocks.com/clients`,
             {
