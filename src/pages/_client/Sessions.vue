@@ -314,10 +314,6 @@
     padding: .2rem 1rem .2rem 0;
     margin: .4rem 0
   }
-  #chart {
-    margin: 4rem 0;
-    position: relative
-  }
   .data-desc {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -730,7 +726,21 @@
 
         // CHART METHODS //
         dataCollection: null,
-        options: null,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                suggestedMin: 0,
+                beginAtZero: false
+              }
+            }]
+          }
+        },
 
         // CALENDAR DATA //
         calendarToolbarHeader: {
@@ -1004,23 +1014,6 @@
               data: this.yData
             }
           ]
-        }
-        this.options = {
-          legend: {
-            display: false
-          },
-          chartOptions: {
-            responsive: true,
-            maintainAspectRatio: false
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                suggestedMin: 0,
-                beginAtZero: false
-              }
-            }]
-          }
         }
       },
 

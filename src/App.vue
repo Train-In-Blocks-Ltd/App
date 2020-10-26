@@ -174,8 +174,10 @@
   .full-width-bar {
     width: 100%
   }
-  #line-chart {
-    padding: 8vw
+  #chart {
+    height: 80vh;
+    position: relative;
+    margin: 4rem 0
   }
   .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
     position: fixed;
