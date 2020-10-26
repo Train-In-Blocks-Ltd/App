@@ -14,5 +14,5 @@
   }
 </style>
 <template>
-    <h1 id="error_message">Error 404 Page Not Found</h1>
+    <p id="text--large error_message">Error 404 Page Not Found</p>
 </template>

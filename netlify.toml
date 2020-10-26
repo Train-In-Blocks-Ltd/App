@@ -3,6 +3,12 @@
   publish = "dist"
   functions = "functions"
 
+# note: each of these fields are OPTIONAL and should only be used if you need an override
+[dev]
+  framework = "vue"
+  port = 8080
+  targetPort = 8081
+
 [[redirects]]
   from = "https://app-train-in-blocks.netlify.app/*"
   to = "https://app.traininblocks.com/:splat"

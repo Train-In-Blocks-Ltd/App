@@ -49,528 +49,29 @@
       opacity: 0
     }
   }
-
-  /* GLOBAL: ELEMENTS */
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    min-height: 100%;
-    display: grid;
-    font-size: 16px;
-    line-height: 1.42;
-    letter-spacing: 1px
-  }
-  #app {
-    color: #282828;
-    background-color: white
-  }
-  main {
-    margin-left: calc(38px + 2rem);
-    display: grid;
-    align-items: start
-  }
-  .notAuth {
-    margin: 0
-  }
-
-  /* GLOBAL: CONTAINERS */
-  #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
-    padding: 4rem 20vw 10rem 20vw
-  }
-  .modal--error {
-    padding: 2rem
-  }
-  .flex {
-    display: flex
-  }
-  .container--title {
-    display: flex;
-    margin: 2rem 0
-  }
-  .home-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4rem;
-    align-items: center
-  }
-  .wrapper--calendar {
-    user-select: none
-  }
-
-  /* GLOBAL: TOOLTIP */
-  .tooltip {
-    cursor: pointer;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .tooltip:hover {
-    opacity: .6
-  }
-  .sub-title.tooltip {
-    margin-left: .6rem
-  }
-
-  /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-plan {
-    padding: 2rem
-  }
-  .modal--copy h3, .modal--reset h2 {
-    margin: 0 0 1.5rem 0
-  }
-
-  /* GLOBAL: SVG */
-  .title-icon {
-    margin: auto .6rem auto 0
-  }
-
-  /* GLOBAL: FONTS */
-  .main-title {
-    margin-top: 0;
-    margin-bottom: 3rem;
-    font-weight: bold;
-    font-size: 3.75rem;
-    text-transform: capitalize;
-    letter-spacing: .15rem
-  }
-  .sub-title {
-    font-size: 2.5rem;
-    letter-spacing: .15rem;
-    margin: 1.75rem 0
-  }
-  .no-margin {
-    margin: 0
-  }
-  h3 {
-    font-size: 2rem
-  }
-  p {
-    margin: 0
-  }
-  svg path:not(.account_nav--item--icon.transparent) {
-    fill: #282828
-  }
-  .allow-text-overflow {
-    text-overflow: ellipsis
-  }
-  .text--error {
-    font-size: .8rem;
-    color: #B80000
-  }
-
-  /* GLOBAL: BUTTONS */
-  button {
-    height: fit-content;
-    width: fit-content;
-    user-select: none;
-    cursor: pointer;
-    border-radius: 3px;
-    opacity: 1;
-    text-transform: capitalize;
-    outline-width: 0;
-    border: none;
-    padding: .6rem 1.6rem;
-    font-size: .8rem;
-    letter-spacing: .1rem;
-    font-weight: bold;
-    color: white;
-    background-color: #282828;
-    margin: .6rem 0;
-    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  button:hover {
-    opacity: .6
-  }
-  button:active {
-    transform: scale(.96)
-  }
-  button:focus {
-    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
-  }
-  button:disabled, button[disabled] {
-    opacity: .6;
-    cursor: default
-  }
-  .delete:hover, .cancel:hover {
-    color: white;
-    background-color: #B80000
-  }
-
-  /* GLOBAL: CALENDAR */
-  button.fc-button {
-    border-radius: 3px;
-    text-transform: capitalize;
-    font-size: .8rem;
-    font-weight: bold;
-    background-color: #282828;
-    color: white
-  }
-  button.fc-button-primary:disabled {
-    background-color: #282828
-  }
-  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
-    border-color: transparent
-  }
-  .fc-view-container span {
-    font-size: .8rem
-  }
-  button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-button.fc-button-primary, button.fc-dayGridWeek-button.fc-button.fc-button-primary, button.fc-dayGridMonth-button.fc-button.fc-button-primary {
-    margin-left: .4rem
-  }
-
-  /* GLOBAL: SESSIONS AND NOTES */
-  .wrapper--session__header {
-    height: 6.4rem
-  }
-  .text--name {
-    text-overflow: ellipsis;
-    white-space: nowrap
-  }
-  .text--date, .text--checked {
-    font-size: .8rem
-  }
-  .bottom-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: .6rem 0
-  }
-  #button-done {
-    background-color: green
-  }
-  #button-to-do {
-    background-color: #B80000
-  }
-  #button-done, #button-to-do {
-    color: white;
-    height: 2rem;
-    margin: auto 0
-  }
-  #button-done:hover, #button-to-do:hover {
-    opacity: .6
-  }
-
-  /* GLOBAL: SHOW AND NOTES */
-  .show-session, .show-plan-notes, .show-client-notes, .show-template-notes {
-    outline-width: 0;
-    overflow-wrap: break-word;
-    color: #282828;
-    line-height: 1.42;
-    overflow-y: auto;
-    font-size: .8rem;
-    transition: all 1s
-  }
-  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template-notes img {
-    max-width: 100%
-  }
-  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template-notes a {
-    color: blue
-  }
-  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template-notes ul, .show-template-notes ol {
-    text-decoration: none;
-    margin: 0
-  }
-  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template-notes p {
-    margin: 1rem 0
-  }
-  .wrapper--session__header.client-side {
-    height: 3.2rem
-  }
-
-  /* GLOBAL: RM IOS CORNERS */
-  input:not([type=checkbox]) {
-    border-radius: 0;
-    -webkit-appearance: none
-  }
-
-  /* GLOBAL: INPUTS */
-  .input--modal {
-    width: 4rem
-  }
-  .input--forms, .input--toolkit, .input--modal {
-    padding: .4rem;
-    font-size: 1rem;
-    border: none;
-    border-bottom: 1px solid #282828
-  }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
-    resize: none;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: .1rem
-  }
-  input[type=color] {
-    margin: 0 .4rem;
-    background-color: transparent;
-    padding: 0 .14rem;
-    outline-width: 0;
-    cursor: pointer;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  input.title {
-    margin-top: 0;
-    margin-bottom: 3rem;
-    font-weight: bold;
-    font-size: 3.75rem;
-    text-transform: capitalize;
-    letter-spacing: .15rem;
-    white-space: nowrap;
-    text-overflow: ellipsis
-  }
-  ::placeholder {
-    color: #28282899;
-    opacity: 1; /* Firefox */
-  }
-
-  /* GLOBAL: FORMS */
-  .form_grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-width: 300px;
-    margin: 0
-  }
-  .form_buttons {
-    display: grid;
-    grid-gap: 1rem;
-    place-content: start;
-    grid-auto-flow: column;
-    margin-bottom: 1rem
-  }
-
-  /* GLOBAL: LOGO */
-  .logo {
-    margin-bottom: auto
-  }
-  .logo--link {
-    display: block;
-    width: 38px;
-    transition: 1s all cubic-bezier(.165, .84, .44, 1)
-  }
-  svg.logo--svg path {
-    fill: white
-  }
-  .logo--link:hover {
-    opacity: .6
-  }
-  .logo--link:active {
-    transform: scale(.9)
-  }
-
-  /* GLOBAL: NAV */
-  .skip-to-content-link {
-    height: 30px;
-    left: 50%;
-    padding: 8px;
-    position: absolute;
-    transform: translateY(-1000%);
-    transition: transform .3s;
-    z-index: 99999999999
-  }
-  .skip-to-content-link:focus {
-    transform: translateY(0%)
-  }
-  .sidebar {
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem 1rem;
+  .section--a, .section--b {
     position: fixed;
-    background-color: #282828;
-    transition: width .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .account_nav--item {
-    display: flex;
-    opacity: .6;
-    cursor: pointer;
-    font-size: 1rem;
-    margin: .8rem 0;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .account_nav--item:hover {
-    opacity: 1
-  }
-  .account_nav--item:last-of-type {
-    padding-bottom: 0
-  }
-  .account_nav--item a {
-    display: flex;
-    text-decoration: none
-  }
-  .account_nav--item--text {
-    user-select: none;
-    color: white;
-    text-decoration: none;
-    position: relative;
-    border: 0;
-    opacity: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .sidebar:hover .account_nav--item--text {
-    opacity: 1
-  }
-  .account_nav--item a.router-link-exact-active {
-    font-weight: bold
-  }
-  .account_nav--item--icon {
-    margin: 0 .4rem 0 0;
-    height: 1.4rem;
-    vertical-align: bottom;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .account_nav--item--icon:not(.transparent) path {
-    fill: white
-  }
-
-  /* GLOBAL: QUILL */
-  .ql-toolbar.ql-snow {
-    border: none;
-    padding: .4rem .6rem .4rem .6rem;
-    position: fixed;
-    top: 25%;
+    top: 0;
     right: 0;
-    border-radius: 3px;
+    width: 0;
     background-color: #F4F4F4;
-    z-index: 2
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .ql-toolbar.ql-snow .ql-formats {
-    display: grid;
-    margin: 0
+  .section--a {
+    height: 50%
   }
-  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
-    margin: .4rem 0
+  .section--b {
+    height: 50%;
+    top: 50%;
+    transition-delay: .2s
   }
-  .ui.attached.segment.ql-container.ql-snow {
-    border: none
-  }
-  .ql-editor {
-    grid-area: body;
-    color: #282828;
-    overflow-y: auto;
-    padding: 0;
-    transition: all 1s
-  }
-  div.ql-editor h1 {
-    margin: 1.072rem 0
-  }
-  div.ql-editor h2 {
-    margin: 1.245rem 0
-  }
-  div.ql-editor p {
-    margin: 1rem 0
-  }
-  div.ql-editor img {
-    display: none
-  }
-  .ql-editor.ql-blank:before {
-    margin: 1rem 0;
-    left: 0
-  }
-
-  /* GLOBAL: SCROLLBAR */
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px
-  }
-  ::-webkit-scrollbar-track {
-    background-color: #28282821
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #28282890
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #28282860
-  }
-
-  /* ARCHIVE AND HOME STYLES */
-  .container--clients {
-    display: grid;
-    grid-gap: 2rem
-  }
-  .client_container p {
-    margin: 0
-  }
-
-  /* HOME: Client Container Animation */
-  .client_container > a {
-    display: grid;
-    grid-gap: 1rem;
-    position: relative;
-    font-weight: 400;
-    color: #282828;
-    text-decoration: none
-  }
-  .client_container > a:not(.archived):hover {
-    color: #282828
-  }
-  .client_container > a:before {
-    content: '';
-    position: absolute;
-    opacity: .4;
-    width: 95%;
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: #282828;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .client_container > a:not(.archived):hover:before {
+  .section--a.openedSections,  .section--b.openedSections {
     width: 100%;
-    opacity: 1
-  }
-  .client_link {
-    padding: 1rem 0;
-    overflow-x: auto
-  }
-  .client_link svg {
-    width: 20px
-  }
-  .client_link__name {
-    font-size: 1.4rem
-  }
-  .client_link__details {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    grid-gap: 1rem
-  }
-  .client_link__details p {
-    margin: auto 0
-  }
-  .client_link__notes__content {
-    font-size: .8rem;
-    margin-top: .4rem
-  }
-  .search {
-    border: none;
-    outline-width: 0;
-    width: 95%;
-    font-size: 1.6rem;
-    letter-spacing: .1rem;
-    font-weight: bold;
-    border-bottom: 2px solid #282828;
-    padding: .6rem 0;
-    margin: 1rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .search:hover {
-    border-bottom: 2px solid #28282880;
-    width: 100%
-  }
-  .search:focus {
-    border-bottom: 2px solid #282828;
-    width: 100%
-  }
-
-  /* GLOBAL: CLIENT-SIDE */
-  .container--session-control {
-    display: flex;
-    justify-content: space-between
-  }
-  .session-counter {
-    align-self: center;
-    font-size: 1rem;
-    font-weight: bold
+    z-index: 4
   }
 
   /* GLOBAL: SPLASH */
-  .splash {
+  #splash {
     height: 100%;
     width: 100%;
     background-color: white;
@@ -604,13 +105,17 @@
     width: 16rem;
     bottom: -50%;
     left: -50%;
-    border-radius: 35%;
-    animation: spin 6s ease-in-out forwards
+    border-radius: 40%;
+    animation: spin 5s forwards
   }
   .box .logo--svg {
     height: 50%;
     width: auto
   }
+  .box svg.logo--svg path {
+    fill: white
+  }
+
   @keyframes spin {
     0% {
       transform: translateY(0) rotate(0deg)
@@ -628,14 +133,566 @@
     }
   }
 
+  /* GLOBAL: ELEMENTS */
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    min-height: 100%;
+    display: grid;
+    font-size: 16px;
+    line-height: 1.42;
+    letter-spacing: 1px
+  }
+  #app {
+    color: #282828;
+    background-color: white
+  }
+  main {
+    margin-left: calc(38px + 2rem);
+    display: grid;
+    align-items: start
+  }
+  .notAuth {
+    margin: 0
+  }
+
+  /* GLOBAL: CONTAINERS */
+  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
+    padding: 2rem 10vw
+  }
+  .flex {
+    display: flex
+  }
+  .container--title {
+    display: flex;
+    margin: 2rem 0
+  }
+  .wrapper--calendar {
+    margin: 6rem 0;
+    user-select: none
+  }
+  .full-width-bar {
+    width: 100%
+  }
+  #chart {
+    height: 80vh;
+    position: relative;
+    margin: 4rem 0
+  }
+  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+    position: fixed;
+    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
+    top: 0;
+    left: 0;
+    z-index: 5;
+    height: 100%;
+    width: 100%
+  }
+  .wrapper--client-link {
+    text-decoration: none
+  }
+  .allow-y-overflow {
+    overflow-y: auto
+  }
+
+  /* GLOBAL: MODALS */
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--alert {
+    padding: 2rem;
+    display: flex;
+    height: 100%
+  }
+  div.vm--modal {
+    /* stylelint-disable-next-line */
+    left: 0!important;
+    min-width: 100%
+  }
+  .modal--bottom-bar {
+    display: flex
+  }
+  .modal--bottom-bar button {
+    margin-right: .6rem
+  }
+
+  /* GLOBAL: SVG */
+  .title-icon {
+    margin: auto .6rem auto 0
+  }
+
+  /* GLOBAL: FONTS */
+  .text--large {
+    margin-top: 0;
+    font-size: 2.6rem
+  }
+  .text--small {
+    font-size: 1.6rem
+  }
+  .grey {
+    color: #28282894
+  }
+  .no-margin {
+    margin: 0
+  }
+  h3 {
+    font-size: 2rem
+  }
+  p {
+    margin: 0
+  }
+  svg path:not(.account_nav--item--icon.transparent) {
+    fill: #282828
+  }
+  .account_nav--item--icon.transparent path {
+    stroke: #282828
+  }
+  .allow-text-overflow {
+    text-overflow: ellipsis
+  }
+  .text--error {
+    font-size: .8rem;
+    color: #B80000
+  }
+  .text--no-client-notes, .text--no-plan-notes {
+    margin: 2rem 0
+  }
+  .text--loading, .text--no-clients {
+    margin: 2rem 0 4rem 0
+  }
+  .text--no-plans, .text--no-sessions {
+    margin: 2rem 0 8rem 0
+  }
+  .text--no-content {
+    margin: 1rem 0
+  }
+
+  /* GLOBAL: BUTTONS */
+  button {
+    height: fit-content;
+    width: fit-content;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 3px;
+    opacity: 1;
+    text-transform: capitalize;
+    outline-width: 0;
+    border: none;
+    padding: .6rem 1.6rem;
+    font-size: .8rem;
+    letter-spacing: .1rem;
+    color: white;
+    background-color: #282828;
+    margin: .6rem 0;
+    transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+  }
+  button:hover:not(:disabled) {
+    opacity: .6
+  }
+  button:active:not(:disabled) {
+    transform: scale(.96)
+  }
+  button:focus {
+    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
+  }
+  button:disabled, button[disabled] {
+    opacity: .6;
+    cursor: default
+  }
+  .delete:hover, .cancel:hover {
+    color: white;
+    background-color: #B80000
+  }
+  button.opposite {
+    border: 2px solid #282828;
+    color: #282828;
+    background-color: transparent
+  }
+  button.opposite:not(:disabled):hover {
+    color: white;
+    background-color: #282828
+  }
+
+  /* GLOBAL: SEARCH */
+  .search {
+    border: none;
+    outline-width: 0;
+    width: 80%;
+    border-bottom: 2px solid #282828;
+    padding: .6rem 0;
+    opacity: .6;
+    margin: 0 auto 4rem 0;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .search:hover {
+    width: 100%;
+    opacity: 1
+  }
+  .search:focus {
+    width: 100%;
+    opacity: 1
+  }
+
+  /* GLOBAL: CALENDAR */
+  div.fc-toolbar h2 {
+    font-weight: lighter;
+    font-size: 1.6rem
+  }
+  button.fc-button {
+    border-radius: 3px;
+    text-transform: capitalize;
+    font-size: .8rem;
+    background-color: #282828;
+    color: white
+  }
+  button.fc-button-primary:disabled {
+    background-color: #282828
+  }
+  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
+    border-color: transparent
+  }
+  .fc-scroller.fc-day-grid-container {
+    /* stylelint-disable-next-line */
+    height: auto!important
+  }
+  .fc-row.fc-week.fc-widget-content {
+    /* stylelint-disable-next-line */
+    height: auto!important
+  }
+  .fc-view-container span {
+    font-size: .8rem
+  }
+
+  /* GLOBAL: SESSIONS AND NOTES */
+  .wrapper--session__header {
+    height: 6.4rem
+  }
+  .text--name {
+    text-overflow: ellipsis;
+    white-space: nowrap
+  }
+  .text--date, .text--checked {
+    font-size: .8rem
+  }
+  .bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .6rem 0;
+    margin-top: 1rem
+  }
+  #button-done {
+    background-color: green
+  }
+  #button-to-do {
+    background-color: #B80000
+  }
+  #button-done, #button-to-do {
+    color: white;
+    height: 2rem;
+    margin: auto 0
+  }
+  #button-done:hover, #button-to-do:hover {
+    opacity: .6
+  }
+
+  /* GLOBAL: SHOW AND NOTES */
+  .show-session, .show-plan-notes, .show-client-notes, .show-template {
+    outline-width: 0;
+    overflow-wrap: break-word;
+    line-height: 1.42;
+    overflow-y: auto;
+    transition: all 1s
+  }
+  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img,.show-session iframe, .show-plan-notes iframe, .show-client-notes iframe, .show-template iframe {
+    border-radius: 3px;
+    margin: 1rem 0
+  }
+  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template a {
+    color: blue
+  }
+  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template ul, .show-template ol {
+    text-decoration: none;
+    margin: 0
+  }
+  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template p {
+    margin: 1rem 0
+  }
+  .wrapper--session__header.client-side {
+    height: 3.2rem
+  }
+
+  /* GLOBAL: RM IOS CORNERS */
+  input:not([type=checkbox]) {
+    border-radius: 0;
+    -webkit-appearance: none
+  }
+
+  /* GLOBAL: INPUTS */
+  .input--modal {
+    width: 4rem
+  }
+  .input--forms, .input--toolkit, .input--modal {
+    padding: .4rem;
+    font-size: 1rem;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #282828
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
+    resize: none;
+    font-family: Arial, Helvetica, sans-serif
+  }
+  input[type=color] {
+    margin: 0 .4rem;
+    background-color: transparent;
+    padding: 0 .14rem;
+    outline-width: 0;
+    cursor: pointer;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  ::placeholder {
+    color: #28282899;
+    opacity: 1; /* Firefox */
+  }
+
+  /* GLOBAL: FORMS */
+  .form_grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: auto;
+    max-width: 300px
+  }
+  .form_buttons {
+    display: grid;
+    grid-gap: 1rem;
+    place-content: start;
+    grid-auto-flow: column;
+    margin-bottom: 1rem
+  }
+  .wrapper--centered-item {
+    margin: auto;
+    max-width: 500px
+  }
+
+  /* GLOBAL: LOGO */
+  .logo {
+    margin-bottom: auto
+  }
+  .logo--link {
+    display: block;
+    width: 38px;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
+  }
+  svg.logo--svg path {
+    fill: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .sidebar:hover svg.logo--svg path {
+    fill: #282828
+  }
+  .logo--link:hover {
+    opacity: .6
+  }
+  .logo--link:active {
+    transform: scale(.9)
+  }
+
+  /* GLOBAL: NAV */
+  .skip-to-content-link {
+    height: 30px;
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-1000%);
+    transition: transform .3s;
+    z-index: 99999999999
+  }
+  .skip-to-content-link:focus {
+    transform: translateY(0%)
+  }
+  .sidebar {
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2rem 1rem;
+    position: fixed;
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810;
+    transition: width .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .account_nav--item {
+    display: flex;
+    opacity: .6;
+    cursor: pointer;
+    font-size: 1rem;
+    margin: .8rem 0;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .account_nav--item:hover {
+    opacity: 1
+  }
+  .account_nav--item:last-of-type {
+    padding-bottom: 0
+  }
+  .account_nav--item a {
+    display: flex;
+    text-decoration: none
+  }
+  .account_nav--item--text {
+    user-select: none;
+    color: #282828;
+    text-decoration: none;
+    position: relative;
+    border: 0;
+    opacity: 0;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .sidebar:hover .account_nav--item--text {
+    opacity: 1
+  }
+  .account_nav--item a.router-link-exact-active {
+    opacity: 1
+  }
+  .account_nav--item--icon {
+    margin: 0 .4rem 0 0;
+    height: 1.4rem;
+    vertical-align: bottom;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .account_nav--item--icon:not(.transparent) path {
+    fill: #282828
+  }
+
+  /* GLOBAL: EXTRA OPTIONS */
+  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new, .icon--open-new-plan {
+    user-select: none;
+    z-index: 2;
+    display: flex;
+    cursor: pointer;
+    position: fixed;
+    right: 0;
+    top: 2rem;
+    width: calc(3rem);
+    padding: .4rem 1rem .4rem .6rem;
+    border-radius: 3px 0 0 3px;
+    background-color: #F4F4F4;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  div.icon--open-stats, div.icon--open-whats-new, .icon--open-new-plan {
+    top: 4.4rem
+  }
+  div.icon--open-install-pwa {
+    top: 6.8rem
+  }
+  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install-pwa:hover {
+    width: 6rem;
+    justify-content: center;
+    text-align: center
+  }
+  .icon--open-new-client:hover, .icon--open-whats-new:hover, .icon--open-new-plan:hover {
+    width: 8rem;
+    justify-content: center;
+    text-align: center
+  }
+  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg, .icon--open-new-plan:hover svg {
+    display: none
+  }
+  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text, .icon--open-new-plan .text {
+    font-size: .8rem;
+    display: none;
+    white-space: nowrap;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+  }
+  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text, .icon--open-new-plan:hover .text {
+    display: block
+  }
+
+  /* GLOBAL: SCROLLBAR */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #28282821
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #28282890
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #28282860
+  }
+
+  /* ARCHIVE AND HOME STYLES */
+  .container--clients {
+    display: grid;
+    grid-gap: 2rem
+  }
+  .client_container p {
+    margin: 0
+  }
+
+  /* GLOBAL: LINK CONTAINERS */
+  .client_link, .plan_link {
+    display: grid;
+    padding: 2rem;
+    grid-gap: 1rem;
+    font-weight: 400;
+    color: #282828;
+    text-decoration: none;
+    box-shadow: 0 0 20px 10px #28282810;
+    border-radius: 3px;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link__notes__content, .plan_link__notes__content {
+    font-size: .8rem;
+    margin-top: .4rem
+  }
+  .client_link__notes__content *, .plan_link__notes__content *, .plan-name {
+    color: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content *, .plan_link:hover .plan-name {
+    color: #282828
+  }
+  .client_link__notes__content p, .plan_link__notes__content p {
+    margin: .4rem 0
+  }
+  .client_name, .plan-name {
+    margin: 0
+  }
+  .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
+    font-size: 1rem
+  }
+  .client_link__notes__content img, .plan_link img, .client_link__notes__content iframe, .plan_link iframe {
+    margin: 1rem 0;
+    border-radius: 3px;
+    opacity: .6;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:hover .client_link__notes__content img, .plan_link:hover img, .client_link:hover .client_link__notes__content iframe, .plan_link:hover iframe {
+    opacity: 1
+  }
+
+  /* GLOBAL: CLIENT-SIDE */
+  .container--session-control {
+    display: flex;
+    justify-content: space-between
+  }
+  .session-counter {
+    align-self: center;
+    font-size: 1rem
+  }
+
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
       padding: 4rem 10vw;
       overflow-x: hidden
     }
-    button:hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+    button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       opacity: 1
+    }
+    #line-chart {
+      padding: 0
     }
   }
   @media (min-width: 768px) {
@@ -651,16 +708,24 @@
       height: 48px;
       width: 48px
     }
+    .client_link.archived {
+      display: flex;
+      justify-content: space-between
+    }
   }
   @media (max-width: 768px) {
     /* Containers */
     .quill {
       width: 90%
     }
-
-    /* Quill */
-    .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
-      margin: .2rem 0
+    .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img {
+      max-width: 100%
+    }
+    .client_link__notes__content img, .plan_link img {
+      max-width: 100%
+    }
+    .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+      padding: 4rem 10vw 10rem 10vw
     }
 
     /* Sidebar */
@@ -681,7 +746,7 @@
     main {
       margin: 0
     }
-    #home, #plan, #account, #archive, .wrapper--client, #help, #logout, #templates {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -705,14 +770,23 @@
     p {
       font-size: .8rem
     }
-    .main-title {
-      font-size: 2.4rem
+    .text--large {
+      font-size: 2rem
     }
-    .sub-title {
-      font-size: 1.6rem
+    .text--small {
+      font-size: 1.2rem
+    }
+    .button--state, .button--feedback {
+      width: 100%
+    }
+    .wrapper--centered-item {
+      max-width: 300px
+    }
+    .wrapper--calendar {
+      margin: 2rem 0
     }
 
-    /* plans Page */
+    /* Plans Page */
     .fc-view-container {
       width: 90vw;
       overflow-x: auto
@@ -723,14 +797,17 @@
     .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
       width: 200vw
     }
+    div.fc-toolbar h2 {
+      font-size: 1rem
+    }
   }
 
-  /* Reduced motion */
+  /* GLOBAL: REDUCED MOTION */
   @media (prefers-reduced-motion: reduce) {
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-new-plan {
       transition: none
     }
     .sidebar {
@@ -747,27 +824,25 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div v-show="splashing && authenticated" class="splash">
-        <div class="box">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" />
-        </div>
-      </div>
-    </transition>
-    <modal name="error" height="auto" :adaptive="true">
+    <modal name="error" height="100%" width='100%' :adaptive="true" :clickToClose="false">
       <div class="modal--error">
-        <p><b>Something went wrong. Please try again...</b></p><br>
-        <p>{{errorMsg}}</p><br>
-        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
-          <button type="submit" formtarget="_blank">Let us know</button>
-        </form>
+        <div class="wrapper--centered-item">
+          <p><b>Something went wrong. Please try again...</b></p><br>
+          <p>{{errorMsg}}</p><br>
+          <div class="modal--bottom-bar">
+            <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
+              <button type="submit" formtarget="_blank">Let us know</button>
+            </form>
+            <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">Close</button> 
+          </div>
+        </div>
       </div>
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
-    <nav class="sidebar" v-if="authenticated && claims">
+    <nav class="sidebar" v-if="authenticated && claims && splashed">
       <div class="logo">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
@@ -791,12 +866,12 @@
         </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/help" title="Help" >
+        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
             Help
           </p>
-        </router-link>
+        </a>
       </div>
       <div class="account_nav--item">
         <router-link to="/templates" title="Templates">
@@ -844,7 +919,7 @@ import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import {deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText} from './components/components/email'
+import {deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText} from './components/email'
 
 export default {
   components: {
@@ -853,7 +928,6 @@ export default {
   },
   data () {
     return {
-      splashing: true,
       archive: {
         clients: {},
         no_archive: false
@@ -870,22 +944,12 @@ export default {
 
       // BACKGROUND DATA //
 
+      splashed: false,
+      templates: null,
       errorMsg: null,
       loading: false,
       dontLeave: false,
       authenticated: false,
-      quill_config: {
-        theme: 'snow',
-        placeholder: 'Type away...',
-        modules: {
-          clipboard: {
-            matchVisual: false
-          },
-          toolbar: [
-            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link', 'image']
-          ]
-        }
-      },
       pwa: {
         deferredPrompt: null,
         displayMode: 'browser tab',
@@ -893,11 +957,12 @@ export default {
       }
     }
   },
-  created () {
+  async created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
-  mounted () {
+  async mounted () {
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -913,9 +978,6 @@ export default {
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.displayMode = 'standalone'
     }
-    setTimeout(() => {
-      this.splashing = false
-    }, 6000)
   },
   watch: {
     // Everytime the route changes, check for auth status
@@ -942,6 +1004,14 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
+    willBodyScroll (state) {
+      const body = document.getElementsByTagName('body')[0]
+      if (state) {
+        body.style.overflow = 'auto'
+      } else {
+        body.style.overflow = 'hidden'
+      }
+    },
     confirmLeave (e) {
       if (this.dontLeave === true) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
@@ -954,8 +1024,7 @@ export default {
     },
     sortSessionsPlan () {
       this.clientUser.plans.forEach((plan) => {
-        //eslint-disable-next-line
-        if (plan.id == this.$route.params.id) {
+        if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
           })
@@ -993,20 +1062,13 @@ export default {
       } else {
         this.$ga.disable()
       }
-      var d = new Date()
-      var n = d.getTime()
-      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.clients_f()
-        localStorage.setItem('firstLoaded', true)
-        localStorage.setItem('loadTime', n)
-      }
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
 
     // CLIENT METHODS //-------------------------------------------------------------------------------
 
     async clients_to_vue () {
-      this.loading = true
       if (!localStorage.getItem('clients')) {
         await this.clients_f()
       }
@@ -1015,29 +1077,22 @@ export default {
         var textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
-      this.loading = false
     },
     async clients_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
         if (response.data.length === 0) {
           this.no_clients = true
         } else {
           this.no_clients = false
         }
         localStorage.setItem('clients', JSON.stringify(response.data))
-        this.loading = false
       } catch (e) {
         this.no_clients = false
         this.loading = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
@@ -1046,8 +1101,7 @@ export default {
         this.loading = true
         this.dontLeave = true
         for (var i = 0; i < this.archive.clients.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive.clients[i].client_id == id) {
+          if (this.archive.clients[i].client_id === id) {
             this.archive.clients.splice(index, 1)
             if (this.archive.clients.length === 0) {
               this.archive.no_archive = true
@@ -1055,13 +1109,7 @@ export default {
           }
         }
         try {
-          await axios.delete(`https://api.traininblocks.com/clients/${id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
           await this.archive_f()
           this.archive_to_vue()
@@ -1076,6 +1124,7 @@ export default {
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1084,7 +1133,6 @@ export default {
     // CLIENT ARCHIVE METHODS //-------------------------------------------------------------------------------
 
     async archive_to_vue () {
-      this.loading = true
       if (!localStorage.getItem('archive')) {
         await this.archive_f()
       }
@@ -1097,17 +1145,10 @@ export default {
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
       }
-      this.loading = false
     },
     async archive_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
         if (response.data.length === 0) {
           this.archive.no_archive = true
         } else {
@@ -1125,8 +1166,7 @@ export default {
         this.loading = true
         this.dontLeave = true
         for (var i = 0; i < this.clients.length; i++) {
-          //eslint-disable-next-line
-          if (this.clients[i].client_id == id) {
+          if (this.clients[i].client_id === id) {
             email = this.clients[i].email
             this.clients.splice(index, 1)
             if (this.clients.length === 0) {
@@ -1135,14 +1175,7 @@ export default {
           }
         }
         try {
-          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
-          // eslint-disable-next-line
+          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
           this.response = response.data
 
           await this.clients_f()
@@ -1152,57 +1185,26 @@ export default {
           this.archive_to_vue()
           this.$ga.event('Client', 'archive')
 
-          const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
+          const result = await axios.post('/.netlify/functions/okta',
             {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'GET',
+              url: `?filter=profile.email+eq+"${email}"&limit=1`
             }
           )
           if (result.data.length >= 1) {
-            await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
-              {},
+            await axios.post('/.netlify/functions/okta',
               {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.AUTH_HEADER
-                }
+                type: 'POST',
+                body: {},
+                url: `${result.data[0].id}/lifecycle/suspend`
               }
             )
-            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            await axios.post('/.netlify/functions/send-email',
               {
-                'personalizations': [
-                  {
-                    'to': [
-                      {
-                        'email': email
-                      }
-                    ],
-                    'subject': 'Account Deactivated'
-                  }
-                ],
-                'from': {
-                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
-                },
-                'content': [
-                  {
-                    'type': 'text/plain',
-                    'value': deleteEmailText()
-                  },
-                  {
-                    'type': 'text/html',
-                    'value': deleteEmail()
-                  }
-                ]
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.SENDGRID
-                }
+                'to': email,
+                'subject': 'Account Deactivated',
+                'text': deleteEmailText(),
+                'html': deleteEmail()
               }
             )
           }
@@ -1214,6 +1216,7 @@ export default {
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1223,8 +1226,7 @@ export default {
         this.loading = true
         this.dontLeave = true
         for (var i = 0; i < this.archive.clients.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive.clients[i].client_id == id) {
+          if (this.archive.clients[i].client_id === id) {
             var arr = JSON.parse(localStorage.getItem('clients'))
             arr.push(this.archive.clients[i])
 
@@ -1242,13 +1244,7 @@ export default {
           }
         }
         try {
-          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
           this.response = response.data
 
           await this.archive_f()
@@ -1264,6 +1260,7 @@ export default {
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1273,23 +1270,11 @@ export default {
 
     async get_plans () {
       try {
-        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
         this.clientUser.plans = plans.data
         var f
         for (f in this.clientUser.plans) {
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
@@ -1297,6 +1282,7 @@ export default {
         this.dontLeave = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
@@ -1304,13 +1290,7 @@ export default {
       try {
         var f
         for (f in this.clientUser.plans) {
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`,
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
-            }
-          )
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
@@ -1318,36 +1298,30 @@ export default {
         this.dontLeave = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
-    async update_session (pid, wid) {
+    async update_session (pid, sid) {
       this.loading = true
       // Set the plan variable to the current plan
       let x
       for (x in this.clientUser.plans) {
-        // eslint-disable-next-line
-        if (this.clientUser.plans[x].id == pid) {
+        if (this.clientUser.plans[x].id === pid) {
           var plan = this.clientUser.plans[x]
           var y
           for (y in plan.sessions) {
-            if (plan.sessions[y].id === wid) {
+            if (plan.sessions[y].id === sid) {
               var sessionId = plan.sessions[y].id
               var sessionName = plan.sessions[y].name
               var sessionChecked = plan.sessions[y].checked
               var sessionFeedback = plan.sessions[y].feedback
-              var sessionName = plan.sessions[y].name
             }
           }
         }
       }
       try {
         await axios.post(`https://api.traininblocks.com/client-workouts`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          },
           {
             'id': sessionId,
             'name': sessionName,
@@ -1356,60 +1330,21 @@ export default {
           }
         )
         this.$ga.event('Session', 'update')
-        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-            }
-          }
-        )
+        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
         if (client.data[0].notifications === 1) {
           if (sessionFeedback !== null) {
-            var ptEmail = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=id+eq+"${client.data[0].pt_id}"&limit=1`,
+            const ptEmail = await axios.post('/.netlify/functions/okta',
               {
-                headers: {
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              },
-              {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.AUTH_HEADER
-                }
+                type: 'GET',
+                url: `?filter=id+eq+"${client.data[0].pt_id}"&limit=1`
               }
             )
-            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            await axios.post('/.netlify/functions/send-email',
               {
-                'personalizations': [
-                  {
-                    'to': [
-                      {
-                        'email': ptEmail.data[0].credentials.emails[0].value
-                      }
-                    ],
-                    'subject': this.claims.email + ' has submitted feedback for ' + sessionName
-                  }
-                ],
-                'from': {
-                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
-                },
-                'content': [
-                  {
-                    'type': 'text/plain',
-                    'value': feedbackEmailText(this.claims.client_id_db, pid)
-                  },
-                  {
-                    'type': 'text/html',
-                    'value': feedbackEmail(this.claims.client_id_db, pid)
-                  }
-                ]
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.SENDGRID
-                }
+                'to': ptEmail.data[0].credentials.emails[0].value,
+                'subject': this.claims.email + ' has submitted feedback for ' + sessionName,
+                'text': feedbackEmailText(this.claims.client_id_db, pid),
+                'html': feedbackEmail(this.claims.client_id_db, pid)
               }
             )
           }
@@ -1419,10 +1354,24 @@ export default {
         this.dontLeave = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
       this.loading = false
       this.dontLeave = false
+    },
+    async getTemplates () {
+      try {
+        const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+        this.templates = response.data
+      } catch (e) {
+        this.loading = false
+        this.dontLeave = false
+        this.errorMsg = e
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
+      }
     }
   }
 }

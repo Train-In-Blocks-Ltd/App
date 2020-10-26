@@ -3,21 +3,20 @@ import Router from 'vue-router'
 
 import Auth from '@okta/okta-vue'
 
-import HomeComponent from '@/components/pages/Home'
-import LoginComponent from '@/components/pages/Login'
-import ProfileComponent from '@/components/pages/Account'
-import LogoutComponent from '@/components/pages/Logout'
-import ClientComponent from '@/components/pages/Client'
-import NotFound from '@/components/pages/NotFound'
-import ArchiveComponent from '@/components/pages/Archive'
-import HelpComponent from '@/components/pages/Help'
-import TemplateComponent from '@/components/pages/Templates'
+import HomeComponent from '@/pages/Home'
+import LoginComponent from '@/pages/Login'
+import ProfileComponent from '@/pages/Account'
+import LogoutComponent from '@/pages/Logout'
+import NotFound from '@/pages/NotFound'
+import ArchiveComponent from '@/pages/Archive'
+import TemplateComponent from '@/pages/Templates'
 
-import ClientPlans from '@/components/pages/_client/ClientPlans'
-import ClientSessions from '@/components/pages/_client/ClientSessions'
+import ClientComponent from '@/pages/_client/Home'
+import ClientPlans from '@/pages/_client/Plans'
+import ClientSessions from '@/pages/_client/Sessions'
 
-import ClientUserComponent from '@/components/pages/clientUser/Home'
-import ClientUserPlans from '@/components/pages/clientUser/Plans'
+import ClientUserComponent from '@/pages/_clientUser/Home'
+import ClientUserPlans from '@/pages/_clientUser/Plans'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -60,14 +59,6 @@ const router = new Router({
       component: ProfileComponent,
       meta: {
         requiresAuth: true
-      }
-    },
-    {
-      path: '/help',
-      component: HelpComponent,
-      meta: {
-        requiresAuth: true,
-        requiresTrainer: true
       }
     },
     {

@@ -1,7 +1,7 @@
-const key = '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'
-
+const key = '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'
+const axios = require('axios')
+const qs = require('querystring')
 const sendgrid = require('@sendgrid/mail')
-
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -14,13 +14,26 @@ const headers = {
 }
 
 exports.handler = async function handler (event, context, callback) {
-  if (handler.httpMethod === 'OPTIONS') {
+  const accessToken = event.headers.authorization.split(' ')
+  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+    qs.stringify({
+      token: accessToken[1],
+      token_type_hint: 'access_token'
+    }),
+    {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+  )
+  if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
       headers: headers,
       body: ''
     })
-  } else if (event.body) {
+  } else if (event.body && response.data.active === true) {
     try {
       var data = JSON.parse(event.body)
       sendgrid.setApiKey(key)

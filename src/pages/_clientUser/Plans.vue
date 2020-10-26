@@ -1,33 +1,49 @@
 <style scoped>
-  .wrapper--calendar {
-    margin: 6rem 0
+  .wrapper--session, .plan-notes {
+    display: grid;
+    margin: 4rem 0;
+    box-shadow: 0 0 20px 10px #28282810;
+    padding: 2rem;
+    border-radius: 3px
   }
-  .plan-notes {
-    margin-top: 4rem
+  .container--sessions {
+    margin-top: 6rem
+  }
+
+  @media (max-width: 576px) {
+    .plan-notes {
+      margin-top: 2rem
+    }
   }
 </style>
 
 <template>
-  <div id="plan">
-    <div v-for="(plan, index) in this.$parent.clientUser.plans"
-      :key="index">
+  <div id="client-plan">
+    <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id">
         <div class="session--header">
-          <h2 class="main-title">{{plan.name}}</h2>
+          <p class="text--large">{{plan.name}}</p>
         </div>
         <div class="plan-notes">
           <div class="plan-notes__header">
-            <p class="plan-notes__header__text"><b>Plan Notes</b></p>
+            <p class="text--small">Plan Notes</p>
           </div>
-          <div v-if="plan.notes !== ''" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn" />
-          <p v-if="plan.notes === ''" class="show-plan-notes">No plan notes added...</p>
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn" />
+          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show-plan-notes text--small grey">No plan notes added...</p>
         </div>
         <div class="wrapper--calendar">
-          <FullCalendar defaultView="dayGridMonth" :firstDay="1" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="sessionDates" />
+          <FullCalendar
+            defaultView="dayGridMonth"
+            :firstDay="1" :plugins="calendarPlugins"
+            :header="calendarToolbarHeader"
+            :footer="calendarToolbarFooter"
+            :events="sessionDates"
+            :views="calendarViews"
+          />
         </div>
         <div class="container--sessions" v-if="plan.sessions">
           <div class="wrapper--session" v-for="(session, index) in plan.sessions"
-            :key="index" v-show="index == currentsessionIndexPlan">
+            :key="index" v-show="index == currentSessionIndexPlan">
             <div class="wrapper--session__header client-side" :id="session.name">
               <div>
                 <span class="text--name"><b>{{session.name}}</b></span><br>
@@ -37,15 +53,15 @@
             </div>
             <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
             <div class="bottom-bar">
-              <div>
-                <button v-if="session.checked !== 0" @click="session.checked = 0, $parent.update_session(plan.id, session.id), session.checked = session.checked" id="button-done">Completed</button>
-                <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id), session.checked = session.checked" id="button-to-do">Incomplete</button>
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id">Give Feedback</button>
+              <div class="full-width-bar" :key="check">
+                <button v-if="session.checked === 1" @click="complete(plan.id, session.id)" id="button-done" class="button--state">Completed</button>
+                <button v-if="session.checked === 0" @click="complete(plan.id, session.id)" id="button-to-do" class="button--state">Click to complete</button>
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
             </div><br>
             <div v-if="giveFeedback === session.id">
-              <h2>Feedback</h2>
-              <quill :config="$parent.quill_config" v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
+              <p><b>Feedback</b></p>
+              <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
               <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
               <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
@@ -53,10 +69,10 @@
         </div>
         <div class="container--session-control">
           <div>
-            <button v-show="currentsessionIndexPlan != 0" @click="currentsessionIndexPlan--">Back</button>
-            <button v-show="currentsessionIndexPlan != maxsessionIndexPlan" @click="currentsessionIndexPlan++">Next</button>
+            <button v-show="currentSessionIndexPlan != 0" @click="currentSessionIndexPlan--">Back</button>
+            <button v-show="currentSessionIndexPlan != maxSessionIndexPlan" @click="currentSessionIndexPlan++">Next</button>
           </div>
-          <p class="session-counter">{{currentsessionIndexPlan + 1}}/{{maxsessionIndexPlan + 1}}</p>
+          <p class="text--small session-counter">{{currentSessionIndexPlan + 1}}/{{maxSessionIndexPlan + 1}}</p>
         </div>
       </div>
     </div>
@@ -75,10 +91,11 @@
     },
     data () {
       return {
+        check: null,
+
         giveFeedback: null,
-        editsession: null,
-        maxsessionIndexPlan: null,
-        currentsessionIndexPlan: 0,
+        maxSessionIndexPlan: null,
+        currentSessionIndexPlan: 0,
 
         // CALENDAR DATA //
 
@@ -87,32 +104,60 @@
           right: ''
         },
         calendarToolbarFooter: {
+          left: 'dayGridMonth, dayGridThreeDay',
           right: 'today prev, next'
         },
         calendarPlugins: [ dayGridPlugin ],
-        sessionDates: []
+        sessionDates: [],
+        calendarViews: {
+          dayGridThreeDay: {
+            type: 'dayGrid',
+            duration: { days: 3 },
+            buttonText: '3 day'
+          }
+        }
       }
     },
     created () {
+      this.$parent.loading = true
       this.$parent.setup()
+      this.$parent.splashed = true
+      this.$parent.loading = false
     },
     async mounted () {
       this.$parent.loading = true
       await this.$parent.get_plans()
-      await this.initCountsessionsPlan()
+      await this.initCountSessionsPlan()
       await this.$parent.sortSessionsPlan()
       await this.scan()
       this.$parent.loading = false
     },
     methods: {
+      complete (p, s) {
+        for (const plan of this.$parent.clientUser.plans) {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            for (let session of plan.sessions) {
+              if (session.id === s) {
+                if (session.checked === 0) {
+                  session.checked = 1
+                  this.check = 1
+                } else {
+                  session.checked = 0
+                  this.check = 0
+                }
+              }
+            }
+          }
+        }
+        this.$parent.update_session(p, s)
+      },
 
       // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
       scan () {
         this.sessionDates.length = 0
         this.$parent.clientUser.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             var weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
             if (plan.sessions !== null) {
               plan.sessions.forEach((session) => {
@@ -142,11 +187,10 @@
           return dataIn
         }
       },
-      initCountsessionsPlan () {
+      initCountSessionsPlan () {
         this.$parent.clientUser.plans.forEach((plan) => {
-          //eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
-            this.maxsessionIndexPlan = plan.sessions.length - 1
+          if (plan.id === parseInt(this.$route.params.id)) {
+            this.maxSessionIndexPlan = plan.sessions.length - 1
           }
         })
       }

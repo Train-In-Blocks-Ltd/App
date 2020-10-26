@@ -17,6 +17,6 @@
 </style>
 <template>
   <div id="logout"> 
-      <h1 id="logout_message">You have been logged out successfully</h1>
+      <p id="text--large logout_message">You have been logged out successfully</p>
   </div>
 </template>

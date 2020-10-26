@@ -1,59 +1,45 @@
 <style scoped>
-  /* Animation */
-  .section--a, .section--b {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 0;
-    background-color: #F4F4F4;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .section--a {
-    height: 50%
-  }
-  .section--b {
-    height: 50%;
-    top: 50%;
-    transition-delay: .2s
-  }
-  .section--a.openedStats,  .section--b.openedStats {
-    width: 100%;
-    z-index: 2
+  /* Client */
+  .client_info {
+    display: grid;
+    grid-gap: 1rem
   }
 
-  /* Session Info */
-  .client_info--name.title {
-    margin: 0
-  }
-  .session_info {
+  /* Plan Info */
+  .plan_info {
     display: flex;
     flex-direction: column
   }
-  #sessions .session_info label {
+  #plan .plan_info label {
     display: flex;
     align-items: center;
-    grid-auto-columns: min-content;
-    font-weight: bold
+    grid-auto-columns: min-content
   }
-  .wrapper-start-date {
-    display: flex;
-    align-self: baseline;
-    align-items: center
+  .wrapper--progress-bar {
+    user-select: none;
+    border: 1px solid #28282840;
+    border-radius: 3px;
+    transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
-  #duration, .session_info input#start {
+  #progress-bar {
+    border-radius: 3px;
+    padding: .3rem 1rem;
+    background-color: #00800020;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
+  }
+  #progress-bar p {
+    white-space: nowrap
+  }
+  #progress-bar.fullBar {
+    background-color: #49AB59
+  }
+  #progress-bar.fullBar p {
+    color: white
+  }
+  #duration {
+    width: 6rem;
     font-size: 1rem;
     margin-left: 1rem
-  }
-  #sessions .session_info input.session_info--name {
-    margin-left: 0;
-    max-width: 100%;
-    font-weight: 700;
-    padding: .6rem 0;
-    letter-spacing: .15rem;
-    font-size: 1.6rem
-  }
-  #sessions .session_info input.session_info--name:focus {
-    padding: .6rem 1rem
   }
   .multi-select {
     display: grid;
@@ -99,49 +85,55 @@
     transform: rotate(180deg)
   }
 
-  /* session Grid */
-  .session_grid {
-    display: grid;
-    grid-gap: 6rem;
-    margin-top: 4rem
-  }
+  /* Plan Grid */
   .plan-notes {
-    grid-area: b;
-    margin: 0 0 4rem 0
+    margin: 4rem 0
+  }
+  .plan-notes__header {
+    display: flex
+  }
+  .a--plan-notes {
+    color: #282828;
+    font-size: .8rem;
+    margin-left: 1rem;
+    align-self: center;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .a--plan-notes:hover {
+    opacity: .6
   }
 
-  /* session Table */
-  .session_table__header h3 {
+  /* Plan Table */
+  .plan_table__header h3 {
     margin: 0
   }
-  .session_table__header {
+  .plan_table__header {
     display: grid;
     margin: 0 0 4rem 0;
     grid-gap: 1rem
   }
-  #duration {
-    width: 4rem
-  }
-  .session_table {
+  .plan_table {
     height: fit-content
   }
-  .session_table--container {
+  .plan_table--container {
     display: inline-block;
     width: 100%;
-    font-weight: bold;
     text-align: center
   }
-  .session_table--container--session_duration_container {
+  .plan_table--container--plan_duration_container {
     display: grid;
     grid-gap: 1rem .4rem;
     grid-template-columns: repeat(auto-fill, 50px);
     border: none;
     padding: 0
   }
+  #info {
+    fill: #282828
+  }
 
   /* Week */
   .week-color-picker {
-    margin: auto 0 auto 1rem;
+    margin: auto 0;
     height: 28px;
     border: #282828
   }
@@ -195,6 +187,9 @@
   }
 
   /* Sessions */
+  .activeState {
+    border: 2px solid #28282860
+  }
   .session--header {
     display: flex;
     justify-content: space-between;
@@ -214,21 +209,13 @@
   .expand-all:hover {
     opacity: .6
   }
-  .wrapper--session {
+  .wrapper--session, .plan-notes {
     display: grid;
-    grid-template-areas:
-      'header'
-      'body'
-      'bar'
-  }
-  .wrapper--session:after {
-    content: '';
-    height: 1px;
-    width: 40%;
-    background-color: #282828
+    box-shadow: 0 0 20px 10px #28282810;
+    padding: 2rem;
+    border-radius: 3px
   }
   .wrapper--session__header {
-    grid-area: header;
     display: flex;
     justify-content: space-between
   }
@@ -245,39 +232,34 @@
   }
   .container--sessions {
     display: grid;
-    grid-gap: 6rem
+    grid-gap: 4rem
   }
   input.session-name, input.session-date {
     text-overflow: ellipsis;
+    letter-spacing: 1px;
     border: 0;
     border-bottom: 1px solid #282828;
     outline-width: 0;
-    padding: 0
+    cursor: pointer;
+    padding: 0;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   input.session-name {
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold
+    font-size: 1rem
   }
   input.session-name:hover {
     opacity: .6
   }
   input.session-date {
-    cursor: pointer;
     width: fit-content;
     font-size: .8rem
   }
-  .show-session {
-    grid-area: body
+  .wrapper--template-options {
+    margin: 2rem 0
   }
   .show-feedback {
     margin: 1rem 0;
-    padding: 0;
-    grid-area: feedback
-  }
-  .bottom-bar {
-    grid-area: bar;
-    margin-bottom: 6rem
+    padding: 0
   }
   .bottom-bar .button {
     margin: 0
@@ -298,13 +280,6 @@
   .editingChecked:hover {
     opacity: .6
   }
-  .showingFeedback {
-    grid-template-areas:
-      'header'
-      'body'
-      'feedback'
-      'bar'
-  }
 
   /* Graph */
   .graph {
@@ -312,10 +287,10 @@
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 5;
     height: 100%;
     width: 100%;
-    overflow-x: auto
+    overflow-y: auto
   }
   .container--content {
     display: flex;
@@ -337,12 +312,7 @@
     font-size: 1.6rem;
     width: fit-content;
     padding: .2rem 1rem .2rem 0;
-    font-weight: bold;
     margin: .4rem 0
-  }
-  #chart {
-    margin: 4rem 0;
-    position: relative
   }
   .data-desc {
     display: grid;
@@ -351,28 +321,18 @@
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
-    font-size: 2.4rem;
-    font-weight: bold
+    font-size: 2.4rem
   }
 
-  @media (max-width: 992px) {
-    .graph {
-      padding: 4rem 10vw
-    }
-    .expand-all:hover {
-      opacity: 1
-    }
-  }
   @media (max-width: 768px) {
     .graph {
       padding: 2rem 5vw 4rem 5vw
     }
-    #copy:hover {
+    .expand-all:hover {
       opacity: 1
     }
-    #sessions .session_info input.session_info--name {
-      font-size: 1.4rem;
-      max-width: 90%
+    #copy:hover {
+      opacity: 1
     }
     input.session-name {
       width: 60%
@@ -381,17 +341,11 @@
 
   @media (max-width: 576px) {
     /* Container */
-    .session_grid {
+    .plan_grid {
       display: block
     }
-    .calendar, .session-plan {
+    .calendar, .wrapper-plan {
       margin: 4rem 0
-    }
-    #sessions .session_info input.session_info--name {
-      font-size: 1.2rem
-    }
-    #client .client_info input.client_info--name {
-      font-size: 1.6rem
     }
 
     /* Session */
@@ -408,65 +362,86 @@
 </style>
 
 <template>
-    <div id="sessions">
-      <modal name="info" height="auto" :adaptive="true">
+    <div id="plan">
+      <modal name="info" height="100%" width="100%" :adaptive="true" :clickToClose="false">
         <div class="modal--info">
-          <p><b>The format for tracking data</b></p><br>
-          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Back Squat: 3x6 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
-          <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Weight: 5okg]</i></p>
-          <p><i>[Vertical Jump: 43.3cm]</i></p>
-          <p><i>[Body Fat (%): 12]</i></p>
-          <p><i>[sRPE (CR10): 8]</i></p>
-          <p><i>[sRPE (Borg): 16]</i></p><br>
-          <p>See <i>Help</i> for more information</p>
+          <div class="wrapper--centered-item">
+            <p><b>The format for tracking data</b></p><br>
+            <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
+            <p><b>Examples</b></p><br>
+            <p><i>[Back Squat: 3x6 at 50kg]</i></p>
+            <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
+            <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
+            <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
+            <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
+            <p><b>Examples</b></p><br>
+            <p><i>[Weight: 5okg]</i></p>
+            <p><i>[Vertical Jump: 43.3cm]</i></p>
+            <p><i>[Body Fat (%): 12]</i></p>
+            <p><i>[sRPE (CR10): 8]</i></p>
+            <p><i>[sRPE (Borg): 16]</i></p><br>
+            <p>See <i>Help</i> for more information</p><br>
+            <button class="cancel" @click="$modal.hide('info'), $parent.$parent.willBodyScroll(true)">Close</button>
+          </div>
         </div>
       </modal>
-      <modal name="move" height="auto" :adaptive="true">
-        <form @submit.prevent="initMove(), $modal.hide('move')" class="modal--move">
-          <label for="range">Move to:</label>
-          <input class="input--modal" name="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required/><br><br>
-          <button type="submit">Move</button>
+      <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
+        <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
+          <div class="wrapper--centered-item">
+            <p class="text--small">Move to a different microcycle</p>
+            <p class="text--small grey">This will change the colour code assigned to the sessions</p><br><br><br>
+            <label for="range">Move to:</label>
+            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required /><br><br>
+            <button type="submit">Move</button>
+            <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+          </div>
         </form>
       </modal>
-      <modal name="shift" height="auto" :adaptive="true">
-        <form @submit.prevent="shiftAcross()" class="modal--shift">
+      <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
+        <form @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)" class="modal--shift">
+          <div class="wrapper--centered-item">
+            <p class="text--small">Shift the dates of the sessions</p>
+            <p class="text--small grey">This will move the dates ahead or behind by the specified amount</p><br><br><br>
             <label for="range">Shift session dates by: </label>
-            <input class="input--modal" v-model="shiftDays" name="range" type="number" min="1" required/><br>
-            <button>Shift</button>
+            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="shiftDays" required /><br><br>
+            <button type="submit">Shift</button>
+            <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+          </div>
         </form>
       </modal>
-      <modal name="copy" height="auto" :adaptive="true">
-        <form @submit.prevent="copyAcross()" class="modal--copy">
-            <label for="range">From {{currentWeek}} to: </label>
-            <input class="input--modal" v-model="copyTarget" name="range" type="number" :min="currentWeek + 1" :max="maxWeek" required/><br>
-            <label for="range">Days until next sessions: </label>
-            <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br>
-            <button>Copy</button>
+      <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
+        <form @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)" class="modal--copy">
+            <div class="wrapper--centered-item">
+              <p class="text--small">Copy across to different microcycles</p>
+              <p class="text--small grey">All you'll have to do is to change and progress each session</p><br><br><br>
+              <label for="range">From {{currentWeek}} to: </label>
+              <input class="input--modal" id="range"  name="range" ref="range" type="number" v-model="copyTarget" :min="currentWeek + 1" :max="maxWeek" required />
+              <br>
+              <label for="range">Days until next sessions: </label>
+              <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br><br>
+              <button type="submit">Copy</button>
+              <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+            </div>
         </form>
       </modal>
-      <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true" aria-label="Menu">
-        <inline-svg :src="require('../../../assets/svg/stats.svg')" aria-label="Statistics"/>
+      <div class="icon--open-stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
+        <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
       </div>
-      <div class="open-stats-animation">
-        <div :class="{openedStats: isStatsOpen}" class="section--a" />
-        <div :class="{openedStats: isStatsOpen}" class="section--b"/>
+      <div>
+        <div :class="{openedSections: isStatsOpen}" class="section--a" />
+        <div :class="{openedSections: isStatsOpen}" class="section--b"/>
       </div>
       <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
         <div class="multi-select" v-if="selectedSessions.length !== 0">
           <p class="text--selected">
             <b>Selected {{selectedSessions.length}} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
           </p>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy')">Copy Across</a>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move')">Move</a>
-          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift')">Shift</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkChecked(1)">Complete</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkChecked(0)">Incomplete</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy'), $parent.$parent.willBodyScroll(false)">Copy Across</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.willBodyScroll(false)">Move</a>
+          <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.willBodyScroll(false)">Shift</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
           <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
         </div>
@@ -477,51 +452,68 @@
         <div v-if="plan.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" class="client_info--name title allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="text--large allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the plan info -->
-              <form class="session_info">
-                <input class="session_info--name allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
-                <div class="wrapper-start-date">
-                  <label>
-                    Start:
-                    <input id="start" type="date" name="start" v-model="plan.start" required @blur="update_plan()"/>
-                  </label>
-                </div>
+              <form class="plan_info">
+                <input class="text--small allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
               </form>
-            </div>  <!-- client_info -->
+            </div><br>  <!-- client_info -->
+            <div class="wrapper--progress-bar">
+              <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal }">
+                <p class="grey">Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions</p>
+              </div>
+            </div>
           </div> <!-- top_grid -->
-          <div class="session_grid">
+          <div class="plan_grid">
             <div class="calendar">
-              <div class="plan-notes">
+              <div class="plan-notes" :class="{ activeState: editPlanNotes }">
                 <div class="plan-notes__header">
-                  <p class="plan-notes__header__text"><b>Plan Notes</b></p>
+                  <p class="text--small">Plan Notes</p>
+                  <a class="a--plan-notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
+                    Edit
+                  </a>
                 </div>
-                <quill v-show="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                <div v-if="!editPlanNotes  && plan.notes !== '' && plan.notes !== null" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"/>
-                <p v-if="!editPlanNotes && (plan.notes === '' || plan.notes === null)" class="show-plan-notes">No plan notes added...</p>
-                <div class="bottom-bar">
+                <quill v-if="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn"/>
+                <div
+                  v-if="!editPlanNotes  && plan.notes !== '<p><br></p>' && plan.notes !== null"
+                  v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"
+                />
+                <p
+                  v-if="!editPlanNotes && (plan.notes === '<p><br></p>' || plan.notes === null)"
+                  class="text--small grey text--no-plan-notes"
+                >
+                  What do you want to achieve in this plan?
+                </p>
+                <div v-if="editPlanNotes" class="bottom-bar">
                   <div>
-                    <button v-show="!editPlanNotes" @click="editingPlanNotes(true), cancelSessionNotes()" class="button--edit">Edit</button>
-                    <button v-show="editPlanNotes" @click="editingPlanNotes(false)" class="button--save">Save</button>
-                    <button v-show="editPlanNotes" @click="cancelPlanNotes()" class="cancel">Cancel</button>
+                    <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
+                    <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
                   </div>
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <FullCalendar defaultView="dayGridMonth" :firstDay="1" :plugins="calendarPlugins" :header="calendarToolbarHeader" :footer="calendarToolbarFooter" :events="sessionDates" />
+                <FullCalendar
+                  defaultView="dayGridMonth"
+                  :firstDay="1"
+                  :plugins="calendarPlugins"
+                  :header="calendarToolbarHeader"
+                  :footer="calendarToolbarFooter" 
+                  :events="sessionDates"
+                  :views="calendarViews"
+                />
               </div>
             </div>
-            <div class="session-plan">
-              <div class="session_table">
-                <div class="session_table__header">
-                  <h3>Microcycles</h3>
+            <div class="wrapper-plan">
+              <div class="plan_table">
+                <div class="plan_table__header">
+                  <p class="text--small">Microcycles</p>
                   <div class="wrapper-duration">
-                    <label for="duration"><b>Duration: </b></label>
+                    <label for="duration">Duration: </label>
                     <input id="duration" type="number" name="duration" inputmode="decimal" v-model="plan.duration" min="1" required @blur="update_plan()" @change="weekConfirm(plan.duration), maxWeek = plan.duration"/>
                   </div>
                 </div>
-                <div class="session_table--container">
-                  <div class="session_table--container--session_duration_container">
+                <div class="plan_table--container">
+                  <div class="plan_table--container--plan_duration_container">
                     <div @click="changeWeek(item), sortSessions()" v-for="item in plan_duration(plan.duration)" :key="item" class="container--week">
                       <div :class="{ weekActive: item === currentWeek }" class="week">
                         <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color"/>
@@ -530,24 +522,23 @@
                     </div>
                   </div>
                 </div>
-              </div> <!-- session_table -->
+              </div> <!-- plan_table -->
               <div class="sessions">
                 <div class="session--header">
                   <div class="session--header__left">
-                    <h3>Sessions</h3>
                     <input @blur="updateSessionColor()" class="week-color-picker" v-model="weekColor.backgroundColor[currentWeek - 1]" type="color" aria-label="Week Color" />
-                    <inline-svg id="info" :src="require('../../../assets/svg/info.svg')" title="Info" @click="$modal.show('info')"/>
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.willBodyScroll(false)"/>
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
-                <p v-if="$parent.no_sessions">No sessions yet. You can add one below.</p>
-                <p v-if="$parent.loading_sessions">Loading sessions...</p>
+                <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
+                <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
-                  <p class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
+                  <p v-if="plan.sessions !== null" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
                   <!-- New session -->
                   <div class="container--sessions" v-if="!$parent.no_sessions">
                     <!-- Loop through sessions -->
-                    <div :id="'session-' + session.id" class="wrapper--session" :class="{showingFeedback: session.id === showFeedback}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
+                    <div :id="'session-' + session.id" class="wrapper--session" :class="{activeState: session.id === editSession}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
                       :key="index">
                       <div class="wrapper--session__header">
                         <div>
@@ -561,23 +552,40 @@
                         </div>
                         <div class="header-options">
                           <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
-                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
+                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
-                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
-                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id)" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
+                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn"/>
+                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
+                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
+                      <div
+                        v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
+                        class="wrapper--template-options"
+                      >
+                        <hr>
+                        <p v-if="$parent.$parent.templates.length !== 0"><b>Click where you want the template to insert before using the buttons.</b></p><br>
+                        <p v-if="$parent.$parent.templates.length === 0"><b>Nothing yet. Go to the templates page to add some shortcuts.</b></p><br>
+                        <div
+                          v-for="(item, index) in $parent.$parent.templates"
+                          :key="index"
+                        >
+                          <button class="opposite" :disabled="!caretIsInEditor || item.template === null || item.template === '<p><br></p>' || item.template === ''" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
+                        </div>
+                      </div>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
+                        <hr><br>
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
                       <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
                         <div>
-                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), cancelPlanNotes()">Edit</button>
+                          <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
-                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes()">Cancel</button>
-                          <button class="delete" v-show="!isEditingSession" @click="soloDelete(session.id)">Delete</button>
+                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore, showTemplates = false">Cancel</button>
+                          <button v-if="isEditingSession && session.id === editSession && !showTemplates" @click="showTemplates = true">Templates</button>
+                          <button v-if="isEditingSession && session.id === editSession && showTemplates" @click="showTemplates = false" class="cancel">Close Templates</button>
                           <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
-                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null">Close Feedback</button>
+                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null" class="cancel">Close Feedback</button>
                         </div>
                       </div>
                     </div>
@@ -588,11 +596,11 @@
             <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
               <div class="graph" v-if="isStatsOpen">
                 <div class="section--top">
-                  <h3 class="section-title">Statistics</h3>
-                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false" class="icon--options" :src="require('../../../assets/svg/close.svg')" aria-label="Close"/>
+                  <p class="text--large section-title">Statistics</p>
+                  <inline-svg v-if="isStatsOpen" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
                 <div>
-                  <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
+                  <p v-show="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
                   <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
                 </div><br>
                 <div class="container--content">
@@ -608,7 +616,7 @@
                           </select>
                         </label>
                       </div>
-                      <div class="data-select__options" v-show="showType">
+                      <div class="data-select__options" v-if="showType">
                         <label for="measure-type">
                           <b>Data type: </b><br>
                           <select v-model="selectedDataType" @change="sortSessions(), scan(), selection()" name="measure-type">
@@ -621,7 +629,7 @@
                         </label>
                       </div>
                     </div>
-                    <div v-show="showType" class="data-desc">
+                    <div v-if="showType && p1.desc" class="data-desc">
                       <div class="container--data-desc">
                         <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
                         <p class="data-desc__value">{{ p1.value }}</p>
@@ -673,8 +681,13 @@
     data () {
       return {
         force: true,
+        tempQuillStore: null,
+        showTemplates: false,
+        caretIsInEditor: false,
 
         // BLOCK DATA //
+        sessionsDone: 0,
+        sessionsTotal: null,
         isStatsOpen: false,
         showFeedback: '',
         weekColor: {
@@ -698,6 +711,7 @@
         },
         selectedSessions: [],
         shiftDays: 1,
+        selectedHTML: '',
 
         // REGEX DATA //
         str: [],
@@ -712,7 +726,21 @@
 
         // CHART METHODS //
         dataCollection: null,
-        options: null,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                suggestedMin: 0,
+                beginAtZero: false
+              }
+            }]
+          }
+        },
 
         // CALENDAR DATA //
         calendarToolbarHeader: {
@@ -720,10 +748,18 @@
           right: ''
         },
         calendarToolbarFooter: {
+          left: 'dayGridMonth, dayGridThreeDay',
           right: 'today prev, next'
         },
         calendarPlugins: [ dayGridPlugin ],
         sessionDates: [],
+        calendarViews: {
+          dayGridThreeDay: {
+            type: 'dayGrid',
+            duration: { days: 3 },
+            buttonText: '3 day'
+          }
+        },
 
         // STATISTICS DATA //
         p1: '',
@@ -731,7 +767,7 @@
         p3: '',
         p4: '',
         p5: '',
-        selectedDataName: 'Session Overview',
+        selectedDataName: 'Plan Overview',
         optionsForDataName: [],
         optionsForDataType: [],
         selectedDataType: 'Sets',
@@ -744,16 +780,21 @@
       }
     },
     created () {
+      this.$parent.$parent.splashed = true
       this.$parent.sessions = true
       this.$parent.showDeletePlan = true
     },
     async mounted () {
       await this.$parent.get_client_details()
+      this.$parent.$parent.getTemplates()
       this.today()
       this.scan()
+      this.checkForNew()
+      this.adherence()
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
+      this.setListenerForEditor(false)
     },
     methods: {
 
@@ -761,8 +802,7 @@
 
       shiftAcross () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 session.date = this.addDays(session.date, parseInt(this.shiftDays))
@@ -778,8 +818,7 @@
         var copysessions = []
         let weekCount = 2
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 copysessions.push({ name: session.name, date: session.date, notes: session.notes })
@@ -792,11 +831,11 @@
           copysessions.forEach((session) => {
             this.new_session.name = session.name
             this.new_session.date = this.addDays(session.date, this.daysDiff * (weekCount - 1))
-            this.currentCopysessionNotes = session.notes
+            this.currentCopySessionNotes = session.notes
             this.add_session()
           })
         }
-        this.currentCopysessionNotes = ''
+        this.currentCopySessionNotes = ''
         this.copyTarget = 1
         this.new_session.name = 'Untitled'
         this.today()
@@ -807,8 +846,7 @@
       },
       initMove () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (this.selectedSessions.includes(session.id)) {
                 session.week_id = this.moveTarget
@@ -822,25 +860,43 @@
       },
 
       // SESSION METHODS //-------------------------------------------------------------------------------
-
-      soloDelete (id) {
-        if (confirm('Are you sure you want to delete this session?')) {
-          this.delete_session(id, true)
+      bulkChecked (state) {
+        function checkedState (dataIn) {
+          if (dataIn === 1) {
+            return 'complete'
+          } else {
+            return 'incomplete'
+          }
+        }
+        if (this.selectedSessions.length !== 0) {
+          if (confirm('Are you sure that you want to ' + checkedState(state) + ' all the selected sessions?')) {
+            this.$parent.$parent.client_details.plans.forEach((plan) => {
+              if (plan.id === parseInt(this.$route.params.id)) {
+                plan.sessions.forEach((session) => {
+                  if (this.selectedSessions.includes(session.id)) {
+                    session.checked = state
+                    this.update_session(session.id)
+                  }
+                })
+              }
+            })
+            this.deselectAll()
+          }
         }
       },
       bulkDelete () {
         if (this.selectedSessions.length !== 0) {
-          var ready = confirm('Are you sure you want to delete all the selected session?')
-          this.selectedSessions.forEach((sessionId) => {
-            this.delete_session(sessionId, ready)
-          })
-          this.deselectAll()
+          if (confirm('Are you sure that you want to delete all the selected sessions?')) {
+            this.selectedSessions.forEach((sessionId) => {
+              this.delete_session(sessionId)
+            })
+            this.deselectAll()
+          }
         }
       },
       deselectAll () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               var selEl = document.getElementById('sc-' + session.id)
               if (selEl.checked === true) {
@@ -860,11 +916,6 @@
           this.selectedSessions.splice(idx, 1)
         }
       },
-      cancelSessionNotes () {
-        this.editSession = null
-        this.isEditingSession = false
-        window.removeEventListener('keydown', this.quickSaveSessionNotes)
-      },
       async createSession () {
         this.$parent.$parent.loading = true
         await this.add_session()
@@ -873,21 +924,20 @@
       editingSessionNotes (id, state) {
         this.isEditingSession = state
         this.editSession = id
-        if (state) {
-          window.addEventListener('keydown', this.quickSaveSessionNotes)
-        } else {
+        if (!state) {
+          this.setListenerForEditor(false)
           this.updateSessionNotes(id)
-          window.removeEventListener('keydown', this.quickSaveSessionNotes)
-        }
-      },
-      quickSaveSessionNotes (key, state) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updateSessionNotes(this.editSession)
-          window.removeEventListener('keydown', this.quickSaveSessionNotes)
+        } else {
+          this.setListenerForEditor(true)
         }
       },
       updateSessionNotes (id) {
         this.update_session(id)
+        this.isEditingSession = false
+        this.editSession = null
+        this.scan()
+      },
+      cancelSessionNotes () {
         this.isEditingSession = false
         this.editSession = null
         this.scan()
@@ -915,6 +965,17 @@
 
       // BLOCK METHODS //-------------------------------------------------------------------------------
 
+      checkForNew () {
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            plan.sessions.forEach((session) => {
+              if (session.notes === null || session.notes === '<p><br></p>') {
+                this.expandedSessions.push(session.id)
+              }
+            })
+          }
+        })
+      },
       toggleExpandedSessions (id) {
         if (this.expandedSessions.includes(id)) {
           const index = this.expandedSessions.indexOf(id)
@@ -925,38 +986,14 @@
           this.expandedSessions.push(id)
         }
       },
-      cancelPlanNotes () {
-        this.editPlanNotes = false
-        window.removeEventListener('keydown', this.quickSavePlanNotes)
-      },
       updateSessionColor () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
           }
         })
         this.update_plan()
         this.scan()
-      },
-      editingPlanNotes (state) {
-        this.editPlanNotes = state
-        if (state) {
-          window.addEventListener('keydown', this.quickSavePlanNotes)
-        } else {
-          this.updatePlanNotes()
-          window.removeEventListener('keydown', this.quickSavePlanNotes)
-        }
-      },
-      quickSavePlanNotes (key, state) {
-        if (key.keyCode === 13 && key.ctrlKey === true) {
-          this.updatePlanNotes()
-          window.removeEventListener('keydown', this.quickSavePlanNotes)
-        }
-      },
-      updatePlanNotes () {
-        this.update_plan()
-        this.editPlanNotes = false
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
@@ -977,23 +1014,6 @@
             }
           ]
         }
-        this.options = {
-          legend: {
-            display: false
-          },
-          chartOptions: {
-            responsive: true,
-            maintainAspectRatio: false
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                suggestedMin: 0,
-                beginAtZero: false
-              }
-            }]
-          }
-        }
       },
 
       // This is called at the start and after @change. It scans the current values selected and fills the chart.
@@ -1007,7 +1027,7 @@
         var overviewStore = []
         this.protocolError.length = 0
         this.optionsForDataType.length = 0
-        if (dataForName === 'Session Overview') {
+        if (dataForName === 'Plan Overview') {
           this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
           this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
         }
@@ -1039,7 +1059,7 @@
                 this.yData.push(this.otherMeasures(protocol))
               }
             }
-            if (dataForName === 'Session Overview' && exerciseDataPacket[2].includes('at') === true) {
+            if (dataForName === 'Plan Overview' && exerciseDataPacket[2].includes('at') === true) {
               if (dataForType === 'Sets' || dataForType === 'Reps') {
                 dataForSum = this.setsReps(exerciseDataPacket, protocol, dataForType)
               }
@@ -1052,11 +1072,11 @@
               overviewStore.push(dataForSum)
             }
           })
-          if (dataForName === 'Session Overview' && overviewStore.length !== 0) {
+          if (dataForName === 'Plan Overview' && overviewStore.length !== 0) {
             this.yData.push(overviewStore.reduce((a, b) => a + b))
           }
         })
-        if (dataForName === 'Session Overview') {
+        if (dataForName === 'Plan Overview') {
           let x = 1
           for (; x <= this.yData.length; x++) {
             this.xLabel.push('session ' + x)
@@ -1119,6 +1139,37 @@
 
       // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
 
+      adherence () {
+        this.sessionsDone = 0
+        this.sessionsTotal = null
+        this.$parent.$parent.client_details.plans.forEach((plan) => {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            this.sessionsTotal = plan.sessions.length
+            plan.sessions.forEach((session) => {
+              if (session.checked === 1) {
+                this.sessionsDone++
+              }
+            })
+          }
+        })
+        const bar = document.getElementById('progress-bar')
+        bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+      },
+      setListenerForEditor (state) {
+        if (state) {
+          document.addEventListener('click', this.checkCaretPos)
+        } else {
+          document.removeEventListener('click', this.checkCaretPos)
+        }
+      },
+      checkCaretPos () {
+        let caretPosition = document.getSelection()
+        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
+          this.caretIsInEditor = true
+        } else {
+          this.caretIsInEditor = false
+        }
+      },
       pasteHtmlAtCaret (html) {
         let caretPosition = document.getSelection()
         if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
@@ -1131,8 +1182,7 @@
       },
       expandAll (toExpand) {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
               if (toExpand === 'Expand') {
                 this.expandedSessions.push(session.id)
@@ -1175,8 +1225,7 @@
       },
       sortSessions () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id && this.$parent.no_sessions === false) {
+          if (plan.id === parseInt(this.$route.params.id) && this.$parent.no_sessions === false) {
             plan.sessions.sort((a, b) => {
               return new Date(a.date) - new Date(b.date)
             })
@@ -1187,8 +1236,7 @@
         this.dataPacketStore.length = 0
         this.sessionDates.length = 0
         this.$parent.$parent.client_details.plans.forEach((plan) => {
-          // eslint-disable-next-line
-          if (plan.id == this.$route.params.id) {
+          if (plan.id === parseInt(this.$route.params.id)) {
             this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
             this.str = plan.sessions
             this.maxWeek = plan.duration
@@ -1247,7 +1295,7 @@
 
       // Init the dropdown selection with validation
       dropdownInit () {
-        this.optionsForDataName = [{ id: 0, text: 'Session Overview', value: 'Session Overview' }]
+        this.optionsForDataName = [{ id: 0, text: 'Plan Overview', value: 'Plan Overview' }]
         var tempItemStore = []
         var tempItemStoreLate = []
         var continueValue = 0
@@ -1410,8 +1458,7 @@
         var plan
         // Set the plan variable to the current plan
         for (var x in this.$parent.$parent.client_details.plans) {
-          // eslint-disable-next-line
-          if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
+          if (this.$parent.$parent.client_details.plans[x].id === parseInt(this.$route.params.id)) {
             plan = this.$parent.$parent.client_details.plans[x]
           }
         }
@@ -1426,11 +1473,6 @@
               'notes': plan.notes,
               'block_color': plan.block_color,
               'type': plan.type
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           // Set vue client_details data to new data
@@ -1463,6 +1505,7 @@
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
@@ -1471,8 +1514,7 @@
         this.$parent.$parent.dontLeave = true
         // Set the plan variable to the current plan
         for (var x in this.$parent.$parent.client_details.plans) {
-          //eslint-disable-next-line
-          if (this.$parent.$parent.client_details.plans[x].id == this.$route.params.id) {
+          if (this.$parent.$parent.client_details.plans[x].id === parseInt(this.$route.params.id)) {
             var plan = this.$parent.$parent.client_details.plans[x]
             var y
             for (y in plan.sessions) {
@@ -1496,15 +1538,11 @@
               'notes': sessionsNotes,
               'week_id': sessionsWeek,
               'checked': sessionsChecked
-            },
-            {
-              headers: {
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           await this.$parent.get_sessions(this.force)
           await this.update_plan()
+          this.adherence()
           this.$ga.event('Session', 'update')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1513,6 +1551,7 @@
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
@@ -1525,14 +1564,8 @@
               'name': this.new_session.name,
               'programme_id': this.$route.params.id,
               'date': this.new_session.date,
-              'notes': this.currentCopysessionNotes,
+              'notes': this.currentCopySessionNotes,
               'week_id': this.currentWeek
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-              }
             }
           )
           this.response = response.data
@@ -1541,12 +1574,14 @@
           this.new_session = {
             name: 'Untitled',
             date: this.todayDate,
-            notes: '',
+            notes: null,
             week_id: '',
             block_color: ''
           }
           this.sortSessions()
           this.scan()
+          this.checkForNew()
+          this.adherence()
           this.$ga.event('Session', 'new')
           this.$parent.$parent.loading = false
           this.$parent.$parent.dontLeave = false
@@ -1555,34 +1590,28 @@
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
           console.error(e)
         }
       },
-      async delete_session (id, ready) {
-        if (ready) {
-          try {
-            this.$parent.$parent.loading = true
-            this.$parent.$parent.dontLeave = true
-            await axios.delete(`https://api.traininblocks.com/workouts/${id}`,
-              {
-                headers: {
-                  'Authorization': `Bearer ${await this.$auth.getAccessToken()}`
-                }
-              }
-            )
-            await this.$parent.get_sessions(this.force)
-            await this.update_plan()
+      async delete_session (id) {
+        try {
+          this.$parent.$parent.loading = true
+          this.$parent.$parent.dontLeave = true
+          await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
+          await this.$parent.get_sessions(this.force)
+          await this.update_plan()
 
-            this.$ga.event('Session', 'delete')
-            this.$parent.$parent.loading = false
-            this.$parent.$parent.dontLeave = false
-          } catch (e) {
-            this.$parent.$parent.loading = false
-            this.$parent.$parent.dontLeave = false
-            this.$parent.$parent.errorMsg = e
-            this.$parent.$parent.$modal.show('error')
-            console.error(e)
-          }
+          this.$ga.event('Session', 'delete')
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
+        } catch (e) {
+          this.$parent.$parent.loading = false
+          this.$parent.$parent.dontLeave = false
+          this.$parent.$parent.errorMsg = e
+          this.$parent.$parent.$modal.show('error')
+          this.$parent.$parent.willBodyScroll(false)
+          console.error(e)
         }
       }
     }

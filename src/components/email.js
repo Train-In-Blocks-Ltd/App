@@ -2865,7 +2865,7 @@ export function feedbackEmail (cId, pId) {
                               <tbody>
                                 <tr>
                                   <td align='center' valign='middle' class='mcnButtonContent' style='font-family: Arial;font-size: 16px;padding: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;'>
-                                    <a class='mcnButton' title='View feedback' href='https://app.traininblocks.com/client/${cId}/block/${pId}' target='_blank' style='font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;  color: #FFFFFF;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;display: block;'>Reset Password</a>
+                                    <a class='mcnButton' title='View feedback' href='https://app.traininblocks.com/client/${cId}/block/${pId}' target='_blank' style='font-weight: bold;letter-spacing: normal;line-height: 100%;text-align: center;text-decoration: none;  color: #FFFFFF;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;display: block;'>Log In</a>
                                   </td>
                                 </tr>
                               </tbody>

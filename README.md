@@ -10,20 +10,38 @@ We use NPM as we've run into some problems before using Yarn. Please make sure y
 
 ### Install packages
 
-```
+```bash
 npm install
+
+npm install netlify-cli -g
+
+netlify login
+
+netlify link
 ```
 
 ### Start developing
 
-```
-npm run start
+```bash
+netlify dev
 ```
 
-### Build for production
+### Test
 
+```bash
+netlify build
 ```
-npm run build
+
+### Build & Deploy
+
+```bash
+git add *
+
+git commit -m ""
+
+git push
+
+netlify deploy
 ```
 
 ## Browser support
@@ -42,7 +60,7 @@ Stylelint doesn't work with WebPack and Vue so you need to install the [VSCode p
 
 You can autofix problems by running:
 
-```
+```bash
 npx stylelint "**/*.vue" --fix
 ```
 
