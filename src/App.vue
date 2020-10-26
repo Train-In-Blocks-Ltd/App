@@ -191,6 +191,9 @@
   .wrapper--client-link {
     text-decoration: none
   }
+  .allow-y-overflow {
+    overflow-y: auto;
+  }
 
   /* GLOBAL: MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--alert {

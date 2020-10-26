@@ -403,7 +403,7 @@
             <p class="text--small">Shift the dates of the sessions</p>
             <p class="text--small grey">This will move the dates ahead or behind by the specified amount</p><br><br><br>
             <label for="range">Shift session dates by: </label>
-            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="shiftDays" min="1" required /><br><br>
+            <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="shiftDays" required /><br><br>
             <button type="submit">Shift</button>
             <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">Cancel</button>
           </div>
@@ -791,10 +791,6 @@
       this.scan()
       this.checkForNew()
       this.adherence()
-      // Needed to prevent an error that occurs on the fastest first click
-      setTimeout(() => {
-        this.setListenerForEditor(true)
-      }, 2000)
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
@@ -929,7 +925,10 @@
         this.isEditingSession = state
         this.editSession = id
         if (!state) {
+          this.setListenerForEditor(false)
           this.updateSessionNotes(id)
+        } else {
+          this.setListenerForEditor(true)
         }
       },
       updateSessionNotes (id) {

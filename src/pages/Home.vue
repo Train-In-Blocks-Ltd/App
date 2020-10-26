@@ -33,7 +33,7 @@
       </div>
     </transition>
     <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div class="wrapper--whats-new" v-if="isWhatsNewOpen">
+      <div class="wrapper--whats-new allow-y-overflow" v-if="isWhatsNewOpen">
         <whats-new />
       </div>
     </transition>
