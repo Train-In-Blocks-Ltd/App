@@ -152,14 +152,14 @@
             </button>
             <button
               @click="$parent.client_details.notifications = 0, update_client()"
-              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && $parent.client_details.notifications === 1"
+              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error' && $parent.client_details.notifications === 1"
               class="button--verify"
             >
               Disable email notifications
             </button>
             <button
               @click="$parent.client_details.notifications = 1, update_client()"
-              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && $parent.client_details.notifications === 0"
+              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'  && $parent.client_details.notifications === 0"
               class="button--verify"
             >
               Enable email notifications
@@ -252,21 +252,29 @@
               url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
             }
           )
-          if (result.data[0].status === 'ACTIVE') {
-            this.clientAlready = true
-            this.clientAlreadyMsg = 'User activated'
-          } else if (result.data[0].status === 'PROVISIONED') {
-            this.clientAlready = false
-            this.clientAlreadyMsg = 'Resend activation email'
-          } else if (result.data[0].status === 'SUSPENDED') {
-            this.clientSuspend = result.data[0].id
+          if (result.data.length > 0) {
+            if (result.data[0].status === 'ACTIVE') {
+              this.clientAlready = true
+              this.clientAlreadyMsg = 'User activated'
+            } else if (result.data[0].status === 'PROVISIONED') {
+              this.clientAlready = false
+              this.clientAlreadyMsg = 'Resend activation email'
+            } else if (result.data[0].status === 'SUSPENDED') {
+              this.clientSuspend = result.data[0].id
+              this.clientAlready = false
+              this.clientAlreadyMsg = 'Give Access'
+            }
+          } else {
             this.clientAlready = false
             this.clientAlreadyMsg = 'Give Access'
           }
-          return result
         } catch (e) {
-          this.clientAlready = false
+          this.clientAlready = true
           this.clientAlreadyMsg = 'Error'
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          this.$parent.willBodyScroll(false)
+          console.error(e)
         }
       },
       async createClient () {
@@ -363,8 +371,6 @@
           console.error(e)
         }
         await this.checkClient()
-        this.$parent.loading = false
-        this.$parent.dontLeave = false
         this.$modal.show(
           AlertModal,
           {msg: 'An activation email was sent to your client.'},
@@ -373,6 +379,8 @@
           { adaptive: true },
           { clickToClose: false }
         )
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
       },
       async get_sessions (force) {
         try {

@@ -100,18 +100,18 @@ export default {
     }
   },
   created () {
-    this.$parent.loading = true
-    this.$parent.setup()
     setTimeout(() => {
       this.$parent.splashed = true
     }, 4000)
     this.$parent.loading = false
   },
   async mounted () {
+    this.$parent.loading = true
+    await this.$parent.setup()
     await this.$parent.get_plans()
     await this.todaysSession()
     await this.initCountSessionsHome()
-    this.loading = false
+    this.$parent.loading = false
   },
   methods: {
 

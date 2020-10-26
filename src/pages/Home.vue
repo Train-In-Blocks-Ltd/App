@@ -7,25 +7,10 @@
     display: grid;
     margin-bottom: 2rem
   }
-  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
-    position: fixed;
-    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
-    top: 0;
-    left: 0;
-    z-index: 5;
-    height: 100%;
-    width: 100%
-  }
-  .wrapper--client-link {
-    text-decoration: none
-  }
 
   @media (max-width: 768px) {
     .home--container {
       width: 100%
-    }
-    .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
-      padding: 4rem 10vw 10rem 10vw
     }
   }
 </style>

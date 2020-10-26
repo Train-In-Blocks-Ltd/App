@@ -177,6 +177,18 @@
   #line-chart {
     padding: 8vw
   }
+  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+    position: fixed;
+    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
+    top: 0;
+    left: 0;
+    z-index: 5;
+    height: 100%;
+    width: 100%
+  }
+  .wrapper--client-link {
+    text-decoration: none
+  }
 
   /* GLOBAL: MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--alert {
@@ -708,6 +720,9 @@
     }
     .client_link__notes__content img, .plan_link img {
       max-width: 100%
+    }
+    .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+      padding: 4rem 10vw 10rem 10vw
     }
 
     /* Sidebar */
