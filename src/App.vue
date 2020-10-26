@@ -192,7 +192,7 @@
     text-decoration: none
   }
   .allow-y-overflow {
-    overflow-y: auto;
+    overflow-y: auto
   }
 
   /* GLOBAL: MODALS */
@@ -401,8 +401,7 @@
     overflow-y: auto;
     transition: all 1s
   }
-  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img {
-    max-width: 60%;
+  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img,.show-session iframe, .show-plan-notes iframe, .show-client-notes iframe, .show-template iframe {
     border-radius: 3px;
     margin: 1rem 0
   }
@@ -663,14 +662,13 @@
   .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
     font-size: 1rem
   }
-  .client_link__notes__content img, .plan_link img {
+  .client_link__notes__content img, .plan_link img, .client_link__notes__content iframe, .plan_link iframe {
     margin: 1rem 0;
-    max-width: 60%;
     border-radius: 3px;
     opacity: .6;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover .client_link__notes__content img, .plan_link:hover .plan_link:hover img {
+  .client_link:hover .client_link__notes__content img, .plan_link:hover img, .client_link:hover .client_link__notes__content iframe, .plan_link:hover iframe {
     opacity: 1
   }
 

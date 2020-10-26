@@ -19,8 +19,8 @@
     padding: 0;
     transition: all 1s
   }
-  .ql-snow .ql-editor img {
-    max-width: 60%
+  .ql-snow .ql-editor img, .ql-snow .ql-editor .ql-video {
+    border-radius: 3px
   }
   div.ql-editor h1 {
     margin: 1.072rem 0
@@ -119,7 +119,7 @@
               matchVisual: false
             },
             toolbar: [
-                ['bold', 'italic', 'underline', {'list': 'ordered'}, {'list': 'bullet'}, { 'list': 'check' }, 'link', 'image']
+                ['bold', 'italic', 'underline', {'list': 'ordered'}, {'list': 'bullet'}, { 'list': 'check' }, 'link', 'image', 'video']
             ]
           },
           theme: 'snow'
