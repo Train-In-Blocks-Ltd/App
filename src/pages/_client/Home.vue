@@ -252,9 +252,12 @@
               url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
             }
           )
-          if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'PROVISIONED') {
+          if (result.data[0].status === 'ACTIVE') {
             this.clientAlready = true
-            this.clientAlreadyMsg = 'Email Sent'
+            this.clientAlreadyMsg = 'User activated'
+          } else if (result.data[0].status === 'PROVISIONED') {
+            this.clientAlready = false
+            this.clientAlreadyMsg = 'Resend activation email'
           } else if (result.data[0].status === 'SUSPENDED') {
             this.clientSuspend = result.data[0].id
             this.clientAlready = false
@@ -263,48 +266,59 @@
           return result
         } catch (e) {
           this.clientAlready = false
-          this.clientAlreadyMsg = 'Give Access'
+          this.clientAlreadyMsg = 'Error'
         }
       },
       async createClient () {
         this.$parent.loading = true
         this.$parent.dontLeave = true
-        if (this.clientSuspend) {
-          await axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {},
-              url: `${this.clientSuspend}/lifecycle/unsuspend`
-            }
-          )
-          const password = await axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {},
-              url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`
-            }
-          )
-          await axios.post('/.netlify/functions/send-email',
-            {
-              'to': this.$parent.client_details.email,
-              'subject': 'Welcome Back to Train In Blocks',
-              'text': resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              'html': resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-            }
-          )
-          this.$modal.show(
-            AlertModal,
-            { msg: 'An activation email was sent to your client.' },
-            { height: '100%' },
-            { width: '100%' },
-            { adaptive: true },
-            { clickToClose: false }
-          )
-          this.checkClient()
-          this.$parent.loading = false
-          this.$parent.dontLeave = false
-        } else {
-          try {
+        try {
+          if (this.clientAlreadyMsg === 'Resend activation email') {
+            const oktaOne = await axios.post('/.netlify/functions/okta',
+              {
+                type: 'GET',
+                url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
+              }
+            )
+            const oktaTwo = await axios.post('/.netlify/functions/okta',
+              {
+                type: 'POST',
+                body: {},
+                url: `${oktaOne.data[0].id}/lifecycle/reactivate?sendEmail=false`
+              }
+            )
+            await axios.post('/.netlify/functions/send-email',
+              {
+                'to': this.$parent.client_details.email,
+                'subject': 'Welcome to Train In Blocks',
+                'text': emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+                'html': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              }
+            )
+          } else if (this.clientSuspend) {
+            await axios.post('/.netlify/functions/okta',
+              {
+                type: 'POST',
+                body: {},
+                url: `${this.clientSuspend}/lifecycle/unsuspend`
+              }
+            )
+            const password = await axios.post('/.netlify/functions/okta',
+              {
+                type: 'POST',
+                body: {},
+                url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`
+              }
+            )
+            await axios.post('/.netlify/functions/send-email',
+              {
+                'to': this.$parent.client_details.email,
+                'subject': 'Welcome Back to Train In Blocks',
+                'text': resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+                'html': resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              }
+            )
+          } else {
             const oktaOne = await axios.post('/.netlify/functions/okta',
               {
                 type: 'POST',
@@ -339,26 +353,26 @@
                 'html': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
               }
             )
-            this.$modal.show(
-              AlertModal,
-              {msg: 'An activation email was sent to your client.'},
-              { height: '100%' },
-              { width: '100%' },
-              { adaptive: true },
-              { clickToClose: false }
-            )
-            await this.checkClient()
-            this.$parent.loading = false
-            this.$parent.dontLeave = false
-          } catch (e) {
-            this.$parent.loading = false
-            this.$parent.dontLeave = false
-            this.$parent.errorMsg = e
-            this.$parent.$modal.show('error')
-            this.$parent.willBodyScroll(false)
-            console.error(e)
           }
+        } catch (e) {
+          this.$parent.loading = false
+          this.$parent.dontLeave = false
+          this.$parent.errorMsg = e
+          this.$parent.$modal.show('error')
+          this.$parent.willBodyScroll(false)
+          console.error(e)
         }
+        await this.checkClient()
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
+        this.$modal.show(
+          AlertModal,
+          {msg: 'An activation email was sent to your client.'},
+          { height: '100%' },
+          { width: '100%' },
+          { adaptive: true },
+          { clickToClose: false }
+        )
       },
       async get_sessions (force) {
         try {
