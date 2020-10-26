@@ -119,19 +119,19 @@
       <toolkit/>
     </modal>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
-      <div v-show="keepLoaded" class="floating_nav">
-        <div class="icon--open-options" v-show="!showOptions" @click="showOptions = true" aria-label="Menu">
+      <div v-if="keepLoaded" class="floating_nav">
+        <div class="icon--open-options" v-if="!showOptions" @click="showOptions = true" aria-label="Menu">
           <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options"/>
           <p class="text">Options</p>
         </div>
         <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-          <inline-svg v-show="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
+          <inline-svg v-if="showOptions" @click="showOptions = false" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
         </transition>
         <transition-group enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
           <div class="client--options" v-for="(clients, index) in $parent.clients" :key="clients.client_id" v-show="clients.client_id == $route.params.client_id && showOptions">
-            <a v-show="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
-            <a href="javascript:void(0)" v-show="showDeletePlan" @click="delete_plan()">Delete Plan</a>
-            <a v-show="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
+            <a v-if="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
+            <a href="javascript:void(0)" v-if="showDeletePlan" @click="delete_plan()">Delete Plan</a>
+            <a v-if="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
           </div>
         </transition-group>
       </div>

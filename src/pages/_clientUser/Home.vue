@@ -52,7 +52,7 @@
             </div><br>
             <div v-if="giveFeedback === session.id">
               <p><b>Feedback</b></p>
-              <quill :config="$parent.quill_config" v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
+              <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
               <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
               <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
@@ -61,8 +61,8 @@
       </div>
       <div v-if="viewSessionsStore.length !== 0" class="container--session-control">
         <div>
-          <button v-show="currentSessionIndexHome != 0" @click="currentSessionIndexHome--">Back</button>
-          <button v-show="currentSessionIndexHome != maxSessionIndexHome" @click="currentSessionIndexHome++">Next</button>
+          <button v-if="currentSessionIndexHome != 0" @click="currentSessionIndexHome--">Back</button>
+          <button v-if="currentSessionIndexHome != maxSessionIndexHome" @click="currentSessionIndexHome++">Next</button>
         </div>
         <p class="text--small session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
       </div>

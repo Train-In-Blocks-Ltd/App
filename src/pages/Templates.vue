@@ -161,12 +161,12 @@
             <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
           </div>
         </div>
-        <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn" :config="$parent.quill_config"/>
+        <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn"/>
         <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
         <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no-content">What do you plan for your clients frequently?</p>
         <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
           <div>
-            <button v-show="!isEditingTemplate" v-if="template.id !== editTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
+            <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
             <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
             <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempQuillStore">Cancel</button>
           </div>

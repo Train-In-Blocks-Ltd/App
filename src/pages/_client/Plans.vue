@@ -71,14 +71,14 @@
           <p class="text--small">Client Information</p>
           <a
             href="javascript:void(0)"
-            v-show="!editClientNotes"
+            v-if="!editClientNotes"
             @click="editClientNotes = true, tempQuillStore = $parent.$parent.client_details.notes"
             class="a--client-notes"
           >
             Edit
           </a>
         </div>
-        <quill v-show="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+        <quill v-if="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn"/>
         <div
           v-if="!editClientNotes && $parent.$parent.client_details.notes !== '<p><br></p>' && $parent.$parent.client_details.notes !== null"
           v-html="$parent.$parent.client_details.notes"
@@ -90,7 +90,7 @@
         >
           What goals does your client have? What physical measures have you taken?
         </p>
-        <div v-show="editClientNotes" class="bottom-bar">
+        <div v-if="editClientNotes" class="bottom-bar">
           <div>
             <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
             <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>

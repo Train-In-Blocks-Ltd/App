@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueQuill from 'vue-quill'
-import 'quill/dist/quill.snow.css'
+import VueQuill from './components/quill/vue-quill'
 import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
 

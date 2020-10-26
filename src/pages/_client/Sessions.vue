@@ -428,7 +428,7 @@
             </div>
         </form>
       </modal>
-      <div class="icon--open-stats" v-show="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
+      <div class="icon--open-stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
         <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
       </div>
@@ -473,11 +473,11 @@
               <div class="plan-notes" :class="{ activeState: editPlanNotes }">
                 <div class="plan-notes__header">
                   <p class="text--small">Plan Notes</p>
-                  <a class="a--plan-notes" href="javascript:void(0)" v-show="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
+                  <a class="a--plan-notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
                     Edit
                   </a>
                 </div>
-                <quill v-show="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+                <quill v-if="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn"/>
                 <div
                   v-if="!editPlanNotes  && plan.notes !== '<p><br></p>' && plan.notes !== null"
                   v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"
@@ -488,7 +488,7 @@
                 >
                   What do you want to achieve in this plan?
                 </p>
-                <div v-show="editPlanNotes" class="bottom-bar">
+                <div v-if="editPlanNotes" class="bottom-bar">
                   <div>
                     <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
                     <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
@@ -559,7 +559,7 @@
                           <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
-                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn" :config="$parent.$parent.quill_config"/>
+                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn"/>
                       <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
                       <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
                       <div
@@ -583,7 +583,7 @@
                       </div>
                       <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
                         <div>
-                          <button v-show="!isEditingSession" v-if="session.id !== editSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
+                          <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
                           <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore, showTemplates = false">Cancel</button>
                           <button v-if="isEditingSession && session.id === editSession && !showTemplates" @click="showTemplates = true">Templates</button>
@@ -601,10 +601,10 @@
               <div class="graph" v-if="isStatsOpen">
                 <div class="section--top">
                   <p class="text--large section-title">Statistics</p>
-                  <inline-svg v-show="isStatsOpen" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
+                  <inline-svg v-if="isStatsOpen" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close"/>
                 </div>
                 <div>
-                  <p v-if="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
+                  <p v-show="protocolError.length !== 0" class="text--error">There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.</p><br>
                   <p v-show="protocolError.length !== 0" class="text--error" v-for="(error, index) in protocolError" :key="index"><b>{{error.prot}} for {{error.exercise}} from {{error.sessionName}}</b></p>
                 </div><br>
                 <div class="container--content">
@@ -620,7 +620,7 @@
                           </select>
                         </label>
                       </div>
-                      <div class="data-select__options" v-show="showType">
+                      <div class="data-select__options" v-if="showType">
                         <label for="measure-type">
                           <b>Data type: </b><br>
                           <select v-model="selectedDataType" @change="sortSessions(), scan(), selection()" name="measure-type">
@@ -633,7 +633,7 @@
                         </label>
                       </div>
                     </div>
-                    <div v-show="showType && p1.desc" class="data-desc">
+                    <div v-if="showType && p1.desc" class="data-desc">
                       <div class="container--data-desc">
                         <p class="data-desc__desc"><b>{{ p1.desc }}</b></p>
                         <p class="data-desc__value">{{ p1.value }}</p>
