@@ -31,8 +31,8 @@
         Install App
       </button>
       <p class="text--large">Today</p>
-      <p class="text--small text--no-sessions grey" v-if="viewSessionsStore.length === 0 && loading === false">No sessions today...</p>
-      <p class="text--small text--loading grey" v-if="loading === true">Loading sessions...</p>
+      <p class="text--small text--no-sessions grey" v-if="viewSessionsStore.length === 0 && $parent.loading === false">No sessions today...</p>
+      <p class="text--small text--loading grey" v-if="$parent.loading === true">Loading sessions...</p>
       <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
         <div class="container--sessions" v-if="plan.sessions">
           <div class="wrapper--session" v-for="(session, index) in plan.sessions"
@@ -93,7 +93,6 @@ export default {
   data () {
     return {
       giveFeedback: null,
-      loading: true,
       viewSessionsStore: [],
       maxSessionIndexHome: null,
       currentSessionIndexHome: 0
@@ -105,12 +104,12 @@ export default {
     }, 4000)
     this.$parent.loading = false
   },
-  async mounted () {
+  mounted () {
     this.$parent.loading = true
-    await this.$parent.setup()
-    await this.$parent.get_plans()
-    await this.todaysSession()
-    await this.initCountSessionsHome()
+    this.$parent.setup()
+    this.$parent.get_plans()
+    this.todaysSession()
+    this.initCountSessionsHome()
     this.$parent.loading = false
   },
   methods: {

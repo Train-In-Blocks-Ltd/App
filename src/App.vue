@@ -350,7 +350,8 @@
   }
   .fc-scroller.fc-day-grid-container {
     /* stylelint-disable-next-line */
-    height: auto!important
+    height: auto!important;
+    overflow: hidden!important
   }
   .fc-row.fc-week.fc-widget-content {
     /* stylelint-disable-next-line */
@@ -403,6 +404,7 @@
   }
   .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img,.show-session iframe, .show-plan-notes iframe, .show-client-notes iframe, .show-template iframe {
     border-radius: 3px;
+    max-width: 80%;
     margin: 1rem 0
   }
   .show-session a, .show-plan-notes a, .show-client-notes a, .show-template a {
