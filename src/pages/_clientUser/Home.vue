@@ -104,12 +104,12 @@ export default {
     }, 4000)
     this.$parent.loading = false
   },
-  mounted () {
+  async mounted () {
     this.$parent.loading = true
-    this.$parent.setup()
-    this.$parent.get_plans()
-    this.todaysSession()
-    this.initCountSessionsHome()
+    await this.$parent.setup()
+    await this.$parent.get_plans()
+    await this.todaysSession()
+    await this.initCountSessionsHome()
     this.$parent.loading = false
   },
   methods: {
