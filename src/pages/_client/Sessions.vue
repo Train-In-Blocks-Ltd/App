@@ -33,6 +33,9 @@
   #progress-bar.fullBar {
     background-color: #49AB59
   }
+  #progress-bar.noSessions {
+    background-color: #8B000020
+  }
   #progress-bar.fullBar p {
     color: white
   }
@@ -459,8 +462,9 @@
               </form>
             </div><br>  <!-- client_info -->
             <div class="wrapper--progress-bar">
-              <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal }">
-                <p class="grey">Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions</p>
+              <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal, noSessions: $parent.no_sessions }">
+                <p v-if="!$parent.no_sessions" class="grey">Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions</p>
+                <p v-if="$parent.no_sessions" class="grey">Add some sessions to see programme adherence here...</p>
               </div>
             </div>
           </div> <!-- top_grid -->
@@ -968,7 +972,7 @@
       checkForNew () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
-            if (plan.sessions !== false && plan.sessions.length !== 0) {
+            if (!this.$parent.no_sessions) {
               plan.sessions.forEach((session) => {
                 if (session.notes === null || session.notes === '<p><br></p>') {
                   this.expandedSessions.push(session.id)
@@ -1147,7 +1151,7 @@
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
             this.sessionsTotal = plan.sessions.length
-            if (plan.sessions !== false && plan.sessions.length !== 0) {
+            if (!this.$parent.no_sessions) {
               plan.sessions.forEach((session) => {
                 if (session.checked === 1) {
                   this.sessionsDone++
