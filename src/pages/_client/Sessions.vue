@@ -968,11 +968,13 @@
       checkForNew () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
-            plan.sessions.forEach((session) => {
-              if (session.notes === null || session.notes === '<p><br></p>') {
-                this.expandedSessions.push(session.id)
-              }
-            })
+            if (plan.sessions !== false && plan.sessions.length !== 0) {
+              plan.sessions.forEach((session) => {
+                if (session.notes === null || session.notes === '<p><br></p>') {
+                  this.expandedSessions.push(session.id)
+                }
+              })
+            }
           }
         })
       },
@@ -1145,11 +1147,13 @@
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
             this.sessionsTotal = plan.sessions.length
-            plan.sessions.forEach((session) => {
-              if (session.checked === 1) {
-                this.sessionsDone++
-              }
-            })
+            if (plan.sessions !== false && plan.sessions.length !== 0) {
+              plan.sessions.forEach((session) => {
+                if (session.checked === 1) {
+                  this.sessionsDone++
+                }
+              })
+            }
           }
         })
         const bar = document.getElementById('progress-bar')
