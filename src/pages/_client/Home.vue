@@ -1,9 +1,4 @@
 <style>
-  #client {
-    overflow-x: hidden;
-    border-right: 6px solid #F4F4F4
-  }
-
   /* Client Info */
   #client .client_info input:not([type='submit']), #duration {
     width: 100%;
@@ -406,11 +401,10 @@
                 }
                 // Sync client_details with clients
                 // Loop through clients
-                // eslint-disable-next-line
                 for (var y in this.$parent.clients) {
                   // If client matches client in route
-                  if (this.$parent.clients[f].client_id === parseInt(this.$route.params.client_id)) {
-                    this.$parent.clients[f] = this.$parent.client_details
+                  if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
+                    this.$parent.clients[y] = this.$parent.client_details
                   }
                 }
                 // Update the localstorage with the sessions

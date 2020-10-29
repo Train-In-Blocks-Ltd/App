@@ -21,8 +21,7 @@
       width: 100%;
       padding: 2rem;
       height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden
+      overflow-y: auto
     }
     .cookies {
       margin-left: 0;

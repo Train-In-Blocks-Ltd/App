@@ -687,8 +687,7 @@
   /* Responsive Design */
   @media (max-width: 992px) {
     #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
-      padding: 4rem 10vw;
-      overflow-x: hidden
+      padding: 4rem 10vw
     }
     button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       opacity: 1

@@ -126,8 +126,8 @@ const router = new Router({
       component: NotFound
     }
   ],
-  scrollBehavior () {
-    document.querySelector('#main').scrollTop = 0
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
   }
 })
 
