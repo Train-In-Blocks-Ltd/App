@@ -1,9 +1,17 @@
+<style scoped>
+  p.text--large {
+    margin: 1rem 0
+  }
+  p.text--large:first-of-type {
+    margin-top: 0
+  }
+</style>
+
 <template>
   <div>
     <p v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall !== true" class="text--large">Install the app</p>
     <p v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall !== true" class="text--large grey">Available for desktops and mobiles</p>
     <p v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true" class="text--large">You have the app installed already...</p>
-    <br><br>
     <button @click="$parent.$parent.installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" v-if="$parent.$parent.pwa.displayMode === 'browser tab'">
       {{runOrInstallApp($parent.$parent.pwa.canInstall)}}
     </button>
@@ -16,7 +24,7 @@
     methods: {
       runOrInstallApp (state) {
         if (!state) {
-          return 'Download'
+          return 'Install'
         } else {
           return 'Launch'
         }

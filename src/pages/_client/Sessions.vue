@@ -244,7 +244,6 @@
     border: 0;
     border-bottom: 1px solid #282828;
     outline-width: 0;
-    cursor: pointer;
     padding: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
@@ -1175,7 +1174,9 @@
           }
         })
         const bar = document.getElementById('progress-bar')
-        bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+        if (bar) {
+          bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+        }
       },
       setListenerForEditor (state) {
         if (state) {

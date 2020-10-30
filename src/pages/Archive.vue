@@ -60,7 +60,7 @@
       InlineSvg,
       ClientLink
     },
-    data: function () {
+    data () {
       return {
         search: ''
       }
@@ -69,9 +69,7 @@
       this.$parent.loading = true
       await this.$parent.setup()
       await this.$parent.archive_to_vue()
-      setTimeout(() => {
-        this.$parent.splashed = true
-      }, 4000)
+      this.$parent.splashed = true
       this.$parent.willBodyScroll(true)
       this.$parent.loading = false
     }

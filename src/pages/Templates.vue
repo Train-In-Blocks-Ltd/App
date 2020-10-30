@@ -81,7 +81,6 @@
     border-bottom: 1px solid #282828;
     font-size: 1rem;
     outline-width: 0;
-    cursor: pointer;
     padding: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }

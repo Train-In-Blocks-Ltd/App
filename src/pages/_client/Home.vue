@@ -2,7 +2,6 @@
   /* Client Info */
   #client .client_info input:not([type='submit']), #duration {
     width: 100%;
-    cursor: pointer;
     background-color: initial;
     border: 1px solid #28282840;
     padding: .6rem 1rem;
@@ -15,8 +14,7 @@
   #client .client_info input:not([type='submit']):focus, #duration:focus, .session-date:focus {
     opacity: 1;
     border: 1px solid #282828;
-    padding: .6rem 1.4rem;
-    cursor: text
+    padding: .6rem 1.4rem
   }
   .client_info__more-details {
     display: grid;

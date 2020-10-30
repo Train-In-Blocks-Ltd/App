@@ -128,6 +128,7 @@
     },
     created () {
       this.loading = true
+      this.$parent.$parent.splashed = true
       this.$parent.checkClient()
       this.loading = false
     },

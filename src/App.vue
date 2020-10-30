@@ -221,10 +221,12 @@
   /* GLOBAL: FONTS */
   .text--large {
     margin-top: 0;
-    font-size: 2.6rem
+    font-size: 2.6rem;
+    line-height: 1.2
   }
   .text--small {
-    font-size: 1.6rem
+    font-size: 1.6rem;
+    line-height: 1.2
   }
   .grey {
     color: #28282894
@@ -233,7 +235,8 @@
     margin: 0
   }
   h3 {
-    font-size: 2rem
+    font-size: 2rem;
+    line-height: 1.2
   }
   p {
     margin: 0
@@ -293,8 +296,7 @@
     box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   button:disabled, button[disabled] {
-    opacity: .6;
-    cursor: default
+    opacity: .6
   }
   .delete:hover, .cancel:hover {
     color: white;
@@ -318,7 +320,7 @@
     border-bottom: 2px solid #282828;
     padding: .6rem 0;
     opacity: .6;
-    margin: 0 auto 4rem 0;
+    margin: .5rem auto 4rem 0;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   .search:hover {
@@ -351,6 +353,7 @@
   .fc-scroller.fc-day-grid-container {
     /* stylelint-disable-next-line */
     height: auto!important;
+    /* stylelint-disable-next-line */
     overflow: hidden!important
   }
   .fc-row.fc-week.fc-widget-content {

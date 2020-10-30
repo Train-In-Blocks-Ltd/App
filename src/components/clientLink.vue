@@ -1,5 +1,4 @@
 <style scoped>
-
   /* SEE HOME.VUE FOR MORE CSS */
 
   /* Client Link */
@@ -17,6 +16,8 @@
     grid-gap: 1rem
   }
   .client_link__details p, .name {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
     margin: auto 0;
     color: #28282890;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -26,6 +27,12 @@
   }
   .client_link:hover .client_link__details p, .client_link:hover .name {
     color: #282828
+  }
+  .client_link.archived .client_link__details p, .client_link.archived .name {
+    color: #282828
+  }
+  .client_link.archived svg {
+    fill: #282828
   }
 
   @media (min-width: 768px) {

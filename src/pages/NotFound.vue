@@ -1,18 +1,16 @@
-<style>
-  #error_message {
-    text-align: center;
-    font-size: 2.5rem;
-    padding: 5rem 3.75rem
-  }
-  @media (max-width: 768px) {
-    #error_message {
-      text-align: center;
-      font-size: 2rem;
-      margin-top: 40%;
-      margin-left: 0
-    }
-  }
-</style>
 <template>
-    <p id="text--large error_message">Error 404 Page Not Found</p>
+  <div style="display: grid; place-items: center; height: 100vh">
+    <p style="font-size: 2.5rem">Error 404 Page Not Found</p>
+  </div>
 </template>
+<script>
+export default {
+  created () {
+    this.$parent.loading = true
+    this.$parent.setup()
+    this.$parent.splashed = true
+    this.$parent.willBodyScroll(true)
+    this.$parent.loading = false
+  }
+}
+</script>

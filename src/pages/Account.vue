@@ -1,6 +1,10 @@
 <style scoped>
+  button {
+    margin: 0
+  }
   .details {
     display: grid;
+    grid-gap: 1rem;
     margin: 2rem 0
   }
   .privacy {
@@ -96,8 +100,7 @@
     <p class="text--large">Your Account</p>
     <form class="details_container" v-if="$parent.claims">
       <div class="details">
-        <p><b>Email: </b>{{$parent.claims.email}}</p>
-        <br>
+        <p style="margin-bottom: 1rem"><b>Email: </b>{{$parent.claims.email}}</p>
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
           <button @click.prevent="manageSubscription()">Manage Your Subscription</button>
         </div>
@@ -141,6 +144,7 @@
     created () {
       this.$parent.loading = true
       this.$parent.setup()
+      this.$parent.splashed = true
       this.$parent.willBodyScroll(true)
       this.$parent.loading = false
     },
