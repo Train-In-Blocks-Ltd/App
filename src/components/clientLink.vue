@@ -49,7 +49,7 @@
         <p>{{number}}</p>
       </div>
     </div>
-    <p v-if="notes === null || notes === '<p><br></p>' || notes === ''" class="grey">What client information do you currently have? Head over to this page and edit it.</p>
+    <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">What client information do you currently have? Head over to this page and edit it.</p>
     <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" v-html="notes" class="client_link__notes__content" />
     <div v-if="archive" class="client_link__options">
       <a href="javascript:void(0)" @click="$parent.$parent.client_unarchive(clientId, clientIndex)" title="Unarchive">

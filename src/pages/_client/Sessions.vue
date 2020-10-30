@@ -57,12 +57,12 @@
     z-index: 9;
     padding: 2rem
   }
-  .multi-select a {
+  .multi-select a, .a--preview-template {
     color: #282828;
     text-decoration: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .multi-select a:hover {
+  .multi-select a:hover, .a--preview-template:hover {
     opacity: .6
   }
   .floating_nav__icon {
@@ -196,7 +196,8 @@
   .session--header {
     display: flex;
     justify-content: space-between;
-    align-items: center
+    align-items: center;
+    margin-bottom: 2rem
   }
   .session--header__left {
     display: flex
@@ -259,6 +260,9 @@
   }
   .wrapper--template-options {
     margin: 2rem 0
+  }
+  .a--preview-template {
+    margin-left: 2rem
   }
   .show-feedback {
     margin: 1rem 0;
@@ -427,6 +431,14 @@
             </div>
         </form>
       </modal>
+      <modal name="preview-template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+        <div class="modal--preview-template">
+            <div class="wrapper--centered-item">
+              <div v-html="previewTemplate" /><br>
+              <button class="cancel" @click.prevent="$modal.hide('preview-template'), $parent.$parent.willBodyScroll(true), previewTemplate = null">Close</button>
+            </div>
+        </div>
+      </modal>
       <div class="icon--open-stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
         <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
         <p class="text">Statistics</p>
@@ -538,7 +550,7 @@
                 <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
                 <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
-                  <p v-if="plan.sessions !== null" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
+                  <p v-if="plan.sessions !== null && !isEditingSession" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
                   <!-- New session -->
                   <div class="container--sessions" v-if="!$parent.no_sessions">
                     <!-- Loop through sessions -->
@@ -556,7 +568,7 @@
                         </div>
                         <div class="header-options">
                           <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
-                          <inline-svg id="expand" class="icon--expand" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
+                          <inline-svg id="expand" class="icon--expand" v-show="!isEditingSession" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn"/>
@@ -574,6 +586,7 @@
                           :key="index"
                         >
                           <button class="opposite" :disabled="!caretIsInEditor || item.template === null || item.template === '<p><br></p>' || item.template === ''" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
+                          <a href="javascript:void(0)" class="a--preview-template" @click="previewTemplate = item.template, $modal.show('preview-template'), $parent.$parent.willBodyScroll(false)">Preview</a>
                         </div>
                       </div>
                       <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
@@ -688,6 +701,7 @@
         tempQuillStore: null,
         showTemplates: false,
         caretIsInEditor: false,
+        previewTemplate: null,
 
         // BLOCK DATA //
         sessionsDone: 0,
