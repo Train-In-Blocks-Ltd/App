@@ -27,39 +27,11 @@
     animation-duration: calc(1s / 2);
     animation-duration: calc(var(--animate-duration) / 2)
   }
-  .animate__bounceInDown {
-    animation-name: bounceInDown;
-    animation-timing-function: cubic-bezier(.215, .61, .355, 1)
-  }
   .animate__fadeIn {
     animation-name: fadeIn
   }
   .animate__fadeOut {
     animation-name: fadeOut
-  }
-  @keyframes bounceInDown {
-    0% {
-      opacity: 0;
-      -webkit-transform: translate3d(0, -3000px, 0) scaleY(3);
-      transform: translate3d(0, -3000px, 0) scaleY(3)
-    }
-    60% {
-      opacity: 1;
-      -webkit-transform: translate3d(0, 25px, 0) scaleY(.9);
-      transform: translate3d(0, 25px, 0) scaleY(.9)
-    }
-    75% {
-      -webkit-transform: translate3d(0, -10px, 0) scaleY(.95);
-      transform: translate3d(0, -10px, 0) scaleY(.95)
-    }
-    90% {
-      -webkit-transform: translate3d(0, 5px, 0) scaleY(.985);
-      transform: translate3d(0, 5px, 0) scaleY(.985)
-    }
-    to {
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0)
-    }
   }
   @keyframes fadeIn {
     from {
@@ -77,6 +49,89 @@
       opacity: 0
     }
   }
+  .section--a, .section--b {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    background-color: #F4F4F4;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .section--a {
+    height: 50%
+  }
+  .section--b {
+    height: 50%;
+    top: 50%;
+    transition-delay: .2s
+  }
+  .section--a.openedSections,  .section--b.openedSections {
+    width: 100%;
+    z-index: 4
+  }
+
+  /* GLOBAL: SPLASH */
+  #splash {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    left: 0
+  }
+  .box {
+    position: relative;
+    top: calc(50% - 8rem);
+    border: .25rem solid #282828;
+    border-radius: 3px;
+    height: 8rem;
+    width: 8rem;
+    outline: 0;
+    overflow: hidden;
+    background-color: #282828;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: flashing 1s ease-in-out alternate-reverse infinite
+  }
+  .box:after {
+    content: '';
+    position: absolute;
+    background: white;
+    height: 16rem;
+    width: 16rem;
+    bottom: -50%;
+    left: -50%;
+    border-radius: 40%;
+    animation: spin 5s forwards
+  }
+  .box .logo--svg {
+    height: 50%;
+    width: auto
+  }
+  .box svg.logo--svg path {
+    fill: white
+  }
+
+  @keyframes spin {
+    0% {
+      transform: translateY(0) rotate(0deg)
+    }
+    100% {
+      transform: translateY(-100%) rotate(500deg)
+    }
+  }
+  @keyframes flashing {
+    0% {
+      opacity: .7
+    }
+    100% {
+      opacity: 1
+    }
+  }
 
   /* GLOBAL: ELEMENTS */
   body {
@@ -86,7 +141,7 @@
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    letter-spacing: .1rem
+    letter-spacing: 1px
   }
   #app {
     color: #282828;
@@ -102,11 +157,8 @@
   }
 
   /* GLOBAL: CONTAINERS */
-  #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-    padding: 4rem 20vw 10rem 20vw
-  }
-  .modal--error {
-    padding: 2rem
+  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
+    padding: 2rem 10vw
   }
   .flex {
     display: flex
@@ -115,31 +167,50 @@
     display: flex;
     margin: 2rem 0
   }
-  .home-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 4rem;
-    align-items: center
+  .wrapper--calendar {
+    margin: 6rem 0;
+    user-select: none
   }
-
-  /* GLOBAL: TOOLTIP */
-  .tooltip {
-    cursor: pointer;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  .full-width-bar {
+    width: 100%
   }
-  .tooltip:hover {
-    opacity: .6
+  #chart {
+    height: 80vh;
+    position: relative;
+    margin: 4rem 0
   }
-  .sub-title.tooltip {
-    margin-left: .6rem
+  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+    position: fixed;
+    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
+    top: 0;
+    left: 0;
+    z-index: 5;
+    height: 100%;
+    width: 100%
+  }
+  .wrapper--client-link {
+    text-decoration: none
+  }
+  .allow-y-overflow {
+    overflow-y: auto
   }
 
   /* GLOBAL: MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--help-block {
-    padding: 2rem
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--alert, .modal--preview-template {
+    padding: 2rem;
+    display: flex;
+    height: 100%
   }
-  .modal--copy h3, .modal--reset h2 {
-    margin: 0 0 1.5rem 0
+  div.vm--modal {
+    /* stylelint-disable-next-line */
+    left: 0!important;
+    min-width: 100%
+  }
+  .modal--bottom-bar {
+    display: flex
+  }
+  .modal--bottom-bar button {
+    margin-right: .6rem
   }
 
   /* GLOBAL: SVG */
@@ -148,30 +219,33 @@
   }
 
   /* GLOBAL: FONTS */
-  .main-title {
+  .text--large {
     margin-top: 0;
-    margin-bottom: 3rem;
-    font-weight: bold;
-    font-size: 3.75rem;
-    text-transform: capitalize;
-    letter-spacing: .15rem
+    font-size: 2.6rem;
+    line-height: 1.2
   }
-  .sub-title {
-    font-size: 2.5rem;
-    letter-spacing: .15rem;
-    margin: 1.75rem 0
+  .text--small {
+    font-size: 1.6rem;
+    line-height: 1.2
+  }
+  .grey {
+    color: #28282894
   }
   .no-margin {
     margin: 0
   }
   h3 {
-    font-size: 2rem
+    font-size: 2rem;
+    line-height: 1.2
   }
   p {
     margin: 0
   }
-  svg path:not(.transparent) {
+  svg path:not(.account_nav--item--icon.transparent) {
     fill: #282828
+  }
+  .account_nav--item--icon.transparent path {
+    stroke: #282828
   }
   .allow-text-overflow {
     text-overflow: ellipsis
@@ -179,6 +253,18 @@
   .text--error {
     font-size: .8rem;
     color: #B80000
+  }
+  .text--no-client-notes, .text--no-plan-notes {
+    margin: 2rem 0
+  }
+  .text--loading, .text--no-clients {
+    margin: 2rem 0 4rem 0
+  }
+  .text--no-plans, .text--no-sessions {
+    margin: 2rem 0 8rem 0
+  }
+  .text--no-content {
+    margin: 1rem 0
   }
 
   /* GLOBAL: BUTTONS */
@@ -195,36 +281,66 @@
     padding: .6rem 1.6rem;
     font-size: .8rem;
     letter-spacing: .1rem;
-    font-weight: bold;
     color: white;
     background-color: #282828;
     margin: .6rem 0;
-    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
-  button:hover {
+  button:hover:not(:disabled) {
     opacity: .6
   }
-  button:active {
+  button:active:not(:disabled) {
     transform: scale(.96)
   }
   button:focus {
     box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   button:disabled, button[disabled] {
-    opacity: .6;
-    cursor: default
+    opacity: .6
   }
   .delete:hover, .cancel:hover {
     color: white;
     background-color: #B80000
   }
+  button.opposite {
+    border: 2px solid #282828;
+    color: #282828;
+    background-color: transparent
+  }
+  button.opposite:not(:disabled):hover {
+    color: white;
+    background-color: #282828
+  }
+
+  /* GLOBAL: SEARCH */
+  .search {
+    border: none;
+    outline-width: 0;
+    width: 80%;
+    border-bottom: 2px solid #282828;
+    padding: .6rem 0;
+    opacity: .6;
+    margin: .5rem auto 4rem 0;
+    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  }
+  .search:hover {
+    width: 100%;
+    opacity: 1
+  }
+  .search:focus {
+    width: 100%;
+    opacity: 1
+  }
 
   /* GLOBAL: CALENDAR */
+  div.fc-toolbar h2 {
+    font-weight: lighter;
+    font-size: 1.6rem
+  }
   button.fc-button {
     border-radius: 3px;
     text-transform: capitalize;
     font-size: .8rem;
-    font-weight: bold;
     background-color: #282828;
     color: white
   }
@@ -234,15 +350,22 @@
   .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
     border-color: transparent
   }
+  .fc-scroller.fc-day-grid-container {
+    /* stylelint-disable-next-line */
+    height: auto!important;
+    /* stylelint-disable-next-line */
+    overflow: hidden!important
+  }
+  .fc-row.fc-week.fc-widget-content {
+    /* stylelint-disable-next-line */
+    height: auto!important
+  }
   .fc-view-container span {
     font-size: .8rem
   }
-  button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-button.fc-button-primary, button.fc-dayGridWeek-button.fc-button.fc-button-primary, button.fc-dayGridMonth-button.fc-button.fc-button-primary {
-    margin-left: .4rem
-  }
 
-  /* GLOBAL: WORKOUTS AND NOTES */
-  .wrapper--workout__header {
+  /* GLOBAL: SESSIONS AND NOTES */
+  .wrapper--session__header {
     height: 6.4rem
   }
   .text--name {
@@ -256,7 +379,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .6rem 0
+    padding: .6rem 0;
+    margin-top: 1rem
   }
   #button-done {
     background-color: green
@@ -273,26 +397,30 @@
     opacity: .6
   }
 
-  /* GLOBAL: SHOW WORKOUT AND NOTES */
-  .show-workout, .show-block-notes, .show-client-notes {
+  /* GLOBAL: SHOW AND NOTES */
+  .show-session, .show-plan-notes, .show-client-notes, .show-template {
+    outline-width: 0;
     overflow-wrap: break-word;
-    color: #282828;
     line-height: 1.42;
     overflow-y: auto;
-    font-size: .8rem;
     transition: all 1s
   }
-  .show-workout a {
+  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img,.show-session iframe, .show-plan-notes iframe, .show-client-notes iframe, .show-template iframe {
+    border-radius: 3px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template a {
     color: blue
   }
-  .show-workout ul, .show-workout ol, .show-block-notes ul, .show-block-notes ol {
+  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template ul, .show-template ol {
     text-decoration: none;
     margin: 0
   }
-  .show-workout p, .show-client-notes p, .show-block-notes p {
+  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template p {
     margin: 1rem 0
   }
-  .wrapper--workout__header.client-side {
+  .wrapper--session__header.client-side {
     height: 3.2rem
   }
 
@@ -309,13 +437,13 @@
   .input--forms, .input--toolkit, .input--modal {
     padding: .4rem;
     font-size: 1rem;
+    background-color: transparent;
     border: none;
     border-bottom: 1px solid #282828
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
     resize: none;
-    font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: .1rem
+    font-family: Arial, Helvetica, sans-serif
   }
   input[type=color] {
     margin: 0 .4rem;
@@ -324,16 +452,6 @@
     outline-width: 0;
     cursor: pointer;
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  input.title {
-    margin-top: 0;
-    margin-bottom: 3rem;
-    font-weight: bold;
-    font-size: 3.75rem;
-    text-transform: capitalize;
-    letter-spacing: .15rem;
-    white-space: nowrap;
-    text-overflow: ellipsis
   }
   ::placeholder {
     color: #28282899;
@@ -344,8 +462,8 @@
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
-    max-width: 300px;
-    margin: 0
+    margin: auto;
+    max-width: 300px
   }
   .form_buttons {
     display: grid;
@@ -353,6 +471,10 @@
     place-content: start;
     grid-auto-flow: column;
     margin-bottom: 1rem
+  }
+  .wrapper--centered-item {
+    margin: auto;
+    max-width: 500px
   }
 
   /* GLOBAL: LOGO */
@@ -365,7 +487,11 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   svg.logo--svg path {
-    fill: white
+    fill: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .sidebar:hover svg.logo--svg path {
+    fill: #282828
   }
   .logo--link:hover {
     opacity: .6
@@ -388,14 +514,14 @@
     transform: translateY(0%)
   }
   .sidebar {
-    border-right: 1px solid #E1E1E1;
     z-index: 10;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 2rem 1rem;
     position: fixed;
-    background-color: #282828;
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810;
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item {
@@ -417,7 +543,8 @@
     text-decoration: none
   }
   .account_nav--item--text {
-    color: white;
+    user-select: none;
+    color: #282828;
     text-decoration: none;
     position: relative;
     border: 0;
@@ -428,7 +555,7 @@
     opacity: 1
   }
   .account_nav--item a.router-link-exact-active {
-    font-weight: bold
+    opacity: 1
   }
   .account_nav--item--icon {
     margin: 0 .4rem 0 0;
@@ -436,49 +563,52 @@
     vertical-align: bottom;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .account_nav--item--icon path:not(.transparent) {
-    fill: white
+  .account_nav--item--icon:not(.transparent) path {
+    fill: #282828
   }
 
-  /* GLOBAL: QUILL */
-  div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
-    border: none;
-    padding: 0
+  /* GLOBAL: EXTRA OPTIONS */
+  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new, .icon--open-new-plan {
+    user-select: none;
+    z-index: 2;
+    display: flex;
+    cursor: pointer;
+    position: fixed;
+    right: 0;
+    top: 2rem;
+    width: calc(3rem);
+    padding: .4rem 1rem .4rem .6rem;
+    border-radius: 3px 0 0 3px;
+    background-color: #F4F4F4;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .ql-formats {
-    transform: translateX(-5px)
+  div.icon--open-stats, div.icon--open-whats-new, .icon--open-new-plan {
+    top: 4.4rem
   }
-  .ql-snow .ql-stroke {
-    stroke: #282828
+  div.icon--open-install-pwa {
+    top: 6.8rem
   }
-  .ql-editor {
-    grid-area: body;
-    color: #282828;
-    overflow-y: auto;
-    padding: 0;
-    transition: all 1s
+  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install-pwa:hover {
+    width: 6rem;
+    justify-content: center;
+    text-align: center
   }
-  .ql-snow .ql-editor h1 {
-    margin: 1.072rem 0
+  .icon--open-new-client:hover, .icon--open-whats-new:hover, .icon--open-new-plan:hover {
+    width: 8rem;
+    justify-content: center;
+    text-align: center
   }
-  .ql-snow .ql-editor h2 {
-    margin: 1.245rem 0
+  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg, .icon--open-new-plan:hover svg {
+    display: none
   }
-  .ql-snow .ql-editor p {
-    margin: 1rem 0
+  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text, .icon--open-new-plan .text {
+    font-size: .8rem;
+    display: none;
+    white-space: nowrap;
+    transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .ql-editor.ql-blank:before {
-    margin: 1rem 0;
-    left: 0
-  }
-  .ql-snow.ql-toolbar button:hover, .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button.ql-active, .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar .ql-picker-label:hover, .ql-snow .ql-toolbar .ql-picker-label:hover, .ql-snow.ql-toolbar .ql-picker-label.ql-active, .ql-snow .ql-toolbar .ql-picker-label.ql-active, .ql-snow.ql-toolbar .ql-picker-item:hover, .ql-snow .ql-toolbar .ql-picker-item:hover, .ql-snow.ql-toolbar .ql-picker-item.ql-selected, .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    color: #28282899
-  }
-  .ql-snow.ql-toolbar button:hover .ql-stroke, .ql-snow .ql-toolbar button:hover .ql-stroke, .ql-snow.ql-toolbar button.ql-active .ql-stroke, .ql-snow .ql-toolbar button.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke, .ql-snow.ql-toolbar button:hover .ql-stroke-miter, .ql-snow .ql-toolbar button:hover .ql-stroke-miter, .ql-snow.ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar button.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke-miter, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke-miter {
-    stroke: #28282899
-  }
-  .ql-snow.ql-toolbar button:hover .ql-fill, .ql-snow .ql-toolbar button:hover .ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-fill, .ql-snow.ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar button:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar button.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item:hover .ql-stroke.ql-fill, .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill, .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke.ql-fill {
-    fill: #28282899
+  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text, .icon--open-new-plan:hover .text {
+    display: block
   }
 
   /* GLOBAL: SCROLLBAR */
@@ -487,13 +617,13 @@
     height: 10px
   }
   ::-webkit-scrollbar-track {
-    background: #28282815
+    background-color: #28282821
   }
   ::-webkit-scrollbar-thumb {
-    background: #28282850
+    background-color: #28282890
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #28282860
+    background-color: #28282860
   }
 
   /* ARCHIVE AND HOME STYLES */
@@ -505,74 +635,46 @@
     margin: 0
   }
 
-  /* HOME: Client Container Animation */
-  .client_container > a {
+  /* GLOBAL: LINK CONTAINERS */
+  .client_link, .plan_link {
     display: grid;
+    padding: 2rem;
     grid-gap: 1rem;
-    position: relative;
     font-weight: 400;
     color: #282828;
-    text-decoration: none
+    text-decoration: none;
+    box-shadow: 0 0 20px 10px #28282810;
+    border-radius: 3px;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_container > a:not(.archived):hover {
-    color: #282828
-  }
-  .client_container > a:before {
-    content: '';
-    position: absolute;
-    opacity: .4;
-    width: 95%;
-    height: 1px;
-    bottom: 0;
-    left: 0;
-    background-color: #282828;
-    transition: all .6s cubic-bezier(.075, .82, .165, 1)
-  }
-  .client_container > a:not(.archived):hover:before {
-    width: 100%;
-    opacity: 1
-  }
-  .client_link {
-    padding: 1rem 0;
-    overflow-x: auto
-  }
-  .client_link svg {
-    width: 20px
-  }
-  .client_link__name {
-    font-size: 1.4rem
-  }
-  .client_link__details {
-    display: grid;
-    grid-template-columns: 20px 1fr;
-    grid-gap: 1rem
-  }
-  .client_link__details p {
-    margin: auto 0
-  }
-  .client_link__notes__content {
+  .client_link__notes__content, .plan_link__notes__content {
     font-size: .8rem;
     margin-top: .4rem
   }
-  .search {
-    border: none;
-    outline-width: 0;
-    width: 95%;
-    font-size: 1.6rem;
-    letter-spacing: .1rem;
-    font-weight: bold;
-    border-bottom: 2px solid #282828;
-    padding: .6rem 0;
+  .client_link__notes__content *, .plan_link__notes__content *, .plan-name {
+    color: #28282890;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content *, .plan_link:hover .plan-name {
+    color: #282828
+  }
+  .client_link__notes__content p, .plan_link__notes__content p {
+    margin: .4rem 0
+  }
+  .client_name, .plan-name {
+    margin: 0
+  }
+  .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
+    font-size: 1rem
+  }
+  .client_link__notes__content img, .plan_link img, .client_link__notes__content iframe, .plan_link iframe {
     margin: 1rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+    border-radius: 3px;
+    opacity: .6;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .search:hover {
-    border-bottom: 2px solid #28282880;
-    width: 100%
-  }
-  .search:focus {
-    border-bottom: 2px solid #282828;
-    width: 100%
+  .client_link:hover .client_link__notes__content img, .plan_link:hover img, .client_link:hover .client_link__notes__content iframe, .plan_link:hover iframe {
+    opacity: 1
   }
 
   /* GLOBAL: CLIENT-SIDE */
@@ -582,18 +684,19 @@
   }
   .session-counter {
     align-self: center;
-    font-size: 1rem;
-    font-weight: bold
+    font-size: 1rem
   }
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
-      padding: 4rem 10vw;
-      overflow-x: hidden
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
+      padding: 4rem 10vw
     }
-    button:hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+    button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
       opacity: 1
+    }
+    #line-chart {
+      padding: 0
     }
   }
   @media (min-width: 768px) {
@@ -605,14 +708,30 @@
     .sidebar:hover {
       width: 12rem
     }
-  }
-  @media (min-width: 768px) {
     .title-icon {
       height: 48px;
       width: 48px
     }
+    .client_link.archived {
+      display: flex;
+      justify-content: space-between
+    }
   }
   @media (max-width: 768px) {
+    /* Containers */
+    .quill {
+      width: 90%
+    }
+    .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img {
+      max-width: 100%
+    }
+    .client_link__notes__content img, .plan_link img {
+      max-width: 100%
+    }
+    .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+      padding: 4rem 10vw 10rem 10vw
+    }
+
     /* Sidebar */
     .logo {
       display: none
@@ -631,7 +750,7 @@
     main {
       margin: 0
     }
-    #home, #block, #account, #archive, .wrapper--client, #help, #logout {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -644,27 +763,6 @@
     .account_nav--item--icon {
       margin: 0
     }
-    .ql-snow .ql-formats button {
-      margin: .2rem
-    }
-    .ql-snow .ql-formats {
-      display: flex;
-      justify-content: space-evenly;
-      position: fixed;
-      bottom: 60.8px;
-      left: 0;
-      z-index: 99;
-      background-color: white;
-      border-radius: 3px;
-      box-shadow: 0 0 20px 10px #28282810;
-      width: 100vw;
-      padding: .6rem;
-      overflow-x: auto
-    }
-    .ql-formats {
-      margin: 0;
-      transform: none
-    }
   }
 
   /* For Mobile */
@@ -676,14 +774,23 @@
     p {
       font-size: .8rem
     }
-    .main-title {
-      font-size: 2.4rem
+    .text--large {
+      font-size: 2rem
     }
-    .sub-title {
-      font-size: 1.6rem
+    .text--small {
+      font-size: 1.2rem
+    }
+    .button--state, .button--feedback {
+      width: 100%
+    }
+    .wrapper--centered-item {
+      max-width: 300px
+    }
+    .wrapper--calendar {
+      margin: 2rem 0
     }
 
-    /* Blocks Page */
+    /* Plans Page */
     .fc-view-container {
       width: 90vw;
       overflow-x: auto
@@ -694,19 +801,17 @@
     .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
       width: 200vw
     }
-  }
-  @media (max-width: 380px) {
-    .ql-snow .ql-formats button {
-      margin: .05rem
+    div.fc-toolbar h2 {
+      font-size: 1rem
     }
   }
 
-  /* Reduced motion */
+  /* GLOBAL: REDUCED MOTION */
   @media (prefers-reduced-motion: reduce) {
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-block-notes,.show-workout, div.wrapper--client, .icon--expand {
+    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-new-plan {
       transition: none
     }
     .sidebar {
@@ -723,21 +828,26 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" v-bind:class="{'authenticated': authenticated}">
-    <modal name="error" height="auto" :adaptive="true">
+    <modal name="error" height="100%" width='100%' :adaptive="true" :clickToClose="false">
       <div class="modal--error">
-        <p><b>Something went wrong. Please try again...</b></p><br>
-        <p>{{errorMsg}}</p><br>
-        <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
-          <button type="submit" formtarget="_blank">Let us know</button>
-        </form>
+        <div class="wrapper--centered-item">
+          <p><b>Something went wrong. Please try again...</b></p><br>
+          <p>{{errorMsg}}</p><br>
+          <div class="modal--bottom-bar">
+            <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
+              <button type="submit" formtarget="_blank">Let us know</button>
+            </form>
+            <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">Close</button> 
+          </div>
+        </div>
       </div>
     </modal>
     <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
-    <nav class="sidebar" v-if="authenticated && claims">
-      <div class="logo animate animate__bounceInDown animate__delay-2s">
+    <nav class="sidebar" v-if="authenticated && claims && splashed">
+      <div class="logo">
         <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
         </router-link>
@@ -760,10 +870,18 @@
         </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <router-link to="/help" title="Help" >
+        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
             Help
+          </p>
+        </a>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/templates" title="Templates">
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon transparent" aria-label="Templates"/>
+          <p class="account_nav--item--text">
+            Templates
           </p>
         </router-link>
       </div>
@@ -805,64 +923,50 @@ import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import {deleteEmail, deleteEmailText} from './components/components/email'
+import {deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText} from './components/email'
 
 export default {
   components: {
     InlineSvg,
     Loading
   },
-  data: function () {
+  data () {
     return {
-
-      // BACKGROUND DATA //
-
-      programmes: null,
-      error: '',
-      archive_error: '',
-      archive_posts: {},
-      no_archive: false,
-      posts: null,
+      archive: {
+        clients: {},
+        no_archive: false
+      },
+      clients: null,
+      no_clients: false,
       claims: {
         user_type: 0
       },
       client_details: null,
-      loading_clients: true,
-      loading: false,
-      dontLeave: false,
-      no_clients: false,
-      errorMsg: null,
-
-      // USER DATA //
-
-      authenticated: false,
-
-      // QUILL DATA //
-
-      config: {
-        placeholder: 'Type away...',
-        modules: {
-          clipboard: {
-            matchVisual: false
-          },
-          toolbar: [
-            [{'header': 1}, {'header': 2}, 'bold', 'italic', 'underline', {'script': 'sub'}, {'script': 'super'}, {'list': 'ordered'}, {'list': 'bullet'}, 'link']
-          ]
-        }
+      clientUser: {
+        plans: null
       },
 
-      // PWA //
+      // BACKGROUND DATA //
 
-      deferredPrompt: null,
-      displayMode: 'browser tab',
-      canInstall: false
+      splashed: false,
+      templates: null,
+      errorMsg: null,
+      loading: false,
+      dontLeave: false,
+      authenticated: false,
+      pwa: {
+        deferredPrompt: null,
+        displayMode: 'browser tab',
+        canInstall: false
+      }
     }
   },
-  created () {
+  async created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
+    axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
-  mounted () {
+  async mounted () {
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -904,6 +1008,14 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
+    willBodyScroll (state) {
+      const body = document.getElementsByTagName('body')[0]
+      if (state) {
+        body.style.overflow = 'auto'
+      } else {
+        body.style.overflow = 'hidden'
+      }
+    },
     confirmLeave (e) {
       if (this.dontLeave === true) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
@@ -914,11 +1026,10 @@ export default {
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
     },
-    sortWorkoutsBlock () {
-      this.programmes.forEach((block) => {
-        //eslint-disable-next-line
-        if (block.id == this.$route.params.id) {
-          block.workouts.sort((a, b) => {
+    sortSessionsPlan () {
+      this.clientUser.plans.forEach((plan) => {
+        if (plan.id === parseInt(this.$route.params.id)) {
+          plan.sessions.sort((a, b) => {
             return new Date(a.date) - new Date(b.date)
           })
         }
@@ -955,69 +1066,59 @@ export default {
       } else {
         this.$ga.disable()
       }
-      var d = new Date()
-      var n = d.getTime()
-      if ((!localStorage.getItem('firstLoaded')) || (n > (parseFloat(localStorage.getItem('loadTime')) + 1800000))) {
-        await this.clients()
-        localStorage.setItem('firstLoaded', true)
-        localStorage.setItem('loadTime', n)
-      }
+      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
 
     // CLIENT METHODS //-------------------------------------------------------------------------------
 
     async clients_to_vue () {
-      if (!localStorage.getItem('posts')) {
-        await this.clients()
+      if (!localStorage.getItem('clients')) {
+        await this.clients_f()
       }
-      this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+      this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
         var textA = a.name.toUpperCase()
         var textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
-      this.loading_clients = false
     },
-    async clients () {
-      this.error = false
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+    async clients_f () {
       try {
         const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
         if (response.data.length === 0) {
           this.no_clients = true
         } else {
           this.no_clients = false
-          this.error = false
         }
-        localStorage.setItem('posts', JSON.stringify(response.data))
-        this.loading_clients = false
+        localStorage.setItem('clients', JSON.stringify(response.data))
       } catch (e) {
         this.no_clients = false
-        this.loading_clients = false
-        this.error = e.toString()
+        this.loading = false
+        this.errorMsg = e.toString()
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
       }
     },
     async client_delete (id, index) {
       if (confirm('Are you sure you want to delete this client?')) {
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.archive_posts.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
+        for (var i = 0; i < this.archive.clients.length; i++) {
+          if (this.archive.clients[i].client_id === id) {
+            this.archive.clients.splice(index, 1)
+            if (this.archive.clients.length === 0) {
+              this.archive.no_archive = true
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
           await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'delete')
           this.loading = false
@@ -1025,8 +1126,9 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1036,33 +1138,30 @@ export default {
 
     async archive_to_vue () {
       if (!localStorage.getItem('archive')) {
-        await this.archive()
+        await this.archive_f()
       }
       if (JSON.parse(localStorage.getItem('archive')).length === 0) {
-        this.no_archive = true
+        this.archive.no_archive = true
       } else {
-        this.archive_posts = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
+        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
           var textA = a.name.toUpperCase()
           var textB = b.name.toUpperCase()
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
       }
     },
-    async archive () {
-      this.archive_error = false
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+    async archive_f () {
       try {
         const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
         if (response.data.length === 0) {
-          this.no_archive = true
+          this.archive.no_archive = true
         } else {
-          this.no_archive = false
-          this.archive_error = false
+          this.archive.no_archive = false
         }
         localStorage.setItem('archive', JSON.stringify(response.data))
       } catch (e) {
-        this.no_archive = false
-        this.archive_error = e.toString()
+        this.archive.no_archive = false
+        this.error = e.toString()
       }
     },
     async client_archive (id, index) {
@@ -1070,81 +1169,46 @@ export default {
         let email
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.posts.length; i++) {
-          //eslint-disable-next-line
-          if (this.posts[i].client_id == id) {
-            email = this.posts[i].email
-            this.posts.splice(index, 1)
-            if (this.posts.length === 0) {
+        for (var i = 0; i < this.clients.length; i++) {
+          if (this.clients[i].client_id === id) {
+            email = this.clients[i].email
+            this.clients.splice(index, 1)
+            if (this.clients.length === 0) {
               this.no_clients = true
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
           const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
-          // eslint-disable-next-line
           this.response = response.data
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
           this.$ga.event('Client', 'archive')
 
-          const result = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${email}"&limit=1`,
+          const result = await axios.post('/.netlify/functions/okta',
             {
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': process.env.AUTH_HEADER
-              }
+              type: 'GET',
+              url: `?filter=profile.email+eq+"${email}"&limit=1`
             }
           )
           if (result.data.length >= 1) {
-            await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${result.data[0].id}/lifecycle/suspend`,
-              {},
+            await axios.post('/.netlify/functions/okta',
               {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.AUTH_HEADER
-                }
+                type: 'POST',
+                body: {},
+                url: `${result.data[0].id}/lifecycle/suspend`
               }
             )
-            await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+            await axios.post('/.netlify/functions/send-email',
               {
-                'personalizations': [
-                  {
-                    'to': [
-                      {
-                        'email': email
-                      }
-                    ],
-                    'subject': 'Account Deactivated'
-                  }
-                ],
-                'from': {
-                  'email': 'Train In Blocks <no-reply@traininblocks.com>'
-                },
-                'content': [
-                  {
-                    'type': 'text/plain',
-                    'value': deleteEmailText()
-                  },
-                  {
-                    'type': 'text/html',
-                    'value': deleteEmail()
-                  }
-                ]
-              },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': process.env.SENDGRID
-                }
+                'to': email,
+                'subject': 'Account Deactivated',
+                'text': deleteEmailText(),
+                'html': deleteEmail()
               }
             )
           }
@@ -1154,8 +1218,9 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
@@ -1164,36 +1229,32 @@ export default {
       if (confirm('Are you sure you want to unarchive this client?')) {
         this.loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.archive_posts.length; i++) {
-          //eslint-disable-next-line
-          if (this.archive_posts[i].client_id == id) {
-            var arr = JSON.parse(localStorage.getItem('posts'))
-            arr.push(this.archive_posts[i])
+        for (var i = 0; i < this.archive.clients.length; i++) {
+          if (this.archive.clients[i].client_id === id) {
+            var arr = JSON.parse(localStorage.getItem('clients'))
+            arr.push(this.archive.clients[i])
 
-            localStorage.setItem('posts', JSON.stringify(arr))
-            this.posts = JSON.parse(localStorage.getItem('posts')).sort(function (a, b) {
+            localStorage.setItem('clients', JSON.stringify(arr))
+            this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
               var textA = a.name.toUpperCase()
               var textB = b.name.toUpperCase()
               return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
             })
 
-            this.archive_posts.splice(index, 1)
-            if (this.archive_posts.length === 0) {
-              this.no_archive = true
+            this.archive.clients.splice(index, 1)
+            if (this.archive.clients.length === 0) {
+              this.archive.no_archive = true
             }
           }
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
         try {
-          // eslint-disable-next-line
           const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-          // eslint-disable-next-line
           this.response = response.data
 
-          await this.archive()
+          await this.archive_f()
           this.archive_to_vue()
 
-          await this.clients()
+          await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
           this.loading = false
@@ -1201,67 +1262,64 @@ export default {
         } catch (e) {
           this.loading = false
           this.dontLeave = false
-          this.errorMsg = e
+          this.errorMsg = e.toString()
           this.$modal.show('error')
+          this.willBodyScroll(false)
           console.error(e)
         }
       }
     },
 
-    // DATABSE METHODS //-------------------------------------------------------------------------------
+    // DATABASE METHODS //-------------------------------------------------------------------------------
 
-    async get_programmes () {
+    async get_plans () {
       try {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-        const programmes = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
-        this.programmes = programmes.data
+        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+        this.clientUser.plans = plans.data
         var f
-        for (f in this.programmes) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          // eslint-disable-next-line
-          const response_programmes = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
-
-          this.programmes[f].workouts = response_programmes.data
+        for (f in this.clientUser.plans) {
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
+          this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
-    async get_workouts () {
+    async get_sessions () {
       try {
         var f
-        for (f in this.programmes) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.programmes[f].id}`)
-          this.programmes[f].workouts = response.data
+        for (f in this.clientUser.plans) {
+          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
+          this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
     },
-    async update_workout (pid, wid) {
+    async update_session (pid, sid) {
       this.loading = true
-      // Set auth header
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
-
+      // Set the plan variable to the current plan
       let x
-      // Set the programme variable to the current programme
-      for (x in this.programmes) {
-        //eslint-disable-next-line
-        if (this.programmes[x].id == pid) {
-          var programme = this.programmes[x]
+      for (x in this.clientUser.plans) {
+        if (this.clientUser.plans[x].id === pid) {
+          var plan = this.clientUser.plans[x]
           var y
-          for (y in programme.workouts) {
-            if (programme.workouts[y].id === wid) {
-              var workoutsId = programme.workouts[y].id
-              var workoutsChecked = programme.workouts[y].checked
-              var workoutsFeedback = programme.workouts[y].feedback
+          for (y in plan.sessions) {
+            if (plan.sessions[y].id === sid) {
+              var sessionId = plan.sessions[y].id
+              var sessionName = plan.sessions[y].name
+              var sessionChecked = plan.sessions[y].checked
+              var sessionFeedback = plan.sessions[y].feedback
             }
           }
         }
@@ -1269,21 +1327,55 @@ export default {
       try {
         await axios.post(`https://api.traininblocks.com/client-workouts`,
           {
-            'id': workoutsId,
-            'checked': workoutsChecked,
-            'feedback': workoutsFeedback
+            'id': sessionId,
+            'name': sessionName,
+            'checked': sessionChecked,
+            'feedback': sessionFeedback
           }
         )
-        this.$ga.event('Workout', 'update')
+        this.$ga.event('Session', 'update')
+        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+        if (client.data[0].notifications === 1) {
+          if (sessionFeedback !== null) {
+            const ptEmail = await axios.post('/.netlify/functions/okta',
+              {
+                type: 'GET',
+                url: `?filter=id+eq+"${client.data[0].pt_id}"&limit=1`
+              }
+            )
+            await axios.post('/.netlify/functions/send-email',
+              {
+                'to': ptEmail.data[0].credentials.emails[0].value,
+                'subject': this.claims.email + ' has submitted feedback for ' + sessionName,
+                'text': feedbackEmailText(this.claims.client_id_db, pid),
+                'html': feedbackEmail(this.claims.client_id_db, pid)
+              }
+            )
+          }
+        }
       } catch (e) {
         this.loading = false
-        this.errorMsg = e
+        this.dontLeave = false
+        this.errorMsg = e.toString()
         this.$modal.show('error')
+        this.willBodyScroll(false)
         console.error(e)
       }
-      await this.get_workouts()
-      this.sortWorkoutsBlock()
       this.loading = false
+      this.dontLeave = false
+    },
+    async getTemplates () {
+      try {
+        const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+        this.templates = response.data
+      } catch (e) {
+        this.loading = false
+        this.dontLeave = false
+        this.errorMsg = e
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
+      }
     }
   }
 }

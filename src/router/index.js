@@ -3,20 +3,20 @@ import Router from 'vue-router'
 
 import Auth from '@okta/okta-vue'
 
-import HomeComponent from '@/components/pages/Home'
-import LoginComponent from '@/components/pages/Login'
-import ProfileComponent from '@/components/pages/Account'
-import LogoutComponent from '@/components/pages/Logout'
-import ClientComponent from '@/components/pages/Client'
-import NotFound from '@/components/pages/NotFound'
-import ArchiveComponent from '@/components/pages/Archive'
-import HelpComponent from '@/components/pages/Help'
+import HomeComponent from '@/pages/Home'
+import LoginComponent from '@/pages/Login'
+import ProfileComponent from '@/pages/Account'
+import LogoutComponent from '@/pages/Logout'
+import NotFound from '@/pages/NotFound'
+import ArchiveComponent from '@/pages/Archive'
+import TemplateComponent from '@/pages/Templates'
 
-import ClientBlocks from '@/components/pages/_client/ClientBlocks'
-import ClientWorkouts from '@/components/pages/_client/ClientWorkouts'
+import ClientComponent from '@/pages/_client/Home'
+import ClientPlans from '@/pages/_client/Plans'
+import ClientSessions from '@/pages/_client/Sessions'
 
-import ClientUserComponent from '@/components/pages/clientUser/Home'
-import ClientUserBlocks from '@/components/pages/clientUser/Block'
+import ClientUserComponent from '@/pages/_clientUser/Home'
+import ClientUserPlans from '@/pages/_clientUser/Plans'
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -62,8 +62,8 @@ const router = new Router({
       }
     },
     {
-      path: '/help',
-      component: HelpComponent,
+      path: '/templates',
+      component: TemplateComponent,
       meta: {
         requiresAuth: true,
         requiresTrainer: true
@@ -79,17 +79,17 @@ const router = new Router({
       children: [
         {
           path: '',
-          component: ClientBlocks,
-          name: 'blocks',
+          component: ClientPlans,
+          name: 'plans',
           meta: {
             requiresAuth: true,
             requiresTrainer: true
           }
         },
         {
-          path: 'block/:id',
-          component: ClientWorkouts,
-          name: 'workouts',
+          path: 'plan/:id',
+          component: ClientSessions,
+          name: 'sessions',
           meta: {
             requiresAuth: true,
             requiresTrainer: true
@@ -106,8 +106,8 @@ const router = new Router({
       }
     },
     {
-      path: '/clientUser/block/:id',
-      component: ClientUserBlocks,
+      path: '/clientUser/plan/:id',
+      component: ClientUserPlans,
       meta: {
         requiresAuth: true,
         requiresClient: true
@@ -126,8 +126,8 @@ const router = new Router({
       component: NotFound
     }
   ],
-  scrollBehavior () {
-    document.querySelector('#main').scrollTop = 0
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 0, y: 0 }
   }
 })
 

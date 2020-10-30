@@ -97,12 +97,12 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'okta',
       minChunks (module) {
-        // any required modules inside node_modules are extracted to vendor
+        // any required modules inside node_modules/@okta are extracted to okta
         return (
           module.resource &&
           /\.js$/.test(module.resource) &&
           module.resource.indexOf(
-            path.join(__dirname, '../node_modules/@okta/okta-signin-widget')
+            path.join(__dirname, '../node_modules/@okta')
           ) === 0
         )
       }

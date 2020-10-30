@@ -1,0 +1,16 @@
+<template>
+  <div style="display: grid; place-items: center; height: 100vh">
+    <p style="font-size: 2.5rem">Error 404 Page Not Found</p>
+  </div>
+</template>
+<script>
+export default {
+  created () {
+    this.$parent.loading = true
+    this.$parent.setup()
+    this.$parent.splashed = true
+    this.$parent.willBodyScroll(true)
+    this.$parent.loading = false
+  }
+}
+</script>

@@ -1,6 +1,5 @@
 <style scoped>
   a {
-    font-weight: bold;
     text-decoration: none;
     color: #282828
   }
@@ -22,8 +21,7 @@
       width: 100%;
       padding: 2rem;
       height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden
+      overflow-y: auto
     }
     .cookies {
       margin-left: 0;
@@ -73,7 +71,6 @@
     padding: .6rem 1.6rem;
     font-size: .8rem;
     letter-spacing: .1rem;
-    font-weight: bold;
     color: white;
     background-color: #282828;
     margin: .6rem 0;
@@ -104,7 +101,6 @@
     fill: #282828
   }
   .okta-form-label {
-    font-weight: bold;
     text-align: left;
     letter-spacing: .1rem
   }
@@ -165,10 +161,10 @@
 
 <template>
   <div id="login" v-if="!this.$parent.authenticated">
-    <inline-svg :src="require('../../assets/svg/full-logo.svg')" class="auth-org-logo"/>
+    <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo"/>
     <div id="okta-signin-container"></div>
     <div class="button--container">
-      <form action="https://traininblocks.com/pricing">
+      <form action="https://traininblocks.com">
         <button class="signup" type="submit">Sign Up</button>
       </form>
       <div><button v-if="!open" @click="open = !open">Forgot password?</button></div>
@@ -176,14 +172,14 @@
     <form v-if="open" v-on:submit.prevent="reset" class="recovery">
       <label>
         <p><b>Email:</b></p>
-        <input type="email" v-model="email" class="input--forms" />
+        <input type="email" v-model="email" class="input--forms" autofocus/>
       </label>
       <button type="submit">Send recovery email</button>
     </form>
     <p v-if="success">{{success}}</p>
     <p v-if="error" class="error">{{error}}</p>
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.</p>
-    <p style="font-size: .8rem"><b>Version 1.2</b></p>
+    <p style="font-size: .8rem"><b>Draco 2.0</b></p>
   </div>
 </template>
 
@@ -251,57 +247,25 @@ export default {
       this.$parent.loading = true
       this.$parent.dontLeave = true
       try {
-        const oktaOne = await axios.get(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users?filter=profile.email+eq+"${this.email}"&limit=1`,
+        const oktaOne = await axios.post('/.netlify/functions/okta',
           {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': process.env.AUTH_HEADER
-            }
+            type: 'GET',
+            url: `?filter=profile.email+eq+"${this.email}"&limit=1`
           }
         )
         this.id = oktaOne.data[0].id
-        const response = await axios.post(`https://cors-anywhere.herokuapp.com/${process.env.ISSUER}/api/v1/users/${this.id}/lifecycle/reset_password?sendEmail=false`,
-          {},
+        const response = await axios.post('/.netlify/functions/okta',
           {
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': process.env.AUTH_HEADER
-            }
+            body: {},
+            url: `${this.id}/lifecycle/reset_password?sendEmail=false`
           }
         )
-        await axios.post('https://cors-anywhere.herokuapp.com/https://api.sendgrid.com/v3/mail/send',
+        await axios.post('/.netlify/functions/send-email',
           {
-            'personalizations': [
-              {
-                'to': [
-                  {
-                    'email': this.email
-                  }
-                ],
-                'subject': 'Password Reset'
-              }
-            ],
-            'from': {
-              'email': 'Train In Blocks <no-reply@traininblocks.com>'
-            },
-            'content': [
-              {
-                'type': 'text/plain',
-                'value': passEmailText(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-              },
-              {
-                'type': 'text/html',
-                'value': passEmail(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-              }
-            ]
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': process.env.SENDGRID
-            }
+            'to': this.email,
+            'subject': 'Password Reset',
+            'text': passEmailText(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+            'html': passEmail(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
           }
         )
         this.open = false
@@ -321,7 +285,7 @@ export default {
     this.$ga.event('Auth', 'login')
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
-    await this.$parent.clients()
+    await this.$parent.clients_f()
   },
   destroyed () {
     // Remove the widget from the DOM on path change
