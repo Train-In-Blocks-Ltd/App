@@ -1492,7 +1492,6 @@
               'id': plan.id,
               'name': plan.name,
               'duration': plan.duration,
-              'start': plan.start,
               'notes': plan.notes,
               'block_color': plan.block_color,
               'type': plan.type

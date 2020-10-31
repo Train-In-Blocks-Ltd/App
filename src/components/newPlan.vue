@@ -60,7 +60,6 @@
               'name': this.new_plan.name,
               'client_id': this.$parent.$parent.$parent.client_details.client_id,
               'duration': this.new_plan.duration,
-              'start': this.today(),
               'type': this.new_plan.type,
               'block_color': ''
             }
