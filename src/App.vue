@@ -870,7 +870,7 @@
         </router-link>
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" title="Help" >
+        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" rel="noopener" title="Help" >
           <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
             Help
