@@ -550,7 +550,7 @@
                 <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
                 <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
-                  <p v-if="plan.sessions !== null && !isEditingSession" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
+                  <p v-if="plan.sessions.length !== null && plan.sessions !== false && !isEditingSession" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
                   <!-- New session -->
                   <div class="container--sessions" v-if="!$parent.no_sessions">
                     <!-- Loop through sessions -->

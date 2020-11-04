@@ -62,7 +62,7 @@
     <p class="text--small grey text--loading" v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
-      <input type="search" rel="search" placeholder="Find a client" class="text--small search" autocomplete="name" aria-label="Find a client" v-model="search"/>
+      <input type="search" rel="search" placeholder="Find a client" class="text--small search" aria-label="Find a client" v-model="search"/>
       <p v-if="response !== ''" class="new-msg">{{response}}</p>
       <div class="container--clients">
         <!-- Perform case insensitive search -->

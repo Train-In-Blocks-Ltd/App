@@ -4,11 +4,8 @@
   /* Client Link */
   .client_link svg {
     width: 20px;
-    fill: #28282890;
+    fill: #282828;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:hover svg {
-    fill: #282828
   }
   .client_link__details {
     display: grid;
@@ -19,14 +16,11 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
     margin: auto 0;
-    color: #28282890;
+    color: #282828;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link__details img, .client_link__details iframe {
     border-radius: 3px
-  }
-  .client_link:hover .client_link__details p, .client_link:hover .name {
-    color: #282828
   }
   .client_link.archived .client_link__details p, .client_link.archived .name {
     color: #282828
