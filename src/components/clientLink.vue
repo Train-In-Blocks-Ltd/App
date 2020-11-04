@@ -41,6 +41,11 @@
       flex-direction: column
     }
   }
+  @media (max-width: 768px) {
+    .client_link:hover svg {
+      fill: #28282890
+    }
+  }
 </style>
 
 <template>

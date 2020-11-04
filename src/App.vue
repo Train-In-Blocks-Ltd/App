@@ -241,9 +241,6 @@
   p {
     margin: 0
   }
-  svg path:not(.account_nav--item--icon.transparent) {
-    fill: #282828
-  }
   .account_nav--item--icon.transparent path {
     stroke: #282828
   }
