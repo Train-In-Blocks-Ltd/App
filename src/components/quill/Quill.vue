@@ -5,11 +5,11 @@
   .ui.attached.segment.ql-container.ql-snow {
     border: none
   }
-  .ql-toolbar.ql-snow {
+  div.ql-toolbar.ql-snow {
     padding: 0;
     border: none
   }
-  .ql-toolbar.ql-snow button {
+  div.ql-toolbar.ql-snow button {
     padding-left: 0
   }
   .ql-editor {
@@ -36,7 +36,7 @@
     left: 0
   }
   @media (max-width: 768px) {
-    .ql-toolbar.ql-snow {
+    div.ql-toolbar.ql-snow {
       border: none;
       padding: .4rem .6rem .4rem .6rem;
       position: fixed;
@@ -46,7 +46,7 @@
       background-color: #F4F4F4;
       z-index: 2
     }
-    .ql-toolbar.ql-snow .ql-formats {
+    div.ql-toolbar.ql-snow .ql-formats {
       display: grid;
       margin: 0
     }

@@ -387,7 +387,6 @@
   }
   #button-done, #button-to-do {
     color: white;
-    height: 2rem;
     margin: auto 0
   }
   #button-done:hover, #button-to-do:hover {
@@ -644,16 +643,16 @@
     border-radius: 3px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
+  .client_link:hover, .plan_link:hover {
+    box-shadow: 0 0 20px 10px #28282820
+  }
   .client_link__notes__content, .plan_link__notes__content {
     font-size: .8rem;
     margin-top: .4rem
   }
   .client_link__notes__content *, .plan_link__notes__content *, .plan-name {
-    color: #28282890;
+    color: #282828;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .client_link:hover .client_link__notes__content *, .plan_link:hover .plan_link__notes__content *, .plan_link:hover .plan-name {
-    color: #282828
   }
   .client_link__notes__content p, .plan_link__notes__content p {
     margin: .4rem 0
@@ -666,6 +665,7 @@
   }
   .client_link__notes__content img, .plan_link img, .client_link__notes__content iframe, .plan_link iframe {
     margin: 1rem 0;
+    max-width: 500px;
     border-radius: 3px;
     opacity: .6;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -721,6 +721,12 @@
     }
     .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img {
       max-width: 100%
+    }
+    .client_link:hover, .plan_link:hover {
+      box-shadow: 0 0 20px 10px #28282810
+    }
+    .client_link:active, .plan_link:active {
+      transform: scale(.99)
     }
     .client_link__notes__content img, .plan_link img {
       max-width: 100%
