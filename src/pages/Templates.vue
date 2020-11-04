@@ -26,7 +26,8 @@
     vertical-align: middle;
     height: 1.4rem;
     width: 1.4rem;
-    cursor: pointer
+    cursor: pointer;
+    --moz-transform: scale(1.5)
   }
   .text--selected {
     font-size: .8rem
