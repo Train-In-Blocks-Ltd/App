@@ -976,7 +976,7 @@ export default {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
       // Stash the event so it can be triggered later.
-      self.deferredPrompt = e
+      self.pwa.deferredPrompt = e
       // Update UI notify the user they can install the PWA
       this.pwa.canInstall = true
     })
