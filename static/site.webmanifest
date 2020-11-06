@@ -59,12 +59,12 @@
     ],
     "shortcuts": [
         {
-          "name": "Get Help",
-          "url": "/help?utm_source=native"
-        },
-        {
           "name": "Manage Account",
           "url": "/account?utm_source=native"
         }
-      ]
+    ],
+    "related_applications": [{
+        "platform": "webapp",
+        "url": "https://app.traininblocks.com/site.webmanifest"
+    }]
 }

@@ -50,7 +50,7 @@
       <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New"/>
       <p class="text">What's New</p>
     </div>
-    <div class="icon--open-install-pwa" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
+    <div class="icon--open-install-pwa" v-if="!isInstallOpen" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App"/>
       <p class="text">Install</p>
     </div>
