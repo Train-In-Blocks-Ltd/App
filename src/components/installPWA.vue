@@ -9,20 +9,20 @@
 
 <template>
   <div>
-    <div v-if="pwa.displayMode === 'browser tab' && $parent.$parent.pwaCanInstall === true && pwa.installed === false">
+    <div v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true && $parent.$parent.pwa.installed === false">
       <p class="text--large">Install the app</p>
       <p class="text--large grey">Available for desktops and mobiles</p>
       <button @click="$parent.$parent.installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
         Install
       </button>
     </div>
-    <div v-else-if="pwa.displayMode === 'browser tab' && $parent.$parent.pwaCanInstall === true && pwa.installed === true">
+    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true && $parent.$parent.pwa.installed === true">
       <p class="text--large">You have the app installed already...</p>
       <button @click="$parent.$parent.installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
         Launch
       </button>
     </div>
-    <div v-else-if="pwa.displayMode === 'browser tab' && $parent.$parent.pwaCanInstall === false && pwa.installed === false">
+    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false && $parent.$parent.pwa.installed === false">
       <p class="text--large">Your device doesn't support Progressive Web Apps</p>
     </div>
     <div v-else>
@@ -34,27 +34,18 @@
 
 <script>
   export default {
-    data () {
-      return {
-        pwa: {
-          deferredPrompt: null,
-          displayMode: 'browser tab',
-          installed: false
-        }
-      }
-    },
     mounted () {
       if (navigator.standalone) {
-        this.pwa.displayMode = 'standalone-ios'
+        this.$parent.$parent.pwa.displayMode = 'standalone-ios'
       }
       if (window.matchMedia('(display-mode: standalone)').matches) {
-        this.pwa.displayMode = 'standalone'
+        this.$parent.$parent.pwa.displayMode = 'standalone'
       }
       if ('getInstalledRelatedApps' in navigator) {
         const self = this
         navigator.getInstalledRelatedApps().then((relatedApps) => {
           if (relatedApps.length > 0) {
-            self.pwa.installed = true
+            self.$parent.$parent.pwa.installed = true
           }
         })
       }
