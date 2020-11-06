@@ -983,7 +983,12 @@ export default {
       loading: false,
       dontLeave: false,
       authenticated: false,
-      pwaCanInstall: false
+      pwa: {
+        deferredPrompt: null,
+        displayMode: 'browser tab',
+        canInstall: false,
+        installed: false
+      }
     }
   },
   async created () {
@@ -997,9 +1002,9 @@ export default {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
       // Stash the event so it can be triggered later.
-      self.deferredPrompt = e
+      self.pwa.deferredPrompt = e
       // Update UI notify the user they can install the PWA
-      this.pwaCanInstall = true
+      this.pwa.canInstall = true
     })
   },
   watch: {
