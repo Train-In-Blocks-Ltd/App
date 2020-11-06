@@ -53,7 +53,7 @@
     methods: {
       installPWA () {
         // Hide the app provided install promotion
-        this.$parent.$parent.pwaCanInstall = false
+        this.$parent.$parent.pwa.canInstall = false
         // Show the install prompt
         this.deferredPrompt.prompt()
         // Wait for the user to respond to the prompt
