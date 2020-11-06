@@ -956,13 +956,25 @@ export default {
       errorMsg: null,
       loading: false,
       dontLeave: false,
-      authenticated: false
+      authenticated: false,
+      pwaCanInstall: false
     }
   },
   async created () {
     this.isAuthenticated()
     window.addEventListener('beforeunload', this.confirmLeave)
     axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+  },
+  mounted () {
+    const self = this
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault()
+      // Stash the event so it can be triggered later.
+      self.deferredPrompt = e
+      // Update UI notify the user they can install the PWA
+      this.pwaCanInstall = true
+    })
   },
   watch: {
     // Everytime the route changes, check for auth status
