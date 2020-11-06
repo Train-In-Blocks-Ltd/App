@@ -16,7 +16,7 @@
         Install
       </button>
     </div>
-    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true && $parent.$parent.pwa.installed === true">
+    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false && $parent.$parent.pwa.installed === true">
       <p class="text--large">You have the app installed already...</p>
       <button @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
         Launch
@@ -34,7 +34,7 @@
 
 <script>
   export default {
-    mounted () {
+    async mounted () {
       if (navigator.standalone) {
         this.$parent.$parent.pwa.displayMode = 'standalone-ios'
       }
@@ -43,11 +43,10 @@
       }
       if ('getInstalledRelatedApps' in navigator) {
         const self = this
-        navigator.getInstalledRelatedApps().then((relatedApps) => {
-          if (relatedApps.length > 0) {
-            self.$parent.$parent.pwa.installed = true
-          }
-        })
+        const relatedApps = await navigator.getInstalledRelatedApps()
+        if (relatedApps.length > 0) {
+          self.$parent.$parent.pwa.installed = true
+        }
       }
     },
     methods: {
