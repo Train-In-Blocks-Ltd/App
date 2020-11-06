@@ -12,13 +12,13 @@
     <div v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true && $parent.$parent.pwa.installed === false">
       <p class="text--large">Install the app</p>
       <p class="text--large grey">Available for desktops and mobiles</p>
-      <button @click="$parent.$parent.installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
+      <button @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
         Install
       </button>
     </div>
     <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true && $parent.$parent.pwa.installed === true">
       <p class="text--large">You have the app installed already...</p>
-      <button @click="$parent.$parent.installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
+      <button @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
         Launch
       </button>
     </div>
