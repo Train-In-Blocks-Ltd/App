@@ -55,14 +55,14 @@
         // Hide the app provided install promotion
         this.$parent.$parent.pwa.canInstall = false
         // Show the install prompt
-        this.deferredPrompt.prompt()
+        this.$parent.$parent.pwa.deferredPrompt.prompt()
         // Wait for the user to respond to the prompt
-        this.deferredPrompt.userChoice.then((choiceResult) => {
+        this.$parent.$parent.pwa.deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
             console.log('User accepted the install prompt')
           } else {
             console.log('User dismissed the install prompt')
-            this.$parent.$parent.pwaCanInstall = true
+            this.$parent.$parent.pwa.canInstall = true
           }
         })
       }
