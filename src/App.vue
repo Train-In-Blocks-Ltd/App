@@ -564,7 +564,7 @@
   }
 
   /* GLOBAL: EXTRA OPTIONS */
-  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new, .icon--open-new-plan {
+  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new, .icon--open-new-plan, .icon--open-print {
     user-select: none;
     z-index: 2;
     display: flex;
@@ -581,10 +581,10 @@
   div.icon--open-stats, div.icon--open-whats-new, .icon--open-new-plan {
     top: 4.4rem
   }
-  div.icon--open-install-pwa {
+  div.icon--open-install-pwa, div.icon--open-print {
     top: 6.8rem
   }
-  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install-pwa:hover {
+  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install-pwa:hover, div.icon--open-print:hover {
     width: 6rem;
     justify-content: center;
     text-align: center
@@ -594,16 +594,16 @@
     justify-content: center;
     text-align: center
   }
-  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg, .icon--open-new-plan:hover svg {
+  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg, .icon--open-new-plan:hover svg, .icon--open-print:hover svg {
     display: none
   }
-  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text, .icon--open-new-plan .text {
+  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text, .icon--open-new-plan .text, .icon--open-print .text {
     font-size: .8rem;
     display: none;
     white-space: nowrap;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text, .icon--open-new-plan:hover .text {
+  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text, .icon--open-new-plan:hover .text, .icon--open-print:hover .text {
     display: block
   }
 
@@ -851,6 +851,23 @@
     }
     .animate, .animate.animate__faster {
       animation: none
+    }
+  }
+
+  /* PRINT MEDIA */
+  @media print {
+    .sidebar, .wrapper--floating_nav, .icon--open-stats, .icon--open-print, .wrapper--progress-bar, a, button, input[type="checkbox"], input[type="color"], svg, .expand-all, .plan_table, video, iframe {
+      display: none
+    }
+    #client .client_info input:not([type='submit']) {
+      border: none;
+      padding: 0
+    }
+    .fc-view-container {
+      width: 100vw
+    }
+    .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
+      width: 100vw
     }
   }
 </style>

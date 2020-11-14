@@ -416,9 +416,13 @@
             </div>
         </div>
       </modal>
-      <div class="icon--open-stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
-        <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
+      <div class="icon--open-stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Statistics">
+        <inline-svg :src="require('../../assets/svg/stats.svg')"/>
         <p class="text">Statistics</p>
+      </div>
+      <div class="icon--open-print" v-if="!isStatsOpen && $parent.showOptions === false" @click="printPage()" aria-label="Print">
+        <inline-svg :src="require('../../assets/svg/print.svg')"/>
+        <p class="text">Print</p>
       </div>
       <div>
         <div :class="{openedSections: isStatsOpen}" class="section--a" />
@@ -795,6 +799,10 @@
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
+      async printPage () {
+        await this.expandAll('Expand')
+        window.print()
+      },
       shiftAcross () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
@@ -855,6 +863,7 @@
       },
 
       // SESSION METHODS //-------------------------------------------------------------------------------
+
       bulkChecked (state) {
         function checkedState (dataIn) {
           if (dataIn === 1) {
