@@ -22,9 +22,10 @@
     </div>
     <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false /*&& $parent.$parent.pwa.installed === true*/">
       <p class="text--large">We can't detect if you have the app installed. Try launching the app, or continue using it in the browser.</p>
-      <button @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
+      <a href="https://app.traininblocks.com" target="_blank">
+      <button>
         Launch
-      </button>
+      </button></a>
       <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
     </div>
     <!--
