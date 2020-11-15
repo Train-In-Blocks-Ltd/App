@@ -631,6 +631,32 @@
     margin: 0
   }
 
+  /* GLOBAL: SELECT */
+  .multi-select {
+    display: grid;
+    grid-gap: .4rem;
+    position: fixed;
+    top: 0;
+    right: 0;
+    text-align: right;
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282810;
+    width: 100%;
+    z-index: 9;
+    padding: 2rem
+  }
+  .multi-select a, .a--preview-template {
+    color: #282828;
+    text-decoration: none;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .multi-select a:hover, .a--preview-template {
+    opacity: .6
+  }
+  .text--selected {
+    font-size: .8rem
+  }
+
   /* GLOBAL: LINK CONTAINERS */
   .client_link, .plan_link {
     display: grid;
@@ -1082,36 +1108,34 @@ export default {
       }
     },
     async client_delete (id, index) {
-      if (confirm('Are you sure you want to delete this client?')) {
-        this.loading = true
-        this.dontLeave = true
-        for (var i = 0; i < this.archive.clients.length; i++) {
-          if (this.archive.clients[i].client_id === id) {
-            this.archive.clients.splice(index, 1)
-            if (this.archive.clients.length === 0) {
-              this.archive.no_archive = true
-            }
+      this.loading = true
+      this.dontLeave = true
+      for (var i = 0; i < this.archive.clients.length; i++) {
+        if (this.archive.clients[i].client_id === id) {
+          this.archive.clients.splice(index, 1)
+          if (this.archive.clients.length === 0) {
+            this.archive.no_archive = true
           }
         }
-        try {
-          await axios.delete(`https://api.traininblocks.com/clients/${id}`)
+      }
+      try {
+        await axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
-          await this.archive_f()
-          this.archive_to_vue()
+        await this.archive_f()
+        this.archive_to_vue()
 
-          await this.clients_f()
-          this.clients_to_vue()
-          this.$ga.event('Client', 'delete')
-          this.loading = false
-          this.dontLeave = false
-        } catch (e) {
-          this.loading = false
-          this.dontLeave = false
-          this.errorMsg = e.toString()
-          this.$modal.show('error')
-          this.willBodyScroll(false)
-          console.error(e)
-        }
+        await this.clients_f()
+        this.clients_to_vue()
+        this.$ga.event('Client', 'delete')
+        this.loading = false
+        this.dontLeave = false
+      } catch (e) {
+        this.loading = false
+        this.dontLeave = false
+        this.errorMsg = e.toString()
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
       }
     },
 

@@ -1,36 +1,8 @@
 <style scoped>
-
-  /* Select */
-  .multi-select {
-    display: grid;
-    grid-gap: .4rem;
-    position: fixed;
-    top: 0;
-    right: 0;
-    text-align: right;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282810;
-    width: 100%;
-    z-index: 9;
-    padding: 2rem
-  }
-  .multi-select a {
-    color: #282828;
-    text-decoration: none;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .multi-select a:hover {
-    opacity: .6
-  }
   .select-checkbox {
     vertical-align: middle;
-    height: 1.4rem;
-    width: 1.4rem;
-    cursor: pointer;
-    --moz-transform: scale(1.5)
-  }
-  .text--selected {
-    font-size: .8rem
+    transform: scale(1.5);
+    cursor: pointer
   }
   .expand-all {
     text-align: right;
@@ -222,7 +194,7 @@
       },
       deleteMultiTemplates () {
         if (this.selectedTemplates.length !== 0) {
-          if (confirm('Are you sure you want to delete all the selected template?')) {
+          if (confirm('Are you sure you want to delete all the selected templates?')) {
             this.selectedTemplates.forEach((templateId) => {
               this.delete_template(templateId)
             })

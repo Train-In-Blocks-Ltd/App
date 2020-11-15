@@ -25,7 +25,13 @@
 
 <template>
   <div id="archive">
-    <p class="text--large">Archive</p>
+    <div class="multi-select" v-if="selectedClients.length !== 0">
+      <p class="text--selected">
+        <b>Selected {{selectedClients.length}} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
+      </p>
+      <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiClients()">Delete</a>
+    </div>
+    <p class="text--large">Archive</p><br>
     <p class="text--small grey" v-if="this.$parent.archive.no_archive">No clients are archived :)</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <input v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients" type="search" aria-label="search by name" rel="search" placeholder="Name" class="search text--small" autocomplete="name" v-model="search"/>
@@ -62,7 +68,9 @@
     },
     data () {
       return {
-        search: ''
+        search: '',
+        selectedClients: [],
+        selectedClientsIndex: []
       }
     },
     async created () {
@@ -72,6 +80,31 @@
       this.$parent.splashed = true
       this.$parent.willBodyScroll(true)
       this.$parent.loading = false
+    },
+    methods: {
+      changeSelectCheckbox (id, index) {
+        if (this.selectedClients.includes(id) === false) {
+          this.selectedClients.push(id)
+          this.selectedClientsIndex.push(index)
+        } else {
+          var idx1 = this.selectedClients.indexOf(id)
+          this.selectedClients.splice(idx1, 1)
+          var idx2 = this.selectedClientsIndex.indexOf(index)
+          this.selectedClientsIndex.splice(idx2, 1)
+        }
+      },
+      deleteMultiClients () {
+        if (this.selectedClients.length !== 0) {
+          if (confirm('Are you sure you want to delete all the selected clients?')) {
+            this.selectedClients.forEach((clientId) => {
+              var idx = this.selectedClients.indexOf(clientId)
+              this.$parent.client_delete(clientId, idx)
+            })
+            this.selectedClients.length = 0
+            this.selectedClientsIndex.length = 0
+          }
+        }
+      }
     }
   }
 </script>

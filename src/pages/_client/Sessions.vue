@@ -44,27 +44,6 @@
     font-size: 1rem;
     margin-left: 1rem
   }
-  .multi-select {
-    display: grid;
-    grid-gap: .4rem;
-    position: fixed;
-    top: 0;
-    right: 0;
-    text-align: right;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282810;
-    width: 100%;
-    z-index: 9;
-    padding: 2rem
-  }
-  .multi-select a, .a--preview-template {
-    color: #282828;
-    text-decoration: none;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .multi-select a:hover, .a--preview-template:hover {
-    opacity: .6
-  }
   .floating_nav__icon {
     cursor: pointer
   }
@@ -230,10 +209,8 @@
   }
   .select-checkbox {
     vertical-align: middle;
-    height: 1.4rem;
-    width: 1.4rem;
-    cursor: pointer;
-    --moz-transform: scale(1.5)
+    transform: scale(1.5);
+    cursor: pointer
   }
   .container--sessions {
     display: grid;
