@@ -1,7 +1,6 @@
-const key = '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'
 const axios = require('axios')
 const qs = require('querystring')
-const sendgrid = require('@sendgrid/mail')
+const smtpTransport = require('nodemailer-smtp-transport')
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -12,6 +11,17 @@ const headers = {
   'Referrer-Policy': 'no-referrer',
   'Content-Security-Policy': 'default-src "self"'
 }
+// setup nodemailer
+const nodemailer = require('nodemailer')
+let transporter = nodemailer.createTransport(smtpTransport({
+  service: 'gmail',
+  host: 'smtp-relay.gmail.com',
+  secure: true,
+  auth: {
+    user: 'joe.bailey@traininblocks.com',
+    pass: 'Bagheera26'
+  }
+}))
 
 exports.handler = async function handler (event, context, callback) {
   const accessToken = event.headers.authorization.split(' ')
@@ -36,15 +46,15 @@ exports.handler = async function handler (event, context, callback) {
   } else if (event.body && response.data.active === true) {
     try {
       var data = JSON.parse(event.body)
-      sendgrid.setApiKey(key)
-      const msg = {
-        to: data.to,
-        from: 'Train In Blocks <no-reply@traininblocks.com>',
-        subject: data.subject,
+      // options
+      const mailOptions = {
+        from: 'Train In Blocks <hello@traininblocks.com>',
+        to: data.to,                   // from req.body.to
+        subject: data.subject,         // from req.body.subject
         text: data.text,
-        html: data.html
+        html: data.html         // from req.body.message
       }
-      await sendgrid.send(msg)
+      await transporter.sendMail(mailOptions)
       return callback(null, {
         statusCode: 200,
         headers: headers,
