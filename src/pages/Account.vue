@@ -121,7 +121,7 @@
         </div>
       </div>
     </form><br><br>
-    <p style="font-size: .8rem"><b>Draco 2.0</b></p>
+    <p style="font-size: .8rem"><b>Draco 2.1</b></p>
   </div>
 </template>
 

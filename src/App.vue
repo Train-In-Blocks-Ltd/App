@@ -1,4 +1,5 @@
 <style>
+  @import './assets/styles/icon-anim';
   /* Global */
   * {
     box-sizing: border-box
@@ -240,9 +241,6 @@
   }
   p {
     margin: 0
-  }
-  .account_nav--item--icon.transparent path {
-    stroke: #282828
   }
   .allow-text-overflow {
     text-overflow: ellipsis
@@ -917,7 +915,7 @@
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" rel="noopener" title="Help" >
-          <inline-svg :src="require('./assets/svg/help.svg')"  class="account_nav--item--icon" aria-label="Help"/>
+          <inline-svg :src="require('./assets/svg/help-desk.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
             Help
           </p>
@@ -933,7 +931,7 @@
       </div>
       <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
         <router-link to="/archive" title="Archive">
-          <inline-svg :src="require('./assets/svg/archive-large.svg')" class="account_nav--item--icon" aria-label="Archive"/>
+          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav--item--icon" aria-label="Archive"/>
           <p class="account_nav--item--text">
             Archive
           </p>
