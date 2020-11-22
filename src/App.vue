@@ -924,7 +924,7 @@
       </div>
       <div class="account_nav--item">
         <router-link to="/templates" title="Templates">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon transparent" aria-label="Templates"/>
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon" aria-label="Templates"/>
           <p class="account_nav--item--text">
             Templates
           </p>
@@ -932,7 +932,7 @@
       </div>
       <div class="account_nav--item">
         <router-link to="/portfolio" title="Portfolio">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon transparent" aria-label="Templates"/>
+          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav--item--icon" aria-label="Portfolio"/>
           <p class="account_nav--item--text">
             Portfolio
           </p>

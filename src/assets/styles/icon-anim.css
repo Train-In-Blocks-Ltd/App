@@ -1,4 +1,10 @@
-#logout__arrow, #archive__t, #template__t, #help-desk__bookmark, #home__house {
+#logout__arrow,
+#archive__t,
+#template__t,
+#help-desk__bookmark,
+#home__house,
+#portfolio_pen,
+#portfolio_case {
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
 }
 
@@ -20,6 +26,14 @@
 /* Template */
 .account_nav--item:hover #template__t {
   transform: translateY(4px)
+}
+
+/* Portfolio */
+.account_nav--item:hover #portfolio_pen {
+  transform: translateX(4px)
+}
+.account_nav--item:hover #portfolio_case {
+  transform: translateX(-2px)
 }
 
 /* Archive */
@@ -49,7 +63,13 @@
 /* Reduced motion */
 
 @media (prefers-reduced-motion: reduce) {
-  #logout__arrow, #archive__t, #template__t, #help-desk__bookmark, #home__house {
+  #logout__arrow,
+  #archive__t,
+  #template__t,
+  #help-desk__bookmark,
+  #home__house,
+  #portfolio_pen,
+  #portfolio_case {
     transition: none
   }
 }
@@ -86,8 +106,10 @@
     animation: none
   }
 
-  /* Logout */
-  .account_nav--item:hover #logout__arrow {
+  /* Logout  and Portfolio*/
+  .account_nav--item:hover #logout__arrow,
+  .account_nav--item:hover #portfolio_pen,
+  .account_nav--item:hover #portfolio_case {
     transform: translateX(0)
   }
 }
