@@ -25,12 +25,14 @@
 
 <template>
   <div id="archive">
-    <div class="multi-select" v-if="selectedClients.length !== 0">
-      <p class="text--selected">
-        <b>Selected {{selectedClients.length}} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
-      </p>
-      <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiClients()">Delete</a>
-    </div>
+    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+      <div class="multi-select" v-if="selectedClients.length !== 0">
+        <p class="text--selected">
+          <b>Selected {{selectedClients.length}} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
+        </p>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiClients()">Delete</a>
+      </div>
+    </transition>
     <p class="text--large">Archive</p><br>
     <p class="text--small grey" v-if="this.$parent.archive.no_archive">No clients are archived :)</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>

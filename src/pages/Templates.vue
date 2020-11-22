@@ -1,9 +1,4 @@
 <style scoped>
-  .select-checkbox {
-    vertical-align: middle;
-    transform: scale(1.5);
-    cursor: pointer
-  }
   .expand-all {
     text-align: right;
     margin: 2rem 0;
@@ -129,7 +124,7 @@
             <input v-if="template.id === editTemplate" class="template-name" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
           </div>
           <div class="header-options">
-            <input name="select-checkbox" :id="'sc-' + template.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(template.id)" aria-label="Select this template">
+            <checkbox :itemId="template.id" :type="'v1'" aria-label="Select this template" />
             <inline-svg id="expand" class="icon--expand" v-show="!isEditingTemplate" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
           </div>
         </div>
@@ -151,10 +146,12 @@
 <script>
   import InlineSvg from 'vue-inline-svg'
   import axios from 'axios'
+  import Checkbox from '../components/Checkbox'
 
   export default {
     components: {
-      InlineSvg
+      InlineSvg,
+      Checkbox
     },
     data () {
       return {

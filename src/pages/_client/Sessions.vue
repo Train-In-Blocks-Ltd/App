@@ -207,11 +207,6 @@
     flex-direction: column;
     align-items: center
   }
-  .select-checkbox {
-    vertical-align: middle;
-    transform: scale(1.5);
-    cursor: pointer
-  }
   .container--sessions {
     display: grid;
     grid-gap: 4rem
@@ -548,7 +543,7 @@
                           <span @click="session.checked = toggleComplete(session.checked)" v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked">{{isCompleted(session.checked)}}</span>
                         </div>
                         <div class="header-options">
-                          <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
+                          <checkbox :itemId="session.id" :type="'v1'" aria-label="Select this session" />
                           <inline-svg id="expand" class="icon--expand" v-show="!isEditingSession" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
@@ -664,6 +659,7 @@
   import axios from 'axios'
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
+  import Checkbox from '../../components/Checkbox'
 
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
@@ -674,7 +670,8 @@
     components: {
       LineChart,
       InlineSvg,
-      FullCalendar
+      FullCalendar,
+      Checkbox
     },
     data () {
       return {
@@ -796,6 +793,10 @@
       this.setListenerForEditor(false)
     },
     methods: {
+
+      test (value) {
+        console.log(value)
+      },
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
