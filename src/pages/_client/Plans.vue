@@ -90,7 +90,7 @@
         >
           What goals does your client have? What physical measures have you taken?
         </p>
-        <div v-if="editClientNotes" class="bottom-bar">
+        <div v-if="editClientNotes" class="bottom_bar">
           <div>
             <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
             <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>

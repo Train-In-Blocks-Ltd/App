@@ -52,7 +52,7 @@
               </div>
             </div>
             <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
-            <div class="bottom-bar">
+            <div class="bottom_bar">
               <div class="full-width-bar" :key="check">
                 <button v-if="session.checked === 1" @click="complete(plan.id, session.id)" id="button-done" class="button--state">Completed</button>
                 <button v-if="session.checked === 0" @click="complete(plan.id, session.id)" id="button-to-do" class="button--state">Click to complete</button>

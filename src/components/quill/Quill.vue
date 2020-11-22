@@ -6,8 +6,14 @@
     border: none
   }
   div.ql-toolbar.ql-snow {
-    padding: 0;
-    border: none
+    position: sticky;
+    top: 0;
+    border: none;
+    border-bottom: 1px solid #28282820;
+    background-color: white;
+    padding: 1rem 0;
+    z-index: 1
+    
   }
   div.ql-toolbar.ql-snow button {
     padding-left: 0

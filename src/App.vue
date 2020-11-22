@@ -10,7 +10,7 @@
     --animate-repeat: 1
   }
 
-  /* GLOBAL: ANIMATIONS */
+  /* ANIMATIONS */
   .animate {
     animation-duration: 1s;
     animation-duration: var(--animate-duration);
@@ -71,7 +71,7 @@
     z-index: 4
   }
 
-  /* GLOBAL: SPLASH */
+  /* SPLASH */
   #splash {
     height: 100%;
     width: 100%;
@@ -134,7 +134,7 @@
     }
   }
 
-  /* GLOBAL: ELEMENTS */
+  /* ELEMENTS */
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -157,8 +157,8 @@
     margin: 0
   }
 
-  /* GLOBAL: CONTAINERS */
-  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
+  /* CONTAINERS */
+  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
     padding: 2rem 10vw
   }
   .flex {
@@ -196,7 +196,7 @@
     overflow-y: auto
   }
 
-  /* GLOBAL: MODALS */
+  /* MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--alert, .modal--preview-template {
     padding: 2rem;
     display: flex;
@@ -207,19 +207,19 @@
     left: 0!important;
     min-width: 100%
   }
-  .modal--bottom-bar {
+  .modal--bottom_bar {
     display: flex
   }
-  .modal--bottom-bar button {
+  .modal--bottom_bar button {
     margin-right: .6rem
   }
 
-  /* GLOBAL: SVG */
+  /* SVG */
   .title-icon {
     margin: auto .6rem auto 0
   }
 
-  /* GLOBAL: FONTS */
+  /* FONTS */
   .text--large {
     margin-top: 0;
     font-size: 2.6rem;
@@ -242,7 +242,7 @@
   p {
     margin: 0
   }
-  .allow-text-overflow {
+  .allow_text_overflow {
     text-overflow: ellipsis
   }
   .text--error {
@@ -262,7 +262,7 @@
     margin: 1rem 0
   }
 
-  /* GLOBAL: BUTTONS */
+  /* BUTTONS */
   button {
     height: fit-content;
     width: fit-content;
@@ -307,7 +307,7 @@
     background-color: #282828
   }
 
-  /* GLOBAL: SEARCH */
+  /* SEARCH */
   .search {
     border: none;
     outline-width: 0;
@@ -327,7 +327,7 @@
     opacity: 1
   }
 
-  /* GLOBAL: CALENDAR */
+  /* CALENDAR */
   div.fc-toolbar h2 {
     font-weight: lighter;
     font-size: 1.6rem
@@ -359,7 +359,7 @@
     font-size: .8rem
   }
 
-  /* GLOBAL: SESSIONS AND NOTES */
+  /* QUILL WRAPPERS */
   .wrapper--session__header {
     height: 6.4rem
   }
@@ -370,12 +370,13 @@
   .text--date, .text--checked {
     font-size: .8rem
   }
-  .bottom-bar {
+  .bottom_bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: .6rem 0;
-    margin-top: 1rem
+    margin-top: 1rem;
+    z-index: 1
   }
   #button-done {
     background-color: green
@@ -391,7 +392,7 @@
     opacity: .6
   }
 
-  /* GLOBAL: SHOW AND NOTES */
+  /* SHOW AND NOTES */
   .show-session, .show-plan-notes, .show-client-notes, .show-template {
     outline-width: 0;
     overflow-wrap: break-word;
@@ -418,13 +419,13 @@
     height: 3.2rem
   }
 
-  /* GLOBAL: RM IOS CORNERS */
+  /* RM IOS CORNERS */
   input:not([type=checkbox]) {
     border-radius: 0;
     -webkit-appearance: none
   }
 
-  /* GLOBAL: INPUTS */
+  /* INPUTS */
   .input--modal {
     width: 4rem
   }
@@ -452,7 +453,7 @@
     opacity: 1; /* Firefox */
   }
 
-  /* GLOBAL: FORMS */
+  /* FORMS */
   .form_grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -471,7 +472,7 @@
     max-width: 500px
   }
 
-  /* GLOBAL: LOGO */
+  /* LOGO */
   .logo {
     margin-bottom: auto
   }
@@ -494,7 +495,7 @@
     transform: scale(.9)
   }
 
-  /* GLOBAL: NAV */
+  /* NAV */
   .skip-to-content-link {
     height: 30px;
     left: 50%;
@@ -561,7 +562,7 @@
     fill: #282828
   }
 
-  /* GLOBAL: EXTRA OPTIONS */
+  /* EXTRA OPTIONS */
   .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new, .icon--open-new-plan, .icon--open-print {
     user-select: none;
     z-index: 2;
@@ -605,7 +606,7 @@
     display: block
   }
 
-  /* GLOBAL: SCROLLBAR */
+  /* SCROLLBAR */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px
@@ -629,7 +630,7 @@
     margin: 0
   }
 
-  /* GLOBAL: SELECT */
+  /* SELECT */
   .multi-select {
     display: grid;
     grid-gap: .4rem;
@@ -655,7 +656,7 @@
     font-size: .8rem
   }
 
-  /* GLOBAL: LINK CONTAINERS */
+  /* LINK CONTAINERS */
   .client_link, .plan_link {
     display: grid;
     padding: 2rem;
@@ -698,7 +699,7 @@
     opacity: 1
   }
 
-  /* GLOBAL: CLIENT-SIDE */
+  /* CLIENT-SIDE */
   .container--session-control {
     display: flex;
     justify-content: space-between
@@ -710,7 +711,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
       padding: 4rem 10vw
     }
     button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -777,7 +778,7 @@
     main {
       margin: 0
     }
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
@@ -833,7 +834,7 @@
     }
   }
 
-  /* GLOBAL: REDUCED MOTION */
+  /* REDUCED MOTION */
   @media (prefers-reduced-motion: reduce) {
     button:active, .button:active {
       transform: scale(1)
@@ -877,7 +878,7 @@
         <div class="wrapper--centered-item">
           <p><b>Something went wrong. Please try again...</b></p><br>
           <p>{{errorMsg}}</p><br>
-          <div class="modal--bottom-bar">
+          <div class="modal--bottom_bar">
             <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
               <button type="submit" formtarget="_blank">Let us know</button>
             </form>
@@ -926,6 +927,14 @@
           <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon transparent" aria-label="Templates"/>
           <p class="account_nav--item--text">
             Templates
+          </p>
+        </router-link>
+      </div>
+      <div class="account_nav--item">
+        <router-link to="/portfolio" title="Portfolio">
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon transparent" aria-label="Templates"/>
+          <p class="account_nav--item--text">
+            Portfolio
           </p>
         </router-link>
       </div>

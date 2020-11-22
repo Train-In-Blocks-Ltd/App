@@ -43,7 +43,7 @@
               <span class="text--date">{{session.date}}</span>
             </div>
             <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
-            <div class="bottom-bar">
+            <div class="bottom_bar">
               <div class="full-width-bar">
                 <button v-if="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button-done" class="button--state no-margin">Completed</button>
                 <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons-to-do" class="button--state no-margin">Click to complete</button>

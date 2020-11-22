@@ -245,7 +245,7 @@
     margin: 1rem 0;
     padding: 0
   }
-  .bottom-bar .button {
+  .bottom_bar .button {
     margin: 0
   }
   .newSession {
@@ -448,10 +448,10 @@
         <div v-if="plan.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" class="text--large allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="text--large allow_text_overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the plan info -->
               <form class="plan_info">
-                <input class="text--small allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
+                <input class="text--small allow_text_overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
               </form>
             </div><br>  <!-- client_info -->
             <div class="wrapper--progress-bar">
@@ -481,7 +481,7 @@
                 >
                   What do you want to achieve in this plan?
                 </p>
-                <div v-if="editPlanNotes" class="bottom-bar">
+                <div v-if="editPlanNotes" class="bottom_bar">
                   <div>
                     <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
                     <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
@@ -575,7 +575,7 @@
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
-                      <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
+                      <div class="bottom_bar" v-if="expandedSessions.includes(session.id)">
                         <div>
                           <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>

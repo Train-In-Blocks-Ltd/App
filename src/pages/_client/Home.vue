@@ -134,8 +134,8 @@
       <form class="client_info" @submit.prevent="update_client()">
         <input class="client_info--name text--large" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
         <div class="client_info__more-details">
-          <input class="input--forms allow-text-overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client(), checkClient()"/>
-          <input class="input--forms allow-text-overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
+          <input class="input--forms allow_text_overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client(), checkClient()"/>
+          <input class="input--forms allow_text_overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
           <div>
             <button
               @click="createClient()" class="button--verify button"
