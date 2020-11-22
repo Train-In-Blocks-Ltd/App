@@ -37,7 +37,7 @@
     <input v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients" type="search" aria-label="search by name" rel="search" placeholder="Name" class="search text--small" autocomplete="name" v-model="search"/>
     <div class="container--clients">
       <div
-        class="wrapper--client-link"
+        class="wrapper--client_link"
         :to="'/client/'+clients.client_id+'/'"
         v-show="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())"
         :id="'a' + clients.client_id"
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-  import ClientLink from '../components/clientLink'
+  import ClientLink from '../components/ClientLink'
   import InlineSvg from 'vue-inline-svg'
 
   export default {

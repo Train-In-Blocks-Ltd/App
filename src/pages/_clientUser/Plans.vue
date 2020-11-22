@@ -1,8 +1,8 @@
 <style scoped>
-  .wrapper--session, .plan-notes {
+  .wrapper--session, .plan_notes {
     display: grid;
     margin: 4rem 0;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
   }
@@ -11,7 +11,7 @@
   }
 
   @media (max-width: 576px) {
-    .plan-notes {
+    .plan_notes {
       margin-top: 2rem
     }
   }
@@ -24,12 +24,12 @@
         <div class="session--header">
           <p class="text--large">{{plan.name}}</p>
         </div>
-        <div class="plan-notes">
-          <div class="plan-notes__header">
+        <div class="plan_notes">
+          <div class="plan_notes__header">
             <p class="text--small">Plan Notes</p>
           </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn" />
-          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show-plan-notes text--small grey">No plan notes added...</p>
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="show_plan_notes animate animate__fadeIn" />
+          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_plan_notes text--small grey">No plan notes added...</p>
         </div>
         <div class="wrapper--calendar">
           <FullCalendar
@@ -51,11 +51,11 @@
                 <span class="text--date">{{session.date}}</span>
               </div>
             </div>
-            <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
+            <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
             <div class="bottom_bar">
-              <div class="full-width-bar" :key="check">
-                <button v-if="session.checked === 1" @click="complete(plan.id, session.id)" id="button-done" class="button--state">Completed</button>
-                <button v-if="session.checked === 0" @click="complete(plan.id, session.id)" id="button-to-do" class="button--state">Click to complete</button>
+              <div class="full_width_bar" :key="check">
+                <button v-if="session.checked === 1" @click="complete(plan.id, session.id)" id="button_done" class="button--state">Completed</button>
+                <button v-if="session.checked === 0" @click="complete(plan.id, session.id)" id="button_to_do" class="button--state">Click to complete</button>
                 <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
             </div><br>

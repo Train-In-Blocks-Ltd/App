@@ -172,7 +172,7 @@
     margin: 6rem 0;
     user-select: none
   }
-  .full-width-bar {
+  .full_width_bar {
     width: 100%
   }
   #chart {
@@ -180,7 +180,7 @@
     position: relative;
     margin: 4rem 0
   }
-  .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+  .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan {
     position: fixed;
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
@@ -189,15 +189,15 @@
     height: 100%;
     width: 100%
   }
-  .wrapper--client-link {
+  .wrapper--client_link {
     text-decoration: none
   }
-  .allow-y-overflow {
+  .allow_y_overflow {
     overflow-y: auto
   }
 
   /* MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new-client, .modal--new-plan, .modal--toolkit, .modal--alert, .modal--preview-template {
+  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new_client, .modal--new_plan, .modal--toolkit, .modal--alert, .modal--preview_template {
     padding: 2rem;
     display: flex;
     height: 100%
@@ -215,7 +215,7 @@
   }
 
   /* SVG */
-  .title-icon {
+  .title_icon {
     margin: auto .6rem auto 0
   }
 
@@ -232,7 +232,7 @@
   .grey {
     color: #28282894
   }
-  .no-margin {
+  .no_margin {
     margin: 0
   }
   h3 {
@@ -249,16 +249,16 @@
     font-size: .8rem;
     color: #B80000
   }
-  .text--no-client-notes, .text--no-plan-notes {
+  .text--no_client_notes, .text--no_plan_notes {
     margin: 2rem 0
   }
-  .text--loading, .text--no-clients {
+  .text--loading, .text--no_clients {
     margin: 2rem 0 4rem 0
   }
-  .text--no-plans, .text--no-sessions {
+  .text--no-plans, .text--no_sessions {
     margin: 2rem 0 8rem 0
   }
-  .text--no-content {
+  .text--no_content {
     margin: 1rem 0
   }
 
@@ -378,41 +378,41 @@
     margin-top: 1rem;
     z-index: 1
   }
-  #button-done {
+  #button_done {
     background-color: green
   }
-  #button-to-do {
+  #button_to_do {
     background-color: #B80000
   }
-  #button-done, #button-to-do {
+  #button_done, #button_to_do {
     color: white;
     margin: auto 0
   }
-  #button-done:hover, #button-to-do:hover {
+  #button_done:hover, #button_to_do:hover {
     opacity: .6
   }
 
   /* SHOW AND NOTES */
-  .show-session, .show-plan-notes, .show-client-notes, .show-template {
+  .show_session, .show_plan_notes, .show_client_notes, .show_template {
     outline-width: 0;
     overflow-wrap: break-word;
     line-height: 1.42;
     overflow-y: auto;
     transition: all 1s
   }
-  .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img,.show-session iframe, .show-plan-notes iframe, .show-client-notes iframe, .show-template iframe {
+  .show_session img, .show_plan_notes img, .show_client_notes img, .show_template img,.show_session iframe, .show_plan_notes iframe, .show_client_notes iframe, .show_template iframe {
     border-radius: 3px;
     max-width: 80%;
     margin: 1rem 0
   }
-  .show-session a, .show-plan-notes a, .show-client-notes a, .show-template a {
+  .show_session a, .show_plan_notes a, .show_client_notes a, .show_template a {
     color: blue
   }
-  .show-session ul, .show-session ol, .show-plan-notes ul, .show-plan-notes ol, .show-client-notes ul, .show-client-notes ol, .show-template ul, .show-template ol {
+  .show_session ul, .show_session ol, .show_plan_notes ul, .show_plan_notes ol, .show_client_notes ul, .show_client_notes ol, .show_template ul, .show_template ol {
     text-decoration: none;
     margin: 0
   }
-  .show-session p, .show-client-notes p, .show-plan-notes p, .show-template p {
+  .show_session p, .show_client_notes p, .show_plan_notes p, .show_template p {
     margin: 1rem 0
   }
   .wrapper--session__header.client-side {
@@ -516,7 +516,7 @@
     padding: 2rem 1rem;
     position: fixed;
     background-color: white;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav--item {
@@ -563,7 +563,7 @@
   }
 
   /* EXTRA OPTIONS */
-  .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-whats-new, .icon--open-new-plan, .icon--open-print {
+  .icon--open-options, .icon--open-stats, .icon--open-new_client, .icon--open-install_PWA, .icon--open-whats_new, .icon--open-new_plan, .icon--open-print {
     user-select: none;
     z-index: 2;
     display: flex;
@@ -577,32 +577,32 @@
     background-color: #F4F4F4;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  div.icon--open-stats, div.icon--open-whats-new, .icon--open-new-plan {
+  div.icon--open-stats, div.icon--open-whats_new, .icon--open-new_plan {
     top: 4.4rem
   }
-  div.icon--open-install-pwa, div.icon--open-print {
+  div.icon--open-install_PWA, div.icon--open-print {
     top: 6.8rem
   }
-  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install-pwa:hover, div.icon--open-print:hover {
+  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install_PWA:hover, div.icon--open-print:hover {
     width: 6rem;
     justify-content: center;
     text-align: center
   }
-  .icon--open-new-client:hover, .icon--open-whats-new:hover, .icon--open-new-plan:hover {
+  .icon--open-new_client:hover, .icon--open-whats_new:hover, .icon--open-new_plan:hover {
     width: 8rem;
     justify-content: center;
     text-align: center
   }
-  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new-client:hover svg, .icon--open-install-pwa:hover svg, .icon--open-whats-new:hover svg, .icon--open-new-plan:hover svg, .icon--open-print:hover svg {
+  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new_client:hover svg, .icon--open-install_PWA:hover svg, .icon--open-whats_new:hover svg, .icon--open-new_plan:hover svg, .icon--open-print:hover svg {
     display: none
   }
-  .icon--open-options .text, .icon--open-stats .text, .icon--open-new-client .text, .icon--open-install-pwa .text, .icon--open-whats-new .text, .icon--open-new-plan .text, .icon--open-print .text {
+  .icon--open-options .text, .icon--open-stats .text, .icon--open-new_client .text, .icon--open-install_PWA .text, .icon--open-whats_new .text, .icon--open-new_plan .text, .icon--open-print .text {
     font-size: .8rem;
     display: none;
     white-space: nowrap;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new-client:hover .text, .icon--open-install-pwa:hover .text, .icon--open-whats-new:hover .text, .icon--open-new-plan:hover .text, .icon--open-print:hover .text {
+  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new_client:hover .text, .icon--open-install_PWA:hover .text, .icon--open-whats_new:hover .text, .icon--open-new_plan:hover .text, .icon--open-print:hover .text {
     display: block
   }
 
@@ -639,17 +639,17 @@
     right: 0;
     text-align: right;
     background-color: white;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     width: 100%;
     z-index: 9;
     padding: 2rem
   }
-  .multi-select a, .a--preview-template {
+  .multi-select a, .a--preview_template {
     color: #282828;
     text-decoration: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .multi-select a:hover, .a--preview-template {
+  .multi-select a:hover, .a--preview_template {
     opacity: .6
   }
   .text--selected {
@@ -664,12 +664,12 @@
     font-weight: 400;
     color: #282828;
     text-decoration: none;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     border-radius: 3px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link:hover, .plan_link:hover {
-    box-shadow: 0 0 20px 10px #28282820
+    box-shadow: 0 0 20px 10px #28282816
   }
   .client_link__notes__content, .plan_link__notes__content {
     font-size: .8rem;
@@ -730,7 +730,7 @@
     .sidebar:hover {
       width: 12rem
     }
-    .title-icon {
+    .title_icon {
       height: 48px;
       width: 48px
     }
@@ -744,11 +744,11 @@
     .quill {
       width: 90%
     }
-    .show-session img, .show-plan-notes img, .show-client-notes img, .show-template img {
+    .show_session img, .show_plan_notes img, .show_client_notes img, .show_template img {
       max-width: 100%
     }
     .client_link:hover, .plan_link:hover {
-      box-shadow: 0 0 20px 10px #28282810
+      box-shadow: 0 0 20px 10px #28282808
     }
     .client_link:active, .plan_link:active {
       transform: scale(.99)
@@ -756,7 +756,7 @@
     .client_link__notes__content img, .plan_link img {
       max-width: 100%
     }
-    .wrapper--new-client, .wrapper--install-PWA, .wrapper--whats-new, .wrapper--new-plan {
+    .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan {
       padding: 4rem 10vw 10rem 10vw
     }
 
@@ -839,7 +839,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show-client-notes, .show-plan-notes,.show-session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new-client, .icon--open-install-pwa, .icon--open-new-plan {
+    .search, .client_container > a:before, .ql-editor, .show_client_notes, .show_plan_notes,.show_session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new_client, .icon--open-install_PWA, .icon--open-new_plan {
       transition: none
     }
     .sidebar {

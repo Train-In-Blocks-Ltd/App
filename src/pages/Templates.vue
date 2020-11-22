@@ -32,7 +32,7 @@
   }
   .wrapper--template {
     display: grid;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
   }
@@ -82,7 +82,7 @@
       padding: 2rem;
       width: 100%;
       background-color: white;
-      box-shadow: 0 0 20px 10px #28282812
+      box-shadow: 0 0 20px 10px #28282816
     }
     .multi-select a {
       grid-template-columns: 1fr
@@ -134,8 +134,8 @@
           </div>
         </div>
         <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn"/>
-        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
-        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no-content">What do you plan for your clients frequently?</p>
+        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show_template animate animate__fadeIn"/>
+        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no_content">What do you plan for your clients frequently?</p>
         <div class="bottom_bar" v-if="expandedTemplates.includes(template.id)">
           <div>
             <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>

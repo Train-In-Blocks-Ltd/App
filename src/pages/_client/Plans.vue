@@ -3,26 +3,26 @@
   .activeState {
     border: 2px solid #28282860
   }
-  .client-notes {
+  .client_notes {
     margin: 4rem 0;
     padding: 2rem;
     border-radius: 3px;
-    box-shadow: 0 0 20px 10px #28282810
+    box-shadow: 0 0 20px 10px #28282808
   }
-  .client-notes__header {
+  .client_notes__header {
     display: flex
   }
-  .a--client-notes {
+  .a--client_notes {
     color: #282828;
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .a--client-notes:hover {
+  .a--client_notes:hover {
     opacity: .6
   }
-  .client-notes-msg {
+  .client_notes-msg {
     margin: 1rem 0
   }
 
@@ -34,7 +34,7 @@
   }
 
   /* Add plan Form */
-  .button--new-plan {
+  .button--new_plan {
     margin: 1rem 0 2rem 0
   }
   .add_plan_link {
@@ -54,11 +54,11 @@
 <template>
     <div>
       <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div class="wrapper--new-plan" v-if="isNewPlanOpen">
-          <new-plan />
+        <div class="wrapper--new_plan" v-if="isNewPlanOpen">
+          <new_plan />
         </div>
       </transition>
-      <div class="icon--open-new-plan" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
+      <div class="icon--open-new_plan" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
         <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan"/>
         <p class="text">New Plan</p>
       </div>
@@ -66,14 +66,14 @@
         <div :class="{ openedSections: isNewPlanOpen }" class="section--a" />
         <div :class="{ openedSections: isNewPlanOpen }" class="section--b"/>
       </div>
-      <div :class="{ activeState: editClientNotes }" class="client-notes">
-        <div class="client-notes__header">
+      <div :class="{ activeState: editClientNotes }" class="client_notes">
+        <div class="client_notes__header">
           <p class="text--small">Client Information</p>
           <a
             href="javascript:void(0)"
             v-if="!editClientNotes"
             @click="editClientNotes = true, tempQuillStore = $parent.$parent.client_details.notes"
-            class="a--client-notes"
+            class="a--client_notes"
           >
             Edit
           </a>
@@ -82,11 +82,11 @@
         <div
           v-if="!editClientNotes && $parent.$parent.client_details.notes !== '<p><br></p>' && $parent.$parent.client_details.notes !== null"
           v-html="$parent.$parent.client_details.notes"
-          class="show-client-notes animate animate__fadeIn"
+          class="show_client_notes animate animate__fadeIn"
         />
         <p
           v-if="!editClientNotes && ($parent.$parent.client_details.notes === '<p><br></p>' || $parent.$parent.client_details.notes === null)"
-          class="text--small grey text--no-client-notes"
+          class="text--small grey text--no_client_notes"
         >
           What goals does your client have? What physical measures have you taken?
         </p>
@@ -119,7 +119,7 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
-  import NewPlan from '../../components/newPlan'
+  import NewPlan from '../../components/NewPlan'
 
   export default {
     components: {

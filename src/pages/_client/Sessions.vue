@@ -68,20 +68,20 @@
   }
 
   /* Plan Grid */
-  .plan-notes {
+  .plan_notes {
     margin: 4rem 0
   }
-  .plan-notes__header {
+  .plan_notes__header {
     display: flex
   }
-  .a--plan-notes {
+  .a--plan_notes {
     color: #282828;
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .a--plan-notes:hover {
+  .a--plan_notes:hover {
     opacity: .6
   }
 
@@ -147,7 +147,7 @@
   }
   .weekActive {
     border-bottom: 2px solid #EEEEEE;
-    box-shadow: 0 0 20px 10px #28282815;
+    box-shadow: 0 0 20px 10px #28282816;
     background-color: white;
     height: 94px
   }
@@ -192,9 +192,9 @@
   .expand-all:hover {
     opacity: .6
   }
-  .wrapper--session, .plan-notes {
+  .wrapper--session, .plan_notes {
     display: grid;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
   }
@@ -238,10 +238,10 @@
   .wrapper--template-options {
     margin: 2rem 0
   }
-  .a--preview-template {
+  .a--preview_template {
     margin-left: 2rem
   }
-  .show-feedback {
+  .show_feedback {
     margin: 1rem 0;
     padding: 0
   }
@@ -408,11 +408,11 @@
             </div>
         </form>
       </modal>
-      <modal name="preview-template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <div class="modal--preview-template">
+      <modal name="preview_template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+        <div class="modal--preview_template">
             <div class="wrapper--centered-item">
               <div v-html="previewTemplate" /><br>
-              <button class="cancel" @click.prevent="$modal.hide('preview-template'), $parent.$parent.willBodyScroll(true), previewTemplate = null">Close</button>
+              <button class="cancel" @click.prevent="$modal.hide('preview_template'), $parent.$parent.willBodyScroll(true), previewTemplate = null">Close</button>
             </div>
         </div>
       </modal>
@@ -463,21 +463,21 @@
           </div> <!-- top_grid -->
           <div class="plan_grid">
             <div class="calendar">
-              <div class="plan-notes" :class="{ activeState: editPlanNotes }">
-                <div class="plan-notes__header">
+              <div class="plan_notes" :class="{ activeState: editPlanNotes }">
+                <div class="plan_notes__header">
                   <p class="text--small">Plan Notes</p>
-                  <a class="a--plan-notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
+                  <a class="a--plan_notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
                     Edit
                   </a>
                 </div>
                 <quill v-if="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn"/>
                 <div
                   v-if="!editPlanNotes  && plan.notes !== '<p><br></p>' && plan.notes !== null"
-                  v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"
+                  v-html="plan.notes" class="show_plan_notes animate animate__fadeIn"
                 />
                 <p
                   v-if="!editPlanNotes && (plan.notes === '<p><br></p>' || plan.notes === null)"
-                  class="text--small grey text--no-plan-notes"
+                  class="text--small grey text--no_plan_notes"
                 >
                   What do you want to achieve in this plan?
                 </p>
@@ -528,7 +528,7 @@
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
-                <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
+                <p class="text--small grey text--no_sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
                 <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
                   <p v-if="plan.sessions.length !== null && plan.sessions !== false && !isEditingSession" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
@@ -553,8 +553,8 @@
                         </div>
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn"/>
-                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
-                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
+                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show_session animate animate__fadeIn"/>
+                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no_content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
                       <div
                         v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
                         class="wrapper--template-options"
@@ -567,10 +567,10 @@
                           :key="index"
                         >
                           <button class="opposite" :disabled="!caretIsInEditor || item.template === null || item.template === '<p><br></p>' || item.template === ''" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
-                          <a href="javascript:void(0)" class="a--preview-template" @click="previewTemplate = item.template, $modal.show('preview-template'), $parent.$parent.willBodyScroll(false)">Preview</a>
+                          <a href="javascript:void(0)" class="a--preview_template" @click="previewTemplate = item.template, $modal.show('preview_template'), $parent.$parent.willBodyScroll(false)">Preview</a>
                         </div>
                       </div>
-                      <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
+                      <div v-if="session.id === showFeedback" class="show_feedback animate animate__fadeIn">
                         <hr><br>
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />

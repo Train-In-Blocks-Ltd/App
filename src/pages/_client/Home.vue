@@ -38,7 +38,7 @@
     top: 0;
     padding: 0;
     z-index: 4;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .wrapper--floating_nav.openFloatingNav {
@@ -172,7 +172,7 @@
   import InlineSvg from 'vue-inline-svg'
   import {email, emailText, resetEmail, resetEmailText} from '../../components/email'
   import Toolkit from '../../components/Toolkit'
-  import AlertModal from '../../components/alertModal'
+  import AlertModal from '../../components/AlertModal'
 
   export default {
     components: {

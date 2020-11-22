@@ -8,7 +8,7 @@
   .wrapper--session {
     display: grid;
     margin: 2rem 0;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
   }
@@ -31,7 +31,7 @@
         Install App
       </button>
       <p class="text--large">Today</p>
-      <p class="text--small text--no-sessions grey" v-if="viewSessionsStore.length === 0 && $parent.loading === false">No sessions today...</p>
+      <p class="text--small text--no_sessions grey" v-if="viewSessionsStore.length === 0 && $parent.loading === false">No sessions today...</p>
       <p class="text--small text--loading grey" v-if="$parent.loading === true">Loading sessions...</p>
       <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
         <div class="container--sessions" v-if="plan.sessions">
@@ -42,11 +42,11 @@
               <span class="text--date">{{$parent.day(session.date)}}</span>
               <span class="text--date">{{session.date}}</span>
             </div>
-            <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
+            <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
             <div class="bottom_bar">
-              <div class="full-width-bar">
-                <button v-if="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button-done" class="button--state no-margin">Completed</button>
-                <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons-to-do" class="button--state no-margin">Click to complete</button>
+              <div class="full_width_bar">
+                <button v-if="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button_done" class="button--state no_margin">Completed</button>
+                <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons-to-do" class="button--state no_margin">Click to complete</button>
                 <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
             </div><br>
