@@ -12,13 +12,13 @@
 </style>
 
 <style>
-  .archive__icon, .archive__icon path {
-    transition: transform .1s, opacity .4s cubic-bezier(.165, .84, .44, 1)
+  .archive_icon, .archive_icon path {
+    transition: transform .1s, opacity .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .archive__icon:hover {
+  .archive_icon:hover {
     opacity: .6
   }
-  .archive__icon:active {
+  .archive_icon:active {
     transform: scale(.9)
   }
 </style>

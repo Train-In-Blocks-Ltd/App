@@ -4,7 +4,8 @@
 #help-desk__bookmark,
 #home__house,
 #portfolio_pen,
-#portfolio_case {
+#portfolio_case,
+#bin__lid {
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
 }
 
@@ -37,8 +38,11 @@
 }
 
 /* Archive */
-.account_nav--item:hover #archive__t {
+.account_nav--item:hover #archive__t, .archive_icon:hover #archive__t {
   transform: translateY(-6px)
+}
+.archive_icon:hover #bin__lid {
+  transform: translateX(6px)
 }
 
 /* Account */
@@ -61,7 +65,6 @@
 }
 
 /* Reduced motion */
-
 @media (prefers-reduced-motion: reduce) {
   #logout__arrow,
   #archive__t,
@@ -69,47 +72,32 @@
   #help-desk__bookmark,
   #home__house,
   #portfolio_pen,
-  #portfolio_case {
+  #portfolio_case,
+  #bin__lid {
     transition: none
   }
 }
 
 /* No Hover */
 @media (max-width: 992px), (prefers-reduced-motion: reduce) {
-  /* Home */
-  .account_nav--item:hover #home__house {
-    transform: translateY(0);
-  }
 
-  /* Help Desk */
-  #help-desk__bookmark {
-    opacity: 1;
-    transform: scaleY(1)
-  }
-  .account_nav--item:hover #help-desk__bookmark {
-    opacity: 1;
-    transform: scaleY(1)
-  }
-
-  /* Template */
-  .account_nav--item:hover #template__t {
-    transform: translateY(4px)
-  }
-  
-  /* Archive */
-  .account_nav--item:hover #archive__t {
-    transform: translateY(4px)
-  }
-
-  /* Account */
-  .account_nav--item:hover #account__cog {
-    animation: none
-  }
-
-  /* Logout  and Portfolio*/
+  /* None */
+  .account_nav--item:hover #home__house,
+  .account_nav--item:hover #template__t,
+  .account_nav--item:hover #archive__t,
+  .archive_icon:hover #archive__t,
+  .archive_icon:hover #bin__lid,
+  .account_nav--item:hover #account__cog,
   .account_nav--item:hover #logout__arrow,
   .account_nav--item:hover #portfolio_pen,
   .account_nav--item:hover #portfolio_case {
-    transform: translateX(0)
+    transform: none;
+    animation: none
+  }
+
+  /* Help Desk */
+  #help-desk__bookmark, .account_nav--item:hover #help-desk__bookmark {
+    opacity: 1;
+    transform: scaleY(1)
   }
 }
