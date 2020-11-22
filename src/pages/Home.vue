@@ -29,12 +29,12 @@
     </div>
     <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
       <div class="wrapper--new_client" v-if="isNewClientOpen">
-        <new_client />
+        <new-client />
       </div>
     </transition>
     <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
       <div class="wrapper--whats_new allow_y_overflow" v-if="isWhatsNewOpen">
-        <whats_new />
+        <whats-new />
       </div>
     </transition>
     <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">

@@ -55,7 +55,7 @@
     <div>
       <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
         <div class="wrapper--new_plan" v-if="isNewPlanOpen">
-          <new_plan />
+          <new-plan />
         </div>
       </transition>
       <div class="icon--open-new_plan" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
