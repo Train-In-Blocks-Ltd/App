@@ -64,11 +64,98 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        editingCard: false
+// MIKEY --------------------
+// First need to map inputs to portfolio and then corresponding object.
+// Second need to find out if portfolio already exists get ()
+// If yes then can update ()
+// If no then create ()
+
+import axios from 'axios'
+export default {
+  data () {
+    return {
+      editingCard: false,
+      portfolio: {},
+      portfolio_already: false
+    }
+  },
+  async created () {
+    this.$parent.loading = true
+    this.$parent.splashed = true
+    await this.$parent.setup()
+    await this.get()
+    this.$parent.loading = false
+  },
+  methods: {
+    async get () {
+      try {
+        this.$parent.dontLeave = true
+        this.$parent.loading = true
+        const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`)
+        if (response.data.length === 0) {
+          this.portfolio_already = false
+        } else {
+          this.portfolio_already = true
+          this.portfolio = response.data[0]
+        }
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
+      } catch (e) {
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
+        this.$parent.errorMsg = e
+        this.$parent.$modal.show('error')
+        this.$parent.willBodyScroll(false)
+        console.error(e)
+      }
+    },
+    async create () {
+      this.$parent.dontLeave = true
+      this.$parent.loading = true
+      try {
+        await axios.put(`https://api.traininblocks.com/portfolio`,
+          {
+            'pt_id': this.$parent.claims.sub,
+            'trainer_name': this.portfolio.trainer_name,
+            'business_name': this.portfolio.business_name,
+            'notes': this.portfolio.notes
+          }
+        )
+        await this.get()
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
+      } catch (e) {
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
+        this.$parent.errorMsg = e
+        this.$parent.$modal.show('error')
+        this.$parent.willBodyScroll(false)
+        console.error(e)
+      }
+    },
+    async update () {
+      this.$parent.dontLeave = true
+      this.$parent.loading = true
+      try {
+        await axios.post(`https://api.traininblocks.com/portfolio/${this.portfolio.id}`,
+          {
+            'trainer_name': this.portfolio.trainer_name,
+            'business_name': this.portfolio.business_name,
+            'notes': this.portfolio.notes
+          }
+        )
+        await this.get()
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
+      } catch (e) {
+        this.$parent.loading = false
+        this.$parent.dontLeave = false
+        this.$parent.errorMsg = e
+        this.$parent.$modal.show('error')
+        this.$parent.willBodyScroll(false)
+        console.error(e)
       }
     }
   }
+}
 </script>
