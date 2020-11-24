@@ -787,10 +787,12 @@
       this.scan()
       this.checkForNew()
       this.adherence()
+      window.addEventListener('beforeprint', this.expandAll('Expand'))
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
       this.setListenerForEditor(false)
+      window.removeEventListener('beforeprint', this.expandAll('Expand'))
     },
     methods: {
 
