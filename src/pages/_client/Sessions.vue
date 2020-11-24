@@ -1194,21 +1194,25 @@
         }
       },
       expandAll (toExpand) {
-        this.$parent.$parent.client_details.plans.forEach((plan) => {
-          if (plan.id === parseInt(this.$route.params.id)) {
-            plan.sessions.forEach((session) => {
-              if (toExpand === 'Expand') {
-                this.expandedSessions.push(session.id)
-              } else {
-                let x = 0
-                let y = this.expandedSessions.length
-                for (; x < y; x++) {
-                  this.expandedSessions.pop()
+        try {
+          this.$parent.$parent.client_details.plans.forEach((plan) => {
+            if (plan.id === parseInt(this.$route.params.id)) {
+              plan.sessions.forEach((session) => {
+                if (toExpand === 'Expand') {
+                  this.expandedSessions.push(session.id)
+                } else {
+                  let x = 0
+                  let y = this.expandedSessions.length
+                  for (; x < y; x++) {
+                    this.expandedSessions.pop()
+                  }
                 }
-              }
-            })
-          }
-        })
+              })
+            }
+          })
+        } catch (e) {
+          console.log(e)
+        }
       },
       expandText (array) {
         if (array.length !== 0) {
