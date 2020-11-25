@@ -19,7 +19,7 @@ let transporter = nodemailer.createTransport(smtpTransport({
   secure: true,
   auth: {
     user: 'joe.bailey@traininblocks.com',
-    pass: 'Bagheera26'
+    pass: 'fczhxioeejfvtpbi'
   }
 }))
 
