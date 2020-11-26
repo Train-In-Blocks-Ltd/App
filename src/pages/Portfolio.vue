@@ -33,8 +33,10 @@
 
 <template>
   <div id="portfolio">
-    <form class="trainer_info" @submit.prevent="">
+    <form class="trainer_info" @submit.prevent="update()">
       <input
+        v-model="portfolio.business_name"
+        @input="editing_info = true"
         class="trainer_info__business text--large"
         placeholder="Business name"
         aria-label="Business name"
@@ -42,21 +44,30 @@
         autocomplete="name"
       >
       <input
+        v-model="portfolio.trainer_name"
+        @input="editing_info = true"
         class="input--forms allow_text_overflow"
         placeholder="Trainer Name"
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
       >
+      <button v-if="editing_info" @click="editing_info = false">Save</button>
     </form>
     <div class="wrapper_card">
-      <div v-if="!editingCard" class="show_card" />
-      <quill v-if="editingCard" output="html" class="quill animate animate__fadeIn" />
+      <p
+        v-if="!editing_card && (portfolio.notes === '<p><br></p>' || portfolio.notes === '')"
+        class="text--small grey text--no_client_notes"
+      >
+        Your clients will be able to access this information. What do you want to share with them?
+      </p>
+      <div v-html="portfolio.notes" v-if="!editing_card" class="show_card" />
+      <quill v-model="portfolio.notes" v-if="editing_card" output="html" class="quill animate animate__fadeIn" />
       <div class="bottom_bar">
         <div>
-          <button v-if="!editingCard" @click="editingCard = true">Edit</button>
-          <button v-if="editingCard" @click="editingCard= false">Save</button>
-          <button v-if="editingCard" @click="editingCard= false" class="cancel">Cancel</button>
+          <button v-if="!editing_card" @click="editing_card = true">Edit</button>
+          <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
+          <button v-if="editing_card" @click="editing_card= false" class="cancel">Cancel</button>
         </div>
       </div>
     </div>
@@ -64,19 +75,18 @@
 </template>
 
 <script>
-// MIKEY --------------------
-// First need to map inputs to portfolio and then corresponding object.
-// Second need to find out if portfolio already exists get ()
-// If yes then can update ()
-// If no then create ()
-
 import axios from 'axios'
+
 export default {
   data () {
     return {
-      editingCard: false,
-      portfolio: {},
-      portfolio_already: false
+      editing_info: false,
+      editing_card: false,
+      portfolio: {
+        business_name: '',
+        trainer_name: '',
+        notes: ''
+      }
     }
   },
   async created () {
@@ -93,9 +103,8 @@ export default {
         this.$parent.loading = true
         const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`)
         if (response.data.length === 0) {
-          this.portfolio_already = false
+          this.create()
         } else {
-          this.portfolio_already = true
           this.portfolio = response.data[0]
         }
         this.$parent.loading = false
@@ -116,9 +125,9 @@ export default {
         await axios.put(`https://api.traininblocks.com/portfolio`,
           {
             'pt_id': this.$parent.claims.sub,
-            'trainer_name': this.portfolio.trainer_name,
-            'business_name': this.portfolio.business_name,
-            'notes': this.portfolio.notes
+            'trainer_name': '',
+            'business_name': '',
+            'notes': ''
           }
         )
         await this.get()
