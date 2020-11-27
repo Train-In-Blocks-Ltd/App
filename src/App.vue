@@ -1,5 +1,6 @@
 <style>
   @import './assets/styles/icon-anim';
+
   /* Global */
   * {
     box-sizing: border-box
@@ -658,6 +659,7 @@
 
   /* LINK CONTAINERS */
   .client_link, .plan_link {
+    content-visibility: auto;
     display: grid;
     padding: 2rem;
     grid-gap: 1rem;
@@ -855,7 +857,7 @@
 
   /* PRINT MEDIA */
   @media print {
-    .sidebar, .wrapper--floating_nav, .icon--open-stats, .icon--open-print, .wrapper--progress-bar, a, button, input[type="checkbox"], input[type="color"], svg, .expand-all, .plan_table, video, iframe {
+    .sidebar, .wrapper--floating_nav, .icon--open-stats, .icon--open-print, .wrapper--progress-bar, a, button, input[type='checkbox'], input[type='color'], svg, .expand-all, .plan_table, video, iframe {
       display: none
     }
     #client .client_info input:not([type='submit']) {

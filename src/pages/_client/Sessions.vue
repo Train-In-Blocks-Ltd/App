@@ -193,6 +193,7 @@
     opacity: .6
   }
   .wrapper--session, .plan_notes {
+    content-visibility: auto;
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;

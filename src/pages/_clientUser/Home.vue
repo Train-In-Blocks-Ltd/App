@@ -6,6 +6,7 @@
     margin: 2rem 0
   }
   .wrapper--session {
+    content-visibility: auto;
     display: grid;
     margin: 2rem 0;
     box-shadow: 0 0 20px 10px #28282808;

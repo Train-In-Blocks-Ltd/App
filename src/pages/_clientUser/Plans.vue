@@ -1,5 +1,6 @@
 <style scoped>
   .wrapper--session, .plan_notes {
+    content-visibility: auto;
     display: grid;
     margin: 4rem 0;
     box-shadow: 0 0 20px 10px #28282808;
