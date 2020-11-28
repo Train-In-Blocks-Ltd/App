@@ -146,7 +146,7 @@ export default {
       this.$parent.dontLeave = true
       this.$parent.loading = true
       try {
-        await axios.post(`https://api.traininblocks.com/portfolio/${this.portfolio.id}`,
+        await axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
           {
             'trainer_name': this.portfolio.trainer_name,
             'business_name': this.portfolio.business_name,
