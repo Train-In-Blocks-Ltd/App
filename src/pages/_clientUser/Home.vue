@@ -1,4 +1,4 @@
-<style scopred>
+<style scoped>
   /* Containers */
   .plan_grid {
     display: grid;
@@ -12,6 +12,47 @@
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
+  }
+
+  /* SVG */
+  .client_home__today__header svg {
+    display: none
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #home {
+      padding: 0
+    }
+    .client_home {
+      display: flex;
+      max-width: 100vw;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+    .client_home__today {
+      margin-bottom: 4rem
+    }
+    .client_home__today, .client_home__plans {
+      padding: 2rem 5vw;
+      min-width: 100vw;
+      scroll-snap-align: start
+    }
+    .client_home__today__header {
+      display: flex;
+      justify-content: space-between
+    }
+    .client_home__today__header svg {
+      display: block;
+      margin: auto 0;
+      transform: rotate(-90deg);
+      opacity: .6
+    }
+    .wrapper--session {
+      box-shadow: none;
+      padding: 0;
+      border-radius: 0
+    }
   }
 </style>
 
@@ -27,58 +68,64 @@
         </svg>
       </div>
     </div>
-    <div class="container--client">
-      <button @click="$parent.installPWA()" v-if="$parent.displayMode === 'browser tab' && $parent.canInstall === true">
-        Install App
-      </button>
-      <p class="text--large">Today</p>
-      <p class="text--small text--no_sessions grey" v-if="viewSessionsStore.length === 0 && $parent.loading === false">No sessions today...</p>
-      <p class="text--small text--loading grey" v-if="$parent.loading === true">Loading sessions...</p>
-      <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
-        <div class="container--sessions" v-if="plan.sessions">
-          <div class="wrapper--session" v-for="(session, index) in plan.sessions"
-            :key="index" v-show="session.id == viewSessionsStore[currentSessionIndexHome] && isToday()">
-            <div class="wrapper--session__header client-side" :id="session.name">
-              <span class="text--name"><b>{{session.name}}</b></span><br>
-              <span class="text--date">{{$parent.day(session.date)}}</span>
-              <span class="text--date">{{session.date}}</span>
-            </div>
-            <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
-            <div class="bottom_bar">
-              <div class="full_width_bar">
-                <button v-if="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button_done" class="button--state no_margin">Completed</button>
-                <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons-to-do" class="button--state no_margin">Click to complete</button>
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
+    <div class="client_home">
+      <div class="client_home__today">
+        <div class="client_home__today__header">
+          <p class="text--large">Today</p>
+          <inline-svg class="svg--scroll_down" :src="require('../../assets/svg/scroll-down-arrow.svg')" />
+        </div>
+        <p v-if="viewSessionsStore.length === 0 && $parent.loading === false" class="text--small text--no_sessions grey">
+          No sessions today...
+        </p>
+        <p class="text--small text--loading grey" v-if="$parent.loading === true">Loading sessions...</p>
+        <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
+          <div class="container--sessions" v-if="plan.sessions">
+            <div class="wrapper--session" v-for="(session, index) in plan.sessions"
+              :key="index" v-show="session.id == viewSessionsStore[currentSessionIndexHome] && isToday()">
+              <div class="wrapper--session__header client-side" :id="session.name">
+                <span class="text--name"><b>{{session.name}}</b></span><br>
+                <span class="text--date">{{$parent.day(session.date)}}</span>
+                <span class="text--date">{{session.date}}</span>
               </div>
-            </div><br>
-            <div v-if="giveFeedback === session.id">
-              <p><b>Feedback</b></p>
-              <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
-              <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
-              <button class="cancel" @click="giveFeedback = null">Cancel</button>
+              <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
+              <div class="bottom_bar">
+                <div class="full_width_bar">
+                  <button v-if="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button_done" class="button--state no_margin">Completed</button>
+                  <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons-to-do" class="button--state no_margin">Click to complete</button>
+                  <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
+                </div>
+              </div><br>
+              <div v-if="giveFeedback === session.id">
+                <p class="text--small"><b>Feedback</b></p>
+                <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
+                <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
+                <button class="cancel" @click="giveFeedback = null">Cancel</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div v-if="viewSessionsStore.length !== 0" class="container--session-control">
-        <div>
-          <button v-if="currentSessionIndexHome != 0" @click="currentSessionIndexHome--">Back</button>
-          <button v-if="currentSessionIndexHome != maxSessionIndexHome" @click="currentSessionIndexHome++">Next</button>
+        <div v-if="viewSessionsStore.length !== 0" class="container--session-control">
+          <div>
+            <button v-if="currentSessionIndexHome != 0" @click="currentSessionIndexHome--">Back</button>
+            <button v-if="currentSessionIndexHome != maxSessionIndexHome" @click="currentSessionIndexHome++">Next</button>
+          </div>
+          <p class="text--small session-counter">{{currentSessionIndexHome + 1}} of {{maxSessionIndexHome + 1}}</p>
         </div>
-        <p class="text--small session-counter">{{currentSessionIndexHome + 1}}/{{maxSessionIndexHome + 1}}</p>
       </div>
-      <p class="text--large">Plans</p>
-      <div class="plan_grid">
-        <router-link
-          v-for="(plan, index) in this.$parent.clientUser.plans"
-          :key="'plan-' + index"
-          class="plan_link"
-          :to="'/clientUser/plan/' + plan.id"
-        >
-          <p class="text--small plan-name">{{plan.name}}</p>
-          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">No plan notes added.</p>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="plan_link__notes__content" />
-        </router-link>
+      <div class="client_home__plans">
+        <p class="text--large">Plans</p>
+        <div class="plan_grid">
+          <router-link
+            v-for="(plan, index) in this.$parent.clientUser.plans"
+            :key="'plan-' + index"
+            class="plan_link"
+            :to="'/clientUser/plan/' + plan.id"
+          >
+            <p class="text--small plan-name">{{plan.name}}</p>
+            <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">No plan notes added.</p>
+            <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="plan_link__notes__content" />
+          </router-link>
+        </div>
       </div>
     </div>
   </div>

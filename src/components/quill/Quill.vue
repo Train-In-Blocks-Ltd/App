@@ -41,28 +41,6 @@
     margin: 1rem 0;
     left: 0
   }
-  @media (max-width: 768px) {
-    div.ql-toolbar.ql-snow {
-      border: none;
-      padding: .4rem .6rem .4rem .6rem;
-      position: fixed;
-      top: 25%;
-      right: 0;
-      border-radius: 3px;
-      background-color: #F4F4F4;
-      z-index: 2
-    }
-    div.ql-toolbar.ql-snow .ql-formats {
-      display: grid;
-      margin: 0
-    }
-    .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button {
-      margin: .2rem 0
-    }
-    .ql-editor img {
-      max-width: 100%
-    }
-  }
 </style>
 
 <template>

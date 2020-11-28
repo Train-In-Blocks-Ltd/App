@@ -25,7 +25,7 @@
   .wrapper_card {
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
-    padding: 1rem 2rem 2rem 2rem;
+    padding: 2rem;
     border-radius: 3px;
     margin: 4rem 0
   }

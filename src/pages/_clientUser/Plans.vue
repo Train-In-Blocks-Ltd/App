@@ -2,15 +2,22 @@
   .wrapper--session, .plan_notes {
     content-visibility: auto;
     display: grid;
-    margin: 4rem 0;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
   }
   .container--sessions {
-    margin-top: 6rem
+    margin-top: 2rem
   }
 
+  /* Responsive */
+  @media (max-width: 768px) {
+    .wrapper--session, .plan_notes {
+      box-shadow: none;
+      padding: 0;
+      border-radius: 0
+    }
+  }
   @media (max-width: 576px) {
     .plan_notes {
       margin-top: 2rem
@@ -42,6 +49,13 @@
             :views="calendarViews"
           />
         </div>
+        <div class="container--session-control">
+          <div>
+            <button v-show="currentSessionIndexPlan != 0" @click="currentSessionIndexPlan--">Back</button>
+            <button v-show="currentSessionIndexPlan != maxSessionIndexPlan" @click="currentSessionIndexPlan++">Next</button>
+          </div>
+          <p class="text--small session-counter">{{currentSessionIndexPlan + 1}} of {{maxSessionIndexPlan + 1}}</p>
+        </div>
         <div class="container--sessions" v-if="plan.sessions">
           <div class="wrapper--session" v-for="(session, index) in plan.sessions"
             :key="index" v-show="index == currentSessionIndexPlan">
@@ -61,19 +75,12 @@
               </div>
             </div><br>
             <div v-if="giveFeedback === session.id">
-              <p><b>Feedback</b></p>
+              <p class="text--small"><b>Feedback</b></p>
               <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
               <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
               <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
           </div>
-        </div>
-        <div class="container--session-control">
-          <div>
-            <button v-show="currentSessionIndexPlan != 0" @click="currentSessionIndexPlan--">Back</button>
-            <button v-show="currentSessionIndexPlan != maxSessionIndexPlan" @click="currentSessionIndexPlan++">Next</button>
-          </div>
-          <p class="text--small session-counter">{{currentSessionIndexPlan + 1}}/{{maxSessionIndexPlan + 1}}</p>
         </div>
       </div>
     </div>

@@ -713,7 +713,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfoli {
       padding: 4rem 10vw
     }
     button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -743,9 +743,6 @@
   }
   @media (max-width: 768px) {
     /* Containers */
-    .quill {
-      width: 90%
-    }
     .show_session img, .show_plan_notes img, .show_client_notes img, .show_template img {
       max-width: 100%
     }
@@ -801,7 +798,7 @@
       width: 0;
       background-color: transparent
     }
-    p {
+    p, li {
       font-size: .8rem
     }
     .text--large {
