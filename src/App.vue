@@ -1048,7 +1048,7 @@ export default {
     }
   },
   methods: {
-    
+
     // BACKGROUND AND MISC.
 
     willBodyScroll (state) {
