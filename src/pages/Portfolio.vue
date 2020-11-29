@@ -33,9 +33,9 @@
 
 <template>
   <div id="portfolio">
-    <form class="trainer_info" @submit.prevent="update()">
+    <form class="trainer_info" @submit.prevent="update(), editing_info = false">
       <input
-        v-model="portfolio.business_name"
+        v-model="$parent.portfolio.business_name"
         @input="editing_info = true"
         class="trainer_info__business text--large"
         placeholder="Business name"
@@ -44,7 +44,7 @@
         autocomplete="name"
       >
       <input
-        v-model="portfolio.trainer_name"
+        v-model="$parent.portfolio.trainer_name"
         @input="editing_info = true"
         class="input--forms allow_text_overflow"
         placeholder="Trainer Name"
@@ -52,17 +52,17 @@
         type="text"
         autocomplete="name"
       >
-      <button v-if="editing_info" @click="editing_info = false">Save</button>
+      <button v-if="editing_info" type="submit">Save</button>
     </form>
     <div class="wrapper_card">
       <p
-        v-if="!editing_card && (portfolio.notes === '<p><br></p>' || portfolio.notes === '')"
+        v-if="!editing_card && ($parent.portfolio.notes === '<p><br></p>' || $parent.portfolio.notes === '')"
         class="text--small grey text--no_client_notes"
       >
         Your clients will be able to access this information. What do you want to share with them?
       </p>
-      <div v-html="portfolio.notes" v-if="!editing_card" class="show_card" />
-      <quill v-model="portfolio.notes" v-if="editing_card" output="html" class="quill animate animate__fadeIn" />
+      <div v-html="$parent.portfolio.notes" v-if="!editing_card" class="show_card" />
+      <quill v-model="$parent.portfolio.notes" v-if="editing_card" output="html" class="quill animate animate__fadeIn" />
       <div class="bottom_bar">
         <div>
           <button v-if="!editing_card" @click="editing_card = true">Edit</button>
@@ -81,43 +81,17 @@ export default {
   data () {
     return {
       editing_info: false,
-      editing_card: false,
-      portfolio: {
-        business_name: '',
-        trainer_name: '',
-        notes: ''
-      }
+      editing_card: false
     }
   },
   async created () {
     this.$parent.loading = true
     this.$parent.splashed = true
     await this.$parent.setup()
-    await this.get()
+    await this.$parent.get_portfolio()
     this.$parent.loading = false
   },
   methods: {
-    async get () {
-      try {
-        this.$parent.dontLeave = true
-        this.$parent.loading = true
-        const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`)
-        if (response.data.length === 0) {
-          this.create()
-        } else {
-          this.portfolio = response.data[0]
-        }
-        this.$parent.loading = false
-        this.$parent.dontLeave = false
-      } catch (e) {
-        this.$parent.loading = false
-        this.$parent.dontLeave = false
-        this.$parent.errorMsg = e
-        this.$parent.$modal.show('error')
-        this.$parent.willBodyScroll(false)
-        console.error(e)
-      }
-    },
     async create () {
       this.$parent.dontLeave = true
       this.$parent.loading = true
@@ -130,7 +104,7 @@ export default {
             'notes': ''
           }
         )
-        await this.get()
+        await this.$parent.get_portfolio()
         this.$parent.loading = false
         this.$parent.dontLeave = false
       } catch (e) {
@@ -148,12 +122,12 @@ export default {
       try {
         await axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
           {
-            'trainer_name': this.portfolio.trainer_name,
-            'business_name': this.portfolio.business_name,
-            'notes': this.portfolio.notes
+            'trainer_name': this.$parent.portfolio.trainer_name,
+            'business_name': this.$parent.portfolio.business_name,
+            'notes': this.$parent.portfolio.notes
           }
         )
-        await this.get()
+        await this.$parent.get_portfolio()
         this.$parent.loading = false
         this.$parent.dontLeave = false
       } catch (e) {

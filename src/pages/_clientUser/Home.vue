@@ -36,6 +36,7 @@
     .client_home__today, .client_home__plans {
       padding: 2rem 5vw;
       min-width: 100vw;
+      min-height: 100vw;
       scroll-snap-align: start
     }
     .client_home__today__header {
@@ -150,15 +151,12 @@ export default {
     setTimeout(() => {
       this.$parent.splashed = true
     }, 4000)
-    this.$parent.loading = false
   },
   async mounted () {
-    this.$parent.loading = true
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.todaysSession()
     await this.initCountSessionsHome()
-    this.$parent.loading = false
   },
   methods: {
 

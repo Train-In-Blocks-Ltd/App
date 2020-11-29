@@ -616,6 +616,7 @@
     background-color: #28282821
   }
   ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
     background-color: #28282890
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -984,6 +985,9 @@ export default {
   },
   data () {
     return {
+
+      // CLIENT AND ARCHIVE
+
       archive: {
         clients: {},
         no_archive: false
@@ -998,7 +1002,15 @@ export default {
         plans: null
       },
 
-      // BACKGROUND DATA //
+      // PORTFOLIO
+
+      portfolio: {
+        business_name: '',
+        trainer_name: '',
+        notes: ''
+      },
+
+      // BACKGROUND
 
       splashed: false,
       templates: null,
@@ -1031,13 +1043,14 @@ export default {
     })
   },
   watch: {
-    // Everytime the route changes, check for auth status
     '$route' (to, from) {
       this.isAuthenticated()
     }
   },
   methods: {
-    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+    
+    // BACKGROUND AND MISC.
+
     willBodyScroll (state) {
       const body = document.getElementsByTagName('body')[0]
       if (state) {
@@ -1098,9 +1111,10 @@ export default {
       }
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
+      this.get_portfolio()
     },
 
-    // CLIENT METHODS //-------------------------------------------------------------------------------
+    // CLIENT
 
     async clients_to_vue () {
       if (!localStorage.getItem('clients')) {
@@ -1162,7 +1176,7 @@ export default {
       }
     },
 
-    // CLIENT ARCHIVE METHODS //-------------------------------------------------------------------------------
+    // CLIENT ARCHIVE
 
     async archive_to_vue () {
       if (!localStorage.getItem('archive')) {
@@ -1298,8 +1312,42 @@ export default {
       }
     },
 
-    // DATABASE METHODS //-------------------------------------------------------------------------------
+    // GET METHODS
 
+    async getTemplates () {
+      try {
+        const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+        this.templates = response.data
+      } catch (e) {
+        this.loading = false
+        this.dontLeave = false
+        this.errorMsg = e
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
+      }
+    },
+    async get_portfolio () {
+      try {
+        this.dontLeave = true
+        this.loading = true
+        const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
+        if (response.data.length === 0) {
+          this.create()
+        } else {
+          this.portfolio = response.data[0]
+        }
+        this.loading = false
+        this.dontLeave = false
+      } catch (e) {
+        this.loading = false
+        this.dontLeave = false
+        this.errorMsg = e
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
+      }
+    },
     async get_plans () {
       try {
         const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
@@ -1391,19 +1439,6 @@ export default {
       }
       this.loading = false
       this.dontLeave = false
-    },
-    async getTemplates () {
-      try {
-        const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
-        this.templates = response.data
-      } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
-      }
     }
   }
 }

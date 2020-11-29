@@ -1,21 +1,48 @@
 <style scoped>
   .wrapper--session, .plan_notes {
-    content-visibility: auto;
-    display: grid;
+    padding: 2rem
+  }
+  .plan_notes {
     box-shadow: 0 0 20px 10px #28282808;
-    padding: 2rem;
-    border-radius: 3px
+    border-radius: 3px;
+    margin-top: 6rem;
+  }
+  .wrapper--session {
+    min-width: calc(100vw - 38px - 2rem - 20vw);
+    scroll-snap-align: start
   }
   .container--sessions {
-    margin-top: 2rem
+    display: flex;
+    margin-top: 2rem;
+    overflow-x: auto;
+    width: calc(100vw - 38px - 2rem - 20vw);
+    scroll-snap-type: x mandatory
+  }
+  .show_session {
+    max-height: 60vh;
+  }
+
+  .container--sessions::-webkit-scrollbar {
+    height: 4px
+  }
+  .container--sessions ::-webkit-scrollbar {
+    width: 4px
   }
 
   /* Responsive */
   @media (max-width: 768px) {
+    .plan_notes {
+      padding: 0
+    }
     .wrapper--session, .plan_notes {
       box-shadow: none;
-      padding: 0;
       border-radius: 0
+    }
+    .wrapper--session {
+      padding: 1rem 1rem 0 1rem
+    }
+    .container--sessions, .wrapper--session {
+      min-width: 90vw
     }
   }
   @media (max-width: 576px) {
@@ -28,7 +55,7 @@
 <template>
   <div id="client-plan">
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
-      <div v-if="plan.id == $route.params.id">
+      <div v-if="plan.id == $route.params.id" class="client_plan">
         <div class="session--header">
           <p class="text--large">{{plan.name}}</p>
         </div>
@@ -49,16 +76,12 @@
             :views="calendarViews"
           />
         </div>
-        <div class="container--session-control">
-          <div>
-            <button v-show="currentSessionIndexPlan != 0" @click="currentSessionIndexPlan--">Back</button>
-            <button v-show="currentSessionIndexPlan != maxSessionIndexPlan" @click="currentSessionIndexPlan++">Next</button>
-          </div>
-          <p class="text--small session-counter">{{currentSessionIndexPlan + 1}} of {{maxSessionIndexPlan + 1}}</p>
-        </div>
-        <div class="container--sessions" v-if="plan.sessions">
-          <div class="wrapper--session" v-for="(session, index) in plan.sessions"
-            :key="index" v-show="index == currentSessionIndexPlan">
+        <div v-if="plan.sessions" class="container--sessions">
+          <div
+            v-for="(session, index) in plan.sessions"
+            :key="index"
+            class="wrapper--session"
+          >
             <div class="wrapper--session__header client-side" :id="session.name">
               <div>
                 <span class="text--name"><b>{{session.name}}</b></span><br>
@@ -69,8 +92,8 @@
             <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
             <div class="bottom_bar">
               <div class="full_width_bar" :key="check">
-                <button v-if="session.checked === 1" @click="complete(plan.id, session.id)" id="button_done" class="button--state">Completed</button>
-                <button v-if="session.checked === 0" @click="complete(plan.id, session.id)" id="button_to_do" class="button--state">Click to complete</button>
+                <button v-if="session.checked === 1 && !giveFeedback" @click="complete(plan.id, session.id)" id="button_done" class="button--state">Completed</button>
+                <button v-if="session.checked === 0 && !giveFeedback" @click="complete(plan.id, session.id)" id="button_to_do" class="button--state">Click to complete</button>
                 <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
             </div><br>
@@ -100,10 +123,7 @@
     data () {
       return {
         check: null,
-
         giveFeedback: null,
-        maxSessionIndexPlan: null,
-        currentSessionIndexPlan: 0,
 
         // CALENDAR DATA //
 
@@ -135,7 +155,6 @@
     async mounted () {
       this.$parent.loading = true
       await this.$parent.get_plans()
-      await this.initCountSessionsPlan()
       await this.$parent.sortSessionsPlan()
       await this.scan()
       this.$parent.loading = false
@@ -194,13 +213,6 @@
         } else {
           return dataIn
         }
-      },
-      initCountSessionsPlan () {
-        this.$parent.clientUser.plans.forEach((plan) => {
-          if (plan.id === parseInt(this.$route.params.id)) {
-            this.maxSessionIndexPlan = plan.sessions.length - 1
-          }
-        })
       }
     }
   }
