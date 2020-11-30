@@ -847,7 +847,7 @@
         this.new_session.name = 'Untitled'
         this.today()
         this.update_plan()
-        this.$parent.$parent.loading = false
+        this.$parent.$parent.pause_loading = false
         this.$modal.hide('copy')
         this.deselectAll()
       },
@@ -925,9 +925,9 @@
         }
       },
       async createSession () {
-        this.$parent.$parent.loading = true
+        this.$parent.$parent.pause_loading = true
         await this.add_session()
-        this.$parent.$parent.loading = false
+        this.$parent.$parent.pause_loading = false
       },
       editingSessionNotes (id, state) {
         this.isEditingSession = state
@@ -1518,7 +1518,7 @@
           this.scan()
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
@@ -1527,7 +1527,7 @@
         }
       },
       async update_session (id) {
-        this.$parent.$parent.loading = true
+        this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
         // Set the plan variable to the current plan
         for (var x in this.$parent.$parent.client_details.plans) {
@@ -1561,10 +1561,10 @@
           await this.update_plan()
           this.adherence()
           this.$ga.event('Session', 'update')
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
@@ -1574,7 +1574,7 @@
       },
       async add_session () {
         try {
-          this.$parent.$parent.loading = true
+          this.$parent.$parent.pause_loading = true
           this.$parent.$parent.dontLeave = true
           const response = await axios.put('https://api.traininblocks.com/workouts',
             {
@@ -1600,10 +1600,10 @@
           this.checkForNew()
           this.adherence()
           this.$ga.event('Session', 'new')
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
@@ -1613,17 +1613,17 @@
       },
       async delete_session (id) {
         try {
-          this.$parent.$parent.loading = true
+          this.$parent.$parent.pause_loading = true
           this.$parent.$parent.dontLeave = true
           await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
           await this.$parent.get_sessions(this.force)
           await this.update_plan()
 
           this.$ga.event('Session', 'delete')
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')

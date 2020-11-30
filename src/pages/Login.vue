@@ -245,7 +245,7 @@ export default {
   },
   methods: {
     async reset () {
-      this.$parent.loading = true
+      this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       try {
         const oktaOne = await axios.post('/.netlify/functions/okta',
@@ -272,10 +272,10 @@ export default {
         this.open = false
         this.email = null
         this.success = 'An email has been sent.'
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
         this.error = 'An error occurred. Please try again...'
         console.error(e)

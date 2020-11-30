@@ -887,7 +887,7 @@
         </div>
       </div>
     </modal>
-    <loading :active.sync="loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
+    <loading :active.sync="pause_loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
@@ -1039,6 +1039,7 @@ export default {
       templates: null,
       errorMsg: null,
       loading: false,
+      pause_loading: false,
       dontLeave: false,
       authenticated: false,
       pwa: {
@@ -1134,7 +1135,6 @@ export default {
       }
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
-      this.get_portfolio()
     },
 
     // CLIENT
@@ -1168,7 +1168,7 @@ export default {
       }
     },
     async client_delete (id, index) {
-      this.loading = true
+      this.pause_loading = true
       this.dontLeave = true
       for (var i = 0; i < this.archive.clients.length; i++) {
         if (this.archive.clients[i].client_id === id) {
@@ -1187,10 +1187,10 @@ export default {
         await this.clients_f()
         this.clients_to_vue()
         this.$ga.event('Client', 'delete')
-        this.loading = false
+        this.pause_loading = false
         this.dontLeave = false
       } catch (e) {
-        this.loading = false
+        this.pause_loading = false
         this.dontLeave = false
         this.errorMsg = e.toString()
         this.$modal.show('error')
@@ -1232,7 +1232,7 @@ export default {
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
         let email
-        this.loading = true
+        this.pause_loading = true
         this.dontLeave = true
         for (var i = 0; i < this.clients.length; i++) {
           if (this.clients[i].client_id === id) {
@@ -1277,11 +1277,11 @@ export default {
               }
             )
           }
-          this.loading = false
+          this.pause_loading = false
           this.dontLeave = false
           this.$router.push('/')
         } catch (e) {
-          this.loading = false
+          this.pause_loading = false
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')
@@ -1292,7 +1292,7 @@ export default {
     },
     async client_unarchive (id, index) {
       if (confirm('Are you sure you want to unarchive this client?')) {
-        this.loading = true
+        this.pause_loading = true
         this.dontLeave = true
         for (var i = 0; i < this.archive.clients.length; i++) {
           if (this.archive.clients[i].client_id === id) {
@@ -1322,10 +1322,10 @@ export default {
           await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
-          this.loading = false
+          this.pause_loading = false
           this.dontLeave = false
         } catch (e) {
-          this.loading = false
+          this.pause_loading = false
           this.dontLeave = false
           this.errorMsg = e.toString()
           this.$modal.show('error')

@@ -262,7 +262,7 @@
         }
       },
       async createClient () {
-        this.$parent.loading = true
+        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         try {
           if (this.clientAlreadyMsg === 'Resend activation email') {
@@ -347,7 +347,7 @@
             )
           }
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -363,7 +363,7 @@
           { adaptive: true },
           { clickToClose: false }
         )
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       },
       async get_sessions (force) {
@@ -453,7 +453,7 @@
       },
       async update_client () {
         this.$parent.dontLeave = true
-        this.$parent.loading = true
+        this.$parent.pause_loading = true
         try {
           await axios.post(`https://api.traininblocks.com/clients`,
             {
@@ -467,10 +467,10 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients_f()
           await this.$parent.clients_to_vue()
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -480,7 +480,7 @@
       },
       async delete_plan () {
         if (confirm('Are you sure you want to delete this plan?')) {
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           var plan
           var id
@@ -498,10 +498,10 @@
             this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
 
             this.$ga.event('Session', 'delete')
-            this.$parent.loading = false
+            this.$parent.pause_loading = false
             this.$parent.dontLeave = false
           } catch (e) {
-            this.$parent.loading = false
+            this.$parent.pause_loading = false
             this.$parent.dontLeave = false
             this.$parent.errorMsg = e
             this.$parent.$modal.show('error')

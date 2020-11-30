@@ -20,6 +20,7 @@
   }
   .show_session {
     max-height: 60vh;
+    padding-right: 1rem
   }
 
   .container--sessions::-webkit-scrollbar {
@@ -74,6 +75,7 @@
             :views="calendarViews"
           />
         </div>
+        <skeleton v-if="$parent.loading" :type="'session'" />
         <div v-if="plan.sessions" class="container--sessions">
           <div
             v-for="(session, index) in plan.sessions"
@@ -109,6 +111,7 @@
 </template>
 
 <script>
+  import Skeleton from '../../components/Skeleton'
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
   import '@fullcalendar/core/main.min.css'
@@ -116,14 +119,15 @@
 
   export default {
     components: {
-      FullCalendar
+      FullCalendar,
+      Skeleton
     },
     data () {
       return {
         check: null,
         giveFeedback: null,
 
-        // CALENDAR DATA //
+        // CALENDAR DATA
 
         calendarToolbarHeader: {
           left: 'title',
@@ -144,14 +148,10 @@
         }
       }
     },
-    created () {
-      this.$parent.loading = true
-      this.$parent.setup()
-      this.$parent.splashed = true
-      this.$parent.loading = false
-    },
     async mounted () {
       this.$parent.loading = true
+      this.$parent.splashed = true
+      await this.$parent.setup()
       await this.$parent.get_plans()
       await this.$parent.sortSessionsPlan()
       await this.scan()

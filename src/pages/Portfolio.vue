@@ -97,7 +97,7 @@ export default {
   methods: {
     async create () {
       this.$parent.dontLeave = true
-      this.$parent.loading = true
+      this.$parent.pause_loading = true
       try {
         await axios.put(`https://api.traininblocks.com/portfolio`,
           {
@@ -108,10 +108,10 @@ export default {
           }
         )
         await this.$parent.get_portfolio()
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
         this.$parent.errorMsg = e
         this.$parent.$modal.show('error')
@@ -121,7 +121,7 @@ export default {
     },
     async update () {
       this.$parent.dontLeave = true
-      this.$parent.loading = true
+      this.$parent.pause_loading = true
       try {
         await axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
           {
@@ -131,10 +131,10 @@ export default {
           }
         )
         await this.$parent.get_portfolio()
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
         this.$parent.errorMsg = e
         this.$parent.$modal.show('error')

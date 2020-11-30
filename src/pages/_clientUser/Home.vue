@@ -19,6 +19,7 @@
   }
   .show_session {
     max-height: 60vh;
+    padding-right: 1rem
   }
 
   /* HStack Scrollar */
@@ -93,19 +94,19 @@
           <p class="text--large">Today</p>
           <inline-svg class="svg--scroll_down" :src="require('../../assets/svg/scroll-down-arrow.svg')" />
         </div>
+        <skeleton v-if="$parent.loading" :type="'session'" />
         <p
-          v-if="viewSessionsStore.length === 0 && $parent.loading === false"
+          v-if="viewSessionsStore.length === 0 && !$parent.loading"
           class="text--small text--no_sessions grey"
         >
           No sessions today...
         </p>
-        <p class="text--small text--loading grey" v-if="$parent.loading === true">Loading sessions...</p>
         <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
           <div class="container--sessions" v-if="plan.sessions">
             <div
               v-for="(session, index) in plan.sessions"
               :key="index"
-              v-show="viewSessionsStore.includes(session.id)"
+              v-show="viewSessionsStore.includes(session.id) && !$parent.loading"
               class="wrapper--session"
             >
               <div class="wrapper--session__header client-side" :id="session.name">
@@ -152,10 +153,12 @@
 
 <script>
 import InlineSvg from 'vue-inline-svg'
+import Skeleton from '../../components/Skeleton.vue'
 
 export default {
   components: {
-    InlineSvg
+    InlineSvg,
+    Skeleton
   },
   data () {
     return {
@@ -163,11 +166,13 @@ export default {
       viewSessionsStore: []
     }
   },
-  async created () {
+  async mounted () {
+    this.$parent.loading = true
     this.$parent.splashed = true
     await this.$parent.setup()
     await this.$parent.get_plans()
-    await this.todaysSession()
+    this.todaysSession()
+    this.$parent.loading = false
   },
   methods: {
 

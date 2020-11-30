@@ -253,13 +253,10 @@
       },
 
       // DATABASE METHODS //-------------------------------------------------------------------------------
-      /*
-        Need to add in store in local storage methods
-        Need to add delete method
-      */
+
       async newTemplate () {
         try {
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           await axios.put('https://api.traininblocks.com/templates',
             {
@@ -274,10 +271,10 @@
             name: 'Untitled',
             note: null
           }
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -289,7 +286,7 @@
         try {
           let templateName
           let templateContent
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           if (this.$parent.templates.length !== 0) {
             this.$parent.templates.forEach((item) => {
@@ -307,10 +304,10 @@
             }
           )
           await this.$parent.getTemplates()
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -320,14 +317,14 @@
       },
       async delete_template (id) {
         try {
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           await axios.delete(`https://api.traininblocks.com/templates/${id}`)
           await this.$parent.getTemplates()
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
