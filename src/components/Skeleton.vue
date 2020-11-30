@@ -1,5 +1,5 @@
 <style scoped>
-  .session {
+  .rect {
     display: grid;
     grid-gap: 2rem;
     padding: 2rem;
@@ -8,24 +8,24 @@
     border-radius: 3px;
     animation: fade .6s linear infinite alternate-reverse
   }
-  .session__title, .session__content, .session__box {
+  .rect__title, .rect__content, .rect__box {
     background: linear-gradient(90deg, white 8%, #F4F4F4 18%, white 33%);
     border-radius: 3px;
     animation: shimmer 5s linear infinite forwards
   }
-  .session__title, .session__content {
+  .rect__title, .rect__content {
     height: 1rem
   }
-  .session__title {
+  .rect__title {
     width: 20%
   }
-  .session__content.one {
+  .rect__content.one {
     width: 50%
   }
-  .session__content.two {
+  .rect__content.two {
     width: 40%;
   }
-  .session__box {
+  .rect__box {
     height: 6rem;
     width: 60%
   }
@@ -50,13 +50,18 @@
 
 <template>
   <div>
-    <div v-if="type === 'session'" class="session">
-      <div class="session__title" />
-      <div class="session__title" />
-      <div class="session__content one" />
-      <div class="session__content two" />
-      <div class="session__box" />
-    </div>  
+    <div v-if="type === 'session'" class="rect">
+      <div class="rect__title" />
+      <div class="rect__title" />
+      <div class="rect__content one" />
+      <div class="rect__content two" />
+      <div class="rect__box" />
+    </div>
+    <div v-if="type === 'plan'" class="rect">
+      <div class="rect__title" />
+      <div class="rect__content one" />
+      <div class="rect__content one" />
+    </div>
   </div>
 </template>
 

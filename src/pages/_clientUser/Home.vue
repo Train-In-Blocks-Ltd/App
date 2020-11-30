@@ -134,7 +134,8 @@
       </div>
       <div class="client_home__plans">
         <p class="text--large">Plans</p>
-        <div class="plan_grid">
+        <skeleton v-if="$parent.loading" :type="'plan'" />
+        <div v-if="!$parent.loading" class="plan_grid">
           <router-link
             v-for="(plan, index) in this.$parent.clientUser.plans"
             :key="'plan-' + index"
