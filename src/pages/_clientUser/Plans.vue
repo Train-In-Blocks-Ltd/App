@@ -32,11 +32,9 @@
   /* Responsive */
   @media (max-width: 768px) {
     .plan_notes {
-      padding: 0
-    }
-    .wrapper--session, .plan_notes {
       box-shadow: none;
-      border-radius: 0
+      border-radius: 0;
+      padding: 0
     }
     .wrapper--session {
       padding: 1rem 1rem 0 1rem

@@ -5,13 +5,28 @@
     grid-gap: 2rem;
     margin: 2rem 0
   }
+  .container--sessions {
+    display: flex;
+    margin-top: 2rem;
+    overflow-x: auto;
+    width: calc(100vw - 38px - 2rem - 20vw);
+    scroll-snap-type: x mandatory
+  }
   .wrapper--session {
-    content-visibility: auto;
-    display: grid;
-    margin: 2rem 0;
-    box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
-    border-radius: 3px
+    min-width: calc(100vw - 38px - 2rem - 20vw);
+    scroll-snap-align: start
+  }
+  .show_session {
+    max-height: 60vh;
+  }
+
+  /* HStack Scrollar */
+  .container--sessions::-webkit-scrollbar {
+    height: 4px
+  }
+  .container--sessions ::-webkit-scrollbar {
+    width: 4px
   }
 
   /* SVG */
@@ -49,10 +64,13 @@
       transform: rotate(-90deg);
       opacity: .6
     }
+
+    /* Sessions */
     .wrapper--session {
-      box-shadow: none;
-      padding: 0;
-      border-radius: 0
+      padding: 1rem 1rem 0 1rem
+    }
+    .container--sessions, .wrapper--session {
+      min-width: 90vw
     }
   }
 </style>
@@ -81,8 +99,12 @@
         <p class="text--small text--loading grey" v-if="$parent.loading === true">Loading sessions...</p>
         <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
           <div class="container--sessions" v-if="plan.sessions">
-            <div class="wrapper--session" v-for="(session, index) in plan.sessions"
-              :key="index" v-show="session.id == viewSessionsStore[currentSessionIndexHome] && isToday()">
+            <div
+              v-for="(session, index) in plan.sessions"
+              :key="index"
+              v-show="viewSessionsStore.includes(session.id)"
+              class="wrapper--session"
+            >
               <div class="wrapper--session__header client-side" :id="session.name">
                 <span class="text--name"><b>{{session.name}}</b></span><br>
                 <span class="text--date">{{$parent.day(session.date)}}</span>
@@ -104,13 +126,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div v-if="viewSessionsStore.length !== 0" class="container--session-control">
-          <div>
-            <button v-if="currentSessionIndexHome != 0" @click="currentSessionIndexHome--">Back</button>
-            <button v-if="currentSessionIndexHome != maxSessionIndexHome" @click="currentSessionIndexHome++">Next</button>
-          </div>
-          <p class="text--small session-counter">{{currentSessionIndexHome + 1}} of {{maxSessionIndexHome + 1}}</p>
         </div>
       </div>
       <div class="client_home__plans">
@@ -142,9 +157,7 @@ export default {
   data () {
     return {
       giveFeedback: null,
-      viewSessionsStore: [],
-      maxSessionIndexHome: null,
-      currentSessionIndexHome: 0
+      viewSessionsStore: []
     }
   },
   created () {
@@ -156,7 +169,6 @@ export default {
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.todaysSession()
-    await this.initCountSessionsHome()
   },
   methods: {
 
@@ -169,10 +181,6 @@ export default {
       } else {
         return dataIn
       }
-    },
-    initCountSessionsHome () {
-      var count = this.viewSessionsStore.length - 1
-      this.maxSessionIndexHome = count
     },
 
     // DATE/TIME METHODS //-------------------------------------------------------------------------------
