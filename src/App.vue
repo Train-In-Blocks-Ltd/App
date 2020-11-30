@@ -901,20 +901,31 @@
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
-        <router-link to="/" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
+        <router-link
+          v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
+          to="/"
+          title="Home"
+        >
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
           <p class="account_nav--item--text">
             Home
           </p>
         </router-link>
-        <router-link to="/clientUser" title="Home" v-if="claims.user_type === 'Client'">
+        <router-link
+          v-if="claims.user_type === 'Client'"
+          to="/clientUser"
+          title="Home"
+        >
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
           <p class="account_nav--item--text">
             Home
           </p>
         </router-link>
       </div>
-      <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
+      <div
+        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
+        class="account_nav--item"
+      >
         <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" rel="noopener" title="Help" >
           <inline-svg :src="require('./assets/svg/help-desk.svg')"  class="account_nav--item--icon" aria-label="Help"/>
           <p class="account_nav--item--text">
@@ -922,7 +933,10 @@
           </p>
         </a>
       </div>
-      <div class="account_nav--item">
+      <div
+        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
+        class="account_nav--item"
+      >
         <router-link to="/templates" title="Templates">
           <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon" aria-label="Templates"/>
           <p class="account_nav--item--text">
@@ -930,7 +944,10 @@
           </p>
         </router-link>
       </div>
-      <div class="account_nav--item">
+      <div
+        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
+        class="account_nav--item"
+      >
         <router-link to="/portfolio" title="Portfolio">
           <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav--item--icon" aria-label="Portfolio"/>
           <p class="account_nav--item--text">
@@ -938,7 +955,10 @@
           </p>
         </router-link>
       </div>
-      <div class="account_nav--item" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
+      <div
+        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
+        class="account_nav--item"
+      >
         <router-link to="/archive" title="Archive">
           <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav--item--icon" aria-label="Archive"/>
           <p class="account_nav--item--text">
@@ -946,7 +966,10 @@
           </p>
         </router-link>
       </div>
-      <div class="account_nav--item">
+      <div
+        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
+        class="account_nav--item"
+      >
         <router-link to="/account" title="Account">
           <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account"/>
           <p class="account_nav--item--text">
@@ -1330,7 +1353,6 @@ export default {
     async get_portfolio () {
       try {
         this.dontLeave = true
-        this.loading = true
         const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
         if (response.data.length === 0) {
           this.create()

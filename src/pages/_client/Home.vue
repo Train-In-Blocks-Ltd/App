@@ -200,13 +200,11 @@
       }
     },
     async created () {
-      this.$parent.loading = true
       this.$parent.splashed = true
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
       this.keepLoaded = true
-      this.$parent.loading = false
     },
     beforeDestroy () {
       this.keepLoaded = false
@@ -225,13 +223,6 @@
             this.$parent.client_details = this.$parent.clients[x]
           }
         }
-      },
-      toURL () {
-        var url = '/'
-        if (window.location.href.includes('session') === true) {
-          url = `/client/${this.$route.params.client_id}/`
-        }
-        return url
       },
 
       // DATABSE AND API METHODS //-------------------------------------------------------------------------------

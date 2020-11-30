@@ -33,7 +33,10 @@
 
 <template>
   <div id="portfolio">
-    <form class="trainer_info" @submit.prevent="update(), editing_info = false">
+    <form
+      @submit.prevent="update(), editing_info = false"
+      class="trainer_info"
+    >
       <input
         v-model="$parent.portfolio.business_name"
         @input="editing_info = true"

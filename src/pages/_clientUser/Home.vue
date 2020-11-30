@@ -93,7 +93,10 @@
           <p class="text--large">Today</p>
           <inline-svg class="svg--scroll_down" :src="require('../../assets/svg/scroll-down-arrow.svg')" />
         </div>
-        <p v-if="viewSessionsStore.length === 0 && $parent.loading === false" class="text--small text--no_sessions grey">
+        <p
+          v-if="viewSessionsStore.length === 0 && $parent.loading === false"
+          class="text--small text--no_sessions grey"
+        >
           No sessions today...
         </p>
         <p class="text--small text--loading grey" v-if="$parent.loading === true">Loading sessions...</p>
@@ -160,12 +163,8 @@ export default {
       viewSessionsStore: []
     }
   },
-  created () {
-    setTimeout(() => {
-      this.$parent.splashed = true
-    }, 4000)
-  },
-  async mounted () {
+  async created () {
+    this.$parent.splashed = true
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.todaysSession()
