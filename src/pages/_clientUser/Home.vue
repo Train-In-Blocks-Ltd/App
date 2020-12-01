@@ -163,6 +163,7 @@ export default {
     this.$parent.splashed = true
     await this.$parent.setup()
     await this.$parent.get_plans()
+    await this.$parent.get_portfolio()
     this.todaysSession()
     this.$parent.loading = false
   },

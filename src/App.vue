@@ -1009,6 +1009,10 @@ export default {
   data () {
     return {
 
+      // USER
+
+      is_trainer: false,
+
       // CLIENT AND ARCHIVE
 
       archive: {
@@ -1065,6 +1069,9 @@ export default {
       // Update UI notify the user they can install the PWA
       this.pwa.canInstall = true
     })
+    if (this.claims.user_type === ('Trainer' || 'Admin')) {
+      this.is_trainer = true
+    }
   },
   watch: {
     '$route' (to, from) {
@@ -1353,7 +1360,7 @@ export default {
     async get_portfolio () {
       try {
         this.dontLeave = true
-        const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
+        const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.is_trainer ? this.claims.sub : this.clients[0].pt_id}`)
         if (response.data.length === 0) {
           this.create()
         } else {
