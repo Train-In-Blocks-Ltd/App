@@ -3,13 +3,13 @@
     display: grid;
     grid-gap: 2rem;
     padding: 2rem;
-    background-color: #F4F4F4;
+    background-color: #E4E4E4;
     margin: 2rem 0;
     border-radius: 3px;
     animation: fade .6s linear infinite alternate-reverse
   }
   .rect__title, .rect__content, .rect__box {
-    background: linear-gradient(90deg, white 8%, #F4F4F4 18%, white 33%);
+    background: linear-gradient(90deg, #F4F4F4 8%, #E4E4E4 18%, #F4F4F4 33%);
     border-radius: 3px;
     animation: shimmer 5s linear infinite forwards
   }

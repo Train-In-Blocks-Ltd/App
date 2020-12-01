@@ -6,20 +6,13 @@
     margin: 2rem 0
   }
   .container--sessions {
-    display: flex;
-    margin-top: 2rem;
-    overflow-x: auto;
-    width: calc(100vw - 38px - 2rem - 20vw);
-    scroll-snap-type: x mandatory
+    margin: 2rem 0
   }
   .wrapper--session {
+    box-shadow: 0 0 20px 10px #28282808;
+    border-radius: 3px;
     padding: 2rem;
-    min-width: calc(100vw - 38px - 2rem - 20vw);
-    scroll-snap-align: start
-  }
-  .show_session {
-    max-height: 60vh;
-    padding-right: 1rem
+    margin-bottom: 2rem
   }
 
   /* HStack Scrollar */
@@ -65,13 +58,10 @@
       transform: rotate(-90deg);
       opacity: .6
     }
-
-    /* Sessions */
     .wrapper--session {
-      padding: 1rem 1rem 0 1rem
-    }
-    .container--sessions, .wrapper--session {
-      min-width: 90vw
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0
     }
   }
 </style>
@@ -92,21 +82,21 @@
       <div class="client_home__today">
         <div class="client_home__today__header">
           <p class="text--large">Today</p>
-          <inline-svg class="svg--scroll_down" :src="require('../../assets/svg/scroll-down-arrow.svg')" />
+          <inline-svg :src="require('../../assets/svg/arrow.svg')" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
-          v-if="viewSessionsStore.length === 0 && !$parent.loading"
+          v-show="todays_sessions_store.length === 0 && !$parent.loading"
           class="text--small text--no_sessions grey"
         >
           No sessions today...
         </p>
-        <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
-          <div class="container--sessions" v-if="plan.sessions">
+        <div v-for="plan in this.$parent.clientUser.plans" :key="plan.name">
+          <div v-if="plan.sessions" class="container--sessions">
             <div
               v-for="(session, index) in plan.sessions"
               :key="index"
-              v-show="viewSessionsStore.includes(session.id) && !$parent.loading"
+              v-show="todays_sessions_store.includes(session.id) && !$parent.loading"
               class="wrapper--session"
             >
               <div class="wrapper--session__header client-side" :id="session.name">
@@ -164,7 +154,8 @@ export default {
   data () {
     return {
       giveFeedback: null,
-      viewSessionsStore: []
+      todays_sessions_store: [],
+      showing_current_session: 0
     }
   },
   async mounted () {
@@ -194,7 +185,7 @@ export default {
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {
           if (session.date === this.isToday()) {
-            this.viewSessionsStore.push(session.id)
+            this.todays_sessions_store.push(session.id)
           }
         })
       })

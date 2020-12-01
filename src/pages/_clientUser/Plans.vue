@@ -1,52 +1,33 @@
 <style scoped>
-  .wrapper--session, .plan_notes {
-    padding: 2rem
+  .plan_name {
+    margin-bottom: 4rem
   }
-  .plan_notes {
+  .plan_notes, .wrapper--session {
     box-shadow: 0 0 20px 10px #28282808;
     border-radius: 3px;
-    margin-top: 6rem;
+    padding: 2rem
   }
-  .wrapper--session {
-    min-width: calc(100vw - 38px - 2rem - 20vw);
-    scroll-snap-align: start
-  }
-  .container--sessions {
+  .show_sessions_nav {
     display: flex;
-    margin-top: 2rem;
-    overflow-x: auto;
-    width: calc(100vw - 38px - 2rem - 20vw);
-    scroll-snap-type: x mandatory
+    justify-content: flex-end;
+    margin: 2rem 0
   }
-  .show_session {
-    max-height: 60vh;
-    padding-right: 1rem
+  .show_sessions_left {
+    cursor: pointer;
+    transform: rotate(90deg)
   }
-
-  .container--sessions::-webkit-scrollbar {
-    height: 4px
-  }
-  .container--sessions ::-webkit-scrollbar {
-    width: 4px
+  .show_sessions_right {
+    cursor: pointer;
+    transform: rotate(-90deg);
+    margin-left: 1rem
   }
 
   /* Responsive */
   @media (max-width: 768px) {
-    .plan_notes {
+    .plan_notes, .wrapper--session {
       box-shadow: none;
       border-radius: 0;
       padding: 0
-    }
-    .wrapper--session {
-      padding: 1rem 1rem 0 1rem
-    }
-    .container--sessions, .wrapper--session {
-      min-width: 90vw
-    }
-  }
-  @media (max-width: 576px) {
-    .plan_notes {
-      margin-top: 2rem
     }
   }
 </style>
@@ -55,9 +36,7 @@
   <div id="client-plan">
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id" class="client_plan">
-        <div class="session--header">
-          <p class="text--large">{{plan.name}}</p>
-        </div>
+        <p class="plan_name text--large">{{plan.name}}</p>
         <div class="plan_notes">
           <div class="plan_notes__header">
             <p class="text--small">Plan Notes</p>
@@ -77,9 +56,24 @@
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <div v-if="plan.sessions" class="container--sessions">
+          <div class="show_sessions_nav">
+            <inline-svg
+              v-show="showing_current_session !== 0"
+              @click="showing_current_session--"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_left"
+            />
+            <inline-svg
+              v-show="showing_current_session !== parseInt(plan.sessions.length) - 1"
+              @click="showing_current_session++"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_right"
+            />
+          </div>
           <div
             v-for="(session, index) in plan.sessions"
             :key="index"
+            v-show="showing_current_session === index"
             class="wrapper--session"
           >
             <div class="wrapper--session__header client-side" :id="session.name">
@@ -111,6 +105,7 @@
 </template>
 
 <script>
+  import InlineSvg from 'vue-inline-svg'
   import Skeleton from '../../components/Skeleton'
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
@@ -120,12 +115,14 @@
   export default {
     components: {
       FullCalendar,
-      Skeleton
+      Skeleton,
+      InlineSvg
     },
     data () {
       return {
         check: null,
         giveFeedback: null,
+        showing_current_session: 0,
 
         // CALENDAR DATA
 
