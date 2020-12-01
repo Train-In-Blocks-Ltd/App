@@ -107,7 +107,7 @@ export default {
             'notes': ''
           }
         )
-        await this.$parent.get_portfolio()
+        await this.$parent.get_portfolio(true)
         this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {
@@ -130,7 +130,7 @@ export default {
             'notes': this.$parent.portfolio.notes
           }
         )
-        await this.$parent.get_portfolio()
+        await this.$parent.get_portfolio(true)
         this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {

@@ -5,7 +5,7 @@
   .plan_notes {
     box-shadow: 0 0 20px 10px #28282808;
     border-radius: 3px;
-    margin-top: 6rem;
+    margin-top: 6rem
   }
   .wrapper--session {
     min-width: calc(100vw - 38px - 2rem - 20vw);
@@ -22,7 +22,6 @@
     max-height: 60vh;
     padding-right: 1rem
   }
-
   .container--sessions::-webkit-scrollbar {
     height: 4px
   }

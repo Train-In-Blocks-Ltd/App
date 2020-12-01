@@ -714,7 +714,7 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfoli {
+    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
       padding: 4rem 10vw
     }
     button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
@@ -1337,10 +1337,13 @@ export default {
 
     // GET METHODS
 
-    async getTemplates () {
+    async getTemplates (force) {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
-        this.templates = response.data
+        if (!localStorage.getItem('templates') || force) {
+          const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+          localStorage.setItem('templates', JSON.stringify(response.data))
+        }
+        this.templates = JSON.parse(localStorage.getItem('templates'))
       } catch (e) {
         this.loading = false
         this.dontLeave = false
@@ -1350,15 +1353,18 @@ export default {
         console.error(e)
       }
     },
-    async get_portfolio () {
+    async get_portfolio (force) {
       try {
-        this.dontLeave = true
-        const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
-        if (response.data.length === 0) {
-          this.create()
-        } else {
-          this.portfolio = response.data[0]
+        if (!localStorage.getItem('portfolio') || force) {
+          this.dontLeave = true
+          const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
+          if (response.data.length === 0) {
+            this.create()
+          } else {
+            localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
+          }
         }
+        this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
         this.loading = false
         this.dontLeave = false
       } catch (e) {

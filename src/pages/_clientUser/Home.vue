@@ -44,7 +44,7 @@
       display: flex;
       max-width: 100vw;
       overflow-x: auto;
-      scroll-snap-type: x mandatory;
+      scroll-snap-type: x mandatory
     }
     .client_home__today {
       margin-bottom: 4rem
