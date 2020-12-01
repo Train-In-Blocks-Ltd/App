@@ -7,6 +7,8 @@
     border-radius: 3px;
     padding: 2rem
   }
+
+  /* Navigate */
   .show_sessions_nav {
     display: flex;
     justify-content: flex-end;
@@ -20,6 +22,11 @@
     cursor: pointer;
     transform: rotate(-90deg);
     margin-left: 1rem
+  }
+
+  /* Scroll */
+  .container--sessions::-webkit-scrollbar {
+    height: 4px
   }
 
   /* Responsive */
