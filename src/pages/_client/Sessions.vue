@@ -412,11 +412,11 @@
             </div>
         </div>
       </modal>
-      <div class="icon--open-stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Statistics">
+      <div class="icon_open--stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Statistics">
         <inline-svg :src="require('../../assets/svg/stats.svg')"/>
         <p class="text">Statistics</p>
       </div>
-      <div class="icon--open-print" v-if="!isStatsOpen && $parent.showOptions === false" @click="printPage()" aria-label="Print">
+      <div class="icon_open--print" v-if="!isStatsOpen && $parent.showOptions === false" @click="printPage()" aria-label="Print">
         <inline-svg :src="require('../../assets/svg/print.svg')"/>
         <p class="text">Print</p>
       </div>
@@ -783,7 +783,7 @@
     },
     async mounted () {
       await this.$parent.get_client_details()
-      this.$parent.$parent.getTemplates()
+      this.$parent.$parent.get_templates()
       this.today()
       this.scan()
       this.checkForNew()

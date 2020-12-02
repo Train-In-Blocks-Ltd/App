@@ -58,7 +58,7 @@
           <new-plan />
         </div>
       </transition>
-      <div class="icon--open-new_plan" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
+      <div class="icon_open--new_plan" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
         <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan"/>
         <p class="text">New Plan</p>
       </div>
@@ -101,8 +101,8 @@
         <p class="text--large">Plans</p>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
         <p class="text--small grey text--no-plans" v-if="this.$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
-        <p class="text--small grey text--loading" v-if="this.$parent.loading_plans">Loading plans...</p>
-        <div v-if="!this.$parent.no_plans" class="plan_grid">
+        <skeleton v-if="$parent.$parent.loading" :type="'plan'" />
+        <div v-if="!this.$parent.no_plans && !$parent.$parent.loading" class="plan_grid">
           <router-link
             class="plan_link" :to="'plan/' + plan.id"
             v-for="(plan, index) in this.$parent.$parent.client_details.plans"
@@ -120,11 +120,13 @@
 <script>
   import InlineSvg from 'vue-inline-svg'
   import NewPlan from '../../components/NewPlan'
+  import Skeleton from '../../components/Skeleton'
 
   export default {
     components: {
       InlineSvg,
-      NewPlan
+      NewPlan,
+      Skeleton
     },
     created () {
       this.loading = true

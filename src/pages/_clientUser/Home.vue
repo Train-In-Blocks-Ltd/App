@@ -12,7 +12,10 @@
     box-shadow: 0 0 20px 10px #28282808;
     border-radius: 3px;
     padding: 2rem;
-    margin-bottom: 2rem
+    margin: 2rem 0
+  }
+  .client_portfolio__notes {
+    margin: 2rem 0
   }
 
   /* HStack Scrollar */
@@ -33,19 +36,16 @@
     #home {
       padding: 0
     }
-    .client_home {
+    #client_home {
       display: flex;
       max-width: 100vw;
       overflow-x: auto;
       scroll-snap-type: x mandatory
     }
-    .client_home__today {
-      margin-bottom: 4rem
-    }
-    .client_home__today, .client_home__plans {
+    .client_home__today, .client_home__plans, .client_home__portfolio {
       padding: 2rem 5vw;
       min-width: 100vw;
-      min-height: 100vw;
+      min-height: calc(100vh - 70.78px);
       scroll-snap-align: start
     }
     .client_home__today__header {
@@ -78,7 +78,25 @@
         </svg>
       </div>
     </div>
-    <div class="client_home">
+    <div>
+      <div :class="{openedSections: is_portfolio_open}" class="section--a" />
+      <div :class="{openedSections: is_portfolio_open}" class="section--b"/>
+    </div>
+    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+      <div class="wrapper--portfolio" v-if="is_portfolio_open">
+        <div class="client_home__portfolio">
+          <p class="text--large">{{ $parent.portfolio.business_name }}</p>
+          <p class="text--large grey">{{ $parent.portfolio.trainer_name }}</p>
+          <div v-html="$parent.portfolio.notes" class="client_portfolio__notes"/>
+          <button @click="is_portfolio_open = false, $parent.willBodyScroll(true)" class="cancel">Close</button>
+        </div>
+      </div>
+    </transition>
+    <div class="icon_open--portfolio" v-if="!is_portfolio_open" @click="is_portfolio_open = true, $parent.willBodyScroll(false)" aria-label="Information">
+      <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information"/>
+      <p class="text">Trainer</p>
+    </div>
+    <div id="client_home">
       <div class="client_home__today">
         <div class="client_home__today__header">
           <p class="text--large">Today</p>
@@ -153,6 +171,7 @@ export default {
   },
   data () {
     return {
+      is_portfolio_open: false,
       giveFeedback: null,
       todays_sessions_store: [],
       showing_current_session: 0
