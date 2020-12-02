@@ -9,16 +9,6 @@
       <b>Duration*</b>
       <input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/>
     </label>
-    <!-- PLAN TYPE
-    <label>
-      <b>Type: </b>
-      <select class="input--forms" v-model="new_plan.type" required>
-        <option value="" disabled selected>Select a type</option>
-        <option value="nutrition">Nutrition</option>
-        <option value="exercise">Exercise</option>
-      </select>
-    </label>
-    -->
     <div class="form_buttons">
       <button type="submit">Save</button>
       <button class="cancel" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">Close</button>
@@ -34,8 +24,7 @@
       return {
         new_plan: {
           name: '',
-          duration: '',
-          type: ''
+          duration: ''
         }
       }
     },
@@ -60,7 +49,6 @@
               'name': this.new_plan.name,
               'client_id': this.$parent.$parent.$parent.client_details.client_id,
               'duration': this.new_plan.duration,
-              'type': this.new_plan.type,
               'block_color': ''
             }
           )
@@ -83,8 +71,7 @@
 
           this.new_plan = {
             name: '',
-            duration: '',
-            type: ''
+            duration: ''
           }
           this.$ga.event('Plan', 'new')
         } catch (e) {
