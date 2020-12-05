@@ -768,7 +768,7 @@
       bottom: 0;
       width: 100vw;
       flex-direction: row;
-      padding: 1rem 1rem 1.4rem 1rem;
+      padding: 1rem 1rem 2.4rem 1rem;
       justify-content: space-between;
       border-right: none
     }
