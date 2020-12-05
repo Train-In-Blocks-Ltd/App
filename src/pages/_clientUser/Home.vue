@@ -26,11 +26,6 @@
     width: 4px
   }
 
-  /* SVG */
-  .client_home__today__header svg {
-    display: none
-  }
-
   /* Responsive */
   @media (max-width: 768px) {
     #home {
@@ -45,18 +40,8 @@
     .client_home__today, .client_home__plans, .client_home__portfolio {
       padding: 2rem 5vw;
       min-width: 100vw;
-      min-height: calc(100vh - 70.78px);
+      min-height: calc(100vh - 86.78px);
       scroll-snap-align: start
-    }
-    .client_home__today__header {
-      display: flex;
-      justify-content: space-between
-    }
-    .client_home__today__header svg {
-      display: block;
-      margin: auto 0;
-      transform: rotate(-90deg);
-      opacity: .6
     }
     .wrapper--session {
       box-shadow: none;
@@ -100,7 +85,6 @@
       <div class="client_home__today">
         <div class="client_home__today__header">
           <p class="text--large">Today</p>
-          <inline-svg :src="require('../../assets/svg/arrow.svg')" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
