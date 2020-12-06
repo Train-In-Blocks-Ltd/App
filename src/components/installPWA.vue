@@ -62,9 +62,7 @@
         // Wait for the user to respond to the prompt
         this.$parent.$parent.pwa.deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the install prompt')
           } else {
-            console.log('User dismissed the install prompt')
             this.$parent.$parent.pwa.canInstall = true
           }
         })

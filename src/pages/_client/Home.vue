@@ -426,7 +426,6 @@
               } else if (!this.$parent.clients[x].plans || force === true) {
                 const response = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
                 // If there are no plans
-                console.log(response.data.length)
                 if (response.data.length === 0) {
                   this.no_plans = true
                   this.$parent.clients[x].plans = false
