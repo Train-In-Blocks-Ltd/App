@@ -176,7 +176,7 @@
       this.$parent.loading = false
     },
     async mounted () {
-      await this.$parent.getTemplates()
+      await this.$parent.get_templates()
       this.checkForNew()
     },
     methods: {
@@ -265,7 +265,7 @@
               template: this.new_template.template
             }
           )
-          await this.$parent.getTemplates(true)
+          await this.$parent.get_templates(true)
           this.checkForNew()
           this.new_template = {
             name: 'Untitled',
@@ -303,7 +303,7 @@
               id: id
             }
           )
-          await this.$parent.getTemplates(true)
+          await this.$parent.get_templates(true)
           this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
@@ -320,7 +320,7 @@
           this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           await axios.delete(`https://api.traininblocks.com/templates/${id}`)
-          await this.$parent.getTemplates(true)
+          await this.$parent.get_templates(true)
           this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {

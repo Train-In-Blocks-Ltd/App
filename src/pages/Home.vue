@@ -42,15 +42,15 @@
         <install-app />
       </div>
     </transition>
-    <div class="icon--open-new_client" v-if="!isNewClientOpen" @click="isNewClientOpen = true, $parent.willBodyScroll(false)" aria-label="New Client">
+    <div class="icon_open--new_client" v-if="!isNewClientOpen" @click="isNewClientOpen = true, $parent.willBodyScroll(false)" aria-label="New Client">
       <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client"/>
       <p class="text">New Client</p>
     </div>
-    <div class="icon--open-whats_new" v-if="!isWhatsNewOpen" @click="isWhatsNewOpen = true, $parent.willBodyScroll(false)" aria-label="What's New">
+    <div class="icon_open--whats_new" v-if="!isWhatsNewOpen" @click="isWhatsNewOpen = true, $parent.willBodyScroll(false)" aria-label="What's New">
       <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New"/>
       <p class="text">What's New</p>
     </div>
-    <div class="icon--open-install_PWA" v-if="!isInstallOpen" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
+    <div class="icon_open--install_PWA" v-if="!isInstallOpen" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
       <inline-svg :src="require('../assets/svg/install-PWA.svg')" aria-label="Install App"/>
       <p class="text">Install</p>
     </div>
@@ -66,12 +66,14 @@
       <p v-if="response !== ''" class="new-msg">{{response}}</p>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
+        <skeleton v-if="$parent.loading" :type="'client'" />
         <router-link
-          class="wrapper--client_link"
           :to="'/client/'+clients.client_id+'/'"
-          v-show="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())"
+          v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
           :id="'a' + clients.client_id"
-          v-for="(clients, index) in $parent.clients" :key="index"
+          v-for="(clients, index) in $parent.clients"
+          :key="index"
+          class="wrapper--client_link"
         >
           <client-link class="client_link" :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes"/>
         </router-link>
@@ -86,6 +88,7 @@
   import NewClient from '../components/NewClient'
   import WhatsNew from '../components/WhatsNew'
   import InstallApp from '../components/InstallPWA'
+  import Skeleton from '../components/Skeleton'
 
   export default {
     components: {
@@ -93,7 +96,8 @@
       ClientLink,
       NewClient,
       WhatsNew,
-      InstallApp
+      InstallApp,
+      Skeleton
     },
     data () {
       return {

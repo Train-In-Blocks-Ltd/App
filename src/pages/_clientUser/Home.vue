@@ -6,20 +6,16 @@
     margin: 2rem 0
   }
   .container--sessions {
-    display: flex;
-    margin-top: 2rem;
-    overflow-x: auto;
-    width: calc(100vw - 38px - 2rem - 20vw);
-    scroll-snap-type: x mandatory
+    margin: 2rem 0
   }
   .wrapper--session {
+    box-shadow: 0 0 20px 10px #28282808;
+    border-radius: 3px;
     padding: 2rem;
-    min-width: calc(100vw - 38px - 2rem - 20vw);
-    scroll-snap-align: start
+    margin: 2rem 0
   }
-  .show_session {
-    max-height: 60vh;
-    padding-right: 1rem
+  .client_portfolio__notes {
+    margin: 2rem 0
   }
 
   /* HStack Scrollar */
@@ -30,48 +26,27 @@
     width: 4px
   }
 
-  /* SVG */
-  .client_home__today__header svg {
-    display: none
-  }
-
   /* Responsive */
   @media (max-width: 768px) {
     #home {
       padding: 0
     }
-    .client_home {
+    #client_home {
       display: flex;
       max-width: 100vw;
       overflow-x: auto;
       scroll-snap-type: x mandatory
     }
-    .client_home__today {
-      margin-bottom: 4rem
-    }
-    .client_home__today, .client_home__plans {
+    .client_home__today, .client_home__plans, .client_home__portfolio {
       padding: 2rem 5vw;
       min-width: 100vw;
-      min-height: 100vw;
+      min-height: calc(100vh - 86.78px);
       scroll-snap-align: start
     }
-    .client_home__today__header {
-      display: flex;
-      justify-content: space-between
-    }
-    .client_home__today__header svg {
-      display: block;
-      margin: auto 0;
-      transform: rotate(-90deg);
-      opacity: .6
-    }
-
-    /* Sessions */
     .wrapper--session {
-      padding: 1rem 1rem 0 1rem
-    }
-    .container--sessions, .wrapper--session {
-      min-width: 90vw
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0
     }
   }
 </style>
@@ -88,25 +63,42 @@
         </svg>
       </div>
     </div>
-    <div class="client_home">
+    <div>
+      <div :class="{openedSections: is_portfolio_open}" class="section--a" />
+      <div :class="{openedSections: is_portfolio_open}" class="section--b"/>
+    </div>
+    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+      <div class="wrapper--portfolio" v-if="is_portfolio_open">
+        <div class="client_home__portfolio">
+          <p class="text--large">{{ $parent.portfolio.business_name }}</p>
+          <p class="text--large grey">{{ $parent.portfolio.trainer_name }}</p>
+          <div v-html="$parent.portfolio.notes" class="client_portfolio__notes"/>
+          <button @click="is_portfolio_open = false, $parent.willBodyScroll(true)" class="cancel">Close</button>
+        </div>
+      </div>
+    </transition>
+    <div class="icon_open--portfolio" v-if="!is_portfolio_open" @click="is_portfolio_open = true, $parent.willBodyScroll(false)" aria-label="Information">
+      <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information"/>
+      <p class="text">Trainer</p>
+    </div>
+    <div id="client_home">
       <div class="client_home__today">
         <div class="client_home__today__header">
           <p class="text--large">Today</p>
-          <inline-svg class="svg--scroll_down" :src="require('../../assets/svg/scroll-down-arrow.svg')" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
-          v-if="viewSessionsStore.length === 0 && !$parent.loading"
+          v-show="todays_sessions_store.length === 0 && !$parent.loading"
           class="text--small text--no_sessions grey"
         >
           No sessions today...
         </p>
-        <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
-          <div class="container--sessions" v-if="plan.sessions">
+        <div v-for="plan in this.$parent.clientUser.plans" :key="plan.name">
+          <div v-if="plan.sessions" class="container--sessions">
             <div
               v-for="(session, index) in plan.sessions"
               :key="index"
-              v-show="viewSessionsStore.includes(session.id) && !$parent.loading"
+              v-show="todays_sessions_store.includes(session.id) && !$parent.loading"
               class="wrapper--session"
             >
               <div class="wrapper--session__header client-side" :id="session.name">
@@ -163,8 +155,10 @@ export default {
   },
   data () {
     return {
+      is_portfolio_open: false,
       giveFeedback: null,
-      viewSessionsStore: []
+      todays_sessions_store: [],
+      showing_current_session: 0
     }
   },
   async mounted () {
@@ -172,6 +166,7 @@ export default {
     this.$parent.splashed = true
     await this.$parent.setup()
     await this.$parent.get_plans()
+    await this.$parent.get_portfolio()
     this.todaysSession()
     this.$parent.loading = false
   },
@@ -194,7 +189,7 @@ export default {
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {
           if (session.date === this.isToday()) {
-            this.viewSessionsStore.push(session.id)
+            this.todays_sessions_store.push(session.id)
           }
         })
       })

@@ -181,7 +181,7 @@
     position: relative;
     margin: 4rem 0
   }
-  .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan {
+  .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan, .wrapper--portfolio {
     position: fixed;
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
@@ -564,7 +564,7 @@
   }
 
   /* EXTRA OPTIONS */
-  .icon--open-options, .icon--open-stats, .icon--open-new_client, .icon--open-install_PWA, .icon--open-whats_new, .icon--open-new_plan, .icon--open-print {
+  .icon_open--options, .icon_open--stats, .icon_open--new_client, .icon_open--install_PWA, .icon_open--whats_new, .icon_open--new_plan, .icon_open--print, .icon_open--portfolio {
     user-select: none;
     z-index: 2;
     display: flex;
@@ -578,32 +578,32 @@
     background-color: #F4F4F4;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  div.icon--open-stats, div.icon--open-whats_new, .icon--open-new_plan {
+  div.icon_open--stats, div.icon_open--whats_new, .icon_open--new_plan {
     top: 4.4rem
   }
-  div.icon--open-install_PWA, div.icon--open-print {
+  div.icon_open--install_PWA, div.icon_open--print {
     top: 6.8rem
   }
-  .icon--open-options:hover, .icon--open-stats:hover, .icon--open-install_PWA:hover, div.icon--open-print:hover {
+  .icon_open--options:hover, .icon_open--stats:hover, .icon_open--install_PWA:hover, div.icon_open--print:hover, div.icon_open--portfolio:hover {
     width: 6rem;
     justify-content: center;
     text-align: center
   }
-  .icon--open-new_client:hover, .icon--open-whats_new:hover, .icon--open-new_plan:hover {
+  .icon_open--new_client:hover, .icon_open--whats_new:hover, .icon_open--new_plan:hover {
     width: 8rem;
     justify-content: center;
     text-align: center
   }
-  .icon--open-options:hover svg, .icon--open-stats:hover svg, .icon--open-new_client:hover svg, .icon--open-install_PWA:hover svg, .icon--open-whats_new:hover svg, .icon--open-new_plan:hover svg, .icon--open-print:hover svg {
+  .icon_open--options:hover svg, .icon_open--stats:hover svg, .icon_open--new_client:hover svg, .icon_open--install_PWA:hover svg, .icon_open--whats_new:hover svg, .icon_open--new_plan:hover svg, .icon_open--print:hover svg, .icon_open--portfolio:hover svg {
     display: none
   }
-  .icon--open-options .text, .icon--open-stats .text, .icon--open-new_client .text, .icon--open-install_PWA .text, .icon--open-whats_new .text, .icon--open-new_plan .text, .icon--open-print .text {
+  .icon_open--options .text, .icon_open--stats .text, .icon_open--new_client .text, .icon_open--install_PWA .text, .icon_open--whats_new .text, .icon_open--new_plan .text, .icon_open--print .text, .icon_open--portfolio .text {
     font-size: .8rem;
     display: none;
     white-space: nowrap;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .icon--open-options:hover .text, .icon--open-stats:hover .text, .icon--open-new_client:hover .text, .icon--open-install_PWA:hover .text, .icon--open-whats_new:hover .text, .icon--open-new_plan:hover .text, .icon--open-print:hover .text {
+  .icon_open--options:hover .text, .icon_open--stats:hover .text, .icon_open--new_client:hover .text, .icon_open--install_PWA:hover .text, .icon_open--whats_new:hover .text, .icon_open--new_plan:hover .text, .icon_open--print:hover .text, .icon_open--portfolio:hover .text {
     display: block
   }
 
@@ -724,7 +724,7 @@
       padding: 0
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .sidebar {
       top: 0;
       height: 100vh;
@@ -756,7 +756,7 @@
     .client_link__notes__content img, .plan_link img {
       max-width: 100%
     }
-    .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan {
+    .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan, .wrapper--portfolio {
       padding: 4rem 10vw 10rem 10vw
     }
 
@@ -768,7 +768,7 @@
       bottom: 0;
       width: 100vw;
       flex-direction: row;
-      padding: 1rem 1rem 1.4rem 1rem;
+      padding: 1rem 1rem 2.4rem 1rem;
       justify-content: space-between;
       border-right: none
     }
@@ -839,7 +839,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, .ql-editor, .show_client_notes, .show_plan_notes,.show_session, div.wrapper--client, .icon--expand, .icon--open-options, .icon--open-stats, .icon--open-new_client, .icon--open-install_PWA, .icon--open-new_plan {
+    .search, .client_container > a:before, .ql-editor, .show_client_notes, .show_plan_notes,.show_session, div.wrapper--client, .icon--expand, .icon_open--options, .icon_open--stats, .icon_open--new_client, .icon_open--install_PWA, .icon_open--new_plan {
       transition: none
     }
     .sidebar {
@@ -855,7 +855,7 @@
 
   /* PRINT MEDIA */
   @media print {
-    .sidebar, .wrapper--floating_nav, .icon--open-stats, .icon--open-print, .wrapper--progress-bar, a, button, input[type='checkbox'], input[type='color'], svg, .expand-all, .plan_table, video, iframe {
+    .sidebar, .wrapper--floating_nav, .icon_open--stats, .icon_open--print, .wrapper--progress-bar, a, button, input[type='checkbox'], input[type='color'], svg, .expand-all, .plan_table, video, iframe {
       display: none
     }
     #client .client_info input:not([type='submit']) {
@@ -1023,6 +1023,10 @@ export default {
   data () {
     return {
 
+      // USER
+
+      is_trainer: false,
+
       // CLIENT AND ARCHIVE
 
       archive: {
@@ -1079,6 +1083,9 @@ export default {
       // Update UI notify the user they can install the PWA
       this.pwa.canInstall = true
     })
+    if (this.claims.user_type === ('Trainer' || 'Admin')) {
+      this.is_trainer = true
+    }
   },
   watch: {
     '$route' (to, from) {
@@ -1351,7 +1358,7 @@ export default {
 
     // GET METHODS
 
-    async getTemplates (force) {
+    async get_templates (force) {
       try {
         if (!localStorage.getItem('templates') || force) {
           const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
@@ -1371,7 +1378,7 @@ export default {
       try {
         if (!localStorage.getItem('portfolio') || force) {
           this.dontLeave = true
-          const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
+          const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.is_trainer ? this.claims.sub : this.clients[0].pt_id}`)
           if (response.data.length === 0) {
             this.create()
           } else {

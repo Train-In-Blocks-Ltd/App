@@ -26,9 +26,12 @@
     </div>
     <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false && $parent.$parent.pwa.installed === false">
       <p class="text--large">Your device doesn't support Progressive Web Apps</p>
+      <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
     </div>
     <div v-else>
-      <p class="text--large">Congratulations. You have launched the app natively</p>
+      <p class="text--large">Nothing to do here</p>
+      <p class="text--large grey">You're using the installed app already</p>
+      <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
     </div>
   </div>
 </template>

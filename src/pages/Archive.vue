@@ -38,10 +38,11 @@
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <input v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients" type="search" aria-label="search by name" rel="search" placeholder="Name" class="search text--small" autocomplete="name" v-model="search"/>
     <div class="container--clients">
+      <skeleton v-if="$parent.loading" :type="'archived'" />
       <div
         class="wrapper--client_link"
         :to="'/client/'+clients.client_id+'/'"
-        v-show="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())"
+        v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
         :id="'a' + clients.client_id"
         v-for="(clients, index) in $parent.archive.clients" :key="index"
       >
@@ -62,11 +63,13 @@
 <script>
   import ClientLink from '../components/ClientLink'
   import InlineSvg from 'vue-inline-svg'
+  import Skeleton from '../components/Skeleton'
 
   export default {
     components: {
       InlineSvg,
-      ClientLink
+      ClientLink,
+      Skeleton
     },
     data () {
       return {

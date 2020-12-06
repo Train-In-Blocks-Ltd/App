@@ -113,7 +113,7 @@
     </modal>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
       <div v-if="keepLoaded" class="floating_nav">
-        <div class="icon--open-options" v-if="!showOptions" @click="showOptions = true" aria-label="Menu">
+        <div class="icon_open--options" v-if="!showOptions" @click="showOptions = true" aria-label="Menu">
           <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options"/>
           <p class="text">Options</p>
         </div>

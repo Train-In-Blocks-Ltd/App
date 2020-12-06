@@ -1,15 +1,17 @@
 <style scoped>
+  .add_margin {
+    margin: 2rem 0
+  }
   .rect {
     display: grid;
     grid-gap: 2rem;
     padding: 2rem;
-    background-color: #F4F4F4;
-    margin: 2rem 0;
+    background-color: #E4E4E4;
     border-radius: 3px;
     animation: fade .6s linear infinite alternate-reverse
   }
   .rect__title, .rect__content, .rect__box {
-    background: linear-gradient(90deg, white 8%, #F4F4F4 18%, white 33%);
+    background: linear-gradient(90deg, #F4F4F4 8%, #E4E4E4 18%, #F4F4F4 33%);
     border-radius: 3px;
     animation: shimmer 5s linear infinite forwards
   }
@@ -50,17 +52,29 @@
 
 <template>
   <div>
-    <div v-if="type === 'session'" class="rect">
+    <div v-if="type === 'session'" class="rect add_margin">
       <div class="rect__title" />
       <div class="rect__title" />
       <div class="rect__content one" />
       <div class="rect__content two" />
       <div class="rect__box" />
     </div>
-    <div v-if="type === 'plan'" class="rect">
+    <div v-if="type === 'plan'" class="rect add_margin">
       <div class="rect__title" />
       <div class="rect__content one" />
       <div class="rect__content one" />
+    </div>
+    <div v-if="type === 'client'" class="rect">
+      <div class="rect__title" />
+      <div class="rect__content two" />
+      <div class="rect__content two" />
+      <div class="rect__content one" />
+      <div class="rect__content one" />
+    </div>
+    <div v-if="type === 'archived'" class="rect">
+      <div class="rect__title" />
+      <div class="rect__content two" />
+      <div class="rect__content two" />
     </div>
   </div>
 </template>
