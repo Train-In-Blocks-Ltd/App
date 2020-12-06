@@ -912,13 +912,27 @@
           </p>
         </router-link>
         <router-link
-          v-if="claims.user_type === 'Client'"
+          v-else-if="claims.user_type === 'Client'"
           to="/clientUser"
           title="Home"
         >
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
           <p class="account_nav--item--text">
             Home
+          </p>
+        </router-link>
+      </div>
+      <div 
+        v-if="claims.user_type === 'Admin'"
+        class="account_nav--item"
+      >
+        <router-link
+          to="/clientUser"
+          title="Client Home"
+        >
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Client Home"/>
+          <p class="account_nav--item--text">
+            Client Home
           </p>
         </router-link>
       </div>
