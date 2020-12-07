@@ -60,9 +60,9 @@
     <div class="wrapper_card">
       <p
         v-if="!editing_card && ($parent.portfolio.notes === '<p><br></p>' || $parent.portfolio.notes === '')"
-        class="text--small grey text--no_client_notes"
+        class="text--small grey"
       >
-        Your clients will be able to access this information. What do you want to share with them?
+        Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.
       </p>
       <div v-html="$parent.portfolio.notes" v-if="!editing_card" class="show_card" />
       <quill v-model="$parent.portfolio.notes" v-if="editing_card" output="html" class="quill animate animate__fadeIn" />
