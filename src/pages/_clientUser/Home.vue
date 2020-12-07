@@ -53,16 +53,7 @@
 
 <template>
   <div id="home">
-    <div v-if="!$parent.splashed" id="splash">
-      <div class="box">
-        <svg class="logo--svg" width="38" height="38" viewBox="0 0 38 38" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-          <g id="Icon">
-            <path d="M0 0L38 0L38 15L15 15L15 38L0 38L0 0Z" id="Rectangle" fill="#282828" stroke="none" />
-            <path d="M0 0L14 0L14 14L0 14L0 0Z" transform="translate(24 24)" id="Rectangle-2" fill="#282828" stroke="none" />
-          </g>
-        </svg>
-      </div>
-    </div>
+    <splash v-if="!$parent.splashed" />
     <div>
       <div :class="{openedSections: is_portfolio_open}" class="section--a" />
       <div :class="{openedSections: is_portfolio_open}" class="section--b"/>
@@ -77,7 +68,12 @@
         </div>
       </div>
     </transition>
-    <div class="icon_open--portfolio" v-if="!is_portfolio_open" @click="is_portfolio_open = true, $parent.willBodyScroll(false)" aria-label="Information">
+    <div
+      v-if="!is_portfolio_open && ($parent.portfolio.notes !== '' || $parent.portfolio.notes !== '<p><br></p>')"
+      @click="is_portfolio_open = true, $parent.willBodyScroll(false)"
+      aria-label="Information"
+      class="icon_open--portfolio"
+    >
       <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information"/>
       <p class="text">Trainer</p>
     </div>
@@ -109,9 +105,29 @@
               <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
               <div class="bottom_bar">
                 <div class="full_width_bar">
-                  <button v-if="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button_done" class="button--state no_margin">Completed</button>
-                  <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons_to_do" class="button--state no_margin">Click to complete</button>
-                  <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
+                  <button
+                    v-if="session.checked === 1"
+                    @click="session.checked = 0, $parent.update_session(plan.id, session.id)"
+                    id="button_done"
+                    class="button--state no_margin"
+                  >
+                    Completed
+                  </button>
+                  <button
+                    v-if="session.checked === 0"
+                    @click="session.checked = 1, $parent.update_session(plan.id, session.id)"
+                    id="buttons_to_do"
+                    class="button--state no_margin"
+                  >
+                    Click to complete
+                  </button>
+                  <button
+                    v-if="giveFeedback !== session.id"
+                    @click="giveFeedback = session.id"
+                    class="button--feedback"
+                  >
+                    Give Feedback
+                  </button>
                 </div>
               </div><br>
               <div v-if="giveFeedback === session.id">
@@ -135,8 +151,17 @@
             :to="'/clientUser/plan/' + plan.id"
           >
             <p class="text--small plan-name">{{plan.name}}</p>
-            <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">No plan notes added.</p>
-            <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="plan_link__notes__content" />
+            <p
+              v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
+              class="grey"
+            >
+              No plan notes added.
+            </p>
+            <div
+              v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
+              v-html="plan.notes"
+              class="plan_link__notes__content"
+            />
           </router-link>
         </div>
       </div>
@@ -147,11 +172,13 @@
 <script>
 import InlineSvg from 'vue-inline-svg'
 import Skeleton from '../../components/Skeleton.vue'
+import Splash from '../../components/Splash'
 
 export default {
   components: {
     InlineSvg,
-    Skeleton
+    Skeleton,
+    Splash
   },
   data () {
     return {
@@ -163,7 +190,9 @@ export default {
   },
   async mounted () {
     this.$parent.loading = true
-    this.$parent.splashed = true
+    setTimeout(() => {
+      this.$parent.splashed = true
+    }, 4000)
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()
