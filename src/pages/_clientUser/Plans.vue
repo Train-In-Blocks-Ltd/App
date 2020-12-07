@@ -11,8 +11,10 @@
   /* Navigate */
   .show_sessions_nav {
     display: flex;
-    justify-content: flex-end;
     margin: 2rem 0
+  }
+  .show_sessions_counter {
+    margin: auto
   }
   .show_sessions_left {
     cursor: pointer;
@@ -22,6 +24,9 @@
     cursor: pointer;
     transform: rotate(-90deg);
     margin-left: 1rem
+  }
+  .disabled {
+    opacity: .4
   }
 
   /* Scroll */
@@ -71,10 +76,21 @@
               class="show_sessions_left"
             />
             <inline-svg
+              v-show="showing_current_session === 0"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_left disabled"
+            />
+            <p class="show_sessions_counter">{{ showing_current_session + 1 }}/{{ plan.sessions.length }}</p>
+            <inline-svg
               v-show="showing_current_session !== parseInt(plan.sessions.length) - 1"
               @click="showing_current_session++"
               :src="require('../../assets/svg/arrow.svg')"
               class="show_sessions_right"
+            />
+            <inline-svg
+              v-show="showing_current_session === parseInt(plan.sessions.length) - 1"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_right disabled"
             />
           </div>
           <div

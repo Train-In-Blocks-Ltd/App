@@ -69,7 +69,7 @@
       </div>
     </transition>
     <div
-      v-if="!is_portfolio_open && ($parent.portfolio.notes !== '' || $parent.portfolio.notes !== '<p><br></p>')"
+      v-if="!is_portfolio_open && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
       @click="is_portfolio_open = true, $parent.willBodyScroll(false)"
       aria-label="Information"
       class="icon_open--portfolio"
