@@ -932,7 +932,7 @@
         >
           <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Client Home"/>
           <p class="account_nav--item--text">
-            Client Home
+            Client
           </p>
         </router-link>
       </div>

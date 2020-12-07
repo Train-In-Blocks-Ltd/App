@@ -110,7 +110,7 @@
               <div class="bottom_bar">
                 <div class="full_width_bar">
                   <button v-if="session.checked === 1" @click="session.checked = 0, $parent.update_session(plan.id, session.id)" id="button_done" class="button--state no_margin">Completed</button>
-                  <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons-to-do" class="button--state no_margin">Click to complete</button>
+                  <button v-if="session.checked === 0" @click="session.checked = 1, $parent.update_session(plan.id, session.id)" id="buttons_to_do" class="button--state no_margin">Click to complete</button>
                   <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
                 </div>
               </div><br>
