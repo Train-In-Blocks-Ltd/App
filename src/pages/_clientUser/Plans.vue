@@ -126,7 +126,7 @@
 <script>
   import InlineSvg from 'vue-inline-svg'
   import Skeleton from '../../components/Skeleton'
-  import Calendar from '../../components/calendar/Calendar'
+  import Calendar from '../../components/Calendar'
 
   export default {
     components: {

@@ -653,8 +653,7 @@
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
   import Checkbox from '../../components/Checkbox'
-
-  import Calendar from '../../components/calendar/Calendar'
+  import Calendar from '../../components/Calendar'
 
   export default {
     components: {

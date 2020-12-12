@@ -93,7 +93,7 @@
       <div class="calendar_header__bar">
         <inline-svg
           @click="week_diff--, get_week()"
-          :src="require('../../assets/svg/arrow.svg')"
+          :src="require('../assets/svg/arrow.svg')"
           class="prev_week"
         />
         <p
@@ -105,7 +105,7 @@
         </p>
         <inline-svg
           @click="week_diff++, get_week()"
-          :src="require('../../assets/svg/arrow.svg')"
+          :src="require('../assets/svg/arrow.svg')"
           class="next_week"
         />
       </div>
