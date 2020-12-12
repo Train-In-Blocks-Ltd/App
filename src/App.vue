@@ -229,6 +229,7 @@
     box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
   button:disabled, button[disabled] {
+    cursor: default;
     opacity: .6
   }
   .delete:hover, .cancel:hover {
@@ -263,38 +264,6 @@
   .search:focus {
     width: 100%;
     opacity: 1
-  }
-
-  /* CALENDAR */
-  div.fc-toolbar h2 {
-    font-weight: lighter;
-    font-size: 1.6rem
-  }
-  button.fc-button {
-    border-radius: 3px;
-    text-transform: capitalize;
-    font-size: .8rem;
-    background-color: #282828;
-    color: white
-  }
-  button.fc-button-primary:disabled {
-    background-color: #282828
-  }
-  .fc-view.fc-dayGridMonth-view.fc-dayGrid-view * {
-    border-color: transparent
-  }
-  .fc-scroller.fc-day-grid-container {
-    /* stylelint-disable-next-line */
-    height: auto!important;
-    /* stylelint-disable-next-line */
-    overflow: hidden!important
-  }
-  .fc-row.fc-week.fc-widget-content {
-    /* stylelint-disable-next-line */
-    height: auto!important
-  }
-  .fc-view-container span {
-    font-size: .8rem
   }
 
   /* QUILL WRAPPERS */
@@ -654,7 +623,7 @@
     #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
       padding: 4rem 10vw
     }
-    button:not(:disabled):hover, .button:hover, button.fc-today-button.fc-button.fc-button-primary:not(:disabled):hover, button.fc-prev-button.fc-button.fc-button-primary:hover, button.fc-next-button.fc-button.fc-button-primary:hover, button.fc-dayGridWeek-button.fc-button.fc-button-primary:hover, button.fc-dayGridMonth-button.fc-button.fc-button-primary:hover {
+    button:not(:disabled):hover, .button:hover {
       opacity: 1
     }
     #line-chart {
@@ -754,21 +723,6 @@
     .wrapper--calendar {
       margin: 2rem 0
     }
-
-    /* Plans Page */
-    .fc-view-container {
-      width: 90vw;
-      overflow-x: auto
-    }
-    .fc-view-container span {
-      font-size: .7rem
-    }
-    .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
-      width: 200vw
-    }
-    div.fc-toolbar h2 {
-      font-size: 1rem
-    }
   }
 
   /* REDUCED MOTION */
@@ -798,12 +752,6 @@
     #client .client_info input:not([type='submit']) {
       border: none;
       padding: 0
-    }
-    .fc-view-container {
-      width: 100vw
-    }
-    .fc-view.fc-dayGridMonth-view.fc-dayGrid-view, div.fc-view.fc-dayGridWeek-view.fc-dayGrid-view {
-      width: 100vw
     }
   }
 </style>

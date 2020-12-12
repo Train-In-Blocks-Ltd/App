@@ -8,9 +8,6 @@
     "debug": "netlify dev --inspect"
   },
   "dependencies": {
-    "@fullcalendar/core": "^4.4.2",
-    "@fullcalendar/daygrid": "^4.4.2",
-    "@fullcalendar/vue": "^4.4.2",
     "@okta/okta-signin-widget": "^4.5.2",
     "@okta/okta-vue": "^2.1.1",
     "@sendgrid/mail": "^7.4.0",

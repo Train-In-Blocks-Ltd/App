@@ -485,15 +485,7 @@
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <FullCalendar
-                  defaultView="dayGridMonth"
-                  :firstDay="1"
-                  :plugins="calendarPlugins"
-                  :header="calendarToolbarHeader"
-                  :footer="calendarToolbarFooter" 
-                  :events="sessionDates"
-                  :views="calendarViews"
-                />
+                <calendar :events="sessionDates" />
               </div>
             </div>
             <div class="wrapper-plan">
@@ -662,17 +654,14 @@
   import InlineSvg from 'vue-inline-svg'
   import Checkbox from '../../components/Checkbox'
 
-  import FullCalendar from '@fullcalendar/vue'
-  import dayGridPlugin from '@fullcalendar/daygrid'
-  import '@fullcalendar/core/main.min.css'
-  import '@fullcalendar/daygrid/main.css'
+  import Calendar from '../../components/calendar/Calendar'
 
   export default {
     components: {
       LineChart,
       InlineSvg,
-      FullCalendar,
-      Checkbox
+      Checkbox,
+      Calendar
     },
     data () {
       return {
@@ -740,23 +729,7 @@
         },
 
         // CALENDAR DATA //
-        calendarToolbarHeader: {
-          left: 'title',
-          right: ''
-        },
-        calendarToolbarFooter: {
-          left: 'dayGridMonth, dayGridThreeDay',
-          right: 'today prev, next'
-        },
-        calendarPlugins: [ dayGridPlugin ],
         sessionDates: [],
-        calendarViews: {
-          dayGridThreeDay: {
-            type: 'dayGrid',
-            duration: { days: 3 },
-            buttonText: '3 day'
-          }
-        },
 
         // STATISTICS DATA //
         p1: '',

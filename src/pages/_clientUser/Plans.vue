@@ -57,14 +57,7 @@
           <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_plan_notes text--small grey">No plan notes added...</p>
         </div>
         <div class="wrapper--calendar">
-          <FullCalendar
-            defaultView="dayGridMonth"
-            :firstDay="1" :plugins="calendarPlugins"
-            :header="calendarToolbarHeader"
-            :footer="calendarToolbarFooter"
-            :events="sessionDates"
-            :views="calendarViews"
-          />
+          <calendar :events="sessionDates" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <div v-if="plan.sessions" class="container--sessions">
@@ -130,14 +123,11 @@
 <script>
   import InlineSvg from 'vue-inline-svg'
   import Skeleton from '../../components/Skeleton'
-  import FullCalendar from '@fullcalendar/vue'
-  import dayGridPlugin from '@fullcalendar/daygrid'
-  import '@fullcalendar/core/main.min.css'
-  import '@fullcalendar/daygrid/main.css'
+  import Calendar from '../../components/calendar/Calendar'
 
   export default {
     components: {
-      FullCalendar,
+      Calendar,
       Skeleton,
       InlineSvg
     },
@@ -148,24 +138,7 @@
         showing_current_session: 0,
 
         // CALENDAR DATA
-
-        calendarToolbarHeader: {
-          left: 'title',
-          right: ''
-        },
-        calendarToolbarFooter: {
-          left: 'dayGridMonth, dayGridThreeDay',
-          right: 'today prev, next'
-        },
-        calendarPlugins: [ dayGridPlugin ],
-        sessionDates: [],
-        calendarViews: {
-          dayGridThreeDay: {
-            type: 'dayGrid',
-            duration: { days: 3 },
-            buttonText: '3 day'
-          }
-        }
+        sessionDates: []
       }
     },
     async mounted () {
