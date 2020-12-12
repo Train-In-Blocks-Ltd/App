@@ -57,7 +57,6 @@
     transform: rotate(90deg) translateY(-5px) scale(.9)
   }
   .today {
-    font-weight: bold;
     cursor: pointer;
     margin: auto
   }
