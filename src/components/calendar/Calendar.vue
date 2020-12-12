@@ -61,9 +61,28 @@
     cursor: pointer;
     margin: auto
   }
-  .disabled {
+  .disabled, .today.disabled:hover {
     opacity: .6;
     cursor: default
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .calendar_header__bar *:hover {
+      opacity: 1
+    }
+    .next_week:hover {
+      transform: rotate(-90deg) translateY(0)
+    }
+    .next_week:active {
+      transform: rotate(-90deg) translateY(0) scale(.9)
+    }
+    .prev_week:hover {
+      transform: rotate(90deg) translateY(0)
+    }
+    .prev_week:active {
+      transform: rotate(90deg) translateY(0) scale(.9)
+    }
   }
 </style>
 
