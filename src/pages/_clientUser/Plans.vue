@@ -7,6 +7,9 @@
     border-radius: 3px;
     padding: 2rem
   }
+  .container--sessions {
+    margin-top: 4rem
+  }
 
   /* Navigate */
   .show_sessions_nav {
@@ -59,7 +62,7 @@
         <div class="wrapper--calendar">
           <calendar :events="sessionDates" />
         </div>
-        <skeleton v-if="$parent.loading" :type="'session'" />
+        <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
         <div v-if="plan.sessions" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
