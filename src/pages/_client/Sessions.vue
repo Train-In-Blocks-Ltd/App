@@ -795,7 +795,7 @@
       },
       copyAcross () {
         var copysessions = []
-        let weekCount = 2
+        let weekCount = this.currentWeek + 1
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
