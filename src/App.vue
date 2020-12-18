@@ -10,6 +10,9 @@
     --animate-duration: 1s;
     --animate-repeat: 1
   }
+  html {
+    scroll-behavior: smooth
+  }
 
   /* ANIMATIONS */
   .animate {

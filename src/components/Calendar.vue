@@ -25,8 +25,16 @@
     grid-gap: 1rem
   }
   .day_events__event {
+    cursor: pointer;
     padding: .6rem 1rem;
-    border-radius: 3px
+    border-radius: 3px;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  .day_events__event.animated:hover {
+    opacity: .6
+  }
+  .day_events__event.animated:active {
+    transform: scale(.98)
   }
 
   /* Header bar */
@@ -82,6 +90,12 @@
     .prev_week:active {
       transform: rotate(90deg) translateY(0) scale(.9)
     }
+    .day_events__event.animated:hover {
+      opacity: 1
+    }
+    .day_events__event.animated:active {
+      transform: scale(1)
+    }
   }
 </style>
 
@@ -123,8 +137,19 @@
             <p class="grey">Rest day</p>
           </div>
           <div
-            v-for="(event, index) in day.events"
-            :key="'event-' + index"
+            v-for="event in day.events"
+            :key="'event-' + event.id"
+            v-show="isTrainer"
+            :style="{ backgroundColor: event.color }"
+            @click="scrollTo(event.id, event.week)"
+            class="day_events__event animated"
+          >
+            <p :style="{ color: event.textColor }">{{ event.title }}</p>
+          </div>
+          <div
+            v-for="event in day.events"
+            :key="'event-client-' + event.id"
+            v-show="!isTrainer"
             :style="{ backgroundColor: event.color }"
             class="day_events__event"
           >
@@ -144,7 +169,8 @@
       InlineSvg
     },
     props: {
-      events: Array
+      events: Array,
+      isTrainer: Boolean
     },
     data () {
       return {
@@ -159,7 +185,14 @@
     methods: {
 
       // EVENTS
-
+      scrollTo (id, week) {
+        this.$parent.currentWeek = week
+        this.$parent.expandAll('Expand')
+        setTimeout(() => {
+          let target = document.getElementById('session-' + id).offsetTop
+          window.scrollTo(0, target - 200)
+        }, 200)
+      },
       append_events () {
         this.this_week.forEach(day => {
           this.events.forEach(event => {

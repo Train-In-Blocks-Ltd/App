@@ -485,7 +485,7 @@
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <calendar :events="sessionDates" />
+                <calendar :events="sessionDates" :isTrainer="true" />
               </div>
             </div>
             <div class="wrapper-plan">
@@ -525,6 +525,7 @@
                     <!-- Loop through sessions -->
                     <div :id="'session-' + session.id" class="wrapper--session" :class="{activeState: session.id === editSession}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
                       :key="index">
+                      <div :id="'to_top-' + session.id" />
                       <div class="wrapper--session__header">
                         <div>
                           <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{session.name}}</b></span><br v-if="session.id !== editSession">
@@ -1232,7 +1233,13 @@
             this.maxWeek = plan.duration
             if (this.str !== null && this.$parent.no_sessions === false) {
               this.str.forEach((object) => {
-                this.sessionDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
+                this.sessionDates.push({
+                  title: object.name, date: object.date,
+                  color: this.weekColor.backgroundColor[object.week_id - 1],
+                  textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]),
+                  id: object.id,
+                  week: object.week_id
+                })
                 if (object.notes !== null) {
                   var pulledProtocols = this.pullProtocols(object.name, object.notes)
                   this.dataPacketStore.push(this.chunkArray(pulledProtocols))
