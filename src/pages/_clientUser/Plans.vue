@@ -60,7 +60,7 @@
           <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_plan_notes text--small grey">No plan notes added...</p>
         </div>
         <div class="wrapper--calendar">
-          <calendar :events="sessionDates" :isTrainer="false" />
+          <calendar :events="sessionDates" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
         <div v-if="plan.sessions" class="container--sessions">
