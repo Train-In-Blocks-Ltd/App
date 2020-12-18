@@ -37,9 +37,6 @@
   div.ql-editor p {
     margin: 1rem 0
   }
-  div.ql-editor li:last-child {
-    margin-bottom: 1rem
-  }
   .ql-editor.ql-blank:before {
     margin: 1rem 0;
     left: 0
