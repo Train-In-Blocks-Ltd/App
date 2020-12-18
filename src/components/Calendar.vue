@@ -25,12 +25,12 @@
     grid-gap: 1rem
   }
   .day_events__event {
+    cursor: pointer;
     padding: .6rem 1rem;
     border-radius: 3px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .day_events__event.animated:hover {
-    cursor: pointer;
     opacity: .6
   }
   .day_events__event.animated:active {
