@@ -769,10 +769,6 @@
     },
     methods: {
 
-      test (value) {
-        console.log(value)
-      },
-
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
       async printPage () {

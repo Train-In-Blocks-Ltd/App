@@ -28,6 +28,9 @@
 
   /* Responsive */
   @media (max-width: 768px) {
+    #to_top {
+      display: none
+    }
     #home {
       padding: 0
     }
@@ -35,12 +38,13 @@
       display: flex;
       max-width: 100vw;
       overflow-x: auto;
-      scroll-snap-type: x mandatory
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth
     }
     .client_home__today, .client_home__plans, .client_home__portfolio {
       padding: 2rem 5vw;
       min-width: 100vw;
-      min-height: calc(100vh - 86.78px);
+      height: calc(100vh - 86.78px);
       scroll-snap-align: start
     }
     .wrapper--session {
@@ -53,6 +57,7 @@
 
 <template>
   <div id="home">
+    <to-top id="to_top" :limit="800" :show="todays_sessions_store.length !== 0 ? true : false" />
     <splash v-if="!$parent.splashed" />
     <div>
       <div :class="{openedSections: is_portfolio_open}" class="section--a" />
@@ -173,12 +178,14 @@
 import InlineSvg from 'vue-inline-svg'
 import Skeleton from '../../components/Skeleton.vue'
 import Splash from '../../components/Splash'
+import ToTop from '../../components/ScrollToTop'
 
 export default {
   components: {
     InlineSvg,
     Skeleton,
-    Splash
+    Splash,
+    ToTop
   },
   data () {
     return {
