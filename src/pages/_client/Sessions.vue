@@ -765,7 +765,7 @@
     beforeDestroy () {
       this.$parent.showDeletePlan = false
       this.setListenerForEditor(false)
-      window.removeEventListener('beforeprint', this.expandAll('Expand'))
+      window.removeEventListener('beforeprint', this.expandAll)
     },
     methods: {
 
