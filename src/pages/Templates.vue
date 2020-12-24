@@ -1,9 +1,4 @@
 <style scoped>
-  .select-checkbox {
-    vertical-align: middle;
-    transform: scale(1.5);
-    cursor: pointer
-  }
   .expand-all {
     text-align: right;
     margin: 2rem 0;
@@ -31,8 +26,9 @@
     margin: 4rem 0
   }
   .wrapper--template {
+    content-visibility: auto;
     display: grid;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
   }
@@ -82,7 +78,7 @@
       padding: 2rem;
       width: 100%;
       background-color: white;
-      box-shadow: 0 0 20px 10px #28282812
+      box-shadow: 0 0 20px 10px #28282816
     }
     .multi-select a {
       grid-template-columns: 1fr
@@ -129,14 +125,14 @@
             <input v-if="template.id === editTemplate" class="template-name" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
           </div>
           <div class="header-options">
-            <input name="select-checkbox" :id="'sc-' + template.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(template.id)" aria-label="Select this template">
+            <checkbox :itemId="template.id" :type="'v1'" aria-label="Select this template" />
             <inline-svg id="expand" class="icon--expand" v-show="!isEditingTemplate" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
           </div>
         </div>
         <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn"/>
-        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show-template animate animate__fadeIn"/>
-        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no-content">What do you plan for your clients frequently?</p>
-        <div class="bottom-bar" v-if="expandedTemplates.includes(template.id)">
+        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show_template animate animate__fadeIn"/>
+        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no_content">What do you plan for your clients frequently?</p>
+        <div class="bottom_bar" v-if="expandedTemplates.includes(template.id)">
           <div>
             <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
             <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
@@ -151,10 +147,12 @@
 <script>
   import InlineSvg from 'vue-inline-svg'
   import axios from 'axios'
+  import Checkbox from '../components/Checkbox'
 
   export default {
     components: {
-      InlineSvg
+      InlineSvg,
+      Checkbox
     },
     data () {
       return {
@@ -178,7 +176,7 @@
       this.$parent.loading = false
     },
     async mounted () {
-      await this.$parent.getTemplates()
+      await this.$parent.get_templates()
       this.checkForNew()
     },
     methods: {
@@ -255,13 +253,10 @@
       },
 
       // DATABASE METHODS //-------------------------------------------------------------------------------
-      /*
-        Need to add in store in local storage methods
-        Need to add delete method
-      */
+
       async newTemplate () {
         try {
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           await axios.put('https://api.traininblocks.com/templates',
             {
@@ -270,16 +265,16 @@
               template: this.new_template.template
             }
           )
-          await this.$parent.getTemplates()
+          await this.$parent.get_templates(true)
           this.checkForNew()
           this.new_template = {
             name: 'Untitled',
             note: null
           }
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -291,7 +286,7 @@
         try {
           let templateName
           let templateContent
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           if (this.$parent.templates.length !== 0) {
             this.$parent.templates.forEach((item) => {
@@ -308,11 +303,11 @@
               id: id
             }
           )
-          await this.$parent.getTemplates()
-          this.$parent.loading = false
+          await this.$parent.get_templates(true)
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -322,14 +317,14 @@
       },
       async delete_template (id) {
         try {
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           await axios.delete(`https://api.traininblocks.com/templates/${id}`)
-          await this.$parent.getTemplates()
-          this.$parent.loading = false
+          await this.$parent.get_templates(true)
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')

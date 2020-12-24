@@ -134,7 +134,8 @@
   }
   .o-form-fieldset-container {
     display: grid;
-    grid-gap: 1.5rem
+    grid-gap: 1.5rem;
+    margin: 2rem 0
   }
   .custom-checkbox label {
     padding-left: 4px
@@ -162,7 +163,7 @@
 <template>
   <div id="login" v-if="!this.$parent.authenticated">
     <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo"/>
-    <div id="okta-signin-container"></div>
+    <div id="okta-signin-container" />
     <div class="button--container">
       <form action="https://traininblocks.com">
         <button class="signup" type="submit">Sign Up</button>
@@ -179,7 +180,7 @@
     <p v-if="success">{{success}}</p>
     <p v-if="error" class="error">{{error}}</p>
     <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.</p>
-    <p style="font-size: .8rem"><b>Draco 2.0</b></p>
+    <p style="font-size: .8rem"><b>Draco 2.1</b></p>
   </div>
 </template>
 
@@ -244,7 +245,7 @@ export default {
   },
   methods: {
     async reset () {
-      this.$parent.loading = true
+      this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       try {
         const oktaOne = await axios.post('/.netlify/functions/okta',
@@ -271,10 +272,10 @@ export default {
         this.open = false
         this.email = null
         this.success = 'An email has been sent.'
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
         this.error = 'An error occurred. Please try again...'
         console.error(e)

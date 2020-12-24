@@ -1,0 +1,103 @@
+#logout__arrow,
+#archive__t,
+#template__t,
+#help-desk__bookmark,
+#home__house,
+#portfolio_pen,
+#portfolio_case,
+#bin__lid {
+  transition: all .6s cubic-bezier(.165, .84, .44, 1)
+}
+
+/* Home */
+.account_nav--item:hover #home__house {
+  transform: translateY(-3px)
+}
+
+/* Help Desk*/
+#help-desk__bookmark {
+  opacity: 0;
+  transform: scaleY(0) translateY(1px)
+}
+.account_nav--item:hover #help-desk__bookmark {
+  opacity: 1;
+  transform: scaleY(1)
+}
+
+/* Template */
+.account_nav--item:hover #template__t {
+  transform: translateY(4px)
+}
+
+/* Portfolio */
+.account_nav--item:hover #portfolio_pen {
+  transform: translateX(4px)
+}
+.account_nav--item:hover #portfolio_case {
+  transform: translateX(-2px)
+}
+
+/* Archive */
+.account_nav--item:hover #archive__t, .archive_icon:hover #archive__t {
+  transform: translateY(-6px)
+}
+.archive_icon:hover #bin__lid {
+  transform: translateX(6px)
+}
+
+/* Account */
+@keyframes inf-spin {
+  from {
+    transform: rotateZ(0)
+  }
+  to {
+    transform: rotateZ(360deg)
+  }
+}
+.account_nav--item:hover #account__cog {
+  transform-origin: center;
+  animation: inf-spin 5s infinite linear
+}
+
+/* Logout */
+.account_nav--item:hover #logout__arrow {
+  transform: translateX(-6px)
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #logout__arrow,
+  #archive__t,
+  #template__t,
+  #help-desk__bookmark,
+  #home__house,
+  #portfolio_pen,
+  #portfolio_case,
+  #bin__lid {
+    transition: none
+  }
+}
+
+/* No Hover */
+@media (max-width: 992px), (prefers-reduced-motion: reduce) {
+
+  /* None */
+  .account_nav--item:hover #home__house,
+  .account_nav--item:hover #template__t,
+  .account_nav--item:hover #archive__t,
+  .archive_icon:hover #archive__t,
+  .archive_icon:hover #bin__lid,
+  .account_nav--item:hover #account__cog,
+  .account_nav--item:hover #logout__arrow,
+  .account_nav--item:hover #portfolio_pen,
+  .account_nav--item:hover #portfolio_case {
+    transform: none;
+    animation: none
+  }
+
+  /* Help Desk */
+  #help-desk__bookmark, .account_nav--item:hover #help-desk__bookmark {
+    opacity: 1;
+    transform: scaleY(1)
+  }
+}

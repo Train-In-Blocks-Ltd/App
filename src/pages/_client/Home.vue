@@ -38,7 +38,7 @@
     top: 0;
     padding: 0;
     z-index: 4;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .wrapper--floating_nav.openFloatingNav {
@@ -113,7 +113,7 @@
     </modal>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
       <div v-if="keepLoaded" class="floating_nav">
-        <div class="icon--open-options" v-if="!showOptions" @click="showOptions = true" aria-label="Menu">
+        <div class="icon_open--options" v-if="!showOptions" @click="showOptions = true" aria-label="Menu">
           <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options"/>
           <p class="text">Options</p>
         </div>
@@ -134,8 +134,8 @@
       <form class="client_info" @submit.prevent="update_client()">
         <input class="client_info--name text--large" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
         <div class="client_info__more-details">
-          <input class="input--forms allow-text-overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client(), checkClient()"/>
-          <input class="input--forms allow-text-overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
+          <input class="input--forms allow_text_overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client(), checkClient()"/>
+          <input class="input--forms allow_text_overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
           <div>
             <button
               @click="createClient()" class="button--verify button"
@@ -172,7 +172,7 @@
   import InlineSvg from 'vue-inline-svg'
   import {email, emailText, resetEmail, resetEmailText} from '../../components/email'
   import Toolkit from '../../components/Toolkit'
-  import AlertModal from '../../components/alertModal'
+  import AlertModal from '../../components/AlertModal'
 
   export default {
     components: {
@@ -200,13 +200,11 @@
       }
     },
     async created () {
-      this.$parent.loading = true
       this.$parent.splashed = true
       this.created()
       await this.$parent.setup()
       await this.get_client_details()
       this.keepLoaded = true
-      this.$parent.loading = false
     },
     beforeDestroy () {
       this.keepLoaded = false
@@ -225,13 +223,6 @@
             this.$parent.client_details = this.$parent.clients[x]
           }
         }
-      },
-      toURL () {
-        var url = '/'
-        if (window.location.href.includes('session') === true) {
-          url = `/client/${this.$route.params.client_id}/`
-        }
-        return url
       },
 
       // DATABSE AND API METHODS //-------------------------------------------------------------------------------
@@ -271,7 +262,7 @@
         }
       },
       async createClient () {
-        this.$parent.loading = true
+        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         try {
           if (this.clientAlreadyMsg === 'Resend activation email') {
@@ -356,7 +347,7 @@
             )
           }
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -372,7 +363,7 @@
           { adaptive: true },
           { clickToClose: false }
         )
-        this.$parent.loading = false
+        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       },
       async get_sessions (force) {
@@ -461,7 +452,7 @@
       },
       async update_client () {
         this.$parent.dontLeave = true
-        this.$parent.loading = true
+        this.$parent.pause_loading = true
         try {
           await axios.post(`https://api.traininblocks.com/clients`,
             {
@@ -475,10 +466,10 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients_f()
           await this.$parent.clients_to_vue()
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -488,7 +479,7 @@
       },
       async delete_plan () {
         if (confirm('Are you sure you want to delete this plan?')) {
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           var plan
           var id
@@ -506,10 +497,10 @@
             this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
 
             this.$ga.event('Session', 'delete')
-            this.$parent.loading = false
+            this.$parent.pause_loading = false
             this.$parent.dontLeave = false
           } catch (e) {
-            this.$parent.loading = false
+            this.$parent.pause_loading = false
             this.$parent.dontLeave = false
             this.$parent.errorMsg = e
             this.$parent.$modal.show('error')

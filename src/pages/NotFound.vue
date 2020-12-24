@@ -6,11 +6,9 @@
 <script>
 export default {
   created () {
-    this.$parent.loading = true
     this.$parent.setup()
     this.$parent.splashed = true
     this.$parent.willBodyScroll(true)
-    this.$parent.loading = false
   }
 }
 </script>

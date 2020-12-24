@@ -121,7 +121,7 @@
         </div>
       </div>
     </form><br><br>
-    <p style="font-size: .8rem"><b>Draco 2.0</b></p>
+    <p style="font-size: .8rem"><b>Draco 2.1</b></p>
   </div>
 </template>
 
@@ -153,7 +153,7 @@
       // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
       async save () {
-        this.$parent.loading = true
+        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         try {
           await axios.post('/.netlify/functions/okta',
@@ -167,10 +167,10 @@
               url: `${this.$parent.claims.sub}`
             }
           )
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')
@@ -190,7 +190,7 @@
       },
       async changePass () {
         try {
-          this.$parent.loading = true
+          this.$parent.pause_loading = true
           this.$parent.dontLeave = true
           this.password.error = ''
           await axios.post('/.netlify/functions/okta',
@@ -214,10 +214,10 @@
               'html': passChangeEmail()
             }
           )
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.loading = false
+          this.$parent.pause_loading = false
           this.password.error = 'Something went wrong. Please make sure that your password is correct'
           this.$parent.dontLeave = false
           console.error(e)
@@ -232,7 +232,6 @@
           )
           window.location.href = response.data
         } catch (e) {
-          this.$parent.loading = false
           this.$parent.dontLeave = false
           this.$parent.errorMsg = e
           this.$parent.$modal.show('error')

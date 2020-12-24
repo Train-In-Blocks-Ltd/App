@@ -1,11 +1,8 @@
 <style scoped>
   /* SEE HOME.VUE FOR MORE CSS */
 
-  .select-checkbox {
-    vertical-align: middle;
-    transform: scale(1.3);
-    margin-bottom: .6rem;
-    cursor: pointer
+  .select_checkbox {
+    margin-bottom: .4rem
   }
 
   /* Client Link */
@@ -32,19 +29,22 @@
   .client_link.archived .client_link__details p, .client_link.archived .name {
     color: #282828
   }
-  .client_link.archived svg {
-    fill: #282828
+  .client_link__options {
+    display: flex;
+    align-items: center
   }
 
   @media (min-width: 768px) {
     .client_link__options {
-      display: flex;
       flex-direction: column
     }
   }
   @media (max-width: 768px) {
     .client_link:hover svg {
-      fill: #28282890
+      fill: #282828
+    }
+    .client_link__options a, .select_checkbox {
+      margin: 0 1rem 0 0
     }
   }
 </style>
@@ -65,12 +65,12 @@
     <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">What client information do you currently have? Head over to this page and edit it.</p>
     <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" v-html="notes" class="client_link__notes__content" />
     <div v-if="archive" class="client_link__options">
-      <input name="select-checkbox" :id="'sc-' + clientId" class="select-checkbox" type="checkbox" @change="$parent.changeSelectCheckbox(clientId, clientIndex)" aria-label="Select this client">
+      <checkbox :itemId="clientId" :indexId="clientIndex" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
       <a href="javascript:void(0)" @click="$parent.$parent.client_unarchive(clientId, clientIndex)" title="Unarchive">
-        <inline-svg :src="require('../assets/svg/archive-small.svg')" class="archive__icon" aria-label="Unarchive"/>
+        <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive"/>
       </a>
       <a href="javascript:void(0)" @click="soloDelete(clientId, clientIndex)" title="Delete">
-        <inline-svg :src="require('../assets/svg/bin.svg')" class="archive__icon" aria-label="Delete"/>
+        <inline-svg :src="require('../assets/svg/bin.svg')" class="archive_icon" aria-label="Delete"/>
       </a>
     </div>
   </div>
@@ -78,10 +78,12 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
+  import Checkbox from './Checkbox'
 
   export default {
     components: {
-      InlineSvg
+      InlineSvg,
+      Checkbox
     },
     props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
     methods: {

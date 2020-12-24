@@ -12,34 +12,37 @@
 </style>
 
 <style>
-  .archive__icon, .archive__icon path {
-    transition: transform .1s, opacity .4s cubic-bezier(.165, .84, .44, 1)
+  .archive_icon, .archive_icon path {
+    transition: transform .1s, opacity .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .archive__icon:hover {
+  .archive_icon:hover {
     opacity: .6
   }
-  .archive__icon:active {
+  .archive_icon:active {
     transform: scale(.9)
   }
 </style>
 
 <template>
   <div id="archive">
-    <div class="multi-select" v-if="selectedClients.length !== 0">
-      <p class="text--selected">
-        <b>Selected {{selectedClients.length}} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
-      </p>
-      <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiClients()">Delete</a>
-    </div>
+    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+      <div class="multi-select" v-if="selectedClients.length !== 0">
+        <p class="text--selected">
+          <b>Selected {{selectedClients.length}} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
+        </p>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiClients()">Delete</a>
+      </div>
+    </transition>
     <p class="text--large">Archive</p><br>
     <p class="text--small grey" v-if="this.$parent.archive.no_archive">No clients are archived :)</p>
     <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <input v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients" type="search" aria-label="search by name" rel="search" placeholder="Name" class="search text--small" autocomplete="name" v-model="search"/>
     <div class="container--clients">
+      <skeleton v-if="$parent.loading" :type="'archived'" />
       <div
-        class="wrapper--client-link"
+        class="wrapper--client_link"
         :to="'/client/'+clients.client_id+'/'"
-        v-show="(!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())"
+        v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
         :id="'a' + clients.client_id"
         v-for="(clients, index) in $parent.archive.clients" :key="index"
       >
@@ -58,13 +61,15 @@
 </template>
 
 <script>
-  import ClientLink from '../components/clientLink'
+  import ClientLink from '../components/ClientLink'
   import InlineSvg from 'vue-inline-svg'
+  import Skeleton from '../components/Skeleton'
 
   export default {
     components: {
       InlineSvg,
-      ClientLink
+      ClientLink,
+      Skeleton
     },
     data () {
       return {

@@ -1,18 +1,48 @@
 <style scoped>
-  .wrapper--session, .plan-notes {
-    display: grid;
-    margin: 4rem 0;
-    box-shadow: 0 0 20px 10px #28282810;
-    padding: 2rem;
-    border-radius: 3px
+  .plan_name {
+    margin-bottom: 4rem
+  }
+  .plan_notes, .wrapper--session {
+    box-shadow: 0 0 20px 10px #28282808;
+    border-radius: 3px;
+    padding: 2rem
   }
   .container--sessions {
-    margin-top: 6rem
+    margin-top: 4rem
   }
 
-  @media (max-width: 576px) {
-    .plan-notes {
-      margin-top: 2rem
+  /* Navigate */
+  .show_sessions_nav {
+    display: flex;
+    margin: 2rem 0
+  }
+  .show_sessions_counter {
+    margin: auto
+  }
+  .show_sessions_left {
+    cursor: pointer;
+    transform: rotate(90deg)
+  }
+  .show_sessions_right {
+    cursor: pointer;
+    transform: rotate(-90deg);
+    margin-left: 1rem
+  }
+  .disabled {
+    opacity: .4
+  }
+
+  /* Scroll */
+  .container--sessions::-webkit-scrollbar {
+    height: 4px
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .plan_notes, .wrapper--session {
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0
     }
   }
 </style>
@@ -20,30 +50,51 @@
 <template>
   <div id="client-plan">
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
-      <div v-if="plan.id == $route.params.id">
-        <div class="session--header">
-          <p class="text--large">{{plan.name}}</p>
-        </div>
-        <div class="plan-notes">
-          <div class="plan-notes__header">
+      <div v-if="plan.id == $route.params.id" class="client_plan">
+        <p class="plan_name text--large">{{plan.name}}</p>
+        <div class="plan_notes">
+          <div class="plan_notes__header">
             <p class="text--small">Plan Notes</p>
           </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="show-plan-notes animate animate__fadeIn" />
-          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show-plan-notes text--small grey">No plan notes added...</p>
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="show_plan_notes animate animate__fadeIn" />
+          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_plan_notes text--small grey">No plan notes added...</p>
         </div>
         <div class="wrapper--calendar">
-          <FullCalendar
-            defaultView="dayGridMonth"
-            :firstDay="1" :plugins="calendarPlugins"
-            :header="calendarToolbarHeader"
-            :footer="calendarToolbarFooter"
-            :events="sessionDates"
-            :views="calendarViews"
-          />
+          <calendar :events="sessionDates" />
         </div>
-        <div class="container--sessions" v-if="plan.sessions">
-          <div class="wrapper--session" v-for="(session, index) in plan.sessions"
-            :key="index" v-show="index == currentSessionIndexPlan">
+        <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
+        <div v-if="plan.sessions" class="container--sessions">
+          <div class="show_sessions_nav">
+            <inline-svg
+              v-show="showing_current_session !== 0"
+              @click="showing_current_session--"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_left"
+            />
+            <inline-svg
+              v-show="showing_current_session === 0"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_left disabled"
+            />
+            <p class="show_sessions_counter">{{ showing_current_session + 1 }}/{{ plan.sessions.length }}</p>
+            <inline-svg
+              v-show="showing_current_session !== parseInt(plan.sessions.length) - 1"
+              @click="showing_current_session++"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_right"
+            />
+            <inline-svg
+              v-show="showing_current_session === parseInt(plan.sessions.length) - 1"
+              :src="require('../../assets/svg/arrow.svg')"
+              class="show_sessions_right disabled"
+            />
+          </div>
+          <div
+            v-for="(session, index) in plan.sessions"
+            :key="index"
+            v-show="showing_current_session === index"
+            class="wrapper--session"
+          >
             <div class="wrapper--session__header client-side" :id="session.name">
               <div>
                 <span class="text--name"><b>{{session.name}}</b></span><br>
@@ -51,28 +102,21 @@
                 <span class="text--date">{{session.date}}</span>
               </div>
             </div>
-            <div v-html="removeBrackets(session.notes)" class="show-session animate animate__fadeIn"/>
-            <div class="bottom-bar">
-              <div class="full-width-bar" :key="check">
-                <button v-if="session.checked === 1" @click="complete(plan.id, session.id)" id="button-done" class="button--state">Completed</button>
-                <button v-if="session.checked === 0" @click="complete(plan.id, session.id)" id="button-to-do" class="button--state">Click to complete</button>
+            <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
+            <div class="bottom_bar">
+              <div class="full_width_bar" :key="check">
+                <button v-if="session.checked === 1 && !giveFeedback" @click="complete(plan.id, session.id)" id="button_done" class="button--state">Completed</button>
+                <button v-if="session.checked === 0 && !giveFeedback" @click="complete(plan.id, session.id)" id="button_to_do" class="button--state">Click to complete</button>
                 <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
             </div><br>
             <div v-if="giveFeedback === session.id">
-              <p><b>Feedback</b></p>
+              <p class="text--small"><b>Feedback</b></p>
               <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
               <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
               <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
           </div>
-        </div>
-        <div class="container--session-control">
-          <div>
-            <button v-show="currentSessionIndexPlan != 0" @click="currentSessionIndexPlan--">Back</button>
-            <button v-show="currentSessionIndexPlan != maxSessionIndexPlan" @click="currentSessionIndexPlan++">Next</button>
-          </div>
-          <p class="text--small session-counter">{{currentSessionIndexPlan + 1}}/{{maxSessionIndexPlan + 1}}</p>
         </div>
       </div>
     </div>
@@ -80,54 +124,31 @@
 </template>
 
 <script>
-  import FullCalendar from '@fullcalendar/vue'
-  import dayGridPlugin from '@fullcalendar/daygrid'
-  import '@fullcalendar/core/main.min.css'
-  import '@fullcalendar/daygrid/main.css'
+  import InlineSvg from 'vue-inline-svg'
+  import Skeleton from '../../components/Skeleton'
+  import Calendar from '../../components/Calendar'
 
   export default {
     components: {
-      FullCalendar
+      Calendar,
+      Skeleton,
+      InlineSvg
     },
     data () {
       return {
         check: null,
-
         giveFeedback: null,
-        maxSessionIndexPlan: null,
-        currentSessionIndexPlan: 0,
+        showing_current_session: 0,
 
-        // CALENDAR DATA //
-
-        calendarToolbarHeader: {
-          left: 'title',
-          right: ''
-        },
-        calendarToolbarFooter: {
-          left: 'dayGridMonth, dayGridThreeDay',
-          right: 'today prev, next'
-        },
-        calendarPlugins: [ dayGridPlugin ],
-        sessionDates: [],
-        calendarViews: {
-          dayGridThreeDay: {
-            type: 'dayGrid',
-            duration: { days: 3 },
-            buttonText: '3 day'
-          }
-        }
+        // CALENDAR DATA
+        sessionDates: []
       }
-    },
-    created () {
-      this.$parent.loading = true
-      this.$parent.setup()
-      this.$parent.splashed = true
-      this.$parent.loading = false
     },
     async mounted () {
       this.$parent.loading = true
+      this.$parent.splashed = true
+      await this.$parent.setup()
       await this.$parent.get_plans()
-      await this.initCountSessionsPlan()
       await this.$parent.sortSessionsPlan()
       await this.scan()
       this.$parent.loading = false
@@ -186,13 +207,6 @@
         } else {
           return dataIn
         }
-      },
-      initCountSessionsPlan () {
-        this.$parent.clientUser.plans.forEach((plan) => {
-          if (plan.id === parseInt(this.$route.params.id)) {
-            this.maxSessionIndexPlan = plan.sessions.length - 1
-          }
-        })
       }
     }
   }
