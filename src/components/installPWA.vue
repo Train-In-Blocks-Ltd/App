@@ -5,23 +5,27 @@
   p.text--large:first-of-type {
     margin-top: 0
   }
+  .cancel {
+    z-index: 99;
+    display: block
+  }
 </style>
 
 <template>
   <div>
-    <div v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true && $parent.$parent.pwa.installed === false">
+    <div v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true /*&& $parent.$parent.pwa.installed === false*/">
       <p class="text--large">Install the app</p>
-      <p class="text--large grey">Available for desktops and mobiles</p>
       <button @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
         Install
       </button>
       <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
     </div>
-    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false && $parent.$parent.pwa.installed === true">
-      <p class="text--large">You have the app installed already...</p>
-      <button @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
+    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false /*&& $parent.$parent.pwa.installed === true*/">
+      <p class="text--large">We can't detect if you have the app installed. Try launching the app, or continue using it in the browser.</p>
+      <a href="https://app.traininblocks.com" target="_blank">
+      <button>
         Launch
-      </button>
+      </button></a>
       <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
     </div>
     <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false && $parent.$parent.pwa.installed === false">
@@ -45,6 +49,7 @@
       if (window.matchMedia('(display-mode: standalone)').matches) {
         this.$parent.$parent.pwa.displayMode = 'standalone'
       }
+      /*
       if ('getInstalledRelatedApps' in navigator) {
         const self = this
         const relatedApps = await navigator.getInstalledRelatedApps()
@@ -52,6 +57,7 @@
           self.$parent.$parent.pwa.installed = true
         }
       }
+      */
     },
     methods: {
       installPWA () {
