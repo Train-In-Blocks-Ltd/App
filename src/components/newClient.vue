@@ -60,7 +60,7 @@
         } else {
           this.$parent.response = ''
           try {
-            this.$parent.$parent.loading = true
+            this.$parent.$parent.pause_loading = true
             this.$parent.$parent.dontLeave = true
             await axios.put('https://api.traininblocks.com/clients',
               {
@@ -77,7 +77,7 @@
             await this.$parent.$parent.clients_f()
             this.$parent.$parent.clients_to_vue()
 
-            this.$parent.$parent.loading = false
+            this.$parent.$parent.pause_loading = false
             this.$parent.$parent.dontLeave = false
 
             this.new_client = {
@@ -88,7 +88,7 @@
             }
             this.$ga.event('Client', 'new')
           } catch (e) {
-            this.$parent.$parent.loading = false
+            this.$parent.$parent.pause_loading = false
             this.$parent.$parent.dontLeave = false
             this.$parent.$parent.errorMsg = e
             this.$parent.$parent.$modal.show('error')

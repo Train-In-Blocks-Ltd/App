@@ -2,12 +2,12 @@
   #logout {
     z-index: 999
   }
-  #logout_message {
+  .logout_message {
     text-align: center;
     font-size: 2.5rem
   }
   @media (max-width: 768px) {
-    #logout_message {
+    .logout_message {
       text-align: center;
       font-size: 2rem;
       margin-top: 40%;
@@ -17,6 +17,6 @@
 </style>
 <template>
   <div id="logout"> 
-      <p id="text--large logout_message">You have been logged out successfully</p>
+      <p class="text--large logout_message">You have been logged out successfully</p>
   </div>
 </template>

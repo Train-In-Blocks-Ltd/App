@@ -68,20 +68,20 @@
   }
 
   /* Plan Grid */
-  .plan-notes {
+  .plan_notes {
     margin: 4rem 0
   }
-  .plan-notes__header {
+  .plan_notes__header {
     display: flex
   }
-  .a--plan-notes {
+  .a--plan_notes {
     color: #282828;
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .a--plan-notes:hover {
+  .a--plan_notes:hover {
     opacity: .6
   }
 
@@ -147,7 +147,7 @@
   }
   .weekActive {
     border-bottom: 2px solid #EEEEEE;
-    box-shadow: 0 0 20px 10px #28282815;
+    box-shadow: 0 0 20px 10px #28282816;
     background-color: white;
     height: 94px
   }
@@ -192,9 +192,10 @@
   .expand-all:hover {
     opacity: .6
   }
-  .wrapper--session, .plan-notes {
+  .wrapper--session, .plan_notes {
+    content-visibility: auto;
     display: grid;
-    box-shadow: 0 0 20px 10px #28282810;
+    box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 3px
   }
@@ -206,11 +207,6 @@
     display: flex;
     flex-direction: column;
     align-items: center
-  }
-  .select-checkbox {
-    vertical-align: middle;
-    transform: scale(1.5);
-    cursor: pointer
   }
   .container--sessions {
     display: grid;
@@ -238,14 +234,14 @@
   .wrapper--template-options {
     margin: 2rem 0
   }
-  .a--preview-template {
+  .a--preview_template {
     margin-left: 2rem
   }
-  .show-feedback {
+  .show_feedback {
     margin: 1rem 0;
     padding: 0
   }
-  .bottom-bar .button {
+  .bottom_bar .button {
     margin: 0
   }
   .newSession {
@@ -408,17 +404,21 @@
             </div>
         </form>
       </modal>
-      <modal name="preview-template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <div class="modal--preview-template">
+      <modal name="preview_template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+        <div class="modal--preview_template">
             <div class="wrapper--centered-item">
               <div v-html="previewTemplate" /><br>
-              <button class="cancel" @click.prevent="$modal.hide('preview-template'), $parent.$parent.willBodyScroll(true), previewTemplate = null">Close</button>
+              <button class="cancel" @click.prevent="$modal.hide('preview_template'), $parent.$parent.willBodyScroll(true), previewTemplate = null">Close</button>
             </div>
         </div>
       </modal>
-      <div class="icon--open-stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Menu">
-        <inline-svg :src="require('../../assets/svg/stats.svg')" aria-label="Statistics"/>
+      <div class="icon_open--stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Statistics">
+        <inline-svg :src="require('../../assets/svg/stats.svg')"/>
         <p class="text">Statistics</p>
+      </div>
+      <div class="icon_open--print" v-if="!isStatsOpen && $parent.showOptions === false" @click="printPage()" aria-label="Print">
+        <inline-svg :src="require('../../assets/svg/print.svg')"/>
+        <p class="text">Print</p>
       </div>
       <div>
         <div :class="{openedSections: isStatsOpen}" class="section--a" />
@@ -444,10 +444,10 @@
         <div v-if="plan.id == $route.params.id">
           <div class="top_grid">
             <div class="client_info">
-              <input @blur="$parent.update_client()" class="text--large allow-text-overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
+              <input @blur="$parent.update_client()" class="text--large allow_text_overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the plan info -->
               <form class="plan_info">
-                <input class="text--small allow-text-overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
+                <input class="text--small allow_text_overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
               </form>
             </div><br>  <!-- client_info -->
             <div class="wrapper--progress-bar">
@@ -459,25 +459,25 @@
           </div> <!-- top_grid -->
           <div class="plan_grid">
             <div class="calendar">
-              <div class="plan-notes" :class="{ activeState: editPlanNotes }">
-                <div class="plan-notes__header">
+              <div class="plan_notes" :class="{ activeState: editPlanNotes }">
+                <div class="plan_notes__header">
                   <p class="text--small">Plan Notes</p>
-                  <a class="a--plan-notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
+                  <a class="a--plan_notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
                     Edit
                   </a>
                 </div>
                 <quill v-if="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn"/>
                 <div
                   v-if="!editPlanNotes  && plan.notes !== '<p><br></p>' && plan.notes !== null"
-                  v-html="plan.notes" class="show-plan-notes animate animate__fadeIn"
+                  v-html="plan.notes" class="show_plan_notes animate animate__fadeIn"
                 />
                 <p
                   v-if="!editPlanNotes && (plan.notes === '<p><br></p>' || plan.notes === null)"
-                  class="text--small grey text--no-plan-notes"
+                  class="text--small grey text--no_plan_notes"
                 >
                   What do you want to achieve in this plan?
                 </p>
-                <div v-if="editPlanNotes" class="bottom-bar">
+                <div v-if="editPlanNotes" class="bottom_bar">
                   <div>
                     <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
                     <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
@@ -485,15 +485,7 @@
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <FullCalendar
-                  defaultView="dayGridMonth"
-                  :firstDay="1"
-                  :plugins="calendarPlugins"
-                  :header="calendarToolbarHeader"
-                  :footer="calendarToolbarFooter" 
-                  :events="sessionDates"
-                  :views="calendarViews"
-                />
+                <calendar :events="sessionDates" />
               </div>
             </div>
             <div class="wrapper-plan">
@@ -524,7 +516,7 @@
                   </div>
                   <button class="button--new-session" @click="createSession()">New session</button>
                 </div>
-                <p class="text--small grey text--no-sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
+                <p class="text--small grey text--no_sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
                 <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
                 <div>
                   <p v-if="plan.sessions.length !== null && plan.sessions !== false && !isEditingSession" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
@@ -544,13 +536,13 @@
                           <span @click="session.checked = toggleComplete(session.checked)" v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked">{{isCompleted(session.checked)}}</span>
                         </div>
                         <div class="header-options">
-                          <input name="select-checkbox" :id="'sc-' + session.id" class="select-checkbox" type="checkbox" @change="changeSelectCheckbox(session.id)" aria-label="Select this session">
+                          <checkbox :itemId="session.id" :type="'v1'" aria-label="Select this session" />
                           <inline-svg id="expand" class="icon--expand" v-show="!isEditingSession" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
                       <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn"/>
-                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show-session animate animate__fadeIn"/>
-                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no-content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
+                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show_session animate animate__fadeIn"/>
+                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no_content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
                       <div
                         v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
                         class="wrapper--template-options"
@@ -563,15 +555,15 @@
                           :key="index"
                         >
                           <button class="opposite" :disabled="!caretIsInEditor || item.template === null || item.template === '<p><br></p>' || item.template === ''" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
-                          <a href="javascript:void(0)" class="a--preview-template" @click="previewTemplate = item.template, $modal.show('preview-template'), $parent.$parent.willBodyScroll(false)">Preview</a>
+                          <a href="javascript:void(0)" class="a--preview_template" @click="previewTemplate = item.template, $modal.show('preview_template'), $parent.$parent.willBodyScroll(false)">Preview</a>
                         </div>
                       </div>
-                      <div v-if="session.id === showFeedback" class="show-feedback animate animate__fadeIn">
+                      <div v-if="session.id === showFeedback" class="show_feedback animate animate__fadeIn">
                         <hr><br>
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
-                      <div class="bottom-bar" v-if="expandedSessions.includes(session.id)">
+                      <div class="bottom_bar" v-if="expandedSessions.includes(session.id)">
                         <div>
                           <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
                           <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
@@ -660,17 +652,15 @@
   import axios from 'axios'
   import LineChart from '../../components/LineChart.js'
   import InlineSvg from 'vue-inline-svg'
-
-  import FullCalendar from '@fullcalendar/vue'
-  import dayGridPlugin from '@fullcalendar/daygrid'
-  import '@fullcalendar/core/main.min.css'
-  import '@fullcalendar/daygrid/main.css'
+  import Checkbox from '../../components/Checkbox'
+  import Calendar from '../../components/Calendar'
 
   export default {
     components: {
       LineChart,
       InlineSvg,
-      FullCalendar
+      Checkbox,
+      Calendar
     },
     data () {
       return {
@@ -738,23 +728,7 @@
         },
 
         // CALENDAR DATA //
-        calendarToolbarHeader: {
-          left: 'title',
-          right: ''
-        },
-        calendarToolbarFooter: {
-          left: 'dayGridMonth, dayGridThreeDay',
-          right: 'today prev, next'
-        },
-        calendarPlugins: [ dayGridPlugin ],
         sessionDates: [],
-        calendarViews: {
-          dayGridThreeDay: {
-            type: 'dayGrid',
-            duration: { days: 3 },
-            buttonText: '3 day'
-          }
-        },
 
         // STATISTICS DATA //
         p1: '',
@@ -781,20 +755,26 @@
     },
     async mounted () {
       await this.$parent.get_client_details()
-      this.$parent.$parent.getTemplates()
+      this.$parent.$parent.get_templates()
       this.today()
       this.scan()
       this.checkForNew()
       this.adherence()
+      window.addEventListener('beforeprint', this.expandAll('Expand'))
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
       this.setListenerForEditor(false)
+      window.removeEventListener('beforeprint', this.expandAll)
     },
     methods: {
 
       // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
 
+      async printPage () {
+        await this.expandAll('Expand')
+        window.print()
+      },
       shiftAcross () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
@@ -811,7 +791,7 @@
       },
       copyAcross () {
         var copysessions = []
-        let weekCount = 2
+        let weekCount = this.currentWeek + 1
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
             plan.sessions.forEach((session) => {
@@ -835,7 +815,7 @@
         this.new_session.name = 'Untitled'
         this.today()
         this.update_plan()
-        this.$parent.$parent.loading = false
+        this.$parent.$parent.pause_loading = false
         this.$modal.hide('copy')
         this.deselectAll()
       },
@@ -855,6 +835,7 @@
       },
 
       // SESSION METHODS //-------------------------------------------------------------------------------
+
       bulkChecked (state) {
         function checkedState (dataIn) {
           if (dataIn === 1) {
@@ -912,9 +893,9 @@
         }
       },
       async createSession () {
-        this.$parent.$parent.loading = true
+        this.$parent.$parent.pause_loading = true
         await this.add_session()
-        this.$parent.$parent.loading = false
+        this.$parent.$parent.pause_loading = false
       },
       editingSessionNotes (id, state) {
         this.isEditingSession = state
@@ -1182,21 +1163,27 @@
         }
       },
       expandAll (toExpand) {
-        this.$parent.$parent.client_details.plans.forEach((plan) => {
-          if (plan.id === parseInt(this.$route.params.id)) {
-            plan.sessions.forEach((session) => {
-              if (toExpand === 'Expand') {
-                this.expandedSessions.push(session.id)
-              } else {
-                let x = 0
-                let y = this.expandedSessions.length
-                for (; x < y; x++) {
-                  this.expandedSessions.pop()
-                }
+        try {
+          this.$parent.$parent.client_details.plans.forEach((plan) => {
+            if (plan.id === parseInt(this.$route.params.id)) {
+              if (plan.sessions.length !== 0) {
+                plan.sessions.forEach((session) => {
+                  if (toExpand === 'Expand') {
+                    this.expandedSessions.push(session.id)
+                  } else {
+                    let x = 0
+                    let y = this.expandedSessions.length
+                    for (; x < y; x++) {
+                      this.expandedSessions.pop()
+                    }
+                  }
+                })
               }
-            })
-          }
-        })
+            }
+          })
+        } catch (e) {
+          console.error(e)
+        }
       },
       expandText (array) {
         if (array.length !== 0) {
@@ -1501,7 +1488,7 @@
           this.scan()
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
@@ -1510,7 +1497,7 @@
         }
       },
       async update_session (id) {
-        this.$parent.$parent.loading = true
+        this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
         // Set the plan variable to the current plan
         for (var x in this.$parent.$parent.client_details.plans) {
@@ -1544,10 +1531,10 @@
           await this.update_plan()
           this.adherence()
           this.$ga.event('Session', 'update')
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
@@ -1557,7 +1544,7 @@
       },
       async add_session () {
         try {
-          this.$parent.$parent.loading = true
+          this.$parent.$parent.pause_loading = true
           this.$parent.$parent.dontLeave = true
           const response = await axios.put('https://api.traininblocks.com/workouts',
             {
@@ -1583,10 +1570,10 @@
           this.checkForNew()
           this.adherence()
           this.$ga.event('Session', 'new')
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')
@@ -1596,17 +1583,17 @@
       },
       async delete_session (id) {
         try {
-          this.$parent.$parent.loading = true
+          this.$parent.$parent.pause_loading = true
           this.$parent.$parent.dontLeave = true
           await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
           await this.$parent.get_sessions(this.force)
           await this.update_plan()
 
           this.$ga.event('Session', 'delete')
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.loading = false
+          this.$parent.$parent.pause_loading = false
           this.$parent.$parent.dontLeave = false
           this.$parent.$parent.errorMsg = e
           this.$parent.$parent.$modal.show('error')

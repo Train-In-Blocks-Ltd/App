@@ -12,9 +12,11 @@ const headers = {
   'Content-Security-Policy': 'default-src "self"'
 }
 
+let response
+
 exports.handler = async function handler (event, context, callback) {
   const accessToken = event.headers.authorization.split(' ')
-  const response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+  response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
     qs.stringify({
       token: accessToken[1],
       token_type_hint: 'access_token'
@@ -36,7 +38,7 @@ exports.handler = async function handler (event, context, callback) {
     const data = JSON.parse(event.body)
     if (data.type === 'POST') {
       try {
-        const response = await axios.post('https://dev-183252.okta.com/api/v1/users/' + data.url, data.body,
+        response = await axios.post('https://dev-183252.okta.com/api/v1/users/' + data.url, data.body,
           {
             headers: {
               'Accept': 'application/json',
@@ -54,7 +56,7 @@ exports.handler = async function handler (event, context, callback) {
         return callback(null, {
           statusCode: 502,
           headers: headers,
-          body: JSON.stringify(e)
+          body: JSON.stringify(e, response)
         })
       }
     } else if (data.type === 'GET' && response.data.active === true) {
@@ -77,7 +79,7 @@ exports.handler = async function handler (event, context, callback) {
         return callback(null, {
           statusCode: 502,
           headers: headers,
-          body: JSON.stringify(e)
+          body: JSON.stringify(e, response)
         })
       }
     }

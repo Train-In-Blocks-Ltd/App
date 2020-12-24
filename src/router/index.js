@@ -10,6 +10,7 @@ import LogoutComponent from '@/pages/Logout'
 import NotFound from '@/pages/NotFound'
 import ArchiveComponent from '@/pages/Archive'
 import TemplateComponent from '@/pages/Templates'
+import PortfolioComponent from '@/pages/Portfolio'
 
 import ClientComponent from '@/pages/_client/Home'
 import ClientPlans from '@/pages/_client/Plans'
@@ -64,6 +65,14 @@ const router = new Router({
     {
       path: '/templates',
       component: TemplateComponent,
+      meta: {
+        requiresAuth: true,
+        requiresTrainer: true
+      }
+    },
+    {
+      path: '/portfolio',
+      component: PortfolioComponent,
       meta: {
         requiresAuth: true,
         requiresTrainer: true

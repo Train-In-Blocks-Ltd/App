@@ -42,7 +42,7 @@
       },
       async save () {
         try {
-          this.$parent.$parent.$parent.loading = true
+          this.$parent.$parent.$parent.pause_loading = true
           this.$parent.$parent.$parent.dontLeave = true
           await axios.put('https://api.traininblocks.com/programmes',
             {
@@ -66,7 +66,7 @@
           var force = true
           await this.$parent.$parent.get_client_details(force)
 
-          this.$parent.$parent.$parent.loading = false
+          this.$parent.$parent.$parent.pause_loading = false
           this.$parent.$parent.$parent.dontLeave = false
 
           this.new_plan = {
@@ -75,7 +75,7 @@
           }
           this.$ga.event('Plan', 'new')
         } catch (e) {
-          this.$parent.$parent.$parent.loading = false
+          this.$parent.$parent.$parent.pause_loading = false
           this.$parent.$parent.$parent.dontLeave = false
           this.$parent.$parent.$parent.errorMsg = e
           this.$parent.$parent.$parent.$modal.show('error')
