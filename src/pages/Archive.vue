@@ -61,7 +61,7 @@
 </template>
 
 <script>
-  import ClientLink from '../components/ClientLink'
+  import ClientLink from '../components/clientLink'
   import InlineSvg from 'vue-inline-svg'
   import Skeleton from '../components/Skeleton'
 

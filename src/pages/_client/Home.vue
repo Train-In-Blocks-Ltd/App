@@ -172,7 +172,7 @@
   import InlineSvg from 'vue-inline-svg'
   import {email, emailText, resetEmail, resetEmailText} from '../../components/email'
   import Toolkit from '../../components/Toolkit'
-  import AlertModal from '../../components/AlertModal'
+  import AlertModal from '../../components/alertModal'
 
   export default {
     components: {

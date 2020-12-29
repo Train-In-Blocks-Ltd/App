@@ -119,7 +119,7 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
-  import NewPlan from '../../components/NewPlan'
+  import NewPlan from '../../components/newPlan'
   import Skeleton from '../../components/Skeleton'
 
   export default {

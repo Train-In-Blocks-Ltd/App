@@ -42,7 +42,7 @@
       <p class="text">What's New</p>
     </div>
     <div class="icon_open--install_PWA" v-if="!isInstallOpen" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
-      <inline-svg :src="require('../assets/svg/install-PWA.svg')" aria-label="Install App"/>
+      <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App"/>
       <p class="text">Install</p>
     </div>
     <div>
@@ -75,10 +75,10 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
-  import ClientLink from '../components/ClientLink'
-  import NewClient from '../components/NewClient'
-  import WhatsNew from '../components/WhatsNew'
-  import InstallApp from '../components/InstallPWA'
+  import ClientLink from '../components/clientLink'
+  import NewClient from '../components/newClient'
+  import WhatsNew from '../components/whatsNew'
+  import InstallApp from '../components/installPWA'
   import Skeleton from '../components/Skeleton'
   import Splash from '../components/Splash'
 
