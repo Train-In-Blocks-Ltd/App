@@ -196,7 +196,7 @@
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
-    border-radius: 3px
+    border-radius: 10px
   }
   .wrapper--session__header {
     display: flex;

@@ -6,7 +6,7 @@
   .client_notes {
     margin: 4rem 0;
     padding: 2rem;
-    border-radius: 3px;
+    border-radius: 10px;
     box-shadow: 0 0 20px 10px #28282808
   }
   .client_notes__header {
@@ -100,7 +100,7 @@
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
         <p class="text--small grey text--no-plans" v-if="this.$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
         <skeleton v-if="$parent.$parent.loading" :type="'plan'" />
-        <div v-if="!this.$parent.no_plans && !$parent.$parent.loading" class="plan_grid">
+        <div v-if="!$parent.no_plans && !$parent.$parent.loading" class="plan_grid">
           <router-link
             class="plan_link" :to="'plan/' + plan.id"
             v-for="(plan, index) in this.$parent.$parent.client_details.plans"
