@@ -193,7 +193,6 @@
     opacity: .6
   }
   .wrapper--session, .plan_notes {
-    content-visibility: auto;
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
@@ -478,10 +477,8 @@
                   What do you want to achieve in this plan?
                 </p>
                 <div v-if="editPlanNotes" class="bottom_bar">
-                  <div>
-                    <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
-                    <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
-                  </div>
+                  <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
+                  <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
                 </div>
               </div>
               <div class="wrapper--calendar">
@@ -564,15 +561,13 @@
                         <div v-html="session.feedback" />
                       </div>
                       <div class="bottom_bar" v-if="expandedSessions.includes(session.id)">
-                        <div>
-                          <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
-                          <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
-                          <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore, showTemplates = false">Cancel</button>
-                          <button v-if="isEditingSession && session.id === editSession && !showTemplates" @click="showTemplates = true">Templates</button>
-                          <button v-if="isEditingSession && session.id === editSession && showTemplates" @click="showTemplates = false" class="cancel">Close Templates</button>
-                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
-                          <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null" class="cancel">Close Feedback</button>
-                        </div>
+                        <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
+                        <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
+                        <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore, showTemplates = false">Cancel</button>
+                        <button v-if="isEditingSession && session.id === editSession && !showTemplates" @click="showTemplates = true">Templates</button>
+                        <button v-if="isEditingSession && session.id === editSession && showTemplates" @click="showTemplates = false" class="cancel">Close Templates</button>
+                        <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
+                        <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null" class="cancel">Close Feedback</button>
                       </div>
                     </div>
                   </div>

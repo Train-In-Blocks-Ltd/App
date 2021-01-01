@@ -80,21 +80,19 @@
         </div>
         <quill v-if="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn"/>
         <div
-          v-if="!editClientNotes && $parent.$parent.client_details.notes !== '<p><br></p>' && $parent.$parent.client_details.notes !== null"
+          v-if="!editClientNotes && $parent.$parent.client_details.notes !== '<p><br></p>' && $parent.$parent.client_details.notes !== ''"
           v-html="$parent.$parent.client_details.notes"
           class="show_client_notes animate animate__fadeIn"
         />
         <p
-          v-if="!editClientNotes && ($parent.$parent.client_details.notes === '<p><br></p>' || $parent.$parent.client_details.notes === null)"
+          v-if="!editClientNotes && ($parent.$parent.client_details.notes === '<p><br></p>' || $parent.$parent.client_details.notes === '')"
           class="text--small grey text--no_client_notes"
         >
           What goals does your client have? What physical measures have you taken?
         </p>
         <div v-if="editClientNotes" class="bottom_bar">
-          <div>
-            <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
-            <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
-          </div>
+          <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
+          <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
         </div>
       </div>
       <div>

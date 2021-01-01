@@ -41,13 +41,13 @@
       <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New"/>
       <p class="text">What's New</p>
     </div>
-    <div class="icon_open--install_PWA" v-if="!isInstallOpen" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
+    <div class="icon_open--install_PWA" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App"/>
       <p class="text">Install</p>
     </div>
     <div>
       <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--a" />
-      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--b"/>
+      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--b" />
     </div>
     <p class="text--small grey text--no_clients" v-if="this.$parent.no_clients">No clients added yet, use the button on the top-right of your screen.</p>
     <p class="text--small grey text--loading" v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>

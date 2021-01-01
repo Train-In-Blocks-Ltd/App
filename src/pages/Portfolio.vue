@@ -67,11 +67,9 @@
       <div v-html="$parent.portfolio.notes" v-if="!editing_card" class="show_card" />
       <quill v-model="$parent.portfolio.notes" v-if="editing_card" output="html" class="quill animate animate__fadeIn" />
       <div class="bottom_bar">
-        <div>
-          <button v-if="!editing_card" @click="editing_card = true">Edit</button>
-          <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
-          <button v-if="editing_card" @click="editing_card= false" class="cancel">Cancel</button>
-        </div>
+        <button v-if="!editing_card" @click="editing_card = true">Edit</button>
+        <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
+        <button v-if="editing_card" @click="editing_card= false" class="cancel">Cancel</button>
       </div>
     </div>
   </div>

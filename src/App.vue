@@ -279,11 +279,12 @@
   }
   .bottom_bar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: .6rem 0;
     margin-top: 1rem;
     z-index: 1
+  }
+  .bottom_bar button {
+    margin-right: .4rem
   }
   #button_done {
     background-color: green
@@ -566,7 +567,6 @@
 
   /* LINK CONTAINERS */
   .client_link, .plan_link {
-    content-visibility: auto;
     display: grid;
     padding: 2rem;
     grid-gap: 1rem;
@@ -947,9 +947,7 @@ export default {
       authenticated: false,
       pwa: {
         deferredPrompt: null,
-        displayMode: 'browser tab',
-        canInstall: false,
-        installed: false
+        displayMode: 'browser tab'
       }
     }
   },
@@ -970,6 +968,12 @@ export default {
     })
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.is_trainer = true
+    }
+    if (navigator.standalone) {
+      this.pwa.displayMode = 'standalone-ios'
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.pwa.displayMode = 'standalone'
     }
   },
   watch: {
