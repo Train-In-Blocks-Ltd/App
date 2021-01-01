@@ -26,7 +26,7 @@
   }
   .day_events__event {
     padding: .6rem 1rem;
-    border-radius: 3px
+    border-radius: 8px
   }
 
   /* Header bar */

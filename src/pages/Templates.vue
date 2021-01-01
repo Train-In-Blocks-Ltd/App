@@ -29,7 +29,7 @@
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
-    border-radius: 3px
+    border-radius: 10px
   }
   .wrapper--template__header {
     display: flex;
@@ -44,7 +44,6 @@
   /* Inputs */
   input.template-name {
     text-overflow: ellipsis;
-    letter-spacing: 1px;
     border: 0;
     border-bottom: 1px solid #282828;
     font-size: 1rem;

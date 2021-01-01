@@ -79,8 +79,7 @@
     min-height: 100%;
     display: grid;
     font-size: 16px;
-    line-height: 1.42;
-    letter-spacing: 1px
+    line-height: 1.42
   }
   #app {
     color: #282828;
@@ -206,14 +205,13 @@
     width: fit-content;
     user-select: none;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 5px;
     opacity: 1;
     text-transform: capitalize;
     outline-width: 0;
     border: none;
     padding: .6rem 1.6rem;
     font-size: .8rem;
-    letter-spacing: .1rem;
     color: white;
     background-color: #282828;
     margin: .6rem 0;
@@ -309,7 +307,7 @@
     transition: all 1s
   }
   .show_session img, .show_plan_notes img, .show_client_notes img, .show_template img,.show_session iframe, .show_plan_notes iframe, .show_client_notes iframe, .show_template iframe {
-    border-radius: 3px;
+    border-radius: 10px;
     max-width: 80%;
     margin: 1rem 0
   }
@@ -574,7 +572,7 @@
     color: #282828;
     text-decoration: none;
     box-shadow: 0 0 20px 10px #28282808;
-    border-radius: 3px;
+    border-radius: 10px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link:hover, .plan_link:hover {

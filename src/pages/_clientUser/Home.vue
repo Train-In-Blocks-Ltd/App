@@ -10,7 +10,7 @@
   }
   .wrapper--session {
     box-shadow: 0 0 20px 10px #28282808;
-    border-radius: 3px;
+    border-radius: 10px;
     padding: 2rem;
     margin: 2rem 0
   }

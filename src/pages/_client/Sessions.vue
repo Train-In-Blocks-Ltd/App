@@ -213,7 +213,6 @@
   }
   input.session-name, input.session-date {
     text-overflow: ellipsis;
-    letter-spacing: 1px;
     border: 0;
     border-bottom: 1px solid #282828;
     outline-width: 0;

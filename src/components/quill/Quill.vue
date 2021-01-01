@@ -11,7 +11,7 @@
     border: none;
     border-bottom: 1px solid #28282820;
     background-color: white;
-    padding: 1rem 0;
+    padding: .4rem 0;
     z-index: 1
     
   }

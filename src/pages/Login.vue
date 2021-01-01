@@ -35,7 +35,7 @@
     margin-top: 1.25rem
   }
   .signup {
-    margin-left: calc(10px + 20px + 60px + 20px + 10px)
+    margin-left: calc(20px + 60px + 20px)
   }
   .recovery {
     margin-top: 1.25rem;
@@ -48,7 +48,6 @@
     padding: .6rem 0;
     font-size: 1rem;
     font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: .1rem;
     border: none;
     border-bottom: 1px solid #282828;
     transition: width 1s;
@@ -63,14 +62,13 @@
     position: absolute;
     user-select: none;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 5px;
     opacity: 1;
     text-transform: capitalize;
     outline-width: 0;
     border: none;
     padding: .6rem 1.6rem;
     font-size: .8rem;
-    letter-spacing: .1rem;
     color: white;
     background-color: #282828;
     margin: .6rem 0;
@@ -101,8 +99,7 @@
     fill: #282828
   }
   .okta-form-label {
-    text-align: left;
-    letter-spacing: .1rem
+    text-align: left
   }
   #okta-signin-username, #okta-signin-password {
     outline-width: 0;
@@ -111,7 +108,6 @@
     padding: .6rem 0;
     font-size: 1rem;
     font-family: Arial, Helvetica, sans-serif;
-    letter-spacing: .1rem;
     border: none;
     border-bottom: 1px solid #282828;
     transition: width 1s;
