@@ -89,7 +89,7 @@ export default {
       editing_info: false,
       editing_card: false,
       toggleTest: false,
-      tempEditorStore: null,
+      tempEditorStore: null
     }
   },
   async created () {

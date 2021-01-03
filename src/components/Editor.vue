@@ -96,7 +96,7 @@
       </form>
       <!-- IMAGE -->
       <div v-if="showAddImage" class="pop_up--add_image">
-        <input @change="add_img()" type="file" accept=".png, .jpeg">
+        <input @change="add_img()" id="img_uploader" type="file" accept=".png, .jpeg">
       </div>
       <!-- LINK -->
       <form v-if="showAddVideo" @submit.prevent="add_video()" class="pop_up--add_video">
@@ -118,6 +118,8 @@
 </template>
 
 <script>
+  import Compressor from 'compressorjs'
+
   export default {
     props: {
       showEditState: Boolean,
@@ -221,7 +223,7 @@
         }
       },
       add_img () {
-        const file = document.querySelector('input[type=file]').files[0]
+        const file = document.getElementById('img_uploader').files[0]
         const reader = new FileReader()
         reader.addEventListener('load', () => {
           this.base64Img = reader.result
@@ -230,7 +232,15 @@
           this.reset_img_pop_up()
         }, false)
         if (file) {
-          reader.readAsDataURL(file)
+          new Compressor(file, {
+            quality: 0.2,
+            success(result) {
+              reader.readAsDataURL(result)
+            },
+            error(err) {
+              console.log(err.message)
+            }
+          })
         }
       },
       reset_img_pop_up () {
