@@ -112,7 +112,7 @@
         data-placeholder="Start typing..."
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" v-html="htmlInjection" id="rich_show_content" class="padding"/>
+    <div v-if="!showEditState && !test_empty_html(htmlInjection)" v-html="remove_brackets_and_breaks(htmlInjection)" id="rich_show_content" class="padding"/>
     <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">{{ emptyPlaceholder }}</p>
   </div>
 </template>
@@ -152,13 +152,24 @@
 
       // GENERAL
 
-      test_empty_html (text) {
-        var rmTags = text.replace(/<[^>]*>?/gm, '')
-        var rmSpace = rmTags.replace(/&nbsp;/g, '')
-        if (rmSpace === '') {
-          return true
+      remove_brackets_and_breaks (dataIn) {
+        if (dataIn !== null) {
+          return dataIn.replace(/[[\]]/g, '')
         } else {
-          return false
+          return dataIn
+        }
+      },
+      test_empty_html (text) {
+        if (text !== null) {
+          var rmTags = text.replace(/<[^>]*>?/gm, '')
+          var rmSpace = rmTags.replace(/&nbsp;/g, '').replace(/ /g, '')
+          if (rmSpace === '') {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          return true
         }
       },
       update_edited_notes () {
@@ -232,12 +243,13 @@
           this.reset_img_pop_up()
         }, false)
         if (file) {
+          // eslint-disable-next-line
           new Compressor(file, {
             quality: 0.2,
-            success(result) {
+            success (result) {
               reader.readAsDataURL(result)
             },
-            error(err) {
+            error (err) {
               console.log(err.message)
             }
           })
