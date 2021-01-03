@@ -464,17 +464,11 @@
                     Edit
                   </a>
                 </div>
-                <quill v-if="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn"/>
-                <div
-                  v-if="!editPlanNotes  && plan.notes !== '<p><br></p>' && plan.notes !== null"
-                  v-html="plan.notes" class="show_plan_notes animate animate__fadeIn"
+                <rich-editor
+                  :showEditState="editPlanNotes"
+                  :htmlInjection.sync="plan.notes"
+                  :emptyPlaceholder="'What do you want to achieve in this plan?'"
                 />
-                <p
-                  v-if="!editPlanNotes && (plan.notes === '<p><br></p>' || plan.notes === null)"
-                  class="text--small grey text--no_plan_notes"
-                >
-                  What do you want to achieve in this plan?
-                </p>
                 <div v-if="editPlanNotes" class="bottom_bar">
                   <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
                   <button @click="editPlanNotes = false, plan.notes = tempEditorStore" class="cancel">Cancel</button>
@@ -536,9 +530,12 @@
                           <inline-svg id="expand" class="icon--expand" v-show="!isEditingSession" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
-                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn"/>
-                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show_session animate animate__fadeIn"/>
-                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no_content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
+                      <rich-editor
+                        v-show="expandedSessions.includes(session.id)"
+                        :showEditState="session.id === editSession"
+                        :htmlInjection.sync="session.notes"
+                        :emptyPlaceholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
+                      />
                       <div
                         v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
                         class="wrapper--template-options"
@@ -648,13 +645,15 @@
   import InlineSvg from 'vue-inline-svg'
   import Checkbox from '../../components/Checkbox'
   import Calendar from '../../components/Calendar'
+  import RichEditor from '../../components/Editor'
 
   export default {
     components: {
       LineChart,
       InlineSvg,
       Checkbox,
-      Calendar
+      Calendar,
+      RichEditor
     },
     data () {
       return {
@@ -1140,7 +1139,7 @@
       },
       checkCaretPos () {
         let caretPosition = document.getSelection()
-        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
+        if (caretPosition.focusNode.parentNode.id === 'rich_editor') {
           this.caretIsInEditor = true
         } else {
           this.caretIsInEditor = false
@@ -1148,7 +1147,7 @@
       },
       pasteHtmlAtCaret (html) {
         let caretPosition = document.getSelection()
-        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
+        if (caretPosition.focusNode.parentNode.id === 'rich_editor') {
           if (caretPosition.focusNode.nodeType !== 3) {
             caretPosition.focusNode.insertAdjacentHTML('afterend', html)
           } else {
