@@ -460,7 +460,7 @@
               <div class="plan_notes" :class="{ activeState: editPlanNotes }">
                 <div class="plan_notes__header">
                   <p class="text--small">Plan Notes</p>
-                  <a class="a--plan_notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
+                  <a class="a--plan_notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempEditorStore = plan.notes">
                     Edit
                   </a>
                 </div>
@@ -477,7 +477,7 @@
                 </p>
                 <div v-if="editPlanNotes" class="bottom_bar">
                   <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
-                  <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
+                  <button @click="editPlanNotes = false, plan.notes = tempEditorStore" class="cancel">Cancel</button>
                 </div>
               </div>
               <div class="wrapper--calendar">
@@ -560,9 +560,9 @@
                         <div v-html="session.feedback" />
                       </div>
                       <div class="bottom_bar" v-if="expandedSessions.includes(session.id)">
-                        <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
+                        <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempEditorStore = session.notes">Edit</button>
                         <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
-                        <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore, showTemplates = false">Cancel</button>
+                        <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempEditorStore, showTemplates = false">Cancel</button>
                         <button v-if="isEditingSession && session.id === editSession && !showTemplates" @click="showTemplates = true">Templates</button>
                         <button v-if="isEditingSession && session.id === editSession && showTemplates" @click="showTemplates = false" class="cancel">Close Templates</button>
                         <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
@@ -659,7 +659,7 @@
     data () {
       return {
         force: true,
-        tempQuillStore: null,
+        tempEditorStore: null,
         showTemplates: false,
         caretIsInEditor: false,
         previewTemplate: null,
