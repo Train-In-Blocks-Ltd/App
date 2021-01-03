@@ -134,9 +134,9 @@
           :emptyPlaceholder="'What do you plan for your clients frequently?'"
         />
         <div class="bottom_bar" v-if="expandedTemplates.includes(template.id)">
-          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
+          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempEditorStore = template.template">Edit</button>
           <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
-          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempQuillStore">Cancel</button>
+          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempEditorStore">Cancel</button>
         </div>
       </div>
     </div>
@@ -158,7 +158,7 @@
     data () {
       return {
         // TEMPLATE DATA //
-        tempQuillStore: null,
+        tempEditorStore: null,
         isEditingTemplate: false,
         editTemplate: null,
         new_template: {

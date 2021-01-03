@@ -72,7 +72,7 @@
           <a
             href="javascript:void(0)"
             v-if="!editClientNotes"
-            @click="editClientNotes = true, tempQuillStore = $parent.$parent.client_details.notes"
+            @click="editClientNotes = true, tempEditorStore = $parent.$parent.client_details.notes"
             class="a--client_notes"
           >
             Edit
@@ -85,7 +85,7 @@
         />
         <div v-if="editClientNotes" class="bottom_bar">
           <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
-          <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
+          <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore" class="cancel">Cancel</button>
         </div>
       </div>
       <div>
@@ -129,7 +129,7 @@
     },
     data () {
       return {
-        tempQuillStore: null,
+        tempEditorStore: null,
         response: '',
         editClientNotes: false,
         isNewPlanOpen: false
