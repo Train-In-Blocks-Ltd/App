@@ -91,12 +91,12 @@
       <div>
         <p class="text--large">Plans</p>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
-        <p class="text--small grey text--no-plans" v-if="this.$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
+        <p class="text--small grey text--no-plans" v-if="$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
         <skeleton v-if="$parent.$parent.loading" :type="'plan'" />
         <div v-if="!$parent.no_plans && !$parent.$parent.loading" class="plan_grid">
           <router-link
             class="plan_link" :to="'plan/' + plan.id"
-            v-for="(plan, index) in this.$parent.$parent.client_details.plans"
+            v-for="(plan, index) in $parent.$parent.client_details.plans"
             :key="index"
           >
             <p class="text--small plan-name">{{plan.name}}</p>

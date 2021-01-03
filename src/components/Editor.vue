@@ -61,15 +61,30 @@
 
   /* Editor */
 
-  #rich_editor {
+  div#rich_editor {
     padding: 1rem 0;
     outline-width: 0
+  }
+  div#rich_show_content p {
+    margin: 1rem 0
+  }
+  div#rich_show_content img, div#rich_show_content iframe {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
   }
 
   /* Show */
 
   .padding {
     padding: 1rem 0
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    div#rich_show_content img, div#rich_show_content iframe {
+      max-width: 100%
+    }
   }
 </style>
 

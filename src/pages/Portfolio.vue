@@ -29,9 +29,6 @@
     border-radius: 10px;
     margin: 4rem 0
   }
-  .show_card {
-    padding: 1rem 0
-  }
 </style>
 
 <template>
