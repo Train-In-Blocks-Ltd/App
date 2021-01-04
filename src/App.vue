@@ -759,7 +759,7 @@
     <modal name="error" height="100%" width='100%' :adaptive="true" :clickToClose="false">
       <div class="modal--error">
         <div class="wrapper--centered-item">
-          <p><b>Something went wrong. Please try again...</b></p><br>
+          <p>Something went wrong. Please try again...</p><br>
           <p>{{errorMsg}}</p><br>
           <div class="modal--bottom_bar">
             <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
@@ -945,7 +945,9 @@ export default {
       authenticated: false,
       pwa: {
         deferredPrompt: null,
-        displayMode: 'browser tab'
+        displayMode: 'browser tab',
+        canInstall: false,
+        installed: false
       }
     }
   },
