@@ -92,14 +92,30 @@
   <div>
     <div v-if="showEditState">
       <div id="rich_toolbar">
-        <button @click="format('bold')"><b>B</b></button>
-        <button @click="format('italic')"><i>I</i></button>
-        <button @click="format('underline')"><u>U</u></button>
-        <button @click="format('insertOrderedList')">List 1</button>
-        <button @click="format('insertUnorderedList')">List 2</button>
-        <button @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up()">Link</button>
-        <button @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up()">Image</button>
-        <button @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up()">Video</button>
+        <button @click="format('bold')">
+          <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+        </button>
+        <button @click="format('italic')">
+          <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+        </button>
+        <button @click="format('underline')">
+          <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+        </button>
+        <button @click="format('insertOrderedList')">
+          <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
+        </button>
+        <button @click="format('insertUnorderedList')">
+          <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+        </button>
+        <button @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up()">
+          <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+        </button>
+        <button @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up()">
+          <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+        </button>
+        <button @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up()">
+          <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
+        </button>
       </div>
       <!-- LINK -->
       <form v-if="showAddLink" @submit.prevent="add_link()" class="pop_up--add_link">
@@ -134,8 +150,12 @@
 
 <script>
   import Compressor from 'compressorjs'
+  import InlineSvg from 'vue-inline-svg'
 
   export default {
+    components: {
+      InlineSvg
+    },
     props: {
       showEditState: Boolean,
       htmlInjection: String,
