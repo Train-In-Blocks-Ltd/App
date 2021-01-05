@@ -114,18 +114,19 @@
 
 <template>
   <div id="wrapper--rich_editor">
-    <p style="display:none">{{ editorVersion }}</p>
+    <p id="rich_editor_version" style="display:none">{{ editorVersion }}</p>
+    <p v-if="outdated">This editor is outdated but it's still working. You can update by creating a new session and moving the plans over. We don't recommend copy and pasting images and videos into the new session.</p>
     <modal name="preview_template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
       <div class="modal--preview_template">
         <div class="wrapper--centered-item">
           <div v-if="previewTemplate !== null">
             <div v-html="previewTemplate" />
-            <button @click="$modal.hide('preview_template'), willBodyScroll(true), previewTemplate = null" class="cancel">Close</button>
+            <button @click="$modal.hide('preview_template'), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
           </div>
           <div v-else>
             <p class="text--small">Something went wrong with the preview</p>
             <p class="text--small grey">Please try again</p>
-            <button @click="$modal.hide('preview_template'), willBodyScroll(true), previewTemplate = null" class="cancel">Close</button>
+            <button @click="$modal.hide('preview_template'), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
           </div>
         </div>
       </div>
@@ -205,7 +206,7 @@
         >
           <button @click="add_template(item.template)">{{ item.name }}</button>
           <inline-svg
-            @click="previewTemplate = item.template, $modal.show('preview_template'), willBodyScroll(false)"
+            @click="previewTemplate = item.template, $modal.show('preview_template'), will_body_scroll(false)"
             :src="require('../assets/svg/editor/preview.svg')"
           />
         </div>
@@ -240,7 +241,8 @@
     },
     data () {
       return {
-        editorVersion: 'Graphite 1.0',
+        editorVersion: 'Graphite 1.1',
+        outdated: false,
         showTooltip: false,
         caretIsInEditor: false,
         savedSelection: null,
@@ -265,9 +267,9 @@
       showEditState: function () {
         this.initialHTML = this.htmlInjection
         if (this) {
-          this.setListenerForEditor(true)
+          this.set_listener_for_editor(true)
         } else {
-          this.setListenerForEditor(false)
+          this.set_listener_for_editor(false)
           this.caretIsInEditor = false
         }
       }
@@ -276,7 +278,14 @@
 
       // GENERAL
 
-      willBodyScroll (state) {
+      /*
+      check_version () {
+        let versionId = document.getElementById('rich_editor_version').innerText
+        let version = parseFloat(versionId.match(/\d+.\d+/gmi))
+      },
+      */
+
+      will_body_scroll (state) {
         const body = document.getElementsByTagName('body')[0]
         if (state) {
           body.style.overflow = 'auto'
@@ -284,14 +293,14 @@
           body.style.overflow = 'hidden'
         }
       },
-      setListenerForEditor (state) {
+      set_listener_for_editor (state) {
         if (state) {
-          document.addEventListener('click', this.checkCaretPos)
+          document.addEventListener('click', this.check_caret_pos)
         } else {
-          document.removeEventListener('click', this.checkCaretPos)
+          document.removeEventListener('click', this.check_caret_pos)
         }
       },
-      checkCaretPos () {
+      check_caret_pos () {
         let caretPosition = document.getSelection()
         if (caretPosition.focusNode !== null) {
           if (caretPosition.focusNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.id === 'rich_editor') {
