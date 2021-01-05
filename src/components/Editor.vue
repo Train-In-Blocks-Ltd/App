@@ -33,8 +33,9 @@
 
   /* Pop-ups */
 
-  .pop_up--add_link, .pop_up--add_image, .pop_up--add_video {
-    position: absolute;
+  .pop_up--add_link, .pop_up--add_image, .pop_up--add_video, .pop_up--add_video, .pop_up--add_template {
+    position: sticky;
+    top: 4.51rem;
     background-color: white;
     z-index: 99;
     display: flex;
@@ -43,6 +44,15 @@
     margin: 1rem 0;
     padding: .8rem;
     box-shadow: 0 0 20px 10px #28282810
+  }
+  .pop_up--add_template {
+    display: grid
+  }
+  .template_item {
+    display: flex
+  }
+  .template_item svg {
+    margin: auto 1rem
   }
   .wrapper--input--add_link {
     display: grid;
@@ -57,6 +67,20 @@
   button.add_link_submit, button.add_video_submit {
     height: auto;
     margin: 0
+  }
+
+  /* Tooltip */
+  .tooltip {
+    position: absolute;
+    top: 120%;
+    background-color: #282828;
+    color: white;
+    font-size: .8rem;
+    opacity: .9;
+    text-align: center;
+    padding: .5rem;
+    border-radius: 3px;
+    z-index: 100
   }
 
   /* Editor */
@@ -89,7 +113,23 @@
 </style>
 
 <template>
-  <div>
+  <div id="wrapper--rich_editor">
+    <p style="display:none">{{ editorVersion }}</p>
+    <modal name="preview_template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+      <div class="modal--preview_template">
+        <div class="wrapper--centered-item">
+          <div v-if="previewTemplate !== null">
+            <div v-html="previewTemplate" />
+            <button @click="$modal.hide('preview_template'), willBodyScroll(true), previewTemplate = null" class="cancel">Close</button>
+          </div>
+          <div v-else>
+            <p class="text--small">Something went wrong with the preview</p>
+            <p class="text--small grey">Please try again</p>
+            <button @click="$modal.hide('preview_template'), willBodyScroll(true), previewTemplate = null" class="cancel">Close</button>
+          </div>
+        </div>
+      </div>
+    </modal>
     <div v-if="showEditState">
       <div id="rich_toolbar">
         <button @click="format('bold')">
@@ -107,15 +147,37 @@
         <button @click="format('insertUnorderedList')">
           <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
         </button>
-        <button @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up()">
-          <inline-svg :src="require('../assets/svg/editor/link.svg')" />
-        </button>
-        <button @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up()">
-          <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-        </button>
-        <button @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up()">
-          <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
-        </button>
+        <div
+          @mouseover="showTooltip = true"
+          @mouseleave="showTooltip = false"
+        >
+          <button
+            @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+            :disabled="!caretIsInEditor"
+          >
+            <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+          </button>
+          <button
+            @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+            :disabled="!caretIsInEditor"
+          >
+            <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+          </button>
+          <button
+            @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+            :disabled="!caretIsInEditor"
+          >
+            <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
+          </button>
+          <button
+            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+            @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
+            :disabled="!caretIsInEditor"
+          >
+            <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+          </button>
+        </div>
+        <span v-show="showTooltip && !caretIsInEditor" class="tooltip">Click on an empty line where you want to insert.</span>
       </div>
       <!-- LINK -->
       <form v-if="showAddLink" @submit.prevent="add_link()" class="pop_up--add_link">
@@ -129,13 +191,27 @@
       <div v-if="showAddImage" class="pop_up--add_image">
         <input @change="add_img()" id="img_uploader" type="file" accept=".png, .jpeg">
       </div>
-      <!-- LINK -->
+      <!-- VIDEO -->
       <form v-if="showAddVideo" @submit.prevent="add_video()" class="pop_up--add_video">
         <input v-model="addVideoURL" class="input--add_video" type="text" placeholder="URL" required>
         <button class="add_video_submit" type="submit">Add</button>
       </form>
+      <!-- TEMPLATE -->
+      <div v-if="showAddTemplate" class="pop_up--add_template">
+        <div
+          v-for="(item, index) in dataForTemplates"
+          :key="'template-' + index"
+          class="template_item"
+        >
+          <button @click="add_template(item.template)">{{ item.name }}</button>
+          <inline-svg
+            @click="previewTemplate = item.template, $modal.show('preview_template'), willBodyScroll(false)"
+            :src="require('../assets/svg/editor/preview.svg')"
+          />
+        </div>
+      </div>
       <div
-        @click="reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
+        @click="reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
         @input="update_edited_notes()"
         v-html="initialHTML"
         id="rich_editor"
@@ -159,10 +235,14 @@
     props: {
       showEditState: Boolean,
       htmlInjection: String,
-      emptyPlaceholder: String
+      emptyPlaceholder: String,
+      dataForTemplates: Array
     },
     data () {
       return {
+        editorVersion: 'Graphite 1.0',
+        showTooltip: false,
+        caretIsInEditor: false,
         savedSelection: null,
         initialHTML: '',
         editedHTML: '',
@@ -175,18 +255,52 @@
         base64Img: null,
 
         showAddVideo: false,
-        addVideoURL: ''
+        addVideoURL: '',
+
+        showAddTemplate: false,
+        previewTemplate: null
       }
     },
     watch: {
       showEditState: function () {
         this.initialHTML = this.htmlInjection
+        if (this) {
+          this.setListenerForEditor(true)
+        } else {
+          this.setListenerForEditor(false)
+          this.caretIsInEditor = false
+        }
       }
     },
     methods: {
 
       // GENERAL
 
+      willBodyScroll (state) {
+        const body = document.getElementsByTagName('body')[0]
+        if (state) {
+          body.style.overflow = 'auto'
+        } else {
+          body.style.overflow = 'hidden'
+        }
+      },
+      setListenerForEditor (state) {
+        if (state) {
+          document.addEventListener('click', this.checkCaretPos)
+        } else {
+          document.removeEventListener('click', this.checkCaretPos)
+        }
+      },
+      checkCaretPos () {
+        let caretPosition = document.getSelection()
+        if (caretPosition.focusNode !== null) {
+          if (caretPosition.focusNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.id === 'rich_editor') {
+            this.caretIsInEditor = true
+          } else {
+            this.caretIsInEditor = false
+          }
+        }
+      },
       remove_brackets_and_breaks (dataIn) {
         if (dataIn !== null) {
           return dataIn.replace(/[[\]]/g, '')
@@ -317,6 +431,24 @@
       reset_video_pop_up () {
         this.addVideoURL = ''
         this.showAddVideo = false
+      },
+
+      // TEMPLATE
+
+      show_template_adder () {
+        this.savedSelection = this.save_selection()
+        this.showAddTemplate = !this.showAddTemplate
+        if (!this.showAddTemplate) {
+          this.savedSelection = null
+        }
+      },
+      add_template (templateData) {
+        this.restore_selection(this.savedSelection)
+        this.format('insertHTML', templateData)
+        this.reset_template_pop_up()
+      },
+      reset_template_pop_up () {
+        this.showAddTemplate = false
       }
     }
   }
