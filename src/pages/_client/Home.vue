@@ -5,7 +5,7 @@
     background-color: initial;
     border: 1px solid #28282840;
     padding: .6rem 1rem;
-    border-radius: 3px;
+    border-radius: 8px;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   #client .client_info input:not([type='submit']):hover, #duration:hover, .session-date:hover {

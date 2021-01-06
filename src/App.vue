@@ -79,8 +79,7 @@
     min-height: 100%;
     display: grid;
     font-size: 16px;
-    line-height: 1.42;
-    letter-spacing: 1px
+    line-height: 1.42
   }
   #app {
     color: #282828;
@@ -206,14 +205,13 @@
     width: fit-content;
     user-select: none;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 5px;
     opacity: 1;
     text-transform: capitalize;
     outline-width: 0;
     border: none;
     padding: .6rem 1.6rem;
     font-size: .8rem;
-    letter-spacing: .1rem;
     color: white;
     background-color: #282828;
     margin: .6rem 0;
@@ -279,11 +277,12 @@
   }
   .bottom_bar {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: .6rem 0;
     margin-top: 1rem;
     z-index: 1
+  }
+  .bottom_bar button {
+    margin-right: .4rem
   }
   #button_done {
     background-color: green
@@ -308,7 +307,7 @@
     transition: all 1s
   }
   .show_session img, .show_plan_notes img, .show_client_notes img, .show_template img,.show_session iframe, .show_plan_notes iframe, .show_client_notes iframe, .show_template iframe {
-    border-radius: 3px;
+    border-radius: 10px;
     max-width: 80%;
     margin: 1rem 0
   }
@@ -566,7 +565,6 @@
 
   /* LINK CONTAINERS */
   .client_link, .plan_link {
-    content-visibility: auto;
     display: grid;
     padding: 2rem;
     grid-gap: 1rem;
@@ -574,7 +572,7 @@
     color: #282828;
     text-decoration: none;
     box-shadow: 0 0 20px 10px #28282808;
-    border-radius: 3px;
+    border-radius: 10px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link:hover, .plan_link:hover {
@@ -761,7 +759,7 @@
     <modal name="error" height="100%" width='100%' :adaptive="true" :clickToClose="false">
       <div class="modal--error">
         <div class="wrapper--centered-item">
-          <p><b>Something went wrong. Please try again...</b></p><br>
+          <p>Something went wrong. Please try again...</p><br>
           <p>{{errorMsg}}</p><br>
           <div class="modal--bottom_bar">
             <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
@@ -949,7 +947,7 @@ export default {
         deferredPrompt: null,
         displayMode: 'browser tab',
         canInstall: false,
-        installed: false
+        installed: null
       }
     }
   },
@@ -958,7 +956,7 @@ export default {
     window.addEventListener('beforeunload', this.confirmLeave)
     axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
-  mounted () {
+  async mounted () {
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -968,6 +966,19 @@ export default {
       // Update UI notify the user they can install the PWA
       this.pwa.canInstall = true
     })
+    if ('getInstalledRelatedApps' in navigator) {
+      const self = this
+      const relatedApps = await navigator.getInstalledRelatedApps()
+      if (relatedApps.length > 0) {
+        self.pwa.installed = true
+      }
+    }
+    if (navigator.standalone) {
+      this.pwa.displayMode = 'standalone-ios'
+    }
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      this.pwa.displayMode = 'standalone'
+    }
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.is_trainer = true
     }
