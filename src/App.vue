@@ -1270,11 +1270,20 @@ export default {
       try {
         if (!localStorage.getItem('portfolio') || force) {
           this.dontLeave = true
-          const response = await axios.get(`https://api.traininblocks.com/portfolio/${this.is_trainer ? this.claims.sub : this.clients[0].pt_id}`)
-          if (response.data.length === 0) {
-            this.create()
+          let response
+          if (this.is_trainer) {
+            response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
+            if (response.data.length === 0) {
+              this.create()
+            } else {
+              localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
+            }
           } else {
-            localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
+            var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+            response = await axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
+            if (response.data.length !== 0) {
+              localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
+            }
           }
         }
         this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
