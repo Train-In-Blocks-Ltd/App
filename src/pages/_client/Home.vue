@@ -11,6 +11,10 @@
   #client .client_info input:not([type='submit']):hover, #duration:hover, .session-date:hover {
     opacity: .6
   }
+  #client .client_info input:not([type='submit']):disabled {
+    cursor: not-allowed;
+    opacity: .6
+  }
   #client .client_info input:not([type='submit']):focus, #duration:focus, .session-date:focus {
     opacity: 1;
     border: 1px solid #282828;
@@ -134,7 +138,7 @@
       <form class="client_info" @submit.prevent="update_client()">
         <input class="client_info--name text--large" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
         <div class="client_info__more-details">
-          <input class="input--forms allow_text_overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" @blur="update_client(), checkClient()"/>
+          <input class="input--forms allow_text_overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" disabled/>
           <input class="input--forms allow_text_overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
           <div>
             <button
@@ -201,10 +205,12 @@
     },
     async created () {
       this.$parent.splashed = true
-      this.created()
+      this.loading = true
       await this.$parent.setup()
       await this.get_client_details()
+      this.created()
       this.keepLoaded = true
+      this.loading = false
     },
     beforeDestroy () {
       this.keepLoaded = false
@@ -411,6 +417,7 @@
         }
       },
       async get_client_details (force) {
+        this.$parent.loading = true
         try {
           // Loop through clients
           var x
