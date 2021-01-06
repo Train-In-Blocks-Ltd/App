@@ -947,7 +947,7 @@ export default {
         deferredPrompt: null,
         displayMode: 'browser tab',
         canInstall: false,
-        installed: false
+        installed: null
       }
     }
   },
@@ -956,7 +956,7 @@ export default {
     window.addEventListener('beforeunload', this.confirmLeave)
     axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
-  mounted () {
+  async mounted () {
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -966,14 +966,21 @@ export default {
       // Update UI notify the user they can install the PWA
       this.pwa.canInstall = true
     })
-    if (this.claims.user_type === ('Trainer' || 'Admin')) {
-      this.is_trainer = true
+    if ('getInstalledRelatedApps' in navigator) {
+      const self = this
+      const relatedApps = await navigator.getInstalledRelatedApps()
+      if (relatedApps.length > 0) {
+        self.pwa.installed = true
+      }
     }
     if (navigator.standalone) {
       this.pwa.displayMode = 'standalone-ios'
     }
     if (window.matchMedia('(display-mode: standalone)').matches) {
       this.pwa.displayMode = 'standalone'
+    }
+    if (this.claims.user_type === ('Trainer' || 'Admin')) {
+      this.is_trainer = true
     }
   },
   watch: {
