@@ -10,43 +10,19 @@
   }
   .wrapper--session {
     box-shadow: 0 0 20px 10px #28282808;
-    border-radius: 3px;
+    border-radius: 10px;
     padding: 2rem;
     margin: 2rem 0
   }
   .client_portfolio__notes {
     margin: 2rem 0
   }
-
-  /* HStack Scrollar */
-  .container--sessions::-webkit-scrollbar {
-    height: 4px
-  }
-  .container--sessions ::-webkit-scrollbar {
-    width: 4px
+  hr {
+    margin: 4rem 0;
   }
 
   /* Responsive */
   @media (max-width: 768px) {
-    #to_top {
-      display: none
-    }
-    #home {
-      padding: 0
-    }
-    #client_home {
-      display: flex;
-      max-width: 100vw;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scroll-behavior: smooth
-    }
-    .client_home__today, .client_home__plans, .client_home__portfolio {
-      padding: 2rem 5vw;
-      min-width: 100vw;
-      height: calc(100vh - 86.78px);
-      scroll-snap-align: start
-    }
     .wrapper--session {
       box-shadow: none;
       border-radius: 0;
@@ -57,7 +33,6 @@
 
 <template>
   <div id="home">
-    <to-top id="to_top" :limit="800" :show="todays_sessions_store.length !== 0 ? true : false" />
     <splash v-if="!$parent.splashed" />
     <div v-if="$parent.portfolio">
       <div>
@@ -147,6 +122,7 @@
           </div>
         </div>
       </div>
+      <hr>
       <div class="client_home__plans">
         <p class="text--large">Plans</p>
         <skeleton v-if="$parent.loading" :type="'plan'" />
@@ -180,14 +156,12 @@
 import InlineSvg from 'vue-inline-svg'
 import Skeleton from '../../components/Skeleton.vue'
 import Splash from '../../components/Splash'
-import ToTop from '../../components/ScrollToTop'
 
 export default {
   components: {
     InlineSvg,
     Skeleton,
-    Splash,
-    ToTop
+    Splash
   },
   data () {
     return {

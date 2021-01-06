@@ -13,61 +13,56 @@
 
 <template>
   <div>
-    <div v-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === true /*&& $parent.$parent.pwa.installed === false*/">
+    <div v-if="$parent.$parent.pwa.canInstall === true">
       <p class="text--large">Install the app</p>
-      <button @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
+    </div>
+    <p
+      v-else-if="$parent.$parent.pwa.canInstall === false"
+      class="text--large"
+    >
+      We can't detect if you have the app installed. Try launching the app, or continue using it in the browser.
+    </p>
+    <p 
+      v-else-if="$parent.$parent.pwa.installed === true"
+      class="text--large"
+    >
+      You have the app installed!
+    </p>
+    <div class="bottom_bar">
+      <button
+        v-if="$parent.$parent.pwa.canInstall === true"
+        @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)"
+      >
         Install
       </button>
+      <a
+        v-else-if="$parent.$parent.pwa.canInstall === false || $parent.$parent.pwa.installed === true"
+        href="https://app.traininblocks.com"
+        target="_blank"
+      >
+        <button>
+          Launch
+        </button>
+      </a>
       <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
     </div>
-    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false /*&& $parent.$parent.pwa.installed === true*/">
-      <p class="text--large">We can't detect if you have the app installed. Try launching the app, or continue using it in the browser.</p>
-      <a href="https://app.traininblocks.com" target="_blank">
-      <button>
-        Launch
-      </button></a>
-      <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
-    </div>
-    <div v-else-if="$parent.$parent.pwa.displayMode === 'browser tab' && $parent.$parent.pwa.canInstall === false && $parent.$parent.pwa.installed === false">
-      <p class="text--large">Your device doesn't support Progressive Web Apps</p>
-      <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
-    </div>
-    <div v-else>
-      <p class="text--large">Nothing to do here</p>
-      <p class="text--large grey">You're using the installed app already</p>
-      <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
-    </div>
+    <br>
+    <br>
   </div>
 </template>
 
 <script>
   export default {
-    async mounted () {
-      if (navigator.standalone) {
-        this.$parent.$parent.pwa.displayMode = 'standalone-ios'
-      }
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        this.$parent.$parent.pwa.displayMode = 'standalone'
-      }
-      /*
-      if ('getInstalledRelatedApps' in navigator) {
-        const self = this
-        const relatedApps = await navigator.getInstalledRelatedApps()
-        if (relatedApps.length > 0) {
-          self.$parent.$parent.pwa.installed = true
-        }
-      }
-      */
-    },
     methods: {
       installPWA () {
-        // Hide the app provided install promotion
-        this.$parent.$parent.pwa.canInstall = false
         // Show the install prompt
         this.$parent.$parent.pwa.deferredPrompt.prompt()
         // Wait for the user to respond to the prompt
         this.$parent.$parent.pwa.deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
+            // Hide the app provided install promotion
+            this.$parent.$parent.pwa.canInstall = false
+            this.$parent.$parent.pwa.displayMode = 'standalone'
           } else {
             this.$parent.$parent.pwa.canInstall = true
           }

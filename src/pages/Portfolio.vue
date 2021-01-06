@@ -5,7 +5,7 @@
     background-color: initial;
     border: 1px solid #28282840;
     padding: .6rem 1rem;
-    border-radius: 3px;
+    border-radius: 8px;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   .trainer_info input:hover {
@@ -26,8 +26,11 @@
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
-    border-radius: 3px;
+    border-radius: 10px;
     margin: 4rem 0
+  }
+  .show_card {
+    padding: 1rem 0
   }
 </style>
 
@@ -58,20 +61,19 @@
       <button v-if="editing_info" type="submit">Save</button>
     </form>
     <div class="wrapper_card">
+      <p class="text--small">Portfolio</p>
       <p
         v-if="!editing_card && ($parent.portfolio.notes === '<p><br></p>' || $parent.portfolio.notes === '')"
         class="text--small grey"
       >
         Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.
       </p>
-      <div v-html="$parent.portfolio.notes" v-if="!editing_card" class="show_card" />
+      <div v-html="$parent.portfolio.notes" v-if="!editing_card && $parent.portfolio.notes !== '<p><br></p>' && $parent.portfolio.notes !== ''" class="show_card" />
       <quill v-model="$parent.portfolio.notes" v-if="editing_card" output="html" class="quill animate animate__fadeIn" />
       <div class="bottom_bar">
-        <div>
-          <button v-if="!editing_card" @click="editing_card = true">Edit</button>
-          <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
-          <button v-if="editing_card" @click="editing_card= false" class="cancel">Cancel</button>
-        </div>
+        <button v-if="!editing_card" @click="editing_card = true">Edit</button>
+        <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
+        <button v-if="editing_card" @click="editing_card= false" class="cancel">Cancel</button>
       </div>
     </div>
   </div>

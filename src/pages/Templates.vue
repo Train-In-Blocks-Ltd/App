@@ -26,11 +26,10 @@
     margin: 4rem 0
   }
   .wrapper--template {
-    content-visibility: auto;
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
-    border-radius: 3px
+    border-radius: 10px
   }
   .wrapper--template__header {
     display: flex;
@@ -45,7 +44,6 @@
   /* Inputs */
   input.template-name {
     text-overflow: ellipsis;
-    letter-spacing: 1px;
     border: 0;
     border-bottom: 1px solid #282828;
     font-size: 1rem;
@@ -133,11 +131,9 @@
         <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show_template animate animate__fadeIn"/>
         <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no_content">What do you plan for your clients frequently?</p>
         <div class="bottom_bar" v-if="expandedTemplates.includes(template.id)">
-          <div>
-            <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
-            <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
-            <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempQuillStore">Cancel</button>
-          </div>
+          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
+          <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
+          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempQuillStore">Cancel</button>
         </div>
       </div>
     </div>
