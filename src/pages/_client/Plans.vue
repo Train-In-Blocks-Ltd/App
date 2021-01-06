@@ -98,18 +98,22 @@
       <div>
         <p class="text--large">Plans</p>
         <p class="new-msg" v-if="response !== ''">{{response}}</p>
-        <p class="text--small grey text--no-plans" v-if="this.$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
-        <skeleton v-if="$parent.$parent.loading" :type="'plan'" />
-        <div v-if="!$parent.no_plans && !$parent.$parent.loading" class="plan_grid">
-          <router-link
-            class="plan_link" :to="'plan/' + plan.id"
-            v-for="(plan, index) in this.$parent.$parent.client_details.plans"
-            :key="index"
-          >
-            <p class="text--small plan-name">{{plan.name}}</p>
-            <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">What's the purpose of this plan? Head over to this page and edit it.</p>
-            <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" v-html="plan.notes" class="plan_link__notes__content" />
-          </router-link>
+        <p class="text--small grey text--no-plans" v-if="$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
+        <div v-else>
+          <skeleton v-if="$parent.$parent.loading" :type="'plan'"/>
+          <div v-else class="plan_grid">
+            <router-link
+              class="plan_link" :to="'plan/' + plan.id"
+              v-for="(plan, index) in $parent.$parent.client_details.plans"
+              :key="index"
+            >
+              <div>
+                <p class="text--small plan-name">{{plan.name}}</p>
+                <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">What's the purpose of this plan? Head over to this page and edit it.</p>
+                <div v-else v-html="plan.notes" class="plan_link__notes__content" />
+              </div>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -127,10 +131,8 @@
       Skeleton
     },
     created () {
-      this.loading = true
       this.$parent.$parent.splashed = true
       this.$parent.checkClient()
-      this.loading = false
     },
     data () {
       return {

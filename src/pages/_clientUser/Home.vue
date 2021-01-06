@@ -34,28 +34,30 @@
 <template>
   <div id="home">
     <splash v-if="!$parent.splashed" />
-    <div>
-      <div :class="{openedSections: is_portfolio_open}" class="section--a" />
-      <div :class="{openedSections: is_portfolio_open}" class="section--b"/>
-    </div>
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div class="wrapper--portfolio" v-if="is_portfolio_open">
-        <div class="client_home__portfolio">
-          <p class="text--large">{{ $parent.portfolio.business_name }}</p>
-          <p class="text--large grey">{{ $parent.portfolio.trainer_name }}</p>
-          <div v-html="$parent.portfolio.notes" class="client_portfolio__notes"/>
-          <button @click="is_portfolio_open = false, $parent.willBodyScroll(true)" class="cancel">Close</button>
-        </div>
+    <div v-if="$parent.portfolio">
+      <div>
+        <div :class="{openedSections: is_portfolio_open}" class="section--a" />
+        <div :class="{openedSections: is_portfolio_open}" class="section--b"/>
       </div>
-    </transition>
-    <div
-      v-if="!is_portfolio_open && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
-      @click="is_portfolio_open = true, $parent.willBodyScroll(false)"
-      aria-label="Information"
-      class="icon_open--portfolio"
-    >
-      <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information"/>
-      <p class="text">Trainer</p>
+      <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+        <div class="wrapper--portfolio" v-if="is_portfolio_open">
+          <div class="client_home__portfolio">
+            <p class="text--large">{{ $parent.portfolio.business_name }}</p>
+            <p class="text--large grey">{{ $parent.portfolio.trainer_name }}</p>
+            <div v-html="$parent.portfolio.notes" class="client_portfolio__notes"/>
+            <button @click="is_portfolio_open = false, $parent.willBodyScroll(true)" class="cancel">Close</button>
+          </div>
+        </div>
+      </transition>
+      <div
+        v-if="!is_portfolio_open && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
+        @click="is_portfolio_open = true, $parent.willBodyScroll(false)"
+        aria-label="Information"
+        class="icon_open--portfolio"
+      >
+        <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information"/>
+        <p class="text">Trainer</p>
+      </div>
     </div>
     <div id="client_home">
       <div class="client_home__today">
@@ -69,7 +71,7 @@
         >
           No sessions today...
         </p>
-        <div v-for="plan in this.$parent.clientUser.plans" :key="plan.name">
+        <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
           <div v-if="plan.sessions" class="container--sessions">
             <div
               v-for="(session, index) in plan.sessions"
