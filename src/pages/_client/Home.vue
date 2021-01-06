@@ -205,10 +205,12 @@
     },
     async created () {
       this.$parent.splashed = true
-      this.created()
+      this.loading = true
       await this.$parent.setup()
       await this.get_client_details()
+      this.created()
       this.keepLoaded = true
+      this.loading = false
     },
     beforeDestroy () {
       this.keepLoaded = false
@@ -415,6 +417,7 @@
         }
       },
       async get_client_details (force) {
+        this.$parent.loading = true
         try {
           // Loop through clients
           var x
