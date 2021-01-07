@@ -673,7 +673,7 @@
       bottom: 0;
       width: 100vw;
       flex-direction: row;
-      padding: 1rem 1rem 2.4rem 1rem;
+      padding: 0;
       justify-content: space-between;
       border-right: none
     }
@@ -687,14 +687,19 @@
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
-      margin: auto;
+      width: 100%;
+      margin: 0;
       padding: 0
+    }
+    .account_nav--item a {
+      width: 100%;
+      height: 4rem
     }
     .account_nav--item--text {
       display: none
     }
     .account_nav--item--icon {
-      margin: 0
+      margin: .8rem auto
     }
   }
 
