@@ -531,7 +531,8 @@
   /* ARCHIVE AND HOME STYLES */
   .container--clients {
     display: grid;
-    grid-gap: 2rem
+    grid-gap: 2rem;
+    margin-bottom: 2rem
   }
   .client_container p {
     margin: 0
