@@ -12,6 +12,7 @@
     opacity: .6
   }
   #client .client_info input:not([type='submit']):disabled {
+    background-color: #28282810;
     cursor: not-allowed;
     opacity: .6
   }
@@ -97,9 +98,6 @@
     }
   }
   @media (max-width: 768px) {
-    #client .client_info input:not([type='submit']):hover, #duration:hover {
-      border-bottom: 2px solid #28282800
-    }
     #client .client_info input.client_info--name {
       font-size: 2rem
     }
@@ -138,7 +136,7 @@
       <form class="client_info" @submit.prevent="update_client()">
         <input class="client_info--name text--large" type="text" aria-label="Client name" autocomplete="name" v-model="$parent.client_details.name" @blur="update_client()"/>
         <div class="client_info__more-details">
-          <input class="input--forms allow_text_overflow" placeholder="Email" aria-label="Email" type="email" autocomplete="email" v-model="$parent.client_details.email" disabled/>
+          <input class="input--forms allow_text_overflow" placeholder="Email" aria-label="Email" type="email" v-model="$parent.client_details.email" disabled />
           <input class="input--forms allow_text_overflow" placeholder="Mobile" aria-label="Mobile" type="tel" inputmode="tel" autocomplete="tel" v-model="$parent.client_details.number" @blur="update_client()" minlength="9" maxlength="14" pattern="\d+" id="phone"/>
           <div>
             <button
