@@ -402,14 +402,6 @@
             </div>
         </form>
       </modal>
-      <modal name="preview_template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-        <div class="modal--preview_template">
-            <div class="wrapper--centered-item">
-              <div v-html="previewTemplate" /><br>
-              <button class="cancel" @click.prevent="$modal.hide('preview_template'), $parent.$parent.willBodyScroll(true), previewTemplate = null">Close</button>
-            </div>
-        </div>
-      </modal>
       <div class="icon_open--stats" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Statistics">
         <inline-svg :src="require('../../assets/svg/stats.svg')"/>
         <p class="text">Statistics</p>
@@ -460,24 +452,18 @@
               <div class="plan_notes" :class="{ activeState: editPlanNotes }">
                 <div class="plan_notes__header">
                   <p class="text--small">Plan Notes</p>
-                  <a class="a--plan_notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempQuillStore = plan.notes">
+                  <a class="a--plan_notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempEditorStore = plan.notes">
                     Edit
                   </a>
                 </div>
-                <quill v-if="editPlanNotes" v-model="plan.notes" output="html" class="quill animate animate__fadeIn"/>
-                <div
-                  v-if="!editPlanNotes  && plan.notes !== '<p><br></p>' && plan.notes !== null"
-                  v-html="plan.notes" class="show_plan_notes animate animate__fadeIn"
+                <rich-editor
+                  :showEditState="editPlanNotes"
+                  :htmlInjection.sync="plan.notes"
+                  :emptyPlaceholder="'What do you want to achieve in this plan?'"
                 />
-                <p
-                  v-if="!editPlanNotes && (plan.notes === '<p><br></p>' || plan.notes === null)"
-                  class="text--small grey text--no_plan_notes"
-                >
-                  What do you want to achieve in this plan?
-                </p>
                 <div v-if="editPlanNotes" class="bottom_bar">
                   <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
-                  <button @click="editPlanNotes = false, plan.notes = tempQuillStore" class="cancel">Cancel</button>
+                  <button @click="editPlanNotes = false, plan.notes = tempEditorStore" class="cancel">Cancel</button>
                 </div>
               </div>
               <div class="wrapper--calendar">
@@ -536,35 +522,22 @@
                           <inline-svg id="expand" class="icon--expand" v-show="!isEditingSession" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
                         </div>
                       </div>
-                      <quill v-if="session.id === editSession && expandedSessions.includes(session.id)" v-model="session.notes" output="html" class="quill animate animate__fadeIn"/>
-                      <div v-if="session.id !== editSession && expandedSessions.includes(session.id) && session.notes !== null && session.notes !== '<p><br></p>'" v-html="removeBracketsAndBreaks(session.notes)" tabindex="0" class="show_session animate animate__fadeIn"/>
-                      <p v-if="session.id !== editSession && expandedSessions.includes(session.id) && (session.notes === null || session.notes === '<p><br></p>')" class="grey text--no_content">What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?</p>
-                      <div
-                        v-if="session.id === editSession && expandedSessions.includes(session.id) && showTemplates"
-                        class="wrapper--template-options"
-                      >
-                        <hr>
-                        <p v-if="$parent.$parent.templates.length !== 0"><b>Click where you want the template to insert before using the buttons.</b></p><br>
-                        <p v-if="$parent.$parent.templates.length === 0"><b>Nothing yet. Go to the templates page to add some shortcuts.</b></p><br>
-                        <div
-                          v-for="(item, index) in $parent.$parent.templates"
-                          :key="index"
-                        >
-                          <button class="opposite" :disabled="!caretIsInEditor || item.template === null || item.template === '<p><br></p>' || item.template === ''" @click="pasteHtmlAtCaret(item.template)">Insert {{ item.name }}</button>
-                          <a href="javascript:void(0)" class="a--preview_template" @click="previewTemplate = item.template, $modal.show('preview_template'), $parent.$parent.willBodyScroll(false)">Preview</a>
-                        </div>
-                      </div>
+                      <rich-editor
+                        v-show="expandedSessions.includes(session.id)"
+                        :showEditState="session.id === editSession"
+                        :htmlInjection.sync="session.notes"
+                        :emptyPlaceholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
+                        :dataForTemplates="$parent.$parent.templates"
+                      />
                       <div v-if="session.id === showFeedback" class="show_feedback animate animate__fadeIn">
                         <hr><br>
                         <p><b>Feedback</b></p><br>
                         <div v-html="session.feedback" />
                       </div>
                       <div class="bottom_bar" v-if="expandedSessions.includes(session.id)">
-                        <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempQuillStore = session.notes">Edit</button>
+                        <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempEditorStore = session.notes">Edit</button>
                         <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">Save</button>
-                        <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempQuillStore, showTemplates = false">Cancel</button>
-                        <button v-if="isEditingSession && session.id === editSession && !showTemplates" @click="showTemplates = true">Templates</button>
-                        <button v-if="isEditingSession && session.id === editSession && showTemplates" @click="showTemplates = false" class="cancel">Close Templates</button>
+                        <button class="cancel" v-if="session.id === editSession" @click="cancelSessionNotes(), session.notes = tempEditorStore">Cancel</button>
                         <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">Feedback</button>
                         <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" @click="showFeedback = null" class="cancel">Close Feedback</button>
                       </div>
@@ -648,21 +621,20 @@
   import InlineSvg from 'vue-inline-svg'
   import Checkbox from '../../components/Checkbox'
   import Calendar from '../../components/Calendar'
+  import RichEditor from '../../components/Editor'
 
   export default {
     components: {
       LineChart,
       InlineSvg,
       Checkbox,
-      Calendar
+      Calendar,
+      RichEditor
     },
     data () {
       return {
         force: true,
-        tempQuillStore: null,
-        showTemplates: false,
-        caretIsInEditor: false,
-        previewTemplate: null,
+        tempEditorStore: null,
 
         // BLOCK DATA //
         sessionsDone: 0,
@@ -758,8 +730,8 @@
     },
     beforeDestroy () {
       this.$parent.showDeletePlan = false
-      this.setListenerForEditor(false)
       window.removeEventListener('beforeprint', this.expandAll)
+      this.$parent.$parent.templates = null
     },
     methods: {
 
@@ -895,10 +867,7 @@
         this.isEditingSession = state
         this.editSession = id
         if (!state) {
-          this.setListenerForEditor(false)
           this.updateSessionNotes(id)
-        } else {
-          this.setListenerForEditor(true)
         }
       },
       updateSessionNotes (id) {
@@ -1129,31 +1098,6 @@
         const bar = document.getElementById('progress-bar')
         if (bar) {
           bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
-        }
-      },
-      setListenerForEditor (state) {
-        if (state) {
-          document.addEventListener('click', this.checkCaretPos)
-        } else {
-          document.removeEventListener('click', this.checkCaretPos)
-        }
-      },
-      checkCaretPos () {
-        let caretPosition = document.getSelection()
-        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
-          this.caretIsInEditor = true
-        } else {
-          this.caretIsInEditor = false
-        }
-      },
-      pasteHtmlAtCaret (html) {
-        let caretPosition = document.getSelection()
-        if (caretPosition.focusNode.parentNode.offsetParent.attributes[0].nodeValue === 'ui attached segment ql-container ql-snow') {
-          if (caretPosition.focusNode.nodeType !== 3) {
-            caretPosition.focusNode.insertAdjacentHTML('afterend', html)
-          } else {
-            caretPosition.focusNode.parentNode.insertAdjacentHTML('afterend', html)
-          }
         }
       },
       expandAll (toExpand) {

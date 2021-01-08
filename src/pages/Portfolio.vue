@@ -29,9 +29,6 @@
     border-radius: 10px;
     margin: 4rem 0
   }
-  .show_card {
-    padding: 1rem 0
-  }
 </style>
 
 <template>
@@ -62,18 +59,15 @@
     </form>
     <div class="wrapper_card">
       <p class="text--small">Portfolio</p>
-      <p
-        v-if="!editing_card && ($parent.portfolio.notes === '<p><br></p>' || $parent.portfolio.notes === '')"
-        class="text--small grey"
-      >
-        Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.
-      </p>
-      <div v-html="$parent.portfolio.notes" v-if="!editing_card && $parent.portfolio.notes !== '<p><br></p>' && $parent.portfolio.notes !== ''" class="show_card" />
-      <quill v-model="$parent.portfolio.notes" v-if="editing_card" output="html" class="quill animate animate__fadeIn" />
+      <rich-editor
+        :showEditState="editing_card"
+        :htmlInjection.sync="$parent.portfolio.notes"
+        :emptyPlaceholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
+      />
       <div class="bottom_bar">
-        <button v-if="!editing_card" @click="editing_card = true">Edit</button>
+        <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">Edit</button>
         <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
-        <button v-if="editing_card" @click="editing_card= false" class="cancel">Cancel</button>
+        <button v-if="editing_card" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore" class="cancel">Cancel</button>
       </div>
     </div>
   </div>
@@ -81,12 +75,18 @@
 
 <script>
 import axios from 'axios'
+import RichEditor from '../components/Editor'
 
 export default {
+  components: {
+    RichEditor
+  },
   data () {
     return {
       editing_info: false,
-      editing_card: false
+      editing_card: false,
+      toggleTest: false,
+      tempEditorStore: null
     }
   },
   async created () {
