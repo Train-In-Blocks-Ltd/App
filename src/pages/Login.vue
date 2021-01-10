@@ -184,7 +184,6 @@
 import OktaSignIn from '@okta/okta-signin-widget'
 import InlineSvg from 'vue-inline-svg'
 import axios from 'axios'
-import {passEmail, passEmailText} from '../components/email'
 
 export default {
   components: {
@@ -199,7 +198,7 @@ export default {
       success: null
     }
   },
-  mounted () {
+  async mounted () {
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
@@ -238,51 +237,51 @@ export default {
         }
       )
     })
+    if (await this.$auth.isAuthenticated()) {
+      this.$router.push('/')
+    } else {
+      localStorage.clear()
+      var cookies = document.cookie.split(';')
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i]
+        var eqPos = cookie.indexOf('=')
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      }
+    }
   },
   methods: {
     async reset () {
       this.$parent.pause_loading = true
       this.$parent.dontLeave = true
+      this.error = null
+      this.success = null
       try {
-        const oktaOne = await axios.post('/.netlify/functions/okta',
+        await axios.post('/.netlify/functions/reset-password',
           {
-            type: 'GET',
-            url: `?filter=profile.email+eq+"${this.email}"&limit=1`
-          }
-        )
-        this.id = oktaOne.data[0].id
-        const response = await axios.post('/.netlify/functions/okta',
-          {
-            body: {},
-            url: `${this.id}/lifecycle/reset_password?sendEmail=false`
-          }
-        )
-        await axios.post('/.netlify/functions/send-email',
-          {
-            'to': this.email,
-            'subject': 'Password Reset',
-            'text': passEmailText(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-            'html': passEmail(response.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+            email: this.email
           }
         )
         this.open = false
         this.email = null
-        this.success = 'An email has been sent.'
+        this.success = 'An email has been sent successfully.'
         this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {
         this.$parent.pause_loading = false
         this.$parent.dontLeave = false
-        this.error = 'An error occurred. Please try again...'
+        this.error = 'An error occurred. Are you sure your email is correct?'
         console.error(e)
       }
     }
   },
   async beforeDestroy () {
-    this.$ga.event('Auth', 'login')
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()
+    if (this.$ga && !this.$parent.authenticated) {
+      this.$ga.event('Auth', 'login')
+    }
   },
   destroyed () {
     // Remove the widget from the DOM on path change

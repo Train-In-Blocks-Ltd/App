@@ -509,7 +509,8 @@
   /* ARCHIVE AND HOME STYLES */
   .container--clients {
     display: grid;
-    grid-gap: 2rem
+    grid-gap: 2rem;
+    margin-bottom: 2rem
   }
   .client_container p {
     margin: 0
@@ -647,7 +648,7 @@
       bottom: 0;
       width: 100vw;
       flex-direction: row;
-      padding: 1rem 1rem 2.4rem 1rem;
+      padding: 0;
       justify-content: space-between;
       border-right: none
     }
@@ -661,14 +662,19 @@
       padding: 2rem 5vw 4rem 5vw
     }
     .account_nav--item {
-      margin: auto;
+      width: 100%;
+      margin: 0;
       padding: 0
+    }
+    .account_nav--item a {
+      width: 100%;
+      height: 4rem
     }
     .account_nav--item--text {
       display: none
     }
     .account_nav--item--icon {
-      margin: 0
+      margin: .8rem auto
     }
   }
 
@@ -1025,13 +1031,15 @@ export default {
     },
     async setup () {
       this.claims = JSON.parse(localStorage.getItem('claims'))
-      if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
-        this.claims.ga = true
-      }
-      if (this.claims.ga !== false) {
-        this.$ga.enable()
-      } else {
-        this.$ga.disable()
+      if (this.claims) {
+        if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
+          this.claims.ga = true
+        }
+        if (this.claims.ga !== false) {
+          this.$ga.enable()
+        } else {
+          this.$ga.disable()
+        }
       }
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
@@ -1254,6 +1262,7 @@ export default {
       }
     },
     async get_portfolio (force) {
+      this.loading = true
       try {
         if (!localStorage.getItem('portfolio') || force) {
           this.dontLeave = true
@@ -1267,15 +1276,16 @@ export default {
             }
           } else {
             var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
-            response = await axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
-            if (response.data.length !== 0) {
-              localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
+            if (client.data[0].pt_id) {
+              response = await axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
+              if (response.data.length !== 0) {
+                localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
+              }
             }
           }
         }
         this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
         this.loading = false
-        this.dontLeave = false
       } catch (e) {
         this.loading = false
         this.dontLeave = false
