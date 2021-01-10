@@ -177,6 +177,7 @@ export default {
     this.$parent.loading = true
     setTimeout(() => {
       this.$parent.splashed = true
+      this.$parent.willBodyScroll(true)
     }, 4000)
     await this.$parent.setup()
     await this.$parent.get_plans()

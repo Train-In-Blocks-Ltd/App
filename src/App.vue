@@ -928,6 +928,7 @@ export default {
   },
   async created () {
     this.isAuthenticated()
+    this.willBodyScroll(false)
     window.addEventListener('beforeunload', this.confirmLeave)
     axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
