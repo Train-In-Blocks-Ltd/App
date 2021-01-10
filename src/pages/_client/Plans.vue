@@ -127,6 +127,7 @@
     },
     created () {
       this.$parent.$parent.splashed = true
+      this.$parent.$parent.willBodyScroll(true)
       this.$parent.checkClient()
     },
     data () {

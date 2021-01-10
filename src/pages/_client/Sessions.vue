@@ -467,7 +467,7 @@
                 </div>
               </div>
               <div class="wrapper--calendar">
-                <calendar :events="sessionDates" />
+                <calendar :events="sessionDates" :forceUpdate="forceUpdate" />
               </div>
             </div>
             <div class="wrapper-plan">
@@ -695,6 +695,7 @@
 
         // CALENDAR DATA //
         sessionDates: [],
+        forceUpdate: 0,
 
         // STATISTICS DATA //
         p1: '',
@@ -716,6 +717,7 @@
     },
     created () {
       this.$parent.$parent.splashed = true
+      this.$parent.$parent.willBodyScroll(true)
       this.$parent.sessions = true
       this.$parent.showDeletePlan = true
     },
@@ -935,6 +937,7 @@
         })
         this.update_plan()
         this.scan()
+        this.forceUpdate += 1
       },
       changeWeek (weekID) {
         this.currentWeek = weekID
