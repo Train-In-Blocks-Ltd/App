@@ -437,7 +437,14 @@
               <input @blur="$parent.update_client()" class="text--large allow_text_overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
                <!-- Update the plan info -->
               <form class="plan_info">
-                <input class="text--small allow_text_overflow" aria-label="Session name" type="text" name="name" v-model="plan.name" @blur="update_plan()">
+                <input
+                  @blur="update_plan()"
+                  v-model="plan.name"
+                  class="text--small allow_text_overflow"
+                  aria-label="Session name"
+                  type="text"
+                  name="name"
+                >
               </form>
             </div><br>  <!-- client_info -->
             <div class="wrapper--progress-bar">

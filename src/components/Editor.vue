@@ -46,11 +46,9 @@
     background-color: white;
     z-index: 99;
     display: flex;
-    width: fit-content;
-    border-radius: 8px;
-    margin: 1rem 0;
-    padding: .8rem;
-    box-shadow: 0 0 20px 10px #28282810
+    border-left: 2px solid #28282820;
+    border-right: 2px solid #28282820;
+    padding: .8rem
   }
   .pop_up--add_template {
     display: grid
