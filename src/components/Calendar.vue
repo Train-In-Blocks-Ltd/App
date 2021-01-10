@@ -159,7 +159,7 @@
         week_diff: 0
       }
     },
-    mounted () {
+    created () {
       this.get_week()
     },
     watch: {
@@ -206,7 +206,9 @@
             events: []
           })
         }
-        this.append_events()
+        setTimeout(() => {
+          this.append_events()
+        }, 100)
       },
       add_days (date, days) {
         var d = new Date(date)

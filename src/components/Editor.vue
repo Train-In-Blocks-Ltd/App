@@ -9,20 +9,27 @@
   }
 
   /* Toolbars */
-
+  .re_toolbar_back {
+    position: sticky;
+    top: 0;
+    padding-top: 2rem;
+    background-color: white
+  }
   #rich_toolbar {
     display: flex;
-    position: sticky;
     background-color: white;
-    border-bottom: 2px solid #28282820;
-    top: 0;
-    padding-top: 1rem
+    border: 2px solid #28282820;
+    border-radius: 5px 5px 0 0;
+    padding: 0 1rem
   }
   #rich_toolbar button {
     padding: 0;
     margin-right: 1rem;
     color: #282828;
     background-color: transparent
+  }
+  #rich_toolbar button:hover {
+    opacity: .4
   }
   #rich_toolbar button:disabled {
     opacity: .6
@@ -86,8 +93,11 @@
   /* Editor */
 
   div#rich_editor {
-    padding: 1rem 0;
-    outline-width: 0
+    padding: 1rem;
+    outline-width: 0;
+    border: 2px solid #28282820;
+    border-top: none;
+    border-radius: 0 0 5px 5px
   }
   div#rich_show_content p {
     margin: 1rem 0
@@ -132,53 +142,55 @@
       </div>
     </modal>
     <div v-if="showEditState">
-      <div id="rich_toolbar">
-        <button @click="format('bold'), check_cmd_state()" :class="{ activeStyle: boldActive }">
-          <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-        </button>
-        <button @click="format('italic'), check_cmd_state()" :class="{ activeStyle: italicActive }">
-          <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-        </button>
-        <button @click="format('underline'), check_cmd_state()" :class="{ activeStyle: underlineActive }">
-          <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-        </button>
-        <button @click="format('insertOrderedList'), check_cmd_state()" :class="{ activeStyle: olActive }">
-          <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
-        </button>
-        <button @click="format('insertUnorderedList'), check_cmd_state()" :class="{ activeStyle: ulActive }">
-          <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
-        </button>
-        <div
-          @mouseover="showTooltip = true"
-          @mouseleave="showTooltip = false"
-        >
-          <button
-            @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-            :disabled="!caretIsInEditor"
-          >
-            <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+      <div class="re_toolbar_back">
+        <div id="rich_toolbar">
+          <button @click="format('bold'), check_cmd_state()" :class="{ activeStyle: boldActive }">
+            <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
           </button>
-          <button
-            @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-            :disabled="!caretIsInEditor"
-          >
-            <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+          <button @click="format('italic'), check_cmd_state()" :class="{ activeStyle: italicActive }">
+            <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
           </button>
-          <button
-            @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
-            :disabled="!caretIsInEditor"
-          >
-            <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
+          <button @click="format('underline'), check_cmd_state()" :class="{ activeStyle: underlineActive }">
+            <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
           </button>
-          <button
-            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-            @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
-            :disabled="!caretIsInEditor"
-          >
-            <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+          <button @click="format('insertOrderedList'), check_cmd_state()" :class="{ activeStyle: olActive }">
+            <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
           </button>
+          <button @click="format('insertUnorderedList'), check_cmd_state()" :class="{ activeStyle: ulActive }">
+            <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+          </button>
+          <div
+            @mouseover="showTooltip = true"
+            @mouseleave="showTooltip = false"
+          >
+            <button
+              @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+              :disabled="!caretIsInEditor"
+            >
+              <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+            </button>
+            <button
+              @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+              :disabled="!caretIsInEditor"
+            >
+              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+            </button>
+            <button
+              @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+              :disabled="!caretIsInEditor"
+            >
+              <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
+            </button>
+            <button
+              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+              @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
+              :disabled="!caretIsInEditor"
+            >
+              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+            </button>
+          </div>
+          <span v-show="showTooltip && !caretIsInEditor" class="tooltip">Click on an empty line where you want to insert.</span>
         </div>
-        <span v-show="showTooltip && !caretIsInEditor" class="tooltip">Click on an empty line where you want to insert.</span>
       </div>
       <!-- LINK -->
       <form v-if="showAddLink" @submit.prevent="add_link()" class="pop_up--add_link">
@@ -323,7 +335,7 @@
       check_caret_pos () {
         let caretPosition = document.getSelection()
         if (caretPosition.focusNode !== null) {
-          if (caretPosition.focusNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.id === 'rich_editor') {
+          if (caretPosition.focusNode.parentNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.id === 'rich_editor') {
             this.caretIsInEditor = true
           } else {
             this.caretIsInEditor = false
@@ -423,7 +435,7 @@
         if (file) {
           // eslint-disable-next-line
           new Compressor(file, {
-            quality: 0.2,
+            quality: 0.6,
             success (result) {
               reader.readAsDataURL(result)
             },
