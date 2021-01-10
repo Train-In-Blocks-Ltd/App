@@ -174,12 +174,14 @@
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
+          <!-- Checkbox
           <button
             @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: ulActive }"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
+          -->
           <div
             @mouseover="showTooltip = true"
             @mouseleave="showTooltip = false"
@@ -249,7 +251,6 @@
         @input="update_edited_notes()"
         v-html="initialHTML"
         id="rich_editor"
-        class="misc_item_styling"
         contenteditable="true"
         data-placeholder="Start typing..."
       />
