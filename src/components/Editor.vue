@@ -12,7 +12,7 @@
   .re_toolbar_back {
     position: sticky;
     top: 0;
-    padding-top: 2rem;
+    padding-top: 1rem;
     background-color: white
   }
   #rich_toolbar {
@@ -144,19 +144,40 @@
     <div v-if="showEditState">
       <div class="re_toolbar_back">
         <div id="rich_toolbar">
-          <button @click="format('bold'), check_cmd_state()" :class="{ activeStyle: boldActive }">
+          <button
+            @click="format('bold'), check_cmd_state(), focus_on_editor()"
+            :class="{ activeStyle: boldActive }"
+          >
             <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
           </button>
-          <button @click="format('italic'), check_cmd_state()" :class="{ activeStyle: italicActive }">
+          <button
+            @click="format('italic'), check_cmd_state(), focus_on_editor()"
+            :class="{ activeStyle: italicActive }"
+          >
             <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
           </button>
-          <button @click="format('underline'), check_cmd_state()" :class="{ activeStyle: underlineActive }">
+          <button
+            @click="format('underline'), check_cmd_state(), focus_on_editor()"
+            :class="{ activeStyle: underlineActive }"
+          >
             <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
           </button>
-          <button @click="format('insertOrderedList'), check_cmd_state()" :class="{ activeStyle: olActive }">
+          <button
+            @click="format('insertOrderedList'), check_cmd_state(), focus_on_editor()"
+            :class="{ activeStyle: olActive }"
+          >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
           </button>
-          <button @click="format('insertUnorderedList'), check_cmd_state()" :class="{ activeStyle: ulActive }">
+          <button
+            @click="format('insertUnorderedList'), check_cmd_state(), focus_on_editor()"
+            :class="{ activeStyle: ulActive }"
+          >
+            <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+          </button>
+          <button
+            @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
+            :class="{ activeStyle: ulActive }"
+          >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
           <div
@@ -228,6 +249,7 @@
         @input="update_edited_notes()"
         v-html="initialHTML"
         id="rich_editor"
+        class="misc_item_styling"
         contenteditable="true"
         data-placeholder="Start typing..."
       />
@@ -303,6 +325,9 @@
       },
       */
 
+      focus_on_editor () {
+        document.getElementById('rich_editor').focus()
+      },
       will_body_scroll (state) {
         const body = document.getElementsByTagName('body')[0]
         if (state) {
@@ -392,6 +417,12 @@
             range.select()
           }
         }
+      },
+
+      // CHECKBOX
+
+      add_checkbox () {
+        this.format('insertHTML', `<div><label><input type="checkbox" style="margin: .4rem"></label></div>`)
       },
 
       // LINK
