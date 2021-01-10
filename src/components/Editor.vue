@@ -27,8 +27,8 @@
   #rich_toolbar button:disabled {
     opacity: .6
   }
-  .activeState {
-    color: blue
+  .activeStyle {
+    opacity: .4
   }
 
   /* Pop-ups */
@@ -133,19 +133,19 @@
     </modal>
     <div v-if="showEditState">
       <div id="rich_toolbar">
-        <button @click="format('bold')">
+        <button @click="format('bold'), check_cmd_state()" :class="{ activeStyle: boldActive }">
           <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
         </button>
-        <button @click="format('italic')">
+        <button @click="format('italic'), check_cmd_state()" :class="{ activeStyle: italicActive }">
           <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
         </button>
-        <button @click="format('underline')">
+        <button @click="format('underline'), check_cmd_state()" :class="{ activeStyle: underlineActive }">
           <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
         </button>
-        <button @click="format('insertOrderedList')">
+        <button @click="format('insertOrderedList'), check_cmd_state()" :class="{ activeStyle: olActive }">
           <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
         </button>
-        <button @click="format('insertUnorderedList')">
+        <button @click="format('insertUnorderedList'), check_cmd_state()" :class="{ activeStyle: ulActive }">
           <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
         </button>
         <div
@@ -249,6 +249,12 @@
         initialHTML: '',
         editedHTML: '',
 
+        boldActive: false,
+        italicActive: false,
+        underlineActive: false,
+        olActive: false,
+        ulActive: false,
+
         showAddLink: false,
         addLinkName: '',
         addLinkURL: '',
@@ -296,9 +302,23 @@
       set_listener_for_editor (state) {
         if (state) {
           document.addEventListener('click', this.check_caret_pos)
+          document.addEventListener('keydown', this.check_cmd_state)
         } else {
           document.removeEventListener('click', this.check_caret_pos)
+          document.removeEventListener('keydown', this.check_cmd_state)
         }
+      },
+      check_cmd_state () {
+        const boldState = document.queryCommandState('bold')
+        const italicState = document.queryCommandState('italic')
+        const underlineState = document.queryCommandState('underline')
+        const orderedListState = document.queryCommandState('insertOrderedList')
+        const unorderedListState = document.queryCommandState('insertUnorderedList')
+        this.boldActive = boldState
+        this.italicActive = italicState
+        this.underlineActive = underlineState
+        this.olActive = orderedListState
+        this.ulActive = unorderedListState
       },
       check_caret_pos () {
         let caretPosition = document.getSelection()
