@@ -1031,15 +1031,13 @@ export default {
     },
     async setup () {
       this.claims = JSON.parse(localStorage.getItem('claims'))
-      if (this.claims) {
-        if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
-          this.claims.ga = true
-        }
-        if (this.claims.ga !== false) {
-          this.$ga.enable()
-        } else {
-          this.$ga.disable()
-        }
+      if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
+        this.claims.ga = true
+      }
+      if (this.claims.ga !== false) {
+        this.$ga.enable()
+      } else {
+        this.$ga.disable()
       }
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()

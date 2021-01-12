@@ -198,7 +198,7 @@ export default {
       success: null
     }
   },
-  async mounted () {
+  mounted () {
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
@@ -237,18 +237,6 @@ export default {
         }
       )
     })
-    if (await this.$auth.isAuthenticated()) {
-      this.$router.push('/')
-    } else {
-      localStorage.clear()
-      var cookies = document.cookie.split(';')
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i]
-        var eqPos = cookie.indexOf('=')
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      }
-    }
   },
   methods: {
     async reset () {
@@ -276,12 +264,10 @@ export default {
     }
   },
   async beforeDestroy () {
+    this.$ga.event('Auth', 'login')
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()
-    if (this.$ga && !this.$parent.authenticated) {
-      this.$ga.event('Auth', 'login')
-    }
   },
   destroyed () {
     // Remove the widget from the DOM on path change
