@@ -36,27 +36,36 @@
     <splash v-if="!$parent.splashed" />
     <div v-if="$parent.portfolio">
       <div>
-        <div :class="{openedSections: is_portfolio_open}" class="section--a" />
-        <div :class="{openedSections: is_portfolio_open}" class="section--b"/>
+        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--a" />
+        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--b"/>
       </div>
       <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div class="wrapper--portfolio" v-if="is_portfolio_open">
+        <div class="wrapper--portfolio" v-if="isPortfolioOpen">
           <div class="client_home__portfolio">
             <p class="text--large">{{ $parent.portfolio.business_name }}</p>
             <p class="text--large grey">{{ $parent.portfolio.trainer_name }}</p>
             <div v-html="$parent.portfolio.notes" class="client_portfolio__notes"/>
-            <button @click="is_portfolio_open = false, $parent.willBodyScroll(true)" class="cancel">Close</button>
+            <button @click="isPortfolioOpen = false, $parent.willBodyScroll(true)" class="cancel">Close</button>
           </div>
         </div>
       </transition>
+      <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+        <div class="wrapper--install_PWA" v-if="isInstallOpen">
+          <install-app />
+        </div>
+      </transition>
       <div
-        v-if="!is_portfolio_open && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
-        @click="is_portfolio_open = true, $parent.willBodyScroll(false)"
+        v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
+        @click="isPortfolioOpen = true, $parent.willBodyScroll(false)"
         aria-label="Information"
         class="icon_open--portfolio"
       >
         <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information"/>
         <p class="text">Trainer</p>
+      </div>
+      <div class="icon_open--install_PWA icon_open_middle" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
+        <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App"/>
+        <p class="text">Install</p>
       </div>
     </div>
     <div id="client_home">
@@ -156,17 +165,20 @@ import InlineSvg from 'vue-inline-svg'
 import Skeleton from '../../components/Skeleton.vue'
 import Splash from '../../components/Splash'
 import RichEditor from '../../components/Editor'
+import InstallApp from '../../components/installPWA'
 
 export default {
   components: {
     InlineSvg,
     Skeleton,
     RichEditor,
-    Splash
+    Splash,
+    InstallApp
   },
   data () {
     return {
-      is_portfolio_open: false,
+      isPortfolioOpen: false,
+      isInstallOpen: false,
       giveFeedback: null,
       tempEditorStore: null,
       todays_sessions_store: [],

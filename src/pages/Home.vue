@@ -37,11 +37,11 @@
       <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client"/>
       <p class="text">New Client</p>
     </div>
-    <div class="icon_open--whats_new" v-if="!isWhatsNewOpen" @click="isWhatsNewOpen = true, $parent.willBodyScroll(false)" aria-label="What's New">
+    <div class="icon_open--whats_new icon_open_middle" v-if="!isWhatsNewOpen" @click="isWhatsNewOpen = true, $parent.willBodyScroll(false)" aria-label="What's New">
       <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New"/>
       <p class="text">What's New</p>
     </div>
-    <div class="icon_open--install_PWA" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
+    <div class="icon_open--install_PWA icon_open_bottom" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App"/>
       <p class="text">Install</p>
     </div>
