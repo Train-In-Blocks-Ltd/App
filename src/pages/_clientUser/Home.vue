@@ -34,7 +34,7 @@
 <template>
   <div id="home">
     <splash v-if="!$parent.splashed" />
-    <div v-if="$parent.portfolio">
+    <div v-if="$parent.portfolio && false">
       <div>
         <div :class="{openedSections: is_portfolio_open}" class="section--a" />
         <div :class="{openedSections: is_portfolio_open}" class="section--b"/>
