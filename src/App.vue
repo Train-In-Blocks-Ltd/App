@@ -1310,6 +1310,7 @@ export default {
         }
         this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
         this.loading = false
+        this.dontLeave = false
       } catch (e) {
         this.loading = false
         this.dontLeave = false
