@@ -105,8 +105,20 @@
             <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
             <div class="bottom_bar">
               <div class="full_width_bar" :key="check">
-                <button v-if="session.checked === 1 && !giveFeedback" @click="complete(plan.id, session.id)" id="button_done" class="button--state">Completed</button>
-                <button v-if="session.checked === 0 && !giveFeedback" @click="complete(plan.id, session.id)" id="button_to_do" class="button--state">Click to complete</button>
+                <button
+                  v-if="session.checked === 1 && !giveFeedback"
+                  @click="complete(plan.id, session.id)"
+                  class="button--state done"
+                >
+                  Completed
+                </button>
+                <button
+                  v-if="session.checked === 0 && !giveFeedback"
+                  @click="complete(plan.id, session.id)"
+                  class="button--state to_do"
+                >
+                  Click to complete
+                </button>
               </div>
             </div>
             <br><hr><br>

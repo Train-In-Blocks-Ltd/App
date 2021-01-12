@@ -99,16 +99,14 @@
                   <button
                     v-if="session.checked === 1"
                     @click="session.checked = 0, $parent.update_session(plan.id, session.id)"
-                    id="button_done"
-                    class="button--state no_margin"
+                    class="button--state no_margin done"
                   >
                     Completed
                   </button>
                   <button
                     v-if="session.checked === 0"
                     @click="session.checked = 1, $parent.update_session(plan.id, session.id)"
-                    id="buttons_to_do"
-                    class="button--state no_margin"
+                    class="button--state no_margin to_do"
                   >
                     Click to complete
                   </button>
