@@ -22,6 +22,9 @@
     border-radius: 5px 5px 0 0;
     padding: 0 1rem
   }
+  #rich_toolbar.showingPopup {
+    border-bottom: 2px solid transparent
+  }
   #rich_toolbar button {
     padding: 0;
     margin-right: 1rem;
@@ -48,6 +51,7 @@
     display: flex;
     border-left: 2px solid #28282820;
     border-right: 2px solid #28282820;
+    border-bottom: 2px solid #28282820;
     padding: .8rem
   }
   .pop_up--add_template {
@@ -101,8 +105,8 @@
     margin: 1rem 0
   }
   div#rich_editor img, div#rich_editor iframe, div#rich_show_content img, div#rich_show_content iframe {
-    border-radius: 10px;
-    max-width: 80%;
+    border-radius: 10px !important;
+    max-width: 80% !important;
     margin: 1rem 0
   }
 
@@ -141,7 +145,7 @@
     </modal>
     <div v-if="showEditState">
       <div class="re_toolbar_back">
-        <div id="rich_toolbar">
+        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
           <button
             @click="format('bold'), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: boldActive }"
@@ -172,14 +176,12 @@
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
-          <!-- Checkbox
           <button
             @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: ulActive }"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
-          -->
           <div
             @mouseover="showTooltip = true"
             @mouseleave="showTooltip = false"
@@ -253,7 +255,7 @@
         data-placeholder="Start typing..."
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" v-html="remove_brackets_and_breaks(htmlInjection)" id="rich_show_content" class="padding"/>
+    <div v-if="!showEditState && !test_empty_html(htmlInjection)" v-html="remove_brackets_and_breaks(htmlInjection)" id="rich_show_content" class="padding" />
     <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">{{ emptyPlaceholder }}</p>
   </div>
 </template>
@@ -305,10 +307,13 @@
     watch: {
       showEditState: function () {
         this.initialHTML = this.htmlInjection
-        if (this) {
-          this.set_listener_for_editor(true)
+        if (this.showEditState) {
+          document.addEventListener('click', this.check_caret_pos)
+          document.addEventListener('keydown', this.check_cmd_state)
         } else {
-          this.set_listener_for_editor(false)
+          this.update_edited_notes()
+          document.removeEventListener('click', this.check_caret_pos)
+          document.removeEventListener('keydown', this.check_cmd_state)
           this.caretIsInEditor = false
         }
       }
@@ -323,7 +328,6 @@
         let version = parseFloat(versionId.match(/\d+.\d+/gmi))
       },
       */
-
       focus_on_editor () {
         document.getElementById('rich_editor').focus()
       },
@@ -333,15 +337,6 @@
           body.style.overflow = 'auto'
         } else {
           body.style.overflow = 'hidden'
-        }
-      },
-      set_listener_for_editor (state) {
-        if (state) {
-          document.addEventListener('click', this.check_caret_pos)
-          document.addEventListener('keydown', this.check_cmd_state)
-        } else {
-          document.removeEventListener('click', this.check_caret_pos)
-          document.removeEventListener('keydown', this.check_cmd_state)
         }
       },
       check_cmd_state () {
@@ -368,7 +363,7 @@
       },
       remove_brackets_and_breaks (dataIn) {
         if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '')
+          return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
         } else {
           return dataIn
         }
@@ -421,7 +416,7 @@
       // CHECKBOX
 
       add_checkbox () {
-        this.format('insertHTML', `<div><label><input type="checkbox" style="margin: .4rem"></label></div>`)
+        this.format('insertHTML', `<label><input name="checklist" type="checkbox" style="margin: .4rem; transform: scale(1.3)" onclick="change_checked_state(this)"></label>`)
       },
 
       // LINK
@@ -435,7 +430,7 @@
       },
       add_link () {
         this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<div><a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a></div>`)
+        this.format('insertHTML', `<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`)
         this.reset_link_pop_up()
       },
       reset_link_pop_up () {
@@ -459,7 +454,7 @@
         reader.addEventListener('load', () => {
           this.base64Img = reader.result
           this.restore_selection(this.savedSelection)
-          this.format('insertHTML', `<div><img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0" /></div>`)
+          this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
           this.reset_img_pop_up()
         }, false)
         if (file) {
@@ -491,7 +486,7 @@
       },
       add_video () {
         this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<div><iframe src="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" frameborder="0" allowfullscreen style="border-radius: 10px; max-width: 80%; margin: 1rem 0" /></div>`)
+        this.format('insertHTML', `<iframe src="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" frameborder="0" allowfullscreen style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
         this.reset_video_pop_up()
       },
       get_embbed_id (url) {

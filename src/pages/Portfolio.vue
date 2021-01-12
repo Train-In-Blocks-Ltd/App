@@ -66,7 +66,7 @@
       />
       <div class="bottom_bar">
         <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">Edit</button>
-        <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
+        <button v-if="editing_card" @click="editing_card= false, update()">Save</button>
         <button v-if="editing_card" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore" class="cancel">Cancel</button>
       </div>
     </div>

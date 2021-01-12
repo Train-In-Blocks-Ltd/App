@@ -469,7 +469,7 @@
                   :emptyPlaceholder="'What do you want to achieve in this plan?'"
                 />
                 <div v-if="editPlanNotes" class="bottom_bar">
-                  <button @click="update_plan(), editPlanNotes = false" class="button--save">Save</button>
+                  <button @click="editPlanNotes = false, update_plan()" class="button--save">Save</button>
                   <button @click="editPlanNotes = false, plan.notes = tempEditorStore" class="cancel">Cancel</button>
                 </div>
               </div>
