@@ -1271,7 +1271,7 @@ export default {
 
     async get_templates (force) {
       try {
-        if (!localStorage.getItem('templates') || force) {
+        if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
           const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
           localStorage.setItem('templates', JSON.stringify(response.data))
         }
@@ -1288,7 +1288,7 @@ export default {
     async get_portfolio (force) {
       this.loading = true
       try {
-        if (!localStorage.getItem('portfolio') || force) {
+        if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
           this.dontLeave = true
           let response
           if (this.is_trainer) {
