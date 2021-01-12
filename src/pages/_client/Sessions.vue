@@ -242,10 +242,7 @@
   .bottom_bar .button {
     margin: 0
   }
-  .newSession {
-    color: #B80000
-  }
-  .incomplete {
+  .newSession, .incomplete {
     color: #B80000
   }
   .completed {

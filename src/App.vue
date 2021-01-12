@@ -284,17 +284,17 @@
   .bottom_bar button {
     margin-right: .4rem
   }
-  #button_done {
+  .done {
     background-color: green
   }
-  #button_to_do {
+  .to_do {
     background-color: #B80000
   }
-  #button_done, #button_to_do {
+  .done, .to_do {
     color: white;
     margin: auto 0
   }
-  #button_done:hover, #button_to_do:hover {
+  .done:hover, .to_do:hover {
     opacity: .6
   }
 
