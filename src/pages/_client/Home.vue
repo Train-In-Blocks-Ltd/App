@@ -251,7 +251,7 @@
             }
           )
           if (result.data.length > 0) {
-            if (result.data[0].status === 'ACTIVE') {
+            if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
               this.clientAlready = true
               this.clientAlreadyMsg = 'User activated'
             } else if (result.data[0].status === 'PROVISIONED') {
