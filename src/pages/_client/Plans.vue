@@ -58,7 +58,7 @@
           <new-plan />
         </div>
       </transition>
-      <div class="icon_open--new_plan" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
+      <div class="icon_open--new_plan icon_open_middle" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
         <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan"/>
         <p class="text">New Plan</p>
       </div>

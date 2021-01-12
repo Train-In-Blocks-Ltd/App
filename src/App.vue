@@ -483,7 +483,7 @@
     background-color: #F4F4F4;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  div.icon_open--stats, div.icon_open--whats_new, .icon_open--new_plan {
+  .icon_open_middle {
     top: 4.4rem
   }
   div.icon_open--install_PWA, div.icon_open--print {
