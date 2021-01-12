@@ -284,17 +284,17 @@
   .bottom_bar button {
     margin-right: .4rem
   }
-  #button_done {
+  .done {
     background-color: green
   }
-  #button_to_do {
+  .to_do {
     background-color: #B80000
   }
-  #button_done, #button_to_do {
+  .done, .to_do {
     color: white;
     margin: auto 0
   }
-  #button_done:hover, #button_to_do:hover {
+  .done:hover, .to_do:hover {
     opacity: .6
   }
 
@@ -483,7 +483,7 @@
     background-color: #F4F4F4;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  div.icon_open--stats, div.icon_open--whats_new, .icon_open--new_plan {
+  .icon_open_middle {
     top: 4.4rem
   }
   div.icon_open--install_PWA, div.icon_open--print {
@@ -1271,7 +1271,7 @@ export default {
 
     async get_templates (force) {
       try {
-        if (!localStorage.getItem('templates') || force) {
+        if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
           const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
           localStorage.setItem('templates', JSON.stringify(response.data))
         }
@@ -1288,7 +1288,7 @@ export default {
     async get_portfolio (force) {
       this.loading = true
       try {
-        if (!localStorage.getItem('portfolio') || force) {
+        if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
           this.dontLeave = true
           let response
           if (this.is_trainer) {
@@ -1310,6 +1310,7 @@ export default {
         }
         this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
         this.loading = false
+        this.dontLeave = false
       } catch (e) {
         this.loading = false
         this.dontLeave = false
