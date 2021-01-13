@@ -284,17 +284,17 @@
   .bottom_bar button {
     margin-right: .4rem
   }
-  #button_done {
+  .done {
     background-color: green
   }
-  #button_to_do {
+  .to_do {
     background-color: #B80000
   }
-  #button_done, #button_to_do {
+  .done, .to_do {
     color: white;
     margin: auto 0
   }
-  #button_done:hover, #button_to_do:hover {
+  .done:hover, .to_do:hover {
     opacity: .6
   }
 
@@ -461,7 +461,7 @@
     background-color: #F4F4F4;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  div.icon_open--stats, div.icon_open--whats_new, .icon_open--new_plan {
+  .icon_open_middle {
     top: 4.4rem
   }
   div.icon_open--install_PWA, div.icon_open--print {
@@ -823,7 +823,7 @@
         </router-link>
       </div>
       <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
+        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin' && false"
         class="account_nav--item"
       >
         <router-link to="/portfolio" title="Portfolio">
@@ -1247,7 +1247,7 @@ export default {
 
     async get_templates (force) {
       try {
-        if (!localStorage.getItem('templates') || force) {
+        if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
           const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
           localStorage.setItem('templates', JSON.stringify(response.data))
         }
@@ -1264,13 +1264,13 @@ export default {
     async get_portfolio (force) {
       this.loading = true
       try {
-        if (!localStorage.getItem('portfolio') || force) {
+        if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
           this.dontLeave = true
           let response
           if (this.is_trainer) {
             response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
             if (response.data.length === 0) {
-              this.create()
+              this.create_portfolio()
             } else {
               localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
             }
@@ -1286,8 +1286,33 @@ export default {
         }
         this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
         this.loading = false
+        this.dontLeave = false
       } catch (e) {
         this.loading = false
+        this.dontLeave = false
+        this.errorMsg = e
+        this.$modal.show('error')
+        this.willBodyScroll(false)
+        console.error(e)
+      }
+    },
+    async create_portfolio () {
+      this.dontLeave = true
+      this.pause_loading = true
+      try {
+        await axios.put(`https://api.traininblocks.com/portfolio`,
+          {
+            'pt_id': this.claims.sub,
+            'trainer_name': '',
+            'business_name': '',
+            'notes': ''
+          }
+        )
+        await this.get_portfolio(true)
+        this.pause_loading = false
+        this.dontLeave = false
+      } catch (e) {
+        this.pause_loading = false
         this.dontLeave = false
         this.errorMsg = e
         this.$modal.show('error')

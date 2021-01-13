@@ -252,7 +252,7 @@
             }
           )
           if (result.data.length > 0) {
-            if (result.data[0].status === 'ACTIVE') {
+            if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
               this.clientAlready = true
               this.clientAlreadyMsg = 'User activated'
             } else if (result.data[0].status === 'PROVISIONED') {
@@ -392,7 +392,7 @@
               if (this.$parent.client_details.plans[f].sessions === false && !force) {
                 this.no_sessions = true
               // If client_details.plans.sessions is not set then query the API
-              } else if (!this.$parent.client_details.plans[f].sessions || force === true) {
+              } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
                 const response = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
                 // If there are no sessions
                 if (response.data.length === 0) {
@@ -439,7 +439,7 @@
               if (this.$parent.clients[x].plans === false && !force) {
                 this.no_plans = true
               // If client_details.plans is not set then query the API
-              } else if (!this.$parent.clients[x].plans || force === true) {
+              } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
                 const response = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
                 // If there are no plans
                 if (response.data.length === 0) {
