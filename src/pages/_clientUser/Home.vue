@@ -1,8 +1,5 @@
 <style scoped>
   /* Containers */
-  .spacer {
-    height: 2rem
-  }
   .plan_grid {
     display: grid;
     grid-gap: 2rem;
@@ -39,8 +36,8 @@
     <splash v-if="!$parent.splashed" />
     <div v-if="$parent.portfolio && false">
       <div>
-        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--a" />
-        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--b"/>
+        <div :class="{openedSections:  isPortfolioOpen || isInstallOpen}" class="section--a" />
+        <div :class="{openedSections:  isPortfolioOpen || isInstallOpen}" class="section--b"/>
       </div>
       <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
         <div class="wrapper--portfolio" v-if="isPortfolioOpen">
@@ -113,25 +110,26 @@
                   >
                     Click to complete
                   </button>
+                  <button
+                    v-if="giveFeedback !== session.id"
+                    @click="giveFeedback = session.id"
+                    class="button--feedback"
+                  >
+                    Give Feedback
+                  </button>
                 </div>
-              </div>
-              <br><hr><br>
-              <div>
-                <p class="text--small">Feedback</p>
-                <rich-editor
-                  :showEditState="giveFeedback === session.id"
-                  :htmlInjection.sync="session.feedback"
-                  :emptyPlaceholder="'What would you like to share with your trainer?'"
-                />
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
-                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
-                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+              </div><br>
+              <div v-if="giveFeedback === session.id">
+                <p class="text--small"><b>Feedback</b></p>
+                <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
+                <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
+                <button class="cancel" @click="giveFeedback = null">Cancel</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="spacer" />
+      <hr>
       <div class="client_home__plans">
         <p class="text--large">Plans</p>
         <skeleton v-if="$parent.loading" :type="'plan'" />
@@ -165,14 +163,12 @@
 import InlineSvg from 'vue-inline-svg'
 import Skeleton from '../../components/Skeleton.vue'
 import Splash from '../../components/Splash'
-import RichEditor from '../../components/Editor'
 import InstallApp from '../../components/installPWA'
 
 export default {
   components: {
     InlineSvg,
     Skeleton,
-    RichEditor,
     Splash,
     InstallApp
   },
@@ -181,7 +177,6 @@ export default {
       isPortfolioOpen: false,
       isInstallOpen: false,
       giveFeedback: null,
-      tempEditorStore: null,
       todays_sessions_store: [],
       showing_current_session: 0
     }
@@ -190,7 +185,6 @@ export default {
     this.$parent.loading = true
     setTimeout(() => {
       this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
     }, 4000)
     await this.$parent.setup()
     await this.$parent.get_plans()

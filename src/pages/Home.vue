@@ -104,8 +104,8 @@
     created () {
       setTimeout(() => {
         this.$parent.splashed = true
-        this.$parent.willBodyScroll(true)
       }, 4000)
+      this.$parent.willBodyScroll(true)
     },
     mounted () {
       this.$parent.loading = true

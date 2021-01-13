@@ -119,19 +119,14 @@
                 >
                   Click to complete
                 </button>
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id" class="button--feedback">Give Feedback</button>
               </div>
-            </div>
-            <br><hr><br>
-            <div>
-              <p class="text--small">Feedback</p>
-              <rich-editor
-                :showEditState="giveFeedback === session.id"
-                :htmlInjection.sync="session.feedback"
-                :emptyPlaceholder="'What would you like to share with your trainer?'"
-              />
-              <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
-              <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
-              <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+            </div><br>
+            <div v-if="giveFeedback === session.id">
+              <p class="text--small"><b>Feedback</b></p>
+              <quill v-model="session.feedback" output="html" class="quill animate animate__fadeIn"/>
+              <button @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
+              <button class="cancel" @click="giveFeedback = null">Cancel</button>
             </div>
           </div>
         </div>
@@ -144,13 +139,11 @@
   import InlineSvg from 'vue-inline-svg'
   import Skeleton from '../../components/Skeleton'
   import Calendar from '../../components/Calendar'
-  import RichEditor from '../../components/Editor'
 
   export default {
     components: {
       Calendar,
       Skeleton,
-      RichEditor,
       InlineSvg
     },
     data () {
@@ -158,7 +151,6 @@
         check: null,
         giveFeedback: null,
         showing_current_session: 0,
-        tempEditorStore: null,
 
         // CALENDAR DATA
         sessionDates: []
@@ -167,7 +159,6 @@
     async mounted () {
       this.$parent.loading = true
       this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
       await this.$parent.setup()
       await this.$parent.get_plans()
       await this.$parent.sortSessionsPlan()

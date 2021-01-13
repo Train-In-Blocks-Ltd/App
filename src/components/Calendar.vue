@@ -26,11 +26,7 @@
   }
   .day_events__event {
     padding: .6rem 1rem;
-    border-radius: 8px;
-    border: 3px solid transparent
-  }
-  .showBorder {
-    border: 3px solid #282828
+    border-radius: 8px
   }
 
   /* Header bar */
@@ -130,7 +126,6 @@
             v-for="(event, index) in day.events"
             :key="'event-' + index"
             :style="{ backgroundColor: event.color }"
-            :class="{ showBorder: event.color === null || event.color === '' || event.color === '#ffffff' }"
             class="day_events__event"
           >
             <p :style="{ color: event.textColor }">{{ event.title }}</p>
@@ -149,8 +144,7 @@
       InlineSvg
     },
     props: {
-      events: Array,
-      forceUpdate: Number
+      events: Array
     },
     data () {
       return {
@@ -161,11 +155,6 @@
     },
     created () {
       this.get_week()
-    },
-    watch: {
-      forceUpdate: function () {
-        this.get_week()
-      }
     },
     methods: {
 
@@ -206,9 +195,7 @@
             events: []
           })
         }
-        setTimeout(() => {
-          this.append_events()
-        }, 100)
+        this.append_events()
       },
       add_days (date, days) {
         var d = new Date(date)

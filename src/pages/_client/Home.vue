@@ -213,7 +213,6 @@
     },
     async created () {
       this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
       this.loading = true
       await this.$parent.setup()
       await this.get_client_details()

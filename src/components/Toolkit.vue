@@ -36,7 +36,7 @@
 </style>
 
 <template>
-  <div class="modal--toolkit">
+  <div class="modal--toolkit" >
     <div class="wrapper--centered-item">
       <select class="text-small session_toolkit--select" @change="get_toolkit()">
         <option>Select a Calculator</option>

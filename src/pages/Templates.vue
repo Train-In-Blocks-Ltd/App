@@ -127,16 +127,13 @@
             <inline-svg id="expand" class="icon--expand" v-show="!isEditingTemplate" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
           </div>
         </div>
-        <rich-editor
-          v-show="expandedTemplates.includes(template.id)"
-          :showEditState="template.id === editTemplate"
-          :htmlInjection.sync="template.template"
-          :emptyPlaceholder="'What do you plan for your clients frequently?'"
-        />
+        <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn"/>
+        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show_template animate animate__fadeIn"/>
+        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no_content">What do you plan for your clients frequently?</p>
         <div class="bottom_bar" v-if="expandedTemplates.includes(template.id)">
-          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempEditorStore = template.template">Edit</button>
+          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
           <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
-          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempEditorStore">Cancel</button>
+          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempQuillStore">Cancel</button>
         </div>
       </div>
     </div>
@@ -146,24 +143,22 @@
 <script>
   import InlineSvg from 'vue-inline-svg'
   import axios from 'axios'
-  import RichEditor from '../components/Editor'
   import Checkbox from '../components/Checkbox'
 
   export default {
     components: {
       InlineSvg,
-      RichEditor,
       Checkbox
     },
     data () {
       return {
         // TEMPLATE DATA //
-        tempEditorStore: null,
+        tempQuillStore: null,
         isEditingTemplate: false,
         editTemplate: null,
         new_template: {
           name: 'Untitled',
-          note: ''
+          note: null
         },
         selectedTemplates: [],
         expandedTemplates: []
@@ -229,6 +224,13 @@
           this.expandedTemplates.push(id)
         }
       },
+      removeBracketsAndBreaks (dataIn) {
+        if (dataIn !== null) {
+          return dataIn.replace(/[[\]]/g, '')
+        } else {
+          return dataIn
+        }
+      },
       editingTemplateNotes (id, state) {
         this.isEditingTemplate = state
         this.editTemplate = id
@@ -263,7 +265,7 @@
           this.checkForNew()
           this.new_template = {
             name: 'Untitled',
-            note: ''
+            note: null
           }
           this.$parent.pause_loading = false
           this.$parent.dontLeave = false

@@ -264,7 +264,7 @@
     opacity: 1
   }
 
-  /* EDITOR WRAPPERS */
+  /* QUILL WRAPPERS */
   .wrapper--session__header {
     height: 6.4rem
   }
@@ -299,6 +299,28 @@
   }
 
   /* SHOW AND NOTES */
+  .show_session, .show_plan_notes, .show_client_notes, .show_template {
+    outline-width: 0;
+    overflow-wrap: break-word;
+    line-height: 1.42;
+    overflow-y: auto;
+    transition: all 1s
+  }
+  .show_session img, .show_plan_notes img, .show_client_notes img, .show_template img,.show_session iframe, .show_plan_notes iframe, .show_client_notes iframe, .show_template iframe {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  .show_session a, .show_plan_notes a, .show_client_notes a, .show_template a {
+    color: blue
+  }
+  .show_session ul, .show_session ol, .show_plan_notes ul, .show_plan_notes ol, .show_client_notes ul, .show_client_notes ol, .show_template ul, .show_template ol {
+    text-decoration: none;
+    margin: 0
+  }
+  .show_session p, .show_client_notes p, .show_plan_notes p, .show_template p {
+    margin: 1rem 0
+  }
   .wrapper--session__header.client-side {
     height: 3.2rem
   }
@@ -464,7 +486,7 @@
   .icon_open_middle {
     top: 4.4rem
   }
-  .icon_open_bottom {
+  div.icon_open--install_PWA, div.icon_open--print {
     top: 6.8rem
   }
   .icon_open--options:hover, .icon_open--stats:hover, .icon_open--install_PWA:hover, div.icon_open--print:hover, div.icon_open--portfolio:hover {
@@ -627,6 +649,9 @@
   }
   @media (max-width: 768px) {
     /* Containers */
+    .show_session img, .show_plan_notes img, .show_client_notes img, .show_template img {
+      max-width: 100%
+    }
     .client_link:hover, .plan_link:hover {
       box-shadow: 0 0 20px 10px #28282808
     }
@@ -709,7 +734,7 @@
     button:active, .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, div.wrapper--client, .icon--expand, .icon_open--options, .icon_open--stats, .icon_open--new_client, .icon_open--install_PWA, .icon_open--new_plan {
+    .search, .client_container > a:before, .ql-editor, .show_client_notes, .show_plan_notes,.show_session, div.wrapper--client, .icon--expand, .icon_open--options, .icon_open--stats, .icon_open--new_client, .icon_open--install_PWA, .icon_open--new_plan {
       transition: none
     }
     .sidebar {
@@ -934,7 +959,6 @@ export default {
   },
   async created () {
     this.isAuthenticated()
-    this.willBodyScroll(false)
     window.addEventListener('beforeunload', this.confirmLeave)
     axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
   },
