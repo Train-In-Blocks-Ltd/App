@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueQuill from './components/quill/vue-quill'
 import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
 
@@ -13,7 +12,6 @@ Vue.use(VueAnalytics, {
   },
   disabled: true
 })
-Vue.use(VueQuill)
 Vue.use(VModal)
 
 Vue.config.productionTip = false
