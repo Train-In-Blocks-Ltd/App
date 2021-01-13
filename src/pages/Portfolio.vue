@@ -20,6 +20,9 @@
     max-width: 100%;
     margin-bottom: 1rem
   }
+  .business_name_skeleton {
+    margin-top: 1rem
+  }
 
   /* Card */
   .wrapper_card {
@@ -27,6 +30,9 @@
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 10px;
+    margin: 4rem 0
+  }
+  .wrapper_card_skeleton {
     margin: 4rem 0
   }
 </style>
@@ -38,6 +44,7 @@
       class="trainer_info"
     >
       <input
+        v-if="!$parent.loading"
         v-model="$parent.portfolio.business_name"
         @input="editing_info = true"
         class="trainer_info__business text--large"
@@ -46,7 +53,9 @@
         type="text"
         autocomplete="name"
       >
+      <skeleton v-else :type="'input_large'" />
       <input
+        v-if="!$parent.loading"
         v-model="$parent.portfolio.trainer_name"
         @input="editing_info = true"
         class="input--forms allow_text_overflow"
@@ -55,9 +64,10 @@
         type="text"
         autocomplete="name"
       >
+      <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
       <button v-if="editing_info" type="submit">Save</button>
     </form>
-    <div class="wrapper_card">
+    <div v-if="!$parent.loading" class="wrapper_card">
       <p class="text--small">Portfolio</p>
       <rich-editor
         :showEditState="editing_card"
@@ -70,16 +80,19 @@
         <button v-if="editing_card" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore" class="cancel">Cancel</button>
       </div>
     </div>
+    <skeleton v-else :type="'session'" class="wrapper_card_skeleton" />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import RichEditor from '../components/Editor'
+import Skeleton from '../components/Skeleton'
 
 export default {
   components: {
-    RichEditor
+    RichEditor,
+    Skeleton
   },
   data () {
     return {
