@@ -98,30 +98,6 @@ export default {
     this.$parent.loading = false
   },
   methods: {
-    async create () {
-      this.$parent.dontLeave = true
-      this.$parent.pause_loading = true
-      try {
-        await axios.put(`https://api.traininblocks.com/portfolio`,
-          {
-            'pt_id': this.$parent.claims.sub,
-            'trainer_name': '',
-            'business_name': '',
-            'notes': ''
-          }
-        )
-        await this.$parent.get_portfolio(true)
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
-      } catch (e) {
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
-        this.$parent.errorMsg = e
-        this.$parent.$modal.show('error')
-        this.$parent.willBodyScroll(false)
-        console.error(e)
-      }
-    },
     async update () {
       this.$parent.dontLeave = true
       this.$parent.pause_loading = true

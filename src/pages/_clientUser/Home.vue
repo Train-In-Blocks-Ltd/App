@@ -20,6 +20,9 @@
   .client_portfolio__notes {
     margin: 2rem 0
   }
+  hr {
+    margin: 4rem 0
+  }
 
   /* Responsive */
   @media (max-width: 768px) {
@@ -34,7 +37,7 @@
 <template>
   <div id="home">
     <splash v-if="!$parent.splashed" />
-    <div v-if="$parent.portfolio">
+    <div v-if="$parent.portfolio && false">
       <div>
         <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--a" />
         <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--b"/>

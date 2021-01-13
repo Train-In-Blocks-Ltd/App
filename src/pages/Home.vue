@@ -29,7 +29,7 @@
       </div>
     </transition>
     <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div class="wrapper--install_PWA" v-if="isInstallOpen">
+      <div class="wrapper--install_PWA icon_open_middle" v-if="isInstallOpen">
         <install-app />
       </div>
     </transition>
