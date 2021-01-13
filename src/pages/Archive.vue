@@ -84,7 +84,7 @@
       await this.$parent.archive_to_vue()
       this.$parent.splashed = true
       this.$parent.willBodyScroll(true)
-      this.$parent.loading = false
+      this.$parent.end_loading()
     },
     methods: {
       changeSelectCheckbox (id, index) {

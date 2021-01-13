@@ -265,11 +265,9 @@ export default {
         this.open = false
         this.email = null
         this.success = 'An email has been sent successfully.'
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
+        this.$parent.end_loading()
       } catch (e) {
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
+        this.$parent.end_loading()
         this.error = 'An error occurred. Are you sure your email is correct?'
         console.error(e)
       }

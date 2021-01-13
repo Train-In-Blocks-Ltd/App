@@ -219,7 +219,7 @@
       await this.get_client_details()
       this.created()
       this.keepLoaded = true
-      this.loading = false
+      this.$parent.end_loading()
     },
     beforeDestroy () {
       this.keepLoaded = false
@@ -270,10 +270,7 @@
         } catch (e) {
           this.clientAlready = true
           this.clientAlreadyMsg = 'Error'
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       },
       async createClient () {
@@ -362,12 +359,7 @@
             )
           }
         } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
         await this.checkClient()
         this.$modal.show(
@@ -378,8 +370,7 @@
           { adaptive: true },
           { clickToClose: false }
         )
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
+        this.$parent.end_loading()
       },
       async get_sessions (force) {
         try {
@@ -416,13 +407,9 @@
               }
             }
           }
-          this.$parent.loading = false
+          this.$parent.end_loading()
         } catch (e) {
-          this.$parent.loading = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       },
       async get_client_details (force) {
@@ -458,11 +445,7 @@
             }
           }
         } catch (e) {
-          this.$parent.loading = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
         await this.get_sessions()
       },
@@ -482,15 +465,9 @@
           // Get the client information again as we have just updated the client
           await this.$parent.clients_f()
           await this.$parent.clients_to_vue()
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
+          this.$parent.end_loading()
         } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       },
       async delete_plan () {
@@ -513,15 +490,9 @@
             this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
 
             this.$ga.event('Session', 'delete')
-            this.$parent.pause_loading = false
-            this.$parent.dontLeave = false
+            this.$parent.end_loading()
           } catch (e) {
-            this.$parent.pause_loading = false
-            this.$parent.dontLeave = false
-            this.$parent.errorMsg = e
-            this.$parent.$modal.show('error')
-            this.$parent.willBodyScroll(false)
-            console.error(e)
+            this.$parent.resolve_error(e)
           }
         }
       }

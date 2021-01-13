@@ -172,7 +172,7 @@
       await this.$parent.get_plans()
       await this.$parent.sortSessionsPlan()
       await this.scan()
-      this.$parent.loading = false
+      this.$parent.end_loading()
     },
     methods: {
       complete (p, s) {

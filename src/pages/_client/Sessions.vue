@@ -787,9 +787,9 @@
         this.new_session.name = 'Untitled'
         this.today()
         this.update_plan()
-        this.$parent.$parent.pause_loading = false
         this.$modal.hide('copy')
         this.deselectAll()
+        this.$parent.$parent.end_loading()
       },
       initMove () {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
@@ -867,7 +867,7 @@
       async createSession () {
         this.$parent.$parent.pause_loading = true
         await this.add_session()
-        this.$parent.$parent.pause_loading = false
+        this.$parent.$parent.end_loading()
       },
       editingSessionNotes (id, state) {
         this.isEditingSession = state
@@ -1433,12 +1433,7 @@
           this.scan()
           this.$parent.$parent.dontLeave = false
         } catch (e) {
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
-          this.$parent.$parent.errorMsg = e
-          this.$parent.$parent.$modal.show('error')
-          this.$parent.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.$parent.resolve_error(e)
         }
       },
       async update_session (id) {
@@ -1476,15 +1471,9 @@
           await this.update_plan()
           this.adherence()
           this.$ga.event('Session', 'update')
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
+          this.$parent.$parent.end_loading()
         } catch (e) {
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
-          this.$parent.$parent.errorMsg = e
-          this.$parent.$parent.$modal.show('error')
-          this.$parent.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.$parent.resolve_error(e)
         }
       },
       async add_session () {
@@ -1515,15 +1504,9 @@
           this.checkForNew()
           this.adherence()
           this.$ga.event('Session', 'new')
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
+          this.$parent.$parent.end_loading()
         } catch (e) {
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
-          this.$parent.$parent.errorMsg = e
-          this.$parent.$parent.$modal.show('error')
-          this.$parent.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.$parent.resolve_error(e)
         }
       },
       async delete_session (id) {
@@ -1535,15 +1518,9 @@
           await this.update_plan()
 
           this.$ga.event('Session', 'delete')
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
+          this.$parent.$parent.end_loading()
         } catch (e) {
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
-          this.$parent.$parent.errorMsg = e
-          this.$parent.$parent.$modal.show('error')
-          this.$parent.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.$parent.resolve_error(e)
         }
       }
     }

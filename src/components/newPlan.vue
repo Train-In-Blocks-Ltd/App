@@ -66,21 +66,14 @@
           var force = true
           await this.$parent.$parent.get_client_details(force)
 
-          this.$parent.$parent.$parent.pause_loading = false
-          this.$parent.$parent.$parent.dontLeave = false
-
           this.new_plan = {
             name: '',
             duration: ''
           }
           this.$ga.event('Plan', 'new')
+          this.$parent.$parent.$parent.end_loading()
         } catch (e) {
-          this.$parent.$parent.$parent.pause_loading = false
-          this.$parent.$parent.$parent.dontLeave = false
-          this.$parent.$parent.$parent.errorMsg = e
-          this.$parent.$parent.$parent.$modal.show('error')
-          this.$parent.$parent.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.$parent.$parent.resolve_error(e)
         }
       }
     }

@@ -1044,6 +1044,20 @@ export default {
       axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
+    resolve_error (msg) {
+      this.pause_loading = false
+      this.loading = false
+      this.dontLeave = false
+      this.errorMsg = msg.toString()
+      this.$modal.show('error')
+      this.willBodyScroll(false)
+      console.error(msg)
+    },
+    end_loading () {
+      this.pause_loading = false
+      this.loading = false
+      this.dontLeave = false
+    },
 
     // CLIENT
 
@@ -1068,11 +1082,7 @@ export default {
         localStorage.setItem('clients', JSON.stringify(response.data))
       } catch (e) {
         this.no_clients = false
-        this.loading = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async client_delete (id, index) {
@@ -1095,15 +1105,9 @@ export default {
         await this.clients_f()
         this.clients_to_vue()
         this.$ga.event('Client', 'delete')
-        this.pause_loading = false
-        this.dontLeave = false
+        this.end_loading()
       } catch (e) {
-        this.pause_loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
 
@@ -1185,16 +1189,10 @@ export default {
               }
             )
           }
-          this.pause_loading = false
-          this.dontLeave = false
           this.$router.push('/')
+          this.end_loading()
         } catch (e) {
-          this.pause_loading = false
-          this.dontLeave = false
-          this.errorMsg = e.toString()
-          this.$modal.show('error')
-          this.willBodyScroll(false)
-          console.error(e)
+          this.resolve_error(e)
         }
       }
     },
@@ -1230,15 +1228,9 @@ export default {
           await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
-          this.pause_loading = false
-          this.dontLeave = false
+          this.end_loading()
         } catch (e) {
-          this.pause_loading = false
-          this.dontLeave = false
-          this.errorMsg = e.toString()
-          this.$modal.show('error')
-          this.willBodyScroll(false)
-          console.error(e)
+          this.resolve_error(e)
         }
       }
     },
@@ -1253,12 +1245,7 @@ export default {
         }
         this.templates = JSON.parse(localStorage.getItem('templates'))
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async get_portfolio (force) {
@@ -1285,15 +1272,9 @@ export default {
           }
         }
         this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
-        this.loading = false
-        this.dontLeave = false
+        this.end_loading()
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async create_portfolio () {
@@ -1309,15 +1290,9 @@ export default {
           }
         )
         await this.get_portfolio(true)
-        this.pause_loading = false
-        this.dontLeave = false
+        this.end_loading()
       } catch (e) {
-        this.pause_loading = false
-        this.dontLeave = false
-        this.errorMsg = e
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async get_plans () {
@@ -1330,12 +1305,7 @@ export default {
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async get_sessions () {
@@ -1346,12 +1316,7 @@ export default {
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async update_session (pid, sid) {
@@ -1402,15 +1367,9 @@ export default {
           }
         }
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
-      this.loading = false
-      this.dontLeave = false
+      this.end_loading()
     }
   }
 }

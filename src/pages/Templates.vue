@@ -174,7 +174,7 @@
       this.$parent.setup()
       this.$parent.splashed = true
       this.$parent.willBodyScroll(true)
-      this.$parent.loading = false
+      this.$parent.end_loading()
     },
     async mounted () {
       await this.$parent.get_templates()
@@ -265,15 +265,9 @@
             name: 'Untitled',
             note: ''
           }
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
+          this.$parent.end_loading()
         } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       },
       async updateTemplate (id) {
@@ -298,15 +292,9 @@
             }
           )
           await this.$parent.get_templates(true)
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
+          this.$parent.end_loading()
         } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       },
       async delete_template (id) {
@@ -315,15 +303,9 @@
           this.$parent.dontLeave = true
           await axios.delete(`https://api.traininblocks.com/templates/${id}`)
           await this.$parent.get_templates(true)
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
+          this.$parent.end_loading()
         } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       }
     }

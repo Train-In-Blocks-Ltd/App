@@ -95,7 +95,7 @@ export default {
     this.$parent.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.get_portfolio()
-    this.$parent.loading = false
+    this.$parent.end_loading()
   },
   methods: {
     async update () {
@@ -110,15 +110,9 @@ export default {
           }
         )
         await this.$parent.get_portfolio(true)
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
+        this.$parent.end_loading()
       } catch (e) {
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
-        this.$parent.errorMsg = e
-        this.$parent.$modal.show('error')
-        this.$parent.willBodyScroll(false)
-        console.error(e)
+        this.$parent.resolve_error(e)
       }
     }
   }

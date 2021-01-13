@@ -146,7 +146,7 @@
       this.$parent.setup()
       this.$parent.splashed = true
       this.$parent.willBodyScroll(true)
-      this.$parent.loading = false
+      this.$parent.end_loading()
     },
     methods: {
 
@@ -167,15 +167,9 @@
               url: `${this.$parent.claims.sub}`
             }
           )
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
+          this.$parent.end_loading()
         } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       },
 
@@ -214,13 +208,11 @@
               'html': passChangeEmail()
             }
           )
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
+          this.$parent.end_loading()
         } catch (e) {
-          this.$parent.pause_loading = false
           this.password.error = 'Something went wrong. Please make sure that your password is correct'
-          this.$parent.dontLeave = false
           console.error(e)
+          this.$parent.end_loading()
         }
       },
       async manageSubscription () {
@@ -232,11 +224,7 @@
           )
           window.location.href = response.data
         } catch (e) {
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          this.$parent.resolve_error(e)
         }
       }
     }

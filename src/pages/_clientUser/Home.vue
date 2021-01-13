@@ -196,7 +196,7 @@ export default {
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()
     this.todaysSession()
-    this.$parent.loading = false
+    this.$parent.end_loading()
   },
   methods: {
 

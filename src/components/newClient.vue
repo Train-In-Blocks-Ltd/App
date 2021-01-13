@@ -77,9 +77,6 @@
             await this.$parent.$parent.clients_f()
             this.$parent.$parent.clients_to_vue()
 
-            this.$parent.$parent.pause_loading = false
-            this.$parent.$parent.dontLeave = false
-
             this.new_client = {
               name: '',
               email: '',
@@ -87,12 +84,9 @@
               notes: ''
             }
             this.$ga.event('Client', 'new')
+            this.$parent.$parent.end_loading()
           } catch (e) {
-            this.$parent.$parent.pause_loading = false
-            this.$parent.$parent.dontLeave = false
-            this.$parent.$parent.errorMsg = e
-            this.$parent.$parent.$modal.show('error')
-            console.error(e)
+            this.$parent.$parent.resolve_error(e)
           }
         }
       }

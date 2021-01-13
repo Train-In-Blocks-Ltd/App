@@ -111,7 +111,7 @@
       this.$parent.loading = true
       this.$parent.setup()
       this.$parent.client_details = null
-      this.$parent.loading = false
+      this.$parent.end_loading()
     }
   }
 </script>
