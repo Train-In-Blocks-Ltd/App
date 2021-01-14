@@ -39,14 +39,11 @@
 
 <template>
   <div id="portfolio">
-    <form
-      @submit.prevent="update(), editing_info = false"
-      class="trainer_info"
-    >
+    <form class="trainer_info">
       <input
         v-if="!$parent.loading"
         v-model="$parent.portfolio.business_name"
-        @input="editing_info = true"
+        @blur="update()"
         class="trainer_info__business text--large"
         placeholder="Business name"
         aria-label="Business name"
@@ -57,7 +54,7 @@
       <input
         v-if="!$parent.loading"
         v-model="$parent.portfolio.trainer_name"
-        @input="editing_info = true"
+        @blur="update()"
         class="input--forms allow_text_overflow"
         placeholder="Trainer Name"
         aria-label="Trainer Name"
@@ -65,7 +62,6 @@
         autocomplete="name"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
-      <button v-if="editing_info" type="submit">Save</button>
     </form>
     <div v-if="!$parent.loading" class="wrapper_card">
       <p class="text--small">Portfolio</p>
@@ -96,7 +92,6 @@ export default {
   },
   data () {
     return {
-      editing_info: false,
       editing_card: false,
       toggleTest: false,
       tempEditorStore: null

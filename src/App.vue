@@ -198,6 +198,9 @@
   .text--no_content {
     margin: 1rem 0
   }
+  .text--new_msg {
+    margin: 2rem 0
+  }
 
   /* BUTTONS */
   button {
@@ -989,9 +992,6 @@ export default {
         return msg
       }
     },
-    responseDelay () {
-      setTimeout(() => { this.response = '' }, 5000)
-    },
     sortSessionsPlan () {
       this.clientUser.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
@@ -1249,7 +1249,6 @@ export default {
       }
     },
     async get_portfolio (force) {
-      this.loading = true
       try {
         if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
           this.dontLeave = true

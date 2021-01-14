@@ -1,4 +1,4 @@
-<style>
+<style scoped>
   /* Add New Client */
   .add_client {
     grid-gap: 1rem
@@ -6,9 +6,6 @@
   .add_client label {
     display: grid;
     grid-gap: .5rem
-  }
-  .new-msg {
-    margin: 2rem 0
   }
 </style>
 
@@ -71,8 +68,8 @@
                 'notes': this.new_client.notes
               }
             )
-            this.$parent.response = 'Added New Client'
-            this.$parent.$parent.responseDelay()
+            this.$parent.response = `Added ${this.new_client.name}`
+            this.$parent.responseDelay()
 
             await this.$parent.$parent.clients_f()
             this.$parent.$parent.clients_to_vue()

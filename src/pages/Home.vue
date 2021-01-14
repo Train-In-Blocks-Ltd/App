@@ -54,7 +54,10 @@
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
       <input type="search" rel="search" placeholder="Find a client" class="text--small search" aria-label="Find a client" v-model="search"/>
-      <p v-if="response !== ''" class="new-msg">{{response}}</p>
+      <div v-if="response !== ''" class="text--new_msg">
+        <p class="text--small">{{ response }}</p>
+        <p class="text--small grey">Well done on getting a new client</p>
+      </div>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
         <skeleton v-if="$parent.loading" :type="'client'" />
@@ -112,6 +115,11 @@
       this.$parent.setup()
       this.$parent.client_details = null
       this.$parent.end_loading()
+    },
+    methods: {
+      responseDelay () {
+        setTimeout(() => { this.response = '' }, 5000)
+      }
     }
   }
 </script>

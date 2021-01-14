@@ -149,38 +149,44 @@
           <button
             @click="format('bold'), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: boldActive }"
+            title="Bold"
           >
             <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
           </button>
           <button
             @click="format('italic'), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: italicActive }"
+            title="Italic"
           >
             <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
           </button>
           <button
             @click="format('underline'), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: underlineActive }"
+            title="Underline"
           >
             <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
           </button>
           <button
             @click="format('insertOrderedList'), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: olActive }"
+            title="Ordered List"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
           </button>
           <button
             @click="format('insertUnorderedList'), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: ulActive }"
+            title="Unordered List"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
           <button
             @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: ulActive }"
+            title="Checkbox"
           >
-            <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+            <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
           </button>
           <div
             @mouseover="showTooltip = true"
@@ -189,18 +195,21 @@
             <button
               @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
               :disabled="!caretIsInEditor"
+              title="Add Link"
             >
               <inline-svg :src="require('../assets/svg/editor/link.svg')" />
             </button>
             <button
               @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
               :disabled="!caretIsInEditor"
+              title="Insert Image"
             >
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
             </button>
             <button
               @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
               :disabled="!caretIsInEditor"
+              title="Insert Video"
             >
               <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
             </button>
@@ -208,6 +217,7 @@
               v-if="dataForTemplates !== undefined && dataForTemplates !== null"
               @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
               :disabled="!caretIsInEditor"
+              title="Use Template"
             >
               <inline-svg :src="require('../assets/svg/editor/template.svg')" />
             </button>
@@ -229,7 +239,7 @@
       </div>
       <!-- VIDEO -->
       <form v-if="showAddVideo" @submit.prevent="add_video()" class="pop_up--add_video">
-        <input v-model="addVideoURL" class="input--add_video" type="text" placeholder="URL" required>
+        <input v-model="addVideoURL" class="input--add_video" type="text" placeholder="YouTube URL" required>
         <button class="add_video_submit" type="submit">Add</button>
       </form>
       <!-- TEMPLATE -->
@@ -416,7 +426,7 @@
       // CHECKBOX
 
       add_checkbox () {
-        this.format('insertHTML', `<label><input name="checklist" type="checkbox" style="margin: .4rem; transform: scale(1.3)" onclick="change_checked_state(this)"></label>`)
+        this.format('insertHTML', `<label><input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)"></label>`)
       },
 
       // LINK

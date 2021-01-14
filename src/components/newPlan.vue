@@ -52,8 +52,8 @@
               'block_color': ''
             }
           )
-          this.response = 'Added New Plan'
-          this.$parent.$parent.$parent.responseDelay()
+          this.$parent.response = `${this.new_plan.name} has been created`
+          this.$parent.responseDelay()
 
           // Set old plans to null so that they can be repopulated
           var x
