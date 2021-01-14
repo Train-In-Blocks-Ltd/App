@@ -69,6 +69,7 @@
               }
             )
             this.$parent.response = `Added ${this.new_client.name}`
+            this.$parent.persistResponse = this.new_client.name
             this.$parent.responseDelay()
 
             await this.$parent.$parent.clients_f()

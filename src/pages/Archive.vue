@@ -105,8 +105,8 @@
               var idx = this.selectedClients.indexOf(clientId)
               this.$parent.client_delete(clientId, idx)
             })
-            this.selectedClients.length = 0
-            this.selectedClientsIndex.length = 0
+            this.selectedClients = []
+            this.selectedClientsIndex = []
           }
         }
       }

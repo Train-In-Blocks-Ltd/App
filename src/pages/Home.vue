@@ -62,14 +62,20 @@
         <!-- Perform case insensitive search -->
         <skeleton v-if="$parent.loading" :type="'client'" />
         <router-link
-          :to="'/client/'+clients.client_id+'/'"
-          v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
-          :id="'a' + clients.client_id"
-          v-for="(clients, index) in $parent.clients"
+          :to="'/client/'+client.client_id+'/'"
+          v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
+          :id="'a' + client.client_id"
+          v-for="(client, index) in $parent.clients"
           :key="index"
           class="wrapper--client_link"
         >
-          <client-link class="client_link" :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes"/>
+          <client-link
+            :name="client.name"
+            :email="client.email" :number="client.number"
+            :notes="client.notes"
+            :class="{ recentlyAdded: persistResponse === client.name }"
+            class="client_link"
+          />
         </router-link>
       </div>
     </div>
@@ -98,6 +104,7 @@
     data () {
       return {
         response: '',
+        persistResponse: '',
         search: '',
         isNewClientOpen: false,
         isInstallOpen: false,

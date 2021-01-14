@@ -99,9 +99,10 @@
           <skeleton v-if="$parent.$parent.loading" :type="'plan'"/>
           <div v-else class="plan_grid">
             <router-link
+              :to="'plan/' + plan.id"
               v-for="(plan, index) in $parent.$parent.client_details.plans"
               :key="index"
-              :to="'plan/' + plan.id"
+              :class="{ recentlyAdded: persistResponse === plan.name }"
               class="plan_link"
             >
               <div>
@@ -138,6 +139,7 @@
       return {
         tempEditorStore: null,
         response: '',
+        persistResponse: '',
         editClientNotes: false,
         isNewPlanOpen: false
       }

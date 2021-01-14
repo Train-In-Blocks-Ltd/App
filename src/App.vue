@@ -132,6 +132,9 @@
   .allow_y_overflow {
     overflow-y: auto
   }
+  .recentlyAdded {
+    border: 2px solid #282828
+  }
 
   /* MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new_client, .modal--new_plan, .modal--toolkit, .modal--alert, .modal--preview_template {
