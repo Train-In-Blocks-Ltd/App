@@ -14,14 +14,21 @@
 <template>
   <div>
     <div v-if="$parent.$parent.pwa.canInstall === true">
-      <p class="text--large">Install the app</p>
+      <p class="text--large">
+        Install the app
+      </p>
+      <p class="text--large grey">
+        Access it quickly from your home screen with a clearer interface
+      </p>
     </div>
-    <p
-      v-else-if="$parent.$parent.pwa.canInstall === false"
-      class="text--large"
-    >
-      We can't detect if you have the app installed. Try launching the app, or continue using it in the browser.
-    </p>
+    <div v-else-if="$parent.$parent.pwa.canInstall === false">
+      <p class="text--large">
+        We can't detect if you have the app installed
+      </p>
+      <p class="text--large grey">
+        Try launching the app, or continue using it in the browser
+      </p>
+    </div>
     <p 
       v-else-if="$parent.$parent.pwa.installed === true"
       class="text--large"
