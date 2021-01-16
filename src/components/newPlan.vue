@@ -1,14 +1,27 @@
 <template>
   <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">
-    <p class="text--large">New Plan</p>
-    <label>
-      <b>Name*</b>
-      <input class="input--forms" ref="name" type="text" v-model="new_plan.name" required/>
-    </label>
-    <label>
-      <b>Duration*</b>
-      <input class="input--forms" type="number" min="1" v-model="new_plan.duration" required/>
-    </label>
+    <div class="bottom_margin">
+      <p class="text--small">Create a new plan and use it for exercise, nutrition or anything else</p>
+      <p class="text--small grey">The duration is the microcycle which can be of any length</p>
+    </div>
+    <input
+      class="small_border_radius width_300"
+      ref="name"
+      type="text"
+      placeholder="Name*"
+      aria-label="Name"
+      v-model="new_plan.name"
+      required
+    />
+    <input
+      class="small_border_radius width_300"
+      type="number"
+      min="1"
+      placeholder="Duration*"
+      aria-label="Duration"
+      v-model="new_plan.duration"
+      required
+    />
     <div class="form_buttons">
       <button type="submit">Save</button>
       <button class="cancel" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">Close</button>

@@ -1,5 +1,9 @@
 <style>
   /* Client Info */
+  .client_info {
+    display: grid;
+    grid-gap: 1rem
+  }
   .client_email_bar {
     display: flex;
     margin-top: 1rem
@@ -7,34 +11,9 @@
   .client_email {
     margin-left: .6rem
   }
-  #client .client_info input:not([type='submit']), #duration {
-    width: 100%;
-    background-color: initial;
-    border: 1px solid #28282840;
-    padding: .6rem 1rem;
-    border-radius: 8px;
-    transition: .4s all cubic-bezier(.165, .84, .44, 1)
-  }
-  #client .client_info input:not([type='submit']):hover, #duration:hover, .session-date:hover {
-    opacity: .6
-  }
-  #client .client_info input:not([type='submit']):disabled {
-    background-color: #28282810;
-    cursor: not-allowed;
-    opacity: .6
-  }
-  #client .client_info input:not([type='submit']):focus, #duration:focus, .session-date:focus {
-    opacity: 1;
-    border: 1px solid #282828;
-    padding: .6rem 1.4rem
-  }
   .client_info__more-details {
     display: grid;
     grid-gap: .6rem
-  }
-  #client .client_info input.client_info--name {
-    max-width: 100%;
-    margin: 0 0 1rem 0
   }
   .button--verify {
     width: fit-content

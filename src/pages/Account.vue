@@ -1,7 +1,4 @@
 <style scoped>
-  button {
-    margin: 0
-  }
   .details {
     display: grid;
     grid-gap: 1rem;
@@ -54,6 +51,9 @@
   .error {
     color: red
   }
+  .reset_password_button_bar {
+    display: flex
+  }
 
   @media (max-width: 768px) {
     #account {
@@ -70,27 +70,40 @@
     <modal name="reset-password" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.pass.focus()">
       <div class="modal--reset">
         <div class="wrapper--centered-item"> 
-          <p class="text--small">Reset your password</p>
-          <form @submit.prevent="changePass(), $parent.willBodyScroll(true)">
-            <label>
-              <p><b>Current Password</b></p>
-              <input type="password" class="input--forms" ref="pass" v-model="password.old" />
-            </label>
-            <br>
-            <br>
-            <br>
-            <label>
-              <p><b>Requirements:</b></p>
-              <p>Number (0-9)</p>
-              <p>At least 8 characters</p>
-              <p>Can't contain your username</p><br>
-              <p><b>New Password</b></p>
-              <input type="password" class="input--forms" v-model="password.new" @input="checkPass" v-bind:class="{check: password.check}"/>
-            </label>
-            <br>
-            <br>
-            <button type="submit" :disabled="password.check">Change your password</button>
-            <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.willBodyScroll(true)">Close</button>
+          <form class="form_grid" @submit.prevent="changePass(), $parent.willBodyScroll(true)">
+            <div>
+              <p class="text--large">Stay safe</p>
+              <p class="text--large grey">Reset your password</p>
+            </div>
+            <input
+              type="password"
+              placeholder="Current password"
+              aria-label="Current password"
+              class="input--forms small_border_radius"
+              ref="pass"
+              v-model="password.old"
+              required
+            />
+            <div>
+              <p class="text--small">Requirements</p>
+              <p class="text--small grey">Number (0-9)</p>
+              <p class="text--small grey">At least 8 characters</p>
+              <p class="text--small grey">Can't contain your username</p>
+            </div>
+            <input
+              type="password"
+              placeholder="New password"
+              aria-label="New password"
+              class="input--forms small_border_radius"
+              v-model="password.new"
+              @input="checkPass"
+              v-bind:class="{check: password.check}"
+              required
+            />
+            <div class="reset_password_button_bar">
+              <button class="right_margin" type="submit" :disabled="password.check">Change your password</button>
+              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.willBodyScroll(true)">Close</button>
+            </div>
             <p v-if="this.password.error" class="error">{{this.password.error}}</p>
             <p v-if="this.password.msg">{{this.password.msg}}</p>
           </form>

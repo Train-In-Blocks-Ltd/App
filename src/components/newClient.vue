@@ -10,20 +10,45 @@
 </style>
 
 <template>
-  <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)">
-    <p class="text--large">New Client</p>
-    <label>
-      <b>Name*</b>
-      <input class="input--forms" ref="name" type="text" autocomplete="name" v-model="new_client.name" required />
-    </label>
-    <label>
-      <b>Email*</b>
-      <input class="input--forms" type="email" autocomplete="email" v-model="new_client.email" required />
-    </label>
-    <label>
-      <b>Mobile</b>
-      <input class="input--forms" type="tel" inputmode="tel" autocomplete="tel" v-model="new_client.number" minlength="9" maxlength="14" pattern="\d+" />
-    </label>
+  <form
+    name="add_client" 
+    class="form_grid add_client"
+    spellcheck="false"
+    @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)"
+  >
+    <div class="bottom_margin">
+      <p class="text--small">Add a new client and email them access</p>
+      <p class="text--small grey">Make sure that you have the correct email address, you won't be able to change it after</p>
+    </div>
+    <input
+      class="small_border_radius width_300"
+      ref="name"
+      type="text"
+      autocomplete="name"
+      placeholder="Name*"
+      aria-label="Name"
+      v-model="new_client.name"
+      required
+    />
+    <input
+      class="small_border_radius width_300"
+      type="email"
+      autocomplete="email"
+      placeholder="Email*"
+      aria-label="Email"
+      v-model="new_client.email"
+      required
+    />
+    <input
+      class="small_border_radius width_300"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      placeholder="Mobile"
+      aria-label="Mobile"
+      v-model="new_client.number"
+      pattern="\d+"
+    />
     <div class="form_buttons">
       <button type="submit">Save</button>
       <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)">Close</button>

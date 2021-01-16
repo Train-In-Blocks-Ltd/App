@@ -162,18 +162,15 @@
   /* FONTS */
   .text--large {
     margin-top: 0;
-    font-size: 2.6rem;
+    font-size: 2.6rem !important;
     line-height: 1.2
   }
   .text--small {
-    font-size: 1.6rem;
+    font-size: 1.6rem !important;
     line-height: 1.2
   }
   .grey {
     color: #28282894
-  }
-  .no_margin {
-    margin: 0
   }
   h3 {
     font-size: 2rem;
@@ -204,6 +201,15 @@
   .text--new_msg {
     margin: 2rem 0
   }
+  .no_margin {
+    margin: 0
+  }
+  .bottom_margin {
+    margin-bottom: 1rem
+  }
+  .right_margin {
+    margin-right: 1rem
+  }
 
   /* BUTTONS */
   button {
@@ -220,7 +226,6 @@
     font-size: .8rem;
     color: white;
     background-color: #282828;
-    margin: .6rem 0;
     transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   button:hover:not(:disabled) {
@@ -239,35 +244,6 @@
   .delete:hover, .cancel:hover {
     color: white;
     background-color: #B80000
-  }
-  button.opposite {
-    border: 2px solid #282828;
-    color: #282828;
-    background-color: transparent
-  }
-  button.opposite:not(:disabled):hover {
-    color: white;
-    background-color: #282828
-  }
-
-  /* SEARCH */
-  .search {
-    border: none;
-    outline-width: 0;
-    width: 80%;
-    border-bottom: 2px solid #282828;
-    padding: .6rem 0;
-    opacity: .6;
-    margin: .5rem auto 4rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .search:hover {
-    width: 100%;
-    opacity: 1
-  }
-  .search:focus {
-    width: 100%;
-    opacity: 1
   }
 
   /* EDITOR WRAPPERS */
@@ -309,26 +285,44 @@
     height: 3.2rem
   }
 
-  /* RM IOS CORNERS */
-  input:not([type=checkbox]) {
-    border-radius: 0;
-    -webkit-appearance: none
-  }
-
   /* INPUTS */
-  .input--modal {
-    width: 4rem
-  }
-  .input--forms, .input--toolkit, .input--modal {
-    padding: .4rem;
-    font-size: 1rem;
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #282828
-  }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]) {
+    -webkit-appearance: none;
+    width: 100%;
+    outline-width: 0;
+    padding: .6rem;
     resize: none;
-    font-family: Arial, Helvetica, sans-serif
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    border: 1px solid #28282840;
+    border-radius: 8px;
+    background-color: transparent;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover {
+    opacity: .6
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--large,
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--small {
+    padding: .6rem 1rem
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
+    border: 1px solid #282828;
+    padding: .6rem 1rem
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--large:focus,
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--small:focus {
+    padding: .6rem 1.4rem
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius {
+    border-radius: 5px
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300 {
+    width: 300px
+  }
+  .search {
+    width: 100%;
+    margin-bottom: 2rem
   }
   input[type=color] {
     margin: 0 .4rem;
@@ -346,9 +340,7 @@
   /* FORMS */
   .form_grid {
     display: grid;
-    grid-template-columns: 1fr;
-    margin: auto;
-    max-width: 300px
+    grid-gap: 2rem
   }
   .form_buttons {
     display: grid;
@@ -603,11 +595,13 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):hover,
+    button:not(:disabled):hover,
+    .button:hover {
+      opacity: 1
+    }
     #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
       padding: 4rem 10vw
-    }
-    button:not(:disabled):hover, .button:hover {
-      opacity: 1
     }
     #line-chart {
       padding: 0

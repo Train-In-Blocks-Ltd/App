@@ -53,7 +53,14 @@
     <p class="text--small grey text--loading" v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
     <!-- Loop through clients -->
     <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
-      <input type="search" rel="search" placeholder="Find a client" class="text--small search" aria-label="Find a client" v-model="search"/>
+      <input
+        type="search"
+        rel="search"
+        placeholder="Find a client"
+        class="text--small search"
+        aria-label="Find a client"
+        v-model="search"
+      />
       <div v-if="response !== ''" class="text--new_msg">
         <p class="text--small">{{ response }}</p>
         <p class="text--small grey">Well done on getting a new client</p>

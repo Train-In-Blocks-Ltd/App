@@ -17,7 +17,7 @@
   }
   .wrapper--template-top {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-bottom: 4rem
   }
   .container--templates {
@@ -107,6 +107,7 @@
       </div>
     </transition>
     <div class="wrapper--template-top">
+      <p class="text--large">Templates</p>
       <button @click="newTemplate()">New Template</button>
     </div>
     <div class="container--templates" v-if="$parent.templates">

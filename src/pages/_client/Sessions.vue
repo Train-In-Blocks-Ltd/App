@@ -95,7 +95,8 @@
     grid-gap: 1rem
   }
   .plan_table {
-    height: fit-content
+    height: fit-content;
+    margin-bottom: 2rem
   }
   .plan_table--container {
     display: inline-block;
