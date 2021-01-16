@@ -98,9 +98,9 @@
             />
           </div>
           <div
-            v-for="(session, index) in plan.sessions"
-            v-show="showing_current_session === index"
-            :key="index"
+            v-for="(session, indexed) in plan.sessions"
+            v-show="showing_current_session === indexed"
+            :key="indexed"
             class="wrapper--session"
           >
             <div :id="session.name" class="wrapper--session__header client-side">
@@ -231,10 +231,9 @@ export default {
     accessibleColors (hex) {
       if (hex !== undefined) {
         hex = hex.replace('#', '')
-        let r, g, b
-        r = parseInt(hex.substring(0, 2), 16)
-        g = parseInt(hex.substring(2, 4), 16)
-        b = parseInt(hex.substring(4, 6), 16)
+        const r = parseInt(hex.substring(0, 2), 16)
+        const g = parseInt(hex.substring(2, 4), 16)
+        const b = parseInt(hex.substring(4, 6), 16)
         const result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
         const color = `rgb(${result}, ${result}, ${result})`
         return color

@@ -26,6 +26,8 @@ module.exports = {
     'vue/component-tags-order': ['error', {
       order: ['style', 'template', 'script']
     }],
-    'no-console': 'off'
+    'no-console': 'off',
+    'vue/require-default-prop': 0,
+    'vue/require-prop-types': 0
   }
 }
