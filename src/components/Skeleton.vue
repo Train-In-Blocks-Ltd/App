@@ -25,29 +25,29 @@
     width: 50%
   }
   .rect__content.two {
-    width: 40%;
+    width: 40%
   }
   .rect__box {
     height: 6rem;
     width: 60%
   }
 
-@keyframes fade {
-  from {
-    opacity: .6
+  @keyframes fade {
+    from {
+      opacity: .6
+    }
+    to {
+      opacity: 1
+    }
   }
-  to {
-    opacity: 1
+  @keyframes shimmer {
+    from {
+      background-position: 0 0
+    }
+    to {
+      background-position: 100rem 0
+    }
   }
-}
-@keyframes shimmer {
-  from {
-    background-position: 0 0
-  }
-  to {
-    background-position: 100rem 0
-  }
-}
 </style>
 
 <template>
@@ -80,9 +80,9 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      type: String
-    }
+export default {
+  props: {
+    type: String
   }
+}
 </script>

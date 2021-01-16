@@ -1,6 +1,5 @@
 <style scoped>
   /* SEE HOME.VUE FOR MORE CSS */
-
   .select_checkbox {
     margin-bottom: .4rem
   }
@@ -52,46 +51,50 @@
 <template>
   <div>
     <div>
-      <p class="text--small name">{{name}}</p>
+      <p class="text--small name">
+        {{ name }}
+      </p>
       <div v-if="email !== ''" class="client_link__details">
         <inline-svg :src="require('../assets/svg/email.svg')" />
-        <p>{{email}}</p>
+        <p>{{ email }}</p>
       </div>
       <div v-if="number !== ''" class="client_link__details">
         <inline-svg :src="require('../assets/svg/mobile.svg')" />
-        <p>{{number}}</p>
+        <p>{{ number }}</p>
       </div>
     </div>
-    <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">What client information do you currently have? Head over to this page and edit it.</p>
-    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" v-html="notes" class="client_link__notes__content" />
+    <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">
+      What client information do you currently have? Head over to this page and edit it.
+    </p>
+    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="client_link__notes__content" v-html="notes" />
     <div v-if="archive" class="client_link__options">
-      <checkbox :itemId="clientId" :indexId="clientIndex" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
-      <a href="javascript:void(0)" @click="$parent.$parent.client_unarchive(clientId, clientIndex)" title="Unarchive">
-        <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive"/>
+      <checkbox :item-id="clientId" :index-id="clientIndex" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
+      <a href="javascript:void(0)" title="Unarchive" @click="$parent.$parent.client_unarchive(clientId, clientIndex)">
+        <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive" />
       </a>
-      <a href="javascript:void(0)" @click="soloDelete(clientId, clientIndex)" title="Delete">
-        <inline-svg :src="require('../assets/svg/bin.svg')" class="archive_icon" aria-label="Delete"/>
+      <a href="javascript:void(0)" title="Delete" @click="soloDelete(clientId, clientIndex)">
+        <inline-svg :src="require('../assets/svg/bin.svg')" class="archive_icon" aria-label="Delete" />
       </a>
     </div>
   </div>
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import Checkbox from './Checkbox'
+import InlineSvg from 'vue-inline-svg'
+import Checkbox from './Checkbox'
 
-  export default {
-    components: {
-      InlineSvg,
-      Checkbox
-    },
-    props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
-    methods: {
-      soloDelete (id, index) {
-        if (confirm('Are you sure that you want to delete this client?')) {
-          this.$parent.$parent.client_delete(id, index)
-        }
+export default {
+  components: {
+    InlineSvg,
+    Checkbox
+  },
+  props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
+  methods: {
+    soloDelete (id, index) {
+      if (confirm('Are you sure that you want to delete this client?')) {
+        this.$parent.$parent.client_delete(id, index)
       }
     }
   }
+}
 </script>

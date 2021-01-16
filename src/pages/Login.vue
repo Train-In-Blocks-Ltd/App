@@ -157,26 +157,42 @@
 </style>
 
 <template>
-  <div id="login" v-if="!this.$parent.authenticated">
-    <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo"/>
+  <div v-if="!this.$parent.authenticated" id="login">
+    <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
     <div id="okta-signin-container" />
     <div class="button--container">
       <form action="https://traininblocks.com">
-        <button class="signup" type="submit">Sign Up</button>
+        <button class="signup" type="submit">
+          Sign Up
+        </button>
       </form>
-      <div><button v-if="!open" @click="open = !open">Forgot password?</button></div>
+      <div>
+        <button v-if="!open" @click="open = !open">
+          Forgot password?
+        </button>
+      </div>
     </div>
-    <form v-if="open" v-on:submit.prevent="reset" class="recovery">
+    <form v-if="open" class="recovery" @submit.prevent="reset">
       <label>
         <p><b>Email:</b></p>
-        <input type="email" v-model="email" class="input--forms" autofocus/>
+        <input v-model="email" type="email" class="input--forms" autofocus>
       </label>
-      <button type="submit">Send recovery email</button>
+      <button type="submit">
+        Send recovery email
+      </button>
     </form>
-    <p v-if="success">{{success}}</p>
-    <p v-if="error" class="error">{{error}}</p>
-    <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.</p>
-    <p style="font-size: .8rem"><b>Draco 2.2</b></p>
+    <p v-if="success">
+      {{ success }}
+    </p>
+    <p v-if="error" class="error">
+      {{ error }}
+    </p>
+    <p class="cookies">
+      By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.
+    </p>
+    <p style="font-size: .8rem">
+      <b>Draco 2.2</b>
+    </p>
   </div>
 </template>
 
@@ -241,14 +257,26 @@ export default {
       this.$router.push('/')
     } else {
       localStorage.clear()
-      var cookies = document.cookie.split(';')
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i]
-        var eqPos = cookie.indexOf('=')
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+      const cookies = document.cookie.split(';')
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i]
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
     }
+  },
+  async beforeDestroy () {
+    await this.$parent.isAuthenticated()
+    await this.$parent.setup()
+    await this.$parent.clients_f()
+    if (this.$ga && !this.$parent.authenticated) {
+      this.$ga.event('Auth', 'login')
+    }
+  },
+  destroyed () {
+    // Remove the widget from the DOM on path change
+    this.widget.remove()
   },
   methods: {
     async reset () {
@@ -274,18 +302,6 @@ export default {
         console.error(e)
       }
     }
-  },
-  async beforeDestroy () {
-    await this.$parent.isAuthenticated()
-    await this.$parent.setup()
-    await this.$parent.clients_f()
-    if (this.$ga && !this.$parent.authenticated) {
-      this.$ga.event('Auth', 'login')
-    }
-  },
-  destroyed () {
-    // Remove the widget from the DOM on path change
-    this.widget.remove()
   }
 }
 </script>

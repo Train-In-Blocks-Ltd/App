@@ -52,91 +52,110 @@
   }
 </style>
 <template>
+  <div>
+    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
+      <div v-if="isNewPlanOpen" class="wrapper--new_plan">
+        <new-plan />
+      </div>
+    </transition>
+    <div v-if="!isNewPlanOpen" class="icon_open--new_plan icon_open_middle" aria-label="New Plan" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)">
+      <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
+      <p class="text">
+        New Plan
+      </p>
+    </div>
     <div>
-      <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div class="wrapper--new_plan" v-if="isNewPlanOpen">
-          <new-plan />
-        </div>
-      </transition>
-      <div class="icon_open--new_plan icon_open_middle" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
-        <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan"/>
-        <p class="text">New Plan</p>
+      <div :class="{ openedSections: isNewPlanOpen }" class="section--a" />
+      <div :class="{ openedSections: isNewPlanOpen }" class="section--b" />
+    </div>
+    <div :class="{ activeState: editClientNotes }" class="client_notes">
+      <div class="client_notes__header">
+        <p class="text--small">
+          Client Information
+        </p>
+        <a
+          v-if="!editClientNotes"
+          href="javascript:void(0)"
+          class="a--client_notes"
+          @click="editClientNotes = true, tempEditorStore = $parent.$parent.client_details.notes"
+        >
+          Edit
+        </a>
       </div>
-      <div>
-        <div :class="{ openedSections: isNewPlanOpen }" class="section--a" />
-        <div :class="{ openedSections: isNewPlanOpen }" class="section--b"/>
+      <rich-editor
+        :show-edit-state="editClientNotes"
+        :html-injection.sync="$parent.$parent.client_details.notes"
+        :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
+      />
+      <div v-if="editClientNotes" class="bottom_bar">
+        <button class="button--save" @click="editClientNotes = false, $parent.update_client()">
+          Save
+        </button>
+        <button class="cancel" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore">
+          Cancel
+        </button>
       </div>
-      <div :class="{ activeState: editClientNotes }" class="client_notes">
-        <div class="client_notes__header">
-          <p class="text--small">Client Information</p>
-          <a
-            href="javascript:void(0)"
-            v-if="!editClientNotes"
-            @click="editClientNotes = true, tempEditorStore = $parent.$parent.client_details.notes"
-            class="a--client_notes"
+    </div>
+    <div>
+      <p class="text--large">
+        Plans
+      </p>
+      <p v-if="response !== ''" class="new-msg">
+        {{ response }}
+      </p>
+      <p v-if="$parent.no_plans" class="text--small grey text--no-plans">
+        No plans yet, use the button on the top-right of your screen.
+      </p>
+      <div v-else>
+        <skeleton v-if="$parent.$parent.loading" :type="'plan'" />
+        <div v-else class="plan_grid">
+          <router-link
+            v-for="(plan, index) in $parent.$parent.client_details.plans"
+            :key="index"
+            class="plan_link"
+            :to="'plan/' + plan.id"
           >
-            Edit
-          </a>
-        </div>
-        <rich-editor
-          :showEditState="editClientNotes"
-          :htmlInjection.sync="$parent.$parent.client_details.notes"
-          :emptyPlaceholder="'What goals does your client have? What physical measures have you taken?'"
-        />
-        <div v-if="editClientNotes" class="bottom_bar">
-          <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
-          <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore" class="cancel">Cancel</button>
-        </div>
-      </div>
-      <div>
-        <p class="text--large">Plans</p>
-        <p class="new-msg" v-if="response !== ''">{{response}}</p>
-        <p class="text--small grey text--no-plans" v-if="$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
-        <div v-else>
-          <skeleton v-if="$parent.$parent.loading" :type="'plan'"/>
-          <div v-else class="plan_grid">
-            <router-link
-              class="plan_link" :to="'plan/' + plan.id"
-              v-for="(plan, index) in $parent.$parent.client_details.plans"
-              :key="index"
-            >
-              <div>
-                <p class="text--small plan-name">{{plan.name}}</p>
-                <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">What's the purpose of this plan? Head over to this page and edit it.</p>
-                <div v-else v-html="plan.notes" class="plan_link__notes__content" />
-              </div>
-            </router-link>
-          </div>
+            <div>
+              <p class="text--small plan-name">
+                {{ plan.name }}
+              </p>
+              <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">
+                What's the purpose of this plan? Head over to this page and edit it.
+              </p>
+              <div v-else class="plan_link__notes__content" v-html="plan.notes" />
+            </div>
+          </router-link>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import NewPlan from '../../components/newPlan'
-  import RichEditor from '../../components/Editor'
-  import Skeleton from '../../components/Skeleton'
+import InlineSvg from 'vue-inline-svg'
+import NewPlan from '../../components/newPlan'
+import RichEditor from '../../components/Editor'
+import Skeleton from '../../components/Skeleton'
 
-  export default {
-    components: {
-      InlineSvg,
-      NewPlan,
-      RichEditor,
-      Skeleton
-    },
-    created () {
-      this.$parent.$parent.splashed = true
-      this.$parent.$parent.willBodyScroll(true)
-      this.$parent.checkClient()
-    },
-    data () {
-      return {
-        tempEditorStore: null,
-        response: '',
-        editClientNotes: false,
-        isNewPlanOpen: false
-      }
+export default {
+  components: {
+    InlineSvg,
+    NewPlan,
+    RichEditor,
+    Skeleton
+  },
+  data () {
+    return {
+      tempEditorStore: null,
+      response: '',
+      editClientNotes: false,
+      isNewPlanOpen: false
     }
+  },
+  created () {
+    this.$parent.$parent.splashed = true
+    this.$parent.$parent.willBodyScroll(true)
+    this.$parent.checkClient()
   }
+}
 </script>

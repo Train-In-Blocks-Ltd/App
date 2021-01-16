@@ -14,7 +14,9 @@
 <template>
   <div>
     <div v-if="$parent.$parent.pwa.canInstall === true">
-      <p class="text--large">Install the app</p>
+      <p class="text--large">
+        Install the app
+      </p>
     </div>
     <p
       v-else-if="$parent.$parent.pwa.canInstall === false"
@@ -22,7 +24,7 @@
     >
       We can't detect if you have the app installed. Try launching the app, or continue using it in the browser.
     </p>
-    <p 
+    <p
       v-else-if="$parent.$parent.pwa.installed === true"
       class="text--large"
     >
@@ -44,7 +46,9 @@
           Launch
         </button>
       </a>
-      <button @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)" class="cancel">Close</button>
+      <button class="cancel" @click="$parent.isInstallOpen = false, $parent.$parent.willBodyScroll(true)">
+        Close
+      </button>
     </div>
     <br>
     <br>
@@ -52,22 +56,22 @@
 </template>
 
 <script>
-  export default {
-    methods: {
-      installPWA () {
-        // Show the install prompt
-        this.$parent.$parent.pwa.deferredPrompt.prompt()
-        // Wait for the user to respond to the prompt
-        this.$parent.$parent.pwa.deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            // Hide the app provided install promotion
-            this.$parent.$parent.pwa.canInstall = false
-            this.$parent.$parent.pwa.displayMode = 'standalone'
-          } else {
-            this.$parent.$parent.pwa.canInstall = true
-          }
-        })
-      }
+export default {
+  methods: {
+    installPWA () {
+      // Show the install prompt
+      this.$parent.$parent.pwa.deferredPrompt.prompt()
+      // Wait for the user to respond to the prompt
+      this.$parent.$parent.pwa.deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          // Hide the app provided install promotion
+          this.$parent.$parent.pwa.canInstall = false
+          this.$parent.$parent.pwa.displayMode = 'standalone'
+        } else {
+          this.$parent.$parent.pwa.canInstall = true
+        }
+      })
     }
   }
+}
 </script>

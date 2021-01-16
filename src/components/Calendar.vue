@@ -92,24 +92,26 @@
 <template>
   <div id="calendar_view">
     <div class="calendar_header">
-      <p class="text--large">{{ get_month(this.this_week[0].date_split[1]) }} {{ this.this_week[0].date_split[0] }}</p>
+      <p class="text--large">
+        {{ get_month(this_week[0].date_split[1]) }} {{ this_week[0].date_split[0] }}
+      </p>
       <div class="calendar_header__bar">
         <inline-svg
-          @click="week_diff--, get_week()"
           :src="require('../assets/svg/arrow.svg')"
           class="prev_week"
+          @click="week_diff--, get_week()"
         />
         <p
-          @click="week_diff = 0, get_week()"
           :class="{ disabled: week_diff === 0 }"
           class="today"
+          @click="week_diff = 0, get_week()"
         >
           Today
         </p>
         <inline-svg
-          @click="week_diff++, get_week()"
           :src="require('../assets/svg/arrow.svg')"
           class="next_week"
+          @click="week_diff++, get_week()"
         />
       </div>
     </div>
@@ -120,20 +122,26 @@
         class="day_container"
       >
         <div class="day_header">
-          <p class="text--small">{{ day.date_split[2] }}</p>
+          <p class="text--small">
+            {{ day.date_split[2] }}
+          </p>
         </div>
         <div class="day_events">
           <div v-if="day.events.length === 0">
-            <p class="grey">Rest day</p>
+            <p class="grey">
+              Rest day
+            </p>
           </div>
           <div
-            v-for="(event, index) in day.events"
-            :key="'event-' + index"
+            v-for="(event, indexed) in day.events"
+            :key="'event-' + indexed"
             :style="{ backgroundColor: event.color }"
             :class="{ showBorder: event.color === null || event.color === '' || event.color === '#ffffff' }"
             class="day_events__event"
           >
-            <p :style="{ color: event.textColor }">{{ event.title }}</p>
+            <p :style="{ color: event.textColor }">
+              {{ event.title }}
+            </p>
           </div>
         </div>
       </div>
@@ -142,87 +150,87 @@
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  
-  export default {
-    components: {
-      InlineSvg
-    },
-    props: {
-      events: Array,
-      forceUpdate: Number
-    },
-    data () {
-      return {
-        current_week_start: null,
-        this_week: [],
-        week_diff: 0
-      }
-    },
-    created () {
+import InlineSvg from 'vue-inline-svg'
+
+export default {
+  components: {
+    InlineSvg
+  },
+  props: {
+    events: Array,
+    forceUpdate: Number
+  },
+  data () {
+    return {
+      current_week_start: null,
+      this_week: [],
+      week_diff: 0
+    }
+  },
+  watch: {
+    forceUpdate () {
       this.get_week()
-    },
-    watch: {
-      forceUpdate: function () {
-        this.get_week()
-      }
-    },
-    methods: {
+    }
+  },
+  created () {
+    this.get_week()
+  },
+  methods: {
 
-      // EVENTS
+    // EVENTS
 
-      append_events () {
-        this.this_week.forEach(day => {
-          this.events.forEach(event => {
-            if (day.date === event.date) {
-              day.events.push(event)
-            }
-          })
+    append_events () {
+      this.this_week.forEach((day) => {
+        this.events.forEach((event) => {
+          if (day.date === event.date) {
+            day.events.push(event)
+          }
         })
-      },
+      })
+    },
 
-      // WEEK
+    // WEEK
 
-      get_week () {
-        this.this_week = []
-        let d = new Date(new Date())
-        const day = d.getDay()
-        let diff = d.getDate() - day + (day === 0 ? -6 : 1)
-        let weekStart = new Date(d.setDate(diff + 7 * this.week_diff))
-        let year = String(weekStart.getFullYear())
-        let month = String(weekStart.getMonth() + 1).padStart(2, '0')
-        let date = String(weekStart.getDate()).padStart(2, '0')
-        const currentMonday = {
-          date: `${year}-${month}-${date}`,
-          date_split: [year, month, date],
-          events: []
-        }
-        this.current_week_start = currentMonday
-        this.this_week.push(currentMonday)
-        for (let i = 1; i < 7; i++) {
-          this.this_week.push({
-            date: this.add_days(this.this_week[0].date, i),
-            date_split: this.add_days(this.this_week[0].date, i).split('-'),
-            events: []
-          })
-        }
-        setTimeout(() => {
-          this.append_events()
-        }, 100)
-      },
-      add_days (date, days) {
-        var d = new Date(date)
-        d.setDate(d.getDate() + days)
-        var year = d.getFullYear()
-        var month = String(d.getMonth() + 1).padStart(2, '0')
-        var dayDate = String(d.getDate()).padStart(2, '0')
-        return `${year}-${month}-${dayDate}`
-      },
-      get_month (month) {
-        const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-        month = parseInt(month) - 1
-        return monthArr[month]
+    get_week () {
+      this.this_week = []
+      const d = new Date(new Date())
+      const day = d.getDay()
+      const diff = d.getDate() - day + (day === 0 ? -6 : 1)
+      const weekStart = new Date(d.setDate(diff + 7 * this.week_diff))
+      const year = String(weekStart.getFullYear())
+      const month = String(weekStart.getMonth() + 1).padStart(2, '0')
+      const date = String(weekStart.getDate()).padStart(2, '0')
+      const currentMonday = {
+        date: `${year}-${month}-${date}`,
+        date_split: [year, month, date],
+        events: []
       }
+      this.current_week_start = currentMonday
+      this.this_week.push(currentMonday)
+      for (let i = 1; i < 7; i++) {
+        this.this_week.push({
+          date: this.add_days(this.this_week[0].date, i),
+          date_split: this.add_days(this.this_week[0].date, i).split('-'),
+          events: []
+        })
+      }
+      setTimeout(() => {
+        this.append_events()
+      }, 100)
+    },
+    add_days (date, days) {
+      const d = new Date(date)
+      d.setDate(d.getDate() + days)
+      const year = d.getFullYear()
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const dayDate = String(d.getDate()).padStart(2, '0')
+      return `${year}-${month}-${dayDate}`
+    },
+    get_month (month) {
+      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      month = parseInt(month) - 1
+      return monthArr[month]
     }
   }
+}
 </script>

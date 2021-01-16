@@ -1,6 +1,8 @@
 <template>
   <div style="display: grid; place-items: center; height: 100vh">
-    <p style="font-size: 2.5rem">Error 404 Page Not Found</p>
+    <p style="font-size: 2.5rem">
+      Error 404 Page Not Found
+    </p>
   </div>
 </template>
 <script>

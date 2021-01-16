@@ -27,8 +27,8 @@ Vue.use(Auth, {
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
-  onSessionExpired: async function () {
-    await Vue.$auth.logout({postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback'})
+  async onSessionExpired () {
+    await Vue.$auth.logout({ postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback' })
   }
 })
 
@@ -152,19 +152,17 @@ const onAuthRequired = async (from, to, next) => {
 const userType = async (from, to, next) => {
   let result
   if (!localStorage.getItem('claims')) {
-    let claims = await Vue.prototype.$auth.getUser()
+    const claims = await Vue.prototype.$auth.getUser()
     if (claims !== undefined && claims !== null) {
       localStorage.setItem('claims', JSON.stringify(claims))
       result = claims
     } else {
       result = false
     }
+  } else if (localStorage.getItem('claims')) {
+    result = JSON.parse(localStorage.getItem('claims'))
   } else {
-    if (localStorage.getItem('claims')) {
-      result = JSON.parse(localStorage.getItem('claims'))
-    } else {
-      result = false
-    }
+    result = false
   }
   if (result) {
     if (from.matched.some(record => record.meta.requiresTrainer)) {

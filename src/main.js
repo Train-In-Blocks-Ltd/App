@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import App from './App'
-import router from './router'
 import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
+import App from './App'
+import router from './router'
 
 Vue.use(VueAnalytics, {
   id: 'UA-167770206-2',
@@ -20,6 +20,6 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  template: '<App/>',
-  components: { App }
+  components: { App },
+  template: '<App/>'
 })

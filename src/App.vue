@@ -736,32 +736,36 @@
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
-  <div id="app" v-bind:class="{'authenticated': authenticated}">
-    <modal name="error" height="100%" width='100%' :adaptive="true" :clickToClose="false">
+  <div id="app" :class="{'authenticated': authenticated}">
+    <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="wrapper--centered-item">
           <p>Something went wrong. Please try again...</p><br>
-          <p>{{errorMsg}}</p><br>
+          <p>{{ errorMsg }}</p><br>
           <div class="modal--bottom_bar">
             <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
-              <button type="submit" formtarget="_blank">Let us know</button>
+              <button type="submit" formtarget="_blank">
+                Let us know
+              </button>
             </form>
-            <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">Close</button> 
+            <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">
+              Close
+            </button>
           </div>
         </div>
       </div>
     </modal>
-    <loading :active.sync="pause_loading" :is-full-page="true" :loader="'bars'" :color="'#282828'"/>
+    <loading :active.sync="pause_loading" :is-full-page="true" :loader="'bars'" :color="'#282828'" />
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
-    <nav class="sidebar" v-if="authenticated && claims && splashed">
+    <nav v-if="authenticated && claims && splashed" class="sidebar">
       <div class="logo">
-        <router-link to="/" class="logo--link" title="Home" v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
+        <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo--link" title="Home">
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home" />
         </router-link>
-        <router-link to="/clientUser" class="logo--link" title="Home" v-if="claims.user_type === 'Client'">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home"/>
+        <router-link v-if="claims.user_type === 'Client'" to="/clientUser" class="logo--link" title="Home">
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home" />
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav--item">
@@ -770,7 +774,7 @@
           to="/"
           title="Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home" />
           <p class="account_nav--item--text">
             Home
           </p>
@@ -780,13 +784,13 @@
           to="/clientUser"
           title="Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home"/>
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home" />
           <p class="account_nav--item--text">
             Home
           </p>
         </router-link>
       </div>
-      <div 
+      <div
         v-if="claims.user_type === 'Admin'"
         class="account_nav--item"
       >
@@ -794,7 +798,7 @@
           to="/clientUser"
           title="Client Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Client Home"/>
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Client Home" />
           <p class="account_nav--item--text">
             Client
           </p>
@@ -804,8 +808,8 @@
         v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
         class="account_nav--item"
       >
-        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" rel="noopener" title="Help" >
-          <inline-svg :src="require('./assets/svg/help-desk.svg')"  class="account_nav--item--icon" aria-label="Help"/>
+        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" rel="noopener" title="Help">
+          <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav--item--icon" aria-label="Help" />
           <p class="account_nav--item--text">
             Help
           </p>
@@ -816,7 +820,7 @@
         class="account_nav--item"
       >
         <router-link to="/templates" title="Templates">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon" aria-label="Templates"/>
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon" aria-label="Templates" />
           <p class="account_nav--item--text">
             Templates
           </p>
@@ -827,7 +831,7 @@
         class="account_nav--item"
       >
         <router-link to="/portfolio" title="Portfolio">
-          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav--item--icon" aria-label="Portfolio"/>
+          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav--item--icon" aria-label="Portfolio" />
           <p class="account_nav--item--text">
             Portfolio
           </p>
@@ -838,7 +842,7 @@
         class="account_nav--item"
       >
         <router-link to="/archive" title="Archive">
-          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav--item--icon" aria-label="Archive"/>
+          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav--item--icon" aria-label="Archive" />
           <p class="account_nav--item--text">
             Archive
           </p>
@@ -849,24 +853,24 @@
         class="account_nav--item"
       >
         <router-link to="/account" title="Account">
-          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account"/>
+          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account" />
           <p class="account_nav--item--text">
             Account
           </p>
         </router-link>
       </div>
       <div class="account_nav--item">
-        <router-link to="/logout" @click.native="logout()" title="Logout">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon" aria-label="Logout"/>
+        <router-link to="/logout" title="Logout" @click.native="logout()">
+          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon" aria-label="Logout" />
           <p class="account_nav--item--text">
             Logout
           </p>
         </router-link>
       </div>
     </nav> <!-- .sidebar -->
-    <main :class="{notAuth: !authenticated}" id="main">
+    <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-        <router-view :key="$route.fullPath"/>
+        <router-view :key="$route.fullPath" />
       </transition>
     </main>
   </div>
@@ -877,7 +881,7 @@ import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import {deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText} from './components/email'
+import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 
 export default {
   components: {
@@ -932,13 +936,18 @@ export default {
       }
     }
   },
+  watch: {
+    '$route' (to, from) {
+      this.isAuthenticated()
+    }
+  },
   async created () {
     this.isAuthenticated()
     this.willBodyScroll(false)
-    window.addEventListener('beforeunload', this.confirmLeave)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+    axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
+    window.addEventListener('beforeunload', this.confirmLeave)
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -963,11 +972,6 @@ export default {
     }
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.is_trainer = true
-    }
-  },
-  watch: {
-    '$route' (to, from) {
-      this.isAuthenticated()
     }
   },
   methods: {
@@ -1002,7 +1006,7 @@ export default {
       })
     },
     day (date) {
-      var weekday = new Array(7)
+      const weekday = new Array(7)
       weekday[0] = 'Sun'
       weekday[1] = 'Mon'
       weekday[2] = 'Tue'
@@ -1010,7 +1014,7 @@ export default {
       weekday[4] = 'Thu'
       weekday[5] = 'Fri'
       weekday[6] = 'Sat'
-      var d = new Date(date)
+      const d = new Date(date)
       return weekday[d.getDay()]
     },
     async isAuthenticated () {
@@ -1020,11 +1024,11 @@ export default {
       await this.$auth.logout()
       await this.isAuthenticated()
       localStorage.clear()
-      var cookies = document.cookie.split(';')
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i]
-        var eqPos = cookie.indexOf('=')
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+      const cookies = document.cookie.split(';')
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i]
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
       this.$ga.event('Auth', 'logout')
@@ -1041,7 +1045,7 @@ export default {
           this.$ga.disable()
         }
       }
-      axios.defaults.headers.common['Authorization'] = `Bearer ${await this.$auth.getAccessToken()}`
+      axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
 
@@ -1052,8 +1056,8 @@ export default {
         await this.clients_f()
       }
       this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
-        var textA = a.name.toUpperCase()
-        var textB = b.name.toUpperCase()
+        const textA = a.name.toUpperCase()
+        const textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
     },
@@ -1078,7 +1082,7 @@ export default {
     async client_delete (id, index) {
       this.pause_loading = true
       this.dontLeave = true
-      for (var i = 0; i < this.archive.clients.length; i++) {
+      for (let i = 0; i < this.archive.clients.length; i++) {
         if (this.archive.clients[i].client_id === id) {
           this.archive.clients.splice(index, 1)
           if (this.archive.clients.length === 0) {
@@ -1117,8 +1121,8 @@ export default {
         this.archive.no_archive = true
       } else {
         this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
-          var textA = a.name.toUpperCase()
-          var textB = b.name.toUpperCase()
+          const textA = a.name.toUpperCase()
+          const textB = b.name.toUpperCase()
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
       }
@@ -1142,7 +1146,7 @@ export default {
         let email
         this.pause_loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.clients.length; i++) {
+        for (let i = 0; i < this.clients.length; i++) {
           if (this.clients[i].client_id === id) {
             email = this.clients[i].email
             this.clients.splice(index, 1)
@@ -1178,10 +1182,10 @@ export default {
             )
             await axios.post('/.netlify/functions/send-email',
               {
-                'to': email,
-                'subject': 'Account Deactivated',
-                'text': deleteEmailText(),
-                'html': deleteEmail()
+                to: email,
+                subject: 'Account Deactivated',
+                text: deleteEmailText(),
+                html: deleteEmail()
               }
             )
           }
@@ -1202,15 +1206,15 @@ export default {
       if (confirm('Are you sure you want to unarchive this client?')) {
         this.pause_loading = true
         this.dontLeave = true
-        for (var i = 0; i < this.archive.clients.length; i++) {
+        for (let i = 0; i < this.archive.clients.length; i++) {
           if (this.archive.clients[i].client_id === id) {
-            var arr = JSON.parse(localStorage.getItem('clients'))
+            const arr = JSON.parse(localStorage.getItem('clients'))
             arr.push(this.archive.clients[i])
 
             localStorage.setItem('clients', JSON.stringify(arr))
             this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
-              var textA = a.name.toUpperCase()
-              var textB = b.name.toUpperCase()
+              const textA = a.name.toUpperCase()
+              const textB = b.name.toUpperCase()
               return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
             })
 
@@ -1275,7 +1279,7 @@ export default {
               localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
             }
           } else {
-            var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+            const client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
             if (client.data[0].pt_id) {
               response = await axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
               if (response.data.length !== 0) {
@@ -1300,12 +1304,12 @@ export default {
       this.dontLeave = true
       this.pause_loading = true
       try {
-        await axios.put(`https://api.traininblocks.com/portfolio`,
+        await axios.put('https://api.traininblocks.com/portfolio',
           {
-            'pt_id': this.claims.sub,
-            'trainer_name': '',
-            'business_name': '',
-            'notes': ''
+            pt_id: this.claims.sub,
+            trainer_name: '',
+            business_name: '',
+            notes: ''
           }
         )
         await this.get_portfolio(true)
@@ -1324,7 +1328,7 @@ export default {
       try {
         const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
         this.clientUser.plans = plans.data
-        var f
+        let f
         for (f in this.clientUser.plans) {
           const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
@@ -1340,7 +1344,7 @@ export default {
     },
     async get_sessions () {
       try {
-        var f
+        let f
         for (f in this.clientUser.plans) {
           const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
@@ -1360,29 +1364,33 @@ export default {
       let x
       for (x in this.clientUser.plans) {
         if (this.clientUser.plans[x].id === pid) {
-          var plan = this.clientUser.plans[x]
-          var y
+          const plan = this.clientUser.plans[x]
+          let y
           for (y in plan.sessions) {
             if (plan.sessions[y].id === sid) {
+              // eslint-disable-next-line
               var sessionId = plan.sessions[y].id
+              // eslint-disable-next-line
               var sessionName = plan.sessions[y].name
+              // eslint-disable-next-line
               var sessionChecked = plan.sessions[y].checked
+              // eslint-disable-next-line
               var sessionFeedback = plan.sessions[y].feedback
             }
           }
         }
       }
       try {
-        await axios.post(`https://api.traininblocks.com/client-workouts`,
+        await axios.post('https://api.traininblocks.com/client-workouts',
           {
-            'id': sessionId,
-            'name': sessionName,
-            'checked': sessionChecked,
-            'feedback': sessionFeedback
+            id: sessionId,
+            name: sessionName,
+            checked: sessionChecked,
+            feedback: sessionFeedback
           }
         )
         this.$ga.event('Session', 'update')
-        var client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+        const client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
         if (client.data[0].notifications === 1) {
           if (sessionFeedback !== null) {
             const ptEmail = await axios.post('/.netlify/functions/okta',
@@ -1393,10 +1401,10 @@ export default {
             )
             await axios.post('/.netlify/functions/send-email',
               {
-                'to': ptEmail.data[0].credentials.emails[0].value,
-                'subject': this.claims.email + ' has submitted feedback for ' + sessionName,
-                'text': feedbackEmailText(this.claims.client_id_db, pid),
-                'html': feedbackEmail(this.claims.client_id_db, pid)
+                to: ptEmail.data[0].credentials.emails[0].value,
+                subject: this.claims.email + ' has submitted feedback for ' + sessionName,
+                text: feedbackEmailText(this.claims.client_id_db, pid),
+                html: feedbackEmail(this.claims.client_id_db, pid)
               }
             )
           }

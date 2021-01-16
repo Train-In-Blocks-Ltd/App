@@ -1,8 +1,12 @@
 <template>
   <div class="modal--alert">
     <div class="wrapper--centered-item">
-      <p class="text--small">{{msg}}</p><br>
-      <button @click="$modal.hideAll()">Close</button>
+      <p class="text--small">
+        {{ msg }}
+      </p><br>
+      <button @click="$modal.hideAll()">
+        Close
+      </button>
     </div>
   </div>
 </template>

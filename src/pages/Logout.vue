@@ -24,9 +24,15 @@
       <div class="logout_message__top">
         <inline-svg :src="require('../assets/svg/logout_success.svg')" />
         <div>
-          <p class="text--large">You have been logged out successfully</p>
-          <p class="text--large grey">See you next time</p><br><br>
-          <p class="text--small">You will be redirected automatically</p>
+          <p class="text--large">
+            You have been logged out successfully
+          </p>
+          <p class="text--large grey">
+            See you next time
+          </p><br><br>
+          <p class="text--small">
+            You will be redirected automatically
+          </p>
           <a href="http://app.traininblocks.com" class="text--small grey">Click here if it takes too long</a>
         </div>
       </div>
@@ -35,10 +41,10 @@
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  export default {
-    components: {
-      InlineSvg
-    }
+import InlineSvg from 'vue-inline-svg'
+export default {
+  components: {
+    InlineSvg
   }
+}
 </script>

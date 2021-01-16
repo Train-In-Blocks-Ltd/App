@@ -34,40 +34,50 @@
 <template>
   <div id="portfolio">
     <form
-      @submit.prevent="update(), editing_info = false"
       class="trainer_info"
+      @submit.prevent="update(), editing_info = false"
     >
       <input
         v-model="$parent.portfolio.business_name"
-        @input="editing_info = true"
         class="trainer_info__business text--large"
         placeholder="Business name"
         aria-label="Business name"
         type="text"
         autocomplete="name"
+        @input="editing_info = true"
       >
       <input
         v-model="$parent.portfolio.trainer_name"
-        @input="editing_info = true"
         class="input--forms allow_text_overflow"
         placeholder="Trainer Name"
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
+        @input="editing_info = true"
       >
-      <button v-if="editing_info" type="submit">Save</button>
+      <button v-if="editing_info" type="submit">
+        Save
+      </button>
     </form>
     <div class="wrapper_card">
-      <p class="text--small">Portfolio</p>
+      <p class="text--small">
+        Portfolio
+      </p>
       <rich-editor
-        :showEditState="editing_card"
-        :htmlInjection.sync="$parent.portfolio.notes"
-        :emptyPlaceholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
+        :show-edit-state="editing_card"
+        :html-injection.sync="$parent.portfolio.notes"
+        :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
       />
       <div class="bottom_bar">
-        <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">Edit</button>
-        <button v-if="editing_card" @click="update(), editing_card= false">Save</button>
-        <button v-if="editing_card" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore" class="cancel">Cancel</button>
+        <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">
+          Edit
+        </button>
+        <button v-if="editing_card" @click="update(), editing_card= false">
+          Save
+        </button>
+        <button v-if="editing_card" class="cancel" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore">
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -104,9 +114,9 @@ export default {
       try {
         await axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
           {
-            'trainer_name': this.$parent.portfolio.trainer_name,
-            'business_name': this.$parent.portfolio.business_name,
-            'notes': this.$parent.portfolio.notes
+            trainer_name: this.$parent.portfolio.trainer_name,
+            business_name: this.$parent.portfolio.business_name,
+            notes: this.$parent.portfolio.notes
           }
         )
         await this.$parent.get_portfolio(true)

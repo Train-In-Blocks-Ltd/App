@@ -39,42 +39,54 @@
     <splash v-if="!$parent.splashed" />
     <div v-if="$parent.portfolio && false">
       <div>
-        <div :class="{openedSections:  isPortfolioOpen || isInstallOpen}" class="section--a" />
-        <div :class="{openedSections:  isPortfolioOpen || isInstallOpen}" class="section--b"/>
+        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--a" />
+        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--b" />
       </div>
       <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div class="wrapper--portfolio" v-if="isPortfolioOpen">
+        <div v-if="isPortfolioOpen" class="wrapper--portfolio">
           <div class="client_home__portfolio">
-            <p class="text--large">{{ $parent.portfolio.business_name }}</p>
-            <p class="text--large grey">{{ $parent.portfolio.trainer_name }}</p>
-            <div v-html="$parent.portfolio.notes" class="client_portfolio__notes"/>
-            <button @click="isPortfolioOpen = false, $parent.willBodyScroll(true)" class="cancel">Close</button>
+            <p class="text--large">
+              {{ $parent.portfolio.business_name }}
+            </p>
+            <p class="text--large grey">
+              {{ $parent.portfolio.trainer_name }}
+            </p>
+            <div class="client_portfolio__notes" v-html="$parent.portfolio.notes" />
+            <button class="cancel" @click="isPortfolioOpen = false, $parent.willBodyScroll(true)">
+              Close
+            </button>
           </div>
         </div>
       </transition>
       <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div class="wrapper--install_PWA" v-if="isInstallOpen">
+        <div v-if="isInstallOpen" class="wrapper--install_PWA">
           <install-app />
         </div>
       </transition>
       <div
         v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
-        @click="isPortfolioOpen = true, $parent.willBodyScroll(false)"
         aria-label="Information"
         class="icon_open--portfolio"
+        @click="isPortfolioOpen = true, $parent.willBodyScroll(false)"
       >
-        <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information"/>
-        <p class="text">Trainer</p>
+        <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information" />
+        <p class="text">
+          Trainer
+        </p>
       </div>
-      <div class="icon_open--install_PWA icon_open_middle" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
-        <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App"/>
-        <p class="text">Install</p>
+      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.willBodyScroll(false)">
+        <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
+        <p class="text">
+          Install
+        </p>
       </div>
     </div>
     <div id="client_home">
       <div class="client_home__today">
         <div class="client_home__today__header">
-          <p class="text--large">Today</p>
+          <p class="text--large">
+            Today
+          </p>
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
@@ -86,30 +98,30 @@
         <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
           <div v-if="plan.sessions" class="container--sessions">
             <div
-              v-for="(session, index) in plan.sessions"
-              :key="index"
+              v-for="(session, indexed) in plan.sessions"
               v-show="todays_sessions_store.includes(session.id) && !$parent.loading"
+              :key="indexed"
               class="wrapper--session"
             >
-              <div class="wrapper--session__header client-side" :id="session.name">
-                <span class="text--name"><b>{{session.name}}</b></span><br>
-                <span class="text--date">{{$parent.day(session.date)}}</span>
-                <span class="text--date">{{session.date}}</span>
+              <div :id="session.name" class="wrapper--session__header client-side">
+                <span class="text--name"><b>{{ session.name }}</b></span><br>
+                <span class="text--date">{{ $parent.day(session.date) }}</span>
+                <span class="text--date">{{ session.date }}</span>
               </div>
-              <div v-html="removeBrackets(session.notes)" class="show_session animate animate__fadeIn"/>
+              <div class="show_session animate animate__fadeIn" v-html="removeBrackets(session.notes)" />
               <div class="bottom_bar">
                 <div class="full_width_bar">
                   <button
                     v-if="session.checked === 1"
-                    @click="session.checked = 0, $parent.update_session(plan.id, session.id)"
                     class="button--state no_margin done"
+                    @click="session.checked = 0, $parent.update_session(plan.id, session.id)"
                   >
                     Completed
                   </button>
                   <button
                     v-if="session.checked === 0"
-                    @click="session.checked = 1, $parent.update_session(plan.id, session.id)"
                     class="button--state no_margin to_do"
+                    @click="session.checked = 1, $parent.update_session(plan.id, session.id)"
                   >
                     Click to complete
                   </button>
@@ -117,15 +129,23 @@
               </div>
               <br><hr><br>
               <div>
-                <p class="text--small">Feedback</p>
+                <p class="text--small">
+                  Feedback
+                </p>
                 <rich-editor
-                  :showEditState="giveFeedback === session.id"
-                  :htmlInjection.sync="session.feedback"
-                  :emptyPlaceholder="'What would you like to share with your trainer?'"
+                  :show-edit-state="giveFeedback === session.id"
+                  :html-injection.sync="session.feedback"
+                  :empty-placeholder="'What would you like to share with your trainer?'"
                 />
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
-                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
-                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
+                  Edit
+                </button>
+                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">
+                  Save
+                </button>
+                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
@@ -133,7 +153,9 @@
       </div>
       <div class="spacer" />
       <div class="client_home__plans">
-        <p class="text--large">Plans</p>
+        <p class="text--large">
+          Plans
+        </p>
         <skeleton v-if="$parent.loading" :type="'plan'" />
         <div v-if="!$parent.loading" class="plan_grid">
           <router-link
@@ -142,7 +164,9 @@
             class="plan_link"
             :to="'/clientUser/plan/' + plan.id"
           >
-            <p class="text--small plan-name">{{plan.name}}</p>
+            <p class="text--small plan-name">
+              {{ plan.name }}
+            </p>
             <p
               v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
               class="grey"
@@ -151,8 +175,8 @@
             </p>
             <div
               v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
-              v-html="plan.notes"
               class="plan_link__notes__content"
+              v-html="plan.notes"
             />
           </router-link>
         </div>
@@ -204,7 +228,7 @@ export default {
 
     removeBrackets (dataIn) {
       if (dataIn !== null) {
-        var dataOut = dataIn.replace(/[[\]]/g, '')
+        const dataOut = dataIn.replace(/[[\]]/g, '')
         return dataOut
       } else {
         return dataIn
@@ -223,10 +247,10 @@ export default {
       })
     },
     isToday () {
-      var today = new Date()
-      var dd = String(today.getDate()).padStart(2, '0')
-      var mm = String(today.getMonth() + 1).padStart(2, '0')
-      var yyyy = today.getFullYear()
+      let today = new Date()
+      const dd = String(today.getDate()).padStart(2, '0')
+      const mm = String(today.getMonth() + 1).padStart(2, '0')
+      const yyyy = today.getFullYear()
       today = `${yyyy}-${mm}-${dd}`
       return today
     }

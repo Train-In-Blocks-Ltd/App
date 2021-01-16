@@ -14,7 +14,7 @@
   transform: translateY(-3px)
 }
 
-/* Help Desk*/
+/* Help Desk */
 #help-desk__bookmark {
   opacity: 0;
   transform: scaleY(0) translateY(1px)
@@ -80,7 +80,6 @@
 
 /* No Hover */
 @media (max-width: 992px), (prefers-reduced-motion: reduce) {
-
   /* None */
   .account_nav--item:hover #home__house,
   .account_nav--item:hover #template__t,
