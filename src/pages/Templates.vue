@@ -119,10 +119,8 @@
         v-for="(template, index) in $parent.templates"
         :key="index">
         <div class="wrapper--template__header">
-          <div>
-            <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{template.name}}</b></span><br v-if="template.id !== editTemplate">
-            <input v-if="template.id === editTemplate" class="template-name" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
-          </div>
+          <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{template.name}}</b></span><br v-if="template.id !== editTemplate">
+          <input v-if="template.id === editTemplate" class="template-name small_border_radius right_margin" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
           <div class="header-options">
             <checkbox :itemId="template.id" :type="'v1'" aria-label="Select this template" />
             <inline-svg id="expand" class="icon--expand" v-show="!isEditingTemplate" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>

@@ -213,18 +213,7 @@
     grid-gap: 4rem
   }
   input.session-name, input.session-date {
-    text-overflow: ellipsis;
-    border: 0;
-    border-bottom: 1px solid #282828;
-    outline-width: 0;
-    padding: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  input.session-name {
-    font-size: 1rem
-  }
-  input.session-name:hover {
-    opacity: .6
+    margin-bottom: 1rem
   }
   input.session-date {
     width: fit-content;
@@ -332,7 +321,8 @@
       display: block
     }
     .button--new-session {
-      width: 100%
+      width: 100%;
+      margin: 1rem 0
     }
   }
 </style>
@@ -513,13 +503,13 @@
                     <div :id="'session-' + session.id" class="wrapper--session" :class="{activeState: session.id === editSession}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
                       :key="index">
                       <div class="wrapper--session__header">
-                        <div>
+                        <div class="right_margin">
                           <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{session.name}}</b></span><br v-if="session.id !== editSession">
                           <span v-if="session.id !== editSession" class="text--date">{{day(session.date)}}</span>
                           <span v-if="session.id !== editSession" class="text--date">{{session.date}}</span><br v-if="session.id !== editSession">
                           <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{isCompleted(session.checked)}}</span>
-                          <input @blur="scan()" v-if="session.id === editSession" class="session-name" type="text" name="session-name" pattern="[^\/]" v-model="session.name" /><br>
-                          <input @blur="scan()" v-if="session.id === editSession" class="session-date" type="date" name="session-date" v-model="session.date" /><br>
+                          <input @blur="scan()" v-if="session.id === editSession" class="session-name small_border_radius" type="text" name="session-name" pattern="[^\/]" v-model="session.name" />
+                          <input @blur="scan()" v-if="session.id === editSession" class="session-date small_border_radius" type="date" name="session-date" v-model="session.date" />
                           <span @click="session.checked = toggleComplete(session.checked)" v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked">{{isCompleted(session.checked)}}</span>
                         </div>
                         <div class="header-options">

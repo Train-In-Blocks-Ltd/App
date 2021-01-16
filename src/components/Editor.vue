@@ -18,7 +18,7 @@
   #rich_toolbar {
     display: flex;
     background-color: white;
-    border: 2px solid #28282820;
+    border: 1px solid #28282840;
     border-radius: 5px 5px 0 0;
     padding: 0 1rem
   }
@@ -27,7 +27,7 @@
   }
   #rich_toolbar button {
     padding: 0;
-    margin-right: 1rem;
+    margin: .8rem 1rem .6rem 0;
     color: #282828;
     background-color: transparent
   }
@@ -97,7 +97,7 @@
   div#rich_editor {
     padding: 1rem;
     outline-width: 0;
-    border: 2px solid #28282820;
+    border: 1px solid #28282840;
     border-top: none;
     border-radius: 0 0 5px 5px
   }

@@ -133,7 +133,7 @@
     overflow-y: auto
   }
   .recentlyAdded {
-    border: 2px solid #282828
+    border: 1px solid #282828
   }
 
   /* MODALS */
@@ -248,7 +248,7 @@
 
   /* EDITOR WRAPPERS */
   .wrapper--session__header {
-    height: 6.4rem
+    height: fit-content
   }
   .text--name {
     text-overflow: ellipsis;
