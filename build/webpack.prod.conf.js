@@ -9,7 +9,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const HashedModuleIdsPlugin = require('content-hashed-module-ids-webpack-plugin')
 const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
@@ -21,9 +20,6 @@ const webpackConfig = merge(baseWebpackConfig, {
       extract: true,
       usePostCSS: true
     })
-  },
-  entry: {
-    main: path.resolve(__dirname, '../src/main.js')
   },
   output: {
     path: config.build.assetsRoot,
@@ -56,7 +52,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    new HashedModuleIdsPlugin(),
     // Ignore all locale files of moment.js
     new webpack.IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
