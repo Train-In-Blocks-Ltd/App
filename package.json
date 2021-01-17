@@ -11,7 +11,6 @@
   "dependencies": {
     "@okta/okta-signin-widget": "^4.5.2",
     "@okta/okta-vue": "^2.1.1",
-    "@vue/cli-service": "^4.5.9",
     "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "compressorjs": "^1.0.7",
@@ -29,11 +28,14 @@
     "vue-router": "^3.4.9"
   },
   "devDependencies": {
+    "@vue/cli-service": "^4.5.9",
     "@nuxtjs/eslint-config": "^5.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
     "autoprefixer": "^7.1.2",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "7",
     "chalk": "^4.1.0",
-    "content-hashed-module-ids-webpack-plugin": "^1.1.1",
     "copy-webpack-plugin": "6",
     "css-loader": "^5.0.1",
     "eslint": "^7.18.0",
