@@ -1,6 +1,5 @@
 'use strict'
 const path = require('path')
-const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 
@@ -22,7 +21,6 @@ const createLintingRule = () => ({
     }
   ]
 })
-
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
@@ -44,7 +42,7 @@ module.exports = {
   },
   module: {
     rules: [
-      ...(config.dev.useEslint ? [createLintingRule()] : []),
+      ...(config.dev.useEslint && process.env.NODE_ENV === 'production' ? [createLintingRule()] : []),
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -63,30 +61,7 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('img/[name].[ext]'),
-          esModule: false,
-        }
-      },
-      {
-        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('media/[name].[ext]'),
-          esModule: false,
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[ext]'),
-          esModule: false,
-        }
+        type: 'asset/resource'
       }
     ]
   }
