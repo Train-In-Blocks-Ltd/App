@@ -45,23 +45,25 @@
 
   .pop_up--add_link, .pop_up--add_image, .pop_up--add_video, .pop_up--add_video, .pop_up--add_template {
     position: sticky;
-    top: 4.51rem;
+    top: calc(1rem + 44.39px);
     background-color: white;
     z-index: 99;
     display: flex;
-    border-left: 2px solid #28282820;
-    border-right: 2px solid #28282820;
-    border-bottom: 2px solid #28282820;
+    border-left: 1px solid #28282840;
+    border-right: 1px solid #28282840;
+    border-bottom: 1px solid #28282840;
     padding: .8rem
   }
   .pop_up--add_template {
-    display: grid
+    display: grid;
+    grid-gap: 1rem
   }
   .template_item {
     display: flex
   }
   .template_item svg {
-    margin: auto 1rem
+    margin: auto 1rem;
+    cursor: pointer
   }
   .wrapper--input--add_link {
     display: grid;
@@ -128,21 +130,6 @@
   <div id="wrapper--rich_editor">
     <p id="rich_editor_version" style="display:none">{{ editorVersion }}</p>
     <p v-if="outdated">This editor is outdated but it's still working. You can update by creating a new session and moving the plans over. We don't recommend copy and pasting images and videos into the new session.</p>
-    <modal name="preview_template" height="100%" width="100%" :adaptive="true" :clickToClose="false">
-      <div class="modal--preview_template">
-        <div class="wrapper--centered-item">
-          <div v-if="previewTemplate !== null">
-            <div v-html="previewTemplate" />
-            <button @click="$modal.hide('preview_template'), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
-          </div>
-          <div v-else>
-            <p class="text--small">Something went wrong with the preview</p>
-            <p class="text--small grey">Please try again</p>
-            <button @click="$modal.hide('preview_template'), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
-          </div>
-        </div>
-      </div>
-    </modal>
     <div v-if="showEditState">
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
@@ -227,9 +214,9 @@
       </div>
       <!-- LINK -->
       <form v-if="showAddLink" @submit.prevent="add_link()" class="pop_up--add_link">
-        <div class="wrapper--input--add_link">
-          <input v-model="addLinkName" class="input--add_link" type="text" placeholder="Name" required>
-          <input v-model="addLinkURL" class="input--add_link" type="text" placeholder="URL" required>
+        <div class="wrapper--input--add_link right_margin">
+          <input v-model="addLinkName" class="input--add_link small_border_radius" type="text" placeholder="Name" required>
+          <input v-model="addLinkURL" class="input--add_link small_border_radius" type="text" placeholder="URL" required>
         </div>
         <button class="add_link_submit" type="submit">Add</button>
       </form>
@@ -239,19 +226,34 @@
       </div>
       <!-- VIDEO -->
       <form v-if="showAddVideo" @submit.prevent="add_video()" class="pop_up--add_video">
-        <input v-model="addVideoURL" class="input--add_video" type="text" placeholder="YouTube URL" required>
+        <input v-model="addVideoURL" class="input--add_video small_border_radius" type="text" placeholder="YouTube URL" required>
         <button class="add_video_submit" type="submit">Add</button>
       </form>
       <!-- TEMPLATE -->
-      <div v-if="showAddTemplate" class="pop_up--add_template">
+      <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">
         <div
           v-for="(item, index) in dataForTemplates"
           :key="'template-' + index"
           class="template_item"
         >
+          <modal :name="'preview_template_' + item.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+            <div class="modal--preview_template">
+              <div class="wrapper--centered-item">
+                <div v-if="previewTemplate !== null">
+                  <div v-html="previewTemplate" /><br>
+                  <button @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
+                </div>
+                <div v-else>
+                  <p class="text--small">Something went wrong with the preview</p>
+                  <p class="text--small grey">Please try again</p><br>
+                  <button @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
+                </div>
+              </div>
+            </div>
+          </modal>
           <button @click="add_template(item.template)">{{ item.name }}</button>
           <inline-svg
-            @click="previewTemplate = item.template, $modal.show('preview_template'), will_body_scroll(false)"
+            @click="previewTemplate = item.template, $modal.show(`preview_template_${item.id}`), will_body_scroll(false)"
             :src="require('../assets/svg/editor/preview.svg')"
           />
         </div>
@@ -426,7 +428,7 @@
       // CHECKBOX
 
       add_checkbox () {
-        this.format('insertHTML', `<label><input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)"></label>`)
+        this.format('insertHTML', `<input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)">`)
       },
 
       // LINK

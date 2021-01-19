@@ -302,17 +302,8 @@
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover {
     opacity: .6
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--large,
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--small {
-    padding: .6rem 1rem
-  }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
-    border: 1px solid #282828;
-    padding: .6rem 1rem
-  }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--large:focus,
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).text--small:focus {
-    padding: .6rem 1.4rem
+    border: 1px solid #282828
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius {
     border-radius: 5px
