@@ -8,7 +8,7 @@
     padding: 2rem
   }
   .container--sessions {
-    margin-top: 4rem
+    margin: 4rem 0 2rem 0
   }
 
   /* Navigate */
@@ -30,6 +30,12 @@
   }
   .disabled {
     opacity: .4
+  }
+  hr {
+    margin: 2rem 0
+  }
+  .feedback_bottom_bar {
+    margin-top: 1rem
   }
 
   /* Scroll */
@@ -121,17 +127,19 @@
                 </button>
               </div>
             </div>
-            <br><hr><br>
-            <div>
+            <div v-if="session.checked === 1">
+              <hr>
               <p class="text--small">Feedback</p>
               <rich-editor
                 :showEditState="giveFeedback === session.id"
                 :htmlInjection.sync="session.feedback"
                 :emptyPlaceholder="'What would you like to share with your trainer?'"
               />
-              <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
-              <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
-              <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+              <div class="feedback_bottom_bar">
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
+                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
+                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+              </div>
             </div>
           </div>
         </div>
