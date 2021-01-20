@@ -426,7 +426,7 @@
                <!-- Update the plan info -->
               <form class="plan_info">
                 <input
-                  @blur="update_plan()"
+                  @blur="$parent.$parent.pause_loading = true, update_plan()"
                   v-model="plan.name"
                   class="text--small allow_text_overflow"
                   aria-label="Session name"
@@ -1422,7 +1422,7 @@
           localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.clients))
           this.$ga.event('Session', 'update')
           this.scan()
-          this.$parent.$parent.dontLeave = false
+          this.$parent.$parent.end_loading()
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
         }
