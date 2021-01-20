@@ -814,7 +814,7 @@
         </router-link>
       </div>
       <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin' && false"
+        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
         class="account_nav--item"
       >
         <router-link to="/portfolio" title="Portfolio">
