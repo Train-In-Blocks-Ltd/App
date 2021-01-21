@@ -132,6 +132,9 @@
   .allow_y_overflow {
     overflow-y: auto
   }
+  .recentlyAdded {
+    border: 1px solid #282828
+  }
 
   /* MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new_client, .modal--new_plan, .modal--toolkit, .modal--alert, .modal--preview_template {
@@ -159,18 +162,15 @@
   /* FONTS */
   .text--large {
     margin-top: 0;
-    font-size: 2.6rem;
+    font-size: 2.6rem !important;
     line-height: 1.2
   }
   .text--small {
-    font-size: 1.6rem;
+    font-size: 1.6rem !important;
     line-height: 1.2
   }
   .grey {
     color: #28282894
-  }
-  .no_margin {
-    margin: 0
   }
   h3 {
     font-size: 2rem;
@@ -198,6 +198,18 @@
   .text--no_content {
     margin: 1rem 0
   }
+  .text--new_msg {
+    margin: 2rem 0
+  }
+  .no_margin {
+    margin: 0
+  }
+  .bottom_margin {
+    margin-bottom: 1rem
+  }
+  .right_margin {
+    margin-right: 1rem
+  }
 
   /* BUTTONS */
   button {
@@ -214,7 +226,6 @@
     font-size: .8rem;
     color: white;
     background-color: #282828;
-    margin: .6rem 0;
     transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   button:hover:not(:disabled) {
@@ -234,39 +245,10 @@
     color: white;
     background-color: #B80000
   }
-  button.opposite {
-    border: 2px solid #282828;
-    color: #282828;
-    background-color: transparent
-  }
-  button.opposite:not(:disabled):hover {
-    color: white;
-    background-color: #282828
-  }
-
-  /* SEARCH */
-  .search {
-    border: none;
-    outline-width: 0;
-    width: 80%;
-    border-bottom: 2px solid #282828;
-    padding: .6rem 0;
-    opacity: .6;
-    margin: .5rem auto 4rem 0;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .search:hover {
-    width: 100%;
-    opacity: 1
-  }
-  .search:focus {
-    width: 100%;
-    opacity: 1
-  }
 
   /* EDITOR WRAPPERS */
   .wrapper--session__header {
-    height: 6.4rem
+    height: fit-content
   }
   .text--name {
     text-overflow: ellipsis;
@@ -303,26 +285,35 @@
     height: 3.2rem
   }
 
-  /* RM IOS CORNERS */
-  input:not([type=checkbox]) {
-    border-radius: 0;
-    -webkit-appearance: none
-  }
-
   /* INPUTS */
-  .input--modal {
-    width: 4rem
-  }
-  .input--forms, .input--toolkit, .input--modal {
-    padding: .4rem;
-    font-size: 1rem;
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #282828
-  }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=search]):not([type=submit]) {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]) {
+    -webkit-appearance: none;
+    width: 100%;
+    outline-width: 0;
+    padding: .6rem;
     resize: none;
-    font-family: Arial, Helvetica, sans-serif
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    border: 1px solid #28282840;
+    border-radius: 8px;
+    background-color: transparent;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover {
+    opacity: .6
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
+    border: 1px solid #282828
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius {
+    border-radius: 5px
+  }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300 {
+    width: 300px
+  }
+  .search {
+    width: 100%;
+    margin-bottom: 2rem
   }
   input[type=color] {
     margin: 0 .4rem;
@@ -340,9 +331,7 @@
   /* FORMS */
   .form_grid {
     display: grid;
-    grid-template-columns: 1fr;
-    margin: auto;
-    max-width: 300px
+    grid-gap: 2rem
   }
   .form_buttons {
     display: grid;
@@ -464,7 +453,7 @@
   .icon_open_middle {
     top: 4.4rem
   }
-  div.icon_open--install_PWA, div.icon_open--print {
+  .icon_open_bottom {
     top: 6.8rem
   }
   .icon_open--options:hover, .icon_open--stats:hover, .icon_open--install_PWA:hover, div.icon_open--print:hover, div.icon_open--portfolio:hover {
@@ -597,11 +586,13 @@
 
   /* Responsive Design */
   @media (max-width: 992px) {
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):hover,
+    button:not(:disabled):hover,
+    .button:hover {
+      opacity: 1
+    }
     #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
       padding: 4rem 10vw
-    }
-    button:not(:disabled):hover, .button:hover {
-      opacity: 1
     }
     #line-chart {
       padding: 0
@@ -993,9 +984,6 @@ export default {
         return msg
       }
     },
-    responseDelay () {
-      setTimeout(() => { this.response = '' }, 5000)
-    },
     sortSessionsPlan () {
       this.clientUser.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
@@ -1048,6 +1036,20 @@ export default {
       axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
+    resolve_error (msg) {
+      this.pause_loading = false
+      this.loading = false
+      this.dontLeave = false
+      this.errorMsg = msg.toString()
+      this.$modal.show('error')
+      this.willBodyScroll(false)
+      console.error(msg)
+    },
+    end_loading () {
+      this.pause_loading = false
+      this.loading = false
+      this.dontLeave = false
+    },
 
     // CLIENT
 
@@ -1072,11 +1074,7 @@ export default {
         localStorage.setItem('clients', JSON.stringify(response.data))
       } catch (e) {
         this.no_clients = false
-        this.loading = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async client_delete (id, index) {
@@ -1099,15 +1097,9 @@ export default {
         await this.clients_f()
         this.clients_to_vue()
         this.$ga.event('Client', 'delete')
-        this.pause_loading = false
-        this.dontLeave = false
+        this.end_loading()
       } catch (e) {
-        this.pause_loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
 
@@ -1189,16 +1181,10 @@ export default {
               }
             )
           }
-          this.pause_loading = false
-          this.dontLeave = false
           this.$router.push('/')
+          this.end_loading()
         } catch (e) {
-          this.pause_loading = false
-          this.dontLeave = false
-          this.errorMsg = e.toString()
-          this.$modal.show('error')
-          this.willBodyScroll(false)
-          console.error(e)
+          this.resolve_error(e)
         }
       }
     },
@@ -1234,15 +1220,9 @@ export default {
           await this.clients_f()
           this.clients_to_vue()
           this.$ga.event('Client', 'unarchive')
-          this.pause_loading = false
-          this.dontLeave = false
+          this.end_loading()
         } catch (e) {
-          this.pause_loading = false
-          this.dontLeave = false
-          this.errorMsg = e.toString()
-          this.$modal.show('error')
-          this.willBodyScroll(false)
-          console.error(e)
+          this.resolve_error(e)
         }
       }
     },
@@ -1257,16 +1237,10 @@ export default {
         }
         this.templates = JSON.parse(localStorage.getItem('templates'))
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async get_portfolio (force) {
-      this.loading = true
       try {
         if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
           this.dontLeave = true
@@ -1289,15 +1263,9 @@ export default {
           }
         }
         this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
-        this.loading = false
-        this.dontLeave = false
+        this.end_loading()
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async create_portfolio () {
@@ -1313,15 +1281,9 @@ export default {
           }
         )
         await this.get_portfolio(true)
-        this.pause_loading = false
-        this.dontLeave = false
+        this.end_loading()
       } catch (e) {
-        this.pause_loading = false
-        this.dontLeave = false
-        this.errorMsg = e
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async get_plans () {
@@ -1334,12 +1296,7 @@ export default {
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async get_sessions () {
@@ -1350,12 +1307,7 @@ export default {
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
     },
     async update_session (pid, sid) {
@@ -1410,15 +1362,9 @@ export default {
           }
         }
       } catch (e) {
-        this.loading = false
-        this.dontLeave = false
-        this.errorMsg = e.toString()
-        this.$modal.show('error')
-        this.willBodyScroll(false)
-        console.error(e)
+        this.resolve_error(e)
       }
-      this.loading = false
-      this.dontLeave = false
+      this.end_loading()
     }
   }
 }

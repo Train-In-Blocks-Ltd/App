@@ -21,7 +21,10 @@
     margin: 2rem 0
   }
   hr {
-    margin: 4rem 0
+    margin: 2rem 0
+  }
+  .feedback_bottom_bar {
+    margin-top: 1rem
   }
 
   /* Responsive */
@@ -37,7 +40,7 @@
 <template>
   <div id="home">
     <splash v-if="!$parent.splashed" />
-    <div v-if="$parent.portfolio && false">
+    <div v-if="$parent.portfolio">
       <div>
         <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--a" />
         <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--b" />
@@ -127,25 +130,19 @@
                   </button>
                 </div>
               </div>
-              <br><hr><br>
-              <div>
-                <p class="text--small">
-                  Feedback
-                </p>
+              <div v-if="session.checked === 1">
+                <hr>
+                <p class="text--small">Feedback</p>
                 <rich-editor
                   :show-edit-state="giveFeedback === session.id"
                   :html-injection.sync="session.feedback"
                   :empty-placeholder="'What would you like to share with your trainer?'"
                 />
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
-                  Edit
-                </button>
-                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">
-                  Save
-                </button>
-                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">
-                  Cancel
-                </button>
+                <div class="feedback_bottom_bar">
+                  <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
+                  <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
+                  <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+                </div>
               </div>
             </div>
           </div>
@@ -220,7 +217,7 @@ export default {
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()
     this.todaysSession()
-    this.$parent.loading = false
+    this.$parent.end_loading()
   },
   methods: {
 

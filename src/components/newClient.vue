@@ -1,4 +1,4 @@
-<style>
+<style scoped>
   /* Add New Client */
   .add_client {
     grid-gap: 1rem
@@ -7,44 +7,48 @@
     display: grid;
     grid-gap: .5rem
   }
-  .new-msg {
-    margin: 2rem 0
-  }
 </style>
 
 <template>
-  <form name="add_client" class="form_grid add_client" spellcheck="false" @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)">
-    <p class="text--large">
-      New Client
-    </p>
-    <label>
-      <b>Name*</b>
-      <input
-        ref="name"
-        v-model="new_client.name"
-        class="input--forms"
-        type="text"
-        autocomplete="name"
-        required
-      >
-    </label>
-    <label>
-      <b>Email*</b>
-      <input v-model="new_client.email" class="input--forms" type="email" autocomplete="email" required>
-    </label>
-    <label>
-      <b>Mobile</b>
-      <input
-        v-model="new_client.number"
-        class="input--forms"
-        type="tel"
-        inputmode="tel"
-        autocomplete="tel"
-        minlength="9"
-        maxlength="14"
-        pattern="\d+"
-      >
-    </label>
+  <form
+    name="add_client" 
+    class="form_grid add_client"
+    spellcheck="false"
+    @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)"
+  >
+    <div class="bottom_margin">
+      <p class="text--small">Add a new client and email them access</p>
+      <p class="text--small grey">Make sure that you have the correct email address, you won't be able to change it after</p>
+    </div>
+    <input
+      class="small_border_radius width_300"
+      ref="name"
+      type="text"
+      autocomplete="name"
+      placeholder="Name*"
+      aria-label="Name"
+      v-model="new_client.name"
+      required
+    />
+    <input
+      class="small_border_radius width_300"
+      type="email"
+      autocomplete="email"
+      placeholder="Email*"
+      aria-label="Email"
+      v-model="new_client.email"
+      required
+    />
+    <input
+      class="small_border_radius width_300"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      placeholder="Mobile"
+      aria-label="Mobile"
+      v-model="new_client.number"
+      pattern="\d+"
+    />
     <div class="form_buttons">
       <button type="submit">
         Save
@@ -57,67 +61,59 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-export default {
-  data () {
-    return {
-      new_client: {
-        name: '',
-        email: '',
-        number: '',
-        notes: ''
+  import axios from 'axios'
+  export default {
+    data () {
+      return {
+        new_client: {
+          name: '',
+          email: '',
+          number: '',
+          notes: ''
+        }
       }
-    }
-  },
-  mounted () {
-    this.$refs.name.focus()
-  },
-  methods: {
-    async save () {
-      if (this.new_client.email === this.$parent.$parent.claims.email) {
-        this.$parent.$parent.errorMsg = 'You cannot create a client with your own email address!'
-        this.$parent.$parent.$modal.show('error')
-        console.error('You cannot create a client with your own email address!')
-      } else {
-        this.$parent.response = ''
-        try {
-          this.$parent.$parent.pause_loading = true
-          this.$parent.$parent.dontLeave = true
-          await axios.put('https://api.traininblocks.com/clients',
-            {
-              name: this.new_client.name,
-              pt_id: this.$parent.$parent.claims.sub,
-              email: this.new_client.email,
-              number: this.new_client.number,
-              notes: this.new_client.notes
-            }
-          )
-          this.$parent.response = 'Added New Client'
-          this.$parent.$parent.responseDelay()
-
-          await this.$parent.$parent.clients_f()
-          this.$parent.$parent.clients_to_vue()
-
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
-
-          this.new_client = {
-            name: '',
-            email: '',
-            number: '',
-            notes: ''
-          }
-          this.$ga.event('Client', 'new')
-        } catch (e) {
-          this.$parent.$parent.pause_loading = false
-          this.$parent.$parent.dontLeave = false
-          this.$parent.$parent.errorMsg = e
+    },
+    mounted () {
+      this.$refs.name.focus()
+    },
+    methods: {
+      async save () {
+        if (this.new_client.email === this.$parent.$parent.claims.email) {
+          this.$parent.$parent.errorMsg = 'You cannot create a client with your own email address!'
           this.$parent.$parent.$modal.show('error')
-          console.error(e)
+          console.error('You cannot create a client with your own email address!')
+        } else {
+          this.$parent.response = ''
+          try {
+            this.$parent.$parent.pause_loading = true
+            this.$parent.$parent.dontLeave = true
+            await axios.put('https://api.traininblocks.com/clients',
+              {
+                'name': this.new_client.name,
+                'pt_id': this.$parent.$parent.claims.sub,
+                'email': this.new_client.email,
+                'number': this.new_client.number,
+                'notes': this.new_client.notes
+              }
+            )
+            this.$parent.response = `Added ${this.new_client.name}`
+            this.$parent.persistResponse = this.new_client.name
+            this.$parent.responseDelay()
+            await this.$parent.$parent.clients_f()
+            this.$parent.$parent.clients_to_vue()
+            this.new_client = {
+              name: '',
+              email: '',
+              number: '',
+              notes: ''
+            }
+            this.$ga.event('Client', 'new')
+            this.$parent.$parent.end_loading()
+          } catch (e) {
+            this.$parent.$parent.resolve_error(e)
+          }
         }
       }
     }
   }
-}
 </script>

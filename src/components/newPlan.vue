@@ -1,16 +1,27 @@
 <template>
   <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">
-    <p class="text--large">
-      New Plan
-    </p>
-    <label>
-      <b>Name*</b>
-      <input ref="name" v-model="new_plan.name" class="input--forms" type="text" required>
-    </label>
-    <label>
-      <b>Duration*</b>
-      <input v-model="new_plan.duration" class="input--forms" type="number" min="1" required>
-    </label>
+    <div class="bottom_margin">
+      <p class="text--small">Create a new plan and use it for exercise, nutrition or anything else</p>
+      <p class="text--small grey">The duration is the microcycle which can be of any length</p>
+    </div>
+    <input
+      class="small_border_radius width_300"
+      ref="name"
+      type="text"
+      placeholder="Name*"
+      aria-label="Name"
+      v-model="new_plan.name"
+      required
+    />
+    <input
+      class="small_border_radius width_300"
+      type="number"
+      min="1"
+      placeholder="Duration*"
+      aria-label="Duration"
+      v-model="new_plan.duration"
+      required
+    />
     <div class="form_buttons">
       <button type="submit">
         Save
@@ -43,7 +54,6 @@ export default {
       const dd = String(today.getDate()).padStart(2, '0')
       const mm = String(today.getMonth() + 1).padStart(2, '0')
       const yyyy = today.getFullYear()
-
       return yyyy + '-' + mm + '-' + dd
     },
     async save () {
@@ -52,14 +62,15 @@ export default {
         this.$parent.$parent.$parent.dontLeave = true
         await axios.put('https://api.traininblocks.com/programmes',
           {
-            name: this.new_plan.name,
-            client_id: this.$parent.$parent.$parent.client_details.client_id,
-            duration: this.new_plan.duration,
-            block_color: ''
+            'name': this.new_plan.name,
+            'client_id': this.$parent.$parent.$parent.client_details.client_id,
+            'duration': this.new_plan.duration,
+            'block_color': ''
           }
         )
-        this.response = 'Added New Plan'
-        this.$parent.$parent.$parent.responseDelay()
+        this.$parent.response = `${this.new_plan.name} has been created`
+        this.$parent.persistResponse = this.new_plan.name
+        this.$parent.responseDelay()
 
         // Set old plans to null so that they can be repopulated
         let x
@@ -71,22 +82,15 @@ export default {
         // Get the new plans
         const force = true
         await this.$parent.$parent.get_client_details(force)
-
-        this.$parent.$parent.$parent.pause_loading = false
-        this.$parent.$parent.$parent.dontLeave = false
-
+        
         this.new_plan = {
           name: '',
           duration: ''
         }
         this.$ga.event('Plan', 'new')
+        this.$parent.$parent.$parent.end_loading()
       } catch (e) {
-        this.$parent.$parent.$parent.pause_loading = false
-        this.$parent.$parent.$parent.dontLeave = false
-        this.$parent.$parent.$parent.errorMsg = e
-        this.$parent.$parent.$parent.$modal.show('error')
-        this.$parent.$parent.$parent.willBodyScroll(false)
-        console.error(e)
+        this.$parent.$parent.$parent.resolve_error(e)
       }
     }
   }

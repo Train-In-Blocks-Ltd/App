@@ -99,7 +99,7 @@ export default {
     await this.$parent.archive_to_vue()
     this.$parent.splashed = true
     this.$parent.willBodyScroll(true)
-    this.$parent.loading = false
+    this.$parent.end_loading()
   },
   methods: {
     changeSelectCheckbox (id, index) {
@@ -107,9 +107,9 @@ export default {
         this.selectedClients.push(id)
         this.selectedClientsIndex.push(index)
       } else {
-        const idx1 = this.selectedClients.indexOf(id)
+        var idx1 = this.selectedClients.indexOf(id)
         this.selectedClients.splice(idx1, 1)
-        const idx2 = this.selectedClientsIndex.indexOf(index)
+        var idx2 = this.selectedClientsIndex.indexOf(index)
         this.selectedClientsIndex.splice(idx2, 1)
       }
     },
@@ -117,11 +117,11 @@ export default {
       if (this.selectedClients.length !== 0) {
         if (confirm('Are you sure you want to delete all the selected clients?')) {
           this.selectedClients.forEach((clientId) => {
-            const idx = this.selectedClients.indexOf(clientId)
+            var idx = this.selectedClients.indexOf(clientId)
             this.$parent.client_delete(clientId, idx)
           })
-          this.selectedClients.length = 0
-          this.selectedClientsIndex.length = 0
+          this.selectedClients = []
+          this.selectedClientsIndex = []
         }
       }
     }
