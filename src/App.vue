@@ -799,7 +799,7 @@
         v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
         class="account_nav--item"
       >
-        <a href="https://traininblocks.atlassian.net/servicedesk/customer/portal/3" target="_blank" rel="noopener" title="Help">
+        <a href="https://traininblocks.com/help" target="_blank" rel="noopener" title="Help">
           <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav--item--icon" aria-label="Help" />
           <p class="account_nav--item--text">
             Help
