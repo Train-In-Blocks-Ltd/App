@@ -100,14 +100,6 @@
     border-top: none;
     border-radius: 0 0 5px 5px
   }
-  div#rich_show_content p {
-    margin: 1rem 0
-  }
-  div#rich_editor img, div#rich_editor iframe, div#rich_show_content img, div#rich_show_content iframe {
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 1rem 0
-  }
 
   /* Show */
   .padding {
