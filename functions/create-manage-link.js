@@ -1,5 +1,6 @@
-const axios = require('axios')
+
 const qs = require('querystring')
+const axios = require('axios')
 const stripe = require('stripe')('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')
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -23,7 +24,7 @@ exports.handler = async function handler (event, context, callback) {
     }),
     {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }
@@ -31,7 +32,7 @@ exports.handler = async function handler (event, context, callback) {
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
-      headers: headers,
+      headers,
       body: ''
     })
   } else if (event.body && response.data.active === true) {
@@ -42,20 +43,20 @@ exports.handler = async function handler (event, context, callback) {
       })
       return callback(null, {
         statusCode: 200,
-        headers: headers,
+        headers,
         body: link.url
       })
     } catch (e) {
       return callback(null, {
         statusCode: 502,
-        headers: headers,
+        headers,
         body: JSON.stringify(e, response)
       })
     }
   } else {
     return callback(null, {
       statusCode: 401,
-      headers: headers,
+      headers,
       body: ''
     })
   }
