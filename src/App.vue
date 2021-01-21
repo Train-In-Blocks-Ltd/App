@@ -443,7 +443,7 @@
     position: fixed;
     right: 0;
     top: 2rem;
-    width: calc(3rem);
+    width: 3rem;
     padding: .4rem 1rem .4rem .6rem;
     border-radius: 3px 0 0 3px;
     background-color: #F4F4F4;

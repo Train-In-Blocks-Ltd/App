@@ -392,11 +392,21 @@
           </div>
       </form>
     </modal>
-    <div class="icon_open--stats icon_open_middle" v-if="!isStatsOpen && $parent.showOptions === false" @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="Statistics">
+    <div
+      v-if="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
+      @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)"
+      class="icon_open--stats icon_open_middle"
+      aria-label="Statistics"
+    >
       <inline-svg :src="require('../../assets/svg/stats.svg')"/>
       <p class="text">Statistics</p>
     </div>
-    <div class="icon_open--print icon_open_bottom" v-if="!isStatsOpen && $parent.showOptions === false" @click="printPage()" aria-label="Print">
+    <div
+      v-show="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
+      @click="printPage()"
+      class="icon_open--print icon_open_bottom"
+      aria-label="Print"
+    >
       <inline-svg :src="require('../../assets/svg/print.svg')"/>
       <p class="text">Print</p>
     </div>
