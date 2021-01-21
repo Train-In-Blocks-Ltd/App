@@ -113,7 +113,6 @@
     width: 100%
   }
   #chart {
-    height: 80vh;
     position: relative;
     margin: 4rem 0
   }

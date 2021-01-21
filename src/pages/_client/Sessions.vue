@@ -249,7 +249,7 @@
   /* Graph */
   .graph {
     position: fixed;
-    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
+    padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
     top: 0;
     left: 0;
     z-index: 5;
@@ -654,7 +654,7 @@
                     </div>
                   </div>
                 </div>
-                <line-chart id="chart" :chart-data="dataCollection" :options="options" aria-label="Graph" />
+                <simple-chart :dataPoints="dataValues" :labels="labelValues" aria-label="Graph" />
               </div>
             </div>
           </transition>
@@ -667,20 +667,20 @@
 <script>
 import axios from 'axios'
 import InlineSvg from 'vue-inline-svg'
-import LineChart from '../../components/LineChart.js'
 import Checkbox from '../../components/Checkbox'
 import Calendar from '../../components/Calendar'
 import RichEditor from '../../components/Editor'
 import Skeleton from '../../components/Skeleton'
+import SimpleChart from '../../components/SimpleChart'
 
 export default {
   components: {
-    LineChart,
     InlineSvg,
     Checkbox,
     Calendar,
     RichEditor,
-    Skeleton
+    Skeleton,
+    SimpleChart
   },
   data () {
     return {
@@ -718,32 +718,14 @@ export default {
 
       // REGEX DATA //
       str: [],
-      yData: [],
-      xLabel: [],
+      dataValues: [],
+      labelValues: [],
       dataPacketStore: [],
       regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
       regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
       regexLoadCapture: /(at|@)(.+)/gi,
       regexNumberBreakdown: /[0-9.]+/gi,
       protocolError: [],
-
-      // CHART METHODS //
-      dataCollection: null,
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-          display: false
-        },
-        scales: {
-          yAxes: [{
-            ticks: {
-              suggestedMin: 0,
-              beginAtZero: false
-            }
-          }]
-        }
-      },
 
       // CALENDAR DATA //
       sessionDates: [],
@@ -1011,25 +993,10 @@ export default {
 
     // CHART METHODS //-------------------------------------------------------------------------------
 
-    fillData () {
-      this.dataCollection = {
-        labels: this.xLabel,
-        datasets: [
-          {
-            label: this.selectedDataType,
-            borderColor: '#282828',
-            backgroundColor: 'transparent',
-            data: this.yData
-          }
-        ]
-      }
-    },
-
-    // This is called at the start and after @change. It scans the current values selected and fills the chart.
     selection () {
       this.showType = true
-      this.yData.length = 0
-      this.xLabel.length = 0
+      this.dataValues.length = 0
+      this.labelValues.length = 0
       const dataForName = this.selectedDataName
       const dataForType = this.selectedDataType
       let dataForSum = 0
@@ -1048,24 +1015,24 @@ export default {
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
           if (regex.test(exerciseDataPacket[1]) === true) {
-            this.xLabel.push(exerciseDataPacket[0])
+            this.labelValues.push(exerciseDataPacket[0])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
               this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
             }
             if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
-              this.yData.push(this.setsReps(exerciseDataPacket, protocol, dataForType))
+              this.dataValues.push(this.setsReps(exerciseDataPacket, protocol, dataForType))
             }
             if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
-              this.yData.push(this.load(exerciseDataPacket, protocol))
+              this.dataValues.push(this.load(exerciseDataPacket, protocol))
             }
             if (dataForType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
               const agg = this.setsReps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
-              this.yData.push(agg)
+              this.dataValues.push(agg)
             }
             if (exerciseDataPacket[2].includes('x') !== true) {
               this.showType = false
-              this.yData.push(this.otherMeasures(protocol))
+              this.dataValues.push(this.otherMeasures(protocol))
             }
           }
           if (dataForName === 'Plan Overview' && exerciseDataPacket[2].includes('at') === true) {
@@ -1082,18 +1049,17 @@ export default {
           }
         })
         if (dataForName === 'Plan Overview' && overviewStore.length !== 0) {
-          this.yData.push(overviewStore.reduce((a, b) => a + b))
+          this.dataValues.push(overviewStore.reduce((a, b) => a + b))
         }
       })
       if (dataForName === 'Plan Overview') {
         let x = 1
-        for (; x <= this.yData.length; x++) {
-          this.xLabel.push('session ' + x)
+        for (; x <= this.dataValues.length; x++) {
+          this.labelValues.push('session ' + x)
         }
       }
-      if (this.yData.length !== 0) {
+      if (this.dataValues.length !== 0) {
         this.descStats(dataForType)
-        this.fillData()
       }
     },
 
@@ -1428,18 +1394,18 @@ export default {
     descStats (dataForType) {
       let storeMax = 0
       let store = 0
-      const sum = this.yData.reduce((a, b) => a + b)
+      const sum = this.dataValues.reduce((a, b) => a + b)
 
       // Sets descriptive data with its corresponding info.
       this.p1 = { desc: 'Total ' + dataForType + ': ', value: sum }
-      this.p2 = { desc: 'Average ' + dataForType + ': ', value: (sum / this.yData.length).toFixed(1) }
+      this.p2 = { desc: 'Average ' + dataForType + ': ', value: (sum / this.dataValues.length).toFixed(1) }
 
-      this.yData.forEach((value) => {
+      this.dataValues.forEach((value) => {
         storeMax = Math.max(storeMax, value)
       })
       this.p3 = { desc: 'Maximum ' + dataForType + ': ', value: storeMax }
       store = storeMax
-      this.yData.forEach((value) => {
+      this.dataValues.forEach((value) => {
         store = Math.min(store, value)
       })
       this.p4 = { desc: 'Minimum ' + dataForType + ': ', value: store }
