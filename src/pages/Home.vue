@@ -101,10 +101,10 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
-  import ClientLink from '../components/clientLink'
-  import NewClient from '../components/newClient'
-  import WhatsNew from '../components/whatsNew'
-  import InstallApp from '../components/installPWA'
+  import ClientLink from '../components/ClientLink'
+  import NewClient from '../components/NewClient'
+  import WhatsNew from '../components/WhatsNew'
+  import InstallApp from '../components/InstallPWA'
   import Skeleton from '../components/Skeleton'
   import Splash from '../components/Splash'
 

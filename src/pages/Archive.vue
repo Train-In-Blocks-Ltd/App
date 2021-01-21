@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import ClientLink from '../components/clientLink'
+import ClientLink from '../components/ClientLink'
 import Skeleton from '../components/Skeleton'
 
 export default {

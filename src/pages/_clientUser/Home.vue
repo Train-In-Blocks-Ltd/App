@@ -187,7 +187,7 @@ import InlineSvg from 'vue-inline-svg'
 import Skeleton from '../../components/Skeleton.vue'
 import Splash from '../../components/Splash'
 import RichEditor from '../../components/Editor'
-import InstallApp from '../../components/installPWA'
+import InstallApp from '../../components/InstallPWA'
 
 export default {
   components: {

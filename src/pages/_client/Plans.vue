@@ -123,7 +123,7 @@
 
 <script>
   import InlineSvg from 'vue-inline-svg'
-  import NewPlan from '../../components/newPlan'
+  import NewPlan from '../../components/NewPlan'
   import RichEditor from '../../components/Editor'
   import Skeleton from '../../components/Skeleton'
 
