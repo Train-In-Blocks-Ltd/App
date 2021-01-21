@@ -511,10 +511,9 @@
                   New session
                 </button>
             </div>
-              <p class="text--small grey text--no_sessions" v-if="$parent.no_sessions">No sessions yet :(</p>
-              <p class="text--small grey text--loading" v-if="$parent.loading_sessions">Loading sessions...</p>
-              <div v-if="plan.sessions">
-                <p v-if="plan.sessions.length !== null && plan.sessions !== false && !isEditingSession" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
+              <p class="text--small grey text--no_sessions" v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)">No sessions yet :(</p>
+              <div v-if="!$parent.$parent.loading">
+                <p v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
                 <!-- New session -->
                 <div class="container--sessions" v-if="!$parent.no_sessions">
                   <!-- Loop through sessions -->
@@ -567,6 +566,7 @@
                   </div>
                 </div>
               </div>
+              <skeleton v-else type="session" />
             </div><!-- sessions -->
           </div>
           <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
@@ -671,6 +671,7 @@ import LineChart from '../../components/LineChart.js'
 import Checkbox from '../../components/Checkbox'
 import Calendar from '../../components/Calendar'
 import RichEditor from '../../components/Editor'
+import Skeleton from '../../components/Skeleton'
 
 export default {
   components: {
@@ -678,14 +679,15 @@ export default {
     InlineSvg,
     Checkbox,
     Calendar,
-    RichEditor
+    RichEditor,
+    Skeleton
   },
   data () {
     return {
       force: true,
       tempEditorStore: null,
 
-      // BLOCK DATA //
+      // GENERAL DATA //
       sessionsDone: 0,
       sessionsTotal: null,
       isStatsOpen: false,
@@ -697,6 +699,7 @@ export default {
       editPlanNotes: false,
       todayDate: '',
       expandedSessions: [],
+      weekIsEmpty: true,
 
       // SESSION DATA //
       isEditingSession: false,
@@ -953,8 +956,21 @@ export default {
       return out
     },
 
-    // BLOCK METHODS //-------------------------------------------------------------------------------
+    // GENERAL METHODS //-------------------------------------------------------------------------------
 
+    check_for_week_sessions () {
+      let arr = 0
+      this.$parent.$parent.client_details.plans.forEach(plan => {
+        if (plan.id === parseInt(this.$route.params.id)) {
+          plan.sessions.forEach(session => {
+            if (session.week_id === this.currentWeek) {
+              arr += 1
+            }
+          })
+        }
+      })
+      arr === 0 ? this.weekIsEmpty = true : this.weekIsEmpty = false
+    },
     checkForNew () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
@@ -986,11 +1002,11 @@ export default {
       })
       this.update_plan()
       this.scan()
-      this.forceUpdate += 1
     },
     changeWeek (weekID) {
       this.currentWeek = weekID
       this.moveTarget = weekID
+      this.check_for_week_sessions()
     },
 
     // CHART METHODS //-------------------------------------------------------------------------------
@@ -1233,6 +1249,8 @@ export default {
           }
         }
       })
+      this.forceUpdate += 1
+      this.check_for_week_sessions()
     },
 
     // Extracts the protocols and measures and stores it all into a temporary array
