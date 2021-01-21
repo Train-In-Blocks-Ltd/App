@@ -18,7 +18,8 @@
   .day_container {
     display: grid;
     grid-template-columns: .1fr 1fr;
-    grid-gap: 1rem
+    grid-gap: 1rem;
+    min-height: 50px
   }
   .day_events {
     display: grid;
@@ -168,7 +169,7 @@ export default {
     }
   },
   watch: {
-    forceUpdate () {
+    forceUpdate: function () {
       this.get_week()
     }
   },

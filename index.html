@@ -30,6 +30,13 @@
     <div id="app"></div>
     <noscript>JavaScript is required to run this app. Please enable it.</noscript>
     <script>
+      function change_checked_state (elem) {
+        if (elem.checked) {
+          elem.setAttribute('checked', 'checked')
+        } else {
+          elem.removeAttribute('checked')
+        }
+      }
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/pwabuilder-sw.js')
       }

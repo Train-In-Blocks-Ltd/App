@@ -13,9 +13,6 @@
     font-size: .75rem;
     margin: 2rem 0
   }
-  .input--forms.email-recovery {
-    width: 70%
-  }
   @media (max-width: 520px) {
     #login {
       width: 100%;
@@ -35,26 +32,15 @@
     margin-top: 1.25rem
   }
   .signup {
-    margin-left: calc(20px + 60px + 20px)
+    margin-left: calc(20px + 60px + 20px);
+    margin-top: .6rem;
+    margin-bottom: .6rem
   }
   .recovery {
-    margin-top: 1.25rem;
-    margin-left: 4px
+    margin-top: 1.25rem
   }
-  .input--forms {
-    outline-width: 0;
-    width: 95%;
-    margin: .8rem 0;
-    padding: .6rem 0;
-    font-size: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
-    border: none;
-    border-bottom: 1px solid #282828;
-    transition: width 1s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
-  }
-  .input--forms:focus, .input--forms:hover {
-    width: 100%
+  .recover_password {
+    margin: .8rem 0
   }
 </style>
 <style>
@@ -102,19 +88,9 @@
     text-align: left
   }
   #okta-signin-username, #okta-signin-password {
-    outline-width: 0;
-    width: 95%;
     margin: .8rem 0;
-    padding: .6rem 0;
     font-size: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
-    border: none;
-    border-bottom: 1px solid #282828;
-    transition: width 1s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
-  }
-  #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus {
-    width: 100%
+    border-radius: 5px
   }
   .okta-form-input-error {
     width: 100%;
@@ -174,8 +150,13 @@
     </div>
     <form v-if="open" class="recovery" @submit.prevent="reset">
       <label>
-        <p><b>Email:</b></p>
-        <input v-model="email" type="email" class="input--forms" autofocus>
+        <p>Email:</p>
+        <input
+          type="email"
+          v-model="email"
+          class="recover_password small_border_radius"
+          autofocus
+        />
       </label>
       <button type="submit">
         Send recovery email
@@ -265,6 +246,7 @@ export default {
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
     }
+    this.$parent.willBodyScroll(true)
   },
   async beforeDestroy () {
     await this.$parent.isAuthenticated()
@@ -293,11 +275,9 @@ export default {
         this.open = false
         this.email = null
         this.success = 'An email has been sent successfully.'
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
+        this.$parent.end_loading()
       } catch (e) {
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
+        this.$parent.end_loading()
         this.error = 'An error occurred. Are you sure your email is correct?'
         console.error(e)
       }

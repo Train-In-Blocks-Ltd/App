@@ -8,7 +8,7 @@
     padding: 2rem
   }
   .container--sessions {
-    margin-top: 4rem
+    margin: 4rem 0 2rem 0
   }
 
   /* Navigate */
@@ -30,6 +30,12 @@
   }
   .disabled {
     opacity: .4
+  }
+  hr {
+    margin: 2rem 0
+  }
+  .feedback_bottom_bar {
+    margin-top: 1rem
   }
 
   /* Scroll */
@@ -127,30 +133,21 @@
                 >
                   Click to complete
                 </button>
-                <button v-if="giveFeedback !== session.id" class="button--feedback" @click="giveFeedback = session.id">
-                  Give Feedback
-                </button>
               </div>
             </div>
-            <br><hr><br>
-            <div>
-              <p class="text--small">
-                Feedback
-              </p>
+            <div v-if="session.checked === 1">
+              <hr>
+              <p class="text--small">Feedback</p>
               <rich-editor
                 :show-edit-state="giveFeedback === session.id"
                 :html-injection.sync="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
               />
-              <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
-                Edit
-              </button>
-              <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">
-                Save
-              </button>
-              <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">
-                Cancel
-              </button>
+              <div class="feedback_bottom_bar">
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
+                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
+                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+              </div>
             </div>
           </div>
         </div>
@@ -191,13 +188,13 @@ export default {
     await this.$parent.get_plans()
     await this.$parent.sortSessionsPlan()
     await this.scan()
-    this.$parent.loading = false
+    this.$parent.end_loading()
   },
   methods: {
     complete (p, s) {
       for (const plan of this.$parent.clientUser.plans) {
         if (plan.id === parseInt(this.$route.params.id)) {
-          for (const session of plan.sessions) {
+          for (let session of plan.sessions) {
             if (session.id === s) {
               if (session.checked === 0) {
                 session.checked = 1
