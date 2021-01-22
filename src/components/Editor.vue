@@ -258,7 +258,7 @@
         v-html="initialHTML"
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="remove_brackets_and_breaks(htmlInjection)" />
+    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="remove_brackets_and_checkbox(htmlInjection)" />
     <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">
       {{ emptyPlaceholder }}
     </p>
@@ -303,8 +303,12 @@
         previewTemplate: null
       }
     },
+    mounted () {
+      this.update_html()
+    },
     watch: {
       showEditState: function () {
+        this.update_html()
         this.initialHTML = this.htmlInjection
         if (this.showEditState) {
           document.addEventListener('click', this.check_caret_pos)
@@ -325,6 +329,17 @@
         let version = parseFloat(versionId.match(/\d+.\d+/gmi))
       },
       */
+     update_html () {
+       const imgs = document.querySelectorAll('p > img')
+       const iframes = document.querySelectorAll('.ql-video')
+       iframes.forEach(item => {
+         item.removeAttribute('class')
+         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+       })
+       imgs.forEach(item => {
+         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+       })
+     },
       focus_on_editor () {
         document.getElementById('rich_editor').focus()
       },
@@ -337,16 +352,18 @@
         }
       },
       check_cmd_state () {
-        const boldState = document.queryCommandState('bold')
-        const italicState = document.queryCommandState('italic')
-        const underlineState = document.queryCommandState('underline')
-        const orderedListState = document.queryCommandState('insertOrderedList')
-        const unorderedListState = document.queryCommandState('insertUnorderedList')
-        this.boldActive = boldState
-        this.italicActive = italicState
-        this.underlineActive = underlineState
-        this.olActive = orderedListState
-        this.ulActive = unorderedListState
+        setInterval(() => {
+          const boldState = document.queryCommandState('bold')
+          const italicState = document.queryCommandState('italic')
+          const underlineState = document.queryCommandState('underline')
+          const orderedListState = document.queryCommandState('insertOrderedList')
+          const unorderedListState = document.queryCommandState('insertUnorderedList')
+          this.boldActive = boldState
+          this.italicActive = italicState
+          this.underlineActive = underlineState
+          this.olActive = orderedListState
+          this.ulActive = unorderedListState
+        }, 100)
       },
       check_caret_pos () {
         let caretPosition = document.getSelection()
@@ -358,7 +375,7 @@
           }
         }
       },
-      remove_brackets_and_breaks (dataIn) {
+      remove_brackets_and_checkbox (dataIn) {
         if (dataIn !== null) {
           return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
         } else {

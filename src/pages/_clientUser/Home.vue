@@ -54,7 +54,7 @@
             <p class="text--large grey">
               {{ $parent.portfolio.trainer_name }}
             </p>
-            <div class="client_portfolio__notes" v-html="$parent.portfolio.notes" />
+            <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
             <button class="cancel" @click="isPortfolioOpen = false, $parent.willBodyScroll(true)">
               Close
             </button>
@@ -111,7 +111,7 @@
                 <span class="text--date">{{ $parent.day(session.date) }}</span>
                 <span class="text--date">{{ session.date }}</span>
               </div>
-              <div class="show_session animate animate__fadeIn" v-html="removeBrackets(session.notes)" />
+              <div class="show_session animate animate__fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
               <div class="bottom_bar">
                 <div class="full_width_bar">
                   <button
@@ -223,10 +223,9 @@ export default {
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
 
-    removeBrackets (dataIn) {
+    remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
-        const dataOut = dataIn.replace(/[[\]]/g, '')
-        return dataOut
+        return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
       } else {
         return dataIn
       }
