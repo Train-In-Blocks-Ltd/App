@@ -1244,7 +1244,7 @@ export default {
         if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
           this.dontLeave = true
           let response
-          if (this.is_trainer) {
+          if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
             response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
             if (response.data.length === 0) {
               this.create_portfolio()
