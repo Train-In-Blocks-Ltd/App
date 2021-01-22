@@ -303,8 +303,12 @@
         previewTemplate: null
       }
     },
+    mounted () {
+      this.update_html()
+    },
     watch: {
       showEditState: function () {
+        this.update_html()
         this.initialHTML = this.htmlInjection
         if (this.showEditState) {
           document.addEventListener('click', this.check_caret_pos)
@@ -325,6 +329,17 @@
         let version = parseFloat(versionId.match(/\d+.\d+/gmi))
       },
       */
+     update_html () {
+       const imgs = document.querySelectorAll('p > img')
+       const iframes = document.querySelectorAll('.ql-video')
+       iframes.forEach(item => {
+         item.removeAttribute('class')
+         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+       })
+       imgs.forEach(item => {
+         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+       })
+     },
       focus_on_editor () {
         document.getElementById('rich_editor').focus()
       },
