@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "webpack serve --config build/webpack.dev.conf.js --mode development --env development",
-    "build": "webpack --config build/webpack.prod.conf.js --mode production --env production",
+    "start": "cross-env NODE_ENV=development webpack serve --config build/webpack.dev.conf.js --progress",
+    "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js",
+    "build:report": "cross-env NODE_ENV=production REPORT=true webpack --config build/webpack.prod.conf.js --progress",
     "debug": "netlify dev --inspect",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -35,6 +36,7 @@
     "babel-loader": "7",
     "chalk": "^4.1.0",
     "copy-webpack-plugin": "6",
+    "cross-env": "^7.0.3",
     "css-loader": "^5.0.1",
     "eslint": "^7.18.0",
     "eslint-friendly-formatter": "^4.0.1",

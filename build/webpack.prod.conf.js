@@ -13,7 +13,6 @@ const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
-  stats: 'none',
   module: {
     rules: utils.styleLoaders({
       sourceMap: config.build.productionSourceMap,
@@ -23,7 +22,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   },
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[contenthash].js'),
+    filename: utils.assetsPath('js/[name].js'),
     chunkFilename: utils.assetsPath('js/[id].js')
   },
   performance: {
@@ -31,6 +30,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     maxAssetSize: 1500000
   },
   optimization: {
+    minimize: false,
     runtimeChunk: 'single',
     splitChunks: {
       chunks: 'all',
@@ -69,8 +69,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
-        ? { safe: true, map: { inline: false } }
-        : { safe: true }
+      ? { safe: true, map: { inline: false } }
+      : { safe: true }
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
@@ -93,8 +93,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     })
   ]
 })
-/*
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-webpackConfig.plugins.push(new BundleAnalyzerPlugin())
-*/
+if (process.env.REPORT) {
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+}
+
 module.exports = webpackConfig
