@@ -337,16 +337,18 @@
         }
       },
       check_cmd_state () {
-        const boldState = document.queryCommandState('bold')
-        const italicState = document.queryCommandState('italic')
-        const underlineState = document.queryCommandState('underline')
-        const orderedListState = document.queryCommandState('insertOrderedList')
-        const unorderedListState = document.queryCommandState('insertUnorderedList')
-        this.boldActive = boldState
-        this.italicActive = italicState
-        this.underlineActive = underlineState
-        this.olActive = orderedListState
-        this.ulActive = unorderedListState
+        setInterval(() => {
+          const boldState = document.queryCommandState('bold')
+          const italicState = document.queryCommandState('italic')
+          const underlineState = document.queryCommandState('underline')
+          const orderedListState = document.queryCommandState('insertOrderedList')
+          const unorderedListState = document.queryCommandState('insertUnorderedList')
+          this.boldActive = boldState
+          this.italicActive = italicState
+          this.underlineActive = underlineState
+          this.olActive = orderedListState
+          this.ulActive = unorderedListState
+        }, 100)
       },
       check_caret_pos () {
         let caretPosition = document.getSelection()
