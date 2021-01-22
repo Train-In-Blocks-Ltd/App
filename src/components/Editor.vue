@@ -258,7 +258,7 @@
         v-html="initialHTML"
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="remove_brackets_and_breaks(htmlInjection)" />
+    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="remove_brackets_and_checkbox(htmlInjection)" />
     <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">
       {{ emptyPlaceholder }}
     </p>
@@ -360,7 +360,7 @@
           }
         }
       },
-      remove_brackets_and_breaks (dataIn) {
+      remove_brackets_and_checkbox (dataIn) {
         if (dataIn !== null) {
           return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
         } else {
