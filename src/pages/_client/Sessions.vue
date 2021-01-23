@@ -1135,6 +1135,11 @@ export default {
     // CHART METHODS //-------------------------------------------------------------------------------
 
     selection () {
+      this.p1 = ''
+      this.p2 = ''
+      this.p3 = ''
+      this.p4 = ''
+      this.p5 = ''
       this.showType = true
       this.dataValues.length = 0
       this.labelValues.length = 0

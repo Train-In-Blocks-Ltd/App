@@ -127,8 +127,8 @@ export default {
   },
   methods: {
     process_and_plot () {
-      this.dataValues = []
-      this.pathValues = []
+      this.dataValues.length = 0
+      this.pathValues.length = 0
       this.xInterval = (90 / this.dataPoints.length)
       this.maxValue = Math.max(...this.dataPoints)
       this.minValue = Math.min(...this.dataPoints)
