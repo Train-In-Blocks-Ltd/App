@@ -140,13 +140,11 @@
 <script>
 const NewPlan = () => import('../../components/NewPlan')
 const RichEditor = () => import('../../components/Editor')
-const Skeleton = () => import('../../components/Skeleton')
 
 export default {
   components: {
     NewPlan,
-    RichEditor,
-    Skeleton
+    RichEditor
   },
   data () {
     return {

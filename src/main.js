@@ -19,7 +19,9 @@ Vue.use(VueAnalytics, {
 })
 Vue.use(VModal)
 Vue.use(InlineSvgPlugin)
-Vue.use(Skeleton)
+
+// Register component globally
+Vue.component('Skeleton', Skeleton)
 
 Vue.config.productionTip = false
 
