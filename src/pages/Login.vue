@@ -178,8 +178,6 @@
 </template>
 
 <script>
-let OktaSignIn
-
 export default {
   data () {
     return {
@@ -191,9 +189,10 @@ export default {
     }
   },
   async mounted () {
-    if (!this.$parent.authenticated) {
-      OktaSignIn = require('@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js')
-    }
+    let OktaSignIn
+    await import('@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
+      OktaSignIn = module.default
+    })
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
