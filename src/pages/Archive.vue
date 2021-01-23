@@ -78,7 +78,7 @@
 </template>
 
 <script>
-const ClientLink = () => import('../components/ClientLink')
+const ClientLink = () => import(/* webpackChunkName: "components.clientlink", webpackPreload: true  */ '../components/ClientLink')
 
 export default {
   components: {

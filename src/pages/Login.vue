@@ -190,7 +190,7 @@ export default {
   },
   async mounted () {
     let OktaSignIn
-    await import('@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
+    await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
       OktaSignIn = module.default
     })
     this.$nextTick(function () {

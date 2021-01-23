@@ -811,10 +811,10 @@
 </template>
 
 <script>
-const Checkbox = () => import('../../components/Checkbox')
-const Calendar = () => import('../../components/Calendar')
-const RichEditor = () => import('../../components/Editor')
-const SimpleChart = () => import('../../components/SimpleChart')
+const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true */ '../../components/Checkbox')
+const Calendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/Calendar')
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
+const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
 
 export default {
   components: {

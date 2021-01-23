@@ -23,7 +23,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].js'),
-    chunkFilename: utils.assetsPath('js/[id].js')
+    chunkFilename: utils.assetsPath('js/[name].js')
   },
   performance: {
     maxEntrypointSize: 2500000,
@@ -38,17 +38,20 @@ const webpackConfig = merge(baseWebpackConfig, {
       minSize: 0,
       cacheGroups: {
         vendor: {
-          test: /[\\/]node_modules[\\/]/,
+          test: /[\\/]node_modules[\\/](?!@okta[\\/]okta-vue)(.*?)[\\/]/,
           name(module) {
             // get the name. E.g. node_modules/packageName/not/this/part.js
             // or node_modules/packageName
-            const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-
+            const packageName = module.context.match(/[\\/]node_modules[\\/](?!@okta[\\/]okta-vue)(.*?)([\\/]|$)/)[1]
             // npm package names are URL-safe, but some servers don't like @ symbols
-            return `npm.${packageName.replace('@', '')}`;
-          },
+            return `npm.${packageName.replace('@', '')}`
+          }
         },
-      },
+        oktaVue: {
+          test: /[\\/]node_modules[\\/](@okta)[\\/](okta-vue)[\\/]/,
+          name: 'oktaVue'
+        }
+      }
     }
   },
   plugins: [

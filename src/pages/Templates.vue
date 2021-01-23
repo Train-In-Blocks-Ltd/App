@@ -171,8 +171,8 @@
 </template>
 
 <script>
-const RichEditor = () => import('../components/Editor')
-const Checkbox = () => import('../components/Checkbox')
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
+const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
 
 export default {
   components: {

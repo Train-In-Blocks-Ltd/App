@@ -2,22 +2,22 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Auth from '@okta/okta-vue'
 
-const LoginComponent = () => import('@/pages/Login')
-const ProfileComponent = () => import('@/pages/Account')
-const LogoutComponent = () => import('@/pages/Logout')
-const NotFound = () => import('@/pages/NotFound')
-const ArchiveComponent = () => import('@/pages/Archive')
-const TemplateComponent = () => import('@/pages/Templates')
-const PortfolioComponent = () => import('@/pages/Portfolio')
+const LoginComponent = () => import(/* webpackChunkName: "login" */ '@/pages/Login')
+const ProfileComponent = () => import(/* webpackChunkName: "account" */ '@/pages/Account')
+const LogoutComponent = () => import(/* webpackChunkName: "logout" */ '@/pages/Logout')
+const NotFound = () => import(/* webpackChunkName: "notfound" */ '@/pages/NotFound')
+const ArchiveComponent = () => import(/* webpackChunkName: "archive" */ '@/pages/Archive')
+const TemplateComponent = () => import(/* webpackChunkName: "templates" */ '@/pages/Templates')
+const PortfolioComponent = () => import(/* webpackChunkName: "portfolio" */ '@/pages/Portfolio')
 
-const ClientComponent = () => import('@/pages/_client/Home')
-const ClientPlans = () => import('@/pages/_client/Plans')
-const ClientSessions = () => import('@/pages/_client/Sessions')
+const ClientComponent = () => import(/* webpackChunkName: "client.home" */ '@/pages/_client/Home')
+const ClientPlans = () => import(/* webpackChunkName: "client.plans" */ '@/pages/_client/Plans')
+const ClientSessions = () => import(/* webpackChunkName: "client.sessions" */ '@/pages/_client/Sessions')
 
-const ClientUserComponent = () => import('@/pages/_clientUser/Home')
-const ClientUserPlans = () => import('@/pages/_clientUser/Plans')
+const ClientUserComponent = () => import(/* webpackChunkName: "client-user.home" */ '@/pages/_clientUser/Home')
+const ClientUserPlans = () => import(/* webpackChunkName: "client-user.plans" */ '@/pages/_clientUser/Plans')
 
-const HomeComponent = () => import('@/pages/Home')
+const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home')
 
 Vue.use(Router)
 Vue.use(Auth, {

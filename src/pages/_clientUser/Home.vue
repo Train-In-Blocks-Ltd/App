@@ -191,9 +191,9 @@
 </template>
 
 <script>
-const Splash = () => import('../../components/Splash')
-const RichEditor = () => import('../../components/Editor')
-const InstallApp = () => import('../../components/InstallPWA')
+const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../../components/Splash')
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
+const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 
 export default {
   components: {

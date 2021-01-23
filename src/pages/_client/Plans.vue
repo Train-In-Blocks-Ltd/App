@@ -138,8 +138,8 @@
 </template>
 
 <script>
-const NewPlan = () => import('../../components/NewPlan')
-const RichEditor = () => import('../../components/Editor')
+const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
 export default {
   components: {

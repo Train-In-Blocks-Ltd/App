@@ -165,8 +165,8 @@
 </template>
 
 <script>
-const Calendar = () => import('../../components/Calendar')
-const RichEditor = () => import('../../components/Editor')
+const Calendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/Calendar')
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
 export default {
   components: {

@@ -91,7 +91,7 @@
 </template>
 
 <script>
-const RichEditor = () => import('../components/Editor')
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
 
 export default {
   components: {

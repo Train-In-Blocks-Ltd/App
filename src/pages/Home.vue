@@ -105,11 +105,11 @@
 </template>
 
 <script>
-const ClientLink = () => import('../components/ClientLink')
-const NewClient = () => import('../components/NewClient')
-const WhatsNew = () => import('../components/WhatsNew')
-const InstallApp = () => import('../components/InstallPWA')
-const Splash = () => import('../components/Splash')
+const ClientLink = () => import(/* webpackChunkName: "components.clientlink", webpackPreload: true  */ '../components/ClientLink')
+const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
+const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
+const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/InstallPWA')
+const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../components/Splash')
 
 export default {
   components: {
