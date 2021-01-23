@@ -872,7 +872,6 @@
 import 'vue-loading-overlay/dist/vue-loading.css'
 const Loading = () => import('vue-loading-overlay')
 const { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } = () => import('./components/email')
-
 export default {
   components: {
     Loading

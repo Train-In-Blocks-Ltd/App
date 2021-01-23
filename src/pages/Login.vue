@@ -178,7 +178,7 @@
 </template>
 
 <script>
-import OktaSignIn from '@okta/okta-signin-widget'
+let OktaSignIn
 
 export default {
   data () {
@@ -191,6 +191,9 @@ export default {
     }
   },
   async mounted () {
+    if (!this.$parent.authenticated) {
+      OktaSignIn = require('@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js')
+    }
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
