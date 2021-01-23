@@ -78,13 +78,11 @@
 </template>
 
 <script>
-import ClientLink from '../components/ClientLink'
-import Skeleton from '../components/Skeleton'
+const ClientLink = () => import('../components/ClientLink')
 
 export default {
   components: {
-    ClientLink,
-    Skeleton
+    ClientLink
   },
   data () {
     return {
@@ -107,9 +105,9 @@ export default {
         this.selectedClients.push(id)
         this.selectedClientsIndex.push(index)
       } else {
-        var idx1 = this.selectedClients.indexOf(id)
+        const idx1 = this.selectedClients.indexOf(id)
         this.selectedClients.splice(idx1, 1)
-        var idx2 = this.selectedClientsIndex.indexOf(index)
+        const idx2 = this.selectedClientsIndex.indexOf(index)
         this.selectedClientsIndex.splice(idx2, 1)
       }
     },
@@ -117,7 +115,7 @@ export default {
       if (this.selectedClients.length !== 0) {
         if (confirm('Are you sure you want to delete all the selected clients?')) {
           this.selectedClients.forEach((clientId) => {
-            var idx = this.selectedClients.indexOf(clientId)
+            const idx = this.selectedClients.indexOf(clientId)
             this.$parent.client_delete(clientId, idx)
           })
           this.selectedClients = []

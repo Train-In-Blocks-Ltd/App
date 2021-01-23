@@ -132,16 +132,24 @@
               </div>
               <div v-if="session.checked === 1">
                 <hr>
-                <p class="text--small">Feedback</p>
+                <p class="text--small">
+                  Feedback
+                </p>
                 <rich-editor
                   :show-edit-state="giveFeedback === session.id"
                   :html-injection.sync="session.feedback"
                   :empty-placeholder="'What would you like to share with your trainer?'"
                 />
                 <div class="feedback_bottom_bar">
-                  <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
-                  <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
-                  <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+                  <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
+                    Edit
+                  </button>
+                  <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">
+                    Save
+                  </button>
+                  <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">
+                    Cancel
+                  </button>
                 </div>
               </div>
             </div>
@@ -183,16 +191,12 @@
 </template>
 
 <script>
-import InlineSvg from 'vue-inline-svg'
-import Skeleton from '../../components/Skeleton.vue'
-import Splash from '../../components/Splash'
-import RichEditor from '../../components/Editor'
-import InstallApp from '../../components/InstallPWA'
+const Splash = () => import('../../components/Splash')
+const RichEditor = () => import('../../components/Editor')
+const InstallApp = () => import('../../components/InstallPWA')
 
 export default {
   components: {
-    InlineSvg,
-    Skeleton,
     RichEditor,
     Splash,
     InstallApp

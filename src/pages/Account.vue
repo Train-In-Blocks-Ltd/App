@@ -76,43 +76,63 @@
       @opened="$refs.pass.focus()"
     >
       <div class="modal--reset">
-        <div class="wrapper--centered-item"> 
+        <div class="wrapper--centered-item">
           <form class="form_grid" @submit.prevent="changePass(), $parent.willBodyScroll(true)">
             <div>
-              <p class="text--large">Stay safe</p>
-              <p class="text--large grey">Reset your password</p>
+              <p class="text--large">
+                Stay safe
+              </p>
+              <p class="text--large grey">
+                Reset your password
+              </p>
             </div>
             <input
+              ref="pass"
+              v-model="password.old"
               type="password"
               placeholder="Current password"
               aria-label="Current password"
               class="input--forms small_border_radius"
-              ref="pass"
-              v-model="password.old"
               required
-            />
+            >
             <div>
-              <p class="text--small">Requirements</p>
-              <p class="text--small grey">Number (0-9)</p>
-              <p class="text--small grey">At least 8 characters</p>
-              <p class="text--small grey">Can't contain your username</p>
+              <p class="text--small">
+                Requirements
+              </p>
+              <p class="text--small grey">
+                Number (0-9)
+              </p>
+              <p class="text--small grey">
+                At least 8 characters
+              </p>
+              <p class="text--small grey">
+                Can't contain your username
+              </p>
             </div>
             <input
+              v-model="password.new"
               type="password"
               placeholder="New password"
               aria-label="New password"
               class="input--forms small_border_radius"
-              v-model="password.new"
-              @input="checkPass"
-              v-bind:class="{check: password.check}"
+              :class="{check: password.check}"
               required
-            />
+              @input="checkPass"
+            >
             <div class="reset_password_button_bar">
-              <button class="right_margin" type="submit" :disabled="password.check">Change your password</button>
-              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.willBodyScroll(true)">Close</button>
+              <button class="right_margin" type="submit" :disabled="password.check">
+                Change your password
+              </button>
+              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.willBodyScroll(true)">
+                Close
+              </button>
             </div>
-            <p v-if="this.password.error" class="error">{{this.password.error}}</p>
-            <p v-if="this.password.msg">{{this.password.msg}}</p>
+            <p v-if="password.error" class="error">
+              {{ password.error }}
+            </p>
+            <p v-if="password.msg">
+              {{ password.msg }}
+            </p>
           </form>
         </div>
       </div>
@@ -158,8 +178,7 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { passChangeEmail, passChangeEmailText } from '../components/email'
+const { passChangeEmail, passChangeEmailText } = () => import('../components/email')
 
 export default {
   data () {
@@ -188,7 +207,7 @@ export default {
       this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       try {
-        await axios.post('/.netlify/functions/okta',
+        await this.$axios.post('/.netlify/functions/okta',
           {
             type: 'POST',
             body: {
@@ -225,12 +244,12 @@ export default {
         this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         this.password.error = ''
-        await axios.post('/.netlify/functions/okta',
+        await this.$axios.post('/.netlify/functions/okta',
           {
             type: 'POST',
             body: {
-              'oldPassword': this.password.old,
-              'newPassword': this.password.new
+              oldPassword: this.password.old,
+              newPassword: this.password.new
             },
             url: `${this.$parent.claims.sub}/credentials/change_password`
           }
@@ -238,12 +257,12 @@ export default {
         this.password.old = null
         this.password.new = null
         this.password.msg = 'Password Updated Successfully'
-        await axios.post('/.netlify/functions/send-email',
+        await this.$axios.post('/.netlify/functions/send-email',
           {
-            'to': this.$parent.claims.email,
-            'subject': 'Password Changed',
-            'text': passChangeEmailText(),
-            'html': passChangeEmail()
+            to: this.$parent.claims.email,
+            subject: 'Password Changed',
+            text: passChangeEmailText(),
+            html: passChangeEmail()
           }
         )
         this.$parent.end_loading()
@@ -255,9 +274,9 @@ export default {
     },
     async manageSubscription () {
       try {
-        const response = await axios.post('/.netlify/functions/create-manage-link',
+        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
           {
-            'id': this.$parent.claims.stripeId
+            id: this.$parent.claims.stripeId
           }
         )
         window.location.href = response.data

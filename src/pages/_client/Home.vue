@@ -184,310 +184,308 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import InlineSvg from 'vue-inline-svg'
-  import {email, emailText, resetEmail, resetEmailText} from '../../components/email'
-  import Toolkit from '../../components/Toolkit'
-  import AlertModal from '../../components/AlertModal'
-  export default {
-    components: {
-      InlineSvg,
-      Toolkit
-    },
-    data () {
-      return {
-        // BACKGROUD DATA //
-        keepLoaded: false,
-        showOptions: false,
-        no_plans: false,
-        loading_plans: true,
-        sessions: false,
-        no_sessions: false,
-        showDeletePlan: false,
-        // CLIENT STATUS DATA //
-        clientAlreadyMsg: 'Loading...',
-        clientAlready: true,
-        clientSuspend: null
+const { email, emailText, resetEmail, resetEmailText } = () => import('../../components/email')
+const Toolkit = () => import('../../components/Toolkit')
+const AlertModal = () => import('../../components/AlertModal')
+
+export default {
+  components: {
+    Toolkit
+  },
+  data () {
+    return {
+      // BACKGROUD DATA //
+      keepLoaded: false,
+      showOptions: false,
+      no_plans: false,
+      loading_plans: true,
+      sessions: false,
+      no_sessions: false,
+      showDeletePlan: false,
+      // CLIENT STATUS DATA //
+      clientAlreadyMsg: 'Loading...',
+      clientAlready: true,
+      clientSuspend: null
+    }
+  },
+  async created () {
+    this.$parent.splashed = true
+    this.$parent.willBodyScroll(true)
+    this.loading = true
+    await this.$parent.setup()
+    await this.get_client_details()
+    this.created()
+    this.keepLoaded = true
+    this.$parent.end_loading()
+  },
+  beforeDestroy () {
+    this.keepLoaded = false
+    this.$parent.client_details = null
+  },
+  methods: {
+    // BACKGROUND METHODS //-------------------------------------------------------------------------------
+    created () {
+      let x
+      for (x in this.$parent.clients) {
+        // If client matches client in route
+        if (this.$parent.clients[x].client_id === this.$route.params.client_id) {
+          // Set client_details variable with client details
+          this.$parent.client_details = this.$parent.clients[x]
+        }
       }
     },
-    async created () {
-      this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
-      this.loading = true
-      await this.$parent.setup()
-      await this.get_client_details()
-      this.created()
-      this.keepLoaded = true
-      this.$parent.end_loading()
-    },
-    beforeDestroy () {
-      this.keepLoaded = false
-      this.$parent.client_details = null
-    },
-    methods: {
-      // BACKGROUND METHODS //-------------------------------------------------------------------------------
-      created () {
-        var x
-        for (x in this.$parent.clients) {
-          // If client matches client in route
-          if (this.$parent.clients[x].client_id === this.$route.params.client_id) {
-            // Set client_details variable with client details
-            this.$parent.client_details = this.$parent.clients[x]
+    // DATABSE AND API METHODS //-------------------------------------------------------------------------------
+    async checkClient () {
+      this.clientAlreadyMsg = 'Loading...'
+      try {
+        const result = await this.$axios.post('/.netlify/functions/okta',
+          {
+            type: 'GET',
+            url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
           }
+        )
+        if (result.data.length > 0) {
+          if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
+            this.clientAlready = true
+            this.clientAlreadyMsg = 'User activated'
+          } else if (result.data[0].status === 'PROVISIONED') {
+            this.clientAlready = false
+            this.clientAlreadyMsg = 'Resend activation email'
+          } else if (result.data[0].status === 'SUSPENDED') {
+            this.clientSuspend = result.data[0].id
+            this.clientAlready = false
+            this.clientAlreadyMsg = 'Give Access'
+          }
+        } else {
+          this.clientAlready = false
+          this.clientAlreadyMsg = 'Give Access'
         }
-      },
-      // DATABSE AND API METHODS //-------------------------------------------------------------------------------
-      async checkClient () {
-        this.clientAlreadyMsg = 'Loading...'
-        try {
-          const result = await axios.post('/.netlify/functions/okta',
+      } catch (e) {
+        this.clientAlready = true
+        this.clientAlreadyMsg = 'Error'
+        this.$parent.resolve_error(e)
+      }
+    },
+    async createClient () {
+      this.$parent.pause_loading = true
+      this.$parent.dontLeave = true
+      try {
+        if (this.clientAlreadyMsg === 'Resend activation email') {
+          const oktaOne = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
               url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
             }
           )
-          if (result.data.length > 0) {
-            if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
-              this.clientAlready = true
-              this.clientAlreadyMsg = 'User activated'
-            } else if (result.data[0].status === 'PROVISIONED') {
-              this.clientAlready = false
-              this.clientAlreadyMsg = 'Resend activation email'
-            } else if (result.data[0].status === 'SUSPENDED') {
-              this.clientSuspend = result.data[0].id
-              this.clientAlready = false
-              this.clientAlreadyMsg = 'Give Access'
+          const oktaTwo = await this.$axios.post('/.netlify/functions/okta',
+            {
+              type: 'POST',
+              body: {},
+              url: `${oktaOne.data[0].id}/lifecycle/reactivate?sendEmail=false`
             }
-          } else {
-            this.clientAlready = false
-            this.clientAlreadyMsg = 'Give Access'
-          }
-        } catch (e) {
-          this.clientAlready = true
-          this.clientAlreadyMsg = 'Error'
-          this.$parent.resolve_error(e)
-        }
-      },
-      async createClient () {
-        this.$parent.pause_loading = true
-        this.$parent.dontLeave = true
-        try {
-          if (this.clientAlreadyMsg === 'Resend activation email') {
-            const oktaOne = await axios.post('/.netlify/functions/okta',
-              {
-                type: 'GET',
-                url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
-              }
-            )
-            const oktaTwo = await axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {},
-                url: `${oktaOne.data[0].id}/lifecycle/reactivate?sendEmail=false`
-              }
-            )
-            await axios.post('/.netlify/functions/send-email',
-              {
-                'to': this.$parent.client_details.email,
-                'subject': 'Welcome to Train In Blocks',
-                'text': emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-                'html': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-              }
-            )
-          } else if (this.clientSuspend) {
-            await axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {},
-                url: `${this.clientSuspend}/lifecycle/unsuspend`
-              }
-            )
-            const password = await axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {},
-                url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`
-              }
-            )
-            await axios.post('/.netlify/functions/send-email',
-              {
-                'to': this.$parent.client_details.email,
-                'subject': 'Welcome Back to Train In Blocks',
-                'text': resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-                'html': resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-              }
-            )
-          } else {
-            const oktaOne = await axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {
-                  'profile': {
-                    'firstName': this.$parent.client_details.email,
-                    'email': this.$parent.client_details.email,
-                    'login': this.$parent.client_details.email,
-                    'ga': true,
-                    'client_id_db': this.$parent.client_details.client_id,
-                    'user_type': 'Client'
-                  },
-                  'groupIds': [
-                    '00gf929legrtSjxOe4x6'
-                  ]
+          )
+          await this.$axios.post('/.netlify/functions/send-email',
+            {
+              to: this.$parent.client_details.email,
+              subject: 'Welcome to Train In Blocks',
+              text: emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+              html: email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+            }
+          )
+        } else if (this.clientSuspend) {
+          await this.$axios.post('/.netlify/functions/okta',
+            {
+              type: 'POST',
+              body: {},
+              url: `${this.clientSuspend}/lifecycle/unsuspend`
+            }
+          )
+          const password = await this.$axios.post('/.netlify/functions/okta',
+            {
+              type: 'POST',
+              body: {},
+              url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`
+            }
+          )
+          await this.$axios.post('/.netlify/functions/send-email',
+            {
+              to: this.$parent.client_details.email,
+              subject: 'Welcome Back to Train In Blocks',
+              text: resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+              html: resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+            }
+          )
+        } else {
+          const oktaOne = await this.$axios.post('/.netlify/functions/okta',
+            {
+              type: 'POST',
+              body: {
+                profile: {
+                  firstName: this.$parent.client_details.email,
+                  email: this.$parent.client_details.email,
+                  login: this.$parent.client_details.email,
+                  ga: true,
+                  client_id_db: this.$parent.client_details.client_id,
+                  user_type: 'Client'
                 },
-                url: `?activate=false`
-              }
-            )
-            const oktaTwo = await axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {},
-                url: `${oktaOne.data.id}/lifecycle/activate?sendEmail=false`
-              }
-            )
-            await axios.post('/.netlify/functions/send-email',
-              {
-                'to': this.$parent.client_details.email,
-                'subject': 'Welcome to Train In Blocks',
-                'text': emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-                'html': email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
-              }
-            )
-          }
-        } catch (e) {
-          this.$parent.resolve_error(e)
+                groupIds: [
+                  '00gf929legrtSjxOe4x6'
+                ]
+              },
+              url: '?activate=false'
+            }
+          )
+          const oktaTwo = await this.$axios.post('/.netlify/functions/okta',
+            {
+              type: 'POST',
+              body: {},
+              url: `${oktaOne.data.id}/lifecycle/activate?sendEmail=false`
+            }
+          )
+          await this.$axios.post('/.netlify/functions/send-email',
+            {
+              to: this.$parent.client_details.email,
+              subject: 'Welcome to Train In Blocks',
+              text: emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+              html: email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+            }
+          )
         }
-        await this.checkClient()
-        this.$modal.show(
-          AlertModal,
-          {msg: 'An activation email was sent to your client.'},
-          { height: '100%' },
-          { width: '100%' },
-          { adaptive: true },
-          { clickToClose: false }
-        )
-        this.$parent.end_loading()
-      },
-      async get_sessions (force) {
-        try {
-          // Loop through plans
-          var f
-          for (f in this.$parent.client_details.plans) {
-            // If plan matches plan in route
-            if (this.$parent.client_details.plans[f].id === parseInt(this.$route.params.id)) {
-              // If client_details.plans.sessions is set to false
-              if (this.$parent.client_details.plans[f].sessions === false && !force) {
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+      await this.checkClient()
+      this.$modal.show(
+        AlertModal,
+        { msg: 'An activation email was sent to your client.' },
+        { height: '100%' },
+        { width: '100%' },
+        { adaptive: true },
+        { clickToClose: false }
+      )
+      this.$parent.end_loading()
+    },
+    async get_sessions (force) {
+      try {
+        // Loop through plans
+        let f
+        for (f in this.$parent.client_details.plans) {
+          // If plan matches plan in route
+          if (this.$parent.client_details.plans[f].id === parseInt(this.$route.params.id)) {
+            // If client_details.plans.sessions is set to false
+            if (this.$parent.client_details.plans[f].sessions === false && !force) {
+              this.no_sessions = true
+            // If client_details.plans.sessions is not set then query the API
+            } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
+              const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
+              // If there are no sessions
+              if (response.data.length === 0) {
                 this.no_sessions = true
-              // If client_details.plans.sessions is not set then query the API
-              } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
-                const response = await axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
-                // If there are no sessions
-                if (response.data.length === 0) {
-                  this.no_sessions = true
-                  this.$parent.client_details.plans[f].sessions = false
-                  // If there are sessions set the client_details to include sessions
-                } else {
-                  this.no_sessions = false
-                  this.$parent.client_details.plans[f].sessions = response.data
+                this.$parent.client_details.plans[f].sessions = false
+                // If there are sessions set the client_details to include sessions
+              } else {
+                this.no_sessions = false
+                this.$parent.client_details.plans[f].sessions = response.data
+              }
+              // Sync client_details with clients
+              // Loop through clients
+              for (const y in this.$parent.clients) {
+                // If client matches client in route
+                if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
+                  this.$parent.clients[y] = this.$parent.client_details
                 }
-                // Sync client_details with clients
-                // Loop through clients
-                for (var y in this.$parent.clients) {
-                  // If client matches client in route
-                  if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
-                    this.$parent.clients[y] = this.$parent.client_details
-                  }
-                }
-                // Update the localstorage with the sessions
+              }
+              // Update the localstorage with the sessions
+              localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
+            }
+          }
+        }
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async get_client_details (force) {
+      this.$parent.loading = true
+      try {
+        // Loop through clients
+        let x
+        for (x in this.$parent.clients) {
+          // If client matches client in route
+          if (this.$parent.clients[x].client_id === parseInt(this.$route.params.client_id)) {
+            // Set client_details variable with client details
+            this.$parent.client_details = this.$parent.clients[x]
+            // If client_details.plans is set to false
+            if (this.$parent.clients[x].plans === false && !force) {
+              this.no_plans = true
+            // If client_details.plans is not set then query the API
+            } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
+              const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
+              // If there are no plans
+              if (response.data.length === 0) {
+                this.no_plans = true
+                this.$parent.clients[x].plans = false
+                // If there are plans set the clients to include plans
+              } else {
+                this.no_plans = false
+                this.$parent.clients[x].plans = response.data
+                // Update the localstorage with the plans
                 localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
               }
             }
+            this.$parent.client_details = this.$parent.clients[x]
+            this.loading_plans = false
           }
-          this.$parent.end_loading()
-        } catch (e) {
-          this.$parent.resolve_error(e)
         }
-      },
-      async get_client_details (force) {
-        this.$parent.loading = true
-        try {
-          // Loop through clients
-          var x
-          for (x in this.$parent.clients) {
-            // If client matches client in route
-            if (this.$parent.clients[x].client_id === parseInt(this.$route.params.client_id)) {
-              // Set client_details variable with client details
-              this.$parent.client_details = this.$parent.clients[x]
-              // If client_details.plans is set to false
-              if (this.$parent.clients[x].plans === false && !force) {
-                this.no_plans = true
-              // If client_details.plans is not set then query the API
-              } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
-                const response = await axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
-                // If there are no plans
-                if (response.data.length === 0) {
-                  this.no_plans = true
-                  this.$parent.clients[x].plans = false
-                  // If there are plans set the clients to include plans
-                } else {
-                  this.no_plans = false
-                  this.$parent.clients[x].plans = response.data
-                  // Update the localstorage with the plans
-                  localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-                }
-              }
-              this.$parent.client_details = this.$parent.clients[x]
-              this.loading_plans = false
-            }
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+      await this.get_sessions()
+    },
+    async update_client () {
+      this.$parent.dontLeave = true
+      this.$parent.pause_loading = true
+      try {
+        await this.$axios.post('https://api.traininblocks.com/clients',
+          {
+            id: this.$parent.client_details.client_id,
+            name: this.$parent.client_details.name,
+            email: this.$parent.client_details.email,
+            number: this.$parent.client_details.number,
+            notes: this.$parent.client_details.notes
           }
-        } catch (e) {
-          this.$parent.resolve_error(e)
-        }
-        await this.get_sessions()
-      },
-      async update_client () {
-        this.$parent.dontLeave = true
+        )
+        // Get the client information again as we have just updated the client
+        await this.$parent.clients_f()
+        await this.$parent.clients_to_vue()
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async delete_plan () {
+      if (confirm('Are you sure you want to delete this plan?')) {
         this.$parent.pause_loading = true
+        this.$parent.dontLeave = true
+        let plan
+        let id
+        for (plan of this.$parent.client_details.plans) {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            id = plan.id
+          }
+        }
         try {
-          await axios.post(`https://api.traininblocks.com/clients`,
-            {
-              'id': this.$parent.client_details.client_id,
-              'name': this.$parent.client_details.name,
-              'email': this.$parent.client_details.email,
-              'number': this.$parent.client_details.number,
-              'notes': this.$parent.client_details.notes
-            }
-          )
-          // Get the client information again as we have just updated the client
+          await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
           await this.$parent.clients_f()
-          await this.$parent.clients_to_vue()
+          this.$parent.clients_to_vue()
+          this.$router.push({ path: `/client/${this.$parent.client_details.client_id}/` })
+          this.$ga.event('Session', 'delete')
           this.$parent.end_loading()
         } catch (e) {
           this.$parent.resolve_error(e)
-        }
-      },
-      async delete_plan () {
-        if (confirm('Are you sure you want to delete this plan?')) {
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          var plan
-          var id
-          for (plan of this.$parent.client_details.plans) {
-            if (plan.id === parseInt(this.$route.params.id)) {
-              id = plan.id
-            }
-          }
-          try {
-            await axios.delete(`https://api.traininblocks.com/programmes/${id}`)
-            await this.$parent.clients_f()
-            this.$parent.clients_to_vue()
-            this.$router.push({path: `/client/${this.$parent.client_details.client_id}/`})
-            this.$ga.event('Session', 'delete')
-            this.$parent.end_loading()
-          } catch (e) {
-            this.$parent.resolve_error(e)
-          }
         }
       }
     }
   }
+}
 </script>

@@ -29,7 +29,7 @@
         Try launching the app, or continue using it in the browser
       </p>
     </div>
-    <p 
+    <p
       v-else-if="$parent.$parent.pwa.installed === true"
       class="text--large"
     >

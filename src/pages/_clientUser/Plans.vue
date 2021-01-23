@@ -137,16 +137,24 @@
             </div>
             <div v-if="session.checked === 1">
               <hr>
-              <p class="text--small">Feedback</p>
+              <p class="text--small">
+                Feedback
+              </p>
               <rich-editor
                 :show-edit-state="giveFeedback === session.id"
                 :html-injection.sync="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
               />
               <div class="feedback_bottom_bar">
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">Edit</button>
-                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">Save</button>
-                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">Cancel</button>
+                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
+                  Edit
+                </button>
+                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">
+                  Save
+                </button>
+                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">
+                  Cancel
+                </button>
               </div>
             </div>
           </div>
@@ -157,17 +165,13 @@
 </template>
 
 <script>
-import InlineSvg from 'vue-inline-svg'
-import Skeleton from '../../components/Skeleton'
-import Calendar from '../../components/Calendar'
-import RichEditor from '../../components/Editor'
+const Calendar = () => import('../../components/Calendar')
+const RichEditor = () => import('../../components/Editor')
 
 export default {
   components: {
     Calendar,
-    Skeleton,
-    RichEditor,
-    InlineSvg
+    RichEditor
   },
   data () {
     return {
@@ -194,7 +198,7 @@ export default {
     complete (p, s) {
       for (const plan of this.$parent.clientUser.plans) {
         if (plan.id === parseInt(this.$route.params.id)) {
-          for (let session of plan.sessions) {
+          for (const session of plan.sessions) {
             if (session.id === s) {
               if (session.checked === 0) {
                 session.checked = 1

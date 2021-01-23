@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack serve --config build/webpack.dev.conf.js --progress",
+    "start": "cross-env NODE_ENV=development webpack serve --config build/webpack.dev.conf.js",
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js",
     "build:report": "cross-env NODE_ENV=production REPORT=true webpack --config build/webpack.prod.conf.js --progress",
     "debug": "netlify dev --inspect",

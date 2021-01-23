@@ -48,8 +48,12 @@
   <div id="simple_chart">
     <div v-if="dataPoints.length !== 0" class="content_wrapper">
       <div class="selected_bar">
-        <p class="text--small">{{ focusText !== 'Select a point' ? focusText[1] : ''}}</p>
-        <p class="text--small grey">{{ focusText !== 'Select a point' ? focusText[0] : focusText}}</p>
+        <p class="text--small">
+          {{ focusText !== 'Select a point' ? focusText[1] : '' }}
+        </p>
+        <p class="text--small grey">
+          {{ focusText !== 'Select a point' ? focusText[0] : focusText }}
+        </p>
       </div>
       <svg
         version="1.2"
@@ -78,66 +82,70 @@
             :key="'dtVal_' + index"
             :cx="`${data[0][0]}%`"
             :cy="`${data[0][1]}%`"
+            r="6"
             @focus="focusText = [data[1], data[2]]"
             @blur="focusText = 'Select a point'"
-            r="6"
           />
         </g>
       </svg>
     </div>
     <div v-else>
-      <p class="text--small">No data to plot on the graph</p>
-      <p class="text--small grey">Make sure that you've used the correct format and have chosen a selection above</p>
+      <p class="text--small">
+        No data to plot on the graph
+      </p>
+      <p class="text--small grey">
+        Make sure that you've used the correct format and have chosen a selection above
+      </p>
     </div>
   </div>
 </template>
 
 <script>
-  export default {
-    props: {
-      dataPoints: Array,
-      labels: Array
-    },
-    data () {
-      return {
-        focusText: 'Select a point',
-        padding: 10,
-        maxValue: null,
-        minValue: null,
-        dataValues: [],
-        pathValues: [],
-        xInterval: null
-      }
-    },
-    mounted () {
+export default {
+  props: {
+    dataPoints: Array,
+    labels: Array
+  },
+  data () {
+    return {
+      focusText: 'Select a point',
+      padding: 10,
+      maxValue: null,
+      minValue: null,
+      dataValues: [],
+      pathValues: [],
+      xInterval: null
+    }
+  },
+  watch: {
+    dataPoints () {
       this.process_and_plot()
-    },
-    watch: {
-      dataPoints: function () {
-        this.process_and_plot()
-      }
-    },
-    methods: {
-      process_and_plot () {
-        this.dataValues = []
-        this.pathValues = []
-        this.xInterval = (90 / this.dataPoints.length)
-        this.maxValue = Math.max(...this.dataPoints)
-        this.minValue = Math.min(...this.dataPoints)
-        this.dataPoints.forEach((data, index) => {
-          this.dataValues.push([[this.xInterval * (index  + 1), 90 - (data * .8 / this.maxValue) * 100], data, this.labels[index]])
-        })
-        this.dataValues.forEach((data, index) => {
-          if (index < this.dataValues.length - 1) {
-            this.pathValues.push([
-              data[0][0],
-              data[0][1],
-              this.dataValues[index + 1][0][0],
-              this.dataValues[index + 1][0][1]
-            ])
-          }
-        })
-      }
+    }
+  },
+  mounted () {
+    this.process_and_plot()
+  },
+  methods: {
+    process_and_plot () {
+      this.dataValues = []
+      this.pathValues = []
+      this.xInterval = (90 / this.dataPoints.length)
+      this.maxValue = Math.max(...this.dataPoints)
+      this.minValue = Math.min(...this.dataPoints)
+      this.dataPoints.forEach((data, index) => {
+        this.dataValues.push([[this.xInterval * (index + 1), 90 - (data * 0.8 / this.maxValue) * 100], data, this.labels[index]])
+      })
+      this.dataValues.forEach((data, index) => {
+        if (index < this.dataValues.length - 1) {
+          this.pathValues.push([
+            data[0][0],
+            data[0][1],
+            this.dataValues[index + 1][0][0],
+            this.dataValues[index + 1][0][1]
+          ])
+        }
+      })
     }
   }
+}
 </script>

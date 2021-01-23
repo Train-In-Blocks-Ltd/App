@@ -39,12 +39,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import InlineSvg from 'vue-inline-svg'
-export default {
-  components: {
-    InlineSvg
-  }
-}
-</script>

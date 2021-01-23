@@ -161,11 +161,13 @@
   /* FONTS */
   .text--large {
     margin-top: 0;
-    font-size: 2.6rem !important;
+    /* stylelint-disable-next-line */
+    font-size: 2.6rem!important;
     line-height: 1.2
   }
   .text--small {
-    font-size: 1.6rem !important;
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem!important;
     line-height: 1.2
   }
   .grey {
@@ -867,15 +869,12 @@
 </template>
 
 <script>
-import axios from 'axios'
-import InlineSvg from 'vue-inline-svg'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
-import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
+const { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } = () => import('./components/email')
 
 export default {
   components: {
-    InlineSvg,
     Loading
   },
   data () {
@@ -934,7 +933,7 @@ export default {
   async created () {
     this.isAuthenticated()
     this.willBodyScroll(false)
-    axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
+    this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
     window.addEventListener('beforeunload', this.confirmLeave)
@@ -1032,7 +1031,7 @@ export default {
           this.$ga.disable()
         }
       }
-      axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
+      this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
     resolve_error (msg) {
@@ -1064,7 +1063,7 @@ export default {
     },
     async clients_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
+        const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
         if (response.data.length === 0) {
           this.no_clients = true
         } else {
@@ -1088,7 +1087,7 @@ export default {
         }
       }
       try {
-        await axios.delete(`https://api.traininblocks.com/clients/${id}`)
+        await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
         await this.archive_f()
         this.archive_to_vue()
@@ -1120,7 +1119,7 @@ export default {
     },
     async archive_f () {
       try {
-        const response = await axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
+        const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
         if (response.data.length === 0) {
           this.archive.no_archive = true
         } else {
@@ -1147,7 +1146,7 @@ export default {
           }
         }
         try {
-          const response = await axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
+          const response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
           this.response = response.data
 
           await this.clients_f()
@@ -1157,21 +1156,21 @@ export default {
           this.archive_to_vue()
           this.$ga.event('Client', 'archive')
 
-          const result = await axios.post('/.netlify/functions/okta',
+          const result = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
               url: `?filter=profile.email+eq+"${email}"&limit=1`
             }
           )
           if (result.data.length >= 1) {
-            await axios.post('/.netlify/functions/okta',
+            await this.$axios.post('/.netlify/functions/okta',
               {
                 type: 'POST',
                 body: {},
                 url: `${result.data[0].id}/lifecycle/suspend`
               }
             )
-            await axios.post('/.netlify/functions/send-email',
+            await this.$axios.post('/.netlify/functions/send-email',
               {
                 to: email,
                 subject: 'Account Deactivated',
@@ -1210,7 +1209,7 @@ export default {
           }
         }
         try {
-          const response = await axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+          const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
           this.response = response.data
 
           await this.archive_f()
@@ -1231,7 +1230,7 @@ export default {
     async get_templates (force) {
       try {
         if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
-          const response = await axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+          const response = await this.$axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
           localStorage.setItem('templates', JSON.stringify(response.data))
         }
         this.templates = JSON.parse(localStorage.getItem('templates'))
@@ -1245,16 +1244,16 @@ export default {
           this.dontLeave = true
           let response
           if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
-            response = await axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
+            response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
             if (response.data.length === 0) {
               this.create_portfolio()
             } else {
               localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
             }
           } else {
-            const client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+            const client = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
             if (client.data[0].pt_id) {
-              response = await axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
+              response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
               if (response.data.length !== 0) {
                 localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
               }
@@ -1271,7 +1270,7 @@ export default {
       this.dontLeave = true
       this.pause_loading = true
       try {
-        await axios.put('https://api.traininblocks.com/portfolio',
+        await this.$axios.put('https://api.traininblocks.com/portfolio',
           {
             pt_id: this.claims.sub,
             trainer_name: '',
@@ -1287,11 +1286,11 @@ export default {
     },
     async get_plans () {
       try {
-        const plans = await axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+        const plans = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
         this.clientUser.plans = plans.data
         let f
         for (f in this.clientUser.plans) {
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
+          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
@@ -1302,7 +1301,7 @@ export default {
       try {
         let f
         for (f in this.clientUser.plans) {
-          const response = await axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
+          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
           this.clientUser.plans[f].sessions = response.data
         }
       } catch (e) {
@@ -1332,7 +1331,7 @@ export default {
         }
       }
       try {
-        await axios.post('https://api.traininblocks.com/client-workouts',
+        await this.$axios.post('https://api.traininblocks.com/client-workouts',
           {
             id: sessionId,
             name: sessionName,
@@ -1341,16 +1340,16 @@ export default {
           }
         )
         this.$ga.event('Session', 'update')
-        const client = await axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+        const client = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
         if (client.data[0].notifications === 1) {
           if (sessionFeedback !== null) {
-            const ptEmail = await axios.post('/.netlify/functions/okta',
+            const ptEmail = await this.$axios.post('/.netlify/functions/okta',
               {
                 type: 'GET',
                 url: `?filter=id+eq+"${client.data[0].pt_id}"&limit=1`
               }
             )
-            await axios.post('/.netlify/functions/send-email',
+            await this.$axios.post('/.netlify/functions/send-email',
               {
                 to: ptEmail.data[0].credentials.emails[0].value,
                 subject: this.claims.email + ' has submitted feedback for ' + sessionName,

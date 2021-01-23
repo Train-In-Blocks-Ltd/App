@@ -152,11 +152,11 @@
       <label>
         <p>Email:</p>
         <input
-          type="email"
           v-model="email"
+          type="email"
           class="recover_password small_border_radius"
           autofocus
-        />
+        >
       </label>
       <button type="submit">
         Send recovery email
@@ -179,13 +179,8 @@
 
 <script>
 import OktaSignIn from '@okta/okta-signin-widget'
-import InlineSvg from 'vue-inline-svg'
-import axios from 'axios'
 
 export default {
-  components: {
-    InlineSvg
-  },
   data () {
     return {
       open: false,
@@ -267,7 +262,7 @@ export default {
       this.error = null
       this.success = null
       try {
-        await axios.post('/.netlify/functions/reset-password',
+        await this.$axios.post('/.netlify/functions/reset-password',
           {
             email: this.email
           }

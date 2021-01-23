@@ -353,62 +353,146 @@
         </div>
       </div>
     </modal>
-    <modal name="move" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
-      <form @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)" class="modal--move">
+    <modal
+      name="move"
+      height="100%"
+      width="100%"
+      :adaptive="true"
+      :click-to-close="false"
+      @opened="$refs.range.focus()"
+    >
+      <form class="modal--move" @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)">
         <div class="wrapper--centered-item">
-          <p class="text--small">Move to a different microcycle</p>
-          <p class="text--small grey">This will change the colour code assigned to the sessions</p><br><br><br>
+          <p class="text--small">
+            Move to a different microcycle
+          </p>
+          <p class="text--small grey">
+            This will change the colour code assigned to the sessions
+          </p><br><br><br>
           <label for="range">Move to:</label>
-          <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="moveTarget" min="1" :max="maxWeek" required /><br><br>
-          <button type="submit">Move</button>
-          <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+          <input
+            id="range"
+            ref="range"
+            v-model="moveTarget"
+            class="input--modal"
+            name="range"
+            type="number"
+            min="1"
+            :max="maxWeek"
+            required
+          ><br><br>
+          <button type="submit">
+            Move
+          </button>
+          <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">
+            Cancel
+          </button>
         </div>
       </form>
     </modal>
-    <modal name="shift" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
-      <form @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)" class="modal--shift">
+    <modal
+      name="shift"
+      height="100%"
+      width="100%"
+      :adaptive="true"
+      :click-to-close="false"
+      @opened="$refs.range.focus()"
+    >
+      <form class="modal--shift" @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)">
         <div class="wrapper--centered-item">
-          <p class="text--small">Shift the dates of the sessions</p>
-          <p class="text--small grey">This will move the dates ahead or behind by the specified amount</p><br><br><br>
+          <p class="text--small">
+            Shift the dates of the sessions
+          </p>
+          <p class="text--small grey">
+            This will move the dates ahead or behind by the specified amount
+          </p><br><br><br>
           <label for="range">Shift session dates by: </label>
-          <input class="input--modal" id="range" name="range" ref="range" type="number" v-model="shiftDays" required /><br><br>
-          <button type="submit">Shift</button>
-          <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">Cancel</button>
+          <input
+            id="range"
+            ref="range"
+            v-model="shiftDays"
+            class="input--modal"
+            name="range"
+            type="number"
+            required
+          ><br><br>
+          <button type="submit">
+            Shift
+          </button>
+          <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">
+            Cancel
+          </button>
         </div>
       </form>
     </modal>
-    <modal name="copy" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.range.focus()">
-      <form @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)" class="modal--copy">
-          <div class="wrapper--centered-item">
-            <p class="text--small">Copy across to different microcycles</p>
-            <p class="text--small grey">All you'll have to do is to change and progress each session</p><br><br><br>
-            <label for="range">From {{currentWeek}} to: </label>
-            <input class="input--modal" id="range"  name="range" ref="range" type="number" v-model="copyTarget" :min="currentWeek + 1" :max="maxWeek" required />
-            <br>
-            <label for="range">Days until next sessions: </label>
-            <input class="input--modal" v-model="daysDiff" name="range" type="number" min="1" required/><br><br>
-            <button type="submit">Copy</button>
-            <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.willBodyScroll(true)">Cancel</button>
-          </div>
+    <modal
+      name="copy"
+      height="100%"
+      width="100%"
+      :adaptive="true"
+      :click-to-close="false"
+      @opened="$refs.range.focus()"
+    >
+      <form class="modal--copy" @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)">
+        <div class="wrapper--centered-item">
+          <p class="text--small">
+            Copy across to different microcycles
+          </p>
+          <p class="text--small grey">
+            All you'll have to do is to change and progress each session
+          </p><br><br><br>
+          <label for="range">From {{ currentWeek }} to: </label>
+          <input
+            id="range"
+            ref="range"
+            v-model="copyTarget"
+            class="input--modal"
+            name="range"
+            type="number"
+            :min="currentWeek + 1"
+            :max="maxWeek"
+            required
+          >
+          <br>
+          <label for="range">Days until next sessions: </label>
+          <input
+            v-model="daysDiff"
+            class="input--modal"
+            name="range"
+            type="number"
+            min="1"
+            required
+          ><br><br>
+          <button type="submit">
+            Copy
+          </button>
+          <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.willBodyScroll(true)">
+            Cancel
+          </button>
+        </div>
       </form>
     </modal>
     <div
       v-if="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
-      @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)"
       class="icon_open--stats icon_open_middle"
       aria-label="Statistics"
+      @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)"
     >
-      <inline-svg :src="require('../../assets/svg/stats.svg')"/>
-      <p class="text">Statistics</p>
+      <inline-svg :src="require('../../assets/svg/stats.svg')" />
+      <p class="text">
+        Statistics
+      </p>
     </div>
     <div
       v-show="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
-      @click="printPage()"
       class="icon_open--print icon_open_bottom"
       aria-label="Print"
+      @click="printPage()"
     >
-      <inline-svg :src="require('../../assets/svg/print.svg')"/>
-      <p class="text">Print</p>
+      <inline-svg :src="require('../../assets/svg/print.svg')" />
+      <p class="text">
+        Print
+      </p>
     </div>
     <div>
       <div :class="{openedSections: isStatsOpen}" class="section--a" />
@@ -429,28 +513,41 @@
       </div>
     </transition>
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
-    <div v-for="(plan, index) in this.$parent.$parent.client_details.plans"
-      :key="index">
+    <div
+      v-for="(plan, index) in this.$parent.$parent.client_details.plans"
+      :key="index"
+    >
       <div v-if="plan.id == $route.params.id">
         <div class="top_grid">
           <div class="client_info">
-            <input @blur="$parent.update_client()" class="text--large allow_text_overflow" type="text" aria-label="Client Name" autocomplete="name" v-model="$parent.$parent.client_details.name" />
-              <!-- Update the plan info -->
+            <input
+              v-model="$parent.$parent.client_details.name"
+              class="text--large allow_text_overflow"
+              type="text"
+              aria-label="Client Name"
+              autocomplete="name"
+              @blur="$parent.update_client()"
+            >
+            <!-- Update the plan info -->
             <form class="plan_info">
               <input
-                @blur="$parent.$parent.pause_loading = true, update_plan()"
                 v-model="plan.name"
                 class="text--small allow_text_overflow"
                 aria-label="Session name"
                 type="text"
                 name="name"
+                @blur="$parent.$parent.pause_loading = true, update_plan()"
               >
             </form>
           </div><br>  <!-- client_info -->
           <div class="wrapper--progress-bar">
             <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal, noSessions: $parent.no_sessions }">
-              <p v-if="!$parent.no_sessions" class="grey">Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions</p>
-              <p v-if="$parent.no_sessions" class="grey">Add some sessions to see programme adherence here...</p>
+              <p v-if="!$parent.no_sessions" class="grey">
+                Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
+              </p>
+              <p v-if="$parent.no_sessions" class="grey">
+                Add some sessions to see programme adherence here...
+              </p>
             </div>
           </div>
         </div> <!-- top_grid -->
@@ -458,19 +555,25 @@
           <div class="calendar">
             <div class="plan_notes" :class="{ activeState: editPlanNotes }">
               <div class="plan_notes__header">
-                <p class="text--small">Plan Notes</p>
-                <a class="a--plan_notes" href="javascript:void(0)" v-if="!editPlanNotes" @click="editPlanNotes = true, cancelSessionNotes(), tempEditorStore = plan.notes">
+                <p class="text--small">
+                  Plan Notes
+                </p>
+                <a v-if="!editPlanNotes" class="a--plan_notes" href="javascript:void(0)" @click="editPlanNotes = true, cancelSessionNotes(), tempEditorStore = plan.notes">
                   Edit
                 </a>
               </div>
               <rich-editor
-                :showEditState="editPlanNotes"
-                :htmlInjection.sync="plan.notes"
-                :emptyPlaceholder="'What do you want to achieve in this plan?'"
+                :show-edit-state="editPlanNotes"
+                :html-injection.sync="plan.notes"
+                :empty-placeholder="'What do you want to achieve in this plan?'"
               />
               <div v-if="editPlanNotes" class="bottom_bar">
-                <button @click="editPlanNotes = false, update_plan()" class="button--save">Save</button>
-                <button @click="editPlanNotes = false, plan.notes = tempEditorStore" class="cancel">Cancel</button>
+                <button class="button--save" @click="editPlanNotes = false, update_plan()">
+                  Save
+                </button>
+                <button class="cancel" @click="editPlanNotes = false, plan.notes = tempEditorStore">
+                  Cancel
+                </button>
               </div>
             </div>
             <div class="wrapper--calendar">
@@ -520,36 +623,69 @@
                 <button class="button--new-session" @click="createSession()">
                   New session
                 </button>
-            </div>
-              <p class="text--small grey text--no_sessions" v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)">No sessions yet :(</p>
+              </div>
+              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--small grey text--no_sessions">
+                No sessions yet :(
+              </p>
               <div v-if="!$parent.$parent.loading">
-                <p v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty" class="expand-all" @click="expandAll(expandText(expandedSessions))">{{ expandText(expandedSessions) }} all</p>
+                <p v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty" class="expand-all" @click="expandAll(expandText(expandedSessions))">
+                  {{ expandText(expandedSessions) }} all
+                </p>
                 <!-- New session -->
-                <div class="container--sessions" v-if="!$parent.no_sessions">
+                <div v-if="!$parent.no_sessions" class="container--sessions">
                   <!-- Loop through sessions -->
-                  <div :id="'session-' + session.id" class="wrapper--session" :class="{activeState: session.id === editSession}" v-show="session.week_id === currentWeek" v-for="(session, index) in plan.sessions"
-                    :key="index">
+                  <div
+                    v-for="(session, indexed) in plan.sessions"
+                    v-show="session.week_id === currentWeek"
+                    :id="'session-' + session.id"
+                    :key="indexed"
+                    class="wrapper--session"
+                    :class="{activeState: session.id === editSession}"
+                  >
                     <div class="wrapper--session__header">
                       <div class="right_margin">
-                        <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{session.name}}</b></span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" class="text--date">{{day(session.date)}}</span>
-                        <span v-if="session.id !== editSession" class="text--date">{{session.date}}</span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{isCompleted(session.checked)}}</span>
-                        <input @blur="scan()" v-if="session.id === editSession" class="session-name small_border_radius" type="text" name="session-name" pattern="[^\/]" v-model="session.name" />
-                        <input @blur="scan()" v-if="session.id === editSession" class="session-date small_border_radius" type="date" name="session-date" v-model="session.date" />
-                        <span @click="session.checked = toggleComplete(session.checked)" v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked">{{isCompleted(session.checked)}}</span>
+                        <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
+                        <span v-if="session.id !== editSession" class="text--date">{{ day(session.date) }}</span>
+                        <span v-if="session.id !== editSession" class="text--date">{{ session.date }}</span><br v-if="session.id !== editSession">
+                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ isCompleted(session.checked) }}</span>
+                        <input
+                          v-if="session.id === editSession"
+                          v-model="session.name"
+                          class="session-name small_border_radius"
+                          type="text"
+                          name="session-name"
+                          pattern="[^\/]"
+                          @blur="scan()"
+                        >
+                        <input
+                          v-if="session.id === editSession"
+                          v-model="session.date"
+                          class="session-date small_border_radius"
+                          type="date"
+                          name="session-date"
+                          @blur="scan()"
+                        >
+                        <span v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked" @click="session.checked = toggleComplete(session.checked)">{{ isCompleted(session.checked) }}</span>
                       </div>
                       <div class="header-options">
-                        <checkbox :itemId="session.id" :type="'v1'" aria-label="Select this session" />
-                        <inline-svg id="expand" class="icon--expand" v-show="!isEditingSession" :class="{expanded: expandedSessions.includes(session.id)}" :src="require('../../assets/svg/expand.svg')" title="Info" @click="toggleExpandedSessions(session.id)"/>
+                        <checkbox :item-id="session.id" :type="'v1'" aria-label="Select this session" />
+                        <inline-svg
+                          v-show="!isEditingSession"
+                          id="expand"
+                          class="icon--expand"
+                          :class="{expanded: expandedSessions.includes(session.id)}"
+                          :src="require('../../assets/svg/expand.svg')"
+                          title="Info"
+                          @click="toggleExpandedSessions(session.id)"
+                        />
                       </div>
                     </div>
                     <rich-editor
                       v-show="expandedSessions.includes(session.id)"
-                      :showEditState="session.id === editSession"
-                      :htmlInjection.sync="session.notes"
-                      :emptyPlaceholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
-                      :dataForTemplates="$parent.$parent.templates"
+                      :show-edit-state="session.id === editSession"
+                      :html-injection.sync="session.notes"
+                      :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
+                      :data-for-templates="$parent.$parent.templates"
                     />
                     <div v-if="session.id === showFeedback" class="show_feedback animate animate__fadeIn">
                       <hr><br>
@@ -664,7 +800,7 @@
                     </div>
                   </div>
                 </div>
-                <simple-chart :dataPoints="dataValues" :labels="labelValues" aria-label="Graph" />
+                <simple-chart :data-points="dataValues" :labels="labelValues" aria-label="Graph" />
               </div>
             </div>
           </transition>
@@ -675,21 +811,16 @@
 </template>
 
 <script>
-import axios from 'axios'
-import InlineSvg from 'vue-inline-svg'
-import Checkbox from '../../components/Checkbox'
-import Calendar from '../../components/Calendar'
-import RichEditor from '../../components/Editor'
-import Skeleton from '../../components/Skeleton'
-import SimpleChart from '../../components/SimpleChart'
+const Checkbox = () => import('../../components/Checkbox')
+const Calendar = () => import('../../components/Calendar')
+const RichEditor = () => import('../../components/Editor')
+const SimpleChart = () => import('../../components/SimpleChart')
 
 export default {
   components: {
-    InlineSvg,
     Checkbox,
     Calendar,
     RichEditor,
-    Skeleton,
     SimpleChart
   },
   data () {
@@ -952,9 +1083,9 @@ export default {
 
     check_for_week_sessions () {
       let arr = 0
-      this.$parent.$parent.client_details.plans.forEach(plan => {
+      this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach(session => {
+          plan.sessions.forEach((session) => {
             if (session.week_id === this.currentWeek) {
               arr += 1
             }
@@ -1435,7 +1566,7 @@ export default {
       }
       try {
         this.sortSessions()
-        const response = await axios.post('https://api.traininblocks.com/programmes',
+        const response = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
             id: plan.id,
             name: plan.name,
@@ -1501,7 +1632,7 @@ export default {
         }
       }
       try {
-        await axios.post('https://api.traininblocks.com/workouts',
+        await this.$axios.post('https://api.traininblocks.com/workouts',
           {
             id: sessionsId,
             name: sessionsName,
@@ -1524,7 +1655,7 @@ export default {
       try {
         this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
-        const response = await axios.put('https://api.traininblocks.com/workouts',
+        const response = await this.$axios.put('https://api.traininblocks.com/workouts',
           {
             name: this.new_session.name,
             programme_id: this.$route.params.id,
@@ -1557,7 +1688,7 @@ export default {
       try {
         this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
-        await axios.delete(`https://api.traininblocks.com/workouts/${id}`)
+        await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
         await this.$parent.get_sessions(this.force)
         await this.update_plan()
 

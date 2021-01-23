@@ -62,7 +62,7 @@
       <b>{{ this.$parent.error }}</b>
     </p>
     <!-- Loop through clients -->
-    <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
+    <div v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients" class="home--container">
       <input
         v-model="search"
         type="search"
@@ -70,25 +70,30 @@
         placeholder="Find a client"
         class="text--small search"
         aria-label="Find a client"
-      />
+      >
       <div v-if="response !== ''" class="text--new_msg">
-        <p class="text--small">{{ response }}</p>
-        <p class="text--small grey">Well done on getting a new client</p>
+        <p class="text--small">
+          {{ response }}
+        </p>
+        <p class="text--small grey">
+          Well done on getting a new client
+        </p>
       </div>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
         <skeleton v-if="$parent.loading" :type="'client'" />
         <router-link
-          :to="'/client/'+client.client_id+'/'"
+          v-for="(client, index) in $parent.clients"
           v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
           :id="'a' + client.client_id"
-          v-for="(client, index) in $parent.clients"
           :key="index"
+          :to="'/client/'+client.client_id+'/'"
           class="wrapper--client_link"
         >
           <client-link
             :name="client.name"
-            :email="client.email" :number="client.number"
+            :email="client.email"
+            :number="client.number"
             :notes="client.notes"
             :class="{ recentlyAdded: persistResponse === client.name }"
             class="client_link"
@@ -100,50 +105,46 @@
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import ClientLink from '../components/ClientLink'
-  import NewClient from '../components/NewClient'
-  import WhatsNew from '../components/WhatsNew'
-  import InstallApp from '../components/InstallPWA'
-  import Skeleton from '../components/Skeleton'
-  import Splash from '../components/Splash'
+const ClientLink = () => import('../components/ClientLink')
+const NewClient = () => import('../components/NewClient')
+const WhatsNew = () => import('../components/WhatsNew')
+const InstallApp = () => import('../components/InstallPWA')
+const Splash = () => import('../components/Splash')
 
-  export default {
-    components: {
-      InlineSvg,
-      ClientLink,
-      NewClient,
-      WhatsNew,
-      InstallApp,
-      Skeleton,
-      Splash
-    },
-    data () {
-      return {
-        response: '',
-        persistResponse: '',
-        search: '',
-        isNewClientOpen: false,
-        isInstallOpen: false,
-        isWhatsNewOpen: false
-      }
-    },
-    created () {
-      setTimeout(() => {
-        this.$parent.splashed = true
-        this.$parent.willBodyScroll(true)
-      }, 4000)
-    },
-    mounted () {
-      this.$parent.loading = true
-      this.$parent.setup()
-      this.$parent.client_details = null
-      this.$parent.end_loading()
-    },
-    methods: {
-      responseDelay () {
-        setTimeout(() => { this.response = '' }, 5000)
-      }
+export default {
+  components: {
+    ClientLink,
+    NewClient,
+    WhatsNew,
+    InstallApp,
+    Splash
+  },
+  data () {
+    return {
+      response: '',
+      persistResponse: '',
+      search: '',
+      isNewClientOpen: false,
+      isInstallOpen: false,
+      isWhatsNewOpen: false
+    }
+  },
+  created () {
+    setTimeout(() => {
+      this.$parent.splashed = true
+      this.$parent.willBodyScroll(true)
+    }, 4000)
+  },
+  mounted () {
+    this.$parent.loading = true
+    this.$parent.setup()
+    this.$parent.client_details = null
+    this.$parent.end_loading()
+  },
+  methods: {
+    responseDelay () {
+      setTimeout(() => { this.response = '' }, 5000)
     }
   }
+}
 </script>

@@ -43,39 +43,47 @@
       <input
         v-if="!$parent.loading"
         v-model="$parent.portfolio.business_name"
-        @blur="update()"
         class="trainer_info__business text--large"
         placeholder="Business name"
         aria-label="Business name"
         type="text"
         autocomplete="name"
+        @blur="update()"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_large'" />
       <input
         v-if="!$parent.loading"
         v-model="$parent.portfolio.trainer_name"
-        @blur="update()"
         class="input--forms allow_text_overflow"
         placeholder="Trainer Name"
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
+        @blur="update()"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
     </form>
     <div v-if="!$parent.loading" class="wrapper_card">
-      <p class="text--small">Portfolio</p>
+      <p class="text--small">
+        Portfolio
+      </p>
       <rich-editor
         :show-edit-state="editing_card"
         :html-injection.sync="$parent.portfolio.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
       />
       <div class="bottom_bar">
-        <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">Edit</button>
-        <button v-if="editing_card" @click="editing_card= false, update()">Save</button>
-        <button v-if="editing_card" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore" class="cancel">Cancel</button>
+        <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">
+          Edit
+        </button>
+        <button v-if="editing_card" @click="editing_card= false, update()">
+          Save
+        </button>
+        <button v-if="editing_card" class="cancel" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore">
+          Cancel
+        </button>
       </div>
     </div>
     <skeleton v-else :type="'session'" class="wrapper_card_skeleton" />
@@ -83,14 +91,11 @@
 </template>
 
 <script>
-import axios from 'axios'
-import RichEditor from '../components/Editor'
-import Skeleton from '../components/Skeleton'
+const RichEditor = () => import('../components/Editor')
 
 export default {
   components: {
-    RichEditor,
-    Skeleton
+    RichEditor
   },
   data () {
     return {
@@ -112,7 +117,7 @@ export default {
       this.$parent.dontLeave = true
       this.$parent.pause_loading = true
       try {
-        await axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
+        await this.$axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
           {
             trainer_name: this.$parent.portfolio.trainer_name,
             business_name: this.$parent.portfolio.business_name,

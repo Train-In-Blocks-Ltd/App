@@ -116,50 +116,54 @@
 
 <template>
   <div id="wrapper--rich_editor">
-    <p id="rich_editor_version" style="display:none">{{ editorVersion }}</p>
-    <p v-if="outdated">This editor is outdated but it's still working. You can update by creating a new session and moving the plans over. We don't recommend copy and pasting images and videos into the new session.</p>
+    <p id="rich_editor_version" style="display: none">
+      {{ editorVersion }}
+    </p>
+    <p v-if="outdated">
+      This editor is outdated but it's still working. You can update by creating a new session and moving the plans over. We don't recommend copy and pasting images and videos into the new session.
+    </p>
     <div v-if="showEditState">
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
           <button
             :class="{ activeStyle: boldActive }"
-            @click="format('bold'), check_cmd_state(), focus_on_editor()"
             title="Bold"
+            @click="format('bold'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
           </button>
           <button
             :class="{ activeStyle: italicActive }"
-            @click="format('italic'), check_cmd_state(), focus_on_editor()"
             title="Italic"
+            @click="format('italic'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
           </button>
           <button
             :class="{ activeStyle: underlineActive }"
-            @click="format('underline'), check_cmd_state(), focus_on_editor()"
             title="Underline"
+            @click="format('underline'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
           </button>
           <button
             :class="{ activeStyle: olActive }"
-            @click="format('insertOrderedList'), check_cmd_state(), focus_on_editor()"
             title="Ordered List"
+            @click="format('insertOrderedList'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
           </button>
           <button
             :class="{ activeStyle: ulActive }"
-            @click="format('insertUnorderedList'), check_cmd_state(), focus_on_editor()"
             title="Unordered List"
+            @click="format('insertUnorderedList'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
           <button
-            @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
             :class="{ activeStyle: ulActive }"
             title="Checkbox"
+            @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
           </button>
@@ -169,30 +173,30 @@
           >
             <button
               :disabled="!caretIsInEditor"
-              @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
               title="Add Link"
+              @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/link.svg')" />
             </button>
             <button
               :disabled="!caretIsInEditor"
-              @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
               title="Insert Image"
+              @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
             </button>
             <button
               :disabled="!caretIsInEditor"
-              @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
               title="Insert Video"
+              @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
             </button>
             <button
               v-if="dataForTemplates !== undefined && dataForTemplates !== null"
               :disabled="!caretIsInEditor"
-              @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
               title="Use Template"
+              @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/template.svg')" />
             </button>
@@ -201,7 +205,7 @@
         </div>
       </div>
       <!-- LINK -->
-      <form v-if="showAddLink" @submit.prevent="add_link()" class="pop_up--add_link">
+      <form v-if="showAddLink" class="pop_up--add_link" @submit.prevent="add_link()">
         <div class="wrapper--input--add_link right_margin">
           <input v-model="addLinkName" class="input--add_link small_border_radius" type="text" placeholder="Name" required>
           <input v-model="addLinkURL" class="input--add_link small_border_radius" type="text" placeholder="URL" required>
@@ -216,9 +220,11 @@
       </div>
       <!-- VIDEO -->
 
-      <form v-if="showAddVideo" @submit.prevent="add_video()" class="pop_up--add_video">
+      <form v-if="showAddVideo" class="pop_up--add_video" @submit.prevent="add_video()">
         <input v-model="addVideoURL" class="input--add_video small_border_radius" type="text" placeholder="YouTube URL" required>
-        <button class="add_video_submit" type="submit">Add</button>
+        <button class="add_video_submit" type="submit">
+          Add
+        </button>
       </form>
       <!-- TEMPLATE -->
       <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">
@@ -227,25 +233,35 @@
           :key="'template-' + index"
           class="template_item"
         >
-          <modal :name="'preview_template_' + item.id" height="100%" width="100%" :adaptive="true" :clickToClose="false">
+          <modal :name="'preview_template_' + item.id" height="100%" width="100%" :adaptive="true" :click-to-close="false">
             <div class="modal--preview_template">
               <div class="wrapper--centered-item">
                 <div v-if="previewTemplate !== null">
                   <div v-html="previewTemplate" /><br>
-                  <button @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
+                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
+                    Close
+                  </button>
                 </div>
                 <div v-else>
-                  <p class="text--small">Something went wrong with the preview</p>
-                  <p class="text--small grey">Please try again</p><br>
-                  <button @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null" class="cancel">Close</button>
+                  <p class="text--small">
+                    Something went wrong with the preview
+                  </p>
+                  <p class="text--small grey">
+                    Please try again
+                  </p><br>
+                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
           </modal>
-          <button @click="add_template(item.template)">{{ item.name }}</button>
+          <button @click="add_template(item.template)">
+            {{ item.name }}
+          </button>
           <inline-svg
-            @click="previewTemplate = item.template, $modal.show(`preview_template_${item.id}`), will_body_scroll(false)"
             :src="require('../assets/svg/editor/preview.svg')"
+            @click="previewTemplate = item.template, $modal.show(`preview_template_${item.id}`), will_body_scroll(false)"
           />
         </div>
       </div>
@@ -266,260 +282,257 @@
 </template>
 
 <script>
-  import Compressor from 'compressorjs'
-  import InlineSvg from 'vue-inline-svg'
-  export default {
-    components: {
-      InlineSvg
+import Compressor from 'compressorjs'
+
+export default {
+  props: {
+    showEditState: Boolean,
+    htmlInjection: String,
+    emptyPlaceholder: String,
+    dataForTemplates: Array
+  },
+  data () {
+    return {
+      editorVersion: 'Graphite 1.1',
+      outdated: false,
+      showTooltip: false,
+      caretIsInEditor: false,
+      savedSelection: null,
+      initialHTML: '',
+      editedHTML: '',
+      boldActive: false,
+      italicActive: false,
+      underlineActive: false,
+      olActive: false,
+      ulActive: false,
+      showAddLink: false,
+      addLinkName: '',
+      addLinkURL: '',
+      showAddImage: false,
+      base64Img: null,
+      showAddVideo: false,
+      addVideoURL: '',
+      showAddTemplate: false,
+      previewTemplate: null
+    }
+  },
+  watch: {
+    showEditState () {
+      this.update_html()
+      this.initialHTML = this.htmlInjection
+      if (this.showEditState) {
+        document.addEventListener('click', this.check_caret_pos)
+        document.addEventListener('keydown', this.check_cmd_state)
+      } else {
+        this.update_edited_notes()
+        document.removeEventListener('click', this.check_caret_pos)
+        document.removeEventListener('keydown', this.check_cmd_state)
+        this.caretIsInEditor = false
+      }
+    }
+  },
+  mounted () {
+    this.update_html()
+  },
+  methods: {
+    // GENERAL
+    /*
+    check_version () {
+      let versionId = document.getElementById('rich_editor_version').innerText
+      let version = parseFloat(versionId.match(/\d+.\d+/gmi))
     },
-    props: {
-      showEditState: Boolean,
-      htmlInjection: String,
-      emptyPlaceholder: String,
-      dataForTemplates: Array
+    */
+    update_html () {
+      const imgs = document.querySelectorAll('p > img')
+      const iframes = document.querySelectorAll('.ql-video')
+      iframes.forEach((item) => {
+        item.removeAttribute('class')
+        item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+      })
+      imgs.forEach((item) => {
+        item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+      })
     },
-    data () {
-      return {
-        editorVersion: 'Graphite 1.1',
-        outdated: false,
-        showTooltip: false,
-        caretIsInEditor: false,
-        savedSelection: null,
-        initialHTML: '',
-        editedHTML: '',
-        boldActive: false,
-        italicActive: false,
-        underlineActive: false,
-        olActive: false,
-        ulActive: false,
-        showAddLink: false,
-        addLinkName: '',
-        addLinkURL: '',
-        showAddImage: false,
-        base64Img: null,
-        showAddVideo: false,
-        addVideoURL: '',
-        showAddTemplate: false,
-        previewTemplate: null
+    focus_on_editor () {
+      document.getElementById('rich_editor').focus()
+    },
+    will_body_scroll (state) {
+      const body = document.getElementsByTagName('body')[0]
+      if (state) {
+        body.style.overflow = 'auto'
+      } else {
+        body.style.overflow = 'hidden'
       }
     },
-    mounted () {
-      this.update_html()
+    check_cmd_state () {
+      setInterval(() => {
+        const boldState = document.queryCommandState('bold')
+        const italicState = document.queryCommandState('italic')
+        const underlineState = document.queryCommandState('underline')
+        const orderedListState = document.queryCommandState('insertOrderedList')
+        const unorderedListState = document.queryCommandState('insertUnorderedList')
+        this.boldActive = boldState
+        this.italicActive = italicState
+        this.underlineActive = underlineState
+        this.olActive = orderedListState
+        this.ulActive = unorderedListState
+      }, 100)
     },
-    watch: {
-      showEditState: function () {
-        this.update_html()
-        this.initialHTML = this.htmlInjection
-        if (this.showEditState) {
-          document.addEventListener('click', this.check_caret_pos)
-          document.addEventListener('keydown', this.check_cmd_state)
+    check_caret_pos () {
+      const caretPosition = document.getSelection()
+      if (caretPosition.focusNode !== null) {
+        if (caretPosition.focusNode.parentNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.id === 'rich_editor') {
+          this.caretIsInEditor = true
         } else {
-          this.update_edited_notes()
-          document.removeEventListener('click', this.check_caret_pos)
-          document.removeEventListener('keydown', this.check_cmd_state)
           this.caretIsInEditor = false
         }
       }
     },
-    methods: {
-      // GENERAL
-      /*
-      check_version () {
-        let versionId = document.getElementById('rich_editor_version').innerText
-        let version = parseFloat(versionId.match(/\d+.\d+/gmi))
-      },
-      */
-     update_html () {
-       const imgs = document.querySelectorAll('p > img')
-       const iframes = document.querySelectorAll('.ql-video')
-       iframes.forEach(item => {
-         item.removeAttribute('class')
-         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
-       })
-       imgs.forEach(item => {
-         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
-       })
-     },
-      focus_on_editor () {
-        document.getElementById('rich_editor').focus()
-      },
-      will_body_scroll (state) {
-        const body = document.getElementsByTagName('body')[0]
-        if (state) {
-          body.style.overflow = 'auto'
-        } else {
-          body.style.overflow = 'hidden'
-        }
-      },
-      check_cmd_state () {
-        setInterval(() => {
-          const boldState = document.queryCommandState('bold')
-          const italicState = document.queryCommandState('italic')
-          const underlineState = document.queryCommandState('underline')
-          const orderedListState = document.queryCommandState('insertOrderedList')
-          const unorderedListState = document.queryCommandState('insertUnorderedList')
-          this.boldActive = boldState
-          this.italicActive = italicState
-          this.underlineActive = underlineState
-          this.olActive = orderedListState
-          this.ulActive = unorderedListState
-        }, 100)
-      },
-      check_caret_pos () {
-        let caretPosition = document.getSelection()
-        if (caretPosition.focusNode !== null) {
-          if (caretPosition.focusNode.parentNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.id === 'rich_editor') {
-            this.caretIsInEditor = true
-          } else {
-            this.caretIsInEditor = false
-          }
-        }
-      },
-      remove_brackets_and_checkbox (dataIn) {
-        if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
-        } else {
-          return dataIn
-        }
-      },
-      test_empty_html (text) {
-        if (text !== null) {
-          var rmTags = text.replace(/<[^>]*>?/gm, '')
-          var rmSpace = rmTags.replace(/&nbsp;/g, '').replace(/ /g, '')
-          if (rmSpace === '') {
-            return true
-          } else {
-            return false
-          }
-        } else {
+    remove_brackets_and_checkbox (dataIn) {
+      if (dataIn !== null) {
+        return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
+      } else {
+        return dataIn
+      }
+    },
+    test_empty_html (text) {
+      if (text !== null) {
+        const rmTags = text.replace(/<[^>]*>?/gm, '')
+        const rmSpace = rmTags.replace(/&nbsp;/g, '').replace(/ /g, '')
+        if (rmSpace === '') {
           return true
+        } else {
+          return false
         }
-      },
-      update_edited_notes () {
-        this.editedHTML = document.getElementById('rich_editor').innerHTML
-        this.$emit('update:htmlInjection', this.editedHTML)
-      },
-      format (com, val) {
-        document.execCommand(com, false, val)
-      },
-      save_selection () {
-        let sel
+      } else {
+        return true
+      }
+    },
+    update_edited_notes () {
+      this.editedHTML = document.getElementById('rich_editor').innerHTML
+      this.$emit('update:htmlInjection', this.editedHTML)
+    },
+    format (com, val) {
+      document.execCommand(com, false, val)
+    },
+    save_selection () {
+      let sel
+      if (window.getSelection) {
+        sel = window.getSelection()
+        if (sel.getRangeAt && sel.rangeCount) {
+          return sel.getRangeAt(0)
+        }
+      } else if (document.selection && document.selection.createRange) {
+        return document.selection.createRange()
+      }
+      return null
+    },
+    restore_selection (range) {
+      let sel
+      if (range) {
         if (window.getSelection) {
           sel = window.getSelection()
-          if (sel.getRangeAt && sel.rangeCount) {
-            return sel.getRangeAt(0)
-          }
-        } else if (document.selection && document.selection.createRange) {
-          return document.selection.createRange()
+          sel.removeAllRanges()
+          sel.addRange(range)
+        } else if (document.selection && range.select) {
+          range.select()
         }
-        return null
-      },
-      restore_selection (range) {
-        let sel
-        if (range) {
-          if (window.getSelection) {
-            sel = window.getSelection()
-            sel.removeAllRanges()
-            sel.addRange(range)
-          } else if (document.selection && range.select) {
-            range.select()
-          }
-        }
-      },
-      // CHECKBOX
-      add_checkbox () {
-        this.format('insertHTML', `<input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)">`)
-      },
-      // LINK
-      show_link_adder () {
-        this.savedSelection = this.save_selection()
-        this.showAddLink = !this.showAddLink
-        if (!this.showAddLink) {
-          this.savedSelection = null
-        }
-      },
-      add_link () {
-        this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`)
-        this.reset_link_pop_up()
-      },
-      reset_link_pop_up () {
-        this.addLinkName = ''
-        this.addLinkURL = ''
-        this.showAddLink = false
-      },
-      // IMAGE
-      show_image_adder () {
-        this.savedSelection = this.save_selection()
-        this.showAddImage = !this.showAddImage
-        if (!this.showAddImage) {
-          this.savedSelection = null
-        }
-      },
-      add_img () {
-        const file = document.getElementById('img_uploader').files[0]
-        const reader = new FileReader()
-        reader.addEventListener('load', () => {
-          this.base64Img = reader.result
-          this.restore_selection(this.savedSelection)
-          this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
-          this.reset_img_pop_up()
-        }, false)
-        if (file) {
-          // eslint-disable-next-line
-          new Compressor(file, {
-            quality: 0.6,
-            success (result) {
-              reader.readAsDataURL(result)
-            },
-            error (err) {
-              console.log(err.message)
-            }
-          })
-        }
-      },
-      reset_img_pop_up () {
-        this.base64Img = null
-        this.showAddImage = false
-      },
-      // VIDEO
-      show_video_adder () {
-        this.savedSelection = this.save_selection()
-        this.showAddVideo = !this.showAddVideo
-        if (!this.showAddVideo) {
-          this.savedSelection = null
-        }
-      },
-      add_video () {
-        this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<iframe src="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" frameborder="0" allowfullscreen style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
-        this.reset_video_pop_up()
-      },
-      get_embbed_id (url) {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
-        const match = url.match(regExp)
-        return (match && match[2].length === 11) ? match[2] : null
-      },
-      reset_video_pop_up () {
-        this.addVideoURL = ''
-        this.showAddVideo = false
-      },
-      // TEMPLATE
-      show_template_adder () {
-        this.savedSelection = this.save_selection()
-        this.showAddTemplate = !this.showAddTemplate
-        if (!this.showAddTemplate) {
-          this.savedSelection = null
-        }
-      },
-      add_template (templateData) {
-        this.restore_selection(this.savedSelection)
-        this.format('insertHTML', templateData)
-        this.reset_template_pop_up()
-      },
-      reset_template_pop_up () {
-        this.showAddTemplate = false
       }
+    },
+    // CHECKBOX
+    add_checkbox () {
+      this.format('insertHTML', '<input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)">')
+    },
+    // LINK
+    show_link_adder () {
+      this.savedSelection = this.save_selection()
+      this.showAddLink = !this.showAddLink
+      if (!this.showAddLink) {
+        this.savedSelection = null
+      }
+    },
+    add_link () {
+      this.restore_selection(this.savedSelection)
+      this.format('insertHTML', `<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`)
+      this.reset_link_pop_up()
+    },
+    reset_link_pop_up () {
+      this.addLinkName = ''
+      this.addLinkURL = ''
+      this.showAddLink = false
+    },
+    // IMAGE
+    show_image_adder () {
+      this.savedSelection = this.save_selection()
+      this.showAddImage = !this.showAddImage
+      if (!this.showAddImage) {
+        this.savedSelection = null
+      }
+    },
+    add_img () {
+      const file = document.getElementById('img_uploader').files[0]
+      const reader = new FileReader()
+      reader.addEventListener('load', () => {
+        this.base64Img = reader.result
+        this.restore_selection(this.savedSelection)
+        this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
+        this.reset_img_pop_up()
+      }, false)
+      if (file) {
+        // eslint-disable-next-line
+        new Compressor(file, {
+          quality: 0.6,
+          success (result) {
+            reader.readAsDataURL(result)
+          },
+          error (err) {
+            console.log(err.message)
+          }
+        })
+      }
+    },
+    reset_img_pop_up () {
+      this.base64Img = null
+      this.showAddImage = false
+    },
+    // VIDEO
+    show_video_adder () {
+      this.savedSelection = this.save_selection()
+      this.showAddVideo = !this.showAddVideo
+      if (!this.showAddVideo) {
+        this.savedSelection = null
+      }
+    },
+    add_video () {
+      this.restore_selection(this.savedSelection)
+      this.format('insertHTML', `<iframe src="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" frameborder="0" allowfullscreen style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
+      this.reset_video_pop_up()
+    },
+    get_embbed_id (url) {
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+      const match = url.match(regExp)
+      return (match && match[2].length === 11) ? match[2] : null
+    },
+    reset_video_pop_up () {
+      this.addVideoURL = ''
+      this.showAddVideo = false
+    },
+    // TEMPLATE
+    show_template_adder () {
+      this.savedSelection = this.save_selection()
+      this.showAddTemplate = !this.showAddTemplate
+      if (!this.showAddTemplate) {
+        this.savedSelection = null
+      }
+    },
+    add_template (templateData) {
+      this.restore_selection(this.savedSelection)
+      this.format('insertHTML', templateData)
+      this.reset_template_pop_up()
+    },
+    reset_template_pop_up () {
+      this.showAddTemplate = false
     }
   }
+}
 </script>

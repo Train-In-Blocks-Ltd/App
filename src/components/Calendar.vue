@@ -151,12 +151,8 @@
 </template>
 
 <script>
-import InlineSvg from 'vue-inline-svg'
 
 export default {
-  components: {
-    InlineSvg
-  },
   props: {
     events: Array,
     forceUpdate: Number
@@ -169,7 +165,7 @@ export default {
     }
   },
   watch: {
-    forceUpdate: function () {
+    forceUpdate () {
       this.get_week()
     }
   },

@@ -107,8 +107,12 @@
       </div>
     </transition>
     <div class="wrapper--template-top">
-      <p class="text--large">Templates</p>
-      <button @click="newTemplate()">New Template</button>
+      <p class="text--large">
+        Templates
+      </p>
+      <button @click="newTemplate()">
+        New Template
+      </button>
     </div>
     <div v-if="$parent.templates" class="container--templates">
       <p v-if="$parent.templates.length === 0" class="text--small grey">
@@ -122,8 +126,15 @@
         :class="{ activeState: template.id === editTemplate }"
       >
         <div class="wrapper--template__header">
-          <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{template.name}}</b></span><br v-if="template.id !== editTemplate">
-          <input v-if="template.id === editTemplate" class="template-name small_border_radius right_margin" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
+          <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{ template.name }}</b></span><br v-if="template.id !== editTemplate">
+          <input
+            v-if="template.id === editTemplate"
+            v-model="template.name"
+            class="template-name small_border_radius right_margin"
+            type="text"
+            name="template-name"
+            pattern="[^\/]"
+          ><br>
           <div class="header-options">
             <checkbox :item-id="template.id" :type="'v1'" aria-label="Select this template" />
             <inline-svg
@@ -160,166 +171,164 @@
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import axios from 'axios'
-  import RichEditor from '../components/Editor'
-  import Checkbox from '../components/Checkbox'
-  export default {
-    components: {
-      InlineSvg,
-      RichEditor,
-      Checkbox
+const RichEditor = () => import('../components/Editor')
+const Checkbox = () => import('../components/Checkbox')
+
+export default {
+  components: {
+    RichEditor,
+    Checkbox
+  },
+  data () {
+    return {
+      // TEMPLATE DATA //
+      tempEditorStore: null,
+      isEditingTemplate: false,
+      editTemplate: null,
+      new_template: {
+        name: 'Untitled',
+        note: ''
+      },
+      selectedTemplates: [],
+      expandedTemplates: []
+    }
+  },
+  created () {
+    this.$parent.loading = true
+    this.$parent.setup()
+    this.$parent.splashed = true
+    this.$parent.willBodyScroll(true)
+    this.$parent.end_loading()
+  },
+  async mounted () {
+    await this.$parent.get_templates()
+    this.checkForNew()
+  },
+  methods: {
+    // BACKGROUND METHODS //-------------------------------------------------------------------------------
+    checkForNew () {
+      this.expandedTemplates.length = 0
+      this.$parent.templates.forEach((template) => {
+        if (template.template === null || template.template === '<p><br></p>') {
+          this.expandedTemplates.push(template.id)
+        }
+      })
     },
-    data () {
-      return {
-        // TEMPLATE DATA //
-        tempEditorStore: null,
-        isEditingTemplate: false,
-        editTemplate: null,
-        new_template: {
-          name: 'Untitled',
-          note: ''
-        },
-        selectedTemplates: [],
-        expandedTemplates: []
+    deleteMultiTemplates () {
+      if (this.selectedTemplates.length !== 0) {
+        if (confirm('Are you sure you want to delete all the selected templates?')) {
+          this.selectedTemplates.forEach((templateId) => {
+            this.delete_template(templateId)
+          })
+          this.deselectAll()
+        }
       }
     },
-    created () {
-      this.$parent.loading = true
-      this.$parent.setup()
-      this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
-      this.$parent.end_loading()
-    },
-    async mounted () {
-      await this.$parent.get_templates()
-      this.checkForNew()
-    },
-    methods: {
-      // BACKGROUND METHODS //-------------------------------------------------------------------------------
-      checkForNew () {
-        this.expandedTemplates.length = 0
-        this.$parent.templates.forEach((template) => {
-          if (template.template === null || template.template === '<p><br></p>') {
-            this.expandedTemplates.push(template.id)
-          }
-        })
-      },
-      deleteMultiTemplates () {
-        if (this.selectedTemplates.length !== 0) {
-          if (confirm('Are you sure you want to delete all the selected templates?')) {
-            this.selectedTemplates.forEach((templateId) => {
-              this.delete_template(templateId)
-            })
-            this.deselectAll()
-          }
-        }
-      },
-      deselectAll () {
-        this.$parent.templates.forEach((template) => {
-          var selEl = document.getElementById('sc-' + template.id)
-          if (selEl.checked === true) {
-            selEl.checked = false
-            var idx = this.selectedTemplates.indexOf(template.id)
-            this.selectedTemplates.splice(idx, 1)
-          }
-        })
-      },
-      changeSelectCheckbox (id) {
-        if (this.selectedTemplates.includes(id) === false) {
-          this.selectedTemplates.push(id)
-        } else {
-          var idx = this.selectedTemplates.indexOf(id)
+    deselectAll () {
+      this.$parent.templates.forEach((template) => {
+        const selEl = document.getElementById('sc-' + template.id)
+        if (selEl.checked === true) {
+          selEl.checked = false
+          const idx = this.selectedTemplates.indexOf(template.id)
           this.selectedTemplates.splice(idx, 1)
         }
-      },
-      toggleExpandedTemplates (id) {
-        if (this.expandedTemplates.includes(id)) {
-          const index = this.expandedTemplates.indexOf(id)
-          if (index > -1) {
-            this.expandedTemplates.splice(index, 1)
+      })
+    },
+    changeSelectCheckbox (id) {
+      if (this.selectedTemplates.includes(id) === false) {
+        this.selectedTemplates.push(id)
+      } else {
+        const idx = this.selectedTemplates.indexOf(id)
+        this.selectedTemplates.splice(idx, 1)
+      }
+    },
+    toggleExpandedTemplates (id) {
+      if (this.expandedTemplates.includes(id)) {
+        const index = this.expandedTemplates.indexOf(id)
+        if (index > -1) {
+          this.expandedTemplates.splice(index, 1)
+        }
+      } else {
+        this.expandedTemplates.push(id)
+      }
+    },
+    editingTemplateNotes (id, state) {
+      this.isEditingTemplate = state
+      this.editTemplate = id
+      if (!state) {
+        this.updateTemplateNotes(id)
+      }
+    },
+    updateTemplateNotes (id) {
+      this.updateTemplate(id)
+      this.isEditingTemplate = false
+      this.editTemplate = null
+    },
+    cancelTemplateNotes () {
+      this.editTemplate = null
+      this.isEditingTemplate = false
+    },
+    // DATABASE METHODS //-------------------------------------------------------------------------------
+    async newTemplate () {
+      try {
+        this.$parent.pause_loading = true
+        this.$parent.dontLeave = true
+        await this.$axios.put('https://api.traininblocks.com/templates',
+          {
+            pt_id: this.$parent.claims.sub,
+            name: this.new_template.name,
+            template: this.new_template.template
           }
-        } else {
-          this.expandedTemplates.push(id)
+        )
+        await this.$parent.get_templates(true)
+        this.checkForNew()
+        this.new_template = {
+          name: 'Untitled',
+          note: ''
         }
-      },
-      editingTemplateNotes (id, state) {
-        this.isEditingTemplate = state
-        this.editTemplate = id
-        if (!state) {
-          this.updateTemplateNotes(id)
-        }
-      },
-      updateTemplateNotes (id) {
-        this.updateTemplate(id)
-        this.isEditingTemplate = false
-        this.editTemplate = null
-      },
-      cancelTemplateNotes () {
-        this.editTemplate = null
-        this.isEditingTemplate = false
-      },
-      // DATABASE METHODS //-------------------------------------------------------------------------------
-      async newTemplate () {
-        try {
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          await axios.put('https://api.traininblocks.com/templates',
-            {
-              pt_id: this.$parent.claims.sub,
-              name: this.new_template.name,
-              template: this.new_template.template
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async updateTemplate (id) {
+      try {
+        let templateName
+        let templateContent
+        this.$parent.pause_loading = true
+        this.$parent.dontLeave = true
+        if (this.$parent.templates.length !== 0) {
+          this.$parent.templates.forEach((item) => {
+            if (item.id === id) {
+              templateName = item.name
+              templateContent = item.template
             }
-          )
-          await this.$parent.get_templates(true)
-          this.checkForNew()
-          this.new_template = {
-            name: 'Untitled',
-            note: ''
+          })
+        }
+        await this.$axios.post('https://api.traininblocks.com/templates',
+          {
+            name: templateName,
+            template: templateContent,
+            id
           }
-          this.$parent.end_loading()
-        } catch (e) {
-          this.$parent.resolve_error(e)
-        }
-      },
-      async updateTemplate (id) {
-        try {
-          let templateName
-          let templateContent
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          if (this.$parent.templates.length !== 0) {
-            this.$parent.templates.forEach((item) => {
-              if (item.id === id) {
-                templateName = item.name
-                templateContent = item.template
-              }
-            })
-          }
-          await axios.post('https://api.traininblocks.com/templates',
-            {
-              name: templateName,
-              template: templateContent,
-              id: id
-            }
-          )
-          await this.$parent.get_templates(true)
-          this.$parent.end_loading()
-        } catch (e) {
-          this.$parent.resolve_error(e)
-        }
-      },
-      async delete_template (id) {
-        try {
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          await axios.delete(`https://api.traininblocks.com/templates/${id}`)
-          await this.$parent.get_templates(true)
-          this.$parent.end_loading()
-        } catch (e) {
-          this.$parent.resolve_error(e)
-        }
+        )
+        await this.$parent.get_templates(true)
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async delete_template (id) {
+      try {
+        this.$parent.pause_loading = true
+        this.$parent.dontLeave = true
+        await this.$axios.delete(`https://api.traininblocks.com/templates/${id}`)
+        await this.$parent.get_templates(true)
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
       }
     }
   }
+}
 </script>

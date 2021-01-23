@@ -11,44 +11,48 @@
 
 <template>
   <form
-    name="add_client" 
+    name="add_client"
     class="form_grid add_client"
     spellcheck="false"
     @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)"
   >
     <div class="bottom_margin">
-      <p class="text--small">Add a new client and email them access</p>
-      <p class="text--small grey">Make sure that you have the correct email address, you won't be able to change it after</p>
+      <p class="text--small">
+        Add a new client and email them access
+      </p>
+      <p class="text--small grey">
+        Make sure that you have the correct email address, you won't be able to change it after
+      </p>
     </div>
     <input
-      class="small_border_radius width_300"
       ref="name"
+      v-model="new_client.name"
+      class="small_border_radius width_300"
       type="text"
       autocomplete="name"
       placeholder="Name*"
       aria-label="Name"
-      v-model="new_client.name"
       required
-    />
+    >
     <input
+      v-model="new_client.email"
       class="small_border_radius width_300"
       type="email"
       autocomplete="email"
       placeholder="Email*"
       aria-label="Email"
-      v-model="new_client.email"
       required
-    />
+    >
     <input
+      v-model="new_client.number"
       class="small_border_radius width_300"
       type="tel"
       inputmode="tel"
       autocomplete="tel"
       placeholder="Mobile"
       aria-label="Mobile"
-      v-model="new_client.number"
       pattern="\d+"
-    />
+    >
     <div class="form_buttons">
       <button type="submit">
         Save
@@ -61,59 +65,58 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  export default {
-    data () {
-      return {
-        new_client: {
-          name: '',
-          email: '',
-          number: '',
-          notes: ''
-        }
+export default {
+  data () {
+    return {
+      new_client: {
+        name: '',
+        email: '',
+        number: '',
+        notes: ''
       }
-    },
-    mounted () {
-      this.$refs.name.focus()
-    },
-    methods: {
-      async save () {
-        if (this.new_client.email === this.$parent.$parent.claims.email) {
-          this.$parent.$parent.errorMsg = 'You cannot create a client with your own email address!'
-          this.$parent.$parent.$modal.show('error')
-          console.error('You cannot create a client with your own email address!')
-        } else {
-          this.$parent.response = ''
-          try {
-            this.$parent.$parent.pause_loading = true
-            this.$parent.$parent.dontLeave = true
-            await axios.put('https://api.traininblocks.com/clients',
-              {
-                'name': this.new_client.name,
-                'pt_id': this.$parent.$parent.claims.sub,
-                'email': this.new_client.email,
-                'number': this.new_client.number,
-                'notes': this.new_client.notes
-              }
-            )
-            this.$parent.response = `Added ${this.new_client.name}`
-            this.$parent.persistResponse = this.new_client.name
-            this.$parent.responseDelay()
-            await this.$parent.$parent.clients_f()
-            this.$parent.$parent.clients_to_vue()
-            this.new_client = {
-              name: '',
-              email: '',
-              number: '',
-              notes: ''
+    }
+  },
+  mounted () {
+    this.$refs.name.focus()
+  },
+  methods: {
+    async save () {
+      if (this.new_client.email === this.$parent.$parent.claims.email) {
+        this.$parent.$parent.errorMsg = 'You cannot create a client with your own email address!'
+        this.$parent.$parent.$modal.show('error')
+        console.error('You cannot create a client with your own email address!')
+      } else {
+        this.$parent.response = ''
+        try {
+          this.$parent.$parent.pause_loading = true
+          this.$parent.$parent.dontLeave = true
+          await this.$axios.put('https://api.traininblocks.com/clients',
+            {
+              name: this.new_client.name,
+              pt_id: this.$parent.$parent.claims.sub,
+              email: this.new_client.email,
+              number: this.new_client.number,
+              notes: this.new_client.notes
             }
-            this.$ga.event('Client', 'new')
-            this.$parent.$parent.end_loading()
-          } catch (e) {
-            this.$parent.$parent.resolve_error(e)
+          )
+          this.$parent.response = `Added ${this.new_client.name}`
+          this.$parent.persistResponse = this.new_client.name
+          this.$parent.responseDelay()
+          await this.$parent.$parent.clients_f()
+          this.$parent.$parent.clients_to_vue()
+          this.new_client = {
+            name: '',
+            email: '',
+            number: '',
+            notes: ''
           }
+          this.$ga.event('Client', 'new')
+          this.$parent.$parent.end_loading()
+        } catch (e) {
+          this.$parent.$parent.resolve_error(e)
         }
       }
     }
   }
+}
 </script>

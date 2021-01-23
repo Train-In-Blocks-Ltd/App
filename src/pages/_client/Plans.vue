@@ -83,36 +83,52 @@
         </a>
       </div>
       <rich-editor
-        :showEditState="editClientNotes"
-        :htmlInjection.sync="$parent.$parent.client_details.notes"
-        :emptyPlaceholder="'What goals does your client have? What physical measures have you taken?'"
+        :show-edit-state="editClientNotes"
+        :html-injection.sync="$parent.$parent.client_details.notes"
+        :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
       />
       <div v-if="editClientNotes" class="bottom_bar">
-        <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
-        <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore" class="cancel">Cancel</button>
+        <button class="button--save" @click="editClientNotes = false, $parent.update_client()">
+          Save
+        </button>
+        <button class="cancel" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore">
+          Cancel
+        </button>
       </div>
     </div>
     <div>
-      <p class="text--large">Plans</p>
+      <p class="text--large">
+        Plans
+      </p>
       <div v-if="response !== ''" class="text--new_msg">
-        <p class="text--small">{{ response }}</p>
-        <p class="text--small grey">You're all set, get programming</p>
+        <p class="text--small">
+          {{ response }}
+        </p>
+        <p class="text--small grey">
+          You're all set, get programming
+        </p>
       </div>
-      <p class="text--small grey text--no-plans" v-if="$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
+      <p v-if="$parent.no_plans" class="text--small grey text--no-plans">
+        No plans yet, use the button on the top-right of your screen.
+      </p>
       <div v-else>
-        <skeleton v-if="$parent.$parent.loading" :type="'plan'"/>
+        <skeleton v-if="$parent.$parent.loading" :type="'plan'" />
         <div v-else class="plan_grid">
           <router-link
-            :to="'plan/' + plan.id"
             v-for="(plan, index) in $parent.$parent.client_details.plans"
             :key="index"
+            :to="'plan/' + plan.id"
             :class="{ recentlyAdded: persistResponse === plan.name }"
             class="plan_link"
           >
             <div>
-              <p class="text--small plan-name">{{plan.name}}</p>
-              <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">What's the purpose of this plan? Head over to this page and edit it.</p>
-              <div v-else v-html="plan.notes" class="plan_link__notes__content" />
+              <p class="text--small plan-name">
+                {{ plan.name }}
+              </p>
+              <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">
+                What's the purpose of this plan? Head over to this page and edit it.
+              </p>
+              <div v-else class="plan_link__notes__content" v-html="plan.notes" />
             </div>
           </router-link>
         </div>
@@ -122,36 +138,34 @@
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import NewPlan from '../../components/NewPlan'
-  import RichEditor from '../../components/Editor'
-  import Skeleton from '../../components/Skeleton'
+const NewPlan = () => import('../../components/NewPlan')
+const RichEditor = () => import('../../components/Editor')
+const Skeleton = () => import('../../components/Skeleton')
 
-  export default {
-    components: {
-      InlineSvg,
-      NewPlan,
-      RichEditor,
-      Skeleton
-    },
-    data () {
-      return {
-        tempEditorStore: null,
-        response: '',
-        persistResponse: '',
-        editClientNotes: false,
-        isNewPlanOpen: false
-      }
-    },
-    created () {
-      this.$parent.$parent.splashed = true
-      this.$parent.$parent.willBodyScroll(true)
-      this.$parent.checkClient()
-    },
-    methods: {
-      responseDelay () {
-        setTimeout(() => { this.response = '' }, 5000)
-      }
+export default {
+  components: {
+    NewPlan,
+    RichEditor,
+    Skeleton
+  },
+  data () {
+    return {
+      tempEditorStore: null,
+      response: '',
+      persistResponse: '',
+      editClientNotes: false,
+      isNewPlanOpen: false
+    }
+  },
+  created () {
+    this.$parent.$parent.splashed = true
+    this.$parent.$parent.willBodyScroll(true)
+    this.$parent.checkClient()
+  },
+  methods: {
+    responseDelay () {
+      setTimeout(() => { this.response = '' }, 5000)
     }
   }
+}
 </script>

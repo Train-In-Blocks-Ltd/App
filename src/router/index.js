@@ -1,23 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 import Auth from '@okta/okta-vue'
 
-import HomeComponent from '@/pages/Home'
-import LoginComponent from '@/pages/Login'
-import ProfileComponent from '@/pages/Account'
-import LogoutComponent from '@/pages/Logout'
-import NotFound from '@/pages/NotFound'
-import ArchiveComponent from '@/pages/Archive'
-import TemplateComponent from '@/pages/Templates'
-import PortfolioComponent from '@/pages/Portfolio'
+const LoginComponent = () => import('@/pages/Login')
+const ProfileComponent = () => import('@/pages/Account')
+const LogoutComponent = () => import('@/pages/Logout')
+const NotFound = () => import('@/pages/NotFound')
+const ArchiveComponent = () => import('@/pages/Archive')
+const TemplateComponent = () => import('@/pages/Templates')
+const PortfolioComponent = () => import('@/pages/Portfolio')
 
-import ClientComponent from '@/pages/_client/Home'
-import ClientPlans from '@/pages/_client/Plans'
-import ClientSessions from '@/pages/_client/Sessions'
+const ClientComponent = () => import('@/pages/_client/Home')
+const ClientPlans = () => import('@/pages/_client/Plans')
+const ClientSessions = () => import('@/pages/_client/Sessions')
 
-import ClientUserComponent from '@/pages/_clientUser/Home'
-import ClientUserPlans from '@/pages/_clientUser/Plans'
+const ClientUserComponent = () => import('@/pages/_clientUser/Home')
+const ClientUserPlans = () => import('@/pages/_clientUser/Plans')
+
+const HomeComponent = () => import('@/pages/Home')
 
 Vue.use(Router)
 Vue.use(Auth, {

@@ -80,12 +80,11 @@
 </template>
 
 <script>
-import InlineSvg from 'vue-inline-svg'
+
 import Checkbox from './Checkbox'
 
 export default {
   components: {
-    InlineSvg,
     Checkbox
   },
   props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
