@@ -49,7 +49,7 @@
       <p class="text--large">
         Archive
       </p>
-      <a href="javascript:void(0)" @click="delete_all()" class="delete_all">Delete all</a>
+      <a v-if="!this.$parent.archive.no_archive" @click="delete_all()" href="javascript:void(0)" class="delete_all">Delete all</a>
     </div>
     <br>
     <p v-if="this.$parent.archive.no_archive" class="text--small grey">
