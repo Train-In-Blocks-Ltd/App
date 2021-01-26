@@ -234,7 +234,7 @@ export default {
         }
       })
     },
-    changeSelectCheckbox (id) {
+    change_select_checkbox (id) {
       if (this.selectedTemplates.includes(id) === false) {
         this.selectedTemplates.push(id)
       } else {

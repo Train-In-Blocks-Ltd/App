@@ -1027,7 +1027,7 @@ export default {
         }
       })
     },
-    changeSelectCheckbox (id) {
+    change_select_checkbox (id) {
       if (this.selectedSessions.includes(id) === false) {
         this.selectedSessions.push(id)
       } else {

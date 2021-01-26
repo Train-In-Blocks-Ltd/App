@@ -1,4 +1,16 @@
 <style scoped>
+  .top_bar {
+    display: flex;
+    justify-content: space-between
+  }
+  .delete_all {
+    color: #282828;
+    text-decoration: none;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .delete_all:hover {
+    opacity: .6
+  }
   .client_update {
     padding: 1rem 0;
     justify-self: end
@@ -30,12 +42,16 @@
         <p class="text--selected">
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiClients()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="delete_multi_clients()">Delete</a>
       </div>
     </transition>
-    <p class="text--large">
-      Archive
-    </p><br>
+    <div class="top_bar">
+      <p class="text--large">
+        Archive
+      </p>
+      <a href="javascript:void(0)" @click="delete_all()" class="delete_all">Delete all</a>
+    </div>
+    <br>
     <p v-if="this.$parent.archive.no_archive" class="text--small grey">
       No clients are archived :)
     </p>
@@ -100,7 +116,7 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
-    changeSelectCheckbox (id, index) {
+    change_select_checkbox (id, index) {
       if (this.selectedClients.includes(id) === false) {
         this.selectedClients.push(id)
         this.selectedClientsIndex.push(index)
@@ -111,9 +127,9 @@ export default {
         this.selectedClientsIndex.splice(idx2, 1)
       }
     },
-    deleteMultiClients () {
+    delete_multi_clients () {
       if (this.selectedClients.length !== 0) {
-        if (confirm('Are you sure you want to delete all the selected clients?')) {
+        if (confirm('Are you sure that you want to delete all the selected clients?')) {
           this.selectedClients.forEach((clientId) => {
             const idx = this.selectedClients.indexOf(clientId)
             this.$parent.client_delete(clientId, idx)
@@ -122,6 +138,14 @@ export default {
           this.selectedClientsIndex = []
         }
       }
+    },
+    delete_all() {
+      this.$parent.archive.clients.forEach(client => {
+        this.selectedClients.push(client.client_id)
+      })
+      this.delete_multi_clients()
+      this.selectedClients = []
+      this.selectedClientsIndex = []
     }
   }
 }
