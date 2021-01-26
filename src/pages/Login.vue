@@ -189,6 +189,7 @@ export default {
     }
   },
   async mounted () {
+    this.$parent.pause_loading = true
     let OktaSignIn
     await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
       OktaSignIn = module.default
@@ -244,6 +245,7 @@ export default {
       }
     }
     this.$parent.willBodyScroll(true)
+    this.$parent.end_loading()
   },
   async beforeDestroy () {
     await this.$parent.isAuthenticated()
