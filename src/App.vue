@@ -479,6 +479,19 @@
   .icon_open--options:hover .text, .icon_open--stats:hover .text, .icon_open--new_client:hover .text, .icon_open--install_PWA:hover .text, .icon_open--whats_new:hover .text, .icon_open--new_plan:hover .text, .icon_open--print:hover .text, .icon_open--portfolio:hover .text {
     display: block
   }
+  .icon_open--whats_new:hover .notify_badge {
+    display: none
+  }
+  .notify_badge {
+    position: absolute;
+    top: -5px;
+    left: -10px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background: red;
+    color: white;
+    font-size: .6rem
+  }
 
   /* SCROLLBAR */
   ::-webkit-scrollbar {
@@ -909,6 +922,9 @@ export default {
 
       // BACKGROUND
 
+      versionName: 'Draco',
+      versionBuild: '2.2',
+      newBuild: false,
       splashed: false,
       templates: null,
       errorMsg: null,
@@ -1009,6 +1025,7 @@ export default {
       await this.$auth.logout()
       await this.isAuthenticated()
       localStorage.clear()
+      localStorage.setItem('versionBuild', this.versionBuild)
       const cookies = document.cookie.split(';')
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i]

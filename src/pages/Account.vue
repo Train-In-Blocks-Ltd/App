@@ -171,8 +171,8 @@
         </div>
       </div>
     </form><br><br>
-    <p style="font-size: .8rem">
-      <b>Draco 2.2</b>
+    <p class="text--tiny">
+      <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
     </p>
   </div>
 </template>

@@ -44,6 +44,7 @@
       <p class="text">
         What's New
       </p>
+      <span v-if="$parent.newBuild" class="notify_badge">New</span>
     </div>
     <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_bottom" aria-label="Install App" @click="isInstallOpen = true, $parent.willBodyScroll(false)">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App" />
@@ -139,11 +140,17 @@ export default {
     this.$parent.loading = true
     this.$parent.setup()
     this.$parent.client_details = null
+    this.version()
     this.$parent.end_loading()
   },
   methods: {
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
+    },
+    version () {
+      if (localStorage.getItem('versionBuild') !== this.$parent.versionBuild) {
+        this.$parent.newBuild = true
+      }
     }
   }
 }

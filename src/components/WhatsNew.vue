@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text--large">
-      What's new in Draco 2.2?
+      What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
     </p>
     <p class="text--large grey">
       Speed and mobile-friendly
@@ -26,8 +26,19 @@
       Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.
     </p><br><br>
     <br>
-    <button class="cancel" @click="$parent.isWhatsNewOpen = false, $parent.$parent.willBodyScroll(true)">
+    <button class="cancel" @click="$parent.isWhatsNewOpen = false, $parent.$parent.willBodyScroll(true), update_version()">
       Close
     </button>
   </div>
 </template>
+
+<script>
+  export default {
+    methods: {
+      update_version () {
+        localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)
+        this.$parent.$parent.newBuild = false
+      }
+    }
+  }
+</script>

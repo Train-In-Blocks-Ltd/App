@@ -171,8 +171,8 @@
     <p class="cookies">
       By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.
     </p>
-    <p style="font-size: .8rem">
-      <b>Draco 2.2</b>
+    <p class="text--tiny">
+      <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
     </p>
   </div>
 </template>
@@ -235,7 +235,6 @@ export default {
     if (await this.$auth.isAuthenticated()) {
       this.$router.push('/')
     } else {
-      localStorage.clear()
       const cookies = document.cookie.split(';')
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i]
