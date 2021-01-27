@@ -11,7 +11,7 @@
       New editor
     </p>
     <p class="text--small grey">
-      Try our new text editor. It's faster and more convenient. You can now access templates for your sessions in the toolbar with additional support for use on mobile devices.
+      Try our new text editor. It's faster and more convenient. You can now access templates for your sessions in the toolbar with additional support for use on mobile devices.<br><br>**We recommend that you create new sessions and copy it over from your current plans**
     </p><br><br>
     <p class="text--small">
       Updated graph
