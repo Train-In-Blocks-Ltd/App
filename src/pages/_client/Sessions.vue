@@ -903,11 +903,9 @@ export default {
     this.scan()
     this.checkForNew()
     this.adherence()
-    window.addEventListener('beforeprint', this.expandAll('Expand'))
   },
   beforeDestroy () {
     this.$parent.showDeletePlan = false
-    window.removeEventListener('beforeprint', this.expandAll)
     this.$parent.$parent.templates = null
   },
   methods: {

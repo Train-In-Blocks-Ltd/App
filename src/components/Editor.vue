@@ -52,11 +52,15 @@
     border-bottom: 1px solid #28282840;
     padding: .8rem
   }
+  .pop_up--add_video.no_flex {
+    display: grid;
+    grid-gap: 1rem
+  }
   .pop_up--add_template {
     display: grid;
     grid-gap: 1rem
   }
-  .template_item {
+  .template_item, .flex {
     display: flex
   }
   .template_item svg {
@@ -219,12 +223,14 @@
         <input id="img_uploader" type="file" accept=".png, .jpeg" @change="add_img()">
       </div>
       <!-- VIDEO -->
-
-      <form v-if="showAddVideo" class="pop_up--add_video" @submit.prevent="add_video()">
-        <input v-model="addVideoURL" class="input--add_video small_border_radius" type="text" placeholder="YouTube URL" required>
-        <button class="add_video_submit" type="submit">
-          Add
-        </button>
+      <form v-if="showAddVideo" class="pop_up--add_video no_flex" @submit.prevent="add_video()">
+        <div class="flex">
+          <input v-model="addVideoURL" class="input--add_video small_border_radius" type="text" placeholder="YouTube URL" required>
+          <button class="add_video_submit" type="submit">
+            Add
+          </button>
+        </div>
+        <p class="text--tiny">Adding too many videos may affect loading time. Use links to redirect the client if this happens.</p>
       </form>
       <!-- TEMPLATE -->
       <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">

@@ -255,7 +255,7 @@
     text-overflow: ellipsis;
     white-space: nowrap
   }
-  .text--date, .text--checked {
+  .text--date, .text--checked, .text--tiny {
     font-size: .8rem
   }
   .bottom_bar {
