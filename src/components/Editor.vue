@@ -348,9 +348,10 @@ export default {
       iframes.forEach((item) => {
         item.removeAttribute('class')
         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+        item.setAttribute('loading', 'lazy')
       })
       imgs.forEach((item) => {
-        item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
+        item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0; content-visibility: auto')
       })
     },
     focus_on_editor () {
@@ -475,7 +476,7 @@ export default {
       reader.addEventListener('load', () => {
         this.base64Img = reader.result
         this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
+        this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0; content-visibility: auto" />`)
         this.reset_img_pop_up()
       }, false)
       if (file) {
@@ -505,7 +506,7 @@ export default {
     },
     add_video () {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', `<iframe src="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" frameborder="0" allowfullscreen style="border-radius: 10px; max-width: 80%; margin: 1rem 0" />`)
+      this.format('insertHTML', `<iframe src="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" frameborder="0" allowfullscreen style="border-radius: 10px; max-width: 80%; margin: 1rem 0" loading="lazy" />`)
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {
