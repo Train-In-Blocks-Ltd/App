@@ -17,7 +17,6 @@
 
 <template>
   <div id="home">
-    <splash v-if="!$parent.splashed" />
     <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
       <div v-if="isNewClientOpen" class="wrapper--new_client">
         <new-client />
@@ -110,15 +109,13 @@ const ClientLink = () => import(/* webpackChunkName: "components.clientlink", we
 const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
 const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/InstallPWA')
-const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../components/Splash')
 
 export default {
   components: {
     ClientLink,
     NewClient,
     WhatsNew,
-    InstallApp,
-    Splash
+    InstallApp
   },
   data () {
     return {
@@ -129,12 +126,6 @@ export default {
       isInstallOpen: false,
       isWhatsNewOpen: false
     }
-  },
-  created () {
-    setTimeout(() => {
-      this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
-    }, 4000)
   },
   mounted () {
     this.$parent.loading = true

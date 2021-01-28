@@ -10,7 +10,6 @@
 export default {
   created () {
     this.$parent.setup()
-    this.$parent.splashed = true
     this.$parent.willBodyScroll(true)
   }
 }

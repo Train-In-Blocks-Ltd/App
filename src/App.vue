@@ -764,7 +764,7 @@
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
-    <nav v-if="authenticated && claims && splashed" class="sidebar">
+    <nav v-if="authenticated && claims" class="sidebar">
       <div class="logo">
         <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo--link" title="Home">
           <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home" />
@@ -925,7 +925,6 @@ export default {
       versionName: 'Draco',
       versionBuild: '2.2',
       newBuild: false,
-      splashed: false,
       templates: null,
       errorMsg: null,
       loading: false,

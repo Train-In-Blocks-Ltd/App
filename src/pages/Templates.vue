@@ -196,7 +196,6 @@ export default {
   created () {
     this.$parent.loading = true
     this.$parent.setup()
-    this.$parent.splashed = true
     this.$parent.willBodyScroll(true)
     this.$parent.end_loading()
   },

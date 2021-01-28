@@ -106,7 +106,6 @@ export default {
   },
   async created () {
     this.$parent.loading = true
-    this.$parent.splashed = true
     this.$parent.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.get_portfolio()

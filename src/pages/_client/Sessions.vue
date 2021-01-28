@@ -891,7 +891,6 @@ export default {
     }
   },
   created () {
-    this.$parent.$parent.splashed = true
     this.$parent.$parent.willBodyScroll(true)
     this.$parent.sessions = true
     this.$parent.showDeletePlan = true

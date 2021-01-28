@@ -209,7 +209,6 @@ export default {
     }
   },
   async created () {
-    this.$parent.splashed = true
     this.$parent.willBodyScroll(true)
     this.loading = true
     await this.$parent.setup()

@@ -32,6 +32,9 @@
     grid-gap: 2rem;
     margin: 2rem 0
   }
+  .show_plan_notes p {
+    margin: 1rem 0
+  }
 
   /* Add plan Form */
   .button--new_plan {
@@ -156,7 +159,6 @@ export default {
     }
   },
   created () {
-    this.$parent.$parent.splashed = true
     this.$parent.$parent.willBodyScroll(true)
     this.$parent.checkClient()
   },

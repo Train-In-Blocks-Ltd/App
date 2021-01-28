@@ -39,7 +39,6 @@
 
 <template>
   <div id="home">
-    <splash v-if="!$parent.splashed" />
     <div v-if="$parent.portfolio">
       <div>
         <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--a" />
@@ -191,14 +190,12 @@
 </template>
 
 <script>
-const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../../components/Splash')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 
 export default {
   components: {
     RichEditor,
-    Splash,
     InstallApp
   },
   data () {
@@ -213,10 +210,7 @@ export default {
   },
   async mounted () {
     this.$parent.loading = true
-    setTimeout(() => {
-      this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
-    }, 4000)
+    this.$parent.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()

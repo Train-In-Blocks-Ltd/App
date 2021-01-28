@@ -186,7 +186,6 @@ export default {
   },
   async mounted () {
     this.$parent.loading = true
-    this.$parent.splashed = true
     this.$parent.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
