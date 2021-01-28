@@ -68,11 +68,11 @@
     </p>
     <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="client_link__notes__content" v-html="notes" />
     <div v-if="archive" class="client_link__options">
-      <checkbox :item-id="clientId" :index-id="clientIndex" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
-      <a href="javascript:void(0)" title="Unarchive" @click="$parent.$parent.client_unarchive(clientId, clientIndex)">
+      <checkbox :item-id="clientId" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
+      <a href="javascript:void(0)" title="Unarchive" @click="$parent.$parent.client_unarchive(clientId)">
         <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive" />
       </a>
-      <a href="javascript:void(0)" title="Delete" @click="soloDelete(clientId, clientIndex)">
+      <a href="javascript:void(0)" title="Delete" @click="soloDelete(clientId)">
         <inline-svg :src="require('../assets/svg/bin.svg')" class="archive_icon" aria-label="Delete" />
       </a>
     </div>
@@ -89,9 +89,9 @@ export default {
   },
   props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
   methods: {
-    soloDelete (id, index) {
+    soloDelete (id) {
       if (confirm('Are you sure that you want to delete this client?')) {
-        this.$parent.$parent.client_delete(id, index)
+        this.$parent.$parent.client_delete(id)
       }
     }
   }

@@ -60,7 +60,7 @@
       class="checked_box"
       type="checkbox"
       style="display: none"
-      @change="$parent.$parent.change_select_checkbox(itemId, indexId)"
+      @change="$parent.$parent.change_select_checkbox(itemId)"
     >
     <label :for="'sc-' + itemId" class="check">
       <svg width="18px" height="18px" viewBox="0 0 18 18">
@@ -75,7 +75,6 @@
 export default {
   props: {
     itemId: Number,
-    indexId: Number,
     type: String
   }
 }

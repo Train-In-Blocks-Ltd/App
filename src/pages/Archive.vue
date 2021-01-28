@@ -43,23 +43,24 @@
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
         </p>
         <a href="javascript:void(0)" class="text--selected selected-options" @click="delete_multi_clients()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect all</a>
       </div>
     </transition>
     <div class="top_bar">
       <p class="text--large">
         Archive
       </p>
-      <a v-if="!this.$parent.archive.no_archive" @click="delete_all()" href="javascript:void(0)" class="delete_all">Delete all</a>
+      <a v-if="!$parent.archive.no_archive" @click="select_all()" href="javascript:void(0)" class="delete_all">Select all</a>
     </div>
     <br>
-    <p v-if="this.$parent.archive.no_archive" class="text--small grey">
+    <p v-if="$parent.archive.no_archive" class="text--small grey">
       No clients are archived :)
     </p>
-    <p v-if="this.$parent.error">
-      <b>{{ this.$parent.error }}</b>
+    <p v-if="$parent.error">
+      <b>{{ $parent.error }}</b>
     </p>
     <input
-      v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients"
+      v-if="!$parent.archive.no_archive && !$parent.error && $parent.archive.clients"
       v-model="search"
       type="search"
       aria-label="search by name"
@@ -68,7 +69,7 @@
       class="search text--small"
       autocomplete="name"
     >
-    <div class="container--clients">
+    <div v-if="!$parent.archive.no_archive" class="container--clients">
       <skeleton v-if="$parent.loading" :type="'archived'" />
       <div
         v-for="(clients, index) in $parent.archive.clients"
@@ -116,36 +117,36 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
-    change_select_checkbox (id, index) {
+    change_select_checkbox (id) {
       if (this.selectedClients.includes(id) === false) {
         this.selectedClients.push(id)
-        this.selectedClientsIndex.push(index)
       } else {
-        const idx1 = this.selectedClients.indexOf(id)
-        this.selectedClients.splice(idx1, 1)
-        const idx2 = this.selectedClientsIndex.indexOf(index)
-        this.selectedClientsIndex.splice(idx2, 1)
+        const idx = this.selectedClients.indexOf(id)
+        this.selectedClients.splice(idx, 1)
       }
     },
     delete_multi_clients () {
       if (this.selectedClients.length !== 0) {
         if (confirm('Are you sure that you want to delete all the selected clients?')) {
           this.selectedClients.forEach((clientId) => {
-            const idx = this.selectedClients.indexOf(clientId)
-            this.$parent.client_delete(clientId, idx)
+            this.$parent.client_delete(clientId)
           })
           this.selectedClients = []
           this.selectedClientsIndex = []
         }
       }
     },
-    delete_all() {
+    select_all () {
       this.$parent.archive.clients.forEach(client => {
         this.selectedClients.push(client.client_id)
+        document.getElementById(`sc-${client.client_id}`).checked = true
       })
-      this.delete_multi_clients()
+    },
+    deselect_all () {
+      this.$parent.archive.clients.forEach(client => {
+        document.getElementById(`sc-${client.client_id}`).checked = false
+      })
       this.selectedClients = []
-      this.selectedClientsIndex = []
     }
   }
 }

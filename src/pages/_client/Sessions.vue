@@ -509,7 +509,7 @@
         <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.willBodyScroll(false)">Move</a>
         <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.willBodyScroll(false)">Shift</a>
         <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
@@ -928,7 +928,7 @@ export default {
         }
       })
       this.$modal.hide('shift')
-      this.deselectAll()
+      this.deselect_all()
     },
     copyAcross () {
       const copysessions = []
@@ -957,7 +957,7 @@ export default {
       this.today()
       this.update_plan()
       this.$modal.hide('copy')
-      this.deselectAll()
+      this.deselect_all()
       this.$parent.$parent.end_loading()
     },
     initMove () {
@@ -971,7 +971,7 @@ export default {
           })
         }
       })
-      this.deselectAll()
+      this.deselect_all()
       this.currentWeek = parseInt(this.moveTarget)
     },
 
@@ -997,7 +997,7 @@ export default {
               })
             }
           })
-          this.deselectAll()
+          this.deselect_all()
         }
       }
     },
@@ -1007,11 +1007,11 @@ export default {
           this.selectedSessions.forEach((sessionId) => {
             this.delete_session(sessionId)
           })
-          this.deselectAll()
+          this.deselect_all()
         }
       }
     },
-    deselectAll () {
+    deselect_all () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.forEach((session) => {

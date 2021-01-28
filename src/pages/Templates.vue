@@ -103,7 +103,7 @@
           <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
         </p>
         <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiTemplates()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
     <div class="wrapper--template-top">
@@ -220,11 +220,11 @@ export default {
           this.selectedTemplates.forEach((templateId) => {
             this.delete_template(templateId)
           })
-          this.deselectAll()
+          this.deselect_all()
         }
       }
     },
-    deselectAll () {
+    deselect_all () {
       this.$parent.templates.forEach((template) => {
         const selEl = document.getElementById('sc-' + template.id)
         if (selEl.checked === true) {

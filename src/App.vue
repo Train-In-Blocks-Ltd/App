@@ -1091,17 +1091,9 @@ export default {
         this.resolve_error(e)
       }
     },
-    async client_delete (id, index) {
+    async client_delete (id) {
       this.pause_loading = true
       this.dontLeave = true
-      for (let i = 0; i < this.archive.clients.length; i++) {
-        if (this.archive.clients[i].client_id === id) {
-          this.archive.clients.splice(index, 1)
-          if (this.archive.clients.length === 0) {
-            this.archive.no_archive = true
-          }
-        }
-      }
       try {
         await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
 
@@ -1110,6 +1102,10 @@ export default {
 
         await this.clients_f()
         this.clients_to_vue()
+
+        if (this.archive.clients.length === 0) {
+          this.archive.no_archive = true
+        }
         this.$ga.event('Client', 'delete')
         this.end_loading()
       } catch (e) {
@@ -1202,7 +1198,7 @@ export default {
         }
       }
     },
-    async client_unarchive (id, index) {
+    async client_unarchive (id) {
       if (confirm('Are you sure you want to unarchive this client?')) {
         this.pause_loading = true
         this.dontLeave = true
@@ -1217,8 +1213,6 @@ export default {
               const textB = b.name.toUpperCase()
               return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
             })
-
-            this.archive.clients.splice(index, 1)
             if (this.archive.clients.length === 0) {
               this.archive.no_archive = true
             }
