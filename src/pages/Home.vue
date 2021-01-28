@@ -7,6 +7,9 @@
     display: grid;
     margin-bottom: 2rem
   }
+  .search_skeleton {
+    margin-bottom: 2rem
+  }
 
   @media (max-width: 768px) {
     .home--container {
@@ -55,14 +58,14 @@
       <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--a" />
       <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--b" />
     </div>
-    <p v-if="this.$parent.no_clients" class="text--small grey text--no_clients">
+    <p v-if="$parent.no_clients" class="text--small grey text--no_clients">
       No clients added yet, use the button on the top-right of your screen.
     </p>
-    <p v-if="this.$parent.error" class="text--small grey text--loading">
-      <b>{{ this.$parent.error }}</b>
+    <p v-if="$parent.error" class="text--small grey text--loading">
+      <b>{{ $parent.error }}</b>
     </p>
     <!-- Loop through clients -->
-    <div v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients" class="home--container">
+    <div v-if="!$parent.no_clients && !$parent.error && $parent.clients && !$parent.loading" class="home--container">
       <input
         v-model="search"
         type="search"
@@ -81,7 +84,6 @@
       </div>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
-        <skeleton v-if="$parent.loading" :type="'client'" />
         <router-link
           v-for="(client, index) in $parent.clients"
           v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
@@ -101,6 +103,10 @@
         </router-link>
       </div>
     </div>
+    <div v-else>
+      <skeleton :type="'input_large'" class="search_skeleton"/>
+      <skeleton :type="'client'" />
+    </div>
   </div>
 </template>
 
@@ -109,13 +115,15 @@ const ClientLink = () => import(/* webpackChunkName: "components.clientlink", we
 const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
 const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/InstallPWA')
+const Skeleton = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/Skeleton')
 
 export default {
   components: {
     ClientLink,
     NewClient,
     WhatsNew,
-    InstallApp
+    InstallApp,
+    Skeleton
   },
   data () {
     return {
