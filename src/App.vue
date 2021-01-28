@@ -884,7 +884,7 @@
 <script>
 import 'vue-loading-overlay/dist/vue-loading.css'
 const Loading = () => import(/* webpackChunkName: "components.vue-loading-overlay", webpackPreload: true */ 'vue-loading-overlay')
-const { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } = () => import(/* webpackChunkName: "email", webpackPrefetch: true */ './components/email')
+const { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } = () => import(/* webpackChunkName: "email", webpackPrefetch: true */ './components/email.js')
 export default {
   components: {
     Loading
@@ -1319,7 +1319,7 @@ export default {
       }
     },
     async update_session (pid, sid) {
-      this.loading = true
+      this.dontLeave = true
       // Set the plan variable to the current plan
       let x
       for (x in this.clientUser.plans) {
