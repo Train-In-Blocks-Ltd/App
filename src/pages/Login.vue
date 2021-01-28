@@ -179,115 +179,115 @@
 </template>
 
 <script>
-  const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../components/Splash')
+const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../components/Splash')
 
-  export default {
-    components: {
-      Splash
-    },
-    data () {
-      return {
-        splashed: false,
-        open: false,
-        email: null,
-        id: null,
-        error: null,
-        success: null
-      }
-    },
-    async mounted () {
-      setTimeout(() => {
-        this.splashed = true
-        this.$parent.willBodyScroll(true)
-      }, 4000)
-      let OktaSignIn
-      await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
-        OktaSignIn = module.default
-      })
-      this.$nextTick(function () {
-        this.widget = new OktaSignIn({
-          baseUrl: process.env.ISSUER,
-          issuer: process.env.ISSUER + '/oauth2/default',
-          clientId: process.env.CLIENT_ID,
-          redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
-          i18n: {
-            en: {
-              'primaryauth.title': '',
-              'primaryauth.username.placeholder': 'Email',
-              'primaryauth.username.tooltip': 'Enter your email',
-              'primaryauth.password.placeholder': 'Password',
-              'primaryauth.password.tooltip': 'Enter your password',
-              'error.username.required': 'Please enter your email',
-              'errors.E0000004': 'That didn\'t work. Was your password correct?'
-            }
-          },
-          authParams: {
-            pkce: true,
-            display: 'page',
-            issuer: process.env.ISSUER + '/oauth2/default',
-            scopes: ['openid', 'profile', 'email']
+export default {
+  components: {
+    Splash
+  },
+  data () {
+    return {
+      splashed: false,
+      open: false,
+      email: null,
+      id: null,
+      error: null,
+      success: null
+    }
+  },
+  async mounted () {
+    setTimeout(() => {
+      this.splashed = true
+      this.$parent.willBodyScroll(true)
+    }, 4000)
+    let OktaSignIn
+    await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
+      OktaSignIn = module.default
+    })
+    this.$nextTick(function () {
+      this.widget = new OktaSignIn({
+        baseUrl: process.env.ISSUER,
+        issuer: process.env.ISSUER + '/oauth2/default',
+        clientId: process.env.CLIENT_ID,
+        redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
+        i18n: {
+          en: {
+            'primaryauth.title': '',
+            'primaryauth.username.placeholder': 'Email',
+            'primaryauth.username.tooltip': 'Enter your email',
+            'primaryauth.password.placeholder': 'Password',
+            'primaryauth.password.tooltip': 'Enter your password',
+            'error.username.required': 'Please enter your email',
+            'errors.E0000004': 'That didn\'t work. Was your password correct?'
           }
-        })
+        },
+        authParams: {
+          pkce: true,
+          display: 'page',
+          issuer: process.env.ISSUER + '/oauth2/default',
+          scopes: ['openid', 'profile', 'email']
+        }
+      })
 
-        this.widget.renderEl(
-          { el: '#okta-signin-container' },
-          () => {
-            /**
-             * In this flow, the success handler will not be called because we redirect
-             * to the Okta org for the authentication workflow.
-             */
-          },
-          (err) => {
-            throw err
+      this.widget.renderEl(
+        { el: '#okta-signin-container' },
+        () => {
+          /**
+           * In this flow, the success handler will not be called because we redirect
+           * to the Okta org for the authentication workflow.
+           */
+        },
+        (err) => {
+          throw err
+        }
+      )
+    })
+    if (await this.$auth.isAuthenticated()) {
+      this.$router.push('/')
+    } else {
+      const cookies = document.cookie.split(';')
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i]
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      }
+    }
+  },
+  async beforeDestroy () {
+    await this.$parent.isAuthenticated()
+    await this.$parent.setup()
+    await this.$parent.clients_f()
+    if (this.$ga && !this.$parent.authenticated) {
+      this.$ga.event('Auth', 'login')
+    }
+  },
+  destroyed () {
+    // Remove the widget from the DOM on path change
+    this.widget.remove()
+  },
+  methods: {
+    async reset () {
+      this.$parent.pause_loading = true
+      this.$parent.dontLeave = true
+      this.error = null
+      this.success = null
+      try {
+        await this.$axios.post('/.netlify/functions/reset-password',
+          {
+            email: this.email
           }
         )
-      })
-      if (await this.$auth.isAuthenticated()) {
-        this.$router.push('/')
-      } else {
-        const cookies = document.cookie.split(';')
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i]
-          const eqPos = cookie.indexOf('=')
-          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
-        }
-      }
-    },
-    async beforeDestroy () {
-      await this.$parent.isAuthenticated()
-      await this.$parent.setup()
-      await this.$parent.clients_f()
-      if (this.$ga && !this.$parent.authenticated) {
-        this.$ga.event('Auth', 'login')
-      }
-    },
-    destroyed () {
-      // Remove the widget from the DOM on path change
-      this.widget.remove()
-    },
-    methods: {
-      async reset () {
-        this.$parent.pause_loading = true
-        this.$parent.dontLeave = true
-        this.error = null
-        this.success = null
-        try {
-          await this.$axios.post('/.netlify/functions/reset-password',
-            {
-              email: this.email
-            }
-          )
-          this.open = false
-          this.email = null
-          this.success = 'An email has been sent successfully.'
-          this.$parent.end_loading()
-        } catch (e) {
-          this.$parent.end_loading()
-          this.error = 'An error occurred. Are you sure your email is correct?'
-          console.error(e)
-        }
+        this.open = false
+        this.email = null
+        this.success = 'An email has been sent successfully.'
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.end_loading()
+        this.error = 'An error occurred. Are you sure your email is correct?'
+        console.error(e)
       }
     }
   }
+}
 </script>

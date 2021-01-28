@@ -184,7 +184,7 @@
 </template>
 
 <script>
-const { email, emailText, resetEmail, resetEmailText } = () => import(/* webpackChunkName: "email", webpackPrefetch: true  */ '../../components/email')
+import { email, emailText, resetEmail, resetEmailText } from '../../components/email'
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
 const AlertModal = () => import(/* webpackChunkName: "components.alertmodal", webpackPrefetch: true  */ '../../components/AlertModal')
 

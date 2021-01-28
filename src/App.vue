@@ -883,8 +883,8 @@
 
 <script>
 import 'vue-loading-overlay/dist/vue-loading.css'
+import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 const Loading = () => import(/* webpackChunkName: "components.vue-loading-overlay", webpackPreload: true */ 'vue-loading-overlay')
-const { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } = () => import(/* webpackChunkName: "email", webpackPrefetch: true */ './components/email.js')
 export default {
   components: {
     Loading

@@ -178,7 +178,7 @@
 </template>
 
 <script>
-const { passChangeEmail, passChangeEmailText } = () => import(/* webpackChunkName: "email", webpackPrefetch: true */ '../components/email')
+import { passChangeEmail, passChangeEmailText } from '../components/email'
 
 export default {
   data () {
