@@ -150,9 +150,11 @@
             Manage Your Subscription
           </button>
         </div>
-        <button @click.prevent="$modal.show('reset-password'), $parent.willBodyScroll(false)">
-          Change Your Password
-        </button>
+        <div>
+          <button @click.prevent="$modal.show('reset-password'), $parent.willBodyScroll(false)">
+            Change Your Password
+          </button>
+        </div>
       </div>
       <div class="privacy">
         <p class="text--small">
@@ -193,6 +195,7 @@ export default {
     }
   },
   created () {
+    this.$parent.$modal.show('error')
     this.$parent.loading = true
     this.$parent.setup()
     this.$parent.willBodyScroll(true)
