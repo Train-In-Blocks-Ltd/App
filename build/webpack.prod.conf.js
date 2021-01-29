@@ -9,6 +9,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const PreloadCssPlugin = require("preload-css-webpack-plugin")
 const env = require('../config/prod.env')
 
 const webpackConfig = merge(baseWebpackConfig, {
@@ -93,7 +94,8 @@ const webpackConfig = merge(baseWebpackConfig, {
           }
         }
       ]
-    })
+    }),
+    new PreloadCssPlugin()
   ]
 })
 if (process.env.REPORT) {
