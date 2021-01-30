@@ -230,7 +230,9 @@
             Add
           </button>
         </div>
-        <p class="text--tiny">Adding too many videos may affect loading time. Use links to redirect the client if this happens.</p>
+        <p class="text--tiny">
+          Adding too many videos may affect loading time. Use links to redirect the client if this happens.
+        </p>
       </form>
       <!-- TEMPLATE -->
       <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">

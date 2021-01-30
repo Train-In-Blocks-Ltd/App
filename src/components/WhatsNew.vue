@@ -33,12 +33,12 @@
 </template>
 
 <script>
-  export default {
-    methods: {
-      update_version () {
-        localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)
-        this.$parent.$parent.newBuild = false
-      }
+export default {
+  methods: {
+    update_version () {
+      localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)
+      this.$parent.$parent.newBuild = false
     }
   }
+}
 </script>

@@ -43,7 +43,7 @@ module.exports = {
   },
   module: {
     rules: [
-      ...(config.dev.useEslint && process.env.NODE_ENV === 'production' ? [createLintingRule()] : []),
+      ...([createLintingRule()]),
       {
         test: /\.vue$/,
         loader: 'vue-loader',

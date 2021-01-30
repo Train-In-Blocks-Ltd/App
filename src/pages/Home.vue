@@ -104,7 +104,7 @@
       </div>
     </div>
     <div v-else>
-      <skeleton :type="'input_large'" class="search_skeleton"/>
+      <skeleton :type="'input_large'" class="search_skeleton" />
       <skeleton :type="'client'" />
     </div>
   </div>
