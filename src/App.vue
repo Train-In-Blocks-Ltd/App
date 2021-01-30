@@ -298,6 +298,7 @@
     border: 1px solid #28282840;
     border-radius: 8px;
     background-color: transparent;
+    box-shadow: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover {

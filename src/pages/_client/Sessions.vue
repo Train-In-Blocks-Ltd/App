@@ -1082,11 +1082,13 @@ export default {
       let arr = 0
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session) => {
-            if (session.week_id === this.currentWeek) {
-              arr += 1
-            }
-          })
+          if (!this.$parent.no_sessions) {
+            plan.sessions.forEach((session) => {
+              if (session.week_id === this.currentWeek) {
+                arr += 1
+              }
+            })
+          }
         }
       })
       arr === 0 ? this.weekIsEmpty = true : this.weekIsEmpty = false

@@ -15,11 +15,11 @@
     background-color: white
   }
   #rich_toolbar {
-    display: flex;
     background-color: white;
     border: 1px solid #28282840;
     border-radius: 5px 5px 0 0;
-    padding: 0 1rem
+    padding: 0 1rem;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   #rich_toolbar.showingPopup {
     border-bottom: 2px solid transparent
@@ -38,6 +38,13 @@
   }
   .activeStyle {
     opacity: .4
+  }
+  #rich_toolbar svg {
+    height: 20px;
+    width: 20px
+  }
+  .grouped_toolbar_options {
+    display: inline
   }
 
   /* Pop-ups */
@@ -95,7 +102,15 @@
     outline-width: 0;
     border: 1px solid #28282840;
     border-top: none;
-    border-radius: 0 0 5px 5px
+    border-radius: 0 0 5px 5px;
+    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  }
+  div#rich_editor:focus {
+    border: 1px solid #282828;
+    border-top: none
+  }
+  #rich_toolbar.focused {
+    border: 1px solid #282828
   }
 
   /* Show */
@@ -113,15 +128,9 @@
 
 <template>
   <div id="wrapper--rich_editor">
-    <p id="rich_editor_version" style="display: none">
-      {{ editorVersion }}
-    </p>
-    <p v-if="outdated">
-      This editor is outdated but it's still working. You can update by creating a new session and moving the plans over. We don't recommend copy and pasting images and videos into the new session.
-    </p>
     <div v-if="showEditState">
       <div class="re_toolbar_back">
-        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
+        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate, focused: caretIsInEditor && !showAddLink && !showAddImage && !showAddVideo && !showAddTemplate }">
           <button
             :class="{ activeStyle: boldActive }"
             title="Bold"
@@ -165,6 +174,7 @@
             <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
           </button>
           <div
+            class="grouped_toolbar_options"
             @mouseover="showTooltip = true"
             @mouseleave="showTooltip = false"
           >
@@ -267,6 +277,8 @@
         data-placeholder="Start typing..."
         @click="reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
         @input="update_edited_notes()"
+        @focus="caretIsInEditor = true"
+        @blur="caretIsInEditor = false"
         v-html="initialHTML"
       />
     </div>
@@ -289,8 +301,6 @@ export default {
   },
   data () {
     return {
-      editorVersion: 'Graphite 1.1',
-      outdated: false,
       showTooltip: false,
       caretIsInEditor: false,
       savedSelection: null,
@@ -317,13 +327,15 @@ export default {
       this.update_html()
       this.initialHTML = this.htmlInjection
       if (this.showEditState) {
-        document.addEventListener('click', this.check_caret_pos)
         document.addEventListener('keydown', this.check_cmd_state)
       } else {
         this.update_edited_notes()
-        document.removeEventListener('click', this.check_caret_pos)
         document.removeEventListener('keydown', this.check_cmd_state)
-        this.caretIsInEditor = false
+      }
+      editable.onkeyup = (e) => {
+        e = e || window.event
+        if (e.keyCode === 13)
+          document.execCommand('formatBlock', false, 'p');
       }
     }
   },
@@ -331,13 +343,6 @@ export default {
     this.update_html()
   },
   methods: {
-    // GENERAL
-    /*
-    check_version () {
-      let versionId = document.getElementById('rich_editor_version').innerText
-      let version = parseFloat(versionId.match(/\d+.\d+/gmi))
-    },
-    */
     update_html () {
       const imgs = document.querySelectorAll('p > img')
       const iframes = document.querySelectorAll('iframe')
@@ -374,16 +379,6 @@ export default {
         this.olActive = orderedListState
         this.ulActive = unorderedListState
       }, 100)
-    },
-    check_caret_pos () {
-      const caretPosition = document.getSelection()
-      if (caretPosition.focusNode !== null) {
-        if (caretPosition.focusNode.parentNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.parentNode.id === 'rich_editor' || caretPosition.focusNode.id === 'rich_editor') {
-          this.caretIsInEditor = true
-        } else {
-          this.caretIsInEditor = false
-        }
-      }
     },
     remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
@@ -438,7 +433,7 @@ export default {
     },
     // CHECKBOX
     add_checkbox () {
-      this.format('insertHTML', '<div contenteditable="false" style="display: inline"><input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)"></div><div contenteditable="true" style="display:inline"></div>')
+      this.format('insertHTML', '<div contenteditable="false" style="display: inline-flex"><input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)"></div><div contenteditable="true" style="display:inline"></div>')
     },
     // LINK
     show_link_adder () {
