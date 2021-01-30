@@ -195,7 +195,6 @@ export default {
     }
   },
   created () {
-    this.$parent.$modal.show('error')
     this.$parent.loading = true
     this.$parent.setup()
     this.$parent.willBodyScroll(true)
