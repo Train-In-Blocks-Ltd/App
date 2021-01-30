@@ -115,15 +115,13 @@ const ClientLink = () => import(/* webpackChunkName: "components.clientlink", we
 const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
 const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/InstallPWA')
-const Skeleton = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/Skeleton')
 
 export default {
   components: {
     ClientLink,
     NewClient,
     WhatsNew,
-    InstallApp,
-    Skeleton
+    InstallApp
   },
   data () {
     return {
