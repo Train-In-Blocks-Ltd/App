@@ -746,7 +746,10 @@
       <div class="modal--error">
         <div class="wrapper--centered-item">
           <p>Something went wrong, please try that again</p>
-          <p class="grey">This problem has been reported to our developers</p><br>
+          <p class="grey">
+            This problem has been reported to our developers
+          </p>
+          <br>
           <p>{{ errorMsg }}</p><br>
           <div class="modal--bottom_bar">
             <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">
