@@ -52,16 +52,9 @@
     border-bottom: 1px solid #28282840;
     padding: .8rem
   }
-  .pop_up--add_video.no_flex {
-    display: grid;
-    grid-gap: 1rem
-  }
   .pop_up--add_template {
     display: grid;
     grid-gap: 1rem
-  }
-  .template_item, .flex {
-    display: flex
   }
   .template_item svg {
     margin: auto 1rem;
@@ -223,16 +216,11 @@
         <input id="img_uploader" type="file" accept=".png, .jpeg" @change="add_img()">
       </div>
       <!-- VIDEO -->
-      <form v-if="showAddVideo" class="pop_up--add_video no_flex" @submit.prevent="add_video()">
-        <div class="flex">
-          <input v-model="addVideoURL" class="input--add_video small_border_radius" type="text" placeholder="YouTube URL" required>
-          <button class="add_video_submit" type="submit">
-            Add
-          </button>
-        </div>
-        <p class="text--tiny">
-          Adding too many videos may affect loading time. Use links to redirect the client if this happens.
-        </p>
+      <form v-if="showAddVideo" class="pop_up--add_video" @submit.prevent="add_video()">
+        <input v-model="addVideoURL" class="input--add_video small_border_radius" type="text" placeholder="YouTube URL" required>
+        <button class="add_video_submit" type="submit">
+          Add
+        </button>
       </form>
       <!-- TEMPLATE -->
       <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">
@@ -352,11 +340,11 @@ export default {
     */
     update_html () {
       const imgs = document.querySelectorAll('p > img')
-      const iframes = document.querySelectorAll('.ql-video')
+      const iframes = document.querySelectorAll('iframe')
       iframes.forEach((item) => {
-        item.removeAttribute('class')
-        item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0')
-        item.setAttribute('loading', 'lazy')
+        const url = item.attributes.src.nodeValue
+        item.insertAdjacentHTML('afterend', `<a href="${url}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
+        item.remove()
       })
       imgs.forEach((item) => {
         item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0; content-visibility: auto')
@@ -514,7 +502,7 @@ export default {
     },
     add_video () {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', `<iframe src="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" frameborder="0" allowfullscreen style="border-radius: 10px; max-width: 80%; margin: 1rem 0" loading="lazy" />`)
+      this.format('insertHTML', `<a href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {

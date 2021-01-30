@@ -42,18 +42,6 @@
   }
 
   /* Inputs */
-  input.template-name {
-    text-overflow: ellipsis;
-    border: 0;
-    border-bottom: 1px solid #282828;
-    font-size: 1rem;
-    outline-width: 0;
-    padding: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  input.template-name:hover {
-    opacity: .6
-  }
   .newTemplate {
     color: #B80000
   }

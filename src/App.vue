@@ -745,14 +745,10 @@
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="wrapper--centered-item">
-          <p>Something went wrong. Please try again...</p><br>
+          <p>Something went wrong, please try that again</p>
+          <p class="grey">This problem has been reported to our developers</p><br>
           <p>{{ errorMsg }}</p><br>
           <div class="modal--bottom_bar">
-            <form action="https://traininblocks.atlassian.net/servicedesk/customer/portal/3/group/4/create/22">
-              <button type="submit" formtarget="_blank">
-                Let us know
-              </button>
-            </form>
             <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">
               Close
             </button>

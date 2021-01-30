@@ -140,6 +140,7 @@ export default {
     this.$parent.setup()
     this.$parent.client_details = null
     this.version()
+    this.$parent.willBodyScroll(true)
     this.$parent.end_loading()
   },
   methods: {
