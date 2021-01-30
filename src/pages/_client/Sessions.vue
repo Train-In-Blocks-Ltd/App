@@ -110,16 +110,8 @@
     border: none;
     padding: 0
   }
-  #info {
-    fill: #282828
-  }
 
   /* Week */
-  .week-color-picker {
-    margin: auto 0;
-    height: 28px;
-    border: #282828
-  }
   .container--week {
     height: 100px;
     user-select: none
@@ -155,17 +147,32 @@
   .week.weekActive:hover {
     box-shadow: 0 0 20px 10px #28282808
   }
+  .change_week_color {
+    height: 2rem;
+    width: 4rem;
+    border: 2px solid #282828;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .change_week_color:hover {
+    opacity: .6
+  }
+  .change_week_color.noColor {
+    background-color: white !important
+  }
 
-  /* Copy */
-  #copy, #info {
-    margin: auto 0 auto 1rem;
+  /* Info */
+  #info {
+    fill: #282828;
+    margin-left: 1rem;
     cursor: pointer;
     transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
   }
-  #copy:hover, #info:hover {
+  #info:hover {
     opacity: .6
   }
-  #copy:active, #info:active {
+  #info:active {
     transform: scale(.9)
   }
 
@@ -175,16 +182,19 @@
   }
   .session--header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem
+    justify-content: space-between
   }
   .session--header__left {
+    display: grid;
+    grid-gap: 1rem;
+    height: 80px
+  }
+  .session--header__left__top {
     display: flex
   }
   .expand-all {
     text-align: right;
-    margin: 2rem 0;
+    margin-bottom: 2rem;
     font-size: .8rem;
     cursor: pointer;
     opacity: 1;
@@ -617,8 +627,16 @@
             <div class="sessions">
               <div class="session--header">
                 <div class="session--header__left">
-                  <input v-model="weekColor.backgroundColor[currentWeek - 1]" class="week-color-picker" type="color" aria-label="Week Color" @blur="updateSessionColor()">
-                  <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.willBodyScroll(false)" />
+                  <div class="session--header__left__top">
+                    <div
+                      :style="{ backgroundColor: weekColor.backgroundColor[currentWeek - 1] }"
+                      :class="{ noColor: weekColor.backgroundColor[currentWeek - 1] === 'null' }"
+                      @click="editingWeekColor = !editingWeekColor"
+                      class="change_week_color"
+                    />
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.willBodyScroll(false)" />
+                  </div>
+                  <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
                 <button class="button--new-session" @click="createSession()">
                   New session
@@ -815,13 +833,15 @@ const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpac
 const Calendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/Calendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
+const ColorPicker = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/ColorPicker')
 
 export default {
   components: {
     Checkbox,
     Calendar,
     RichEditor,
-    SimpleChart
+    SimpleChart,
+    ColorPicker
   },
   data () {
     return {
@@ -841,6 +861,8 @@ export default {
       todayDate: '',
       expandedSessions: [],
       weekIsEmpty: true,
+
+      editingWeekColor: false,
 
       // SESSION DATA //
       isEditingSession: false,
@@ -1122,6 +1144,7 @@ export default {
           plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
         }
       })
+      this.editingWeekColor = false
       this.update_plan()
       this.scan()
     },

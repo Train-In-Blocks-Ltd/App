@@ -332,11 +332,6 @@ export default {
         this.update_edited_notes()
         document.removeEventListener('keydown', this.check_cmd_state)
       }
-      editable.onkeyup = (e) => {
-        e = e || window.event
-        if (e.keyCode === 13)
-          document.execCommand('formatBlock', false, 'p');
-      }
     }
   },
   mounted () {
