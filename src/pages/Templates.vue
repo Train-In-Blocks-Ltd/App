@@ -98,9 +98,11 @@
       <p class="text--large">
         Templates
       </p>
-      <button @click="newTemplate()">
-        New Template
-      </button>
+      <div>
+        <button @click="newTemplate()">
+          New Template
+        </button>
+      </div>
     </div>
     <div v-if="$parent.templates" class="container--templates">
       <p v-if="$parent.templates.length === 0" class="text--small grey">

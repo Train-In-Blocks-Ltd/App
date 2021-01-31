@@ -638,9 +638,11 @@
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
-                <button class="button--new-session" @click="createSession()">
-                  New session
-                </button>
+                <div>
+                  <button class="button--new-session" @click="createSession()">
+                    New session
+                  </button>
+                </div>
               </div>
               <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--small grey text--no_sessions">
                 No sessions yet :(
@@ -833,7 +835,7 @@ const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpac
 const Calendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/Calendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
-const ColorPicker = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/ColorPicker')
+const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ '../../components/ColorPicker')
 
 export default {
   components: {
@@ -1103,7 +1105,7 @@ export default {
     go_to_event (id, week) {
       this.expandAll('Expand')
       this.currentWeek = week
-      document.getElementById(`session-${id}`).scrollIntoView()
+      document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
     },
     check_for_week_sessions () {
       let arr = 0
