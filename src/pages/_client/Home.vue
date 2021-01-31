@@ -121,7 +121,7 @@
     </div>
     <div v-if="!sessions" class="top_grid">
       <!-- Update the client details -->
-      <form class="client_info" @submit.prevent="$parent.update_client()">
+      <div class="client_info">
         <input
           v-model="$parent.client_details.name"
           class="client_info--name text--large"
@@ -175,7 +175,7 @@
             </button>
           </div>
         </div>
-      </form>
+      </div>
     </div>
     <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
       <router-view :key="$route.fullPath" />

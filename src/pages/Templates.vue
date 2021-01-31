@@ -154,7 +154,7 @@
           <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false, template.template)">
             Save
           </button>
-          <button v-if="template.id === editTemplate" class="cancel" @click="cancelTemplateNotes(), template.template = tempEditorStore">
+          <button v-if="template.id === editTemplate" class="cancel" @click="template.template = tempEditorStore, cancelTemplateNotes()">
             Cancel
           </button>
         </div>

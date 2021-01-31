@@ -539,7 +539,7 @@
               @blur="$parent.$parent.update_client()"
             >
             <!-- Update the plan info -->
-            <form class="plan_info">
+            <div class="plan_info">
               <input
                 v-model="plan.name"
                 class="text--small allow_text_overflow"
@@ -548,7 +548,7 @@
                 name="name"
                 @blur="$parent.$parent.pause_loading = true, update_plan()"
               >
-            </form>
+            </div>
           </div><br>  <!-- client_info -->
           <div class="wrapper--progress-bar">
             <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal, noSessions: $parent.no_sessions }">
@@ -607,9 +607,7 @@
                     name="duration"
                     inputmode="decimal"
                     min="1"
-                    required
-                    @blur="update_plan()"
-                    @change="weekConfirm(plan.duration), maxWeek = plan.duration"
+                    @change="weekConfirm(plan.duration), update_plan(), maxWeek = plan.duration"
                   >
                 </div>
               </div>

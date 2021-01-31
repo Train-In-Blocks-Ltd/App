@@ -148,7 +148,7 @@
               v-for="(event, indexed) in day.events"
               :key="'event-' + indexed"
               :style="{ backgroundColor: event.color }"
-              :class="{ showBorder: event.color === null || event.color === '' || event.color === '#ffffff' }"
+              :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
               @click="$parent.go_to_event(event.session_id, event.week_id)"
               class="day_events__event cursor"
             >
@@ -162,7 +162,7 @@
               v-for="(event, indexed) in day.events"
               :key="'event-' + indexed"
               :style="{ backgroundColor: event.color }"
-              :class="{ showBorder: event.color === null || event.color === '' || event.color === '#ffffff' }"
+              :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
               class="day_events__event"
             >
               <p :style="{ color: event.textColor }">

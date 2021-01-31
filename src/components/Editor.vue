@@ -332,7 +332,6 @@ export default {
       if (this.showEditState) {
         document.addEventListener('keydown', this.check_cmd_state)
       } else {
-        this.update_edited_notes()
         document.removeEventListener('keydown', this.check_cmd_state)
       }
     }

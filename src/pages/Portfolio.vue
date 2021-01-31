@@ -39,7 +39,7 @@
 
 <template>
   <div id="portfolio">
-    <form class="trainer_info">
+    <div class="trainer_info">
       <input
         v-if="!$parent.loading"
         v-model="$parent.portfolio.business_name"
@@ -64,7 +64,7 @@
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
-    </form>
+    </div>
     <div v-if="!$parent.loading" class="wrapper_card">
       <p class="text--small">
         Portfolio
