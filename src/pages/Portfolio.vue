@@ -48,7 +48,7 @@
         aria-label="Business name"
         type="text"
         autocomplete="name"
-        @blur="update()"
+        @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_large'" />
@@ -60,7 +60,7 @@
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
-        @blur="update()"
+        @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
@@ -73,12 +73,14 @@
         :show-edit-state="editing_card"
         :html-injection.sync="$parent.portfolio.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
+        :called-from-el="'portfolio'"
+        :called-from-item="'portfolio'"
       />
       <div class="bottom_bar">
         <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">
           Edit
         </button>
-        <button v-if="editing_card" @click="editing_card= false, update()">
+        <button v-if="editing_card" @click="editing_card= false, update($parent.portfolio.notes)">
           Save
         </button>
         <button v-if="editing_card" class="cancel" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore">
@@ -112,7 +114,7 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
-    async update () {
+    async update (notesUpdate) {
       this.$parent.dontLeave = true
       this.$parent.pause_loading = true
       try {
@@ -120,7 +122,7 @@ export default {
           {
             trainer_name: this.$parent.portfolio.trainer_name,
             business_name: this.$parent.portfolio.business_name,
-            notes: this.$parent.portfolio.notes
+            notes: notesUpdate
           }
         )
         await this.$parent.get_portfolio(true)

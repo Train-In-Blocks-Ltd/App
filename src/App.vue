@@ -1114,6 +1114,27 @@ export default {
 
     // CLIENT ARCHIVE
 
+    async update_client (clientNotesUpdate) {
+      this.dontLeave = true
+      this.pause_loading = true
+      try {
+        await this.$axios.post('https://api.traininblocks.com/clients',
+          {
+            id: this.client_details.client_id,
+            name: this.client_details.name,
+            email: this.client_details.email,
+            number: this.client_details.number,
+            notes: clientNotesUpdate === undefined ? this.client_details.notes : clientNotesUpdate
+          }
+        )
+        // Get the client information again as we have just updated the client
+        await this.clients_f()
+        await this.clients_to_vue()
+        this.end_loading()
+      } catch (e) {
+        this.resolve_error(e)
+      }
+    },
     async archive_to_vue () {
       if (!localStorage.getItem('archive')) {
         await this.archive_f()
@@ -1317,7 +1338,7 @@ export default {
         this.resolve_error(e)
       }
     },
-    async update_session (pid, sid) {
+    async update_session (pid, sid, feedbackNotesUpdate) {
       this.dontLeave = true
       // Set the plan variable to the current plan
       let x
@@ -1345,7 +1366,7 @@ export default {
             id: sessionId,
             name: sessionName,
             checked: sessionChecked,
-            feedback: sessionFeedback
+            feedback: feedbackNotesUpdate === undefined ? sessionFeedback : feedbackNotesUpdate
           }
         )
         this.$ga.event('Session', 'update')

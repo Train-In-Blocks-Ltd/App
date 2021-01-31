@@ -68,7 +68,7 @@
   }
 
   /* Plan Grid */
-  .plan_notes {
+  #plan_notes {
     margin: 4rem 0
   }
   .plan_notes__header {
@@ -203,7 +203,7 @@
   .expand-all:hover {
     opacity: .6
   }
-  .wrapper--session, .plan_notes {
+  .wrapper--session, #plan_notes {
     display: grid;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
@@ -536,7 +536,7 @@
               type="text"
               aria-label="Client Name"
               autocomplete="name"
-              @blur="$parent.update_client()"
+              @blur="$parent.$parent.update_client()"
             >
             <!-- Update the plan info -->
             <form class="plan_info">
@@ -563,7 +563,7 @@
         </div> <!-- top_grid -->
         <div class="plan_grid">
           <div class="calendar">
-            <div class="plan_notes" :class="{ activeState: editPlanNotes }">
+            <div id="plan_notes" :class="{ activeState: editPlanNotes }">
               <div class="plan_notes__header">
                 <p class="text--small">
                   Plan Notes
@@ -576,9 +576,11 @@
                 :show-edit-state="editPlanNotes"
                 :html-injection.sync="plan.notes"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
+                :called-from-el="'plan'"
+                :called-from-item="'plan_notes'"
               />
               <div v-if="editPlanNotes" class="bottom_bar">
-                <button class="button--save" @click="editPlanNotes = false, update_plan()">
+                <button class="button--save" @click="editPlanNotes = false, update_plan(plan.notes)">
                   Save
                 </button>
                 <button class="cancel" @click="editPlanNotes = false, plan.notes = tempEditorStore">
@@ -587,7 +589,7 @@
               </div>
             </div>
             <div class="wrapper--calendar">
-              <calendar :events="sessionDates" :force-update="forceUpdate" :isTrainer="true" />
+              <calendar :events="sessionDates" :force-update="forceUpdate" :is-trainer="true" />
             </div>
           </div>
           <div class="wrapper-plan">
@@ -631,8 +633,8 @@
                     <div
                       :style="{ backgroundColor: weekColor.backgroundColor[currentWeek - 1] }"
                       :class="{ noColor: weekColor.backgroundColor[currentWeek - 1] === 'null' }"
-                      @click="editingWeekColor = !editingWeekColor"
                       class="change_week_color"
+                      @click="editingWeekColor = !editingWeekColor"
                     />
                     <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.willBodyScroll(false)" />
                   </div>
@@ -704,6 +706,9 @@
                       :html-injection.sync="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                       :data-for-templates="$parent.$parent.templates"
+                      :called-from-el="'plan'"
+                      :called-from-item="'trainer_session'"
+                      :called-from-item-id="`${session.id}`"
                     />
                     <div v-if="session.id === showFeedback" class="show_feedback animate animate__fadeIn">
                       <hr><br>
@@ -711,10 +716,10 @@
                       <div v-html="session.feedback" />
                     </div>
                     <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
-                      <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true), editPlanNotes = false, tempEditorStore = session.notes">
+                      <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true, session.notes), editPlanNotes = false, tempEditorStore = session.notes">
                         Edit
                       </button>
-                      <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false)">
+                      <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false, session.notes)">
                         Save
                       </button>
                       <button v-if="session.id === editSession" class="cancel" @click="cancelSessionNotes(), session.notes = tempEditorStore">
@@ -861,7 +866,6 @@ export default {
       todayDate: '',
       expandedSessions: [],
       weekIsEmpty: true,
-
       editingWeekColor: false,
 
       // SESSION DATA //
@@ -943,7 +947,7 @@ export default {
           plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               session.date = this.addDays(session.date, parseInt(this.shiftDays))
-              this.update_session(session.id)
+              this.update_session(session.id, session.notes)
             }
           })
         }
@@ -1013,7 +1017,7 @@ export default {
               plan.sessions.forEach((session) => {
                 if (this.selectedSessions.includes(session.id)) {
                   session.checked = state
-                  this.update_session(session.id)
+                  this.update_session(session.id, session.notes)
                 }
               })
             }
@@ -1059,18 +1063,15 @@ export default {
       await this.add_session()
       this.$parent.$parent.end_loading()
     },
-    editingSessionNotes (id, state) {
+    editingSessionNotes (id, state, notesUpdate) {
       this.isEditingSession = state
       this.editSession = id
       if (!state) {
-        this.updateSessionNotes(id)
+        this.update_session(id, notesUpdate)
+        this.isEditingSession = false
+        this.editSession = null
+        this.scan()
       }
-    },
-    updateSessionNotes (id) {
-      this.update_session(id)
-      this.isEditingSession = false
-      this.editSession = null
-      this.scan()
     },
     cancelSessionNotes () {
       this.isEditingSession = false
@@ -1587,7 +1588,7 @@ export default {
 
     // DATABASE METHODS //-------------------------------------------------------------------------------
 
-    async update_plan () {
+    async update_plan (planNotesUpdate) {
       this.$parent.$parent.dontLeave = true
       let plan
       // Set the plan variable to the current plan
@@ -1603,7 +1604,7 @@ export default {
             id: plan.id,
             name: plan.name,
             duration: plan.duration,
-            notes: plan.notes,
+            notes: planNotesUpdate === undefined ? plan.notes : planNotesUpdate,
             block_color: plan.block_color,
             type: plan.type
           }
@@ -1637,7 +1638,7 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async update_session (id) {
+    async update_session (id, sessionNotesUpdate) {
       this.$parent.$parent.pause_loading = true
       this.$parent.$parent.dontLeave = true
       // Set the plan variable to the current plan
@@ -1654,8 +1655,6 @@ export default {
               // eslint-disable-next-line
               var sessionsDate = plan.sessions[y].date
               // eslint-disable-next-line
-              var sessionsNotes = plan.sessions[y].notes
-              // eslint-disable-next-line
               var sessionsWeek = plan.sessions[y].week_id
               // eslint-disable-next-line
               var sessionsChecked = plan.sessions[y].checked
@@ -1669,7 +1668,7 @@ export default {
             id: sessionsId,
             name: sessionsName,
             date: sessionsDate,
-            notes: sessionsNotes,
+            notes: sessionNotesUpdate,
             week_id: sessionsWeek,
             checked: sessionsChecked
           }

@@ -141,12 +141,15 @@
           :show-edit-state="template.id === editTemplate"
           :html-injection.sync="template.template"
           :empty-placeholder="'What do you plan for your clients frequently?'"
+          :called-from-el="'templates'"
+          :called-from-item="'template'"
+          :called-from-item-id="`${template.id}`"
         />
         <div v-if="expandedTemplates.includes(template.id)" class="bottom_bar">
-          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempEditorStore = template.template">
+          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true, template.template), tempEditorStore = template.template">
             Edit
           </button>
-          <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">
+          <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false, template.template)">
             Save
           </button>
           <button v-if="template.id === editTemplate" class="cancel" @click="cancelTemplateNotes(), template.template = tempEditorStore">
@@ -239,17 +242,14 @@ export default {
         this.expandedTemplates.push(id)
       }
     },
-    editingTemplateNotes (id, state) {
+    editingTemplateNotes (id, state, notesUpdate) {
       this.isEditingTemplate = state
       this.editTemplate = id
       if (!state) {
-        this.updateTemplateNotes(id)
+        this.updateTemplate(id, notesUpdate)
+        this.isEditingTemplate = false
+        this.editTemplate = null
       }
-    },
-    updateTemplateNotes (id) {
-      this.updateTemplate(id)
-      this.isEditingTemplate = false
-      this.editTemplate = null
     },
     cancelTemplateNotes () {
       this.editTemplate = null
@@ -278,24 +278,22 @@ export default {
         this.$parent.resolve_error(e)
       }
     },
-    async updateTemplate (id) {
+    async updateTemplate (id, notesUpdate) {
       try {
         let templateName
-        let templateContent
         this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         if (this.$parent.templates.length !== 0) {
           this.$parent.templates.forEach((item) => {
             if (item.id === id) {
               templateName = item.name
-              templateContent = item.template
             }
           })
         }
         await this.$axios.post('https://api.traininblocks.com/templates',
           {
             name: templateName,
-            template: templateContent,
+            template: notesUpdate,
             id
           }
         )

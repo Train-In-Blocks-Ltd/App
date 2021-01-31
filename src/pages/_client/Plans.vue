@@ -3,7 +3,7 @@
   .activeState {
     border: 2px solid #28282860
   }
-  .client_notes {
+  #client_notes {
     margin: 4rem 0;
     padding: 2rem;
     border-radius: 10px;
@@ -71,7 +71,7 @@
       <div :class="{ openedSections: isNewPlanOpen }" class="section--a" />
       <div :class="{ openedSections: isNewPlanOpen }" class="section--b" />
     </div>
-    <div :class="{ activeState: editClientNotes }" class="client_notes">
+    <div id="client_notes" :class="{ activeState: editClientNotes }">
       <div class="client_notes__header">
         <p class="text--small">
           Client Information
@@ -89,9 +89,11 @@
         :show-edit-state="editClientNotes"
         :html-injection.sync="$parent.$parent.client_details.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
+        :called-from-el="'app'"
+        :called-from-item="'client_information'"
       />
       <div v-if="editClientNotes" class="bottom_bar">
-        <button class="button--save" @click="editClientNotes = false, $parent.update_client()">
+        <button class="button--save" @click="editClientNotes = false, $parent.$parent.update_client()">
           Save
         </button>
         <button class="cancel" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore">
@@ -131,7 +133,7 @@
               <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">
                 What's the purpose of this plan? Head over to this page and edit it.
               </p>
-              <div v-else class="plan_link__notes__content" v-html="plan.notes" />
+              <div v-else class="plan_link__notes__content" v-html="remove_brackets_and_checkbox(plan.notes)" />
             </div>
           </router-link>
         </div>
@@ -163,6 +165,13 @@ export default {
     this.$parent.checkClient()
   },
   methods: {
+    remove_brackets_and_checkbox (dataIn) {
+      if (dataIn !== null) {
+        return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
+      } else {
+        return dataIn
+      }
+    },
     responseDelay () {
       setTimeout(() => { this.response = '' }, 5000)
     }

@@ -121,14 +121,14 @@
     </div>
     <div v-if="!sessions" class="top_grid">
       <!-- Update the client details -->
-      <form class="client_info" @submit.prevent="update_client()">
+      <form class="client_info" @submit.prevent="$parent.update_client()">
         <input
           v-model="$parent.client_details.name"
           class="client_info--name text--large"
           type="text"
           aria-label="Client name"
           autocomplete="name"
-          @blur="update_client()"
+          @blur="$parent.update_client()"
         >
         <div class="client_info__more-details">
           <input
@@ -143,7 +143,7 @@
             minlength="9"
             maxlength="14"
             pattern="\d+"
-            @blur="update_client()"
+            @blur="$parent.update_client()"
           >
           <div class="client_email_bar">
             <inline-svg :src="require('../../assets/svg/email.svg')" />
@@ -162,14 +162,14 @@
             <button
               v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error' && $parent.client_details.notifications === 1"
               class="button--verify"
-              @click="$parent.client_details.notifications = 0, update_client()"
+              @click="$parent.client_details.notifications = 0, $parent.update_client()"
             >
               Disable email notifications
             </button>
             <button
               v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error' && $parent.client_details.notifications === 0"
               class="button--verify"
-              @click="$parent.client_details.notifications = 1, update_client()"
+              @click="$parent.client_details.notifications = 1, $parent.update_client()"
             >
               Enable email notifications
             </button>
@@ -440,27 +440,6 @@ export default {
         this.$parent.resolve_error(e)
       }
       await this.get_sessions()
-    },
-    async update_client () {
-      this.$parent.dontLeave = true
-      this.$parent.pause_loading = true
-      try {
-        await this.$axios.post('https://api.traininblocks.com/clients',
-          {
-            id: this.$parent.client_details.client_id,
-            name: this.$parent.client_details.name,
-            email: this.$parent.client_details.email,
-            number: this.$parent.client_details.number,
-            notes: this.$parent.client_details.notes
-          }
-        )
-        // Get the client information again as we have just updated the client
-        await this.$parent.clients_f()
-        await this.$parent.clients_to_vue()
-        this.$parent.end_loading()
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
     },
     async delete_plan () {
       if (confirm('Are you sure you want to delete this plan?')) {

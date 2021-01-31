@@ -297,7 +297,10 @@ export default {
     showEditState: Boolean,
     htmlInjection: String,
     emptyPlaceholder: String,
-    dataForTemplates: Array
+    dataForTemplates: Array,
+    calledFromEl: String,
+    calledFromItem: String,
+    calledFromItemId: String
   },
   data () {
     return {
@@ -377,7 +380,7 @@ export default {
     },
     remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
+        return dataIn.replace(/[[\]]/g, '')
       } else {
         return dataIn
       }
@@ -428,7 +431,9 @@ export default {
     },
     // CHECKBOX
     add_checkbox () {
-      this.format('insertHTML', '<div contenteditable="false" style="display: inline-flex"><input name="checklist" type="checkbox" style="margin: .4rem" onclick="change_checked_state(this)"></div><div contenteditable="true" style="display:inline"></div>')
+      let itemId
+      this.calledFromItemId === undefined ? itemId = '' : itemId = this.calledFromItemId
+      this.format('insertHTML', `<input type="checkbox" style="margin: .4rem; cursor: pointer" onclick="change_checked_state(this, '${this.calledFromEl}', '${this.calledFromItem}', '${itemId}')">`)
     },
     // LINK
     show_link_adder () {

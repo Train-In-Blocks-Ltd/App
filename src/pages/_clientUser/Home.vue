@@ -97,33 +97,36 @@
         >
           No sessions today...
         </p>
-        <div v-for="(plan, index) in this.$parent.clientUser.plans" :key="index">
+        <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
           <div v-if="plan.sessions" class="container--sessions">
             <div
               v-for="(session, indexed) in plan.sessions"
-              v-show="todays_sessions_store.includes(session.id) && !$parent.loading"
+              v-show="showing_current_session === indexed"
               :key="indexed"
+              :id="`session-${session.id}`"
               class="wrapper--session"
             >
               <div :id="session.name" class="wrapper--session__header client-side">
-                <span class="text--name"><b>{{ session.name }}</b></span><br>
-                <span class="text--date">{{ $parent.day(session.date) }}</span>
-                <span class="text--date">{{ session.date }}</span>
+                <div>
+                  <span class="text--name"><b>{{ session.name }}</b></span><br>
+                  <span class="text--date">{{ $parent.day(session.date) }}</span>
+                  <span class="text--date">{{ session.date }}</span>
+                </div>
               </div>
               <div class="show_session animate animate__fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
               <div class="bottom_bar">
-                <div class="full_width_bar">
+                <div :key="check" class="full_width_bar">
                   <button
-                    v-if="session.checked === 1"
-                    class="button--state no_margin done"
-                    @click="session.checked = 0, $parent.update_session(plan.id, session.id)"
+                    v-if="session.checked === 1 && !giveFeedback"
+                    class="button--state done"
+                    @click="complete(plan.id, session.id)"
                   >
                     Completed
                   </button>
                   <button
-                    v-if="session.checked === 0"
-                    class="button--state no_margin to_do"
-                    @click="session.checked = 1, $parent.update_session(plan.id, session.id)"
+                    v-if="session.checked === 0 && !giveFeedback"
+                    class="button--state to_do"
+                    @click="complete(plan.id, session.id)"
                   >
                     Click to complete
                   </button>
@@ -138,6 +141,9 @@
                   :show-edit-state="giveFeedback === session.id"
                   :html-injection.sync="session.feedback"
                   :empty-placeholder="'What would you like to share with your trainer?'"
+                  :called-from-el="'app'"
+                  :called-from-item="'client_home_session'"
+                  :called-from-item-id="`${plan.id},${session.id}`"
                 />
                 <div class="feedback_bottom_bar">
                   <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
@@ -180,7 +186,7 @@
             <div
               v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
               class="plan_link__notes__content"
-              v-html="plan.notes"
+              v-html="remove_brackets_and_checkbox(plan.notes)"
             />
           </router-link>
         </div>
@@ -200,6 +206,7 @@ export default {
   },
   data () {
     return {
+      check: null,
       isPortfolioOpen: false,
       isInstallOpen: false,
       giveFeedback: null,
@@ -227,6 +234,24 @@ export default {
       } else {
         return dataIn
       }
+    },
+    complete (planId, sessionId) {
+      for (const plan of this.$parent.clientUser.plans) {
+        if (plan.id === planId) {
+          for (const session of plan.sessions) {
+            if (session.id === sessionId) {
+              if (session.checked === 0) {
+                session.checked = 1
+                this.check = 1
+              } else {
+                session.checked = 0
+                this.check = 0
+              }
+            }
+          }
+        }
+      }
+      this.$parent.update_session(planId, sessionId)
     },
 
     // DATE/TIME METHODS //-------------------------------------------------------------------------------

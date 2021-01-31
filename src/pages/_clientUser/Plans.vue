@@ -66,13 +66,13 @@
               Plan Notes
             </p>
           </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_plan_notes animate animate__fadeIn" v-html="plan.notes" />
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_plan_notes animate animate__fadeIn" v-html="remove_brackets_and_checkbox(plan.notes)" />
           <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_plan_notes text--small grey">
             No plan notes added...
           </p>
         </div>
         <div class="wrapper--calendar">
-          <calendar :events="sessionDates" :isTrainer="false" />
+          <calendar :events="sessionDates" :is-trainer="false" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
         <div v-else-if="plan.sessions" class="container--sessions">
@@ -107,6 +107,7 @@
             v-for="(session, indexed) in plan.sessions"
             v-show="showing_current_session === indexed"
             :key="indexed"
+            :id="`session-${session.id}`"
             class="wrapper--session"
           >
             <div :id="session.name" class="wrapper--session__header client-side">
@@ -116,7 +117,7 @@
                 <span class="text--date">{{ session.date }}</span>
               </div>
             </div>
-            <div class="show_session animate animate__fadeIn" v-html="removeBrackets(session.notes)" />
+            <div class="show_session animate animate__fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
             <div class="bottom_bar">
               <div :key="check" class="full_width_bar">
                 <button
@@ -144,6 +145,8 @@
                 :show-edit-state="giveFeedback === session.id"
                 :html-injection.sync="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
+                :called-from-el="'app'"
+                :called-from-item="'client_plan_session'"
               />
               <div class="feedback_bottom_bar">
                 <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
@@ -194,11 +197,11 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
-    complete (p, s) {
+    complete (planId, sessionId) {
       for (const plan of this.$parent.clientUser.plans) {
-        if (plan.id === parseInt(this.$route.params.id)) {
+        if (plan.id === planId) {
           for (const session of plan.sessions) {
-            if (session.id === s) {
+            if (session.id === sessionId) {
               if (session.checked === 0) {
                 session.checked = 1
                 this.check = 1
@@ -210,7 +213,7 @@ export default {
           }
         }
       }
-      this.$parent.update_session(p, s)
+      this.$parent.update_session(planId, sessionId)
     },
 
     // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
@@ -239,10 +242,9 @@ export default {
         return color
       }
     },
-    removeBrackets (dataIn) {
+    remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
-        const dataOut = dataIn.replace(/[[\]]/g, '')
-        return dataOut
+        return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
       } else {
         return dataIn
       }
