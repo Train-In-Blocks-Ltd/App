@@ -178,12 +178,19 @@ export default {
   },
   data () {
     return {
+
+      // SYSTEM
+
       check: null,
-      giveFeedback: null,
       showing_current_session: 0,
+
+      // EDIT
+
+      giveFeedback: null,
       tempEditorStore: null,
 
-      // CALENDAR DATA
+      // CALENDAR
+
       sessionDates: []
     }
   },
@@ -197,6 +204,9 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
+
+    // BACKGROUND AND MISC.
+
     complete (planId, sessionId) {
       for (const plan of this.$parent.clientUser.plans) {
         if (plan.id === planId) {
@@ -215,9 +225,6 @@ export default {
       }
       this.$parent.update_session(planId, sessionId)
     },
-
-    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
-
     scan () {
       this.sessionDates.length = 0
       this.$parent.clientUser.plans.forEach((plan) => {

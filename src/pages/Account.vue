@@ -202,7 +202,7 @@ export default {
   },
   methods: {
 
-    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+    // BACKGROUND AND MISC.
 
     async save () {
       this.$parent.pause_loading = true
@@ -230,8 +230,20 @@ export default {
         console.error(e)
       }
     },
+    async manage_subscription () {
+      try {
+        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
+          {
+            id: this.$parent.claims.stripeId
+          }
+        )
+        window.location.href = response.data
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
 
-    // PASSWORD METHODS //-------------------------------------------------------------------------------
+    // PASSWORD
 
     check_password () {
       if (!this.password.new.includes(this.$parent.claims.email) && this.password.new.match(/[0-9]+/) && this.password.new.length >= 8 && this.password.old.length >= 1) {
@@ -271,18 +283,6 @@ export default {
         this.password.error = 'Something went wrong. Please make sure that your password is correct'
         console.error(e)
         this.$parent.end_loading()
-      }
-    },
-    async manage_subscription () {
-      try {
-        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
-          {
-            id: this.$parent.claims.stripeId
-          }
-        )
-        window.location.href = response.data
-      } catch (e) {
-        this.$parent.resolve_error(e)
       }
     }
   }

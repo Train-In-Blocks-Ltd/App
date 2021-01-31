@@ -153,11 +153,17 @@ export default {
   },
   data () {
     return {
+
+      // EDIT
+
       tempEditorStore: null,
-      response: '',
-      persistResponse: '',
       editClientNotes: false,
-      isNewPlanOpen: false
+
+      // PLAN CREATION
+
+      isNewPlanOpen: false,
+      response: '',
+      persistResponse: ''
     }
   },
   created () {
@@ -165,6 +171,9 @@ export default {
     this.$parent.check_client()
   },
   methods: {
+
+    // BACKGROUND AND MISC.
+
     remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
         return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')

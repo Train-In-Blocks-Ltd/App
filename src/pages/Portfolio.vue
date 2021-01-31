@@ -101,8 +101,10 @@ export default {
   },
   data () {
     return {
+
+      // EDIT
+
       editing_card: false,
-      toggleTest: false,
       tempEditorStore: null
     }
   },
@@ -114,6 +116,9 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
+
+    // DATABASE
+
     async update (notesUpdate) {
       this.$parent.dontLeave = true
       this.$parent.pause_loading = true

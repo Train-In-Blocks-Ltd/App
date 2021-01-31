@@ -125,12 +125,21 @@ export default {
   },
   data () {
     return {
+      
+      // CLIENT CREATION
+      
       response: '',
       persistResponse: '',
-      search: '',
+
+      // TAB STATES
+
       isNewClientOpen: false,
       isInstallOpen: false,
-      isWhatsNewOpen: false
+      isWhatsNewOpen: false,
+
+      // OTHER
+
+      search: ''
     }
   },
   mounted () {
@@ -142,6 +151,9 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
+    
+    // BACKGROUND AND MISC.
+
     response_delay () {
       setTimeout(() => { this.response = '' }, 5000)
     },

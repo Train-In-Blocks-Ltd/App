@@ -206,11 +206,20 @@ export default {
   },
   data () {
     return {
-      check: null,
+
+      // TAB
+
       isPortfolioOpen: false,
       isInstallOpen: false,
+
+      // EDIT
+
       giveFeedback: null,
       tempEditorStore: null,
+
+      // SYSTEM
+
+      check: null,
       todays_sessions_store: [],
       showing_current_session: 0
     }
@@ -226,7 +235,7 @@ export default {
   },
   methods: {
 
-    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+    // BACKGROUND AND MISC.
 
     remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
@@ -254,7 +263,7 @@ export default {
       this.$parent.update_session(planId, sessionId)
     },
 
-    // DATE/TIME METHODS //-------------------------------------------------------------------------------
+    // DATE/TIME
 
     todays_session () {
       this.$parent.clientUser.plans.forEach((plan) => {

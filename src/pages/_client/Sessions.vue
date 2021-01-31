@@ -850,55 +850,37 @@ export default {
   },
   data () {
     return {
-      force: true,
-      tempEditorStore: null,
 
-      // GENERAL DATA //
-      sessionsDone: 0,
-      sessionsTotal: null,
-      isStatsOpen: false,
+      force: true,
+
+      // EDIT
+
+      tempEditorStore: null,
+      editPlanNotes: false,
+      isEditingSession: false,
+      editSession: null,
       showFeedback: '',
+
+      // SYSTEM
+
+      expandedSessions: [],
+      todayDate: '',
+
+      // WEEK
+
+      weekIsEmpty: true,
+      editingWeekColor: false,
       weekColor: {
         backgroundColor: ''
       },
-      response: '',
-      editPlanNotes: false,
-      todayDate: '',
-      expandedSessions: [],
-      weekIsEmpty: true,
-      editingWeekColor: false,
 
-      // SESSION DATA //
-      isEditingSession: false,
-      editSession: null,
-      movingSession: null,
-      moveTarget: 1,
-      copyTarget: 2,
-      daysDiff: 7,
-      new_session: {
-        name: 'Untitled',
-        date: ''
-      },
-      selectedSessions: [],
-      shiftDays: 1,
-      selectedHTML: '',
+      // ADHERANCE
 
-      // REGEX DATA //
-      str: [],
-      dataValues: [],
-      labelValues: [],
-      dataPacketStore: [],
-      regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
-      regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
-      regexLoadCapture: /(at|@)(.+)/gi,
-      regexNumberBreakdown: /[0-9.]+/gi,
-      protocolError: [],
+      sessionsDone: 0,
+      sessionsTotal: null,
 
-      // CALENDAR DATA //
-      sessionDates: [],
-      forceUpdate: 0,
+      // STATS
 
-      // STATISTICS DATA //
       p1: '',
       p2: '',
       p3: '',
@@ -909,8 +891,42 @@ export default {
       optionsForDataType: [],
       selectedDataType: 'Sets',
       showType: true,
+      isStatsOpen: false,
 
-      // MICROCYCLE DATA //
+      // SESSION CREATION
+
+      new_session: {
+        name: 'Untitled',
+        date: ''
+      },
+
+      // MANIPULATION AND MODAL
+
+      moveTarget: 1,
+      copyTarget: 2,
+      daysDiff: 7,
+      selectedSessions: [],
+      shiftDays: 1,
+
+      // REGEX DATA //
+
+      str: [],
+      dataValues: [],
+      labelValues: [],
+      dataPacketStore: [],
+      regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
+      regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
+      regexLoadCapture: /(at|@)(.+)/gi,
+      regexNumberBreakdown: /[0-9.]+/gi,
+      protocolError: [],
+
+      // CALENDAR
+
+      sessionDates: [],
+      forceUpdate: 0,
+
+      // MICROCYCLE
+
       allowMoreWeeks: false,
       currentWeek: 1,
       maxWeek: '2'
@@ -935,10 +951,10 @@ export default {
   },
   methods: {
 
-    // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
+    // MODALS AND TAB
 
-    async print_page () {
-      await this.expand_all('Expand')
+    print_page () {
+      setInterval(() => { this.expand_all('Expand') }, 100)
       window.print()
     },
     shift_across () {
@@ -1000,7 +1016,7 @@ export default {
       this.currentWeek = parseInt(this.moveTarget)
     },
 
-    // SESSION METHODS //-------------------------------------------------------------------------------
+    // MULTI AND CHECKBOX
 
     bulk_check (state) {
       function checked_state (dataIn) {
@@ -1063,6 +1079,9 @@ export default {
       await this.add_session()
       this.$parent.$parent.end_loading()
     },
+
+    // SESSION STATE
+
     editing_session_notes (id, state, notesUpdate) {
       this.isEditingSession = state
       this.editSession = id
@@ -1099,7 +1118,7 @@ export default {
       return out
     },
 
-    // GENERAL METHODS //-------------------------------------------------------------------------------
+    // GENERAL
 
     go_to_event (id, week) {
       this.expand_all('Expand')
@@ -1160,7 +1179,7 @@ export default {
       this.check_for_week_sessions()
     },
 
-    // CHART METHODS //-------------------------------------------------------------------------------
+    // CHART
 
     selection () {
       this.p1 = ''
@@ -1237,7 +1256,7 @@ export default {
       }
     },
 
-    // DATE/TIME METHODS //-------------------------------------------------------------------------------
+    // DATE/TIME
 
     week_confirm (dur) {
       if (parseInt(dur) > 12 && this.allowMoreWeeks === false) {
@@ -1286,7 +1305,7 @@ export default {
       return arr
     },
 
-    // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
+    // INIT AND BACKGROUND
 
     adherence () {
       this.sessionsDone = 0
@@ -1459,7 +1478,7 @@ export default {
       return sentence.join(' ')
     },
 
-    // REGEX METHODS //-------------------------------------------------------------------------------
+    // REGEX
 
     // Extracts anything for Sets and Reps
     sets_reps (exerciseDataPacket, protocol, dataForType) {
@@ -1579,7 +1598,7 @@ export default {
       this.p5 = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
     },
 
-    // DATABASE METHODS //-------------------------------------------------------------------------------
+    // DATABASE
 
     async update_plan (planNotesUpdate) {
       this.$parent.$parent.dontLeave = true
@@ -1688,7 +1707,6 @@ export default {
             week_id: this.currentWeek
           }
         )
-        this.response = response.data
         // Get the sessions from the API because we've just created a new one
         await this.$parent.get_sessions(this.force)
         this.new_session = {

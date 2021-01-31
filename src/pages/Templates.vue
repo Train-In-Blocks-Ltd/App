@@ -174,22 +174,30 @@ export default {
   },
   data () {
     return {
-      // TEMPLATE DATA //
-      tempEditorStore: null,
-      isEditingTemplate: false,
-      editTemplate: null,
+
+      // CREATE
+
       new_template: {
         name: 'Untitled',
         note: ''
       },
+      
+      // EDIT
+
+      isEditingTemplate: false,
+      tempEditorStore: null,
+      editTemplate: null,
+
+      // SELECTED AND EXPANDED
+
       selectedTemplates: [],
       expandedTemplates: []
     }
   },
   created () {
     this.$parent.loading = true
-    this.$parent.setup()
     this.$parent.will_body_scroll(true)
+    this.$parent.setup()
     this.$parent.end_loading()
   },
   async mounted () {
@@ -197,7 +205,9 @@ export default {
     this.check_for_new()
   },
   methods: {
-    // BACKGROUND METHODS //-------------------------------------------------------------------------------
+
+    // BACKGROUND
+
     check_for_new () {
       this.expandedTemplates.length = 0
       this.$parent.templates.forEach((template) => {
@@ -206,26 +216,9 @@ export default {
         }
       })
     },
-    delete_multi_templates () {
-      if (this.selectedTemplates.length !== 0) {
-        if (confirm('Are you sure you want to delete all the selected templates?')) {
-          this.selectedTemplates.forEach((templateId) => {
-            this.delete_template(templateId)
-          })
-          this.deselect_all()
-        }
-      }
-    },
-    deselect_all () {
-      this.$parent.templates.forEach((template) => {
-        const selEl = document.getElementById('sc-' + template.id)
-        if (selEl.checked === true) {
-          selEl.checked = false
-          const idx = this.selectedTemplates.indexOf(template.id)
-          this.selectedTemplates.splice(idx, 1)
-        }
-      })
-    },
+
+    // CHECKBOX
+
     change_select_checkbox (id) {
       if (this.selectedTemplates.includes(id) === false) {
         this.selectedTemplates.push(id)
@@ -244,6 +237,29 @@ export default {
         this.expandedTemplates.push(id)
       }
     },
+    deselect_all () {
+      this.$parent.templates.forEach((template) => {
+        const selEl = document.getElementById('sc-' + template.id)
+        if (selEl.checked === true) {
+          selEl.checked = false
+          const idx = this.selectedTemplates.indexOf(template.id)
+          this.selectedTemplates.splice(idx, 1)
+        }
+      })
+    },
+    delete_multi_templates () {
+      if (this.selectedTemplates.length !== 0) {
+        if (confirm('Are you sure you want to delete all the selected templates?')) {
+          this.selectedTemplates.forEach((templateId) => {
+            this.delete_template(templateId)
+          })
+          this.deselect_all()
+        }
+      }
+    },
+
+    // EDIT
+
     editing_template_notes (id, state, notesUpdate) {
       this.isEditingTemplate = state
       this.editTemplate = id
@@ -257,7 +273,9 @@ export default {
       this.editTemplate = null
       this.isEditingTemplate = false
     },
-    // DATABASE METHODS //-------------------------------------------------------------------------------
+    
+    // DATABASE
+
     async new_template () {
       try {
         this.$parent.pause_loading = true
