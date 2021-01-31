@@ -1,5 +1,5 @@
 <template>
-  <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">
+  <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.will_body_scroll(true)">
     <div class="bottom_margin">
       <p class="text--small">
         Create a new plan and use it for exercise, nutrition or anything else
@@ -30,7 +30,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, $parent.$parent.$parent.willBodyScroll(true)">
+      <button class="cancel" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, $parent.$parent.$parent.will_body_scroll(true)">
         Close
       </button>
     </div>
@@ -72,7 +72,7 @@ export default {
         )
         this.$parent.response = `${this.new_plan.name} has been created`
         this.$parent.persistResponse = this.new_plan.name
-        this.$parent.responseDelay()
+        this.$parent.response_delay()
 
         // Set old plans to null so that they can be repopulated
         let x

@@ -47,7 +47,7 @@
             break
           case 'template':
             const templateNotes = document.getElementById(`template-${itemId}`).querySelector('#rich_show_content').innerHTML
-            document.getElementById(calledFrom).__vue__.updateTemplate(parseInt(itemId), templateNotes)
+            document.getElementById(calledFrom).__vue__.update_template(parseInt(itemId), templateNotes)
             break
           case 'client_information':
             const clientNotes = document.getElementById('client_notes').querySelector('#rich_show_content').innerHTML

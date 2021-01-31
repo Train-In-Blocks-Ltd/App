@@ -61,7 +61,7 @@
         <new-plan />
       </div>
     </transition>
-    <div v-if="!isNewPlanOpen" class="icon_open--new_plan icon_open_middle" aria-label="New Plan" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)">
+    <div v-if="!isNewPlanOpen" class="icon_open--new_plan icon_open_middle" aria-label="New Plan" @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)">
       <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
         New Plan
@@ -161,8 +161,8 @@ export default {
     }
   },
   created () {
-    this.$parent.$parent.willBodyScroll(true)
-    this.$parent.checkClient()
+    this.$parent.$parent.will_body_scroll(true)
+    this.$parent.check_client()
   },
   methods: {
     remove_brackets_and_checkbox (dataIn) {
@@ -172,7 +172,7 @@ export default {
         return dataIn
       }
     },
-    responseDelay () {
+    response_delay () {
       setTimeout(() => { this.response = '' }, 5000)
     }
   }

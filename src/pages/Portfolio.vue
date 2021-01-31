@@ -108,7 +108,7 @@ export default {
   },
   async created () {
     this.$parent.loading = true
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_portfolio()
     this.$parent.end_loading()

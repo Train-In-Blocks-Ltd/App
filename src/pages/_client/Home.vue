@@ -155,7 +155,7 @@
             <button
               class="button--verify button"
               :disabled="clientAlready"
-              @click="createClient()"
+              @click="create_client()"
             >
               {{ clientAlreadyMsg }}
             </button>
@@ -209,7 +209,7 @@ export default {
     }
   },
   async created () {
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     this.loading = true
     await this.$parent.setup()
     await this.get_client_details()
@@ -234,7 +234,7 @@ export default {
       }
     },
     // DATABSE AND API METHODS //-------------------------------------------------------------------------------
-    async checkClient () {
+    async check_client () {
       this.clientAlreadyMsg = 'Loading...'
       try {
         const result = await this.$axios.post('/.netlify/functions/okta',
@@ -265,7 +265,7 @@ export default {
         this.$parent.resolve_error(e)
       }
     },
-    async createClient () {
+    async create_client () {
       this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       try {
@@ -353,7 +353,7 @@ export default {
       } catch (e) {
         this.$parent.resolve_error(e)
       }
-      await this.checkClient()
+      await this.check_client()
       this.$modal.show(
         AlertModal,
         { msg: 'An activation email was sent to your client.' },

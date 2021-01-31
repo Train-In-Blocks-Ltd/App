@@ -14,7 +14,7 @@
     name="add_client"
     class="form_grid add_client"
     spellcheck="false"
-    @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)"
+    @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.will_body_scroll(true)"
   >
     <div class="bottom_margin">
       <p class="text--small">
@@ -57,7 +57,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, $parent.$parent.willBodyScroll(true)">
+      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, $parent.$parent.will_body_scroll(true)">
         Close
       </button>
     </div>
@@ -101,7 +101,7 @@ export default {
           )
           this.$parent.response = `Added ${this.new_client.name}`
           this.$parent.persistResponse = this.new_client.name
-          this.$parent.responseDelay()
+          this.$parent.response_delay()
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()
           this.new_client = {

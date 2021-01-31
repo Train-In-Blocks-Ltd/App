@@ -753,7 +753,7 @@
           <br>
           <p>{{ errorMsg }}</p><br>
           <div class="modal--bottom_bar">
-            <button class="cancel" @click="$modal.hide('error'), willBodyScroll(true)">
+            <button class="cancel" @click="$modal.hide('error'), will_body_scroll(true)">
               Close
             </button>
           </div>
@@ -895,21 +895,24 @@ export default {
       // USER
 
       isTrainer: false,
+      claims: {
+        user_type: 0
+      },
+      clientUser: {
+        plans: null
+      },
 
-      // CLIENT AND ARCHIVE
+      // CLIENT
+
+      clients: null,
+      no_clients: false,
+      client_details: null,
+
+      // ARCHIVE
 
       archive: {
         clients: {},
         no_archive: false
-      },
-      clients: null,
-      no_clients: false,
-      claims: {
-        user_type: 0
-      },
-      client_details: null,
-      clientUser: {
-        plans: null
       },
 
       // PORTFOLIO
@@ -920,12 +923,15 @@ export default {
         notes: ''
       },
 
-      // BACKGROUND
+      // TEMPLATE
+
+      templates: null,
+
+      // SYSTEM
 
       versionName: 'Draco',
       versionBuild: '2.2',
       newBuild: false,
-      templates: null,
       errorMsg: null,
       loading: false,
       pause_loading: false,
@@ -941,12 +947,12 @@ export default {
   },
   watch: {
     '$route' (to, from) {
-      this.isAuthenticated()
+      this.is_authenticated()
     }
   },
   async created () {
-    this.isAuthenticated()
-    this.willBodyScroll(false)
+    this.is_authenticated()
+    this.will_body_scroll(false)
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
@@ -979,50 +985,14 @@ export default {
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // AUTH
 
-    willBodyScroll (state) {
-      const body = document.getElementsByTagName('body')[0]
-      if (state) {
-        body.style.overflow = 'auto'
-      } else {
-        body.style.overflow = 'hidden'
-      }
-    },
-    confirmLeave (e) {
-      if (this.dontLeave === true) {
-        const msg = 'Your changes might not be saved, are you sure you want to leave?'
-        e.returnValue = msg
-        return msg
-      }
-    },
-    sortSessionsPlan () {
-      this.clientUser.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-          })
-        }
-      })
-    },
-    day (date) {
-      const weekday = new Array(7)
-      weekday[0] = 'Sun'
-      weekday[1] = 'Mon'
-      weekday[2] = 'Tue'
-      weekday[3] = 'Wed'
-      weekday[4] = 'Thu'
-      weekday[5] = 'Fri'
-      weekday[6] = 'Sat'
-      const d = new Date(date)
-      return weekday[d.getDay()]
-    },
-    async isAuthenticated () {
+    async is_authenticated () {
       this.authenticated = await this.$auth.isAuthenticated()
     },
     async logout () {
       await this.$auth.logout()
-      await this.isAuthenticated()
+      await this.is_authenticated()
       localStorage.clear()
       localStorage.setItem('versionBuild', this.versionBuild)
       const cookies = document.cookie.split(';')
@@ -1049,19 +1019,61 @@ export default {
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
+
+    // SYSTEM STATE
+
     resolve_error (msg) {
       this.pause_loading = false
       this.loading = false
       this.dontLeave = false
       this.errorMsg = msg.toString()
       this.$modal.show('error')
-      this.willBodyScroll(false)
+      this.will_body_scroll(false)
       console.error(msg)
     },
     end_loading () {
       this.pause_loading = false
       this.loading = false
       this.dontLeave = false
+    },
+
+    // OTHER SHARED METHODS
+
+    will_body_scroll (state) {
+      const body = document.getElementsByTagName('body')[0]
+      if (state) {
+        body.style.overflow = 'auto'
+      } else {
+        body.style.overflow = 'hidden'
+      }
+    },
+    confirmLeave (e) {
+      if (this.dontLeave === true) {
+        const msg = 'Your changes might not be saved, are you sure you want to leave?'
+        e.returnValue = msg
+        return msg
+      }
+    },
+    sort_sessions_plan () {
+      this.clientUser.plans.forEach((plan) => {
+        if (plan.id === parseInt(this.$route.params.id)) {
+          plan.sessions.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date)
+          })
+        }
+      })
+    },
+    day (date) {
+      const weekday = new Array(7)
+      weekday[0] = 'Sun'
+      weekday[1] = 'Mon'
+      weekday[2] = 'Tue'
+      weekday[3] = 'Wed'
+      weekday[4] = 'Thu'
+      weekday[5] = 'Fri'
+      weekday[6] = 'Sat'
+      const d = new Date(date)
+      return weekday[d.getDay()]
     },
 
     // CLIENT

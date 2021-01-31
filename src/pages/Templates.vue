@@ -90,7 +90,7 @@
         <p class="text--selected">
           <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiTemplates()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="delete_multi_templates()">Delete</a>
         <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
@@ -99,7 +99,7 @@
         Templates
       </p>
       <div>
-        <button @click="newTemplate()">
+        <button @click="new_template()">
           New Template
         </button>
       </div>
@@ -134,7 +134,7 @@
               :class="{expanded: expandedTemplates.includes(template.id)}"
               :src="require('../assets/svg/expand.svg')"
               title="Info"
-              @click="toggleExpandedTemplates(template.id)"
+              @click="toggle_expanded_templates(template.id)"
             />
           </div>
         </div>
@@ -148,13 +148,13 @@
           :called-from-item-id="`${template.id}`"
         />
         <div v-if="expandedTemplates.includes(template.id)" class="bottom_bar">
-          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true, template.template), tempEditorStore = template.template">
+          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editing_template_notes(template.id, true, template.template), tempEditorStore = template.template">
             Edit
           </button>
-          <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false, template.template)">
+          <button v-if="template.id === editTemplate" @click="editing_template_notes(template.id, false, template.template)">
             Save
           </button>
-          <button v-if="template.id === editTemplate" class="cancel" @click="template.template = tempEditorStore, cancelTemplateNotes()">
+          <button v-if="template.id === editTemplate" class="cancel" @click="template.template = tempEditorStore, cancel_template_notes()">
             Cancel
           </button>
         </div>
@@ -189,16 +189,16 @@ export default {
   created () {
     this.$parent.loading = true
     this.$parent.setup()
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     this.$parent.end_loading()
   },
   async mounted () {
     await this.$parent.get_templates()
-    this.checkForNew()
+    this.check_for_new()
   },
   methods: {
     // BACKGROUND METHODS //-------------------------------------------------------------------------------
-    checkForNew () {
+    check_for_new () {
       this.expandedTemplates.length = 0
       this.$parent.templates.forEach((template) => {
         if (template.template === null || template.template === '<p><br></p>') {
@@ -206,7 +206,7 @@ export default {
         }
       })
     },
-    deleteMultiTemplates () {
+    delete_multi_templates () {
       if (this.selectedTemplates.length !== 0) {
         if (confirm('Are you sure you want to delete all the selected templates?')) {
           this.selectedTemplates.forEach((templateId) => {
@@ -234,7 +234,7 @@ export default {
         this.selectedTemplates.splice(idx, 1)
       }
     },
-    toggleExpandedTemplates (id) {
+    toggle_expanded_templates (id) {
       if (this.expandedTemplates.includes(id)) {
         const index = this.expandedTemplates.indexOf(id)
         if (index > -1) {
@@ -244,21 +244,21 @@ export default {
         this.expandedTemplates.push(id)
       }
     },
-    editingTemplateNotes (id, state, notesUpdate) {
+    editing_template_notes (id, state, notesUpdate) {
       this.isEditingTemplate = state
       this.editTemplate = id
       if (!state) {
-        this.updateTemplate(id, notesUpdate)
+        this.update_template(id, notesUpdate)
         this.isEditingTemplate = false
         this.editTemplate = null
       }
     },
-    cancelTemplateNotes () {
+    cancel_template_notes () {
       this.editTemplate = null
       this.isEditingTemplate = false
     },
     // DATABASE METHODS //-------------------------------------------------------------------------------
-    async newTemplate () {
+    async new_template () {
       try {
         this.$parent.pause_loading = true
         this.$parent.dontLeave = true
@@ -270,7 +270,7 @@ export default {
           }
         )
         await this.$parent.get_templates(true)
-        this.checkForNew()
+        this.check_for_new()
         this.new_template = {
           name: 'Untitled',
           note: ''
@@ -280,7 +280,7 @@ export default {
         this.$parent.resolve_error(e)
       }
     },
-    async updateTemplate (id, notesUpdate) {
+    async update_template (id, notesUpdate) {
       try {
         let templateName
         this.$parent.pause_loading = true

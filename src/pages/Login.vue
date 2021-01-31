@@ -198,7 +198,7 @@ export default {
   async mounted () {
     setTimeout(() => {
       this.splashed = true
-      this.$parent.willBodyScroll(true)
+      this.$parent.will_body_scroll(true)
     }, 4000)
     let OktaSignIn
     await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
@@ -255,7 +255,7 @@ export default {
     }
   },
   async beforeDestroy () {
-    await this.$parent.isAuthenticated()
+    await this.$parent.is_authenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()
     if (this.$ga && !this.$parent.authenticated) {

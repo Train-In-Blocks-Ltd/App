@@ -112,7 +112,7 @@ export default {
     this.$parent.loading = true
     await this.$parent.setup()
     await this.$parent.archive_to_vue()
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {

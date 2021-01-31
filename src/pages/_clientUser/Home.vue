@@ -54,7 +54,7 @@
               {{ $parent.portfolio.trainer_name }}
             </p>
             <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
-            <button class="cancel" @click="isPortfolioOpen = false, $parent.willBodyScroll(true)">
+            <button class="cancel" @click="isPortfolioOpen = false, $parent.will_body_scroll(true)">
               Close
             </button>
           </div>
@@ -69,14 +69,14 @@
         v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
         aria-label="Information"
         class="icon_open--portfolio"
-        @click="isPortfolioOpen = true, $parent.willBodyScroll(false)"
+        @click="isPortfolioOpen = true, $parent.will_body_scroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information" />
         <p class="text">
           Trainer
         </p>
       </div>
-      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.willBodyScroll(false)">
+      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
         <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
         <p class="text">
           Install
@@ -217,11 +217,11 @@ export default {
   },
   async mounted () {
     this.$parent.loading = true
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()
-    this.todaysSession()
+    this.todays_session()
     this.$parent.end_loading()
   },
   methods: {
@@ -256,16 +256,16 @@ export default {
 
     // DATE/TIME METHODS //-------------------------------------------------------------------------------
 
-    todaysSession () {
+    todays_session () {
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {
-          if (session.date === this.isToday()) {
+          if (session.date === this.is_today()) {
             this.todays_sessions_store.push(session.id)
           }
         })
       })
     },
-    isToday () {
+    is_today () {
       let today = new Date()
       const dd = String(today.getDate()).padStart(2, '0')
       const mm = String(today.getMonth() + 1).padStart(2, '0')
