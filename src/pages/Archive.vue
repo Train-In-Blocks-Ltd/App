@@ -104,7 +104,7 @@ export default {
   data () {
     return {
       search: '',
-      selectedClients: [],
+      selectedClients: []
     }
   },
   async created () {

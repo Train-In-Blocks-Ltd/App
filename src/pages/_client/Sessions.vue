@@ -1019,7 +1019,7 @@ export default {
     // MULTI AND CHECKBOX
 
     bulk_check (state) {
-      function checked_state (dataIn) {
+      function checkedState (dataIn) {
         if (dataIn === 1) {
           return 'complete'
         } else {
@@ -1027,7 +1027,7 @@ export default {
         }
       }
       if (this.selectedSessions.length !== 0) {
-        if (confirm('Are you sure that you want to ' + checked_state(state) + ' all the selected sessions?')) {
+        if (confirm('Are you sure that you want to ' + checkedState(state) + ' all the selected sessions?')) {
           this.$parent.$parent.client_details.plans.forEach((plan) => {
             if (plan.id === parseInt(this.$route.params.id)) {
               plan.sessions.forEach((session) => {
@@ -1698,7 +1698,7 @@ export default {
       try {
         this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
-        const response = await this.$axios.put('https://api.traininblocks.com/workouts',
+        await this.$axios.put('https://api.traininblocks.com/workouts',
           {
             name: this.new_session.name,
             programme_id: this.$route.params.id,

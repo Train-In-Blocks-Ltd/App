@@ -194,7 +194,7 @@ export default {
   },
   data () {
     return {
-      
+
       // BACKGROUND
 
       keepLoaded: false,
@@ -202,7 +202,7 @@ export default {
       showDeletePlan: false,
 
       // PLANS
-      
+
       no_plans: false,
       loading_plans: true,
 

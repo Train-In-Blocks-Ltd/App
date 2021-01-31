@@ -125,9 +125,9 @@ export default {
   },
   data () {
     return {
-      
+
       // CLIENT CREATION
-      
+
       response: '',
       persistResponse: '',
 
@@ -151,7 +151,7 @@ export default {
     this.$parent.end_loading()
   },
   methods: {
-    
+
     // BACKGROUND AND MISC.
 
     response_delay () {

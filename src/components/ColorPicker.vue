@@ -21,34 +21,34 @@
       v-for="(paint, index) in colorPalette"
       :key="'color_' + index"
       :style="{ backgroundColor: paint.color }"
-      @click="selectedColor = paint.color"
       class="color"
+      @click="selectedColor = paint.color"
     />
   </div>
 </template>
 
 <script>
-  export default {
-    props: {
-      injectedColor: String
-    },
-    data () {
-      return {
-        selectedColor: null,
-        colorPalette: [
-          { color: '#EB4034' },
-          { color: '#EB9634' },
-          { color: '#34EB6B' },
-          { color: '#346BEB' },
-          { color: '#303030' }
-        ]
-      }
-    },
-    watch: {
-      selectedColor () {
-        this.$emit('update:injectedColor', this.selectedColor)
-        this.$parent.update_session_color()
-      }
+export default {
+  props: {
+    injectedColor: String
+  },
+  data () {
+    return {
+      selectedColor: null,
+      colorPalette: [
+        { color: '#EB4034' },
+        { color: '#EB9634' },
+        { color: '#34EB6B' },
+        { color: '#346BEB' },
+        { color: '#303030' }
+      ]
+    }
+  },
+  watch: {
+    selectedColor () {
+      this.$emit('update:injectedColor', this.selectedColor)
+      this.$parent.update_session_color()
     }
   }
+}
 </script>

@@ -102,8 +102,8 @@
             <div
               v-for="(session, indexed) in plan.sessions"
               v-show="showing_current_session === indexed"
-              :key="indexed"
               :id="`session-${session.id}`"
+              :key="indexed"
               class="wrapper--session"
             >
               <div :id="session.name" class="wrapper--session__header client-side">

@@ -125,7 +125,7 @@ export default {
     this.process_and_plot()
   },
   methods: {
-    select_point(d1, d2) {
+    select_point (d1, d2) {
       this.focusText = [d1, d2]
       setInterval(() => {
         this.focusText = 'Select a point'

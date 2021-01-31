@@ -177,11 +177,11 @@ export default {
 
       // CREATE
 
-      new_template: {
+      new_template_form: {
         name: 'Untitled',
         note: ''
       },
-      
+
       // EDIT
 
       isEditingTemplate: false,
@@ -273,7 +273,7 @@ export default {
       this.editTemplate = null
       this.isEditingTemplate = false
     },
-    
+
     // DATABASE
 
     async new_template () {
@@ -283,13 +283,13 @@ export default {
         await this.$axios.put('https://api.traininblocks.com/templates',
           {
             pt_id: this.$parent.claims.sub,
-            name: this.new_template.name,
-            template: this.new_template.template
+            name: this.new_template_form.name,
+            template: this.new_template_form.template
           }
         )
         await this.$parent.get_templates(true)
         this.check_for_new()
-        this.new_template = {
+        this.new_template_form = {
           name: 'Untitled',
           note: ''
         }
