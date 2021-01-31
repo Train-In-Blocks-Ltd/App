@@ -587,7 +587,7 @@
               </div>
             </div>
             <div class="wrapper--calendar">
-              <calendar :events="sessionDates" :force-update="forceUpdate" />
+              <calendar :events="sessionDates" :force-update="forceUpdate" :isTrainer="true" />
             </div>
           </div>
           <div class="wrapper-plan">
@@ -1100,6 +1100,11 @@ export default {
 
     // GENERAL METHODS //-------------------------------------------------------------------------------
 
+    go_to_event (id, week) {
+      this.expandAll('Expand')
+      this.currentWeek = week
+      document.getElementById(`session-${id}`).scrollIntoView()
+    },
     check_for_week_sessions () {
       let arr = 0
       this.$parent.$parent.client_details.plans.forEach((plan) => {
@@ -1369,7 +1374,7 @@ export default {
           this.maxWeek = plan.duration
           if (this.str !== null && this.$parent.no_sessions === false) {
             this.str.forEach((object) => {
-              this.sessionDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]) })
+              this.sessionDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]), week_id: object.week_id, session_id: object.id })
               if (object.notes !== null) {
                 const pulledProtocols = this.pullProtocols(object.name, object.notes)
                 this.dataPacketStore.push(this.chunkArray(pulledProtocols))

@@ -894,7 +894,7 @@ export default {
 
       // USER
 
-      is_trainer: false,
+      isTrainer: false,
 
       // CLIENT AND ARCHIVE
 
@@ -974,7 +974,7 @@ export default {
       this.pwa.displayMode = 'standalone'
     }
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
-      this.is_trainer = true
+      this.isTrainer = true
     }
   },
   methods: {

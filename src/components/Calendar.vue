@@ -30,6 +30,13 @@
     border-radius: 8px;
     border: 3px solid transparent
   }
+  .cursor {
+    cursor: pointer;
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .cursor:hover {
+    opacity: .6
+  }
   .showBorder {
     border: 3px solid #282828
   }
@@ -87,6 +94,9 @@
     .prev_week:active {
       transform: rotate(90deg) translateY(0) scale(.9)
     }
+    .cursor:hover {
+      opacity: 1
+    }
   }
 </style>
 
@@ -133,16 +143,32 @@
               Rest day
             </p>
           </div>
-          <div
-            v-for="(event, indexed) in day.events"
-            :key="'event-' + indexed"
-            :style="{ backgroundColor: event.color }"
-            :class="{ showBorder: event.color === null || event.color === '' || event.color === '#ffffff' }"
-            class="day_events__event"
-          >
-            <p :style="{ color: event.textColor }">
-              {{ event.title }}
-            </p>
+          <div v-if="isTrainer">
+            <div
+              v-for="(event, indexed) in day.events"
+              :key="'event-' + indexed"
+              :style="{ backgroundColor: event.color }"
+              :class="{ showBorder: event.color === null || event.color === '' || event.color === '#ffffff' }"
+              @click="$parent.go_to_event(event.session_id, event.week_id)"
+              class="day_events__event cursor"
+            >
+              <p :style="{ color: event.textColor }">
+                {{ event.title }}
+              </p>
+            </div>
+          </div>
+          <div v-else>
+            <div
+              v-for="(event, indexed) in day.events"
+              :key="'event-' + indexed"
+              :style="{ backgroundColor: event.color }"
+              :class="{ showBorder: event.color === null || event.color === '' || event.color === '#ffffff' }"
+              class="day_events__event"
+            >
+              <p :style="{ color: event.textColor }">
+                {{ event.title }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -155,7 +181,8 @@
 export default {
   props: {
     events: Array,
-    forceUpdate: Number
+    forceUpdate: Number,
+    isTrainer: Boolean
   },
   data () {
     return {

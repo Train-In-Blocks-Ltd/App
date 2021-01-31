@@ -72,7 +72,7 @@
           </p>
         </div>
         <div class="wrapper--calendar">
-          <calendar :events="sessionDates" />
+          <calendar :events="sessionDates" :isTrainer="false" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
         <div v-else-if="plan.sessions" class="container--sessions">
