@@ -77,7 +77,7 @@
     >
       <div class="modal--reset">
         <div class="wrapper--centered-item">
-          <form class="form_grid" @submit.prevent="changePass(), $parent.willBodyScroll(true)">
+          <form class="form_grid" @submit.prevent="change_password(), $parent.will_body_scroll(true)">
             <div>
               <p class="text--large">
                 Stay safe
@@ -117,13 +117,13 @@
               class="input--forms small_border_radius"
               :class="{check: password.check}"
               required
-              @input="checkPass"
+              @input="check_password"
             >
             <div class="reset_password_button_bar">
               <button class="right_margin" type="submit" :disabled="password.check">
                 Change your password
               </button>
-              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.willBodyScroll(true)">
+              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.will_body_scroll(true)">
                 Close
               </button>
             </div>
@@ -146,12 +146,12 @@
           <b>Email: </b>{{ $parent.claims.email }}
         </p>
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-          <button @click.prevent="manageSubscription()">
+          <button @click.prevent="manage_subscription()">
             Manage Your Subscription
           </button>
         </div>
         <div>
-          <button @click.prevent="$modal.show('reset-password'), $parent.willBodyScroll(false)">
+          <button @click.prevent="$modal.show('reset-password'), $parent.will_body_scroll(false)">
             Change Your Password
           </button>
         </div>
@@ -197,12 +197,12 @@ export default {
   created () {
     this.$parent.loading = true
     this.$parent.setup()
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {
 
-    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+    // BACKGROUND AND MISC.
 
     async save () {
       this.$parent.pause_loading = true
@@ -225,17 +225,29 @@ export default {
         this.$parent.resolve_error(e)
       }
     },
+    async manage_subscription () {
+      try {
+        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
+          {
+            id: this.$parent.claims.stripeId
+          }
+        )
+        window.location.href = response.data
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
 
-    // PASSWORD METHODS //-------------------------------------------------------------------------------
+    // PASSWORD
 
-    checkPass () {
+    check_password () {
       if (!this.password.new.includes(this.$parent.claims.email) && this.password.new.match(/[0-9]+/) && this.password.new.length >= 8 && this.password.old.length >= 1) {
         this.password.check = false
       } else {
         this.password.check = true
       }
     },
-    async changePass () {
+    async change_password () {
       try {
         this.$parent.pause_loading = true
         this.$parent.dontLeave = true
@@ -266,18 +278,6 @@ export default {
         this.password.error = 'Something went wrong. Please make sure that your password is correct'
         console.error(e)
         this.$parent.end_loading()
-      }
-    },
-    async manageSubscription () {
-      try {
-        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
-          {
-            id: this.$parent.claims.stripeId
-          }
-        )
-        window.location.href = response.data
-      } catch (e) {
-        this.$parent.resolve_error(e)
       }
     }
   }

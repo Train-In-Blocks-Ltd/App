@@ -155,7 +155,7 @@
             <button
               class="button--verify button"
               :disabled="clientAlready"
-              @click="createClient()"
+              @click="create_client()"
             >
               {{ clientAlreadyMsg }}
             </button>
@@ -194,26 +194,36 @@ export default {
   },
   data () {
     return {
-      // BACKGROUD DATA //
+
+      // BACKGROUND
+
       keepLoaded: false,
       showOptions: false,
+      showDeletePlan: false,
+
+      // PLANS
+
       no_plans: false,
       loading_plans: true,
+
+      // SESSIONS
+
       sessions: false,
       no_sessions: false,
-      showDeletePlan: false,
-      // CLIENT STATUS DATA //
+
+      // CLIENT STATUS
+
       clientAlreadyMsg: 'Loading...',
       clientAlready: true,
       clientSuspend: null
     }
   },
   async created () {
-    this.$parent.willBodyScroll(true)
     this.loading = true
+    this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.get_client_details()
-    this.created()
+    this.__init__()
     this.keepLoaded = true
     this.$parent.end_loading()
   },
@@ -222,8 +232,10 @@ export default {
     this.$parent.client_details = null
   },
   methods: {
-    // BACKGROUND METHODS //-------------------------------------------------------------------------------
-    created () {
+
+    // BACKGROUND
+
+    __init__ () {
       let x
       for (x in this.$parent.clients) {
         // If client matches client in route
@@ -233,8 +245,10 @@ export default {
         }
       }
     },
-    // DATABSE AND API METHODS //-------------------------------------------------------------------------------
-    async checkClient () {
+
+    // OKTA CLIENT
+
+    async check_client () {
       this.clientAlreadyMsg = 'Loading...'
       try {
         const result = await this.$axios.post('/.netlify/functions/okta',
@@ -265,7 +279,7 @@ export default {
         this.$parent.resolve_error(e)
       }
     },
-    async createClient () {
+    async create_client () {
       this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       try {
@@ -353,7 +367,7 @@ export default {
       } catch (e) {
         this.$parent.resolve_error(e)
       }
-      await this.checkClient()
+      await this.check_client()
       this.$modal.show(
         AlertModal,
         { msg: 'An activation email was sent to your client.' },
@@ -363,6 +377,46 @@ export default {
         { clickToClose: false }
       )
       this.$parent.end_loading()
+    },
+
+    // DATABASE
+
+    async get_client_details (force) {
+      this.$parent.loading = true
+      try {
+        // Loop through clients
+        let x
+        for (x in this.$parent.clients) {
+          // If client matches client in route
+          if (this.$parent.clients[x].client_id === parseInt(this.$route.params.client_id)) {
+            // Set client_details variable with client details
+            this.$parent.client_details = this.$parent.clients[x]
+            // If client_details.plans is set to false
+            if (this.$parent.clients[x].plans === false && !force) {
+              this.no_plans = true
+            // If client_details.plans is not set then query the API
+            } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
+              const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
+              // If there are no plans
+              if (response.data.length === 0) {
+                this.no_plans = true
+                this.$parent.clients[x].plans = false
+                // If there are plans set the clients to include plans
+              } else {
+                this.no_plans = false
+                this.$parent.clients[x].plans = response.data
+                // Update the localstorage with the plans
+                localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
+              }
+            }
+            this.$parent.client_details = this.$parent.clients[x]
+            this.loading_plans = false
+          }
+        }
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+      await this.get_sessions()
     },
     async get_sessions (force) {
       try {
@@ -403,43 +457,6 @@ export default {
       } catch (e) {
         this.$parent.resolve_error(e)
       }
-    },
-    async get_client_details (force) {
-      this.$parent.loading = true
-      try {
-        // Loop through clients
-        let x
-        for (x in this.$parent.clients) {
-          // If client matches client in route
-          if (this.$parent.clients[x].client_id === parseInt(this.$route.params.client_id)) {
-            // Set client_details variable with client details
-            this.$parent.client_details = this.$parent.clients[x]
-            // If client_details.plans is set to false
-            if (this.$parent.clients[x].plans === false && !force) {
-              this.no_plans = true
-            // If client_details.plans is not set then query the API
-            } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
-              const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
-              // If there are no plans
-              if (response.data.length === 0) {
-                this.no_plans = true
-                this.$parent.clients[x].plans = false
-                // If there are plans set the clients to include plans
-              } else {
-                this.no_plans = false
-                this.$parent.clients[x].plans = response.data
-                // Update the localstorage with the plans
-                localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-              }
-            }
-            this.$parent.client_details = this.$parent.clients[x]
-            this.loading_plans = false
-          }
-        }
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-      await this.get_sessions()
     },
     async delete_plan () {
       if (confirm('Are you sure you want to delete this plan?')) {

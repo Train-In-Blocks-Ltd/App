@@ -104,35 +104,26 @@ export default {
   data () {
     return {
       search: '',
-      selectedClients: [],
-      selectedClientsIndex: []
+      selectedClients: []
     }
   },
   async created () {
     this.$parent.loading = true
     await this.$parent.setup()
     await this.$parent.archive_to_vue()
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {
+
+    // CHECKBOX
+
     change_select_checkbox (id) {
       if (this.selectedClients.includes(id) === false) {
         this.selectedClients.push(id)
       } else {
         const idx = this.selectedClients.indexOf(id)
         this.selectedClients.splice(idx, 1)
-      }
-    },
-    delete_multi_clients () {
-      if (this.selectedClients.length !== 0) {
-        if (confirm('Are you sure that you want to delete all the selected clients?')) {
-          this.selectedClients.forEach((clientId) => {
-            this.$parent.client_delete(clientId)
-          })
-          this.selectedClients = []
-          this.selectedClientsIndex = []
-        }
       }
     },
     select_all () {
@@ -146,6 +137,16 @@ export default {
         document.getElementById(`sc-${client.client_id}`).checked = false
       })
       this.selectedClients = []
+    },
+    delete_multi_clients () {
+      if (this.selectedClients.length !== 0) {
+        if (confirm('Are you sure that you want to delete all the selected clients?')) {
+          this.selectedClients.forEach((clientId) => {
+            this.$parent.client_delete(clientId)
+          })
+          this.selectedClients = []
+        }
+      }
     }
   }
 }

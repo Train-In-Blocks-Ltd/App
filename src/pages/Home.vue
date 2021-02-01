@@ -35,20 +35,20 @@
         <install-app />
       </div>
     </transition>
-    <div v-if="!isNewClientOpen" class="icon_open--new_client" aria-label="New Client" @click="isNewClientOpen = true, $parent.willBodyScroll(false)">
+    <div v-if="!isNewClientOpen" class="icon_open--new_client" aria-label="New Client" @click="isNewClientOpen = true, $parent.will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client" />
       <p class="text">
         New Client
       </p>
     </div>
-    <div v-if="!isWhatsNewOpen" class="icon_open--whats_new icon_open_middle" aria-label="What's New" @click="isWhatsNewOpen = true, $parent.willBodyScroll(false)">
+    <div v-if="!isWhatsNewOpen" class="icon_open--whats_new icon_open_middle" aria-label="What's New" @click="isWhatsNewOpen = true, $parent.will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New" />
       <p class="text">
         What's New
       </p>
       <span v-if="$parent.newBuild" class="notify_badge">New</span>
     </div>
-    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_bottom" aria-label="Install App" @click="isInstallOpen = true, $parent.willBodyScroll(false)">
+    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_bottom" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App" />
       <p class="text">
         Install
@@ -125,12 +125,21 @@ export default {
   },
   data () {
     return {
+
+      // CLIENT CREATION
+
       response: '',
       persistResponse: '',
-      search: '',
+
+      // TAB STATES
+
       isNewClientOpen: false,
       isInstallOpen: false,
-      isWhatsNewOpen: false
+      isWhatsNewOpen: false,
+
+      // OTHER
+
+      search: ''
     }
   },
   mounted () {
@@ -138,11 +147,14 @@ export default {
     this.$parent.setup()
     this.$parent.client_details = null
     this.version()
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {
-    responseDelay () {
+
+    // BACKGROUND AND MISC.
+
+    response_delay () {
       setTimeout(() => { this.response = '' }, 5000)
     },
     version () {

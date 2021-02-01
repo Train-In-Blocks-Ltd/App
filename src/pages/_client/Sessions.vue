@@ -357,7 +357,7 @@
           <p><i>[sRPE (CR10): 8]</i></p>
           <p><i>[sRPE (Borg): 16]</i></p><br>
           <p>See <i>Help</i> for more information</p><br>
-          <button class="cancel" @click="$modal.hide('info'), $parent.$parent.willBodyScroll(true)">
+          <button class="cancel" @click="$modal.hide('info'), $parent.$parent.will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -371,7 +371,7 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--move" @submit.prevent="initMove(), $modal.hide('move'), $parent.$parent.willBodyScroll(true)">
+      <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), $parent.$parent.will_body_scroll(true)">
         <div class="wrapper--centered-item">
           <p class="text--small">
             Move to a different microcycle
@@ -394,7 +394,7 @@
           <button type="submit">
             Move
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.willBodyScroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -408,7 +408,7 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--shift" @submit.prevent="shiftAcross(), $parent.$parent.willBodyScroll(true)">
+      <form class="modal--shift" @submit.prevent="shift_across(), $parent.$parent.will_body_scroll(true)">
         <div class="wrapper--centered-item">
           <p class="text--small">
             Shift the dates of the sessions
@@ -429,7 +429,7 @@
           <button type="submit">
             Shift
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.willBodyScroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -443,7 +443,7 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--copy" @submit.prevent="copyAcross(), $parent.$parent.willBodyScroll(true)">
+      <form class="modal--copy" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)">
         <div class="wrapper--centered-item">
           <p class="text--small">
             Copy across to different microcycles
@@ -476,7 +476,7 @@
           <button type="submit">
             Copy
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.willBodyScroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -486,7 +486,7 @@
       v-if="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
       class="icon_open--stats icon_open_middle"
       aria-label="Statistics"
-      @click="isStatsOpen = true, $parent.$parent.willBodyScroll(false)"
+      @click="isStatsOpen = true, $parent.$parent.will_body_scroll(false)"
     >
       <inline-svg :src="require('../../assets/svg/stats.svg')" />
       <p class="text">
@@ -497,7 +497,7 @@
       v-show="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
       class="icon_open--print icon_open_bottom"
       aria-label="Print"
-      @click="printPage()"
+      @click="print_page()"
     >
       <inline-svg :src="require('../../assets/svg/print.svg')" />
       <p class="text">
@@ -513,12 +513,12 @@
         <p class="text--selected">
           <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkChecked(1)">Complete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkChecked(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy'), $parent.$parent.willBodyScroll(false)">Copy Across</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.willBodyScroll(false)">Move</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.willBodyScroll(false)">Shift</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulkDelete()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulk_check(1)">Complete</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulk_check(0)">Incomplete</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
+        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulk_delete()">Delete</a>
         <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
@@ -568,7 +568,7 @@
                 <p class="text--small">
                   Plan Notes
                 </p>
-                <a v-if="!editPlanNotes" class="a--plan_notes" href="javascript:void(0)" @click="editPlanNotes = true, cancelSessionNotes(), tempEditorStore = plan.notes">
+                <a v-if="!editPlanNotes" class="a--plan_notes" href="javascript:void(0)" @click="editPlanNotes = true, cancel_session_notes(), tempEditorStore = plan.notes">
                   Edit
                 </a>
               </div>
@@ -607,13 +607,13 @@
                     name="duration"
                     inputmode="decimal"
                     min="1"
-                    @change="weekConfirm(plan.duration), update_plan(), maxWeek = plan.duration"
+                    @change="week_confirm(plan.duration), update_plan(), maxWeek = plan.duration"
                   >
                 </div>
               </div>
               <div class="plan_table--container">
                 <div class="plan_table--container--plan_duration_container">
-                  <div v-for="item in plan_duration(plan.duration)" :key="item" class="container--week" @click="changeWeek(item), sortSessions()">
+                  <div v-for="item in plan_duration(plan.duration)" :key="item" class="container--week" @click="change_week(item), sort_sessions()">
                     <div :class="{ weekActive: item === currentWeek }" class="week">
                       <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color" />
                       <div class="week__number">
@@ -634,12 +634,12 @@
                       class="change_week_color"
                       @click="editingWeekColor = !editingWeekColor"
                     />
-                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.willBodyScroll(false)" />
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.will_body_scroll(false)" />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
                 <div>
-                  <button class="button--new-session" @click="createSession()">
+                  <button class="button--new-session" @click="create_session()">
                     New session
                   </button>
                 </div>
@@ -648,8 +648,8 @@
                 No sessions yet :(
               </p>
               <div v-if="!$parent.$parent.loading">
-                <p v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty" class="expand-all" @click="expandAll(expandText(expandedSessions))">
-                  {{ expandText(expandedSessions) }} all
+                <p v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty" class="expand-all" @click="expand_all(expand_text(expandedSessions))">
+                  {{ expand_text(expandedSessions) }} all
                 </p>
                 <!-- New session -->
                 <div v-if="!$parent.no_sessions" class="container--sessions">
@@ -667,7 +667,7 @@
                         <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
                         <span v-if="session.id !== editSession" class="text--date">{{ day(session.date) }}</span>
                         <span v-if="session.id !== editSession" class="text--date">{{ session.date }}</span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ isCompleted(session.checked) }}</span>
+                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ check_if_complete(session.checked) }}</span>
                         <input
                           v-if="session.id === editSession"
                           v-model="session.name"
@@ -685,7 +685,7 @@
                           name="session-date"
                           @blur="scan()"
                         >
-                        <span v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked" @click="session.checked = toggleComplete(session.checked)">{{ isCompleted(session.checked) }}</span>
+                        <span v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked" @click="session.checked = toggle_complete(session.checked)">{{ check_if_complete(session.checked) }}</span>
                       </div>
                       <div class="header-options">
                         <checkbox :item-id="session.id" :type="'v1'" aria-label="Select this session" />
@@ -696,7 +696,7 @@
                           :class="{expanded: expandedSessions.includes(session.id)}"
                           :src="require('../../assets/svg/expand.svg')"
                           title="Info"
-                          @click="toggleExpandedSessions(session.id)"
+                          @click="toggle_expanded_sessions(session.id)"
                         />
                       </div>
                     </div>
@@ -716,13 +716,13 @@
                       <div v-html="session.feedback" />
                     </div>
                     <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
-                      <button v-if="session.id !== editSession && !isEditingSession" @click="editingSessionNotes(session.id, true, session.notes), editPlanNotes = false, tempEditorStore = session.notes">
+                      <button v-if="session.id !== editSession && !isEditingSession" @click="editing_session_notes(session.id, true, session.notes), editPlanNotes = false, tempEditorStore = session.notes">
                         Edit
                       </button>
-                      <button v-if="session.id === editSession" @click="editingSessionNotes(session.id, false, session.notes)">
+                      <button v-if="session.id === editSession" @click="editing_session_notes(session.id, false, session.notes)">
                         Save
                       </button>
-                      <button v-if="session.id === editSession" class="cancel" @click="cancelSessionNotes(), session.notes = tempEditorStore">
+                      <button v-if="session.id === editSession" class="cancel" @click="cancel_session_notes(), session.notes = tempEditorStore">
                         Cancel
                       </button>
                       <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">
@@ -744,7 +744,7 @@
                 <p class="text--large section-title">
                   Statistics
                 </p>
-                <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.willBodyScroll(true)" />
+                <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.will_body_scroll(true)" />
               </div>
               <div>
                 <p v-show="protocolError.length !== 0" class="text--error">
@@ -760,7 +760,7 @@
                     <div class="data-select__options">
                       <label for="measure">
                         <b>Measurement: </b><br>
-                        <select v-model="selectedDataName" name="measure" @change="sortSessions(), scan(), selection()">
+                        <select v-model="selectedDataName" name="measure" @change="sort_sessions(), scan(), selection()">
                           <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
                             {{ optionName.text }}
                           </option>
@@ -770,7 +770,7 @@
                     <div v-if="showType" class="data-select__options">
                       <label for="measure-type">
                         <b>Data type: </b><br>
-                        <select v-model="selectedDataType" name="measure-type" @change="sortSessions(), scan(), selection()">
+                        <select v-model="selectedDataType" name="measure-type" @change="sort_sessions(), scan(), selection()">
                           <option value="Sets">Sets</option>
                           <option value="Reps">Reps</option>
                           <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">
@@ -850,55 +850,37 @@ export default {
   },
   data () {
     return {
-      force: true,
-      tempEditorStore: null,
 
-      // GENERAL DATA //
-      sessionsDone: 0,
-      sessionsTotal: null,
-      isStatsOpen: false,
+      force: true,
+
+      // EDIT
+
+      tempEditorStore: null,
+      editPlanNotes: false,
+      isEditingSession: false,
+      editSession: null,
       showFeedback: '',
+
+      // SYSTEM
+
+      expandedSessions: [],
+      todayDate: '',
+
+      // WEEK
+
+      weekIsEmpty: true,
+      editingWeekColor: false,
       weekColor: {
         backgroundColor: ''
       },
-      response: '',
-      editPlanNotes: false,
-      todayDate: '',
-      expandedSessions: [],
-      weekIsEmpty: true,
-      editingWeekColor: false,
 
-      // SESSION DATA //
-      isEditingSession: false,
-      editSession: null,
-      movingSession: null,
-      moveTarget: 1,
-      copyTarget: 2,
-      daysDiff: 7,
-      new_session: {
-        name: 'Untitled',
-        date: ''
-      },
-      selectedSessions: [],
-      shiftDays: 1,
-      selectedHTML: '',
+      // ADHERANCE
 
-      // REGEX DATA //
-      str: [],
-      dataValues: [],
-      labelValues: [],
-      dataPacketStore: [],
-      regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
-      regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
-      regexLoadCapture: /(at|@)(.+)/gi,
-      regexNumberBreakdown: /[0-9.]+/gi,
-      protocolError: [],
+      sessionsDone: 0,
+      sessionsTotal: null,
 
-      // CALENDAR DATA //
-      sessionDates: [],
-      forceUpdate: 0,
+      // STATS
 
-      // STATISTICS DATA //
       p1: '',
       p2: '',
       p3: '',
@@ -909,15 +891,49 @@ export default {
       optionsForDataType: [],
       selectedDataType: 'Sets',
       showType: true,
+      isStatsOpen: false,
 
-      // MICROCYCLE DATA //
+      // SESSION CREATION
+
+      new_session: {
+        name: 'Untitled',
+        date: ''
+      },
+
+      // MANIPULATION AND MODAL
+
+      moveTarget: 1,
+      copyTarget: 2,
+      daysDiff: 7,
+      selectedSessions: [],
+      shiftDays: 1,
+
+      // REGEX DATA //
+
+      str: [],
+      dataValues: [],
+      labelValues: [],
+      dataPacketStore: [],
+      regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
+      regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
+      regexLoadCapture: /(at|@)(.+)/gi,
+      regexNumberBreakdown: /[0-9.]+/gi,
+      protocolError: [],
+
+      // CALENDAR
+
+      sessionDates: [],
+      forceUpdate: 0,
+
+      // MICROCYCLE
+
       allowMoreWeeks: false,
       currentWeek: 1,
       maxWeek: '2'
     }
   },
   created () {
-    this.$parent.$parent.willBodyScroll(true)
+    this.$parent.$parent.will_body_scroll(true)
     this.$parent.sessions = true
     this.$parent.showDeletePlan = true
   },
@@ -926,7 +942,7 @@ export default {
     this.$parent.$parent.get_templates()
     this.today()
     this.scan()
-    this.checkForNew()
+    this.check_for_new()
     this.adherence()
   },
   beforeDestroy () {
@@ -935,18 +951,18 @@ export default {
   },
   methods: {
 
-    // MODALS AND CHILD METHODS //-------------------------------------------------------------------------------
+    // MODALS AND TAB
 
-    async printPage () {
-      await this.expandAll('Expand')
+    print_page () {
+      setInterval(() => { this.expand_all('Expand') }, 100)
       window.print()
     },
-    shiftAcross () {
+    shift_across () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
-              session.date = this.addDays(session.date, parseInt(this.shiftDays))
+              session.date = this.add_days(session.date, parseInt(this.shiftDays))
               this.update_session(session.id, session.notes)
             }
           })
@@ -955,7 +971,7 @@ export default {
       this.$modal.hide('shift')
       this.deselect_all()
     },
-    copyAcross () {
+    copy_across () {
       const copysessions = []
       let weekCount = this.currentWeek + 1
       this.$parent.$parent.client_details.plans.forEach((plan) => {
@@ -971,7 +987,7 @@ export default {
         this.currentWeek = weekCount
         copysessions.forEach((session) => {
           this.new_session.name = session.name
-          this.new_session.date = this.addDays(session.date, this.daysDiff * (weekCount - 1))
+          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - 1))
           this.currentCopySessionNotes = session.notes
           this.add_session()
         })
@@ -985,7 +1001,7 @@ export default {
       this.deselect_all()
       this.$parent.$parent.end_loading()
     },
-    initMove () {
+    move_to_week () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.forEach((session) => {
@@ -1000,9 +1016,9 @@ export default {
       this.currentWeek = parseInt(this.moveTarget)
     },
 
-    // SESSION METHODS //-------------------------------------------------------------------------------
+    // MULTI AND CHECKBOX
 
-    bulkChecked (state) {
+    bulk_check (state) {
       function checkedState (dataIn) {
         if (dataIn === 1) {
           return 'complete'
@@ -1026,7 +1042,7 @@ export default {
         }
       }
     },
-    bulkDelete () {
+    bulk_delete () {
       if (this.selectedSessions.length !== 0) {
         if (confirm('Are you sure that you want to delete all the selected sessions?')) {
           this.selectedSessions.forEach((sessionId) => {
@@ -1058,12 +1074,15 @@ export default {
         this.selectedSessions.splice(idx, 1)
       }
     },
-    async createSession () {
+    async create_session () {
       this.$parent.$parent.pause_loading = true
       await this.add_session()
       this.$parent.$parent.end_loading()
     },
-    editingSessionNotes (id, state, notesUpdate) {
+
+    // SESSION STATE
+
+    editing_session_notes (id, state, notesUpdate) {
       this.isEditingSession = state
       this.editSession = id
       if (!state) {
@@ -1073,12 +1092,12 @@ export default {
         this.scan()
       }
     },
-    cancelSessionNotes () {
+    cancel_session_notes () {
       this.isEditingSession = false
       this.editSession = null
       this.scan()
     },
-    toggleComplete (value) {
+    toggle_complete (value) {
       let out
       if (value === 0) {
         out = 1
@@ -1088,7 +1107,7 @@ export default {
       }
       return out
     },
-    isCompleted (value) {
+    check_if_complete (value) {
       let out
       if (value === 0) {
         out = 'Incomplete'
@@ -1099,10 +1118,10 @@ export default {
       return out
     },
 
-    // GENERAL METHODS //-------------------------------------------------------------------------------
+    // GENERAL
 
     go_to_event (id, week) {
-      this.expandAll('Expand')
+      this.expand_all('Expand')
       this.currentWeek = week
       document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
     },
@@ -1121,7 +1140,7 @@ export default {
       })
       arr === 0 ? this.weekIsEmpty = true : this.weekIsEmpty = false
     },
-    checkForNew () {
+    check_for_new () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           if (!this.$parent.no_sessions) {
@@ -1134,7 +1153,7 @@ export default {
         }
       })
     },
-    toggleExpandedSessions (id) {
+    toggle_expanded_sessions (id) {
       if (this.expandedSessions.includes(id)) {
         const index = this.expandedSessions.indexOf(id)
         if (index > -1) {
@@ -1144,7 +1163,7 @@ export default {
         this.expandedSessions.push(id)
       }
     },
-    updateSessionColor () {
+    update_session_color () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
@@ -1154,13 +1173,13 @@ export default {
       this.update_plan()
       this.scan()
     },
-    changeWeek (weekID) {
+    change_week (weekID) {
       this.currentWeek = weekID
       this.moveTarget = weekID
       this.check_for_week_sessions()
     },
 
-    // CHART METHODS //-------------------------------------------------------------------------------
+    // CHART
 
     selection () {
       this.p1 = ''
@@ -1195,29 +1214,29 @@ export default {
               this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
             }
             if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
-              this.dataValues.push(this.setsReps(exerciseDataPacket, protocol, dataForType))
+              this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, dataForType))
             }
             if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
               this.dataValues.push(this.load(exerciseDataPacket, protocol))
             }
             if (dataForType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
-              const agg = this.setsReps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+              const agg = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
               this.dataValues.push(agg)
             }
             if (exerciseDataPacket[2].includes('x') !== true) {
               this.showType = false
-              this.dataValues.push(this.otherMeasures(protocol))
+              this.dataValues.push(this.other_measures(protocol))
             }
           }
           if (dataForName === 'Plan Overview' && exerciseDataPacket[2].includes('at') === true) {
             if (dataForType === 'Sets' || dataForType === 'Reps') {
-              dataForSum = this.setsReps(exerciseDataPacket, protocol, dataForType)
+              dataForSum = this.sets_reps(exerciseDataPacket, protocol, dataForType)
             }
             if (dataForType === 'Load') {
               dataForSum = this.load(exerciseDataPacket, protocol)
             }
             if (dataForType === 'Volume') {
-              dataForSum = this.setsReps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+              dataForSum = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
             }
             overviewStore.push(dataForSum)
           }
@@ -1233,13 +1252,13 @@ export default {
         }
       }
       if (this.dataValues.length !== 0) {
-        this.descStats(dataForType)
+        this.desc_stats(dataForType)
       }
     },
 
-    // DATE/TIME METHODS //-------------------------------------------------------------------------------
+    // DATE/TIME
 
-    weekConfirm (dur) {
+    week_confirm (dur) {
       if (parseInt(dur) > 12 && this.allowMoreWeeks === false) {
         if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new session.')) {
           this.allowMoreWeeks = true
@@ -1256,7 +1275,7 @@ export default {
       this.new_session.date = `${yyyy}-${mm}-${dd}`
       this.todayDate = `${yyyy}-${mm}-${dd}`
     },
-    addDays (date, days) {
+    add_days (date, days) {
       const d = new Date(date)
       d.setDate(d.getDate() + days)
       const year = d.getFullYear()
@@ -1286,7 +1305,7 @@ export default {
       return arr
     },
 
-    // INIT AND BACKGROUND METHODS //-------------------------------------------------------------------------------
+    // INIT AND BACKGROUND
 
     adherence () {
       this.sessionsDone = 0
@@ -1308,7 +1327,7 @@ export default {
         bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
       }
     },
-    expandAll (toExpand) {
+    expand_all (toExpand) {
       try {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
@@ -1331,14 +1350,14 @@ export default {
         console.error(e)
       }
     },
-    expandText (array) {
+    expand_text (array) {
       if (array.length !== 0) {
         return 'Collapse'
       } else {
         return 'Expand'
       }
     },
-    accessibleColors (hex) {
+    accessible_colors (hex) {
       if (hex !== undefined) {
         hex = hex.replace('#', '')
         const r = parseInt(hex.substring(0, 2), 16)
@@ -1349,14 +1368,7 @@ export default {
         return color
       }
     },
-    removeBracketsAndBreaks (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '')
-      } else {
-        return dataIn
-      }
-    },
-    sortSessions () {
+    sort_sessions () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id) && this.$parent.no_sessions === false) {
           plan.sessions.sort((a, b) => {
@@ -1375,15 +1387,15 @@ export default {
           this.maxWeek = plan.duration
           if (this.str !== null && this.$parent.no_sessions === false) {
             this.str.forEach((object) => {
-              this.sessionDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessibleColors(this.weekColor.backgroundColor[object.week_id - 1]), week_id: object.week_id, session_id: object.id })
+              this.sessionDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessible_colors(this.weekColor.backgroundColor[object.week_id - 1]), week_id: object.week_id, session_id: object.id })
               if (object.notes !== null) {
-                const pulledProtocols = this.pullProtocols(object.name, object.notes)
-                this.dataPacketStore.push(this.chunkArray(pulledProtocols))
+                const pulledProtocols = this.pull_protocols(object.name, object.notes)
+                this.dataPacketStore.push(this.chunk_array(pulledProtocols))
               }
             })
             // Appends the options to the select
             if (this.dataPacketStore !== null) {
-              this.dropdownInit()
+              this.dropdown_init()
               this.selection()
             }
           }
@@ -1394,7 +1406,7 @@ export default {
     },
 
     // Extracts the protocols and measures and stores it all into a temporary array
-    pullProtocols (sessionName, text) {
+    pull_protocols (sessionName, text) {
       const textNoHTML = text.replace(/<[^>]*>?/gm, '')
       const tempStore = []
       let m
@@ -1418,7 +1430,7 @@ export default {
 
     // Breaks down the temporary array into data packets of length 2
     // Data Packet format: ['NAME', 'PROTOCOL/MEASURE/NUMBERS']
-    chunkArray (myArray) {
+    chunk_array (myArray) {
       let index = 0
       const tempArray = []
       for (index = 0; index < myArray.length; index += 3) {
@@ -1429,7 +1441,7 @@ export default {
     },
 
     // Init the dropdown selection with validation
-    dropdownInit () {
+    dropdown_init () {
       this.optionsForDataName = [{ id: 0, text: 'Plan Overview', value: 'Plan Overview' }]
       const tempItemStore = []
       const tempItemStoreLate = []
@@ -1439,7 +1451,7 @@ export default {
           const tidyA = exerciseDataPacket[1].replace(/\(/g, '\\(')
           const tidyB = tidyA.replace(/\)/g, '\\)')
           const regexA = RegExp(tidyB, 'gi')
-          const itemCased = this.properCase(exerciseDataPacket[1])
+          const itemCased = this.proper_case(exerciseDataPacket[1])
           if (regexA.test(tempItemStore) !== true && exerciseDataPacket[2].includes('at') === true) {
             tempItemStore.push(itemCased)
           }
@@ -1458,7 +1470,7 @@ export default {
     },
 
     // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
-    properCase (string) {
+    proper_case (string) {
       const sentence = string.toLowerCase().split(' ')
       for (let i = 0; i < sentence.length; i++) {
         sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
@@ -1466,10 +1478,10 @@ export default {
       return sentence.join(' ')
     },
 
-    // REGEX METHODS //-------------------------------------------------------------------------------
+    // REGEX
 
     // Extracts anything for Sets and Reps
-    setsReps (exerciseDataPacket, protocol, dataForType) {
+    sets_reps (exerciseDataPacket, protocol, dataForType) {
       let setStore = null
       let extractedSetsReps = null
       const tempSetsRepsStore = []
@@ -1517,7 +1529,7 @@ export default {
       const tempLoadStore = []
       let sum = 0
       let isMultiple = false
-      const sets = this.setsReps(exerciseDataPacket, protocol, 'Sets')
+      const sets = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
       let m
       while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
         if (m.index === this.regexLoadCapture.lastIndex) {
@@ -1552,7 +1564,7 @@ export default {
     },
 
     // Extracts any other measures
-    otherMeasures (protocol) {
+    other_measures (protocol) {
       let data = 0
       let m
       while ((m = this.regexNumberBreakdown.exec(protocol)) !== null) {
@@ -1565,7 +1577,7 @@ export default {
       }
       return data
     },
-    descStats (dataForType) {
+    desc_stats (dataForType) {
       let storeMax = 0
       let store = 0
       const sum = this.dataValues.reduce((a, b) => a + b)
@@ -1586,7 +1598,7 @@ export default {
       this.p5 = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
     },
 
-    // DATABASE METHODS //-------------------------------------------------------------------------------
+    // DATABASE
 
     async update_plan (planNotesUpdate) {
       this.$parent.$parent.dontLeave = true
@@ -1598,7 +1610,7 @@ export default {
         }
       }
       try {
-        this.sortSessions()
+        this.sort_sessions()
         const response = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
             id: plan.id,
@@ -1686,7 +1698,7 @@ export default {
       try {
         this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
-        const response = await this.$axios.put('https://api.traininblocks.com/workouts',
+        await this.$axios.put('https://api.traininblocks.com/workouts',
           {
             name: this.new_session.name,
             programme_id: this.$route.params.id,
@@ -1695,7 +1707,6 @@ export default {
             week_id: this.currentWeek
           }
         )
-        this.response = response.data
         // Get the sessions from the API because we've just created a new one
         await this.$parent.get_sessions(this.force)
         this.new_session = {
@@ -1705,9 +1716,9 @@ export default {
           week_id: '',
           block_color: ''
         }
-        this.sortSessions()
+        this.sort_sessions()
         this.scan()
-        this.checkForNew()
+        this.check_for_new()
         this.adherence()
         this.$ga.event('Session', 'new')
         this.$parent.$parent.end_loading()

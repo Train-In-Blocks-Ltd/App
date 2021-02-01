@@ -106,8 +106,8 @@
           <div
             v-for="(session, indexed) in plan.sessions"
             v-show="showing_current_session === indexed"
-            :key="indexed"
             :id="`session-${session.id}`"
+            :key="indexed"
             class="wrapper--session"
           >
             <div :id="session.name" class="wrapper--session__header client-side">
@@ -178,25 +178,35 @@ export default {
   },
   data () {
     return {
+
+      // SYSTEM
+
       check: null,
-      giveFeedback: null,
       showing_current_session: 0,
+
+      // EDIT
+
+      giveFeedback: null,
       tempEditorStore: null,
 
-      // CALENDAR DATA
+      // CALENDAR
+
       sessionDates: []
     }
   },
   async mounted () {
     this.$parent.loading = true
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
-    await this.$parent.sortSessionsPlan()
+    await this.$parent.sort_sessions_plan()
     await this.scan()
     this.$parent.end_loading()
   },
   methods: {
+
+    // BACKGROUND AND MISC.
+
     complete (planId, sessionId) {
       for (const plan of this.$parent.clientUser.plans) {
         if (plan.id === planId) {
@@ -215,9 +225,6 @@ export default {
       }
       this.$parent.update_session(planId, sessionId)
     },
-
-    // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
-
     scan () {
       this.sessionDates.length = 0
       this.$parent.clientUser.plans.forEach((plan) => {
@@ -225,13 +232,13 @@ export default {
           const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
           if (plan.sessions !== null) {
             plan.sessions.forEach((session) => {
-              this.sessionDates.push({ title: session.name, date: session.date, color: weekColor[session.week_id - 1], textColor: this.accessibleColors(weekColor[session.week_id - 1]) })
+              this.sessionDates.push({ title: session.name, date: session.date, color: weekColor[session.week_id - 1], textColor: this.accessible_colors(weekColor[session.week_id - 1]) })
             })
           }
         }
       })
     },
-    accessibleColors (hex) {
+    accessible_colors (hex) {
       if (hex !== undefined) {
         hex = hex.replace('#', '')
         const r = parseInt(hex.substring(0, 2), 16)

@@ -101,19 +101,24 @@ export default {
   },
   data () {
     return {
+
+      // EDIT
+
       editing_card: false,
-      toggleTest: false,
       tempEditorStore: null
     }
   },
   async created () {
     this.$parent.loading = true
-    this.$parent.willBodyScroll(true)
+    this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_portfolio()
     this.$parent.end_loading()
   },
   methods: {
+
+    // DATABASE
+
     async update (notesUpdate) {
       this.$parent.dontLeave = true
       this.$parent.pause_loading = true
