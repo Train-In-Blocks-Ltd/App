@@ -1049,7 +1049,13 @@ export default {
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
     },
-    resolve_error (msg) {
+    async resolve_error (msg) {
+      await this.$axios.post('/.netlify/functions/error',
+        {
+          msg,
+          claims: this.claims
+        }
+      )
       this.pause_loading = false
       this.loading = false
       this.dontLeave = false
