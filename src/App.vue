@@ -739,6 +739,18 @@
       padding: 0
     }
   }
+
+  /* Progress */
+  #nprogress .bar {
+    background: #282828 !important;
+  }
+  #nprogress .peg {
+    box-shadow: 0 0 10px #282828, 0 0 5px #282828 !important;
+  }
+  #nprogress .spinner-icon {
+    border-top-color: #282828 !important;
+    border-left-color: #282828 !important;
+  }
 </style>
 <template>
   <!-- Container with class authenticated and setting color css variables -->
@@ -760,7 +772,7 @@
         </div>
       </div>
     </modal>
-    <loading :active.sync="pause_loading" :is-full-page="true" :loader="'bars'" :color="'#282828'" />
+    <!--<loading :active.sync="pause_loading" :is-full-page="true" :loader="'bars'" :color="'#282828'" />-->
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
@@ -884,10 +896,10 @@
 <script>
 import 'vue-loading-overlay/dist/vue-loading.css'
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
-const Loading = () => import(/* webpackChunkName: "components.vue-loading-overlay", webpackPreload: true */ 'vue-loading-overlay')
+// const Loading = () => import(/* webpackChunkName: "components.vue-loading-overlay", webpackPreload: true */ 'vue-loading-overlay')
 export default {
   components: {
-    Loading
+    // Loading
   },
   data () {
     return {

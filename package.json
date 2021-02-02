@@ -13,6 +13,7 @@
     "@okta/okta-signin-widget": "^4.5.2",
     "@okta/okta-vue": "^2.1.1",
     "axios": "^0.21.1",
+    "axios-progress-bar": "^1.2.0",
     "compressorjs": "^1.0.7",
     "json-beautify": "^1.1.1",
     "lodash.defaultsdeep": "^4.6.1",
