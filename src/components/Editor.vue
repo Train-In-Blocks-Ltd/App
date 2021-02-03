@@ -279,10 +279,10 @@
         @input="update_edited_notes()"
         @focus="caretIsInEditor = true"
         @blur="caretIsInEditor = false"
-        v-html="initialHTML"
+        v-html="update_html(initialHTML)"
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="remove_brackets_and_checkbox(htmlInjection)" />
+    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="update_html(remove_brackets(htmlInjection))" />
     <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">
       {{ emptyPlaceholder }}
     </p>
@@ -322,12 +322,20 @@ export default {
       showAddVideo: false,
       addVideoURL: '',
       showAddTemplate: false,
-      previewTemplate: null
+      previewTemplate: null,
+
+      // REGEX
+
+      updateInputRegex: /<input.*?>/gmi,
+      updateCheckboxRegex: /name="(.*?)"/gmi,
+      updateIframeRegex: /<iframe.*?><\/iframe>/gmi,
+      updateURLRegex: /src="(.*?)"/gmi,
+      updateImageRegex: /<img.*?>/gmi,
+      updateStyleRegex: /style="(.*?)"/gmi
     }
   },
   watch: {
     showEditState () {
-      this.update_html()
       this.initialHTML = this.htmlInjection
       if (this.showEditState) {
         document.addEventListener('keydown', this.check_cmd_state)
@@ -336,22 +344,53 @@ export default {
       }
     }
   },
-  mounted () {
-    this.update_html()
-  },
   methods: {
-    update_html () {
-      const imgs = document.querySelectorAll('p > img')
-      const iframes = document.querySelectorAll('iframe')
-      iframes.forEach((item) => {
-        const url = item.attributes.src.nodeValue
-        item.insertAdjacentHTML('afterend', `<a href="${url}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
-        item.remove()
-      })
-      imgs.forEach((item) => {
-        item.setAttribute('style', 'border-radius: 10px; max-width: 80%; margin: 1rem 0; content-visibility: auto')
-      })
+    update_html (html) {
+      return this.update_iframe(this.update_checkbox(html))
     },
+    update_checkbox (html) {
+      let m
+      const arr = []
+      while ((m = this.updateInputRegex.exec(html)) !== null) {
+        if (m.index === this.updateInputRegex.lastIndex) {
+          this.updateInputRegex.lastIndex++
+        }
+        m.forEach((inputMatch) => {
+          const name = inputMatch.match(this.updateCheckboxRegex)[0].replace('name=', '').replace(/"/g, '')
+          if (name !== 'checkbox_v1') {
+            arr.push(inputMatch)
+          }
+        })
+      }
+      if (arr.length !== 0) {
+        arr.forEach((item) => {
+          html = html.replace(item, '')
+        })
+      }
+      return html
+    },
+    update_iframe (html) {
+      let m
+      const arr = []
+      while ((m = this.updateIframeRegex.exec(html)) !== null) {
+        if (m.index === this.updateIframeRegex.lastIndex) {
+          this.updateIframeRegex.lastIndex++
+        }
+        m.forEach((iframeMatch) => {
+          const url = iframeMatch.match(this.updateURLRegex)[0].replace('src=', '').replace(/"/g, '')
+          arr.push([iframeMatch, url])
+        })
+      }
+      if (arr.length !== 0) {
+        arr.forEach((item) => {
+          html = html.replace(item[0], `<a name="video_v1" href="${item[1]}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
+        })
+      }
+      return html
+    },
+
+    // MISC.
+
     focus_on_editor () {
       document.getElementById('rich_editor').focus()
     },
@@ -377,7 +416,7 @@ export default {
         this.ulActive = unorderedListState
       }, 100)
     },
-    remove_brackets_and_checkbox (dataIn) {
+    remove_brackets (dataIn) {
       if (dataIn !== null) {
         return dataIn.replace(/[[\]]/g, '')
       } else {
@@ -432,7 +471,7 @@ export default {
     add_checkbox () {
       let itemId
       this.calledFromItemId === undefined ? itemId = '' : itemId = this.calledFromItemId
-      this.format('insertHTML', `<input type="checkbox" style="margin: .4rem; cursor: pointer" onclick="change_checked_state(this, '${this.calledFromEl}', '${this.calledFromItem}', '${itemId}')">`)
+      this.format('insertHTML', `<input name="checkbox_v1" type="checkbox" style="margin: .4rem; cursor: pointer" onclick="change_checked_state(this, '${this.calledFromEl}', '${this.calledFromItem}', '${itemId}')">`)
     },
     // LINK
     show_link_adder () {
@@ -466,7 +505,7 @@ export default {
       reader.addEventListener('load', () => {
         this.base64Img = reader.result
         this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0; content-visibility: auto" />`)
+        this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0; content-visibility: auto">`)
         this.reset_img_pop_up()
       }, false)
       if (file) {
@@ -496,7 +535,7 @@ export default {
     },
     add_video () {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', `<a href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
+      this.format('insertHTML', `<a name="video_v1" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {
