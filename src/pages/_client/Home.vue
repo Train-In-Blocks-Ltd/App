@@ -280,7 +280,6 @@ export default {
       }
     },
     async create_client () {
-      this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       try {
         if (this.clientAlreadyMsg === 'Resend activation email') {
@@ -460,7 +459,6 @@ export default {
     },
     async delete_plan () {
       if (confirm('Are you sure you want to delete this plan?')) {
-        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         let plan
         let id

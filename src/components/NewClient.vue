@@ -88,7 +88,6 @@ export default {
       } else {
         this.$parent.response = ''
         try {
-          this.$parent.$parent.pause_loading = true
           this.$parent.$parent.dontLeave = true
           await this.$axios.put('https://api.traininblocks.com/clients',
             {

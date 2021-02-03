@@ -205,7 +205,6 @@ export default {
     // BACKGROUND AND MISC.
 
     async save () {
-      this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       try {
         await this.$axios.post('/.netlify/functions/okta',
@@ -219,7 +218,6 @@ export default {
             url: `${this.$parent.claims.sub}`
           }
         )
-        this.$parent.pause_loading = false
         this.$parent.dontLeave = false
       } catch (e) {
         this.$parent.resolve_error(e)
@@ -249,7 +247,6 @@ export default {
     },
     async change_password () {
       try {
-        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         this.password.error = ''
         await this.$axios.post('/.netlify/functions/okta',

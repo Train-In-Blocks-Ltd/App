@@ -121,7 +121,6 @@ export default {
 
     async update (notesUpdate) {
       this.$parent.dontLeave = true
-      this.$parent.pause_loading = true
       try {
         await this.$axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
           {

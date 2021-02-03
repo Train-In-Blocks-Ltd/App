@@ -60,7 +60,6 @@ export default {
     },
     async save () {
       try {
-        this.$parent.$parent.$parent.pause_loading = true
         this.$parent.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/programmes',
           {

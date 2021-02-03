@@ -546,7 +546,7 @@
                 aria-label="Session name"
                 type="text"
                 name="name"
-                @blur="$parent.$parent.pause_loading = true, update_plan()"
+                @blur="update_plan()"
               >
             </div>
           </div><br>  <!-- client_info -->
@@ -1075,7 +1075,6 @@ export default {
       }
     },
     async create_session () {
-      this.$parent.$parent.pause_loading = true
       await this.add_session()
       this.$parent.$parent.end_loading()
     },
@@ -1651,7 +1650,6 @@ export default {
       }
     },
     async update_session (id, sessionNotesUpdate) {
-      this.$parent.$parent.pause_loading = true
       this.$parent.$parent.dontLeave = true
       // Set the plan variable to the current plan
       for (const x in this.$parent.$parent.client_details.plans) {
@@ -1696,7 +1694,6 @@ export default {
     },
     async add_session () {
       try {
-        this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/workouts',
           {
@@ -1728,7 +1725,6 @@ export default {
     },
     async delete_session (id) {
       try {
-        this.$parent.$parent.pause_loading = true
         this.$parent.$parent.dontLeave = true
         await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
         await this.$parent.get_sessions(this.force)

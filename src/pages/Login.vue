@@ -271,7 +271,6 @@ export default {
     // BACKGROUND AND MISC.
 
     async reset () {
-      this.$parent.pause_loading = true
       this.$parent.dontLeave = true
       this.error = null
       this.success = null

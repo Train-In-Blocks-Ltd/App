@@ -445,7 +445,7 @@
     cursor: pointer;
     position: fixed;
     right: 0;
-    top: 2rem;
+    top: 3rem;
     width: 3rem;
     padding: .4rem 1rem .4rem .6rem;
     border-radius: 3px 0 0 3px;
@@ -453,10 +453,10 @@
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .icon_open_middle {
-    top: 4.4rem
+    top: 5.4rem
   }
   .icon_open_bottom {
-    top: 6.8rem
+    top: 7.8rem
   }
   .icon_open--options:hover, .icon_open--stats:hover, .icon_open--install_PWA:hover, div.icon_open--print:hover, div.icon_open--portfolio:hover {
     width: 6rem;
@@ -772,7 +772,6 @@
         </div>
       </div>
     </modal>
-    <!--<loading :active.sync="pause_loading" :is-full-page="true" :loader="'bars'" :color="'#282828'" />-->
     <a class="skip-to-content-link" href="#main">
       Skip to content
     </a>
@@ -894,13 +893,9 @@
 </template>
 
 <script>
-import 'vue-loading-overlay/dist/vue-loading.css'
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
-// const Loading = () => import(/* webpackChunkName: "components.vue-loading-overlay", webpackPreload: true */ 'vue-loading-overlay')
+
 export default {
-  components: {
-    // Loading
-  },
   data () {
     return {
 
@@ -946,7 +941,6 @@ export default {
       newBuild: false,
       errorMsg: null,
       loading: false,
-      pause_loading: false,
       dontLeave: false,
       authenticated: false,
       pwa: {
@@ -1041,7 +1035,6 @@ export default {
           claims: this.claims
         }
       )
-      this.pause_loading = false
       this.loading = false
       this.dontLeave = false
       this.errorMsg = msg.toString()
@@ -1050,7 +1043,6 @@ export default {
       console.error(msg)
     },
     end_loading () {
-      this.pause_loading = false
       this.loading = false
       this.dontLeave = false
     },
@@ -1121,7 +1113,6 @@ export default {
       }
     },
     async client_delete (id) {
-      this.pause_loading = true
       this.dontLeave = true
       try {
         await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
@@ -1146,7 +1137,6 @@ export default {
 
     async update_client (clientNotesUpdate) {
       this.dontLeave = true
-      this.pause_loading = true
       try {
         await this.$axios.post('https://api.traininblocks.com/clients',
           {
@@ -1196,7 +1186,6 @@ export default {
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
         let email
-        this.pause_loading = true
         this.dontLeave = true
         for (let i = 0; i < this.clients.length; i++) {
           if (this.clients[i].client_id === id) {
@@ -1250,7 +1239,6 @@ export default {
     },
     async client_unarchive (id) {
       if (confirm('Are you sure you want to unarchive this client?')) {
-        this.pause_loading = true
         this.dontLeave = true
         for (let i = 0; i < this.archive.clients.length; i++) {
           if (this.archive.clients[i].client_id === id) {
@@ -1328,7 +1316,6 @@ export default {
     },
     async create_portfolio () {
       this.dontLeave = true
-      this.pause_loading = true
       try {
         await this.$axios.put('https://api.traininblocks.com/portfolio',
           {

@@ -278,7 +278,6 @@ export default {
 
     async new_template () {
       try {
-        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/templates',
           {
@@ -301,7 +300,6 @@ export default {
     async update_template (id, notesUpdate) {
       try {
         let templateName
-        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         if (this.$parent.templates.length !== 0) {
           this.$parent.templates.forEach((item) => {
@@ -325,7 +323,6 @@ export default {
     },
     async delete_template (id) {
       try {
-        this.$parent.pause_loading = true
         this.$parent.dontLeave = true
         await this.$axios.delete(`https://api.traininblocks.com/templates/${id}`)
         await this.$parent.get_templates(true)
