@@ -1122,7 +1122,9 @@ export default {
     go_to_event (id, week) {
       this.expand_all('Expand')
       this.currentWeek = week
-      document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
+      setTimeout(() => {
+        document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
+      }, 100)
     },
     check_for_week_sessions () {
       let arr = 0
