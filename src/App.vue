@@ -1344,17 +1344,6 @@ export default {
         this.resolve_error(e)
       }
     },
-    async get_sessions () {
-      try {
-        let f
-        for (f in this.clientUser.plans) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
-          this.clientUser.plans[f].sessions = response.data
-        }
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
     async update_session (pid, sid, feedbackNotesUpdate) {
       this.dontLeave = true
       // Set the plan variable to the current plan
