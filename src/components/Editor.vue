@@ -356,10 +356,12 @@ export default {
           this.updateInputRegex.lastIndex++
         }
         m.forEach((inputMatch) => {
-          const name = inputMatch.match(this.updateCheckboxRegex)[0].replace('name=', '').replace(/"/g, '')
-          if (name !== 'checkbox_v1') {
+          const name = inputMatch.match(this.updateCheckboxRegex)
+          if (name === null) {
             arr.push(inputMatch)
-          }
+          } else if (name !== 'checkbox_v1') {
+            arr.push(inputMatch.replace('name=', '').replace(/"/g, ''))
+          } 
         })
       }
       if (arr.length !== 0) {
