@@ -127,9 +127,6 @@ export default {
   methods: {
     select_point (d1, d2) {
       this.focusText = [d1, d2]
-      setInterval(() => {
-        this.focusText = 'Select a point'
-      }, 5000)
     },
     process_and_plot () {
       this.dataValues = []
