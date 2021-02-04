@@ -15,10 +15,15 @@
   .activeState {
     border: 2px solid #28282860
   }
-  .wrapper--template-top {
+  .wrapper--template_top {
     display: flex;
     justify-content: space-between;
     margin-bottom: 4rem
+  }
+  .wrapper--template_top__right {
+    display: grid;
+    grid-gap: 1rem;
+    text-align: right
   }
   .container--templates {
     display: grid;
@@ -94,14 +99,15 @@
         <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
-    <div class="wrapper--template-top">
+    <div class="wrapper--template_top">
       <p class="text--large">
         Templates
       </p>
-      <div>
+      <div class="wrapper--template_top__right">
         <button @click="new_template()">
           New Template
         </button>
+        <a v-if="$parent.templates.length !== 0" href="javascript:void(0)" class="a_link" @click="select_all()">Select all</a>
       </div>
     </div>
     <div v-if="$parent.templates" class="container--templates">
@@ -237,15 +243,17 @@ export default {
         this.expandedTemplates.push(id)
       }
     },
+    select_all () {
+      this.$parent.templates.forEach((template) => {
+        this.selectedTemplates.push(template.id)
+        document.getElementById(`sc-${template.id}`).checked = true
+      })
+    },
     deselect_all () {
       this.$parent.templates.forEach((template) => {
-        const selEl = document.getElementById('sc-' + template.id)
-        if (selEl.checked === true) {
-          selEl.checked = false
-          const idx = this.selectedTemplates.indexOf(template.id)
-          this.selectedTemplates.splice(idx, 1)
-        }
+        document.getElementById(`sc-${template.id}`).checked = false
       })
+      this.selectedTemplates = []
     },
     delete_multi_templates () {
       if (this.selectedTemplates.length !== 0) {

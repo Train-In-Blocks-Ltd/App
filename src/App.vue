@@ -211,6 +211,14 @@
   .right_margin {
     margin-right: 1rem
   }
+  .a_link {
+    color: #282828;
+    text-decoration: none;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .a_link:hover {
+    opacity: .6
+  }
 
   /* BUTTONS */
   button {

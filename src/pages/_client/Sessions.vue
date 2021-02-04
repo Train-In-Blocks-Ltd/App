@@ -192,16 +192,14 @@
   .session--header__left__top {
     display: flex
   }
-  .expand-all {
-    text-align: right;
-    margin-bottom: 2rem;
-    font-size: .8rem;
-    cursor: pointer;
-    opacity: 1;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+  .container--sessions_header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem
   }
-  .expand-all:hover {
-    opacity: .6
+  .container--sessions_header a {
+    font-size: .8rem;
+    margin-left: 1rem
   }
   .wrapper--session, #plan_notes {
     display: grid;
@@ -648,9 +646,24 @@
                 No sessions yet :(
               </p>
               <div v-if="!$parent.$parent.loading">
-                <p v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty" class="expand-all" @click="expand_all(expand_text(expandedSessions))">
-                  {{ expand_text(expandedSessions) }} all
-                </p>
+                <div class="container--sessions_header">
+                  <a
+                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length"
+                    href="javascript:void(0)"
+                    class="a_link"
+                    @click="select_all()"
+                  >
+                    Select all
+                  </a>
+                  <a
+                    v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty"
+                    href="javascript:void(0)"
+                    class="a_link"
+                    @click="expand_all(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"
+                  >
+                    {{ expandedSessions.length !== 0 ? 'Collapse' : 'Expand' }} all
+                  </a>
+                </div>
                 <!-- New session -->
                 <div v-if="!$parent.no_sessions" class="container--sessions">
                   <!-- Loop through sessions -->
@@ -1052,19 +1065,25 @@ export default {
         }
       }
     },
+    select_all () {
+      this.$parent.$parent.client_details.plans.forEach((plan) => {
+        if (plan.id === parseInt(this.$route.params.id)) {
+          plan.sessions.forEach((session) => {
+            document.getElementById(`sc-${session.id}`).checked = true
+            this.selectedSessions.push(session.id)
+          })
+        }
+      })
+    },
     deselect_all () {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.forEach((session) => {
-            const selEl = document.getElementById('sc-' + session.id)
-            if (selEl.checked === true) {
-              selEl.checked = false
-              const idx = this.selectedSessions.indexOf(session.id)
-              this.selectedSessions.splice(idx, 1)
-            }
+            document.getElementById(`sc-${session.id}`).checked = false
           })
         }
       })
+      this.selectedSessions = []
     },
     change_select_checkbox (id) {
       if (this.selectedSessions.includes(id) === false) {
@@ -1349,13 +1368,6 @@ export default {
         })
       } catch (e) {
         console.error(e)
-      }
-    },
-    expand_text (array) {
-      if (array.length !== 0) {
-        return 'Collapse'
-      } else {
-        return 'Expand'
       }
     },
     accessible_colors (hex) {

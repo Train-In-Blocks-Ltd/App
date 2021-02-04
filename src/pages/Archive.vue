@@ -3,14 +3,6 @@
     display: flex;
     justify-content: space-between
   }
-  .delete_all {
-    color: #282828;
-    text-decoration: none;
-    transition: 1s all cubic-bezier(.165, .84, .44, 1)
-  }
-  .delete_all:hover {
-    opacity: .6
-  }
   .client_update {
     padding: 1rem 0;
     justify-self: end
@@ -50,7 +42,7 @@
       <p class="text--large">
         Archive
       </p>
-      <a v-if="!$parent.archive.no_archive" href="javascript:void(0)" class="delete_all" @click="select_all()">Select all</a>
+      <a v-if="!$parent.archive.no_archive" href="javascript:void(0)" class="a_link" @click="select_all()">Select all</a>
     </div>
     <br>
     <p v-if="$parent.archive.no_archive" class="text--small grey">
