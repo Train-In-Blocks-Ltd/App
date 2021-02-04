@@ -40,52 +40,115 @@
       <div class="session_toolkit--content">
         <div v-if="toolkit_calcs.mhr_tanaka.view">
           <div>
-            <label for="tanaka_age">Age: </label>
-            <input id="tanaka_age" class="input--toolkit small_border_radius" type="number" name="tanaka_age" @input="mhr_tanaka_calc()">
+            <input
+              id="tanaka_age"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="tanaka_age"
+              aria-label="Age"
+              placeholder="Age"
+              @input="mhr_tanaka_calc()"
+            >
           </div>
           <p class="text--small">Maximal Heart Rate: {{ toolkit_calcs.mhr_tanaka.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.mhr_gellish.view">
           <div>
-            <label for="gellish_age">Age: </label>
-            <input id="gellish_age" class="input--toolkit small_border_radius" type="number" name="gellish_age" @input="mhr_gellish_calc()">
+            <input
+              id="gellish_age"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="gellish_age"
+              aria-label="Age"
+              placeholder="Age"
+              @input="mhr_gellish_calc()"
+            >
           </div>
           <p class="text--small">Maximal Heart Rate: {{ toolkit_calcs.mhr_gellish.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.hrtz.view">
           <div>
-            <label for="intensity">Intensity (%): </label>
-            <input id="intensity" class="input--toolkit small_border_radius" type="number" name="intensity" @input="hrtz_calc()">
+            <input
+              id="intensity"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="intensity"
+              aria-label="Intensity"
+              placeholder="Intensity"
+              @input="hrtz_calc()"
+            >
           </div>
           <div>
-            <label for="mhr">Maximal Heart Rate: </label>
-            <input id="mhr" class="input--toolkit small_border_radius" type="number" name="mhr" @input="hrtz_calc()">
+            <input
+              id="mhr"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="mhr"
+              aria-label="Maximal Heart Rate"
+              placeholder="Maximal Heart Rate"
+              @input="hrtz_calc()"
+            >
           </div>
           <div>
-            <label for="rhr">Resting Heart Rate: </label>
-            <input id="rhr" class="input--toolkit small_border_radius" type="number" name="rhr" @input="hrtz_calc()">
+            <input
+              id="rhr"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="rhr"
+              aria-label="Resting Heart Rate"
+              placeholder="Resting Heart Rate"
+              @input="hrtz_calc()"
+            >
           </div>
           <p class="text--small">Target Heart Rate: {{ toolkit_calcs.hrtz.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.hrr.view">
           <div>
-            <label for="hrr_mhr">Maximal Heart Rate: </label>
-            <input id="hrr_mhr" class="input--toolkit small_border_radius" type="number" name="hrr_mhr" @input="hrr_calc()">
+            <input
+              id="hrr_mhr"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="hrr_mhr"
+              aria-label="Maximal Heart Rate"
+              placeholder="Maximal Heart Rate"
+              @input="hrr_calc()"
+            >
           </div>
           <div>
-            <label for="hrr_rhr">Resting Heart Rate: </label>
-            <input id="hrr_rhr" class="input--toolkit small_border_radius" type="number" name="hrr_rhr" @input="hrr_calc()">
+            <input
+              id="hrr_rhr"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="hrr_rhr"
+              aria-label="Resting Heart Rate"
+              placeholder="Resting Heart Rate"
+              @input="hrr_calc()"
+            >
           </div>
           <p class="text--small">Heart Rate Reserve: {{ toolkit_calcs.hrr.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.bmi.view">
           <div>
-            <label for="height">Height (m): </label>
-            <input id="height" class="input--toolkit small_border_radius" type="number" name="height" @input="bmi_calc()">
+            <input
+              id="height"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="height"
+              aria-label="Height (m)"
+              placeholder="Height (m)"
+              @input="bmi_calc()"
+            >
           </div>
           <div>
-            <label for="weight">Weight (kg): </label>
-            <input id="weight" class="input--toolkit small_border_radius" type="number" name="weight" @input="bmi_calc()">
+            <input
+              id="weight"
+              class="input--toolkit small_border_radius"
+              type="number"
+              name="weight"
+              aria-label="Weight (kg)"
+              placeholder="Weight (kg)"
+              @input="bmi_calc()"
+            >
           </div>
           <p class="text--small">Body Mass Index: {{ toolkit_calcs.bmi.value }} kg/m<sup>2</sup></p>
         </div>
