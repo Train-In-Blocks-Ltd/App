@@ -56,7 +56,9 @@
     top: 0;
     right: 0;
     width: 0;
-    background-color: white;
+    background-color: rgba(255, 255, 255, .7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .section--a {
@@ -70,6 +72,11 @@
   .section--a.openedSections,  .section--b.openedSections {
     width: 100%;
     z-index: 4
+  }
+  @supports not (backdrop-filter: blur(10px)) {
+    .section--a, .section--b {
+      background-color: white
+    }
   }
 
   /* ELEMENTS */
