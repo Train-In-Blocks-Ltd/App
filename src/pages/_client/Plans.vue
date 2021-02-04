@@ -7,6 +7,7 @@
     margin: 4rem 0;
     padding: 2rem;
     border-radius: 10px;
+    background-color: white;
     box-shadow: 0 0 20px 10px #28282808
   }
   .client_notes__header {

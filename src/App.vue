@@ -56,7 +56,7 @@
     top: 0;
     right: 0;
     width: 0;
-    background-color: #F4F4F4;
+    background-color: white;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .section--a {
@@ -79,7 +79,8 @@
     min-height: 100%;
     display: grid;
     font-size: 16px;
-    line-height: 1.42
+    line-height: 1.42;
+    background-color: #F9F9F9
   }
   #app {
     color: #282828;
@@ -96,6 +97,7 @@
 
   /* CONTAINERS */
   #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
+    background-color: #F9F9F9;
     padding: 2rem 10vw
   }
   .flex {
@@ -457,7 +459,8 @@
     width: 3rem;
     padding: .4rem 1rem .4rem .6rem;
     border-radius: 3px 0 0 3px;
-    background-color: #F4F4F4;
+    background-color: white;
+    box-shadow: 0 0 20px 10px #28282808;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .icon_open_middle {
@@ -563,6 +566,7 @@
     color: #282828;
     text-decoration: none;
     box-shadow: 0 0 20px 10px #28282808;
+    background-color: white;
     border-radius: 10px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }

@@ -21,7 +21,7 @@
 
   /* Floating Nav */
   .wrapper--floating_nav {
-    background-color: #F4F4F4;
+    background-color: white;
     width: 0;
     height: 100%;
     position: fixed;

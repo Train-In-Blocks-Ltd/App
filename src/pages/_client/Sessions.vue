@@ -127,7 +127,7 @@
     display: grid;
     grid-template-rows: 6px 90px;
     cursor: pointer;
-    box-shadow: 0 0 14px 08px #28282808;
+    box-shadow: 0 0 14px 08px #28282810;
     background-color: #F2F2F2;
     min-width: 50px;
     height: 74px;
@@ -203,6 +203,7 @@
   }
   .wrapper--session, #plan_notes {
     display: grid;
+    background-color: white;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 10px
