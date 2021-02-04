@@ -739,7 +739,7 @@
 
   /* PRINT MEDIA */
   @media print {
-    .sidebar, .wrapper--floating_nav, .icon_open--stats, .icon_open--print, .wrapper--progress-bar, a, button, input[type='checkbox'], input[type='color'], svg, .expand-all, .plan_table, video, iframe {
+    .sidebar, .wrapper--floating_nav, .icon_open--stats, .icon_open--print, .wrapper--progress-bar, a, button, svg, .expand-all, .plan_table, video, iframe, .change_week_color {
       display: none
     }
     #client .client_info input:not([type='submit']) {
