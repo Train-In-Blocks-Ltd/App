@@ -239,7 +239,7 @@ export default {
 
     remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input name="checklist"/gmi, '<p><input name="checklist" disabled')
+        return dataIn.replace(/[[\]]/g, '').replace(/<input name="checkbox_v1"/gmi, '<p><input name="checkbox_v1" disabled')
       } else {
         return dataIn
       }
