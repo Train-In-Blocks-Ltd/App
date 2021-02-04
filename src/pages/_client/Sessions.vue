@@ -279,14 +279,6 @@
     grid-gap: 1rem;
     width: fit-content
   }
-  .data-select__options select {
-    background-color: transparent;
-    border: 0;
-    font-size: 1.6rem;
-    width: fit-content;
-    padding: .2rem 1rem .2rem 0;
-    margin: .4rem 0
-  }
   .data-desc {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -772,8 +764,8 @@
                   <div class="data-select">
                     <div class="data-select__options">
                       <label for="measure">
-                        <b>Measurement: </b><br>
-                        <select v-model="selectedDataName" name="measure" @change="sort_sessions(), scan(), selection()">
+                        Measurement:<br>
+                        <select class="small_border_radius width_300 text--small" v-model="selectedDataName" name="measure" @change="sort_sessions(), scan(), selection()">
                           <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
                             {{ optionName.text }}
                           </option>
@@ -782,8 +774,8 @@
                     </div>
                     <div v-if="showType" class="data-select__options">
                       <label for="measure-type">
-                        <b>Data type: </b><br>
-                        <select v-model="selectedDataType" name="measure-type" @change="sort_sessions(), scan(), selection()">
+                        Data type:<br>
+                        <select class="small_border_radius width_300 text--small" v-model="selectedDataType" name="measure-type" @change="sort_sessions(), scan(), selection()">
                           <option value="Sets">Sets</option>
                           <option value="Reps">Reps</option>
                           <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">

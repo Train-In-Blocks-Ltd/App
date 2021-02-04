@@ -7,25 +7,17 @@
     display: grid;
     grid-gap: 1rem
   }
-  .session_toolkit--select {
-    background-color: transparent;
-    border: 0;
-    font-size: 1.6rem;
-    width: fit-content;
-    padding: .2rem 1rem .2rem 0;
-    margin: .4rem 0
-  }
   .session_toolkit--content input {
     width: 4rem
   }
   .modal--toolkit-close {
     display: none
   }
+  p.text--small {
+    margin-top: 1rem
+  }
 
   @media (max-width: 576px) {
-    .session_toolkit--select {
-      width: 100%
-    }
     .modal--toolkit {
       height: 100vh
     }
@@ -38,8 +30,7 @@
 <template>
   <div class="modal--toolkit">
     <div class="wrapper--centered-item">
-      <select class="text-small session_toolkit--select" @change="get_toolkit()">
-        <option>Select a Calculator</option>
+      <select class="text--small session_toolkit--select" @change="get_toolkit()">
         <option>Maximal Heart Rate (Tanaka)</option>
         <option>Maximal Heart Rate (Gellish)</option>
         <option>Heart Rate Training Zone (Karvonen)</option>
@@ -52,14 +43,14 @@
             <label for="tanaka_age">Age: </label>
             <input id="tanaka_age" class="input--toolkit small_border_radius" type="number" name="tanaka_age" @input="mhr_tanaka_calc()">
           </div>
-          <p><b>Maximal Heart Rate: </b>{{ toolkit_calcs.mhr_tanaka.value }} BPM</p>
+          <p class="text--small">Maximal Heart Rate: {{ toolkit_calcs.mhr_tanaka.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.mhr_gellish.view">
           <div>
             <label for="gellish_age">Age: </label>
             <input id="gellish_age" class="input--toolkit small_border_radius" type="number" name="gellish_age" @input="mhr_gellish_calc()">
           </div>
-          <p><b>Maximal Heart Rate: </b>{{ toolkit_calcs.mhr_gellish.value }} BPM</p>
+          <p class="text--small">Maximal Heart Rate: {{ toolkit_calcs.mhr_gellish.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.hrtz.view">
           <div>
@@ -74,7 +65,7 @@
             <label for="rhr">Resting Heart Rate: </label>
             <input id="rhr" class="input--toolkit small_border_radius" type="number" name="rhr" @input="hrtz_calc()">
           </div>
-          <p><b>Target Heart Rate: </b>{{ toolkit_calcs.hrtz.value }} BPM</p>
+          <p class="text--small">Target Heart Rate: {{ toolkit_calcs.hrtz.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.hrr.view">
           <div>
@@ -85,7 +76,7 @@
             <label for="hrr_rhr">Resting Heart Rate: </label>
             <input id="hrr_rhr" class="input--toolkit small_border_radius" type="number" name="hrr_rhr" @input="hrr_calc()">
           </div>
-          <p><b>Heart Rate Reserve: </b>{{ toolkit_calcs.hrr.value }} BPM</p>
+          <p class="text--small">Heart Rate Reserve: {{ toolkit_calcs.hrr.value }} BPM</p>
         </div>
         <div v-if="toolkit_calcs.bmi.view">
           <div>
@@ -96,7 +87,7 @@
             <label for="weight">Weight (kg): </label>
             <input id="weight" class="input--toolkit small_border_radius" type="number" name="weight" @input="bmi_calc()">
           </div>
-          <p><b>Body Mass Index: </b>{{ toolkit_calcs.bmi.value }} kg/m<sup>2</sup></p>
+          <p class="text--small">Body Mass Index: {{ toolkit_calcs.bmi.value }} kg/m<sup>2</sup></p>
         </div>
       </div>
       <button class="cancel" @click="$parent.$modal.hide('toolkit')">
@@ -134,6 +125,9 @@ export default {
         }
       }
     }
+  },
+  mounted () {
+    this.get_toolkit()
   },
   methods: {
     /* Various session calculators */

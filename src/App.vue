@@ -295,7 +295,7 @@
   }
 
   /* INPUTS */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]) {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]), select {
     -webkit-appearance: none;
     width: 100%;
     outline-width: 0;
@@ -309,16 +309,16 @@
     box-shadow: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover, select:hover {
     opacity: .6
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
     border: 1px solid #282828
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius, select.small_border_radius {
     border-radius: 5px
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300 {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300, select.width_300 {
     width: 300px
   }
   .search {
