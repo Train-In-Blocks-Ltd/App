@@ -882,7 +882,7 @@ export default {
       // ADHERANCE
 
       sessionsDone: 0,
-      sessionsTotal: 0,
+      sessionsTotal: null,
 
       // STATS
 
@@ -1321,12 +1321,12 @@ export default {
 
     adherence () {
       this.sessionsDone = 0
-      this.sessionsTotal = 0
+      this.sessionsTotal = null
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
+          this.sessionsTotal = plan.sessions.length
           if (!this.$parent.no_sessions) {
             plan.sessions.forEach((session) => {
-              this.sessionsTotal += 1
               if (session.checked === 1) {
                 this.sessionsDone++
               }
