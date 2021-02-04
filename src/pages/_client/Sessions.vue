@@ -187,7 +187,7 @@
   .session--header__left {
     display: grid;
     grid-gap: 1rem;
-    height: 80px
+    min-height: 80px
   }
   .session--header__left__top {
     display: flex
@@ -330,7 +330,7 @@
     }
     .button--new-session {
       width: 100%;
-      margin: 1rem 0
+      margin: 2rem 0
     }
   }
 </style>

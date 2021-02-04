@@ -13,6 +13,17 @@
   .color:hover {
     opacity: .6
   }
+
+  @media (max-width: 576px) {
+    #color_picker {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-gap: 1rem
+    }
+    .color {
+      width: 100%
+    }
+  }
 </style>
 
 <template>
