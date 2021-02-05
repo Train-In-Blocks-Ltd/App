@@ -91,7 +91,7 @@
   }
   #app {
     color: #282828;
-    background-color: white
+    background-color: #F9F9F9
   }
   main {
     margin-left: calc(38px + 2rem);
