@@ -457,7 +457,7 @@
             :max="maxWeek"
             required
           >
-          <br>
+          <br><br>
           <label for="range">Days until next sessions: </label>
           <input
             v-model="daysDiff"
@@ -987,7 +987,11 @@ export default {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
-              copysessions.push({ name: session.name, date: session.date, notes: session.notes })
+              copysessions.push({
+                name: session.name,
+                date: session.date,
+                notes: session.notes
+              })
             }
           })
         }
@@ -1203,39 +1207,53 @@ export default {
       this.descData.max = ''
       this.descData.min = ''
       this.descData.change = ''
+      this.dataValues = []
+      this.labelValues = []
+      this.protocolError = []
+      this.optionsForDataType = []
+      let overviewStore = []
       this.showType = true
-      this.dataValues.length = 0
-      this.labelValues.length = 0
-      const dataForName = this.selectedDataName
-      const dataForType = this.selectedDataType
       let dataForSum = 0
-      const overviewStore = []
-      this.protocolError.length = 0
-      this.optionsForDataType.length = 0
-      if (dataForName === 'Plan Overview') {
-        this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
-        this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
+      if (this.selectedDataName === 'Plan Overview') {
+        this.optionsForDataType.push({
+          id: 1, 
+          text: 'Load',
+          value: 'Load'
+        })
+        this.optionsForDataType.push({
+          id: 2,
+          text: 'Volume',
+          value: 'Volume'
+        })
       }
       this.dataPacketStore.forEach((item) => {
-        overviewStore.length = 0
+        overviewStore = []
         item.forEach((exerciseDataPacket) => {
-          const tidyA = dataForName.replace(/\(/g, '\\(')
+          const tidyA = this.selectedDataName.replace(/\(/g, '\\(')
           const tidyB = tidyA.replace(/\)/g, '\\)')
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
           if (regex.test(exerciseDataPacket[1]) === true) {
             this.labelValues.push(exerciseDataPacket[0])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
-              this.optionsForDataType.push({ id: 1, text: 'Load', value: 'Load' })
-              this.optionsForDataType.push({ id: 2, text: 'Volume', value: 'Volume' })
+              this.optionsForDataType.push({
+                id: 1,
+                text: 'Load',
+                value: 'Load'
+              })
+              this.optionsForDataType.push({
+                id: 2,
+                text:'Volume',
+                value: 'Volume'
+              })
             }
-            if ((dataForType === 'Sets' || dataForType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
-              this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, dataForType))
+            if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
+              this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType))
             }
-            if (dataForType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
+            if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
               this.dataValues.push(this.load(exerciseDataPacket, protocol))
             }
-            if (dataForType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
+            if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
               const agg = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
               this.dataValues.push(agg)
             }
@@ -1244,31 +1262,31 @@ export default {
               this.dataValues.push(this.other_measures(protocol))
             }
           }
-          if (dataForName === 'Plan Overview' && exerciseDataPacket[2].includes('at') === true) {
-            if (dataForType === 'Sets' || dataForType === 'Reps') {
-              dataForSum = this.sets_reps(exerciseDataPacket, protocol, dataForType)
+          if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at') === true) {
+            if (this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') {
+              dataForSum = this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
             }
-            if (dataForType === 'Load') {
+            if (this.selectedDataType === 'Load') {
               dataForSum = this.load(exerciseDataPacket, protocol)
             }
-            if (dataForType === 'Volume') {
+            if (this.selectedDataType === 'Volume') {
               dataForSum = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
             }
             overviewStore.push(dataForSum)
           }
         })
-        if (dataForName === 'Plan Overview' && overviewStore.length !== 0) {
+        if (this.selectedDataName === 'Plan Overview' && overviewStore.length !== 0) {
           this.dataValues.push(overviewStore.reduce((a, b) => a + b))
         }
       })
-      if (dataForName === 'Plan Overview') {
+      if (this.selectedDataName === 'Plan Overview') {
         let x = 1
         for (; x <= this.dataValues.length; x++) {
           this.labelValues.push('session ' + x)
         }
       }
       if (this.dataValues.length !== 0) {
-        this.desc_stats(dataForType)
+        this.desc_stats(this.selectedDataType)
       }
     },
 
@@ -1395,7 +1413,14 @@ export default {
           this.maxWeek = plan.duration
           if (plan.sessions !== null && this.$parent.no_sessions === false) {
             plan.sessions.forEach((object) => {
-              this.sessionDates.push({ title: object.name, date: object.date, color: this.weekColor.backgroundColor[object.week_id - 1], textColor: this.accessible_colors(this.weekColor.backgroundColor[object.week_id - 1]), week_id: object.week_id, session_id: object.id })
+              this.sessionDates.push({
+                title: object.name,
+                date: object.date,
+                color: this.weekColor.backgroundColor[object.week_id - 1],
+                textColor: this.accessible_colors(this.weekColor.backgroundColor[object.week_id - 1]),
+                week_id: object.week_id,
+                session_id: object.id
+              })
               if (object.notes !== null) {
                 const pulledProtocols = this.pull_protocols(object.name, object.notes)
                 this.dataPacketStore.push(this.chunk_array(pulledProtocols))
@@ -1470,14 +1495,20 @@ export default {
       })
       tempItemStore.forEach((item, index) => {
         continueValue = index + 1
-        this.optionsForDataName.push({ id: continueValue, text: item, value: item })
+        this.optionsForDataName.push({
+          id: continueValue,
+          text: item,
+          value: item
+        })
       })
       tempItemStoreLate.forEach((item, index) => {
-        this.optionsForDataName.push({ id: continueValue + index + 1, text: item, value: item })
+        this.optionsForDataName.push({
+          id: continueValue + index + 1,
+          text: item, value: item
+        })
       })
     },
 
-    // Creates proper casing, works in conjuction with dropdownAppend to validate if exercise is already in the list.
     proper_case (string) {
       const sentence = string.toLowerCase().split(' ')
       for (let i = 0; i < sentence.length; i++) {
@@ -1488,11 +1519,10 @@ export default {
 
     // REGEX
 
-    // Extracts anything for Sets and Reps
-    sets_reps (exerciseDataPacket, protocol, dataForType) {
+    sets_reps (exerciseDataPacket, protocol, selectedDataType) {
+      const tempSetsRepsStore = []
       let setStore = null
       let extractedSetsReps = null
-      const tempSetsRepsStore = []
       let m
       let n
       while ((m = this.regexSetsReps.exec(protocol)) !== null) {
@@ -1503,14 +1533,22 @@ export default {
           if (groupIndex === 1) {
             setStore = parseInt(match)
           }
-          if (dataForType === 'Sets' && groupIndex === 1) {
+          if (selectedDataType === 'Sets' && groupIndex === 1) {
             if (match === '' || isNaN(match)) {
-              this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
+              this.protocolError.push({
+                sessionName: exerciseDataPacket[0],
+                exercise: exerciseDataPacket[1],
+                prot: exerciseDataPacket[2]
+              })
             }
             extractedSetsReps = parseInt(match)
-          } else if (dataForType === 'Reps' && groupIndex === 2) {
+          } else if (selectedDataType === 'Reps' && groupIndex === 2) {
             if (match === '' || isNaN(match)) {
-              this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
+              this.protocolError.push({
+                sessionName: exerciseDataPacket[0],
+                exercise: exerciseDataPacket[1],
+                prot: exerciseDataPacket[2]
+              })
             } else if (match.includes('/') === true) {
               while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
                 if (n.index === this.regexNumberBreakdown.lastIndex) {
@@ -1529,13 +1567,11 @@ export default {
       }
       return extractedSetsReps
     },
-
-    // Extracts anything for Loads
     load (exerciseDataPacket, protocol) {
       const tempLoadStore = []
+      const sets = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
       let sum = 0
       let isMultiple = false
-      const sets = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
       let m
       let n
       while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
@@ -1544,7 +1580,11 @@ export default {
         }
         m.forEach((loadMatch, groupIndex) => {
           if (groupIndex === 2 && isNaN(loadMatch)) {
-            this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
+            this.protocolError.push({
+              sessionName: exerciseDataPacket[0],
+              exercise: exerciseDataPacket[1],
+              prot: exerciseDataPacket[2]
+            })
           } else if (groupIndex === 2) {
             while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
               if (n.index === this.regexNumberBreakdown.lastIndex) {
@@ -1567,8 +1607,6 @@ export default {
       }
       return sum
     },
-
-    // Extracts any other measures
     other_measures (protocol) {
       let data = 0
       let m
@@ -1582,25 +1620,37 @@ export default {
       }
       return data
     },
-    desc_stats (dataForType) {
+    desc_stats (selectedDataType) {
       let storeMax = 0
       let store = 0
       const sum = this.dataValues.reduce((a, b) => a + b)
-
-      // Sets descriptive data with its corresponding info.
-      this.descData.total = { desc: `Total ${dataForType}: `, value: sum }
-      this.descData.average = { desc: `Average ${dataForType}: `, value: (sum / this.dataValues.length).toFixed(1) }
-
+      this.descData.total = {
+        desc: `Total ${selectedDataType}: `,
+        value: sum
+      }
+      this.descData.average = {
+        desc: `Average ${selectedDataType}: `,
+        value: (sum / this.dataValues.length).toFixed(1)
+      }
       this.dataValues.forEach((value) => {
         storeMax = Math.max(storeMax, value)
       })
-      this.descData.max = { desc: `Maximum ${dataForType}: `, value: storeMax }
+      this.descData.max = {
+        desc: `Maximum ${selectedDataType}: `,
+        value: storeMax
+      }
       store = storeMax
       this.dataValues.forEach((value) => {
         store = Math.min(store, value)
       })
-      this.descData.min = { desc: `Minimum ${dataForType}: `, value: store }
-      this.descData.change = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
+      this.descData.min = {
+        desc: `Minimum ${selectedDataType}: `,
+        value: store
+      }
+      this.descData.change = {
+        desc: 'Percentage Change: ',
+        value: (((storeMax / store) - 1) * 100).toFixed(1) + '%'
+      }
     },
 
     // DATABASE
