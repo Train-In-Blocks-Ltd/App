@@ -143,6 +143,13 @@
   .recentlyAdded {
     border: 1px solid #282828
   }
+  .version {
+    display: flex
+  }
+  .version p {
+    margin-left: .2rem;
+    line-height: 1.65
+  }
 
   /* MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new_client, .modal--new_plan, .modal--toolkit, .modal--alert, .modal--preview_template {
@@ -684,7 +691,7 @@
       margin: 0
     }
     #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
-      padding: 2rem 5vw 4rem 5vw
+      padding: 2rem 5vw 5rem 5vw
     }
     .account_nav--item {
       width: 100%;

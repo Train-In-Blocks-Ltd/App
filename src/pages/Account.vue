@@ -173,9 +173,12 @@
         </div>
       </div>
     </form><br><br>
-    <p class="text--tiny">
-      <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
-    </p>
+    <div class="version">
+      <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />
+      <p class="text--tiny">
+        <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
+      </p>
+    </div>
   </div>
 </template>
 

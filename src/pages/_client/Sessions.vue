@@ -1216,7 +1216,7 @@ export default {
       let dataForSum = 0
       if (this.selectedDataName === 'Plan Overview') {
         this.optionsForDataType.push({
-          id: 1, 
+          id: 1,
           text: 'Load',
           value: 'Load'
         })
@@ -1243,7 +1243,7 @@ export default {
               })
               this.optionsForDataType.push({
                 id: 2,
-                text:'Volume',
+                text: 'Volume',
                 value: 'Volume'
               })
             }
@@ -1504,7 +1504,8 @@ export default {
       tempItemStoreLate.forEach((item, index) => {
         this.optionsForDataName.push({
           id: continueValue + index + 1,
-          text: item, value: item
+          text: item,
+          value: item
         })
       })
     },
