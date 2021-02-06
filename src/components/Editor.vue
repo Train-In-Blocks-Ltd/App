@@ -361,7 +361,7 @@ export default {
             arr.push(inputMatch)
           } else if (name !== 'checkbox_v1') {
             arr.push(inputMatch.replace('name=', '').replace(/"/g, ''))
-          } 
+          }
         })
       }
       if (arr.length !== 0) {

@@ -50,7 +50,9 @@
               @input="mhr_tanaka_calc()"
             >
           </div>
-          <p class="text--small">Maximal Heart Rate: {{ toolkit_calcs.mhr_tanaka.value }} BPM</p>
+          <p class="text--small">
+            Maximal Heart Rate: {{ toolkit_calcs.mhr_tanaka.value }} BPM
+          </p>
         </div>
         <div v-if="toolkit_calcs.mhr_gellish.view">
           <div>
@@ -64,7 +66,9 @@
               @input="mhr_gellish_calc()"
             >
           </div>
-          <p class="text--small">Maximal Heart Rate: {{ toolkit_calcs.mhr_gellish.value }} BPM</p>
+          <p class="text--small">
+            Maximal Heart Rate: {{ toolkit_calcs.mhr_gellish.value }} BPM
+          </p>
         </div>
         <div v-if="toolkit_calcs.hrtz.view">
           <div>
@@ -100,7 +104,9 @@
               @input="hrtz_calc()"
             >
           </div>
-          <p class="text--small">Target Heart Rate: {{ toolkit_calcs.hrtz.value }} BPM</p>
+          <p class="text--small">
+            Target Heart Rate: {{ toolkit_calcs.hrtz.value }} BPM
+          </p>
         </div>
         <div v-if="toolkit_calcs.hrr.view">
           <div>
@@ -125,7 +131,9 @@
               @input="hrr_calc()"
             >
           </div>
-          <p class="text--small">Heart Rate Reserve: {{ toolkit_calcs.hrr.value }} BPM</p>
+          <p class="text--small">
+            Heart Rate Reserve: {{ toolkit_calcs.hrr.value }} BPM
+          </p>
         </div>
         <div v-if="toolkit_calcs.bmi.view">
           <div>
@@ -150,7 +158,9 @@
               @input="bmi_calc()"
             >
           </div>
-          <p class="text--small">Body Mass Index: {{ toolkit_calcs.bmi.value }} kg/m<sup>2</sup></p>
+          <p class="text--small">
+            Body Mass Index: {{ toolkit_calcs.bmi.value }} kg/m<sup>2</sup>
+          </p>
         </div>
       </div>
       <button class="cancel" @click="$parent.$modal.hide('toolkit')">

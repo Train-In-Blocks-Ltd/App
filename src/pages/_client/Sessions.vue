@@ -289,6 +289,9 @@
     margin: .4rem 0 2rem 0;
     font-size: 2.4rem
   }
+  .protocol_error {
+    margin-top: 4rem
+  }
 
   @media (max-width: 768px) {
     .graph {
@@ -641,7 +644,7 @@
               <div v-if="!$parent.$parent.loading">
                 <div class="container--sessions_header">
                   <a
-                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length"
+                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
                     @click="select_all()"
@@ -758,7 +761,7 @@
                     <div class="data-select__options">
                       <label for="measure">
                         Measurement:<br>
-                        <select class="small_border_radius width_300 text--small" v-model="selectedDataName" name="measure" @change="sort_sessions(), scan(), selection()">
+                        <select v-model="selectedDataName" class="small_border_radius width_300 text--small" name="measure" @change="sort_sessions(), scan(), selection()">
                           <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
                             {{ optionName.text }}
                           </option>
@@ -768,7 +771,7 @@
                     <div v-if="showType" class="data-select__options">
                       <label for="measure-type">
                         Data type:<br>
-                        <select class="small_border_radius width_300 text--small" v-model="selectedDataType" name="measure-type" @change="sort_sessions(), scan(), selection()">
+                        <select v-model="selectedDataType" class="small_border_radius width_300 text--small" name="measure-type" @change="sort_sessions(), scan(), selection()">
                           <option value="Sets">Sets</option>
                           <option value="Reps">Reps</option>
                           <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">
@@ -778,50 +781,50 @@
                       </label>
                     </div>
                   </div>
-                  <div v-if="showType && p1.desc" class="data-desc">
+                  <div v-if="showType && descData.total.desc && !dataValues.includes(null)" class="data-desc">
                     <div class="container--data-desc">
                       <p class="data-desc__desc">
-                        <b>{{ p1.desc }}</b>
+                        <b>{{ descData.total.desc }}</b>
                       </p>
                       <p class="data-desc__value">
-                        {{ p1.value }}
+                        {{ descData.total.value }}
                       </p>
                     </div>
                     <div class="container--data-desc">
                       <p class="data-desc__desc">
-                        <b>{{ p2.desc }}</b>
+                        <b>{{ descData.average.desc }}</b>
                       </p>
                       <p class="data-desc__value">
-                        {{ p2.value }}
+                        {{ descData.average.value }}
                       </p>
                     </div>
                     <div class="container--data-desc">
                       <p class="data-desc__desc">
-                        <b>{{ p3.desc }}</b>
+                        <b>{{ descData.max.desc }}</b>
                       </p>
                       <p class="data-desc__value">
-                        {{ p3.value }}
+                        {{ descData.max.value }}
                       </p>
                     </div>
                     <div class="container--data-desc">
                       <p class="data-desc__desc">
-                        <b>{{ p4.desc }}</b>
+                        <b>{{ descData.min.desc }}</b>
                       </p>
                       <p class="data-desc__value">
-                        {{ p4.value }}
+                        {{ descData.min.value }}
                       </p>
                     </div>
                     <div class="container--data-desc">
                       <p class="data-desc__desc">
-                        {{ p5.desc }}
+                        {{ descData.change.desc }}
                       </p>
                       <p class="data-desc__value">
-                        {{ p5.value }}
+                        {{ descData.change.value }}
                       </p>
                     </div>
                   </div>
                 </div>
-                <div>
+                <div class="protocol_error">
                   <p v-show="protocolError.length !== 0" class="text--error">
                     There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
                   </p>
@@ -829,7 +832,7 @@
                     <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
                   </p>
                 </div><br>
-                <simple-chart :data-points="dataValues" :labels="labelValues" aria-label="Graph" />
+                <simple-chart v-if="!dataValues.includes(null)" :data-points="dataValues" :labels="labelValues" aria-label="Graph" />
               </div>
             </div>
           </transition>
@@ -887,11 +890,13 @@ export default {
 
       // STATS
 
-      p1: '',
-      p2: '',
-      p3: '',
-      p4: '',
-      p5: '',
+      descData: {
+        total: '',
+        average: '',
+        max: '',
+        min: '',
+        change: ''
+      },
       selectedDataName: 'Plan Overview',
       optionsForDataName: [],
       optionsForDataType: [],
@@ -1193,11 +1198,11 @@ export default {
     // CHART
 
     selection () {
-      this.p1 = ''
-      this.p2 = ''
-      this.p3 = ''
-      this.p4 = ''
-      this.p5 = ''
+      this.descData.total = ''
+      this.descData.average = ''
+      this.descData.max = ''
+      this.descData.min = ''
+      this.descData.change = ''
       this.showType = true
       this.dataValues.length = 0
       this.labelValues.length = 0
@@ -1489,6 +1494,7 @@ export default {
       let extractedSetsReps = null
       const tempSetsRepsStore = []
       let m
+      let n
       while ((m = this.regexSetsReps.exec(protocol)) !== null) {
         if (m.index === this.regexSetsReps.lastIndex) {
           this.regexSetsReps.lastIndex++
@@ -1502,13 +1508,10 @@ export default {
               this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
             }
             extractedSetsReps = parseInt(match)
-          }
-          if (dataForType === 'Reps' && groupIndex === 2) {
+          } else if (dataForType === 'Reps' && groupIndex === 2) {
             if (match === '' || isNaN(match)) {
               this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
-            }
-            if (match.includes('/') === true) {
-              let n
+            } else if (match.includes('/') === true) {
               while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
                 if (n.index === this.regexNumberBreakdown.lastIndex) {
                   this.regexNumberBreakdown.lastIndex++
@@ -1534,6 +1537,7 @@ export default {
       let isMultiple = false
       const sets = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
       let m
+      let n
       while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
         if (m.index === this.regexLoadCapture.lastIndex) {
           this.regexLoadCapture.lastIndex++
@@ -1541,9 +1545,7 @@ export default {
         m.forEach((loadMatch, groupIndex) => {
           if (groupIndex === 2 && isNaN(loadMatch)) {
             this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
-          }
-          if (groupIndex === 2) {
-            let n
+          } else if (groupIndex === 2) {
             while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
               if (n.index === this.regexNumberBreakdown.lastIndex) {
                 this.regexNumberBreakdown.lastIndex++
@@ -1586,19 +1588,19 @@ export default {
       const sum = this.dataValues.reduce((a, b) => a + b)
 
       // Sets descriptive data with its corresponding info.
-      this.p1 = { desc: 'Total ' + dataForType + ': ', value: sum }
-      this.p2 = { desc: 'Average ' + dataForType + ': ', value: (sum / this.dataValues.length).toFixed(1) }
+      this.descData.total = { desc: `Total ${dataForType}: `, value: sum }
+      this.descData.average = { desc: `Average ${dataForType}: `, value: (sum / this.dataValues.length).toFixed(1) }
 
       this.dataValues.forEach((value) => {
         storeMax = Math.max(storeMax, value)
       })
-      this.p3 = { desc: 'Maximum ' + dataForType + ': ', value: storeMax }
+      this.descData.max = { desc: `Maximum ${dataForType}: `, value: storeMax }
       store = storeMax
       this.dataValues.forEach((value) => {
         store = Math.min(store, value)
       })
-      this.p4 = { desc: 'Minimum ' + dataForType + ': ', value: store }
-      this.p5 = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
+      this.descData.min = { desc: `Minimum ${dataForType}: `, value: store }
+      this.descData.change = { desc: 'Percentage Change: ', value: (((storeMax / store) - 1) * 100).toFixed(1) + '%' }
     },
 
     // DATABASE
