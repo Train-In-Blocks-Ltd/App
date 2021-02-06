@@ -955,8 +955,8 @@ export default {
 
       // SYSTEM
 
-      versionName: 'Draco',
-      versionBuild: '2.2',
+      versionName: 'Pegasus',
+      versionBuild: '3.0',
       newBuild: false,
       errorMsg: null,
       loading: false,

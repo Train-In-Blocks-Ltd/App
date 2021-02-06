@@ -752,14 +752,6 @@
                 </p>
                 <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.will_body_scroll(true)" />
               </div>
-              <div>
-                <p v-show="protocolError.length !== 0" class="text--error">
-                  There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
-                </p><br>
-                <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--error">
-                  <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
-                </p>
-              </div><br>
               <div class="container--content">
                 <div class="data-options">
                   <div class="data-select">
@@ -829,6 +821,14 @@
                     </div>
                   </div>
                 </div>
+                <div>
+                  <p v-show="protocolError.length !== 0" class="text--error">
+                    There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
+                  </p>
+                  <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--error">
+                    <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
+                  </p>
+                </div><br>
                 <simple-chart :data-points="dataValues" :labels="labelValues" aria-label="Graph" />
               </div>
             </div>
@@ -1498,13 +1498,13 @@ export default {
             setStore = parseInt(match)
           }
           if (dataForType === 'Sets' && groupIndex === 1) {
-            if (match === '') {
+            if (match === '' || isNaN(match)) {
               this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
             }
             extractedSetsReps = parseInt(match)
           }
           if (dataForType === 'Reps' && groupIndex === 2) {
-            if (match === '') {
+            if (match === '' || isNaN(match)) {
               this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
             }
             if (match.includes('/') === true) {
@@ -1539,7 +1539,7 @@ export default {
           this.regexLoadCapture.lastIndex++
         }
         m.forEach((loadMatch, groupIndex) => {
-          if (groupIndex === 2 && /\d/g.test(loadMatch) === false) {
+          if (groupIndex === 2 && isNaN(loadMatch)) {
             this.protocolError.push({ sessionName: exerciseDataPacket[0], exercise: exerciseDataPacket[1], prot: exerciseDataPacket[2] })
           }
           if (groupIndex === 2) {
