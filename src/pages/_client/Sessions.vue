@@ -1761,7 +1761,7 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async update_plan (planNotesUpdate) {
+    async update_plan (planNotesUpdate, planIDUpdate) {
       this.$parent.$parent.dontLeave = true
       let plan
       // Set the plan variable to the current plan
@@ -1774,7 +1774,7 @@ export default {
         this.sort_sessions()
         const response = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
-            id: plan.id,
+            id: planIDUpdate === undefined ? plan.id : planIDUpdate,
             name: plan.name,
             duration: plan.duration,
             notes: planNotesUpdate === undefined ? plan.notes : planNotesUpdate,
