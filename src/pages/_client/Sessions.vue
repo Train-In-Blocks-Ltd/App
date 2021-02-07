@@ -67,6 +67,30 @@
     transform: rotate(180deg)
   }
 
+  /* Plan Options */
+  .plan_options {
+    display: flex
+  }
+  .duplicate_plan, .delete_plan {
+    display: flex;
+    color: #282828;
+    text-decoration: none;
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .delete_plan {
+    margin-left: 1rem
+  }
+  .delete_plan svg {
+    height: 17px;
+    width: 17px
+  }
+  .duplicate_plan svg, .delete_plan svg {
+    margin-right: .2rem
+  }
+  .duplicate_plan:hover, .delete_plan:hover {
+    opacity: .6
+  }
+
   /* Plan Grid */
   #plan_notes {
     margin: 4rem 0
@@ -372,7 +396,7 @@
           </p>
           <p class="text--small grey">
             This will change the colour code assigned to the sessions
-          </p><br><br><br>
+          </p><br><br>
           <label for="range">Move to:</label>
           <input
             id="range"
@@ -409,7 +433,7 @@
           </p>
           <p class="text--small grey">
             This will move the dates ahead or behind by the specified amount
-          </p><br><br><br>
+          </p><br><br>
           <label for="range">Shift session dates by: </label>
           <input
             id="range"
@@ -444,7 +468,7 @@
           </p>
           <p class="text--small grey">
             All you'll have to do is to change and progress each session
-          </p><br><br><br>
+          </p><br><br>
           <label for="range">From {{ currentWeek }} to: </label>
           <input
             id="range"
@@ -471,6 +495,40 @@
             Copy
           </button>
           <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </modal>
+    <modal
+      name="duplicate"
+      height="100%"
+      width="100%"
+      :adaptive="true"
+      :click-to-close="false"
+    >
+      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $parent.$parent.will_body_scroll(true)">
+        <div class="wrapper--centered-item">
+          <p class="text--small">
+            Create a similar plan
+          </p>
+          <p class="text--small grey">
+            Copy this plan to the same/different client
+          </p><br><br>
+          <select name="duplicate_client" v-model="duplicateClientID">
+            <option disabled>Select a client</option>
+            <option
+              v-for="(client, index) in $parent.$parent.clients"
+              :key="`client_${index}`"
+              :value="client.client_id"
+            >
+              {{ client.name }}
+            </option>
+          </select><br><br>
+          <button type="submit">
+            Duplicate
+          </button>
+          <button class="cancel" @click.prevent="$modal.hide('duplicate'), $parent.$parent.will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -553,6 +611,24 @@
                 Add some sessions to see programme adherence here...
               </p>
             </div>
+          </div><br>
+          <div class="plan_options">
+            <a
+              class="duplicate_plan"
+              href="javascript:void(0)"
+              @click="$modal.show('duplicate'), $parent.$parent.will_body_scroll(false)"
+            >
+              <inline-svg :src="require('../../assets/svg/copy.svg')" />
+              Duplicate plan
+            </a>
+            <a
+              class="delete_plan"
+              href="javascript:void(0)"
+              @click="delete_plan()"
+            >
+              <inline-svg :src="require('../../assets/svg/bin.svg')" />
+              Delete plan
+            </a>
           </div>
         </div> <!-- top_grid -->
         <div class="plan_grid">
@@ -918,6 +994,7 @@ export default {
       daysDiff: 7,
       selectedSessions: [],
       shiftDays: 1,
+      duplicateClientID: 'Select a client',
 
       // REGEX DATA //
 
@@ -945,7 +1022,6 @@ export default {
   created () {
     this.$parent.$parent.will_body_scroll(true)
     this.$parent.sessions = true
-    this.$parent.showDeletePlan = true
   },
   async mounted () {
     await this.$parent.get_client_details()
@@ -956,7 +1032,6 @@ export default {
     this.adherence()
   },
   beforeDestroy () {
-    this.$parent.showDeletePlan = false
     this.$parent.$parent.templates = null
   },
   methods: {
@@ -1027,6 +1102,15 @@ export default {
       })
       this.deselect_all()
       this.currentWeek = parseInt(this.moveTarget)
+    },
+    duplicate_plan (clientId) {
+      this.$parent.$parent.client_details.plans.forEach((plan) => {
+        if (plan.id === parseInt(this.$route.params.id)) {
+          this.create_plan(plan.name, clientId, plan.duration, plan.block_color)
+        }
+      })
+      this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
+      this.$modal.hide('duplicate')
     },
 
     // MULTI AND CHECKBOX
@@ -1656,6 +1740,27 @@ export default {
 
     // DATABASE
 
+    async create_plan (planName, clientId, micros, blockColor) {
+      try {
+        this.$parent.$parent.dontLeave = true
+        await this.$axios.put('https://api.traininblocks.com/programmes',
+          {
+            name: `Copy of ${planName}`,
+            client_id: clientId,
+            duration: micros,
+            block_color: blockColor
+          }
+        )
+        .then((response) => {
+          console.log(response)
+        })
+        await this.$parent.get_client_details(true)
+        this.$ga.event('Plan', 'new')
+        this.$parent.$parent.end_loading()
+      } catch (e) {
+        this.$parent.$parent.resolve_error(e)
+      }
+    },
     async update_plan (planNotesUpdate) {
       this.$parent.$parent.dontLeave = true
       let plan
@@ -1704,6 +1809,28 @@ export default {
         this.$parent.$parent.end_loading()
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
+      }
+    },
+    async delete_plan () {
+      if (confirm('Are you sure you want to delete this plan?')) {
+        this.$parent.$parent.dontLeave = true
+        let plan
+        let id
+        for (plan of this.$parent.$parent.client_details.plans) {
+          if (plan.id === parseInt(this.$route.params.id)) {
+            id = plan.id
+          }
+        }
+        try {
+          await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+          await this.$parent.$parent.clients_f()
+          this.$parent.$parent.clients_to_vue()
+          this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
+          this.$ga.event('Session', 'delete')
+          this.$parent.$parent.end_loading()
+        } catch (e) {
+          this.$parent.$parent.resolve_error(e)
+        }
       }
     },
     async update_session (id, sessionNotesUpdate) {

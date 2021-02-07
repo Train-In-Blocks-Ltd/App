@@ -1,5 +1,5 @@
 <template>
-  <form class="form_grid add_plan" name="add_plan" @submit.prevent="save(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.will_body_scroll(true)">
+  <form class="form_grid add_plan" name="add_plan" @submit.prevent="create_plan(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.will_body_scroll(true)">
     <div class="bottom_margin">
       <p class="text--small">
         Create a new plan and use it for exercise, nutrition or anything else
@@ -58,7 +58,7 @@ export default {
       const yyyy = today.getFullYear()
       return yyyy + '-' + mm + '-' + dd
     },
-    async save () {
+    async create_plan () {
       try {
         this.$parent.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/programmes',

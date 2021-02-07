@@ -113,7 +113,6 @@
         <transition-group enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
           <div v-for="(clients, index) in $parent.clients" v-show="clients.client_id == $route.params.client_id && showOptions" :key="clients.client_id" class="client--options">
             <a v-if="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
-            <a v-if="showDeletePlan" href="javascript:void(0)" @click="delete_plan()">Delete Plan</a>
             <a v-if="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
           </div>
         </transition-group>
@@ -199,7 +198,6 @@ export default {
 
       keepLoaded: false,
       showOptions: false,
-      showDeletePlan: false,
 
       // PLANS
 
@@ -455,28 +453,6 @@ export default {
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
-      }
-    },
-    async delete_plan () {
-      if (confirm('Are you sure you want to delete this plan?')) {
-        this.$parent.dontLeave = true
-        let plan
-        let id
-        for (plan of this.$parent.client_details.plans) {
-          if (plan.id === parseInt(this.$route.params.id)) {
-            id = plan.id
-          }
-        }
-        try {
-          await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
-          await this.$parent.clients_f()
-          this.$parent.clients_to_vue()
-          this.$router.push({ path: `/client/${this.$parent.client_details.client_id}/` })
-          this.$ga.event('Session', 'delete')
-          this.$parent.end_loading()
-        } catch (e) {
-          this.$parent.resolve_error(e)
-        }
       }
     }
   }
