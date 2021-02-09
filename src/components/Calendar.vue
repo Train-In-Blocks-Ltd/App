@@ -217,7 +217,7 @@ export default {
 
     get_week () {
       this.this_week = []
-      const d = new Date(new Date())
+      const d = new Date()
       const day = d.getDay()
       const diff = d.getDate() - day + (day === 0 ? -6 : 1)
       const weekStart = new Date(d.setDate(diff + 7 * this.week_diff))

@@ -662,6 +662,7 @@
             </div>
             <div class="wrapper--calendar">
               <calendar :events="sessionDates" :force-update="forceUpdate" :is-trainer="true" />
+              <month-calendar :events="sessionDates" :force-update="forceUpdate" />
             </div>
           </div>
           <div class="wrapper-plan">
@@ -923,6 +924,7 @@
 <script>
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true */ '../../components/Checkbox')
 const Calendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/Calendar')
+const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
 const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ '../../components/ColorPicker')
@@ -931,6 +933,7 @@ export default {
   components: {
     Checkbox,
     Calendar,
+    MonthCalendar,
     RichEditor,
     SimpleChart,
     ColorPicker
@@ -1368,7 +1371,7 @@ export default {
       if (this.selectedDataName === 'Plan Overview') {
         let x = 1
         for (; x <= this.dataValues.length; x++) {
-          this.labelValues.push('session ' + x)
+          this.labelValues.push('Session ' + x)
         }
       }
       if (this.dataValues.length !== 0) {
