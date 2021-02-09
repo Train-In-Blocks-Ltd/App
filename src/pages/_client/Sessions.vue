@@ -396,7 +396,7 @@
           </p>
           <p class="text--small grey">
             This will change the colour code assigned to the sessions
-          </p><br><br>
+          </p><br>
           <label for="range">Move to:</label>
           <input
             id="range"
@@ -433,7 +433,7 @@
           </p>
           <p class="text--small grey">
             This will move the dates ahead or behind by the specified amount
-          </p><br><br>
+          </p><br>
           <label for="range">Shift session dates by: </label>
           <input
             id="range"
@@ -481,7 +481,7 @@
             :max="maxWeek"
             required
           >
-          <br><br>
+          <br>
           <label for="range">Days until next sessions: </label>
           <input
             v-model="daysDiff"
@@ -514,9 +514,11 @@
           </p>
           <p class="text--small grey">
             Copy this plan to the same/different client
-          </p><br><br>
-          <select name="duplicate_client" v-model="duplicateClientID">
-            <option disabled>Select a client</option>
+          </p><br>
+          <select v-model="duplicateClientID" name="duplicate_client">
+            <option disabled>
+              Select a client
+            </option>
             <option
               v-for="(client, index) in $parent.$parent.clients"
               :key="`client_${index}`"
@@ -1752,8 +1754,7 @@ export default {
             duration: micros,
             block_color: blockColor
           }
-        )
-        .then((response) => {
+        ).then((response) => {
           console.log(response)
         })
         await this.$parent.get_client_details(true)
