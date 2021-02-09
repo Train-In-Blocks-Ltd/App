@@ -721,7 +721,7 @@
                 No sessions yet :(
               </p>
               <div v-if="!$parent.$parent.loading">
-                <div class="container--sessions_header">
+                <div v-if="plan.sessions" class="container--sessions_header">
                   <a
                     v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
@@ -1454,7 +1454,7 @@ export default {
       try {
         this.$parent.$parent.client_details.plans.forEach((plan) => {
           if (plan.id === parseInt(this.$route.params.id)) {
-            if (plan.sessions) {
+            if (Array.isArray(plan.sessions)) {
               if (plan.sessions.length !== 0) {
                 plan.sessions.forEach((session) => {
                   if (toExpand === 'Expand') {
@@ -1758,7 +1758,7 @@ export default {
             block_color: blockColor
           }
         ).then((response) => {
-          console.log(response)
+          console.log(response.data[0]['LAST_INSERT_ID()'])
         })
         await this.$parent.get_client_details(true)
         this.$ga.event('Plan', 'new')
