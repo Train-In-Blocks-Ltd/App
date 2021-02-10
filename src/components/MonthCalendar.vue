@@ -121,8 +121,8 @@
           :key="`event_${event.session_id}`"
           :style="{ backgroundColor: event.color, color: event.textColor }"
           :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF', cursor: isTrainer }"
-          @click="isTrainer ? $parent.go_to_event(event.session_id, event.week_id) : null"
           class="event"
+          @click="isTrainer ? $parent.go_to_event(event.session_id, event.week_id) : null"
         >
           {{ event.title }}
         </p>

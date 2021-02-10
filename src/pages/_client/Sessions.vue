@@ -1025,7 +1025,7 @@ export default {
       protocolError: [],
 
       // CALENDAR
-      
+
       showMonthlyCal: false,
       sessionDates: [],
       forceUpdate: 0,
@@ -1124,7 +1124,7 @@ export default {
     duplicate_plan (clientId) {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
-          this.create_plan(plan.name, clientId, plan.duration, plan.block_color)
+          this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
         }
       })
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
@@ -1760,7 +1760,7 @@ export default {
 
     // DATABASE
 
-    async create_plan (planName, clientId, micros, blockColor) {
+    async create_plan (planName, clientId, micros, blockColor, planNotes, sessions) {
       try {
         this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/programmes',
@@ -1771,7 +1771,16 @@ export default {
             block_color: blockColor
           }
         ).then((response) => {
-          console.log(response.data[0]['LAST_INSERT_ID()'])
+          this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, micros, blockColor)
+          sessions.forEach((session) => {
+            this.add_session([
+              session.name,
+              response.data[0]['LAST_INSERT_ID()'],
+              session.date,
+              session.notes,
+              session.week_id
+            ])
+          })
         })
         await this.$parent.get_client_details(true)
         this.$ga.event('Plan', 'new')
@@ -1780,7 +1789,7 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async update_plan (planNotesUpdate, planIDUpdate) {
+    async update_plan (planNotesUpdate, planIDUpdate, planNameUpdate, planDurationUpdate, planColorUpdate) {
       this.$parent.$parent.dontLeave = true
       let plan
       // Set the plan variable to the current plan
@@ -1794,11 +1803,10 @@ export default {
         const response = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
             id: planIDUpdate === undefined ? plan.id : planIDUpdate,
-            name: plan.name,
-            duration: plan.duration,
+            name: planNameUpdate === undefined ? plan.name : `Copy of ${planNameUpdate}`,
+            duration: planDurationUpdate === undefined ? plan.duration : planDurationUpdate,
             notes: planNotesUpdate === undefined ? plan.notes : planNotesUpdate,
-            block_color: plan.block_color,
-            type: plan.type
+            block_color: planColorUpdate === undefined ? plan.block_color : planColorUpdate
           }
         )
         // Set vue client_details data to new data
@@ -1895,16 +1903,16 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async add_session () {
+    async add_session (forceArr) {
       try {
         this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/workouts',
           {
-            name: this.new_session.name,
-            programme_id: this.$route.params.id,
-            date: this.new_session.date,
-            notes: this.currentCopySessionNotes,
-            week_id: this.currentWeek
+            name: forceArr === undefined ? this.new_session.name : forceArr[0],
+            programme_id: forceArr === undefined ? this.$route.params.id : forceArr[1],
+            date: forceArr === undefined ? this.new_session.date : forceArr[2],
+            notes: forceArr === undefined ? this.currentCopySessionNotes : forceArr[3],
+            week_id: forceArr === undefined ? this.currentWeek : forceArr[4]
           }
         )
         // Get the sessions from the API because we've just created a new one
