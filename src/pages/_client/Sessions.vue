@@ -71,24 +71,11 @@
   .plan_options {
     display: flex
   }
-  .duplicate_plan, .delete_plan {
-    display: flex;
-    color: #282828;
-    text-decoration: none;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  .plan_options a {
+    margin-right: 1rem
   }
-  .delete_plan {
-    margin-left: 1rem
-  }
-  .delete_plan svg {
-    height: 17px;
-    width: 17px
-  }
-  .duplicate_plan svg, .delete_plan svg {
-    margin-right: .2rem
-  }
-  .duplicate_plan:hover, .delete_plan:hover {
-    opacity: .6
+  .switch_cal {
+    margin-bottom: .4rem
   }
 
   /* Plan Grid */
@@ -317,6 +304,11 @@
     margin-top: 4rem
   }
 
+  @media (max-width: 992px) {
+    .switch_cal {
+      display: none
+    }
+  }
   @media (max-width: 768px) {
     .graph {
       padding: 2rem 5vw 4rem 5vw
@@ -567,13 +559,13 @@
         <p class="text--selected">
           <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulk_check(1)">Complete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulk_check(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="bulk_delete()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_check(1)">Complete</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_check(0)">Incomplete</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_delete()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
@@ -616,7 +608,7 @@
           </div><br>
           <div class="plan_options">
             <a
-              class="duplicate_plan"
+              class="a_link"
               href="javascript:void(0)"
               @click="$modal.show('duplicate'), $parent.$parent.will_body_scroll(false)"
             >
@@ -624,7 +616,7 @@
               Duplicate plan
             </a>
             <a
-              class="delete_plan"
+              class="a_link"
               href="javascript:void(0)"
               @click="delete_plan()"
             >
@@ -661,8 +653,28 @@
               </div>
             </div>
             <div class="wrapper--calendar">
-              <calendar :events="sessionDates" :force-update="forceUpdate" :is-trainer="true" />
-              <month-calendar :events="sessionDates" :force-update="forceUpdate" />
+              <a
+                class="a_link switch_cal"
+                href="javascript:void(0)"
+                @click="showMonthlyCal = !showMonthlyCal"
+              >
+                <inline-svg :src="require('../../assets/svg/calendar.svg')" />
+                Switch to {{ !showMonthlyCal ? 'month' : 'week' }} view
+              </a>
+              <week-calendar
+                v-if="!showMonthlyCal"
+                :events="sessionDates"
+                :force-update="forceUpdate"
+                :is-trainer="true"
+                class="animate animate__fadeIn animate__delay-1s animate__faster"
+              />
+              <month-calendar
+                v-else
+                :events="sessionDates"
+                :force-update="forceUpdate"
+                :is-trainer="true"
+                class="animate animate__fadeIn animate__delay-1s animate__faster"
+              />
             </div>
           </div>
           <div class="wrapper-plan">
@@ -923,7 +935,7 @@
 
 <script>
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true */ '../../components/Checkbox')
-const Calendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/Calendar')
+const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/WeekCalendar')
 const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
@@ -932,7 +944,7 @@ const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", 
 export default {
   components: {
     Checkbox,
-    Calendar,
+    WeekCalendar,
     MonthCalendar,
     RichEditor,
     SimpleChart,
@@ -1013,7 +1025,8 @@ export default {
       protocolError: [],
 
       // CALENDAR
-
+      
+      showMonthlyCal: false,
       sessionDates: [],
       forceUpdate: 0,
 

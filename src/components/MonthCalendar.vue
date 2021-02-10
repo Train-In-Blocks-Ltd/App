@@ -66,9 +66,17 @@
   /* Event */
 
   .event {
-    height: 10px;
     border: 2px solid transparent;
-    border-radius: 5px
+    border-radius: 5px;
+    font-size: .7rem;
+    text-align: center
+  }
+  .cursor {
+    cursor: pointer;
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .cursor:hover {
+    opacity: .6
   }
   .showBorder {
     border: 2px solid #282828
@@ -108,13 +116,16 @@
         class="day_cell"
       >
         <p>{{ index + 1 }}</p>
-        <div
+        <p
           v-for="event in day"
           :key="`event_${event.session_id}`"
-          :style="{ backgroundColor: event.color }"
-          :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
+          :style="{ backgroundColor: event.color, color: event.textColor }"
+          :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF', cursor: isTrainer }"
+          @click="isTrainer ? $parent.go_to_event(event.session_id, event.week_id) : null"
           class="event"
-        />
+        >
+          {{ event.title }}
+        </p>
       </div>
     </div>
   </div>
@@ -124,7 +135,8 @@
 export default {
   props: {
     events: Array,
-    forceUpdate: Number
+    forceUpdate: Number,
+    isTrainer: Boolean
   },
   data () {
     return {

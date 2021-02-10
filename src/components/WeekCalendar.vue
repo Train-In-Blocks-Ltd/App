@@ -143,32 +143,17 @@
               Rest day
             </p>
           </div>
-          <div v-if="isTrainer">
-            <div
-              v-for="(event, indexed) in day.events"
-              :key="'event-' + indexed"
-              :style="{ backgroundColor: event.color }"
-              :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
-              class="day_events__event cursor"
-              @click="$parent.go_to_event(event.session_id, event.week_id)"
-            >
-              <p :style="{ color: event.textColor }">
-                {{ event.title }}
-              </p>
-            </div>
-          </div>
-          <div v-else>
-            <div
-              v-for="(event, indexed) in day.events"
-              :key="'event-' + indexed"
-              :style="{ backgroundColor: event.color }"
-              :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
-              class="day_events__event"
-            >
-              <p :style="{ color: event.textColor }">
-                {{ event.title }}
-              </p>
-            </div>
+          <div
+            v-for="(event, indexed) in day.events"
+            :key="'event-' + indexed"
+            :style="{ backgroundColor: event.color }"
+            :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF', cursor: isTrainer }"
+            class="day_events__event"
+            @click="isTrainer ? $parent.go_to_event(event.session_id, event.week_id) : null"
+          >
+            <p :style="{ color: event.textColor }">
+              {{ event.title }}
+            </p>
           </div>
         </div>
       </div>

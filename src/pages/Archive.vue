@@ -34,8 +34,8 @@
         <p class="text--selected">
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="delete_multi_clients()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect all</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="delete_multi_clients()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="deselect_all()">Deselect all</a>
       </div>
     </transition>
     <div class="top_bar">

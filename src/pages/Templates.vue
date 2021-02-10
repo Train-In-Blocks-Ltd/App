@@ -96,8 +96,8 @@
         <p class="text--selected">
           <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="delete_multi_templates()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselect_all()">Deselect</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="delete_multi_templates()">Delete</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
     <div class="wrapper--template_top">

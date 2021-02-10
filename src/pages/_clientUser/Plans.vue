@@ -73,7 +73,7 @@
           </p>
         </div>
         <div class="wrapper--calendar">
-          <calendar :events="sessionDates" :is-trainer="false" />
+          <week-calendar :events="sessionDates" :is-trainer="false" />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
         <div v-else-if="plan.sessions" class="container--sessions">
@@ -169,12 +169,12 @@
 </template>
 
 <script>
-const Calendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/Calendar')
+const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/WeekCalendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
 export default {
   components: {
-    Calendar,
+    WeekCalendar,
     RichEditor
   },
   data () {

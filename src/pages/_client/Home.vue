@@ -41,13 +41,8 @@
     grid-gap: 2rem;
     text-align: right
   }
-  .floating_nav a, .selected-options {
-    color: #282828;
-    text-decoration: none;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .floating_nav a:hover, .selected-options:hover {
-    opacity: .6
+  .floating_nav a {
+    text-align: right
   }
   .icon--options {
     cursor: pointer;
@@ -57,8 +52,8 @@
     display: grid;
     grid-gap: 1rem
   }
-  .client--options a:hover {
-    opacity: .6
+  .client--options a {
+    margin-left: auto
   }
 
   /* Client Notes */
@@ -108,12 +103,37 @@
           </p>
         </div>
         <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-          <inline-svg v-if="showOptions" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="showOptions = false" />
+          <inline-svg
+            v-if="showOptions"
+            class="icon--options"
+            :src="require('../../assets/svg/close.svg')"
+            aria-label="Close"
+            @click="showOptions = false"
+          />
         </transition>
         <transition-group enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster">
-          <div v-for="(clients, index) in $parent.clients" v-show="clients.client_id == $route.params.client_id && showOptions" :key="clients.client_id" class="client--options">
-            <a v-if="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$modal.show('toolkit')">Toolkit</a>
-            <a v-if="clients.client_id == $route.params.client_id && showOptions" href="javascript:void(0)" @click="$parent.client_archive(clients.client_id, index)">Archive Client</a>
+          <div
+            v-for="(clients, index) in $parent.clients"
+            v-show="clients.client_id == $route.params.client_id && showOptions"
+            :key="clients.client_id"
+            class="client--options"
+          >
+            <a
+              v-if="clients.client_id == $route.params.client_id && showOptions"
+              class="a_link"
+              href="javascript:void(0)"
+              @click="$modal.show('toolkit')"
+            >
+              Toolkit
+            </a>
+            <a
+              v-if="clients.client_id == $route.params.client_id && showOptions"
+              class="a_link"
+              href="javascript:void(0)"
+              @click="$parent.client_archive(clients.client_id, index)"
+            >
+              Archive Client
+            </a>
           </div>
         </transition-group>
       </div>
