@@ -38,6 +38,9 @@
   .feedback_bottom_bar {
     margin-top: 1rem
   }
+  .switch_cal {
+    margin-bottom: .4rem
+  }
 
   /* Scroll */
   .container--sessions::-webkit-scrollbar {
@@ -45,6 +48,12 @@
   }
 
   /* Responsive */
+
+  @media (max-width: 992px) {
+    .switch_cal {
+      display: none
+    }
+  }
   @media (max-width: 768px) {
     .plan_notes, .wrapper--session {
       box-shadow: none;
@@ -73,7 +82,26 @@
           </p>
         </div>
         <div class="wrapper--calendar">
-          <week-calendar :events="sessionDates" :is-trainer="false" />
+          <a
+            class="a_link switch_cal"
+            href="javascript:void(0)"
+            @click="showMonthlyCal = !showMonthlyCal"
+          >
+            <inline-svg :src="require('../../assets/svg/calendar.svg')" />
+            Switch to {{ !showMonthlyCal ? 'month' : 'week' }} view
+          </a>
+          <week-calendar
+            v-if="!showMonthlyCal"
+            :events="sessionDates"
+            :is-trainer="false"
+            class="animate animate__fadeIn animate__delay-1s animate__faster"
+          />
+          <month-calendar
+            v-else
+            :events="sessionDates"
+            :is-trainer="false"
+            class="animate animate__fadeIn animate__delay-1s animate__faster"
+          />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
         <div v-else-if="plan.sessions" class="container--sessions">
@@ -170,11 +198,13 @@
 
 <script>
 const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/WeekCalendar')
+const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
 export default {
   components: {
     WeekCalendar,
+    MonthCalendar,
     RichEditor
   },
   data () {
@@ -192,6 +222,7 @@ export default {
 
       // CALENDAR
 
+      showMonthlyCal: false,
       sessionDates: []
     }
   },
