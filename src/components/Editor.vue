@@ -346,30 +346,7 @@ export default {
   },
   methods: {
     update_html (html) {
-      return this.update_iframe(this.update_checkbox(html))
-    },
-    update_checkbox (html) {
-      let m
-      const arr = []
-      while ((m = this.updateInputRegex.exec(html)) !== null) {
-        if (m.index === this.updateInputRegex.lastIndex) {
-          this.updateInputRegex.lastIndex++
-        }
-        m.forEach((inputMatch) => {
-          const name = inputMatch.match(this.updateCheckboxRegex)
-          if (name === null) {
-            arr.push(inputMatch)
-          } else if (name !== 'checkbox_v1') {
-            arr.push(inputMatch.replace('name=', '').replace(/"/g, ''))
-          }
-        })
-      }
-      if (arr.length !== 0) {
-        arr.forEach((item) => {
-          html = html.replace(item, '')
-        })
-      }
-      return html
+      return this.update_iframe(html)
     },
     update_iframe (html) {
       let m
@@ -420,7 +397,7 @@ export default {
     },
     remove_brackets (dataIn) {
       if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '')
+        return dataIn.replace(/[[\]]/g, '').replace(/(checkbox")/g, 'checkbox" disabled')
       } else {
         return dataIn
       }
@@ -471,9 +448,7 @@ export default {
     },
     // CHECKBOX
     add_checkbox () {
-      let itemId
-      this.calledFromItemId === undefined ? itemId = '' : itemId = this.calledFromItemId
-      this.format('insertHTML', `<input name="checkbox_v1" type="checkbox" style="margin: .4rem; cursor: pointer" onclick="change_checked_state(this, '${this.calledFromEl}', '${this.calledFromItem}', '${itemId}')">`)
+      this.format('insertHTML', '<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" style="margin: .4rem; cursor: pointer" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>')
     },
     // LINK
     show_link_adder () {

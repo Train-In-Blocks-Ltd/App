@@ -30,40 +30,11 @@
     <div id="app"></div>
     <noscript>JavaScript is required to run this app. Please enable it.</noscript>
     <script>
-      function change_checked_state (elem, calledFrom, item, itemId) {
+      const checkbox = function (elem) {
         if (elem.checked) {
-          elem.setAttribute('checked', 'checked')
+          elem.setAttribute("checked", "1")
         } else {
-          elem.removeAttribute('checked')
-        }
-        switch (item) {
-          case 'trainer_session':
-            const sessionNotes = document.getElementById(`session-${itemId}`).querySelector('#rich_show_content').innerHTML
-            document.getElementById(calledFrom).__vue__.update_session(parseInt(itemId), sessionNotes)
-            break
-          case 'portfolio':
-            const portfolioNotes = document.getElementById('rich_show_content').innerHTML
-            document.getElementById(calledFrom).__vue__.update(portfolioNotes)
-            break
-          case 'template':
-            const templateNotes = document.getElementById(`template-${itemId}`).querySelector('#rich_show_content').innerHTML
-            document.getElementById(calledFrom).__vue__.update_template(parseInt(itemId), templateNotes)
-            break
-          case 'client_information':
-            const clientNotes = document.getElementById('client_notes').querySelector('#rich_show_content').innerHTML
-            document.getElementById(calledFrom).__vue__.update_client(clientNotes)
-            break
-          case 'plan_notes':
-            const planNotes = document.getElementById('plan_notes').querySelector('#rich_show_content').innerHTML
-            document.getElementById(calledFrom).__vue__.update_plan(planNotes)
-            break
-          case 'client_home_session':
-            const idIdx = itemId.split(',')
-            const clientHomeFeedback = document.getElementById(`session-${idIdx[1]}`).querySelector('#rich_show_content').innerHTML
-            document.getElementById(calledFrom).__vue__.update_session(parseInt(idIdx[0]), parseInt(idIdx[1]), clientHomeFeedback)
-            break
-          default:
-            break
+          elem.removeAttribute("checked")
         }
       }
       if ('serviceWorker' in navigator) {
