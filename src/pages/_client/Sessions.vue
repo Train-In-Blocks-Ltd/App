@@ -1760,19 +1760,19 @@ export default {
 
     // DATABASE
 
-    async create_plan (planName, clientId, micros, blockColor, planNotes, sessions) {
+    async create_plan (planName, clientId, planDuration, planColors, planNotes, planSessions) {
       try {
         this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/programmes',
           {
             name: `Copy of ${planName}`,
             client_id: clientId,
-            duration: micros,
-            block_color: blockColor
+            duration: planDuration,
+            block_color: planColors
           }
         ).then((response) => {
-          this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, micros, blockColor)
-          sessions.forEach((session) => {
+          this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, planDuration, planColors)
+          planSessions.forEach((session) => {
             this.add_session([
               session.name,
               response.data[0]['LAST_INSERT_ID()'],
@@ -1789,7 +1789,7 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async update_plan (planNotesUpdate, planIDUpdate, planNameUpdate, planDurationUpdate, planColorUpdate) {
+    async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
       this.$parent.$parent.dontLeave = true
       let plan
       // Set the plan variable to the current plan
@@ -1802,11 +1802,11 @@ export default {
         this.sort_sessions()
         const response = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
-            id: planIDUpdate === undefined ? plan.id : planIDUpdate,
-            name: planNameUpdate === undefined ? plan.name : `Copy of ${planNameUpdate}`,
-            duration: planDurationUpdate === undefined ? plan.duration : planDurationUpdate,
-            notes: planNotesUpdate === undefined ? plan.notes : planNotesUpdate,
-            block_color: planColorUpdate === undefined ? plan.block_color : planColorUpdate
+            id: forceID === undefined ? plan.id : forceID,
+            name: forceName === undefined ? plan.name : `Copy of ${forceName}`,
+            duration: forceDuration === undefined ? plan.duration : forceDuration,
+            notes: forceNotes === undefined ? plan.notes : forceNotes,
+            block_color: forceColors === undefined ? plan.block_color : forceColors
           }
         )
         // Set vue client_details data to new data
@@ -1860,7 +1860,7 @@ export default {
         }
       }
     },
-    async update_session (id, sessionNotesUpdate) {
+    async update_session (id, forceNotes) {
       this.$parent.$parent.dontLeave = true
       // Set the plan variable to the current plan
       for (const x in this.$parent.$parent.client_details.plans) {
@@ -1889,7 +1889,7 @@ export default {
             id: sessionsId,
             name: sessionsName,
             date: sessionsDate,
-            notes: sessionNotesUpdate,
+            notes: forceNotes,
             week_id: sessionsWeek,
             checked: sessionsChecked
           }
