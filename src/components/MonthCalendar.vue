@@ -69,7 +69,8 @@
     border: 2px solid transparent;
     border-radius: 5px;
     font-size: .7rem;
-    text-align: center
+    text-align: center;
+    margin: .4rem 0
   }
   .cursor {
     cursor: pointer;
@@ -115,7 +116,7 @@
         :key="`day_${index}`"
         class="day_cell"
       >
-        <p>{{ index + 1 }}</p>
+        <p>{{ get_day(`${currentYear}-${get_month_number(currentMonth)}-${index + 1}`) }}<br><span class="grey">{{ index + 1 }}</span></p>
         <p
           v-for="event in day"
           :key="`event_${event.session_id}`"
@@ -155,6 +156,15 @@ export default {
     this.get_month()
   },
   methods: {
+    get_day (date) {
+      const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+      return days[new Date(date).getDay()]
+    },
+    get_month_number (month) {
+      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      console.log(monthArr.indexOf(month) + 1)
+      return monthArr.indexOf(month) + 1
+    },
     get_month () {
       const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       const today = new Date()

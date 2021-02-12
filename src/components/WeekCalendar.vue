@@ -134,7 +134,7 @@
       >
         <div class="day_header">
           <p class="text--small">
-            {{ day.date_split[2] }}
+            {{ get_day(index) }} <span class="grey">{{ day.date_split[2] }}</span>
           </p>
         </div>
         <div class="day_events">
@@ -200,6 +200,10 @@ export default {
 
     // WEEK
 
+    get_day (date) {
+      const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+      return days[date]
+    },
     get_week () {
       this.this_week = []
       const d = new Date()
