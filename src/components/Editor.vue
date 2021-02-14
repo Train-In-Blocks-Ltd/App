@@ -278,7 +278,7 @@
         @click="reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
         @input="update_edited_notes()"
         @focus="caretIsInEditor = true"
-        @blur="caretIsInEditor = false"
+        @blur="unfocus_editor()"
         v-html="update_iframe(initialHTML)"
       />
     </div>
@@ -359,7 +359,7 @@ export default {
       }
       if (arr.length !== 0) {
         arr.forEach((item) => {
-          html = html.replace(item[0], `<a name="video_v1" href="${item[1]}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
+          html = html.replace(item[0], `<div><br></div><a name="video_v1" href="${item[1]}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
         })
       }
       return html
@@ -369,6 +369,9 @@ export default {
 
     focus_on_editor () {
       document.getElementById('rich_editor').focus()
+    },
+    unfocus_editor () {
+      setTimeout(() => { this.caretIsInEditor = false }, 100)
     },
     will_body_scroll (state) {
       const body = document.getElementsByTagName('body')[0]
@@ -509,7 +512,7 @@ export default {
     },
     add_video () {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', `<a name="video_v1" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
+      this.format('insertHTML', `<div><br></div><a name="video_v1" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {
