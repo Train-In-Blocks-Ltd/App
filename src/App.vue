@@ -577,7 +577,8 @@
     opacity: .6
   }
   .text--selected {
-    font-size: .8rem
+    font-size: .8rem;
+    margin-left: auto
   }
 
   /* LINK CONTAINERS */

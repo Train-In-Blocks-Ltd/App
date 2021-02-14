@@ -54,10 +54,6 @@
   .section-title {
     margin: 0 0 2rem 0
   }
-  .text--selected {
-    font-size: .8rem;
-    margin-left: auto
-  }
   .icon--expand {
     cursor: pointer;
     vertical-align: middle;

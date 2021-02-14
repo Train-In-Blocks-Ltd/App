@@ -279,10 +279,10 @@
         @input="update_edited_notes()"
         @focus="caretIsInEditor = true"
         @blur="caretIsInEditor = false"
-        v-html="update_html(initialHTML)"
+        v-html="update_iframe(initialHTML)"
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="update_html(remove_brackets(htmlInjection))" />
+    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="update_iframe(remove_brackets(htmlInjection))" />
     <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">
       {{ emptyPlaceholder }}
     </p>
@@ -345,9 +345,6 @@ export default {
     }
   },
   methods: {
-    update_html (html) {
-      return this.update_iframe(html)
-    },
     update_iframe (html) {
       let m
       const arr = []
