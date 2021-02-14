@@ -55,7 +55,8 @@
     margin: 0 0 2rem 0
   }
   .text--selected {
-    font-size: .8rem
+    font-size: .8rem;
+    margin-left: auto
   }
   .icon--expand {
     cursor: pointer;
@@ -561,7 +562,7 @@
         </p>
         <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_check(1)">Complete</a>
         <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_check(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
+        <a href="javascript:void(0)" class="text--selected a_link" @click="copyTarget = maxWeek, $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
         <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
         <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
         <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_delete()">Delete</a>
@@ -1089,11 +1090,13 @@ export default {
           })
         }
       })
+      const startWeek = this.currentWeek
       for (; weekCount <= this.copyTarget; weekCount++) {
         this.currentWeek = weekCount
         copysessions.forEach((session) => {
           this.new_session.name = session.name
-          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - 1))
+          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - startWeek))
+          console.log(weekCount - startWeek)
           this.currentCopySessionNotes = session.notes
           this.add_session()
         })
