@@ -162,7 +162,6 @@ export default {
     },
     get_month_number (month) {
       const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      console.log(monthArr.indexOf(month) + 1)
       return monthArr.indexOf(month) + 1
     },
     get_month () {
