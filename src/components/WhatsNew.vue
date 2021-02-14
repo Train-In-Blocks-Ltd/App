@@ -21,7 +21,7 @@ img {
       What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
     </p>
     <p class="text--large grey">
-      Speed and mobile-friendly
+      Enhanced workflow, visuals, and more mobile-friendly
     </p>
     <br><br>
     <div class="update_wrapper">
@@ -31,7 +31,7 @@ img {
           New editor
         </p>
         <p class="text--small grey">
-          Try our new text editor. It's faster and more convenient. You can now access templates for your sessions in the toolbar with additional support for use on mobile devices.<br><br>**We recommend that you create new sessions and copy it over from your current plans**
+          Try our new text editor. It's faster and more convenient. You can now access templates for your sessions in the toolbar with additional support for use on mobile devices.<br><br>**We recommend that you should create new sessions and copy it over from your current plans**
         </p>
       </div>
       <div class="update_item">
