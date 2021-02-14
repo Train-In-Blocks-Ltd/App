@@ -448,7 +448,7 @@ export default {
     },
     // CHECKBOX
     add_checkbox () {
-      this.format('insertHTML', '<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" style="margin: .4rem; cursor: pointer" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>')
+      this.format('insertHTML', '<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" style="margin: .4rem" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>')
     },
     // LINK
     show_link_adder () {
