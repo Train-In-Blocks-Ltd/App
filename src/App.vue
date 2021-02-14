@@ -150,6 +150,9 @@
     margin-left: .2rem;
     line-height: 1.65
   }
+  .spacer {
+    height: 2rem
+  }
 
   /* MODALS */
   .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new_client, .modal--new_plan, .modal--toolkit, .modal--alert, .modal--preview_template {

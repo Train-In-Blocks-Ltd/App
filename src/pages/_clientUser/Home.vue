@@ -1,8 +1,5 @@
 <style scoped>
   /* Containers */
-  .spacer {
-    height: 2rem
-  }
   .plan_grid {
     display: grid;
     grid-gap: 2rem;
@@ -93,7 +90,7 @@
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
-          v-show="todays_sessions_store.length === 0 && !$parent.loading"
+          v-if="todays_sessions_store.length === 0 && !$parent.loading"
           class="text--small text--no_sessions grey"
         >
           No sessions today...
@@ -102,7 +99,7 @@
           <div v-if="plan.sessions" class="container--sessions">
             <div
               v-for="(session, indexed) in plan.sessions"
-              v-show="showing_current_session === indexed"
+              v-show="showing_current_session === indexed && todays_sessions_store.includes(session.id)"
               :id="`session-${session.id}`"
               :key="indexed"
               class="wrapper--session"
@@ -267,21 +264,15 @@ export default {
     // DATE/TIME
 
     todays_session () {
+      let today = new Date()
+      today = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {
-          if (session.date === this.is_today()) {
+          if (session.date === today) {
             this.todays_sessions_store.push(session.id)
           }
         })
       })
-    },
-    is_today () {
-      let today = new Date()
-      const dd = String(today.getDate()).padStart(2, '0')
-      const mm = String(today.getMonth() + 1).padStart(2, '0')
-      const yyyy = today.getFullYear()
-      today = `${yyyy}-${mm}-${dd}`
-      return today
     }
   }
 }

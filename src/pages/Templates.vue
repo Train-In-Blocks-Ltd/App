@@ -25,6 +25,9 @@
     grid-gap: 1rem;
     text-align: right
   }
+  .wrapper--template_top__right a {
+    margin-left: auto
+  }
   .container--templates {
     display: grid;
     grid-gap: 4rem;

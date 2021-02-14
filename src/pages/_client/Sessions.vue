@@ -1096,7 +1096,6 @@ export default {
         copysessions.forEach((session) => {
           this.new_session.name = session.name
           this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - startWeek))
-          console.log(weekCount - startWeek)
           this.currentCopySessionNotes = session.notes
           this.add_session()
         })

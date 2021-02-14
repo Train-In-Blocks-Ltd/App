@@ -1,3 +1,10 @@
+<style scoped>
+img {
+  width: 60%;
+  margin: 1rem 0
+}
+</style>
+
 <template>
   <div>
     <p class="text--large">
@@ -7,6 +14,8 @@
       Speed and mobile-friendly
     </p>
     <br><br>
+    <div class="spacer" />
+    <img :src="require('../assets/whats-new/new-editor.png')" alt="New editor">
     <p class="text--small">
       New editor
     </p>
@@ -14,10 +23,24 @@
       Try our new text editor. It's faster and more convenient. You can now access templates for your sessions in the toolbar with additional support for use on mobile devices.<br><br>**We recommend that you create new sessions and copy it over from your current plans**
     </p><br><br>
     <p class="text--small">
+      Updated calendar
+    </p>
+    <p class="text--small grey">
+      Visualise all the sessions in our new monthly view. You can now head straight towards the session by clicking on it through the calendar.
+    </p><br><br>
+    <img :src="require('../assets/whats-new/graph.png')" alt="New editor">
+    <p class="text--small">
       Updated graph
     </p>
     <p class="text--small grey">
       We've made our line-chart more interactive and responsive. You can now click on a point to get the value and find out where it occurred.
+    </p><br><br>
+    <img :src="require('../assets/whats-new/duplicate.png')" alt="New editor">
+    <p class="text--small">
+      Duplicate plans
+    </p>
+    <p class="text--small grey">
+      If you need a copy of the same plan or adapting a similar plan for another client, then simply duplicate it over.
     </p><br><br>
     <p class="text--small">
       Client-side improvements
