@@ -132,16 +132,15 @@
     display: grid;
     grid-template-rows: 6px 90px;
     cursor: pointer;
-    box-shadow: 0 0 14px 08px #28282810;
-    background-color: #F2F2F2;
+    background-color: white;
     min-width: 50px;
     height: 74px;
     width: 100%;
-    border-radius: 6px;
+    border-radius: 5px;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .week:hover {
-    box-shadow: inset 0 20px 30px -30px #28282840
+    box-shadow: 0 0px 20px 10px #28282810
   }
   .weekActive {
     border-bottom: 2px solid #EEEEEE;
