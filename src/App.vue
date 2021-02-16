@@ -55,6 +55,9 @@
     animation: .6s fadeOut;
     animation-fill-mode: both
   }
+  .delay {
+    animation-delay: .6s
+  }
   @keyframes fadeIn {
     from {
       opacity: 0
