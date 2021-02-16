@@ -94,15 +94,13 @@
 
 <template>
   <div id="templates">
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div v-if="selectedTemplates.length !== 0" class="multi-select">
-        <p class="text--selected">
-          <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="delete_multi_templates()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="deselect_all()">Deselect</a>
-      </div>
-    </transition>
+    <div v-if="selectedTemplates.length !== 0" class="multi-select fadeIn">
+      <p>
+        <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
+      </p>
+      <a href="javascript:void(0)" class="a_link" @click="delete_multi_templates()">Delete</a>
+      <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
+    </div>
     <div class="wrapper--template_top">
       <p class="text--large">
         Templates

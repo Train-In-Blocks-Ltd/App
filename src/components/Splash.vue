@@ -36,11 +36,11 @@
     border-radius: 40%;
     animation: spin 5s forwards
   }
-  .box .logo--svg {
+  .box .logo_svg {
     height: 50%;
     width: auto
   }
-  .box svg.logo--svg path {
+  .box svg.logo_svg path {
     fill: white
   }
 
@@ -66,7 +66,7 @@
   <div id="splash">
     <div class="box">
       <svg
-        class="logo--svg"
+        class="logo_svg"
         width="38"
         height="38"
         viewBox="0 0 38 38"

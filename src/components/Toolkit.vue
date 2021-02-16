@@ -29,7 +29,7 @@
 
 <template>
   <div class="modal--toolkit">
-    <div class="wrapper--centered-item">
+    <div class="center_wrapped">
       <select class="text--small session_toolkit--select" @change="get_toolkit()">
         <option>Maximal Heart Rate (Tanaka)</option>
         <option>Maximal Heart Rate (Gellish)</option>

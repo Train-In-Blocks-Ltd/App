@@ -29,13 +29,13 @@
 
 <template>
   <div id="archive">
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedClients.length !== 0" class="multi-select">
-        <p class="text--selected">
+        <p>
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="delete_multi_clients()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="deselect_all()">Deselect all</a>
+        <a href="javascript:void(0)" class="a_link" @click="delete_multi_clients()">Delete</a>
+        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect all</a>
       </div>
     </transition>
     <div class="top_bar">
@@ -68,7 +68,7 @@
         v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
         :id="'a' + clients.client_id"
         :key="index"
-        class="wrapper--client_link"
+        class="client_link_wrapper fadeIn"
         :to="'/client/'+clients.client_id+'/'"
       >
         <client-link

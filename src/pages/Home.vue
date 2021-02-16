@@ -20,43 +20,37 @@
 
 <template>
   <div id="home">
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div v-if="isNewClientOpen" class="wrapper--new_client">
-        <new-client />
-      </div>
-    </transition>
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div v-if="isWhatsNewOpen" class="wrapper--whats_new allow_y_overflow">
-        <whats-new />
-      </div>
-    </transition>
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div v-if="isInstallOpen" class="wrapper--install_PWA icon_open_middle">
-        <install-app />
-      </div>
-    </transition>
-    <div v-if="!isNewClientOpen" class="icon_open--new_client" aria-label="New Client" @click="isNewClientOpen = true, $parent.will_body_scroll(false)">
+    <div v-if="isNewClientOpen" class="tab_overlay_content fadeIn delay">
+      <new-client />
+    </div>
+    <div v-if="isWhatsNewOpen" class="tab_overlay_content allow_y_overflow fadeIn delay">
+      <whats-new />
+    </div>
+    <div v-if="isInstallOpen" class="tab_overlay_content icon_open_middle fadeIn delay">
+      <install-app />
+    </div>
+    <div v-if="!isNewClientOpen" class="tab_option tab_option_large" aria-label="New Client" @click="isNewClientOpen = true, $parent.will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client" />
       <p class="text">
         New Client
       </p>
     </div>
-    <div v-if="!isWhatsNewOpen" class="icon_open--whats_new icon_open_middle" aria-label="What's New" @click="isWhatsNewOpen = true, $parent.will_body_scroll(false)">
+    <div v-if="!isWhatsNewOpen" class="tab_option icon_open_middle tab_option_large" aria-label="What's New" @click="isWhatsNewOpen = true, $parent.will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New" />
       <p class="text">
         What's New
       </p>
       <span v-if="$parent.newBuild" class="notify_badge">New</span>
     </div>
-    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_bottom" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
+    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_bottom tab_option_small" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App" />
       <p class="text">
         Install
       </p>
     </div>
     <div>
-      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--a" />
-      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--b" />
+      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_a" />
+      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_b" />
     </div>
     <p v-if="$parent.no_clients" class="text--small grey text--no_clients">
       No clients added yet, use the button on the top-right of your screen.
@@ -90,14 +84,14 @@
           :id="'a' + client.client_id"
           :key="index"
           :to="'/client/'+client.client_id+'/'"
-          class="wrapper--client_link"
+          class="client_link_wrapper fadeIn"
         >
           <client-link
             :name="client.name"
             :email="client.email"
             :number="client.number"
             :notes="client.notes"
-            :class="{ recentlyAdded: persistResponse === client.name }"
+            :class="{ recently_added: persistResponse === client.name }"
             class="client_link"
           />
         </router-link>

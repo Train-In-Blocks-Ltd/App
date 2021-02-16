@@ -2,26 +2,35 @@
   @import './assets/styles/icon-anim';
 
   /* Global */
+
   * {
     box-sizing: border-box
-  }
-  :root {
-    --animate-delay: .5s;
-    --animate-duration: 1s;
-    --animate-repeat: 1
   }
 
   /* Rich Editor */
 
-  div#rich_editor > div, div#rich_editor > p, div#rich_show_content > div, div#rich_show_content > p, .show_feedback > div, .show_feedback > p {
-    margin: 1rem 0
+  .show_session > div,
+  .show_session > p,
+  div#rich_editor > div,
+  div#rich_editor > p,
+  div#rich_show_content > div,
+  div#rich_show_content > p,
+  .show_feedback > div,
+  .show_feedback > p {
+    margin: .6rem 0
   }
-  div#rich_editor img, div#rich_show_content img, .show_feedback img {
+  .show_session img,
+  div#rich_editor img,
+  div#rich_show_content img,
+  .show_feedback img {
     border-radius: 10px;
     max-width: 80%;
     margin: 1rem 0
   }
-  div#rich_editor a[name="video"], div#rich_show_content a[name="video"], .show_feedback a[name="video"]{
+  .show_session a[name="video"],
+  div#rich_editor a[name="video"],
+  div#rich_show_content a[name="video"],
+  .show_feedback a[name="video"] {
     line-height: 3rem;
     padding: .2rem 1rem;
     border-radius: 3px;
@@ -29,30 +38,22 @@
     color: white;
     text-decoration: none
   }
+  .show_session input[type="checkbox"]
+  div#rich_editor input[type="checkbox"],
+  div#rich_show_content input[type="checkbox"],
+  .show_feedback input[type="checkbox"] {
+    margin: .4rem
+  }
 
-  /* ANIMATIONS */
-  .animate {
-    animation-duration: 1s;
-    animation-duration: var(--animate-duration);
+  /* Animation */
+
+  .fadeIn {
+    animation: .6s fadeIn;
     animation-fill-mode: both
   }
-  .animate.animate__delay-1s {
-    animation-delay: 1s;
-    animation-delay: var(--animate-delay)
-  }
-  .animate.animate__delay-2s {
-    animation-delay: calc(1s * 2);
-    animation-delay: calc(var(--animate-delay) * 2)
-  }
-  .animate.animate__faster {
-    animation-duration: calc(1s / 2);
-    animation-duration: calc(var(--animate-duration) / 2)
-  }
-  .animate__fadeIn {
-    animation-name: fadeIn
-  }
-  .animate__fadeOut {
-    animation-name: fadeOut
+  .fadeOut {
+    animation: .6s fadeOut;
+    animation-fill-mode: both
   }
   @keyframes fadeIn {
     from {
@@ -70,7 +71,11 @@
       opacity: 0
     }
   }
-  .section--a, .section--b {
+
+  /* Tab overlay */
+
+  .section_a,
+  .section_b {
     position: fixed;
     top: 0;
     right: 0;
@@ -80,25 +85,27 @@
     -webkit-backdrop-filter: blur(10px);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .section--a {
+  .section_a {
     height: 50%
   }
-  .section--b {
+  .section_b {
     height: 50%;
     top: 50%;
     transition-delay: .2s
   }
-  .section--a.openedSections,  .section--b.openedSections {
+  .section_a.opened_sections,
+  .section_b.opened_sections {
     width: 100%;
     z-index: 4
   }
   @supports not (backdrop-filter: blur(10px)) {
-    .section--a, .section--b {
+    .section_a, .section_b {
       background-color: white
     }
   }
 
-  /* ELEMENTS */
+  /* Document elements */
+
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -121,13 +128,18 @@
     margin: 0
   }
 
-  /* CONTAINERS */
-  #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
+  /* Containers */
+
+  #home,
+  #client,
+  #account,
+  #archive,
+  #logout,
+  #templates,
+  #client-plan,
+  #portfolio {
     background-color: #F9F9F9;
     padding: 2rem 10vw
-  }
-  .flex {
-    display: flex
   }
   .container--title {
     display: flex;
@@ -140,11 +152,7 @@
   .full_width_bar {
     width: 100%
   }
-  #chart {
-    position: relative;
-    margin: 4rem 0
-  }
-  .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan, .wrapper--portfolio {
+  .tab_overlay_content {
     position: fixed;
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
@@ -153,15 +161,12 @@
     height: 100%;
     width: 100%
   }
-  .wrapper--client_link {
-    text-decoration: none
+  .spacer {
+    height: 2rem
   }
-  .allow_y_overflow {
-    overflow-y: auto
-  }
-  .recentlyAdded {
-    border: 1px solid #282828
-  }
+
+  /* Versioning */
+
   .version {
     display: flex
   }
@@ -169,34 +174,34 @@
     margin-left: .2rem;
     line-height: 1.65
   }
-  .spacer {
-    height: 2rem
-  }
 
-  /* MODALS */
-  .modal--info, .modal--move, .modal--copy, .modal--shift, .modal--reset, .modal--error, .modal--new_client, .modal--new_plan, .modal--toolkit, .modal--alert, .modal--preview_template {
-    padding: 2rem;
-    display: flex;
-    height: 100%
-  }
+  /* Modals */
+
   div.vm--modal {
     /* stylelint-disable-next-line */
     left: 0!important;
     min-width: 100%
   }
-  .modal--bottom_bar {
-    display: flex
+  div.vm--modal > div,
+  div.vm--modal > form {
+    padding: 2rem;
+    display: flex;
+    height: 100%
   }
-  .modal--bottom_bar button {
-    margin-right: .6rem
+  .center_wrapped {
+    margin: auto;
+    max-width: 500px
   }
 
-  /* SVG */
-  .title_icon {
-    margin: auto .6rem auto 0
-  }
+  /* Fonts */
 
-  /* FONTS */
+  h3 {
+    font-size: 2rem;
+    line-height: 1.2
+  }
+  p {
+    margin: 0
+  }
   .text--large {
     margin-top: 0;
     /* stylelint-disable-next-line */
@@ -208,37 +213,41 @@
     font-size: 1.6rem!important;
     line-height: 1.2
   }
-  .grey {
-    color: #28282894
-  }
-  h3 {
-    font-size: 2rem;
-    line-height: 1.2
-  }
-  p {
-    margin: 0
-  }
-  .allow_text_overflow {
-    text-overflow: ellipsis
-  }
   .text--error {
     font-size: .8rem;
     color: #B80000
   }
-  .text--no_client_notes, .text--no_plan_notes {
-    margin: 2rem 0
-  }
-  .text--loading, .text--no_clients {
+  .text--loading,
+  .text--no_clients {
     margin: 2rem 0 4rem 0
   }
-  .text--no-plans, .text--no_sessions {
+  .text--no-plans,
+  .text--no_sessions {
     margin: 2rem 0 8rem 0
-  }
-  .text--no_content {
-    margin: 1rem 0
   }
   .text--new_msg {
     margin: 2rem 0
+  }
+  .text--name {
+    text-overflow: ellipsis;
+    white-space: nowrap
+  }
+  .text--date,
+  .text--checked,
+  .text--tiny {
+    font-size: .8rem
+  }
+
+  /* Tailwinds */
+
+  .allow_y_overflow {
+    overflow-y: auto
+  }
+  .flex {
+    display: flex
+  }
+  .recently_added {
+    border: 1px solid #282828
   }
   .no_margin {
     margin: 0
@@ -249,6 +258,15 @@
   .right_margin {
     margin-right: 1rem
   }
+  .grey {
+    color: #28282894
+  }
+  .allow_text_overflow {
+    text-overflow: ellipsis
+  }
+
+  /* Text buttons */
+
   .a_link {
     display: flex;
     color: #282828;
@@ -264,7 +282,7 @@
     opacity: .6
   }
 
-  /* BUTTONS */
+  /* Box buttons */
 
   button {
     height: fit-content;
@@ -291,26 +309,24 @@
   button:focus {
     box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
   }
-  button:disabled, button[disabled] {
+  button:disabled,
+  button[disabled] {
     cursor: default;
     opacity: .6
   }
-  .delete:hover, .cancel:hover {
+  .delete:hover,
+  .cancel:hover {
     color: white;
     background-color: #B80000
   }
 
-  /* EDITOR WRAPPERS */
+  /* Editor wrapper */
 
-  .wrapper--session__header {
+  .session_header {
     height: fit-content
   }
-  .text--name {
-    text-overflow: ellipsis;
-    white-space: nowrap
-  }
-  .text--date, .text--checked, .text--tiny {
-    font-size: .8rem
+  .session_header.client-side {
+    height: 3.2rem
   }
   .bottom_bar {
     display: flex;
@@ -327,18 +343,14 @@
   .to_do {
     background-color: #B80000
   }
-  .done, .to_do {
+  .done,
+  .to_do {
     color: white;
     margin: auto 0
   }
-  .done:hover, .to_do:hover {
+  .done:hover,
+  .to_do:hover {
     opacity: .6
-  }
-
-  /* SHOW AND NOTES */
-
-  .wrapper--session__header.client-side {
-    height: 3.2rem
   }
 
   /* INPUTS */
@@ -358,16 +370,19 @@
     box-shadow: none;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover, select:hover {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
+  select:hover {
     opacity: .6
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
     border: 1px solid #282828
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius, select.small_border_radius {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
+  select.small_border_radius {
     border-radius: 5px
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300, select.width_300 {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
+  select.width_300 {
     width: 300px
   }
   .search {
@@ -387,59 +402,42 @@
     opacity: 1; /* Firefox */
   }
 
-  /* FORMS */
+  /* Forms */
+
   .form_grid {
     display: grid;
     grid-gap: 2rem
   }
-  .form_buttons {
-    display: grid;
-    grid-gap: 1rem;
-    place-content: start;
-    grid-auto-flow: column;
-    margin-bottom: 1rem
-  }
-  .wrapper--centered-item {
-    margin: auto;
-    max-width: 500px
+  .form_grid button {
+    margin-right: .6rem
   }
 
-  /* LOGO */
+  /* Logo */
+
   .logo {
     margin-bottom: auto
   }
-  .logo--link {
+  .logo_link {
     display: block;
     width: 38px;
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
-  svg.logo--svg path {
+  .logo_link:hover {
+    opacity: .6
+  }
+  .logo_link:active {
+    transform: scale(.9)
+  }
+  svg.logo_svg path {
     fill: #28282890;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .sidebar:hover svg.logo--svg path {
+  .sidebar:hover svg.logo_svg path {
     fill: #282828
   }
-  .logo--link:hover {
-    opacity: .6
-  }
-  .logo--link:active {
-    transform: scale(.9)
-  }
 
-  /* NAV */
-  .skip-to-content-link {
-    height: 30px;
-    left: 50%;
-    padding: 8px;
-    position: absolute;
-    transform: translateY(-1000%);
-    transition: transform .3s;
-    z-index: 99999999999
-  }
-  .skip-to-content-link:focus {
-    transform: translateY(0%)
-  }
+  /* Navigation */
+
   .sidebar {
     z-index: 10;
     display: flex;
@@ -451,7 +449,7 @@
     box-shadow: 0 0 20px 10px #28282808;
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .account_nav--item {
+  .account_nav_item {
     display: flex;
     opacity: .6;
     cursor: pointer;
@@ -459,17 +457,19 @@
     margin: .8rem 0;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .account_nav--item:hover {
+  .account_nav_item:hover,
+  .sidebar:hover .account_nav_item--text,
+  .account_nav_item a.router-link-exact-active {
     opacity: 1
   }
-  .account_nav--item:last-of-type {
+  .account_nav_item:last-of-type {
     padding-bottom: 0
   }
-  .account_nav--item a {
+  .account_nav_item a {
     display: flex;
     text-decoration: none
   }
-  .account_nav--item--text {
+  .account_nav_item--text {
     user-select: none;
     color: #282828;
     text-decoration: none;
@@ -478,24 +478,19 @@
     opacity: 0;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .sidebar:hover .account_nav--item--text {
-    opacity: 1
-  }
-  .account_nav--item a.router-link-exact-active {
-    opacity: 1
-  }
-  .account_nav--item--icon {
+  .account_nav_item--icon {
     margin: 0 .4rem 0 0;
     height: 1.4rem;
     vertical-align: bottom;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .account_nav--item--icon:not(.transparent) path {
+  .account_nav_item--icon:not(.transparent) path {
     fill: #282828
   }
 
-  /* EXTRA OPTIONS */
-  .icon_open--options, .icon_open--stats, .icon_open--new_client, .icon_open--install_PWA, .icon_open--whats_new, .icon_open--new_plan, .icon_open--print, .icon_open--portfolio {
+  /* Tab options */
+
+  .tab_option {
     user-select: none;
     z-index: 2;
     display: flex;
@@ -516,30 +511,28 @@
   .icon_open_bottom {
     top: 7.8rem
   }
-  .icon_open--options:hover, .icon_open--stats:hover, .icon_open--install_PWA:hover, div.icon_open--print:hover, div.icon_open--portfolio:hover {
-    width: 6rem;
+  .tab_option_small:hover {
+    width: 6rem
+  }
+  .tab_option_large:hover {
+    width: 8rem
+  }
+  .tab_option:hover {
     justify-content: center;
     text-align: center
   }
-  .icon_open--new_client:hover, .icon_open--whats_new:hover, .icon_open--new_plan:hover {
-    width: 8rem;
-    justify-content: center;
-    text-align: center
-  }
-  .icon_open--options:hover svg, .icon_open--stats:hover svg, .icon_open--new_client:hover svg, .icon_open--install_PWA:hover svg, .icon_open--whats_new:hover svg, .icon_open--new_plan:hover svg, .icon_open--print:hover svg, .icon_open--portfolio:hover svg {
+  .tab_option:hover svg,
+  .tab_option:hover .notify_badge {
     display: none
   }
-  .icon_open--options .text, .icon_open--stats .text, .icon_open--new_client .text, .icon_open--install_PWA .text, .icon_open--whats_new .text, .icon_open--new_plan .text, .icon_open--print .text, .icon_open--portfolio .text {
+  .tab_option .text {
     font-size: .8rem;
     display: none;
     white-space: nowrap;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
-  .icon_open--options:hover .text, .icon_open--stats:hover .text, .icon_open--new_client:hover .text, .icon_open--install_PWA:hover .text, .icon_open--whats_new:hover .text, .icon_open--new_plan:hover .text, .icon_open--print:hover .text, .icon_open--portfolio:hover .text {
+  .tab_option:hover .text {
     display: block
-  }
-  .icon_open--whats_new:hover .notify_badge {
-    display: none
   }
   .notify_badge {
     position: absolute;
@@ -552,7 +545,8 @@
     font-size: .6rem
   }
 
-  /* SCROLLBAR */
+  /* Scrollbar */
+
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px
@@ -568,7 +562,8 @@
     background-color: #28282860
   }
 
-  /* ARCHIVE AND HOME STYLES */
+  /* Archive and Home */
+
   .container--clients {
     display: grid;
     grid-gap: 2rem;
@@ -578,7 +573,8 @@
     margin: 0
   }
 
-  /* SELECT */
+  /* Multi-select */
+
   .multi-select {
     display: grid;
     grid-gap: .4rem;
@@ -590,23 +586,17 @@
     box-shadow: 0 0 20px 10px #28282808;
     width: 100%;
     z-index: 9;
-    padding: 2rem
-  }
-  .multi-select a, .a--preview_template {
-    color: #282828;
-    text-decoration: none;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .multi-select a:hover, .a--preview_template {
-    opacity: .6
-  }
-  .text--selected {
-    font-size: .8rem;
-    margin-left: auto
+    padding: 2rem;
+    justify-items: end
   }
 
-  /* LINK CONTAINERS */
-  .client_link, .plan_link {
+  /* Links */
+
+  .client_link_wrapper {
+    text-decoration: none
+  }
+  .client_link,
+  .plan_link {
     display: grid;
     padding: 2rem;
     grid-gap: 1rem;
@@ -618,38 +608,54 @@
     border-radius: 10px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover, .plan_link:hover {
+  .client_link:hover,
+  .plan_link:hover {
     box-shadow: 0 0 20px 10px #28282816
   }
-  .client_link__notes__content, .plan_link__notes__content {
+  .client_link__notes__content,
+  .plan_link__notes__content {
     font-size: .8rem;
     margin-top: .4rem
   }
-  .client_link__notes__content *, .plan_link__notes__content *, .plan-name {
+  .client_link__notes__content *,
+  .plan_link__notes__content *,
+  .plan-name {
     color: #282828;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link__notes__content p, .plan_link__notes__content p {
+  .client_link__notes__content p,
+  .plan_link__notes__content p {
     margin: .4rem 0
   }
-  .client_name, .plan-name {
+  .client_name,
+  .plan-name {
     margin: 0
   }
-  .client_link__notes__content h1, .plan_link__notes__content h1, .client_link__notes__content h2, .plan_link__notes__content h2 {
+  .client_link__notes__content h1,
+  .client_link__notes__content h2,
+  .plan_link__notes__content h1,
+  .plan_link__notes__content h2 {
     font-size: 1rem
   }
-  .client_link__notes__content img, .plan_link img, .client_link__notes__content iframe, .plan_link iframe {
+  .client_link__notes__content img,
+  .client_link__notes__content iframe,
+  .plan_link img,
+  .plan_link iframe {
     margin: 1rem 0;
     max-width: 500px;
     border-radius: 3px;
     opacity: .6;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover .client_link__notes__content img, .plan_link:hover img, .client_link:hover .client_link__notes__content iframe, .plan_link:hover iframe {
-    opacity: 1
+  .client_link:hover .client_link__notes__content img,
+  .plan_link:hover img,
+  .client_link:hover .client_link__notes__content iframe,
+  .plan_link:hover iframe {
+    display: none
   }
 
-  /* CLIENT-SIDE */
+  /* Client-side */
+
   .container--session-control {
     display: flex;
     justify-content: space-between
@@ -659,18 +665,23 @@
     font-size: 1rem
   }
 
-  /* Responsive Design */
+  /* Responsiveness */
+
   @media (max-width: 992px) {
     input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):hover,
     button:not(:disabled):hover,
     .button:hover {
       opacity: 1
     }
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
+    #home,
+    #client,
+    #account,
+    #archive,
+    #logout,
+    #templates,
+    #client-plan,
+    #portfolio {
       padding: 4rem 10vw
-    }
-    #line-chart {
-      padding: 0
     }
   }
   @media (min-width: 769px) {
@@ -682,31 +693,29 @@
     .sidebar:hover {
       width: 12rem
     }
-    .title_icon {
-      height: 48px;
-      width: 48px
-    }
     .client_link.archived {
       display: flex;
       justify-content: space-between
     }
   }
   @media (max-width: 768px) {
+
     /* Containers */
-    .client_link:hover, .plan_link:hover {
+
+    .client_link:hover,
+    .plan_link:hover {
       box-shadow: 0 0 20px 10px #28282808
     }
-    .client_link:active, .plan_link:active {
+    .client_link:active,
+    .plan_link:active {
       transform: scale(.99)
     }
-    .client_link__notes__content img, .plan_link img {
-      max-width: 100%
-    }
-    .wrapper--new_client, .wrapper--install_PWA, .wrapper--whats_new, .wrapper--new_plan, .wrapper--portfolio {
+    .tab_overlay_content {
       padding: 4rem 10vw 10rem 10vw
     }
 
     /* Sidebar */
+
     .logo {
       display: none
     }
@@ -718,34 +727,46 @@
       justify-content: space-between;
       border-right: none
     }
-    .sidebar:hover .account_nav--item--text {
+    .sidebar:hover .account_nav_item--text {
       display: none
     }
+
+    /* Container */
+
     main {
       margin: 0
     }
-    #home, #client, #account, #archive, .wrapper--client, #logout, #templates, #client-plan, #portfolio {
+    #home,
+    #client,
+    #account,
+    #archive,
+    #logout,
+    #templates,
+    #client-plan,
+    #portfolio {
       padding: 2rem 5vw 5rem 5vw
     }
-    .account_nav--item {
+    .account_nav_item {
       width: 100%;
       margin: 0;
       padding: 0
     }
-    .account_nav--item a {
+    .account_nav_item a {
       width: 100%;
       height: 4rem
     }
-    .account_nav--item--text {
+    .account_nav_item--text {
       display: none
     }
-    .account_nav--item--icon {
+    .account_nav_item--icon {
       margin: .8rem auto
     }
   }
 
-  /* For Mobile */
   @media (max-width: 576px) {
+
+    /* Elements */
+
     ::-webkit-scrollbar {
       width: 0;
       background-color: transparent
@@ -759,10 +780,10 @@
     .text--small {
       font-size: 1.2rem
     }
-    .button--state, .button--feedback {
+    .button--state {
       width: 100%
     }
-    .wrapper--centered-item {
+    .center_wrapped {
       max-width: 300px
     }
     .wrapper--calendar {
@@ -772,26 +793,46 @@
 
   /* REDUCED MOTION */
   @media (prefers-reduced-motion: reduce) {
-    button:active, .button:active {
+    button:active,
+    .button:active {
       transform: scale(1)
     }
-    .search, .client_container > a:before, div.wrapper--client, .icon--expand, .icon_open--options, .icon_open--stats, .icon_open--new_client, .icon_open--install_PWA, .icon_open--new_plan {
+    .search,
+    .client_container > a:before,
+    .icon--expand,
+    .tab_option,
+    .icon_open--stats,
+    .icon_open--new_client,
+    .icon_open--install_PWA,
+    .icon_open--new_plan {
       transition: none
     }
     .sidebar {
       width: 12rem
     }
-    .account_nav--item--text {
+    .account_nav_item--text {
       opacity: 1
     }
-    .animate, .animate.animate__faster {
+    .fadeIn, .fadeOut {
       animation: none
     }
   }
 
-  /* PRINT MEDIA */
+  /* Print */
+
   @media print {
-    .sidebar, .wrapper--floating_nav, .icon_open--stats, .icon_open--print, .wrapper--progress-bar, a, button, svg, .expand-all, .plan_table, video, iframe, .change_week_color {
+    a,
+    button,
+    svg,
+    video,
+    iframe,
+    .sidebar,
+    .wrapper--floating_nav,
+    .tab_option,
+    .wrapper--progress-bar,
+    .expand-all,
+    .plan_table,
+    .change_week_color {
       display: none
     }
     #client .client_info input:not([type='submit']) {
@@ -801,57 +842,54 @@
   }
 
   /* Progress */
+
   #nprogress .bar {
-    background: #282828 !important;
+    background: #282828 !important
   }
   #nprogress .peg {
-    box-shadow: 0 0 10px #282828, 0 0 5px #282828 !important;
+    box-shadow: 0 0 10px #282828, 0 0 5px #282828 !important
   }
   #nprogress .spinner-icon {
     border-top-color: #282828 !important;
-    border-left-color: #282828 !important;
+    border-left-color: #282828 !important
   }
 </style>
+
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
-        <div class="wrapper--centered-item">
+        <div class="center_wrapped">
           <p>Something went wrong, please try that again</p>
           <p class="grey">
             This problem has been reported to our developers
           </p>
           <br>
           <p>{{ errorMsg }}</p><br>
-          <div class="modal--bottom_bar">
-            <button class="cancel" @click="$modal.hide('error'), will_body_scroll(true)">
-              Close
-            </button>
-          </div>
+          <button class="cancel" @click="$modal.hide('error'), will_body_scroll(true)">
+            Close
+          </button>
         </div>
       </div>
     </modal>
-    <a class="skip-to-content-link" href="#main">
-      Skip to content
-    </a>
     <nav v-if="authenticated && claims" class="sidebar">
       <div class="logo">
-        <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo--link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home" />
+        <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo_link" title="Home">
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg" aria-label="Home" />
         </router-link>
-        <router-link v-if="claims.user_type === 'Client'" to="/clientUser" class="logo--link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo--svg" aria-label="Home" />
+        <router-link v-if="claims.user_type === 'Client'" to="/clientUser" class="logo_link" title="Home">
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg" aria-label="Home" />
         </router-link>
       </div> <!-- .logo -->
-      <div class="account_nav--item">
+      <div class="account_nav_item">
         <router-link
           v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
           to="/"
           title="Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon" aria-label="Home" />
+          <p class="account_nav_item--text">
             Home
           </p>
         </router-link>
@@ -860,92 +898,92 @@
           to="/clientUser"
           title="Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Home" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon" aria-label="Home" />
+          <p class="account_nav_item--text">
             Home
           </p>
         </router-link>
       </div>
       <div
         v-if="claims.user_type === 'Admin'"
-        class="account_nav--item"
+        class="account_nav_item"
       >
         <router-link
           to="/clientUser"
           title="Client Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav--item--icon" aria-label="Client Home" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon" aria-label="Client Home" />
+          <p class="account_nav_item--text">
             Client
           </p>
         </router-link>
       </div>
       <div
         v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav--item"
+        class="account_nav_item"
       >
         <a href="https://traininblocks.com/help" target="_blank" rel="noopener" title="Help">
-          <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav--item--icon" aria-label="Help" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav_item--icon" aria-label="Help" />
+          <p class="account_nav_item--text">
             Help
           </p>
         </a>
       </div>
       <div
         v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav--item"
+        class="account_nav_item"
       >
         <router-link to="/templates" title="Templates">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav--item--icon" aria-label="Templates" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav_item--icon" aria-label="Templates" />
+          <p class="account_nav_item--text">
             Templates
           </p>
         </router-link>
       </div>
       <div
         v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav--item"
+        class="account_nav_item"
       >
         <router-link to="/portfolio" title="Portfolio">
-          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav--item--icon" aria-label="Portfolio" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav_item--icon" aria-label="Portfolio" />
+          <p class="account_nav_item--text">
             Portfolio
           </p>
         </router-link>
       </div>
       <div
         v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav--item"
+        class="account_nav_item"
       >
         <router-link to="/archive" title="Archive">
-          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav--item--icon" aria-label="Archive" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav_item--icon" aria-label="Archive" />
+          <p class="account_nav_item--text">
             Archive
           </p>
         </router-link>
       </div>
       <div
         v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav--item"
+        class="account_nav_item"
       >
         <router-link to="/account" title="Account">
-          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav--item--icon" aria-label="Account" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav_item--icon" aria-label="Account" />
+          <p class="account_nav_item--text">
             Account
           </p>
         </router-link>
       </div>
-      <div class="account_nav--item">
+      <div class="account_nav_item">
         <router-link to="/logout" title="Logout" @click.native="logout()">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav--item--icon" aria-label="Logout" />
-          <p class="account_nav--item--text">
+          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav_item--icon" aria-label="Logout" />
+          <p class="account_nav_item--text">
             Logout
           </p>
         </router-link>
       </div>
     </nav> <!-- .sidebar -->
     <main id="main" :class="{notAuth: !authenticated}">
-      <transition enter-active-class="animate animate__fadeIn animate__delay-1s animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
+      <transition enter-active-class="fadeIn delay" leave-active-class="fadeOut">
         <router-view :key="$route.fullPath" />
       </transition>
     </main>

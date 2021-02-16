@@ -57,20 +57,18 @@
 </style>
 <template>
   <div>
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div v-if="isNewPlanOpen" class="wrapper--new_plan">
-        <new-plan />
-      </div>
-    </transition>
-    <div v-if="!isNewPlanOpen" class="icon_open--new_plan icon_open_middle" aria-label="New Plan" @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)">
+    <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay">
+      <new-plan />
+    </div>
+    <div v-if="!isNewPlanOpen" class="tab_option icon_open_middle tab_option_large" aria-label="New Plan" @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)">
       <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
         New Plan
       </p>
     </div>
     <div>
-      <div :class="{ openedSections: isNewPlanOpen }" class="section--a" />
-      <div :class="{ openedSections: isNewPlanOpen }" class="section--b" />
+      <div :class="{ opened_sections: isNewPlanOpen }" class="section_a" />
+      <div :class="{ opened_sections: isNewPlanOpen }" class="section_b" />
     </div>
     <div id="client_notes" :class="{ activeState: editClientNotes }">
       <div class="client_notes__header">
@@ -124,7 +122,7 @@
             v-for="(plan, index) in $parent.$parent.client_details.plans"
             :key="index"
             :to="'plan/' + plan.id"
-            :class="{ recentlyAdded: persistResponse === plan.name }"
+            :class="{ recently_added: persistResponse === plan.name }"
             class="plan_link"
           >
             <div>

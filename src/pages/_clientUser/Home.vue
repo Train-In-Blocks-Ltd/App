@@ -39,34 +39,30 @@
   <div id="home">
     <div v-if="$parent.portfolio">
       <div>
-        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--a" />
-        <div :class="{openedSections: isPortfolioOpen || isInstallOpen}" class="section--b" />
+        <div :class="{opened_sections: isPortfolioOpen || isInstallOpen}" class="section_a" />
+        <div :class="{opened_sections: isPortfolioOpen || isInstallOpen}" class="section_b" />
       </div>
-      <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div v-if="isPortfolioOpen" class="wrapper--portfolio">
-          <div class="client_home__portfolio">
-            <p class="text--large">
-              {{ $parent.portfolio.business_name }}
-            </p>
-            <p class="text--large grey">
-              {{ $parent.portfolio.trainer_name }}
-            </p>
-            <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
-            <button class="cancel" @click="isPortfolioOpen = false, $parent.will_body_scroll(true)">
-              Close
-            </button>
-          </div>
+      <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay">
+        <div class="client_home__portfolio">
+          <p class="text--large">
+            {{ $parent.portfolio.business_name }}
+          </p>
+          <p class="text--large grey">
+            {{ $parent.portfolio.trainer_name }}
+          </p>
+          <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
+          <button class="cancel" @click="isPortfolioOpen = false, $parent.will_body_scroll(true)">
+            Close
+          </button>
         </div>
-      </transition>
-      <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div v-if="isInstallOpen" class="wrapper--install_PWA">
-          <install-app />
-        </div>
-      </transition>
+      </div>
+      <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay">
+        <install-app />
+      </div>
       <div
         v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
         aria-label="Information"
-        class="icon_open--portfolio"
+        class="tab_option tab_option_small"
         @click="isPortfolioOpen = true, $parent.will_body_scroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information" />
@@ -74,7 +70,7 @@
           Trainer
         </p>
       </div>
-      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="icon_open--install_PWA icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
+      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
         <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
         <p class="text">
           Install
@@ -104,14 +100,14 @@
               :key="indexed"
               class="wrapper--session"
             >
-              <div :id="session.name" class="wrapper--session__header client-side">
+              <div :id="session.name" class="session_header client-side">
                 <div>
                   <span class="text--name"><b>{{ session.name }}</b></span><br>
                   <span class="text--date">{{ $parent.day(session.date) }}</span>
                   <span class="text--date">{{ session.date }}</span>
                 </div>
               </div>
-              <div class="show_session animate animate__fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
+              <div class="show_session fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
               <div class="bottom_bar">
                 <div :key="check" class="full_width_bar">
                   <button

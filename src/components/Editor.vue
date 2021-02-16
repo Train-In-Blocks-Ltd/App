@@ -30,12 +30,6 @@
     color: #282828;
     background-color: transparent
   }
-  #rich_toolbar button:hover {
-    opacity: .4
-  }
-  #rich_toolbar button:disabled {
-    opacity: .6
-  }
   .activeStyle {
     opacity: .4
   }
@@ -243,7 +237,7 @@
         >
           <modal :name="'preview_template_' + item.id" height="100%" width="100%" :adaptive="true" :click-to-close="false">
             <div class="modal--preview_template">
-              <div class="wrapper--centered-item">
+              <div class="center_wrapped">
                 <div v-if="previewTemplate !== null">
                   <div v-html="previewTemplate" /><br>
                   <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
@@ -361,7 +355,7 @@ export default {
       }
       if (arr.length !== 0) {
         arr.forEach((item) => {
-          html = html.replace(item[0], `<div><br></div><a name="video_v1" href="${item[1]}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
+          html = html.replace(item[0], `<a name="video_v1" href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
         })
       }
       return html
@@ -450,7 +444,7 @@ export default {
     },
     // CHECKBOX
     add_checkbox () {
-      this.format('insertHTML', '<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" style="margin: .4rem" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>')
+      this.format('insertHTML', '<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>')
     },
     // LINK
     show_link_adder () {

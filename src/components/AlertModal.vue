@@ -1,6 +1,6 @@
 <template>
   <div class="modal--alert">
-    <div class="wrapper--centered-item">
+    <div class="center_wrapped">
       <p class="text--small">
         {{ msg }}
       </p><br>

@@ -76,7 +76,7 @@
               Plan Notes
             </p>
           </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_plan_notes animate animate__fadeIn" v-html="remove_brackets_and_checkbox(plan.notes)" />
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_plan_notes fadeIn" v-html="remove_brackets_and_checkbox(plan.notes)" />
           <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_plan_notes text--small grey">
             No plan notes added...
           </p>
@@ -94,13 +94,13 @@
             v-if="!showMonthlyCal"
             :events="sessionDates"
             :is-trainer="false"
-            class="animate animate__fadeIn animate__delay-1s animate__faster"
+            class="fadeIn"
           />
           <month-calendar
             v-else
             :events="sessionDates"
             :is-trainer="false"
-            class="animate animate__fadeIn animate__delay-1s animate__faster"
+            class="fadeIn"
           />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
@@ -139,14 +139,14 @@
             :key="indexed"
             class="wrapper--session"
           >
-            <div :id="session.name" class="wrapper--session__header client-side">
+            <div :id="session.name" class="session_header client-side">
               <div>
                 <span class="text--name"><b>{{ session.name }}</b></span><br>
                 <span class="text--date">{{ $parent.day(session.date) }}</span>
                 <span class="text--date">{{ session.date }}</span>
               </div>
             </div>
-            <div class="show_session animate animate__fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
+            <div class="show_session fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
             <div class="bottom_bar">
               <div :key="check" class="full_width_bar">
                 <button

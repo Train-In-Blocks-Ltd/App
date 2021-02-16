@@ -44,9 +44,6 @@
     font-size: 1rem;
     margin-left: 1rem
   }
-  .floating_nav__icon {
-    cursor: pointer
-  }
   .section--top {
     display: flex;
     justify-content: space-between
@@ -216,7 +213,7 @@
     padding: 2rem;
     border-radius: 10px
   }
-  .wrapper--session__header {
+  .session_header {
     display: flex;
     justify-content: space-between
   }
@@ -238,9 +235,6 @@
   }
   .wrapper--template-options {
     margin: 2rem 0
-  }
-  .a--preview_template {
-    margin-left: 2rem
   }
   .feedback_wrapper {
     margin: 1rem 0;
@@ -348,7 +342,7 @@
   <div id="plan">
     <modal name="info" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--info">
-        <div class="wrapper--centered-item">
+        <div class="center_wrapped">
           <p><b>The format for tracking data</b></p><br>
           <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
           <p><b>Examples</b></p><br>
@@ -379,7 +373,7 @@
       @opened="$refs.range.focus()"
     >
       <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), $parent.$parent.will_body_scroll(true)">
-        <div class="wrapper--centered-item">
+        <div class="center_wrapped">
           <p class="text--small">
             Move to a different microcycle
           </p>
@@ -416,7 +410,7 @@
       @opened="$refs.range.focus()"
     >
       <form class="modal--shift" @submit.prevent="shift_across(), $parent.$parent.will_body_scroll(true)">
-        <div class="wrapper--centered-item">
+        <div class="center_wrapped">
           <p class="text--small">
             Shift the dates of the sessions
           </p>
@@ -451,7 +445,7 @@
       @opened="$refs.range.focus()"
     >
       <form class="modal--copy" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)">
-        <div class="wrapper--centered-item">
+        <div class="center_wrapped">
           <p class="text--small">
             Copy across to different microcycles
           </p>
@@ -497,7 +491,7 @@
       :click-to-close="false"
     >
       <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $parent.$parent.will_body_scroll(true)">
-        <div class="wrapper--centered-item">
+        <div class="center_wrapped">
           <p class="text--small">
             Create a similar plan
           </p>
@@ -527,7 +521,7 @@
     </modal>
     <div
       v-if="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
-      class="icon_open--stats icon_open_middle"
+      class="tab_option icon_open_middle tab_option_small"
       aria-label="Statistics"
       @click="isStatsOpen = true, $parent.$parent.will_body_scroll(false)"
     >
@@ -538,7 +532,7 @@
     </div>
     <div
       v-show="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
-      class="icon_open--print icon_open_bottom"
+      class="tab_option icon_open_bottom tab_option_small"
       aria-label="Print"
       @click="print_page()"
     >
@@ -548,23 +542,21 @@
       </p>
     </div>
     <div>
-      <div :class="{openedSections: isStatsOpen}" class="section--a" />
-      <div :class="{openedSections: isStatsOpen}" class="section--b" />
+      <div :class="{opened_sections: isStatsOpen}" class="section_a" />
+      <div :class="{opened_sections: isStatsOpen}" class="section_b" />
     </div>
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div v-if="selectedSessions.length !== 0" class="multi-select">
-        <p class="text--selected">
-          <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_check(1)">Complete</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_check(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="copyTarget = maxWeek, $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="bulk_delete()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected a_link" @click="deselect_all()">Deselect</a>
-      </div>
-    </transition>
+    <div v-if="selectedSessions.length !== 0" class="multi-select fadeIn">
+      <p>
+        <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
+      </p>
+      <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
+      <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
+      <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
+      <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
+      <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
+      <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
+      <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
+    </div>
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in this.$parent.$parent.client_details.plans"
@@ -663,14 +655,14 @@
                 :events="sessionDates"
                 :force-update="forceUpdate"
                 :is-trainer="true"
-                class="animate animate__fadeIn animate__delay-1s animate__faster"
+                class="fadeIn"
               />
               <month-calendar
                 v-else
                 :events="sessionDates"
                 :force-update="forceUpdate"
                 :is-trainer="true"
-                class="animate animate__fadeIn animate__delay-1s animate__faster"
+                class="fadeIn"
               />
             </div>
           </div>
@@ -759,7 +751,7 @@
                     class="wrapper--session"
                     :class="{activeState: session.id === editSession}"
                   >
-                    <div class="wrapper--session__header">
+                    <div class="session_header">
                       <div class="right_margin">
                         <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
                         <span v-if="session.id !== editSession" class="text--date">{{ day(session.date) }}</span>
@@ -807,7 +799,7 @@
                       :called-from-item="'trainer_session'"
                       :called-from-item-id="`${session.id}`"
                     />
-                    <div v-if="session.id === showFeedback" class="feedback_wrapper animate animate__fadeIn">
+                    <div v-if="session.id === showFeedback" class="feedback_wrapper fadeIn">
                       <hr><br>
                       <p><b>Feedback</b></p><br>
                       <div class="show_feedback" v-html="session.feedback" />
@@ -835,95 +827,93 @@
               <skeleton v-else type="session" />
             </div><!-- sessions -->
           </div>
-          <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-            <div v-if="isStatsOpen" class="graph">
-              <div class="section--top">
-                <p class="text--large section-title">
-                  Statistics
-                </p>
-                <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.will_body_scroll(true)" />
-              </div>
-              <div class="container--content">
-                <div class="data-options">
-                  <div class="data-select">
-                    <div class="data-select__options">
-                      <label for="measure">
-                        Measurement:<br>
-                        <select v-model="selectedDataName" class="small_border_radius width_300 text--small" name="measure" @change="sort_sessions(), scan(), selection()">
-                          <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
-                            {{ optionName.text }}
-                          </option>
-                        </select>
-                      </label>
-                    </div>
-                    <div v-if="showType" class="data-select__options">
-                      <label for="measure-type">
-                        Data type:<br>
-                        <select v-model="selectedDataType" class="small_border_radius width_300 text--small" name="measure-type" @change="sort_sessions(), scan(), selection()">
-                          <option value="Sets">Sets</option>
-                          <option value="Reps">Reps</option>
-                          <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">
-                            {{ optionData.text }}
-                          </option>
-                        </select>
-                      </label>
-                    </div>
+          <div v-if="isStatsOpen" class="graph fadeIn delay">
+            <div class="section--top">
+              <p class="text--large section-title">
+                Statistics
+              </p>
+              <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.will_body_scroll(true)" />
+            </div>
+            <div class="container--content">
+              <div class="data-options">
+                <div class="data-select">
+                  <div class="data-select__options">
+                    <label for="measure">
+                      Measurement:<br>
+                      <select v-model="selectedDataName" class="small_border_radius width_300 text--small" name="measure" @change="sort_sessions(), scan(), selection()">
+                        <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
+                          {{ optionName.text }}
+                        </option>
+                      </select>
+                    </label>
                   </div>
-                  <div v-if="showType && descData.total.desc && !dataValues.includes(null)" class="data-desc">
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc">
-                        <b>{{ descData.total.desc }}</b>
-                      </p>
-                      <p class="data-desc__value">
-                        {{ descData.total.value }}
-                      </p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc">
-                        <b>{{ descData.average.desc }}</b>
-                      </p>
-                      <p class="data-desc__value">
-                        {{ descData.average.value }}
-                      </p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc">
-                        <b>{{ descData.max.desc }}</b>
-                      </p>
-                      <p class="data-desc__value">
-                        {{ descData.max.value }}
-                      </p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc">
-                        <b>{{ descData.min.desc }}</b>
-                      </p>
-                      <p class="data-desc__value">
-                        {{ descData.min.value }}
-                      </p>
-                    </div>
-                    <div class="container--data-desc">
-                      <p class="data-desc__desc">
-                        {{ descData.change.desc }}
-                      </p>
-                      <p class="data-desc__value">
-                        {{ descData.change.value }}
-                      </p>
-                    </div>
+                  <div v-if="showType" class="data-select__options">
+                    <label for="measure-type">
+                      Data type:<br>
+                      <select v-model="selectedDataType" class="small_border_radius width_300 text--small" name="measure-type" @change="sort_sessions(), scan(), selection()">
+                        <option value="Sets">Sets</option>
+                        <option value="Reps">Reps</option>
+                        <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">
+                          {{ optionData.text }}
+                        </option>
+                      </select>
+                    </label>
                   </div>
                 </div>
-                <div class="protocol_error">
-                  <p v-show="protocolError.length !== 0" class="text--error">
-                    There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
-                  </p>
-                  <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--error">
-                    <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
-                  </p>
-                </div><br>
-                <simple-chart v-if="!dataValues.includes(null)" :data-points="dataValues" :labels="labelValues" aria-label="Graph" />
+                <div v-if="showType && descData.total.desc && !dataValues.includes(null)" class="data-desc">
+                  <div class="container--data-desc">
+                    <p class="data-desc__desc">
+                      <b>{{ descData.total.desc }}</b>
+                    </p>
+                    <p class="data-desc__value">
+                      {{ descData.total.value }}
+                    </p>
+                  </div>
+                  <div class="container--data-desc">
+                    <p class="data-desc__desc">
+                      <b>{{ descData.average.desc }}</b>
+                    </p>
+                    <p class="data-desc__value">
+                      {{ descData.average.value }}
+                    </p>
+                  </div>
+                  <div class="container--data-desc">
+                    <p class="data-desc__desc">
+                      <b>{{ descData.max.desc }}</b>
+                    </p>
+                    <p class="data-desc__value">
+                      {{ descData.max.value }}
+                    </p>
+                  </div>
+                  <div class="container--data-desc">
+                    <p class="data-desc__desc">
+                      <b>{{ descData.min.desc }}</b>
+                    </p>
+                    <p class="data-desc__value">
+                      {{ descData.min.value }}
+                    </p>
+                  </div>
+                  <div class="container--data-desc">
+                    <p class="data-desc__desc">
+                      {{ descData.change.desc }}
+                    </p>
+                    <p class="data-desc__value">
+                      {{ descData.change.value }}
+                    </p>
+                  </div>
+                </div>
               </div>
+              <div class="protocol_error">
+                <p v-show="protocolError.length !== 0" class="text--error">
+                  There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
+                </p>
+                <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--error">
+                  <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
+                </p>
+              </div><br>
+              <simple-chart v-if="!dataValues.includes(null)" :data-points="dataValues" :labels="labelValues" aria-label="Graph" />
             </div>
-          </transition>
+          </div>
         </div> <!-- plan_grid -->
       </div>
     </div>

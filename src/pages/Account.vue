@@ -76,7 +76,7 @@
       @opened="$refs.pass.focus()"
     >
       <div class="modal--reset">
-        <div class="wrapper--centered-item">
+        <div class="center_wrapped">
           <form class="form_grid" @submit.prevent="change_password(), $parent.will_body_scroll(true)">
             <div>
               <p class="text--large">
