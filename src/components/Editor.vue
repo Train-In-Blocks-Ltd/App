@@ -97,6 +97,7 @@
   }
 
   /* Editor */
+
   div#rich_editor {
     padding: 1rem;
     outline-width: 0;
@@ -114,6 +115,7 @@
   }
 
   /* Show */
+
   .padding {
     padding: 1rem 0
   }
@@ -482,7 +484,7 @@ export default {
       reader.addEventListener('load', () => {
         this.base64Img = reader.result
         this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<img src="${this.base64Img}" style="border-radius: 10px; max-width: 80%; margin: 1rem 0; content-visibility: auto">`)
+        this.format('insertHTML', `<img src="${this.base64Img}">`)
         this.reset_img_pop_up()
       }, false)
       if (file) {
@@ -512,7 +514,7 @@ export default {
     },
     add_video () {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', `<div><br></div><a name="video_v1" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" style="padding: .2rem 1rem; border-radius: 3px; background-color: #282828; color: white; text-decoration: none" contenteditable="false">Watch video</a>`)
+      this.format('insertHTML', `<a name="video" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`)
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {

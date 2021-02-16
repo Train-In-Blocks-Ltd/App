@@ -242,7 +242,7 @@
   .a--preview_template {
     margin-left: 2rem
   }
-  .show_feedback {
+  .feedback_wrapper {
     margin: 1rem 0;
     padding: 0
   }
@@ -807,10 +807,10 @@
                       :called-from-item="'trainer_session'"
                       :called-from-item-id="`${session.id}`"
                     />
-                    <div v-if="session.id === showFeedback" class="show_feedback animate animate__fadeIn">
+                    <div v-if="session.id === showFeedback" class="feedback_wrapper animate animate__fadeIn">
                       <hr><br>
                       <p><b>Feedback</b></p><br>
-                      <div v-html="session.feedback" />
+                      <div class="show_feedback" v-html="session.feedback" />
                     </div>
                     <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
                       <button v-if="session.id !== editSession && !isEditingSession" @click="editing_session_notes(session.id, true, session.notes), editPlanNotes = false, tempEditorStore = session.notes">

@@ -11,6 +11,25 @@
     --animate-repeat: 1
   }
 
+  /* Rich Editor */
+
+  div#rich_editor > div, div#rich_editor > p, div#rich_show_content > div, div#rich_show_content > p, .show_feedback > div, .show_feedback > p {
+    margin: 1rem 0
+  }
+  div#rich_editor img, div#rich_show_content img, .show_feedback img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  div#rich_editor a[name="video"], div#rich_show_content a[name="video"], .show_feedback a[name="video"]{
+    line-height: 3rem;
+    padding: .2rem 1rem;
+    border-radius: 3px;
+    background-color: #282828;
+    color: white;
+    text-decoration: none
+  }
+
   /* ANIMATIONS */
   .animate {
     animation-duration: 1s;
@@ -246,6 +265,7 @@
   }
 
   /* BUTTONS */
+
   button {
     height: fit-content;
     width: fit-content;
@@ -281,6 +301,7 @@
   }
 
   /* EDITOR WRAPPERS */
+
   .wrapper--session__header {
     height: fit-content
   }
@@ -315,15 +336,18 @@
   }
 
   /* SHOW AND NOTES */
+
   .wrapper--session__header.client-side {
     height: 3.2rem
   }
 
   /* INPUTS */
+
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]), select {
+    outline: none;
+    -moz-appearance: none;
     -webkit-appearance: none;
     width: 100%;
-    outline-width: 0;
     padding: .6rem;
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
