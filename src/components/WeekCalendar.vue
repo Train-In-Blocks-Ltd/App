@@ -1,5 +1,7 @@
 <style scoped>
+
   /* Containers */
+
   .calendar_header {
     display: flex;
     justify-content: space-between;
@@ -18,7 +20,7 @@
   .day_container {
     display: grid;
     grid-template-columns: .1fr 1fr;
-    grid-gap: 1rem;
+    grid-gap: 4rem;
     min-height: 50px
   }
   .day_events {
@@ -42,6 +44,7 @@
   }
 
   /* Header bar */
+
   .calendar_header__bar * {
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
@@ -75,6 +78,13 @@
   .disabled, .today.disabled:hover {
     opacity: .6;
     cursor: default
+  }
+
+  /* Day */
+
+  .day_header {
+    display: flex;
+    justify-content: space-between
   }
 
   /* Responsive */
@@ -134,7 +144,10 @@
       >
         <div class="day_header">
           <p class="text--small">
-            {{ get_day(index) }} <span class="grey">{{ day.date_split[2] }}</span>
+            {{ get_day(index) }}
+          </p>
+          <p class="text--small grey">
+            {{ day.date_split[2] }}
           </p>
         </div>
         <div class="day_events">
