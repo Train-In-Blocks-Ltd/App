@@ -11,7 +11,8 @@ img {
 .update_item {
   background-color: white;
   border-radius: 10px;
-  padding: 2rem
+  padding: 2rem;
+  box-shadow: 0 0 20px 10px #28282810
 }
 </style>
 
