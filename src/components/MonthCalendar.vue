@@ -116,9 +116,9 @@
     </div>
     <div class="month_container">
       <p
-        class="days_label grey"
         v-for="(label, index) in daysLabel"
         :key="`d_label_${index}`"
+        class="days_label grey"
       >
         {{ label }}
       </p>
@@ -127,7 +127,9 @@
         :key="`day_${index}`"
         class="day_cell"
       >
-        <p class="grey">{{ index + 1 }}</p>
+        <p class="grey">
+          {{ index + 1 }}
+        </p>
         <p
           v-for="event in day"
           :key="`event_${event.session_id}`"

@@ -356,7 +356,7 @@ export default {
       }
       if (arr.length !== 0) {
         arr.forEach((item) => {
-          html = html.replace(item[0], `<a name="video_v1" href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
+          html = html.replace(item[0], `<a name="video" href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
         })
       }
       return html

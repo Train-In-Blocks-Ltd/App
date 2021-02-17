@@ -193,8 +193,12 @@
           </div>
         </div>
         <div v-else>
-          <p class="text--small">No sessions yet</p>
-          <p class="text--small grey">Please contact your trainer or coach for more details</p>
+          <p class="text--small">
+            No sessions yet
+          </p>
+          <p class="text--small grey">
+            Please contact your trainer or coach for more details
+          </p>
           <div class="spacer" />
         </div>
       </div>
