@@ -66,6 +66,12 @@
   .day_cell:hover {
     box-shadow: 0 0 20px 10px #28282808
   }
+  .holderCell {
+    background-color: transparent
+  }
+  .holderCell:hover {
+    box-shadow: none
+  }
 
   /* Event */
 
@@ -115,23 +121,24 @@
       </div>
     </div>
     <div class="month_container">
-      <p
-        v-for="(label, index) in daysLabel"
-        :key="`d_label_${index}`"
-        class="days_label grey"
-      >
-        {{ label }}
-      </p>
+      <p class="days_label grey">Mon</p>
+      <p class="days_label grey">Tue</p>
+      <p class="days_label grey">Wed</p>
+      <p class="days_label grey">Thu</p>
+      <p class="days_label grey">Fri</p>
+      <p class="days_label grey">Sat</p>
+      <p class="days_label grey">Sun</p>
       <div
         v-for="(day, index) in month"
         :key="`day_${index}`"
+        :class="{ holderCell: day[1] === '' }"
         class="day_cell"
       >
         <p class="grey">
-          {{ index + 1 }}
+          {{ day[1] }}
         </p>
         <p
-          v-for="event in day"
+          v-for="event in day[0]"
           :key="`event_${event.session_id}`"
           :style="{ backgroundColor: event.color, color: event.textColor }"
           :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF', cursor: isTrainer }"
@@ -157,8 +164,7 @@ export default {
       currentMonth: '',
       currentYear: '',
       monthDiff: 1,
-      month: [],
-      daysLabel: []
+      month: []
     }
   },
   watch: {
@@ -170,14 +176,6 @@ export default {
     this.get_month()
   },
   methods: {
-    get_day (date) {
-      let i
-      this.daysLabel = []
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-      for (i = 0; i <= 6; i++) {
-        this.daysLabel.push(new Date(date).getDay() + i <= 6 ? days[new Date(date).getDay() + i] : days[new Date(date).getDay() + i - 7])
-      }
-    },
     get_month_number (month) {
       const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       return monthArr.indexOf(month) + 1
@@ -192,6 +190,13 @@ export default {
       const monthEnd = lastDayOfMonth.getDate()
       let date
       for (date = 1; date <= monthEnd; date++) {
+        const weekDay = new Date(`${this.currentYear}-${this.get_month_number(this.currentMonth)}-${date}`).getDay()
+        if (date === 1 && weekDay !== 1) {
+          let holder
+          for (holder = 1; holder < weekDay; holder++) {
+            this.month.push([[], ''])
+          }
+        }
         const datapack = []
         this.events.forEach((event) => {
           const dateSplit = event.date.split('-')
@@ -199,9 +204,8 @@ export default {
             datapack.push(event)
           }
         })
-        this.month.push(datapack)
+        this.month.push([datapack, date])
       }
-      this.get_day(`${this.currentYear}-${this.get_month_number(this.currentMonth)}-01`)
     }
   }
 }
