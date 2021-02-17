@@ -204,11 +204,17 @@ export default {
       const monthEnd = lastDayOfMonth.getDate()
       let date
       for (date = 1; date <= monthEnd; date++) {
-        const weekDay = new Date(`${this.currentYear}-${this.get_month_number(this.currentMonth)}-${date}`).getDay()
+        const weekDay = new Date(`${this.currentYear}-${this.get_month_number(this.currentMonth).toLocaleString('en-US', { minimumIntegerDigits: 2 })}-${date.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`).getDay()
         if (date === 1 && weekDay !== 1) {
           let holder
-          for (holder = 1; holder < weekDay; holder++) {
-            this.month.push([[], ''])
+          if (weekDay === 0) {
+            for (holder = 1; holder < 7; holder++) {
+              this.month.push([[], ''])
+            }
+          } else {
+            for (holder = 1; holder < weekDay; holder++) {
+              this.month.push([[], ''])
+            }
           }
         }
         const datapack = []
