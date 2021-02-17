@@ -58,8 +58,13 @@
     grid-gap: 1rem
   }
   .template_item svg {
-    margin: auto 1rem;
-    cursor: pointer
+    cursor: pointer;
+    margin-left: 1rem;
+    vertical-align: middle;
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .template_item svg:hover {
+    opacity: .6
   }
   .wrapper--input--add_link {
     display: grid;
@@ -322,21 +327,17 @@ export default {
 
       // REGEX
 
-      updateInputRegex: /<input.*?>/gmi,
-      updateCheckboxRegex: /name="(.*?)"/gmi,
       updateIframeRegex: /<iframe.*?><\/iframe>/gmi,
-      updateURLRegex: /src="(.*?)"/gmi,
-      updateImageRegex: /<img.*?>/gmi,
-      updateStyleRegex: /style="(.*?)"/gmi
+      updateURLRegex: /src="(.*?)"/gmi
     }
   },
   watch: {
     showEditState () {
       this.initialHTML = this.htmlInjection
       if (this.showEditState) {
-        document.addEventListener('keydown', this.check_cmd_state)
+        document.addEventListener('keyup', this.check_cmd_state)
       } else {
-        document.removeEventListener('keydown', this.check_cmd_state)
+        document.removeEventListener('keyup', this.check_cmd_state)
       }
     }
   },
@@ -378,18 +379,16 @@ export default {
       }
     },
     check_cmd_state () {
-      setInterval(() => {
-        const boldState = document.queryCommandState('bold')
-        const italicState = document.queryCommandState('italic')
-        const underlineState = document.queryCommandState('underline')
-        const orderedListState = document.queryCommandState('insertOrderedList')
-        const unorderedListState = document.queryCommandState('insertUnorderedList')
-        this.boldActive = boldState
-        this.italicActive = italicState
-        this.underlineActive = underlineState
-        this.olActive = orderedListState
-        this.ulActive = unorderedListState
-      }, 100)
+      const boldState = document.queryCommandState('bold')
+      const italicState = document.queryCommandState('italic')
+      const underlineState = document.queryCommandState('underline')
+      const orderedListState = document.queryCommandState('insertOrderedList')
+      const unorderedListState = document.queryCommandState('insertUnorderedList')
+      this.boldActive = boldState
+      this.italicActive = italicState
+      this.underlineActive = underlineState
+      this.olActive = orderedListState
+      this.ulActive = unorderedListState
     },
     remove_brackets (dataIn) {
       if (dataIn !== null) {

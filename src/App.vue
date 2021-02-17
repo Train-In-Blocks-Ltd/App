@@ -9,28 +9,34 @@
 
   /* Rich Editor */
 
-  .show_session > div,
-  .show_session > p,
+  div#rich_editor {
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none
+  }
   div#rich_editor > div,
   div#rich_editor > p,
   div#rich_show_content > div,
   div#rich_show_content > p,
+  .show_session > div,
+  .show_session > p,
   .show_feedback > div,
   .show_feedback > p {
     margin: .6rem 0
   }
-  .show_session img,
   div#rich_editor img,
   div#rich_show_content img,
+  .show_session img,
   .show_feedback img {
     border-radius: 10px;
     max-width: 80%;
     margin: 1rem 0
   }
-  .show_session a[name="video"],
   div#rich_editor a[name="video"],
   div#rich_show_content a[name="video"],
-  .show_feedback a[name="video"] {
+  .show_session a[name="video"],
+  .show_feedback a[name="video"]
+  .show_plan_notes a[name="video"] {
     line-height: 3rem;
     padding: .2rem 1rem;
     border-radius: 3px;
@@ -38,9 +44,9 @@
     color: white;
     text-decoration: none
   }
-  .show_session input[type="checkbox"]
   div#rich_editor input[type="checkbox"],
   div#rich_show_content input[type="checkbox"],
+  .show_session input[type="checkbox"]
   .show_feedback input[type="checkbox"] {
     margin: .4rem
   }
@@ -267,6 +273,10 @@
   .allow_text_overflow {
     text-overflow: ellipsis
   }
+  .disabled, .disabled:hover {
+    opacity: .6;
+    cursor: default
+  }
 
   /* Text buttons */
 
@@ -356,7 +366,7 @@
     opacity: .6
   }
 
-  /* INPUTS */
+  /* Inputs */
 
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]), select {
     outline: none;
@@ -650,10 +660,12 @@
     opacity: .6;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover .client_link__notes__content img,
-  .plan_link:hover img,
-  .client_link:hover .client_link__notes__content iframe,
-  .plan_link:hover iframe {
+  .client_link .client_link__notes__content img,
+  .client_link .client_link__notes__content iframe,
+  .client_link .client_link__notes__content a,
+  .plan_link img,
+  .plan_link iframe,
+  .plan_link a {
     display: none
   }
 

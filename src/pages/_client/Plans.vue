@@ -33,8 +33,17 @@
     grid-gap: 2rem;
     margin: 2rem 0
   }
-  .show_plan_notes p {
-    margin: 1rem 0
+  .show_plan_notes > div,
+  .show_plan_notes > p {
+    margin: .6rem 0;
+  }
+  .show_plan_notes a[name="video"] {
+    line-height: 3rem;
+    padding: .2rem 1rem;
+    border-radius: 3px;
+    background-color: #282828;
+    color: white;
+    text-decoration: none
   }
 
   /* Add plan Form */

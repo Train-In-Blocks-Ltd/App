@@ -29,8 +29,9 @@
     transform: rotate(-90deg);
     margin-left: 1rem
   }
-  .disabled {
-    opacity: .4
+  .disabled, .disabled:hover {
+    opacity: .6;
+    cursor: default
   }
   hr {
     margin: 2rem 0
@@ -72,7 +73,7 @@
         </p>
         <div class="plan_notes">
           <div class="plan_notes__header">
-            <p class="text--small">
+            <p class="text--small bottom_margin">
               Plan Notes
             </p>
           </div>
@@ -104,7 +105,7 @@
           />
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
-        <div v-else-if="plan.sessions" class="container--sessions">
+        <div v-else-if="plan.sessions.length !== 0" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
               v-show="showing_current_session !== 0"
@@ -190,6 +191,11 @@
               </div>
             </div>
           </div>
+        </div>
+        <div v-else>
+          <p class="text--small">No sessions yet</p>
+          <p class="text--small grey">Please contact your trainer or coach for more details</p>
+          <div class="spacer" />
         </div>
       </div>
     </div>

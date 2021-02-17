@@ -49,8 +49,12 @@
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-gap: .6rem
   }
+  .days_label {
+    text-align: center
+  }
 
   /* Day */
+
   .day_cell {
     text-align: right;
     min-height: 100px;
@@ -111,12 +115,19 @@
       </div>
     </div>
     <div class="month_container">
+      <p
+        class="days_label grey"
+        v-for="(label, index) in daysLabel"
+        :key="`d_label_${index}`"
+      >
+        {{ label }}
+      </p>
       <div
         v-for="(day, index) in month"
         :key="`day_${index}`"
         class="day_cell"
       >
-        <p>{{ get_day(`${currentYear}-${get_month_number(currentMonth)}-${index + 1}`) }}<br><span class="grey">{{ index + 1 }}</span></p>
+        <p class="grey">{{ index + 1 }}</p>
         <p
           v-for="event in day"
           :key="`event_${event.session_id}`"
@@ -144,7 +155,8 @@ export default {
       currentMonth: '',
       currentYear: '',
       monthDiff: 1,
-      month: []
+      month: [],
+      daysLabel: []
     }
   },
   watch: {
@@ -157,8 +169,12 @@ export default {
   },
   methods: {
     get_day (date) {
-      const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-      return days[new Date(date).getDay()]
+      let i
+      this.daysLabel = []
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      for (i = 0; i <= 6; i++) {
+        this.daysLabel.push(new Date(date).getDay() + i <= 6 ? days[new Date(date).getDay() + i] : days[new Date(date).getDay() + i - 7])
+      }
     },
     get_month_number (month) {
       const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -183,6 +199,7 @@ export default {
         })
         this.month.push(datapack)
       }
+      this.get_day(`${this.currentYear}-${this.get_month_number(this.currentMonth)}-01`)
     }
   }
 }
