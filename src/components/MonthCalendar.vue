@@ -121,13 +121,27 @@
       </div>
     </div>
     <div class="month_container">
-      <p class="days_label grey">Mon</p>
-      <p class="days_label grey">Tue</p>
-      <p class="days_label grey">Wed</p>
-      <p class="days_label grey">Thu</p>
-      <p class="days_label grey">Fri</p>
-      <p class="days_label grey">Sat</p>
-      <p class="days_label grey">Sun</p>
+      <p class="days_label grey">
+        Mon
+      </p>
+      <p class="days_label grey">
+        Tue
+      </p>
+      <p class="days_label grey">
+        Wed
+      </p>
+      <p class="days_label grey">
+        Thu
+      </p>
+      <p class="days_label grey">
+        Fri
+      </p>
+      <p class="days_label grey">
+        Sat
+      </p>
+      <p class="days_label grey">
+        Sun
+      </p>
       <div
         v-for="(day, index) in month"
         :key="`day_${index}`"
