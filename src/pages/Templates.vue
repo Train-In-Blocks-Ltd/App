@@ -112,10 +112,7 @@
         <a v-if="$parent.templates.length !== 0" href="javascript:void(0)" class="a_link" @click="select_all()">Select all</a>
       </div>
     </div>
-    <div v-if="$parent.templates" class="container--templates">
-      <p v-if="$parent.templates.length === 0" class="text--small grey">
-        No templates yet :(
-      </p>
+    <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="container--templates">
       <div
         v-for="(template, index) in $parent.templates"
         :id="'template-' + template.id"
@@ -168,6 +165,9 @@
         </div>
       </div>
     </div>
+    <p v-else class="text--small grey">
+      No templates yet :(
+    </p>
   </div>
 </template>
 
