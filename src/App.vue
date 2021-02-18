@@ -891,10 +891,10 @@
     <nav v-if="authenticated && claims" class="sidebar">
       <div class="logo">
         <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo_link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg" aria-label="Home" />
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
         </router-link>
         <router-link v-if="claims.user_type === 'Client'" to="/clientUser" class="logo_link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg" aria-label="Home" />
+          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
         </router-link>
       </div> <!-- .logo -->
       <div class="account_nav_item">
@@ -903,7 +903,7 @@
           to="/"
           title="Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon" aria-label="Home" />
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Home" />
           <p class="account_nav_item--text">
             Home
           </p>
@@ -913,7 +913,7 @@
           to="/clientUser"
           title="Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon" aria-label="Home" />
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Home" />
           <p class="account_nav_item--text">
             Home
           </p>
@@ -927,7 +927,7 @@
           to="/clientUser"
           title="Client Home"
         >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon" aria-label="Client Home" />
+          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Client Home" />
           <p class="account_nav_item--text">
             Client
           </p>
@@ -938,7 +938,7 @@
         class="account_nav_item"
       >
         <a href="https://traininblocks.com/help" target="_blank" rel="noopener" title="Help">
-          <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav_item--icon" aria-label="Help" />
+          <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav_item--icon fadeIn" aria-label="Help" />
           <p class="account_nav_item--text">
             Help
           </p>
@@ -949,7 +949,7 @@
         class="account_nav_item"
       >
         <router-link to="/templates" title="Templates">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav_item--icon" aria-label="Templates" />
+          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav_item--icon fadeIn" aria-label="Templates" />
           <p class="account_nav_item--text">
             Templates
           </p>
@@ -960,7 +960,7 @@
         class="account_nav_item"
       >
         <router-link to="/portfolio" title="Portfolio">
-          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav_item--icon" aria-label="Portfolio" />
+          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav_item--icon fadeIn" aria-label="Portfolio" />
           <p class="account_nav_item--text">
             Portfolio
           </p>
@@ -971,7 +971,7 @@
         class="account_nav_item"
       >
         <router-link to="/archive" title="Archive">
-          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav_item--icon" aria-label="Archive" />
+          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav_item--icon fadeIn" aria-label="Archive" />
           <p class="account_nav_item--text">
             Archive
           </p>
@@ -982,7 +982,7 @@
         class="account_nav_item"
       >
         <router-link to="/account" title="Account">
-          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav_item--icon" aria-label="Account" />
+          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav_item--icon fadeIn" aria-label="Account" />
           <p class="account_nav_item--text">
             Account
           </p>
@@ -990,7 +990,7 @@
       </div>
       <div class="account_nav_item">
         <router-link to="/logout" title="Logout" @click.native="logout()">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav_item--icon" aria-label="Logout" />
+          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav_item--icon fadeIn" aria-label="Logout" />
           <p class="account_nav_item--text">
             Logout
           </p>
