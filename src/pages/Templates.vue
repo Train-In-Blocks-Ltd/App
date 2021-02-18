@@ -109,7 +109,7 @@
         <button @click="new_template()">
           New Template
         </button>
-        <a v-if="$parent.templates.length !== 0" href="javascript:void(0)" class="a_link" @click="select_all()">Select all</a>
+        <a v-if="$parent.templates !== null && $parent.templates.length !== 0" href="javascript:void(0)" class="a_link" @click="select_all()">Select all</a>
       </div>
     </div>
     <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="container--templates">
