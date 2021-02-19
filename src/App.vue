@@ -189,7 +189,8 @@
   div.vm--modal {
     /* stylelint-disable-next-line */
     left: 0!important;
-    min-width: 100%
+    min-width: 100%;
+    overflow-y: auto
   }
   div.vm--modal > div,
   div.vm--modal > form {

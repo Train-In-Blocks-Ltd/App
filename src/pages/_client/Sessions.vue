@@ -443,13 +443,13 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--copy" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)">
-        <div class="center_wrapped">
+      <div class="modal--copy">
+        <form v-if="copyAcrossPage === 0" class="center_wrapped" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
           <p class="text--small">
             Copy across to different microcycles
           </p>
           <p class="text--small grey">
-            All you'll have to do is to change and progress each session
+            Progress each session in just a few clicks
           </p><br><br>
           <label for="range">From {{ currentWeek }} to: </label>
           <input
@@ -463,7 +463,7 @@
             :max="maxWeek"
             required
           >
-          <br>
+          <br><br>
           <label for="range">Days until next sessions: </label>
           <input
             v-model="daysDiff"
@@ -473,14 +473,80 @@
             min="1"
             required
           ><br><br>
-          <button type="submit">
-            Copy
-          </button>
           <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
             Cancel
           </button>
+          <button v-if="!simpleCopy" type="submit">
+            Next
+          </button>
+          <button v-else @click.prevent="copy_across(), $modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
+            Copy
+          </button>
+        </form>
+        <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1" class="center_wrapped">
+          <form
+            v-for="(protocol, protocolIndex) in copyAcrossProtocols"
+            :key="`protocol_${protocolIndex}`"
+            v-show="copyAcrossPage === protocolIndex + 1"
+            @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
+          >
+            <div
+              v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[protocolIndex][1]"
+              v-show="copyAcrossView === exerciseGroupIndex"
+              :key="`exercise_${protocolIndex}_${exerciseGroupIndex}`"
+            >
+              <p class="text--small">
+                {{ protocol[1][exerciseGroupIndex][0] }}
+              </p>
+              <p class="text--small grey">
+                {{ protocol[1][exerciseGroupIndex][1] }} {{ protocol[1][exerciseGroupIndex][2] }}
+              </p>
+              <div
+                v-for="(exercise, exerciseIndex) in exercises"
+                :key="`exercise_${protocolIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
+              >
+                <br>
+                <label :for="`${protocol[1][0][0]}_${exerciseIndex}`">
+                  Week {{ currentWeek + exerciseIndex + 1 }}:
+                </label>
+                <input
+                  v-model="copyAcrossInputs[protocolIndex][1][exerciseGroupIndex][exerciseIndex]"
+                  :name="`${protocol[1][0][0]}_${exerciseIndex}`"
+                  type="text"
+                  required
+                >
+              </div>
+              <br>
+              <button v-if="copyAcrossView !== 0" class="cancel" @click.prevent="copyAcrossView -= 1">
+                Back
+              </button>
+              <button v-if="copyAcrossView === 0" class="cancel" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
+                Back
+              </button>
+              <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">
+                Next
+              </button>
+              <button v-if="copyAcrossView !== copyAcrossInputs[protocolIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[protocolIndex][1].length - 1">
+                Next
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)" class="center_wrapped">
+          <p class="text--small">
+            You're all set
+          </p>
+          <p class="text--small grey">
+            Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
+          </p><br>
+          <button class="cancel" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
+            Back
+          </button>
+          <button type="submit">
+            Copy
+          </button>
+        </form>
+      </div>
     </modal>
     <modal
       name="duplicate"
@@ -550,7 +616,7 @@
       </p>
       <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
       <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
-      <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
+      <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
       <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
       <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
       <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
@@ -994,6 +1060,12 @@ export default {
 
       moveTarget: 1,
       copyTarget: 2,
+      simpleCopy: false,
+      copyAcrossPage: 0,
+      copyAcrossView: 0,
+      copyAcrossViewMax: 0,
+      copyAcrossProtocols: [],
+      copyAcrossInputs: [],
       daysDiff: 7,
       selectedSessions: [],
       shiftDays: 1,
@@ -1059,6 +1131,66 @@ export default {
       this.$modal.hide('shift')
       this.deselect_all()
     },
+    copy_across_check () {
+      this.simpleCopy = false
+      this.$parent.$parent.client_details.plans.forEach((plan) => {
+        if (plan.id === parseInt(this.$route.params.id)) {
+          plan.sessions.forEach((session) => {
+            if (this.selectedSessions.includes(session.id)) {
+              if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes).length === 0) {
+                this.simpleCopy = true
+              }
+            }
+          })
+        }
+      })
+    },
+    copy_across_pull () {
+      let ignored = 0
+      this.copyAcrossInputs = []
+      this.copyAcrossProtocols = []
+      this.$parent.$parent.client_details.plans.forEach((plan) => {
+        if (plan.id === parseInt(this.$route.params.id)) {
+          plan.sessions.forEach((session, sessionIdx) => {
+            if (this.selectedSessions.includes(session.id)) {
+              this.copyAcrossProtocols.push([
+                session.id,
+                this.chunk_array(this.pull_protocols(session.name, session.notes))
+              ])
+              this.copyAcrossInputs.push([
+                session.id,
+                new Array(this.copyAcrossProtocols[sessionIdx - ignored][1].length)
+              ])
+              let i
+              for (i = 0; i < this.copyAcrossProtocols[sessionIdx - ignored][1].length; i++) {
+                this.copyAcrossInputs[sessionIdx - ignored][1][i] = new Array(this.copyTarget - this.currentWeek)
+                let e
+                for (e = 0; e < this.copyAcrossInputs[sessionIdx - ignored][1][i].length; e++) {
+                  this.copyAcrossInputs[sessionIdx - ignored][1][i][e] = this.copyAcrossProtocols[sessionIdx - ignored][1][i][2]
+                }
+              }
+            } else {
+              ignored++
+            }
+          })
+        }
+      })
+    },
+    copy_across_process (sessionId, sessionNotes, loc) {
+      this.copyAcrossInputs.forEach((sessionItem, sessionItemId) => {
+        let n = 0
+        if (sessionItem[0] === sessionId) {
+          sessionItem[1].forEach((exerciseGroup, exerciseGroupIndex) => {
+            const regEx = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
+            sessionNotes = sessionNotes.replace(regEx, (match) => {
+              return n === exerciseGroupIndex ? `${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}: ${exerciseGroup[loc - 1]}` : match
+            })
+            n++
+          })
+        }
+      })
+      return sessionNotes
+    },
     copy_across () {
       const copysessions = []
       let weekCount = this.currentWeek + 1
@@ -1067,6 +1199,7 @@ export default {
           plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               copysessions.push({
+                id: session.id,
                 name: session.name,
                 date: session.date,
                 notes: session.notes
@@ -1081,12 +1214,17 @@ export default {
         copysessions.forEach((session) => {
           this.new_session.name = session.name
           this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - startWeek))
-          this.currentCopySessionNotes = session.notes
+          this.currentCopySessionNotes = this.simpleCopy ? session.notes : this.copy_across_process(session.id, session.notes, weekCount - startWeek)
           this.add_session()
         })
       }
       this.currentCopySessionNotes = ''
       this.copyTarget = 1
+      this.copyAcrossPage = 0
+      this.copyAcrossView = 0
+      this.copyAcrossViewMax = 0
+      this.copyAcrossInputs = []
+      this.copyAcrossProtocols = []
       this.new_session.name = 'Untitled'
       this.today()
       this.update_plan()
