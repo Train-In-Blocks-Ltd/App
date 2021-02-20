@@ -174,28 +174,28 @@
           >
             <button
               :class="{ activeStyle: ulActive }"
-              :disabled="!caretIsInEditor"
+              :disabled="!allowMedias"
               title="Checkbox"
               @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
             >
               <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
             </button>
             <button
-              :disabled="!caretIsInEditor"
+              :disabled="!allowMedias"
               title="Add Link"
               @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/link.svg')" />
             </button>
             <button
-              :disabled="!caretIsInEditor"
+              :disabled="!allowMedias"
               title="Insert Image"
               @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
             </button>
             <button
-              :disabled="!caretIsInEditor"
+              :disabled="!allowMedias"
               title="Insert Video"
               @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
             >
@@ -203,7 +203,7 @@
             </button>
             <button
               v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-              :disabled="!caretIsInEditor"
+              :disabled="!allowMedias"
               title="Use Template"
               @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
             >
@@ -277,10 +277,9 @@
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-        @input="update_edited_notes()"
-        @focus="caretIsInEditor = true"
-        @blur="unfocus_editor()"
+        @click="caretIsInEditor = true, allowMedias = true, reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+        @input="update_edited_notes(), caretIsInEditor = true, allowMedias = true"
+        @blur="caretIsInEditor = false, unfocus_editor()"
         v-html="update_iframe(initialHTML)"
       />
     </div>
@@ -316,6 +315,8 @@ export default {
       underlineActive: false,
       olActive: false,
       ulActive: false,
+
+      allowMedias: false,
       showAddLink: false,
       addLinkName: '',
       addLinkURL: '',
@@ -369,7 +370,7 @@ export default {
       document.getElementById('rich_editor').focus()
     },
     unfocus_editor () {
-      setTimeout(() => { this.caretIsInEditor = false }, 100)
+      setTimeout(() => { this.allowMedias = false }, 100)
     },
     will_body_scroll (state) {
       const body = document.getElementsByTagName('body')[0]
