@@ -167,18 +167,19 @@
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
-          <button
-            :class="{ activeStyle: ulActive }"
-            title="Checkbox"
-            @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
-          </button>
           <div
             class="grouped_toolbar_options"
             @mouseover="showTooltip = true"
             @mouseleave="showTooltip = false"
           >
+            <button
+              :class="{ activeStyle: ulActive }"
+              :disabled="!caretIsInEditor"
+              title="Checkbox"
+              @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
+            </button>
             <button
               :disabled="!caretIsInEditor"
               title="Add Link"
@@ -414,6 +415,38 @@ export default {
       this.editedHTML = document.getElementById('rich_editor').innerHTML
       this.$emit('update:htmlInjection', this.editedHTML)
     },
+    paste_html_at_caret(html, selectPastedContent) {
+      var sel, range
+      if (window.getSelection) {
+        sel = window.getSelection()
+        if (sel.getRangeAt && sel.rangeCount) {
+          range = sel.getRangeAt(0)
+          range.deleteContents()
+
+          var el = document.createElement("div")
+          el.innerHTML = html
+          var frag = document.createDocumentFragment(), node, lastNode
+          while ( (node = el.firstChild) ) {
+            lastNode = frag.appendChild(node)
+          }
+          var firstNode = frag.firstChild
+          range.insertNode(frag)
+
+          if (lastNode) {
+            range = range.cloneRange()
+            range.setStartAfter(lastNode)
+            if (selectPastedContent) {
+              range.setStartBefore(firstNode)
+            } else {
+              range.collapse(true)
+            }
+            sel.removeAllRanges()
+            sel.addRange(range)
+          }
+        }
+      }
+      this.update_edited_notes()
+    },
     format (com, val) {
       document.execCommand(com, false, val)
     },
@@ -441,11 +474,15 @@ export default {
         }
       }
     },
+
     // CHECKBOX
+
     add_checkbox () {
-      this.format('insertHTML', '<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>')
+      this.paste_html_at_caret('<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>', false)
     },
+
     // LINK
+
     show_link_adder () {
       this.savedSelection = this.save_selection()
       this.showAddLink = !this.showAddLink
@@ -455,7 +492,7 @@ export default {
     },
     add_link () {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', `<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`)
+      this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, true)
       this.reset_link_pop_up()
     },
     reset_link_pop_up () {
@@ -463,7 +500,9 @@ export default {
       this.addLinkURL = ''
       this.showAddLink = false
     },
+
     // IMAGE
+
     show_image_adder () {
       this.savedSelection = this.save_selection()
       this.showAddImage = !this.showAddImage
@@ -477,7 +516,7 @@ export default {
       reader.addEventListener('load', () => {
         this.base64Img = reader.result
         this.restore_selection(this.savedSelection)
-        this.format('insertHTML', `<img src="${this.base64Img}">`)
+        this.paste_html_at_caret(`<img src="${this.base64Img}">`, false)
         this.reset_img_pop_up()
       }, false)
       if (file) {
@@ -497,7 +536,9 @@ export default {
       this.base64Img = null
       this.showAddImage = false
     },
+
     // VIDEO
+
     show_video_adder () {
       this.savedSelection = this.save_selection()
       this.showAddVideo = !this.showAddVideo
@@ -507,7 +548,7 @@ export default {
     },
     add_video () {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', `<a name="video" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`)
+      this.paste_html_at_caret(`<a name="video" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`, false)
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {
@@ -519,7 +560,9 @@ export default {
       this.addVideoURL = ''
       this.showAddVideo = false
     },
+
     // TEMPLATE
+
     show_template_adder () {
       this.savedSelection = this.save_selection()
       this.showAddTemplate = !this.showAddTemplate
@@ -529,7 +572,7 @@ export default {
     },
     add_template (templateData) {
       this.restore_selection(this.savedSelection)
-      this.format('insertHTML', templateData)
+      this.paste_html_at_caret(templateData, false)
       this.reset_template_pop_up()
     },
     reset_template_pop_up () {
