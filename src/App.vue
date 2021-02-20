@@ -7,50 +7,6 @@
     box-sizing: border-box
   }
 
-  /* Rich Editor */
-
-  div#rich_editor {
-    outline: none;
-    -moz-appearance: none;
-    -webkit-appearance: none
-  }
-  div#rich_editor > div,
-  div#rich_editor > p,
-  div#rich_show_content > div,
-  div#rich_show_content > p,
-  .show_session > div,
-  .show_session > p,
-  .show_feedback > div,
-  .show_feedback > p {
-    margin: .6rem 0
-  }
-  div#rich_editor img,
-  div#rich_show_content img,
-  .show_session img,
-  .show_feedback img {
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 1rem 0
-  }
-  div#rich_editor a[name="video"],
-  div#rich_show_content a[name="video"],
-  .show_session a[name="video"],
-  .show_feedback a[name="video"]
-  .show_plan_notes a[name="video"] {
-    line-height: 3rem;
-    padding: .2rem 1rem;
-    border-radius: 3px;
-    background-color: #282828;
-    color: white;
-    text-decoration: none
-  }
-  div#rich_editor input[type="checkbox"],
-  div#rich_show_content input[type="checkbox"],
-  .show_session input[type="checkbox"]
-  .show_feedback input[type="checkbox"] {
-    margin: .4rem
-  }
-
   /* Animation */
 
   .fadeIn {

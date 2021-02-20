@@ -1,130 +1,174 @@
+<style>
+div#rich_editor {
+  outline: none;
+  -moz-appearance: none;
+  -webkit-appearance: none
+}
+div#rich_editor > div,
+div#rich_editor > p,
+div#rich_show_content > div,
+div#rich_show_content > p,
+.show_session > div,
+.show_session > p,
+.show_feedback > div,
+.show_feedback > p {
+  margin: .6rem 0
+}
+div#rich_editor img,
+div#rich_show_content img,
+.show_session img,
+.show_feedback img {
+  border-radius: 10px;
+  max-width: 80%;
+  margin: 1rem 0
+}
+div#rich_editor a[name="video"],
+div#rich_show_content a[name="video"],
+.show_session a[name="video"],
+.show_feedback a[name="video"]
+.show_plan_notes a[name="video"] {
+  line-height: 3rem;
+  padding: .2rem 1rem;
+  border-radius: 3px;
+  background-color: #282828;
+  color: white;
+  text-decoration: none
+}
+div#rich_editor input[type="checkbox"],
+div#rich_show_content input[type="checkbox"],
+.show_session input[type="checkbox"]
+.show_feedback input[type="checkbox"] {
+  margin: .4rem
+}
+</style>
+
 <style scoped>
 
-  /* Attr */
-  [data-placeholder]:empty:before {
-    content: attr(data-placeholder);
-    color: #888888;
-    font-style: italic
-  }
+/* Attr */
+[data-placeholder]:empty:before {
+  content: attr(data-placeholder);
+  color: #888888;
+  font-style: italic
+}
 
-  /* Toolbars */
-  .re_toolbar_back {
-    position: sticky;
-    top: 0;
-    padding-top: 1rem;
-    background-color: white
-  }
-  #rich_toolbar {
-    background-color: white;
-    border: 1px solid #28282840;
-    border-radius: 5px 5px 0 0;
-    padding: 0 1rem;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  #rich_toolbar.showingPopup {
-    border-bottom: 2px solid transparent
-  }
-  #rich_toolbar button {
-    padding: 0;
-    margin: .8rem 1rem .6rem 0;
-    color: #282828;
-    background-color: transparent
-  }
-  .activeStyle {
-    opacity: .4
-  }
-  #rich_toolbar svg {
-    height: 20px;
-    width: 20px
-  }
-  .grouped_toolbar_options {
-    display: inline
-  }
+/* Toolbars */
+.re_toolbar_back {
+  position: sticky;
+  top: 0;
+  padding-top: 1rem;
+  background-color: white
+}
+#rich_toolbar {
+  background-color: white;
+  border: 1px solid #28282840;
+  border-radius: 5px 5px 0 0;
+  padding: 0 1rem;
+  transition: all .6s cubic-bezier(.165, .84, .44, 1)
+}
+#rich_toolbar.showingPopup {
+  border-bottom: 2px solid transparent
+}
+#rich_toolbar button {
+  padding: 0;
+  margin: .8rem 1rem .6rem 0;
+  color: #282828;
+  background-color: transparent
+}
+.activeStyle {
+  opacity: .4
+}
+#rich_toolbar svg {
+  height: 20px;
+  width: 20px
+}
+.grouped_toolbar_options {
+  display: inline
+}
 
-  /* Pop-ups */
-  .pop_up--add_link, .pop_up--add_image, .pop_up--add_video, .pop_up--add_template {
-    position: sticky;
-    top: calc(1rem + 44.39px);
-    background-color: white;
-    z-index: 99;
-    display: flex;
-    border-left: 1px solid #28282840;
-    border-right: 1px solid #28282840;
-    border-bottom: 1px solid #28282840;
-    padding: .8rem
-  }
-  .pop_up--add_template {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .template_item svg {
-    cursor: pointer;
-    margin-left: 1rem;
-    vertical-align: middle;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
-  }
-  .template_item svg:hover {
-    opacity: .6
-  }
-  .wrapper--input--add_link {
-    display: grid;
-    grid-gap: .4rem
-  }
-  .input--add_link, .input--add_video {
-    padding: .2rem .4rem;
-    border: 1px solid #28282840;
-    border-radius: 3px;
-    margin-right: 1rem
-  }
-  button.add_link_submit, button.add_video_submit {
-    height: auto;
-    margin: 0
-  }
+/* Pop-ups */
+.pop_up--add_link, .pop_up--add_image, .pop_up--add_video, .pop_up--add_template {
+  position: sticky;
+  top: calc(1rem + 44.39px);
+  background-color: white;
+  z-index: 99;
+  display: flex;
+  border-left: 1px solid #28282840;
+  border-right: 1px solid #28282840;
+  border-bottom: 1px solid #28282840;
+  padding: .8rem
+}
+.pop_up--add_template {
+  display: grid;
+  grid-gap: 1rem
+}
+.template_item svg {
+  cursor: pointer;
+  margin-left: 1rem;
+  vertical-align: middle;
+  transition: .6s all cubic-bezier(.165, .84, .44, 1)
+}
+.template_item svg:hover {
+  opacity: .6
+}
+.wrapper--input--add_link {
+  display: grid;
+  grid-gap: .4rem
+}
+.input--add_link, .input--add_video {
+  padding: .2rem .4rem;
+  border: 1px solid #28282840;
+  border-radius: 3px;
+  margin-right: 1rem
+}
+button.add_link_submit, button.add_video_submit {
+  height: auto;
+  margin: 0
+}
 
-  /* Tooltip */
-  .tooltip {
-    position: absolute;
-    top: 120%;
-    background-color: #282828;
-    color: white;
-    font-size: .8rem;
-    opacity: .9;
-    text-align: center;
-    padding: .5rem;
-    border-radius: 3px;
-    z-index: 100
-  }
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  top: 120%;
+  background-color: #282828;
+  color: white;
+  font-size: .8rem;
+  opacity: .9;
+  text-align: center;
+  padding: .5rem;
+  border-radius: 3px;
+  z-index: 100
+}
 
-  /* Editor */
+/* Editor */
 
-  div#rich_editor {
-    padding: 1rem;
-    outline-width: 0;
-    border: 1px solid #28282840;
-    border-top: none;
-    border-radius: 0 0 5px 5px;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  div#rich_editor:focus {
-    border: 1px solid #282828;
-    border-top: none
-  }
-  #rich_toolbar.focused {
-    border: 1px solid #282828
-  }
+div#rich_editor {
+  padding: 1rem;
+  outline-width: 0;
+  border: 1px solid #28282840;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  transition: all .6s cubic-bezier(.165, .84, .44, 1)
+}
+div#rich_editor:focus {
+  border: 1px solid #282828;
+  border-top: none
+}
+#rich_toolbar.focused {
+  border: 1px solid #282828
+}
 
-  /* Show */
+/* Show */
 
-  .padding {
-    padding: 1rem 0
-  }
+.padding {
+  padding: 1rem 0
+}
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    div#rich_show_content img, div#rich_show_content iframe {
-      max-width: 100%
-    }
+/* Responsive */
+@media (max-width: 768px) {
+  div#rich_show_content img, div#rich_show_content iframe {
+    max-width: 100%
   }
+}
 </style>
 
 <template>

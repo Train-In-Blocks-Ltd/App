@@ -36,6 +36,15 @@ img {
         </p>
       </div>
       <div class="update_item">
+        <img :src="require('../assets/whats-new/progress.png')" alt="Progress sessions upgrade">
+        <p class="text--small">
+          Progression update
+        </p>
+        <p class="text--small grey">
+          Quickly spread and change the session protocols across multiple weeks/microcycles
+        </p>
+      </div>
+      <div class="update_item">
         <img :src="require('../assets/whats-new/calendar.png')" alt="New calendar">
         <p class="text--small">
           Updated calendar

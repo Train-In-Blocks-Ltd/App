@@ -45,13 +45,15 @@
 </style>
 <style>
   #okta-signin-submit {
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     position: absolute;
     user-select: none;
     cursor: pointer;
     border-radius: 5px;
     opacity: 1;
     text-transform: capitalize;
-    outline-width: 0;
     border: none;
     padding: .6rem 1.6rem;
     font-size: .8rem;
