@@ -83,7 +83,6 @@
       font-size: 2rem
     }
     .client_info {
-      grid-gap: 0;
       width: 90vw
     }
   }
