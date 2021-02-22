@@ -1077,7 +1077,7 @@ export default {
       dataPacketStore: [],
       regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
       regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
-      regexLoadCapture: /(at|@)(.+)/gi,
+      regexLoadCapture: /(at|@)\s*(\d*)\s*\w*/gi,
       regexNumberBreakdown: /[0-9.]+/gi,
       protocolError: [],
 
@@ -1789,6 +1789,7 @@ export default {
         }
         m.forEach((loadMatch, groupIndex) => {
           if (groupIndex === 2 && isNaN(loadMatch)) {
+            console.log(loadMatch, groupIndex)
             this.protocolError.push({
               sessionName: exerciseDataPacket[0],
               exercise: exerciseDataPacket[1],
