@@ -149,13 +149,6 @@ div#rich_editor {
   border-radius: 0 0 5px 5px;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
 }
-div#rich_editor:focus {
-  border: 1px solid #282828;
-  border-top: none
-}
-#rich_toolbar.focused {
-  border: 1px solid #282828
-}
 
 /* Show */
 
@@ -175,7 +168,7 @@ div#rich_editor:focus {
   <div id="wrapper--rich_editor">
     <div v-if="showEditState">
       <div class="re_toolbar_back">
-        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate, focused: caretIsInEditor && !showAddLink && !showAddImage && !showAddVideo && !showAddTemplate }">
+        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
           <button
             :class="{ activeStyle: boldActive }"
             title="Bold"

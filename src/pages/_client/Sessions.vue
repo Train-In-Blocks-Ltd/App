@@ -226,7 +226,7 @@
     grid-gap: 4rem
   }
   input.session-name, input.session-date {
-    margin-bottom: 1rem
+    margin-bottom: .4rem
   }
   input.session-date {
     width: fit-content;
@@ -821,7 +821,7 @@
                         <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
                         <span v-if="session.id !== editSession" class="text--date">{{ day(session.date) }}</span>
                         <span v-if="session.id !== editSession" class="text--date">{{ session.date }}</span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ check_if_complete(session.checked) }}</span>
+                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
                         <input
                           v-if="session.id === editSession"
                           v-model="session.name"
@@ -839,7 +839,6 @@
                           name="session-date"
                           @blur="scan()"
                         >
-                        <span v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked" @click="session.checked = toggle_complete(session.checked)">{{ check_if_complete(session.checked) }}</span>
                       </div>
                       <div class="header-options">
                         <checkbox :item-id="session.id" :type="'v1'" aria-label="Select this session" />
@@ -847,7 +846,7 @@
                           v-show="!isEditingSession"
                           id="expand"
                           class="icon--expand"
-                          :class="{expanded: expandedSessions.includes(session.id)}"
+                          :class="{ expanded: expandedSessions.includes(session.id) }"
                           :src="require('../../assets/svg/expand.svg')"
                           title="Info"
                           @click="toggle_expanded_sessions(session.id)"
@@ -1341,26 +1340,6 @@ export default {
       this.isEditingSession = false
       this.editSession = null
       this.scan()
-    },
-    toggle_complete (value) {
-      let out
-      if (value === 0) {
-        out = 1
-      }
-      if (value === 1) {
-        out = 0
-      }
-      return out
-    },
-    check_if_complete (value) {
-      let out
-      if (value === 0) {
-        out = 'Incomplete'
-      }
-      if (value === 1) {
-        out = 'Completed'
-      }
-      return out
     },
 
     // GENERAL
