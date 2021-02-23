@@ -226,7 +226,7 @@
     grid-gap: 4rem
   }
   input.session-name, input.session-date {
-    margin-bottom: 1rem
+    margin-bottom: .4rem
   }
   input.session-date {
     width: fit-content;
@@ -661,6 +661,14 @@
             </div>
           </div><br>
           <div class="plan_options">
+            <router-link
+              :to="`/client/${$route.params.client_id}/`"
+              class="a_link"
+              href="javascript:void(0)"
+            >
+              <inline-svg :src="require('../../assets/svg/back.svg')" />
+              Back to profile
+            </router-link>
             <a
               class="a_link"
               href="javascript:void(0)"
@@ -821,7 +829,7 @@
                         <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
                         <span v-if="session.id !== editSession" class="text--date">{{ day(session.date) }}</span>
                         <span v-if="session.id !== editSession" class="text--date">{{ session.date }}</span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ check_if_complete(session.checked) }}</span>
+                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
                         <input
                           v-if="session.id === editSession"
                           v-model="session.name"
@@ -839,7 +847,6 @@
                           name="session-date"
                           @blur="scan()"
                         >
-                        <span v-if="session.id === editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1, editingChecked: session.id === editSession}" class="text--checked" @click="session.checked = toggle_complete(session.checked)">{{ check_if_complete(session.checked) }}</span>
                       </div>
                       <div class="header-options">
                         <checkbox :item-id="session.id" :type="'v1'" aria-label="Select this session" />
@@ -847,7 +854,7 @@
                           v-show="!isEditingSession"
                           id="expand"
                           class="icon--expand"
-                          :class="{expanded: expandedSessions.includes(session.id)}"
+                          :class="{ expanded: expandedSessions.includes(session.id) }"
                           :src="require('../../assets/svg/expand.svg')"
                           title="Info"
                           @click="toggle_expanded_sessions(session.id)"
@@ -1078,7 +1085,7 @@ export default {
       dataPacketStore: [],
       regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
       regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
-      regexLoadCapture: /(at|@)(.+)/gi,
+      regexLoadCapture: /(at|@)\s*(\d*)\s*\w*/gi,
       regexNumberBreakdown: /[0-9.]+/gi,
       protocolError: [],
 
@@ -1341,26 +1348,6 @@ export default {
       this.isEditingSession = false
       this.editSession = null
       this.scan()
-    },
-    toggle_complete (value) {
-      let out
-      if (value === 0) {
-        out = 1
-      }
-      if (value === 1) {
-        out = 0
-      }
-      return out
-    },
-    check_if_complete (value) {
-      let out
-      if (value === 0) {
-        out = 'Incomplete'
-      }
-      if (value === 1) {
-        out = 'Completed'
-      }
-      return out
     },
 
     // GENERAL
@@ -1810,6 +1797,7 @@ export default {
         }
         m.forEach((loadMatch, groupIndex) => {
           if (groupIndex === 2 && isNaN(loadMatch)) {
+            console.log(loadMatch, groupIndex)
             this.protocolError.push({
               sessionName: exerciseDataPacket[0],
               exercise: exerciseDataPacket[1],

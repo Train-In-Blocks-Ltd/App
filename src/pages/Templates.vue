@@ -1,14 +1,6 @@
 <style scoped>
-  .expand-all {
-    text-align: right;
-    margin: 2rem 0;
-    font-size: .8rem;
-    cursor: pointer;
-    opacity: 1;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .expand-all:hover {
-    opacity: .6
+  .select_all {
+    justify-content: flex-end
   }
 
   /* Containers */
@@ -31,7 +23,7 @@
   .container--templates {
     display: grid;
     grid-gap: 4rem;
-    margin: 4rem 0
+    margin: 2rem 0
   }
   .wrapper--template {
     display: grid;
@@ -68,8 +60,6 @@
 
   @media (max-width: 768px) {
     .multi-select {
-      top: -2rem;
-      right: 0;
       padding: 2rem;
       width: 100%;
       background-color: white;
@@ -105,13 +95,18 @@
       <p class="text--large">
         Templates
       </p>
-      <div class="wrapper--template_top__right">
-        <button @click="new_template()">
-          New Template
-        </button>
-        <a v-if="$parent.templates !== null && $parent.templates.length !== 0" href="javascript:void(0)" class="a_link" @click="select_all()">Select all</a>
-      </div>
+      <button @click="new_template()">
+        New Template
+      </button>
     </div>
+    <a
+      v-if="$parent.templates !== null && $parent.templates.length !== 0"
+      href="javascript:void(0)"
+      class="a_link select_all"
+      @click="select_all()"
+    >
+      Select all
+    </a>
     <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="container--templates">
       <div
         v-for="(template, index) in $parent.templates"

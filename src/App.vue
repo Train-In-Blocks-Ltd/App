@@ -244,8 +244,8 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   .a_link svg {
-    height: 17px;
-    width: 17px;
+    height: 22px;
+    width: 22px;
     margin-right: .2rem
   }
   .a_link:hover {

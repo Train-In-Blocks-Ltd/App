@@ -25,14 +25,22 @@ div#rich_show_content img,
 div#rich_editor a[name="video"],
 div#rich_show_content a[name="video"],
 .show_session a[name="video"],
-.show_feedback a[name="video"]
+.show_feedback a[name="video"],
 .show_plan_notes a[name="video"] {
   line-height: 3rem;
   padding: .2rem 1rem;
   border-radius: 3px;
   background-color: #282828;
   color: white;
-  text-decoration: none
+  text-decoration: none;
+  transition: .6s all cubic-bezier(.165, .84, .44, 1)
+}
+div#rich_editor a[name="video"]:hover,
+div#rich_show_content a[name="video"]:hover,
+.show_session a[name="video"]:hover,
+.show_feedback a[name="video"]:hover,
+.show_plan_notes a[name="video"]:hover {
+  opacity: .6
 }
 div#rich_editor input[type="checkbox"],
 div#rich_show_content input[type="checkbox"],
@@ -149,13 +157,6 @@ div#rich_editor {
   border-radius: 0 0 5px 5px;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
 }
-div#rich_editor:focus {
-  border: 1px solid #282828;
-  border-top: none
-}
-#rich_toolbar.focused {
-  border: 1px solid #282828
-}
 
 /* Show */
 
@@ -175,7 +176,7 @@ div#rich_editor:focus {
   <div id="wrapper--rich_editor">
     <div v-if="showEditState">
       <div class="re_toolbar_back">
-        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate, focused: caretIsInEditor && !showAddLink && !showAddImage && !showAddVideo && !showAddTemplate }">
+        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
           <button
             :class="{ activeStyle: boldActive }"
             title="Bold"
