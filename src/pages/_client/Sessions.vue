@@ -661,6 +661,14 @@
             </div>
           </div><br>
           <div class="plan_options">
+            <router-link
+              :to="`/client/${$route.params.client_id}/`"
+              class="a_link"
+              href="javascript:void(0)"
+            >
+              <inline-svg :src="require('../../assets/svg/back.svg')" />
+              Back to profile
+            </router-link>
             <a
               class="a_link"
               href="javascript:void(0)"
