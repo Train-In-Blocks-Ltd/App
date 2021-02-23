@@ -25,14 +25,22 @@ div#rich_show_content img,
 div#rich_editor a[name="video"],
 div#rich_show_content a[name="video"],
 .show_session a[name="video"],
-.show_feedback a[name="video"]
+.show_feedback a[name="video"],
 .show_plan_notes a[name="video"] {
   line-height: 3rem;
   padding: .2rem 1rem;
   border-radius: 3px;
   background-color: #282828;
   color: white;
-  text-decoration: none
+  text-decoration: none;
+  transition: .6s all cubic-bezier(.165, .84, .44, 1)
+}
+div#rich_editor a[name="video"]:hover,
+div#rich_show_content a[name="video"]:hover,
+.show_session a[name="video"]:hover,
+.show_feedback a[name="video"]:hover,
+.show_plan_notes a[name="video"]:hover {
+  opacity: .6
 }
 div#rich_editor input[type="checkbox"],
 div#rich_show_content input[type="checkbox"],
