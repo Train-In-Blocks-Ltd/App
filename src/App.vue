@@ -38,7 +38,6 @@
   }
 
   /* Tab overlay */
-
   .section_a,
   .section_b {
     position: fixed;
@@ -46,8 +45,8 @@
     right: 0;
     width: 0;
     background-color: rgba(255, 255, 255, .7);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .section_a {
@@ -124,7 +123,8 @@
     left: 0;
     z-index: 5;
     height: 100%;
-    width: 100%
+    width: 100%;
+    overflow-x: auto
   }
   .spacer {
     height: 2rem

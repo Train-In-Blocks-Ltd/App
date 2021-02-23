@@ -56,9 +56,6 @@
   }
 
   @media (max-width: 768px) {
-    #account {
-      width: 90vw
-    }
     .policies:hover {
       opacity: 1
     }
