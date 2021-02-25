@@ -177,46 +177,51 @@ div#rich_editor {
     <div v-if="showEditState">
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
-          <button
-            :class="{ activeStyle: boldActive }"
-            title="Bold"
-            @click="format('bold'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: italicActive }"
-            title="Italic"
-            @click="format('italic'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: underlineActive }"
-            title="Underline"
-            @click="format('underline'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: olActive }"
-            title="Ordered List"
-            @click="format('insertOrderedList'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: ulActive }"
-            title="Unordered List"
-            @click="format('insertUnorderedList'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
-          </button>
           <div
             class="grouped_toolbar_options"
             @mouseover="showTooltip = true"
             @mouseleave="showTooltip = false"
           >
+            <button
+              :class="{ activeStyle: boldActive }"
+              :disabled="!allowMedias"
+              title="Bold"
+              @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+            </button>
+            <button
+              :class="{ activeStyle: italicActive }"
+              :disabled="!allowMedias"
+              title="Italic"
+              @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+            </button>
+            <button
+              :class="{ activeStyle: underlineActive }"
+              :disabled="!allowMedias"
+              title="Underline"
+              @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+            </button>
+            <button
+              :class="{ activeStyle: olActive }"
+              :disabled="!allowMedias"
+              title="Ordered List"
+              @click="add_ol(), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
+            </button>
+            <button
+              :class="{ activeStyle: ulActive }"
+              :disabled="!allowMedias"
+              title="Unordered List"
+              @click="add_ul(), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+            </button>
             <button
               :class="{ activeStyle: ulActive }"
               :disabled="!allowMedias"
@@ -322,7 +327,7 @@ div#rich_editor {
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="caretIsInEditor = true, allowMedias = true, reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+        @click="caretIsInEditor = true, allowMedias = true, check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
         @input="update_edited_notes(), caretIsInEditor = true, allowMedias = true"
         @blur="caretIsInEditor = false, unfocus_editor()"
         v-html="update_iframe(initialHTML)"
@@ -493,9 +498,6 @@ export default {
       }
       this.update_edited_notes()
     },
-    format (com, val) {
-      document.execCommand(com, false, val)
-    },
     save_selection () {
       let sel
       if (window.getSelection) {
@@ -519,6 +521,82 @@ export default {
           range.select()
         }
       }
+    },
+
+    // TEXT
+
+
+    format_style (style) {
+      const el = document.getSelection()
+      switch (style) {
+        case 'bold':
+          if (!document.queryCommandState('bold')) {
+            if (el.type === 'Caret') {
+              this.paste_html_at_caret('<b>Bold</b>', true)
+            } else if (el.type === 'Range'){
+              if (el.focusNode.nodeName === '#text') {
+                this.paste_html_at_caret(`<b>${el.toString()}</b>`, true)
+              }
+            }
+          } else {
+            this.unwrap(el.focusNode.parentNode)
+          }
+          break
+        case 'italic':
+          if (!document.queryCommandState('italic')) {
+            if (el.type === 'Caret') {
+              this.paste_html_at_caret('<i>Italic</i>', true)
+            } else if (el.type === 'Range'){
+              if (el.focusNode.nodeName === '#text') {
+                this.paste_html_at_caret(`<i>${el.toString()}</i>`, true)
+              }
+            }
+          } else {
+            this.unwrap(el.focusNode.parentNode)
+          }
+          break
+        case 'underline':
+          if (!document.queryCommandState('underline')) {
+            if (el.type === 'Caret') {
+              this.paste_html_at_caret('<u>Underline</u>', true)
+            } else if (el.type === 'Range'){
+              if (el.focusNode.nodeName === '#text') {
+                this.paste_html_at_caret(`<u>${el.toString()}</u>`, true)
+              }
+            }
+          } else {
+            this.unwrap(el.focusNode.parentNode)
+          }
+          break
+      }
+    },
+    surround_selection (elem) {
+      if (window.getSelection) {
+        var sel = window.getSelection()
+        if (sel.rangeCount) {
+          var range = sel.getRangeAt(0).cloneRange()
+          range.surroundContents(elem)
+          sel.removeAllRanges()
+          sel.addRange(range)
+        }
+      }
+    },
+    unwrap (wrapper) {
+      var docFrag = document.createDocumentFragment()
+      while (wrapper.firstChild) {
+        var child = wrapper.removeChild(wrapper.firstChild)
+        docFrag.appendChild(child)
+      }
+      wrapper.parentNode.replaceChild(docFrag, wrapper)
+    },
+
+    // LISTS
+
+    add_ol () {
+      this.paste_html_at_caret('<ol><li></li></ol>', false)
+    },
+    add_ul () {
+      this.paste_html_at_caret('<ul><li></li></ul>', false)
     },
 
     // CHECKBOX
