@@ -539,7 +539,9 @@ export default {
               }
             }
           } else {
-            this.unwrap(el.focusNode.parentNode)
+            if (el.focusNode.parentNode.id !== 'rich_editor') {
+              this.unwrap(el.focusNode.parentNode)
+            }
           }
           break
         case 'italic':
@@ -552,7 +554,9 @@ export default {
               }
             }
           } else {
-            this.unwrap(el.focusNode.parentNode)
+            if (el.focusNode.parentNode.id !== 'rich_editor') {
+              this.unwrap(el.focusNode.parentNode)
+            }
           }
           break
         case 'underline':
@@ -565,7 +569,9 @@ export default {
               }
             }
           } else {
-            this.unwrap(el.focusNode.parentNode)
+            if (el.focusNode.parentNode.id !== 'rich_editor') {
+              this.unwrap(el.focusNode.parentNode)
+            }
           }
           break
       }
