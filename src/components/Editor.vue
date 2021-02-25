@@ -22,11 +22,11 @@ div#rich_show_content img,
   max-width: 80%;
   margin: 1rem 0
 }
-div#rich_editor a[name="video"],
-div#rich_show_content a[name="video"],
-.show_session a[name="video"],
-.show_feedback a[name="video"],
-.show_plan_notes a[name="video"] {
+div#rich_editor a[name='video'],
+div#rich_show_content a[name='video'],
+.show_session a[name='video'],
+.show_feedback a[name='video'],
+.show_plan_notes a[name='video'] {
   line-height: 3rem;
   padding: .2rem 1rem;
   border-radius: 3px;
@@ -35,17 +35,17 @@ div#rich_show_content a[name="video"],
   text-decoration: none;
   transition: .6s all cubic-bezier(.165, .84, .44, 1)
 }
-div#rich_editor a[name="video"]:hover,
-div#rich_show_content a[name="video"]:hover,
-.show_session a[name="video"]:hover,
-.show_feedback a[name="video"]:hover,
-.show_plan_notes a[name="video"]:hover {
+div#rich_editor a[name='video']:hover,
+div#rich_show_content a[name='video']:hover,
+.show_session a[name='video']:hover,
+.show_feedback a[name='video']:hover,
+.show_plan_notes a[name='video']:hover {
   opacity: .6
 }
-div#rich_editor input[type="checkbox"],
-div#rich_show_content input[type="checkbox"],
-.show_session input[type="checkbox"]
-.show_feedback input[type="checkbox"] {
+div#rich_editor input[type='checkbox'],
+div#rich_show_content input[type='checkbox'],
+.show_session input[type='checkbox'],
+.show_feedback input[type='checkbox'] {
   margin: .4rem
 }
 </style>
@@ -88,9 +88,6 @@ div#rich_show_content input[type="checkbox"],
 #rich_toolbar svg {
   height: 20px;
   width: 20px
-}
-.grouped_toolbar_options {
-  display: inline
 }
 
 /* Pop-ups */
@@ -148,7 +145,6 @@ button.add_link_submit, button.add_video_submit {
 }
 
 /* Editor */
-
 div#rich_editor {
   padding: 1rem;
   outline-width: 0;
@@ -159,7 +155,6 @@ div#rich_editor {
 }
 
 /* Show */
-
 .padding {
   padding: 1rem 0
 }
@@ -177,90 +172,73 @@ div#rich_editor {
     <div v-if="showEditState">
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
-          <div
-            class="grouped_toolbar_options"
-            @mouseover="showTooltip = true"
-            @mouseleave="showTooltip = false"
+          <button
+            :class="{ activeStyle: boldActive }"
+            title="Bold"
+            @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
           >
-            <button
-              :class="{ activeStyle: boldActive }"
-              :disabled="!allowMedias"
-              title="Bold"
-              @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-            </button>
-            <button
-              :class="{ activeStyle: italicActive }"
-              :disabled="!allowMedias"
-              title="Italic"
-              @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-            </button>
-            <button
-              :class="{ activeStyle: underlineActive }"
-              :disabled="!allowMedias"
-              title="Underline"
-              @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-            </button>
-            <button
-              :class="{ activeStyle: olActive }"
-              :disabled="!allowMedias"
-              title="Ordered List"
-              @click="add_ol(), check_cmd_state(), focus_on_editor()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
-            </button>
-            <button
-              :class="{ activeStyle: ulActive }"
-              :disabled="!allowMedias"
-              title="Unordered List"
-              @click="add_ul(), check_cmd_state(), focus_on_editor()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
-            </button>
-            <button
-              :class="{ activeStyle: ulActive }"
-              :disabled="!allowMedias"
-              title="Checkbox"
-              @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
-            </button>
-            <button
-              :disabled="!allowMedias"
-              title="Add Link"
-              @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/link.svg')" />
-            </button>
-            <button
-              :disabled="!allowMedias"
-              title="Insert Image"
-              @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-            </button>
-            <button
-              :disabled="!allowMedias"
-              title="Insert Video"
-              @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
-            </button>
-            <button
-              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-              :disabled="!allowMedias"
-              title="Use Template"
-              @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
-            </button>
-          </div>
-          <span v-show="showTooltip && !caretIsInEditor" class="tooltip">Click on an empty line where you want to insert.</span>
+            <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+          </button>
+          <button
+            :class="{ activeStyle: italicActive }"
+            title="Italic"
+            @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+          </button>
+          <button
+            :class="{ activeStyle: underlineActive }"
+            title="Underline"
+            @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+          </button>
+          <button
+            :class="{ activeStyle: olActive }"
+            title="Ordered List"
+            @click="add_ol(), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
+          </button>
+          <button
+            :class="{ activeStyle: ulActive }"
+            title="Unordered List"
+            @click="add_ul(), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+          </button>
+          <button
+            :class="{ activeStyle: ulActive }"
+            title="Checkbox"
+            @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
+          </button>
+          <button
+            title="Add Link"
+            @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+          </button>
+          <button
+            title="Insert Image"
+            @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+          </button>
+          <button
+            title="Insert Video"
+            @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
+          </button>
+          <button
+            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+            title="Use Template"
+            @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+          </button>
         </div>
       </div>
       <!-- LINK -->
@@ -275,7 +253,7 @@ div#rich_editor {
       </form>
       <!-- IMAGE -->
       <div v-if="showAddImage" class="pop_up--add_image">
-        <input id="img_uploader" type="file" accept=".png, .jpeg" @change="add_img()">
+        <input id="img_uploader" type="file" accept=".png, .jpeg, .jpg, .webp, .gif" @change="add_img()">
       </div>
       <!-- VIDEO -->
       <form v-if="showAddVideo" class="pop_up--add_video" @submit.prevent="add_video()">
@@ -327,9 +305,9 @@ div#rich_editor {
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="caretIsInEditor = true, allowMedias = true, check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-        @input="update_edited_notes(), caretIsInEditor = true, allowMedias = true"
-        @blur="caretIsInEditor = false, unfocus_editor()"
+        @click="caretIsInEditor = true, check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+        @input="update_edited_notes(), caretIsInEditor = true"
+        @blur="caretIsInEditor = false"
         v-html="update_iframe(initialHTML)"
       />
     </div>
@@ -355,7 +333,6 @@ export default {
   },
   data () {
     return {
-      showTooltip: false,
       caretIsInEditor: false,
       savedSelection: null,
       initialHTML: '',
@@ -366,7 +343,6 @@ export default {
       olActive: false,
       ulActive: false,
 
-      allowMedias: false,
       showAddLink: false,
       addLinkName: '',
       addLinkURL: '',
@@ -408,7 +384,7 @@ export default {
       }
       if (arr.length !== 0) {
         arr.forEach((item) => {
-          html = html.replace(item[0], `<a name="video" href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
+          html = html.replace(item[0], `<a name='video' href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
         })
       }
       return html
@@ -418,9 +394,6 @@ export default {
 
     focus_on_editor () {
       document.getElementById('rich_editor').focus()
-    },
-    unfocus_editor () {
-      setTimeout(() => { this.allowMedias = false }, 100)
     },
     will_body_scroll (state) {
       const body = document.getElementsByTagName('body')[0]
@@ -466,21 +439,22 @@ export default {
       this.editedHTML = document.getElementById('rich_editor').innerHTML
       this.$emit('update:htmlInjection', this.editedHTML)
     },
-    paste_html_at_caret(html, selectPastedContent) {
-      var sel, range
+    paste_html_at_caret (html, selectPastedContent) {
+      let sel, range
       if (window.getSelection) {
         sel = window.getSelection()
         if (sel.getRangeAt && sel.rangeCount) {
           range = sel.getRangeAt(0)
           range.deleteContents()
 
-          var el = document.createElement("div")
+          const el = document.createElement('div')
           el.innerHTML = html
-          var frag = document.createDocumentFragment(), node, lastNode
-          while ( (node = el.firstChild) ) {
+          const frag = document.createDocumentFragment()
+          let node, lastNode
+          while ((node = el.firstChild)) {
             lastNode = frag.appendChild(node)
           }
-          var firstNode = frag.firstChild
+          const firstNode = frag.firstChild
           range.insertNode(frag)
 
           if (lastNode) {
@@ -525,72 +499,62 @@ export default {
 
     // TEXT
 
-
     format_style (style) {
       const el = document.getSelection()
+      this.saveSelection = this.save_selection()
+      if (document.activeElement.contentEditable !== true) {
+        this.focus_on_editor()
+      }
       switch (style) {
         case 'bold':
           if (!document.queryCommandState('bold')) {
             if (el.type === 'Caret') {
+              this.restore_selection(this.savedSelection)
+              console.log(el)
               this.paste_html_at_caret('<b>Bold</b>', true)
-            } else if (el.type === 'Range'){
+            } else if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
                 this.paste_html_at_caret(`<b>${el.toString()}</b>`, true)
               }
             }
-          } else {
-            if (el.focusNode.parentNode.id !== 'rich_editor') {
-              this.unwrap(el.focusNode.parentNode)
-            }
+          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
+            this.unwrap(el.focusNode.parentNode)
           }
           break
         case 'italic':
           if (!document.queryCommandState('italic')) {
             if (el.type === 'Caret') {
+              this.restore_selection(this.savedSelection)
               this.paste_html_at_caret('<i>Italic</i>', true)
-            } else if (el.type === 'Range'){
+            } else if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
                 this.paste_html_at_caret(`<i>${el.toString()}</i>`, true)
               }
             }
-          } else {
-            if (el.focusNode.parentNode.id !== 'rich_editor') {
-              this.unwrap(el.focusNode.parentNode)
-            }
+          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
+            this.unwrap(el.focusNode.parentNode)
           }
           break
         case 'underline':
           if (!document.queryCommandState('underline')) {
             if (el.type === 'Caret') {
+              this.restore_selection(this.savedSelection)
               this.paste_html_at_caret('<u>Underline</u>', true)
-            } else if (el.type === 'Range'){
+            } else if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
                 this.paste_html_at_caret(`<u>${el.toString()}</u>`, true)
               }
             }
-          } else {
-            if (el.focusNode.parentNode.id !== 'rich_editor') {
-              this.unwrap(el.focusNode.parentNode)
-            }
+          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
+            this.unwrap(el.focusNode.parentNode)
           }
           break
       }
     },
-    surround_selection (elem) {
-      if (window.getSelection) {
-        var sel = window.getSelection()
-        if (sel.rangeCount) {
-          var range = sel.getRangeAt(0).cloneRange()
-          range.surroundContents(elem)
-          sel.removeAllRanges()
-          sel.addRange(range)
-        }
-      }
-    },
     unwrap (wrapper) {
-      var docFrag = document.createDocumentFragment()
+      const docFrag = document.createDocumentFragment()
       while (wrapper.firstChild) {
-        var child = wrapper.removeChild(wrapper.firstChild)
+        const child = wrapper.removeChild(wrapper.firstChild)
         docFrag.appendChild(child)
       }
       wrapper.parentNode.replaceChild(docFrag, wrapper)
@@ -599,15 +563,30 @@ export default {
     // LISTS
 
     add_ol () {
+      this.saveSelection = this.save_selection()
+      if (document.activeElement.contentEditable !== true) {
+        this.focus_on_editor()
+      }
+      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret('<ol><li></li></ol>', false)
     },
     add_ul () {
+      this.saveSelection = this.save_selection()
+      if (document.activeElement.contentEditable !== true) {
+        this.focus_on_editor()
+      }
+      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret('<ul><li></li></ul>', false)
     },
 
     // CHECKBOX
 
     add_checkbox () {
+      this.saveSelection = this.save_selection()
+      if (document.activeElement.contentEditable !== true) {
+        this.focus_on_editor()
+      }
+      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret('<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>', false)
     },
 
@@ -621,6 +600,9 @@ export default {
       }
     },
     add_link () {
+      if (document.activeElement.contentEditable !== true) {
+        this.focus_on_editor()
+      }
       this.restore_selection(this.savedSelection)
       this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, true)
       this.reset_link_pop_up()
@@ -645,6 +627,9 @@ export default {
       const reader = new FileReader()
       reader.addEventListener('load', () => {
         this.base64Img = reader.result
+        if (document.activeElement.contentEditable !== true) {
+          this.focus_on_editor()
+        }
         this.restore_selection(this.savedSelection)
         this.paste_html_at_caret(`<img src="${this.base64Img}">`, false)
         this.reset_img_pop_up()
@@ -677,8 +662,11 @@ export default {
       }
     },
     add_video () {
+      if (document.activeElement.contentEditable !== true) {
+        this.focus_on_editor()
+      }
       this.restore_selection(this.savedSelection)
-      this.paste_html_at_caret(`<a name="video" href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`, false)
+      this.paste_html_at_caret(`<a name='video' href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`, false)
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {
@@ -701,6 +689,9 @@ export default {
       }
     },
     add_template (templateData) {
+      if (document.activeElement.contentEditable !== true) {
+        this.focus_on_editor()
+      }
       this.restore_selection(this.savedSelection)
       this.paste_html_at_caret(templateData, false)
       this.reset_template_pop_up()
