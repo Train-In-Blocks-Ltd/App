@@ -69,7 +69,12 @@
     <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay">
       <new-plan />
     </div>
-    <div v-if="!isNewPlanOpen" class="tab_option icon_open_middle tab_option_large" aria-label="New Plan" @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)">
+    <div
+      v-if="!isNewPlanOpen"
+      class="tab_option icon_open_middle tab_option_large fadeIn"
+      aria-label="New Plan"
+      @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)"
+    >
       <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
         New Plan

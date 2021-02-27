@@ -94,7 +94,7 @@
       <toolkit />
     </modal>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
-      <div v-if="keepLoaded" class="floating_nav">
+      <div v-if="keepLoaded" class="floating_nav fadeIn">
         <div v-if="!showOptions" class="tab_option tab_option_small" aria-label="Menu" @click="showOptions = true">
           <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options" />
           <p class="text">
