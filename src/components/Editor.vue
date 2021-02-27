@@ -18,9 +18,11 @@ div#rich_editor img,
 div#rich_show_content img,
 .show_session img,
 .show_feedback img {
+  cursor: pointer;
   border-radius: 10px;
   max-width: 80%;
-  margin: 1rem 0
+  margin: 1rem 0;
+  transition: .4s all cubic-bezier(.165, .84, .44, 1)
 }
 div#rich_editor a[name='video'],
 div#rich_show_content a[name='video'],
@@ -39,7 +41,11 @@ div#rich_editor a[name='video']:hover,
 div#rich_show_content a[name='video']:hover,
 .show_session a[name='video']:hover,
 .show_feedback a[name='video']:hover,
-.show_plan_notes a[name='video']:hover {
+.show_plan_notes a[name='video']:hover,
+div#rich_editor img:hover,
+div#rich_show_content img:hover,
+.show_session img:hover,
+.show_feedback img:hover {
   opacity: .6
 }
 div#rich_editor input[type='checkbox'],
@@ -620,7 +626,7 @@ export default {
         } else if (document.activeElement.contentEditable !== 'true') {
           this.focus_on_editor()
         }
-        this.paste_html_at_caret(`<img src="${this.base64Img}">`, false)
+        this.paste_html_at_caret(`<img src="${this.base64Img}" onclick="resize(this)">`, false)
         this.reset_img_pop_up()
       }, false)
       if (file) {
