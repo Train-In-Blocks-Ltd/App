@@ -271,10 +271,14 @@
     display: flex;
     flex-direction: column
   }
+  .data-options {
+    display: flex
+  }
   .data-select {
-    display: grid;
-    grid-gap: 2rem;
-    width: fit-content
+    margin-right: 6rem
+  }
+  .data-select > div:first-child {
+    margin-bottom: 2rem
   }
   .data-select__options {
     display: grid;
@@ -284,7 +288,7 @@
   .data-desc {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin-top: 4rem
+    width: 100%
   }
   .data-desc__value {
     margin: .4rem 0 2rem 0;
@@ -297,6 +301,13 @@
   @media (max-width: 992px) {
     .switch_cal {
       display: none
+    }
+    .data-options {
+      display: grid;
+      grid-gap: 4rem
+    }
+    .data-select {
+      margin-right: 0
     }
   }
   @media (max-width: 768px) {
@@ -983,7 +994,13 @@
                   <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
                 </p>
               </div><br>
-              <simple-chart v-if="!dataValues.includes(null)" :data-points="dataValues" :labels="labelValues" aria-label="Graph" />
+              <simple-chart
+                v-if="!dataValues.includes(null)"
+                :data-points="dataValues"
+                :labels="labelValues"
+                aria-label="Graph"
+                class="fadeIn"
+              />
             </div>
           </div>
         </div> <!-- plan_grid -->

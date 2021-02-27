@@ -175,14 +175,14 @@
             </button>
             <button
               v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error' && $parent.client_details.notifications === 1"
-              class="button--verify"
+              class="button--verify fadeIn"
               @click="$parent.client_details.notifications = 0, $parent.update_client()"
             >
               Disable email notifications
             </button>
             <button
               v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error' && $parent.client_details.notifications === 0"
-              class="button--verify"
+              class="button--verify fadeIn"
               @click="$parent.client_details.notifications = 1, $parent.update_client()"
             >
               Enable email notifications

@@ -113,26 +113,28 @@
       <p class="text--large">
         Plans
       </p>
-      <div v-if="response !== ''" class="text--new_msg">
-        <p class="text--small">
-          {{ response }}
-        </p>
-        <p class="text--small grey">
-          You're all set, get programming
-        </p>
-      </div>
-      <p v-if="$parent.no_plans" class="text--small grey text--no-plans">
+      <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+        <div v-if="response !== ''" class="text--new_msg">
+          <p class="text--small">
+            {{ response }}
+          </p>
+          <p class="text--small grey">
+            You're all set, get programming
+          </p>
+        </div>
+      </transition>
+      <p v-if="$parent.no_plans" class="text--small grey text--no-plans fadeIn">
         No plans yet, use the button on the top-right of your screen.
       </p>
       <div v-else>
-        <skeleton v-if="$parent.$parent.loading" :type="'plan'" />
+        <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn"/>
         <div v-else class="plan_grid">
           <router-link
             v-for="(plan, index) in $parent.$parent.client_details.plans"
             :key="index"
             :to="'plan/' + plan.id"
             :class="{ recently_added: persistResponse === plan.name }"
-            class="plan_link"
+            class="plan_link fadeIn"
           >
             <div>
               <p class="text--small plan-name">
