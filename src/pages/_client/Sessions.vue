@@ -473,7 +473,7 @@
             min="1"
             required
           ><br><br>
-          <button class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
+          <button type="button" class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
             Cancel
           </button>
           <button v-if="!simpleCopy" type="submit">
@@ -517,10 +517,10 @@
                 >
               </div>
               <br>
-              <button v-if="copyAcrossView !== 0" class="cancel" @click.prevent="copyAcrossView -= 1">
+              <button v-if="copyAcrossView !== 0" class="cancel" type="button" @click.prevent="copyAcrossView -= 1">
                 Back
               </button>
-              <button v-if="copyAcrossView === 0" class="cancel" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
+              <button v-if="copyAcrossView === 0" class="cancel" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
                 Back
               </button>
               <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">

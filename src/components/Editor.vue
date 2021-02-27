@@ -115,10 +115,6 @@ div#rich_show_content input[type='checkbox'],
 .template_item svg:hover {
   opacity: .6
 }
-.wrapper--input--add_link {
-  display: grid;
-  grid-gap: .4rem
-}
 .input--add_link, .input--add_video {
   padding: .2rem .4rem;
   border: 1px solid #28282840;
@@ -131,6 +127,9 @@ button.add_link_submit, button.add_video_submit {
 }
 
 /* Tooltip */
+.grouped_toolbar_options {
+  display: inline
+}
 .tooltip {
   position: absolute;
   top: 120%;
@@ -163,6 +162,10 @@ div#rich_editor {
 @media (max-width: 768px) {
   div#rich_show_content img, div#rich_show_content iframe {
     max-width: 100%
+  }
+  .pop_up--add_link {
+    display: grid;
+    grid-gap: .6rem
   }
 }
 </style>
@@ -214,39 +217,48 @@ div#rich_editor {
           >
             <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
           </button>
-          <button
-            title="Add Link"
-            @click="show_link_adder(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+          <div
+            class="grouped_toolbar_options"
+            @mouseover="showTooltip = true"
+            @mouseleave="showTooltip = false"
           >
-            <inline-svg :src="require('../assets/svg/editor/link.svg')" />
-          </button>
-          <button
-            title="Insert Image"
-            @click="show_image_adder(), reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-          </button>
-          <button
-            title="Insert Video"
-            @click="show_video_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
-          </button>
-          <button
-            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-            title="Use Template"
-            @click="show_template_adder(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/template.svg')" />
-          </button>
+            <button
+              title="Add Link"
+              :disabled="savedSelection === null"
+              @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+            </button>
+            <button
+              title="Insert Image"
+              :disabled="savedSelection === null"
+              @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+            </button>
+            <button
+              title="Insert Video"
+              :disabled="savedSelection === null"
+              @click="showAddVideo = !showAddVideo, reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
+            </button>
+            <button
+              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+              title="Use Template"
+              :disabled="savedSelection === null"
+              @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+            </button>
+          </div>
         </div>
+        <span v-show="showTooltip && savedSelection === null" class="tooltip">Click on an empty line where you want to insert.</span>
       </div>
       <!-- LINK -->
       <form v-if="showAddLink" class="pop_up--add_link" @submit.prevent="add_link()">
-        <div class="wrapper--input--add_link right_margin">
-          <input v-model="addLinkName" class="input--add_link small_border_radius" type="text" placeholder="Name" required>
-          <input v-model="addLinkURL" class="input--add_link small_border_radius" type="text" placeholder="URL" required>
-        </div>
+        <input v-model="addLinkName" class="input--add_link small_border_radius" type="text" placeholder="Name" required>
+        <input v-model="addLinkURL" class="input--add_link small_border_radius" type="text" placeholder="URL" required>
         <button class="add_link_submit" type="submit">
           Add
         </button>
@@ -305,9 +317,8 @@ div#rich_editor {
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="caretIsInEditor = true, check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
-        @input="update_edited_notes(), caretIsInEditor = true"
-        @blur="caretIsInEditor = false"
+        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+        @input="update_edited_notes()"
         v-html="update_iframe(initialHTML)"
       />
     </div>
@@ -333,7 +344,7 @@ export default {
   },
   data () {
     return {
-      caretIsInEditor: false,
+      showTooltip: false,
       savedSelection: null,
       initialHTML: '',
       editedHTML: '',
@@ -477,40 +488,38 @@ export default {
       if (window.getSelection) {
         sel = window.getSelection()
         if (sel.getRangeAt && sel.rangeCount) {
-          return sel.getRangeAt(0)
+          return this.savedSelection = sel.getRangeAt(0)
         }
       } else if (document.selection && document.selection.createRange) {
-        return document.selection.createRange()
+        return this.savedSelection = document.selection.createRange()
       }
-      return null
+      return this.savedSelection = null
     },
-    restore_selection (range) {
+    restore_selection () {
       let sel
-      if (range) {
+      if (this.savedSelection) {
         if (window.getSelection) {
           sel = window.getSelection()
           sel.removeAllRanges()
-          sel.addRange(range)
-        } else if (document.selection && range.select) {
-          range.select()
+          sel.addRange(this.savedSelection)
+        } else if (document.selection && this.savedSelection.select) {
+          this.savedSelection.select()
         }
       }
+      this.savedSelection = null
     },
 
     // TEXT
 
     format_style (style) {
       const el = document.getSelection()
-      this.saveSelection = this.save_selection()
-      if (document.activeElement.contentEditable !== true) {
+      if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
       switch (style) {
         case 'bold':
           if (!document.queryCommandState('bold')) {
             if (el.type === 'Caret') {
-              this.restore_selection(this.savedSelection)
-              console.log(el)
               this.paste_html_at_caret('<b>Bold</b>', true)
             } else if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
@@ -524,7 +533,6 @@ export default {
         case 'italic':
           if (!document.queryCommandState('italic')) {
             if (el.type === 'Caret') {
-              this.restore_selection(this.savedSelection)
               this.paste_html_at_caret('<i>Italic</i>', true)
             } else if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
@@ -538,7 +546,6 @@ export default {
         case 'underline':
           if (!document.queryCommandState('underline')) {
             if (el.type === 'Caret') {
-              this.restore_selection(this.savedSelection)
               this.paste_html_at_caret('<u>Underline</u>', true)
             } else if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
@@ -563,47 +570,35 @@ export default {
     // LISTS
 
     add_ol () {
-      this.saveSelection = this.save_selection()
-      if (document.activeElement.contentEditable !== true) {
+      if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
-      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret('<ol><li></li></ol>', false)
     },
     add_ul () {
-      this.saveSelection = this.save_selection()
-      if (document.activeElement.contentEditable !== true) {
+      if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
-      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret('<ul><li></li></ul>', false)
     },
 
     // CHECKBOX
 
     add_checkbox () {
-      this.saveSelection = this.save_selection()
-      if (document.activeElement.contentEditable !== true) {
+      if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
-      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret('<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>', false)
     },
 
     // LINK
 
-    show_link_adder () {
-      this.savedSelection = this.save_selection()
-      this.showAddLink = !this.showAddLink
-      if (!this.showAddLink) {
-        this.savedSelection = null
-      }
-    },
     add_link () {
-      if (document.activeElement.contentEditable !== true) {
+      if (this.savedSelection !== null) {
+        this.restore_selection()
+      } else if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
-      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, true)
       this.reset_link_pop_up()
     },
@@ -615,22 +610,16 @@ export default {
 
     // IMAGE
 
-    show_image_adder () {
-      this.savedSelection = this.save_selection()
-      this.showAddImage = !this.showAddImage
-      if (!this.showAddImage) {
-        this.savedSelection = null
-      }
-    },
     add_img () {
       const file = document.getElementById('img_uploader').files[0]
       const reader = new FileReader()
       reader.addEventListener('load', () => {
         this.base64Img = reader.result
-        if (document.activeElement.contentEditable !== true) {
+        if (this.savedSelection !== null) {
+        this.restore_selection()
+        } else if (document.activeElement.contentEditable !== 'true') {
           this.focus_on_editor()
         }
-        this.restore_selection(this.savedSelection)
         this.paste_html_at_caret(`<img src="${this.base64Img}">`, false)
         this.reset_img_pop_up()
       }, false)
@@ -654,18 +643,12 @@ export default {
 
     // VIDEO
 
-    show_video_adder () {
-      this.savedSelection = this.save_selection()
-      this.showAddVideo = !this.showAddVideo
-      if (!this.showAddVideo) {
-        this.savedSelection = null
-      }
-    },
     add_video () {
-      if (document.activeElement.contentEditable !== true) {
+      if (this.savedSelection !== null) {
+        this.restore_selection()
+      } else if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
-      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret(`<a name='video' href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`, false)
       this.reset_video_pop_up()
     },
@@ -681,18 +664,12 @@ export default {
 
     // TEMPLATE
 
-    show_template_adder () {
-      this.savedSelection = this.save_selection()
-      this.showAddTemplate = !this.showAddTemplate
-      if (!this.showAddTemplate) {
-        this.savedSelection = null
-      }
-    },
     add_template (templateData) {
-      if (document.activeElement.contentEditable !== true) {
+      if (this.savedSelection !== null) {
+        this.restore_selection()
+      } else if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
-      this.restore_selection(this.savedSelection)
       this.paste_html_at_caret(templateData, false)
       this.reset_template_pop_up()
     },
