@@ -70,7 +70,7 @@
           Trainer
         </p>
       </div>
-      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
+      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option tab_option_small icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
         <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
         <p class="text">
           Install

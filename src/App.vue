@@ -20,6 +20,9 @@
   .delay {
     animation-delay: .6s
   }
+  .delay_long {
+    animation-delay: 1.2s
+  }
   @keyframes fadeIn {
     from {
       opacity: 0
