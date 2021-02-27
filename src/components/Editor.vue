@@ -17,6 +17,7 @@ div#rich_show_content > p,
 div#rich_editor img[onclick='resize(this)'],
 div#rich_show_content img,
 .show_session img,
+.show_plan_notes img,
 .show_feedback img {
   border-radius: 10px;
   max-width: 80%;
@@ -50,6 +51,7 @@ div#rich_editor img[onclick='resize(this)']:hover {
 div#rich_editor input[type='checkbox'],
 div#rich_show_content input[type='checkbox'],
 .show_session input[type='checkbox'],
+.show_plan_notes input[type='checkbox']
 .show_feedback input[type='checkbox'] {
   margin: .4rem
 }
