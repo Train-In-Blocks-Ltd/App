@@ -381,7 +381,6 @@ export default {
       if (this.showEditState) {
         document.addEventListener('keyup', this.check_cmd_state)
       } else {
-        this.update_edited_notes()
         document.removeEventListener('keyup', this.check_cmd_state)
       }
     }
@@ -535,6 +534,7 @@ export default {
           } else if (el.focusNode.parentNode.id !== 'rich_editor') {
             this.unwrap(el.focusNode.parentNode)
           }
+          this.update_edited_notes()
           break
         case 'italic':
           if (!document.queryCommandState('italic')) {
@@ -548,6 +548,7 @@ export default {
           } else if (el.focusNode.parentNode.id !== 'rich_editor') {
             this.unwrap(el.focusNode.parentNode)
           }
+          this.update_edited_notes()
           break
         case 'underline':
           if (!document.queryCommandState('underline')) {
@@ -561,6 +562,7 @@ export default {
           } else if (el.focusNode.parentNode.id !== 'rich_editor') {
             this.unwrap(el.focusNode.parentNode)
           }
+          this.update_edited_notes()
           break
       }
     },
@@ -580,12 +582,14 @@ export default {
         this.focus_on_editor()
       }
       this.paste_html_at_caret('<ol><li></li></ol>', false)
+      this.update_edited_notes()
     },
     add_ul () {
       if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
       this.paste_html_at_caret('<ul><li></li></ul>', false)
+      this.update_edited_notes()
     },
 
     // CHECKBOX
@@ -595,6 +599,7 @@ export default {
         this.focus_on_editor()
       }
       this.paste_html_at_caret('<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>', false)
+      this.update_edited_notes()
     },
 
     // LINK
@@ -606,6 +611,7 @@ export default {
         this.focus_on_editor()
       }
       this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, true)
+      this.update_edited_notes()
       this.reset_link_pop_up()
     },
     reset_link_pop_up () {
@@ -627,6 +633,7 @@ export default {
           this.focus_on_editor()
         }
         this.paste_html_at_caret(`<img src="${this.base64Img}" onclick="resize(this)">`, false)
+        this.update_edited_notes()
         this.reset_img_pop_up()
       }, false)
       if (file) {
@@ -656,6 +663,7 @@ export default {
         this.focus_on_editor()
       }
       this.paste_html_at_caret(`<a name='video' href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`, false)
+      this.update_edited_notes()
       this.reset_video_pop_up()
     },
     get_embbed_id (url) {
@@ -677,6 +685,7 @@ export default {
         this.focus_on_editor()
       }
       this.paste_html_at_caret(templateData, false)
+      this.update_edited_notes()
       this.reset_template_pop_up()
     },
     reset_template_pop_up () {
