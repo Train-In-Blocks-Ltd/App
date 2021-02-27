@@ -233,7 +233,7 @@ export default {
 
     remove_brackets_and_checkbox (dataIn) {
       if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ')
+        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '')
       } else {
         return dataIn
       }

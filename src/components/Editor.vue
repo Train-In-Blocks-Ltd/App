@@ -14,14 +14,16 @@ div#rich_show_content > p,
 .show_feedback > p {
   margin: .6rem 0
 }
-div#rich_editor img,
+div#rich_editor img[onclick='resize(this)'],
 div#rich_show_content img,
 .show_session img,
 .show_feedback img {
-  cursor: pointer;
   border-radius: 10px;
   max-width: 80%;
-  margin: 1rem 0;
+  margin: 1rem 0
+}
+div#rich_editor img[onclick='resize(this)'] {
+  cursor: pointer;
   transition: .4s all cubic-bezier(.165, .84, .44, 1)
 }
 div#rich_editor a[name='video'],
@@ -42,10 +44,7 @@ div#rich_show_content a[name='video']:hover,
 .show_session a[name='video']:hover,
 .show_feedback a[name='video']:hover,
 .show_plan_notes a[name='video']:hover,
-div#rich_editor img:hover,
-div#rich_show_content img:hover,
-.show_session img:hover,
-.show_feedback img:hover {
+div#rich_editor img[onclick='resize(this)']:hover {
   opacity: .6
 }
 div#rich_editor input[type='checkbox'],
@@ -325,10 +324,10 @@ div#rich_editor {
         data-placeholder="Start typing..."
         @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
         @input="update_edited_notes()"
-        v-html="update_iframe(initialHTML)"
+        v-html="update_content(initialHTML)"
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="update_iframe(remove_brackets(htmlInjection))" />
+    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="update_content(remove_brackets(htmlInjection))" />
     <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">
       {{ emptyPlaceholder }}
     </p>
@@ -382,12 +381,13 @@ export default {
       if (this.showEditState) {
         document.addEventListener('keyup', this.check_cmd_state)
       } else {
+        this.update_edited_notes()
         document.removeEventListener('keyup', this.check_cmd_state)
       }
     }
   },
   methods: {
-    update_iframe (html) {
+    update_content (html) {
       let m
       const arr = []
       while ((m = this.updateIframeRegex.exec(html)) !== null) {
@@ -434,7 +434,7 @@ export default {
     },
     remove_brackets (dataIn) {
       if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/(checkbox")/g, 'checkbox" disabled')
+        return dataIn.replace(/[[\]]/g, '').replace(/(checkbox")/g, 'checkbox" disabled').replace('onclick="resize(this)"', '')
       } else {
         return dataIn
       }
