@@ -24,15 +24,6 @@
   .feedback_bottom_bar {
     margin-top: 1rem
   }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .wrapper--session {
-      box-shadow: none;
-      border-radius: 0;
-      padding: 0
-    }
-  }
 </style>
 
 <template>
@@ -92,12 +83,12 @@
           No sessions today...
         </p>
         <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
-          <div v-if="plan.sessions" class="container--sessions">
+          <div v-if="todays_sessions_store.length !== 0" class="container--sessions">
             <div
-              v-for="(session, indexed) in plan.sessions"
-              v-show="showing_current_session === indexed && todays_sessions_store.includes(session.id)"
+              v-for="(session, sessionIndex) in plan.sessions"
+              v-show="todays_sessions_store.includes(session.id)"
               :id="`session-${session.id}`"
-              :key="indexed"
+              :key="sessionIndex"
               class="wrapper--session"
             >
               <div :id="session.name" class="session_header client-side">

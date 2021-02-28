@@ -55,13 +55,6 @@
       display: none
     }
   }
-  @media (max-width: 768px) {
-    .plan_notes, .wrapper--session {
-      box-shadow: none;
-      border-radius: 0;
-      padding: 0
-    }
-  }
 </style>
 
 <template>
