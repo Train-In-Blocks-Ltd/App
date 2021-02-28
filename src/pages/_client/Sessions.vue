@@ -327,6 +327,10 @@
 
   @media (max-width: 576px) {
     /* Container */
+    .plan_options {
+      display: grid;
+      grid-gap: 1rem
+    }
     .plan_grid {
       display: block
     }
@@ -500,6 +504,7 @@
             :key="`protocol_${protocolIndex}`"
             v-show="copyAcrossPage === protocolIndex + 1"
             @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
+            class="bottom_margin"
           >
             <div
               v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[protocolIndex][1]"
@@ -832,7 +837,7 @@
                     v-show="session.week_id === currentWeek"
                     :id="'session-' + session.id"
                     :key="indexed"
-                    class="wrapper--session"
+                    class="wrapper--session fadeIn"
                     :class="{activeState: session.id === editSession}"
                   >
                     <div class="session_header">

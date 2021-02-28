@@ -153,7 +153,7 @@
   }
   .center_wrapped {
     margin: auto;
-    max-width: 500px
+    width: 500px
   }
 
   /* Fonts */
@@ -654,7 +654,9 @@
   @media (max-width: 768px) {
 
     /* Containers */
-
+    .center_wrapped {
+      width: 300px
+    }
     .client_link:hover,
     .plan_link:hover {
       box-shadow: 0 0 20px 10px #28282808
@@ -668,7 +670,6 @@
     }
 
     /* Sidebar */
-
     .logo {
       display: none
     }
@@ -685,7 +686,6 @@
     }
 
     /* Container */
-
     main {
       margin: 0
     }

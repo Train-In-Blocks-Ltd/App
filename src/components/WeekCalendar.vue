@@ -161,7 +161,7 @@
             :key="'event-' + indexed"
             :style="{ backgroundColor: event.color }"
             :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF', cursor: isTrainer }"
-            class="day_events__event"
+            class="day_events__event fadeIn"
             @click="isTrainer ? $parent.go_to_event(event.session_id, event.week_id) : null"
           >
             <p :style="{ color: event.textColor }">
