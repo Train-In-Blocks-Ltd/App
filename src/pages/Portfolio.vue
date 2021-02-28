@@ -49,6 +49,7 @@
         aria-label="Business name"
         type="text"
         autocomplete="name"
+        @click="editing_card= false, update($parent.portfolio.notes)"
         @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >
@@ -61,6 +62,7 @@
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
+        @click="editing_card= false, update($parent.portfolio.notes)"
         @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >

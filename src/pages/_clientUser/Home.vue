@@ -61,7 +61,13 @@
           Trainer
         </p>
       </div>
-      <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option tab_option_small icon_open_middle" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
+      <div
+        v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'"
+        :class="{ icon_open_middle: $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>' }"
+        class="tab_option tab_option_small"
+        aria-label="Install App"
+        @click="isInstallOpen = true, $parent.will_body_scroll(false)"
+      >
         <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
         <p class="text">
           Install
@@ -80,7 +86,7 @@
           v-if="todays_sessions_store.length === 0 && !$parent.loading"
           class="text--small text--no_sessions grey"
         >
-          No sessions today...
+          Nothing planned for today
         </p>
         <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
           <div v-if="todays_sessions_store.length !== 0" class="container--sessions">
@@ -152,9 +158,9 @@
           Plans
         </p>
         <skeleton v-if="$parent.loading" :type="'plan'" />
-        <div v-if="!$parent.loading" class="plan_grid">
+        <div v-if="$parent.clientUser.plans.length !== 0 && !$parent.loading" class="plan_grid">
           <router-link
-            v-for="(plan, index) in this.$parent.clientUser.plans"
+            v-for="(plan, index) in $parent.clientUser.plans"
             :key="'plan-' + index"
             class="plan_link"
             :to="'/clientUser/plan/' + plan.id"
@@ -175,6 +181,12 @@
             />
           </router-link>
         </div>
+        <p
+          v-if="$parent.clientUser.plans.length === 0 && !$parent.loading"
+          class="text--small text--no_sessions grey"
+        >
+          No plans yet, please contact your trainer or coach for more information
+        </p>
       </div>
     </div>
   </div>

@@ -808,7 +808,7 @@
                 </div>
               </div>
               <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--small grey text--no_sessions">
-                No sessions yet :(
+                No sessions created yet
               </p>
               <div v-if="!$parent.$parent.loading">
                 <div v-if="plan.sessions" class="container--sessions_header">

@@ -129,7 +129,7 @@
         </div>
       </transition>
       <p v-if="$parent.no_plans" class="text--small grey text--no-plans fadeIn">
-        No plans yet, use the button on the top-right of your screen.
+        No plans yet, use the button on the top-right of your screen
       </p>
       <div v-else>
         <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn"/>
