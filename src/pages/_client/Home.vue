@@ -16,6 +16,7 @@
     grid-gap: .6rem
   }
   .button--verify {
+    margin-bottom: 1rem;
     width: fit-content
   }
 

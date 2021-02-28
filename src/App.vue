@@ -2,13 +2,11 @@
   @import './assets/styles/icon-anim';
 
   /* Global */
-
   * {
     box-sizing: border-box
   }
 
   /* Animation */
-
   .fadeIn {
     animation: .6s fadeIn;
     animation-fill-mode: both
@@ -72,7 +70,6 @@
   }
 
   /* Document elements */
-
   body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -96,7 +93,6 @@
   }
 
   /* Containers */
-
   #home,
   #client,
   #account,
@@ -134,7 +130,6 @@
   }
 
   /* Versioning */
-
   .version {
     display: flex
   }
@@ -144,7 +139,6 @@
   }
 
   /* Modals */
-
   div.vm--modal {
     /* stylelint-disable-next-line */
     left: 0!important;
@@ -163,7 +157,6 @@
   }
 
   /* Fonts */
-
   h3 {
     font-size: 2rem;
     line-height: 1.2
@@ -208,7 +201,6 @@
   }
 
   /* Tailwinds */
-
   .allow_y_overflow {
     overflow-y: auto
   }
@@ -239,7 +231,6 @@
   }
 
   /* Text buttons */
-
   .a_link {
     display: flex;
     color: #282828;
@@ -256,7 +247,6 @@
   }
 
   /* Box buttons */
-
   button {
     height: fit-content;
     width: fit-content;
@@ -294,7 +284,6 @@
   }
 
   /* Editor wrapper */
-
   .session_header {
     height: fit-content
   }
@@ -327,7 +316,6 @@
   }
 
   /* Inputs */
-
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]), select {
     outline: none;
     -moz-appearance: none;
@@ -376,7 +364,6 @@
   }
 
   /* Forms */
-
   .form_grid {
     display: grid;
     grid-gap: 2rem
@@ -386,7 +373,6 @@
   }
 
   /* Logo */
-
   .logo {
     margin-bottom: auto
   }
@@ -410,7 +396,6 @@
   }
 
   /* Navigation */
-
   .sidebar {
     z-index: 10;
     display: flex;
@@ -462,7 +447,6 @@
   }
 
   /* Tab options */
-
   .tab_option {
     user-select: none;
     z-index: 2;
@@ -519,7 +503,6 @@
   }
 
   /* Scrollbar */
-
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px
@@ -536,7 +519,6 @@
   }
 
   /* Archive and Home */
-
   .container--clients {
     display: grid;
     grid-gap: 2rem;
@@ -547,7 +529,6 @@
   }
 
   /* Multi-select */
-
   .multi-select {
     display: grid;
     grid-gap: .4rem;
@@ -564,7 +545,6 @@
   }
 
   /* Links */
-
   .client_link_wrapper {
     text-decoration: none
   }
@@ -630,7 +610,6 @@
   }
 
   /* Client-side */
-
   .container--session-control {
     display: flex;
     justify-content: space-between
@@ -641,7 +620,6 @@
   }
 
   /* Responsiveness */
-
   @media (max-width: 992px) {
     input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):hover,
     button:not(:disabled):hover,
@@ -741,7 +719,6 @@
   @media (max-width: 576px) {
 
     /* Elements */
-
     ::-webkit-scrollbar {
       width: 0;
       background-color: transparent
@@ -794,7 +771,6 @@
   }
 
   /* Print */
-
   @media print {
     a,
     button,
@@ -817,7 +793,6 @@
   }
 
   /* Progress */
-
   #nprogress .bar {
     background: #282828 !important
   }
