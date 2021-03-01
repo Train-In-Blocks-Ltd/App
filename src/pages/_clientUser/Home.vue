@@ -121,13 +121,6 @@
                   >
                     Click to complete
                   </button>
-                  <button
-                    v-if="giveFeedback !== session.id"
-                    @click="giveFeedback = session.id"
-                    class="button--feedback"
-                  >
-                    Give Feedback
-                  </button>
                 </div>
               </div>
               <div v-if="session.checked === 1">
@@ -159,7 +152,7 @@
           </div>
         </div>
       </div>
-      <hr>
+      <div class="spacer" />
       <div class="client_home__plans">
         <p class="text--large">
           Plans
