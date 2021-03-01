@@ -22,6 +22,7 @@ Vue.use(VueAnalytics, {
   },
   disabled: true
 })
+Vue.use(VueQuill)
 Vue.use(VModal)
 Vue.use(InlineSvgPlugin)
 
