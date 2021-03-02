@@ -2,24 +2,32 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
-    sourceType: 'module'
+    sourceType: 'module',
+    parser: 'babel-eslint'
   },
   env: {
     browser: true,
+    node: true
   },
   // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-  extends: 'standard',
-  // required to lint *.vue files
-  plugins: [
-    'html'
+  extends: [
+    '@nuxtjs',
+    'plugin:nuxt/recommended'
   ],
   // add your custom rules here
   rules: {
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'vue/comment-directive': 0,
+    'vue/no-v-html': 0,
+    'vue/component-tags-order': ['error', {
+      order: ['style', 'template', 'script']
+    }],
+    'no-console': 'off',
+    'vue/require-default-prop': 0,
+    'vue/require-prop-types': 0
   }
 }

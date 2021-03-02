@@ -1,4 +1,8 @@
 <style scoped>
+  .top_bar {
+    display: flex;
+    justify-content: space-between
+  }
   .client_update {
     padding: 1rem 0;
     justify-self: end
@@ -25,26 +29,54 @@
 
 <template>
   <div id="archive">
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div class="multi-select" v-if="selectedClients.length !== 0">
-        <p class="text--selected">
-          <b>Selected {{selectedClients.length}} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <div v-if="selectedClients.length !== 0" class="multi-select">
+        <p>
+          <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiClients()">Delete</a>
+        <a href="javascript:void(0)" class="a_link" @click="delete_multi_clients()">Delete</a>
+        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect all</a>
       </div>
     </transition>
-    <p class="text--large">Archive</p><br>
-    <p class="text--small grey" v-if="this.$parent.archive.no_archive">No clients are archived :)</p>
-    <p v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
-    <input v-if="!this.$parent.archive.no_archive && !this.$parent.error && this.$parent.archive.clients" type="search" aria-label="search by name" rel="search" placeholder="Name" class="search text--small" autocomplete="name" v-model="search"/>
-    <div class="container--clients">
+    <div class="top_bar">
+      <p class="text--large">
+        Archive
+      </p>
+      <a
+        v-if="!$parent.archive.no_archive && selectedClients.length < $parent.archive.clients.length"
+        href="javascript:void(0)"
+        class="a_link"
+        @click="select_all()"
+      >
+        Select all
+      </a>
+    </div>
+    <br>
+    <p v-if="$parent.archive.no_archive" class="text--small grey">
+      No clients are archived :)
+    </p>
+    <p v-if="$parent.error">
+      <b>{{ $parent.error }}</b>
+    </p>
+    <input
+      v-if="!$parent.archive.no_archive && !$parent.error && $parent.archive.clients"
+      v-model="search"
+      type="search"
+      aria-label="search by name"
+      rel="search"
+      placeholder="Name"
+      class="search text--small"
+      autocomplete="name"
+    >
+    <div v-if="!$parent.archive.no_archive" class="container--clients">
       <skeleton v-if="$parent.loading" :type="'archived'" />
       <div
-        class="wrapper--client_link"
-        :to="'/client/'+clients.client_id+'/'"
+        v-for="(clients, index) in $parent.archive.clients"
         v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
         :id="'a' + clients.client_id"
-        v-for="(clients, index) in $parent.archive.clients" :key="index"
+        :key="index"
+        class="client_link_wrapper fadeIn"
+        :to="'/client/'+clients.client_id+'/'"
       >
         <client-link
           class="client_link archived"
@@ -52,64 +84,71 @@
           :email="clients.email"
           :number="clients.number"
           :notes="clients.notes"
-          :clientId="clients.client_id"
-          :clientIndex="index"
-          :archive="true"/>
+          :client-id="clients.client_id"
+          :client-index="index"
+          :archive="true"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import ClientLink from '../components/clientLink'
-  import InlineSvg from 'vue-inline-svg'
-  import Skeleton from '../components/Skeleton'
+const ClientLink = () => import(/* webpackChunkName: "components.clientlink", webpackPreload: true  */ '../components/ClientLink')
 
-  export default {
-    components: {
-      InlineSvg,
-      ClientLink,
-      Skeleton
-    },
-    data () {
-      return {
-        search: '',
-        selectedClients: [],
-        selectedClientsIndex: []
+export default {
+  components: {
+    ClientLink
+  },
+  data () {
+    return {
+      search: '',
+      selectedClients: []
+    }
+  },
+  async created () {
+    this.$parent.loading = true
+    await this.$parent.setup()
+    await this.$parent.archive_to_vue()
+    this.$parent.will_body_scroll(true)
+    this.$parent.end_loading()
+  },
+  methods: {
+
+    // CHECKBOX
+
+    change_select_checkbox (id) {
+      if (this.selectedClients.includes(id) === false) {
+        this.selectedClients.push(id)
+      } else {
+        const idx = this.selectedClients.indexOf(id)
+        this.selectedClients.splice(idx, 1)
       }
     },
-    async created () {
-      this.$parent.loading = true
-      await this.$parent.setup()
-      await this.$parent.archive_to_vue()
-      this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
-      this.$parent.loading = false
-    },
-    methods: {
-      changeSelectCheckbox (id, index) {
-        if (this.selectedClients.includes(id) === false) {
-          this.selectedClients.push(id)
-          this.selectedClientsIndex.push(index)
-        } else {
-          var idx1 = this.selectedClients.indexOf(id)
-          this.selectedClients.splice(idx1, 1)
-          var idx2 = this.selectedClientsIndex.indexOf(index)
-          this.selectedClientsIndex.splice(idx2, 1)
+    select_all () {
+      this.$parent.archive.clients.forEach((client) => {
+        if (!this.selectedClients.includes(client.client_id)) {
+          this.selectedClients.push(client.client_id)
+          document.getElementById(`sc-${client.client_id}`).checked = true
         }
-      },
-      deleteMultiClients () {
-        if (this.selectedClients.length !== 0) {
-          if (confirm('Are you sure you want to delete all the selected clients?')) {
-            this.selectedClients.forEach((clientId) => {
-              var idx = this.selectedClients.indexOf(clientId)
-              this.$parent.client_delete(clientId, idx)
-            })
-            this.selectedClients.length = 0
-            this.selectedClientsIndex.length = 0
-          }
+      })
+    },
+    deselect_all () {
+      this.$parent.archive.clients.forEach((client) => {
+        document.getElementById(`sc-${client.client_id}`).checked = false
+      })
+      this.selectedClients = []
+    },
+    delete_multi_clients () {
+      if (this.selectedClients.length !== 0) {
+        if (confirm('Are you sure that you want to delete all the selected clients?')) {
+          this.selectedClients.forEach((clientId) => {
+            this.$parent.client_delete(clientId)
+          })
+          this.selectedClients = []
         }
       }
     }
   }
+}
 </script>

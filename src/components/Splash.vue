@@ -36,11 +36,11 @@
     border-radius: 40%;
     animation: spin 5s forwards
   }
-  .box .logo--svg {
+  .box .logo_svg {
     height: 50%;
     width: auto
   }
-  .box svg.logo--svg path {
+  .box svg.logo_svg path {
     fill: white
   }
 
@@ -65,10 +65,18 @@
 <template>
   <div id="splash">
     <div class="box">
-      <svg class="logo--svg" width="38" height="38" viewBox="0 0 38 38" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        class="logo_svg"
+        width="38"
+        height="38"
+        viewBox="0 0 38 38"
+        version="1.1"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <g id="Icon">
-          <path d="M0 0L38 0L38 15L15 15L15 38L0 38L0 0Z" id="Rectangle" fill="#282828" stroke="none" />
-          <path d="M0 0L14 0L14 14L0 14L0 0Z" transform="translate(24 24)" id="Rectangle-2" fill="#282828" stroke="none" />
+          <path id="Rectangle" d="M0 0L38 0L38 15L15 15L15 38L0 38L0 0Z" fill="#282828" stroke="none" />
+          <path id="Rectangle-2" d="M0 0L14 0L14 14L0 14L0 0Z" transform="translate(24 24)" fill="#282828" stroke="none" />
         </g>
       </svg>
     </div>

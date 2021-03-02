@@ -1,32 +1,21 @@
 <style scoped>
-  .expand-all {
-    text-align: right;
-    margin: 2rem 0;
-    font-size: .8rem;
-    cursor: pointer;
-    opacity: 1;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
-  }
-  .expand-all:hover {
-    opacity: .6
-  }
-
   /* Containers */
+  .template_options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem
+  }
   .activeState {
     border: 2px solid #28282860
-  }
-  .wrapper--template-top {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 4rem
   }
   .container--templates {
     display: grid;
     grid-gap: 4rem;
-    margin: 4rem 0
+    margin: 2rem 0
   }
   .wrapper--template {
     display: grid;
+    background-color: white;
     box-shadow: 0 0 20px 10px #28282808;
     padding: 2rem;
     border-radius: 10px
@@ -42,18 +31,6 @@
   }
 
   /* Inputs */
-  input.template-name {
-    text-overflow: ellipsis;
-    border: 0;
-    border-bottom: 1px solid #282828;
-    font-size: 1rem;
-    outline-width: 0;
-    padding: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  input.template-name:hover {
-    opacity: .6
-  }
   .newTemplate {
     color: #B80000
   }
@@ -71,8 +48,6 @@
 
   @media (max-width: 768px) {
     .multi-select {
-      top: -2rem;
-      right: 0;
       padding: 2rem;
       width: 100%;
       background-color: white;
@@ -97,237 +72,276 @@
 
 <template>
   <div id="templates">
-    <transition enter-active-class="animate animate__fadeIn animate__faster" leave-active-class="animate animate__fadeOut animate__faster">
-      <div class="multi-select" v-if="selectedTemplates.length !== 0">
-        <p class="text--selected">
-          <b>Selected {{selectedTemplates.length}} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <div v-if="selectedTemplates.length !== 0" class="multi-select">
+        <p>
+          <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
         </p>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deleteMultiTemplates()">Delete</a>
-        <a href="javascript:void(0)" class="text--selected selected-options" @click="deselectAll()">Deselect</a>
+        <a href="javascript:void(0)" class="a_link" @click="delete_multi_templates()">Delete</a>
+        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
-    <div class="wrapper--template-top">
-      <button @click="newTemplate()">New Template</button>
+    <input
+      v-model="search"
+      type="search"
+      rel="search"
+      placeholder="Find a template"
+      class="text--small search"
+      aria-label="Find a template"
+    >
+    <div class="template_options">
+      <button @click="new_template()">
+        New Template
+      </button>
+      <a
+        v-if="$parent.templates !== null && $parent.templates.length !== 0 && selectedTemplates.length < $parent.templates.length"
+        href="javascript:void(0)"
+        class="a_link select_all"
+        @click="select_all()"
+      >
+        Select all
+      </a>
     </div>
-    <div class="container--templates" v-if="$parent.templates">
-      <p v-if="$parent.templates.length === 0" class="text--small grey">No templates yet :(</p>
+    <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="container--templates">
       <div
+        v-for="(template, index) in $parent.templates"
+        v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
+        :key="index"
         class="wrapper--template"
         :class="{ activeState: template.id === editTemplate }"
-        v-for="(template, index) in $parent.templates"
-        :key="index">
+      >
         <div class="wrapper--template__header">
-          <div>
-            <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{template.name}}</b></span><br v-if="template.id !== editTemplate">
-            <input v-if="template.id === editTemplate" class="template-name" type="text" name="template-name" pattern="[^\/]" v-model="template.name" /><br>
-          </div>
+          <span
+            v-if="template.id !== editTemplate"
+            class="text--name"
+            :class="{ newTemplate: template.name == 'Untitled' && !isEditingTemplate }"
+          >
+            <b>
+              {{ template.name }}
+            </b>
+          </span>
+          <br v-if="template.id !== editTemplate">
+          <input
+            v-if="template.id === editTemplate"
+            v-model="template.name"
+            class="template-name small_border_radius right_margin"
+            type="text"
+            name="template-name"
+            pattern="[^\/]"
+          ><br>
           <div class="header-options">
-            <checkbox :itemId="template.id" :type="'v1'" aria-label="Select this template" />
-            <inline-svg id="expand" class="icon--expand" v-show="!isEditingTemplate" :class="{expanded: expandedTemplates.includes(template.id)}" :src="require('../assets/svg/expand.svg')" title="Info" @click="toggleExpandedTemplates(template.id)"/>
+            <checkbox :item-id="template.id" :type="'v1'" aria-label="Select this template" />
+            <inline-svg
+              v-show="!isEditingTemplate"
+              id="expand"
+              class="icon--expand"
+              :class="{expanded: expandedTemplates.includes(template.id)}"
+              :src="require('../assets/svg/expand.svg')"
+              title="Info"
+              @click="toggle_expanded_templates(template.id)"
+            />
           </div>
         </div>
-        <quill v-if="template.id === editTemplate && expandedTemplates.includes(template.id)" v-model="template.template" output="html" class="quill animate animate__fadeIn"/>
-        <div v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && template.template !== null && template.template !== ''" v-html="removeBracketsAndBreaks(template.template)" tabindex="0" class="show_template animate animate__fadeIn"/>
-        <p v-if="template.id !== editTemplate && expandedTemplates.includes(template.id) && (template.template === null || template.template === '')" class="grey text--no_content">What do you plan for your clients frequently?</p>
-        <div class="bottom_bar" v-if="expandedTemplates.includes(template.id)">
-          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editingTemplateNotes(template.id, true), tempQuillStore = template.template">Edit</button>
-          <button v-if="template.id === editTemplate" @click="editingTemplateNotes(template.id, false)">Save</button>
-          <button class="cancel" v-if="template.id === editTemplate" @click="cancelTemplateNotes(), template.template = tempQuillStore">Cancel</button>
+        <rich-editor
+          v-show="expandedTemplates.includes(template.id)"
+          :show-edit-state="template.id === editTemplate"
+          :html-injection.sync="template.template"
+          :empty-placeholder="'What do you plan for your clients frequently?'"
+        />
+        <div v-if="expandedTemplates.includes(template.id)" class="bottom_bar">
+          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editing_template_notes(template.id, true, template.template), tempEditorStore = template.template">
+            Edit
+          </button>
+          <button v-if="template.id === editTemplate" @click="editing_template_notes(template.id, false, template.template)">
+            Save
+          </button>
+          <button v-if="template.id === editTemplate" class="cancel" @click="template.template = tempEditorStore, cancel_template_notes()">
+            Cancel
+          </button>
         </div>
       </div>
     </div>
+    <p v-else class="text--small grey top_margin">
+      No templates yet :(
+    </p>
   </div>
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import axios from 'axios'
-  import Checkbox from '../components/Checkbox'
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
+const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
 
-  export default {
-    components: {
-      InlineSvg,
-      Checkbox
+export default {
+  components: {
+    RichEditor,
+    Checkbox
+  },
+  data () {
+    return {
+
+      search: '',
+
+      // CREATE
+
+      new_template_form: {
+        name: 'Untitled',
+        note: ''
+      },
+
+      // EDIT
+
+      isEditingTemplate: false,
+      tempEditorStore: null,
+      editTemplate: null,
+
+      // SELECTED AND EXPANDED
+
+      selectedTemplates: [],
+      expandedTemplates: []
+    }
+  },
+  created () {
+    this.$parent.loading = true
+    this.$parent.will_body_scroll(true)
+    this.$parent.setup()
+    this.$parent.end_loading()
+  },
+  async mounted () {
+    await this.$parent.get_templates()
+    this.check_for_new()
+  },
+  methods: {
+
+    // BACKGROUND
+
+    check_for_new () {
+      this.expandedTemplates = []
+      this.$parent.templates.forEach((template) => {
+        if (template.template === null || template.template === '<p><br></p>') {
+          this.expandedTemplates.push(template.id)
+        }
+      })
     },
-    data () {
-      return {
-        // TEMPLATE DATA //
-        tempQuillStore: null,
-        isEditingTemplate: false,
-        editTemplate: null,
-        new_template: {
-          name: 'Untitled',
-          note: null
-        },
-        selectedTemplates: [],
-        expandedTemplates: []
+
+    // CHECKBOX
+
+    change_select_checkbox (id) {
+      if (this.selectedTemplates.includes(id) === false) {
+        this.selectedTemplates.push(id)
+      } else {
+        const idx = this.selectedTemplates.indexOf(id)
+        this.selectedTemplates.splice(idx, 1)
       }
     },
-    created () {
-      this.$parent.loading = true
-      this.$parent.setup()
-      this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
-      this.$parent.loading = false
+    toggle_expanded_templates (id) {
+      if (this.expandedTemplates.includes(id)) {
+        const index = this.expandedTemplates.indexOf(id)
+        if (index > -1) {
+          this.expandedTemplates.splice(index, 1)
+        }
+      } else {
+        this.expandedTemplates.push(id)
+      }
     },
-    async mounted () {
-      await this.$parent.get_templates()
-      this.checkForNew()
+    select_all () {
+      this.$parent.templates.forEach((template) => {
+        if (!this.selectedTemplates.includes(template.id)) {
+          this.selectedTemplates.push(template.id)
+          document.getElementById(`sc-${template.id}`).checked = true
+        }
+      })
     },
-    methods: {
+    deselect_all () {
+      this.$parent.templates.forEach((template) => {
+        document.getElementById(`sc-${template.id}`).checked = false
+      })
+      this.selectedTemplates = []
+    },
+    delete_multi_templates () {
+      if (this.selectedTemplates.length !== 0) {
+        if (confirm('Are you sure you want to delete all the selected templates?')) {
+          this.selectedTemplates.forEach((templateId) => {
+            this.delete_template(templateId)
+          })
+          this.deselect_all()
+        }
+      }
+    },
 
-      // BACKGROUND METHODS //-------------------------------------------------------------------------------
-      checkForNew () {
-        this.expandedTemplates.length = 0
-        this.$parent.templates.forEach((template) => {
-          if (template.template === null || template.template === '<p><br></p>') {
-            this.expandedTemplates.push(template.id)
-          }
-        })
-      },
-      deleteMultiTemplates () {
-        if (this.selectedTemplates.length !== 0) {
-          if (confirm('Are you sure you want to delete all the selected templates?')) {
-            this.selectedTemplates.forEach((templateId) => {
-              this.delete_template(templateId)
-            })
-            this.deselectAll()
-          }
-        }
-      },
-      deselectAll () {
-        this.$parent.templates.forEach((template) => {
-          var selEl = document.getElementById('sc-' + template.id)
-          if (selEl.checked === true) {
-            selEl.checked = false
-            var idx = this.selectedTemplates.indexOf(template.id)
-            this.selectedTemplates.splice(idx, 1)
-          }
-        })
-      },
-      changeSelectCheckbox (id) {
-        if (this.selectedTemplates.includes(id) === false) {
-          this.selectedTemplates.push(id)
-        } else {
-          var idx = this.selectedTemplates.indexOf(id)
-          this.selectedTemplates.splice(idx, 1)
-        }
-      },
-      toggleExpandedTemplates (id) {
-        if (this.expandedTemplates.includes(id)) {
-          const index = this.expandedTemplates.indexOf(id)
-          if (index > -1) {
-            this.expandedTemplates.splice(index, 1)
-          }
-        } else {
-          this.expandedTemplates.push(id)
-        }
-      },
-      removeBracketsAndBreaks (dataIn) {
-        if (dataIn !== null) {
-          return dataIn.replace(/[[\]]/g, '')
-        } else {
-          return dataIn
-        }
-      },
-      editingTemplateNotes (id, state) {
-        this.isEditingTemplate = state
-        this.editTemplate = id
-        if (!state) {
-          this.updateTemplateNotes(id)
-        }
-      },
-      updateTemplateNotes (id) {
-        this.updateTemplate(id)
+    // EDIT
+
+    editing_template_notes (id, state, notesUpdate) {
+      this.isEditingTemplate = state
+      this.editTemplate = id
+      if (!state) {
+        this.update_template(id, notesUpdate)
         this.isEditingTemplate = false
         this.editTemplate = null
-      },
-      cancelTemplateNotes () {
-        this.editTemplate = null
-        this.isEditingTemplate = false
-      },
+      }
+    },
+    cancel_template_notes () {
+      this.editTemplate = null
+      this.isEditingTemplate = false
+    },
 
-      // DATABASE METHODS //-------------------------------------------------------------------------------
+    // DATABASE
 
-      async newTemplate () {
-        try {
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          await axios.put('https://api.traininblocks.com/templates',
-            {
-              pt_id: this.$parent.claims.sub,
-              name: this.new_template.name,
-              template: this.new_template.template
-            }
-          )
-          await this.$parent.get_templates(true)
-          this.checkForNew()
-          this.new_template = {
-            name: 'Untitled',
-            note: null
+    async new_template () {
+      try {
+        this.$parent.dontLeave = true
+        await this.$axios.put('https://api.traininblocks.com/templates',
+          {
+            pt_id: this.$parent.claims.sub,
+            name: this.new_template_form.name,
+            template: this.new_template_form.template
           }
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-        } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+        )
+        await this.$parent.get_templates(true)
+        this.check_for_new()
+        this.new_template_form = {
+          name: 'Untitled',
+          note: ''
         }
-      },
-      async updateTemplate (id) {
-        try {
-          let templateName
-          let templateContent
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          if (this.$parent.templates.length !== 0) {
-            this.$parent.templates.forEach((item) => {
-              if (item.id === id) {
-                templateName = item.name
-                templateContent = item.template
-              }
-            })
-          }
-          await axios.post('https://api.traininblocks.com/templates',
-            {
-              name: templateName,
-              template: templateContent,
-              id: id
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async update_template (id, notesUpdate) {
+      try {
+        let templateName
+        this.$parent.dontLeave = true
+        if (this.$parent.templates.length !== 0) {
+          this.$parent.templates.forEach((item) => {
+            if (item.id === id) {
+              templateName = item.name
             }
-          )
-          await this.$parent.get_templates(true)
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-        } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
+          })
         }
-      },
-      async delete_template (id) {
-        try {
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          await axios.delete(`https://api.traininblocks.com/templates/${id}`)
-          await this.$parent.get_templates(true)
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-        } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
-        }
+        await this.$axios.post('https://api.traininblocks.com/templates',
+          {
+            name: templateName,
+            template: notesUpdate,
+            id
+          }
+        )
+        await this.$parent.get_templates(true)
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async delete_template (id) {
+      try {
+        this.$parent.dontLeave = true
+        await this.$axios.delete(`https://api.traininblocks.com/templates/${id}`)
+        await this.$parent.get_templates(true)
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.resolve_error(e)
       }
     }
   }
+}
 </script>

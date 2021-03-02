@@ -7,6 +7,9 @@
     display: grid;
     margin-bottom: 2rem
   }
+  .search_skeleton {
+    margin-bottom: 2rem
+  }
 
   @media (max-width: 768px) {
     .home--container {
@@ -17,101 +20,142 @@
 
 <template>
   <div id="home">
-    <splash v-if="!$parent.splashed" />
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div class="wrapper--new_client" v-if="isNewClientOpen">
-        <new-client />
-      </div>
-    </transition>
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div class="wrapper--whats_new allow_y_overflow" v-if="isWhatsNewOpen">
-        <whats-new />
-      </div>
-    </transition>
-    <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-      <div class="wrapper--install_PWA icon_open_middle" v-if="isInstallOpen">
-        <install-app />
-      </div>
-    </transition>
-    <div class="icon_open--new_client" v-if="!isNewClientOpen" @click="isNewClientOpen = true, $parent.willBodyScroll(false)" aria-label="New Client">
-      <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client"/>
-      <p class="text">New Client</p>
+    <div v-if="isNewClientOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
+      <new-client />
     </div>
-    <div class="icon_open--whats_new icon_open_middle" v-if="!isWhatsNewOpen" @click="isWhatsNewOpen = true, $parent.willBodyScroll(false)" aria-label="What's New">
-      <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New"/>
-      <p class="text">What's New</p>
+    <div v-if="isWhatsNewOpen" class="tab_overlay_content allow_y_overflow fadeIn delay fill_mode_both">
+      <whats-new />
     </div>
-    <div class="icon_open--install_PWA icon_open_bottom" v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" @click="isInstallOpen = true, $parent.willBodyScroll(false)" aria-label="Install App">
-      <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App"/>
-      <p class="text">Install</p>
+    <div v-if="isInstallOpen" class="tab_overlay_content icon_open_middle fadeIn delay fill_mode_both">
+      <install-app />
+    </div>
+    <div v-if="!isNewClientOpen" class="tab_option tab_option_large" aria-label="New Client" @click="isNewClientOpen = true, $parent.will_body_scroll(false)">
+      <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client" />
+      <p class="text">
+        New Client
+      </p>
+    </div>
+    <div v-if="!isWhatsNewOpen" class="tab_option icon_open_middle tab_option_large" aria-label="What's New" @click="isWhatsNewOpen = true, $parent.will_body_scroll(false)">
+      <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New" />
+      <p class="text">
+        What's New
+      </p>
+      <span v-if="$parent.newBuild" class="notify_badge">New</span>
+    </div>
+    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_bottom tab_option_small" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
+      <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App" />
+      <p class="text">
+        Install
+      </p>
     </div>
     <div>
-      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--a" />
-      <div :class="{openedSections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section--b" />
+      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_a" />
+      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_b" />
     </div>
-    <p class="text--small grey text--no_clients" v-if="this.$parent.no_clients">No clients added yet, use the button on the top-right of your screen.</p>
-    <p class="text--small grey text--loading" v-if="this.$parent.error"><b>{{this.$parent.error}}</b></p>
+    <p v-if="$parent.no_clients" class="text--small grey text--no_clients">
+      No clients added yet, use the button on the top-right of your screen.
+    </p>
+    <p v-if="$parent.error" class="text--small grey text--loading">
+      <b>{{ $parent.error }}</b>
+    </p>
     <!-- Loop through clients -->
-    <div class="home--container" v-if="!this.$parent.no_clients && !this.$parent.error && this.$parent.clients">
-      <input type="search" rel="search" placeholder="Find a client" class="text--small search" aria-label="Find a client" v-model="search"/>
-      <p v-if="response !== ''" class="new-msg">{{response}}</p>
+    <div v-if="!$parent.no_clients && !$parent.error && $parent.clients && !$parent.loading" class="home--container">
+      <input
+        v-model="search"
+        type="search"
+        rel="search"
+        placeholder="Find a client"
+        class="text--small search"
+        aria-label="Find a client"
+      >
+      <div v-if="response !== ''" class="text--new_msg">
+        <p class="text--small">
+          {{ response }}
+        </p>
+        <p class="text--small grey">
+          Well done on getting a new client
+        </p>
+      </div>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
-        <skeleton v-if="$parent.loading" :type="'client'" />
         <router-link
-          :to="'/client/'+clients.client_id+'/'"
-          v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
-          :id="'a' + clients.client_id"
-          v-for="(clients, index) in $parent.clients"
+          v-for="(client, index) in $parent.clients"
+          v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
+          :id="'a' + client.client_id"
           :key="index"
-          class="wrapper--client_link"
+          :to="'/client/'+client.client_id+'/'"
+          class="client_link_wrapper fadeIn fill_mode_both delay_long"
         >
-          <client-link class="client_link" :name="clients.name" :email="clients.email" :number="clients.number" :notes="clients.notes"/>
+          <client-link
+            :name="client.name"
+            :email="client.email"
+            :number="client.number"
+            :notes="client.notes"
+            :class="{ recently_added: persistResponse === client.name }"
+            class="client_link"
+          />
         </router-link>
       </div>
+    </div>
+    <div v-else>
+      <skeleton :type="'input_large'" class="search_skeleton" />
+      <skeleton :type="'client'" />
     </div>
   </div>
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import ClientLink from '../components/clientLink'
-  import NewClient from '../components/newClient'
-  import WhatsNew from '../components/whatsNew'
-  import InstallApp from '../components/installPWA'
-  import Skeleton from '../components/Skeleton'
-  import Splash from '../components/Splash'
+const ClientLink = () => import(/* webpackChunkName: "components.clientlink", webpackPreload: true  */ '../components/ClientLink')
+const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
+const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
+const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/InstallPWA')
 
-  export default {
-    components: {
-      InlineSvg,
-      ClientLink,
-      NewClient,
-      WhatsNew,
-      InstallApp,
-      Skeleton,
-      Splash
+export default {
+  components: {
+    ClientLink,
+    NewClient,
+    WhatsNew,
+    InstallApp
+  },
+  data () {
+    return {
+
+      // CLIENT CREATION
+
+      response: '',
+      persistResponse: '',
+
+      // TAB STATES
+
+      isNewClientOpen: false,
+      isInstallOpen: false,
+      isWhatsNewOpen: false,
+
+      // OTHER
+
+      search: ''
+    }
+  },
+  mounted () {
+    this.$parent.loading = true
+    this.$parent.setup()
+    this.$parent.client_details = null
+    this.version()
+    this.$parent.will_body_scroll(true)
+    this.$parent.end_loading()
+  },
+  methods: {
+
+    // BACKGROUND AND MISC.
+
+    response_delay () {
+      setTimeout(() => { this.response = '' }, 5000)
     },
-    data () {
-      return {
-        response: '',
-        search: '',
-        isNewClientOpen: false,
-        isInstallOpen: false,
-        isWhatsNewOpen: false
+    version () {
+      if (localStorage.getItem('versionBuild') !== this.$parent.versionBuild) {
+        this.$parent.newBuild = true
       }
-    },
-    created () {
-      setTimeout(() => {
-        this.$parent.splashed = true
-      }, 4000)
-      this.$parent.willBodyScroll(true)
-    },
-    mounted () {
-      this.$parent.loading = true
-      this.$parent.setup()
-      this.$parent.client_details = null
-      this.$parent.loading = false
     }
   }
+}
 </script>

@@ -30,6 +30,29 @@
     <div id="app"></div>
     <noscript>JavaScript is required to run this app. Please enable it.</noscript>
     <script>
+      const checkbox = function (elem) {
+        if (elem.checked) {
+          elem.setAttribute("checked", "1")
+        } else {
+          elem.removeAttribute("checked")
+        }
+      }
+      const resize = function (elem) {
+        switch (elem.style.cssText) {
+          case 'max-width: 80%;':
+            elem.style = 'max-width: 60%;'
+            break
+          case 'max-width: 60%;':
+            elem.style = 'max-width: 40%;'
+            break
+          case 'max-width: 40%;':
+            elem.style = 'max-width: 80%;'
+            break
+          default:
+            elem.style = 'max-width: 60%;'
+            break
+        }
+      }
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/pwabuilder-sw.js')
       }

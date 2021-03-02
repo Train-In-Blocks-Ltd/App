@@ -13,9 +13,6 @@
     font-size: .75rem;
     margin: 2rem 0
   }
-  .input--forms.email-recovery {
-    width: 70%
-  }
   @media (max-width: 520px) {
     #login {
       width: 100%;
@@ -35,37 +32,28 @@
     margin-top: 1.25rem
   }
   .signup {
-    margin-left: calc(20px + 60px + 20px)
+    margin-left: calc(20px + 60px + 20px);
+    margin-top: .6rem;
+    margin-bottom: .6rem
   }
   .recovery {
-    margin-top: 1.25rem;
-    margin-left: 4px
+    margin-top: 1.25rem
   }
-  .input--forms {
-    outline-width: 0;
-    width: 95%;
-    margin: .8rem 0;
-    padding: .6rem 0;
-    font-size: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
-    border: none;
-    border-bottom: 1px solid #282828;
-    transition: width 1s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
-  }
-  .input--forms:focus, .input--forms:hover {
-    width: 100%
+  .recover_password {
+    margin: .8rem 0
   }
 </style>
 <style>
   #okta-signin-submit {
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
     position: absolute;
     user-select: none;
     cursor: pointer;
     border-radius: 5px;
     opacity: 1;
     text-transform: capitalize;
-    outline-width: 0;
     border: none;
     padding: .6rem 1.6rem;
     font-size: .8rem;
@@ -102,19 +90,9 @@
     text-align: left
   }
   #okta-signin-username, #okta-signin-password {
-    outline-width: 0;
-    width: 95%;
     margin: .8rem 0;
-    padding: .6rem 0;
     font-size: 1rem;
-    font-family: Arial, Helvetica, sans-serif;
-    border: none;
-    border-bottom: 1px solid #282828;
-    transition: width 1s;
-    transition-timing-function: cubic-bezier(.075, .82, .165, 1)
-  }
-  #okta-signin-username:hover, #okta-signin-password:hover, #okta-signin-username:focus, #okta-signin-password:focus {
-    width: 100%
+    border-radius: 5px
   }
   .okta-form-input-error {
     width: 100%;
@@ -157,40 +135,64 @@
 </style>
 
 <template>
-  <div id="login" v-if="!this.$parent.authenticated">
-    <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo"/>
+  <div v-if="!this.$parent.authenticated" id="login">
+    <splash v-if="!splashed" />
+    <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
     <div id="okta-signin-container" />
     <div class="button--container">
       <form action="https://traininblocks.com">
-        <button class="signup" type="submit">Sign Up</button>
+        <button class="signup" type="submit">
+          Sign Up
+        </button>
       </form>
-      <div><button v-if="!open" @click="open = !open">Forgot password?</button></div>
+      <div>
+        <button v-if="!open" @click="open = !open">
+          Forgot password?
+        </button>
+      </div>
     </div>
-    <form v-if="open" v-on:submit.prevent="reset" class="recovery">
+    <form v-if="open" class="recovery" @submit.prevent="reset">
       <label>
-        <p><b>Email:</b></p>
-        <input type="email" v-model="email" class="input--forms" autofocus/>
+        <p>Email:</p>
+        <input
+          v-model="email"
+          type="email"
+          class="recover_password small_border_radius"
+          autofocus
+        >
       </label>
-      <button type="submit">Send recovery email</button>
+      <button type="submit">
+        Send recovery email
+      </button>
     </form>
-    <p v-if="success">{{success}}</p>
-    <p v-if="error" class="error">{{error}}</p>
-    <p class="cookies">By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.</p>
-    <p style="font-size: .8rem"><b>Draco 2.1</b></p>
+    <p v-if="success">
+      {{ success }}
+    </p>
+    <p v-if="error" class="error">
+      {{ error }}
+    </p>
+    <p class="cookies">
+      By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.
+    </p>
+    <div class="version">
+      <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />
+      <p class="text--tiny">
+        <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
-import OktaSignIn from '@okta/okta-signin-widget'
-import InlineSvg from 'vue-inline-svg'
-import axios from 'axios'
+const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../components/Splash')
 
 export default {
   components: {
-    InlineSvg
+    Splash
   },
   data () {
     return {
+      splashed: false,
       open: false,
       email: null,
       id: null,
@@ -199,6 +201,14 @@ export default {
     }
   },
   async mounted () {
+    setTimeout(() => {
+      this.splashed = true
+      this.$parent.will_body_scroll(true)
+    }, 4000)
+    let OktaSignIn
+    await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
+      OktaSignIn = module.default
+    })
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
@@ -240,43 +250,17 @@ export default {
     if (await this.$auth.isAuthenticated()) {
       this.$router.push('/')
     } else {
-      localStorage.clear()
-      var cookies = document.cookie.split(';')
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i]
-        var eqPos = cookie.indexOf('=')
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+      const cookies = document.cookie.split(';')
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i]
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
     }
   },
-  methods: {
-    async reset () {
-      this.$parent.pause_loading = true
-      this.$parent.dontLeave = true
-      this.error = null
-      this.success = null
-      try {
-        await axios.post('/.netlify/functions/reset-password',
-          {
-            email: this.email
-          }
-        )
-        this.open = false
-        this.email = null
-        this.success = 'An email has been sent successfully.'
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
-      } catch (e) {
-        this.$parent.pause_loading = false
-        this.$parent.dontLeave = false
-        this.error = 'An error occurred. Are you sure your email is correct?'
-        console.error(e)
-      }
-    }
-  },
   async beforeDestroy () {
-    await this.$parent.isAuthenticated()
+    await this.$parent.is_authenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()
     if (this.$ga && !this.$parent.authenticated) {
@@ -286,6 +270,31 @@ export default {
   destroyed () {
     // Remove the widget from the DOM on path change
     this.widget.remove()
+  },
+  methods: {
+
+    // BACKGROUND AND MISC.
+
+    async reset () {
+      this.$parent.dontLeave = true
+      this.error = null
+      this.success = null
+      try {
+        await this.$axios.post('/.netlify/functions/reset-password',
+          {
+            email: this.email
+          }
+        )
+        this.open = false
+        this.email = null
+        this.success = 'An email has been sent successfully.'
+        this.$parent.end_loading()
+      } catch (e) {
+        this.$parent.end_loading()
+        this.error = 'An error occurred. Are you sure your email is correct?'
+        console.error(e)
+      }
+    }
   }
 }
 </script>

@@ -10,35 +10,35 @@
 }
 
 /* Home */
-.account_nav--item:hover #home__house {
+.account_nav_item:hover #home__house {
   transform: translateY(-3px)
 }
 
-/* Help Desk*/
+/* Help Desk */
 #help-desk__bookmark {
   opacity: 0;
   transform: scaleY(0) translateY(1px)
 }
-.account_nav--item:hover #help-desk__bookmark {
+.account_nav_item:hover #help-desk__bookmark {
   opacity: 1;
   transform: scaleY(1)
 }
 
 /* Template */
-.account_nav--item:hover #template__t {
+.account_nav_item:hover #template__t {
   transform: translateY(4px)
 }
 
 /* Portfolio */
-.account_nav--item:hover #portfolio_pen {
+.account_nav_item:hover #portfolio_pen {
   transform: translateX(4px)
 }
-.account_nav--item:hover #portfolio_case {
+.account_nav_item:hover #portfolio_case {
   transform: translateX(-2px)
 }
 
 /* Archive */
-.account_nav--item:hover #archive__t, .archive_icon:hover #archive__t {
+.account_nav_item:hover #archive__t, .archive_icon:hover #archive__t {
   transform: translateY(-6px)
 }
 .archive_icon:hover #bin__lid {
@@ -54,13 +54,13 @@
     transform: rotateZ(360deg)
   }
 }
-.account_nav--item:hover #account__cog {
+.account_nav_item:hover #account__cog {
   transform-origin: center;
   animation: inf-spin 5s infinite linear
 }
 
 /* Logout */
-.account_nav--item:hover #logout__arrow {
+.account_nav_item:hover #logout__arrow {
   transform: translateX(-6px)
 }
 
@@ -80,23 +80,22 @@
 
 /* No Hover */
 @media (max-width: 992px), (prefers-reduced-motion: reduce) {
-
   /* None */
-  .account_nav--item:hover #home__house,
-  .account_nav--item:hover #template__t,
-  .account_nav--item:hover #archive__t,
+  .account_nav_item:hover #home__house,
+  .account_nav_item:hover #template__t,
+  .account_nav_item:hover #archive__t,
   .archive_icon:hover #archive__t,
   .archive_icon:hover #bin__lid,
-  .account_nav--item:hover #account__cog,
-  .account_nav--item:hover #logout__arrow,
-  .account_nav--item:hover #portfolio_pen,
-  .account_nav--item:hover #portfolio_case {
+  .account_nav_item:hover #account__cog,
+  .account_nav_item:hover #logout__arrow,
+  .account_nav_item:hover #portfolio_pen,
+  .account_nav_item:hover #portfolio_case {
     transform: none;
     animation: none
   }
 
   /* Help Desk */
-  #help-desk__bookmark, .account_nav--item:hover #help-desk__bookmark {
+  #help-desk__bookmark, .account_nav_item:hover #help-desk__bookmark {
     opacity: 1;
     transform: scaleY(1)
   }

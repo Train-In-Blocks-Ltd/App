@@ -1,7 +1,4 @@
 <style scoped>
-  button {
-    margin: 0
-  }
   .details {
     display: grid;
     grid-gap: 1rem;
@@ -54,11 +51,11 @@
   .error {
     color: red
   }
+  .reset_password_button_bar {
+    display: flex
+  }
 
   @media (max-width: 768px) {
-    #account {
-      width: 90vw
-    }
     .policies:hover {
       opacity: 1
     }
@@ -66,48 +63,100 @@
 </style>
 
 <template>
-  <div id="account" v-if="this.$parent.claims">
-    <modal name="reset-password" height="100%" width="100%" :adaptive="true" :clickToClose="false" @opened="$refs.pass.focus()">
+  <div v-if="this.$parent.claims" id="account">
+    <modal
+      name="reset-password"
+      height="100%"
+      width="100%"
+      :adaptive="true"
+      :click-to-close="false"
+      @opened="$refs.pass.focus()"
+    >
       <div class="modal--reset">
-        <div class="wrapper--centered-item"> 
-          <p class="text--small">Reset your password</p>
-          <form @submit.prevent="changePass(), $parent.willBodyScroll(true)">
-            <label>
-              <p><b>Current Password</b></p>
-              <input type="password" class="input--forms" ref="pass" v-model="password.old" />
-            </label>
-            <br>
-            <br>
-            <br>
-            <label>
-              <p><b>Requirements:</b></p>
-              <p>Number (0-9)</p>
-              <p>At least 8 characters</p>
-              <p>Can't contain your username</p><br>
-              <p><b>New Password</b></p>
-              <input type="password" class="input--forms" v-model="password.new" @input="checkPass" v-bind:class="{check: password.check}"/>
-            </label>
-            <br>
-            <br>
-            <button type="submit" :disabled="password.check">Change your password</button>
-            <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.willBodyScroll(true)">Close</button>
-            <p v-if="this.password.error" class="error">{{this.password.error}}</p>
-            <p v-if="this.password.msg">{{this.password.msg}}</p>
+        <div class="center_wrapped">
+          <form class="form_grid" @submit.prevent="change_password(), $parent.will_body_scroll(true)">
+            <div>
+              <p class="text--large">
+                Stay safe
+              </p>
+              <p class="text--large grey">
+                Reset your password
+              </p>
+            </div>
+            <input
+              ref="pass"
+              v-model="password.old"
+              type="password"
+              placeholder="Current password"
+              aria-label="Current password"
+              class="input--forms small_border_radius"
+              required
+            >
+            <div>
+              <p class="text--small">
+                Requirements
+              </p>
+              <p class="text--small grey">
+                Number (0-9)
+              </p>
+              <p class="text--small grey">
+                At least 8 characters
+              </p>
+              <p class="text--small grey">
+                Can't contain your username
+              </p>
+            </div>
+            <input
+              v-model="password.new"
+              type="password"
+              placeholder="New password"
+              aria-label="New password"
+              class="input--forms small_border_radius"
+              :class="{check: password.check}"
+              required
+              @input="check_password"
+            >
+            <div class="reset_password_button_bar">
+              <button class="right_margin" type="submit" :disabled="password.check">
+                Change your password
+              </button>
+              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.will_body_scroll(true)">
+                Close
+              </button>
+            </div>
+            <p v-if="password.error" class="error">
+              {{ password.error }}
+            </p>
+            <p v-if="password.msg">
+              {{ password.msg }}
+            </p>
           </form>
         </div>
       </div>
     </modal>
-    <p class="text--large">Your Account</p>
-    <form class="details_container" v-if="$parent.claims">
+    <p class="text--large">
+      Your Account
+    </p>
+    <form v-if="$parent.claims" class="details_container">
       <div class="details">
-        <p style="margin-bottom: 1rem"><b>Email: </b>{{$parent.claims.email}}</p>
+        <p style="margin-bottom: 1rem">
+          <b>Email: </b>{{ $parent.claims.email }}
+        </p>
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-          <button @click.prevent="manageSubscription()">Manage Your Subscription</button>
+          <button @click.prevent="manage_subscription()">
+            Manage Your Subscription
+          </button>
         </div>
-        <button @click.prevent="$modal.show('reset-password'), $parent.willBodyScroll(false)">Change Your Password</button>
+        <div>
+          <button @click.prevent="$modal.show('reset-password'), $parent.will_body_scroll(false)">
+            Change Your Password
+          </button>
+        </div>
       </div>
       <div class="privacy">
-        <p class="text--small">Your Privacy and Data</p>
+        <p class="text--small">
+          Your Privacy and Data
+        </p>
         <p>You can find more information about our policies below:</p>
         <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
         <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
@@ -115,130 +164,119 @@
         <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
         <div class="form__options">
           <label for="cookies">
-            Allow Third Party Cookies: 
-            <input class="allow-cookies" type="checkbox" v-model="$parent.claims.ga" @change="save()"/>
+            Allow Third Party Cookies:
+            <input v-model="$parent.claims.ga" class="allow-cookies" type="checkbox" @change="save()">
           </label>
         </div>
       </div>
     </form><br><br>
-    <p style="font-size: .8rem"><b>Draco 2.1</b></p>
+    <div class="version">
+      <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />
+      <p class="text--tiny">
+        <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-  import {passChangeEmail, passChangeEmailText} from '../components/email'
+import { passChangeEmail, passChangeEmailText } from '../components/email'
 
-  export default {
-    data () {
-      return {
-        password: {
-          old: null,
-          new: null,
-          check: null,
-          error: null,
-          msg: null
-        }
+export default {
+  data () {
+    return {
+      password: {
+        old: null,
+        new: null,
+        check: null,
+        error: null,
+        msg: null
+      }
+    }
+  },
+  created () {
+    this.$parent.loading = true
+    this.$parent.setup()
+    this.$parent.will_body_scroll(true)
+    this.$parent.end_loading()
+  },
+  methods: {
+
+    // BACKGROUND AND MISC.
+
+    async save () {
+      this.$parent.dontLeave = true
+      try {
+        await this.$axios.post('/.netlify/functions/okta',
+          {
+            type: 'POST',
+            body: {
+              profile: {
+                ga: this.$parent.claims.ga
+              }
+            },
+            url: `${this.$parent.claims.sub}`
+          }
+        )
+        this.$parent.dontLeave = false
+      } catch (e) {
+        this.$parent.resolve_error(e)
       }
     },
-    created () {
-      this.$parent.loading = true
-      this.$parent.setup()
-      this.$parent.splashed = true
-      this.$parent.willBodyScroll(true)
-      this.$parent.loading = false
+    async manage_subscription () {
+      try {
+        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
+          {
+            id: this.$parent.claims.stripeId
+          }
+        )
+        window.location.href = response.data
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
     },
-    methods: {
 
-      // BACKGROUND AND MISC. METHODS //-------------------------------------------------------------------------------
+    // PASSWORD
 
-      async save () {
-        this.$parent.pause_loading = true
+    check_password () {
+      if (!this.password.new.includes(this.$parent.claims.email) && this.password.new.match(/[0-9]+/) && this.password.new.length >= 8 && this.password.old.length >= 1) {
+        this.password.check = false
+      } else {
+        this.password.check = true
+      }
+    },
+    async change_password () {
+      try {
         this.$parent.dontLeave = true
-        try {
-          await axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {
-                'profile': {
-                  'ga': this.$parent.claims.ga
-                }
-              },
-              url: `${this.$parent.claims.sub}`
-            }
-          )
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-        } catch (e) {
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
-        }
-      },
-
-      // PASSWORD METHODS //-------------------------------------------------------------------------------
-
-      checkPass () {
-        if (!this.password.new.includes(this.$parent.claims.email) && this.password.new.match(/[0-9]+/) && this.password.new.length >= 8 && this.password.old.length >= 1) {
-          this.password.check = false
-        } else {
-          this.password.check = true
-        }
-      },
-      async changePass () {
-        try {
-          this.$parent.pause_loading = true
-          this.$parent.dontLeave = true
-          this.password.error = ''
-          await axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {
-                'oldPassword': this.password.old,
-                'newPassword': this.password.new
-              },
-              url: `${this.$parent.claims.sub}/credentials/change_password`
-            }
-          )
-          this.password.old = null
-          this.password.new = null
-          this.password.msg = 'Password Updated Successfully'
-          await axios.post('/.netlify/functions/send-email',
-            {
-              'to': this.$parent.claims.email,
-              'subject': 'Password Changed',
-              'text': passChangeEmailText(),
-              'html': passChangeEmail()
-            }
-          )
-          this.$parent.pause_loading = false
-          this.$parent.dontLeave = false
-        } catch (e) {
-          this.$parent.pause_loading = false
-          this.password.error = 'Something went wrong. Please make sure that your password is correct'
-          this.$parent.dontLeave = false
-          console.error(e)
-        }
-      },
-      async manageSubscription () {
-        try {
-          const response = await axios.post('/.netlify/functions/create-manage-link',
-            {
-              'id': this.$parent.claims.stripeId
-            }
-          )
-          window.location.href = response.data
-        } catch (e) {
-          this.$parent.dontLeave = false
-          this.$parent.errorMsg = e
-          this.$parent.$modal.show('error')
-          this.$parent.willBodyScroll(false)
-          console.error(e)
-        }
+        this.password.error = ''
+        await this.$axios.post('/.netlify/functions/okta',
+          {
+            type: 'POST',
+            body: {
+              oldPassword: this.password.old,
+              newPassword: this.password.new
+            },
+            url: `${this.$parent.claims.sub}/credentials/change_password`
+          }
+        )
+        this.password.old = null
+        this.password.new = null
+        this.password.msg = 'Password Updated Successfully'
+        await this.$axios.post('/.netlify/functions/send-email',
+          {
+            to: this.$parent.claims.email,
+            subject: 'Password Changed',
+            text: passChangeEmailText(),
+            html: passChangeEmail()
+          }
+        )
+        this.$parent.end_loading()
+      } catch (e) {
+        this.password.error = 'Something went wrong. Please make sure that your password is correct'
+        console.error(e)
+        this.$parent.end_loading()
       }
     }
   }
+}
 </script>

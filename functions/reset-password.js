@@ -545,30 +545,30 @@ exports.handler = async function handler (event, context, callback) {
         {},
         {
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authHeader
+            Authorization: authHeader
           }
         }
       )
       // options
       const mailOptions = {
         from: 'Train In Blocks <hello@traininblocks.com>',
-        to: data.email,                   // from req.body.to
-        subject: 'Password Reset',         // from req.body.subject
+        to: data.email,
+        subject: 'Password Reset',
         text: passEmailText(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-        html: passEmail(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))         // from req.body.message
+        html: passEmail(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
       }
       await transporter.sendMail(mailOptions)
       return callback(null, {
         statusCode: 200,
-        headers: headers,
+        headers,
         body: 'Email sent successfully'
       })
     } catch (e) {
       return callback(null, {
         statusCode: 502,
-        headers: headers,
+        headers,
         body: JSON.stringify(e, response)
       })
     }

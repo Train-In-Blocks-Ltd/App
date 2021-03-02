@@ -1,23 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 import Auth from '@okta/okta-vue'
 
-import HomeComponent from '@/pages/Home'
-import LoginComponent from '@/pages/Login'
-import ProfileComponent from '@/pages/Account'
-import LogoutComponent from '@/pages/Logout'
-import NotFound from '@/pages/NotFound'
-import ArchiveComponent from '@/pages/Archive'
-import TemplateComponent from '@/pages/Templates'
-import PortfolioComponent from '@/pages/Portfolio'
+const LoginComponent = () => import(/* webpackChunkName: "login" */ '@/pages/Login')
+const ProfileComponent = () => import(/* webpackChunkName: "account" */ '@/pages/Account')
+const LogoutComponent = () => import(/* webpackChunkName: "logout" */ '@/pages/Logout')
+const NotFound = () => import(/* webpackChunkName: "notfound" */ '@/pages/NotFound')
+const ArchiveComponent = () => import(/* webpackChunkName: "archive" */ '@/pages/Archive')
+const TemplateComponent = () => import(/* webpackChunkName: "templates" */ '@/pages/Templates')
+const PortfolioComponent = () => import(/* webpackChunkName: "portfolio" */ '@/pages/Portfolio')
 
-import ClientComponent from '@/pages/_client/Home'
-import ClientPlans from '@/pages/_client/Plans'
-import ClientSessions from '@/pages/_client/Sessions'
+const ClientComponent = () => import(/* webpackChunkName: "client.home" */ '@/pages/_client/Home')
+const ClientPlans = () => import(/* webpackChunkName: "client.plans" */ '@/pages/_client/Plans')
+const ClientSessions = () => import(/* webpackChunkName: "client.sessions" */ '@/pages/_client/Sessions')
 
-import ClientUserComponent from '@/pages/_clientUser/Home'
-import ClientUserPlans from '@/pages/_clientUser/Plans'
+const ClientUserComponent = () => import(/* webpackChunkName: "client-user.home" */ '@/pages/_clientUser/Home')
+const ClientUserPlans = () => import(/* webpackChunkName: "client-user.plans" */ '@/pages/_clientUser/Plans')
+
+const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home')
 
 Vue.use(Router)
 Vue.use(Auth, {
@@ -27,8 +27,8 @@ Vue.use(Auth, {
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
-  onSessionExpired: async function () {
-    await Vue.$auth.logout({postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback'})
+  async onSessionExpired () {
+    await Vue.$auth.logout({ postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback' })
   }
 })
 
@@ -152,19 +152,17 @@ const onAuthRequired = async (from, to, next) => {
 const userType = async (from, to, next) => {
   let result
   if (!localStorage.getItem('claims')) {
-    let claims = await Vue.prototype.$auth.getUser()
+    const claims = await Vue.prototype.$auth.getUser()
     if (claims !== undefined && claims !== null) {
       localStorage.setItem('claims', JSON.stringify(claims))
       result = claims
     } else {
       result = false
     }
+  } else if (localStorage.getItem('claims')) {
+    result = JSON.parse(localStorage.getItem('claims'))
   } else {
-    if (localStorage.getItem('claims')) {
-      result = JSON.parse(localStorage.getItem('claims'))
-    } else {
-      result = false
-    }
+    result = false
   }
   if (result) {
     if (from.matched.some(record => record.meta.requiresTrainer)) {

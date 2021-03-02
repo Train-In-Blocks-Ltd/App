@@ -3,10 +3,11 @@
   .activeState {
     border: 2px solid #28282860
   }
-  .client_notes {
+  #client_notes {
     margin: 4rem 0;
     padding: 2rem;
     border-radius: 10px;
+    background-color: white;
     box-shadow: 0 0 20px 10px #28282808
   }
   .client_notes__header {
@@ -52,95 +53,139 @@
   }
 </style>
 <template>
+  <div>
+    <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
+      <new-plan />
+    </div>
+    <div
+      v-if="!isNewPlanOpen"
+      :class="{ icon_open_middle: $parent.keepLoaded }"
+      class="tab_option tab_option_small"
+      aria-label="New Plan"
+      @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)"
+    >
+      <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
+      <p class="text">
+        New Plan
+      </p>
+    </div>
     <div>
-      <transition enter-active-class="animate animate__fadeIn animate__faster animate__delay-1s">
-        <div class="wrapper--new_plan" v-if="isNewPlanOpen">
-          <new-plan />
+      <div :class="{ opened_sections: isNewPlanOpen }" class="section_a" />
+      <div :class="{ opened_sections: isNewPlanOpen }" class="section_b" />
+    </div>
+    <div id="client_notes" :class="{ activeState: editClientNotes }">
+      <div class="client_notes__header">
+        <p class="text--small">
+          Client Information
+        </p>
+        <a
+          v-if="!editClientNotes"
+          href="javascript:void(0)"
+          class="a--client_notes"
+          @click="editClientNotes = true, tempEditorStore = $parent.$parent.client_details.notes"
+        >
+          Edit
+        </a>
+      </div>
+      <rich-editor
+        :show-edit-state="editClientNotes"
+        :html-injection.sync="$parent.$parent.client_details.notes"
+        :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
+      />
+      <div v-if="editClientNotes" class="bottom_bar">
+        <button class="button--save" @click="editClientNotes = false, $parent.$parent.update_client()">
+          Save
+        </button>
+        <button class="cancel" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore">
+          Cancel
+        </button>
+      </div>
+    </div>
+    <div>
+      <p class="text--large">
+        Plans
+      </p>
+      <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+        <div v-if="response !== ''" class="text--new_msg">
+          <p class="text--small">
+            {{ response }}
+          </p>
+          <p class="text--small grey">
+            You're all set, get programming
+          </p>
         </div>
       </transition>
-      <div class="icon_open--new_plan icon_open_middle" v-if="!isNewPlanOpen" @click="isNewPlanOpen = true, $parent.$parent.willBodyScroll(false)" aria-label="New Plan">
-        <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan"/>
-        <p class="text">New Plan</p>
-      </div>
-      <div>
-        <div :class="{ openedSections: isNewPlanOpen }" class="section--a" />
-        <div :class="{ openedSections: isNewPlanOpen }" class="section--b"/>
-      </div>
-      <div :class="{ activeState: editClientNotes }" class="client_notes">
-        <div class="client_notes__header">
-          <p class="text--small">Client Information</p>
-          <a
-            href="javascript:void(0)"
-            v-if="!editClientNotes"
-            @click="editClientNotes = true, tempQuillStore = $parent.$parent.client_details.notes"
-            class="a--client_notes"
+      <p v-if="$parent.no_plans" class="text--small grey text--no-plans fadeIn">
+        No plans yet, use the button on the top-right of your screen
+      </p>
+      <div v-else>
+        <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
+        <div v-else class="plan_grid">
+          <router-link
+            v-for="(plan, index) in $parent.$parent.client_details.plans"
+            :key="index"
+            :to="'plan/' + plan.id"
+            :class="{ recently_added: persistResponse === plan.name }"
+            class="plan_link fadeIn"
           >
-            Edit
-          </a>
-        </div>
-        <quill v-if="editClientNotes" v-model="$parent.$parent.client_details.notes" output="html" class="quill animate animate__fadeIn"/>
-        <div
-          v-if="!editClientNotes && $parent.$parent.client_details.notes !== '<p><br></p>' && $parent.$parent.client_details.notes !== ''"
-          v-html="$parent.$parent.client_details.notes"
-          class="show_client_notes animate animate__fadeIn"
-        />
-        <p
-          v-if="!editClientNotes && ($parent.$parent.client_details.notes === '<p><br></p>' || $parent.$parent.client_details.notes === '')"
-          class="text--small grey text--no_client_notes"
-        >
-          What goals does your client have? What physical measures have you taken?
-        </p>
-        <div v-if="editClientNotes" class="bottom_bar">
-          <button @click="editClientNotes = false, $parent.update_client()" class="button--save">Save</button>
-          <button @click="editClientNotes = false, $parent.$parent.client_details.notes = tempQuillStore" class="cancel">Cancel</button>
-        </div>
-      </div>
-      <div>
-        <p class="text--large">Plans</p>
-        <p class="new-msg" v-if="response !== ''">{{response}}</p>
-        <p class="text--small grey text--no-plans" v-if="$parent.no_plans">No plans yet, use the button on the top-right of your screen.</p>
-        <div v-else>
-          <skeleton v-if="$parent.$parent.loading" :type="'plan'"/>
-          <div v-else class="plan_grid">
-            <router-link
-              class="plan_link" :to="'plan/' + plan.id"
-              v-for="(plan, index) in $parent.$parent.client_details.plans"
-              :key="index"
-            >
-              <div>
-                <p class="text--small plan-name">{{plan.name}}</p>
-                <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">What's the purpose of this plan? Head over to this page and edit it.</p>
-                <div v-else v-html="plan.notes" class="plan_link__notes__content" />
-              </div>
-            </router-link>
-          </div>
+            <div>
+              <p class="text--small plan-name">
+                {{ plan.name }}
+              </p>
+              <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">
+                What's the purpose of this plan? Head over to this page and edit it.
+              </p>
+              <div v-else class="plan_link__notes__content" v-html="remove_brackets_and_checkbox(plan.notes)" />
+            </div>
+          </router-link>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
-  import InlineSvg from 'vue-inline-svg'
-  import NewPlan from '../../components/newPlan'
-  import Skeleton from '../../components/Skeleton'
+const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
-  export default {
-    components: {
-      InlineSvg,
-      NewPlan,
-      Skeleton
-    },
-    created () {
-      this.$parent.$parent.splashed = true
-      this.$parent.checkClient()
-    },
-    data () {
-      return {
-        tempQuillStore: null,
-        response: '',
-        editClientNotes: false,
-        isNewPlanOpen: false
+export default {
+  components: {
+    NewPlan,
+    RichEditor
+  },
+  data () {
+    return {
+
+      // EDIT
+
+      tempEditorStore: null,
+      editClientNotes: false,
+
+      // PLAN CREATION
+
+      isNewPlanOpen: false,
+      response: '',
+      persistResponse: ''
+    }
+  },
+  created () {
+    this.$parent.$parent.will_body_scroll(true)
+    this.$parent.check_client()
+  },
+  methods: {
+
+    // BACKGROUND AND MISC.
+
+    remove_brackets_and_checkbox (dataIn) {
+      if (dataIn !== null) {
+        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ')
+      } else {
+        return dataIn
       }
+    },
+    response_delay () {
+      setTimeout(() => { this.response = '' }, 5000)
     }
   }
+}
 </script>

@@ -6,12 +6,12 @@ Repo for the Train In Blocks App.
 
 ## Getting Started
 
-We use NPM as we've run into some problems before using Yarn. Please make sure you have the latest version of NPM installed globally. Vue CLI and Vue UI can help with development when installed globally.
+We use Yarn. Please make sure you have the latest version of NPM and Yarn installed globally. Vue UI can help with development when installed globally.
 
 ### Install packages
 
 ```bash
-npm install
+yarn install
 
 npm install netlify-cli -g
 
