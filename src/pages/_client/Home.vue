@@ -104,7 +104,7 @@
         </div>
         <inline-svg
           v-if="showOptions"
-          class="icon--options fadeIn delay"
+          class="icon--options fadeIn delay fill_mode_both"
           :src="require('../../assets/svg/close.svg')"
           aria-label="Close"
           @click="showOptions = false"
@@ -113,7 +113,7 @@
           v-for="(clients, index) in $parent.clients"
           v-show="clients.client_id == $route.params.client_id && showOptions"
           :key="clients.client_id"
-          class="client--options fadeIn delay"
+          class="client--options fadeIn delay fill_mode_both"
         >
           <a
             v-if="clients.client_id == $route.params.client_id && showOptions"
@@ -271,7 +271,6 @@ export default {
             url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
           }
         )
-        console.log('results.data', result.data)
         if (result.data.length > 0) {
           if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
             this.clientAlready = true
@@ -412,7 +411,6 @@ export default {
             } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
               const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
               // If there are no plans
-              console.log('response.data', response.data)
               if (response.data.length === 0) {
                 this.no_plans = true
                 this.$parent.clients[x].plans = false
@@ -447,7 +445,6 @@ export default {
             } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
               const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
               // If there are no sessions
-              console.log('response.data 2', response.data)
               if (response.data.length === 0) {
                 this.no_sessions = true
                 this.$parent.client_details.plans[f].sessions = false

@@ -917,7 +917,7 @@
               <skeleton v-else type="session" />
             </div><!-- sessions -->
           </div>
-          <div v-if="isStatsOpen" class="graph fadeIn delay">
+          <div v-if="isStatsOpen" class="graph fadeIn delay fill_mode_both">
             <div class="section--top">
               <p class="text--large section-title">
                 Statistics

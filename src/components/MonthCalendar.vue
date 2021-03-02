@@ -179,7 +179,7 @@ export default {
       this.get_month()
     }
   },
-  created () {
+  mounted () {
     this.get_month()
   },
   methods: {

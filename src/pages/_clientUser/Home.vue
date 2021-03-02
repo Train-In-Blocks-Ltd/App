@@ -33,7 +33,7 @@
         <div :class="{opened_sections: isPortfolioOpen || isInstallOpen}" class="section_a" />
         <div :class="{opened_sections: isPortfolioOpen || isInstallOpen}" class="section_b" />
       </div>
-      <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay">
+      <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
           <p class="text--large">
             {{ $parent.portfolio.business_name }}
@@ -47,7 +47,7 @@
           </button>
         </div>
       </div>
-      <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay">
+      <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <install-app />
       </div>
       <div
@@ -158,7 +158,7 @@
           Plans
         </p>
         <skeleton v-if="$parent.loading" :type="'plan'" />
-        <div v-if="$parent.clientUser.plans.length !== 0 && !$parent.loading" class="plan_grid">
+        <div v-if="!noPlans && !$parent.loading" class="plan_grid">
           <router-link
             v-for="(plan, index) in $parent.clientUser.plans"
             :key="'plan-' + index"
@@ -182,7 +182,7 @@
           </router-link>
         </div>
         <p
-          v-if="$parent.clientUser.plans.length === 0 && !$parent.loading"
+          v-if="noPlans && !$parent.loading"
           class="text--small text--no_sessions grey"
         >
           No plans yet, please contact your trainer or coach for more information
@@ -216,6 +216,7 @@ export default {
 
       // SYSTEM
 
+      noPlans: true,
       check: null,
       todays_sessions_store: [],
       showing_current_session: 0
@@ -228,6 +229,7 @@ export default {
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()
     this.todays_session()
+    this.$parent.clientUser.plans.length === 0 ? this.noPlans = true : this.noPlans = false
     this.$parent.end_loading()
   },
   methods: {

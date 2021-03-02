@@ -184,7 +184,7 @@ export default {
       this.get_week()
     }
   },
-  created () {
+  mounted () {
     this.get_week()
   },
   methods: {
