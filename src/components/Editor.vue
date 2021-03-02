@@ -115,23 +115,6 @@ button.add_link_submit {
   margin: 0
 }
 
-/* Tooltip */
-.grouped_toolbar_options {
-  display: inline
-}
-.tooltip {
-  position: absolute;
-  top: 120%;
-  background-color: #282828;
-  color: white;
-  font-size: .8rem;
-  opacity: .9;
-  text-align: center;
-  padding: .5rem;
-  border-radius: 3px;
-  z-index: 100
-}
-
 /* Editor */
 div#rich_editor {
   padding: 1rem;
@@ -206,36 +189,26 @@ div#rich_editor {
           >
             <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
           </button>
-          <div
-            class="grouped_toolbar_options"
-            @mouseover="showTooltip = true"
-            @mouseleave="showTooltip = false"
+          <button
+            title="Add Link"
+            @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
           >
-            <button
-              title="Add Link"
-              :disabled="savedSelection === null"
-              @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/link.svg')" />
-            </button>
-            <button
-              title="Insert Image"
-              :disabled="savedSelection === null"
-              @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_template_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-            </button>
-            <button
-              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-              title="Use Template"
-              :disabled="savedSelection === null"
-              @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
-            </button>
-          </div>
+            <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+          </button>
+          <button
+            title="Insert Image"
+            @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_template_pop_up()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+          </button>
+          <button
+            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+            title="Use Template"
+            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+          </button>
         </div>
-        <span v-show="showTooltip && savedSelection === null" class="tooltip">Click on an empty line where you want to insert.</span>
       </div>
       <!-- LINK -->
       <form v-if="showAddLink" class="pop_up--add_link" @submit.prevent="add_link()">
@@ -319,7 +292,6 @@ export default {
   },
   data () {
     return {
-      showTooltip: false,
       savedSelection: null,
       initialHTML: '',
       editedHTML: '',
@@ -492,9 +464,7 @@ export default {
       switch (style) {
         case 'bold':
           if (!document.queryCommandState('bold')) {
-            if (el.type === 'Caret') {
-              this.paste_html_at_caret('<b>Bold</b>', true)
-            } else if (el.type === 'Range') {
+            if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
                 this.paste_html_at_caret(`<b>${el.toString()}</b>`, true)
               }
@@ -506,9 +476,7 @@ export default {
           break
         case 'italic':
           if (!document.queryCommandState('italic')) {
-            if (el.type === 'Caret') {
-              this.paste_html_at_caret('<i>Italic</i>', true)
-            } else if (el.type === 'Range') {
+            if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
                 this.paste_html_at_caret(`<i>${el.toString()}</i>`, true)
               }
@@ -520,9 +488,7 @@ export default {
           break
         case 'underline':
           if (!document.queryCommandState('underline')) {
-            if (el.type === 'Caret') {
-              this.paste_html_at_caret('<u>Underline</u>', true)
-            } else if (el.type === 'Range') {
+            if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
                 this.paste_html_at_caret(`<u>${el.toString()}</u>`, true)
               }
@@ -546,39 +512,61 @@ export default {
     // LISTS
 
     add_ol () {
-      if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
+      let forceFocus = false
+      if (this.savedSelection === null) {
+        forceFocus = true
       }
-      this.paste_html_at_caret('<ol><li></li></ol>', false)
+      this.restore_selection()
+      if (!forceFocus) {
+        this.paste_html_at_caret('<ol><li></li></ol>', false)
+      } else {
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ol><li></li></ol>')
+      }
       this.update_edited_notes()
     },
     add_ul () {
-      if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
+      let forceFocus = false
+      if (this.savedSelection === null) {
+        forceFocus = true
       }
-      this.paste_html_at_caret('<ul><li></li></ul>', false)
+      this.restore_selection()
+      if (!forceFocus) {
+        this.paste_html_at_caret('<ul><li></li></ul>', false)
+      } else {
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ul><li></li></ul>')
+      }
       this.update_edited_notes()
     },
 
     // CHECKBOX
 
     add_checkbox () {
-      if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
+      let forceFocus = false
+      if (this.savedSelection === null) {
+        forceFocus = true
       }
-      this.paste_html_at_caret('<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>', false)
+      this.restore_selection()
+      if (!forceFocus) {
+        this.paste_html_at_caret('<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>', false)
+      } else {
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<div contenteditable="false" style="display: inline"><input name="checkbox" type="checkbox" value="0" onclick="checkbox(this)"></div><div contenteditable="true" style="display: inline"></div>')
+      }
       this.update_edited_notes()
     },
 
     // LINK
 
     add_link () {
-      if (this.savedSelection !== null) {
-        this.restore_selection()
-      } else if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
+      let forceFocus = false
+      if (this.savedSelection === null) {
+        forceFocus = true
       }
-      this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, true)
+      this.restore_selection()
+      if (!forceFocus) {
+        this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, true)
+      } else {
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`)
+      }
       this.update_edited_notes()
       this.reset_link_pop_up()
     },
@@ -591,16 +579,20 @@ export default {
     // IMAGE
 
     add_img () {
+      let forceFocus = false
       const file = document.getElementById('img_uploader').files[0]
       const reader = new FileReader()
       reader.addEventListener('load', () => {
         this.base64Img = reader.result
-        if (this.savedSelection !== null) {
-        this.restore_selection()
-        } else if (document.activeElement.contentEditable !== 'true') {
-          this.focus_on_editor()
+        if (this.savedSelection === null) {
+          forceFocus = true
         }
-        this.paste_html_at_caret(`<img src="${this.base64Img}" onclick="resize(this)">`, false)
+        this.restore_selection()
+        if (!forceFocus) {
+          this.paste_html_at_caret(`<img src="${this.base64Img}" onclick="resize(this)">`, false)
+        } else {
+          document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<img src="${this.base64Img}" onclick="resize(this)">`)
+        }
         this.update_edited_notes()
         this.reset_img_pop_up()
       }, false)
@@ -625,12 +617,16 @@ export default {
     // TEMPLATE
 
     add_template (templateData) {
-      if (this.savedSelection !== null) {
-        this.restore_selection()
-      } else if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
+      let forceFocus = false
+      if (this.savedSelection === null) {
+        forceFocus = true
       }
-      this.paste_html_at_caret(templateData, false)
+      this.restore_selection()
+      if (!forceFocus) {
+        this.paste_html_at_caret(templateData, false)
+      } else {
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', templateData)
+      }
       this.update_edited_notes()
       this.reset_template_pop_up()
     },
