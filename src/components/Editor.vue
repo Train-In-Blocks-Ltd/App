@@ -511,7 +511,7 @@ export default {
       }
       this.restore_selection()
       if (!forceFocus) {
-        this.paste_html_at_caret('<ol><li></li></ol>', false)
+        this.paste_html_at_caret('<ol><li>Item</li></ol>', true)
       } else {
         document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ol><li></li></ol>')
       }
@@ -524,7 +524,7 @@ export default {
       }
       this.restore_selection()
       if (!forceFocus) {
-        this.paste_html_at_caret('<ul><li></li></ul>', false)
+        this.paste_html_at_caret('<ul><li>Item</li></ul>', true)
       } else {
         document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ul><li></li></ul>')
       }
