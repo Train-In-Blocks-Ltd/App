@@ -724,8 +724,6 @@
                 :show-edit-state="editPlanNotes"
                 :html-injection.sync="plan.notes"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
-                :called-from-el="'plan'"
-                :called-from-item="'plan_notes'"
               />
               <div v-if="editPlanNotes" class="bottom_bar">
                 <button class="button--save" @click="editPlanNotes = false, update_plan(plan.notes)">
@@ -897,9 +895,6 @@
                       :html-injection.sync="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                       :data-for-templates="$parent.$parent.templates"
-                      :called-from-el="'plan'"
-                      :called-from-item="'trainer_session'"
-                      :called-from-item-id="`${session.id}`"
                     />
                     <div v-if="session.id === showFeedback" class="feedback_wrapper fadeIn">
                       <hr><br>

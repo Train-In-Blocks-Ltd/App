@@ -144,6 +144,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: boldActive }"
             title="Bold"
+            :disabled="!firstClickOver"
             @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
@@ -151,6 +152,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: italicActive }"
             title="Italic"
+            :disabled="!firstClickOver"
             @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
@@ -158,6 +160,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: underlineActive }"
             title="Underline"
+            :disabled="!firstClickOver"
             @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
@@ -165,6 +168,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: olActive }"
             title="Ordered List"
+            :disabled="!firstClickOver"
             @click="add_ol(), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
@@ -172,6 +176,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: ulActive }"
             title="Unordered List"
+            :disabled="!firstClickOver"
             @click="add_ul(), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
@@ -179,18 +184,21 @@ div#rich_editor {
           <button
             :class="{ activeStyle: ulActive }"
             title="Checkbox"
+            :disabled="!firstClickOver"
             @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
           </button>
           <button
             title="Add Link"
+            :disabled="!firstClickOver"
             @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
           >
             <inline-svg :src="require('../assets/svg/editor/link.svg')" />
           </button>
           <button
             title="Insert Image"
+            :disabled="!firstClickOver"
             @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_template_pop_up()"
           >
             <inline-svg :src="require('../assets/svg/editor/image.svg')" />
@@ -198,6 +206,7 @@ div#rich_editor {
           <button
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             title="Use Template"
+            :disabled="!firstClickOver"
             @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
           >
             <inline-svg :src="require('../assets/svg/editor/template.svg')" />
@@ -259,9 +268,8 @@ div#rich_editor {
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
-        @input="update_edited_notes()"
-        @keyup="save_selection()"
+        @click="firstClickOver = true, save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+        @keyup="firstClickOver = true, save_selection(), update_edited_notes()"
         v-html="update_content(initialHTML)"
       />
     </div>
@@ -280,22 +288,24 @@ export default {
     showEditState: Boolean,
     htmlInjection: String,
     emptyPlaceholder: String,
-    dataForTemplates: Array,
-    calledFromEl: String,
-    calledFromItem: String,
-    calledFromItemId: String
+    dataForTemplates: Array
   },
   data () {
     return {
+      // System
+      firstClickOver: false,
       savedSelection: null,
       initialHTML: '',
       editedHTML: '',
+
+      // Style state
       boldActive: false,
       italicActive: false,
       underlineActive: false,
       olActive: false,
       ulActive: false,
 
+      // Pop up
       showAddLink: false,
       addLinkName: '',
       addLinkURL: '',
@@ -317,6 +327,7 @@ export default {
         document.addEventListener('keyup', this.check_cmd_state)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
+        this.firstClickOver = false
       }
     }
   },

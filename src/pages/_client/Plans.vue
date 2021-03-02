@@ -91,8 +91,6 @@
         :show-edit-state="editClientNotes"
         :html-injection.sync="$parent.$parent.client_details.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
-        :called-from-el="'app'"
-        :called-from-item="'client_information'"
       />
       <div v-if="editClientNotes" class="bottom_bar">
         <button class="button--save" @click="editClientNotes = false, $parent.$parent.update_client()">

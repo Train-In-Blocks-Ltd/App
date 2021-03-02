@@ -170,8 +170,6 @@
                 :show-edit-state="giveFeedback === session.id"
                 :html-injection.sync="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
-                :called-from-el="'app'"
-                :called-from-item="'client_plan_session'"
               />
               <div class="feedback_bottom_bar">
                 <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">

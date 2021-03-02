@@ -148,9 +148,6 @@
           :show-edit-state="template.id === editTemplate"
           :html-injection.sync="template.template"
           :empty-placeholder="'What do you plan for your clients frequently?'"
-          :called-from-el="'templates'"
-          :called-from-item="'template'"
-          :called-from-item-id="`${template.id}`"
         />
         <div v-if="expandedTemplates.includes(template.id)" class="bottom_bar">
           <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editing_template_notes(template.id, true, template.template), tempEditorStore = template.template">

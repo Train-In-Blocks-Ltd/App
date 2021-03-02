@@ -78,8 +78,6 @@
         :show-edit-state="editing_card"
         :html-injection.sync="$parent.portfolio.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
-        :called-from-el="'portfolio'"
-        :called-from-item="'portfolio'"
       />
       <div class="bottom_bar">
         <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">
