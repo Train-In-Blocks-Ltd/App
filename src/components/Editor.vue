@@ -8,17 +8,13 @@ div#rich_editor > div,
 div#rich_editor > p,
 div#rich_show_content > div,
 div#rich_show_content > p,
-.show_session > div,
-.show_session > p,
-.show_feedback > div,
-.show_feedback > p {
+.show_html > div,
+.show_html > p {
   margin: .6rem 0
 }
 div#rich_editor img,
 div#rich_show_content img,
-.show_session img,
-.show_plan_notes img,
-.show_feedback img {
+.show_html img {
   border-radius: 10px;
   max-width: 80%;
   margin: 1rem 0
@@ -32,9 +28,7 @@ div#rich_editor img[onclick='resize(this)']:hover {
 }
 div#rich_editor input[type='checkbox'],
 div#rich_show_content input[type='checkbox'],
-.show_session input[type='checkbox'],
-.show_plan_notes input[type='checkbox']
-.show_feedback input[type='checkbox'] {
+.show_html input[type='checkbox'] {
   margin: .4rem
 }
 </style>
@@ -263,7 +257,7 @@ div#rich_editor {
             <div class="modal--preview_template">
               <div class="center_wrapped">
                 <div v-if="previewTemplate !== null">
-                  <div v-html="previewTemplate" /><br>
+                  <div v-html="previewTemplate" class="show_html" /><br>
                   <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
                     Close
                   </button>

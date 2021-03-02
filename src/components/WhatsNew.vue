@@ -17,7 +17,7 @@ img {
 </style>
 
 <template>
-  <div>
+  <div class="bottom_margin">
     <p class="text--large">
       What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
     </p>

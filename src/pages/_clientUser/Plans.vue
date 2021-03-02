@@ -70,8 +70,8 @@
               Plan Notes
             </p>
           </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_plan_notes fadeIn" v-html="remove_brackets_and_checkbox(plan.notes)" />
-          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_plan_notes text--small grey">
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_html fadeIn" v-html="remove_brackets_and_checkbox(plan.notes)" />
+          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_html text--small grey">
             No plan notes added...
           </p>
         </div>
@@ -142,7 +142,7 @@
                 <span class="text--date">{{ session.date }}</span>
               </div>
             </div>
-            <div class="show_session fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
+            <div class="show_html fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
             <div class="bottom_bar">
               <div :key="check" class="full_width_bar">
                 <button

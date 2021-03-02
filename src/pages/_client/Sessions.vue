@@ -894,7 +894,7 @@
                     <div v-if="session.id === showFeedback" class="feedback_wrapper fadeIn">
                       <hr><br>
                       <p><b>Feedback</b></p><br>
-                      <div class="show_feedback" v-html="session.feedback" />
+                      <div class="show_html" v-html="session.feedback" />
                     </div>
                     <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
                       <button v-if="session.id !== editSession && !isEditingSession" @click="editing_session_notes(session.id, true, session.notes), editPlanNotes = false, tempEditorStore = session.notes">
