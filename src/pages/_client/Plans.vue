@@ -121,7 +121,7 @@
         No plans yet, use the button on the top-right of your screen
       </p>
       <div v-else>
-        <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn"/>
+        <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
         <div v-else class="plan_grid">
           <router-link
             v-for="(plan, index) in $parent.$parent.client_details.plans"

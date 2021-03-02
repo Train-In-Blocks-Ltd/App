@@ -165,7 +165,7 @@
         </div>
       </div>
     </div>
-    <p v-else class="text--small grey">
+    <p v-else class="text--small grey top_margin">
       No templates yet :(
     </p>
   </div>

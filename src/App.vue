@@ -221,6 +221,9 @@
   .no_margin {
     margin: 0
   }
+  .top_margin {
+    margin-top: 1rem
+  }
   .bottom_margin {
     margin-bottom: 1rem
   }

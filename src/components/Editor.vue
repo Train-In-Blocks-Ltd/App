@@ -257,7 +257,7 @@ div#rich_editor {
             <div class="modal--preview_template">
               <div class="center_wrapped">
                 <div v-if="previewTemplate !== null">
-                  <div v-html="previewTemplate" class="show_html" /><br>
+                  <div class="show_html" v-html="previewTemplate" /><br>
                   <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
                     Close
                   </button>
@@ -458,12 +458,11 @@ export default {
       if (window.getSelection) {
         sel = window.getSelection()
         if (sel.getRangeAt && sel.rangeCount) {
-          return this.savedSelection = sel.getRangeAt(0)
+          this.savedSelection = sel.getRangeAt(0)
         }
       } else if (document.selection && document.selection.createRange) {
-        return this.savedSelection = document.selection.createRange()
+        this.savedSelection = document.selection.createRange()
       }
-      return this.savedSelection = null
     },
     restore_selection () {
       let sel

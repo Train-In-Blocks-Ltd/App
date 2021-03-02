@@ -501,10 +501,10 @@
         <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1" class="center_wrapped">
           <form
             v-for="(protocol, protocolIndex) in copyAcrossProtocols"
-            :key="`protocol_${protocolIndex}`"
             v-show="copyAcrossPage === protocolIndex + 1"
-            @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
+            :key="`protocol_${protocolIndex}`"
             class="bottom_margin"
+            @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
           >
             <div
               v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[protocolIndex][1]"
@@ -548,7 +548,7 @@
             </div>
           </form>
         </div>
-        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)" class="center_wrapped">
+        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)">
           <p class="text--small">
             You're all set
           </p>
