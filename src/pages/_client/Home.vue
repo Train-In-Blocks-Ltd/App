@@ -143,6 +143,7 @@
           type="text"
           aria-label="Client name"
           autocomplete="name"
+          :disabled="$parent.silent_loading"
           @blur="$parent.update_client()"
         >
         <div class="client_info__more-details">
@@ -158,6 +159,7 @@
             minlength="9"
             maxlength="14"
             pattern="\d+"
+            :disabled="$parent.silent_loading"
             @blur="$parent.update_client()"
           >
           <div class="client_email_bar">

@@ -656,6 +656,7 @@
               type="text"
               aria-label="Client Name"
               autocomplete="name"
+              :disabled="$parent.$parent.silent_loading"
               @blur="$parent.$parent.update_client()"
             >
             <!-- Update the plan info -->
@@ -666,6 +667,7 @@
                 aria-label="Session name"
                 type="text"
                 name="name"
+                :disabled="$parent.$parent.silent_loading"
                 @blur="update_plan()"
               >
             </div>
@@ -1931,6 +1933,7 @@ export default {
       }
     },
     async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
+      this.$parent.$parent.silent_loading = true
       this.$parent.$parent.dontLeave = true
       let plan
       // Set the plan variable to the current plan

@@ -347,6 +347,10 @@
   select:hover {
     opacity: .6
   }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
+    cursor: not-allowed;
+    opacity: .6
+  }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
     border: 1px solid #282828
   }
@@ -1005,6 +1009,7 @@ export default {
       errorMsg: null,
       loading: false,
       dontLeave: false,
+      silent_loading: false,
       authenticated: false,
       pwa: {
         deferredPrompt: null,
@@ -1108,6 +1113,7 @@ export default {
     end_loading () {
       this.loading = false
       this.dontLeave = false
+      this.silent_loading = false
     },
 
     // OTHER SHARED METHODS
@@ -1199,6 +1205,7 @@ export default {
     // CLIENT ARCHIVE
 
     async update_client (clientNotesUpdate) {
+      this.silent_loading = true
       this.dontLeave = true
       try {
         await this.$axios.post('https://api.traininblocks.com/clients',
