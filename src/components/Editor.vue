@@ -14,7 +14,7 @@ div#rich_show_content > p,
 .show_feedback > p {
   margin: .6rem 0
 }
-div#rich_editor img[onclick='resize(this)'],
+div#rich_editor img,
 div#rich_show_content img,
 .show_session img,
 .show_plan_notes img,
@@ -115,6 +115,23 @@ button.add_link_submit {
   margin: 0
 }
 
+/* Tooltip */
+.grouped_toolbar_options {
+  display: inline
+}
+.tooltip {
+  position: absolute;
+  top: 120%;
+  background-color: #282828;
+  color: white;
+  font-size: .8rem;
+  opacity: .9;
+  text-align: center;
+  padding: .5rem;
+  border-radius: 3px;
+  z-index: 100
+}
+
 /* Editor */
 div#rich_editor {
   padding: 1rem;
@@ -168,47 +185,60 @@ div#rich_editor {
           >
             <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
           </button>
-          <button
-            :class="{ activeStyle: olActive }"
-            title="Ordered List"
-            @click="add_ol(), check_cmd_state(), focus_on_editor()"
+          <div
+            class="grouped_toolbar_options"
+            @mouseover="showTooltip = true"
+            @mouseleave="showTooltip = false"
           >
-            <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: ulActive }"
-            title="Unordered List"
-            @click="add_ul(), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: ulActive }"
-            title="Checkbox"
-            @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
-          </button>
-          <button
-            title="Add Link"
-            @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/link.svg')" />
-          </button>
-          <button
-            title="Insert Image"
-            @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_template_pop_up()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-          </button>
-          <button
-            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-            title="Use Template"
-            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/template.svg')" />
-          </button>
+            <button
+              :class="{ activeStyle: olActive }"
+              title="Ordered List"
+              :disabled="savedSelection === null"
+              @click="add_ol(), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
+            </button>
+            <button
+              :class="{ activeStyle: ulActive }"
+              title="Unordered List"
+              :disabled="savedSelection === null"
+              @click="add_ul(), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+            </button>
+            <button
+              :class="{ activeStyle: ulActive }"
+              title="Checkbox"
+              :disabled="savedSelection === null"
+              @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
+            </button>
+            <button
+              title="Add Link"
+              :disabled="savedSelection === null"
+              @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+            </button>
+            <button
+              title="Insert Image"
+              :disabled="savedSelection === null"
+              @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_template_pop_up()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+            </button>
+            <button
+              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+              title="Use Template"
+              :disabled="savedSelection === null"
+              @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+            </button>
+          </div>
         </div>
+        <span v-show="showTooltip && savedSelection === null" class="tooltip">Click on an empty line where you want to insert.</span>
       </div>
       <!-- LINK -->
       <form v-if="showAddLink" class="pop_up--add_link" @submit.prevent="add_link()">
@@ -292,6 +322,7 @@ export default {
   },
   data () {
     return {
+      showTooltip: false,
       savedSelection: null,
       initialHTML: '',
       editedHTML: '',
