@@ -30,8 +30,8 @@
   <div id="home">
     <div v-if="$parent.portfolio">
       <div>
-        <div :class="{opened_sections: isPortfolioOpen || isInstallOpen}" class="section_a" />
-        <div :class="{opened_sections: isPortfolioOpen || isInstallOpen}" class="section_b" />
+        <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_a" />
+        <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_b" />
       </div>
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">

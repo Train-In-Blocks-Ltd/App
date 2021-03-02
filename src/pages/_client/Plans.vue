@@ -71,7 +71,8 @@
     </div>
     <div
       v-if="!isNewPlanOpen"
-      class="tab_option icon_open_middle tab_option_small"
+      :class="{ icon_open_middle: $parent.keepLoaded }"
+      class="tab_option tab_option_small"
       aria-label="New Plan"
       @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)"
     >

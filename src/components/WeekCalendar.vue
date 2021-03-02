@@ -103,32 +103,32 @@
 <template>
   <div id="calendar_view">
     <div class="calendar_header">
-      <p class="text--large">
-        {{ get_month(this_week[0].date_split[1]) }} {{ this_week[0].date_split[0] }}
+      <p v-if="!emptyWeek" class="text--large">
+        {{ get_month(thisWeek[0].date_split[1]) }} {{ thisWeek[0].date_split[0] }}
       </p>
       <div class="calendar_header__bar">
         <inline-svg
           :src="require('../assets/svg/arrow.svg')"
           class="prev_week"
-          @click="week_diff--, get_week()"
+          @click="weekDiff--, get_week()"
         />
         <p
-          :class="{ disabled: week_diff === 0 }"
+          :class="{ disabled: weekDiff === 0 }"
           class="today"
-          @click="week_diff = 0, get_week()"
+          @click="weekDiff = 0, get_week()"
         >
           Today
         </p>
         <inline-svg
           :src="require('../assets/svg/arrow.svg')"
           class="next_week"
-          @click="week_diff++, get_week()"
+          @click="weekDiff++, get_week()"
         />
       </div>
     </div>
     <div class="week_container">
       <div
-        v-for="(day, index) in this_week"
+        v-for="(day, index) in thisWeek"
         :key="'day-' + index"
         class="day_container"
       >
@@ -174,9 +174,10 @@ export default {
   },
   data () {
     return {
-      current_week_start: null,
-      this_week: [],
-      week_diff: 0
+      emptyWeek: true,
+      currentWeekStart: null,
+      thisWeek: [],
+      weekDiff: 0
     }
   },
   watch: {
@@ -186,13 +187,14 @@ export default {
   },
   mounted () {
     this.get_week()
+    this.thisWeek.length === 0 ? this.emptyWeek = true : this.emptyWeek = false
   },
   methods: {
 
     // EVENTS
 
     append_events () {
-      this.this_week.forEach((day) => {
+      this.thisWeek.forEach((day) => {
         this.events.forEach((event) => {
           if (day.date === event.date) {
             day.events.push(event)
@@ -208,11 +210,11 @@ export default {
       return days[date]
     },
     get_week () {
-      this.this_week = []
+      this.thisWeek = []
       const d = new Date()
       const day = d.getDay()
       const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-      const weekStart = new Date(d.setDate(diff + 7 * this.week_diff))
+      const weekStart = new Date(d.setDate(diff + 7 * this.weekDiff))
       const year = String(weekStart.getFullYear())
       const month = String(weekStart.getMonth() + 1).padStart(2, '0')
       const date = String(weekStart.getDate()).padStart(2, '0')
@@ -221,12 +223,12 @@ export default {
         date_split: [year, month, date],
         events: []
       }
-      this.current_week_start = currentMonday
-      this.this_week.push(currentMonday)
+      this.currentWeekStart = currentMonday
+      this.thisWeek.push(currentMonday)
       for (let i = 1; i < 7; i++) {
-        this.this_week.push({
-          date: this.add_days(this.this_week[0].date, i),
-          date_split: this.add_days(this.this_week[0].date, i).split('-'),
+        this.thisWeek.push({
+          date: this.add_days(this.thisWeek[0].date, i),
+          date_split: this.add_days(this.thisWeek[0].date, i).split('-'),
           events: []
         })
       }

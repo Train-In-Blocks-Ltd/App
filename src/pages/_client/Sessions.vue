@@ -602,7 +602,8 @@
     </modal>
     <div
       v-if="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
-      class="tab_option icon_open_middle tab_option_small fadeIn"
+      :class="{ icon_open_middle: $parent.keepLoaded }"
+      class="tab_option tab_option_small fadeIn"
       aria-label="Statistics"
       @click="isStatsOpen = true, $parent.$parent.will_body_scroll(false)"
     >
@@ -613,7 +614,8 @@
     </div>
     <div
       v-show="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
-      class="tab_option icon_open_bottom tab_option_small fadeIn"
+      :class="{ icon_open_middle: !$parent.keepLoaded, icon_open_bottom: $parent.keepLoaded }"
+      class="tab_option tab_option_small fadeIn"
       aria-label="Print"
       @click="print_page()"
     >
