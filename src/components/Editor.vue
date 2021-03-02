@@ -290,7 +290,7 @@ div#rich_editor {
         contenteditable="true"
         data-placeholder="Start typing..."
         @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
-        @input="update_edited_notes()"
+        @input="update_edited_notes(), savedSelection = null"
         v-html="update_content(initialHTML)"
       />
     </div>

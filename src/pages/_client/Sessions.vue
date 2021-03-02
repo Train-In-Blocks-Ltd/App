@@ -1271,7 +1271,7 @@ export default {
           plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               session.week_id = this.moveTarget
-              this.update_session(session.id)
+              this.update_session(session.id, session.notes)
             }
           })
         }
