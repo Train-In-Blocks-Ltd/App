@@ -42,7 +42,14 @@
       <p class="text--large">
         Archive
       </p>
-      <a v-if="!$parent.archive.no_archive" href="javascript:void(0)" class="a_link" @click="select_all()">Select all</a>
+      <a
+        v-if="!$parent.archive.no_archive && selectedClients.length < $parent.archive.clients.length"
+        href="javascript:void(0)"
+        class="a_link"
+        @click="select_all()"
+      >
+        Select all
+      </a>
     </div>
     <br>
     <p v-if="$parent.archive.no_archive" class="text--small grey">
@@ -120,8 +127,10 @@ export default {
     },
     select_all () {
       this.$parent.archive.clients.forEach((client) => {
-        this.selectedClients.push(client.client_id)
-        document.getElementById(`sc-${client.client_id}`).checked = true
+        if (!this.selectedClients.includes(client.client_id)) {
+          this.selectedClients.push(client.client_id)
+          document.getElementById(`sc-${client.client_id}`).checked = true
+        }
       })
     },
     deselect_all () {

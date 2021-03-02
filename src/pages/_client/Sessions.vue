@@ -1329,8 +1329,10 @@ export default {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.forEach((session) => {
-            document.getElementById(`sc-${session.id}`).checked = true
-            this.selectedSessions.push(session.id)
+            if (!this.selectedSessions.includes(session.id)) {
+              document.getElementById(`sc-${session.id}`).checked = true
+              this.selectedSessions.push(session.id)
+            }
           })
         }
       })

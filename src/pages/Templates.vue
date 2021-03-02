@@ -102,7 +102,7 @@
       </button>
     </div>
     <a
-      v-if="$parent.templates !== null && $parent.templates.length !== 0"
+      v-if="$parent.templates !== null && $parent.templates.length !== 0 && selectedTemplates.length < $parent.templates.length"
       href="javascript:void(0)"
       class="a_link select_all"
       @click="select_all()"
@@ -244,8 +244,10 @@ export default {
     },
     select_all () {
       this.$parent.templates.forEach((template) => {
-        this.selectedTemplates.push(template.id)
-        document.getElementById(`sc-${template.id}`).checked = true
+        if (!this.selectedTemplates.includes(template.id)) {
+          this.selectedTemplates.push(template.id)
+          document.getElementById(`sc-${template.id}`).checked = true
+        }
       })
     },
     deselect_all () {
