@@ -27,24 +27,6 @@ div#rich_editor img[onclick='resize(this)'] {
   cursor: pointer;
   transition: .4s all cubic-bezier(.165, .84, .44, 1)
 }
-div#rich_editor a[name='video'],
-div#rich_show_content a[name='video'],
-.show_session a[name='video'],
-.show_feedback a[name='video'],
-.show_plan_notes a[name='video'] {
-  line-height: 3rem;
-  padding: .2rem 1rem;
-  border-radius: 3px;
-  background-color: #282828;
-  color: white;
-  text-decoration: none;
-  transition: .6s all cubic-bezier(.165, .84, .44, 1)
-}
-div#rich_editor a[name='video']:hover,
-div#rich_show_content a[name='video']:hover,
-.show_session a[name='video']:hover,
-.show_feedback a[name='video']:hover,
-.show_plan_notes a[name='video']:hover,
 div#rich_editor img[onclick='resize(this)']:hover {
   opacity: .6
 }
@@ -98,7 +80,7 @@ div#rich_show_content input[type='checkbox'],
 }
 
 /* Pop-ups */
-.pop_up--add_link, .pop_up--add_image, .pop_up--add_video, .pop_up--add_template {
+.pop_up--add_link, .pop_up--add_image, .pop_up--add_template {
   position: sticky;
   top: calc(1rem + 44.39px);
   background-color: white;
@@ -122,13 +104,13 @@ div#rich_show_content input[type='checkbox'],
 .template_item svg:hover {
   opacity: .6
 }
-.input--add_link, .input--add_video {
+.input--add_link {
   padding: .2rem .4rem;
   border: 1px solid #28282840;
   border-radius: 3px;
   margin-right: 1rem
 }
-button.add_link_submit, button.add_video_submit {
+button.add_link_submit {
   height: auto;
   margin: 0
 }
@@ -181,7 +163,7 @@ div#rich_editor {
   <div id="wrapper--rich_editor">
     <div v-if="showEditState">
       <div class="re_toolbar_back">
-        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddVideo || showAddTemplate }">
+        <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
           <button
             :class="{ activeStyle: boldActive }"
             title="Bold"
@@ -232,29 +214,22 @@ div#rich_editor {
             <button
               title="Add Link"
               :disabled="savedSelection === null"
-              @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+              @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/link.svg')" />
             </button>
             <button
               title="Insert Image"
               :disabled="savedSelection === null"
-              @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+              @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_template_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-            </button>
-            <button
-              title="Insert Video"
-              :disabled="savedSelection === null"
-              @click="showAddVideo = !showAddVideo, reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/youtube.svg')" />
             </button>
             <button
               v-if="dataForTemplates !== undefined && dataForTemplates !== null"
               title="Use Template"
               :disabled="savedSelection === null"
-              @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up()"
+              @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
             >
               <inline-svg :src="require('../assets/svg/editor/template.svg')" />
             </button>
@@ -274,13 +249,6 @@ div#rich_editor {
       <div v-if="showAddImage" class="pop_up--add_image">
         <input id="img_uploader" type="file" accept=".png, .jpeg, .jpg, .webp, .gif" @change="add_img()">
       </div>
-      <!-- VIDEO -->
-      <form v-if="showAddVideo" class="pop_up--add_video" @submit.prevent="add_video()">
-        <input v-model="addVideoURL" class="input--add_video small_border_radius" type="text" placeholder="YouTube URL" required>
-        <button class="add_video_submit" type="submit">
-          Add
-        </button>
-      </form>
       <!-- TEMPLATE -->
       <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">
         <div
@@ -324,7 +292,7 @@ div#rich_editor {
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_video_pop_up(), reset_template_pop_up()"
+        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
         @input="update_edited_notes()"
         v-html="update_content(initialHTML)"
       />
@@ -366,8 +334,6 @@ export default {
       addLinkURL: '',
       showAddImage: false,
       base64Img: null,
-      showAddVideo: false,
-      addVideoURL: '',
       showAddTemplate: false,
       previewTemplate: null,
 
@@ -402,7 +368,7 @@ export default {
       }
       if (arr.length !== 0) {
         arr.forEach((item) => {
-          html = html.replace(item[0], `<a name='video' href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
+          html = html.replace(item[0], `<a href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
         })
       }
       return html
@@ -654,28 +620,6 @@ export default {
     reset_img_pop_up () {
       this.base64Img = null
       this.showAddImage = false
-    },
-
-    // VIDEO
-
-    add_video () {
-      if (this.savedSelection !== null) {
-        this.restore_selection()
-      } else if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
-      }
-      this.paste_html_at_caret(`<a name='video' href="//www.youtube.com/embed/${this.get_embbed_id(this.addVideoURL)}" target="_blank" contenteditable="false">Watch video</a>`, false)
-      this.update_edited_notes()
-      this.reset_video_pop_up()
-    },
-    get_embbed_id (url) {
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
-      const match = url.match(regExp)
-      return (match && match[2].length === 11) ? match[2] : null
-    },
-    reset_video_pop_up () {
-      this.addVideoURL = ''
-      this.showAddVideo = false
     },
 
     // TEMPLATE

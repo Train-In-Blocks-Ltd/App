@@ -626,18 +626,20 @@
       <div :class="{opened_sections: isStatsOpen}" class="section_a" />
       <div :class="{opened_sections: isStatsOpen}" class="section_b" />
     </div>
-    <div v-if="selectedSessions.length !== 0" class="multi-select fadeIn">
-      <p>
-        <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
-      </p>
-      <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
-      <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
-      <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
-      <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
-      <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
-      <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
-      <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
-    </div>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <div v-if="selectedSessions.length !== 0" class="multi-select">
+        <p>
+          <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
+        </p>
+        <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
+        <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
+        <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
+        <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
+        <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
+        <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
+        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
+      </div>
+    </transition>
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in this.$parent.$parent.client_details.plans"
