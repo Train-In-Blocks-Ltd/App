@@ -82,13 +82,6 @@
     text-align: center;
     margin: .4rem 0
   }
-  .cursor {
-    cursor: pointer;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
-  }
-  .cursor:hover {
-    opacity: .6
-  }
   .showBorder {
     border: 2px solid #282828
   }
@@ -155,9 +148,9 @@
           v-for="event in day[0]"
           :key="`event_${event.session_id}`"
           :style="{ backgroundColor: event.color, color: event.textColor }"
-          :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF', cursor: isTrainer }"
-          class="event"
-          @click="isTrainer ? $parent.go_to_event(event.session_id, event.week_id) : null"
+          :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
+          class="event cursor fadeIn"
+          @click="$parent.go_to_event(event.session_id, event.week_id)"
         >
           {{ event.title }}
         </p>

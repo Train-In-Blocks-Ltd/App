@@ -8,11 +8,12 @@
 
   /* Animation */
   .fadeIn {
-    animation: .6s fadeIn;
-    animation-fill-mode: both
+    animation: .6s fadeIn
   }
   .fadeOut {
-    animation: .6s fadeOut;
+    animation: .6s fadeOut
+  }
+  .fill_mode_both {
     animation-fill-mode: both
   }
   .delay {
@@ -201,6 +202,13 @@
   }
 
   /* Tailwinds */
+  .cursor {
+    cursor: pointer;
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .cursor:hover {
+    opacity: .6
+  }
   .allow_y_overflow {
     overflow-y: auto
   }
@@ -636,6 +644,9 @@
     #portfolio {
       padding: 4rem 10vw
     }
+    .cursor:hover {
+      opacity: 1
+    }
   }
   @media (min-width: 769px) {
     .sidebar {
@@ -933,7 +944,7 @@
       </div>
     </nav> <!-- .sidebar -->
     <main id="main" :class="{notAuth: !authenticated}">
-      <transition enter-active-class="fadeIn delay" leave-active-class="fadeOut">
+      <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
         <router-view :key="$route.fullPath" />
       </transition>
     </main>

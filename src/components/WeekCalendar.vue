@@ -32,13 +32,6 @@
     border-radius: 8px;
     border: 3px solid transparent
   }
-  .cursor {
-    cursor: pointer;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
-  }
-  .cursor:hover {
-    opacity: .6
-  }
   .showBorder {
     border: 3px solid #282828
   }
@@ -104,9 +97,6 @@
     .prev_week:active {
       transform: rotate(90deg) translateY(0) scale(.9)
     }
-    .cursor:hover {
-      opacity: 1
-    }
   }
 </style>
 
@@ -160,9 +150,9 @@
             v-for="(event, indexed) in day.events"
             :key="'event-' + indexed"
             :style="{ backgroundColor: event.color }"
-            :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF', cursor: isTrainer }"
-            class="day_events__event fadeIn"
-            @click="isTrainer ? $parent.go_to_event(event.session_id, event.week_id) : null"
+            :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
+            class="day_events__event cursor"
+            @click="$parent.go_to_event(event.session_id, event.week_id)"
           >
             <p :style="{ color: event.textColor }">
               {{ event.title }}

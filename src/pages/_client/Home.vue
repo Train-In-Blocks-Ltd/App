@@ -192,7 +192,7 @@
         </div>
       </div>
     </div>
-    <transition enter-active-class="fadeIn delay" leave-active-class="fadeOut">
+    <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
       <router-view :key="$route.fullPath" />
     </transition>
   </div>
@@ -271,6 +271,7 @@ export default {
             url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
           }
         )
+        console.log('results.data', result.data)
         if (result.data.length > 0) {
           if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
             this.clientAlready = true
@@ -411,6 +412,7 @@ export default {
             } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
               const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
               // If there are no plans
+              console.log('response.data', response.data)
               if (response.data.length === 0) {
                 this.no_plans = true
                 this.$parent.clients[x].plans = false
@@ -445,6 +447,7 @@ export default {
             } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
               const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
               // If there are no sessions
+              console.log('response.data 2', response.data)
               if (response.data.length === 0) {
                 this.no_sessions = true
                 this.$parent.client_details.plans[f].sessions = false

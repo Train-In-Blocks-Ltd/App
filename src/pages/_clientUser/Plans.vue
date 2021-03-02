@@ -87,12 +87,14 @@
           <week-calendar
             v-if="!showMonthlyCal"
             :events="sessionDates"
+            :force-update="forceUpdate"
             :is-trainer="false"
             class="fadeIn"
           />
           <month-calendar
             v-else
             :events="sessionDates"
+            :force-update="forceUpdate"
             :is-trainer="false"
             class="fadeIn"
           />
@@ -226,7 +228,8 @@ export default {
       // CALENDAR
 
       showMonthlyCal: false,
-      sessionDates: []
+      sessionDates: [],
+      forceUpdate: 0
     }
   },
   async mounted () {
@@ -242,6 +245,12 @@ export default {
 
     // BACKGROUND AND MISC.
 
+    go_to_event (id, week) {
+      this.showing_current_session = week - 1
+      setTimeout(() => {
+        document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    },
     complete (planId, sessionId) {
       for (const plan of this.$parent.clientUser.plans) {
         if (plan.id === planId) {
@@ -267,11 +276,19 @@ export default {
           const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
           if (plan.sessions !== null) {
             plan.sessions.forEach((session) => {
-              this.sessionDates.push({ title: session.name, date: session.date, color: weekColor[session.week_id - 1], textColor: this.accessible_colors(weekColor[session.week_id - 1]) })
+              this.sessionDates.push({
+                title: session.name,
+                date: session.date,
+                color: weekColor[session.week_id - 1],
+                textColor: this.accessible_colors(weekColor[session.week_id - 1]),
+                week_id: session.week_id,
+                session_id: session.id
+              })
             })
           }
         }
       })
+      this.forceUpdate += 1
     },
     accessible_colors (hex) {
       if (hex !== undefined) {
