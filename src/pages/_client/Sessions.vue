@@ -822,7 +822,15 @@
                     v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
-                    @click="select_all()"
+                    @click="select_all('week')"
+                  >
+                    Select this week
+                  </a>
+                  <a
+                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                    href="javascript:void(0)"
+                    class="a_link"
+                    @click="select_all('all')"
                   >
                     Select all
                   </a>
@@ -1057,6 +1065,7 @@ export default {
 
       // WEEK
 
+      weekSessions: [],
       weekIsEmpty: true,
       editingWeekColor: false,
       weekColor: {
@@ -1327,13 +1336,18 @@ export default {
         }
       }
     },
-    select_all () {
+    select_all (mode) {
       this.$parent.$parent.client_details.plans.forEach((plan) => {
         if (plan.id === parseInt(this.$route.params.id)) {
           plan.sessions.forEach((session) => {
             if (!this.selectedSessions.includes(session.id)) {
-              document.getElementById(`sc-${session.id}`).checked = true
-              this.selectedSessions.push(session.id)
+              if (mode === 'all') {
+                document.getElementById(`sc-${session.id}`).checked = true
+                this.selectedSessions.push(session.id)
+              } else if (mode === 'week' && session.week_id === this.currentWeek) {
+                document.getElementById(`sc-${session.id}`).checked = true
+                this.selectedSessions.push(session.id)
+              }
             }
           })
         }
@@ -1397,6 +1411,7 @@ export default {
             plan.sessions.forEach((session) => {
               if (session.week_id === this.currentWeek) {
                 arr += 1
+                this.weekSessions.push(session.id)
               }
             })
           }
