@@ -587,9 +587,9 @@ export default {
       }
       this.restore_selection()
       if (!forceFocus) {
-        this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, true)
+        this.paste_html_at_caret(`<div contenteditable="false" style="display: inline"><a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a></div><div contenteditable="true" style="display: inline"></div>`, false)
       } else {
-        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`)
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<div contenteditable="false" style="display: inline"><a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a></div><div contenteditable="true" style="display: inline"></div>`)
       }
       this.update_edited_notes()
       this.reset_link_pop_up()
