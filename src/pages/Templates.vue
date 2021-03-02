@@ -1,24 +1,12 @@
 <style scoped>
-  .select_all {
-    justify-content: flex-end
-  }
-
   /* Containers */
-  .activeState {
-    border: 2px solid #28282860
-  }
-  .wrapper--template_top {
+  .template_options {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 4rem
+    margin-top: 2rem
   }
-  .wrapper--template_top__right {
-    display: grid;
-    grid-gap: 1rem;
-    text-align: right
-  }
-  .wrapper--template_top__right a {
-    margin-left: auto
+  .activeState {
+    border: 2px solid #28282860
   }
   .container--templates {
     display: grid;
@@ -93,32 +81,47 @@
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
-    <div class="wrapper--template_top">
-      <p class="text--large">
-        Templates
-      </p>
+    <input
+      v-model="search"
+      type="search"
+      rel="search"
+      placeholder="Find a template"
+      class="text--small search"
+      aria-label="Find a template"
+    >
+    <div class="template_options">
       <button @click="new_template()">
         New Template
       </button>
+      <a
+        v-if="$parent.templates !== null && $parent.templates.length !== 0 && selectedTemplates.length < $parent.templates.length"
+        href="javascript:void(0)"
+        class="a_link select_all"
+        @click="select_all()"
+      >
+        Select all
+      </a>
     </div>
-    <a
-      v-if="$parent.templates !== null && $parent.templates.length !== 0 && selectedTemplates.length < $parent.templates.length"
-      href="javascript:void(0)"
-      class="a_link select_all"
-      @click="select_all()"
-    >
-      Select all
-    </a>
     <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="container--templates">
       <div
         v-for="(template, index) in $parent.templates"
+        v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
         :key="index"
         class="wrapper--template"
         :class="{ activeState: template.id === editTemplate }"
       >
         <div class="wrapper--template__header">
-          <span v-if="template.id !== editTemplate" class="text--name" :class="{newTemplate: template.name == 'Untitled' && !isEditingTemplate}"><b>{{ template.name }}</b></span><br v-if="template.id !== editTemplate">
+          <span
+            v-if="template.id !== editTemplate"
+            class="text--name"
+            :class="{ newTemplate: template.name == 'Untitled' && !isEditingTemplate }"
+          >
+            <b>
+              {{ template.name }}
+            </b>
+          </span>
+          <br v-if="template.id !== editTemplate">
           <input
             v-if="template.id === editTemplate"
             v-model="template.name"
@@ -179,6 +182,8 @@ export default {
   },
   data () {
     return {
+
+      search: '',
 
       // CREATE
 
