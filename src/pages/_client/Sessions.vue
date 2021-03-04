@@ -774,7 +774,7 @@
                     name="duration"
                     inputmode="decimal"
                     min="1"
-                    @change="week_confirm(plan.duration), update_plan(), maxWeek = plan.duration"
+                    @change="update_plan(), maxWeek = plan.duration"
                   >
                 </div>
               </div>
@@ -1298,15 +1298,8 @@ export default {
     // MULTI AND CHECKBOX
 
     bulk_check (state) {
-      function checkedState (dataIn) {
-        if (dataIn === 1) {
-          return 'complete'
-        } else {
-          return 'incomplete'
-        }
-      }
       if (this.selectedSessions.length !== 0) {
-        if (confirm('Are you sure that you want to ' + checkedState(state) + ' all the selected sessions?')) {
+        if (confirm(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`)) {
           this.$parent.$parent.client_details.plans.forEach((plan) => {
             if (plan.id === parseInt(this.$route.params.id)) {
               plan.sessions.forEach((session) => {
@@ -1546,15 +1539,6 @@ export default {
 
     // DATE/TIME
 
-    week_confirm (dur) {
-      if (parseInt(dur) > 12 && this.allowMoreWeeks === false) {
-        if (confirm('Are you sure that you want a cycle of over 3 months? Maybe it\'s best to create a new session.')) {
-          this.allowMoreWeeks = true
-        } else {
-          this.allowMoreWeeks = false
-        }
-      }
-    },
     today () {
       const today = new Date()
       const dd = String(today.getDate()).padStart(2, '0')
