@@ -1,3 +1,18 @@
+<style>
+  .show_html > div,
+  .show_html > p {
+    margin: .6rem 0
+  }
+  .show_html img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  .show_html input[type='checkbox'] {
+    margin: .4rem
+  }
+</style>
+
 <style scoped>
   /* Containers */
   .plan_grid {

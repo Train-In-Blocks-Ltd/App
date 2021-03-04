@@ -7,14 +7,11 @@ div#rich_editor {
 div#rich_editor > div,
 div#rich_editor > p,
 div#rich_show_content > div,
-div#rich_show_content > p,
-.show_html > div,
-.show_html > p {
+div#rich_show_content > p {
   margin: .6rem 0
 }
 div#rich_editor img,
-div#rich_show_content img,
-.show_html img {
+div#rich_show_content img {
   border-radius: 10px;
   max-width: 80%;
   margin: 1rem 0
@@ -27,8 +24,7 @@ div#rich_editor img[onclick='resize(this)']:hover {
   opacity: .6
 }
 div#rich_editor input[type='checkbox'],
-div#rich_show_content input[type='checkbox'],
-.show_html input[type='checkbox'] {
+div#rich_show_content input[type='checkbox'] {
   margin: .4rem
 }
 </style>

@@ -1151,20 +1151,23 @@ export default {
   },
   methods: {
 
+    helper (type) {
+      switch (type) {
+        case 'match_plan':
+          return this.$parent.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+      }
+    },
+
     // MODALS AND TAB
 
     print_page () {
       window.print()
     },
     shift_across () {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session) => {
-            if (this.selectedSessions.includes(session.id)) {
-              session.date = this.add_days(session.date, parseInt(this.shiftDays))
-              this.update_session(session.id, session.notes)
-            }
-          })
+      this.helper('match_plan').sessions.forEach((session) => {
+        if (this.selectedSessions.includes(session.id)) {
+          session.date = this.add_days(session.date, parseInt(this.shiftDays))
+          this.update_session(session.id, session.notes)
         }
       })
       this.$modal.hide('shift')
@@ -1172,15 +1175,11 @@ export default {
     },
     copy_across_check () {
       this.simpleCopy = false
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session) => {
-            if (this.selectedSessions.includes(session.id)) {
-              if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes).length === 0) {
-                this.simpleCopy = true
-              }
-            }
-          })
+      this.helper('match_plan').sessions.forEach((session) => {
+        if (this.selectedSessions.includes(session.id)) {
+          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes).length === 0) {
+            this.simpleCopy = true
+          }
         }
       })
     },
@@ -1188,30 +1187,26 @@ export default {
       let ignored = 0
       this.copyAcrossInputs = []
       this.copyAcrossProtocols = []
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session, sessionIdx) => {
-            if (this.selectedSessions.includes(session.id)) {
-              this.copyAcrossProtocols.push([
-                session.id,
-                this.chunk_array(this.pull_protocols(session.name, session.notes))
-              ])
-              this.copyAcrossInputs.push([
-                session.id,
-                new Array(this.copyAcrossProtocols[sessionIdx - ignored][1].length)
-              ])
-              let i
-              for (i = 0; i < this.copyAcrossProtocols[sessionIdx - ignored][1].length; i++) {
-                this.copyAcrossInputs[sessionIdx - ignored][1][i] = new Array(this.copyTarget - this.currentWeek)
-                let e
-                for (e = 0; e < this.copyAcrossInputs[sessionIdx - ignored][1][i].length; e++) {
-                  this.copyAcrossInputs[sessionIdx - ignored][1][i][e] = this.copyAcrossProtocols[sessionIdx - ignored][1][i][2]
-                }
-              }
-            } else {
-              ignored++
+      this.helper('match_plan').sessions.forEach((session, sessionIdx) => {
+        if (this.selectedSessions.includes(session.id)) {
+          this.copyAcrossProtocols.push([
+            session.id,
+            this.chunk_array(this.pull_protocols(session.name, session.notes))
+          ])
+          this.copyAcrossInputs.push([
+            session.id,
+            new Array(this.copyAcrossProtocols[sessionIdx - ignored][1].length)
+          ])
+          let i
+          for (i = 0; i < this.copyAcrossProtocols[sessionIdx - ignored][1].length; i++) {
+            this.copyAcrossInputs[sessionIdx - ignored][1][i] = new Array(this.copyTarget - this.currentWeek)
+            let e
+            for (e = 0; e < this.copyAcrossInputs[sessionIdx - ignored][1][i].length; e++) {
+              this.copyAcrossInputs[sessionIdx - ignored][1][i][e] = this.copyAcrossProtocols[sessionIdx - ignored][1][i][2]
             }
-          })
+          }
+        } else {
+          ignored++
         }
       })
     },
@@ -1233,17 +1228,13 @@ export default {
     copy_across () {
       const copysessions = []
       let weekCount = this.currentWeek + 1
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session) => {
-            if (this.selectedSessions.includes(session.id)) {
-              copysessions.push({
-                id: session.id,
-                name: session.name,
-                date: session.date,
-                notes: session.notes
-              })
-            }
+      this.helper('match_plan').sessions.forEach((session) => {
+        if (this.selectedSessions.includes(session.id)) {
+          copysessions.push({
+            id: session.id,
+            name: session.name,
+            date: session.date,
+            notes: session.notes
           })
         }
       })
@@ -1272,25 +1263,18 @@ export default {
       this.$parent.$parent.end_loading()
     },
     move_to_week () {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session) => {
-            if (this.selectedSessions.includes(session.id)) {
-              session.week_id = this.moveTarget
-              this.update_session(session.id, session.notes)
-            }
-          })
+      this.helper('match_plan').sessions.forEach((session) => {
+        if (this.selectedSessions.includes(session.id)) {
+          session.week_id = this.moveTarget
+          this.update_session(session.id, session.notes)
         }
       })
       this.deselect_all()
       this.currentWeek = parseInt(this.moveTarget)
     },
     duplicate_plan (clientId) {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
-        }
-      })
+      const plan = this.helper('match_plan')
+      this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
       this.$modal.hide('duplicate')
     },
@@ -1300,14 +1284,10 @@ export default {
     bulk_check (state) {
       if (this.selectedSessions.length !== 0) {
         if (confirm(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`)) {
-          this.$parent.$parent.client_details.plans.forEach((plan) => {
-            if (plan.id === parseInt(this.$route.params.id)) {
-              plan.sessions.forEach((session) => {
-                if (this.selectedSessions.includes(session.id)) {
-                  session.checked = state
-                  this.update_session(session.id, session.notes)
-                }
-              })
+          this.helper('match_plan').sessions.forEach((session) => {
+            if (this.selectedSessions.includes(session.id)) {
+              session.checked = state
+              this.update_session(session.id, session.notes)
             }
           })
           this.deselect_all()
@@ -1325,29 +1305,21 @@ export default {
       }
     },
     select_all (mode) {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session) => {
-            if (!this.selectedSessions.includes(session.id)) {
-              if (mode === 'all') {
-                document.getElementById(`sc-${session.id}`).checked = true
-                this.selectedSessions.push(session.id)
-              } else if (mode === 'week' && session.week_id === this.currentWeek) {
-                document.getElementById(`sc-${session.id}`).checked = true
-                this.selectedSessions.push(session.id)
-              }
-            }
-          })
+      this.helper('match_plan').sessions.forEach((session) => {
+        if (!this.selectedSessions.includes(session.id)) {
+          if (mode === 'all') {
+            document.getElementById(`sc-${session.id}`).checked = true
+            this.selectedSessions.push(session.id)
+          } else if (mode === 'week' && session.week_id === this.currentWeek) {
+            document.getElementById(`sc-${session.id}`).checked = true
+            this.selectedSessions.push(session.id)
+          }
         }
       })
     },
     deselect_all () {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.forEach((session) => {
-            document.getElementById(`sc-${session.id}`).checked = false
-          })
-        }
+      this.helper('match_plan').sessions.forEach((session) => {
+        document.getElementById(`sc-${session.id}`).checked = false
       })
       this.selectedSessions = []
     },
@@ -1393,32 +1365,24 @@ export default {
     },
     check_for_week_sessions () {
       let arr = 0
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          if (!this.$parent.no_sessions) {
-            plan.sessions.forEach((session) => {
-              if (session.week_id === this.currentWeek) {
-                arr += 1
-                this.weekSessions.push(session.id)
-              }
-            })
+      if (!this.$parent.no_sessions) {
+        this.helper('match_plan').sessions.forEach((session) => {
+          if (session.week_id === this.currentWeek) {
+            arr += 1
+            this.weekSessions.push(session.id)
           }
-        }
-      })
+        })
+      }
       arr === 0 ? this.weekIsEmpty = true : this.weekIsEmpty = false
     },
     check_for_new () {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          if (!this.$parent.no_sessions) {
-            plan.sessions.forEach((session) => {
-              if (session.notes === null || session.notes === '<p><br></p>') {
-                this.expandedSessions.push(session.id)
-              }
-            })
+      if (!this.$parent.no_sessions) {
+        this.helper('match_plan').sessions.forEach((session) => {
+          if (session.notes === null || session.notes === '<p><br></p>') {
+            this.expandedSessions.push(session.id)
           }
-        }
-      })
+        })
+      }
     },
     toggle_expanded_sessions (id) {
       if (this.expandedSessions.includes(id)) {
@@ -1431,11 +1395,8 @@ export default {
       }
     },
     update_session_color () {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
-        }
-      })
+      const plan = this.helper('match_plan')
+      plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
       this.editingWeekColor = false
       this.update_plan()
       this.scan()
@@ -1582,18 +1543,14 @@ export default {
     adherence () {
       this.sessionsDone = 0
       this.sessionsTotal = 0
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          if (!this.$parent.no_sessions) {
-            plan.sessions.forEach((session) => {
-              this.sessionsTotal += 1
-              if (session.checked === 1) {
-                this.sessionsDone++
-              }
-            })
+      if (!this.$parent.no_sessions) {
+        this.helper('match_plan').sessions.forEach((session) => {
+          this.sessionsTotal += 1
+          if (session.checked === 1) {
+            this.sessionsDone++
           }
-        }
-      })
+        })
+      }
       const bar = document.getElementById('progress-bar')
       if (bar) {
         bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
@@ -1601,25 +1558,22 @@ export default {
     },
     expand_all (toExpand) {
       try {
-        this.$parent.$parent.client_details.plans.forEach((plan) => {
-          if (plan.id === parseInt(this.$route.params.id)) {
-            if (Array.isArray(plan.sessions)) {
-              if (plan.sessions.length !== 0) {
-                plan.sessions.forEach((session) => {
-                  if (toExpand === 'Expand') {
-                    this.expandedSessions.push(session.id)
-                  } else {
-                    let x = 0
-                    const y = this.expandedSessions.length
-                    for (; x < y; x++) {
-                      this.expandedSessions.pop()
-                    }
-                  }
-                })
+        const plan = this.helper('match_plan')
+        if (Array.isArray(plan.sessions)) {
+          if (plan.sessions.length !== 0) {
+            plan.sessions.forEach((session) => {
+              if (toExpand === 'Expand') {
+                this.expandedSessions.push(session.id)
+              } else {
+                let x = 0
+                const y = this.expandedSessions.length
+                for (; x < y; x++) {
+                  this.expandedSessions.pop()
+                }
               }
-            }
+            })
           }
-        })
+        }
       } catch (e) {
         console.error(e)
       }
@@ -1647,33 +1601,30 @@ export default {
     scan () {
       this.dataPacketStore.length = 0
       this.sessionDates.length = 0
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
-          this.maxWeek = plan.duration
-          if (plan.sessions !== null && this.$parent.no_sessions === false) {
-            plan.sessions.forEach((object) => {
-              this.sessionDates.push({
-                title: object.name,
-                date: object.date,
-                color: this.weekColor.backgroundColor[object.week_id - 1],
-                textColor: this.accessible_colors(this.weekColor.backgroundColor[object.week_id - 1]),
-                week_id: object.week_id,
-                session_id: object.id
-              })
-              if (object.notes !== null) {
-                const pulledProtocols = this.pull_protocols(object.name, object.notes)
-                this.dataPacketStore.push(this.chunk_array(pulledProtocols))
-              }
-            })
-            // Appends the options to the select
-            if (this.dataPacketStore !== null) {
-              this.dropdown_init()
-              this.selection()
-            }
+      const plan = this.helper('match_plan')
+      this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
+      this.maxWeek = plan.duration
+      if (plan.sessions !== null && this.$parent.no_sessions === false) {
+        plan.sessions.forEach((object) => {
+          this.sessionDates.push({
+            title: object.name,
+            date: object.date,
+            color: this.weekColor.backgroundColor[object.week_id - 1],
+            textColor: this.accessible_colors(this.weekColor.backgroundColor[object.week_id - 1]),
+            week_id: object.week_id,
+            session_id: object.id
+          })
+          if (object.notes !== null) {
+            const pulledProtocols = this.pull_protocols(object.name, object.notes)
+            this.dataPacketStore.push(this.chunk_array(pulledProtocols))
           }
+        })
+        // Appends the options to the select
+        if (this.dataPacketStore !== null) {
+          this.dropdown_init()
+          this.selection()
         }
-      })
+      }
       this.forceUpdate += 1
       this.check_for_week_sessions()
     },
@@ -1979,13 +1930,7 @@ export default {
     async delete_plan () {
       if (confirm('Are you sure you want to delete this plan?')) {
         this.$parent.$parent.dontLeave = true
-        let plan
-        let id
-        for (plan of this.$parent.$parent.client_details.plans) {
-          if (plan.id === parseInt(this.$route.params.id)) {
-            id = plan.id
-          }
-        }
+        const id = parseInt(this.$route.params.id)
         try {
           await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
           await this.$parent.$parent.clients_f()
