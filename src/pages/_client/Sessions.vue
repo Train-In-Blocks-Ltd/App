@@ -1172,6 +1172,7 @@ export default {
       })
       this.$modal.hide('shift')
       this.deselect_all()
+      this.$ga.event('Session', 'shift')
     },
     copy_across_check () {
       this.simpleCopy = false
@@ -1260,6 +1261,7 @@ export default {
       this.update_plan()
       this.$modal.hide('copy')
       this.deselect_all()
+      this.$ga.event('Session', 'progress')
       this.$parent.$parent.end_loading()
     },
     move_to_week () {
@@ -1271,12 +1273,14 @@ export default {
       })
       this.deselect_all()
       this.currentWeek = parseInt(this.moveTarget)
+      this.$ga.event('Session', 'move')
     },
     async duplicate_plan (clientId) {
       const plan = this.helper('match_plan')
       await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
       this.$modal.hide('duplicate')
+      this.$ga.event('Plan', 'duplicate')
     },
 
     // MULTI AND CHECKBOX
@@ -1301,6 +1305,7 @@ export default {
             this.delete_session(sessionId)
           })
           this.deselect_all()
+          this.$ga.event('Session', 'bulk_delete')
         }
       }
     },
@@ -1916,7 +1921,7 @@ export default {
         }
         // Update the localstorage with the plans
         localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.clients))
-        this.$ga.event('Session', 'update')
+        this.$ga.event('Plan', 'update')
         this.scan()
         this.$parent.$parent.end_loading()
       } catch (e) {
