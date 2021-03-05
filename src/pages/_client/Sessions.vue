@@ -1272,9 +1272,9 @@ export default {
       this.deselect_all()
       this.currentWeek = parseInt(this.moveTarget)
     },
-    duplicate_plan (clientId) {
+    async duplicate_plan (clientId) {
       const plan = this.helper('match_plan')
-      this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
+      await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
       this.$modal.hide('duplicate')
     },
@@ -1860,15 +1860,17 @@ export default {
           }
         ).then((response) => {
           this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, planDuration, planColors)
-          planSessions.forEach((session) => {
-            this.add_session([
-              session.name,
-              response.data[0]['LAST_INSERT_ID()'],
-              session.date,
-              session.notes,
-              session.week_id
-            ])
-          })
+          if (planSessions) {
+            planSessions.forEach((session) => {
+              this.add_session([
+                session.name,
+                response.data[0]['LAST_INSERT_ID()'],
+                session.date,
+                session.notes,
+                session.week_id
+              ])
+            })
+          }
         })
         await this.$parent.get_client_details(true)
         this.$ga.event('Plan', 'new')
@@ -1880,13 +1882,7 @@ export default {
     async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
       this.$parent.$parent.silent_loading = true
       this.$parent.$parent.dontLeave = true
-      let plan
-      // Set the plan variable to the current plan
-      for (const x in this.$parent.$parent.client_details.plans) {
-        if (this.$parent.$parent.client_details.plans[x].id === parseInt(this.$route.params.id)) {
-          plan = this.$parent.$parent.client_details.plans[x]
-        }
-      }
+      const plan = this.helper('match_plan')
       try {
         this.sort_sessions()
         const response = await this.$axios.post('https://api.traininblocks.com/programmes',
