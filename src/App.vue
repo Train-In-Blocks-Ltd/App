@@ -1106,12 +1106,14 @@ export default {
     // SYSTEM STATE
 
     async resolve_error (msg) {
-      await this.$axios.post('/.netlify/functions/error',
-        {
-          msg,
-          claims: this.claims
-        }
-      )
+      if (this.claims.user_type !== 'Admin') {
+        await this.$axios.post('/.netlify/functions/error',
+          {
+            msg,
+            claims: this.claims
+          }
+        )
+      }
       this.loading = false
       this.dontLeave = false
       this.errorMsg = msg.toString()
