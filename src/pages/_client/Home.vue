@@ -239,7 +239,6 @@ export default {
     this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.get_client_details()
-    this.__init__()
     this.keepLoaded = true
     this.$parent.end_loading()
   },
@@ -248,19 +247,6 @@ export default {
     this.$parent.client_details = null
   },
   methods: {
-
-    // BACKGROUND
-
-    __init__ () {
-      let x
-      for (x in this.$parent.clients) {
-        // If client matches client in route
-        if (this.$parent.clients[x].client_id === this.$route.params.client_id) {
-          // Set client_details variable with client details
-          this.$parent.client_details = this.$parent.clients[x]
-        }
-      }
-    },
 
     // OKTA CLIENT
 
@@ -274,16 +260,20 @@ export default {
           }
         )
         if (result.data.length > 0) {
-          if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
-            this.clientAlready = true
-            this.clientAlreadyMsg = 'User activated'
-          } else if (result.data[0].status === 'PROVISIONED') {
-            this.clientAlready = false
-            this.clientAlreadyMsg = 'Resend activation email'
-          } else if (result.data[0].status === 'SUSPENDED') {
-            this.clientSuspend = result.data[0].id
-            this.clientAlready = false
-            this.clientAlreadyMsg = 'Give Access'
+          switch (result.data[0].status) {
+            case 'ACTIVE' || 'RECOVERY':
+              this.clientAlready = true
+              this.clientAlreadyMsg = 'User activated'
+              break
+            case 'PROVISIONED':
+              this.clientAlready = false
+              this.clientAlreadyMsg = 'Resend activation email'
+              break
+            case 'SUSPENDED':
+              this.clientSuspend = result.data[0].id
+              this.clientAlready = false
+              this.clientAlreadyMsg = 'Give Access'
+              break
           }
         } else {
           this.clientAlready = false
@@ -399,74 +389,52 @@ export default {
     async get_client_details (force) {
       this.$parent.loading = true
       try {
-        // Loop through clients
-        let x
-        for (x in this.$parent.clients) {
-          // If client matches client in route
-          if (this.$parent.clients[x].client_id === parseInt(this.$route.params.client_id)) {
-            // Set client_details variable with client details
-            this.$parent.client_details = this.$parent.clients[x]
-            // If client_details.plans is set to false
-            if (this.$parent.clients[x].plans === false && !force) {
-              this.no_plans = true
-            // If client_details.plans is not set then query the API
-            } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
-              const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
-              // If there are no plans
-              if (response.data.length === 0) {
-                this.no_plans = true
-                this.$parent.clients[x].plans = false
-                // If there are plans set the clients to include plans
-              } else {
-                this.no_plans = false
-                this.$parent.clients[x].plans = response.data
-                // Update the localstorage with the plans
-                localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-              }
-            }
-            this.$parent.client_details = this.$parent.clients[x]
-            this.loading_plans = false
+        const client = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+        this.$parent.client_details = client
+        // If client_details.plans is set to false
+        if (client.plans === false && !force) {
+          this.no_plans = true
+        // If client_details.plans is not set then query the API
+        } else if (!client.plans || force || this.$parent.claims.user_type === 'Admin') {
+          const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
+          if (response.data.length === 0) {
+            this.no_plans = true
+            client.plans = false
+          } else {
+            this.no_plans = false
+            client.plans = response.data
+            localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
           }
         }
+        this.loading_plans = false
       } catch (e) {
         this.$parent.resolve_error(e)
       }
-      await this.get_sessions()
+      if (this.$route.params.id !== undefined) {
+        await this.get_sessions()
+      }
     },
     async get_sessions (force) {
       try {
-        // Loop through plans
-        let f
-        for (f in this.$parent.client_details.plans) {
-          // If plan matches plan in route
-          if (this.$parent.client_details.plans[f].id === parseInt(this.$route.params.id)) {
-            // If client_details.plans.sessions is set to false
-            if (this.$parent.client_details.plans[f].sessions === false && !force) {
-              this.no_sessions = true
-            // If client_details.plans.sessions is not set then query the API
-            } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
-              const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
-              // If there are no sessions
-              if (response.data.length === 0) {
-                this.no_sessions = true
-                this.$parent.client_details.plans[f].sessions = false
-                // If there are sessions set the client_details to include sessions
-              } else {
-                this.no_sessions = false
-                this.$parent.client_details.plans[f].sessions = response.data
-              }
-              // Sync client_details with clients
-              // Loop through clients
-              for (const y in this.$parent.clients) {
-                // If client matches client in route
-                if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
-                  this.$parent.clients[y] = this.$parent.client_details
-                }
-              }
-              // Update the localstorage with the sessions
-              localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
+        const clientPlans = this.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+        if (clientPlans.sessions === false && !force) {
+          this.no_sessions = true
+        } else if (!clientPlans.sessions || force === true || this.$parent.claims.user_type === 'Admin') {
+          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${clientPlans.id}`)
+          if (response.data.length === 0) {
+            this.no_sessions = true
+            clientPlans.sessions = false
+          } else {
+            this.no_sessions = false
+            clientPlans.sessions = response.data
+          }
+          // Sync client_details with clients
+          for (const y in this.$parent.clients) {
+            if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
+              this.$parent.clients[y] = this.$parent.client_details
             }
           }
+          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
         }
         this.$parent.end_loading()
       } catch (e) {
