@@ -1059,6 +1059,19 @@ export default {
   },
   methods: {
 
+    async helper (mode, gaItem, gaAction) {
+      switch (mode) {
+        case 'client_store':
+          await this.archive_f()
+          this.archive_to_vue()
+          await this.clients_f()
+          this.clients_to_vue()
+          this.$ga.event(gaItem, gaAction)
+          this.end_loading()
+          break
+      }
+    },
+
     // AUTH
 
     async is_authenticated () {
@@ -1084,11 +1097,7 @@ export default {
         if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
           this.claims.ga = true
         }
-        if (this.claims.ga !== false) {
-          this.$ga.enable()
-        } else {
-          this.$ga.disable()
-        }
+        this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
@@ -1120,39 +1129,24 @@ export default {
 
     will_body_scroll (state) {
       const body = document.getElementsByTagName('body')[0]
-      if (state) {
-        body.style.overflow = 'auto'
-      } else {
-        body.style.overflow = 'hidden'
-      }
+      state ? body.style.overflow = 'auto' : body.style.overflow = 'hidden'
     },
     confirmLeave (e) {
-      if (this.dontLeave === true) {
+      if (this.dontLeave) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
         e.returnValue = msg
         return msg
       }
     },
     sort_sessions_plan () {
-      this.clientUser.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-          })
-        }
+      const plan = this.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+      plan.sessions.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
       })
     },
     day (date) {
-      const weekday = new Array(7)
-      weekday[0] = 'Sun'
-      weekday[1] = 'Mon'
-      weekday[2] = 'Tue'
-      weekday[3] = 'Wed'
-      weekday[4] = 'Thu'
-      weekday[5] = 'Fri'
-      weekday[6] = 'Sat'
-      const d = new Date(date)
-      return weekday[d.getDay()]
+      const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      return weekday[new Date(date).getDay()]
     },
 
     // CLIENT
@@ -1161,7 +1155,7 @@ export default {
       if (!localStorage.getItem('clients')) {
         await this.clients_f()
       }
-      this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
+      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
         const textA = a.name.toUpperCase()
         const textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
@@ -1170,11 +1164,7 @@ export default {
     async clients_f () {
       try {
         const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
-        if (response.data.length === 0) {
-          this.no_clients = true
-        } else {
-          this.no_clients = false
-        }
+        this.no_clients = response.data.length === 0
         localStorage.setItem('clients', JSON.stringify(response.data))
       } catch (e) {
         this.no_clients = false
@@ -1185,18 +1175,8 @@ export default {
       this.dontLeave = true
       try {
         await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
-
-        await this.archive_f()
-        this.archive_to_vue()
-
-        await this.clients_f()
-        this.clients_to_vue()
-
-        if (this.archive.clients.length === 0) {
-          this.archive.no_archive = true
-        }
-        this.$ga.event('Client', 'delete')
-        this.end_loading()
+        this.helper('client_end', 'Client', 'delete')
+        this.archive.no_archive = this.archive.clients.length === 0
       } catch (e) {
         this.resolve_error(e)
       }
@@ -1232,7 +1212,7 @@ export default {
       if (JSON.parse(localStorage.getItem('archive')).length === 0) {
         this.archive.no_archive = true
       } else {
-        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
+        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort((a, b) => {
           const textA = a.name.toUpperCase()
           const textB = b.name.toUpperCase()
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
@@ -1242,11 +1222,7 @@ export default {
     async archive_f () {
       try {
         const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
-        if (response.data.length === 0) {
-          this.archive.no_archive = true
-        } else {
-          this.archive.no_archive = false
-        }
+        this.archive.no_archive = response.data.length === 0
         localStorage.setItem('archive', JSON.stringify(response.data))
       } catch (e) {
         this.archive.no_archive = false
@@ -1255,28 +1231,13 @@ export default {
     },
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
-        let email
         this.dontLeave = true
-        for (let i = 0; i < this.clients.length; i++) {
-          if (this.clients[i].client_id === id) {
-            email = this.clients[i].email
-            this.clients.splice(index, 1)
-            if (this.clients.length === 0) {
-              this.no_clients = true
-            }
-          }
-        }
+        const client = this.clients.find(client => client.client_id === id)
+        const email = client.email
+        this.clients.splice(index, 1)
+        this.no_clients = this.clients.length === 0
         try {
-          const response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
-          this.response = response.data
-
-          await this.clients_f()
-          this.clients_to_vue()
-
-          await this.archive_f()
-          this.archive_to_vue()
-          this.$ga.event('Client', 'archive')
-
+          this.response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`).data
           const result = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
@@ -1300,8 +1261,8 @@ export default {
               }
             )
           }
+          this.helper('client_store', 'Client', 'archive')
           this.$router.push('/')
-          this.end_loading()
         } catch (e) {
           this.resolve_error(e)
         }
@@ -1310,33 +1271,21 @@ export default {
     async client_unarchive (id) {
       if (confirm('Are you sure you want to unarchive this client?')) {
         this.dontLeave = true
-        for (let i = 0; i < this.archive.clients.length; i++) {
-          if (this.archive.clients[i].client_id === id) {
-            const arr = JSON.parse(localStorage.getItem('clients'))
-            arr.push(this.archive.clients[i])
+        const client = this.archive.clients.find(client => client.client_id === id)
+        const arr = JSON.parse(localStorage.getItem('clients'))
+        arr.push(client)
 
-            localStorage.setItem('clients', JSON.stringify(arr))
-            this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
-              const textA = a.name.toUpperCase()
-              const textB = b.name.toUpperCase()
-              return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-            })
-            if (this.archive.clients.length === 0) {
-              this.archive.no_archive = true
-            }
-          }
-        }
+        localStorage.setItem('clients', JSON.stringify(arr))
+        this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
+          const textA = a.name.toUpperCase()
+          const textB = b.name.toUpperCase()
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        })
+        this.archive.no_archive = this.archive.clients.length === 0
         try {
           const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
           this.response = response.data
-
-          await this.archive_f()
-          this.archive_to_vue()
-
-          await this.clients_f()
-          this.clients_to_vue()
-          this.$ga.event('Client', 'unarchive')
-          this.end_loading()
+          this.helper('client_store', 'Client', 'unarchive')
         } catch (e) {
           this.resolve_error(e)
         }
@@ -1405,10 +1354,9 @@ export default {
       try {
         const plans = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
         this.clientUser.plans = plans.data
-        let f
-        for (f in this.clientUser.plans) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
-          this.clientUser.plans[f].sessions = response.data
+        for (const i in this.clientUser.plans) {
+          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[i].id}`)
+          this.clientUser.plans[i].sessions = response.data
         }
       } catch (e) {
         this.resolve_error(e)
@@ -1416,26 +1364,12 @@ export default {
     },
     async update_session (pid, sid, feedbackNotesUpdate) {
       this.dontLeave = true
-      // Set the plan variable to the current plan
-      let x
-      for (x in this.clientUser.plans) {
-        if (this.clientUser.plans[x].id === pid) {
-          const plan = this.clientUser.plans[x]
-          let y
-          for (y in plan.sessions) {
-            if (plan.sessions[y].id === sid) {
-              // eslint-disable-next-line
-              var sessionId = plan.sessions[y].id
-              // eslint-disable-next-line
-              var sessionName = plan.sessions[y].name
-              // eslint-disable-next-line
-              var sessionChecked = plan.sessions[y].checked
-              // eslint-disable-next-line
-              var sessionFeedback = plan.sessions[y].feedback
-            }
-          }
-        }
-      }
+      const plan = this.clientUser.plans.find(plan => plan.id === pid)
+      const session = plan.sessions.find(session => session.id === sid)
+      const sessionId = session.id
+      const sessionName = session.name
+      const sessionChecked = session.checked
+      const sessionFeedback = session.feedback
       try {
         await this.$axios.post('https://api.traininblocks.com/client-workouts',
           {
