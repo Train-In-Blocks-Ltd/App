@@ -1146,10 +1146,6 @@ export default {
         return new Date(a.date) - new Date(b.date)
       })
     },
-    day (date) {
-      const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-      return weekday[new Date(date).getDay()]
-    },
 
     // CLIENT
 

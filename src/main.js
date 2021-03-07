@@ -38,6 +38,10 @@ Vue.mixin({
       const month = String(d.getMonth() + 1).padStart(2, '0')
       const dayDate = String(d.getDate()).padStart(2, '0')
       return `${year}-${month}-${dayDate}`
+    },
+    day (date) {
+      const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      return weekday[new Date(date).getDay()]
     }
   }
 })

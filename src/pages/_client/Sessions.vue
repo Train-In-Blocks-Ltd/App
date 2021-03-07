@@ -1521,18 +1521,6 @@ export default {
       const dayDate = d.getDate()
       return `${year}-${month}-${dayDate}`
     },
-    day (date) {
-      const weekday = new Array(7)
-      weekday[0] = 'Sun'
-      weekday[1] = 'Mon'
-      weekday[2] = 'Tue'
-      weekday[3] = 'Wed'
-      weekday[4] = 'Thu'
-      weekday[5] = 'Fri'
-      weekday[6] = 'Sat'
-      const d = new Date(date)
-      return weekday[d.getDay()]
-    },
     plan_duration (duration) {
       // Turn the duration of the plan into an array to render the boxes in the table
       const arr = []
