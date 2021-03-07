@@ -30,6 +30,18 @@ Vue.component('Skeleton', Skeleton)
 
 Vue.config.productionTip = false
 
+Vue.mixin({
+  methods: {
+    today () {
+      const d = new Date()
+      const year = d.getFullYear()
+      const month = String(d.getMonth() + 1).padStart(2, '0')
+      const dayDate = String(d.getDate()).padStart(2, '0')
+      return `${year}-${month}-${dayDate}`
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

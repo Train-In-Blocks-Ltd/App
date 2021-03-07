@@ -21,7 +21,11 @@
     display: grid;
     grid-template-columns: .1fr 1fr;
     grid-gap: 4rem;
-    min-height: 50px
+    padding: 1rem
+  }
+  .is_today {
+    border: 3px solid #28282860;
+    border-radius: 10px
   }
   .day_events {
     display: grid;
@@ -130,6 +134,7 @@
       <div
         v-for="(day, index) in thisWeek"
         :key="'day-' + index"
+        :class="{ is_today: day.date === today() }"
         class="day_container"
       >
         <div class="day_header">
