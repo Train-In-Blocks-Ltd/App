@@ -813,14 +813,14 @@
 
   /* Progress */
   #nprogress .bar {
-    background: #282828 !important
+    background: #282828!important
   }
   #nprogress .peg {
-    box-shadow: 0 0 10px #282828, 0 0 5px #282828 !important
+    box-shadow: 0 0 10px #282828, 0 0 5px #282828!important
   }
   #nprogress .spinner-icon {
-    border-top-color: #282828 !important;
-    border-left-color: #282828 !important
+    border-top-color: #282828!important;
+    border-left-color: #282828!important
   }
 </style>
 

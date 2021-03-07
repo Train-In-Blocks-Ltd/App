@@ -1,7 +1,6 @@
 <style scoped>
 
   /* Calendar Nav */
-
   .calendar_header__bar {
     display: flex;
     justify-content: space-between;
