@@ -68,14 +68,16 @@
         class="text--small search"
         aria-label="Find a client"
       >
-      <div v-if="response !== ''" class="text--new_msg">
-        <p class="text--small">
-          {{ response }}
-        </p>
-        <p class="text--small grey">
-          Well done on getting a new client
-        </p>
-      </div>
+      <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+        <div v-if="response !== ''" class="text--new_msg">
+          <p class="text--small">
+            {{ response }}
+          </p>
+          <p class="text--small grey">
+            Well done on getting a new client
+          </p>
+        </div>
+      </transition>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
         <router-link
