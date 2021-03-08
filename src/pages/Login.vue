@@ -260,6 +260,8 @@ export default {
     }
   },
   async beforeDestroy () {
+    console.log(this.$auth)
+    window.setTimeout(this.$auth.oktaAuth.session.refresh(), 3600)
     await this.$parent.is_authenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()

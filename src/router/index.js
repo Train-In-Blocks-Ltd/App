@@ -146,6 +146,7 @@ const onAuthRequired = async (from, to, next) => {
     next({ path: '/login' })
   } else {
     next()
+    Vue.prototype.$auth.oktaAuth.session.refresh()
   }
 }
 
