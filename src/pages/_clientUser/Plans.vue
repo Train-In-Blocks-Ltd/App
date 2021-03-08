@@ -235,7 +235,7 @@ export default {
     this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
-    await this.$parent.sort_sessions_plan()
+    await this.sort_sessions(this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id)))
     await this.scan()
     this.$parent.end_loading()
   },

@@ -1140,12 +1140,6 @@ export default {
         return msg
       }
     },
-    sort_sessions_plan () {
-      const plan = this.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
-      plan.sessions.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
-      })
-    },
 
     // CLIENT
 

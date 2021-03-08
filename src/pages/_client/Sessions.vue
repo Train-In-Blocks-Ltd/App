@@ -780,7 +780,12 @@
               </div>
               <div class="plan_table--container">
                 <div class="plan_table--container--plan_duration_container">
-                  <div v-for="item in plan_duration(plan.duration)" :key="item" class="container--week" @click="change_week(item), sort_sessions()">
+                  <div
+                    v-for="item in plan_duration(plan.duration)"
+                    :key="item"
+                    class="container--week"
+                    @click="change_week(item), sort_sessions(plan)"
+                  >
                     <div :class="{ weekActive: item === currentWeek }" class="week">
                       <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color" />
                       <div class="week__number">
@@ -937,7 +942,12 @@
                   <div class="data-select__options">
                     <label for="measure">
                       Measurement:<br>
-                      <select v-model="selectedDataName" class="small_border_radius width_300 text--small" name="measure" @change="sort_sessions(), scan(), selection()">
+                      <select
+                        v-model="selectedDataName"
+                        class="small_border_radius width_300 text--small"
+                        name="measure"
+                        @change="sort_sessions(plan), scan(), selection()"
+                      >
                         <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
                           {{ optionName.text }}
                         </option>
@@ -947,7 +957,12 @@
                   <div v-if="showType" class="data-select__options">
                     <label for="measure-type">
                       Data type:<br>
-                      <select v-model="selectedDataType" class="small_border_radius width_300 text--small" name="measure-type" @change="sort_sessions(), scan(), selection()">
+                      <select
+                        v-model="selectedDataType"
+                        class="small_border_radius width_300 text--small"
+                        name="measure-type"
+                        @change="sort_sessions(plan), scan(), selection()"
+                      >
                         <option value="Sets">Sets</option>
                         <option value="Reps">Reps</option>
                         <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">
@@ -1582,15 +1597,6 @@ export default {
         return color
       }
     },
-    sort_sessions () {
-      this.$parent.$parent.client_details.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id) && this.$parent.no_sessions === false) {
-          plan.sessions.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-          })
-        }
-      })
-    },
     scan () {
       this.dataPacketStore.length = 0
       this.sessionDates.length = 0
@@ -1877,7 +1883,7 @@ export default {
       this.$parent.$parent.dontLeave = true
       const plan = this.helper('match_plan')
       try {
-        this.sort_sessions()
+        this.sort_sessions(plan)
         const response = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
             id: forceID === undefined ? plan.id : forceID,
@@ -1996,7 +2002,8 @@ export default {
           week_id: '',
           block_color: ''
         }
-        this.sort_sessions()
+        const plan = this.helper('match_plan')
+        this.sort_sessions(plan)
         this.scan()
         this.check_for_new()
         this.adherence()

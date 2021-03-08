@@ -32,6 +32,9 @@ Vue.config.productionTip = false
 
 Vue.mixin({
   methods: {
+
+    // Shared
+
     today () {
       const d = new Date()
       const year = d.getFullYear()
@@ -42,6 +45,14 @@ Vue.mixin({
     day (date) {
       const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
       return weekday[new Date(date).getDay()]
+    },
+
+    // Organise
+
+    sort_sessions (plan) {
+      plan.sessions.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
+      })
     }
   }
 })
