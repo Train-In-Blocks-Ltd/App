@@ -32,6 +32,10 @@
   .prev_month:active {
     transform: rotate(90deg) translateY(-5px) scale(.9)
   }
+  .is_today {
+    border: 3px solid #28282860;
+    border-radius: 10px
+  }
   .today {
     cursor: pointer;
     margin: auto
@@ -137,7 +141,7 @@
       <div
         v-for="(day, index) in month"
         :key="`day_${index}`"
-        :class="{ holderCell: day[1] === '' }"
+        :class="{ holderCell: day[1] === '', is_today: today() === day[2] }"
         class="day_cell"
       >
         <p class="grey">
@@ -216,7 +220,7 @@ export default {
             datapack.push(event)
           }
         })
-        this.month.push([datapack, date])
+        this.month.push([datapack, date, `${this.currentYear}-${String(this.get_month_number(this.currentMonth)).padStart(2, '0')}-${String(date).padStart(2, '0')}`])
       }
     }
   }

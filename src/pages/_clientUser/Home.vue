@@ -277,11 +277,9 @@ export default {
     // DATE/TIME
 
     todays_session () {
-      let today = new Date()
-      today = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {
-          if (session.date === today) {
+          if (session.date === this.today()) {
             this.todays_sessions_store.push(session.id)
           }
         })
