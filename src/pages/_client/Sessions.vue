@@ -1594,7 +1594,7 @@ export default {
       const plan = this.helper('match_plan')
       this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
       this.maxWeek = plan.duration
-      if (plan.sessions !== null && this.$parent.no_sessions === false) {
+      if (plan.sessions !== null && !this.$parent.no_sessions) {
         plan.sessions.forEach((object) => {
           this.sessionDates.push({
             title: object.name,

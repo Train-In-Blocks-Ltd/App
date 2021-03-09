@@ -250,42 +250,33 @@ export default {
       }, 100)
     },
     complete (planId, sessionId) {
-      for (const plan of this.$parent.clientUser.plans) {
-        if (plan.id === planId) {
-          for (const session of plan.sessions) {
-            if (session.id === sessionId) {
-              if (session.checked === 0) {
-                session.checked = 1
-                this.check = 1
-              } else {
-                session.checked = 0
-                this.check = 0
-              }
-            }
-          }
-        }
+      const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
+      const session = plan.sessions.find(session => session.id === sessionId)
+      if (session.checked === 0) {
+        session.checked = 1
+        this.check = 1
+      } else {
+        session.checked = 0
+        this.check = 0
       }
       this.$parent.update_session(planId, sessionId)
     },
     scan () {
       this.sessionDates.length = 0
-      this.$parent.clientUser.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
-          if (plan.sessions !== null) {
-            plan.sessions.forEach((session) => {
-              this.sessionDates.push({
-                title: session.name,
-                date: session.date,
-                color: weekColor[session.week_id - 1],
-                textColor: this.accessible_colors(weekColor[session.week_id - 1]),
-                week_id: session.week_id,
-                session_id: session.id
-              })
-            })
-          }
-        }
-      })
+      const plan = this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+      const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
+      if (plan.sessions !== null) {
+        plan.sessions.forEach((session) => {
+          this.sessionDates.push({
+            title: session.name,
+            date: session.date,
+            color: weekColor[session.week_id - 1],
+            textColor: this.accessible_colors(weekColor[session.week_id - 1]),
+            week_id: session.week_id,
+            session_id: session.id
+          })
+        })
+      }
       this.forceUpdate += 1
     }
   }
