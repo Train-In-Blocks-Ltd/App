@@ -1097,7 +1097,7 @@ export default {
         if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
           this.claims.ga = true
         }
-        this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
+        this.claims.ga ? this.$ga.enable() : this.$ga.disable()
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()

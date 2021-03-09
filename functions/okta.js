@@ -34,7 +34,7 @@ exports.handler = async function handler (event, context, callback) {
       headers: headers,
       body: ''
     })
-  } else if (event.body && response.data.active === true) {
+  } else if (event.body && response.data.active) {
     const data = JSON.parse(event.body)
     if (data.type === 'POST') {
       try {
@@ -59,7 +59,7 @@ exports.handler = async function handler (event, context, callback) {
           body: JSON.stringify(e, response)
         })
       }
-    } else if (data.type === 'GET' && response.data.active === true) {
+    } else if (data.type === 'GET' && response.data.active) {
       try {
         const response = await axios.get('https://dev-183252.okta.com/api/v1/users/' + data.url,
           {

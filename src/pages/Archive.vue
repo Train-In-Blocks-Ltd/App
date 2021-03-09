@@ -118,7 +118,7 @@ export default {
     // Checkbox
 
     change_select_checkbox (id) {
-      if (this.selectedClients.includes(id) === false) {
+      if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)
       } else {
         const idx = this.selectedClients.indexOf(id)

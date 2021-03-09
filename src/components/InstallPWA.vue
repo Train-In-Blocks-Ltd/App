@@ -13,7 +13,7 @@
 
 <template>
   <div>
-    <div v-if="$parent.$parent.pwa.canInstall === true">
+    <div v-if="$parent.$parent.pwa.canInstall">
       <p class="text--large">
         Install the app
       </p>
@@ -21,7 +21,7 @@
         Access it quickly from your home screen with a clearer interface
       </p>
     </div>
-    <div v-else-if="$parent.$parent.pwa.canInstall === false">
+    <div v-else-if="!$parent.$parent.pwa.canInstall">
       <p class="text--large">
         We can't detect if you have the app installed
       </p>
@@ -30,20 +30,20 @@
       </p>
     </div>
     <p
-      v-else-if="$parent.$parent.pwa.installed === true"
+      v-else-if="$parent.$parent.pwa.installed"
       class="text--large"
     >
       You have the app installed!
     </p>
     <div class="bottom_bar">
       <button
-        v-if="$parent.$parent.pwa.canInstall === true"
+        v-if="$parent.$parent.pwa.canInstall"
         @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.will_body_scroll(true)"
       >
         Install
       </button>
       <a
-        v-else-if="$parent.$parent.pwa.canInstall === false || $parent.$parent.pwa.installed === true"
+        v-else-if="!$parent.$parent.pwa.canInstall || $parent.$parent.pwa.installed"
         href="https://app.traininblocks.com"
         target="_blank"
       >

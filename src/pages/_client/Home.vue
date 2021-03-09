@@ -406,7 +406,7 @@ export default {
         const client = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
         this.$parent.client_details = client
         // If client_details.plans is set to false
-        if (client.plans === false && !force) {
+        if (!client.plans && !force) {
           this.no_plans = true
         // If client_details.plans is not set then query the API
         } else if (!client.plans || force || this.$parent.claims.user_type === 'Admin') {
@@ -432,10 +432,10 @@ export default {
       try {
         const plan = this.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
         // If client_details.plans.sessions is set to false
-        if (plan.sessions === false && !force) {
+        if (!plan.sessions && !force) {
           this.no_sessions = true
         // If client_details.plans.sessions is not set then query the API
-        } else if (!plan.sessions || force === true || this.$parent.claims.user_type === 'Admin') {
+        } else if (!plan.sessions || force || this.$parent.claims.user_type === 'Admin') {
           const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
           if (response.data.length === 0) {
             this.no_sessions = true

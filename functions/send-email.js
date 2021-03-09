@@ -45,7 +45,7 @@ exports.handler = async function handler (event, context, callback) {
       headers: headers,
       body: ''
     })
-  } else if (event.body && response.data.active === true) {
+  } else if (event.body && response.data.active) {
     try {
       var data = JSON.parse(event.body)
       // options

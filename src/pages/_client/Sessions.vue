@@ -601,7 +601,7 @@
       </form>
     </modal>
     <div
-      v-if="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
+      v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions"
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small fadeIn"
       aria-label="Statistics"
@@ -613,7 +613,7 @@
       </p>
     </div>
     <div
-      v-show="!$parent.$parent.loading && !isStatsOpen && $parent.showOptions === false"
+      v-show="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions"
       :class="{ icon_open_middle: !$parent.keepLoaded, icon_open_bottom: $parent.keepLoaded }"
       class="tab_option tab_option_small fadeIn"
       aria-label="Print"
@@ -838,7 +838,7 @@
                     Select all
                   </a>
                   <a
-                    v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty"
+                    v-if="plan.sessions && !isEditingSession && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
                     @click="expand_all(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"
@@ -1346,7 +1346,7 @@ export default {
       this.selectedSessions = []
     },
     change_select_checkbox (id) {
-      if (this.selectedSessions.includes(id) === false) {
+      if (!this.selectedSessions.includes(id)) {
         this.selectedSessions.push(id)
       } else {
         const idx = this.selectedSessions.indexOf(id)
@@ -1463,7 +1463,7 @@ export default {
           const tidyB = tidyA.replace(/\)/g, '\\)')
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
-          if (regex.test(exerciseDataPacket[1]) === true) {
+          if (regex.test(exerciseDataPacket[1])) {
             this.labelValues.push(exerciseDataPacket[0])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({
@@ -1477,22 +1477,22 @@ export default {
                 value: 'Volume'
               })
             }
-            if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x') === true) {
+            if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x')) {
               this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType))
             }
-            if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at') === true) {
+            if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
               this.dataValues.push(this.load(exerciseDataPacket, protocol))
             }
-            if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at') === true) {
+            if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
               const agg = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
               this.dataValues.push(agg)
             }
-            if (exerciseDataPacket[2].includes('x') !== true) {
+            if (!exerciseDataPacket[2].includes('x')) {
               this.showType = false
               this.dataValues.push(this.other_measures(protocol))
             }
           }
-          if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at') === true) {
+          if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
             if (this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') {
               dataForSum = this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
             }
@@ -1663,10 +1663,10 @@ export default {
           const tidyB = tidyA.replace(/\)/g, '\\)')
           const regexA = RegExp(tidyB, 'gi')
           const itemCased = this.proper_case(exerciseDataPacket[1])
-          if (regexA.test(tempItemStore) !== true && exerciseDataPacket[2].includes('at') === true) {
+          if (!regexA.test(tempItemStore) && exerciseDataPacket[2].includes('at')) {
             tempItemStore.push(itemCased)
           }
-          if (regexA.test(tempItemStoreLate) !== true && exerciseDataPacket[2].includes('at') !== true) {
+          if (!regexA.test(tempItemStoreLate) && !exerciseDataPacket[2].includes('at')) {
             tempItemStoreLate.push(exerciseDataPacket[1])
           }
         })
@@ -1727,7 +1727,7 @@ export default {
                 exercise: exerciseDataPacket[1],
                 prot: exerciseDataPacket[2]
               })
-            } else if (match.includes('/') === true) {
+            } else if (match.includes('/')) {
               while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
                 if (n.index === this.regexNumberBreakdown.lastIndex) {
                   this.regexNumberBreakdown.lastIndex++
@@ -1770,7 +1770,7 @@ export default {
                 this.regexNumberBreakdown.lastIndex++
               }
               n.forEach((loadMatchExact) => {
-                if (loadMatch.includes('/') === true) {
+                if (loadMatch.includes('/')) {
                   tempLoadStore.push(parseFloat(loadMatchExact))
                   isMultiple = true
                 } else {

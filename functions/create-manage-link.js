@@ -35,7 +35,7 @@ exports.handler = async function handler (event, context, callback) {
       headers,
       body: ''
     })
-  } else if (event.body && response.data.active === true) {
+  } else if (event.body && response.data.active) {
     try {
       const link = await stripe.billingPortal.sessions.create({
         customer: JSON.parse(event.body).id,
