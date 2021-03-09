@@ -644,7 +644,7 @@
     </transition>
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
-      v-for="(plan, index) in this.$parent.$parent.client_details.plans"
+      v-for="(plan, index) in $parent.$parent.client_details.plans"
       :key="index"
     >
       <div v-if="plan.id == $route.params.id">

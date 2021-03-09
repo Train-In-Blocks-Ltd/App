@@ -10,6 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const env = require('../config/prod.env')
+const {InjectManifest} = require('workbox-webpack-plugin')
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -93,6 +94,9 @@ const webpackConfig = merge(baseWebpackConfig, {
           }
         }
       ]
+    }),
+    new InjectManifest({
+      swSrc: './src/sw.js',
     })
   ]
 })

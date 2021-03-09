@@ -63,7 +63,7 @@
 </style>
 
 <template>
-  <div v-if="this.$parent.claims" id="account">
+  <div v-if="$parent.claims" id="account">
     <modal
       name="reset-password"
       height="100%"
