@@ -248,34 +248,18 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '')
-      } else {
-        return dataIn
-      }
-    },
     complete (planId, sessionId) {
-      for (const plan of this.$parent.clientUser.plans) {
-        if (plan.id === planId) {
-          for (const session of plan.sessions) {
-            if (session.id === sessionId) {
-              if (session.checked === 0) {
-                session.checked = 1
-                this.check = 1
-              } else {
-                session.checked = 0
-                this.check = 0
-              }
-            }
-          }
-        }
+      const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
+      const session = plan.sessions.find(session => session.id === sessionId)
+      if (session.checked === 0) {
+        session.checked = 1
+        this.check = 1
+      } else {
+        session.checked = 0
+        this.check = 0
       }
       this.$parent.update_session(planId, sessionId)
     },
-
-    // DATE/TIME
-
     todays_session () {
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {

@@ -188,9 +188,6 @@
   .text--no_sessions {
     margin: 2rem 0 8rem 0
   }
-  .text--new_msg {
-    margin: 2rem 0
-  }
   .text--name {
     text-overflow: ellipsis;
     white-space: nowrap
@@ -1139,12 +1136,6 @@ export default {
         e.returnValue = msg
         return msg
       }
-    },
-    sort_sessions_plan () {
-      const plan = this.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
-      plan.sessions.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
-      })
     },
 
     // CLIENT

@@ -15,16 +15,19 @@
   .week_container {
     display: grid;
     grid-gap: 2rem;
-    margin: 2rem 0
+    margin: 2rem 0;
+    background-color: white;
+    border-radius: 10px
   }
   .day_container {
     display: grid;
     grid-template-columns: .1fr 1fr;
     grid-gap: 4rem;
-    padding: 1rem
+    padding: 2rem
   }
   .is_today {
-    border: 3px solid #28282860;
+    background-color: #FFFFEE;
+    box-shadow: 0 0 20px 10px #28282810;
     border-radius: 10px
   }
   .day_events {

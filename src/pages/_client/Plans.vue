@@ -54,6 +54,9 @@
 </style>
 <template>
   <div>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up v-if="response !== ''" :header="response" :desc="`You're all set, get programming`" />
+    </transition>
     <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <new-plan />
     </div>
@@ -105,16 +108,6 @@
       <p class="text--large">
         Plans
       </p>
-      <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-        <div v-if="response !== ''" class="text--new_msg">
-          <p class="text--small">
-            {{ response }}
-          </p>
-          <p class="text--small grey">
-            You're all set, get programming
-          </p>
-        </div>
-      </transition>
       <p v-if="$parent.no_plans" class="text--small grey text--no-plans fadeIn">
         No plans yet, use the button on the top-right of your screen
       </p>
@@ -176,13 +169,6 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ')
-      } else {
-        return dataIn
-      }
-    },
     response_delay () {
       setTimeout(() => { this.response = '' }, 5000)
     }

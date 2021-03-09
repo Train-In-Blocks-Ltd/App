@@ -32,8 +32,8 @@
   .prev_month:active {
     transform: rotate(90deg) translateY(-5px) scale(.9)
   }
-  .is_today {
-    border: 3px solid #28282860;
+  .day_cell.is_today {
+    background-color: #FFFFEE;
     border-radius: 10px
   }
   .today {
