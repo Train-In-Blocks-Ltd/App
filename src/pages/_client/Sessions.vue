@@ -354,6 +354,13 @@
 
 <template>
   <div id="plan">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up
+        v-if="response !== ''"
+        :header="response"
+        :desc="response === 'Sessions have been progressed' ? `Please go through them to make sure that you're happy with it` : 'Get programming!'"
+      />
+    </transition>
     <modal name="info" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--info">
         <div class="center_wrapped">
@@ -1058,8 +1065,6 @@ export default {
   data () {
     return {
 
-      force: true,
-
       // EDIT
 
       tempEditorStore: null,
@@ -1072,6 +1077,8 @@ export default {
 
       expandedSessions: [],
       todayDate: '',
+      response: '',
+      force: true,
 
       // WEEK
 
@@ -1263,7 +1270,7 @@ export default {
           this.new_session.name = session.name
           this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - startWeek))
           this.currentCopySessionNotes = this.simpleCopy ? session.notes : this.copy_across_process(session.id, session.notes, weekCount - startWeek)
-          this.add_session()
+          this.add_session(true)
         })
       }
       this.currentCopySessionNotes = ''
@@ -1354,7 +1361,7 @@ export default {
       }
     },
     async create_session () {
-      await this.add_session()
+      await this.add_session(false)
       this.$parent.$parent.end_loading()
     },
 
@@ -1848,7 +1855,7 @@ export default {
           this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, planDuration, planColors)
           if (planSessions) {
             planSessions.forEach((session) => {
-              this.add_session([
+              this.add_session(false, [
                 session.name,
                 response.data[0]['LAST_INSERT_ID()'],
                 session.date,
@@ -1948,7 +1955,7 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async add_session (forceArr) {
+    async add_session (isCopy, forceArr) {
       try {
         this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/workouts',
@@ -1962,6 +1969,18 @@ export default {
         )
         // Get the sessions from the API because we've just created a new one
         await this.$parent.get_sessions(this.force)
+        const plan = this.helper('match_plan')
+        this.sort_sessions(plan)
+        this.scan()
+        this.check_for_new()
+        this.adherence()
+        this.$ga.event('Session', 'new')
+        if (!isCopy) {
+          this.response = `${this.new_session.name} has been added`
+        } else {
+          this.response = 'Sessions have been progressed'
+        }
+        setTimeout(() => { this.response = '' }, 5000)
         this.new_session = {
           name: 'Untitled',
           date: this.todayDate,
@@ -1969,12 +1988,6 @@ export default {
           week_id: '',
           block_color: ''
         }
-        const plan = this.helper('match_plan')
-        this.sort_sessions(plan)
-        this.scan()
-        this.check_for_new()
-        this.adherence()
-        this.$ga.event('Session', 'new')
         this.$parent.$parent.end_loading()
       } catch (e) {
         this.$parent.$parent.resolve_error(e)

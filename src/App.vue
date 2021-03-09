@@ -188,9 +188,6 @@
   .text--no_sessions {
     margin: 2rem 0 8rem 0
   }
-  .text--new_msg {
-    margin: 2rem 0
-  }
   .text--name {
     text-overflow: ellipsis;
     white-space: nowrap

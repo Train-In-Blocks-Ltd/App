@@ -430,27 +430,38 @@ export default {
     },
     async get_sessions (force) {
       try {
-        const plan = this.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
-        // If client_details.plans.sessions is set to false
-        if (!plan.sessions && !force) {
-          this.no_sessions = true
-        // If client_details.plans.sessions is not set then query the API
-        } else if (!plan.sessions || force || this.$parent.claims.user_type === 'Admin') {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
-          if (response.data.length === 0) {
-            this.no_sessions = true
-            plan.sessions = false
-          } else {
-            this.no_sessions = false
-            plan.sessions = response.data
-          }
-          // Sync client_details with clients
-          for (const y in this.$parent.clients) {
-            if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
-              this.$parent.clients[y] = this.$parent.client_details
+        // Loop through plans
+        let f
+        for (f in this.$parent.client_details.plans) {
+          // If plan matches plan in route
+          if (this.$parent.client_details.plans[f].id === parseInt(this.$route.params.id)) {
+            // If client_details.plans.sessions is set to false
+            if (this.$parent.client_details.plans[f].sessions === false && !force) {
+              this.no_sessions = true
+            // If client_details.plans.sessions is not set then query the API
+            } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
+              const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
+              // If there are no sessions
+              if (response.data.length === 0) {
+                this.no_sessions = true
+                this.$parent.client_details.plans[f].sessions = false
+                // If there are sessions set the client_details to include sessions
+              } else {
+                this.no_sessions = false
+                this.$parent.client_details.plans[f].sessions = response.data
+              }
+              // Sync client_details with clients
+              // Loop through clients
+              for (const y in this.$parent.clients) {
+                // If client matches client in route
+                if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
+                  this.$parent.clients[y] = this.$parent.client_details
+                }
+              }
+              // Update the localstorage with the sessions
+              localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
             }
           }
-          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
         }
         this.$parent.end_loading()
       } catch (e) {

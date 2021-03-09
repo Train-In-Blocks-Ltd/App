@@ -20,6 +20,9 @@
 
 <template>
   <div id="home">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up v-if="response !== ''" :header="response" :desc="'Well done on getting a new client'" />
+    </transition>
     <div v-if="isNewClientOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <new-client />
     </div>
@@ -68,16 +71,6 @@
         class="text--small search"
         aria-label="Find a client"
       >
-      <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-        <div v-if="response !== ''" class="text--new_msg">
-          <p class="text--small">
-            {{ response }}
-          </p>
-          <p class="text--small grey">
-            Well done on getting a new client
-          </p>
-        </div>
-      </transition>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
         <router-link
