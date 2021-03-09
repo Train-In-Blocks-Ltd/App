@@ -89,13 +89,6 @@ export default {
   },
   props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
   methods: {
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ')
-      } else {
-        return dataIn
-      }
-    },
     soloDelete (id) {
       if (confirm('Are you sure that you want to delete this client?')) {
         this.$parent.$parent.client_delete(id)

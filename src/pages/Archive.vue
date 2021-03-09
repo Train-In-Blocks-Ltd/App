@@ -115,7 +115,7 @@ export default {
   },
   methods: {
 
-    // CHECKBOX
+    // Checkbox
 
     change_select_checkbox (id) {
       if (this.selectedClients.includes(id) === false) {

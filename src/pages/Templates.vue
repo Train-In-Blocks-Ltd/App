@@ -227,7 +227,7 @@ export default {
     // CHECKBOX
 
     change_select_checkbox (id) {
-      if (this.selectedTemplates.includes(id) === false) {
+      if (!this.selectedTemplates.includes(id)) {
         this.selectedTemplates.push(id)
       } else {
         const idx = this.selectedTemplates.indexOf(id)

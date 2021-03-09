@@ -53,6 +53,22 @@ Vue.mixin({
       plan.sessions.sort((a, b) => {
         return new Date(a.date) - new Date(b.date)
       })
+    },
+    remove_brackets_and_checkbox (dataIn) {
+      return dataIn !== null ? dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '') : dataIn
+    },
+
+    // Other
+
+    accessible_colors (hex) {
+      if (hex !== undefined) {
+        hex = hex.replace('#', '')
+        const r = parseInt(hex.substring(0, 2), 16)
+        const g = parseInt(hex.substring(2, 4), 16)
+        const b = parseInt(hex.substring(4, 6), 16)
+        const result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
+        return `rgb(${result}, ${result}, ${result})`
+      }
     }
   }
 })

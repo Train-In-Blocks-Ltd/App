@@ -907,10 +907,10 @@
                       <div class="show_html" v-html="session.feedback" />
                     </div>
                     <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
-                      <button v-if="session.id !== editSession && !isEditingSession" @click="editing_session_notes(session.id, true, session.notes), editPlanNotes = false, tempEditorStore = session.notes">
+                      <button v-if="session.id !== editSession && !isEditingSession" @click="editing_session_notes(session.id, true), editPlanNotes = false, tempEditorStore = session.notes">
                         Edit
                       </button>
-                      <button v-if="session.id === editSession" @click="editing_session_notes(session.id, false, session.notes)">
+                      <button v-if="session.id === editSession" @click="editing_session_notes(session.id, false)">
                         Save
                       </button>
                       <button v-if="session.id === editSession" class="cancel" @click="cancel_session_notes(), session.notes = tempEditorStore">
@@ -1157,19 +1157,21 @@ export default {
     await this.$parent.get_client_details()
     this.$parent.$parent.get_templates()
     this.today()
-    this.scan()
     this.check_for_new()
     this.adherence()
+    this.scan()
   },
   beforeDestroy () {
     this.$parent.$parent.templates = null
   },
   methods: {
 
-    helper (type) {
+    helper (type, sessionId) {
       switch (type) {
         case 'match_plan':
           return this.$parent.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+        case 'match_session':
+          return this.helper('match_plan').sessions.find(session => session.id === sessionId)
       }
     },
 
@@ -1182,7 +1184,7 @@ export default {
       this.helper('match_plan').sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           session.date = this.add_days(session.date, parseInt(this.shiftDays))
-          this.update_session(session.id, session.notes)
+          this.update_session(session.id)
         }
       })
       this.$modal.hide('shift')
@@ -1283,7 +1285,7 @@ export default {
       this.helper('match_plan').sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           session.week_id = this.moveTarget
-          this.update_session(session.id, session.notes)
+          this.update_session(session.id)
         }
       })
       this.deselect_all()
@@ -1306,7 +1308,7 @@ export default {
           this.helper('match_plan').sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               session.checked = state
-              this.update_session(session.id, session.notes)
+              this.update_session(session.id)
             }
           })
           this.deselect_all()
@@ -1358,11 +1360,11 @@ export default {
 
     // SESSION STATE
 
-    editing_session_notes (id, state, notesUpdate) {
-      this.isEditingSession = state
-      this.editSession = id
-      if (!state) {
-        this.update_session(id, notesUpdate)
+    editing_session_notes (sessionId, sessionState) {
+      this.isEditingSession = sessionState
+      this.editSession = sessionId
+      if (!sessionState) {
+        this.update_session(sessionId)
         this.isEditingSession = false
         this.editSession = null
         this.scan()
@@ -1586,17 +1588,6 @@ export default {
         console.error(e)
       }
     },
-    accessible_colors (hex) {
-      if (hex !== undefined) {
-        hex = hex.replace('#', '')
-        const r = parseInt(hex.substring(0, 2), 16)
-        const g = parseInt(hex.substring(2, 4), 16)
-        const b = parseInt(hex.substring(4, 6), 16)
-        const result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
-        const color = `rgb(${result}, ${result}, ${result})`
-        return color
-      }
-    },
     scan () {
       this.dataPacketStore.length = 0
       this.sessionDates.length = 0
@@ -1614,8 +1605,7 @@ export default {
             session_id: object.id
           })
           if (object.notes !== null) {
-            const pulledProtocols = this.pull_protocols(object.name, object.notes)
-            this.dataPacketStore.push(this.chunk_array(pulledProtocols))
+            this.dataPacketStore.push(this.chunk_array(this.pull_protocols(object.name, object.notes)))
           }
         })
         // Appends the options to the select
@@ -1640,8 +1630,7 @@ export default {
         m.forEach((match, groupIndex) => {
           if (groupIndex === 0) {
             tempStore.push(sessionName)
-          }
-          if (groupIndex === 1 || groupIndex === 2) {
+          } else if (groupIndex === 1 || groupIndex === 2) {
             tempStore.push(match)
           }
         })
@@ -1654,9 +1643,8 @@ export default {
     // Breaks down the temporary array into data packets of length 2
     // Data Packet format: ['NAME', 'PROTOCOL/MEASURE/NUMBERS']
     chunk_array (myArray) {
-      let index = 0
       const tempArray = []
-      for (index = 0; index < myArray.length; index += 3) {
+      for (let index = 0; index < myArray.length; index += 3) {
         const dataPacket = myArray.slice(index, index + 3)
         tempArray.push(dataPacket)
       }
@@ -1699,7 +1687,6 @@ export default {
         })
       })
     },
-
     proper_case (string) {
       const sentence = string.toLowerCase().split(' ')
       for (let i = 0; i < sentence.length; i++) {
@@ -1938,38 +1925,18 @@ export default {
         }
       }
     },
-    async update_session (id, forceNotes) {
+    async update_session (id) {
       this.$parent.$parent.dontLeave = true
-      // Set the plan variable to the current plan
-      for (const x in this.$parent.$parent.client_details.plans) {
-        if (this.$parent.$parent.client_details.plans[x].id === parseInt(this.$route.params.id)) {
-          const plan = this.$parent.$parent.client_details.plans[x]
-          let y
-          for (y in plan.sessions) {
-            if (plan.sessions[y].id === id) {
-              // eslint-disable-next-line
-              var sessionsId = plan.sessions[y].id
-              // eslint-disable-next-line
-              var sessionsName = plan.sessions[y].name
-              // eslint-disable-next-line
-              var sessionsDate = plan.sessions[y].date
-              // eslint-disable-next-line
-              var sessionsWeek = plan.sessions[y].week_id
-              // eslint-disable-next-line
-              var sessionsChecked = plan.sessions[y].checked
-            }
-          }
-        }
-      }
+      const session = this.helper('match_session', id)
       try {
         await this.$axios.post('https://api.traininblocks.com/workouts',
           {
-            id: sessionsId,
-            name: sessionsName,
-            date: sessionsDate,
-            notes: forceNotes,
-            week_id: sessionsWeek,
-            checked: sessionsChecked
+            id: session.id,
+            name: session.name,
+            date: session.date,
+            notes: session.notes,
+            week_id: session.week_id,
+            checked: session.checked
           }
         )
         await this.$parent.get_sessions(this.force)

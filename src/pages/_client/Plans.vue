@@ -176,13 +176,6 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ')
-      } else {
-        return dataIn
-      }
-    },
     response_delay () {
       setTimeout(() => { this.response = '' }, 5000)
     }

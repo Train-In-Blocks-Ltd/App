@@ -248,13 +248,6 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '')
-      } else {
-        return dataIn
-      }
-    },
     complete (planId, sessionId) {
       for (const plan of this.$parent.clientUser.plans) {
         if (plan.id === planId) {
