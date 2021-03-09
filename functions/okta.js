@@ -34,7 +34,7 @@ exports.handler = async function handler (event, context, callback) {
       headers: headers,
       body: ''
     })
-  } else if (event.body && response.data.active) {
+  } else if (event.body && response.data.active === true) {
     const data = JSON.parse(event.body)
     if (data.type === 'POST') {
       try {

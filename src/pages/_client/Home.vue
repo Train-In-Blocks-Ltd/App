@@ -406,7 +406,7 @@ export default {
         const client = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
         this.$parent.client_details = client
         // If client_details.plans is set to false
-        if (!client.plans && !force) {
+        if (client.plans === false && !force) {
           this.no_plans = true
         // If client_details.plans is not set then query the API
         } else if (!client.plans || force || this.$parent.claims.user_type === 'Admin') {

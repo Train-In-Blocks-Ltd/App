@@ -845,7 +845,7 @@
                     Select all
                   </a>
                   <a
-                    v-if="plan.sessions && !isEditingSession && !weekIsEmpty"
+                    v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
                     @click="expand_all(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"

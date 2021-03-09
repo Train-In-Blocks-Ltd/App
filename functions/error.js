@@ -79,7 +79,7 @@ exports.handler = async function handler (event, context, callback) {
       headers,
       body: ''
     })
-  } else if (event.body && response.data.active) {
+  } else if (event.body && response.data.active === true) {
     const data = JSON.parse(event.body)
     try {
       const atlassian = await axios.post('https://traininblocks.atlassian.net/rest/api/3/issue',
