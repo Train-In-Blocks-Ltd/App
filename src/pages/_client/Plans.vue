@@ -69,10 +69,7 @@
         New Plan
       </p>
     </div>
-    <div>
-      <div :class="{ opened_sections: isNewPlanOpen }" class="section_a" />
-      <div :class="{ opened_sections: isNewPlanOpen }" class="section_b" />
-    </div>
+    <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
     <div id="client_notes" :class="{ activeState: editClientNotes }">
       <div class="client_notes__header">
         <p class="text--small">

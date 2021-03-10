@@ -40,8 +40,8 @@
   }
 
   /* Tab overlay */
-  .section_a,
-  .section_b {
+  .section_overlay {
+    height: 100%;
     position: fixed;
     top: 0;
     right: 0;
@@ -51,21 +51,12 @@
     backdrop-filter: blur(10px);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .section_a {
-    height: 50%
-  }
-  .section_b {
-    height: 50%;
-    top: 50%;
-    transition-delay: .2s
-  }
-  .section_a.opened_sections,
-  .section_b.opened_sections {
+  .section_overlay.opened_sections {
     width: 100%;
     z-index: 4
   }
   @supports not (backdrop-filter: blur(10px)) {
-    .section_a, .section_b {
+    .section_overlay {
       background-color: white
     }
   }

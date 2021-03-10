@@ -624,10 +624,7 @@
         Print
       </p>
     </div>
-    <div>
-      <div :class="{opened_sections: isStatsOpen}" class="section_a" />
-      <div :class="{opened_sections: isStatsOpen}" class="section_b" />
-    </div>
+    <div :class="{opened_sections: isStatsOpen}" class="section_overlay" />
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedSessions.length !== 0" class="multi-select">
         <p>

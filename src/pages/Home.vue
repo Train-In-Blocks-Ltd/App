@@ -48,10 +48,7 @@
         Install
       </p>
     </div>
-    <div>
-      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_a" />
-      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_b" />
-    </div>
+    <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
     <p v-if="$parent.no_clients" class="text--small grey text--no_clients">
       No clients added yet, use the button on the top-right of your screen.
     </p>
