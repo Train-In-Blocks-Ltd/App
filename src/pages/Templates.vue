@@ -73,6 +73,13 @@
 <template>
   <div id="templates">
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up
+        v-if="response !== ''"
+        :header="response"
+        :desc="response === 'New template created' ? `Edit and use it in a client's plan` : 'Your changes have been saved'"
+      />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedTemplates.length !== 0" class="multi-select">
         <p>
           <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
@@ -181,6 +188,7 @@ export default {
     return {
 
       search: '',
+      response: '',
 
       // CREATE
 
@@ -215,6 +223,20 @@ export default {
 
     // BACKGROUND
 
+    helper (type) {
+      setTimeout(() => { this.response = '' }, 5000)
+      switch (type) {
+        case 'new':
+          this.response = 'New template created'
+          break
+        case 'update':
+          this.response = 'Updated template'
+          break
+        case 'delete':
+          this.response = this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template'
+          break
+      }
+    },
     check_for_new () {
       this.expandedTemplates = []
       this.$parent.templates.forEach((template) => {
@@ -264,6 +286,7 @@ export default {
           this.selectedTemplates.forEach((templateId) => {
             this.delete_template(templateId)
           })
+          this.helper('delete')
           this.deselect_all()
         }
       }
@@ -303,6 +326,7 @@ export default {
           name: 'Untitled',
           note: ''
         }
+        this.helper('new')
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
@@ -327,6 +351,7 @@ export default {
           }
         )
         await this.$parent.get_templates(true)
+        this.helper('update')
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
