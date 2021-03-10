@@ -1011,7 +1011,7 @@ export default {
       responseHeader: '',
       responseDesc: '',
       versionName: 'Pegasus',
-      versionBuild: '3.0',
+      versionBuild: '3.1',
       newBuild: false,
       errorMsg: null,
       loading: false,
@@ -1413,6 +1413,8 @@ export default {
             )
           }
         }
+        this.responseHeader = 'Session updated'
+        this.responseDesc = 'Your changes have been saved'
       } catch (e) {
         this.resolve_error(e)
       }
