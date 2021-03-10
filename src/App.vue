@@ -824,6 +824,13 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up
+        v-if="responseHeader !== ''"
+        :header="responseHeader"
+        :desc="responseDesc"
+      />
+    </transition>
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="center_wrapped">
@@ -1000,6 +1007,8 @@ export default {
 
       // SYSTEM
 
+      responseHeader: '',
+      responseDesc: '',
       versionName: 'Pegasus',
       versionBuild: '3.0',
       newBuild: false,
@@ -1019,6 +1028,9 @@ export default {
   watch: {
     '$route' (to, from) {
       this.is_authenticated()
+    },
+    responseHeader () {
+      setTimeout(() => { this.responseHeader = '' }, 5000)
     }
   },
   async created () {
@@ -1164,7 +1176,7 @@ export default {
       this.dontLeave = true
       try {
         await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
-        this.helper('client_end', 'Client', 'delete')
+        this.helper('client_store', 'Client', 'delete')
         this.archive.no_archive = this.archive.clients.length === 0
       } catch (e) {
         this.resolve_error(e)

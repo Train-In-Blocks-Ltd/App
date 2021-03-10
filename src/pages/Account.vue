@@ -74,7 +74,7 @@
     >
       <div class="modal--reset">
         <div class="center_wrapped">
-          <form class="form_grid" @submit.prevent="change_password(), $parent.will_body_scroll(true)">
+          <form class="form_grid" @submit.prevent="change_password(), $modal.hide('reset-password'), $parent.will_body_scroll(true)">
             <div>
               <p class="text--large">
                 Stay safe
@@ -116,8 +116,18 @@
               required
               @input="check_password"
             >
+            <input
+              v-model="password.match"
+              type="password"
+              placeholder="Confirm new password"
+              aria-label="Confirm new password"
+              class="input--forms small_border_radius"
+              :class="{check: password.new !== password.match}"
+              required
+              @input="password.error = password.new === password.match ? '' : 'New password does not match'"
+            >
             <div class="reset_password_button_bar">
-              <button class="right_margin" type="submit" :disabled="password.check">
+              <button class="right_margin" type="submit" :disabled="password.check === null || password.new !== password.match">
                 Change your password
               </button>
               <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.will_body_scroll(true)">
@@ -126,9 +136,6 @@
             </div>
             <p v-if="password.error" class="error">
               {{ password.error }}
-            </p>
-            <p v-if="password.msg">
-              {{ password.msg }}
             </p>
           </form>
         </div>
@@ -188,9 +195,9 @@ export default {
       password: {
         old: null,
         new: null,
+        match: null,
         check: null,
-        error: null,
-        msg: null
+        error: null
       }
     }
   },
@@ -261,7 +268,6 @@ export default {
         )
         this.password.old = null
         this.password.new = null
-        this.password.msg = 'Password Updated Successfully'
         await this.$axios.post('/.netlify/functions/send-email',
           {
             to: this.$parent.claims.email,
@@ -270,6 +276,8 @@ export default {
             html: passChangeEmail()
           }
         )
+        this.$parent.responseHeader = 'Password changed'
+        this.$parent.responseDesc = 'Remember to not share it and keep it safe'
         this.$parent.end_loading()
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct'

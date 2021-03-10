@@ -104,9 +104,7 @@ export default {
   },
   data () {
     return {
-
-      // EDIT
-
+      response: '',
       editing_card: false,
       tempEditorStore: null
     }
@@ -135,6 +133,8 @@ export default {
         )
         await this.$parent.get_portfolio(true)
         this.$ga.event('Portfolio', 'update')
+        this.$parent.responseHeader = 'Portfolio updated'
+        this.$parent.responseDesc = 'Your clients can access this information'
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
