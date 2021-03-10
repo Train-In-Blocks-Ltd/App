@@ -354,13 +354,6 @@
 
 <template>
   <div id="plan">
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up
-        v-if="response !== ''"
-        :header="response"
-        :desc="response === 'Sessions have been progressed' ? `Please go through them to make sure that you're happy with it` : 'Get programming!'"
-      />
-    </transition>
     <modal name="info" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--info">
         <div class="center_wrapped">
@@ -578,7 +571,7 @@
       :adaptive="true"
       :click-to-close="false"
     >
-      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $parent.$parent.will_body_scroll(true)">
+      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), $parent.$parent.will_body_scroll(true)">
         <div class="center_wrapped">
           <p class="text--small">
             Create a similar plan
@@ -1077,7 +1070,6 @@ export default {
 
       expandedSessions: [],
       todayDate: '',
-      response: '',
       force: true,
 
       // WEEK
@@ -1195,8 +1187,10 @@ export default {
         }
       })
       this.$modal.hide('shift')
-      this.deselect_all()
       this.$ga.event('Session', 'shift')
+      this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session'
+      this.$parent.$parent.responseDesc = 'Your changes have been saved'
+      this.deselect_all()
     },
     copy_across_check () {
       this.simpleCopy = false
@@ -1295,15 +1289,19 @@ export default {
           this.update_session(session.id)
         }
       })
-      this.deselect_all()
       this.currentWeek = parseInt(this.moveTarget)
       this.$ga.event('Session', 'move')
+      this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session'
+      this.$parent.$parent.responseDesc = 'Your changes have been saved'
+      this.deselect_all()
     },
     async duplicate_plan (clientId) {
       const plan = this.helper('match_plan')
       await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
       this.$modal.hide('duplicate')
+      this.$parent.$parent.responseHeader = 'Plan duplicated'
+      this.$parent.$parent.responseDesc = 'Access it on your client\'s profile'
       this.$ga.event('Plan', 'duplicate')
     },
 
@@ -1318,6 +1316,8 @@ export default {
               this.update_session(session.id)
             }
           })
+          this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated'
+          this.$parent.$parent.responseDesc = 'Your changes have been saved'
           this.deselect_all()
         }
       }
@@ -1328,8 +1328,10 @@ export default {
           this.selectedSessions.forEach((sessionId) => {
             this.delete_session(sessionId)
           })
-          this.deselect_all()
           this.$ga.event('Session', 'bulk_delete')
+          this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted'
+          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.deselect_all()
         }
       }
     },
@@ -1375,6 +1377,8 @@ export default {
         this.isEditingSession = false
         this.editSession = null
         this.scan()
+        this.$parent.$parent.responseHeader = 'Session updated'
+        this.$parent.$parent.responseDesc = 'Your changes have been saved'
       }
     },
     cancel_session_notes () {
@@ -1926,6 +1930,8 @@ export default {
           this.$parent.$parent.clients_to_vue()
           this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
           this.$ga.event('Session', 'delete')
+          this.$parent.$parent.responseHeader = 'Plan deleted'
+          this.$parent.$parent.responseDesc = 'Your changes have been saved'
           this.$parent.$parent.end_loading()
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
@@ -1976,11 +1982,12 @@ export default {
         this.adherence()
         this.$ga.event('Session', 'new')
         if (!isCopy) {
-          this.response = `${this.new_session.name} has been added`
+          this.$parent.$parent.responseHeader = 'New session added'
+          this.$parent.$parent.responseDesc = 'Get programming!'
         } else {
-          this.response = 'Sessions have been progressed'
+          this.$parent.$parent.responseHeader = 'Sessions have been progressed'
+          this.$parent.$parent.responseDesc = 'Please go through them to make sure that you\'re happy with it'
         }
-        setTimeout(() => { this.response = '' }, 5000)
         this.new_session = {
           name: 'Untitled',
           date: this.todayDate,
