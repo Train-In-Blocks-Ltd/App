@@ -203,7 +203,6 @@
 <script>
 import { email, emailText, resetEmail, resetEmailText } from '../../components/email'
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
-const AlertModal = () => import(/* webpackChunkName: "components.alertmodal", webpackPrefetch: true  */ '../../components/AlertModal')
 
 export default {
   components: {
@@ -387,14 +386,9 @@ export default {
         this.$parent.resolve_error(e)
       }
       await this.check_client()
-      this.$modal.show(
-        AlertModal,
-        { msg: 'An activation email was sent to your client.' },
-        { height: '100%' },
-        { width: '100%' },
-        { adaptive: true },
-        { clickToClose: false }
-      )
+      this.$parent.responsePersist = true
+      this.$parent.responseHeader = 'An activation email was sent to your client'
+      this.$parent.responseDesc = 'Please ask them to check their inbox and spam mail'
       this.$parent.end_loading()
     },
 

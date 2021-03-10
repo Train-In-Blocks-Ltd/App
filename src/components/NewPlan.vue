@@ -62,9 +62,9 @@ export default {
             block_color: ''
           }
         )
-        this.$parent.response = `${this.new_plan.name} has been created`
+        this.$parent.$parent.$parent.responseHeader = `${this.new_plan.name} created`
+        this.$parent.$parent.$parent.responseDesc = 'You\'re all set, get programming'
         this.$parent.persistResponse = this.new_plan.name
-        this.$parent.response_delay()
 
         // Set old plans to null so that they can be repopulated
         let x

@@ -98,9 +98,9 @@ export default {
               notes: this.new_client.notes
             }
           )
-          this.$parent.response = `Added ${this.new_client.name}`
+          this.$parent.$parent.responseHeader = `Added ${this.new_client.name}`
+          this.$parent.$parent.responseDesc = 'Well done on getting a new client'
           this.$parent.persistResponse = this.new_client.name
-          this.$parent.response_delay()
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()
           this.new_client = {

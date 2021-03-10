@@ -54,9 +54,6 @@
 </style>
 <template>
   <div>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up v-if="response !== ''" :header="response" :desc="`You're all set, get programming`" />
-    </transition>
     <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <new-plan />
     </div>
@@ -164,14 +161,6 @@ export default {
   created () {
     this.$parent.$parent.will_body_scroll(true)
     this.$parent.check_client()
-  },
-  methods: {
-
-    // BACKGROUND AND MISC.
-
-    response_delay () {
-      setTimeout(() => { this.response = '' }, 5000)
-    }
   }
 }
 </script>

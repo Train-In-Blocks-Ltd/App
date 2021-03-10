@@ -1007,6 +1007,7 @@ export default {
 
       // SYSTEM
 
+      responsePersist: false,
       responseHeader: '',
       responseDesc: '',
       versionName: 'Pegasus',
@@ -1030,7 +1031,13 @@ export default {
       this.is_authenticated()
     },
     responseHeader () {
-      setTimeout(() => { this.responseHeader = '' }, 5000)
+      if (!this.responsePersist) {
+        setTimeout(() => {
+          this.responseHeader = ''
+          this.responseDesc = ''
+          this.responsePersist = false
+        }, 8000)
+      }
     }
   },
   async created () {
@@ -1201,6 +1208,8 @@ export default {
         // Get the client information again as we have just updated the client
         await this.clients_f()
         await this.clients_to_vue()
+        this.responseHeader = 'Client updated'
+        this.responseDesc = 'All your changes have been saved'
         this.end_loading()
       } catch (e) {
         this.resolve_error(e)
@@ -1263,6 +1272,8 @@ export default {
             )
           }
           this.helper('client_store', 'Client', 'archive')
+          this.responseHeader = 'Client archived'
+          this.responseDesc = 'Their data will be kept safe on the archive page'
           this.$router.push('/')
         } catch (e) {
           this.resolve_error(e)
@@ -1287,6 +1298,8 @@ export default {
           const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
           this.response = response.data
           this.helper('client_store', 'Client', 'unarchive')
+          this.responseHeader = 'Client unarchived'
+          this.responseDesc = 'You can access them back on the home page'
         } catch (e) {
           this.resolve_error(e)
         }

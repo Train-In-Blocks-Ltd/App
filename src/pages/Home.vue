@@ -20,9 +20,6 @@
 
 <template>
   <div id="home">
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up v-if="response !== ''" :header="response" :desc="'Well done on getting a new client'" />
-    </transition>
     <div v-if="isNewClientOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <new-client />
     </div>
@@ -117,7 +114,6 @@ export default {
 
       // CLIENT CREATION
 
-      response: '',
       persistResponse: '',
 
       // TAB STATES
@@ -143,9 +139,6 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    response_delay () {
-      setTimeout(() => { this.response = '' }, 5000)
-    },
     version () {
       if (localStorage.getItem('versionBuild') !== this.$parent.versionBuild) {
         this.$parent.newBuild = true

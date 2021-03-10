@@ -104,7 +104,6 @@ export default {
   },
   data () {
     return {
-      response: '',
       editing_card: false,
       tempEditorStore: null
     }

@@ -181,7 +181,6 @@ export default {
     return {
 
       search: '',
-      response: '',
 
       // CREATE
 
