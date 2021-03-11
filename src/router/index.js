@@ -143,7 +143,7 @@ const onAuthRequired = async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !(await Vue.prototype.$auth.isAuthenticated())) {
     // Navigate to custom login page
     next({ path: '/login' })
-  } else if (to.matched.some(record => record.path === '/login') || from.matched.some(record => record.path === '/login') || from.matched.some(record => record.path === '/implicit/callback')) {
+  } else if (to.matched.some(record => record.path === '/login') || from.matched.some(record => record.path === '/login') || to.matched.some(record => record.path === '/implicit/callback') || from.matched.some(record => record.path === '/implicit/callback')) {
     next()
   } else {
     next()
