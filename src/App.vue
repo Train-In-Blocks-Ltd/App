@@ -971,6 +971,7 @@
 
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
+import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ 'traininblocks-sw.js')
 
 export default {
   data () {
@@ -1053,7 +1054,7 @@ export default {
   },
   async mounted () {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/traininblocks-sw.js')
+      navigator.serviceWorker.register('/sw/traininblocks-sw.js')
     }
     window.addEventListener('beforeunload', this.confirmLeave)
     const self = this
