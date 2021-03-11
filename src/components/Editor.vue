@@ -139,7 +139,7 @@ div#rich_editor {
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
           <button
             :class="{ activeStyle: boldActive }"
-            title="Bold"
+            title="Bold (CMD/Ctrl + B)"
             :disabled="!firstClickOver"
             @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
           >
@@ -147,7 +147,7 @@ div#rich_editor {
           </button>
           <button
             :class="{ activeStyle: italicActive }"
-            title="Italic"
+            title="Italic (CMD/Ctrl + I)"
             :disabled="!firstClickOver"
             @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
           >
@@ -155,7 +155,7 @@ div#rich_editor {
           </button>
           <button
             :class="{ activeStyle: underlineActive }"
-            title="Underline"
+            title="Underline (CMD/Ctrl + U)"
             :disabled="!firstClickOver"
             @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
           >
@@ -457,7 +457,7 @@ export default {
     // TEXT
 
     format_style (style) {
-      const el = document.getSelection()
+      const el = window.getSelection()
       if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
