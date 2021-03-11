@@ -1,16 +1,14 @@
 'use strict'
-const path = require('path')
 const utils = require('./utils')
-const webpack = require('webpack')
 const config = require('../config')
+const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const env = require('../config/prod.env')
 const {InjectManifest} = require('workbox-webpack-plugin')
+const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -56,14 +54,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    // Ignore all locale files of moment.js
-    new webpack.IgnorePlugin({
-      resourceRegExp: /^\.\/locale$/,
-      contextRegExp: /moment$/
-    }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({	
-      'process.env': env	
+      'process.env': require('../config/prod.env')	
     }),
     // extract css into its own file
     new ExtractTextPlugin({
@@ -83,21 +76,20 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: config.build.index,
       template: 'index.html',
     }),
-    // copy custom static assets
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, '../static'),
-          to: config.build.assetsSubDirectory,
-          globOptions: {
-            ignore: ['.*']
-          }
-        }
-      ]
-    }),
+    new PreloadWebpackPlugin({
+      rel: 'preload',
+      include: 'initial',
+      fileBlacklist: [/\.svg/],
+      as(entry) {
+        if (/\.css$/.test(entry)) return 'style'
+        return 'script'
+      }
+    })
+    /*
     new InjectManifest({
       swSrc: './src/sw.js',
     })
+    */
   ]
 })
 if (process.env.REPORT) {

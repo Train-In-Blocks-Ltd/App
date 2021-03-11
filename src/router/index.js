@@ -140,17 +140,19 @@ const router = new Router({
   }
 })
 
-const onAuthRequired = async (from, to, next) => {
-  if (from.matched.some(record => record.meta.requiresAuth) && !(await Vue.prototype.$auth.isAuthenticated())) {
+const onAuthRequired = async (to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth) && !(await Vue.prototype.$auth.isAuthenticated())) {
     // Navigate to custom login page
     next({ path: '/login' })
+  } else if (to.matched.some(record => record.path === '/login') || from.matched.some(record => record.path === '/login') || from.matched.some(record => record.path === '/implicit/callback')) {
+    next()
   } else {
     next()
     Vue.prototype.$auth.oktaAuth.tokenManager.renew('accessToken')
   }
 }
 
-const userType = async (from, to, next) => {
+const userType = async (to, from, next) => {
   let result
   if (!localStorage.getItem('claims')) {
     const claims = await Vue.prototype.$auth.getUser()
@@ -166,7 +168,7 @@ const userType = async (from, to, next) => {
     result = false
   }
   if (result) {
-    if (from.matched.some(record => record.meta.requiresTrainer)) {
+    if (to.matched.some(record => record.meta.requiresTrainer)) {
       if (result.user_type === 'Admin') {
         next()
       } else if (result.user_type === 'Client') {
@@ -175,7 +177,7 @@ const userType = async (from, to, next) => {
       } else {
         next()
       }
-    } else if (from.matched.some(record => record.meta.requiresClient)) {
+    } else if (to.matched.some(record => record.meta.requiresClient)) {
       if (result.user_type === 'Admin') {
         next()
       } else if (result.user_type === 'Trainer') {

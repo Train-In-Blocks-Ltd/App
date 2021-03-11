@@ -2,11 +2,12 @@ import { BackgroundSyncPlugin } from 'workbox-background-sync'
 import { registerRoute } from 'workbox-routing'
 import { NetworkOnly, NetworkFirst } from 'workbox-strategies'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
+/*
 import { precacheAndRoute } from 'workbox-precaching'
 
 // Use with precache injection
 precacheAndRoute(self.__WB_MANIFEST)
-
+*/
 const CACHE = 'pwabuilder-precache'
 
 const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)/]

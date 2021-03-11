@@ -659,7 +659,6 @@
     }
   }
   @media (max-width: 768px) {
-
     /* Containers */
     .center_wrapped {
       width: 300px
@@ -724,7 +723,6 @@
   }
 
   @media (max-width: 576px) {
-
     /* Elements */
     ::-webkit-scrollbar {
       width: 0;
@@ -801,13 +799,17 @@
 
   /* Progress */
   #nprogress .bar {
+    /* stylelint-disable-next-line */
     background: #282828!important
   }
   #nprogress .peg {
+    /* stylelint-disable-next-line */
     box-shadow: 0 0 10px #282828, 0 0 5px #282828!important
   }
   #nprogress .spinner-icon {
+    /* stylelint-disable-next-line */
     border-top-color: #282828!important;
+    /* stylelint-disable-next-line */
     border-left-color: #282828!important
   }
 </style>
@@ -1037,6 +1039,9 @@ export default {
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
+    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+    }
     window.addEventListener('beforeunload', this.confirmLeave)
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
