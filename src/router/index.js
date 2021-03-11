@@ -26,6 +26,7 @@ Vue.use(Auth, {
   redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
+  autoRenew: false,
   async onSessionExpired () {
     await Vue.prototype.$auth.logout({ postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback' })
   }
