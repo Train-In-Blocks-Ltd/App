@@ -35,8 +35,4 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Content-Security-Policy = "upgrade-insecure-requests"
 
-[[headers]]
-  for = "/sw.js"
-    [headers.values]
-      Content-Type = 'text/javascript'
 
