@@ -5,6 +5,20 @@
   * {
     box-sizing: border-box
   }
+  :root {
+    --low_shadow: 0 0 20px 10px #28282808;
+    --high_shadow: 0 0 20px 10px #28282816;
+    --back: #F9F9F9;
+    --fore: white;
+    --base: #282828;
+    --base_light: #28282894;
+    --base_faint: #28282840;
+    --overlay_glass: #FFFFFFB3;
+    --calendar_highlight: #FFFFEE;
+    --skeleton_1: #F4F4F4;
+    --skeleton_2: #E4E4E4;
+    --link: blue
+  }
 
   /* Animation */
   .fadeIn {
@@ -46,7 +60,7 @@
     top: 0;
     right: 0;
     width: 0;
-    background-color: rgba(255, 255, 255, .7);
+    background-color: var(--overlay_glass);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -57,7 +71,7 @@
   }
   @supports not (backdrop-filter: blur(10px)) {
     .section_overlay {
-      background-color: white
+      background-color: var(--fore)
     }
   }
 
@@ -69,11 +83,11 @@
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    background-color: #F9F9F9
+    background-color: var(--back)
   }
   #app {
-    color: #282828;
-    background-color: #F9F9F9
+    color: var(--base);
+    background-color: var(--back)
   }
   main {
     margin-left: calc(38px + 2rem);
@@ -82,6 +96,13 @@
   }
   .notAuth {
     margin: 0
+  }
+  svg path {
+    fill: var(--base)
+  }
+  svg.no_fill path {
+    fill: none;
+    stroke: var(--base)
   }
 
   /* Containers */
@@ -93,7 +114,7 @@
   #templates,
   #client-plan,
   #portfolio {
-    background-color: #F9F9F9;
+    background-color: var(--back);
     padding: 2rem 10vw
   }
   .container--title {
@@ -135,7 +156,8 @@
     /* stylelint-disable-next-line */
     left: 0!important;
     min-width: 100%;
-    overflow-y: auto
+    overflow-y: auto;
+    background-color: var(--back)
   }
   div.vm--modal > div,
   div.vm--modal > form {
@@ -204,7 +226,7 @@
     display: flex
   }
   .recently_added {
-    border: 1px solid #282828
+    border: 1px solid var(--base)
   }
   .no_margin {
     margin: 0
@@ -219,7 +241,7 @@
     margin-right: 1rem
   }
   .grey {
-    color: #28282894
+    color: var(--base_light)
   }
   .allow_text_overflow {
     text-overflow: ellipsis
@@ -232,7 +254,7 @@
   /* Text buttons */
   .a_link {
     display: flex;
-    color: #282828;
+    color: var(--base);
     text-decoration: none;
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
@@ -259,8 +281,8 @@
     border: none;
     padding: .6rem 1.6rem;
     font-size: .8rem;
-    color: white;
-    background-color: #282828;
+    color: var(--back);
+    background-color: var(--base);
     transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   button:hover:not(:disabled) {
@@ -270,11 +292,11 @@
     transform: scale(.96)
   }
   button:focus {
-    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
+    box-shadow: 0 0 0 4px var(--base_light)
   }
   button:disabled,
   button[disabled] {
-    cursor: default;
+    cursor: not-allowed;
     opacity: .6
   }
   .delete:hover,
@@ -325,7 +347,8 @@
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1rem;
-    border: 1px solid #28282840;
+    color: var(--base);
+    border: 1px solid var(--base_faint);
     border-radius: 8px;
     background-color: transparent;
     box-shadow: none;
@@ -340,7 +363,7 @@
     opacity: .6
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
-    border: 1px solid #282828
+    border: 1px solid var(--base)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
   select.small_border_radius {
@@ -363,7 +386,7 @@
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   ::placeholder {
-    color: #28282899;
+    color: var(--base_light);
     opacity: 1; /* Firefox */
   }
 
@@ -391,13 +414,6 @@
   .logo_link:active {
     transform: scale(.9)
   }
-  svg.logo_svg path {
-    fill: #28282890;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .sidebar:hover svg.logo_svg path {
-    fill: #282828
-  }
 
   /* Navigation */
   .sidebar {
@@ -407,8 +423,8 @@
     justify-content: flex-end;
     padding: 2rem 1rem;
     position: fixed;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav_item {
@@ -433,7 +449,7 @@
   }
   .account_nav_item--text {
     user-select: none;
-    color: #282828;
+    color: var(--base);
     text-decoration: none;
     position: relative;
     border: 0;
@@ -445,9 +461,6 @@
     height: 1.4rem;
     vertical-align: bottom;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .account_nav_item--icon:not(.transparent) path {
-    fill: #282828
   }
 
   /* Tab options */
@@ -462,8 +475,8 @@
     width: 3rem;
     padding: .4rem 1rem .4rem .6rem;
     border-radius: 3px 0 0 3px;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .icon_open_middle {
@@ -512,14 +525,14 @@
     height: 10px
   }
   ::-webkit-scrollbar-track {
-    background-color: #28282821
+    background-color: var(--base_faint)
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    background-color: #28282890
+    background-color: var(--base)
   }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #28282860
+    background-color: var(--base_faint)
   }
 
   /* Archive and Home */
@@ -540,8 +553,8 @@
     top: 0;
     right: 0;
     text-align: right;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     width: 100%;
     z-index: 9;
     padding: 2rem;
@@ -558,16 +571,16 @@
     padding: 2rem;
     grid-gap: 1rem;
     font-weight: 400;
-    color: #282828;
+    color: var(--base);
     text-decoration: none;
-    box-shadow: 0 0 20px 10px #28282808;
-    background-color: white;
+    box-shadow: var(--low_shadow);
+    background-color: var(--fore);
     border-radius: 10px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link:hover,
   .plan_link:hover {
-    box-shadow: 0 0 20px 10px #28282816
+    box-shadow: var(--high_shadow)
   }
   .client_link__notes__content,
   .plan_link__notes__content {
@@ -577,7 +590,7 @@
   .client_link__notes__content *,
   .plan_link__notes__content *,
   .plan-name {
-    color: #282828;
+    color: var(--base);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link__notes__content p,
@@ -665,7 +678,7 @@
     }
     .client_link:hover,
     .plan_link:hover {
-      box-shadow: 0 0 20px 10px #28282808
+      box-shadow: var(--low_shadow)
     }
     .client_link:active,
     .plan_link:active {
@@ -800,17 +813,17 @@
   /* Progress */
   #nprogress .bar {
     /* stylelint-disable-next-line */
-    background: #282828!important
+    background-color: var(--base) !important
   }
   #nprogress .peg {
     /* stylelint-disable-next-line */
-    box-shadow: 0 0 10px #282828, 0 0 5px #282828!important
+    box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
   }
   #nprogress .spinner-icon {
     /* stylelint-disable-next-line */
-    border-top-color: #282828!important;
+    border-top-color: var(--base) !important;
     /* stylelint-disable-next-line */
-    border-left-color: #282828!important
+    border-left-color: var(--base) !important
   }
 </style>
 
@@ -1082,6 +1095,20 @@ export default {
           this.end_loading()
           break
       }
+    },
+    darkmode () {
+      document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
+      document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
+      document.documentElement.style.setProperty('--back', '#282828')
+      document.documentElement.style.setProperty('--fore', '#383838')
+      document.documentElement.style.setProperty('--base', 'white')
+      document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
+      document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
+      document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
+      document.documentElement.style.setProperty('--calendar_highlight', '#686868')
+      document.documentElement.style.setProperty('--skeleton_1', '#686868')
+      document.documentElement.style.setProperty('--skeleton_2', '#484848')
+      document.documentElement.style.setProperty('--link', 'white')
     },
 
     // AUTH

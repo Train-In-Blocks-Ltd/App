@@ -9,10 +9,10 @@ img {
   grid-gap: 4rem
 }
 .update_item {
-  background-color: white;
+  background-color: var(--fore);
   border-radius: 10px;
   padding: 2rem;
-  box-shadow: 0 0 20px 10px #28282810
+  box-shadow: var(--low_shadow)
 }
 </style>
 

@@ -7,7 +7,7 @@
   /* Client Link */
   .client_link svg {
     width: 20px;
-    fill: #282828;
+    fill: var(--base);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link__details {
@@ -19,14 +19,14 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
     margin: auto 0;
-    color: #282828;
+    color: var(--base);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link__details img, .client_link__details iframe {
     border-radius: 3px
   }
   .client_link.archived .client_link__details p, .client_link.archived .name {
-    color: #282828
+    color: var(--base)
   }
   .client_link__options {
     display: flex;
@@ -40,7 +40,7 @@
   }
   @media (max-width: 768px) {
     .client_link:hover svg {
-      fill: #282828
+      fill: var(--base)
     }
     .client_link__options a, .select_checkbox {
       margin: 0 1rem 0 0

@@ -27,6 +27,10 @@ div#rich_editor input[type='checkbox'],
 div#rich_show_content input[type='checkbox'] {
   margin: .4rem
 }
+div#rich_editor a,
+div#rich_show_content a {
+  color: var(--link)
+}
 </style>
 
 <style scoped>
@@ -43,11 +47,11 @@ div#rich_show_content input[type='checkbox'] {
   position: sticky;
   top: 0;
   padding-top: 1rem;
-  background-color: white
+  background-color: var(--fore)
 }
 #rich_toolbar {
-  background-color: white;
-  border: 1px solid #28282840;
+  background-color: var(--fore);
+  border: 1px solid var(--base_faint);
   border-radius: 5px 5px 0 0;
   padding: 0 1rem;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -58,7 +62,7 @@ div#rich_show_content input[type='checkbox'] {
 #rich_toolbar button {
   padding: 0;
   margin: .8rem 1rem .6rem 0;
-  color: #282828;
+  color: var(--base);
   background-color: transparent
 }
 .activeStyle {
@@ -73,12 +77,12 @@ div#rich_show_content input[type='checkbox'] {
 .pop_up--add_link, .pop_up--add_image, .pop_up--add_template {
   position: sticky;
   top: calc(1rem + 44.39px);
-  background-color: white;
+  background-color: var(--fore);
   z-index: 99;
   display: flex;
-  border-left: 1px solid #28282840;
-  border-right: 1px solid #28282840;
-  border-bottom: 1px solid #28282840;
+  border-left: 1px solid var(--base_faint);
+  border-right: 1px solid var(--base_faint);
+  border-bottom: 1px solid var(--base_faint);
   padding: .8rem
 }
 .pop_up--add_template {
@@ -96,7 +100,7 @@ div#rich_show_content input[type='checkbox'] {
 }
 .input--add_link {
   padding: .2rem .4rem;
-  border: 1px solid #28282840;
+  border: 1px solid var(--base_faint);
   border-radius: 3px;
   margin-right: 1rem
 }
@@ -109,7 +113,7 @@ button.add_link_submit {
 div#rich_editor {
   padding: 1rem;
   outline-width: 0;
-  border: 1px solid #28282840;
+  border: 1px solid var(--base_faint);
   border-top: none;
   border-radius: 0 0 5px 5px;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)

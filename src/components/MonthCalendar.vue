@@ -33,7 +33,7 @@
     transform: rotate(90deg) translateY(-5px) scale(.9)
   }
   .day_cell.is_today {
-    background-color: #FFFFEE;
+    background-color: var(--calendar_highlight);
     border-radius: 10px
   }
   .today {
@@ -46,7 +46,6 @@
   }
 
   /* Month */
-
   .month_container {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -57,17 +56,16 @@
   }
 
   /* Day */
-
   .day_cell {
     text-align: right;
     min-height: 100px;
-    background-color: white;
+    background-color: var(--fore);
     border-radius: 10px;
     padding: .6rem;
     transition: .6s all cubic-bezier(.165, .84, .44, 1)
   }
   .day_cell:hover {
-    box-shadow: 0 0 20px 10px #28282808
+    box-shadow: var(--low_shadow)
   }
   .holderCell {
     background-color: transparent
@@ -77,7 +75,6 @@
   }
 
   /* Event */
-
   .event {
     border: 2px solid transparent;
     border-radius: 5px;
@@ -86,7 +83,7 @@
     margin: .4rem 0
   }
   .showBorder {
-    border: 2px solid #282828
+    border: 2px solid var(--base)
   }
 </style>
 

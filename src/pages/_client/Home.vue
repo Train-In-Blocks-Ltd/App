@@ -22,7 +22,7 @@
 
   /* Floating Nav */
   .wrapper--floating_nav {
-    background-color: white;
+    background-color: var(--fore);
     width: 0;
     height: 100%;
     position: fixed;
@@ -30,7 +30,7 @@
     top: 0;
     padding: 0;
     z-index: 4;
-    box-shadow: 0 0 20px 10px #28282808;
+    box-shadow: var(--low_shadow);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .wrapper--floating_nav.openFloatingNav {
@@ -59,7 +59,7 @@
 
   /* Client Notes */
   .client_notes--header {
-    color: #282828;
+    color: var(--base);
     padding: .6rem .8rem
   }
 

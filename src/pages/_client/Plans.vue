@@ -1,20 +1,20 @@
 <style>
   /* Client Notes */
   .activeState {
-    border: 2px solid #28282860
+    border: 2px solid var(--base_faint)
   }
   #client_notes {
     margin: 4rem 0;
     padding: 2rem;
     border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow)
   }
   .client_notes__header {
     display: flex
   }
   .a--client_notes {
-    color: #282828;
+    color: var(--base);
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
@@ -64,7 +64,7 @@
       aria-label="New Plan"
       @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)"
     >
-      <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
+      <inline-svg class="no_fill" :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
         New Plan
       </p>

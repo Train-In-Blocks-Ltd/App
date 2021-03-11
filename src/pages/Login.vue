@@ -1,7 +1,7 @@
 <style scoped>
   a {
     text-decoration: none;
-    color: #282828
+    color: var(--base)
   }
   #login {
     text-align: left;
@@ -58,7 +58,7 @@
     padding: .6rem 1.6rem;
     font-size: .8rem;
     color: white;
-    background-color: #282828;
+    background-color: var(--base);
     margin: .6rem 0;
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
@@ -84,7 +84,7 @@
     margin: 2rem 0
   }
   .auth-org-logo.logo > path {
-    fill: #282828
+    fill: var(--base)
   }
   .okta-form-label {
     text-align: left
