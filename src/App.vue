@@ -971,7 +971,7 @@
 
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
-import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ 'traininblocks-sw.js')
+import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
 
 export default {
   data () {
