@@ -72,6 +72,10 @@ module.exports = {
           globOptions: {
             ignore: ['.*']
           }
+        },
+        {
+          from: path.resolve(__dirname, '../src/traininblocks-sw.js'),
+          to: config.build.assetsSubDirectory
         }
       ]
     }),
