@@ -3,8 +3,8 @@
     margin-bottom: 4rem
   }
   .plan_notes, .wrapper--session {
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     border-radius: 10px;
     padding: 2rem
   }

@@ -1,7 +1,6 @@
 <style scoped>
 
   /* Containers */
-
   .calendar_header {
     display: flex;
     justify-content: space-between;
@@ -16,7 +15,7 @@
     display: grid;
     grid-gap: 2rem;
     margin: 2rem 0;
-    background-color: white;
+    background-color: var(--fore);
     border-radius: 10px
   }
   .day_container {
@@ -26,8 +25,8 @@
     padding: 2rem
   }
   .is_today {
-    background-color: #FFFFEE;
-    box-shadow: 0 0 20px 10px #28282810;
+    background-color: var(--calendar_highlight);
+    box-shadow: var(--low_shadow);
     border-radius: 10px
   }
   .day_events {
@@ -40,11 +39,10 @@
     border: 3px solid transparent
   }
   .showBorder {
-    border: 3px solid #282828
+    border: 3px solid var(--base)
   }
 
   /* Header bar */
-
   .calendar_header__bar * {
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
@@ -81,7 +79,6 @@
   }
 
   /* Day */
-
   .day_header {
     display: flex;
     justify-content: space-between

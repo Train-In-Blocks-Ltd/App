@@ -11,7 +11,7 @@
     justify-content: space-between
   }
   .x_axis line, .y_axis line {
-    stroke: #282828;
+    stroke: var(--base);
     stroke-dasharray: 0;
     stroke-width: 2
   }
@@ -19,16 +19,16 @@
     cursor: pointer;
     outline-width: 0;
     fill: transparent;
-    stroke: #282828;
+    stroke: var(--base);
     stroke-width: 2;
     transition: .6s all cubic-bezier(.165, .84, .44, 1);
     animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
   }
   .plot circle:hover {
-    fill: #282828
+    fill: var(--base)
   }
   .plot line {
-    stroke: #28282860;
+    stroke: var(--base_faint);
     stroke-width: 2;
     transition: .6s all cubic-bezier(.165, .84, .44, 1);
     animation: 1.6s show cubic-bezier(.165, .84, .44, 1)

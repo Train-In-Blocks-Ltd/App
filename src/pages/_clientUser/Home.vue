@@ -11,6 +11,9 @@
   .show_html input[type='checkbox'] {
     margin: .4rem
   }
+  .show_html a {
+    color: var(--link)
+  }
 </style>
 
 <style scoped>
@@ -24,8 +27,8 @@
     margin: 2rem 0
   }
   .wrapper--session {
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     border-radius: 10px;
     padding: 2rem;
     margin: 2rem 0

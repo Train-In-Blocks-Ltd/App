@@ -16,7 +16,7 @@
   .policies {
     width: fit-content;
     text-decoration: none;
-    color: #282828;
+    color: var(--base);
     opacity: 1;
     margin: .4rem 0;
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)

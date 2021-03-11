@@ -6,7 +6,7 @@
     margin-top: 2rem
   }
   .activeState {
-    border: 2px solid #28282860
+    border: 2px solid var(--base_faint)
   }
   .container--templates {
     display: grid;
@@ -15,8 +15,8 @@
   }
   .wrapper--template {
     display: grid;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     padding: 2rem;
     border-radius: 10px
   }
@@ -50,8 +50,8 @@
     .multi-select {
       padding: 2rem;
       width: 100%;
-      background-color: white;
-      box-shadow: 0 0 20px 10px #28282816
+      background-color: var(--fore);
+      box-shadow: var(--high_shadow)
     }
     .multi-select a {
       grid-template-columns: 1fr

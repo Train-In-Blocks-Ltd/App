@@ -1,8 +1,5 @@
 <style>
   /* Containers */
-  #home {
-    border-right: 6px solid #F4F4F4
-  }
   .home--container {
     display: grid;
     margin-bottom: 2rem

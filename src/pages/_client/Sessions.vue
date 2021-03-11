@@ -17,7 +17,7 @@
   }
   .wrapper--progress-bar {
     user-select: none;
-    border: 1px solid #28282840;
+    border: 1px solid var(--base_faint);
     border-radius: 3px;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
@@ -80,7 +80,7 @@
     display: flex
   }
   .a--plan_notes {
-    color: #282828;
+    color: var(--base);
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
@@ -132,7 +132,7 @@
     display: grid;
     grid-template-rows: 6px 90px;
     cursor: pointer;
-    background-color: white;
+    background-color: var(--fore);
     min-width: 50px;
     height: 74px;
     width: 100%;
@@ -140,21 +140,21 @@
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .week:hover {
-    box-shadow: 0 0px 20px 10px #28282810
+    box-shadow: var(--low_shadow)
   }
   .weekActive {
     border-bottom: 2px solid #EEEEEE;
-    box-shadow: 0 0 20px 10px #28282816;
-    background-color: white;
+    box-shadow: var(--high_shadow);
+    background-color: var(--fore);
     height: 94px
   }
   .week.weekActive:hover {
-    box-shadow: 0 0 20px 10px #28282808
+    box-shadow: var(--low_shadow)
   }
   .change_week_color {
     height: 2rem;
     width: 4rem;
-    border: 2px solid #282828;
+    border: 2px solid var(--base);
     border-radius: 5px;
     cursor: pointer;
     transition: .6s all cubic-bezier(.165, .84, .44, 1)
@@ -163,12 +163,13 @@
     opacity: .6
   }
   .change_week_color.noColor {
-    background-color: white !important
+    /* stylelint-disable-next-line */
+    background-color: var(--fore) !important
   }
 
   /* Info */
   #info {
-    fill: #282828;
+    fill: var(--base);
     margin-left: 1rem;
     cursor: pointer;
     transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
@@ -182,7 +183,7 @@
 
   /* Sessions */
   .activeState {
-    border: 2px solid #28282860
+    border: 2px solid var(--base_faint)
   }
   .session--header {
     display: flex;
@@ -207,8 +208,8 @@
   }
   .wrapper--session, #plan_notes {
     display: grid;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     padding: 2rem;
     border-radius: 10px
   }
