@@ -1053,7 +1053,7 @@ export default {
   },
   async mounted () {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register('/traininblocks-sw.js')
     }
     window.addEventListener('beforeunload', this.confirmLeave)
     const self = this
