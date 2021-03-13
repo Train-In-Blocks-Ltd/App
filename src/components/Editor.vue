@@ -169,7 +169,7 @@ div#rich_editor {
             :class="{ activeStyle: olActive }"
             title="Ordered List"
             :disabled="!firstClickOver"
-            @click="add_ol(), check_cmd_state(), focus_on_editor()"
+            @click="add_list('ol'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
           </button>
@@ -177,7 +177,7 @@ div#rich_editor {
             :class="{ activeStyle: ulActive }"
             title="Unordered List"
             :disabled="!firstClickOver"
-            @click="add_ul(), check_cmd_state(), focus_on_editor()"
+            @click="add_list('ul'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
@@ -515,29 +515,27 @@ export default {
 
     // LISTS
 
-    add_ol () {
+    add_list (tag) {
       let forceFocus = false
+      const olNode = document.createElement(tag)
+      const liNode = document.createElement('li')
       if (this.savedSelection === null) {
         forceFocus = true
       }
       this.restore_selection()
+      const sel = window.getSelection()
       if (!forceFocus) {
-        this.paste_html_at_caret('<ol><li>Item</li></ol>', true)
+        const range = new Range()
+        const isEmpty = sel.focusNode.length || 0
+        range.setStart(sel.focusNode, 0)
+        range.setEnd(sel.focusNode, sel.focusNode.length)
+        window.getSelection().removeAllRanges()
+        window.getSelection().addRange(range)
+        range.surroundContents(liNode)
+        range.surroundContents(olNode)
+        range.collapse(isEmpty === 0)
       } else {
-        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ol><li></li></ol>')
-      }
-      this.update_edited_notes()
-    },
-    add_ul () {
-      let forceFocus = false
-      if (this.savedSelection === null) {
-        forceFocus = true
-      }
-      this.restore_selection()
-      if (!forceFocus) {
-        this.paste_html_at_caret('<ul><li>Item</li></ul>', true)
-      } else {
-        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ul><li></li></ul>')
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<${tag}><li></li></${tag}>`)
       }
       this.update_edited_notes()
     },
