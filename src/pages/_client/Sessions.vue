@@ -1767,7 +1767,6 @@ export default {
         }
         m.forEach((loadMatch, groupIndex) => {
           if (groupIndex === 2 && isNaN(loadMatch)) {
-            console.log(loadMatch, groupIndex)
             this.protocolError.push({
               sessionName: exerciseDataPacket[0],
               exercise: exerciseDataPacket[1],

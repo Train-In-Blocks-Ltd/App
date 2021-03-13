@@ -606,7 +606,7 @@ export default {
             reader.readAsDataURL(result)
           },
           error (err) {
-            console.log(err.message)
+            console.error(err.message)
           }
         })
       }
