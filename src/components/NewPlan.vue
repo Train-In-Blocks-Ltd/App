@@ -51,13 +51,6 @@ export default {
     this.$refs.name.focus()
   },
   methods: {
-    today () {
-      const today = new Date()
-      const dd = String(today.getDate()).padStart(2, '0')
-      const mm = String(today.getMonth() + 1).padStart(2, '0')
-      const yyyy = today.getFullYear()
-      return yyyy + '-' + mm + '-' + dd
-    },
     async create_plan () {
       try {
         this.$parent.$parent.$parent.dontLeave = true
@@ -69,9 +62,9 @@ export default {
             block_color: ''
           }
         )
-        this.$parent.response = `${this.new_plan.name} has been created`
+        this.$parent.$parent.$parent.responseHeader = `${this.new_plan.name} created`
+        this.$parent.$parent.$parent.responseDesc = 'You\'re all set, get programming'
         this.$parent.persistResponse = this.new_plan.name
-        this.$parent.response_delay()
 
         // Set old plans to null so that they can be repopulated
         let x

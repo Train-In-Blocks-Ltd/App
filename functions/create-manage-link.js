@@ -48,7 +48,7 @@ exports.handler = async function handler (event, context, callback) {
       })
     } catch (e) {
       return callback(null, {
-        statusCode: 502,
+        statusCode: 500,
         headers,
         body: JSON.stringify(e, response)
       })

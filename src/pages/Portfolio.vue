@@ -3,7 +3,7 @@
   .trainer_info input {
     width: 100%;
     background-color: initial;
-    border: 1px solid #28282840;
+    border: 1px solid var(--base_faint);
     padding: .6rem 1rem;
     border-radius: 8px;
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
@@ -13,7 +13,7 @@
   }
   .trainer_info input:focus {
     opacity: 1;
-    border: 1px solid #282828;
+    border: 1px solid var(--base);
     padding: .6rem 1.4rem
   }
   .trainer_info .trainer_info__business {
@@ -27,8 +27,8 @@
   /* Card */
   .wrapper_card {
     display: grid;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     padding: 2rem;
     border-radius: 10px;
     margin: 4rem 0
@@ -104,9 +104,6 @@ export default {
   },
   data () {
     return {
-
-      // EDIT
-
       editing_card: false,
       tempEditorStore: null
     }
@@ -135,6 +132,8 @@ export default {
         )
         await this.$parent.get_portfolio(true)
         this.$ga.event('Portfolio', 'update')
+        this.$parent.responseHeader = 'Portfolio updated'
+        this.$parent.responseDesc = 'Your clients can access this information'
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)

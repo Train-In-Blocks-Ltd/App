@@ -1,20 +1,20 @@
 <style>
   /* Client Notes */
   .activeState {
-    border: 2px solid #28282860
+    border: 2px solid var(--base_faint)
   }
   #client_notes {
     margin: 4rem 0;
     padding: 2rem;
     border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow)
   }
   .client_notes__header {
     display: flex
   }
   .a--client_notes {
-    color: #282828;
+    color: var(--base);
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
@@ -64,15 +64,12 @@
       aria-label="New Plan"
       @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)"
     >
-      <inline-svg :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
+      <inline-svg class="no_fill" :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
         New Plan
       </p>
     </div>
-    <div>
-      <div :class="{ opened_sections: isNewPlanOpen }" class="section_a" />
-      <div :class="{ opened_sections: isNewPlanOpen }" class="section_b" />
-    </div>
+    <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
     <div id="client_notes" :class="{ activeState: editClientNotes }">
       <div class="client_notes__header">
         <p class="text--small">
@@ -105,16 +102,6 @@
       <p class="text--large">
         Plans
       </p>
-      <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-        <div v-if="response !== ''" class="text--new_msg">
-          <p class="text--small">
-            {{ response }}
-          </p>
-          <p class="text--small grey">
-            You're all set, get programming
-          </p>
-        </div>
-      </transition>
       <p v-if="$parent.no_plans" class="text--small grey text--no-plans fadeIn">
         No plans yet, use the button on the top-right of your screen
       </p>
@@ -171,21 +158,6 @@ export default {
   created () {
     this.$parent.$parent.will_body_scroll(true)
     this.$parent.check_client()
-  },
-  methods: {
-
-    // BACKGROUND AND MISC.
-
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ')
-      } else {
-        return dataIn
-      }
-    },
-    response_delay () {
-      setTimeout(() => { this.response = '' }, 5000)
-    }
   }
 }
 </script>

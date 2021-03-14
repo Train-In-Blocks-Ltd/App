@@ -1,8 +1,10 @@
 'use strict'
 const path = require('path')
+const webpack = require('webpack')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -16,8 +18,7 @@ const createLintingRule = () => ({
     {
     loader: 'eslint-loader',
       options: {
-        formatter: require('eslint-friendly-formatter'),
-        emitWarning: !config.dev.showEslintErrorsInOverlay
+        formatter: require('eslint-friendly-formatter')
       }
     }
   ]
@@ -56,6 +57,23 @@ module.exports = {
     ]
   },
   plugins: [
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    // Ignore all locale files of moment.js
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/
+    }),
+    // copy custom static assets
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../static'),
+          to: config.build.assetsSubDirectory,
+          globOptions: {
+            ignore: ['.*']
+          }
+        }
+      ]
+    }),
   ]
 }

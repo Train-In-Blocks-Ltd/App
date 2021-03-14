@@ -30,6 +30,13 @@
 <template>
   <div id="archive">
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up
+        v-if="response !== ''"
+        :header="response"
+        :desc="'Your clients can access this information'"
+      />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedClients.length !== 0" class="multi-select">
         <p>
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
@@ -115,10 +122,10 @@ export default {
   },
   methods: {
 
-    // CHECKBOX
+    // Checkbox
 
     change_select_checkbox (id) {
-      if (this.selectedClients.includes(id) === false) {
+      if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)
       } else {
         const idx = this.selectedClients.indexOf(id)
@@ -145,7 +152,9 @@ export default {
           this.selectedClients.forEach((clientId) => {
             this.$parent.client_delete(clientId)
           })
-          this.selectedClients = []
+          this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete'
+          this.$parent.responseDesc = 'All their data have been removed'
+          this.deselect_all()
         }
       }
     }

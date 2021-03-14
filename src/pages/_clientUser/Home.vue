@@ -1,3 +1,21 @@
+<style>
+  .show_html > div,
+  .show_html > p {
+    margin: .6rem 0
+  }
+  .show_html img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  .show_html input[type='checkbox'] {
+    margin: .4rem
+  }
+  .show_html a {
+    color: var(--link)
+  }
+</style>
+
 <style scoped>
   /* Containers */
   .plan_grid {
@@ -9,8 +27,8 @@
     margin: 2rem 0
   }
   .wrapper--session {
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     border-radius: 10px;
     padding: 2rem;
     margin: 2rem 0
@@ -29,10 +47,7 @@
 <template>
   <div id="home">
     <div v-if="$parent.portfolio">
-      <div>
-        <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_a" />
-        <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_b" />
-      </div>
+      <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_overlay" />
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
           <p class="text--large">
@@ -233,40 +248,22 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '')
-      } else {
-        return dataIn
-      }
-    },
     complete (planId, sessionId) {
-      for (const plan of this.$parent.clientUser.plans) {
-        if (plan.id === planId) {
-          for (const session of plan.sessions) {
-            if (session.id === sessionId) {
-              if (session.checked === 0) {
-                session.checked = 1
-                this.check = 1
-              } else {
-                session.checked = 0
-                this.check = 0
-              }
-            }
-          }
-        }
+      const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
+      const session = plan.sessions.find(session => session.id === sessionId)
+      if (session.checked === 0) {
+        session.checked = 1
+        this.check = 1
+      } else {
+        session.checked = 0
+        this.check = 0
       }
       this.$parent.update_session(planId, sessionId)
     },
-
-    // DATE/TIME
-
     todays_session () {
-      let today = new Date()
-      today = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
       this.$parent.clientUser.plans.forEach((plan) => {
         plan.sessions.forEach((session) => {
-          if (session.date === today) {
+          if (session.date === this.today()) {
             this.todays_sessions_store.push(session.id)
           }
         })

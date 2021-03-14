@@ -1,8 +1,5 @@
 <style>
   /* Containers */
-  #home {
-    border-right: 6px solid #F4F4F4
-  }
   .home--container {
     display: grid;
     margin-bottom: 2rem
@@ -48,10 +45,7 @@
         Install
       </p>
     </div>
-    <div>
-      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_a" />
-      <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_b" />
-    </div>
+    <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
     <p v-if="$parent.no_clients" class="text--small grey text--no_clients">
       No clients added yet, use the button on the top-right of your screen.
     </p>
@@ -68,14 +62,6 @@
         class="text--small search"
         aria-label="Find a client"
       >
-      <div v-if="response !== ''" class="text--new_msg">
-        <p class="text--small">
-          {{ response }}
-        </p>
-        <p class="text--small grey">
-          Well done on getting a new client
-        </p>
-      </div>
       <div class="container--clients">
         <!-- Perform case insensitive search -->
         <router-link
@@ -122,7 +108,6 @@ export default {
 
       // CLIENT CREATION
 
-      response: '',
       persistResponse: '',
 
       // TAB STATES
@@ -148,9 +133,6 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    response_delay () {
-      setTimeout(() => { this.response = '' }, 5000)
-    },
     version () {
       if (localStorage.getItem('versionBuild') !== this.$parent.versionBuild) {
         this.$parent.newBuild = true

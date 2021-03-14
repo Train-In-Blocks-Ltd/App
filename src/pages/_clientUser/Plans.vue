@@ -3,8 +3,8 @@
     margin-bottom: 4rem
   }
   .plan_notes, .wrapper--session {
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     border-radius: 10px;
     padding: 2rem
   }
@@ -235,7 +235,7 @@ export default {
     this.$parent.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
-    await this.$parent.sort_sessions_plan()
+    await this.sort_sessions(this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id)))
     await this.scan()
     this.$parent.end_loading()
   },
@@ -250,61 +250,34 @@ export default {
       }, 100)
     },
     complete (planId, sessionId) {
-      for (const plan of this.$parent.clientUser.plans) {
-        if (plan.id === planId) {
-          for (const session of plan.sessions) {
-            if (session.id === sessionId) {
-              if (session.checked === 0) {
-                session.checked = 1
-                this.check = 1
-              } else {
-                session.checked = 0
-                this.check = 0
-              }
-            }
-          }
-        }
+      const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
+      const session = plan.sessions.find(session => session.id === sessionId)
+      if (session.checked === 0) {
+        session.checked = 1
+        this.check = 1
+      } else {
+        session.checked = 0
+        this.check = 0
       }
       this.$parent.update_session(planId, sessionId)
     },
     scan () {
       this.sessionDates.length = 0
-      this.$parent.clientUser.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
-          if (plan.sessions !== null) {
-            plan.sessions.forEach((session) => {
-              this.sessionDates.push({
-                title: session.name,
-                date: session.date,
-                color: weekColor[session.week_id - 1],
-                textColor: this.accessible_colors(weekColor[session.week_id - 1]),
-                week_id: session.week_id,
-                session_id: session.id
-              })
-            })
-          }
-        }
-      })
+      const plan = this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+      const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
+      if (plan.sessions !== null) {
+        plan.sessions.forEach((session) => {
+          this.sessionDates.push({
+            title: session.name,
+            date: session.date,
+            color: weekColor[session.week_id - 1],
+            textColor: this.accessible_colors(weekColor[session.week_id - 1]),
+            week_id: session.week_id,
+            session_id: session.id
+          })
+        })
+      }
       this.forceUpdate += 1
-    },
-    accessible_colors (hex) {
-      if (hex !== undefined) {
-        hex = hex.replace('#', '')
-        const r = parseInt(hex.substring(0, 2), 16)
-        const g = parseInt(hex.substring(2, 4), 16)
-        const b = parseInt(hex.substring(4, 6), 16)
-        const result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
-        const color = `rgb(${result}, ${result}, ${result})`
-        return color
-      }
-    },
-    remove_brackets_and_checkbox (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '')
-      } else {
-        return dataIn
-      }
     }
   }
 }

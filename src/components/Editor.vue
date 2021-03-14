@@ -7,14 +7,11 @@ div#rich_editor {
 div#rich_editor > div,
 div#rich_editor > p,
 div#rich_show_content > div,
-div#rich_show_content > p,
-.show_html > div,
-.show_html > p {
+div#rich_show_content > p {
   margin: .6rem 0
 }
 div#rich_editor img,
-div#rich_show_content img,
-.show_html img {
+div#rich_show_content img {
   border-radius: 10px;
   max-width: 80%;
   margin: 1rem 0
@@ -27,9 +24,12 @@ div#rich_editor img[onclick='resize(this)']:hover {
   opacity: .6
 }
 div#rich_editor input[type='checkbox'],
-div#rich_show_content input[type='checkbox'],
-.show_html input[type='checkbox'] {
+div#rich_show_content input[type='checkbox'] {
   margin: .4rem
+}
+div#rich_editor a,
+div#rich_show_content a {
+  color: var(--link)
 }
 </style>
 
@@ -47,11 +47,11 @@ div#rich_show_content input[type='checkbox'],
   position: sticky;
   top: 0;
   padding-top: 1rem;
-  background-color: white
+  background-color: var(--fore)
 }
 #rich_toolbar {
-  background-color: white;
-  border: 1px solid #28282840;
+  background-color: var(--fore);
+  border: 1px solid var(--base_faint);
   border-radius: 5px 5px 0 0;
   padding: 0 1rem;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -62,7 +62,7 @@ div#rich_show_content input[type='checkbox'],
 #rich_toolbar button {
   padding: 0;
   margin: .8rem 1rem .6rem 0;
-  color: #282828;
+  color: var(--base);
   background-color: transparent
 }
 .activeStyle {
@@ -77,12 +77,12 @@ div#rich_show_content input[type='checkbox'],
 .pop_up--add_link, .pop_up--add_image, .pop_up--add_template {
   position: sticky;
   top: calc(1rem + 44.39px);
-  background-color: white;
+  background-color: var(--fore);
   z-index: 99;
   display: flex;
-  border-left: 1px solid #28282840;
-  border-right: 1px solid #28282840;
-  border-bottom: 1px solid #28282840;
+  border-left: 1px solid var(--base_faint);
+  border-right: 1px solid var(--base_faint);
+  border-bottom: 1px solid var(--base_faint);
   padding: .8rem
 }
 .pop_up--add_template {
@@ -100,7 +100,7 @@ div#rich_show_content input[type='checkbox'],
 }
 .input--add_link {
   padding: .2rem .4rem;
-  border: 1px solid #28282840;
+  border: 1px solid var(--base_faint);
   border-radius: 3px;
   margin-right: 1rem
 }
@@ -113,7 +113,7 @@ button.add_link_submit {
 div#rich_editor {
   padding: 1rem;
   outline-width: 0;
-  border: 1px solid #28282840;
+  border: 1px solid var(--base_faint);
   border-top: none;
   border-radius: 0 0 5px 5px;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
@@ -143,7 +143,7 @@ div#rich_editor {
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
           <button
             :class="{ activeStyle: boldActive }"
-            title="Bold"
+            title="Bold (CMD/Ctrl + B)"
             :disabled="!firstClickOver"
             @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
           >
@@ -151,7 +151,7 @@ div#rich_editor {
           </button>
           <button
             :class="{ activeStyle: italicActive }"
-            title="Italic"
+            title="Italic (CMD/Ctrl + I)"
             :disabled="!firstClickOver"
             @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
           >
@@ -159,7 +159,7 @@ div#rich_editor {
           </button>
           <button
             :class="{ activeStyle: underlineActive }"
-            title="Underline"
+            title="Underline (CMD/Ctrl + U)"
             :disabled="!firstClickOver"
             @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
           >
@@ -169,7 +169,7 @@ div#rich_editor {
             :class="{ activeStyle: olActive }"
             title="Ordered List"
             :disabled="!firstClickOver"
-            @click="add_ol(), check_cmd_state(), focus_on_editor()"
+            @click="add_list('ol'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
           </button>
@@ -177,7 +177,7 @@ div#rich_editor {
             :class="{ activeStyle: ulActive }"
             title="Unordered List"
             :disabled="!firstClickOver"
-            @click="add_ul(), check_cmd_state(), focus_on_editor()"
+            @click="add_list('ul'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
@@ -461,7 +461,7 @@ export default {
     // TEXT
 
     format_style (style) {
-      const el = document.getSelection()
+      const el = window.getSelection()
       if (document.activeElement.contentEditable !== 'true') {
         this.focus_on_editor()
       }
@@ -515,29 +515,27 @@ export default {
 
     // LISTS
 
-    add_ol () {
+    add_list (tag) {
       let forceFocus = false
+      const olNode = document.createElement(tag)
+      const liNode = document.createElement('li')
       if (this.savedSelection === null) {
         forceFocus = true
       }
       this.restore_selection()
+      const sel = window.getSelection()
       if (!forceFocus) {
-        this.paste_html_at_caret('<ol><li>Item</li></ol>', true)
+        const range = new Range()
+        const isEmpty = sel.focusNode.length || 0
+        range.setStart(sel.focusNode, 0)
+        range.setEnd(sel.focusNode, sel.focusNode.length)
+        window.getSelection().removeAllRanges()
+        window.getSelection().addRange(range)
+        range.surroundContents(liNode)
+        range.surroundContents(olNode)
+        range.collapse(isEmpty === 0)
       } else {
-        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ol><li></li></ol>')
-      }
-      this.update_edited_notes()
-    },
-    add_ul () {
-      let forceFocus = false
-      if (this.savedSelection === null) {
-        forceFocus = true
-      }
-      this.restore_selection()
-      if (!forceFocus) {
-        this.paste_html_at_caret('<ul><li>Item</li></ul>', true)
-      } else {
-        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', '<ul><li></li></ul>')
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<${tag}><li></li></${tag}>`)
       }
       this.update_edited_notes()
     },
@@ -608,7 +606,7 @@ export default {
             reader.readAsDataURL(result)
           },
           error (err) {
-            console.log(err.message)
+            console.error(err.message)
           }
         })
       }

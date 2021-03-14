@@ -1,7 +1,6 @@
 <style scoped>
 
   /* Containers */
-
   .calendar_header {
     display: flex;
     justify-content: space-between;
@@ -15,13 +14,20 @@
   .week_container {
     display: grid;
     grid-gap: 2rem;
-    margin: 2rem 0
+    margin: 2rem 0;
+    background-color: var(--fore);
+    border-radius: 10px
   }
   .day_container {
     display: grid;
     grid-template-columns: .1fr 1fr;
     grid-gap: 4rem;
-    min-height: 50px
+    padding: 2rem
+  }
+  .is_today {
+    background-color: var(--calendar_highlight);
+    box-shadow: var(--low_shadow);
+    border-radius: 10px
   }
   .day_events {
     display: grid;
@@ -33,11 +39,10 @@
     border: 3px solid transparent
   }
   .showBorder {
-    border: 3px solid #282828
+    border: 3px solid var(--base)
   }
 
   /* Header bar */
-
   .calendar_header__bar * {
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
@@ -74,7 +79,6 @@
   }
 
   /* Day */
-
   .day_header {
     display: flex;
     justify-content: space-between
@@ -130,6 +134,7 @@
       <div
         v-for="(day, index) in thisWeek"
         :key="'day-' + index"
+        :class="{ is_today: day.date === today() }"
         class="day_container"
       >
         <div class="day_header">

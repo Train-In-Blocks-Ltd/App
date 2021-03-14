@@ -1,7 +1,7 @@
 <style scoped>
   a {
     text-decoration: none;
-    color: #282828
+    color: var(--base)
   }
   #login {
     text-align: left;
@@ -58,7 +58,7 @@
     padding: .6rem 1.6rem;
     font-size: .8rem;
     color: white;
-    background-color: #282828;
+    background-color: var(--base);
     margin: .6rem 0;
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
@@ -84,7 +84,7 @@
     margin: 2rem 0
   }
   .auth-org-logo.logo > path {
-    fill: #282828
+    fill: var(--base)
   }
   .okta-form-label {
     text-align: left
@@ -135,7 +135,7 @@
 </style>
 
 <template>
-  <div v-if="!this.$parent.authenticated" id="login">
+  <div v-if="!$parent.authenticated" id="login">
     <splash v-if="!splashed" />
     <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
     <div id="okta-signin-container" />
@@ -214,7 +214,7 @@ export default {
         baseUrl: process.env.ISSUER,
         issuer: process.env.ISSUER + '/oauth2/default',
         clientId: process.env.CLIENT_ID,
-        redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
+        redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
         i18n: {
           en: {
             'primaryauth.title': '',
@@ -230,7 +230,14 @@ export default {
           pkce: true,
           display: 'page',
           issuer: process.env.ISSUER + '/oauth2/default',
-          scopes: ['openid', 'profile', 'email']
+          scopes: ['openid', 'profile', 'email'],
+          cookies: {
+            secure: true
+          },
+          tokenManager: {
+            autoRenew: true,
+            expireEarlySeconds: 120
+          }
         }
       })
 
@@ -260,6 +267,7 @@ export default {
     }
   },
   async beforeDestroy () {
+    window.setTimeout(this.$auth.oktaAuth.tokenManager.renew('accessToken'), 3500)
     await this.$parent.is_authenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()

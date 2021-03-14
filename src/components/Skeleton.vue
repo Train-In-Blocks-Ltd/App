@@ -17,12 +17,12 @@
   .rect {
     display: grid;
     grid-gap: 2rem;
-    background-color: #E4E4E4;
+    background-color: var(--skeleton_2);
     border-radius: 10px;
     animation: fade .6s linear infinite alternate-reverse
   }
   .rect__title, .rect__content, .rect__box, .rect__large_text, .rect__small_text {
-    background: linear-gradient(90deg, #F4F4F4 8%, #E4E4E4 18%, #F4F4F4 33%);
+    background: linear-gradient(90deg, var(--skeleton_1) 8%, var(--skeleton_2) 18%, var(--skeleton_1) 33%);
     border-radius: 10px;
     animation: shimmer 5s linear infinite forwards
   }

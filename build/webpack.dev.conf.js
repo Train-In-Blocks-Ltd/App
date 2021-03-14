@@ -1,7 +1,7 @@
 'use strict'
 const utils = require('./utils')
-const webpack = require('webpack')
 const config = require('../config')
+const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
@@ -53,7 +53,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       'process.env': require('../config/dev.env')	
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: config.build.index,

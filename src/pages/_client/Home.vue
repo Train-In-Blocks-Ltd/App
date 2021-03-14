@@ -22,7 +22,7 @@
 
   /* Floating Nav */
   .wrapper--floating_nav {
-    background-color: white;
+    background-color: var(--fore);
     width: 0;
     height: 100%;
     position: fixed;
@@ -30,7 +30,7 @@
     top: 0;
     padding: 0;
     z-index: 4;
-    box-shadow: 0 0 20px 10px #28282808;
+    box-shadow: var(--low_shadow);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .wrapper--floating_nav.openFloatingNav {
@@ -59,7 +59,7 @@
 
   /* Client Notes */
   .client_notes--header {
-    color: #282828;
+    color: var(--base);
     padding: .6rem .8rem
   }
 
@@ -203,7 +203,6 @@
 <script>
 import { email, emailText, resetEmail, resetEmailText } from '../../components/email'
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
-const AlertModal = () => import(/* webpackChunkName: "components.alertmodal", webpackPrefetch: true  */ '../../components/AlertModal')
 
 export default {
   components: {
@@ -274,16 +273,20 @@ export default {
           }
         )
         if (result.data.length > 0) {
-          if (result.data[0].status === 'ACTIVE' || result.data[0].status === 'RECOVERY') {
-            this.clientAlready = true
-            this.clientAlreadyMsg = 'User activated'
-          } else if (result.data[0].status === 'PROVISIONED') {
-            this.clientAlready = false
-            this.clientAlreadyMsg = 'Resend activation email'
-          } else if (result.data[0].status === 'SUSPENDED') {
-            this.clientSuspend = result.data[0].id
-            this.clientAlready = false
-            this.clientAlreadyMsg = 'Give Access'
+          switch (result.data[0].status) {
+            case 'ACTIVE' || 'RECOVERY':
+              this.clientAlready = true
+              this.clientAlreadyMsg = 'User activated'
+              break
+            case 'PROVISIONED':
+              this.clientAlready = false
+              this.clientAlreadyMsg = 'Resend activation email'
+              break
+            case 'SUSPENDED':
+              this.clientSuspend = result.data[0].id
+              this.clientAlready = false
+              this.clientAlreadyMsg = 'Give Access'
+              break
           }
         } else {
           this.clientAlready = false
@@ -383,14 +386,9 @@ export default {
         this.$parent.resolve_error(e)
       }
       await this.check_client()
-      this.$modal.show(
-        AlertModal,
-        { msg: 'An activation email was sent to your client.' },
-        { height: '100%' },
-        { width: '100%' },
-        { adaptive: true },
-        { clickToClose: false }
-      )
+      this.$parent.responsePersist = true
+      this.$parent.responseHeader = 'An activation email was sent to your client'
+      this.$parent.responseDesc = 'Please ask them to check their inbox and spam mail'
       this.$parent.end_loading()
     },
 
@@ -399,39 +397,30 @@ export default {
     async get_client_details (force) {
       this.$parent.loading = true
       try {
-        // Loop through clients
-        let x
-        for (x in this.$parent.clients) {
-          // If client matches client in route
-          if (this.$parent.clients[x].client_id === parseInt(this.$route.params.client_id)) {
-            // Set client_details variable with client details
-            this.$parent.client_details = this.$parent.clients[x]
-            // If client_details.plans is set to false
-            if (this.$parent.clients[x].plans === false && !force) {
-              this.no_plans = true
-            // If client_details.plans is not set then query the API
-            } else if (!this.$parent.clients[x].plans || force === true || this.$parent.claims.user_type === 'Admin') {
-              const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.$parent.clients[x].client_id}`)
-              // If there are no plans
-              if (response.data.length === 0) {
-                this.no_plans = true
-                this.$parent.clients[x].plans = false
-                // If there are plans set the clients to include plans
-              } else {
-                this.no_plans = false
-                this.$parent.clients[x].plans = response.data
-                // Update the localstorage with the plans
-                localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-              }
-            }
-            this.$parent.client_details = this.$parent.clients[x]
-            this.loading_plans = false
+        const client = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+        this.$parent.client_details = client
+        // If client_details.plans is set to false
+        if (client.plans === false && !force) {
+          this.no_plans = true
+        // If client_details.plans is not set then query the API
+        } else if (!client.plans || force || this.$parent.claims.user_type === 'Admin') {
+          const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
+          if (response.data.length === 0) {
+            this.no_plans = true
+            client.plans = false
+          } else {
+            this.no_plans = false
+            client.plans = response.data
+            localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
           }
         }
+        this.loading_plans = false
       } catch (e) {
         this.$parent.resolve_error(e)
       }
-      await this.get_sessions()
+      if (this.$route.params.id !== undefined) {
+        await this.get_sessions()
+      }
     },
     async get_sessions (force) {
       try {

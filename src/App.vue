@@ -5,6 +5,20 @@
   * {
     box-sizing: border-box
   }
+  :root {
+    --low_shadow: 0 0 20px 10px #28282808;
+    --high_shadow: 0 0 20px 10px #28282816;
+    --back: #F9F9F9;
+    --fore: white;
+    --base: #282828;
+    --base_light: #28282894;
+    --base_faint: #28282840;
+    --overlay_glass: #FFFFFFB3;
+    --calendar_highlight: #FFFFEE;
+    --skeleton_1: #F4F4F4;
+    --skeleton_2: #E4E4E4;
+    --link: blue
+  }
 
   /* Animation */
   .fadeIn {
@@ -40,33 +54,24 @@
   }
 
   /* Tab overlay */
-  .section_a,
-  .section_b {
+  .section_overlay {
+    height: 100%;
     position: fixed;
     top: 0;
     right: 0;
     width: 0;
-    background-color: rgba(255, 255, 255, .7);
+    background-color: var(--overlay_glass);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .section_a {
-    height: 50%
-  }
-  .section_b {
-    height: 50%;
-    top: 50%;
-    transition-delay: .2s
-  }
-  .section_a.opened_sections,
-  .section_b.opened_sections {
+  .section_overlay.opened_sections {
     width: 100%;
     z-index: 4
   }
   @supports not (backdrop-filter: blur(10px)) {
-    .section_a, .section_b {
-      background-color: white
+    .section_overlay {
+      background-color: var(--fore)
     }
   }
 
@@ -78,11 +83,11 @@
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    background-color: #F9F9F9
+    background-color: var(--back)
   }
   #app {
-    color: #282828;
-    background-color: #F9F9F9
+    color: var(--base);
+    background-color: var(--back)
   }
   main {
     margin-left: calc(38px + 2rem);
@@ -91,6 +96,13 @@
   }
   .notAuth {
     margin: 0
+  }
+  svg path {
+    fill: var(--base)
+  }
+  svg.no_fill path {
+    fill: none;
+    stroke: var(--base)
   }
 
   /* Containers */
@@ -102,7 +114,7 @@
   #templates,
   #client-plan,
   #portfolio {
-    background-color: #F9F9F9;
+    background-color: var(--back);
     padding: 2rem 10vw
   }
   .container--title {
@@ -144,7 +156,8 @@
     /* stylelint-disable-next-line */
     left: 0!important;
     min-width: 100%;
-    overflow-y: auto
+    overflow-y: auto;
+    background-color: var(--back)
   }
   div.vm--modal > div,
   div.vm--modal > form {
@@ -188,9 +201,6 @@
   .text--no_sessions {
     margin: 2rem 0 8rem 0
   }
-  .text--new_msg {
-    margin: 2rem 0
-  }
   .text--name {
     text-overflow: ellipsis;
     white-space: nowrap
@@ -216,7 +226,7 @@
     display: flex
   }
   .recently_added {
-    border: 1px solid #282828
+    border: 1px solid var(--base)
   }
   .no_margin {
     margin: 0
@@ -231,7 +241,7 @@
     margin-right: 1rem
   }
   .grey {
-    color: #28282894
+    color: var(--base_light)
   }
   .allow_text_overflow {
     text-overflow: ellipsis
@@ -244,7 +254,7 @@
   /* Text buttons */
   .a_link {
     display: flex;
-    color: #282828;
+    color: var(--base);
     text-decoration: none;
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
@@ -271,8 +281,8 @@
     border: none;
     padding: .6rem 1.6rem;
     font-size: .8rem;
-    color: white;
-    background-color: #282828;
+    color: var(--back);
+    background-color: var(--base);
     transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   button:hover:not(:disabled) {
@@ -282,11 +292,11 @@
     transform: scale(.96)
   }
   button:focus {
-    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
+    box-shadow: 0 0 0 4px var(--base_light)
   }
   button:disabled,
   button[disabled] {
-    cursor: default;
+    cursor: not-allowed;
     opacity: .6
   }
   .delete:hover,
@@ -337,7 +347,8 @@
     resize: none;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1rem;
-    border: 1px solid #28282840;
+    color: var(--base);
+    border: 1px solid var(--base_faint);
     border-radius: 8px;
     background-color: transparent;
     box-shadow: none;
@@ -352,7 +363,7 @@
     opacity: .6
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
-    border: 1px solid #282828
+    border: 1px solid var(--base)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
   select.small_border_radius {
@@ -375,7 +386,7 @@
     transition: all .4s cubic-bezier(.165, .84, .44, 1)
   }
   ::placeholder {
-    color: #28282899;
+    color: var(--base_light);
     opacity: 1; /* Firefox */
   }
 
@@ -403,13 +414,6 @@
   .logo_link:active {
     transform: scale(.9)
   }
-  svg.logo_svg path {
-    fill: #28282890;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .sidebar:hover svg.logo_svg path {
-    fill: #282828
-  }
 
   /* Navigation */
   .sidebar {
@@ -419,8 +423,8 @@
     justify-content: flex-end;
     padding: 2rem 1rem;
     position: fixed;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     transition: width .6s cubic-bezier(.165, .84, .44, 1)
   }
   .account_nav_item {
@@ -445,7 +449,7 @@
   }
   .account_nav_item--text {
     user-select: none;
-    color: #282828;
+    color: var(--base);
     text-decoration: none;
     position: relative;
     border: 0;
@@ -457,9 +461,6 @@
     height: 1.4rem;
     vertical-align: bottom;
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .account_nav_item--icon:not(.transparent) path {
-    fill: #282828
   }
 
   /* Tab options */
@@ -474,8 +475,8 @@
     width: 3rem;
     padding: .4rem 1rem .4rem .6rem;
     border-radius: 3px 0 0 3px;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     transition: all 1s cubic-bezier(.165, .84, .44, 1)
   }
   .icon_open_middle {
@@ -524,14 +525,14 @@
     height: 10px
   }
   ::-webkit-scrollbar-track {
-    background-color: #28282821
+    background-color: var(--base_faint)
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    background-color: #28282890
+    background-color: var(--base)
   }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #28282860
+    background-color: var(--base_faint)
   }
 
   /* Archive and Home */
@@ -552,8 +553,8 @@
     top: 0;
     right: 0;
     text-align: right;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     width: 100%;
     z-index: 9;
     padding: 2rem;
@@ -570,16 +571,16 @@
     padding: 2rem;
     grid-gap: 1rem;
     font-weight: 400;
-    color: #282828;
+    color: var(--base);
     text-decoration: none;
-    box-shadow: 0 0 20px 10px #28282808;
-    background-color: white;
+    box-shadow: var(--low_shadow);
+    background-color: var(--fore);
     border-radius: 10px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link:hover,
   .plan_link:hover {
-    box-shadow: 0 0 20px 10px #28282816
+    box-shadow: var(--high_shadow)
   }
   .client_link__notes__content,
   .plan_link__notes__content {
@@ -589,7 +590,7 @@
   .client_link__notes__content *,
   .plan_link__notes__content *,
   .plan-name {
-    color: #282828;
+    color: var(--base);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link__notes__content p,
@@ -671,14 +672,13 @@
     }
   }
   @media (max-width: 768px) {
-
     /* Containers */
     .center_wrapped {
       width: 300px
     }
     .client_link:hover,
     .plan_link:hover {
-      box-shadow: 0 0 20px 10px #28282808
+      box-shadow: var(--low_shadow)
     }
     .client_link:active,
     .plan_link:active {
@@ -736,7 +736,6 @@
   }
 
   @media (max-width: 576px) {
-
     /* Elements */
     ::-webkit-scrollbar {
       width: 0;
@@ -813,20 +812,31 @@
 
   /* Progress */
   #nprogress .bar {
-    background: #282828 !important
+    /* stylelint-disable-next-line */
+    background-color: var(--base) !important
   }
   #nprogress .peg {
-    box-shadow: 0 0 10px #282828, 0 0 5px #282828 !important
+    /* stylelint-disable-next-line */
+    box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
   }
   #nprogress .spinner-icon {
-    border-top-color: #282828 !important;
-    border-left-color: #282828 !important
+    /* stylelint-disable-next-line */
+    border-top-color: var(--base) !important;
+    /* stylelint-disable-next-line */
+    border-left-color: var(--base) !important
   }
 </style>
 
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up
+        v-if="responseHeader !== ''"
+        :header="responseHeader"
+        :desc="responseDesc"
+      />
+    </transition>
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="center_wrapped">
@@ -961,6 +971,7 @@
 
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
+import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
 
 export default {
   data () {
@@ -1003,8 +1014,11 @@ export default {
 
       // SYSTEM
 
+      responsePersist: false,
+      responseHeader: '',
+      responseDesc: '',
       versionName: 'Pegasus',
-      versionBuild: '3.0',
+      versionBuild: '3.1',
       newBuild: false,
       errorMsg: null,
       loading: false,
@@ -1022,6 +1036,15 @@ export default {
   watch: {
     '$route' (to, from) {
       this.is_authenticated()
+    },
+    responseHeader () {
+      if (!this.responsePersist) {
+        setTimeout(() => {
+          this.responseHeader = ''
+          this.responseDesc = ''
+          this.responsePersist = false
+        }, 8000)
+      }
     }
   },
   async created () {
@@ -1030,6 +1053,9 @@ export default {
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
+    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/js/traininblocks-sw.js')
+    }
     window.addEventListener('beforeunload', this.confirmLeave)
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -1059,6 +1085,33 @@ export default {
   },
   methods: {
 
+    async helper (mode, gaItem, gaAction) {
+      switch (mode) {
+        case 'client_store':
+          await this.archive_f()
+          this.archive_to_vue()
+          await this.clients_f()
+          this.clients_to_vue()
+          this.$ga.event(gaItem, gaAction)
+          this.end_loading()
+          break
+      }
+    },
+    darkmode () {
+      document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
+      document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
+      document.documentElement.style.setProperty('--back', '#282828')
+      document.documentElement.style.setProperty('--fore', '#383838')
+      document.documentElement.style.setProperty('--base', 'white')
+      document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
+      document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
+      document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
+      document.documentElement.style.setProperty('--calendar_highlight', '#686868')
+      document.documentElement.style.setProperty('--skeleton_1', '#686868')
+      document.documentElement.style.setProperty('--skeleton_2', '#484848')
+      document.documentElement.style.setProperty('--link', 'white')
+    },
+
     // AUTH
 
     async is_authenticated () {
@@ -1084,11 +1137,7 @@ export default {
         if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
           this.claims.ga = true
         }
-        if (this.claims.ga !== false) {
-          this.$ga.enable()
-        } else {
-          this.$ga.disable()
-        }
+        this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
@@ -1097,12 +1146,14 @@ export default {
     // SYSTEM STATE
 
     async resolve_error (msg) {
-      await this.$axios.post('/.netlify/functions/error',
-        {
-          msg,
-          claims: this.claims
-        }
-      )
+      if (this.claims.user_type !== 'Admin') {
+        await this.$axios.post('/.netlify/functions/error',
+          {
+            msg,
+            claims: this.claims
+          }
+        )
+      }
       this.loading = false
       this.dontLeave = false
       this.errorMsg = msg.toString()
@@ -1120,39 +1171,14 @@ export default {
 
     will_body_scroll (state) {
       const body = document.getElementsByTagName('body')[0]
-      if (state) {
-        body.style.overflow = 'auto'
-      } else {
-        body.style.overflow = 'hidden'
-      }
+      state ? body.style.overflow = 'auto' : body.style.overflow = 'hidden'
     },
     confirmLeave (e) {
-      if (this.dontLeave === true) {
+      if (this.dontLeave) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
         e.returnValue = msg
         return msg
       }
-    },
-    sort_sessions_plan () {
-      this.clientUser.plans.forEach((plan) => {
-        if (plan.id === parseInt(this.$route.params.id)) {
-          plan.sessions.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-          })
-        }
-      })
-    },
-    day (date) {
-      const weekday = new Array(7)
-      weekday[0] = 'Sun'
-      weekday[1] = 'Mon'
-      weekday[2] = 'Tue'
-      weekday[3] = 'Wed'
-      weekday[4] = 'Thu'
-      weekday[5] = 'Fri'
-      weekday[6] = 'Sat'
-      const d = new Date(date)
-      return weekday[d.getDay()]
     },
 
     // CLIENT
@@ -1161,7 +1187,7 @@ export default {
       if (!localStorage.getItem('clients')) {
         await this.clients_f()
       }
-      this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
+      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
         const textA = a.name.toUpperCase()
         const textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
@@ -1170,11 +1196,7 @@ export default {
     async clients_f () {
       try {
         const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
-        if (response.data.length === 0) {
-          this.no_clients = true
-        } else {
-          this.no_clients = false
-        }
+        this.no_clients = response.data.length === 0
         localStorage.setItem('clients', JSON.stringify(response.data))
       } catch (e) {
         this.no_clients = false
@@ -1185,18 +1207,8 @@ export default {
       this.dontLeave = true
       try {
         await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
-
-        await this.archive_f()
-        this.archive_to_vue()
-
-        await this.clients_f()
-        this.clients_to_vue()
-
-        if (this.archive.clients.length === 0) {
-          this.archive.no_archive = true
-        }
-        this.$ga.event('Client', 'delete')
-        this.end_loading()
+        this.helper('client_store', 'Client', 'delete')
+        this.archive.no_archive = this.archive.clients.length === 0
       } catch (e) {
         this.resolve_error(e)
       }
@@ -1220,6 +1232,8 @@ export default {
         // Get the client information again as we have just updated the client
         await this.clients_f()
         await this.clients_to_vue()
+        this.responseHeader = 'Client updated'
+        this.responseDesc = 'All your changes have been saved'
         this.end_loading()
       } catch (e) {
         this.resolve_error(e)
@@ -1232,7 +1246,7 @@ export default {
       if (JSON.parse(localStorage.getItem('archive')).length === 0) {
         this.archive.no_archive = true
       } else {
-        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort(function (a, b) {
+        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort((a, b) => {
           const textA = a.name.toUpperCase()
           const textB = b.name.toUpperCase()
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
@@ -1242,11 +1256,7 @@ export default {
     async archive_f () {
       try {
         const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
-        if (response.data.length === 0) {
-          this.archive.no_archive = true
-        } else {
-          this.archive.no_archive = false
-        }
+        this.archive.no_archive = response.data.length === 0
         localStorage.setItem('archive', JSON.stringify(response.data))
       } catch (e) {
         this.archive.no_archive = false
@@ -1255,28 +1265,13 @@ export default {
     },
     async client_archive (id, index) {
       if (confirm('Are you sure you want to archive this client?')) {
-        let email
         this.dontLeave = true
-        for (let i = 0; i < this.clients.length; i++) {
-          if (this.clients[i].client_id === id) {
-            email = this.clients[i].email
-            this.clients.splice(index, 1)
-            if (this.clients.length === 0) {
-              this.no_clients = true
-            }
-          }
-        }
+        const client = this.clients.find(client => client.client_id === id)
+        const email = client.email
+        this.clients.splice(index, 1)
+        this.no_clients = this.clients.length === 0
         try {
-          const response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`)
-          this.response = response.data
-
-          await this.clients_f()
-          this.clients_to_vue()
-
-          await this.archive_f()
-          this.archive_to_vue()
-          this.$ga.event('Client', 'archive')
-
+          this.response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`).data
           const result = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
@@ -1300,8 +1295,10 @@ export default {
               }
             )
           }
+          this.helper('client_store', 'Client', 'archive')
+          this.responseHeader = 'Client archived'
+          this.responseDesc = 'Their data will be kept safe on the archive page'
           this.$router.push('/')
-          this.end_loading()
         } catch (e) {
           this.resolve_error(e)
         }
@@ -1310,33 +1307,23 @@ export default {
     async client_unarchive (id) {
       if (confirm('Are you sure you want to unarchive this client?')) {
         this.dontLeave = true
-        for (let i = 0; i < this.archive.clients.length; i++) {
-          if (this.archive.clients[i].client_id === id) {
-            const arr = JSON.parse(localStorage.getItem('clients'))
-            arr.push(this.archive.clients[i])
+        const client = this.archive.clients.find(client => client.client_id === id)
+        const arr = JSON.parse(localStorage.getItem('clients'))
+        arr.push(client)
 
-            localStorage.setItem('clients', JSON.stringify(arr))
-            this.clients = JSON.parse(localStorage.getItem('clients')).sort(function (a, b) {
-              const textA = a.name.toUpperCase()
-              const textB = b.name.toUpperCase()
-              return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-            })
-            if (this.archive.clients.length === 0) {
-              this.archive.no_archive = true
-            }
-          }
-        }
+        localStorage.setItem('clients', JSON.stringify(arr))
+        this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
+          const textA = a.name.toUpperCase()
+          const textB = b.name.toUpperCase()
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        })
+        this.archive.no_archive = this.archive.clients.length === 0
         try {
           const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
           this.response = response.data
-
-          await this.archive_f()
-          this.archive_to_vue()
-
-          await this.clients_f()
-          this.clients_to_vue()
-          this.$ga.event('Client', 'unarchive')
-          this.end_loading()
+          this.helper('client_store', 'Client', 'unarchive')
+          this.responseHeader = 'Client unarchived'
+          this.responseDesc = 'You can access them back on the home page'
         } catch (e) {
           this.resolve_error(e)
         }
@@ -1405,10 +1392,9 @@ export default {
       try {
         const plans = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
         this.clientUser.plans = plans.data
-        let f
-        for (f in this.clientUser.plans) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[f].id}`)
-          this.clientUser.plans[f].sessions = response.data
+        for (const i in this.clientUser.plans) {
+          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[i].id}`)
+          this.clientUser.plans[i].sessions = response.data
         }
       } catch (e) {
         this.resolve_error(e)
@@ -1416,26 +1402,12 @@ export default {
     },
     async update_session (pid, sid, feedbackNotesUpdate) {
       this.dontLeave = true
-      // Set the plan variable to the current plan
-      let x
-      for (x in this.clientUser.plans) {
-        if (this.clientUser.plans[x].id === pid) {
-          const plan = this.clientUser.plans[x]
-          let y
-          for (y in plan.sessions) {
-            if (plan.sessions[y].id === sid) {
-              // eslint-disable-next-line
-              var sessionId = plan.sessions[y].id
-              // eslint-disable-next-line
-              var sessionName = plan.sessions[y].name
-              // eslint-disable-next-line
-              var sessionChecked = plan.sessions[y].checked
-              // eslint-disable-next-line
-              var sessionFeedback = plan.sessions[y].feedback
-            }
-          }
-        }
-      }
+      const plan = this.clientUser.plans.find(plan => plan.id === pid)
+      const session = plan.sessions.find(session => session.id === sid)
+      const sessionId = session.id
+      const sessionName = session.name
+      const sessionChecked = session.checked
+      const sessionFeedback = session.feedback
       try {
         await this.$axios.post('https://api.traininblocks.com/client-workouts',
           {
@@ -1465,6 +1437,8 @@ export default {
             )
           }
         }
+        this.responseHeader = 'Session updated'
+        this.responseDesc = 'Your changes have been saved'
       } catch (e) {
         this.resolve_error(e)
       }

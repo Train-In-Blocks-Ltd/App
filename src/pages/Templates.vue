@@ -6,7 +6,7 @@
     margin-top: 2rem
   }
   .activeState {
-    border: 2px solid #28282860
+    border: 2px solid var(--base_faint)
   }
   .container--templates {
     display: grid;
@@ -15,8 +15,8 @@
   }
   .wrapper--template {
     display: grid;
-    background-color: white;
-    box-shadow: 0 0 20px 10px #28282808;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
     padding: 2rem;
     border-radius: 10px
   }
@@ -50,8 +50,8 @@
     .multi-select {
       padding: 2rem;
       width: 100%;
-      background-color: white;
-      box-shadow: 0 0 20px 10px #28282816
+      background-color: var(--fore);
+      box-shadow: var(--high_shadow)
     }
     .multi-select a {
       grid-template-columns: 1fr
@@ -215,6 +215,22 @@ export default {
 
     // BACKGROUND
 
+    helper (type) {
+      switch (type) {
+        case 'new':
+          this.$parent.responseHeader = 'New template created'
+          this.$parent.responseDesc = 'Edit and use it in a client\'s plan'
+          break
+        case 'update':
+          this.$parent.responseHeader = 'Updated template'
+          this.$parent.responseDesc = 'Your changes have been saved'
+          break
+        case 'delete':
+          this.$parent.responseHeader = this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template'
+          this.$parent.responseDesc = 'Your changes have been saved'
+          break
+      }
+    },
     check_for_new () {
       this.expandedTemplates = []
       this.$parent.templates.forEach((template) => {
@@ -227,7 +243,7 @@ export default {
     // CHECKBOX
 
     change_select_checkbox (id) {
-      if (this.selectedTemplates.includes(id) === false) {
+      if (!this.selectedTemplates.includes(id)) {
         this.selectedTemplates.push(id)
       } else {
         const idx = this.selectedTemplates.indexOf(id)
@@ -264,6 +280,7 @@ export default {
           this.selectedTemplates.forEach((templateId) => {
             this.delete_template(templateId)
           })
+          this.helper('delete')
           this.deselect_all()
         }
       }
@@ -303,6 +320,7 @@ export default {
           name: 'Untitled',
           note: ''
         }
+        this.helper('new')
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
@@ -327,6 +345,7 @@ export default {
           }
         )
         await this.$parent.get_templates(true)
+        this.helper('update')
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
