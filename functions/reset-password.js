@@ -509,7 +509,7 @@ const headers = {
 }
 // setup nodemailer
 const nodemailer = require('nodemailer')
-let transporter = nodemailer.createTransport(smtpTransport({
+const transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp-relay.gmail.com',
   secure: true,
@@ -525,7 +525,7 @@ exports.handler = async function handler (event, context, callback) {
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
-      headers: headers,
+      headers,
       body: ''
     })
   } else if (event.body) {
@@ -534,9 +534,9 @@ exports.handler = async function handler (event, context, callback) {
       const oktaOne = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=profile.email+eq+"${data.email}"&limit=1`,
         {
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': authHeader
+            Authorization: authHeader
           }
         }
       )
@@ -567,7 +567,7 @@ exports.handler = async function handler (event, context, callback) {
       })
     } catch (e) {
       return callback(null, {
-        statusCode: 502,
+        statusCode: 500,
         headers,
         body: JSON.stringify(e, response)
       })
@@ -575,7 +575,7 @@ exports.handler = async function handler (event, context, callback) {
   } else {
     return callback(null, {
       statusCode: 401,
-      headers: headers,
+      headers,
       body: ''
     })
   }

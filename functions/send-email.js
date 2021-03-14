@@ -1,5 +1,5 @@
-const axios = require('axios')
 const qs = require('querystring')
+const axios = require('axios')
 const smtpTransport = require('nodemailer-smtp-transport')
 const headers = {
   'Access-Control-Allow-Origin': '*',
@@ -13,7 +13,7 @@ const headers = {
 }
 // setup nodemailer
 const nodemailer = require('nodemailer')
-let transporter = nodemailer.createTransport(smtpTransport({
+const transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp-relay.gmail.com',
   secure: true,
@@ -34,7 +34,7 @@ exports.handler = async function handler (event, context, callback) {
     }),
     {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     }
@@ -42,37 +42,37 @@ exports.handler = async function handler (event, context, callback) {
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
-      headers: headers,
+      headers,
       body: ''
     })
   } else if (event.body && response.data.active === true) {
     try {
-      var data = JSON.parse(event.body)
+      const data = JSON.parse(event.body)
       // options
       const mailOptions = {
         from: 'Train In Blocks <hello@traininblocks.com>',
-        to: data.to,                   // from req.body.to
-        subject: data.subject,         // from req.body.subject
+        to: data.to, // from req.body.to
+        subject: data.subject, // from req.body.subject
         text: data.text,
-        html: data.html         // from req.body.message
+        html: data.html // from req.body.message
       }
       await transporter.sendMail(mailOptions)
       return callback(null, {
         statusCode: 200,
-        headers: headers,
+        headers,
         body: 'Email sent successfully'
       })
     } catch (e) {
       return callback(null, {
-        statusCode: 502,
-        headers: headers,
+        statusCode: 500,
+        headers,
         body: JSON.stringify(e, response)
       })
     }
   } else {
     return callback(null, {
       statusCode: 401,
-      headers: headers,
+      headers,
       body: ''
     })
   }
