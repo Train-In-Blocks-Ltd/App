@@ -4,6 +4,10 @@
     grid-gap: 1rem;
     margin: 2rem 0
   }
+  .theme {
+    display: grid;
+    grid-gap: 1rem
+  }
   .privacy {
     display: grid
   }
@@ -160,6 +164,25 @@
           </button>
         </div>
       </div>
+      <div class="theme">
+        <label for="theme" class="text--small">Theme:</label>
+        <select
+          v-model="$parent.claims.theme"
+          name="theme"
+          class="width_300"
+          @change="$parent.darkmode($parent.claims.theme), save()"
+        >
+          <option value="system">
+            System default
+          </option>
+          <option value="light">
+            Light
+          </option>
+          <option value="dark">
+            Dark
+          </option>
+        </select>
+      </div>
       <div class="privacy">
         <p class="text--small">
           Your Privacy and Data
@@ -219,7 +242,8 @@ export default {
             type: 'POST',
             body: {
               profile: {
-                ga: this.$parent.claims.ga
+                ga: this.$parent.claims.ga,
+                theme: this.$parent.claims.theme
               }
             },
             url: `${this.$parent.claims.sub}`

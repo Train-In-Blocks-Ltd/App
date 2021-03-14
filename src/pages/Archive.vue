@@ -30,13 +30,6 @@
 <template>
   <div id="archive">
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up
-        v-if="response !== ''"
-        :header="response"
-        :desc="'Your clients can access this information'"
-      />
-    </transition>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedClients.length !== 0" class="multi-select">
         <p>
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
