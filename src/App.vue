@@ -1082,6 +1082,7 @@ export default {
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.isTrainer = true
     }
+    this.darkmode('system')
   },
   methods: {
 
@@ -1097,19 +1098,39 @@ export default {
           break
       }
     },
-    darkmode () {
-      document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
-      document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
-      document.documentElement.style.setProperty('--back', '#282828')
-      document.documentElement.style.setProperty('--fore', '#383838')
-      document.documentElement.style.setProperty('--base', 'white')
-      document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
-      document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
-      document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
-      document.documentElement.style.setProperty('--calendar_highlight', '#686868')
-      document.documentElement.style.setProperty('--skeleton_1', '#686868')
-      document.documentElement.style.setProperty('--skeleton_2', '#484848')
-      document.documentElement.style.setProperty('--link', 'white')
+    darkmode (mode) {
+      if (mode === 'dark') {
+        document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
+        document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
+        document.documentElement.style.setProperty('--back', '#282828')
+        document.documentElement.style.setProperty('--fore', '#383838')
+        document.documentElement.style.setProperty('--base', 'white')
+        document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
+        document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
+        document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
+        document.documentElement.style.setProperty('--calendar_highlight', '#686868')
+        document.documentElement.style.setProperty('--skeleton_1', '#686868')
+        document.documentElement.style.setProperty('--skeleton_2', '#484848')
+        document.documentElement.style.setProperty('--link', 'white')
+      } else if (mode === 'system' && window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+        this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          this.darkmode(e.matches ? 'dark' : 'light')
+        })
+      } else {
+        document.documentElement.style.setProperty('--low_shadow', '0 0 20px 10px #28282808')
+        document.documentElement.style.setProperty('--high_shadow', '0 0 20px 10px #28282816')
+        document.documentElement.style.setProperty('--back', '#F9F9F9')
+        document.documentElement.style.setProperty('--fore', 'white')
+        document.documentElement.style.setProperty('--base', '#282828')
+        document.documentElement.style.setProperty('--base_light', '#28282894')
+        document.documentElement.style.setProperty('--base_faint', '#28282840')
+        document.documentElement.style.setProperty('--overlay_glass', '#FFFFFFB3')
+        document.documentElement.style.setProperty('--calendar_highlight', '#FFFFEE')
+        document.documentElement.style.setProperty('--skeleton_1', '#F4F4F4')
+        document.documentElement.style.setProperty('--skeleton_2', '#E4E4E4')
+        document.documentElement.style.setProperty('--link', 'blue')
+      }
     },
 
     // AUTH
