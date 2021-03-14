@@ -54,7 +54,7 @@ exports.handler = async function handler (event, context, callback) {
           body: JSON.stringify(response.data)
         })
       } catch (e) {
-        if (response.status === 400 && data.url.includes('suspend')) {
+        if (data.url.includes('suspend')) {
           return callback(null, {
             statusCode: 200,
             headers,
