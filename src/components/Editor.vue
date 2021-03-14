@@ -524,18 +524,39 @@ export default {
       }
       this.restore_selection()
       const sel = window.getSelection()
-      if (!forceFocus) {
-        const range = new Range()
-        const isEmpty = sel.focusNode.length || 0
-        range.setStart(sel.focusNode, 0)
-        range.setEnd(sel.focusNode, sel.focusNode.length)
-        window.getSelection().removeAllRanges()
-        window.getSelection().addRange(range)
-        range.surroundContents(liNode)
-        range.surroundContents(olNode)
-        range.collapse(isEmpty === 0)
-      } else {
-        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<${tag}><li></li></${tag}>`)
+      const isEmpty = sel.focusNode.length || 0
+      if (!document.queryCommandState(tag === 'ol' ? 'insertOrderedList' : 'insertUnorderedList')) {
+        if (!forceFocus) {
+          const range = new Range()
+          range.setStart(sel.focusNode, 0)
+          range.setEnd(sel.focusNode, sel.focusNode.length)
+          sel.removeAllRanges()
+          sel.addRange(range)
+          range.surroundContents(liNode)
+          range.surroundContents(olNode)
+          range.collapse(isEmpty === 0)
+        } else {
+          document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<${tag}><li></li></${tag}>`)
+        }
+      } else if (sel.focusNode.parentNode.parentNode.id !== 'rich_editor' || sel.focusNode.parentNode.id !== 'rich_editor') {
+        const nodes = []
+        if (isEmpty === 0) {
+          sel.focusNode.parentNode.childNodes.forEach((node) => {
+            nodes.push(node.innerHTML)
+          })
+        } else {
+          sel.focusNode.parentNode.parentNode.childNodes.forEach((node) => {
+            nodes.push(node.innerHTML)
+          })
+        }
+        nodes.reverse().forEach((node) => {
+          if (isEmpty === 0) {
+            sel.focusNode.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+          } else {
+            sel.focusNode.parentNode.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+          }
+        })
+        isEmpty === 0 ? sel.focusNode.parentNode.remove() : sel.focusNode.parentNode.parentNode.remove()
       }
       this.update_edited_notes()
     },
