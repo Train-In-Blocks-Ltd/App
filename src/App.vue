@@ -1082,7 +1082,6 @@ export default {
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.isTrainer = true
     }
-    this.darkmode('system')
   },
   methods: {
 
@@ -1159,6 +1158,11 @@ export default {
           this.claims.ga = true
         }
         this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
+
+        if (this.claims.theme === undefined || this.claims === undefined || this.claims === null) {
+          this.claims.theme = 'system'
+        }
+        this.darkmode(this.claims.theme)
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
