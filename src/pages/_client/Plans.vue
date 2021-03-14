@@ -27,6 +27,15 @@
     margin: 1rem 0
   }
 
+  /* Periodise Grid */
+  .periodise_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 4rem
+  }
+
   /* Plans */
   .plan_grid {
     display: grid;
@@ -98,6 +107,20 @@
         </button>
       </div>
     </div>
+    <!-- Model
+    <div>
+      <p class="text--large">
+        Overview
+      </p>
+      <div class="periodise_grid">
+        <periodise
+          v-for="(peri, periIndex) in $parent.$parent.client_details.plans"
+          :key="`peri_${periIndex}`"
+          :plan="peri"
+        />
+      </div>
+    </div>
+    -->
     <div>
       <p class="text--large">
         Plans
@@ -134,11 +157,13 @@
 <script>
 const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
+// const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
 
 export default {
   components: {
     NewPlan,
     RichEditor
+    // Periodise
   },
   data () {
     return {

@@ -1111,7 +1111,7 @@ export default {
 
       moveTarget: 1,
       copyTarget: 2,
-      simpleCopy: false,
+      simpleCopy: true,
       copyAcrossPage: 0,
       copyAcrossView: 0,
       copyAcrossViewMax: 0,
@@ -1191,11 +1191,11 @@ export default {
       this.deselect_all()
     },
     copy_across_check () {
-      this.simpleCopy = false
+      this.simpleCopy = true
       this.helper('match_plan').sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes).length === 0) {
-            this.simpleCopy = true
+          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes).length !== 0) {
+            this.simpleCopy = false
           }
         }
       })
@@ -1208,7 +1208,7 @@ export default {
         if (this.selectedSessions.includes(session.id)) {
           this.copyAcrossProtocols.push([
             session.id,
-            this.chunk_array(this.pull_protocols(session.name, session.notes))
+            this.pull_protocols(session.name, session.notes)
           ])
           this.copyAcrossInputs.push([
             session.id,
@@ -1614,7 +1614,7 @@ export default {
             session_id: object.id
           })
           if (object.notes !== null) {
-            this.dataPacketStore.push(this.chunk_array(this.pull_protocols(object.name, object.notes)))
+            this.dataPacketStore.push(this.pull_protocols(object.name, object.notes))
           }
         })
         // Appends the options to the select
@@ -1625,39 +1625,6 @@ export default {
       }
       this.forceUpdate += 1
       this.check_for_week_sessions()
-    },
-
-    // Extracts the protocols and measures and stores it all into a temporary array
-    pull_protocols (sessionName, text) {
-      const textNoHTML = text.replace(/<[^>]*>?/gm, '')
-      const tempStore = []
-      let m
-      while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
-        if (m.index === this.regexExtract.lastIndex) {
-          this.regexExtract.lastIndex++
-        }
-        m.forEach((match, groupIndex) => {
-          if (groupIndex === 0) {
-            tempStore.push(sessionName)
-          } else if (groupIndex === 1 || groupIndex === 2) {
-            tempStore.push(match)
-          }
-        })
-      }
-      if (tempStore !== null) {
-        return tempStore
-      }
-    },
-
-    // Breaks down the temporary array into data packets of length 2
-    // Data Packet format: ['NAME', 'PROTOCOL/MEASURE/NUMBERS']
-    chunk_array (myArray) {
-      const tempArray = []
-      for (let index = 0; index < myArray.length; index += 3) {
-        const dataPacket = myArray.slice(index, index + 3)
-        tempArray.push(dataPacket)
-      }
-      return tempArray
     },
 
     // Init the dropdown selection with validation
@@ -1695,13 +1662,6 @@ export default {
           value: item
         })
       })
-    },
-    proper_case (string) {
-      const sentence = string.toLowerCase().split(' ')
-      for (let i = 0; i < sentence.length; i++) {
-        sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
-      }
-      return sentence.join(' ')
     },
 
     // REGEX

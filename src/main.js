@@ -35,7 +35,35 @@ Vue.config.productionTip = false
 Vue.mixin({
   methods: {
 
-    // Shared
+    // Protocol
+
+    pull_protocols (sessionName, text) {
+      const textNoHTML = text.replace(/<[^>]*>?/gm, '')
+      const tempStore = []
+      let m
+      while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
+        if (m.index === this.regexExtract.lastIndex) {
+          this.regexExtract.lastIndex++
+        }
+        m.forEach((match, groupIndex) => {
+          if (groupIndex === 0) {
+            tempStore.push(sessionName)
+          } else if (groupIndex === 1 || groupIndex === 2) {
+            tempStore.push(match)
+          }
+        })
+      }
+      if (tempStore !== null) {
+        const tempArray = []
+        for (let index = 0; index < tempStore.length; index += 3) {
+          const dataPacket = tempStore.slice(index, index + 3)
+          tempArray.push(dataPacket)
+        }
+        return tempArray
+      }
+    },
+
+    // Date
 
     today () {
       const d = new Date()
@@ -49,7 +77,7 @@ Vue.mixin({
       return weekday[new Date(date).getDay()]
     },
 
-    // Organise
+    // Tidy
 
     sort_sessions (plan) {
       plan.sessions.sort((a, b) => {
@@ -58,6 +86,13 @@ Vue.mixin({
     },
     remove_brackets_and_checkbox (dataIn) {
       return dataIn !== null ? dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '') : dataIn
+    },
+    proper_case (string) {
+      const sentence = string.toLowerCase().split(' ')
+      for (let i = 0; i < sentence.length; i++) {
+        sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
+      }
+      return sentence.join(' ')
     },
 
     // Other
