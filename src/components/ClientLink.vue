@@ -69,7 +69,7 @@
     <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="client_link__notes__content" v-html="remove_brackets_and_checkbox(notes)" />
     <div v-if="archive" class="client_link__options">
       <checkbox :item-id="clientId" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
-      <a href="javascript:void(0)" title="Unarchive" @click="$parent.$parent.client_unarchive(clientId)">
+      <a href="javascript:void(0)" title="Unarchive" @click="$parent.unarchive_single(clientId)">
         <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive" />
       </a>
       <a href="javascript:void(0)" title="Delete" @click="soloDelete(clientId)">

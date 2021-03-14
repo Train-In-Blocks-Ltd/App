@@ -1334,28 +1334,24 @@ export default {
       }
     },
     async client_unarchive (id) {
-      if (confirm('Are you sure you want to unarchive this client?')) {
-        this.dontLeave = true
-        const client = this.archive.clients.find(client => client.client_id === id)
-        const arr = JSON.parse(localStorage.getItem('clients'))
-        arr.push(client)
+      this.dontLeave = true
+      const client = this.archive.clients.find(client => client.client_id === id)
+      const arr = JSON.parse(localStorage.getItem('clients'))
+      arr.push(client)
 
-        localStorage.setItem('clients', JSON.stringify(arr))
-        this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-          const textA = a.name.toUpperCase()
-          const textB = b.name.toUpperCase()
-          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-        })
-        this.archive.no_archive = this.archive.clients.length === 0
-        try {
-          const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-          this.response = response.data
-          this.helper('client_store', 'Client', 'unarchive')
-          this.responseHeader = 'Client unarchived'
-          this.responseDesc = 'You can access them back on the home page'
-        } catch (e) {
-          this.resolve_error(e)
-        }
+      localStorage.setItem('clients', JSON.stringify(arr))
+      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
+        const textA = a.name.toUpperCase()
+        const textB = b.name.toUpperCase()
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+      })
+      this.archive.no_archive = this.archive.clients.length === 0
+      try {
+        const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+        this.response = response.data
+        this.helper('client_store', 'Client', 'unarchive')
+      } catch (e) {
+        this.resolve_error(e)
       }
     },
 
