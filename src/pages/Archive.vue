@@ -34,6 +34,7 @@
         <p>
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
         </p>
+        <a href="javascript:void(0)" class="a_link" @click="unarchive_multi_clients()">Unarchive</a>
         <a href="javascript:void(0)" class="a_link" @click="delete_multi_clients()">Delete</a>
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect all</a>
       </div>
@@ -116,7 +117,6 @@ export default {
   methods: {
 
     // Checkbox
-
     change_select_checkbox (id) {
       if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)
@@ -147,6 +147,25 @@ export default {
           })
           this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete'
           this.$parent.responseDesc = 'All their data have been removed'
+          this.deselect_all()
+        }
+      }
+    },
+    unarchive_single (id) {
+      if (confirm('Are you sure you want to unarchive this client?')) {
+        this.$parent.client_unarchive(id)
+      }
+      this.$parent.responseHeader = 'Client unarchived'
+      this.$parent.responseDesc = 'You can access them back on the home page'
+    },
+    unarchive_multi_clients () {
+      if (this.selectedClients.length !== 0) {
+        if (confirm('Are you sure that you want to unarchive all the selected clients?')) {
+          this.selectedClients.forEach((clientId) => {
+            this.$parent.client_unarchive(clientId)
+          })
+          this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client'
+          this.$parent.responseDesc = 'All their data have been recovered'
           this.deselect_all()
         }
       }
