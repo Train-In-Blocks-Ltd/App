@@ -249,6 +249,7 @@ export default {
             url: `${this.$parent.claims.sub}`
           }
         )
+        localStorage.removeItem('claims')
         this.$parent.dontLeave = false
       } catch (e) {
         this.$parent.resolve_error(e)

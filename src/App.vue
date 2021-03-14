@@ -1138,7 +1138,7 @@ export default {
       this.authenticated = await this.$auth.isAuthenticated()
     },
     async logout () {
-      await this.$auth.logout()
+      await this.$auth.signOut()
       await this.is_authenticated()
       localStorage.clear()
       localStorage.setItem('versionBuild', this.versionBuild)
@@ -1152,7 +1152,11 @@ export default {
       this.$ga.event('Auth', 'logout')
     },
     async setup () {
-      this.claims = JSON.parse(localStorage.getItem('claims'))
+      if (localStorage.getItem('claims')) {
+        this.claims = JSON.parse(localStorage.getItem('claims'))
+      } else {
+        this.claims = this.$auth.getUser()
+      }
       if (this.claims) {
         if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
           this.claims.ga = true

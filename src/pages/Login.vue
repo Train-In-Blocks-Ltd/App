@@ -29,11 +29,11 @@
     color: red
   }
   .button--container {
-    margin-top: 1.25rem
+    margin-top: 1rem
   }
   .signup {
     margin-left: calc(20px + 60px + 20px);
-    margin-top: .6rem;
+    margin-top: -.6rem;
     margin-bottom: .6rem
   }
   .recovery {
@@ -44,6 +44,9 @@
   }
 </style>
 <style>
+  #okta-sign-in {
+    margin-left: 0
+  }
   #okta-signin-submit {
     outline: none;
     -moz-appearance: none;
@@ -201,6 +204,7 @@ export default {
     }
   },
   async mounted () {
+    const scopes = ['openid', 'profile', 'email']
     setTimeout(() => {
       this.splashed = true
       this.$parent.will_body_scroll(true)
@@ -230,10 +234,7 @@ export default {
           pkce: true,
           display: 'page',
           issuer: process.env.ISSUER + '/oauth2/default',
-          scopes: ['openid', 'profile', 'email'],
-          cookies: {
-            secure: true
-          },
+          scopes,
           tokenManager: {
             autoRenew: true,
             expireEarlySeconds: 120
@@ -241,18 +242,14 @@ export default {
         }
       })
 
-      this.widget.renderEl(
-        { el: '#okta-signin-container' },
-        () => {
-          /**
-           * In this flow, the success handler will not be called because we redirect
-           * to the Okta org for the authentication workflow.
-           */
-        },
-        (err) => {
-          throw err
-        }
-      )
+      this.widget.showSignInToGetTokens({
+        el: '#okta-signin-container',
+        scopes
+      }).then((tokens) => {
+        this.$auth.handleLoginRedirect(tokens)
+      }).catch((err) => {
+        throw err
+      })
     })
     if (await this.$auth.isAuthenticated()) {
       this.$router.push('/')
@@ -267,17 +264,12 @@ export default {
     }
   },
   async beforeDestroy () {
-    window.setTimeout(this.$auth.oktaAuth.tokenManager.renew('accessToken'), 3500)
     await this.$parent.is_authenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()
     if (this.$ga && !this.$parent.authenticated) {
       this.$ga.event('Auth', 'login')
     }
-  },
-  destroyed () {
-    // Remove the widget from the DOM on path change
-    this.widget.remove()
   },
   methods: {
 
