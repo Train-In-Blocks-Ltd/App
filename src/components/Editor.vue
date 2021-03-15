@@ -474,7 +474,10 @@ export default {
       let sel = window.getSelection()
       const type = sel.type
       sel = sel.focusNode
-      while (sel.parentNode.id !== 'app') {
+      if (sel === null) {
+        return
+      }
+      while (sel.parentNode.id !== 'app' && sel.parentNode !== null) {
         if (sel.parentNode.id === 'rich_editor' && type === 'Range') {
           this.showFormatter = true
           break
