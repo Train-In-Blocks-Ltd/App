@@ -142,25 +142,31 @@ div#rich_editor {
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
           <button
+            v-if="showFormatter"
             :class="{ activeStyle: boldActive }"
-            title="Bold (CMD/Ctrl + B)"
             :disabled="!firstClickOver"
+            title="Bold (CMD/Ctrl + B)"
+            class="fadeIn"
             @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
           </button>
           <button
+            v-if="showFormatter"
             :class="{ activeStyle: italicActive }"
-            title="Italic (CMD/Ctrl + I)"
             :disabled="!firstClickOver"
+            title="Italic (CMD/Ctrl + I)"
+            class="fadeIn"
             @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
           </button>
           <button
+            v-if="showFormatter"
             :class="{ activeStyle: underlineActive }"
-            title="Underline (CMD/Ctrl + U)"
             :disabled="!firstClickOver"
+            title="Underline (CMD/Ctrl + U)"
+            class="fadeIn"
             @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
@@ -306,6 +312,7 @@ export default {
       ulActive: false,
 
       // Pop up
+      showFormatter: false,
       showAddLink: false,
       addLinkName: '',
       addLinkURL: '',
@@ -325,8 +332,10 @@ export default {
       this.initialHTML = this.htmlInjection
       if (this.showEditState) {
         document.addEventListener('keyup', this.check_cmd_state)
+        document.addEventListener('selectionchange', this.check_text_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
+        document.removeEventListener('selectionchange', this.check_text_formatter)
         this.firstClickOver = false
       }
     }
@@ -460,6 +469,20 @@ export default {
 
     // TEXT
 
+    check_text_formatter () {
+      this.showFormatter = false
+      let sel = window.getSelection()
+      const type = sel.type
+      sel = sel.focusNode
+      while (sel.parentNode.id !== 'app') {
+        if (sel.parentNode.id === 'rich_editor' && type === 'Range') {
+          this.showFormatter = true
+          break
+        } else {
+          sel = sel.parentNode
+        }
+      }
+    },
     format_style (style) {
       const el = window.getSelection()
       if (document.activeElement.contentEditable !== 'true') {
