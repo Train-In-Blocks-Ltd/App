@@ -4,10 +4,10 @@ div#rich_editor {
   -moz-appearance: none;
   -webkit-appearance: none
 }
-div#rich_editor > div,
-div#rich_editor > p,
-div#rich_show_content > div,
-div#rich_show_content > p {
+div#rich_editor div,
+div#rich_editor p,
+div#rich_show_content div,
+div#rich_show_content p {
   margin: .6rem 0
 }
 div#rich_editor img,
@@ -539,24 +539,26 @@ export default {
           document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<${tag}><li></li></${tag}>`)
         }
       } else if (sel.focusNode.parentNode.parentNode.id !== 'rich_editor' || sel.focusNode.parentNode.id !== 'rich_editor') {
+        let dynamSel = sel.focusNode
         const nodes = []
-        if (isEmpty === 0) {
-          sel.focusNode.parentNode.childNodes.forEach((node) => {
-            nodes.push(node.innerHTML)
-          })
-        } else {
-          sel.focusNode.parentNode.parentNode.childNodes.forEach((node) => {
-            nodes.push(node.innerHTML)
-          })
-        }
-        nodes.reverse().forEach((node) => {
-          if (isEmpty === 0) {
-            sel.focusNode.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+        while (dynamSel.parentNode.id !== 'rich_editor') {
+          if (dynamSel.parentNode.nodeName === tag.toUpperCase()) {
+            dynamSel.parentNode.childNodes.forEach((node) => {
+              nodes.push(node.innerHTML)
+            })
+            nodes.reverse().forEach((node) => {
+              if (dynamSel.parentNode.parentNode.id !== 'rich_editor') {
+                dynamSel.parentNode.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+              } else {
+                dynamSel.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+              }
+            })
+            dynamSel.parentNode.remove()
+            break
           } else {
-            sel.focusNode.parentNode.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+            dynamSel = dynamSel.parentNode
           }
-        })
-        isEmpty === 0 ? sel.focusNode.parentNode.remove() : sel.focusNode.parentNode.parentNode.remove()
+        }
       }
       this.update_edited_notes()
     },
