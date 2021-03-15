@@ -516,28 +516,20 @@ export default {
     // LISTS
 
     add_list (tag) {
-      let forceFocus = false
       const olNode = document.createElement(tag)
       const liNode = document.createElement('li')
-      if (this.savedSelection === null) {
-        forceFocus = true
-      }
       this.restore_selection()
       const sel = window.getSelection()
       const isEmpty = sel.focusNode.length || 0
-      if (!document.queryCommandState(tag === 'ol' ? 'insertOrderedList' : 'insertUnorderedList')) {
-        if (!forceFocus) {
-          const range = new Range()
-          range.setStart(sel.focusNode, 0)
-          range.setEnd(sel.focusNode, sel.focusNode.length)
-          sel.removeAllRanges()
-          sel.addRange(range)
-          range.surroundContents(liNode)
-          range.surroundContents(olNode)
-          range.collapse(isEmpty === 0)
-        } else {
-          document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<${tag}><li></li></${tag}>`)
-        }
+      if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
+        const range = new Range()
+        range.setStart(sel.focusNode, 0)
+        range.setEnd(sel.focusNode, sel.focusNode.length)
+        sel.removeAllRanges()
+        sel.addRange(range)
+        range.surroundContents(liNode)
+        range.surroundContents(olNode)
+        range.collapse(isEmpty === 0)
       } else if (sel.focusNode.parentNode.parentNode.id !== 'rich_editor' || sel.focusNode.parentNode.id !== 'rich_editor') {
         let dynamSel = sel.focusNode
         const nodes = []
@@ -553,6 +545,11 @@ export default {
                 dynamSel.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
               }
             })
+            dynamSel.parentNode.remove()
+            break
+          } else if (dynamSel.parentNode.nodeName === 'OL' || dynamSel.parentNode.nodeName === 'UL') {
+            const html = dynamSel.parentNode.outerHTML
+            dynamSel.parentNode.insertAdjacentHTML('afterend', html.replace(`<${dynamSel.parentNode.nodeName.toLowerCase()}>`, `<${dynamSel.parentNode.nodeName === 'OL' ? 'ul' : 'ol'}>`).replace(`</${dynamSel.parentNode.nodeName.toLowerCase()}>`, `</${dynamSel.parentNode.nodeName === 'OL' ? 'ul' : 'ol'}>`))
             dynamSel.parentNode.remove()
             break
           } else {
