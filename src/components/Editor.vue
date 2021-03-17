@@ -645,16 +645,21 @@ export default {
         this.reset_img_pop_up()
       }, false)
       if (file) {
-        // eslint-disable-next-line
-        new Compressor(file, {
-          quality: 0.6,
-          success (result) {
-            reader.readAsDataURL(result)
-          },
-          error (err) {
-            console.error(err.message)
-          }
-        })
+        if (file.size < 1000000) {
+          // eslint-disable-next-line
+          new Compressor(file, {
+            quality: 0.6,
+            success (result) {
+              reader.readAsDataURL(result)
+            },
+            error (err) {
+              console.error(err.message)
+            }
+          })
+        } else {
+          alert('File size is too big, please compress it to 1MB or lower')
+          document.getElementById('img_uploader').value = ''
+        }
       }
     },
     reset_img_pop_up () {
