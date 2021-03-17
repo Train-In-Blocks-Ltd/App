@@ -88,7 +88,7 @@ div#rich_show_content a {
 .pop_up--add_template {
   display: grid;
   grid-gap: 1rem;
-  max-height: 300px;
+  max-height: 250px;
   overflow-y: auto
 }
 .template_item svg {
@@ -232,20 +232,28 @@ div#rich_editor {
       </div>
       <!-- TEMPLATE -->
       <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">
-        <p>
+        <input
+          v-if="dataForTemplates.length !== 0"
+          v-model="search"
+          type="search"
+          aria-label="Search by name"
+          rel="search"
+          placeholder="Name"
+        >
+        <p v-show="search === ''">
           System templates
         </p>
-        <div class="template_item">
+        <div v-show="search === ''" class="template_item">
           <button @click="add_template('<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>')">
             Track with sets, reps, and load
           </button>
         </div>
-        <div class="template_item">
+        <div v-show="search === ''" class="template_item">
           <button @click="add_template('<div>[ EXERCISE: SETS x REPS ]</div>')">
             Track with sets, reps
           </button>
         </div>
-        <div class="template_item">
+        <div v-show="search === ''" class="template_item">
           <button @click="add_template('<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>')">
             Track with other measurements
           </button>
@@ -255,6 +263,7 @@ div#rich_editor {
         </p>
         <div
           v-for="(item, index) in dataForTemplates"
+          v-show="((!search) || ((item.name).toLowerCase()).startsWith(search.toLowerCase()))"
           :key="'template-' + index"
           class="template_item"
         >
@@ -319,6 +328,7 @@ export default {
   data () {
     return {
       // System
+      search: '',
       firstClickOver: false,
       savedSelection: null,
       initialHTML: '',
