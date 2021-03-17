@@ -107,7 +107,6 @@
         </button>
       </div>
     </div>
-    <!-- Model
     <div>
       <p class="text--large">
         Overview
@@ -120,7 +119,6 @@
         />
       </div>
     </div>
-    -->
     <div>
       <p class="text--large">
         Plans
@@ -157,13 +155,13 @@
 <script>
 const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
-// const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
+const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
 
 export default {
   components: {
     NewPlan,
-    RichEditor
-    // Periodise
+    RichEditor,
+    Periodise
   },
   data () {
     return {

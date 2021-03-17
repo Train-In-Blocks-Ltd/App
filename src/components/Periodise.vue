@@ -53,7 +53,7 @@
 <script>
 export default {
   props: {
-    plan: Array
+    plan: Object
   }
 }
 </script>

@@ -80,9 +80,11 @@ Vue.mixin({
     // Tidy
 
     sort_sessions (plan) {
-      plan.sessions.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
-      })
+      if (plan.sessions) {
+        plan.sessions.sort((a, b) => {
+          return new Date(a.date) - new Date(b.date)
+        })
+      }
     },
     remove_brackets_and_checkbox (dataIn) {
       return dataIn !== null ? dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '') : dataIn
