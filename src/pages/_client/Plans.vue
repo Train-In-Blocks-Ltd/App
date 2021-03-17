@@ -60,6 +60,18 @@
     display: grid;
     grid-gap: .5rem
   }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .periodise_grid {
+      grid-template-columns: 1fr 1fr
+    }
+  }
+  @media (max-width: 567px) {
+    .periodise_grid {
+      grid-template-columns: 1fr
+    }
+  }
 </style>
 <template>
   <div>
