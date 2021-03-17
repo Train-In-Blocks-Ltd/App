@@ -87,7 +87,9 @@ div#rich_show_content a {
 }
 .pop_up--add_template {
   display: grid;
-  grid-gap: 1rem
+  grid-gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto
 }
 .template_item svg {
   cursor: pointer;
@@ -230,6 +232,27 @@ div#rich_editor {
       </div>
       <!-- TEMPLATE -->
       <div v-if="showAddTemplate" class="pop_up--add_template small_border_radius">
+        <p>
+          System templates
+        </p>
+        <div class="template_item">
+          <button @click="add_template('<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>')">
+            Track with sets, reps, and load
+          </button>
+        </div>
+        <div class="template_item">
+          <button @click="add_template('<div>[ EXERCISE: SETS x REPS ]</div>')">
+            Track with sets, reps
+          </button>
+        </div>
+        <div class="template_item">
+          <button @click="add_template('<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>')">
+            Track with other measurements
+          </button>
+        </div>
+        <p>
+          Your templates
+        </p>
         <div
           v-for="(item, index) in dataForTemplates"
           :key="'template-' + index"
@@ -265,7 +288,7 @@ div#rich_editor {
             :src="require('../assets/svg/editor/preview.svg')"
             @click="previewTemplate = item.template, $modal.show(`preview_template_${item.id}`), will_body_scroll(false)"
           />
-        </div>
+        </div><br>
       </div>
       <div
         id="rich_editor"
