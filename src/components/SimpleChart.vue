@@ -48,10 +48,10 @@
   <div id="simple_chart">
     <div v-if="dataPoints.length !== 0" class="content_wrapper">
       <div class="selected_bar">
-        <p class="text--small">
+        <h2>
           {{ focusText !== 'Select a point' ? focusText[1] : '' }}
-        </p>
-        <p class="text--small grey">
+        </h2>
+        <p class="grey">
           {{ focusText !== 'Select a point' ? focusText[0] : focusText }}
         </p>
       </div>
@@ -89,10 +89,10 @@
       </svg>
     </div>
     <div v-else>
-      <p class="text--small">
+      <h2>
         No data to plot on the graph
-      </p>
-      <p class="text--small grey">
+      </h2>
+      <p class="grey">
         Make sure that you've used the correct format and have chosen a selection above
       </p>
     </div>

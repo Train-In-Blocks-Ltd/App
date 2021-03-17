@@ -80,12 +80,12 @@
         <div class="center_wrapped">
           <form class="form_grid" @submit.prevent="change_password(), $modal.hide('reset-password'), $parent.will_body_scroll(true)">
             <div>
-              <p class="text--large">
+              <h1>
                 Stay safe
-              </p>
-              <p class="text--large grey">
+              </h1>
+              <h2 class="grey">
                 Reset your password
-              </p>
+              </h2>
             </div>
             <input
               ref="pass"
@@ -97,16 +97,16 @@
               required
             >
             <div>
-              <p class="text--small">
+              <h2>
                 Requirements
-              </p>
-              <p class="text--small grey">
+              </h2>
+              <p class="grey">
                 Number (0-9)
               </p>
-              <p class="text--small grey">
+              <p class="grey">
                 At least 8 characters
               </p>
-              <p class="text--small grey">
+              <p class="grey">
                 Can't contain your username
               </p>
             </div>
@@ -145,9 +145,9 @@
         </div>
       </div>
     </modal>
-    <p class="text--large">
+    <h1>
       Your Account
-    </p>
+    </h1>
     <form v-if="$parent.claims" class="details_container">
       <div class="details">
         <p style="margin-bottom: 1rem">
@@ -184,9 +184,9 @@
         </select>
       </div>
       <div class="privacy">
-        <p class="text--small">
+        <h2>
           Your Privacy and Data
-        </p>
+        </h2>
         <p>You can find more information about our policies below:</p>
         <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
         <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>

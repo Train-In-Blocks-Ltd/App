@@ -51,9 +51,9 @@
 <template>
   <div>
     <div>
-      <p class="text--small name">
+      <h2 class="name">
         {{ name }}
-      </p>
+      </h2>
       <div v-if="email !== ''" class="client_link__details">
         <inline-svg :src="require('../assets/svg/email.svg')" />
         <p>{{ email }}</p>

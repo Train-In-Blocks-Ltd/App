@@ -277,10 +277,10 @@ div#rich_editor {
                   </button>
                 </div>
                 <div v-else>
-                  <p class="text--small">
+                  <h2>
                     Something went wrong with the preview
-                  </p>
-                  <p class="text--small grey">
+                  </h2>
+                  <p class="grey">
                     Please try again
                   </p><br>
                   <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
@@ -309,7 +309,7 @@ div#rich_editor {
       />
     </div>
     <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="update_content(remove_brackets(htmlInjection))" />
-    <p v-if="!showEditState && test_empty_html(htmlInjection)" class="text--small grey padding">
+    <p v-if="!showEditState && test_empty_html(htmlInjection)" class="grey padding">
       {{ emptyPlaceholder }}
     </p>
   </div>

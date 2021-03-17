@@ -94,6 +94,17 @@
     display: grid;
     align-items: start
   }
+  h1, h2 {
+    margin: 0
+  }
+  h1, .text--large {
+    /* stylelint-disable-next-line */
+    font-size: 2.6rem !important
+  }
+  h2, .text--small {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important
+  }
   .notAuth {
     margin: 0
   }
@@ -177,17 +188,6 @@
   }
   p {
     margin: 0
-  }
-  .text--large {
-    margin-top: 0;
-    /* stylelint-disable-next-line */
-    font-size: 2.6rem!important;
-    line-height: 1.2
-  }
-  .text--small {
-    /* stylelint-disable-next-line */
-    font-size: 1.6rem!important;
-    line-height: 1.2
   }
   .text--error {
     font-size: .8rem;
@@ -747,10 +747,10 @@
     p, li {
       font-size: .8rem
     }
-    .text--large {
+    h1, .text--large {
       font-size: 2rem
     }
-    .text--small {
+    h2, .text--small {
       font-size: 1.2rem
     }
     .button--state {

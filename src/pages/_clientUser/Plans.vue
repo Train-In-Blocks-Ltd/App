@@ -61,17 +61,17 @@
   <div id="client-plan">
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id" class="client_plan">
-        <p class="plan_name text--large">
+        <h1 class="plan_name">
           {{ plan.name }}
-        </p>
+        </h1>
         <div class="plan_notes">
           <div class="plan_notes__header">
-            <p class="text--small bottom_margin">
+            <h2 class="bottom_margin">
               Plan Notes
-            </p>
+            </h2>
           </div>
           <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_html fadeIn" v-html="remove_brackets_and_checkbox(plan.notes)" />
-          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_html text--small grey">
+          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_html grey">
             No plan notes added...
           </p>
         </div>
@@ -163,9 +163,9 @@
             </div>
             <div v-if="session.checked === 1">
               <hr>
-              <p class="text--small">
+              <h2>
                 Feedback
-              </p>
+              </h2>
               <rich-editor
                 :show-edit-state="giveFeedback === session.id"
                 :html-injection.sync="session.feedback"
@@ -186,10 +186,10 @@
           </div>
         </div>
         <div v-else>
-          <p class="text--small">
+          <h2>
             No sessions yet
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             Please contact your trainer or coach for more details
           </p>
           <div class="spacer" />

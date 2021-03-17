@@ -107,9 +107,9 @@
 <template>
   <div id="calendar_view">
     <div class="calendar_header">
-      <p v-if="!emptyWeek" class="text--large">
+      <h1>
         {{ get_month(thisWeek[0].date_split[1]) }} {{ thisWeek[0].date_split[0] }}
-      </p>
+      </h1>
       <div class="calendar_header__bar">
         <inline-svg
           :src="require('../assets/svg/arrow.svg')"
@@ -138,10 +138,10 @@
         class="day_container"
       >
         <div class="day_header">
-          <p class="text--small">
+          <h2>
             {{ get_day(index) }}
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             {{ day.date_split[2] }}
           </p>
         </div>
@@ -179,7 +179,6 @@ export default {
   },
   data () {
     return {
-      emptyWeek: true,
       currentWeekStart: null,
       thisWeek: [],
       weekDiff: 0
@@ -192,7 +191,6 @@ export default {
   },
   mounted () {
     this.get_week()
-    this.thisWeek.length === 0 ? this.emptyWeek = true : this.emptyWeek = false
   },
   methods: {
 

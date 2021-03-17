@@ -48,9 +48,6 @@
     display: flex;
     justify-content: space-between
   }
-  .section-title {
-    margin: 0 0 2rem 0
-  }
   .icon--expand {
     cursor: pointer;
     vertical-align: middle;
@@ -389,10 +386,10 @@
     >
       <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), $parent.$parent.will_body_scroll(true)">
         <div class="center_wrapped">
-          <p class="text--small">
+          <h2>
             Move to a different microcycle
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             This will change the colour code assigned to the sessions
           </p><br>
           <label for="range">Move to:</label>
@@ -426,10 +423,10 @@
     >
       <form class="modal--shift" @submit.prevent="shift_across(), $parent.$parent.will_body_scroll(true)">
         <div class="center_wrapped">
-          <p class="text--small">
+          <h2>
             Shift the dates of the sessions
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             This will move the dates ahead or behind by the specified amount
           </p><br>
           <label for="range">Shift session dates by: </label>
@@ -461,10 +458,10 @@
     >
       <div class="modal--copy">
         <form v-if="copyAcrossPage === 0" class="center_wrapped" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
-          <p class="text--small">
+          <h2>
             Copy across to different microcycles
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             Progress each session in just a few clicks
           </p><br><br>
           <label for="range">From {{ currentWeek }} to: </label>
@@ -512,10 +509,10 @@
               v-show="copyAcrossView === exerciseGroupIndex"
               :key="`exercise_${protocolIndex}_${exerciseGroupIndex}`"
             >
-              <p class="text--small">
+              <h2>
                 {{ protocol[1][exerciseGroupIndex][0] }}
-              </p>
-              <p class="text--small grey">
+              </h2>
+              <p class="grey">
                 {{ protocol[1][exerciseGroupIndex][1] }} {{ protocol[1][exerciseGroupIndex][2] }}
               </p>
               <div
@@ -550,10 +547,10 @@
           </form>
         </div>
         <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)">
-          <p class="text--small">
+          <h2>
             You're all set
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
           </p><br>
           <button class="cancel" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
@@ -574,10 +571,10 @@
     >
       <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), $parent.$parent.will_body_scroll(true)">
         <div class="center_wrapped">
-          <p class="text--small">
+          <h2>
             Create a similar plan
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             Copy this plan to the same/different client
           </p><br>
           <select v-model="duplicateClientID" name="duplicate_client">
@@ -711,9 +708,9 @@
           <div class="calendar">
             <div id="plan_notes" :class="{ activeState: editPlanNotes }">
               <div class="plan_notes__header">
-                <p class="text--small">
+                <h2>
                   Plan Notes
-                </p>
+                </h2>
                 <a v-if="!editPlanNotes" class="a--plan_notes" href="javascript:void(0)" @click="editPlanNotes = true, cancel_session_notes(), tempEditorStore = plan.notes">
                   Edit
                 </a>
@@ -760,9 +757,9 @@
           <div class="wrapper-plan">
             <div class="plan_table">
               <div class="plan_table__header">
-                <p class="text--small">
+                <h2>
                   Microcycles
-                </p>
+                </h2>
                 <div class="wrapper-duration">
                   <label for="duration">Duration: </label>
                   <input
@@ -814,7 +811,7 @@
                   </button>
                 </div>
               </div>
-              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--small grey text--no_sessions">
+              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="grey text--no_sessions">
                 No sessions created yet
               </p>
               <div v-if="!$parent.$parent.loading">
@@ -929,9 +926,9 @@
           </div>
           <div v-if="isStatsOpen" class="graph fadeIn delay fill_mode_both">
             <div class="section--top">
-              <p class="text--large section-title">
+              <h1 class="bottom_margin">
                 Statistics
-              </p>
+              </h1>
               <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.will_body_scroll(true)" />
             </div>
             <div class="container--content">

@@ -50,12 +50,12 @@
       <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_overlay" />
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
-          <p class="text--large">
+          <h1>
             {{ $parent.portfolio.business_name }}
-          </p>
-          <p class="text--large grey">
+          </h1>
+          <h2 class="grey">
             {{ $parent.portfolio.trainer_name }}
-          </p>
+          </h2>
           <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
           <button class="cancel" @click="isPortfolioOpen = false, $parent.will_body_scroll(true)">
             Close
@@ -92,14 +92,14 @@
     <div id="client_home">
       <div class="client_home__today">
         <div class="client_home__today__header">
-          <p class="text--large">
+          <h1>
             Today
-          </p>
+          </h1>
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
           v-if="todays_sessions_store.length === 0 && !$parent.loading"
-          class="text--small text--no_sessions grey"
+          class="text--no_sessions grey"
         >
           Nothing planned for today
         </p>
@@ -140,9 +140,9 @@
               </div>
               <div v-if="session.checked === 1">
                 <hr>
-                <p class="text--small">
+                <h2>
                   Feedback
-                </p>
+                </h2>
                 <rich-editor
                   :show-edit-state="giveFeedback === session.id"
                   :html-injection.sync="session.feedback"
@@ -166,9 +166,9 @@
       </div>
       <div class="spacer" />
       <div class="client_home__plans">
-        <p class="text--large">
+        <h1>
           Plans
-        </p>
+        </h1>
         <skeleton v-if="$parent.loading" :type="'plan'" />
         <div v-if="!noPlans && !$parent.loading" class="plan_grid">
           <router-link
@@ -177,9 +177,9 @@
             class="plan_link"
             :to="'/clientUser/plan/' + plan.id"
           >
-            <p class="text--small plan-name">
+            <h2 class="plan-name">
               {{ plan.name }}
-            </p>
+            </h2>
             <p
               v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
               class="grey"
@@ -195,7 +195,7 @@
         </div>
         <p
           v-if="noPlans && !$parent.loading"
-          class="text--small text--no_sessions grey"
+          class="text--no_sessions grey"
         >
           No plans yet, please contact your trainer or coach for more information
         </p>

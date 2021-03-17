@@ -40,9 +40,9 @@
       </div>
     </transition>
     <div class="top_bar">
-      <p class="text--large">
+      <h1>
         Archive
-      </p>
+      </h1>
       <a
         v-if="!$parent.archive.no_archive && selectedClients.length < $parent.archive.clients.length"
         href="javascript:void(0)"
@@ -53,7 +53,7 @@
       </a>
     </div>
     <br>
-    <p v-if="$parent.archive.no_archive" class="text--small grey">
+    <p v-if="$parent.archive.no_archive" class="grey">
       No clients are archived :)
     </p>
     <p v-if="$parent.error">

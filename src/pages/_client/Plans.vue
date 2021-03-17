@@ -93,9 +93,9 @@
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
     <div id="client_notes" :class="{ activeState: editClientNotes }">
       <div class="client_notes__header">
-        <p class="text--small">
+        <h2>
           Client Information
-        </p>
+        </h2>
         <a
           v-if="!editClientNotes"
           href="javascript:void(0)"
@@ -120,9 +120,9 @@
       </div>
     </div>
     <div>
-      <p class="text--large">
+      <h1>
         Overview
-      </p>
+      </h1>
       <div class="periodise_grid">
         <periodise
           v-for="(peri, periIndex) in $parent.$parent.client_details.plans"
@@ -132,10 +132,10 @@
       </div>
     </div>
     <div>
-      <p class="text--large">
+      <h1>
         Plans
-      </p>
-      <p v-if="$parent.no_plans" class="text--small grey text--no-plans fadeIn">
+      </h1>
+      <p v-if="$parent.no_plans" class="grey text--no-plans fadeIn">
         No plans yet, use the button on the top-right of your screen
       </p>
       <div v-else>
@@ -149,9 +149,9 @@
             class="plan_link fadeIn"
           >
             <div>
-              <p class="text--small plan-name">
+              <h2 class="plan-name">
                 {{ plan.name }}
-              </p>
+              </h2>
               <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">
                 What's the purpose of this plan? Head over to this page and edit it.
               </p>

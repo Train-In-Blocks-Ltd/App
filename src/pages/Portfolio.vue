@@ -71,9 +71,9 @@
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
     </div>
     <div v-if="!$parent.loading" class="wrapper_card">
-      <p class="text--small">
+      <h2>
         Portfolio
-      </p>
+      </h2>
       <rich-editor
         :show-edit-state="editing_card"
         :html-injection.sync="$parent.portfolio.notes"

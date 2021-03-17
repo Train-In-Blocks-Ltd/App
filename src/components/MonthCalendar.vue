@@ -90,9 +90,9 @@
 <template>
   <div id="month_calendar">
     <div class="calendar_header">
-      <p class="text--large">
+      <h1>
         {{ currentMonth }} {{ currentYear }}
-      </p>
+      </h1>
       <div class="calendar_header__bar">
         <inline-svg
           :src="require('../assets/svg/arrow.svg')"
