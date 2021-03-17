@@ -142,9 +142,8 @@ div#rich_editor {
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
           <button
-            v-if="showFormatter"
             :class="{ activeStyle: boldActive }"
-            :disabled="!firstClickOver"
+            :disabled="!firstClickOver || !showFormatter"
             title="Bold (CMD/Ctrl + B)"
             class="fadeIn"
             @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
@@ -152,9 +151,8 @@ div#rich_editor {
             <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
           </button>
           <button
-            v-if="showFormatter"
             :class="{ activeStyle: italicActive }"
-            :disabled="!firstClickOver"
+            :disabled="!firstClickOver || !showFormatter"
             title="Italic (CMD/Ctrl + I)"
             class="fadeIn"
             @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
@@ -162,9 +160,8 @@ div#rich_editor {
             <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
           </button>
           <button
-            v-if="showFormatter"
             :class="{ activeStyle: underlineActive }"
-            :disabled="!firstClickOver"
+            :disabled="!firstClickOver || !showFormatter"
             title="Underline (CMD/Ctrl + U)"
             class="fadeIn"
             @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
