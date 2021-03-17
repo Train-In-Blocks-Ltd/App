@@ -389,6 +389,9 @@
     color: var(--base_light);
     opacity: 1; /* Firefox */
   }
+  option {
+    background-color: var(--fore)
+  }
 
   /* Forms */
   .form_grid {
