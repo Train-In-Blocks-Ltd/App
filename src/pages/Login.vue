@@ -207,7 +207,7 @@ export default {
     const scopes = ['openid', 'profile', 'email']
     setTimeout(() => {
       this.splashed = true
-      this.$parent.will_body_scroll(true)
+      this.will_body_scroll(true)
     }, 4000)
     let OktaSignIn
     await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {

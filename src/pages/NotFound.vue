@@ -10,7 +10,7 @@
 export default {
   created () {
     this.$parent.setup()
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
   }
 }
 </script>

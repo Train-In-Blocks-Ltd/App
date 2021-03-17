@@ -232,7 +232,7 @@ export default {
   },
   async mounted () {
     this.$parent.loading = true
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.sort_sessions(this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id)))

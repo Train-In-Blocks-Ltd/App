@@ -26,20 +26,20 @@
     <div v-if="isInstallOpen" class="tab_overlay_content icon_open_middle fadeIn delay fill_mode_both">
       <install-app />
     </div>
-    <div v-if="!isNewClientOpen" class="tab_option tab_option_large" aria-label="New Client" @click="isNewClientOpen = true, $parent.will_body_scroll(false)">
+    <div v-if="!isNewClientOpen" class="tab_option tab_option_large" aria-label="New Client" @click="isNewClientOpen = true, will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/new-client.svg')" aria-label="New Client" />
       <p class="text">
         New Client
       </p>
     </div>
-    <div v-if="!isWhatsNewOpen" class="tab_option icon_open_middle tab_option_large" aria-label="What's New" @click="isWhatsNewOpen = true, $parent.will_body_scroll(false)">
+    <div v-if="!isWhatsNewOpen" class="tab_option icon_open_middle tab_option_large" aria-label="What's New" @click="isWhatsNewOpen = true, will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/whats-new.svg')" aria-label="What's New" />
       <p class="text">
         What's New
       </p>
       <span v-if="$parent.newBuild" class="notify_badge">New</span>
     </div>
-    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_bottom tab_option_small" aria-label="Install App" @click="isInstallOpen = true, $parent.will_body_scroll(false)">
+    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_bottom tab_option_small" aria-label="Install App" @click="isInstallOpen = true, will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App" />
       <p class="text">
         Install
@@ -126,7 +126,7 @@ export default {
     this.$parent.setup()
     this.$parent.client_details = null
     this.version()
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {

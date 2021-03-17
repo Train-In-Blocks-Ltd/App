@@ -119,7 +119,7 @@
             v-if="clients.client_id == $route.params.client_id && showOptions"
             class="a_link"
             href="javascript:void(0)"
-            @click="$modal.show('toolkit')"
+            @click="$modal.show('toolkit'), will_body_scroll(false)"
           >
             Toolkit
           </a>
@@ -235,7 +235,7 @@ export default {
   },
   async created () {
     this.loading = true
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     await this.$parent.setup()
     await this.get_client_details()
     this.__init__()

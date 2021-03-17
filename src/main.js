@@ -35,6 +35,13 @@ Vue.config.productionTip = false
 Vue.mixin({
   methods: {
 
+    // System
+
+    will_body_scroll (state) {
+      const body = document.getElementsByTagName('body')[0]
+      state ? body.style.overflow = 'auto' : body.style.overflow = 'hidden'
+    },
+
     // Protocol
 
     pull_protocols (sessionName, text) {

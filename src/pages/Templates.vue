@@ -203,7 +203,7 @@ export default {
   },
   created () {
     this.$parent.loading = true
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.setup()
     this.$parent.end_loading()
   },

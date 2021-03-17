@@ -1,13 +1,34 @@
 <style scoped>
+  .preview_html {
+    margin: 2rem 0
+  }
   .periodise {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 4rem
+  }
+  .plan {
     display: grid;
     background-color: var(--fore);
     box-shadow: var(--low_shadow);
-    border-radius: 10px
+    border-radius: 10px;
+    transition: .6 all cubic-bezier(.165, .84, .44, 1)
   }
-  p {
-    text-align: center;
+  .plan:hover {
+    box-shadow: var(--high_shadow)
+  }
+  .plan_header {
+    display: grid;
+    grid-gap: 1rem;
     padding: 2rem
+  }
+  .plan_header__options {
+    display: flex
+  }
+  .plan_header__options a {
+    margin-right: 1rem
   }
   .microcycles {
     display: flex
@@ -31,21 +52,67 @@
   .noColor:not(.noColor:last-child) {
     border-right: 1px solid var(--base_faint)
   }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .periodise {
+      grid-template-columns: 1fr
+    }
+  }
 </style>
 
 <template>
   <div class="periodise">
-    <p>
-      {{ plan.name }}
-    </p>
-    <div class="microcycles">
-      <div
-        v-for="(micro, microIndex) in plan.duration"
-        :key="`micro_${microIndex}`"
-        :style="{ backgroundColor: plan.block_color.split(',')[microIndex] }"
-        :class="{ noColor: plan.block_color === '' }"
-        class="microcycle"
-      />
+    <modal :name="'preview'" height="100%" width="100%" :adaptive="true" :click-to-close="false">
+      <div>
+        <div class="center_wrapped">
+          <h2>
+            Plan notes
+          </h2>
+          <div class="preview_html" v-html="preview" />
+          <button class="close" @click="preview = null, $modal.hide('preview'), will_body_scroll(true)">
+            Close
+          </button>
+          <div class="spacer" />
+        </div>
+      </div>
+    </modal>
+    <div
+      v-for="(plan, planIndex) in plans"
+      :key="`plan_${planIndex}`"
+      class="plan"
+    >
+      <div class="plan_header">
+        <h2>
+          {{ plan.name }}
+        </h2>
+        <div class="plan_header__options">
+          <router-link
+            :to="isTrainer ? `plan/${plan.id}` : `/clientUser/plan/${plan.id}`"
+            href="javascript:void(0)"
+            class="a_link"
+          >
+            {{ isTrainer ? 'Edit' : 'View' }}
+          </router-link>
+          <a
+            v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
+            href="javascript:void(0)"
+            class="a_link"
+            @click="preview = plan.notes, $modal.show('preview'), will_body_scroll(false)"
+          >
+            Notes
+          </a>
+        </div>
+      </div>
+      <div class="microcycles">
+        <div
+          v-for="(micro, microIndex) in plan.duration"
+          :key="`plan_${planIndex}_micro_${microIndex}`"
+          :style="{ backgroundColor: plan.block_color.split(',')[microIndex] }"
+          :class="{ noColor: plan.block_color === '' }"
+          class="microcycle"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -53,7 +120,13 @@
 <script>
 export default {
   props: {
-    plan: Object
+    isTrainer: Boolean,
+    plans: Array
+  },
+  data () {
+    return {
+      preview: null
+    }
   }
 }
 </script>

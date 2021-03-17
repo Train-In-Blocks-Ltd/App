@@ -78,7 +78,7 @@
     >
       <div class="modal--reset">
         <div class="center_wrapped">
-          <form class="form_grid" @submit.prevent="change_password(), $modal.hide('reset-password'), $parent.will_body_scroll(true)">
+          <form class="form_grid" @submit.prevent="change_password(), $modal.hide('reset-password'), will_body_scroll(true)">
             <div>
               <h1>
                 Stay safe
@@ -134,7 +134,7 @@
               <button class="right_margin" type="submit" :disabled="password.check === null || password.new !== password.match">
                 Change your password
               </button>
-              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.will_body_scroll(true)">
+              <button class="cancel" @click.prevent="$modal.hide('reset-password'), will_body_scroll(true)">
                 Close
               </button>
             </div>
@@ -159,7 +159,7 @@
           </button>
         </div>
         <div>
-          <button @click.prevent="$modal.show('reset-password'), $parent.will_body_scroll(false)">
+          <button @click.prevent="$modal.show('reset-password'), will_body_scroll(false)">
             Change Your Password
           </button>
         </div>
@@ -227,7 +227,7 @@ export default {
   created () {
     this.$parent.loading = true
     this.$parent.setup()
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {

@@ -36,13 +36,6 @@
     margin-bottom: 4rem
   }
 
-  /* Plans */
-  .plan_grid {
-    display: grid;
-    grid-gap: 2rem;
-    margin: 2rem 0
-  }
-
   /* Add plan Form */
   .button--new_plan {
     margin: 1rem 0 2rem 0
@@ -83,7 +76,7 @@
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small"
       aria-label="New Plan"
-      @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)"
+      @click="isNewPlanOpen = true, will_body_scroll(false)"
     >
       <inline-svg class="no_fill" :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
@@ -121,45 +114,16 @@
     </div>
     <div>
       <h1>
-        Overview
-      </h1>
-      <div class="periodise_grid">
-        <periodise
-          v-for="(peri, periIndex) in $parent.$parent.client_details.plans"
-          :key="`peri_${periIndex}`"
-          :plan="peri"
-        />
-      </div>
-    </div>
-    <div>
-      <h1>
         Plans
       </h1>
-      <p v-if="$parent.no_plans" class="grey text--no-plans fadeIn">
+      <p
+        v-if="$parent.no_plans"
+        class="text--no_sessions grey"
+      >
         No plans yet, use the button on the top-right of your screen
       </p>
-      <div v-else>
-        <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
-        <div v-else class="plan_grid">
-          <router-link
-            v-for="(plan, index) in $parent.$parent.client_details.plans"
-            :key="index"
-            :to="'plan/' + plan.id"
-            :class="{ recently_added: persistResponse === plan.name }"
-            class="plan_link fadeIn"
-          >
-            <div>
-              <h2 class="plan-name">
-                {{ plan.name }}
-              </h2>
-              <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">
-                What's the purpose of this plan? Head over to this page and edit it.
-              </p>
-              <div v-else class="plan_link__notes__content" v-html="remove_brackets_and_checkbox(plan.notes)" />
-            </div>
-          </router-link>
-        </div>
-      </div>
+      <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
+      <periodise v-else :is-trainer="true" :plans="$parent.$parent.client_details.plans" />
     </div>
   </div>
 </template>
@@ -191,7 +155,7 @@ export default {
     }
   },
   created () {
-    this.$parent.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.check_client()
   }
 }

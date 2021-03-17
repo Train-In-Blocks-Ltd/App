@@ -160,7 +160,7 @@
           </h2>
         </div>
       </div>
-      <button class="cancel" @click="$parent.$modal.hide('toolkit')">
+      <button class="cancel" @click="$parent.$modal.hide('toolkit'), will_body_scroll(true)">
         Close
       </button>
     </div>

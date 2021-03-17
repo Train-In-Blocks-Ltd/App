@@ -1,5 +1,5 @@
 <template>
-  <form class="form_grid add_plan" name="add_plan" @submit.prevent="create_plan(), $parent.isNewPlanOpen = false, $parent.$parent.$parent.will_body_scroll(true)">
+  <form class="form_grid add_plan" name="add_plan" @submit.prevent="create_plan(), $parent.isNewPlanOpen = false, will_body_scroll(true)">
     <div class="bottom_margin">
       <h2>
         Create a new plan and use it for exercise, nutrition or anything else
@@ -30,7 +30,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, $parent.$parent.$parent.will_body_scroll(true)">
+      <button class="cancel" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

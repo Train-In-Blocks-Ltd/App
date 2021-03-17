@@ -18,11 +18,6 @@
 
 <style scoped>
   /* Containers */
-  .plan_grid {
-    display: grid;
-    grid-gap: 2rem;
-    margin: 2rem 0
-  }
   .container--sessions {
     margin: 2rem 0
   }
@@ -57,7 +52,7 @@
             {{ $parent.portfolio.trainer_name }}
           </h2>
           <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
-          <button class="cancel" @click="isPortfolioOpen = false, $parent.will_body_scroll(true)">
+          <button class="cancel" @click="isPortfolioOpen = false, will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -69,7 +64,7 @@
         v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
         aria-label="Information"
         class="tab_option tab_option_small"
-        @click="isPortfolioOpen = true, $parent.will_body_scroll(false)"
+        @click="isPortfolioOpen = true, will_body_scroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information" />
         <p class="text">
@@ -81,7 +76,7 @@
         :class="{ icon_open_middle: $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>' }"
         class="tab_option tab_option_small"
         aria-label="Install App"
-        @click="isInstallOpen = true, $parent.will_body_scroll(false)"
+        @click="isInstallOpen = true, will_body_scroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
         <p class="text">
@@ -169,30 +164,8 @@
         <h1>
           Plans
         </h1>
-        <skeleton v-if="$parent.loading" :type="'plan'" />
-        <div v-if="!noPlans && !$parent.loading" class="plan_grid">
-          <router-link
-            v-for="(plan, index) in $parent.clientUser.plans"
-            :key="'plan-' + index"
-            class="plan_link"
-            :to="'/clientUser/plan/' + plan.id"
-          >
-            <h2 class="plan-name">
-              {{ plan.name }}
-            </h2>
-            <p
-              v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
-              class="grey"
-            >
-              No plan notes added.
-            </p>
-            <div
-              v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
-              class="plan_link__notes__content"
-              v-html="remove_brackets_and_checkbox(plan.notes)"
-            />
-          </router-link>
-        </div>
+        <skeleton v-if="$parent.loading" :type="'plan'" class="fadeIn" />
+        <periodise v-else :is-trainer="false" :plans="$parent.clientUser.plans" />
         <p
           v-if="noPlans && !$parent.loading"
           class="text--no_sessions grey"
@@ -207,11 +180,13 @@
 <script>
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
+const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
 
 export default {
   components: {
     RichEditor,
-    InstallApp
+    InstallApp,
+    Periodise
   },
   data () {
     return {
@@ -236,7 +211,7 @@ export default {
   },
   async mounted () {
     this.$parent.loading = true
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()

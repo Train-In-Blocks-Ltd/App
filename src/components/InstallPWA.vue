@@ -29,7 +29,7 @@
     <div class="bottom_bar">
       <button
         v-if="$parent.$parent.pwa.canInstall"
-        @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.will_body_scroll(true)"
+        @click="installPWA(), $parent.isInstallOpen = false, will_body_scroll(true)"
       >
         Install
       </button>
@@ -42,7 +42,7 @@
           Launch
         </button>
       </a>
-      <button class="cancel" @click="$parent.isInstallOpen = false, $parent.$parent.will_body_scroll(true)">
+      <button class="cancel" @click="$parent.isInstallOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

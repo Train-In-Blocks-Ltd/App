@@ -14,7 +14,7 @@
     name="add_client"
     class="form_grid add_client"
     spellcheck="false"
-    @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.will_body_scroll(true)"
+    @submit.prevent="save(), $parent.isNewClientOpen = false, will_body_scroll(true)"
   >
     <div class="bottom_margin">
       <h2>
@@ -57,7 +57,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, $parent.$parent.will_body_scroll(true)">
+      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

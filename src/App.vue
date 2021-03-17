@@ -105,6 +105,10 @@
     /* stylelint-disable-next-line */
     font-size: 1.6rem !important
   }
+  em {
+    /* stylelint-disable-next-line */
+    color: var(--base) !important
+  }
   .notAuth {
     margin: 0
   }
@@ -197,7 +201,6 @@
   .text--no_clients {
     margin: 2rem 0 4rem 0
   }
-  .text--no-plans,
   .text--no_sessions {
     margin: 2rem 0 8rem 0
   }
@@ -568,8 +571,7 @@
   .client_link_wrapper {
     text-decoration: none
   }
-  .client_link,
-  .plan_link {
+  .client_link {
     display: grid;
     padding: 2rem;
     grid-gap: 1rem;
@@ -581,23 +583,22 @@
     border-radius: 10px;
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
-  .client_link:hover,
-  .plan_link:hover {
+  .client_link:hover {
     box-shadow: var(--high_shadow)
   }
   .client_link__notes__content,
-  .plan_link__notes__content {
+  .preview_html {
     font-size: .8rem;
     margin-top: .4rem
   }
   .client_link__notes__content *,
-  .plan_link__notes__content *,
+  .preview_html *,
   .plan-name {
     color: var(--base);
     transition: all .6s cubic-bezier(.165, .84, .44, 1)
   }
   .client_link__notes__content p,
-  .plan_link__notes__content p {
+  .preview_html p {
     margin: .4rem 0
   }
   .client_name,
@@ -606,14 +607,14 @@
   }
   .client_link__notes__content h1,
   .client_link__notes__content h2,
-  .plan_link__notes__content h1,
-  .plan_link__notes__content h2 {
+  .preview_html h1,
+  .preview_html h2 {
     font-size: 1rem
   }
   .client_link__notes__content img,
   .client_link__notes__content iframe,
-  .plan_link img,
-  .plan_link iframe {
+  .preview_html img,
+  .preview_html iframe {
     margin: 1rem 0;
     max-width: 500px;
     border-radius: 3px;
@@ -623,9 +624,9 @@
   .client_link .client_link__notes__content img,
   .client_link .client_link__notes__content iframe,
   .client_link .client_link__notes__content a,
-  .plan_link img,
-  .plan_link iframe,
-  .plan_link a {
+  .preview_html img,
+  .preview_html iframe,
+  .preview_html a {
     display: none
   }
 
@@ -1201,10 +1202,6 @@ export default {
 
     // OTHER SHARED METHODS
 
-    will_body_scroll (state) {
-      const body = document.getElementsByTagName('body')[0]
-      state ? body.style.overflow = 'auto' : body.style.overflow = 'hidden'
-    },
     confirmLeave (e) {
       if (this.dontLeave) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'

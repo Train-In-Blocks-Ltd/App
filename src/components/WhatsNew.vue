@@ -81,7 +81,7 @@ img {
       </div>
     </div>
     <br>
-    <button class="cancel" @click="$parent.isWhatsNewOpen = false, $parent.$parent.will_body_scroll(true), update_version()">
+    <button class="cancel" @click="$parent.isWhatsNewOpen = false, will_body_scroll(true), update_version()">
       Close
     </button>
   </div>

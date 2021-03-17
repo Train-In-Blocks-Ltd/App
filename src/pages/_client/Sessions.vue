@@ -370,7 +370,7 @@
           <p><i>[sRPE (CR10): 8]</i></p>
           <p><i>[sRPE (Borg): 16]</i></p><br>
           <p>See <i>Help</i> for more information</p><br>
-          <button class="cancel" @click="$modal.hide('info'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click="$modal.hide('info'), will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -384,7 +384,7 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), $parent.$parent.will_body_scroll(true)">
+      <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), will_body_scroll(true)">
         <div class="center_wrapped">
           <h2>
             Move to a different microcycle
@@ -407,7 +407,7 @@
           <button type="submit">
             Move
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -421,7 +421,7 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--shift" @submit.prevent="shift_across(), $parent.$parent.will_body_scroll(true)">
+      <form class="modal--shift" @submit.prevent="shift_across(), will_body_scroll(true)">
         <div class="center_wrapped">
           <h2>
             Shift the dates of the sessions
@@ -442,7 +442,7 @@
           <button type="submit">
             Shift
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -486,13 +486,13 @@
             min="1"
             required
           ><br><br>
-          <button type="button" class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
+          <button type="button" class="cancel" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
             Cancel
           </button>
           <button v-if="!simpleCopy" type="submit">
             Next
           </button>
-          <button v-else @click.prevent="copy_across(), $modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
+          <button v-else @click.prevent="copy_across(), $modal.hide('copy'), will_body_scroll(true)">
             Copy
           </button>
         </form>
@@ -546,7 +546,7 @@
             </div>
           </form>
         </div>
-        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)">
+        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), will_body_scroll(true)">
           <h2>
             You're all set
           </h2>
@@ -569,7 +569,7 @@
       :adaptive="true"
       :click-to-close="false"
     >
-      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), $parent.$parent.will_body_scroll(true)">
+      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), will_body_scroll(true)">
         <div class="center_wrapped">
           <h2>
             Create a similar plan
@@ -592,7 +592,7 @@
           <button type="submit">
             Duplicate
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('duplicate'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -603,7 +603,7 @@
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small fadeIn"
       aria-label="Statistics"
-      @click="isStatsOpen = true, $parent.$parent.will_body_scroll(false)"
+      @click="isStatsOpen = true, will_body_scroll(false)"
     >
       <inline-svg :src="require('../../assets/svg/stats.svg')" />
       <p class="text">
@@ -630,9 +630,9 @@
         </p>
         <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
         <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
+        <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), will_body_scroll(false)">Copy Across</a>
+        <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), will_body_scroll(false)">Move</a>
+        <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), will_body_scroll(false)">Shift</a>
         <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
       </div>
@@ -689,7 +689,7 @@
             <a
               class="a_link"
               href="javascript:void(0)"
-              @click="$modal.show('duplicate'), $parent.$parent.will_body_scroll(false)"
+              @click="$modal.show('duplicate'), will_body_scroll(false)"
             >
               <inline-svg :src="require('../../assets/svg/copy.svg')" />
               Duplicate plan
@@ -801,7 +801,7 @@
                       class="change_week_color"
                       @click="editingWeekColor = !editingWeekColor"
                     />
-                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.will_body_scroll(false)" />
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), will_body_scroll(false)" />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
@@ -929,7 +929,7 @@
               <h1 class="bottom_margin">
                 Statistics
               </h1>
-              <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.will_body_scroll(true)" />
+              <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, will_body_scroll(true)" />
             </div>
             <div class="container--content">
               <div class="data-options">
@@ -1144,7 +1144,7 @@ export default {
     }
   },
   created () {
-    this.$parent.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.sessions = true
   },
   async mounted () {
