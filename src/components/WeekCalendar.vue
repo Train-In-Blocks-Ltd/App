@@ -141,7 +141,7 @@
           <h2>
             {{ get_day(index) }}
           </h2>
-          <p class="grey">
+          <p class="text--small grey">
             {{ day.date_split[2] }}
           </p>
         </div>

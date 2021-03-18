@@ -14,7 +14,7 @@
     background-color: var(--fore);
     box-shadow: var(--low_shadow);
     border-radius: 10px;
-    transition: .6 all cubic-bezier(.165, .84, .44, 1)
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
   }
   .plan:hover {
     box-shadow: var(--high_shadow)
