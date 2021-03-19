@@ -327,6 +327,8 @@ div#rich_editor {
         data-placeholder="Start typing..."
         @click="firstClickOver = true, save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
         @keyup="firstClickOver = true, save_selection(), update_edited_notes()"
+        @focus="allowStyleDetect = true"
+        @blur="allowStyleDetect = false"
         v-html="update_content(initialHTML)"
       />
     </div>
@@ -357,6 +359,7 @@ export default {
       editedHTML: '',
 
       // Style state
+      allowStyleDetect: false,
       showStyleBar: false,
       boldActive: false,
       italicActive: false,
@@ -418,7 +421,7 @@ export default {
     move_style_bar () {
       let sel = window.getSelection()
       const bar = document.getElementById('style_bar')
-      if (sel.type === 'Range') {
+      if (sel.type === 'Range' && this.allowStyleDetect) {
         this.showStyleBar = true
         if (sel.focusNode.nodeName !== '#text') {
           sel = sel.focusNode
