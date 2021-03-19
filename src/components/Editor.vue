@@ -169,7 +169,6 @@ div#rich_editor {
   <div id="wrapper--rich_editor">
     <div v-if="editState">
       <div
-        v-show="showStyleBar"
         id="style_bar"
       >
         <button
@@ -334,8 +333,6 @@ div#rich_editor {
         data-placeholder="Start typing..."
         @click="firstClickOver = true, save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
         @keyup="firstClickOver = true, save_selection(), update_edited_notes()"
-        @focus="allowStyleDetect = true"
-        @blur="allowStyleDetect = false"
         v-html="update_content(initialHTML)"
       />
     </div>
@@ -387,7 +384,6 @@ export default {
 
       // Style state
       allowStyleDetect: false,
-      showStyleBar: false,
       boldActive: false,
       italicActive: false,
       underlineActive: false,
@@ -414,10 +410,10 @@ export default {
       this.initialHTML = this.htmlInjection
       if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
-        document.addEventListener('selectionchange', this.move_style_bar)
+        document.addEventListener('click', this.toggle_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
-        document.removeEventListener('selectionchange', this.move_style_bar)
+        document.removeEventListener('click', this.toggle_formatter)
         this.firstClickOver = false
       }
     },
@@ -448,28 +444,44 @@ export default {
       return html
     },
 
-    // MISC.
+    // Caret
 
-    move_style_bar () {
-      let sel = window.getSelection()
-      const bar = document.getElementById('style_bar')
-      if (sel.type === 'Range' && this.allowStyleDetect) {
-        this.showStyleBar = true
-        if (sel.focusNode.nodeName !== '#text') {
-          sel = sel.focusNode
-          const letterLength = window.getSelection().focusNode.offsetWidth / window.getSelection().focusNode.textContent.length
-          bar.style.top = `${sel.getBoundingClientRect().top - 48}px`
-          bar.style.left = `${letterLength * window.getSelection().focusOffset + sel.getBoundingClientRect().left - 66}px`
-        } else {
-          sel = sel.focusNode.parentNode
-          const letterLength = window.getSelection().focusNode.parentNode.offsetWidth / window.getSelection().focusNode.parentNode.textContent.length
-          bar.style.top = `${sel.getBoundingClientRect().top - 48}px`
-          bar.style.left = `${letterLength * window.getSelection().focusOffset + sel.getBoundingClientRect().left - 66}px`
+    get_caret_coordinates () {
+      let x = 0
+      let y = 0
+      const isSupported = typeof window.getSelection !== 'undefined'
+      if (isSupported) {
+        const selection = window.getSelection()
+        if (selection.rangeCount !== 0) {
+          const range = selection.getRangeAt(0).cloneRange()
+          range.collapse(true)
+          const rect = range.getClientRects()[0]
+          if (rect) {
+            x = rect.left
+            y = rect.top
+          }
         }
+      }
+      return { x, y }
+    },
+    toggle_formatter (event) {
+      const contenteditable = document.getElementById('rich_editor')
+      const formatter = document.getElementById('style_bar')
+      const { x, y } = this.get_caret_coordinates()
+      if (contenteditable.contains(event.target) && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
+        formatter.setAttribute('aria-hidden', 'false')
+        formatter.setAttribute(
+          'style',
+          `left: ${x - 32}px; top: ${y - 36}px`
+        )
       } else {
-        this.showStyleBar = false
+        formatter.setAttribute('aria-hidden', 'true')
+        formatter.setAttribute('style', 'display: none')
       }
     },
+
+    // Misc.
+
     focus_on_editor () {
       document.getElementById('rich_editor').focus()
     },
