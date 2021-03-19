@@ -1,21 +1,3 @@
-<style>
-  .show_html > div,
-  .show_html > p {
-    margin: .6rem 0
-  }
-  .show_html img {
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 1rem 0
-  }
-  .show_html input[type='checkbox'] {
-    margin: .4rem
-  }
-  .show_html a {
-    color: var(--link)
-  }
-</style>
-
 <style scoped>
   /* Containers */
   .container--sessions {
@@ -48,7 +30,7 @@
           <h2 class="grey">
             {{ $parent.portfolio.trainer_name }}
           </h2>
-          <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
+          <div class="client_portfolio__notes" v-html="update_content(remove_brackets_and_checkbox($parent.portfolio.notes))" />
           <button class="cancel" @click="isPortfolioOpen = false, will_body_scroll(true)">
             Close
           </button>
@@ -112,7 +94,7 @@
                   <span class="text--date">{{ session.date }}</span>
                 </div>
               </div>
-              <div class="show_html fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
+              <div class="show_html fadeIn" v-html="update_content(remove_brackets_and_checkbox(session.notes))" />
               <div class="bottom_bar">
                 <div :key="check" class="full_width_bar">
                   <button

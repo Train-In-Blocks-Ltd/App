@@ -120,6 +120,23 @@
     stroke: var(--base)
   }
 
+  /* Show HTML */
+  .show_html > div,
+  .show_html > p {
+    margin: .6rem 0
+  }
+  .show_html img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  .show_html input[type='checkbox'] {
+    margin: .4rem
+  }
+  .show_html a {
+    color: var(--link)
+  }
+
   /* Containers */
   #home,
   #client,

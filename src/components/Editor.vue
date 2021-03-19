@@ -396,12 +396,7 @@ export default {
       showAddImage: false,
       base64Img: null,
       showAddTemplate: false,
-      previewTemplate: null,
-
-      // REGEX
-
-      updateIframeRegex: /<iframe.*?><\/iframe>/gmi,
-      updateURLRegex: /src="(.*?)"/gmi
+      previewTemplate: null
     }
   },
   watch: {
@@ -423,25 +418,6 @@ export default {
     }
   },
   methods: {
-    update_content (html) {
-      let m
-      const arr = []
-      while ((m = this.updateIframeRegex.exec(html)) !== null) {
-        if (m.index === this.updateIframeRegex.lastIndex) {
-          this.updateIframeRegex.lastIndex++
-        }
-        m.forEach((iframeMatch) => {
-          const url = iframeMatch.match(this.updateURLRegex)[0].replace('src=', '').replace(/"/g, '')
-          arr.push([iframeMatch, url])
-        })
-      }
-      if (arr.length !== 0) {
-        arr.forEach((item) => {
-          html = html.replace(item[0], `<a href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
-        })
-      }
-      return html
-    },
 
     // Misc.
 

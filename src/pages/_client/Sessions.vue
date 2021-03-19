@@ -1186,7 +1186,12 @@ export default {
     helper (type, sessionId) {
       switch (type) {
         case 'match_plan':
-          return this.$parent.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+          try {
+            return this.$parent.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+          } catch {
+            setTimeout(() => { this.helper('match_plan') }, 1000)
+          }
+          break
         case 'match_session':
           return this.helper('match_plan').sessions.find(session => session.id === sessionId)
       }

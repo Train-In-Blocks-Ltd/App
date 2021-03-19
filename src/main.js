@@ -103,6 +103,27 @@ Vue.mixin({
       }
       return sentence.join(' ')
     },
+    update_content (html) {
+      let m
+      const arr = []
+      const updateIframeRegex = /<iframe.*?><\/iframe>/gmi
+      const updateURLRegex = /src="(.*?)"/gmi
+      while ((m = updateIframeRegex.exec(html)) !== null) {
+        if (m.index === updateIframeRegex.lastIndex) {
+          updateIframeRegex.lastIndex++
+        }
+        m.forEach((iframeMatch) => {
+          const url = iframeMatch.match(updateURLRegex)[0].replace('src=', '').replace(/"/g, '')
+          arr.push([iframeMatch, url])
+        })
+      }
+      if (arr.length !== 0) {
+        arr.forEach((item) => {
+          html = html.replace(item[0], `<a href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
+        })
+      }
+      return html
+    },
 
     // Other
 
