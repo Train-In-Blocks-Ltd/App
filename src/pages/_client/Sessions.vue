@@ -73,9 +73,6 @@
   #plan_notes {
     margin: 4rem 0
   }
-  .plan_notes__header {
-    display: flex
-  }
   .a--plan_notes {
     color: var(--base);
     font-size: .8rem;
@@ -179,9 +176,6 @@
   }
 
   /* Sessions */
-  .activeState {
-    border: 2px solid var(--base_faint)
-  }
   .session--header {
     display: flex;
     justify-content: space-between
@@ -706,28 +700,15 @@
         </div> <!-- top_grid -->
         <div class="plan_grid">
           <div class="calendar">
-            <div id="plan_notes" :class="{ activeState: editPlanNotes }">
-              <div class="plan_notes__header">
-                <h2>
-                  Plan Notes
-                </h2>
-                <a v-if="!editPlanNotes" class="a--plan_notes" href="javascript:void(0)" @click="editPlanNotes = true, cancel_session_notes(), tempEditorStore = plan.notes">
-                  Edit
-                </a>
-              </div>
+            <div id="plan_notes" :class="{ editorActive: editingPlanNotes }">
+              <h2>
+                Plan Notes
+              </h2>
               <rich-editor
-                :show-edit-state="editPlanNotes"
                 :html-injection.sync="plan.notes"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
+                @on-edit-change="resolve_plan_info_editor"
               />
-              <div v-if="editPlanNotes" class="bottom_bar">
-                <button class="button--save" @click="editPlanNotes = false, update_plan(plan.notes)">
-                  Save
-                </button>
-                <button class="cancel" @click="editPlanNotes = false, plan.notes = tempEditorStore">
-                  Cancel
-                </button>
-              </div>
             </div>
             <div class="wrapper--calendar">
               <a
@@ -811,7 +792,7 @@
                   </button>
                 </div>
               </div>
-              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="grey text--no_sessions">
+              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--holder text--small grey">
                 No sessions created yet
               </p>
               <div v-if="!$parent.$parent.loading">
@@ -850,7 +831,7 @@
                     :id="'session-' + session.id"
                     :key="indexed"
                     class="wrapper--session fadeIn"
-                    :class="{activeState: session.id === editSession}"
+                    :class="{ editorActive: session.id === editSession }"
                   >
                     <div class="session_header">
                       <div class="right_margin">
@@ -891,10 +872,13 @@
                     </div>
                     <rich-editor
                       v-show="expandedSessions.includes(session.id)"
-                      :show-edit-state="session.id === editSession"
+                      :item-id="session.id"
+                      :editing="editSession"
                       :html-injection.sync="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                       :data-for-templates="$parent.$parent.templates"
+                      :force-stop="forceStop"
+                      @on-edit-change="resolve_session_editor"
                     />
                     <div v-if="session.id === showFeedback" class="feedback_wrapper fadeIn">
                       <hr><br>
@@ -902,15 +886,6 @@
                       <div class="show_html" v-html="session.feedback" />
                     </div>
                     <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
-                      <button v-if="session.id !== editSession && !isEditingSession" @click="editing_session_notes(session.id, true), editPlanNotes = false, tempEditorStore = session.notes">
-                        Edit
-                      </button>
-                      <button v-if="session.id === editSession" @click="editing_session_notes(session.id, false)">
-                        Save
-                      </button>
-                      <button v-if="session.id === editSession" class="cancel" @click="cancel_session_notes(), session.notes = tempEditorStore">
-                        Cancel
-                      </button>
                       <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">
                         Feedback
                       </button>
@@ -1055,8 +1030,9 @@ export default {
 
       // EDIT
 
+      forceStop: 0,
       tempEditorStore: null,
-      editPlanNotes: false,
+      editingPlanNotes: false,
       isEditingSession: false,
       editSession: null,
       showFeedback: '',
@@ -1159,6 +1135,53 @@ export default {
     this.$parent.$parent.templates = null
   },
   methods: {
+
+    // Editor resolvers
+
+    resolve_plan_info_editor (state) {
+      const plan = this.helper('match_plan')
+      switch (state) {
+        case 'edit':
+          this.editingPlanNotes = true
+          this.tempEditorStore = plan.notes
+          break
+        case 'save':
+          this.editingPlanNotes = false
+          this.update_plan(plan.notes)
+          break
+        case 'cancel':
+          this.editingPlanNotes = false
+          plan.notes = this.tempEditorStore
+          break
+      }
+    },
+    resolve_session_editor (state, id) {
+      const session = this.helper('match_session', id)
+      switch (state) {
+        case 'edit':
+          this.isEditingSession = true
+          this.editSession = id
+          this.forceStop += 1
+          this.tempEditorStore = session.notes
+          break
+        case 'save':
+          this.isEditingSession = false
+          this.editSession = null
+          this.update_session(id)
+          this.scan()
+          this.$parent.$parent.responseHeader = 'Session updated'
+          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          break
+        case 'cancel':
+          this.isEditingSession = false
+          this.editSession = null
+          session.notes = this.tempEditorStore
+          this.scan()
+          break
+      }
+    },
+
+    // Background
 
     helper (type, sessionId) {
       switch (type) {
@@ -1360,26 +1383,6 @@ export default {
     async create_session () {
       await this.add_session(false)
       this.$parent.$parent.end_loading()
-    },
-
-    // SESSION STATE
-
-    editing_session_notes (sessionId, sessionState) {
-      this.isEditingSession = sessionState
-      this.editSession = sessionId
-      if (!sessionState) {
-        this.update_session(sessionId)
-        this.isEditingSession = false
-        this.editSession = null
-        this.scan()
-        this.$parent.$parent.responseHeader = 'Session updated'
-        this.$parent.$parent.responseDesc = 'Your changes have been saved'
-      }
-    },
-    cancel_session_notes () {
-      this.isEditingSession = false
-      this.editSession = null
-      this.scan()
     },
 
     // GENERAL

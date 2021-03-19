@@ -1,8 +1,23 @@
 <style>
-div#rich_editor {
+.editorActive {
+  border: 2px solid var(--base_faint)
+}
+div#rich_editor, div#rich_show_content {
   outline: none;
   -moz-appearance: none;
   -webkit-appearance: none
+}
+div#rich_show_content, .placeholder {
+  cursor: pointer;
+  padding: 1rem;
+  border: 1px solid var(--base_faint);
+  border-radius: 10px;
+  margin-top: 1rem;
+  transition: .6s opacity cubic-bezier(.165, .84, .44, 1), .6s border cubic-bezier(.165, .84, .44, 1)
+}
+div#rich_show_content:hover, .placeholder:hover {
+  border: 1px solid var(--base_light);
+  opacity: .6
 }
 div#rich_editor div,
 div#rich_editor p,
@@ -51,11 +66,8 @@ div#rich_show_content a {
   padding: .2rem;
   border-radius: 5px;
   background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  box-shadow: var(--high_shadow);
   transition: .6s all cubic-bezier(.165, .84, .44, 1)
-}
-#style_bar:hover {
-  box-shadow: var(--high_shadow)
 }
 #style_bar button {
   padding: 0;
@@ -72,7 +84,7 @@ div#rich_show_content a {
 #rich_toolbar {
   background-color: var(--fore);
   border: 1px solid var(--base_faint);
-  border-radius: 5px 5px 0 0;
+  border-radius: 10px 10px 0 0;
   padding: 0 1rem;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
 }
@@ -137,13 +149,8 @@ div#rich_editor {
   outline-width: 0;
   border: 1px solid var(--base_faint);
   border-top: none;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 10px 10px;
   transition: all .6s cubic-bezier(.165, .84, .44, 1)
-}
-
-/* Show */
-.padding {
-  padding: 1rem 0
 }
 
 /* Responsive */
@@ -160,7 +167,7 @@ div#rich_editor {
 
 <template>
   <div id="wrapper--rich_editor">
-    <div v-if="showEditState">
+    <div v-if="editState">
       <div
         v-show="showStyleBar"
         id="style_bar"
@@ -332,8 +339,25 @@ div#rich_editor {
         v-html="update_content(initialHTML)"
       />
     </div>
-    <div v-if="!showEditState && !test_empty_html(htmlInjection)" id="rich_show_content" class="padding" v-html="update_content(remove_brackets(htmlInjection))" />
-    <p v-if="!showEditState && test_empty_html(htmlInjection)" class="grey padding">
+    <div v-if="editState" class="bottom_bar">
+      <button @click="editState = false , $emit('on-edit-change', 'save', itemId)">
+        Save
+      </button>
+      <button class="cancel" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
+        Cancel
+      </button>
+    </div>
+    <div
+      v-if="!editState && !test_empty_html(htmlInjection)"
+      id="rich_show_content"
+      @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
+      v-html="update_content(remove_brackets(htmlInjection))"
+    />
+    <p
+      v-if="!editState && test_empty_html(htmlInjection)"
+      class="placeholder grey"
+      @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
+    >
       {{ emptyPlaceholder }}
     </p>
   </div>
@@ -344,14 +368,17 @@ import Compressor from 'compressorjs'
 
 export default {
   props: {
-    showEditState: Boolean,
+    itemId: Number,
+    editing: Number,
     htmlInjection: String,
     emptyPlaceholder: String,
-    dataForTemplates: Array
+    dataForTemplates: Array,
+    forceStop: Number
   },
   data () {
     return {
       // System
+      editState: false,
       search: '',
       firstClickOver: false,
       savedSelection: null,
@@ -383,15 +410,20 @@ export default {
     }
   },
   watch: {
-    showEditState () {
+    editState () {
       this.initialHTML = this.htmlInjection
-      if (this.showEditState) {
+      if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
         document.addEventListener('selectionchange', this.move_style_bar)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener('selectionchange', this.move_style_bar)
         this.firstClickOver = false
+      }
+    },
+    forceStop () {
+      if (this.editing !== this.itemId) {
+        this.editState = false
       }
     }
   },

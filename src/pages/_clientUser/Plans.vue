@@ -36,9 +36,6 @@
   hr {
     margin: 2rem 0
   }
-  .feedback_bottom_bar {
-    margin-top: 1rem
-  }
   .switch_cal {
     margin-bottom: .4rem
   }
@@ -133,6 +130,7 @@
             v-show="showing_current_session === indexed"
             :id="`session-${session.id}`"
             :key="indexed"
+            :class="{ editorActive: feedbackId === session.id }"
             class="wrapper--session"
           >
             <div :id="session.name" class="session_header client-side">
@@ -146,14 +144,14 @@
             <div class="bottom_bar">
               <div :key="check" class="full_width_bar">
                 <button
-                  v-if="session.checked === 1 && !giveFeedback"
+                  v-if="session.checked === 1 && !feedbackId"
                   class="button--state done"
                   @click="complete(plan.id, session.id)"
                 >
                   Completed
                 </button>
                 <button
-                  v-if="session.checked === 0 && !giveFeedback"
+                  v-if="session.checked === 0 && !feedbackId"
                   class="button--state to_do"
                   @click="complete(plan.id, session.id)"
                 >
@@ -167,21 +165,13 @@
                 Feedback
               </h2>
               <rich-editor
-                :show-edit-state="giveFeedback === session.id"
+                :item-id="session.id"
+                :editing="feedbackId"
                 :html-injection.sync="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
+                :force-stop="forceStop"
+                @on-edit-change="resolve_feedback_editor"
               />
-              <div class="feedback_bottom_bar">
-                <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
-                  Edit
-                </button>
-                <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">
-                  Save
-                </button>
-                <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">
-                  Cancel
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -220,7 +210,8 @@ export default {
 
       // EDIT
 
-      giveFeedback: null,
+      forceStop: 0,
+      feedbackId: null,
       tempEditorStore: null,
 
       // CALENDAR
@@ -243,6 +234,33 @@ export default {
 
     // BACKGROUND AND MISC.
 
+    resolve_feedback_editor (state, id) {
+      let plan
+      let session
+      this.$parent.clientUser.plans.forEach((planItem) => {
+        planItem.sessions.forEach((sessionItem) => {
+          if (sessionItem.id === id) {
+            plan = planItem
+            session = sessionItem
+          }
+        })
+      })
+      switch (state) {
+        case 'edit':
+          this.feedbackId = id
+          this.forceStop += 1
+          this.tempEditorStore = session.feedback
+          break
+        case 'save':
+          this.feedbackId = null
+          this.$parent.update_session(plan.id, session.id)
+          break
+        case 'cancel':
+          this.feedbackId = null
+          session.feedback = this.tempEditorStore
+          break
+      }
+    },
     go_to_event (id, week) {
       this.showing_current_session = week - 1
       setTimeout(() => {

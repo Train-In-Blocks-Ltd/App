@@ -46,11 +46,8 @@
       </p>
     </div>
     <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
-    <p v-if="$parent.no_clients" class="grey text--no_clients">
+    <p v-if="$parent.no_clients" class="text--holder text--small grey">
       No clients added yet, use the button on the top-right of your screen.
-    </p>
-    <p v-if="$parent.error" class="grey text--loading">
-      <b>{{ $parent.error }}</b>
     </p>
     <!-- Loop through clients -->
     <div v-if="!$parent.no_clients && !$parent.error && $parent.clients && !$parent.loading" class="home--container">

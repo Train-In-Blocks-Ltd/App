@@ -5,9 +5,6 @@
     justify-content: space-between;
     margin-top: 2rem
   }
-  .activeState {
-    border: 2px solid var(--base_faint)
-  }
   .container--templates {
     display: grid;
     grid-gap: 4rem;
@@ -108,8 +105,8 @@
         v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
         :key="index"
+        :class="{ editorActive: template.id === editTemplate }"
         class="wrapper--template"
-        :class="{ activeState: template.id === editTemplate }"
       >
         <div class="wrapper--template__header">
           <span
@@ -145,21 +142,13 @@
         </div>
         <rich-editor
           v-show="expandedTemplates.includes(template.id)"
-          :show-edit-state="template.id === editTemplate"
+          :item-id="template.id"
+          :editing="editTemplate"
           :html-injection.sync="template.template"
           :empty-placeholder="'What do you plan for your clients frequently?'"
+          :force-stop="forceStop"
+          @on-edit-change="resolve_template_editor"
         />
-        <div v-if="expandedTemplates.includes(template.id)" class="bottom_bar">
-          <button v-if="template.id !== editTemplate && !isEditingTemplate" @click="editing_template_notes(template.id, true, template.template), tempEditorStore = template.template">
-            Edit
-          </button>
-          <button v-if="template.id === editTemplate" @click="editing_template_notes(template.id, false, template.template)">
-            Save
-          </button>
-          <button v-if="template.id === editTemplate" class="cancel" @click="template.template = tempEditorStore, cancel_template_notes()">
-            Cancel
-          </button>
-        </div>
       </div>
     </div>
     <p v-else class="grey top_margin">
@@ -191,6 +180,7 @@ export default {
 
       // EDIT
 
+      forceStop: 0,
       isEditingTemplate: false,
       tempEditorStore: null,
       editTemplate: null,
@@ -228,6 +218,27 @@ export default {
         case 'delete':
           this.$parent.responseHeader = this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template'
           this.$parent.responseDesc = 'Your changes have been saved'
+          break
+      }
+    },
+    resolve_template_editor (state, id) {
+      const template = this.$parent.templates.find(template => template.id === id)
+      switch (state) {
+        case 'edit':
+          this.isEditingTemplate = true
+          this.editTemplate = id
+          this.forceStop += 1
+          this.tempEditorStore = template.template
+          break
+        case 'save':
+          this.isEditingTemplate = false
+          this.editTemplate = null
+          this.update_template(id)
+          break
+        case 'cancel':
+          this.isEditingTemplate = false
+          this.editTemplate = null
+          template.template = this.tempEditorStore
           break
       }
     },
@@ -286,22 +297,6 @@ export default {
       }
     },
 
-    // EDIT
-
-    editing_template_notes (id, state, notesUpdate) {
-      this.isEditingTemplate = state
-      this.editTemplate = id
-      if (!state) {
-        this.update_template(id, notesUpdate)
-        this.isEditingTemplate = false
-        this.editTemplate = null
-      }
-    },
-    cancel_template_notes () {
-      this.editTemplate = null
-      this.isEditingTemplate = false
-    },
-
     // DATABASE
 
     async new_template () {
@@ -326,21 +321,14 @@ export default {
         this.$parent.resolve_error(e)
       }
     },
-    async update_template (id, notesUpdate) {
+    async update_template (id) {
       try {
-        let templateName
         this.$parent.dontLeave = true
-        if (this.$parent.templates.length !== 0) {
-          this.$parent.templates.forEach((item) => {
-            if (item.id === id) {
-              templateName = item.name
-            }
-          })
-        }
+        const template = this.$parent.templates.find(template => template.id === id)
         await this.$axios.post('https://api.traininblocks.com/templates',
           {
-            name: templateName,
-            template: notesUpdate,
+            name: template.name,
+            template: template.template,
             id
           }
         )

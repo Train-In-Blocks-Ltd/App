@@ -197,11 +197,7 @@
     font-size: .8rem;
     color: #B80000
   }
-  .text--loading,
-  .text--no_clients {
-    margin: 2rem 0 4rem 0
-  }
-  .text--no_sessions {
+  .text--holder {
     margin: 2rem 0 8rem 0
   }
   .text--name {

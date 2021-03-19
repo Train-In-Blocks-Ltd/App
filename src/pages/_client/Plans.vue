@@ -1,17 +1,11 @@
 <style>
   /* Client Notes */
-  .activeState {
-    border: 2px solid var(--base_faint)
-  }
   #client_notes {
     margin: 4rem 0;
     padding: 2rem;
     border-radius: 10px;
     background-color: var(--fore);
     box-shadow: var(--low_shadow)
-  }
-  .client_notes__header {
-    display: flex
   }
   .a--client_notes {
     color: var(--base);
@@ -84,33 +78,15 @@
       </p>
     </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
-    <div id="client_notes" :class="{ activeState: editClientNotes }">
-      <div class="client_notes__header">
-        <h2>
-          Client Information
-        </h2>
-        <a
-          v-if="!editClientNotes"
-          href="javascript:void(0)"
-          class="a--client_notes"
-          @click="editClientNotes = true, tempEditorStore = $parent.$parent.client_details.notes"
-        >
-          Edit
-        </a>
-      </div>
+    <div id="client_notes" :class="{ editorActive: editingClientNotes }">
+      <h2>
+        Client Information
+      </h2>
       <rich-editor
-        :show-edit-state="editClientNotes"
         :html-injection.sync="$parent.$parent.client_details.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
+        @on-edit-change="resolve_client_info_editor"
       />
-      <div v-if="editClientNotes" class="bottom_bar">
-        <button class="button--save" @click="editClientNotes = false, $parent.$parent.update_client()">
-          Save
-        </button>
-        <button class="cancel" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore">
-          Cancel
-        </button>
-      </div>
     </div>
     <div>
       <h1>
@@ -118,7 +94,7 @@
       </h1>
       <p
         v-if="$parent.no_plans"
-        class="text--no_sessions grey"
+        class="text--holder text--small grey"
       >
         No plans yet, use the button on the top-right of your screen
       </p>
@@ -145,7 +121,7 @@ export default {
       // EDIT
 
       tempEditorStore: null,
-      editClientNotes: false,
+      editingClientNotes: false,
 
       // PLAN CREATION
 
@@ -157,6 +133,24 @@ export default {
   created () {
     this.will_body_scroll(true)
     this.$parent.check_client()
+  },
+  methods: {
+    resolve_client_info_editor (state) {
+      switch (state) {
+        case 'edit':
+          this.editingClientNotes = true
+          this.tempEditorStore = this.$parent.$parent.client_details.notes
+          break
+        case 'save':
+          this.editingClientNotes = false
+          this.$parent.$parent.update_client()
+          break
+        case 'cancel':
+          this.editingClientNotes = false
+          this.$parent.$parent.client_details.notes = this.tempEditorStore
+          break
+      }
+    }
   }
 }
 </script>
