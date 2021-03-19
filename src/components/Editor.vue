@@ -549,7 +549,8 @@ export default {
       const contenteditable = document.getElementById('rich_editor')
       const formatter = document.getElementById('style_bar')
       const { x, y } = this.get_caret_coordinates()
-      if (contenteditable.contains(event.target) && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
+      const containing = contenteditable.contains(event.target) || false
+      if (containing && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
           'style',
