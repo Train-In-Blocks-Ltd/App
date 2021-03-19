@@ -383,7 +383,6 @@ export default {
       editedHTML: '',
 
       // Style state
-      allowStyleDetect: false,
       boldActive: false,
       italicActive: false,
       underlineActive: false,
@@ -442,42 +441,6 @@ export default {
         })
       }
       return html
-    },
-
-    // Caret
-
-    get_caret_coordinates () {
-      let x = 0
-      let y = 0
-      const isSupported = typeof window.getSelection !== 'undefined'
-      if (isSupported) {
-        const selection = window.getSelection()
-        if (selection.rangeCount !== 0) {
-          const range = selection.getRangeAt(0).cloneRange()
-          range.collapse(true)
-          const rect = range.getClientRects()[0]
-          if (rect) {
-            x = rect.left
-            y = rect.top
-          }
-        }
-      }
-      return { x, y }
-    },
-    toggle_formatter (event) {
-      const contenteditable = document.getElementById('rich_editor')
-      const formatter = document.getElementById('style_bar')
-      const { x, y } = this.get_caret_coordinates()
-      if (contenteditable.contains(event.target) && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
-        formatter.setAttribute('aria-hidden', 'false')
-        formatter.setAttribute(
-          'style',
-          `left: ${x - 32}px; top: ${y - 36}px`
-        )
-      } else {
-        formatter.setAttribute('aria-hidden', 'true')
-        formatter.setAttribute('style', 'display: none')
-      }
     },
 
     // Misc.
@@ -588,6 +551,47 @@ export default {
 
     // TEXT
 
+    get_caret_coordinates () {
+      let x = 0
+      let y = 0
+      const isSupported = typeof window.getSelection !== 'undefined'
+      if (isSupported) {
+        const selection = window.getSelection()
+        if (selection.rangeCount !== 0) {
+          const range = selection.getRangeAt(0).cloneRange()
+          range.collapse(true)
+          const rect = range.getClientRects()[0]
+          if (rect) {
+            x = rect.left
+            y = rect.top
+          }
+        }
+      }
+      return { x, y }
+    },
+    toggle_formatter (event) {
+      const contenteditable = document.getElementById('rich_editor')
+      const formatter = document.getElementById('style_bar')
+      const { x, y } = this.get_caret_coordinates()
+      if (contenteditable.contains(event.target) && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
+        formatter.setAttribute('aria-hidden', 'false')
+        formatter.setAttribute(
+          'style',
+          `left: ${x - 32}px; top: ${y - 36}px`
+        )
+      } else {
+        formatter.setAttribute('aria-hidden', 'true')
+        formatter.setAttribute('style', 'display: none')
+      }
+    },
+    unwrap (wrapper) {
+      const docFrag = document.createDocumentFragment()
+      while (wrapper.firstChild) {
+        const child = wrapper.removeChild(wrapper.firstChild)
+        docFrag.appendChild(child)
+      }
+      wrapper.parentNode.replaceChild(docFrag, wrapper)
+    },
     format_style (style) {
       const el = window.getSelection()
       if (document.activeElement.contentEditable !== 'true') {
@@ -598,7 +602,7 @@ export default {
           if (!document.queryCommandState('bold')) {
             if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<b>${el.toString()}</b>`, true)
+                this.paste_html_at_caret(`<strong>${el.toString()}</strong>`, true)
               }
             }
           } else if (el.focusNode.parentNode.id !== 'rich_editor') {
@@ -610,7 +614,7 @@ export default {
           if (!document.queryCommandState('italic')) {
             if (el.type === 'Range') {
               if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<i>${el.toString()}</i>`, true)
+                this.paste_html_at_caret(`<em>${el.toString()}</em>`, true)
               }
             }
           } else if (el.focusNode.parentNode.id !== 'rich_editor') {
@@ -631,14 +635,6 @@ export default {
           this.update_edited_notes()
           break
       }
-    },
-    unwrap (wrapper) {
-      const docFrag = document.createDocumentFragment()
-      while (wrapper.firstChild) {
-        const child = wrapper.removeChild(wrapper.firstChild)
-        docFrag.appendChild(child)
-      }
-      wrapper.parentNode.replaceChild(docFrag, wrapper)
     },
 
     // LISTS
