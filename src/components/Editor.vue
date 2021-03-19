@@ -8,6 +8,7 @@ div#rich_editor div,
 div#rich_editor p,
 div#rich_show_content div,
 div#rich_show_content p {
+  width: fit-content;
   margin: .6rem 0
 }
 div#rich_editor img,
@@ -43,6 +44,25 @@ div#rich_show_content a {
 }
 
 /* Toolbars */
+#style_bar {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  padding: .2rem;
+  border-radius: 5px;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  transition: .6s all cubic-bezier(.165, .84, .44, 1)
+}
+#style_bar:hover {
+  box-shadow: var(--high_shadow)
+}
+#style_bar button {
+  padding: 0;
+  margin: .2rem .6rem;
+  color: var(--base);
+  background-color: transparent
+}
 .re_toolbar_back {
   position: sticky;
   top: 0;
@@ -68,7 +88,7 @@ div#rich_show_content a {
 .activeStyle {
   opacity: .4
 }
-#rich_toolbar svg {
+#rich_toolbar svg, #style_bar svg {
   height: 20px;
   width: 20px
 }
@@ -141,35 +161,37 @@ div#rich_editor {
 <template>
   <div id="wrapper--rich_editor">
     <div v-if="showEditState">
+      <div
+        v-show="showStyleBar"
+        id="style_bar"
+      >
+        <button
+          :class="{ activeStyle: boldActive }"
+          title="Bold (CMD/Ctrl + B)"
+          class="fadeIn"
+          @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
+        >
+          <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+        </button>
+        <button
+          :class="{ activeStyle: italicActive }"
+          title="Italic (CMD/Ctrl + I)"
+          class="fadeIn"
+          @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
+        >
+          <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+        </button>
+        <button
+          :class="{ activeStyle: underlineActive }"
+          title="Underline (CMD/Ctrl + U)"
+          class="fadeIn"
+          @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
+        >
+          <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+        </button>
+      </div>
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
-          <button
-            :class="{ activeStyle: boldActive }"
-            :disabled="!firstClickOver || !showFormatter"
-            title="Bold (CMD/Ctrl + B)"
-            class="fadeIn"
-            @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: italicActive }"
-            :disabled="!firstClickOver || !showFormatter"
-            title="Italic (CMD/Ctrl + I)"
-            class="fadeIn"
-            @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-          </button>
-          <button
-            :class="{ activeStyle: underlineActive }"
-            :disabled="!firstClickOver || !showFormatter"
-            title="Underline (CMD/Ctrl + U)"
-            class="fadeIn"
-            @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-          </button>
           <button
             :class="{ activeStyle: olActive }"
             title="Ordered List"
@@ -335,6 +357,7 @@ export default {
       editedHTML: '',
 
       // Style state
+      showStyleBar: false,
       boldActive: false,
       italicActive: false,
       underlineActive: false,
@@ -342,7 +365,6 @@ export default {
       ulActive: false,
 
       // Pop up
-      showFormatter: false,
       showAddLink: false,
       addLinkName: '',
       addLinkURL: '',
@@ -362,10 +384,10 @@ export default {
       this.initialHTML = this.htmlInjection
       if (this.showEditState) {
         document.addEventListener('keyup', this.check_cmd_state)
-        document.addEventListener('selectionchange', this.check_text_formatter)
+        document.addEventListener('selectionchange', this.move_style_bar)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
-        document.removeEventListener('selectionchange', this.check_text_formatter)
+        document.removeEventListener('selectionchange', this.move_style_bar)
         this.firstClickOver = false
       }
     }
@@ -393,6 +415,26 @@ export default {
 
     // MISC.
 
+    move_style_bar () {
+      let sel = window.getSelection()
+      const bar = document.getElementById('style_bar')
+      if (sel.type === 'Range') {
+        this.showStyleBar = true
+        if (sel.focusNode.nodeName !== '#text') {
+          sel = sel.focusNode
+          const letterLength = window.getSelection().focusNode.offsetWidth / window.getSelection().focusNode.textContent.length
+          bar.style.top = `${sel.getBoundingClientRect().top - 48}px`
+          bar.style.left = `${letterLength * window.getSelection().focusOffset + sel.getBoundingClientRect().left - 66}px`
+        } else {
+          sel = sel.focusNode.parentNode
+          const letterLength = window.getSelection().focusNode.parentNode.offsetWidth / window.getSelection().focusNode.parentNode.textContent.length
+          bar.style.top = `${sel.getBoundingClientRect().top - 48}px`
+          bar.style.left = `${letterLength * window.getSelection().focusOffset + sel.getBoundingClientRect().left - 66}px`
+        }
+      } else {
+        this.showStyleBar = false
+      }
+    },
     focus_on_editor () {
       document.getElementById('rich_editor').focus()
     },
@@ -499,23 +541,6 @@ export default {
 
     // TEXT
 
-    check_text_formatter () {
-      this.showFormatter = false
-      let sel = window.getSelection()
-      const type = sel.type
-      sel = sel.focusNode
-      if (sel === null) {
-        return
-      }
-      while (sel.parentNode.id !== 'app' && sel.parentNode !== null) {
-        if (sel.parentNode.id === 'rich_editor' && type === 'Range') {
-          this.showFormatter = true
-          break
-        } else {
-          sel = sel.parentNode
-        }
-      }
-    },
     format_style (style) {
       const el = window.getSelection()
       if (document.activeElement.contentEditable !== 'true') {
