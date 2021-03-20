@@ -187,7 +187,7 @@
 </template>
 
 <script>
-const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../components/Splash')
+import Splash from '../components/Splash'
 
 export default {
   components: {
@@ -205,14 +205,12 @@ export default {
   },
   async mounted () {
     const scopes = ['openid', 'profile', 'email']
-    setTimeout(() => {
-      this.splashed = true
-      this.will_body_scroll(true)
-    }, 4000)
     let OktaSignIn
     await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
       OktaSignIn = module.default
     })
+    this.splashed = true
+    this.will_body_scroll(true)
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
@@ -245,10 +243,18 @@ export default {
       this.widget.showSignInToGetTokens({
         el: '#okta-signin-container',
         scopes
-      }).then((tokens) => {
-        this.$auth.handleLoginRedirect(tokens)
+      }).then(async (tokens) => {
+        await this.$auth.handleLoginRedirect(tokens)
+        this.will_body_scroll(true)
       }).catch((err) => {
         throw err
+      })
+      const self = this
+      this.widget.on('ready', function (context) {
+        document.querySelector('#okta-signin-submit').addEventListener('click', function () {
+          self.splashed = false
+          self.will_body_scroll(false)
+        })
       })
     })
     if (await this.$auth.isAuthenticated()) {

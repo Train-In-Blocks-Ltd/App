@@ -91,6 +91,7 @@
   }
   main {
     margin-left: calc(38px + 2rem);
+    min-height: 100vh;
     display: grid;
     align-items: start
   }
@@ -678,10 +679,14 @@
     .sidebar {
       top: 0;
       height: 100vh;
+      min-height: 100%;
       width: calc(38px + 2rem)
     }
     .sidebar:hover {
       width: 12rem
+    }
+    .sidebar:hover main {
+      margin-left: 12rem
     }
     .client_link.archived {
       display: flex;
