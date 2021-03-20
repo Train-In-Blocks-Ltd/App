@@ -24,12 +24,12 @@ Vue.use(Router)
 const oktaAuth = new OktaAuth({
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
-  redirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback',
+  redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,
   async onSessionExpired () {
-    await Vue.prototype.$auth.logout({ postLogoutRedirectUri: process.env.NODE_ENV === 'production' ? 'https://' + window.location.host + '/implicit/callback' : 'http://' + window.location.host + '/implicit/callback' })
+    await Vue.prototype.$auth.logout({ postLogoutRedirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback' })
   }
 })
 Vue.use(OktaVue, { oktaAuth })
