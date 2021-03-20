@@ -91,7 +91,6 @@
   }
   main {
     margin-left: calc(38px + 2rem);
-    min-height: 100vh;
     display: grid;
     align-items: start
   }
