@@ -22,53 +22,35 @@ img {
       What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
     </h1>
     <h2 class="grey">
-      Enhanced workflow, visuals, and more mobile-friendly
+      Dark mode, new styles, and bug fixes
     </h2>
     <br><br>
     <div class="update_wrapper">
       <div class="update_item">
-        <img :src="require('../assets/whats-new/new-editor.png')" alt="New editor">
+        <img :src="require('../assets/whats-new/dark-mode.png')" alt="Dark mode">
         <h2>
-          New editor
+          Dark mode
         </h2>
         <p class="grey">
-          Try our new text editor. It's faster and more convenient. You can now access templates for your sessions in the toolbar with additional support for use on mobile devices.<br><br>**We recommend that you should create new sessions and copy it over from your current plans**
+          Working at night? Let's take some strain off the eyes. You can turn on dark mode through your <strong>Account</strong> page.
         </p>
       </div>
       <div class="update_item">
-        <img :src="require('../assets/whats-new/progress.png')" alt="Progress sessions upgrade">
+        <img :src="require('../assets/whats-new/editor-style.png')" alt="New editor style">
         <h2>
-          Progression update
+          New editor style
         </h2>
         <p class="grey">
-          Quickly spread and change the session protocols across multiple weeks/microcycles
+          We've made a minor change to how the editor works. Simply click on the text to start editing.
         </p>
       </div>
       <div class="update_item">
-        <img :src="require('../assets/whats-new/calendar.png')" alt="New calendar">
+        <img :src="require('../assets/whats-new/highlight.png')" alt="Highlight formatting">
         <h2>
-          Updated calendar
+          Highlight formatting
         </h2>
         <p class="grey">
-          Visualise all the sessions in our new monthly view. You can now head straight towards the session by clicking on it through the calendar.
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/graph.png')" alt="New graph">
-        <h2>
-          Updated graph
-        </h2>
-        <p class="grey">
-          We've made our line-chart more interactive and responsive. You can now click on a point to get the value and find out where it occurred.
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/duplicate.png')" alt="Duplicate plans">
-        <h2>
-          Duplicate plans
-        </h2>
-        <p class="grey">
-          If you need a copy of the same plan or adapting a similar plan for another client, then simply duplicate it over.
+          Want to bold, italic, or underline some text? Just highlight it and get stylish!
         </p>
       </div>
       <div class="update_item">

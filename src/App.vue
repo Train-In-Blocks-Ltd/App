@@ -1039,7 +1039,7 @@ export default {
       responseHeader: '',
       responseDesc: '',
       versionName: 'Pegasus',
-      versionBuild: '3.1',
+      versionBuild: '3.2',
       newBuild: false,
       errorMsg: null,
       loading: false,
