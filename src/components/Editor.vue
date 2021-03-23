@@ -58,8 +58,12 @@ div#rich_show_content a {
   font-style: italic
 }
 
-/* Toolbars */
-#style_bar {
+/* Tools */
+a#link_bar {
+  color: var(--base);
+  padding: .2rem .6rem
+}
+#style_bar, #link_bar {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -196,6 +200,13 @@ div#rich_editor {
           <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
         </button>
       </div>
+      <a
+        id="link_bar"
+        :href="linkAddress"
+        target="_blank"
+      >
+        {{ linkAddress }}
+      </a>
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
           <button
@@ -375,6 +386,7 @@ export default {
   data () {
     return {
       // System
+      linkAddress: '',
       editState: false,
       search: '',
       firstClickOver: false,
@@ -548,17 +560,28 @@ export default {
     toggle_formatter (event) {
       const contenteditable = document.getElementById('rich_editor')
       const formatter = document.getElementById('style_bar')
+      const linker = document.getElementById('link_bar')
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
+      this.linkAddress = ''
       if (containing && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
           'style',
           `left: ${x - 32}px; top: ${y - 36}px`
         )
+      } else if (containing && window.getSelection().focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
+        linker.setAttribute('aria-hidden', 'false')
+        linker.setAttribute(
+          'style',
+          `left: ${x - 32}px; top: ${y - 36}px`
+        )
+        this.linkAddress = window.getSelection().focusNode.parentNode.attributes.href.value
       } else {
         formatter.setAttribute('aria-hidden', 'true')
         formatter.setAttribute('style', 'display: none')
+        linker.setAttribute('aria-hidden', 'true')
+        linker.setAttribute('style', 'display: none')
       }
     },
     unwrap (wrapper) {
@@ -686,9 +709,9 @@ export default {
       }
       this.restore_selection()
       if (!forceFocus) {
-        this.paste_html_at_caret(`<div contenteditable="false" style="display: inline"><a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a></div><div contenteditable="true" style="display: inline"></div>`, false)
+        this.paste_html_at_caret(`<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`, false)
       } else {
-        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<div contenteditable="false" style="display: inline"><a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a></div><div contenteditable="true" style="display: inline"></div>`)
+        document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<a href="${this.addLinkURL}" target="_blank">${this.addLinkName}</a>`)
       }
       this.update_edited_notes()
       this.reset_link_pop_up()
