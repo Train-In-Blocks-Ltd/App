@@ -563,7 +563,6 @@ export default {
       const linker = document.getElementById('link_bar')
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
-      this.linkAddress = ''
       if (containing && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
