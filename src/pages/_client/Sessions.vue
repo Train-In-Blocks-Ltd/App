@@ -1459,7 +1459,6 @@ export default {
       this.optionsForDataType = []
       let overviewStore = []
       this.showType = true
-      let dataForSum = 0
       if (this.selectedDataName === 'Plan Overview') {
         this.optionsForDataType.push({
           id: 1,
@@ -1472,9 +1471,9 @@ export default {
           value: 'Volume'
         })
       }
-      this.dataPacketStore.forEach((item) => {
+      this.dataPacketStore.forEach((session) => {
         overviewStore = []
-        item.forEach((exerciseDataPacket) => {
+        session.forEach((exerciseDataPacket) => {
           const tidyA = this.selectedDataName.replace(/\(/g, '\\(')
           const tidyB = tidyA.replace(/\)/g, '\\)')
           const regex = RegExp(tidyB, 'gi')
@@ -1509,31 +1508,27 @@ export default {
             }
           }
           if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
-            if (this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') {
-              dataForSum = this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
+            const dataForSum = () => {
+              switch (this.selectedDataType) {
+                case 'Sets' || 'Reps':
+                  return this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
+                case 'Load':
+                  return this.load(exerciseDataPacket, protocol)
+                case 'Volume':
+                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+              }
             }
-            if (this.selectedDataType === 'Load') {
-              dataForSum = this.load(exerciseDataPacket, protocol)
+            overviewStore.push(dataForSum())
+            if (overviewStore.length !== 0) {
+              this.dataValues.push(overviewStore.reduce((a, b) => a + b))
+              this.desc_stats(this.selectedDataType)
             }
-            if (this.selectedDataType === 'Volume') {
-              dataForSum = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+            for (let x = 1; x <= this.dataValues.length; x++) {
+              this.labelValues.push(['Session ' + x])
             }
-            overviewStore.push(dataForSum)
           }
         })
-        if (this.selectedDataName === 'Plan Overview' && overviewStore.length !== 0) {
-          this.dataValues.push(overviewStore.reduce((a, b) => a + b))
-        }
       })
-      if (this.selectedDataName === 'Plan Overview') {
-        let x = 1
-        for (; x <= this.dataValues.length; x++) {
-          this.labelValues.push(['Session ' + x])
-        }
-      }
-      if (this.dataValues.length !== 0) {
-        this.desc_stats(this.selectedDataType)
-      }
       this.resetGraph += 1
     },
 
