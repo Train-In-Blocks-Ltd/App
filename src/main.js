@@ -44,7 +44,7 @@ Vue.mixin({
 
     // Protocol
 
-    pull_protocols (sessionName, text) {
+    pull_protocols (sessionName, text, date) {
       const textNoHTML = text.replace(/<[^>]*>?/gm, '')
       const tempStore = []
       let m
@@ -57,13 +57,16 @@ Vue.mixin({
             tempStore.push(sessionName)
           } else if (groupIndex === 1 || groupIndex === 2) {
             tempStore.push(match)
+            if (groupIndex === 2) {
+              tempStore.push(date)
+            }
           }
         })
       }
       if (tempStore !== null) {
         const tempArray = []
-        for (let index = 0; index < tempStore.length; index += 3) {
-          const dataPacket = tempStore.slice(index, index + 3)
+        for (let index = 0; index < tempStore.length; index += 4) {
+          const dataPacket = tempStore.slice(index, index + 4)
           tempArray.push(dataPacket)
         }
         return tempArray

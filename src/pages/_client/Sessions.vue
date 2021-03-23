@@ -997,6 +997,7 @@
                 v-if="!dataValues.includes(null)"
                 :data-points="dataValues"
                 :labels="labelValues"
+                :reset="resetGraph"
                 aria-label="Graph"
                 class="fadeIn"
               />
@@ -1072,6 +1073,7 @@ export default {
       selectedDataType: 'Sets',
       showType: true,
       isStatsOpen: false,
+      resetGraph: 0,
 
       // SESSION CREATION
 
@@ -1219,7 +1221,7 @@ export default {
       this.simpleCopy = true
       this.helper('match_plan').sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes).length !== 0) {
+          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes, session.date).length !== 0) {
             this.simpleCopy = false
           }
         }
@@ -1233,7 +1235,7 @@ export default {
         if (this.selectedSessions.includes(session.id)) {
           this.copyAcrossProtocols.push([
             session.id,
-            this.pull_protocols(session.name, session.notes)
+            this.pull_protocols(session.name, session.notes, session.date)
           ])
           this.copyAcrossInputs.push([
             session.id,
@@ -1478,7 +1480,7 @@ export default {
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
           if (regex.test(exerciseDataPacket[1])) {
-            this.labelValues.push(exerciseDataPacket[0])
+            this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({
                 id: 1,
@@ -1526,12 +1528,13 @@ export default {
       if (this.selectedDataName === 'Plan Overview') {
         let x = 1
         for (; x <= this.dataValues.length; x++) {
-          this.labelValues.push('Session ' + x)
+          this.labelValues.push(['Session ' + x])
         }
       }
       if (this.dataValues.length !== 0) {
         this.desc_stats(this.selectedDataType)
       }
+      this.resetGraph += 1
     },
 
     // DATE/TIME
@@ -1619,7 +1622,7 @@ export default {
             session_id: object.id
           })
           if (object.notes !== null) {
-            this.dataPacketStore.push(this.pull_protocols(object.name, object.notes))
+            this.dataPacketStore.push(this.pull_protocols(object.name, object.notes, object.date))
           }
         })
         // Appends the options to the select

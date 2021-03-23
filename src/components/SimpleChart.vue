@@ -50,8 +50,12 @@
       <div class="selected_bar">
         <h2>
           {{ focusText !== 'Select a point' ? focusText[1] : '' }}
+          <br>
+          <span v-if="focusText !== 'Select a point'" class="text--small grey">
+            {{ focusText[2] === undefined ? '' : focusText[2] }}
+          </span>
         </h2>
-        <p class="grey">
+        <p class="text--small grey">
           {{ focusText !== 'Select a point' ? focusText[0] : focusText }}
         </p>
       </div>
@@ -83,7 +87,7 @@
             :cx="`${data[0][0]}%`"
             :cy="`${data[0][1]}%`"
             r="6"
-            @click="select_point(data[1], data[2])"
+            @click="select_point(data[1], data[2], data[3])"
           />
         </g>
       </svg>
@@ -103,7 +107,8 @@
 export default {
   props: {
     dataPoints: Array,
-    labels: Array
+    labels: Array,
+    reset: Number
   },
   data () {
     return {
@@ -119,14 +124,17 @@ export default {
   watch: {
     dataPoints () {
       this.process_and_plot()
+    },
+    reset () {
+      this.focusText = 'Select a point'
     }
   },
   mounted () {
     this.process_and_plot()
   },
   methods: {
-    select_point (d1, d2) {
-      this.focusText = [d1, d2]
+    select_point (d1, d2, d3) {
+      this.focusText = [d1, d2, d3]
     },
     process_and_plot () {
       this.dataValues = []
@@ -135,7 +143,15 @@ export default {
       this.maxValue = Math.max(...this.dataPoints)
       this.minValue = Math.min(...this.dataPoints)
       this.dataPoints.forEach((data, index) => {
-        this.dataValues.push([[this.xInterval * (index + 1), 90 - (data * 0.8 / this.maxValue) * 100], data, this.labels[index]])
+        this.dataValues.push([
+          [
+            this.xInterval * (index + 1),
+            90 - (data * 0.8 / this.maxValue) * 100
+          ],
+          data,
+          this.labels[index][0],
+          this.labels[index][1]
+        ])
       })
       this.dataValues.forEach((data, index) => {
         if (index < this.dataValues.length - 1) {
