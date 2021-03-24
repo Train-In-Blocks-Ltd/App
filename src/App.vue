@@ -210,9 +210,8 @@
   p {
     margin: 0
   }
-  .text--error {
-    font-size: .8rem;
-    color: #B80000
+  .text--error, a.text--red {
+    color: rgb(184, 0, 0)
   }
   .text--holder {
     margin: 2rem 0 8rem 0

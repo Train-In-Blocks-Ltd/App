@@ -616,7 +616,7 @@
         <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), will_body_scroll(false)">Move</a>
         <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), will_body_scroll(false)">Shift</a>
         <a href="javascript:void(0)" class="a_link" @click="print()">Print</a>
-        <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
+        <a href="javascript:void(0)" class="a_link text--red" @click="bulk_delete()">Delete</a>
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
@@ -678,7 +678,7 @@
               Duplicate plan
             </a>
             <a
-              class="a_link"
+              class="a_link text--red"
               href="javascript:void(0)"
               @click="delete_plan()"
             >
@@ -1192,7 +1192,11 @@ export default {
 
     print () {
       const notesArr = []
-      this.helper('match_plan').sessions.forEach((session) => {
+      const plan = this.helper('match_plan')
+      plan.sessions.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
+      })
+      plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           notesArr.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.remove_brackets_and_checkbox(this.update_content(session.notes))}</div>`)
         }
