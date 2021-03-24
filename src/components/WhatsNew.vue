@@ -26,39 +26,17 @@ img {
     </h2>
     <br><br>
     <div class="update_wrapper">
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/dark-mode.png')" alt="Dark mode">
+      <div
+        v-for="(item, index) in content"
+        :key="`item_${index}`"
+        class="update_item"
+      >
+        <img v-if="item.img" :src="require(`../assets/whats-new/${item.img}`)" :alt="item.title">
         <h2>
-          Dark mode
+          {{ item.title }}
         </h2>
         <p class="grey">
-          Working at night? Let's take some strain off the eyes. You can turn on dark mode through your <strong>Account</strong> page.
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/editor-style.png')" alt="New editor style">
-        <h2>
-          New editor style
-        </h2>
-        <p class="grey">
-          We've made a minor change to how the editor looks but it still works in a similar way. Simply click on the text to start editing.
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/highlight.png')" alt="Highlight formatting">
-        <h2>
-          Highlight formatting
-        </h2>
-        <p class="grey">
-          Want to bold, italic, or underline some text? Just highlight it and get stylish! The formatter will follow you to where you are working.
-        </p>
-      </div>
-      <div class="update_item">
-        <h2>
-          Client-side improvements
-        </h2>
-        <p class="grey">
-          Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.
+          {{ item.desc }}
         </p>
       </div>
     </div>
@@ -71,6 +49,17 @@ img {
 
 <script>
 export default {
+  data () {
+    return {
+      content: [
+        { title: 'Dark mode', desc: 'Working at night? Let\'s take some strain off the eyes. You can turn on dark mode through your Account page.', img: 'dark-mode.png' },
+        { title: 'New editor style', desc: 'We\'ve made a minor change to how the editor looks but it still works in a similar way. Simply click on the text to start editing.', img: 'editor-style.png' },
+        { title: 'Highlight formatting', desc: 'Want to bold, italic, or underline some text? Just highlight it and get stylish! The formatter will follow you to where you are working.', img: 'highlight.png' },
+        { title: 'Printing sessions', desc: 'Want a physical copy or a PDF? You can simply select all the sessions that you wish to export and print from the menu.', img: 'print.png' },
+        { title: 'Client-side improvements', desc: 'Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.', img: false }
+      ]
+    }
+  },
   methods: {
     update_version () {
       localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)

@@ -11,7 +11,7 @@
     --back: #F9F9F9;
     --fore: white;
     --base: #282828;
-    --base_light: #28282894;
+    --base_light: #585858;
     --base_faint: #28282840;
     --overlay_glass: #FFFFFFB3;
     --calendar_highlight: #FFFFEE;
@@ -1120,7 +1120,7 @@ export default {
         document.documentElement.style.setProperty('--back', '#F9F9F9')
         document.documentElement.style.setProperty('--fore', 'white')
         document.documentElement.style.setProperty('--base', '#282828')
-        document.documentElement.style.setProperty('--base_light', '#28282894')
+        document.documentElement.style.setProperty('--base_light', '#585858')
         document.documentElement.style.setProperty('--base_faint', '#28282840')
         document.documentElement.style.setProperty('--overlay_glass', '#FFFFFFB3')
         document.documentElement.style.setProperty('--calendar_highlight', '#FFFFEE')
