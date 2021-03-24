@@ -30,11 +30,35 @@
     overflow: hidden
   }
   .plan_header__options {
-    display: flex
+    display: flex;
+    justify-content: space-between
   }
   .plan_header__options a {
     margin-right: 1rem
   }
+
+  /* Plan order and links */
+  .plan_order, .plan_a_links {
+    display: flex
+  }
+  .plan_order svg {
+    height: 24px;
+    width: 24px;
+    cursor: pointer;
+    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  }
+  .plan_order svg:hover {
+    opacity: .6
+  }
+  svg.left {
+    transform: rotate(90deg)
+  }
+  svg.right {
+    margin-left: 1rem;
+    transform: rotate(-90deg)
+  }
+
+  /* Micros */
   .microcycles {
     display: flex
   }
@@ -93,21 +117,33 @@
           {{ plan.name }}
         </h2>
         <div class="plan_header__options">
-          <router-link
-            :to="isTrainer ? `plan/${plan.id}` : `/clientUser/plan/${plan.id}`"
-            href="javascript:void(0)"
-            class="a_link"
-          >
-            {{ isTrainer ? 'Edit' : 'View' }}
-          </router-link>
-          <a
-            v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
-            href="javascript:void(0)"
-            class="a_link"
-            @click="preview = plan.notes, $modal.show('preview'), will_body_scroll(false)"
-          >
-            Notes
-          </a>
+          <div class="plan_a_links">
+            <router-link
+              :to="isTrainer ? `plan/${plan.id}` : `/clientUser/plan/${plan.id}`"
+              href="javascript:void(0)"
+              class="a_link"
+            >
+              {{ isTrainer ? 'Edit' : 'View' }}
+            </router-link>
+            <a
+              v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
+              href="javascript:void(0)"
+              class="a_link"
+              @click="preview = plan.notes, $modal.show('preview'), will_body_scroll(false)"
+            >
+              Notes
+            </a>
+          </div>
+          <div v-if="isTrainer" class="plan_order">
+            <inline-svg
+              :src="require('../assets/svg/arrow.svg')"
+              class="left"
+            />
+            <inline-svg
+              :src="require('../assets/svg/arrow.svg')"
+              class="right"
+            />
+          </div>
         </div>
       </div>
       <div class="microcycles">

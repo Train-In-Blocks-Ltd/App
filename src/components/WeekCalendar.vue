@@ -83,6 +83,9 @@
     display: flex;
     justify-content: space-between
   }
+  .day_header .text--small {
+    margin-left: .4rem
+  }
 
   /* Responsive */
   @media (max-width: 992px) {
