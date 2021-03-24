@@ -809,28 +809,6 @@
     }
   }
 
-  /* Print */
-  @media print {
-    a,
-    button,
-    svg,
-    video,
-    iframe,
-    .sidebar,
-    .wrapper--floating_nav,
-    .tab_option,
-    .wrapper--progress-bar,
-    .expand-all,
-    .plan_table,
-    .change_week_color {
-      display: none
-    }
-    #client .client_info input:not([type='submit']) {
-      border: none;
-      padding: 0
-    }
-  }
-
   /* Progress */
   #nprogress .bar {
     /* stylelint-disable-next-line */

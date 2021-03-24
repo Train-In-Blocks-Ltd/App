@@ -604,18 +604,6 @@
         Statistics
       </p>
     </div>
-    <div
-      v-show="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions"
-      :class="{ icon_open_middle: !$parent.keepLoaded, icon_open_bottom: $parent.keepLoaded }"
-      class="tab_option tab_option_small fadeIn"
-      aria-label="Print"
-      @click="print_page()"
-    >
-      <inline-svg :src="require('../../assets/svg/print.svg')" />
-      <p class="text">
-        Print
-      </p>
-    </div>
     <div :class="{opened_sections: isStatsOpen}" class="section_overlay" />
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedSessions.length !== 0" class="multi-select">
@@ -627,6 +615,7 @@
         <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), will_body_scroll(false)">Copy Across</a>
         <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), will_body_scroll(false)">Move</a>
         <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), will_body_scroll(false)">Shift</a>
+        <a href="javascript:void(0)" class="a_link" @click="print()">Print</a>
         <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
       </div>
@@ -1201,8 +1190,20 @@ export default {
 
     // MODALS AND TAB
 
-    print_page () {
-      window.print()
+    print () {
+      const notesArr = []
+      this.helper('match_plan').sessions.forEach((session) => {
+        if (this.selectedSessions.includes(session.id)) {
+          notesArr.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.remove_brackets_and_checkbox(this.update_content(session.notes))}</div>`)
+        }
+      })
+      const newWindow = window.open()
+      const html = notesArr.join('')
+      newWindow.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}</style><div>${html}</div>`)
+      newWindow.stop()
+      newWindow.print()
+      this.$ga.event('Plan', 'print')
+      this.deselect_all()
     },
     shift_across () {
       this.helper('match_plan').sessions.forEach((session) => {
