@@ -24,6 +24,11 @@
     grid-gap: 1rem;
     padding: 2rem
   }
+  .plan_header h2 {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+  }
   .plan_header__options {
     display: flex
   }
@@ -37,8 +42,9 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    opacity: .6;
     width: 100%;
-    min-height: 50px
+    height: 10px
   }
   .microcycle:first-child {
     border-radius: 0 0 0 10px

@@ -41,7 +41,7 @@ img {
           New editor style
         </h2>
         <p class="grey">
-          We've made a minor change to how the editor works. Simply click on the text to start editing.
+          We've made a minor change to how the editor looks but it still works in a similar way. Simply click on the text to start editing.
         </p>
       </div>
       <div class="update_item">
@@ -50,7 +50,7 @@ img {
           Highlight formatting
         </h2>
         <p class="grey">
-          Want to bold, italic, or underline some text? Just highlight it and get stylish!
+          Want to bold, italic, or underline some text? Just highlight it and get stylish! The formatter will follow you to where you are working.
         </p>
       </div>
       <div class="update_item">
