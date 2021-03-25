@@ -567,13 +567,13 @@ export default {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${y - 36}px`
+          `left: ${x - 32}px; top: ${y + 36}px`
         )
       } else if (containing && window.getSelection().focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
         linker.setAttribute('aria-hidden', 'false')
         linker.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${y - 36}px`
+          `left: ${x - 32}px; top: ${y + 36}px`
         )
         this.linkAddress = window.getSelection().focusNode.parentNode.attributes.href.value
       } else {

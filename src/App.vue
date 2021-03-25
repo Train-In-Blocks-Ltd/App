@@ -1091,6 +1091,7 @@ export default {
       this.isTrainer = true
     }
     if (this.claims.policy !== this.policyVersion) {
+      this.will_body_scroll(false)
       this.$modal.show('agreement')
     }
   },
@@ -1180,7 +1181,6 @@ export default {
         this.darkmode(this.claims.theme)
 
         if (this.claims.policy === undefined || this.claims === undefined || this.claims === null) {
-          console.log('ok')
           this.claims.policy = this.policyVersion
           // this.save_claims()
         }
