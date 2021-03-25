@@ -1090,9 +1090,11 @@ export default {
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.isTrainer = true
     }
-    if (this.claims.policy !== this.policyVersion) {
-      this.will_body_scroll(false)
-      this.$modal.show('agreement')
+    if (this.claims.policy !== undefined) {
+      if (this.policyVersion !== this.claims.policy[2]) {
+        this.will_body_scroll(false)
+        this.$modal.show('agreement')
+      }
     }
   },
   methods: {
@@ -1181,7 +1183,7 @@ export default {
         this.darkmode(this.claims.theme)
 
         if (this.claims.policy === undefined || this.claims === undefined || this.claims === null) {
-          this.claims.policy = this.policyVersion
+          this.claims.policy = ['', '', this.policyVersion]
           // this.save_claims()
         }
       }
