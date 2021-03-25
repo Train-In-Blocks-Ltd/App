@@ -44,7 +44,7 @@
 
   /* Header bar */
   .calendar_header__bar * {
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .calendar_header__bar *:hover {
     opacity: .6

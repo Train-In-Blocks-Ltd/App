@@ -12,7 +12,7 @@
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .a--client_notes:hover {
     opacity: .6

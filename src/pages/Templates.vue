@@ -37,7 +37,7 @@
     cursor: pointer;
     vertical-align: middle;
     margin-top: .8rem;
-    transition: all .4s
+    transition: var(--transition_smooth)
   }
   .icon--expand.expanded {
     transform: rotate(180deg)

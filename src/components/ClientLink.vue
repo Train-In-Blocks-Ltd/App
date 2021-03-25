@@ -8,7 +8,7 @@
   .client_link svg {
     width: 20px;
     fill: var(--base);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link__details {
     display: grid;
@@ -20,7 +20,7 @@
     word-wrap: break-word;
     margin: auto 0;
     color: var(--base);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link__details img, .client_link__details iframe {
     border-radius: 3px

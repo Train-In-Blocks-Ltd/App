@@ -7,7 +7,7 @@
     margin: 1rem 0
   }
   .calendar_header__bar * {
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .calendar_header__bar *:hover {
     opacity: .6
@@ -62,7 +62,7 @@
     background-color: var(--fore);
     border-radius: 10px;
     padding: .6rem;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .day_cell:hover {
     box-shadow: var(--low_shadow)

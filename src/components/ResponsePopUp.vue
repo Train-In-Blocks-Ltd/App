@@ -22,7 +22,7 @@
   background-color: var(--fore);
   border: 1px solid var(--base);
   border-radius: 50%;
-  transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  transition: var(--transition_standard)
 }
 .response_pop_up svg:hover {
   fill: white;

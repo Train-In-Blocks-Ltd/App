@@ -21,7 +21,7 @@
     fill: transparent;
     stroke: var(--base);
     stroke-width: 2;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1);
+    transition: var(--transition_standard);
     animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
   }
   .plot circle:hover {
@@ -30,7 +30,7 @@
   .plot line {
     stroke: var(--base_faint);
     stroke-width: 2;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1);
+    transition: var(--transition_standard);
     animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
   }
 

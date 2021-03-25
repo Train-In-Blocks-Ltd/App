@@ -6,6 +6,8 @@
     box-sizing: border-box
   }
   :root {
+    --transition_smooth: .4s all;
+    --transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
     --low_shadow: 0 0 20px 10px #28282808;
     --high_shadow: 0 0 20px 10px #28282816;
     --back: #F9F9F9;
@@ -63,7 +65,7 @@
     background-color: var(--overlay_glass);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .section_overlay.opened_sections {
     width: 100%;
@@ -191,7 +193,7 @@
     overflow-y: auto;
     background-color: var(--back)
   }
-  div.vm--modal > div,
+  div.vm--modal > div:not(#policy_agreement),
   div.vm--modal > form {
     padding: 2rem;
     display: flex;
@@ -229,7 +231,7 @@
   /* Tailwinds */
   .cursor {
     cursor: pointer;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .cursor:hover {
     opacity: .6
@@ -367,7 +369,7 @@
     border-radius: 8px;
     background-color: transparent;
     box-shadow: none;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
   select:hover {
@@ -398,7 +400,7 @@
     padding: 0 .14rem;
     outline-width: 0;
     cursor: pointer;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   ::placeholder {
     color: var(--base_light);
@@ -451,7 +453,7 @@
     cursor: pointer;
     font-size: 1rem;
     margin: .8rem 0;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .account_nav_item:hover,
   .sidebar:hover .account_nav_item--text,
@@ -472,13 +474,13 @@
     position: relative;
     border: 0;
     opacity: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .account_nav_item--icon {
     margin: 0 .4rem 0 0;
     height: 1.4rem;
     vertical-align: bottom;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
 
   /* Tab options */
@@ -495,7 +497,7 @@
     border-radius: 3px 0 0 3px;
     background-color: var(--fore);
     box-shadow: var(--low_shadow);
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .icon_open_middle {
     top: 5.4rem
@@ -521,7 +523,7 @@
     font-size: .8rem;
     display: none;
     white-space: nowrap;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .tab_option:hover .text {
     display: block
@@ -593,7 +595,7 @@
     box-shadow: var(--low_shadow);
     background-color: var(--fore);
     border-radius: 10px;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link:hover {
     box-shadow: var(--high_shadow)
@@ -607,7 +609,7 @@
   .preview_html *,
   .plan-name {
     color: var(--base);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link__notes__content p,
   .preview_html p {
@@ -631,7 +633,7 @@
     max-width: 500px;
     border-radius: 3px;
     opacity: .6;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link .client_link__notes__content img,
   .client_link .client_link__notes__content iframe,
@@ -850,6 +852,9 @@
         </div>
       </div>
     </modal>
+    <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
+      <policy />
+    </modal>
     <nav v-if="authenticated && claims" class="sidebar">
       <div class="logo">
         <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo_link" title="Home">
@@ -970,8 +975,12 @@
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
+const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
 
 export default {
+  components: {
+    Policy
+  },
   data () {
     return {
 
@@ -1012,6 +1021,7 @@ export default {
 
       // SYSTEM
 
+      policyVersion: '1.0',
       responsePersist: false,
       responseHeader: '',
       responseDesc: '',
@@ -1079,6 +1089,9 @@ export default {
     }
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.isTrainer = true
+    }
+    if (this.claims.policy !== this.policyVersion) {
+      this.$modal.show('agreement')
     }
   },
   methods: {
@@ -1165,9 +1178,37 @@ export default {
           this.claims.theme = 'system'
         }
         this.darkmode(this.claims.theme)
+
+        if (this.claims.policy === undefined || this.claims === undefined || this.claims === null) {
+          console.log('ok')
+          this.claims.policy = this.policyVersion
+          // this.save_claims()
+        }
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
+    },
+    async save_claims () {
+      this.dontLeave = true
+      try {
+        await this.$axios.post('/.netlify/functions/okta',
+          {
+            type: 'POST',
+            body: {
+              profile: {
+                ga: this.claims.ga,
+                theme: this.claims.theme,
+                policy: this.claims.policy
+              }
+            },
+            url: `${this.claims.sub}`
+          }
+        )
+        localStorage.removeItem('claims')
+        this.dontLeave = false
+      } catch (e) {
+        this.resolve_error(e)
+      }
     },
 
     // SYSTEM STATE

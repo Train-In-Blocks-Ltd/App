@@ -71,7 +71,7 @@ a#link_bar {
   border-radius: 5px;
   background-color: var(--fore);
   box-shadow: var(--high_shadow);
-  transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  transition: var(--transition_standard)
 }
 #style_bar button {
   padding: 0;
@@ -90,7 +90,7 @@ a#link_bar {
   border: 1px solid var(--base_faint);
   border-radius: 10px 10px 0 0;
   padding: 0 1rem;
-  transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  transition: var(--transition_standard)
 }
 #rich_toolbar.showingPopup {
   border-bottom: 2px solid transparent
@@ -131,7 +131,7 @@ a#link_bar {
   cursor: pointer;
   margin-left: 1rem;
   vertical-align: middle;
-  transition: .6s all cubic-bezier(.165, .84, .44, 1)
+  transition: var(--transition_standard)
 }
 .template_item svg:hover {
   opacity: .6
@@ -154,7 +154,7 @@ div#rich_editor {
   border: 1px solid var(--base_faint);
   border-top: none;
   border-radius: 0 0 10px 10px;
-  transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  transition: var(--transition_standard)
 }
 
 /* Responsive */

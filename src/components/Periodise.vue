@@ -14,7 +14,7 @@
     background-color: var(--fore);
     box-shadow: var(--low_shadow);
     border-radius: 10px;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .plan:hover {
     box-shadow: var(--high_shadow)
@@ -45,7 +45,7 @@
     height: 24px;
     width: 24px;
     cursor: pointer;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .plan_order svg:hover {
     opacity: .6

@@ -52,7 +52,7 @@
     cursor: pointer;
     vertical-align: middle;
     margin-top: .8rem;
-    transition: all .4s
+    transition: var(--transition_smooth)
   }
   .icon--expand.expanded {
     transform: rotate(180deg)
@@ -78,7 +78,7 @@
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .a--plan_notes:hover {
     opacity: .6
@@ -131,7 +131,7 @@
     height: 74px;
     width: 100%;
     border-radius: 5px;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .week:hover {
     box-shadow: var(--low_shadow)
@@ -151,7 +151,7 @@
     border: 2px solid var(--base);
     border-radius: 5px;
     cursor: pointer;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .change_week_color:hover {
     opacity: .6

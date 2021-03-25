@@ -31,7 +31,7 @@
     padding: 0;
     z-index: 4;
     box-shadow: var(--low_shadow);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .wrapper--floating_nav.openFloatingNav {
     width: 14rem;
@@ -67,7 +67,7 @@
   @media (max-width: 992px) {
     .floating_nav a {
       grid-template-columns: 1fr;
-      transition: all .1s cubic-bezier(.165, .84, .44, 1)
+      transition: var(--transition_standard)
     }
     .floating_nav a:active {
       transform: scale(.9)

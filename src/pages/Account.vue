@@ -170,7 +170,7 @@
           v-model="$parent.claims.theme"
           name="theme"
           class="width_300"
-          @change="$parent.darkmode($parent.claims.theme), save()"
+          @change="$parent.darkmode($parent.claims.theme), $parent.save_claims()"
         >
           <option value="system">
             System default
@@ -195,7 +195,7 @@
         <div class="form__options">
           <label for="cookies">
             Allow Third Party Cookies:
-            <input v-model="$parent.claims.ga" class="allow-cookies" type="checkbox" @change="save()">
+            <input v-model="$parent.claims.ga" class="allow-cookies" type="checkbox" @change="$parent.save_claims()">
           </label>
         </div>
       </div>
@@ -234,27 +234,6 @@ export default {
 
     // BACKGROUND AND MISC.
 
-    async save () {
-      this.$parent.dontLeave = true
-      try {
-        await this.$axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              profile: {
-                ga: this.$parent.claims.ga,
-                theme: this.$parent.claims.theme
-              }
-            },
-            url: `${this.$parent.claims.sub}`
-          }
-        )
-        localStorage.removeItem('claims')
-        this.$parent.dontLeave = false
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-    },
     async manage_subscription () {
       try {
         const response = await this.$axios.post('/.netlify/functions/create-manage-link',
