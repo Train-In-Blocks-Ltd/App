@@ -37,7 +37,7 @@
     margin-right: 1rem
   }
 
-  /* Plan order and links */
+  /* Plan ordered and links */
   .plan_order, .plan_a_links {
     display: flex
   }
@@ -136,16 +136,16 @@
           </div>
           <div v-if="isTrainer" class="plan_order">
             <inline-svg
-              v-if="plan.order !== 0"
+              v-if="plan.ordered !== 0"
               :src="require('../assets/svg/arrow.svg')"
               class="left"
-              @click="change_order(plan.order, 'back')"
+              @click="change_order(plan.ordered, 'back')"
             />
             <inline-svg
-              v-if="plan.order !== client_plans.length - 1"
+              v-if="plan.ordered !== client_plans.length - 1"
               :src="require('../assets/svg/arrow.svg')"
               class="right"
-              @click="change_order(plan.order, 'next')"
+              @click="change_order(plan.ordered, 'next')"
             />
           </div>
         </div>
@@ -186,29 +186,30 @@ export default {
   methods: {
     sort_plans () {
       this.client_plans.forEach((plan, index) => {
-        if (plan.order === null) {
-          plan.order = index
+        if (plan.ordered === null) {
+          console.log('null')
+          plan.ordered = index
           this.$emit('update:plans', this.client_plans)
         }
       })
       this.client_plans.sort((a, b) => {
-        return new Date(a.order) - new Date(b.order)
+        return new Date(a.ordered) - new Date(b.ordered)
       })
       this.$emit('update:plans', this.client_plans)
     },
     change_order (planOrder, direction) {
       switch (direction) {
         case 'next':
-          this.client_plans[planOrder + 1].order = planOrder
+          this.client_plans[planOrder + 1].ordered = planOrder
           this.update_plan(this.client_plans[planOrder + 1].id)
-          this.client_plans[planOrder].order = planOrder + 1
+          this.client_plans[planOrder].ordered = planOrder + 1
           this.update_plan(this.client_plans[planOrder].id)
           this.sort_plans()
           break
         case 'back':
-          this.client_plans[planOrder - 1].order = planOrder
+          this.client_plans[planOrder - 1].ordered = planOrder
           this.update_plan(this.client_plans[planOrder - 1].id)
-          this.client_plans[planOrder].order = planOrder - 1
+          this.client_plans[planOrder].ordered = planOrder - 1
           this.update_plan(this.client_plans[planOrder].id)
           this.sort_plans()
           break
@@ -217,7 +218,7 @@ export default {
     async update_plan (id) {
       this.$parent.$parent.$parent.silent_loading = true
       this.$parent.$parent.$parent.dontLeave = true
-      const plan = this.plans.find(plan => plan.id === id)
+      const plan = this.client_plans.find(plan => plan.id === id)
       try {
         this.sort_sessions(plan)
         await this.$axios.post('https://api.traininblocks.com/programmes',
@@ -227,7 +228,7 @@ export default {
             duration: plan.duration,
             notes: plan.notes,
             block_color: plan.block_color,
-            order: plan.order
+            ordered: plan.ordered
           }
         )
         localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.$parent.clients))

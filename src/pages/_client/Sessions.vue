@@ -1854,7 +1854,7 @@ export default {
             duration: forceDuration === undefined ? plan.duration : forceDuration,
             notes: forceNotes === undefined ? plan.notes : forceNotes,
             block_color: forceColors === undefined ? plan.block_color : forceColors,
-            order: plan.order
+            ordered: plan.ordered
           }
         )
         // Set vue client_details data to new data
