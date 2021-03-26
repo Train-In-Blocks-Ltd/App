@@ -1,166 +1,57 @@
 <style scoped>
-  /* Toolkit */
-  .session_toolkit--content {
-    margin: 2rem 0
-  }
-  .session_toolkit--content > div {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .session_toolkit--content input {
-    width: 4rem
-  }
-  .modal--toolkit-close {
-    display: none
-  }
-
-  @media (max-width: 576px) {
-    .modal--toolkit {
-      height: 100vh
-    }
-    .modal--toolkit-close {
-      display: block
-    }
-  }
+/* Toolkit */
+.session_toolkit--content {
+  margin: 2rem 0
+}
+.session_toolkit--content > div {
+  display: grid;
+  grid-gap: 1rem
+}
+.result {
+  margin-top: 2rem
+}
 </style>
 
 <template>
   <div class="modal--toolkit">
     <div class="center_wrapped">
-      <select class="text--small session_toolkit--select" @change="get_toolkit()">
-        <option>Maximal Heart Rate (Tanaka)</option>
-        <option>Maximal Heart Rate (Gellish)</option>
-        <option>Heart Rate Training Zone (Karvonen)</option>
-        <option>Heart Rate Reserve</option>
-        <option>Body Mass Index</option>
+      <select
+        v-model="selectedTool"
+        class="text--small session_toolkit--select"
+        @change="result = null"
+      >
+        <option
+          v-for="(toolSelect, toolSelectIndex) in calculators"
+          :key="`tool_select_${toolSelectIndex}`"
+        >
+          {{ toolSelect.name }}
+        </option>
       </select>
       <div class="session_toolkit--content">
-        <div v-if="toolkit_calcs.mhr_tanaka.view">
-          <div>
-            <input
-              id="tanaka_age"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="tanaka_age"
-              aria-label="Age"
-              placeholder="Age"
-              @input="mhr_tanaka_calc()"
-            >
-          </div>
-          <h2>
-            Maximal Heart Rate: {{ toolkit_calcs.mhr_tanaka.value }} BPM
-          </h2>
-        </div>
-        <div v-if="toolkit_calcs.mhr_gellish.view">
-          <div>
-            <input
-              id="gellish_age"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="gellish_age"
-              aria-label="Age"
-              placeholder="Age"
-              @input="mhr_gellish_calc()"
-            >
-          </div>
-          <h2>
-            Maximal Heart Rate: {{ toolkit_calcs.mhr_gellish.value }} BPM
-          </h2>
-        </div>
-        <div v-if="toolkit_calcs.hrtz.view">
-          <div>
-            <input
-              id="intensity"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="intensity"
-              aria-label="Intensity"
-              placeholder="Intensity"
-              @input="hrtz_calc()"
-            >
-          </div>
-          <div>
-            <input
-              id="mhr"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="mhr"
-              aria-label="Maximal Heart Rate"
-              placeholder="Maximal Heart Rate"
-              @input="hrtz_calc()"
-            >
-          </div>
-          <div>
-            <input
-              id="rhr"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="rhr"
-              aria-label="Resting Heart Rate"
-              placeholder="Resting Heart Rate"
-              @input="hrtz_calc()"
-            >
-          </div>
-          <h2>
-            Target Heart Rate: {{ toolkit_calcs.hrtz.value }} BPM
-          </h2>
-        </div>
-        <div v-if="toolkit_calcs.hrr.view">
-          <div>
-            <input
-              id="hrr_mhr"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="hrr_mhr"
-              aria-label="Maximal Heart Rate"
-              placeholder="Maximal Heart Rate"
-              @input="hrr_calc()"
-            >
-          </div>
-          <div>
-            <input
-              id="hrr_rhr"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="hrr_rhr"
-              aria-label="Resting Heart Rate"
-              placeholder="Resting Heart Rate"
-              @input="hrr_calc()"
-            >
-          </div>
-          <h2>
-            Heart Rate Reserve: {{ toolkit_calcs.hrr.value }} BPM
-          </h2>
-        </div>
-        <div v-if="toolkit_calcs.bmi.view">
-          <div>
-            <input
-              id="height"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="height"
-              aria-label="Height (m)"
-              placeholder="Height (m)"
-              @input="bmi_calc()"
-            >
-          </div>
-          <div>
-            <input
-              id="weight"
-              class="input--toolkit small_border_radius"
-              type="number"
-              name="weight"
-              aria-label="Weight (kg)"
-              placeholder="Weight (kg)"
-              @input="bmi_calc()"
-            >
-          </div>
-          <h2>
-            Body Mass Index: {{ toolkit_calcs.bmi.value }} kg/m<sup>2</sup>
+        <div
+          v-for="(tool, toolIndex) in calculators"
+          v-show="selectedTool === tool.name"
+          :key="`tool_${toolIndex}`"
+        >
+          <input
+            v-for="(input, inputIndex) in tool.inputs"
+            :id="`input_${input.id}`"
+            :key="`tool_${inputIndex}`"
+            v-model="input.value"
+            type="number"
+            :placeholder="input.label"
+            :aria-label="input.label"
+            @input="calculate(tool.id)"
+          >
+          <h2 class="result">
+            Result: {{ result || '_____' }} <span v-html="tool.units" />
           </h2>
         </div>
       </div>
-      <button class="cancel" @click="$parent.$modal.hide('toolkit'), will_body_scroll(true)">
+      <button
+        class="cancel"
+        @click="$parent.$modal.hide('toolkit'), will_body_scroll(true)"
+      >
         Close
       </button>
     </div>
@@ -171,82 +62,90 @@
 export default {
   data () {
     return {
-      toolkit: false,
-      toolkit_calcs: {
-        mhr_tanaka: {
-          view: false,
-          value: null
+      selectedTool: 'Maximal heart rate (Tanaka)',
+      result: null,
+      calculators: [
+        {
+          id: 'mhr_tanaka',
+          name: 'Maximal heart rate (Tanaka)',
+          inputs: [
+            { id: 'age_tanaka', label: 'Age', value: null }
+          ],
+          units: 'BPM'
         },
-        mhr_gellish: {
-          view: false,
-          value: null
+        {
+          id: 'mhr_gelish',
+          name: 'Maximal heart rate (Gelish)',
+          inputs: [
+            { id: 'age_gelish', label: 'Age', value: null }
+          ],
+          units: 'BPM'
         },
-        hrtz: {
-          view: false,
-          value: null
+        {
+          id: 'hrr',
+          name: 'Heart rate reserve (Tanaka)',
+          inputs: [
+            { id: 'mhr_hrr', label: 'Maximal heart rate', value: null },
+            { id: 'rhr_hrr', label: 'Resting heart rate', value: null }
+          ],
+          units: 'BPM'
         },
-        hrr: {
-          view: false,
-          value: null
+        {
+          id: 'hrtz',
+          name: 'Heart rate training zone (Karvonen)',
+          inputs: [
+            { id: 'intensity_1', label: 'Higher intensity (%)', value: null },
+            { id: 'intensity_2', label: 'Lower intensity (%)', value: null },
+            { id: 'mhr_hrtz', label: 'Maximal heart rate', value: null },
+            { id: 'rhr_hrtz', label: 'Resting heart rate', value: null }
+          ],
+          units: 'BPM'
         },
-        bmi: {
-          view: false,
-          value: null
+        {
+          id: 'bmi',
+          name: 'Body mass index',
+          inputs: [
+            { id: 'weight', label: 'Weight (kg)', value: null },
+            { id: 'height', label: 'Height (m)', value: null }
+          ],
+          units: 'kg/m<sup>2</sup>'
         }
-      }
+      ]
     }
   },
-  mounted () {
-    this.get_toolkit()
-  },
   methods: {
-    /* Various session calculators */
-    mhr_tanaka_calc () {
-      this.toolkit_calcs.mhr_tanaka.value = 220 - Number(document.querySelector('#tanaka_age').value)
-    },
-    mhr_gellish_calc () {
-      this.toolkit_calcs.mhr_gellish.value = 220 - 0.7 * Number(document.querySelector('#gellish_age').value)
-    },
-    hrtz_calc () {
-      this.toolkit_calcs.hrtz.value = (Number(document.querySelector('#intensity').value / 100)) * (Number(document.querySelector('#mhr').value) - Number(document.querySelector('#rhr').value)) + Number(document.querySelector('#rhr').value)
-    },
-    hrr_calc () {
-      this.toolkit_calcs.hrr.value = Number(document.querySelector('#hrr_mhr').value) - Number(document.querySelector('#hrr_rhr').value)
-    },
-    bmi_calc () {
-      this.toolkit_calcs.bmi.value = (Number(document.querySelector('#weight').value) / (Number(document.querySelector('#height').value) * Number(document.querySelector('#height').value))).toFixed(2)
-    },
-    /* Closes the toolkit */
-    close_toolkit () {
-      this.toolkit_calcs.mhr_tanaka.view = false
-      this.toolkit_calcs.mhr_gellish.view = false
-      this.toolkit_calcs.hrtz.view = false
-      this.toolkit_calcs.hrr.view = false
-      this.toolkit_calcs.bmi.view = false
-      document.querySelectorAll('.session_toolkit--content input').forEach((e) => {
-        e.value = null
-      })
-    },
-    /* Selects the correct calculator depending on the select */
-    get_toolkit () {
-      const select = document.querySelector('.session_toolkit--select').value
-      if (select === 'Maximal Heart Rate (Tanaka)') {
-        this.close_toolkit()
-        this.toolkit_calcs.mhr_tanaka.view = true
-      } else if (select === 'Maximal Heart Rate (Gellish)') {
-        this.close_toolkit()
-        this.toolkit_calcs.mhr_gellish.view = true
-      } else if (select === 'Heart Rate Training Zone (Karvonen)') {
-        this.close_toolkit()
-        this.toolkit_calcs.hrtz.view = true
-      } else if (select === 'Heart Rate Reserve') {
-        this.close_toolkit()
-        this.toolkit_calcs.hrr.view = true
-      } else if (select === 'Body Mass Index') {
-        this.close_toolkit()
-        this.toolkit_calcs.bmi.view = true
+    calculate (cal) {
+      switch (cal) {
+        case 'mhr_tanaka': {
+          this.result = 220 - Number(document.getElementById('input_age_tanaka').value)
+          break
+        }
+        case 'mhr_gelish': {
+          this.result = (220 - 0.7 * Number(document.getElementById('input_age_gelish').value)).toFixed(2)
+          break
+        }
+        case 'hrr': {
+          const mhr = Number(document.getElementById('input_mhr_hrr').value)
+          const rhr = Number(document.getElementById('input_rhr_hrr').value)
+          this.result = mhr - rhr
+          break
+        }
+        case 'hrtz': {
+          const int1 = Number(document.getElementById('input_intensity_1').value / 100)
+          const int2 = Number(document.getElementById('input_intensity_2').value / 100)
+          const mhr = Number(document.getElementById('input_mhr_hrtz').value)
+          const rhr = Number(document.getElementById('input_rhr_hrtz').value)
+          this.result = `${(int1 * (mhr - rhr) + rhr).toFixed(2)}–${(int2 * (mhr - rhr) + rhr).toFixed(2)}`
+          break
+        }
+        case 'bmi': {
+          const weight = Number(document.getElementById('input_weight').value)
+          const height = Number(document.getElementById('input_height').value)
+          this.result = (weight / (height * height)).toFixed(2)
+          break
+        }
       }
     }
   }
 }
-</script>>
+</script>

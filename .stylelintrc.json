@@ -24,7 +24,6 @@
         "length-zero-no-unit": true,
         "value-keyword-case": "lower",
         "property-case": "lower",
-        "declaration-property-unit-blacklist": {"opacity": ["%"]},
-        "no-inline-html": false
+        "declaration-property-unit-blacklist": {"opacity": ["%"]}
     }
 }
