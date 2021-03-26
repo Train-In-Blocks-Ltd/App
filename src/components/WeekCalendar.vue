@@ -44,7 +44,7 @@
 
   /* Header bar */
   .calendar_header__bar * {
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .calendar_header__bar *:hover {
     opacity: .6
@@ -83,6 +83,9 @@
     display: flex;
     justify-content: space-between
   }
+  .day_header .text--small {
+    margin-left: .4rem
+  }
 
   /* Responsive */
   @media (max-width: 992px) {
@@ -107,9 +110,9 @@
 <template>
   <div id="calendar_view">
     <div class="calendar_header">
-      <p v-if="!emptyWeek" class="text--large">
+      <h1>
         {{ get_month(thisWeek[0].date_split[1]) }} {{ thisWeek[0].date_split[0] }}
-      </p>
+      </h1>
       <div class="calendar_header__bar">
         <inline-svg
           :src="require('../assets/svg/arrow.svg')"
@@ -138,9 +141,9 @@
         class="day_container"
       >
         <div class="day_header">
-          <p class="text--small">
+          <h2>
             {{ get_day(index) }}
-          </p>
+          </h2>
           <p class="text--small grey">
             {{ day.date_split[2] }}
           </p>
@@ -179,7 +182,6 @@ export default {
   },
   data () {
     return {
-      emptyWeek: true,
       currentWeekStart: null,
       thisWeek: [],
       weekDiff: 0
@@ -190,9 +192,8 @@ export default {
       this.get_week()
     }
   },
-  mounted () {
+  created () {
     this.get_week()
-    this.thisWeek.length === 0 ? this.emptyWeek = true : this.emptyWeek = false
   },
   methods: {
 

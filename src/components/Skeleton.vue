@@ -14,7 +14,7 @@
   .mini_padding {
     padding: .6rem
   }
-  .rect {
+  .plans_layout > div, .rect {
     display: grid;
     grid-gap: 2rem;
     background-color: var(--skeleton_2);
@@ -67,6 +67,13 @@
       background-position: 100rem 0
     }
   }
+
+  /* Plans */
+  .plans_layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem
+  }
 </style>
 
 <template>
@@ -78,10 +85,17 @@
       <div class="rect__content two" />
       <div class="rect__box" />
     </div>
-    <div v-if="type === 'plan'" class="rect small_margin large_padding">
-      <div class="rect__title" />
-      <div class="rect__content one" />
-      <div class="rect__content one" />
+    <div v-if="type === 'plan'" class="plans_layout">
+      <div class="small_margin large_padding">
+        <div class="rect__title" />
+        <div class="rect__content one" />
+        <div class="rect__content one" />
+      </div>
+      <div class="small_margin large_padding">
+        <div class="rect__title" />
+        <div class="rect__content one" />
+        <div class="rect__content one" />
+      </div>
     </div>
     <div v-if="type === 'client'" class="rect large_padding">
       <div class="rect__title" />

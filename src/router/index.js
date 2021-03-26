@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Auth from '@okta/okta-vue'
+import OktaVue, { LoginCallback } from '@okta/okta-vue'
+import { OktaAuth } from '@okta/okta-auth-js'
 
 const LoginComponent = () => import(/* webpackChunkName: "login" */ '@/pages/Login')
 const ProfileComponent = () => import(/* webpackChunkName: "account" */ '@/pages/Account')
@@ -20,7 +21,7 @@ const ClientUserPlans = () => import(/* webpackChunkName: "client-user.plans" */
 const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home')
 
 Vue.use(Router)
-Vue.use(Auth, {
+const oktaAuth = new OktaAuth({
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
   redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
@@ -31,6 +32,7 @@ Vue.use(Auth, {
     await Vue.prototype.$auth.logout({ postLogoutRedirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host })
   }
 })
+Vue.use(OktaVue, { oktaAuth })
 
 const router = new Router({
   mode: 'history',
@@ -53,7 +55,7 @@ const router = new Router({
     },
     {
       path: '/implicit/callback',
-      component: Auth.handleCallback()
+      component: LoginCallback
     },
     {
       path: '/account',
@@ -148,13 +150,13 @@ const onAuthRequired = async (to, from, next) => {
     next()
   } else {
     next()
-    Vue.prototype.$auth.oktaAuth.tokenManager.renew('accessToken')
+    Vue.prototype.$auth.tokenManager.renew('accessToken')
   }
 }
 
 const userType = async (to, from, next) => {
   let result
-  if (!localStorage.getItem('claims')) {
+  if (!localStorage.getItem('claims') && await Vue.prototype.$auth.isAuthenticated()) {
     const claims = await Vue.prototype.$auth.getUser()
     if (claims !== undefined && claims !== null) {
       localStorage.setItem('claims', JSON.stringify(claims))

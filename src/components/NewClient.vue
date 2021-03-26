@@ -14,13 +14,13 @@
     name="add_client"
     class="form_grid add_client"
     spellcheck="false"
-    @submit.prevent="save(), $parent.isNewClientOpen = false, $parent.$parent.will_body_scroll(true)"
+    @submit.prevent="save(), $parent.isNewClientOpen = false, will_body_scroll(true)"
   >
     <div class="bottom_margin">
-      <p class="text--small">
+      <h2>
         Add a new client and email them access
-      </p>
-      <p class="text--small grey">
+      </h2>
+      <p class="grey">
         Make sure that you have the correct email address, you won't be able to change it after
       </p>
     </div>
@@ -57,7 +57,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, $parent.$parent.will_body_scroll(true)">
+      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

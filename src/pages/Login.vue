@@ -29,11 +29,11 @@
     color: red
   }
   .button--container {
-    margin-top: 1.25rem
+    margin-top: 1rem
   }
   .signup {
     margin-left: calc(20px + 60px + 20px);
-    margin-top: .6rem;
+    margin-top: -.6rem;
     margin-bottom: .6rem
   }
   .recovery {
@@ -44,6 +44,9 @@
   }
 </style>
 <style>
+  #okta-sign-in {
+    margin-left: 0
+  }
   #okta-signin-submit {
     outline: none;
     -moz-appearance: none;
@@ -184,7 +187,7 @@
 </template>
 
 <script>
-const Splash = () => import(/* webpackChunkName: "components.splash", webpackPreload: true  */ '../components/Splash')
+import Splash from '../components/Splash'
 
 export default {
   components: {
@@ -201,14 +204,13 @@ export default {
     }
   },
   async mounted () {
-    setTimeout(() => {
-      this.splashed = true
-      this.$parent.will_body_scroll(true)
-    }, 4000)
+    const scopes = ['openid', 'profile', 'email']
     let OktaSignIn
     await import(/* webpackChunkName: "okta.signin", webpackPreload: true  */ '@okta/okta-signin-widget/dist/js/okta-sign-in.no-polyfill.min.js').then((module) => {
       OktaSignIn = module.default
     })
+    this.splashed = true
+    this.will_body_scroll(true)
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
@@ -230,10 +232,7 @@ export default {
           pkce: true,
           display: 'page',
           issuer: process.env.ISSUER + '/oauth2/default',
-          scopes: ['openid', 'profile', 'email'],
-          cookies: {
-            secure: true
-          },
+          scopes,
           tokenManager: {
             autoRenew: true,
             expireEarlySeconds: 120
@@ -241,18 +240,22 @@ export default {
         }
       })
 
-      this.widget.renderEl(
-        { el: '#okta-signin-container' },
-        () => {
-          /**
-           * In this flow, the success handler will not be called because we redirect
-           * to the Okta org for the authentication workflow.
-           */
-        },
-        (err) => {
-          throw err
-        }
-      )
+      this.widget.showSignInToGetTokens({
+        el: '#okta-signin-container',
+        scopes
+      }).then(async (tokens) => {
+        await this.$auth.handleLoginRedirect(tokens)
+        this.will_body_scroll(true)
+      }).catch((err) => {
+        throw err
+      })
+      const self = this
+      this.widget.on('ready', function (context) {
+        document.querySelector('#okta-signin-submit').addEventListener('click', function () {
+          self.splashed = false
+          self.will_body_scroll(false)
+        })
+      })
     })
     if (await this.$auth.isAuthenticated()) {
       this.$router.push('/')
@@ -267,17 +270,12 @@ export default {
     }
   },
   async beforeDestroy () {
-    window.setTimeout(this.$auth.oktaAuth.tokenManager.renew('accessToken'), 3500)
     await this.$parent.is_authenticated()
     await this.$parent.setup()
     await this.$parent.clients_f()
     if (this.$ga && !this.$parent.authenticated) {
       this.$ga.event('Auth', 'login')
     }
-  },
-  destroyed () {
-    // Remove the widget from the DOM on path change
-    this.widget.remove()
   },
   methods: {
 

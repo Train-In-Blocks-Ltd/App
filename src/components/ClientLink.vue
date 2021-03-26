@@ -8,7 +8,7 @@
   .client_link svg {
     width: 20px;
     fill: var(--base);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link__details {
     display: grid;
@@ -20,7 +20,7 @@
     word-wrap: break-word;
     margin: auto 0;
     color: var(--base);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link__details img, .client_link__details iframe {
     border-radius: 3px
@@ -51,9 +51,9 @@
 <template>
   <div>
     <div>
-      <p class="text--small name">
+      <h2 class="name">
         {{ name }}
-      </p>
+      </h2>
       <div v-if="email !== ''" class="client_link__details">
         <inline-svg :src="require('../assets/svg/email.svg')" />
         <p>{{ email }}</p>
@@ -69,7 +69,7 @@
     <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="client_link__notes__content" v-html="remove_brackets_and_checkbox(notes)" />
     <div v-if="archive" class="client_link__options">
       <checkbox :item-id="clientId" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
-      <a href="javascript:void(0)" title="Unarchive" @click="$parent.$parent.client_unarchive(clientId)">
+      <a href="javascript:void(0)" title="Unarchive" @click="$parent.unarchive_single(clientId)">
         <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive" />
       </a>
       <a href="javascript:void(0)" title="Delete" @click="soloDelete(clientId)">

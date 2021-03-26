@@ -18,70 +18,30 @@ img {
 
 <template>
   <div class="bottom_margin">
-    <p class="text--large">
+    <h1>
       What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
-    </p>
-    <p class="text--large grey">
-      Enhanced workflow, visuals, and more mobile-friendly
-    </p>
+    </h1>
+    <h2 class="grey">
+      Dark mode, new styles, and bug fixes
+    </h2>
     <br><br>
     <div class="update_wrapper">
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/new-editor.png')" alt="New editor">
-        <p class="text--small">
-          New editor
-        </p>
-        <p class="text--small grey">
-          Try our new text editor. It's faster and more convenient. You can now access templates for your sessions in the toolbar with additional support for use on mobile devices.<br><br>**We recommend that you should create new sessions and copy it over from your current plans**
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/progress.png')" alt="Progress sessions upgrade">
-        <p class="text--small">
-          Progression update
-        </p>
-        <p class="text--small grey">
-          Quickly spread and change the session protocols across multiple weeks/microcycles
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/calendar.png')" alt="New calendar">
-        <p class="text--small">
-          Updated calendar
-        </p>
-        <p class="text--small grey">
-          Visualise all the sessions in our new monthly view. You can now head straight towards the session by clicking on it through the calendar.
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/graph.png')" alt="New graph">
-        <p class="text--small">
-          Updated graph
-        </p>
-        <p class="text--small grey">
-          We've made our line-chart more interactive and responsive. You can now click on a point to get the value and find out where it occurred.
-        </p>
-      </div>
-      <div class="update_item">
-        <img :src="require('../assets/whats-new/duplicate.png')" alt="Duplicate plans">
-        <p class="text--small">
-          Duplicate plans
-        </p>
-        <p class="text--small grey">
-          If you need a copy of the same plan or adapting a similar plan for another client, then simply duplicate it over.
-        </p>
-      </div>
-      <div class="update_item">
-        <p class="text--small">
-          Client-side improvements
-        </p>
-        <p class="text--small grey">
-          Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.
+      <div
+        v-for="(item, index) in content"
+        :key="`item_${index}`"
+        class="update_item"
+      >
+        <img v-if="item.img" :src="require(`../assets/whats-new/${item.img}`)" :alt="item.title">
+        <h2>
+          {{ item.title }}
+        </h2>
+        <p class="grey">
+          {{ item.desc }}
         </p>
       </div>
     </div>
     <br>
-    <button class="cancel" @click="$parent.isWhatsNewOpen = false, $parent.$parent.will_body_scroll(true), update_version()">
+    <button class="cancel" @click="$parent.isWhatsNewOpen = false, will_body_scroll(true), update_version()">
       Close
     </button>
   </div>
@@ -89,6 +49,18 @@ img {
 
 <script>
 export default {
+  data () {
+    return {
+      content: [
+        { title: 'Dark mode', desc: 'Working at night? Let\'s take some strain off the eyes. You can turn on dark mode through your Account page.', img: 'dark-mode.png' },
+        { title: 'New editor style', desc: 'We\'ve made a minor change to how the editor looks but it still works in a similar way. Simply click on the text to start editing.', img: 'editor-style.png' },
+        { title: 'Highlight formatting', desc: 'Want to bold, italic, or underline some text? Just highlight it and get stylish! The formatter will follow you to where you are working.', img: 'highlight.png' },
+        { title: 'Plan overview', desc: 'You can now organise your plans in the order that they will occur. Much like a periodised model, you can see how the number of microcycles and their colour-code in this general overview.', img: 'new-plans.png' },
+        { title: 'Printing sessions', desc: 'Want a physical copy or a PDF? You can simply select all the sessions that you wish to export and print from the menu.', img: 'print.png' },
+        { title: 'Client-side improvements', desc: 'Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.', img: false }
+      ]
+    }
+  },
   methods: {
     update_version () {
       localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)

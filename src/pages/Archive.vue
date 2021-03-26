@@ -30,25 +30,19 @@
 <template>
   <div id="archive">
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up
-        v-if="response !== ''"
-        :header="response"
-        :desc="'Your clients can access this information'"
-      />
-    </transition>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedClients.length !== 0" class="multi-select">
         <p>
           <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
         </p>
+        <a href="javascript:void(0)" class="a_link" @click="unarchive_multi_clients()">Unarchive</a>
         <a href="javascript:void(0)" class="a_link" @click="delete_multi_clients()">Delete</a>
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect all</a>
       </div>
     </transition>
     <div class="top_bar">
-      <p class="text--large">
+      <h1>
         Archive
-      </p>
+      </h1>
       <a
         v-if="!$parent.archive.no_archive && selectedClients.length < $parent.archive.clients.length"
         href="javascript:void(0)"
@@ -59,7 +53,7 @@
       </a>
     </div>
     <br>
-    <p v-if="$parent.archive.no_archive" class="text--small grey">
+    <p v-if="$parent.archive.no_archive" class="grey">
       No clients are archived :)
     </p>
     <p v-if="$parent.error">
@@ -117,13 +111,12 @@ export default {
     this.$parent.loading = true
     await this.$parent.setup()
     await this.$parent.archive_to_vue()
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {
 
     // Checkbox
-
     change_select_checkbox (id) {
       if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)
@@ -154,6 +147,25 @@ export default {
           })
           this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete'
           this.$parent.responseDesc = 'All their data have been removed'
+          this.deselect_all()
+        }
+      }
+    },
+    unarchive_single (id) {
+      if (confirm('Are you sure you want to unarchive this client?')) {
+        this.$parent.client_unarchive(id)
+      }
+      this.$parent.responseHeader = 'Client unarchived'
+      this.$parent.responseDesc = 'You can access them back on the home page'
+    },
+    unarchive_multi_clients () {
+      if (this.selectedClients.length !== 0) {
+        if (confirm('Are you sure that you want to unarchive all the selected clients?')) {
+          this.selectedClients.forEach((clientId) => {
+            this.$parent.client_unarchive(clientId)
+          })
+          this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client'
+          this.$parent.responseDesc = 'All their data have been recovered'
           this.deselect_all()
         }
       }

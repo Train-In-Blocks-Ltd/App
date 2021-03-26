@@ -6,12 +6,14 @@
     box-sizing: border-box
   }
   :root {
+    --transition_smooth: .4s all;
+    --transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
     --low_shadow: 0 0 20px 10px #28282808;
     --high_shadow: 0 0 20px 10px #28282816;
     --back: #F9F9F9;
     --fore: white;
     --base: #282828;
-    --base_light: #28282894;
+    --base_light: #585858;
     --base_faint: #28282840;
     --overlay_glass: #FFFFFFB3;
     --calendar_highlight: #FFFFEE;
@@ -63,7 +65,7 @@
     background-color: var(--overlay_glass);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .section_overlay.opened_sections {
     width: 100%;
@@ -94,6 +96,21 @@
     display: grid;
     align-items: start
   }
+  h1, h2 {
+    margin: 0
+  }
+  h1, .text--large {
+    /* stylelint-disable-next-line */
+    font-size: 2.6rem !important
+  }
+  h2, .text--small {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important
+  }
+  em {
+    /* stylelint-disable-next-line */
+    color: var(--base) !important
+  }
   .notAuth {
     margin: 0
   }
@@ -103,6 +120,23 @@
   svg.no_fill path {
     fill: none;
     stroke: var(--base)
+  }
+
+  /* Show HTML */
+  .show_html > div,
+  .show_html > p {
+    margin: .6rem 0
+  }
+  .show_html img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  .show_html input[type='checkbox'] {
+    margin: .4rem
+  }
+  .show_html a {
+    color: var(--link)
   }
 
   /* Containers */
@@ -159,7 +193,7 @@
     overflow-y: auto;
     background-color: var(--back)
   }
-  div.vm--modal > div,
+  div.vm--modal > div:not(#policy_agreement),
   div.vm--modal > form {
     padding: 2rem;
     display: flex;
@@ -178,27 +212,10 @@
   p {
     margin: 0
   }
-  .text--large {
-    margin-top: 0;
-    /* stylelint-disable-next-line */
-    font-size: 2.6rem!important;
-    line-height: 1.2
+  .text--error, a.text--red {
+    color: rgb(184, 0, 0)
   }
-  .text--small {
-    /* stylelint-disable-next-line */
-    font-size: 1.6rem!important;
-    line-height: 1.2
-  }
-  .text--error {
-    font-size: .8rem;
-    color: #B80000
-  }
-  .text--loading,
-  .text--no_clients {
-    margin: 2rem 0 4rem 0
-  }
-  .text--no-plans,
-  .text--no_sessions {
+  .text--holder {
     margin: 2rem 0 8rem 0
   }
   .text--name {
@@ -214,7 +231,7 @@
   /* Tailwinds */
   .cursor {
     cursor: pointer;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .cursor:hover {
     opacity: .6
@@ -352,7 +369,7 @@
     border-radius: 8px;
     background-color: transparent;
     box-shadow: none;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
   select:hover {
@@ -383,11 +400,14 @@
     padding: 0 .14rem;
     outline-width: 0;
     cursor: pointer;
-    transition: all .4s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   ::placeholder {
     color: var(--base_light);
     opacity: 1; /* Firefox */
+  }
+  option {
+    background-color: var(--fore)
   }
 
   /* Forms */
@@ -433,7 +453,7 @@
     cursor: pointer;
     font-size: 1rem;
     margin: .8rem 0;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .account_nav_item:hover,
   .sidebar:hover .account_nav_item--text,
@@ -454,13 +474,13 @@
     position: relative;
     border: 0;
     opacity: 0;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .account_nav_item--icon {
     margin: 0 .4rem 0 0;
     height: 1.4rem;
     vertical-align: bottom;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
 
   /* Tab options */
@@ -477,7 +497,7 @@
     border-radius: 3px 0 0 3px;
     background-color: var(--fore);
     box-shadow: var(--low_shadow);
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .icon_open_middle {
     top: 5.4rem
@@ -503,7 +523,7 @@
     font-size: .8rem;
     display: none;
     white-space: nowrap;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .tab_option:hover .text {
     display: block
@@ -565,8 +585,7 @@
   .client_link_wrapper {
     text-decoration: none
   }
-  .client_link,
-  .plan_link {
+  .client_link {
     display: grid;
     padding: 2rem;
     grid-gap: 1rem;
@@ -576,25 +595,24 @@
     box-shadow: var(--low_shadow);
     background-color: var(--fore);
     border-radius: 10px;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
-  .client_link:hover,
-  .plan_link:hover {
+  .client_link:hover {
     box-shadow: var(--high_shadow)
   }
   .client_link__notes__content,
-  .plan_link__notes__content {
+  .preview_html {
     font-size: .8rem;
     margin-top: .4rem
   }
   .client_link__notes__content *,
-  .plan_link__notes__content *,
+  .preview_html *,
   .plan-name {
     color: var(--base);
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link__notes__content p,
-  .plan_link__notes__content p {
+  .preview_html p {
     margin: .4rem 0
   }
   .client_name,
@@ -603,26 +621,26 @@
   }
   .client_link__notes__content h1,
   .client_link__notes__content h2,
-  .plan_link__notes__content h1,
-  .plan_link__notes__content h2 {
+  .preview_html h1,
+  .preview_html h2 {
     font-size: 1rem
   }
   .client_link__notes__content img,
   .client_link__notes__content iframe,
-  .plan_link img,
-  .plan_link iframe {
+  .preview_html img,
+  .preview_html iframe {
     margin: 1rem 0;
     max-width: 500px;
     border-radius: 3px;
     opacity: .6;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .client_link .client_link__notes__content img,
   .client_link .client_link__notes__content iframe,
   .client_link .client_link__notes__content a,
-  .plan_link img,
-  .plan_link iframe,
-  .plan_link a {
+  .preview_html img,
+  .preview_html iframe,
+  .preview_html a {
     display: none
   }
 
@@ -661,10 +679,14 @@
     .sidebar {
       top: 0;
       height: 100vh;
+      min-height: 100%;
       width: calc(38px + 2rem)
     }
     .sidebar:hover {
       width: 12rem
+    }
+    .sidebar:hover main {
+      margin-left: 12rem
     }
     .client_link.archived {
       display: flex;
@@ -744,10 +766,10 @@
     p, li {
       font-size: .8rem
     }
-    .text--large {
+    h1, .text--large {
       font-size: 2rem
     }
-    .text--small {
+    h2, .text--small {
       font-size: 1.2rem
     }
     .button--state {
@@ -785,28 +807,6 @@
     }
     .fadeIn, .fadeOut {
       animation: none
-    }
-  }
-
-  /* Print */
-  @media print {
-    a,
-    button,
-    svg,
-    video,
-    iframe,
-    .sidebar,
-    .wrapper--floating_nav,
-    .tab_option,
-    .wrapper--progress-bar,
-    .expand-all,
-    .plan_table,
-    .change_week_color {
-      display: none
-    }
-    #client .client_info input:not([type='submit']) {
-      border: none;
-      padding: 0
     }
   }
 
@@ -851,6 +851,9 @@
           </button>
         </div>
       </div>
+    </modal>
+    <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
+      <policy :type="claims.user_type" />
     </modal>
     <nav v-if="authenticated && claims" class="sidebar">
       <div class="logo">
@@ -972,8 +975,12 @@
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
+const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
 
 export default {
+  components: {
+    Policy
+  },
   data () {
     return {
 
@@ -1014,11 +1021,12 @@ export default {
 
       // SYSTEM
 
+      policyVersion: '1.1',
       responsePersist: false,
       responseHeader: '',
       responseDesc: '',
       versionName: 'Pegasus',
-      versionBuild: '3.1',
+      versionBuild: '3.2',
       newBuild: false,
       errorMsg: null,
       loading: false,
@@ -1097,19 +1105,39 @@ export default {
           break
       }
     },
-    darkmode () {
-      document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
-      document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
-      document.documentElement.style.setProperty('--back', '#282828')
-      document.documentElement.style.setProperty('--fore', '#383838')
-      document.documentElement.style.setProperty('--base', 'white')
-      document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
-      document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
-      document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
-      document.documentElement.style.setProperty('--calendar_highlight', '#686868')
-      document.documentElement.style.setProperty('--skeleton_1', '#686868')
-      document.documentElement.style.setProperty('--skeleton_2', '#484848')
-      document.documentElement.style.setProperty('--link', 'white')
+    darkmode (mode) {
+      if (mode === 'dark') {
+        document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
+        document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
+        document.documentElement.style.setProperty('--back', '#282828')
+        document.documentElement.style.setProperty('--fore', '#383838')
+        document.documentElement.style.setProperty('--base', 'white')
+        document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
+        document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
+        document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
+        document.documentElement.style.setProperty('--calendar_highlight', '#686868')
+        document.documentElement.style.setProperty('--skeleton_1', '#686868')
+        document.documentElement.style.setProperty('--skeleton_2', '#484848')
+        document.documentElement.style.setProperty('--link', 'white')
+      } else if (mode === 'system' && window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+        this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          this.darkmode(e.matches ? 'dark' : 'light')
+        })
+      } else {
+        document.documentElement.style.setProperty('--low_shadow', '0 0 20px 10px #28282808')
+        document.documentElement.style.setProperty('--high_shadow', '0 0 20px 10px #28282816')
+        document.documentElement.style.setProperty('--back', '#F9F9F9')
+        document.documentElement.style.setProperty('--fore', 'white')
+        document.documentElement.style.setProperty('--base', '#282828')
+        document.documentElement.style.setProperty('--base_light', '#585858')
+        document.documentElement.style.setProperty('--base_faint', '#28282840')
+        document.documentElement.style.setProperty('--overlay_glass', '#FFFFFFB3')
+        document.documentElement.style.setProperty('--calendar_highlight', '#FFFFEE')
+        document.documentElement.style.setProperty('--skeleton_1', '#F4F4F4')
+        document.documentElement.style.setProperty('--skeleton_2', '#E4E4E4')
+        document.documentElement.style.setProperty('--link', 'blue')
+      }
     },
 
     // AUTH
@@ -1118,7 +1146,7 @@ export default {
       this.authenticated = await this.$auth.isAuthenticated()
     },
     async logout () {
-      await this.$auth.logout()
+      await this.$auth.signOut()
       await this.is_authenticated()
       localStorage.clear()
       localStorage.setItem('versionBuild', this.versionBuild)
@@ -1132,15 +1160,53 @@ export default {
       this.$ga.event('Auth', 'logout')
     },
     async setup () {
-      this.claims = JSON.parse(localStorage.getItem('claims'))
+      if (localStorage.getItem('claims')) {
+        this.claims = JSON.parse(localStorage.getItem('claims'))
+      } else {
+        this.claims = this.$auth.getUser()
+      }
       if (this.claims) {
         if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
           this.claims.ga = true
         }
         this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
+
+        if (this.claims.theme === undefined || this.claims === undefined || this.claims === null) {
+          this.claims.theme = 'system'
+        }
+        this.darkmode(this.claims.theme)
+        if (this.claims.policy === undefined || this.claims.policy === []) {
+          this.will_body_scroll(false)
+          this.$modal.show('agreement')
+        } else if (this.policyVersion !== this.claims.policy[2]) {
+          this.will_body_scroll(false)
+          this.$modal.show('agreement')
+        }
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
+    },
+    async save_claims () {
+      this.dontLeave = true
+      try {
+        await this.$axios.post('/.netlify/functions/okta',
+          {
+            type: 'POST',
+            body: {
+              profile: {
+                ga: this.claims.ga,
+                theme: this.claims.theme,
+                policy: this.claims.policy
+              }
+            },
+            url: `${this.claims.sub}`
+          }
+        )
+        localStorage.removeItem('claims')
+        this.dontLeave = false
+      } catch (e) {
+        this.resolve_error(e)
+      }
     },
 
     // SYSTEM STATE
@@ -1169,10 +1235,6 @@ export default {
 
     // OTHER SHARED METHODS
 
-    will_body_scroll (state) {
-      const body = document.getElementsByTagName('body')[0]
-      state ? body.style.overflow = 'auto' : body.style.overflow = 'hidden'
-    },
     confirmLeave (e) {
       if (this.dontLeave) {
         const msg = 'Your changes might not be saved, are you sure you want to leave?'
@@ -1305,28 +1367,24 @@ export default {
       }
     },
     async client_unarchive (id) {
-      if (confirm('Are you sure you want to unarchive this client?')) {
-        this.dontLeave = true
-        const client = this.archive.clients.find(client => client.client_id === id)
-        const arr = JSON.parse(localStorage.getItem('clients'))
-        arr.push(client)
+      this.dontLeave = true
+      const client = this.archive.clients.find(client => client.client_id === id)
+      const arr = JSON.parse(localStorage.getItem('clients'))
+      arr.push(client)
 
-        localStorage.setItem('clients', JSON.stringify(arr))
-        this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-          const textA = a.name.toUpperCase()
-          const textB = b.name.toUpperCase()
-          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-        })
-        this.archive.no_archive = this.archive.clients.length === 0
-        try {
-          const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-          this.response = response.data
-          this.helper('client_store', 'Client', 'unarchive')
-          this.responseHeader = 'Client unarchived'
-          this.responseDesc = 'You can access them back on the home page'
-        } catch (e) {
-          this.resolve_error(e)
-        }
+      localStorage.setItem('clients', JSON.stringify(arr))
+      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
+        const textA = a.name.toUpperCase()
+        const textB = b.name.toUpperCase()
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+      })
+      this.archive.no_archive = this.archive.clients.length === 0
+      try {
+        const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+        this.response = response.data
+        this.helper('client_store', 'Client', 'unarchive')
+      } catch (e) {
+        this.resolve_error(e)
       }
     },
 
