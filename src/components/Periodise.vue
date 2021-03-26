@@ -187,7 +187,6 @@ export default {
     sort_plans () {
       this.client_plans.forEach((plan, index) => {
         if (plan.ordered === null) {
-          console.log('null')
           plan.ordered = index
           this.$emit('update:plans', this.client_plans)
         }
