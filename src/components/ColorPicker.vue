@@ -8,7 +8,7 @@
     border-radius: 5px;
     cursor: pointer;
     margin-right: 1rem;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .color:hover {
     opacity: .6

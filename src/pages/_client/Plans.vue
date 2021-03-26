@@ -1,8 +1,5 @@
 <style>
   /* Client Notes */
-  .activeState {
-    border: 2px solid var(--base_faint)
-  }
   #client_notes {
     margin: 4rem 0;
     padding: 2rem;
@@ -10,15 +7,12 @@
     background-color: var(--fore);
     box-shadow: var(--low_shadow)
   }
-  .client_notes__header {
-    display: flex
-  }
   .a--client_notes {
     color: var(--base);
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .a--client_notes:hover {
     opacity: .6
@@ -27,11 +21,13 @@
     margin: 1rem 0
   }
 
-  /* Plans */
-  .plan_grid {
+  /* Periodise Grid */
+  .periodise_grid {
     display: grid;
-    grid-gap: 2rem;
-    margin: 2rem 0
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 4rem
   }
 
   /* Add plan Form */
@@ -51,6 +47,18 @@
     display: grid;
     grid-gap: .5rem
   }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .periodise_grid {
+      grid-template-columns: 1fr 1fr
+    }
+  }
+  @media (max-width: 567px) {
+    .periodise_grid {
+      grid-template-columns: 1fr
+    }
+  }
 </style>
 <template>
   <div>
@@ -62,7 +70,7 @@
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small"
       aria-label="New Plan"
-      @click="isNewPlanOpen = true, $parent.$parent.will_body_scroll(false)"
+      @click="isNewPlanOpen = true, will_body_scroll(false)"
     >
       <inline-svg class="no_fill" :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
@@ -70,63 +78,28 @@
       </p>
     </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
-    <div id="client_notes" :class="{ activeState: editClientNotes }">
-      <div class="client_notes__header">
-        <p class="text--small">
-          Client Information
-        </p>
-        <a
-          v-if="!editClientNotes"
-          href="javascript:void(0)"
-          class="a--client_notes"
-          @click="editClientNotes = true, tempEditorStore = $parent.$parent.client_details.notes"
-        >
-          Edit
-        </a>
-      </div>
+    <div id="client_notes" :class="{ editorActive: editingClientNotes }">
+      <h2>
+        Client Information
+      </h2>
       <rich-editor
-        :show-edit-state="editClientNotes"
         :html-injection.sync="$parent.$parent.client_details.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
+        @on-edit-change="resolve_client_info_editor"
       />
-      <div v-if="editClientNotes" class="bottom_bar">
-        <button class="button--save" @click="editClientNotes = false, $parent.$parent.update_client()">
-          Save
-        </button>
-        <button class="cancel" @click="editClientNotes = false, $parent.$parent.client_details.notes = tempEditorStore">
-          Cancel
-        </button>
-      </div>
     </div>
     <div>
-      <p class="text--large">
+      <h1>
         Plans
-      </p>
-      <p v-if="$parent.no_plans" class="text--small grey text--no-plans fadeIn">
+      </h1>
+      <p
+        v-if="$parent.no_plans"
+        class="text--holder text--small grey"
+      >
         No plans yet, use the button on the top-right of your screen
       </p>
-      <div v-else>
-        <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
-        <div v-else class="plan_grid">
-          <router-link
-            v-for="(plan, index) in $parent.$parent.client_details.plans"
-            :key="index"
-            :to="'plan/' + plan.id"
-            :class="{ recently_added: persistResponse === plan.name }"
-            class="plan_link fadeIn"
-          >
-            <div>
-              <p class="text--small plan-name">
-                {{ plan.name }}
-              </p>
-              <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="grey">
-                What's the purpose of this plan? Head over to this page and edit it.
-              </p>
-              <div v-else class="plan_link__notes__content" v-html="remove_brackets_and_checkbox(plan.notes)" />
-            </div>
-          </router-link>
-        </div>
-      </div>
+      <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
+      <periodise v-else :is-trainer="true" :plans.sync="$parent.$parent.client_details.plans" />
     </div>
   </div>
 </template>
@@ -134,11 +107,13 @@
 <script>
 const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
+const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
 
 export default {
   components: {
     NewPlan,
-    RichEditor
+    RichEditor,
+    Periodise
   },
   data () {
     return {
@@ -146,7 +121,7 @@ export default {
       // EDIT
 
       tempEditorStore: null,
-      editClientNotes: false,
+      editingClientNotes: false,
 
       // PLAN CREATION
 
@@ -156,8 +131,26 @@ export default {
     }
   },
   created () {
-    this.$parent.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.check_client()
+  },
+  methods: {
+    resolve_client_info_editor (state) {
+      switch (state) {
+        case 'edit':
+          this.editingClientNotes = true
+          this.tempEditorStore = this.$parent.$parent.client_details.notes
+          break
+        case 'save':
+          this.editingClientNotes = false
+          this.$parent.$parent.update_client()
+          break
+        case 'cancel':
+          this.editingClientNotes = false
+          this.$parent.$parent.client_details.notes = this.tempEditorStore
+          break
+      }
+    }
   }
 }
 </script>

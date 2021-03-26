@@ -50,7 +50,6 @@
         type="text"
         autocomplete="name"
         :disabled="$parent.silent_loading"
-        @click="editing_card ? update($parent.portfolio.notes): null, editing_card = false"
         @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >
@@ -64,32 +63,24 @@
         type="text"
         autocomplete="name"
         :disabled="$parent.silent_loading"
-        @click="editing_card ? update($parent.portfolio.notes): null, editing_card = false"
         @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
     </div>
-    <div v-if="!$parent.loading" class="wrapper_card">
-      <p class="text--small">
+    <div
+      v-if="!$parent.loading"
+      :class="{ editorActive: editingPortfolio }"
+      class="wrapper_card"
+    >
+      <h2>
         Portfolio
-      </p>
+      </h2>
       <rich-editor
-        :show-edit-state="editing_card"
         :html-injection.sync="$parent.portfolio.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
+        @on-edit-change="resolve_portfolio_editor"
       />
-      <div class="bottom_bar">
-        <button v-if="!editing_card" @click="editing_card = true, tempEditorStore = $parent.portfolio.notes">
-          Edit
-        </button>
-        <button v-if="editing_card" @click="editing_card= false, update($parent.portfolio.notes)">
-          Save
-        </button>
-        <button v-if="editing_card" class="cancel" @click="editing_card= false, $parent.portfolio.notes = tempEditorStore">
-          Cancel
-        </button>
-      </div>
     </div>
     <skeleton v-else :type="'session'" class="wrapper_card_skeleton" />
   </div>
@@ -104,18 +95,35 @@ export default {
   },
   data () {
     return {
-      editing_card: false,
+      editingPortfolio: false,
       tempEditorStore: null
     }
   },
   async created () {
     this.$parent.loading = true
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_portfolio()
     this.$parent.end_loading()
   },
   methods: {
+
+    resolve_portfolio_editor (state) {
+      switch (state) {
+        case 'edit':
+          this.editingPortfolio = true
+          this.tempEditorStore = this.$parent.portfolio.notes
+          break
+        case 'save':
+          this.editingPortfolio = false
+          this.update(this.$parent.portfolio.notes)
+          break
+        case 'cancel':
+          this.editingPortfolio = false
+          this.$parent.portfolio.notes = this.tempEditorStore
+          break
+      }
+    },
 
     // DATABASE
 

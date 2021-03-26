@@ -4,6 +4,10 @@
     grid-gap: 1rem;
     margin: 2rem 0
   }
+  .theme {
+    display: grid;
+    grid-gap: 1rem
+  }
   .privacy {
     display: grid
   }
@@ -74,14 +78,14 @@
     >
       <div class="modal--reset">
         <div class="center_wrapped">
-          <form class="form_grid" @submit.prevent="change_password(), $modal.hide('reset-password'), $parent.will_body_scroll(true)">
+          <form class="form_grid" @submit.prevent="change_password(), $modal.hide('reset-password'), will_body_scroll(true)">
             <div>
-              <p class="text--large">
+              <h1>
                 Stay safe
-              </p>
-              <p class="text--large grey">
+              </h1>
+              <h2 class="grey">
                 Reset your password
-              </p>
+              </h2>
             </div>
             <input
               ref="pass"
@@ -93,16 +97,16 @@
               required
             >
             <div>
-              <p class="text--small">
+              <h2>
                 Requirements
-              </p>
-              <p class="text--small grey">
+              </h2>
+              <p class="grey">
                 Number (0-9)
               </p>
-              <p class="text--small grey">
+              <p class="grey">
                 At least 8 characters
               </p>
-              <p class="text--small grey">
+              <p class="grey">
                 Can't contain your username
               </p>
             </div>
@@ -130,7 +134,7 @@
               <button class="right_margin" type="submit" :disabled="password.check === null || password.new !== password.match">
                 Change your password
               </button>
-              <button class="cancel" @click.prevent="$modal.hide('reset-password'), $parent.will_body_scroll(true)">
+              <button class="cancel" @click.prevent="$modal.hide('reset-password'), will_body_scroll(true)">
                 Close
               </button>
             </div>
@@ -141,9 +145,9 @@
         </div>
       </div>
     </modal>
-    <p class="text--large">
+    <h1>
       Your Account
-    </p>
+    </h1>
     <form v-if="$parent.claims" class="details_container">
       <div class="details">
         <p style="margin-bottom: 1rem">
@@ -155,15 +159,34 @@
           </button>
         </div>
         <div>
-          <button @click.prevent="$modal.show('reset-password'), $parent.will_body_scroll(false)">
+          <button @click.prevent="$modal.show('reset-password'), will_body_scroll(false)">
             Change Your Password
           </button>
         </div>
       </div>
+      <div class="theme">
+        <label for="theme" class="text--small">Theme:</label>
+        <select
+          v-model="$parent.claims.theme"
+          name="theme"
+          class="width_300"
+          @change="$parent.darkmode($parent.claims.theme), $parent.save_claims()"
+        >
+          <option value="system">
+            System default
+          </option>
+          <option value="light">
+            Light
+          </option>
+          <option value="dark">
+            Dark
+          </option>
+        </select>
+      </div>
       <div class="privacy">
-        <p class="text--small">
+        <h2>
           Your Privacy and Data
-        </p>
+        </h2>
         <p>You can find more information about our policies below:</p>
         <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
         <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
@@ -172,7 +195,7 @@
         <div class="form__options">
           <label for="cookies">
             Allow Third Party Cookies:
-            <input v-model="$parent.claims.ga" class="allow-cookies" type="checkbox" @change="save()">
+            <input v-model="$parent.claims.ga" class="allow-cookies" type="checkbox" @change="$parent.save_claims()">
           </label>
         </div>
       </div>
@@ -204,32 +227,13 @@ export default {
   created () {
     this.$parent.loading = true
     this.$parent.setup()
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.end_loading()
   },
   methods: {
 
     // BACKGROUND AND MISC.
 
-    async save () {
-      this.$parent.dontLeave = true
-      try {
-        await this.$axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              profile: {
-                ga: this.$parent.claims.ga
-              }
-            },
-            url: `${this.$parent.claims.sub}`
-          }
-        )
-        this.$parent.dontLeave = false
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-    },
     async manage_subscription () {
       try {
         const response = await this.$axios.post('/.netlify/functions/create-manage-link',

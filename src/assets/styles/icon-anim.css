@@ -6,7 +6,7 @@
 #portfolio_pen,
 #portfolio_case,
 #bin__lid {
-  transition: all .6s cubic-bezier(.165, .84, .44, 1)
+  transition: var(--transition_standard)
 }
 
 /* Home */

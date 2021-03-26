@@ -1,28 +1,5 @@
-<style>
-  .show_html > div,
-  .show_html > p {
-    margin: .6rem 0
-  }
-  .show_html img {
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 1rem 0
-  }
-  .show_html input[type='checkbox'] {
-    margin: .4rem
-  }
-  .show_html a {
-    color: var(--link)
-  }
-</style>
-
 <style scoped>
   /* Containers */
-  .plan_grid {
-    display: grid;
-    grid-gap: 2rem;
-    margin: 2rem 0
-  }
   .container--sessions {
     margin: 2rem 0
   }
@@ -39,9 +16,6 @@
   hr {
     margin: 2rem 0
   }
-  .feedback_bottom_bar {
-    margin-top: 1rem
-  }
 </style>
 
 <template>
@@ -50,14 +24,14 @@
       <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_overlay" />
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
-          <p class="text--large">
+          <h1>
             {{ $parent.portfolio.business_name }}
-          </p>
-          <p class="text--large grey">
+          </h1>
+          <h2 class="grey">
             {{ $parent.portfolio.trainer_name }}
-          </p>
-          <div class="client_portfolio__notes" v-html="remove_brackets_and_checkbox($parent.portfolio.notes)" />
-          <button class="cancel" @click="isPortfolioOpen = false, $parent.will_body_scroll(true)">
+          </h2>
+          <div class="client_portfolio__notes" v-html="update_content(remove_brackets_and_checkbox($parent.portfolio.notes))" />
+          <button class="cancel" @click="isPortfolioOpen = false, will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -69,7 +43,7 @@
         v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
         aria-label="Information"
         class="tab_option tab_option_small"
-        @click="isPortfolioOpen = true, $parent.will_body_scroll(false)"
+        @click="isPortfolioOpen = true, will_body_scroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information" />
         <p class="text">
@@ -81,7 +55,7 @@
         :class="{ icon_open_middle: $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>' }"
         class="tab_option tab_option_small"
         aria-label="Install App"
-        @click="isInstallOpen = true, $parent.will_body_scroll(false)"
+        @click="isInstallOpen = true, will_body_scroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
         <p class="text">
@@ -92,14 +66,14 @@
     <div id="client_home">
       <div class="client_home__today">
         <div class="client_home__today__header">
-          <p class="text--large">
+          <h1>
             Today
-          </p>
+          </h1>
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
           v-if="todays_sessions_store.length === 0 && !$parent.loading"
-          class="text--small text--no_sessions grey"
+          class="text--holder text--small grey"
         >
           Nothing planned for today
         </p>
@@ -110,6 +84,7 @@
               v-show="todays_sessions_store.includes(session.id)"
               :id="`session-${session.id}`"
               :key="sessionIndex"
+              :class="{ editorActive: feedbackId === session.id }"
               class="wrapper--session"
             >
               <div :id="session.name" class="session_header client-side">
@@ -119,18 +94,18 @@
                   <span class="text--date">{{ session.date }}</span>
                 </div>
               </div>
-              <div class="show_html fadeIn" v-html="remove_brackets_and_checkbox(session.notes)" />
+              <div class="show_html fadeIn" v-html="update_content(remove_brackets_and_checkbox(session.notes))" />
               <div class="bottom_bar">
                 <div :key="check" class="full_width_bar">
                   <button
-                    v-if="session.checked === 1 && !giveFeedback"
+                    v-if="session.checked === 1 && !feedbackId"
                     class="button--state done"
                     @click="complete(plan.id, session.id)"
                   >
                     Completed
                   </button>
                   <button
-                    v-if="session.checked === 0 && !giveFeedback"
+                    v-if="session.checked === 0 && !feedbackId"
                     class="button--state to_do"
                     @click="complete(plan.id, session.id)"
                   >
@@ -140,25 +115,17 @@
               </div>
               <div v-if="session.checked === 1">
                 <hr>
-                <p class="text--small">
+                <h2>
                   Feedback
-                </p>
+                </h2>
                 <rich-editor
-                  :show-edit-state="giveFeedback === session.id"
+                  :item-id="session.id"
+                  :editing="feedbackId"
                   :html-injection.sync="session.feedback"
                   :empty-placeholder="'What would you like to share with your trainer?'"
+                  :force-stop="forceStop"
+                  @on-edit-change="resolve_feedback_editor"
                 />
-                <div class="feedback_bottom_bar">
-                  <button v-if="giveFeedback !== session.id" @click="giveFeedback = session.id, tempEditorStore = session.feedback">
-                    Edit
-                  </button>
-                  <button v-if="giveFeedback === session.id" @click="giveFeedback = null, $parent.update_session(plan.id, session.id)">
-                    Save
-                  </button>
-                  <button v-if="giveFeedback === session.id" class="cancel" @click="giveFeedback = null, session.feedback = tempEditorStore">
-                    Cancel
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -166,36 +133,14 @@
       </div>
       <div class="spacer" />
       <div class="client_home__plans">
-        <p class="text--large">
+        <h1>
           Plans
-        </p>
-        <skeleton v-if="$parent.loading" :type="'plan'" />
-        <div v-if="!noPlans && !$parent.loading" class="plan_grid">
-          <router-link
-            v-for="(plan, index) in $parent.clientUser.plans"
-            :key="'plan-' + index"
-            class="plan_link"
-            :to="'/clientUser/plan/' + plan.id"
-          >
-            <p class="text--small plan-name">
-              {{ plan.name }}
-            </p>
-            <p
-              v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
-              class="grey"
-            >
-              No plan notes added.
-            </p>
-            <div
-              v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
-              class="plan_link__notes__content"
-              v-html="remove_brackets_and_checkbox(plan.notes)"
-            />
-          </router-link>
-        </div>
+        </h1>
+        <skeleton v-if="$parent.loading" :type="'plan'" class="fadeIn" />
+        <periodise v-else :is-trainer="false" :plans.sync="$parent.clientUser.plans" />
         <p
           v-if="noPlans && !$parent.loading"
-          class="text--small text--no_sessions grey"
+          class="text--holder text--small grey"
         >
           No plans yet, please contact your trainer or coach for more information
         </p>
@@ -207,11 +152,13 @@
 <script>
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
+const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
 
 export default {
   components: {
     RichEditor,
-    InstallApp
+    InstallApp,
+    Periodise
   },
   data () {
     return {
@@ -223,7 +170,8 @@ export default {
 
       // EDIT
 
-      giveFeedback: null,
+      forceStop: 0,
+      feedbackId: null,
       tempEditorStore: null,
 
       // SYSTEM
@@ -236,7 +184,7 @@ export default {
   },
   async mounted () {
     this.$parent.loading = true
-    this.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     await this.$parent.setup()
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()
@@ -248,6 +196,33 @@ export default {
 
     // BACKGROUND AND MISC.
 
+    resolve_feedback_editor (state, id) {
+      let plan
+      let session
+      this.$parent.clientUser.plans.forEach((planItem) => {
+        planItem.sessions.forEach((sessionItem) => {
+          if (sessionItem.id === id) {
+            plan = planItem
+            session = sessionItem
+          }
+        })
+      })
+      switch (state) {
+        case 'edit':
+          this.feedbackId = id
+          this.forceStop += 1
+          this.tempEditorStore = session.feedback
+          break
+        case 'save':
+          this.feedbackId = null
+          this.$parent.update_session(plan.id, session.id)
+          break
+        case 'cancel':
+          this.feedbackId = null
+          session.feedback = this.tempEditorStore
+          break
+      }
+    },
     complete (planId, sessionId) {
       const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
       const session = plan.sessions.find(session => session.id === sessionId)

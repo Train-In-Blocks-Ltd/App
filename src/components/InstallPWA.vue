@@ -1,10 +1,4 @@
 <style scoped>
-  p.text--large {
-    margin: 1rem 0
-  }
-  p.text--large:first-of-type {
-    margin-top: 0
-  }
   .cancel {
     z-index: 99;
     display: block
@@ -14,31 +8,28 @@
 <template>
   <div>
     <div v-if="$parent.$parent.pwa.canInstall">
-      <p class="text--large">
+      <h1>
         Install the app
-      </p>
-      <p class="text--large grey">
+      </h1>
+      <h2 class="grey">
         Access it quickly from your home screen with a clearer interface
-      </p>
+      </h2>
     </div>
     <div v-else-if="!$parent.$parent.pwa.canInstall">
-      <p class="text--large">
+      <h1>
         We can't detect if you have the app installed
-      </p>
-      <p class="text--large grey">
+      </h1>
+      <h2 class="grey">
         Try launching the app, or continue using it in the browser
-      </p>
+      </h2>
     </div>
-    <p
-      v-else-if="$parent.$parent.pwa.installed"
-      class="text--large"
-    >
+    <h1 v-else-if="$parent.$parent.pwa.installed">
       You have the app installed!
-    </p>
+    </h1>
     <div class="bottom_bar">
       <button
         v-if="$parent.$parent.pwa.canInstall"
-        @click="installPWA(), $parent.isInstallOpen = false, $parent.$parent.will_body_scroll(true)"
+        @click="installPWA(), $parent.isInstallOpen = false, will_body_scroll(true)"
       >
         Install
       </button>
@@ -51,7 +42,7 @@
           Launch
         </button>
       </a>
-      <button class="cancel" @click="$parent.isInstallOpen = false, $parent.$parent.will_body_scroll(true)">
+      <button class="cancel" @click="$parent.isInstallOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

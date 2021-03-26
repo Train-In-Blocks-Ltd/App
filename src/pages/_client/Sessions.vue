@@ -48,14 +48,11 @@
     display: flex;
     justify-content: space-between
   }
-  .section-title {
-    margin: 0 0 2rem 0
-  }
   .icon--expand {
     cursor: pointer;
     vertical-align: middle;
     margin-top: .8rem;
-    transition: all .4s
+    transition: var(--transition_smooth)
   }
   .icon--expand.expanded {
     transform: rotate(180deg)
@@ -76,15 +73,12 @@
   #plan_notes {
     margin: 4rem 0
   }
-  .plan_notes__header {
-    display: flex
-  }
   .a--plan_notes {
     color: var(--base);
     font-size: .8rem;
     margin-left: 1rem;
     align-self: center;
-    transition: all .6s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .a--plan_notes:hover {
     opacity: .6
@@ -137,7 +131,7 @@
     height: 74px;
     width: 100%;
     border-radius: 5px;
-    transition: all 1s cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .week:hover {
     box-shadow: var(--low_shadow)
@@ -157,7 +151,7 @@
     border: 2px solid var(--base);
     border-radius: 5px;
     cursor: pointer;
-    transition: .6s all cubic-bezier(.165, .84, .44, 1)
+    transition: var(--transition_standard)
   }
   .change_week_color:hover {
     opacity: .6
@@ -182,9 +176,6 @@
   }
 
   /* Sessions */
-  .activeState {
-    border: 2px solid var(--base_faint)
-  }
   .session--header {
     display: flex;
     justify-content: space-between
@@ -373,7 +364,7 @@
           <p><i>[sRPE (CR10): 8]</i></p>
           <p><i>[sRPE (Borg): 16]</i></p><br>
           <p>See <i>Help</i> for more information</p><br>
-          <button class="cancel" @click="$modal.hide('info'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click="$modal.hide('info'), will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -387,12 +378,12 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), $parent.$parent.will_body_scroll(true)">
+      <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), will_body_scroll(true)">
         <div class="center_wrapped">
-          <p class="text--small">
+          <h2>
             Move to a different microcycle
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             This will change the colour code assigned to the sessions
           </p><br>
           <label for="range">Move to:</label>
@@ -410,7 +401,7 @@
           <button type="submit">
             Move
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('move'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -424,12 +415,12 @@
       :click-to-close="false"
       @opened="$refs.range.focus()"
     >
-      <form class="modal--shift" @submit.prevent="shift_across(), $parent.$parent.will_body_scroll(true)">
+      <form class="modal--shift" @submit.prevent="shift_across(), will_body_scroll(true)">
         <div class="center_wrapped">
-          <p class="text--small">
+          <h2>
             Shift the dates of the sessions
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             This will move the dates ahead or behind by the specified amount
           </p><br>
           <label for="range">Shift session dates by: </label>
@@ -445,7 +436,7 @@
           <button type="submit">
             Shift
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('shift'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -461,10 +452,10 @@
     >
       <div class="modal--copy">
         <form v-if="copyAcrossPage === 0" class="center_wrapped" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
-          <p class="text--small">
+          <h2>
             Copy across to different microcycles
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             Progress each session in just a few clicks
           </p><br><br>
           <label for="range">From {{ currentWeek }} to: </label>
@@ -489,13 +480,13 @@
             min="1"
             required
           ><br><br>
-          <button type="button" class="cancel" @click.prevent="$modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
+          <button type="button" class="cancel" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
             Cancel
           </button>
           <button v-if="!simpleCopy" type="submit">
             Next
           </button>
-          <button v-else @click.prevent="copy_across(), $modal.hide('copy'), $parent.$parent.will_body_scroll(true)">
+          <button v-else @click.prevent="copy_across(), $modal.hide('copy'), will_body_scroll(true)">
             Copy
           </button>
         </form>
@@ -512,10 +503,10 @@
               v-show="copyAcrossView === exerciseGroupIndex"
               :key="`exercise_${protocolIndex}_${exerciseGroupIndex}`"
             >
-              <p class="text--small">
+              <h2>
                 {{ protocol[1][exerciseGroupIndex][0] }}
-              </p>
-              <p class="text--small grey">
+              </h2>
+              <p class="grey">
                 {{ protocol[1][exerciseGroupIndex][1] }} {{ protocol[1][exerciseGroupIndex][2] }}
               </p>
               <div
@@ -549,11 +540,11 @@
             </div>
           </form>
         </div>
-        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), $parent.$parent.will_body_scroll(true)">
-          <p class="text--small">
+        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), will_body_scroll(true)">
+          <h2>
             You're all set
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
           </p><br>
           <button class="cancel" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
@@ -572,12 +563,12 @@
       :adaptive="true"
       :click-to-close="false"
     >
-      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), $parent.$parent.will_body_scroll(true)">
+      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), will_body_scroll(true)">
         <div class="center_wrapped">
-          <p class="text--small">
+          <h2>
             Create a similar plan
-          </p>
-          <p class="text--small grey">
+          </h2>
+          <p class="grey">
             Copy this plan to the same/different client
           </p><br>
           <select v-model="duplicateClientID" name="duplicate_client">
@@ -595,7 +586,7 @@
           <button type="submit">
             Duplicate
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('duplicate'), $parent.$parent.will_body_scroll(true)">
+          <button class="cancel" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -606,23 +597,11 @@
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small fadeIn"
       aria-label="Statistics"
-      @click="isStatsOpen = true, $parent.$parent.will_body_scroll(false)"
+      @click="isStatsOpen = true, will_body_scroll(false)"
     >
       <inline-svg :src="require('../../assets/svg/stats.svg')" />
       <p class="text">
         Statistics
-      </p>
-    </div>
-    <div
-      v-show="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions"
-      :class="{ icon_open_middle: !$parent.keepLoaded, icon_open_bottom: $parent.keepLoaded }"
-      class="tab_option tab_option_small fadeIn"
-      aria-label="Print"
-      @click="print_page()"
-    >
-      <inline-svg :src="require('../../assets/svg/print.svg')" />
-      <p class="text">
-        Print
       </p>
     </div>
     <div :class="{opened_sections: isStatsOpen}" class="section_overlay" />
@@ -633,10 +612,11 @@
         </p>
         <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
         <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), $parent.$parent.will_body_scroll(false)">Copy Across</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), $parent.$parent.will_body_scroll(false)">Move</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), $parent.$parent.will_body_scroll(false)">Shift</a>
-        <a href="javascript:void(0)" class="a_link" @click="bulk_delete()">Delete</a>
+        <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), will_body_scroll(false)">Copy Across</a>
+        <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), will_body_scroll(false)">Move</a>
+        <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), will_body_scroll(false)">Shift</a>
+        <a href="javascript:void(0)" class="a_link" @click="print()">Print</a>
+        <a href="javascript:void(0)" class="a_link text--red" @click="bulk_delete()">Delete</a>
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
@@ -692,13 +672,13 @@
             <a
               class="a_link"
               href="javascript:void(0)"
-              @click="$modal.show('duplicate'), $parent.$parent.will_body_scroll(false)"
+              @click="$modal.show('duplicate'), will_body_scroll(false)"
             >
               <inline-svg :src="require('../../assets/svg/copy.svg')" />
               Duplicate plan
             </a>
             <a
-              class="a_link"
+              class="a_link text--red"
               href="javascript:void(0)"
               @click="delete_plan()"
             >
@@ -709,28 +689,15 @@
         </div> <!-- top_grid -->
         <div class="plan_grid">
           <div class="calendar">
-            <div id="plan_notes" :class="{ activeState: editPlanNotes }">
-              <div class="plan_notes__header">
-                <p class="text--small">
-                  Plan Notes
-                </p>
-                <a v-if="!editPlanNotes" class="a--plan_notes" href="javascript:void(0)" @click="editPlanNotes = true, cancel_session_notes(), tempEditorStore = plan.notes">
-                  Edit
-                </a>
-              </div>
+            <div id="plan_notes" :class="{ editorActive: editingPlanNotes }">
+              <h2>
+                Plan Notes
+              </h2>
               <rich-editor
-                :show-edit-state="editPlanNotes"
                 :html-injection.sync="plan.notes"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
+                @on-edit-change="resolve_plan_info_editor"
               />
-              <div v-if="editPlanNotes" class="bottom_bar">
-                <button class="button--save" @click="editPlanNotes = false, update_plan(plan.notes)">
-                  Save
-                </button>
-                <button class="cancel" @click="editPlanNotes = false, plan.notes = tempEditorStore">
-                  Cancel
-                </button>
-              </div>
             </div>
             <div class="wrapper--calendar">
               <a
@@ -760,9 +727,9 @@
           <div class="wrapper-plan">
             <div class="plan_table">
               <div class="plan_table__header">
-                <p class="text--small">
+                <h2>
                   Microcycles
-                </p>
+                </h2>
                 <div class="wrapper-duration">
                   <label for="duration">Duration: </label>
                   <input
@@ -804,7 +771,7 @@
                       class="change_week_color"
                       @click="editingWeekColor = !editingWeekColor"
                     />
-                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), $parent.$parent.will_body_scroll(false)" />
+                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), will_body_scroll(false)" />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
@@ -814,7 +781,7 @@
                   </button>
                 </div>
               </div>
-              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--small grey text--no_sessions">
+              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--holder text--small grey">
                 No sessions created yet
               </p>
               <div v-if="!$parent.$parent.loading">
@@ -853,7 +820,7 @@
                     :id="'session-' + session.id"
                     :key="indexed"
                     class="wrapper--session fadeIn"
-                    :class="{activeState: session.id === editSession}"
+                    :class="{ editorActive: session.id === editSession }"
                   >
                     <div class="session_header">
                       <div class="right_margin">
@@ -894,10 +861,13 @@
                     </div>
                     <rich-editor
                       v-show="expandedSessions.includes(session.id)"
-                      :show-edit-state="session.id === editSession"
+                      :item-id="session.id"
+                      :editing="editSession"
                       :html-injection.sync="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                       :data-for-templates="$parent.$parent.templates"
+                      :force-stop="forceStop"
+                      @on-edit-change="resolve_session_editor"
                     />
                     <div v-if="session.id === showFeedback" class="feedback_wrapper fadeIn">
                       <hr><br>
@@ -905,15 +875,6 @@
                       <div class="show_html" v-html="session.feedback" />
                     </div>
                     <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
-                      <button v-if="session.id !== editSession && !isEditingSession" @click="editing_session_notes(session.id, true), editPlanNotes = false, tempEditorStore = session.notes">
-                        Edit
-                      </button>
-                      <button v-if="session.id === editSession" @click="editing_session_notes(session.id, false)">
-                        Save
-                      </button>
-                      <button v-if="session.id === editSession" class="cancel" @click="cancel_session_notes(), session.notes = tempEditorStore">
-                        Cancel
-                      </button>
                       <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">
                         Feedback
                       </button>
@@ -929,10 +890,10 @@
           </div>
           <div v-if="isStatsOpen" class="graph fadeIn delay fill_mode_both">
             <div class="section--top">
-              <p class="text--large section-title">
+              <h1 class="bottom_margin">
                 Statistics
-              </p>
-              <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, $parent.$parent.will_body_scroll(true)" />
+              </h1>
+              <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, will_body_scroll(true)" />
             </div>
             <div class="container--content">
               <div class="data-options">
@@ -1025,6 +986,7 @@
                 v-if="!dataValues.includes(null)"
                 :data-points="dataValues"
                 :labels="labelValues"
+                :reset="resetGraph"
                 aria-label="Graph"
                 class="fadeIn"
               />
@@ -1058,8 +1020,9 @@ export default {
 
       // EDIT
 
+      forceStop: 0,
       tempEditorStore: null,
-      editPlanNotes: false,
+      editingPlanNotes: false,
       isEditingSession: false,
       editSession: null,
       showFeedback: '',
@@ -1099,6 +1062,7 @@ export default {
       selectedDataType: 'Sets',
       showType: true,
       isStatsOpen: false,
+      resetGraph: 0,
 
       // SESSION CREATION
 
@@ -1111,7 +1075,7 @@ export default {
 
       moveTarget: 1,
       copyTarget: 2,
-      simpleCopy: false,
+      simpleCopy: true,
       copyAcrossPage: 0,
       copyAcrossView: 0,
       copyAcrossViewMax: 0,
@@ -1147,7 +1111,7 @@ export default {
     }
   },
   created () {
-    this.$parent.$parent.will_body_scroll(true)
+    this.will_body_scroll(true)
     this.$parent.sessions = true
   },
   async mounted () {
@@ -1163,10 +1127,62 @@ export default {
   },
   methods: {
 
+    // Editor resolvers
+
+    resolve_plan_info_editor (state) {
+      const plan = this.helper('match_plan')
+      switch (state) {
+        case 'edit':
+          this.editingPlanNotes = true
+          this.tempEditorStore = plan.notes
+          break
+        case 'save':
+          this.editingPlanNotes = false
+          this.update_plan(plan.notes)
+          break
+        case 'cancel':
+          this.editingPlanNotes = false
+          plan.notes = this.tempEditorStore
+          break
+      }
+    },
+    resolve_session_editor (state, id) {
+      const session = this.helper('match_session', id)
+      switch (state) {
+        case 'edit':
+          this.isEditingSession = true
+          this.editSession = id
+          this.forceStop += 1
+          this.tempEditorStore = session.notes
+          break
+        case 'save':
+          this.isEditingSession = false
+          this.editSession = null
+          this.update_session(id)
+          this.scan()
+          this.$parent.$parent.responseHeader = 'Session updated'
+          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          break
+        case 'cancel':
+          this.isEditingSession = false
+          this.editSession = null
+          session.notes = this.tempEditorStore
+          this.scan()
+          break
+      }
+    },
+
+    // Background
+
     helper (type, sessionId) {
       switch (type) {
         case 'match_plan':
-          return this.$parent.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+          try {
+            return this.$parent.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+          } catch {
+            setTimeout(() => { this.helper('match_plan') }, 1000)
+          }
+          break
         case 'match_session':
           return this.helper('match_plan').sessions.find(session => session.id === sessionId)
       }
@@ -1174,8 +1190,24 @@ export default {
 
     // MODALS AND TAB
 
-    print_page () {
-      window.print()
+    print () {
+      const notesArr = []
+      const plan = this.helper('match_plan')
+      plan.sessions.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
+      })
+      plan.sessions.forEach((session) => {
+        if (this.selectedSessions.includes(session.id)) {
+          notesArr.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.remove_brackets_and_checkbox(this.update_content(session.notes))}</div>`)
+        }
+      })
+      const newWindow = window.open()
+      const html = notesArr.join('')
+      newWindow.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}</style><div>${html}</div>`)
+      newWindow.stop()
+      newWindow.print()
+      this.$ga.event('Plan', 'print')
+      this.deselect_all()
     },
     shift_across () {
       this.helper('match_plan').sessions.forEach((session) => {
@@ -1191,11 +1223,11 @@ export default {
       this.deselect_all()
     },
     copy_across_check () {
-      this.simpleCopy = false
+      this.simpleCopy = true
       this.helper('match_plan').sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes).length === 0) {
-            this.simpleCopy = true
+          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes, session.date).length !== 0) {
+            this.simpleCopy = false
           }
         }
       })
@@ -1208,7 +1240,7 @@ export default {
         if (this.selectedSessions.includes(session.id)) {
           this.copyAcrossProtocols.push([
             session.id,
-            this.chunk_array(this.pull_protocols(session.name, session.notes))
+            this.pull_protocols(session.name, session.notes, session.date)
           ])
           this.copyAcrossInputs.push([
             session.id,
@@ -1365,26 +1397,6 @@ export default {
       this.$parent.$parent.end_loading()
     },
 
-    // SESSION STATE
-
-    editing_session_notes (sessionId, sessionState) {
-      this.isEditingSession = sessionState
-      this.editSession = sessionId
-      if (!sessionState) {
-        this.update_session(sessionId)
-        this.isEditingSession = false
-        this.editSession = null
-        this.scan()
-        this.$parent.$parent.responseHeader = 'Session updated'
-        this.$parent.$parent.responseDesc = 'Your changes have been saved'
-      }
-    },
-    cancel_session_notes () {
-      this.isEditingSession = false
-      this.editSession = null
-      this.scan()
-    },
-
     // GENERAL
 
     go_to_event (id, week) {
@@ -1452,7 +1464,6 @@ export default {
       this.optionsForDataType = []
       let overviewStore = []
       this.showType = true
-      let dataForSum = 0
       if (this.selectedDataName === 'Plan Overview') {
         this.optionsForDataType.push({
           id: 1,
@@ -1465,15 +1476,15 @@ export default {
           value: 'Volume'
         })
       }
-      this.dataPacketStore.forEach((item) => {
+      this.dataPacketStore.forEach((session) => {
         overviewStore = []
-        item.forEach((exerciseDataPacket) => {
+        session.forEach((exerciseDataPacket) => {
           const tidyA = this.selectedDataName.replace(/\(/g, '\\(')
           const tidyB = tidyA.replace(/\)/g, '\\)')
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
           if (regex.test(exerciseDataPacket[1])) {
-            this.labelValues.push(exerciseDataPacket[0])
+            this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({
                 id: 1,
@@ -1502,31 +1513,28 @@ export default {
             }
           }
           if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
-            if (this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') {
-              dataForSum = this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
+            const dataForSum = () => {
+              switch (this.selectedDataType) {
+                case 'Sets' || 'Reps':
+                  return this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
+                case 'Load':
+                  return this.load(exerciseDataPacket, protocol)
+                case 'Volume':
+                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+              }
             }
-            if (this.selectedDataType === 'Load') {
-              dataForSum = this.load(exerciseDataPacket, protocol)
+            overviewStore.push(dataForSum())
+            if (overviewStore.length !== 0) {
+              this.dataValues.push(overviewStore.reduce((a, b) => a + b))
+              this.desc_stats(this.selectedDataType)
             }
-            if (this.selectedDataType === 'Volume') {
-              dataForSum = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+            for (let x = 1; x <= this.dataValues.length; x++) {
+              this.labelValues.push(['Session ' + x])
             }
-            overviewStore.push(dataForSum)
           }
         })
-        if (this.selectedDataName === 'Plan Overview' && overviewStore.length !== 0) {
-          this.dataValues.push(overviewStore.reduce((a, b) => a + b))
-        }
       })
-      if (this.selectedDataName === 'Plan Overview') {
-        let x = 1
-        for (; x <= this.dataValues.length; x++) {
-          this.labelValues.push('Session ' + x)
-        }
-      }
-      if (this.dataValues.length !== 0) {
-        this.desc_stats(this.selectedDataType)
-      }
+      this.resetGraph += 1
     },
 
     // DATE/TIME
@@ -1614,7 +1622,7 @@ export default {
             session_id: object.id
           })
           if (object.notes !== null) {
-            this.dataPacketStore.push(this.chunk_array(this.pull_protocols(object.name, object.notes)))
+            this.dataPacketStore.push(this.pull_protocols(object.name, object.notes, object.date))
           }
         })
         // Appends the options to the select
@@ -1625,39 +1633,6 @@ export default {
       }
       this.forceUpdate += 1
       this.check_for_week_sessions()
-    },
-
-    // Extracts the protocols and measures and stores it all into a temporary array
-    pull_protocols (sessionName, text) {
-      const textNoHTML = text.replace(/<[^>]*>?/gm, '')
-      const tempStore = []
-      let m
-      while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
-        if (m.index === this.regexExtract.lastIndex) {
-          this.regexExtract.lastIndex++
-        }
-        m.forEach((match, groupIndex) => {
-          if (groupIndex === 0) {
-            tempStore.push(sessionName)
-          } else if (groupIndex === 1 || groupIndex === 2) {
-            tempStore.push(match)
-          }
-        })
-      }
-      if (tempStore !== null) {
-        return tempStore
-      }
-    },
-
-    // Breaks down the temporary array into data packets of length 2
-    // Data Packet format: ['NAME', 'PROTOCOL/MEASURE/NUMBERS']
-    chunk_array (myArray) {
-      const tempArray = []
-      for (let index = 0; index < myArray.length; index += 3) {
-        const dataPacket = myArray.slice(index, index + 3)
-        tempArray.push(dataPacket)
-      }
-      return tempArray
     },
 
     // Init the dropdown selection with validation
@@ -1695,13 +1670,6 @@ export default {
           value: item
         })
       })
-    },
-    proper_case (string) {
-      const sentence = string.toLowerCase().split(' ')
-      for (let i = 0; i < sentence.length; i++) {
-        sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
-      }
-      return sentence.join(' ')
     },
 
     // REGEX
@@ -1885,7 +1853,8 @@ export default {
             name: forceName === undefined ? plan.name : `Copy of ${forceName}`,
             duration: forceDuration === undefined ? plan.duration : forceDuration,
             notes: forceNotes === undefined ? plan.notes : forceNotes,
-            block_color: forceColors === undefined ? plan.block_color : forceColors
+            block_color: forceColors === undefined ? plan.block_color : forceColors,
+            ordered: plan.ordered
           }
         )
         // Set vue client_details data to new data

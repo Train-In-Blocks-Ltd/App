@@ -35,7 +35,45 @@ Vue.config.productionTip = false
 Vue.mixin({
   methods: {
 
-    // Shared
+    // System
+
+    will_body_scroll (state) {
+      const body = document.getElementsByTagName('body')[0]
+      state ? body.style.overflow = 'auto' : body.style.overflow = 'hidden'
+    },
+
+    // Protocol
+
+    pull_protocols (sessionName, text, date) {
+      const textNoHTML = text.replace(/<[^>]*>?/gm, '')
+      const tempStore = []
+      let m
+      while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
+        if (m.index === this.regexExtract.lastIndex) {
+          this.regexExtract.lastIndex++
+        }
+        m.forEach((match, groupIndex) => {
+          if (groupIndex === 0) {
+            tempStore.push(sessionName)
+          } else if (groupIndex === 1 || groupIndex === 2) {
+            tempStore.push(match)
+            if (groupIndex === 2) {
+              tempStore.push(date)
+            }
+          }
+        })
+      }
+      if (tempStore !== null) {
+        const tempArray = []
+        for (let index = 0; index < tempStore.length; index += 4) {
+          const dataPacket = tempStore.slice(index, index + 4)
+          tempArray.push(dataPacket)
+        }
+        return tempArray
+      }
+    },
+
+    // Date
 
     today () {
       const d = new Date()
@@ -49,15 +87,45 @@ Vue.mixin({
       return weekday[new Date(date).getDay()]
     },
 
-    // Organise
+    // Tidy
 
     sort_sessions (plan) {
-      plan.sessions.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
-      })
+      if (plan.sessions) {
+        plan.sessions.sort((a, b) => {
+          return new Date(a.date) - new Date(b.date)
+        })
+      }
     },
     remove_brackets_and_checkbox (dataIn) {
       return dataIn !== null ? dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '') : dataIn
+    },
+    proper_case (string) {
+      const sentence = string.toLowerCase().split(' ')
+      for (let i = 0; i < sentence.length; i++) {
+        sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
+      }
+      return sentence.join(' ')
+    },
+    update_content (html) {
+      let m
+      const arr = []
+      const updateIframeRegex = /<iframe.*?><\/iframe>/gmi
+      const updateURLRegex = /src="(.*?)"/gmi
+      while ((m = updateIframeRegex.exec(html)) !== null) {
+        if (m.index === updateIframeRegex.lastIndex) {
+          updateIframeRegex.lastIndex++
+        }
+        m.forEach((iframeMatch) => {
+          const url = iframeMatch.match(updateURLRegex)[0].replace('src=', '').replace(/"/g, '')
+          arr.push([iframeMatch, url])
+        })
+      }
+      if (arr.length !== 0) {
+        arr.forEach((item) => {
+          html = html.replace(item[0], `<a href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
+        })
+      }
+      return html
     },
 
     // Other
