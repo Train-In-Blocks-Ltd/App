@@ -1853,7 +1853,8 @@ export default {
             name: forceName === undefined ? plan.name : `Copy of ${forceName}`,
             duration: forceDuration === undefined ? plan.duration : forceDuration,
             notes: forceNotes === undefined ? plan.notes : forceNotes,
-            block_color: forceColors === undefined ? plan.block_color : forceColors
+            block_color: forceColors === undefined ? plan.block_color : forceColors,
+            order: plan.order
           }
         )
         // Set vue client_details data to new data

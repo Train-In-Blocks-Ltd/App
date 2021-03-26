@@ -108,7 +108,7 @@
       </div>
     </modal>
     <div
-      v-for="(plan, planIndex) in plans"
+      v-for="(plan, planIndex) in client_plans"
       :key="`plan_${planIndex}`"
       class="plan"
     >
@@ -136,12 +136,16 @@
           </div>
           <div v-if="isTrainer" class="plan_order">
             <inline-svg
+              v-if="plan.order !== 0"
               :src="require('../assets/svg/arrow.svg')"
               class="left"
+              @click="change_order(plan.order, 'back')"
             />
             <inline-svg
+              v-if="plan.order !== client_plans.length - 1"
               :src="require('../assets/svg/arrow.svg')"
               class="right"
+              @click="change_order(plan.order, 'next')"
             />
           </div>
         </div>
@@ -167,7 +171,73 @@ export default {
   },
   data () {
     return {
+      client_plans: this.plans,
       preview: null
+    }
+  },
+  watch: {
+    plans () {
+      this.client_plans = this.plans
+    }
+  },
+  created () {
+    this.sort_plans()
+  },
+  methods: {
+    sort_plans () {
+      this.client_plans.forEach((plan, index) => {
+        if (plan.order === null) {
+          plan.order = index
+          this.$emit('update:plans', this.client_plans)
+        }
+      })
+      this.client_plans.sort((a, b) => {
+        return new Date(a.order) - new Date(b.order)
+      })
+      this.$emit('update:plans', this.client_plans)
+    },
+    change_order (planOrder, direction) {
+      switch (direction) {
+        case 'next':
+          this.client_plans[planOrder + 1].order = planOrder
+          this.update_plan(this.client_plans[planOrder + 1].id)
+          this.client_plans[planOrder].order = planOrder + 1
+          this.update_plan(this.client_plans[planOrder].id)
+          this.sort_plans()
+          break
+        case 'back':
+          this.client_plans[planOrder - 1].order = planOrder
+          this.update_plan(this.client_plans[planOrder - 1].id)
+          this.client_plans[planOrder].order = planOrder - 1
+          this.update_plan(this.client_plans[planOrder].id)
+          this.sort_plans()
+          break
+      }
+    },
+    async update_plan (id) {
+      this.$parent.$parent.$parent.silent_loading = true
+      this.$parent.$parent.$parent.dontLeave = true
+      const plan = this.plans.find(plan => plan.id === id)
+      try {
+        this.sort_sessions(plan)
+        await this.$axios.post('https://api.traininblocks.com/programmes',
+          {
+            id: plan.id,
+            name: plan.name,
+            duration: plan.duration,
+            notes: plan.notes,
+            block_color: plan.block_color,
+            order: plan.order
+          }
+        )
+        localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.$parent.clients))
+        this.$ga.event('Plan', 'update')
+        this.$parent.$parent.$parent.responseHeader = 'Plan updated'
+        this.$parent.$parent.$parent.responseDesc = 'Your changes have been saved'
+        this.$parent.$parent.$parent.end_loading()
+      } catch (e) {
+        this.$parent.$parent.$parent.resolve_error(e)
+      }
     }
   }
 }

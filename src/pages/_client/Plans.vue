@@ -99,7 +99,7 @@
         No plans yet, use the button on the top-right of your screen
       </p>
       <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
-      <periodise v-else :is-trainer="true" :plans="$parent.$parent.client_details.plans" />
+      <periodise v-else :is-trainer="true" :plans.sync="$parent.$parent.client_details.plans" />
     </div>
   </div>
 </template>
