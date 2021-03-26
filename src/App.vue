@@ -1090,11 +1090,14 @@ export default {
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.isTrainer = true
     }
-    if (this.claims.policy !== undefined) {
+    if (this.claims.policy !== undefined && this.claims.policy !== [] && this.claims !== undefined && this.claims !== null) {
       if (this.policyVersion !== this.claims.policy[2]) {
         this.will_body_scroll(false)
         this.$modal.show('agreement')
       }
+    } else {
+      this.will_body_scroll(false)
+      this.$modal.show('agreement')
     }
   },
   methods: {
@@ -1181,11 +1184,6 @@ export default {
           this.claims.theme = 'system'
         }
         this.darkmode(this.claims.theme)
-
-        if (this.claims.policy === undefined || this.claims === undefined || this.claims === null) {
-          this.claims.policy = ['', '', this.policyVersion]
-          // this.save_claims()
-        }
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
