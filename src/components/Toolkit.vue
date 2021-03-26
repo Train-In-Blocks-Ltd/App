@@ -145,6 +145,15 @@ export default {
           ],
           metric: 'Body density',
           units: ''
+        },
+        {
+          id: 'bf_siri',
+          name: 'Percentage body fat (Siri)',
+          inputs: [
+            { id: 'body_density', label: 'Body density', value: null }
+          ],
+          metric: 'Body fat',
+          units: '%'
         }
       ]
     }
@@ -196,6 +205,10 @@ export default {
           const site3 = Number(document.getElementById('input_site3_m').value)
           const sum = site1 + site2 + site3
           this.result = (1.10938 - (0.0008267 * sum) + (0.0000016 * sum * sum) - (0.0002574 * age)).toFixed(2)
+          break
+        }
+        case 'bf_siri': {
+          this.result = (495 / Number(document.getElementById('input_body_density').value) - 450).toFixed(2)
           break
         }
       }
