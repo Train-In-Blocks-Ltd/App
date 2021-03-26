@@ -66,13 +66,21 @@
 </template>
 
 <script>
-import eula from './legal/eula.md'
-
 export default {
+  props: {
+    type: String
+  },
   data () {
     return {
       name: '',
-      eula
+      eula: null
+    }
+  },
+  created () {
+    if (this.type === 'Client') {
+      this.eula = require('./legal/eula-client.md')
+    } else {
+      this.eula = require('./legal/eula.md')
     }
   },
   methods: {

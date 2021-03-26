@@ -19,8 +19,6 @@ These terms and conditions are governed by and construed in accordance with the 
 You are authorised to:
 
 - use the web application as intended by us;
-- manage your clients and giving them access to their accounts which is handled by Okta;
-- create, update, get, manage, and delete data that is related to you or your clients;
 - and save the web application as a progressive web application (PWA) on supported devices.
 
 ## 5. Unauthorised Uses
@@ -37,9 +35,9 @@ When using any of our products, services, or websites, you are not to:
 
 We hold the right to terminate your account and subscription if we find that you have breached our EULA.
 
-## 7. Cancelling Your Subscription
+## 7. Cancelling Your Account
 
-You can cancel your subscription through the ‘Manage your subscription’ button on the Account page on our web application. You will be redirected to our payment processor Stripe where you will be able to manage you payments details.
+You can cancel your account by reaching out to your personal trainer, coach, or relevant professional and ask them to remove you from our service.
 
 ## 8. Must Read Documents
 

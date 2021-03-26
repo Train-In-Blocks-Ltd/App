@@ -853,7 +853,7 @@
       </div>
     </modal>
     <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-      <policy />
+      <policy :type="claims.user_type" />
     </modal>
     <nav v-if="authenticated && claims" class="sidebar">
       <div class="logo">
@@ -1021,7 +1021,7 @@ export default {
 
       // SYSTEM
 
-      policyVersion: '1.0',
+      policyVersion: '1.1',
       responsePersist: false,
       responseHeader: '',
       responseDesc: '',
@@ -1175,7 +1175,6 @@ export default {
           this.claims.theme = 'system'
         }
         this.darkmode(this.claims.theme)
-
         if (this.claims.policy === undefined || this.claims.policy === []) {
           this.will_body_scroll(false)
           this.$modal.show('agreement')
