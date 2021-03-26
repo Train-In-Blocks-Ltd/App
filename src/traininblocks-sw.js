@@ -1,7 +1,6 @@
 import { BackgroundSyncPlugin } from 'workbox-background-sync'
 import { registerRoute } from 'workbox-routing'
 import { NetworkOnly, NetworkFirst } from 'workbox-strategies'
-import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 /*
 import { precacheAndRoute } from 'workbox-precaching'
 
@@ -52,5 +51,6 @@ self.addEventListener('install', function (event) {
 })
 
 self.addEventListener('activate', () => {
+  /* eslint-disable-next-line */
   clients.claim()
 })
