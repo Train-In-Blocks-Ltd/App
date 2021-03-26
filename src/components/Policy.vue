@@ -29,10 +29,6 @@
 .agree_name {
   margin-right: 1rem
 }
-.confirm_agree {
-  background-color: green;
-  color: white
-}
 
 /* Responsiveness */
 @media (max-width: 992px) {
@@ -62,11 +58,8 @@
     </p>
     <div class="confirmation">
       <input v-model="name" class="width_300 small_border_radius agree_name" type="name" placeholder="Your full name" required>
-      <button v-if="!agreeing" :disabled="name === ''" type="button" @click.prevent="agreeing = true, timing()">
+      <button :disabled="name === ''">
         Agree
-      </button>
-      <button v-else :disabled="name === ''" class="confirm_agree" type="submit">
-        Confirm
       </button>
     </div>
   </form>
@@ -79,14 +72,10 @@ export default {
   data () {
     return {
       name: '',
-      agreeing: false,
       eula
     }
   },
   methods: {
-    timing () {
-      setTimeout(() => { this.agreeing = false }, 4000)
-    },
     agree_to_terms () {
       this.$parent.$parent.claims.policy = [this.name, this.today(), this.$parent.$parent.policyVersion]
       this.$parent.$parent.save_claims()

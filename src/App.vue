@@ -1175,6 +1175,7 @@ export default {
           this.claims.theme = 'system'
         }
         this.darkmode(this.claims.theme)
+
         if (this.claims.policy === undefined || this.claims.policy === []) {
           this.will_body_scroll(false)
           this.$modal.show('agreement')
