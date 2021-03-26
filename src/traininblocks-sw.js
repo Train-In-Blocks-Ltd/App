@@ -1,7 +1,6 @@
 import { BackgroundSyncPlugin } from 'workbox-background-sync'
 import { registerRoute } from 'workbox-routing'
 import { NetworkOnly, NetworkFirst } from 'workbox-strategies'
-import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 /*
 import { precacheAndRoute } from 'workbox-precaching'
 
@@ -24,10 +23,7 @@ networkFirstPaths.forEach((path) => {
     new NetworkFirst({
       cacheName: CACHE,
       plugins: [
-        bgSyncPlugin,
-        new CacheableResponsePlugin({
-          statuses: [200]
-        })
+        bgSyncPlugin
       ]
     }),
     ['POST', 'GET', 'PUT']
@@ -46,15 +42,15 @@ networkOnlyPaths.forEach((path) => {
 registerRoute(
   /\/*/,
   new NetworkFirst({
-    cacheName: CACHE,
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [200]
-      })
-    ]
+    cacheName: CACHE
   })
 )
 
 self.addEventListener('install', function (event) {
   self.skipWaiting()
+})
+
+self.addEventListener('activate', () => {
+  /* eslint-disable-next-line */
+  clients.claim()
 })
