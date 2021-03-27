@@ -99,6 +99,9 @@ Vue.mixin({
     remove_brackets_and_checkbox (dataIn) {
       return dataIn !== null ? dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '') : dataIn
     },
+    remove_mark (dataIn) {
+      return dataIn !== null ? dataIn.replace(/<mark>/g, '').replace(/<\/mark>/g, '') : dataIn
+    },
     proper_case (string) {
       const sentence = string.toLowerCase().split(' ')
       for (let i = 0; i < sentence.length; i++) {
@@ -108,9 +111,11 @@ Vue.mixin({
     },
     update_content (html) {
       let m
+      let n
       const arr = []
       const updateIframeRegex = /<iframe.*?><\/iframe>/gmi
       const updateURLRegex = /src="(.*?)"/gmi
+      const protocolRegex = /\[.+: .+\]/gi
       while ((m = updateIframeRegex.exec(html)) !== null) {
         if (m.index === updateIframeRegex.lastIndex) {
           updateIframeRegex.lastIndex++
@@ -123,6 +128,14 @@ Vue.mixin({
       if (arr.length !== 0) {
         arr.forEach((item) => {
           html = html.replace(item[0], `<a href="${item[1]}" target="_blank">Watch video</a>`)
+        })
+      }
+      while ((n = protocolRegex.exec(html)) !== null) {
+        if (n.index === protocolRegex.lastIndex) {
+          protocolRegex.lastIndex++
+        }
+        n.forEach((match) => {
+          html = html.replace(match, `<mark>${match}</mark>`)
         })
       }
       return html
