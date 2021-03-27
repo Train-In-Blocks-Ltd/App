@@ -28,15 +28,13 @@ div#rich_show_content p {
 }
 div#rich_editor img,
 div#rich_show_content img {
+  cursor: pointer;
   border-radius: 10px;
   max-width: 80%;
-  margin: 1rem 0
-}
-div#rich_editor img[onclick='resize(this)'] {
-  cursor: pointer;
+  margin: 1rem 0;
   transition: .4s all cubic-bezier(.165, .84, .44, 1)
 }
-div#rich_editor img[onclick='resize(this)']:hover {
+div#rich_editor img:hover {
   opacity: .6
 }
 div#rich_editor input[type='checkbox'],
@@ -212,7 +210,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: olActive }"
             title="Ordered List"
-            :disabled="!firstClickOver"
+            :disabled="!inEditor"
             @click="add_list('ol'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
@@ -220,7 +218,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: ulActive }"
             title="Unordered List"
-            :disabled="!firstClickOver"
+            :disabled="!inEditor"
             @click="add_list('ul'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
@@ -228,21 +226,21 @@ div#rich_editor {
           <button
             :class="{ activeStyle: ulActive }"
             title="Checkbox"
-            :disabled="!firstClickOver"
+            :disabled="!inEditor"
             @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
           </button>
           <button
             title="Add Link"
-            :disabled="!firstClickOver"
+            :disabled="!inEditor"
             @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
           >
             <inline-svg :src="require('../assets/svg/editor/link.svg')" />
           </button>
           <button
             title="Insert Image"
-            :disabled="!firstClickOver"
+            :disabled="!inEditor"
             @click="showAddImage = !showAddImage, reset_link_pop_up(), reset_template_pop_up()"
           >
             <inline-svg :src="require('../assets/svg/editor/image.svg')" />
@@ -250,7 +248,7 @@ div#rich_editor {
           <button
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             title="Use Template"
-            :disabled="!firstClickOver"
+            :disabled="!inEditor"
             @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
           >
             <inline-svg :src="require('../assets/svg/editor/template.svg')" />
@@ -342,8 +340,8 @@ div#rich_editor {
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="firstClickOver = true, save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
-        @keyup="firstClickOver = true, save_selection(), update_edited_notes()"
+        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+        @keyup="save_selection(), update_edited_notes()"
         v-html="update_content(initialHTML)"
       />
     </div>
@@ -389,7 +387,7 @@ export default {
       linkAddress: '',
       editState: false,
       search: '',
-      firstClickOver: false,
+      inEditor: false,
       savedSelection: null,
       initialHTML: '',
       editedHTML: '',
@@ -420,7 +418,6 @@ export default {
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener('click', this.toggle_formatter)
-        this.firstClickOver = false
       }
     },
     forceStop () {
@@ -563,19 +560,36 @@ export default {
       const linker = document.getElementById('link_bar')
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
-      if (containing && window.getSelection().type === 'Range' && x !== 0 && y !== 0) {
+      const sel = window.getSelection()
+      this.inEditor = containing
+      if (containing && sel.type === 'Range' && x !== 0 && y !== 0) {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
           'style',
           `left: ${x - 32}px; top: ${y + 22}px`
         )
-      } else if (containing && window.getSelection().focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
+      } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
         linker.setAttribute('aria-hidden', 'false')
         linker.setAttribute(
           'style',
           `left: ${x - 32}px; top: ${y + 22}px`
         )
-        this.linkAddress = window.getSelection().focusNode.parentNode.attributes.href.value
+        this.linkAddress = sel.focusNode.parentNode.attributes.href.value
+      } else if (containing && event.target.nodeName === 'IMG') {
+        switch (event.target.style.cssText) {
+          case 'max-width: 80%;':
+            event.target.style = 'max-width: 60%;'
+            break
+          case 'max-width: 60%;':
+            event.target.style = 'max-width: 40%;'
+            break
+          case 'max-width: 40%;':
+            event.target.style = 'max-width: 80%;'
+            break
+          default:
+            event.target.style = 'max-width: 60%;'
+            break
+        }
       } else {
         formatter.setAttribute('aria-hidden', 'true')
         formatter.setAttribute('style', 'display: none')
@@ -734,9 +748,9 @@ export default {
         }
         this.restore_selection()
         if (!forceFocus) {
-          this.paste_html_at_caret(`<img src="${this.base64Img}" onclick="resize(this)">`, false)
+          this.paste_html_at_caret(`<img src="${this.base64Img}">`, false)
         } else {
-          document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<img src="${this.base64Img}" onclick="resize(this)">`)
+          document.getElementById('rich_editor').insertAdjacentHTML('beforeend', `<img src="${this.base64Img}">`)
         }
         this.update_edited_notes()
         this.reset_img_pop_up()
