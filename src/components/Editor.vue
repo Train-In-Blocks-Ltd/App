@@ -23,7 +23,6 @@ div#rich_editor div,
 div#rich_editor p,
 div#rich_show_content div,
 div#rich_show_content p {
-  width: fit-content;
   margin: .6rem 0
 }
 div#rich_editor img,
