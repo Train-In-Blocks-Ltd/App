@@ -570,22 +570,6 @@
     margin: 0
   }
 
-  /* Multi-select */
-  .multi-select {
-    display: grid;
-    grid-gap: .4rem;
-    position: fixed;
-    top: 0;
-    right: 0;
-    text-align: right;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    width: 100%;
-    z-index: 9;
-    padding: 2rem;
-    justify-items: end
-  }
-
   /* Links */
   .client_link_wrapper {
     text-decoration: none

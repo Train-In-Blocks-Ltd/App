@@ -605,21 +605,12 @@
       </p>
     </div>
     <div :class="{opened_sections: isStatsOpen}" class="section_overlay" />
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <div v-if="selectedSessions.length !== 0" class="multi-select">
-        <p>
-          <b>Selected {{ selectedSessions.length }} {{ selectedSessions.length === 1 ? 'session' : 'sessions' }} to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
-        <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), will_body_scroll(false)">Copy Across</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), will_body_scroll(false)">Move</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), will_body_scroll(false)">Shift</a>
-        <a href="javascript:void(0)" class="a_link" @click="print()">Print</a>
-        <a href="javascript:void(0)" class="a_link text--red" @click="bulk_delete()">Delete</a>
-        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
-      </div>
-    </transition>
+    <multiselect
+      :type="'session'"
+      :options="['Complete', 'Incomplete', 'Copy Across', 'Move', 'Shift', 'Print', 'Delete', 'Deselect']"
+      :selected="selectedSessions"
+      @response="resolve_session_multiselect"
+    />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in $parent.$parent.client_details.plans"
@@ -1005,6 +996,7 @@ const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", w
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
 const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ '../../components/ColorPicker')
+const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPrefetch: true */ '../../components/Multiselect')
 
 export default {
   components: {
@@ -1013,7 +1005,8 @@ export default {
     MonthCalendar,
     RichEditor,
     SimpleChart,
-    ColorPicker
+    ColorPicker,
+    Multiselect
   },
   data () {
     return {
@@ -1126,8 +1119,41 @@ export default {
   },
   methods: {
 
-    // Editor resolvers
+    // Resolvers
 
+    resolve_session_multiselect (res) {
+      switch (res) {
+        case 'Complete':
+          this.bulk_check(1)
+          break
+        case 'Incomplete':
+          this.bulk_check(0)
+          break
+        case 'Copy Across':
+          this.copyTarget = this.maxWeek
+          this.copy_across_check()
+          this.$modal.show('copy')
+          this.will_body_scroll(false)
+          break
+        case 'Move':
+          this.$modal.show('move')
+          this.will_body_scroll(false)
+          break
+        case 'Shift':
+          this.$modal.show('shift')
+          this.will_body_scroll(false)
+          break
+        case 'Print':
+          this.print()
+          break
+        case 'Delete':
+          this.bulk_delete()
+          break
+        case 'Deselect':
+          this.deselect_all()
+          break
+      }
+    },
     resolve_plan_info_editor (state) {
       const plan = this.helper('match_plan')
       switch (state) {

@@ -69,15 +69,12 @@
 
 <template>
   <div id="templates">
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <div v-if="selectedTemplates.length !== 0" class="multi-select">
-        <p>
-          <b>Selected {{ selectedTemplates.length }} {{ selectedTemplates.length === 1 ? 'template' : 'templates' }} to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="a_link" @click="delete_multi_templates()">Delete</a>
-        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
-      </div>
-    </transition>
+    <multiselect
+      :type="'template'"
+      :options="['Delete', 'Deselect']"
+      :selected="selectedTemplates"
+      @response="resolve_template_multiselect"
+    />
     <input
       v-model="search"
       type="search"
@@ -160,11 +157,13 @@
 <script>
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
+const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
 
 export default {
   components: {
     RichEditor,
-    Checkbox
+    Checkbox,
+    Multiselect
   },
   data () {
     return {
@@ -218,6 +217,16 @@ export default {
         case 'delete':
           this.$parent.responseHeader = this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template'
           this.$parent.responseDesc = 'Your changes have been saved'
+          break
+      }
+    },
+    resolve_template_multiselect (res) {
+      switch (res) {
+        case 'Delete':
+          this.delete_multi_templates()
+          break
+        case 'Deselect':
+          this.deselect_all()
           break
       }
     },
