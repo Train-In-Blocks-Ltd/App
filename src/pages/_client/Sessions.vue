@@ -358,7 +358,7 @@
           <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
           <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
           <p><b>Examples</b></p><br>
-          <p><i>[Weight: 5okg]</i></p>
+          <p><i>[Weight: 50kg]</i></p>
           <p><i>[Vertical Jump: 43.3cm]</i></p>
           <p><i>[Body Fat (%): 12]</i></p>
           <p><i>[sRPE (CR10): 8]</i></p>
@@ -1499,15 +1499,12 @@ export default {
             }
             if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x')) {
               this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType))
-            }
-            if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
+            } else if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
               this.dataValues.push(this.load(exerciseDataPacket, protocol))
-            }
-            if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
+            } else if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
               const agg = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
               this.dataValues.push(agg)
-            }
-            if (!exerciseDataPacket[2].includes('x')) {
+            } else if (!exerciseDataPacket[2].includes('x')) {
               this.showType = false
               this.dataValues.push(this.other_measures(protocol))
             }
