@@ -1115,8 +1115,6 @@ export default {
     this.will_body_scroll(true)
     this.$parent.sessions = true
     this.noSessions = this.helper('match_plan').sessions === false
-  },
-  mounted () {
     this.$parent.$parent.get_templates()
     this.today()
     this.check_for_new()

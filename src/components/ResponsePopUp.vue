@@ -1,5 +1,5 @@
 <style>
-svg#close path {
+svg#response_close path {
   fill: white
 }
 </style>
@@ -57,6 +57,7 @@ svg#close path {
 <template>
   <div class="response_pop_up">
     <inline-svg
+      id="response_close"
       :src="require('../assets/svg/close.svg')"
       @click="$parent.responseHeader = '', $parent.responseDesc = '', $parent.responsePersist = false"
     />
