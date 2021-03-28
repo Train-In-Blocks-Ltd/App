@@ -1225,8 +1225,7 @@ export default {
           }
         )
       }
-      this.loading = false
-      this.dontLeave = false
+      this.end_loading()
       this.errorMsg = msg.toString()
       this.$modal.show('error')
       this.will_body_scroll(false)

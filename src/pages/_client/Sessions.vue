@@ -651,11 +651,11 @@
             </div>
           </div><br>  <!-- client_info -->
           <div class="wrapper--progress-bar">
-            <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: $parent.no_sessions }">
-              <p v-if="!$parent.no_sessions" class="grey">
+            <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: noSessions }">
+              <p v-if="!noSessions" class="grey">
                 Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
               </p>
-              <p v-if="$parent.no_sessions" class="grey">
+              <p v-if="noSessions" class="grey">
                 Add some sessions to see programme adherence here...
               </p>
             </div>
@@ -781,13 +781,13 @@
                   </button>
                 </div>
               </div>
-              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--holder text--small grey">
+              <p v-if="!$parent.$parent.loading && (noSessions || weekIsEmpty)" class="text--holder text--small grey">
                 No sessions created yet
               </p>
               <div v-if="!$parent.$parent.loading">
                 <div v-if="plan.sessions" class="container--sessions_header">
                   <a
-                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                    v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
                     @click="select_all('week')"
@@ -795,7 +795,7 @@
                     Select this week
                   </a>
                   <a
-                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                    v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
                     @click="select_all('all')"
@@ -812,7 +812,7 @@
                   </a>
                 </div>
                 <!-- New session -->
-                <div v-if="!$parent.no_sessions" class="container--sessions">
+                <div v-if="!noSessions" class="container--sessions">
                   <!-- Loop through sessions -->
                   <div
                     v-for="(session, indexed) in plan.sessions"
@@ -1029,6 +1029,7 @@ export default {
 
       // SYSTEM
 
+      noSessions: false,
       expandedSessions: [],
       todayDate: '',
       force: true,
@@ -1113,9 +1114,9 @@ export default {
   created () {
     this.will_body_scroll(true)
     this.$parent.sessions = true
+    this.noSessions = this.helper('match_plan').sessions === false
   },
-  async mounted () {
-    await this.$parent.get_client_details()
+  mounted () {
     this.$parent.$parent.get_templates()
     this.today()
     this.check_for_new()
@@ -1408,7 +1409,7 @@ export default {
     },
     check_for_week_sessions () {
       let arr = 0
-      if (!this.$parent.no_sessions) {
+      if (!this.noSessions) {
         this.helper('match_plan').sessions.forEach((session) => {
           if (session.week_id === this.currentWeek) {
             arr += 1
@@ -1416,10 +1417,10 @@ export default {
           }
         })
       }
-      arr === 0 ? this.weekIsEmpty = true : this.weekIsEmpty = false
+      this.weekIsEmpty = arr === 0
     },
     check_for_new () {
-      if (!this.$parent.no_sessions) {
+      if (!this.noSessions) {
         this.helper('match_plan').sessions.forEach((session) => {
           if (session.notes === null || session.notes === '<p><br></p>') {
             this.expandedSessions.push(session.id)
@@ -1567,7 +1568,7 @@ export default {
     adherence () {
       this.sessionsDone = 0
       this.sessionsTotal = 0
-      if (!this.$parent.no_sessions) {
+      if (!this.noSessions) {
         this.helper('match_plan').sessions.forEach((session) => {
           this.sessionsTotal += 1
           if (session.checked === 1) {
@@ -1608,7 +1609,7 @@ export default {
       const plan = this.helper('match_plan')
       this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
       this.maxWeek = plan.duration
-      if (plan.sessions !== null && !this.$parent.no_sessions) {
+      if (plan.sessions !== null && !this.noSessions) {
         plan.sessions.forEach((object) => {
           this.sessionDates.push({
             title: object.name,
@@ -1915,7 +1916,7 @@ export default {
             checked: session.checked
           }
         )
-        await this.$parent.get_sessions(this.force)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         await this.update_plan()
         this.adherence()
         this.$ga.event('Session', 'update')
@@ -1937,9 +1938,8 @@ export default {
           }
         )
         // Get the sessions from the API because we've just created a new one
-        await this.$parent.get_sessions(this.force)
-        const plan = this.helper('match_plan')
-        this.sort_sessions(plan)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
+        this.sort_sessions(this.helper('match_plan'))
         this.scan()
         this.check_for_new()
         this.adherence()
@@ -1967,7 +1967,7 @@ export default {
       try {
         this.$parent.$parent.dontLeave = true
         await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
-        await this.$parent.get_sessions(this.force)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         await this.update_plan()
 
         this.$ga.event('Session', 'delete')

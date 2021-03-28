@@ -216,11 +216,6 @@ export default {
       keepLoaded: false,
       showOptions: false,
 
-      // PLANS
-
-      no_plans: false,
-      loading_plans: true,
-
       // SESSIONS
 
       sessions: false,
@@ -399,67 +394,33 @@ export default {
       try {
         const client = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
         this.$parent.client_details = client
-        // If client_details.plans is set to false
-        if (client.plans === false && !force) {
-          this.no_plans = true
-        // If client_details.plans is not set then query the API
-        } else if (!client.plans || force || this.$parent.claims.user_type === 'Admin') {
+        if (client.plans === undefined || !client.plans || force) {
           const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
-          if (response.data.length === 0) {
-            this.no_plans = true
-            client.plans = false
-          } else {
-            this.no_plans = false
-            client.plans = response.data
-            localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-          }
+          client.plans = response.data.length === 0 ? false : response.data
+          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
         }
-        this.loading_plans = false
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-      if (this.$route.params.id !== undefined) {
-        await this.get_sessions()
-      }
-    },
-    async get_sessions (force) {
-      try {
-        // Loop through plans
-        let f
-        for (f in this.$parent.client_details.plans) {
-          // If plan matches plan in route
-          if (this.$parent.client_details.plans[f].id === parseInt(this.$route.params.id)) {
-            // If client_details.plans.sessions is set to false
-            if (this.$parent.client_details.plans[f].sessions === false && !force) {
-              this.no_sessions = true
-            // If client_details.plans.sessions is not set then query the API
-            } else if (!this.$parent.client_details.plans[f].sessions || force === true || this.$parent.claims.user_type === 'Admin') {
-              const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.$parent.client_details.plans[f].id}`)
-              // If there are no sessions
-              if (response.data.length === 0) {
-                this.no_sessions = true
-                this.$parent.client_details.plans[f].sessions = false
-                // If there are sessions set the client_details to include sessions
-              } else {
-                this.no_sessions = false
-                this.$parent.client_details.plans[f].sessions = response.data
-              }
-              // Sync client_details with clients
-              // Loop through clients
-              for (const y in this.$parent.clients) {
-                // If client matches client in route
-                if (this.$parent.clients[y].client_id === parseInt(this.$route.params.client_id)) {
-                  this.$parent.clients[y] = this.$parent.client_details
-                }
-              }
-              // Update the localstorage with the sessions
-              localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-            }
-          }
+        if (client.plans !== false) {
+          this.$parent.client_details.plans.forEach((plan) => {
+            this.get_sessions(plan.id)
+          })
         }
         this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
+      }
+    },
+    async get_sessions (planId, force) {
+      force = force || false
+      try {
+        const plan = this.$parent.client_details.plans.find(plan => plan.id === planId)
+        if (plan.sessions === undefined || force) {
+          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
+          plan.sessions = response.data.length === 0 ? false : response.data
+          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
+        }
+        this.$parent.end_loading()
+      } catch (e) {
+        console.log(e)
       }
     }
   }
