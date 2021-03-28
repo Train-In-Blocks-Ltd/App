@@ -192,13 +192,11 @@
 <script>
 const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/WeekCalendar')
 const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
-const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
 export default {
   components: {
     WeekCalendar,
-    MonthCalendar,
-    RichEditor
+    MonthCalendar
   },
   data () {
     return {

@@ -150,13 +150,11 @@
 </template>
 
 <script>
-const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
 
 export default {
   components: {
-    RichEditor,
     InstallApp,
     Periodise
   },

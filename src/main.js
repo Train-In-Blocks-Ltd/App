@@ -7,6 +7,7 @@ import 'axios-progress-bar/dist/nprogress.css'
 
 import { InlineSvgPlugin } from 'vue-inline-svg'
 import Skeleton from './components/Skeleton'
+import RichEditor from './components/Editor'
 import ResponsePopUp from './components/ResponsePopUp'
 import App from './App'
 import router from './router'
@@ -28,6 +29,7 @@ Vue.use(InlineSvgPlugin)
 
 // Register component globally
 Vue.component('Skeleton', Skeleton)
+Vue.component('RichEditor', RichEditor)
 Vue.component('ResponsePopUp', ResponsePopUp)
 
 Vue.config.productionTip = false

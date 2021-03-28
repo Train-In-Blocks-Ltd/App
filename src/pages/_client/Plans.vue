@@ -106,13 +106,11 @@
 
 <script>
 const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
-const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
 
 export default {
   components: {
     NewPlan,
-    RichEditor,
     Periodise
   },
   data () {
