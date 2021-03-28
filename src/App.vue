@@ -374,8 +374,8 @@
     transition: var(--transition_standard)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
-  select:hover,
-  textarea:hover {
+  select:not(:focus):hover,
+  textarea:not(:focus):hover {
     opacity: .6
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
