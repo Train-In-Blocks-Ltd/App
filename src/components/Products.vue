@@ -86,14 +86,6 @@
           <strong>A {{ product.type }} of <u>{{ product.price }}</u></strong>
         </p>
         <textarea v-model="product.desc" placeholder="Description" aria-label="Description" />
-        <input
-          v-model="product.credits"
-          class="width_300 small_border_radius"
-          type="number"
-          placeholder="Credits"
-          min="0"
-          @change="validate_credits(product.credits)"
-        >
       </div>
     </div>
   </div>
@@ -114,20 +106,14 @@ export default {
     return {
       // These are temporary data
       products: [
-        { id: 1, name: '4 sessions', desc: 'Just a test data', price: '£40', type: 'single', credits: 4, productStripeId: 'ABC' },
-        { id: 2, name: '8 sessions', desc: 'Just a test data', price: '£70', type: 'single', credits: 8, productStripeId: 'ABC' },
-        { id: 3, name: '12 week plan', desc: 'Just a test data', price: '£120', type: 'monthly', credits: null, productStripeId: 'ABC' }
+        { id: 1, name: '4 sessions', desc: 'Just a test data', price: '£40', type: 'single', productStripeId: 'ABC' },
+        { id: 2, name: '8 sessions', desc: 'Just a test data', price: '£70', type: 'single', productStripeId: 'ABC' },
+        { id: 3, name: '12 week plan', desc: 'Just a test data', price: '£120', type: 'monthly', productStripeId: 'ABC' }
       ],
       selectedProducts: []
     }
   },
   methods: {
-    // Inputs
-    validate_credits (credits) {
-      if (credits < 0) {
-        alert('Credits cannot be less than 0')
-      }
-    },
 
     // Checkbox
     change_select_checkbox (id) {
