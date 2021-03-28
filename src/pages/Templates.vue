@@ -72,7 +72,7 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedTemplates.length !== 0" class="multi-select">
         <p>
-          <b>Selected {{ selectedTemplates.length }} <span v-if="selectedTemplates.length === 1">Template</span><span v-if="selectedTemplates.length !== 1">Templates</span> to ...</b>
+          <b>Selected {{ selectedTemplates.length }} {{ selectedTemplates.length === 1 ? 'template' : 'templates' }} to ...</b>
         </p>
         <a href="javascript:void(0)" class="a_link" @click="delete_multi_templates()">Delete</a>
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>

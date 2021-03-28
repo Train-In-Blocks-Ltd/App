@@ -32,7 +32,7 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedClients.length !== 0" class="multi-select">
         <p>
-          <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
+          <b>Selected {{ selectedClients.length }} {{ selectedClients.length === 1 ? 'client' : 'clients' }} to ...</b>
         </p>
         <a href="javascript:void(0)" class="a_link" @click="unarchive_multi_clients()">Unarchive</a>
         <a href="javascript:void(0)" class="a_link" @click="delete_multi_clients()">Delete</a>

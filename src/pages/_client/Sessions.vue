@@ -608,7 +608,7 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <div v-if="selectedSessions.length !== 0" class="multi-select">
         <p>
-          <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
+          <b>Selected {{ selectedSessions.length }} {{ selectedSessions.length === 1 ? 'session' : 'sessions' }} to ...</b>
         </p>
         <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
         <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
