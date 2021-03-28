@@ -88,10 +88,12 @@
 </template>
 
 <script>
+const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
 // const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '../components/Products')
 
 export default {
   components: {
+    RichEditor
     // Products
   },
   data () {
