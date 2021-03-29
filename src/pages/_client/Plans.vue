@@ -93,7 +93,11 @@
         Plans
       </h1>
       <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
-      <periodise v-else-if="!noPlans" :is-trainer="true" :plans.sync="$parent.$parent.client_details.plans" />
+      <periodise
+        v-else-if="!noPlans"
+        :is-trainer="true"
+        :plans.sync="$parent.$parent.client_details.plans"
+      />
       <p
         v-else
         class="text--holder text--small grey"
@@ -115,8 +119,13 @@ export default {
     RichEditor,
     Periodise
   },
+  props: {
+    otherData: [Array, Boolean]
+  },
   data () {
     return {
+
+      noPlans: false,
 
       // EDIT
 
@@ -130,10 +139,14 @@ export default {
       persistResponse: ''
     }
   },
+  watch: {
+    otherData () {
+      this.noPlans = this.otherData === false
+    }
+  },
   created () {
     this.will_body_scroll(true)
     this.$parent.check_client()
-    this.noPlans = this.$parent.$parent.client_details.plans === false
   },
   methods: {
     resolve_client_info_editor (state) {

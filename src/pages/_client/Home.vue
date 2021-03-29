@@ -195,7 +195,7 @@
       </div>
     </div>
     <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
-      <router-view :key="$route.fullPath" />
+      <router-view :key="$route.fullPath" :other-data="$parent.client_details.plans" />
     </transition>
   </div>
 </template>
@@ -219,7 +219,6 @@ export default {
       // SESSIONS
 
       sessions: false,
-      no_sessions: false,
 
       // CLIENT STATUS
 

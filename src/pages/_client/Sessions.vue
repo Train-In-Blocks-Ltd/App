@@ -1840,7 +1840,8 @@ export default {
             name: `Copy of ${planName}`,
             client_id: clientId,
             duration: planDuration,
-            block_color: planColors
+            block_color: planColors,
+            ordered: this.$parent.$parent.client_details.plans.length
           }
         ).then((response) => {
           this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, planDuration, planColors)
