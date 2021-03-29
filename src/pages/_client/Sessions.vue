@@ -358,7 +358,7 @@
           <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
           <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
           <p><b>Examples</b></p><br>
-          <p><i>[Weight: 5okg]</i></p>
+          <p><i>[Weight: 50kg]</i></p>
           <p><i>[Vertical Jump: 43.3cm]</i></p>
           <p><i>[Body Fat (%): 12]</i></p>
           <p><i>[sRPE (CR10): 8]</i></p>
@@ -605,21 +605,12 @@
       </p>
     </div>
     <div :class="{opened_sections: isStatsOpen}" class="section_overlay" />
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <div v-if="selectedSessions.length !== 0" class="multi-select">
-        <p>
-          <b>Selected {{ selectedSessions.length }} <span v-if="selectedSessions.length === 1">Session</span><span v-if="selectedSessions.length !== 1">Sessions</span> to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="a_link" @click="bulk_check(1)">Complete</a>
-        <a href="javascript:void(0)" class="a_link" @click="bulk_check(0)">Incomplete</a>
-        <a href="javascript:void(0)" class="a_link" @click="copyTarget = maxWeek, copy_across_check(), $modal.show('copy'), will_body_scroll(false)">Copy Across</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('move'), will_body_scroll(false)">Move</a>
-        <a href="javascript:void(0)" class="a_link" @click="$modal.show('shift'), will_body_scroll(false)">Shift</a>
-        <a href="javascript:void(0)" class="a_link" @click="print()">Print</a>
-        <a href="javascript:void(0)" class="a_link text--red" @click="bulk_delete()">Delete</a>
-        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
-      </div>
-    </transition>
+    <multiselect
+      :type="'session'"
+      :options="['Complete', 'Incomplete', 'Copy Across', 'Move', 'Shift', 'Print', 'Delete', 'Deselect']"
+      :selected="selectedSessions"
+      @response="resolve_session_multiselect"
+    />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in $parent.$parent.client_details.plans"
@@ -651,11 +642,11 @@
             </div>
           </div><br>  <!-- client_info -->
           <div class="wrapper--progress-bar">
-            <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: $parent.no_sessions }">
-              <p v-if="!$parent.no_sessions" class="grey">
+            <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: noSessions }">
+              <p v-if="!noSessions" class="grey">
                 Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
               </p>
-              <p v-if="$parent.no_sessions" class="grey">
+              <p v-if="noSessions" class="grey">
                 Add some sessions to see programme adherence here...
               </p>
             </div>
@@ -781,13 +772,13 @@
                   </button>
                 </div>
               </div>
-              <p v-if="!$parent.$parent.loading && ($parent.no_sessions || weekIsEmpty)" class="text--holder text--small grey">
+              <p v-if="!$parent.$parent.loading && (noSessions || weekIsEmpty)" class="text--holder text--small grey">
                 No sessions created yet
               </p>
               <div v-if="!$parent.$parent.loading">
                 <div v-if="plan.sessions" class="container--sessions_header">
                   <a
-                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                    v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
                     @click="select_all('week')"
@@ -795,7 +786,7 @@
                     Select this week
                   </a>
                   <a
-                    v-if="!$parent.no_sessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                    v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
                     @click="select_all('all')"
@@ -812,7 +803,7 @@
                   </a>
                 </div>
                 <!-- New session -->
-                <div v-if="!$parent.no_sessions" class="container--sessions">
+                <div v-if="!noSessions" class="container--sessions">
                   <!-- Loop through sessions -->
                   <div
                     v-for="(session, indexed) in plan.sessions"
@@ -1005,6 +996,7 @@ const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", w
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
 const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ '../../components/ColorPicker')
+const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPrefetch: true */ '../../components/Multiselect')
 
 export default {
   components: {
@@ -1013,7 +1005,8 @@ export default {
     MonthCalendar,
     RichEditor,
     SimpleChart,
-    ColorPicker
+    ColorPicker,
+    Multiselect
   },
   data () {
     return {
@@ -1029,6 +1022,7 @@ export default {
 
       // SYSTEM
 
+      noSessions: false,
       expandedSessions: [],
       todayDate: '',
       force: true,
@@ -1113,9 +1107,7 @@ export default {
   created () {
     this.will_body_scroll(true)
     this.$parent.sessions = true
-  },
-  async mounted () {
-    await this.$parent.get_client_details()
+    this.noSessions = this.helper('match_plan').sessions === false
     this.$parent.$parent.get_templates()
     this.today()
     this.check_for_new()
@@ -1127,8 +1119,41 @@ export default {
   },
   methods: {
 
-    // Editor resolvers
+    // Resolvers
 
+    resolve_session_multiselect (res) {
+      switch (res) {
+        case 'Complete':
+          this.bulk_check(1)
+          break
+        case 'Incomplete':
+          this.bulk_check(0)
+          break
+        case 'Copy Across':
+          this.copyTarget = this.maxWeek
+          this.copy_across_check()
+          this.$modal.show('copy')
+          this.will_body_scroll(false)
+          break
+        case 'Move':
+          this.$modal.show('move')
+          this.will_body_scroll(false)
+          break
+        case 'Shift':
+          this.$modal.show('shift')
+          this.will_body_scroll(false)
+          break
+        case 'Print':
+          this.print()
+          break
+        case 'Delete':
+          this.bulk_delete()
+          break
+        case 'Deselect':
+          this.deselect_all()
+          break
+      }
+    },
     resolve_plan_info_editor (state) {
       const plan = this.helper('match_plan')
       switch (state) {
@@ -1408,7 +1433,7 @@ export default {
     },
     check_for_week_sessions () {
       let arr = 0
-      if (!this.$parent.no_sessions) {
+      if (!this.noSessions) {
         this.helper('match_plan').sessions.forEach((session) => {
           if (session.week_id === this.currentWeek) {
             arr += 1
@@ -1416,10 +1441,10 @@ export default {
           }
         })
       }
-      arr === 0 ? this.weekIsEmpty = true : this.weekIsEmpty = false
+      this.weekIsEmpty = arr === 0
     },
     check_for_new () {
-      if (!this.$parent.no_sessions) {
+      if (!this.noSessions) {
         this.helper('match_plan').sessions.forEach((session) => {
           if (session.notes === null || session.notes === '<p><br></p>') {
             this.expandedSessions.push(session.id)
@@ -1499,15 +1524,12 @@ export default {
             }
             if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x')) {
               this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType))
-            }
-            if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
+            } else if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
               this.dataValues.push(this.load(exerciseDataPacket, protocol))
-            }
-            if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
+            } else if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
               const agg = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
               this.dataValues.push(agg)
-            }
-            if (!exerciseDataPacket[2].includes('x')) {
+            } else if (!exerciseDataPacket[2].includes('x')) {
               this.showType = false
               this.dataValues.push(this.other_measures(protocol))
             }
@@ -1570,7 +1592,7 @@ export default {
     adherence () {
       this.sessionsDone = 0
       this.sessionsTotal = 0
-      if (!this.$parent.no_sessions) {
+      if (!this.noSessions) {
         this.helper('match_plan').sessions.forEach((session) => {
           this.sessionsTotal += 1
           if (session.checked === 1) {
@@ -1611,7 +1633,7 @@ export default {
       const plan = this.helper('match_plan')
       this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
       this.maxWeek = plan.duration
-      if (plan.sessions !== null && !this.$parent.no_sessions) {
+      if (plan.sessions !== null && !this.noSessions) {
         plan.sessions.forEach((object) => {
           this.sessionDates.push({
             title: object.name,
@@ -1918,7 +1940,7 @@ export default {
             checked: session.checked
           }
         )
-        await this.$parent.get_sessions(this.force)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         await this.update_plan()
         this.adherence()
         this.$ga.event('Session', 'update')
@@ -1940,9 +1962,8 @@ export default {
           }
         )
         // Get the sessions from the API because we've just created a new one
-        await this.$parent.get_sessions(this.force)
-        const plan = this.helper('match_plan')
-        this.sort_sessions(plan)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
+        this.sort_sessions(this.helper('match_plan'))
         this.scan()
         this.check_for_new()
         this.adherence()
@@ -1970,7 +1991,7 @@ export default {
       try {
         this.$parent.$parent.dontLeave = true
         await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
-        await this.$parent.get_sessions(this.force)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         await this.update_plan()
 
         this.$ga.event('Session', 'delete')

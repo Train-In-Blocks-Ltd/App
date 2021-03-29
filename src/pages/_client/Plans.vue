@@ -92,14 +92,14 @@
       <h1>
         Plans
       </h1>
+      <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
+      <periodise v-else-if="!noPlans" :is-trainer="true" :plans.sync="$parent.$parent.client_details.plans" />
       <p
-        v-if="$parent.no_plans"
+        v-else
         class="text--holder text--small grey"
       >
         No plans yet, use the button on the top-right of your screen
       </p>
-      <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
-      <periodise v-else :is-trainer="true" :plans.sync="$parent.$parent.client_details.plans" />
     </div>
   </div>
 </template>
@@ -133,6 +133,7 @@ export default {
   created () {
     this.will_body_scroll(true)
     this.$parent.check_client()
+    this.noPlans = this.$parent.$parent.client_details.plans === false
   },
   methods: {
     resolve_client_info_editor (state) {

@@ -239,22 +239,16 @@ export default {
           }
         }
       })
-
+      const self = this
       this.widget.showSignInToGetTokens({
         el: '#okta-signin-container',
         scopes
       }).then(async (tokens) => {
+        self.splashed = false
+        self.will_body_scroll(false)
         await this.$auth.handleLoginRedirect(tokens)
-        this.will_body_scroll(true)
       }).catch((err) => {
         throw err
-      })
-      const self = this
-      this.widget.on('ready', function (context) {
-        document.querySelector('#okta-signin-submit').addEventListener('click', function () {
-          self.splashed = false
-          self.will_body_scroll(false)
-        })
       })
     })
     if (await this.$auth.isAuthenticated()) {

@@ -1,3 +1,9 @@
+<style>
+svg#response_close path {
+  fill: white
+}
+</style>
+
 <style scoped>
 .response_pop_up {
   position: fixed;
@@ -19,15 +25,13 @@
   padding: .2rem;
   right: -.5rem;
   top: -.5rem;
-  background-color: var(--fore);
-  border: 1px solid var(--base);
+  background-color: var(--base);
+  border: 1px solid var(--fore);
   border-radius: 50%;
   transition: var(--transition_standard)
 }
 .response_pop_up svg:hover {
-  fill: white;
-  background-color: var(--base);
-  border-color: white
+  opacity: .6
 }
 
 @supports not (backdrop-filter: blur(10px)) {
@@ -53,6 +57,7 @@
 <template>
   <div class="response_pop_up">
     <inline-svg
+      id="response_close"
       :src="require('../assets/svg/close.svg')"
       @click="$parent.responseHeader = '', $parent.responseDesc = '', $parent.responsePersist = false"
     />

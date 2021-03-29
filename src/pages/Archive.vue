@@ -29,16 +29,12 @@
 
 <template>
   <div id="archive">
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <div v-if="selectedClients.length !== 0" class="multi-select">
-        <p>
-          <b>Selected {{ selectedClients.length }} <span v-if="selectedClients.length === 1">Client</span><span v-if="selectedClients.length !== 1">Clients</span> to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="a_link" @click="unarchive_multi_clients()">Unarchive</a>
-        <a href="javascript:void(0)" class="a_link" @click="delete_multi_clients()">Delete</a>
-        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect all</a>
-      </div>
-    </transition>
+    <multiselect
+      :type="'client'"
+      :options="['Unarchive', 'Delete', 'Deselect']"
+      :selected="selectedClients"
+      @response="resolve_archive_multiselect"
+    />
     <div class="top_bar">
       <h1>
         Archive
@@ -96,10 +92,12 @@
 
 <script>
 const ClientLink = () => import(/* webpackChunkName: "components.clientlink", webpackPreload: true  */ '../components/ClientLink')
+const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
 
 export default {
   components: {
-    ClientLink
+    ClientLink,
+    Multiselect
   },
   data () {
     return {
@@ -116,7 +114,19 @@ export default {
   },
   methods: {
 
-    // Checkbox
+    resolve_archive_multiselect (res) {
+      switch (res) {
+        case 'Unarchive':
+          this.unarchive_multi_clients()
+          break
+        case 'Delete':
+          this.delete_multi_clients()
+          break
+        case 'Deselect':
+          this.deselect_all()
+          break
+      }
+    },
     change_select_checkbox (id) {
       if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)

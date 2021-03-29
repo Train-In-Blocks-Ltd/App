@@ -122,7 +122,7 @@ Vue.mixin({
       }
       if (arr.length !== 0) {
         arr.forEach((item) => {
-          html = html.replace(item[0], `<a href="${item[1]}" target="_blank" contenteditable="false">Watch video</a>`)
+          html = html.replace(item[0], `<a href="${item[1]}" target="_blank">Watch video</a>`)
         })
       }
       return html

@@ -355,7 +355,9 @@
   }
 
   /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]), select {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]),
+  select,
+  textarea {
     outline: none;
     -moz-appearance: none;
     -webkit-appearance: none;
@@ -372,14 +374,17 @@
     transition: var(--transition_standard)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
-  select:hover {
+  select:not(:focus):hover,
+  textarea:not(:focus):hover {
     opacity: .6
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
     cursor: not-allowed;
     opacity: .6
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus {
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus,
+  select:focus,
+  textarea:focus {
     border: 1px solid var(--base)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
@@ -563,22 +568,6 @@
   }
   .client_container p {
     margin: 0
-  }
-
-  /* Multi-select */
-  .multi-select {
-    display: grid;
-    grid-gap: .4rem;
-    position: fixed;
-    top: 0;
-    right: 0;
-    text-align: right;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    width: 100%;
-    z-index: 9;
-    padding: 2rem;
-    justify-items: end
   }
 
   /* Links */
@@ -1220,8 +1209,7 @@ export default {
           }
         )
       }
-      this.loading = false
-      this.dontLeave = false
+      this.end_loading()
       this.errorMsg = msg.toString()
       this.$modal.show('error')
       this.will_body_scroll(false)
