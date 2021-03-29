@@ -167,7 +167,7 @@
 export default {
   props: {
     isTrainer: Boolean,
-    plans: Array
+    plans: [Array, Boolean]
   },
   data () {
     return {
@@ -185,16 +185,18 @@ export default {
   },
   methods: {
     sort_plans () {
-      this.client_plans.forEach((plan, index) => {
-        if (plan.ordered === null) {
-          plan.ordered = index
-          this.$emit('update:plans', this.client_plans)
-        }
-      })
-      this.client_plans.sort((a, b) => {
-        return new Date(a.ordered) - new Date(b.ordered)
-      })
-      this.$emit('update:plans', this.client_plans)
+      if (this.plans !== false) {
+        this.client_plans.forEach((plan, index) => {
+          if (plan.ordered === null) {
+            plan.ordered = index
+            this.$emit('update:plans', this.client_plans)
+          }
+        })
+        this.client_plans.sort((a, b) => {
+          return new Date(a.ordered) - new Date(b.ordered)
+        })
+        this.$emit('update:plans', this.client_plans)
+      }
     },
     change_order (planOrder, direction) {
       switch (direction) {

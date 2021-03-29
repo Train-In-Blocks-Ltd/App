@@ -93,7 +93,11 @@
         Plans
       </h1>
       <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
-      <periodise v-else-if="!noPlans" :is-trainer="true" :plans.sync="$parent.$parent.client_details.plans" />
+      <periodise
+        v-else-if="!noPlans"
+        :is-trainer="true"
+        :plans.sync="$parent.$parent.client_details.plans"
+      />
       <p
         v-else
         class="text--holder text--small grey"
