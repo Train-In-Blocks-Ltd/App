@@ -58,6 +58,7 @@ export default {
           {
             name: this.new_plan.name,
             client_id: this.$parent.$parent.$parent.client_details.client_id,
+            duration: this.new_plan.duration,
             notes: '',
             block_color: '',
             ordered: this.$parent.$parent.$parent.client_details.plans === undefined || this.$parent.$parent.$parent.client_details.plans === false ? 0 : this.$parent.$parent.$parent.client_details.length
