@@ -244,9 +244,10 @@ export default {
         el: '#okta-signin-container',
         scopes
       }).then(async (tokens) => {
-        await this.$auth.handleLoginRedirect(tokens)
+        console.log(self.splashed)
         self.splashed = false
         self.will_body_scroll(false)
+        await this.$auth.handleLoginRedirect(tokens)
       }).catch((err) => {
         throw err
       })
