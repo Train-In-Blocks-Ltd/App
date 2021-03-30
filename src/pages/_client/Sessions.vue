@@ -686,7 +686,10 @@
               </h2>
               <rich-editor
                 :html-injection.sync="plan.notes"
+                :item-id="'plan_notes'"
+                :editing="editSession"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
+                :force-stop="forceStop"
                 @on-edit-change="resolve_plan_info_editor"
               />
             </div>

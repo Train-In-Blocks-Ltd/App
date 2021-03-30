@@ -373,8 +373,8 @@ import Compressor from 'compressorjs'
 
 export default {
   props: {
-    itemId: Number,
-    editing: Number,
+    itemId: [Number, String],
+    editing: [Number, String],
     htmlInjection: String,
     emptyPlaceholder: String,
     dataForTemplates: Array,
