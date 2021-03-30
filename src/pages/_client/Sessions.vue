@@ -364,7 +364,7 @@
           <p><i>[sRPE (CR10): 8]</i></p>
           <p><i>[sRPE (Borg): 16]</i></p><br>
           <p>See <i>Help</i> for more information</p><br>
-          <button class="cancel" @click="$modal.hide('info'), will_body_scroll(true)">
+          <button class="red_button" @click="$modal.hide('info'), will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -401,7 +401,7 @@
           <button type="submit">
             Move
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
+          <button class="red_button" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -436,7 +436,7 @@
           <button type="submit">
             Shift
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
+          <button class="red_button" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -480,7 +480,7 @@
             min="1"
             required
           ><br><br>
-          <button type="button" class="cancel" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
+          <button type="button" class="red_button" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
             Cancel
           </button>
           <button v-if="!simpleCopy" type="submit">
@@ -525,10 +525,10 @@
                 >
               </div>
               <br>
-              <button v-if="copyAcrossView !== 0" class="cancel" type="button" @click.prevent="copyAcrossView -= 1">
+              <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
                 Back
               </button>
-              <button v-if="copyAcrossView === 0" class="cancel" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
+              <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
                 Back
               </button>
               <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">
@@ -547,7 +547,7 @@
           <p class="grey">
             Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
           </p><br>
-          <button class="cancel" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
+          <button class="red_button" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
             Back
           </button>
           <button type="submit">
@@ -586,7 +586,7 @@
           <button type="submit">
             Duplicate
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
+          <button class="red_button" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -869,7 +869,7 @@
                       <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">
                         Feedback
                       </button>
-                      <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" class="cancel" @click="showFeedback = null">
+                      <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" class="red_button" @click="showFeedback = null">
                         Close Feedback
                       </button>
                     </div>

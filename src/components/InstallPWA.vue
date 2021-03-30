@@ -42,7 +42,7 @@
           Launch
         </button>
       </a>
-      <button class="cancel" @click="$parent.isInstallOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click="$parent.isInstallOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

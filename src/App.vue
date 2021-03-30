@@ -316,8 +316,11 @@
     cursor: not-allowed;
     opacity: .6
   }
-  .delete:hover,
-  .cancel:hover {
+  .green_button:hover {
+    color: white;
+    background-color: green
+  }
+  .red_button:hover {
     color: white;
     background-color: #B80000
   }
@@ -337,21 +340,6 @@
   }
   .bottom_bar button {
     margin-right: .4rem
-  }
-  .done {
-    background-color: green
-  }
-  .to_do {
-    background-color: #B80000
-  }
-  .done,
-  .to_do {
-    color: white;
-    margin: auto 0
-  }
-  .done:hover,
-  .to_do:hover {
-    opacity: .6
   }
 
   /* Inputs */
@@ -570,67 +558,9 @@
     margin: 0
   }
 
-  /* Links */
+  /* Plan links container */
   .client_link_wrapper {
     text-decoration: none
-  }
-  .client_link {
-    display: grid;
-    padding: 2rem;
-    grid-gap: 1rem;
-    font-weight: 400;
-    color: var(--base);
-    text-decoration: none;
-    box-shadow: var(--low_shadow);
-    background-color: var(--fore);
-    border-radius: 10px;
-    transition: var(--transition_standard)
-  }
-  .client_link:hover {
-    box-shadow: var(--high_shadow)
-  }
-  .client_link__notes__content,
-  .preview_html {
-    font-size: .8rem;
-    margin-top: .4rem
-  }
-  .client_link__notes__content *,
-  .preview_html *,
-  .plan-name {
-    color: var(--base);
-    transition: var(--transition_standard)
-  }
-  .client_link__notes__content p,
-  .preview_html p {
-    margin: .4rem 0
-  }
-  .client_name,
-  .plan-name {
-    margin: 0
-  }
-  .client_link__notes__content h1,
-  .client_link__notes__content h2,
-  .preview_html h1,
-  .preview_html h2 {
-    font-size: 1rem
-  }
-  .client_link__notes__content img,
-  .client_link__notes__content iframe,
-  .preview_html img,
-  .preview_html iframe {
-    margin: 1rem 0;
-    max-width: 500px;
-    border-radius: 3px;
-    opacity: .6;
-    transition: var(--transition_standard)
-  }
-  .client_link .client_link__notes__content img,
-  .client_link .client_link__notes__content iframe,
-  .client_link .client_link__notes__content a,
-  .preview_html img,
-  .preview_html iframe,
-  .preview_html a {
-    display: none
   }
 
   /* Client-side */
@@ -835,7 +765,7 @@
           </p>
           <br>
           <p>{{ errorMsg }}</p><br>
-          <button class="cancel" @click="$modal.hide('error'), will_body_scroll(true)">
+          <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
             Close
           </button>
         </div>

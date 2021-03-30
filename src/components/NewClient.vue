@@ -57,7 +57,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

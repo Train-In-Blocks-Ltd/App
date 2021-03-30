@@ -31,7 +31,7 @@
             {{ $parent.portfolio.trainer_name }}
           </h2>
           <div class="client_portfolio__notes" v-html="update_content(remove_brackets_and_checkbox($parent.portfolio.notes))" />
-          <button class="cancel" @click="isPortfolioOpen = false, will_body_scroll(true)">
+          <button class="red_button" @click="isPortfolioOpen = false, will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -99,14 +99,14 @@
                 <div :key="check" class="full_width_bar">
                   <button
                     v-if="session.checked === 1 && !feedbackId"
-                    class="button--state done"
+                    class="button--state green_button"
                     @click="complete(plan.id, session.id)"
                   >
                     Completed
                   </button>
                   <button
                     v-if="session.checked === 0 && !feedbackId"
-                    class="button--state to_do"
+                    class="button--state red_button"
                     @click="complete(plan.id, session.id)"
                   >
                     Click to complete

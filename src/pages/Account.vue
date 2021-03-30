@@ -134,7 +134,7 @@
               <button class="right_margin" type="submit" :disabled="password.check === null || password.new !== password.match">
                 Change your password
               </button>
-              <button class="cancel" @click.prevent="$modal.hide('reset-password'), will_body_scroll(true)">
+              <button class="red_button" @click.prevent="$modal.hide('reset-password'), will_body_scroll(true)">
                 Close
               </button>
             </div>

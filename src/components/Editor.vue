@@ -308,7 +308,7 @@ div#rich_editor {
               <div class="center_wrapped">
                 <div v-if="previewTemplate !== null">
                   <div class="show_html" v-html="previewTemplate" /><br>
-                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
+                  <button class="red_button" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
                     Close
                   </button>
                 </div>
@@ -319,7 +319,7 @@ div#rich_editor {
                   <p class="grey">
                     Please try again
                   </p><br>
-                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
+                  <button class="red_button" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
                     Close
                   </button>
                 </div>
@@ -348,7 +348,7 @@ div#rich_editor {
       <button @click="editState = false , $emit('on-edit-change', 'save', itemId)">
         Save
       </button>
-      <button class="cancel" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
+      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
         Cancel
       </button>
     </div>

@@ -30,7 +30,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>

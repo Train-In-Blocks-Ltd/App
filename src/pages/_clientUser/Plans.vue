@@ -145,14 +145,14 @@
               <div :key="check" class="full_width_bar">
                 <button
                   v-if="session.checked === 1 && !feedbackId"
-                  class="button--state done"
+                  class="button--state green_button"
                   @click="complete(plan.id, session.id)"
                 >
                   Completed
                 </button>
                 <button
                   v-if="session.checked === 0 && !feedbackId"
-                  class="button--state to_do"
+                  class="button--state red_button"
                   @click="complete(plan.id, session.id)"
                 >
                   Click to complete

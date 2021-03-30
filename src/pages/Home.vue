@@ -75,7 +75,6 @@
             :number="client.number"
             :notes="client.notes"
             :class="{ recently_added: persistResponse === client.name }"
-            class="client_link"
           />
         </router-link>
       </div>
