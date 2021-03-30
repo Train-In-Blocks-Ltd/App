@@ -50,8 +50,7 @@
   }
   .icon--expand {
     cursor: pointer;
-    vertical-align: middle;
-    margin-top: .8rem;
+    margin: .8rem 0 0 auto;
     transition: var(--transition_smooth)
   }
   .icon--expand.expanded {
@@ -208,10 +207,13 @@
     display: flex;
     justify-content: space-between
   }
-  .header-options {
+  .header_options {
     display: flex;
     flex-direction: column;
     align-items: center
+  }
+  .header_options > .slot_1 {
+    display: flex
   }
   .container--sessions {
     display: grid;
@@ -227,12 +229,11 @@
   .wrapper--template-options {
     margin: 2rem 0
   }
-  .feedback_wrapper {
-    margin: 1rem 0;
-    padding: 0
-  }
-  .bottom_bar .button {
-    margin: 0
+  .feedback_button {
+    margin-right: 1rem;
+    padding: .2rem 1rem;
+    border-radius: 3px;
+    height: 20px
   }
   .newSession, .incomplete {
     color: #B80000
@@ -611,6 +612,11 @@
       :selected="selectedSessions"
       @response="resolve_session_multiselect"
     />
+    <preview-modal
+      :desc="feedbackDesc"
+      :html="feedbackHTML"
+      @close="feedbackHTML = '', feedbackDesc = []"
+    />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in $parent.$parent.client_details.plans"
@@ -840,8 +846,21 @@
                           @blur="scan()"
                         >
                       </div>
-                      <div class="header-options">
-                        <checkbox :item-id="session.id" :type="'v1'" aria-label="Select this session" />
+                      <div class="header_options">
+                        <div class="slot_1">
+                          <button
+                            v-if="session.feedback !== '' && session.feedback !== null"
+                            class="feedback_button"
+                            @click="feedbackHTML = session.feedback, feedbackDesc = [$parent.$parent.client_details.name, session.name, session.date], will_body_scroll(false)"
+                          >
+                            Feedback
+                          </button>
+                          <checkbox
+                            :item-id="session.id"
+                            :type="'v1'"
+                            aria-label="Select this session"
+                          />
+                        </div>
                         <inline-svg
                           v-show="!isEditingSession"
                           id="expand"
@@ -863,19 +882,6 @@
                       :force-stop="forceStop"
                       @on-edit-change="resolve_session_editor"
                     />
-                    <div v-if="session.id === showFeedback" class="feedback_wrapper fadeIn">
-                      <hr><br>
-                      <p><b>Feedback</b></p><br>
-                      <div class="show_html" v-html="session.feedback" />
-                    </div>
-                    <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
-                      <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">
-                        Feedback
-                      </button>
-                      <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" class="red_button" @click="showFeedback = null">
-                        Close Feedback
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1000,6 +1006,7 @@ const RichEditor = () => import(/* webpackChunkName: "components.richeditor", we
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
 const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ '../../components/ColorPicker')
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPrefetch: true */ '../../components/Multiselect')
+const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ '../../components/PreviewModal')
 
 export default {
   components: {
@@ -1009,7 +1016,8 @@ export default {
     RichEditor,
     SimpleChart,
     ColorPicker,
-    Multiselect
+    Multiselect,
+    PreviewModal
   },
   data () {
     return {
@@ -1021,7 +1029,11 @@ export default {
       editingPlanNotes: false,
       isEditingSession: false,
       editSession: null,
-      showFeedback: '',
+
+      // Feedback
+      showFeedback: false,
+      feedbackHTML: '',
+      feedbackDesc: [],
 
       // SYSTEM
 

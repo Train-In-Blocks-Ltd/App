@@ -21,7 +21,7 @@
     display: flex;
     justify-content: space-between
   }
-  .header-options {
+  .header_options {
     display: flex;
     flex-direction: column;
     align-items: center
@@ -124,7 +124,7 @@
             name="template-name"
             pattern="[^\/]"
           ><br>
-          <div class="header-options">
+          <div class="header_options">
             <checkbox :item-id="template.id" :type="'v1'" aria-label="Select this template" />
             <inline-svg
               v-show="!isEditingTemplate"
