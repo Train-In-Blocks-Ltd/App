@@ -46,11 +46,11 @@
       </p>
     </div>
     <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
-    <p v-if="$parent.no_clients" class="text--holder text--small grey">
+    <p v-if="$parent.noClients" class="text--holder text--small grey">
       No clients added yet, use the button on the top-right of your screen.
     </p>
     <!-- Loop through clients -->
-    <div v-if="!$parent.no_clients && !$parent.error && $parent.clients && !$parent.loading" class="home--container">
+    <div v-if="!$parent.noClients && !$parent.error && $parent.clients && !$parent.loading" class="home--container">
       <input
         v-model="search"
         type="search"

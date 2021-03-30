@@ -986,7 +986,7 @@ export default {
       // CLIENT
 
       clients: null,
-      no_clients: false,
+      noClients: false,
       client_details: null,
 
       // ARCHIVE
@@ -1242,14 +1242,29 @@ export default {
         const textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
+      /*
+      if (!this.noClients && this.isTrainer) {
+        for (const client of this.clients) {
+          const planResponse = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
+          client.plans = planResponse.data.length === 0 ? false : planResponse.data
+          if (client.plans !== false) {
+            for (const plan of client.plans) {
+              const sessionsResponse = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
+              plan.sessions = sessionsResponse.data.length === 0 ? false : sessionsResponse.data
+            }
+          }
+        }
+      }
+      localStorage.setItem('clients', JSON.stringify(this.clients))
+      */
     },
     async clients_f () {
       try {
         const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
-        this.no_clients = response.data.length === 0
+        this.noClients = response.data.length === 0
         localStorage.setItem('clients', JSON.stringify(response.data))
       } catch (e) {
-        this.no_clients = false
+        this.noClients = false
         this.resolve_error(e)
       }
     },
@@ -1319,7 +1334,7 @@ export default {
         const client = this.clients.find(client => client.client_id === id)
         const email = client.email
         this.clients.splice(index, 1)
-        this.no_clients = this.clients.length === 0
+        this.noClients = this.clients.length === 0
         try {
           this.response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`).data
           const result = await this.$axios.post('/.netlify/functions/okta',
