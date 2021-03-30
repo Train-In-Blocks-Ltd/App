@@ -383,6 +383,7 @@ export default {
   data () {
     return {
       // System
+      isMobile: false,
       linkAddress: '',
       editState: false,
       search: '',
@@ -411,15 +412,15 @@ export default {
   watch: {
     editState () {
       this.initialHTML = this.htmlInjection
-      const isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      this.isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
         document.addEventListener('click', this.toggle_formatter)
-        document.addEventListener(isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.addEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener('click', this.toggle_formatter)
-        document.removeEventListener(isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.removeEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
       }
     },
     forceStop () {
@@ -568,13 +569,13 @@ export default {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${y + 22}px`
+          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
         )
       } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
         linker.setAttribute('aria-hidden', 'false')
         linker.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${y + 22}px`
+          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
         )
         this.linkAddress = sel.focusNode.parentNode.attributes.href.value
       } else if (containing && event.target.nodeName === 'IMG') {
