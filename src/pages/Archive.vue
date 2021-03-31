@@ -155,8 +155,7 @@ export default {
           this.selectedClients.forEach((clientId) => {
             this.$parent.client_delete(clientId)
           })
-          this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete'
-          this.$parent.responseDesc = 'All their data have been removed'
+          this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete', 'All their data have been removed')
           this.deselect_all()
         }
       }
@@ -164,8 +163,7 @@ export default {
     async unarchive_single (id) {
       if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to unarchive this client?', 'Their data will be recovered and available on the Home page.')) {
         this.$parent.client_unarchive(id)
-        this.$parent.responseHeader = 'Client unarchived'
-        this.$parent.responseDesc = 'You can access them back on the home page'
+        this.$parent.$refs.response_pop_up.show('Client unarchived', 'You can access them back on the home page')
       }
     },
     async unarchive_multi_clients () {
@@ -174,8 +172,7 @@ export default {
           this.selectedClients.forEach((clientId) => {
             this.$parent.client_unarchive(clientId)
           })
-          this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client'
-          this.$parent.responseDesc = 'All their data have been recovered'
+          this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client', 'All their data have been recovered')
           this.deselect_all()
         }
       }

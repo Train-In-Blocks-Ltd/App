@@ -1196,8 +1196,7 @@ export default {
           this.editSession = null
           this.update_session(id)
           this.scan()
-          this.$parent.$parent.responseHeader = 'Session updated'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
           break
         case 'cancel':
           this.isEditingSession = false
@@ -1254,8 +1253,7 @@ export default {
       })
       this.$modal.hide('shift')
       this.$ga.event('Session', 'shift')
-      this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session'
-      this.$parent.$parent.responseDesc = 'Your changes have been saved'
+      this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
       this.deselect_all()
     },
     copy_across_check () {
@@ -1357,8 +1355,7 @@ export default {
       })
       this.currentWeek = parseInt(this.moveTarget)
       this.$ga.event('Session', 'move')
-      this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session'
-      this.$parent.$parent.responseDesc = 'Your changes have been saved'
+      this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session', 'Your changes have been saved')
       this.deselect_all()
     },
     async duplicate_plan (clientId) {
@@ -1366,8 +1363,7 @@ export default {
       await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
       this.$modal.hide('duplicate')
-      this.$parent.$parent.responseHeader = 'Plan duplicated'
-      this.$parent.$parent.responseDesc = 'Access it on your client\'s profile'
+      this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
       this.$ga.event('Plan', 'duplicate')
     },
 
@@ -1382,8 +1378,7 @@ export default {
               this.update_session(session.id)
             }
           })
-          this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated', 'Your changes have been saved')
           this.deselect_all()
         }
       }
@@ -1395,8 +1390,7 @@ export default {
             this.delete_session(sessionId)
           })
           this.$ga.event('Session', 'bulk_delete')
-          this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
           this.deselect_all()
         }
       }
@@ -1930,8 +1924,7 @@ export default {
           this.$parent.$parent.clients_to_vue()
           this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
           this.$ga.event('Session', 'delete')
-          this.$parent.$parent.responseHeader = 'Plan deleted'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
           this.$parent.$parent.end_loading()
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
@@ -1981,11 +1974,9 @@ export default {
         this.adherence()
         this.$ga.event('Session', 'new')
         if (!isCopy) {
-          this.$parent.$parent.responseHeader = 'New session added'
-          this.$parent.$parent.responseDesc = 'Get programming!'
+          this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
         } else {
-          this.$parent.$parent.responseHeader = 'Sessions have been progressed'
-          this.$parent.$parent.responseDesc = 'Please go through them to make sure that you\'re happy with it'
+          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
         }
         this.new_session = {
           name: 'Untitled',

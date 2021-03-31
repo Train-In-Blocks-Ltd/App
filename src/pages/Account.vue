@@ -284,8 +284,7 @@ export default {
             html: passChangeEmail()
           }
         )
-        this.$parent.responseHeader = 'Password changed'
-        this.$parent.responseDesc = 'Remember to not share it and keep it safe'
+        this.$parent.$refs.response_pop_up.show('Password changed', 'Remember to not share it and keep it safe')
         this.$parent.end_loading()
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct'

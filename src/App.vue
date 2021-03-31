@@ -726,16 +726,14 @@
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up
-        v-if="responseHeader !== ''"
-        :header="responseHeader"
-        :desc="responseDesc"
-      />
+      <response-pop-up ref="response_pop_up" />
     </transition>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <confirm-pop-up ref="confirm_pop_up" />
     </transition>
-    <global-overlay ref="overlay" />
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <global-overlay ref="overlay" />
+    </transition>
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="center_wrapped">
@@ -921,9 +919,6 @@ export default {
       // SYSTEM
 
       policyVersion: '1.1',
-      responsePersist: false,
-      responseHeader: '',
-      responseDesc: '',
       versionName: 'Pegasus',
       versionBuild: '3.2',
       newBuild: false,
@@ -943,15 +938,6 @@ export default {
   watch: {
     '$route' (to, from) {
       this.is_authenticated()
-    },
-    responseHeader () {
-      if (!this.responsePersist) {
-        setTimeout(() => {
-          this.responseHeader = ''
-          this.responseDesc = ''
-          this.responsePersist = false
-        }, 3000)
-      }
     }
   },
   async created () {
@@ -1206,8 +1192,7 @@ export default {
         // Get the client information again as we have just updated the client
         await this.clients_f()
         await this.clients_to_vue()
-        this.responseHeader = 'Client updated'
-        this.responseDesc = 'All your changes have been saved'
+        this.$refs.response_pop_up.show('Client updated', 'All your changes have been saved')
         this.end_loading()
       } catch (e) {
         this.resolve_error(e)
@@ -1270,8 +1255,7 @@ export default {
             )
           }
           this.helper('client_store', 'Client', 'archive')
-          this.responseHeader = 'Client archived'
-          this.responseDesc = 'Their data will be kept safe on the archive page'
+          this.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
           this.$router.push('/')
         } catch (e) {
           this.resolve_error(e)
@@ -1407,8 +1391,7 @@ export default {
             )
           }
         }
-        this.responseHeader = 'Session updated'
-        this.responseDesc = 'Your changes have been saved'
+        this.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
       } catch (e) {
         this.resolve_error(e)
       }

@@ -207,16 +207,13 @@ export default {
     helper (type) {
       switch (type) {
         case 'new':
-          this.$parent.responseHeader = 'New template created'
-          this.$parent.responseDesc = 'Edit and use it in a client\'s plan'
+          this.$parent.$refs.response_pop_up.show('New template created', 'Edit and use it in a client\'s plan')
           break
         case 'update':
-          this.$parent.responseHeader = 'Updated template'
-          this.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$refs.response_pop_up.show('Updated template', 'Your changes have been saved')
           break
         case 'delete':
-          this.$parent.responseHeader = this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template'
-          this.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$refs.response_pop_up.show(this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template', 'Your changes have been saved')
           break
       }
     },

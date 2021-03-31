@@ -63,8 +63,7 @@ export default {
             ordered: this.$parent.$parent.$parent.client_details.plans === undefined || this.$parent.$parent.$parent.client_details.plans === false ? 0 : this.$parent.$parent.$parent.client_details.length
           }
         )
-        this.$parent.$parent.$parent.responseHeader = `${this.new_plan.name} created`
-        this.$parent.$parent.$parent.responseDesc = 'You\'re all set, get programming'
+        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')
         this.$parent.persistResponse = this.new_plan.name
 
         // Set old plans to null so that they can be repopulated

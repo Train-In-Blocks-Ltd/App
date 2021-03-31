@@ -238,8 +238,7 @@ export default {
         )
         localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.$parent.clients))
         this.$ga.event('Plan', 'update')
-        this.$parent.$parent.$parent.responseHeader = 'Plan updated'
-        this.$parent.$parent.$parent.responseDesc = 'Your changes have been saved'
+        this.$parent.$parent.$parent.$refs.response_pop_up.show('Plan updated', 'Your changes have been saved')
         this.$parent.$parent.$parent.end_loading()
       } catch (e) {
         this.$parent.$parent.$parent.resolve_error(e)

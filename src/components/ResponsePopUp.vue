@@ -55,11 +55,11 @@ svg#response_close path {
 </style>
 
 <template>
-  <div class="response_pop_up">
+  <div v-if="reveal" class="response_pop_up">
     <inline-svg
       id="response_close"
       :src="require('../assets/svg/close.svg')"
-      @click="$parent.responseHeader = '', $parent.responseDesc = '', $parent.responsePersist = false"
+      @click="header = null, desc = null, persist = false, reveal = false"
     />
     <p>
       <b>
@@ -74,9 +74,35 @@ svg#response_close path {
 
 <script>
 export default {
-  props: {
-    header: String,
-    desc: String
+  data () {
+    return {
+      reveal: false,
+      header: null,
+      desc: null,
+      persist: false
+    }
+  },
+  watch: {
+    reveal () {
+      if (!this.persist) {
+        if (!this.reveal) {
+          this.header = null
+          this.desc = null
+          this.persist = false
+        }
+        setTimeout(() => {
+          this.reveal = false
+        }, 3000)
+      }
+    }
+  },
+  methods: {
+    show (header, desc, persist) {
+      this.header = header
+      this.desc = desc
+      this.persist = persist || false
+      this.reveal = true
+    }
   }
 }
 </script>
