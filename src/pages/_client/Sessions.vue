@@ -1,4 +1,15 @@
 <style scoped>
+  /* Other */
+  .dark_overlay {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vw;
+    background-color: #00000060
+  }
+
   /* Client */
   .client_info {
     display: grid;
@@ -347,30 +358,6 @@
 
 <template>
   <div id="plan">
-    <modal name="info" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-      <div class="modal--info">
-        <div class="center_wrapped">
-          <p><b>The format for tracking data</b></p><br>
-          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Back Squat: 3x6 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
-          <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Weight: 50kg]</i></p>
-          <p><i>[Vertical Jump: 43.3cm]</i></p>
-          <p><i>[Body Fat (%): 12]</i></p>
-          <p><i>[sRPE (CR10): 8]</i></p>
-          <p><i>[sRPE (Borg): 16]</i></p><br>
-          <p>See <i>Help</i> for more information</p><br>
-          <button class="red_button" @click="$modal.hide('info'), will_body_scroll(true)">
-            Close
-          </button>
-        </div>
-      </div>
-    </modal>
     <modal
       name="move"
       height="100%"
@@ -613,10 +600,12 @@
       @response="resolve_session_multiselect"
     />
     <preview-modal
-      :desc="feedbackDesc"
-      :html="feedbackHTML"
-      @close="feedbackHTML = '', feedbackDesc = []"
+      :desc="previewDesc"
+      :html="previewHTML"
+      :show-media="true"
+      @close="previewDesc = null, previewHTML = null"
     />
+    <div v-show="editSession !== null" class="dark_overlay" />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in $parent.$parent.client_details.plans"
@@ -771,7 +760,12 @@
                       class="change_week_color"
                       @click="editingWeekColor = !editingWeekColor"
                     />
-                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), will_body_scroll(false)" />
+                    <inline-svg
+                      id="info"
+                      :src="require('../../assets/svg/info.svg')"
+                      title="Info"
+                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', will_body_scroll(false)"
+                    />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
@@ -821,6 +815,7 @@
                     :key="indexed"
                     class="wrapper--session fadeIn"
                     :class="{ editorActive: session.id === editSession }"
+                    :style="{ zIndex: session.id === editSession ? 2 : 0 }"
                   >
                     <div class="session_header">
                       <div class="right_margin">
@@ -851,7 +846,7 @@
                           <button
                             v-if="session.feedback !== '' && session.feedback !== null"
                             class="feedback_button"
-                            @click="feedbackHTML = session.feedback, feedbackDesc = [$parent.$parent.client_details.name, session.name, session.date], will_body_scroll(false)"
+                            @click="previewHTML = session.feedback, previewDesc = `${session.name} on ${session.date}`, will_body_scroll(false)"
                           >
                             Feedback
                           </button>
@@ -1031,9 +1026,10 @@ export default {
       editSession: null,
 
       // Feedback
+
       showFeedback: false,
-      feedbackHTML: '',
-      feedbackDesc: [],
+      previewHTML: null,
+      previewDesc: null,
 
       // SYSTEM
 
@@ -1130,7 +1126,7 @@ export default {
     this.scan()
   },
   beforeDestroy () {
-    this.$parent.$parent.templates = null
+    this.will_body_scroll(true)
   },
   methods: {
 

@@ -1,27 +1,3 @@
-<style>
-/* Preview HTML */
-.preview_html {
-  font-size: .8rem;
-  margin-top: .4rem
-}
-.preview_html * {
-  color: var(--base);
-  transition: var(--transition_standard)
-}
-.preview_html p {
-  margin: .4rem 0
-}
-.preview_html h1,
-.preview_html h2 {
-  font-size: 1rem
-}
-.preview_html img,
-.preview_html iframe,
-.preview_html a {
-  display: none
-}
-</style>
-
 <style scoped>
 /* Plan and periodise */
 .periodise {
@@ -120,79 +96,78 @@ button.red_button {
 </style>
 
 <template>
-  <div class="periodise">
-    <modal :name="'preview'" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-      <div>
-        <div class="center_wrapped">
+  <div>
+    <preview-modal
+      :desc="planDesc"
+      :html="planHTML"
+      :show-media="true"
+      @close="planDesc = null, planHTML = null"
+    />
+    <div class="periodise">
+      <div
+        v-for="(plan, planIndex) in client_plans"
+        :key="`plan_${planIndex}`"
+        class="plan"
+      >
+        <div class="plan_header">
           <h2>
-            Plan notes
+            {{ plan.name }}
           </h2>
-          <div class="preview_html" v-html="preview" />
-          <button class="red_button" @click="preview = null, $modal.hide('preview'), will_body_scroll(true)">
-            Close
-          </button>
-          <div class="spacer" />
-        </div>
-      </div>
-    </modal>
-    <div
-      v-for="(plan, planIndex) in client_plans"
-      :key="`plan_${planIndex}`"
-      class="plan"
-    >
-      <div class="plan_header">
-        <h2>
-          {{ plan.name }}
-        </h2>
-        <div class="plan_header__options">
-          <div class="plan_a_links">
-            <router-link
-              :to="isTrainer ? `plan/${plan.id}` : `/clientUser/plan/${plan.id}`"
-              href="javascript:void(0)"
-              class="a_link"
-            >
-              {{ isTrainer ? 'Edit' : 'View' }}
-            </router-link>
-            <a
-              v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
-              href="javascript:void(0)"
-              class="a_link"
-              @click="preview = plan.notes, $modal.show('preview'), will_body_scroll(false)"
-            >
-              Notes
-            </a>
-          </div>
-          <div v-if="isTrainer" class="plan_order">
-            <inline-svg
-              v-if="plan.ordered !== 0"
-              :src="require('../assets/svg/arrow.svg')"
-              class="left"
-              @click="change_order(plan.ordered, 'back')"
-            />
-            <inline-svg
-              v-if="plan.ordered !== client_plans.length - 1"
-              :src="require('../assets/svg/arrow.svg')"
-              class="right"
-              @click="change_order(plan.ordered, 'next')"
-            />
+          <div class="plan_header__options">
+            <div class="plan_a_links">
+              <router-link
+                :to="isTrainer ? `plan/${plan.id}` : `/clientUser/plan/${plan.id}`"
+                href="javascript:void(0)"
+                class="a_link"
+              >
+                {{ isTrainer ? 'Edit' : 'View' }}
+              </router-link>
+              <a
+                v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
+                href="javascript:void(0)"
+                class="a_link"
+                @click="planDesc = plan.name, planHTML = plan.notes, will_body_scroll(false)"
+              >
+                Notes
+              </a>
+            </div>
+            <div v-if="isTrainer" class="plan_order">
+              <inline-svg
+                v-if="plan.ordered !== 0"
+                :src="require('../assets/svg/arrow.svg')"
+                class="left"
+                @click="change_order(plan.ordered, 'back')"
+              />
+              <inline-svg
+                v-if="plan.ordered !== client_plans.length - 1"
+                :src="require('../assets/svg/arrow.svg')"
+                class="right"
+                @click="change_order(plan.ordered, 'next')"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div class="microcycles">
-        <div
-          v-for="(micro, microIndex) in plan.duration"
-          :key="`plan_${planIndex}_micro_${microIndex}`"
-          :style="{ backgroundColor: plan.block_color.split(',')[microIndex] }"
-          :class="{ noColor: plan.block_color === '' }"
-          class="microcycle"
-        />
+        <div class="microcycles">
+          <div
+            v-for="(micro, microIndex) in plan.duration"
+            :key="`plan_${planIndex}_micro_${microIndex}`"
+            :style="{ backgroundColor: plan.block_color.split(',')[microIndex] }"
+            :class="{ noColor: plan.block_color === '' }"
+            class="microcycle"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ './PreviewModal')
+
 export default {
+  components: {
+    PreviewModal
+  },
   props: {
     isTrainer: Boolean,
     plans: [Array, Boolean]
@@ -200,7 +175,8 @@ export default {
   data () {
     return {
       client_plans: this.plans,
-      preview: null
+      planDesc: null,
+      planHTML: null
     }
   },
   watch: {

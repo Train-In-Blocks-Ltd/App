@@ -16,15 +16,20 @@
   font-size: 1rem
 }
 .preview_html img,
-.preview_html iframe,
-.preview_html a {
+.preview_html iframe {
+  max-width: 100%;
+  border-radius: 10px;
+  margin: 1rem 0
+}
+.noMedia img,
+.noMedia iframe {
   display: none
 }
 </style>
 
 <style scoped>
 /* Other */
-.title {
+h2.title {
   margin-bottom: 2rem
 }
 button.red_button {
@@ -42,12 +47,12 @@ button.red_button {
 
 <template>
   <div>
-    <div :class="{ opened_sections: html !== '' }" class="section_overlay" />
-    <div v-if="html !== ''" class="tab_overlay_content fadeIn delay fill_mode_both">
+    <div :class="{ opened_sections: html !== '' && html !== null }" class="section_overlay" />
+    <div v-if="html !== '' && html !== null" class="tab_overlay_content fadeIn delay fill_mode_both">
       <h2 class="title">
-        {{ desc[0] }} has given feedback for {{ `${desc[1]} on ${desc[2]}` }}
+        {{ desc }}
       </h2>
-      <div v-html="html" />
+      <div class="preview_html" :class="{ noMedia: !showMedia }" v-html="remove_brackets_and_checkbox(html)" />
       <button
         class="red_button"
         @click="$emit('close'), will_body_scroll(true)"
@@ -61,8 +66,10 @@ button.red_button {
 <script>
 export default {
   props: {
-    desc: Array,
-    html: String
+    desc: String,
+    type: String,
+    html: String,
+    showMedia: Boolean
   }
 }
 </script>
