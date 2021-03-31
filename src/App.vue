@@ -316,11 +316,11 @@
     cursor: not-allowed;
     opacity: .6
   }
-  .green_button:hover {
+  .green_button {
     color: white;
     background-color: green
   }
-  .red_button:hover {
+  .red_button {
     color: white;
     background-color: #B80000
   }
@@ -331,15 +331,6 @@
   }
   .session_header.client-side {
     height: 3.2rem
-  }
-  .bottom_bar {
-    display: flex;
-    padding: .6rem 0;
-    margin-top: 1rem;
-    z-index: 1
-  }
-  .bottom_bar button {
-    margin-right: .4rem
   }
 
   /* Inputs */
@@ -681,9 +672,6 @@
     ::-webkit-scrollbar {
       width: 0;
       background-color: transparent
-    }
-    p, li {
-      font-size: .8rem
     }
     h1, .text--large {
       font-size: 2rem

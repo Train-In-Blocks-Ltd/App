@@ -153,6 +153,13 @@ div#rich_editor {
   border-radius: 0 0 10px 10px;
   transition: var(--transition_standard)
 }
+.bottom_bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: .6rem;
+  margin-top: 1rem;
+  z-index: 1
+}
 
 /* Responsive */
 @media (max-width: 768px) {
