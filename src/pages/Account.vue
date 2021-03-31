@@ -165,7 +165,11 @@
         </div>
       </div>
       <div class="theme">
-        <label for="theme" class="text--small">Theme:</label>
+        <label for="theme" class="text--small">
+          <b>
+            Theme
+          </b>
+        </label>
         <select
           v-model="$parent.claims.theme"
           name="theme"

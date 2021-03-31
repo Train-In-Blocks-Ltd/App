@@ -70,9 +70,13 @@
     align-items: center
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     .client_link__options {
       flex-direction: column
+    }
+    .client_link.archived {
+      display: flex;
+      justify-content: space-between
     }
   }
   @media (max-width: 768px) {
@@ -82,6 +86,12 @@
     .client_link__options a,
     .select_checkbox {
       margin: 0 1rem 0 0
+    }
+    .client_link:hover {
+      box-shadow: var(--low_shadow)
+    }
+    .client_link:active {
+      transform: scale(.99)
     }
   }
 </style>

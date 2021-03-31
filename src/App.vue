@@ -598,23 +598,11 @@
     .sidebar:hover main {
       margin-left: 12rem
     }
-    .client_link.archived {
-      display: flex;
-      justify-content: space-between
-    }
   }
   @media (max-width: 768px) {
     /* Containers */
     .center_wrapped {
       width: 300px
-    }
-    .client_link:hover,
-    .plan_link:hover {
-      box-shadow: var(--low_shadow)
-    }
-    .client_link:active,
-    .plan_link:active {
-      transform: scale(.99)
     }
     .tab_overlay_content {
       padding: 4rem 10vw 10rem 10vw
