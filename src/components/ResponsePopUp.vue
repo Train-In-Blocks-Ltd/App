@@ -1,6 +1,6 @@
 <style>
 svg#response_close path {
-  fill: white
+  fill: var(--back)
 }
 </style>
 
@@ -15,7 +15,7 @@ svg#response_close path {
   box-shadow: var(--low_shadow);
   border-radius: 5px;
   padding: 1rem;
-  z-index: 999
+  z-index: 1000
 }
 .response_pop_up svg {
   cursor: pointer;
@@ -79,11 +79,15 @@ export default {
       reveal: false,
       header: null,
       desc: null,
-      persist: false
+      persist: false,
+      cover: false
     }
   },
   watch: {
     reveal () {
+      if (this.cover) {
+        this.$parent.$refs.overlay.show = this.reveal
+      }
       if (!this.persist) {
         if (!this.reveal) {
           this.header = null
@@ -97,10 +101,11 @@ export default {
     }
   },
   methods: {
-    show (header, desc, persist) {
+    show (header, desc, persist, cover) {
       this.header = header
       this.desc = desc
       this.persist = persist || false
+      this.cover = cover || false
       this.reveal = true
     }
   }

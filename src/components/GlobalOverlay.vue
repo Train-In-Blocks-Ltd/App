@@ -6,7 +6,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #00000060
+  background-color: #00000080
 }
 </style>
 

@@ -181,6 +181,12 @@ div#rich_editor {
 
 <template>
   <div id="wrapper--rich_editor">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up ref="response_pop_up" />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <global-overlay ref="overlay" />
+    </transition>
     <preview-modal
       :desc="previewDesc"
       :html="previewHTML"
@@ -787,7 +793,7 @@ export default {
             }
           })
         } else {
-          alert('File size is too big, please compress it to 1MB or lower')
+          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
           document.getElementById('img_uploader').value = ''
         }
       }
