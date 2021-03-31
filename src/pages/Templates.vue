@@ -294,9 +294,9 @@ export default {
       })
       this.selectedTemplates = []
     },
-    delete_multi_templates () {
+    async delete_multi_templates () {
       if (this.selectedTemplates.length !== 0) {
-        if (confirm('Are you sure you want to delete all the selected templates?')) {
+        if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete all the selected templates?', 'We will remove these templates from our database and it won\'t be recoverable.')) {
           this.selectedTemplates.forEach((templateId) => {
             this.delete_template(templateId)
           })

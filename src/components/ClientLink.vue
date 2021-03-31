@@ -137,8 +137,8 @@ export default {
   },
   props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
   methods: {
-    soloDelete (id) {
-      if (confirm('Are you sure that you want to delete this client?')) {
+    async soloDelete (id) {
+      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete this client?', 'We will remove their data from our database and it won\'t be recoverable.')) {
         this.$parent.$parent.client_delete(id)
       }
     }

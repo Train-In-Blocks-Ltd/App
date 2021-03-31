@@ -732,6 +732,10 @@
         :desc="responseDesc"
       />
     </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <confirm-pop-up ref="confirm_pop_up" />
+    </transition>
+    <global-overlay ref="overlay" />
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="center_wrapped">
@@ -946,7 +950,7 @@ export default {
           this.responseHeader = ''
           this.responseDesc = ''
           this.responsePersist = false
-        }, 8000)
+        }, 3000)
       }
     }
   },
@@ -987,7 +991,6 @@ export default {
     }
   },
   methods: {
-
     async helper (mode, gaItem, gaAction) {
       switch (mode) {
         case 'client_store':
@@ -1235,7 +1238,7 @@ export default {
       }
     },
     async client_archive (id, index) {
-      if (confirm('Are you sure you want to archive this client?')) {
+      if (await this.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
         this.dontLeave = true
         const client = this.clients.find(client => client.client_id === id)
         const email = client.email

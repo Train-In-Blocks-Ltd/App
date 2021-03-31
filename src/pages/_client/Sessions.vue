@@ -1373,9 +1373,9 @@ export default {
 
     // MULTI AND CHECKBOX
 
-    bulk_check (state) {
+    async bulk_check (state) {
       if (this.selectedSessions.length !== 0) {
-        if (confirm(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`)) {
+        if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
           this.helper('match_plan').sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               session.checked = state
@@ -1388,9 +1388,9 @@ export default {
         }
       }
     },
-    bulk_delete () {
+    async bulk_delete () {
       if (this.selectedSessions.length !== 0) {
-        if (confirm('Are you sure that you want to delete all the selected sessions?')) {
+        if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected sessions?', 'We will remove these sessions from our database and it won\'t be recoverable.')) {
           this.selectedSessions.forEach((sessionId) => {
             this.delete_session(sessionId)
           })
@@ -1921,7 +1921,7 @@ export default {
       }
     },
     async delete_plan () {
-      if (confirm('Are you sure you want to delete this plan?')) {
+      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         this.$parent.$parent.dontLeave = true
         const id = parseInt(this.$route.params.id)
         try {
