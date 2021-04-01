@@ -160,6 +160,12 @@ export default {
     InstallApp,
     Periodise
   },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.dontLeave = false
+      next()
+    }
+  },
   data () {
     return {
 
@@ -209,6 +215,7 @@ export default {
       })
       switch (state) {
         case 'edit':
+          this.$parent.dontLeave = true
           this.feedbackId = id
           this.forceStop += 1
           this.tempEditorStore = session.feedback
@@ -218,6 +225,7 @@ export default {
           this.$parent.update_session(plan.id, session.id)
           break
         case 'cancel':
+          this.$parent.dontLeave = false
           this.feedbackId = null
           session.feedback = this.tempEditorStore
           break

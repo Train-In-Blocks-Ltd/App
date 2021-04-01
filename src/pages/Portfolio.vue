@@ -96,6 +96,12 @@ export default {
     RichEditor
     // Products
   },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.dontLeave = false
+      next()
+    }
+  },
   data () {
     return {
       editingPortfolio: false,
@@ -114,6 +120,7 @@ export default {
     resolve_portfolio_editor (state) {
       switch (state) {
         case 'edit':
+          this.$parent.dontLeave = true
           this.editingPortfolio = true
           this.tempEditorStore = this.$parent.portfolio.notes
           break
@@ -122,6 +129,7 @@ export default {
           this.update(this.$parent.portfolio.notes)
           break
         case 'cancel':
+          this.$parent.dontLeave = false
           this.editingPortfolio = false
           this.$parent.portfolio.notes = this.tempEditorStore
           break

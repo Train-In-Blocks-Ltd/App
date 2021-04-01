@@ -936,7 +936,7 @@ export default {
     }
   },
   watch: {
-    '$route' (to, from) {
+    $route (to, from) {
       this.is_authenticated()
     }
   },
@@ -949,7 +949,12 @@ export default {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('/js/traininblocks-sw.js')
     }
-    window.addEventListener('beforeunload', this.confirmLeave)
+    window.addEventListener('beforeunload', (e) => {
+      if (this.dontLeave) {
+        e.preventDefault()
+        e.returnValue = 'Your changes might not be saved, are you sure you want to leave?'
+      }
+    })
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -1114,16 +1119,6 @@ export default {
       this.loading = false
       this.dontLeave = false
       this.silent_loading = false
-    },
-
-    // OTHER SHARED METHODS
-
-    confirmLeave (e) {
-      if (this.dontLeave) {
-        const msg = 'Your changes might not be saved, are you sure you want to leave?'
-        e.returnValue = msg
-        return msg
-      }
     },
 
     // CLIENT

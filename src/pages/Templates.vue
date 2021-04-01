@@ -165,6 +165,12 @@ export default {
     Checkbox,
     Multiselect
   },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.dontLeave = false
+      next()
+    }
+  },
   data () {
     return {
 
@@ -231,6 +237,7 @@ export default {
       const template = this.$parent.templates.find(template => template.id === id)
       switch (state) {
         case 'edit':
+          this.$parent.dontLeave = true
           this.isEditingTemplate = true
           this.editTemplate = id
           this.forceStop += 1
@@ -242,6 +249,7 @@ export default {
           this.update_template(id)
           break
         case 'cancel':
+          this.$parent.dontLeave = false
           this.isEditingTemplate = false
           this.editTemplate = null
           template.template = this.tempEditorStore

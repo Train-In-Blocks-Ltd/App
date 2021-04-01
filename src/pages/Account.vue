@@ -217,6 +217,12 @@
 import { passChangeEmail, passChangeEmailText } from '../components/email'
 
 export default {
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.dontLeave = false
+      next()
+    }
+  },
   data () {
     return {
       password: {

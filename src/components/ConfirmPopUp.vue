@@ -73,8 +73,8 @@ svg#confirm_close path {
       <button @click="resolvePromise(true), reveal = false">
         Confirm
       </button>
-      <button @click="resolvePromise(false), reveal = false">
-        Reject
+      <button class="red_button" @click="resolvePromise(false), reveal = false">
+        Cancel
       </button>
     </div>
   </div>

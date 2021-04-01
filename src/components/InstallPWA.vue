@@ -3,6 +3,9 @@
     z-index: 99;
     display: block
   }
+  .install_bottom_bar {
+    margin-top: 2rem
+  }
 </style>
 
 <template>
@@ -26,7 +29,7 @@
     <h1 v-else-if="$parent.$parent.pwa.installed">
       You have the app installed!
     </h1>
-    <div class="bottom_bar">
+    <div class="install_bottom_bar">
       <button
         v-if="$parent.$parent.pwa.canInstall"
         @click="installPWA(), $parent.isInstallOpen = false, will_body_scroll(true)"

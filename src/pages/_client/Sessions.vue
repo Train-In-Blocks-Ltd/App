@@ -1014,6 +1014,12 @@ export default {
     Multiselect,
     PreviewModal
   },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.$parent.dontLeave = false
+      next()
+    }
+  },
   data () {
     return {
 
@@ -1169,6 +1175,7 @@ export default {
       const plan = this.helper('match_plan')
       switch (state) {
         case 'edit':
+          this.$parent.$parent.dontLeave = true
           this.editingPlanNotes = true
           this.tempEditorStore = plan.notes
           break
@@ -1177,6 +1184,7 @@ export default {
           this.update_plan(plan.notes)
           break
         case 'cancel':
+          this.$parent.$parent.dontLeave = false
           this.editingPlanNotes = false
           plan.notes = this.tempEditorStore
           break
@@ -1186,6 +1194,7 @@ export default {
       const session = this.helper('match_session', id)
       switch (state) {
         case 'edit':
+          this.$parent.$parent.dontLeave = true
           this.isEditingSession = true
           this.editSession = id
           this.forceStop += 1
@@ -1199,6 +1208,7 @@ export default {
           this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
           break
         case 'cancel':
+          this.$parent.$parent.dontLeave = false
           this.isEditingSession = false
           this.editSession = null
           session.notes = this.tempEditorStore
@@ -1839,7 +1849,6 @@ export default {
 
     async create_plan (planName, clientId, planDuration, planColors, planNotes, planSessions) {
       try {
-        this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/programmes',
           {
             name: `Copy of ${planName}`,
@@ -1871,7 +1880,6 @@ export default {
     },
     async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
       this.$parent.$parent.silent_loading = true
-      this.$parent.$parent.dontLeave = true
       const plan = this.helper('match_plan')
       try {
         this.sort_sessions(plan)
@@ -1916,7 +1924,6 @@ export default {
     },
     async delete_plan () {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
-        this.$parent.$parent.dontLeave = true
         const id = parseInt(this.$route.params.id)
         try {
           await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
@@ -1932,7 +1939,6 @@ export default {
       }
     },
     async update_session (id) {
-      this.$parent.$parent.dontLeave = true
       const session = this.helper('match_session', id)
       try {
         await this.$axios.post('https://api.traininblocks.com/workouts',
@@ -1956,7 +1962,6 @@ export default {
     },
     async add_session (isCopy, forceArr) {
       try {
-        this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/workouts',
           {
             name: forceArr === undefined ? this.new_session.name : forceArr[0],
@@ -1992,7 +1997,6 @@ export default {
     },
     async delete_session (id) {
       try {
-        this.$parent.$parent.dontLeave = true
         await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         await this.update_plan()
