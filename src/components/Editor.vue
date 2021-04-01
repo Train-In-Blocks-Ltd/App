@@ -90,7 +90,7 @@ a#link_bar {
   transition: var(--transition_standard)
 }
 #rich_toolbar.showingPopup {
-  border-bottom: 2px solid transparent
+  border-bottom: 1px solid transparent
 }
 #rich_toolbar button {
   padding: 0;
@@ -111,7 +111,7 @@ a#link_bar {
   position: sticky;
   top: calc(1rem + 44.39px);
   background-color: var(--fore);
-  z-index: 99;
+  z-index: 1;
   display: flex;
   border-left: 1px solid var(--base_faint);
   border-right: 1px solid var(--base_faint);
@@ -123,6 +123,9 @@ a#link_bar {
   grid-gap: 1rem;
   max-height: 250px;
   overflow-y: auto
+}
+.pop_up--add_template > h2 {
+  margin-top: 1rem
 }
 .template_item svg {
   cursor: pointer;
@@ -143,6 +146,9 @@ button.add_link_submit {
   height: auto;
   margin: 0
 }
+#templates_search_none {
+  display: none
+}
 
 /* Editor */
 div#rich_editor {
@@ -152,6 +158,13 @@ div#rich_editor {
   border-top: none;
   border-radius: 0 0 10px 10px;
   transition: var(--transition_standard)
+}
+.bottom_bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: .6rem;
+  margin-top: 1rem;
+  z-index: 1
 }
 
 /* Responsive */
@@ -168,6 +181,18 @@ div#rich_editor {
 
 <template>
   <div id="wrapper--rich_editor">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up ref="response_pop_up" />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <global-overlay ref="overlay" />
+    </transition>
+    <preview-modal
+      :desc="previewDesc"
+      :html="previewHTML"
+      :show-media="true"
+      @close="previewDesc = null, previewHTML = null"
+    />
     <div v-if="editState">
       <div
         id="style_bar"
@@ -248,7 +273,7 @@ div#rich_editor {
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             title="Use Template"
             :disabled="!inEditor"
-            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
+            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up(), will_body_scroll(false)"
           >
             <inline-svg :src="require('../assets/svg/editor/template.svg')" />
           </button>
@@ -272,13 +297,14 @@ div#rich_editor {
           v-if="dataForTemplates.length !== 0"
           v-model="search"
           type="search"
-          aria-label="Search by name"
+          aria-label="Search templates"
           rel="search"
-          placeholder="Name"
+          placeholder="Search templates"
+          @input="isSearchEmpty()"
         >
-        <p v-show="search === ''">
+        <h2 v-show="search === ''">
           System templates
-        </p>
+        </h2>
         <div v-show="search === ''" class="template_item">
           <button @click="add_template('<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>')">
             Track with sets, reps, and load
@@ -294,52 +320,32 @@ div#rich_editor {
             Track with other measurements
           </button>
         </div>
-        <p>
+        <h2>
           Your templates
-        </p>
+        </h2>
         <div
           v-for="(item, index) in dataForTemplates"
           v-show="((!search) || ((item.name).toLowerCase()).startsWith(search.toLowerCase()))"
           :key="'template-' + index"
           class="template_item"
         >
-          <modal :name="'preview_template_' + item.id" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-            <div class="modal--preview_template">
-              <div class="center_wrapped">
-                <div v-if="previewTemplate !== null">
-                  <div class="show_html" v-html="previewTemplate" /><br>
-                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
-                    Close
-                  </button>
-                </div>
-                <div v-else>
-                  <h2>
-                    Something went wrong with the preview
-                  </h2>
-                  <p class="grey">
-                    Please try again
-                  </p><br>
-                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          </modal>
           <button @click="add_template(item.template)">
             {{ item.name }}
           </button>
           <inline-svg
             :src="require('../assets/svg/editor/preview.svg')"
-            @click="previewTemplate = item.template, $modal.show(`preview_template_${item.id}`), will_body_scroll(false)"
+            @click="previewDesc = item.name, previewHTML = item.template, will_body_scroll(false)"
           />
-        </div><br>
+        </div>
+        <p id="templates_search_none">
+          No templates found
+        </p><br>
       </div>
       <div
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up(), will_body_scroll(true)"
         @keyup="save_selection(), update_edited_notes()"
         v-html="update_content(initialHTML)"
       />
@@ -348,7 +354,7 @@ div#rich_editor {
       <button @click="editState = false , $emit('on-edit-change', 'save', itemId)">
         Save
       </button>
-      <button class="cancel" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
+      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
         Cancel
       </button>
     </div>
@@ -370,11 +376,15 @@ div#rich_editor {
 
 <script>
 import Compressor from 'compressorjs'
+const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ './PreviewModal')
 
 export default {
+  components: {
+    PreviewModal
+  },
   props: {
-    itemId: Number,
-    editing: Number,
+    itemId: [Number, String],
+    editing: [Number, String],
     htmlInjection: String,
     emptyPlaceholder: String,
     dataForTemplates: Array,
@@ -383,6 +393,7 @@ export default {
   data () {
     return {
       // System
+      isMobile: false,
       linkAddress: '',
       editState: false,
       search: '',
@@ -405,21 +416,24 @@ export default {
       showAddImage: false,
       base64Img: null,
       showAddTemplate: false,
-      previewTemplate: null
+
+      // Preview
+      previewDesc: null,
+      previewHTML: null
     }
   },
   watch: {
     editState () {
       this.initialHTML = this.htmlInjection
-      const isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      this.isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
         document.addEventListener('click', this.toggle_formatter)
-        document.addEventListener(isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.addEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener('click', this.toggle_formatter)
-        document.removeEventListener(isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.removeEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
       }
     },
     forceStop () {
@@ -432,6 +446,15 @@ export default {
 
     // Misc.
 
+    isSearchEmpty () {
+      let showNoneMsg = false
+      this.dataForTemplates.forEach((template) => {
+        if (!(((template.name).toLowerCase()).startsWith(this.search.toLowerCase()) && this.search !== '')) {
+          showNoneMsg = this.search !== ''
+        }
+      })
+      document.getElementById('templates_search_none').style.display = showNoneMsg ? 'block' : 'none'
+    },
     focus_on_editor () {
       document.getElementById('rich_editor').focus()
     },
@@ -568,13 +591,13 @@ export default {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${y + 22}px`
+          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
         )
       } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
         linker.setAttribute('aria-hidden', 'false')
         linker.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${y + 22}px`
+          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
         )
         this.linkAddress = sel.focusNode.parentNode.attributes.href.value
       } else if (containing && event.target.nodeName === 'IMG') {
@@ -770,7 +793,7 @@ export default {
             }
           })
         } else {
-          alert('File size is too big, please compress it to 1MB or lower')
+          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
           document.getElementById('img_uploader').value = ''
         }
       }

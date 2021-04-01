@@ -1,11 +1,11 @@
 <style>
-svg#response_close path {
-  fill: var(--back)
+svg#confirm_close path {
+  fill: white
 }
 </style>
 
 <style scoped>
-.response_pop_up {
+.confirm_pop_up {
   position: fixed;
   top: 1rem;
   left: calc(38px + 3rem);
@@ -17,7 +17,7 @@ svg#response_close path {
   padding: 1rem;
   z-index: 1000
 }
-.response_pop_up svg {
+.confirm_pop_up svg {
   cursor: pointer;
   height: 1.2rem;
   width: 1.2rem;
@@ -30,24 +30,29 @@ svg#response_close path {
   border-radius: 50%;
   transition: var(--transition_standard)
 }
-.response_pop_up svg:hover {
+.confirm_pop_up svg:hover {
   opacity: .6
 }
 
+/* Button */
+.confirm_button_bar {
+  margin-top: 1rem
+}
+
 @supports not (backdrop-filter: blur(10px)) {
-  .response_pop_up {
+  .confirm_pop_up {
     background-color: var(--fore)
   }
 }
 @media (max-width: 992px) {
-  .response_pop_up svg:hover {
+  .confirm_pop_up svg:hover {
     fill: black;
     background-color: var(--fore);
     border-color: var(--base)
   }
 }
 @media (max-width: 768px) {
-  .response_pop_up {
+  .confirm_pop_up {
     max-width: 300px;
     left: .4rem
   }
@@ -55,12 +60,7 @@ svg#response_close path {
 </style>
 
 <template>
-  <div v-if="reveal" class="response_pop_up">
-    <inline-svg
-      id="response_close"
-      :src="require('../assets/svg/close.svg')"
-      @click="header = null, desc = null, persist = false, reveal = false"
-    />
+  <div v-if="reveal" class="confirm_pop_up">
     <p>
       <b>
         {{ header }}
@@ -69,6 +69,14 @@ svg#response_close path {
     <p>
       {{ desc }}
     </p>
+    <div class="confirm_button_bar">
+      <button @click="resolvePromise(true), reveal = false">
+        Confirm
+      </button>
+      <button class="red_button" @click="resolvePromise(false), reveal = false">
+        Cancel
+      </button>
+    </div>
   </div>
 </template>
 
@@ -76,37 +84,29 @@ svg#response_close path {
 export default {
   data () {
     return {
-      reveal: false,
       header: null,
       desc: null,
-      persist: false,
-      cover: false
+      reveal: false,
+      resolvePromise: undefined
     }
   },
   watch: {
     reveal () {
-      if (this.cover) {
-        this.$parent.$refs.overlay.show = this.reveal
-      }
-      if (!this.persist) {
-        if (!this.reveal) {
-          this.header = null
-          this.desc = null
-          this.persist = false
-        }
-        setTimeout(() => {
-          this.reveal = false
-        }, 3000)
+      this.$parent.$refs.overlay.show = this.reveal
+      if (!this.reveal) {
+        this.header = null
+        this.desc = null
       }
     }
   },
   methods: {
-    show (header, desc, persist, cover) {
+    show (header, desc) {
+      this.reveal = true
       this.header = header
       this.desc = desc
-      this.persist = persist || false
-      this.cover = cover || false
-      this.reveal = true
+      return new Promise((resolve) => {
+        this.resolvePromise = resolve
+      })
     }
   }
 }

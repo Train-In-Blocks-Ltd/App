@@ -119,6 +119,12 @@ export default {
     RichEditor,
     Periodise
   },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.$parent.dontLeave = false
+      next()
+    }
+  },
   props: {
     otherData: [Array, Boolean]
   },
@@ -152,6 +158,7 @@ export default {
     resolve_client_info_editor (state) {
       switch (state) {
         case 'edit':
+          this.$parent.$parent.dontLeave = true
           this.editingClientNotes = true
           this.tempEditorStore = this.$parent.$parent.client_details.notes
           break
@@ -160,6 +167,7 @@ export default {
           this.$parent.$parent.update_client()
           break
         case 'cancel':
+          this.$parent.$parent.dontLeave = false
           this.editingClientNotes = false
           this.$parent.$parent.client_details.notes = this.tempEditorStore
           break

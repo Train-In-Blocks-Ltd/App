@@ -145,14 +145,14 @@
               <div :key="check" class="full_width_bar">
                 <button
                   v-if="session.checked === 1 && !feedbackId"
-                  class="button--state done"
+                  class="button--state green_button"
                   @click="complete(plan.id, session.id)"
                 >
                   Completed
                 </button>
                 <button
                   v-if="session.checked === 0 && !feedbackId"
-                  class="button--state to_do"
+                  class="button--state red_button"
                   @click="complete(plan.id, session.id)"
                 >
                   Click to complete
@@ -199,6 +199,12 @@ export default {
     WeekCalendar,
     MonthCalendar,
     RichEditor
+  },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.dontLeave = false
+      next()
+    }
   },
   data () {
     return {
@@ -247,6 +253,7 @@ export default {
       })
       switch (state) {
         case 'edit':
+          this.$parent.dontLeave = true
           this.feedbackId = id
           this.forceStop += 1
           this.tempEditorStore = session.feedback
@@ -256,6 +263,7 @@ export default {
           this.$parent.update_session(plan.id, session.id)
           break
         case 'cancel':
+          this.$parent.dontLeave = false
           this.feedbackId = null
           session.feedback = this.tempEditorStore
           break

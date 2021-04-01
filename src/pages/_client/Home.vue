@@ -6,18 +6,18 @@
   }
   .client_email_bar {
     display: flex;
-    margin-top: 1rem
+    margin: auto 0
   }
   .client_email {
     margin-left: .6rem
   }
-  .client_info__more-details {
+  .client_info__more_details {
     display: grid;
     grid-gap: .6rem
   }
-  .button--verify {
-    margin-bottom: 1rem;
-    width: fit-content
+  .client_info__options {
+    display: flex;
+    justify-content: space-between
   }
 
   /* Floating Nav */
@@ -87,6 +87,13 @@
       width: 90vw
     }
   }
+  @media (max-width: 576px) {
+    .client_info__options {
+      display: grid;
+      grid-gap: .4rem;
+      margin-top: 1rem
+    }
+  }
 </style>
 
 <template>
@@ -146,7 +153,7 @@
           :disabled="$parent.silent_loading"
           @blur="$parent.update_client()"
         >
-        <div class="client_info__more-details">
+        <div class="client_info__more_details">
           <input
             id="phone"
             v-model="$parent.client_details.number"
@@ -162,33 +169,27 @@
             :disabled="$parent.silent_loading"
             @blur="$parent.update_client()"
           >
-          <div class="client_email_bar">
-            <inline-svg :src="require('../../assets/svg/email.svg')" />
-            <p class="client_email">
-              {{ $parent.client_details.email }}
-            </p>
-          </div>
-          <div>
+          <div class="client_info__options">
+            <div class="client_email_bar">
+              <inline-svg :src="require('../../assets/svg/email.svg')" />
+              <p class="client_email">
+                {{ $parent.client_details.email }}
+              </p>
+            </div>
             <button
+              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
+              class="button--verify fadeIn"
+              @click="$parent.client_details.notifications = $parent.client_details.notifications === 1 ? 0 : 1, $parent.update_client()"
+            >
+              {{ $parent.client_details.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
+            </button>
+            <button
+              v-else
               class="button--verify button"
               :disabled="clientAlready"
               @click="create_client()"
             >
               {{ clientAlreadyMsg }}
-            </button>
-            <button
-              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error' && $parent.client_details.notifications === 1"
-              class="button--verify fadeIn"
-              @click="$parent.client_details.notifications = 0, $parent.update_client()"
-            >
-              Disable email notifications
-            </button>
-            <button
-              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error' && $parent.client_details.notifications === 0"
-              class="button--verify fadeIn"
-              @click="$parent.client_details.notifications = 1, $parent.update_client()"
-            >
-              Enable email notifications
             </button>
           </div>
         </div>
@@ -380,9 +381,7 @@ export default {
         this.$parent.resolve_error(e)
       }
       await this.check_client()
-      this.$parent.responsePersist = true
-      this.$parent.responseHeader = 'An activation email was sent to your client'
-      this.$parent.responseDesc = 'Please ask them to check their inbox and spam mail'
+      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true)
       this.$parent.end_loading()
     },
 

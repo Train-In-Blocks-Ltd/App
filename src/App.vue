@@ -316,8 +316,11 @@
     cursor: not-allowed;
     opacity: .6
   }
-  .delete:hover,
-  .cancel:hover {
+  .green_button {
+    color: white;
+    background-color: green
+  }
+  .red_button {
     color: white;
     background-color: #B80000
   }
@@ -328,30 +331,6 @@
   }
   .session_header.client-side {
     height: 3.2rem
-  }
-  .bottom_bar {
-    display: flex;
-    padding: .6rem 0;
-    margin-top: 1rem;
-    z-index: 1
-  }
-  .bottom_bar button {
-    margin-right: .4rem
-  }
-  .done {
-    background-color: green
-  }
-  .to_do {
-    background-color: #B80000
-  }
-  .done,
-  .to_do {
-    color: white;
-    margin: auto 0
-  }
-  .done:hover,
-  .to_do:hover {
-    opacity: .6
   }
 
   /* Inputs */
@@ -570,67 +549,9 @@
     margin: 0
   }
 
-  /* Links */
+  /* Plan links container */
   .client_link_wrapper {
     text-decoration: none
-  }
-  .client_link {
-    display: grid;
-    padding: 2rem;
-    grid-gap: 1rem;
-    font-weight: 400;
-    color: var(--base);
-    text-decoration: none;
-    box-shadow: var(--low_shadow);
-    background-color: var(--fore);
-    border-radius: 10px;
-    transition: var(--transition_standard)
-  }
-  .client_link:hover {
-    box-shadow: var(--high_shadow)
-  }
-  .client_link__notes__content,
-  .preview_html {
-    font-size: .8rem;
-    margin-top: .4rem
-  }
-  .client_link__notes__content *,
-  .preview_html *,
-  .plan-name {
-    color: var(--base);
-    transition: var(--transition_standard)
-  }
-  .client_link__notes__content p,
-  .preview_html p {
-    margin: .4rem 0
-  }
-  .client_name,
-  .plan-name {
-    margin: 0
-  }
-  .client_link__notes__content h1,
-  .client_link__notes__content h2,
-  .preview_html h1,
-  .preview_html h2 {
-    font-size: 1rem
-  }
-  .client_link__notes__content img,
-  .client_link__notes__content iframe,
-  .preview_html img,
-  .preview_html iframe {
-    margin: 1rem 0;
-    max-width: 500px;
-    border-radius: 3px;
-    opacity: .6;
-    transition: var(--transition_standard)
-  }
-  .client_link .client_link__notes__content img,
-  .client_link .client_link__notes__content iframe,
-  .client_link .client_link__notes__content a,
-  .preview_html img,
-  .preview_html iframe,
-  .preview_html a {
-    display: none
   }
 
   /* Client-side */
@@ -677,23 +598,11 @@
     .sidebar:hover main {
       margin-left: 12rem
     }
-    .client_link.archived {
-      display: flex;
-      justify-content: space-between
-    }
   }
   @media (max-width: 768px) {
     /* Containers */
     .center_wrapped {
       width: 300px
-    }
-    .client_link:hover,
-    .plan_link:hover {
-      box-shadow: var(--low_shadow)
-    }
-    .client_link:active,
-    .plan_link:active {
-      transform: scale(.99)
     }
     .tab_overlay_content {
       padding: 4rem 10vw 10rem 10vw
@@ -751,9 +660,6 @@
     ::-webkit-scrollbar {
       width: 0;
       background-color: transparent
-    }
-    p, li {
-      font-size: .8rem
     }
     h1, .text--large {
       font-size: 2rem
@@ -820,11 +726,13 @@
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up
-        v-if="responseHeader !== ''"
-        :header="responseHeader"
-        :desc="responseDesc"
-      />
+      <response-pop-up ref="response_pop_up" />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <confirm-pop-up ref="confirm_pop_up" />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <global-overlay ref="overlay" />
     </transition>
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
@@ -835,7 +743,7 @@
           </p>
           <br>
           <p>{{ errorMsg }}</p><br>
-          <button class="cancel" @click="$modal.hide('error'), will_body_scroll(true)">
+          <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
             Close
           </button>
         </div>
@@ -986,7 +894,7 @@ export default {
       // CLIENT
 
       clients: null,
-      no_clients: false,
+      noClients: false,
       client_details: null,
 
       // ARCHIVE
@@ -1011,9 +919,6 @@ export default {
       // SYSTEM
 
       policyVersion: '1.1',
-      responsePersist: false,
-      responseHeader: '',
-      responseDesc: '',
       versionName: 'Pegasus',
       versionBuild: '3.2',
       newBuild: false,
@@ -1031,17 +936,8 @@ export default {
     }
   },
   watch: {
-    '$route' (to, from) {
+    $route (to, from) {
       this.is_authenticated()
-    },
-    responseHeader () {
-      if (!this.responsePersist) {
-        setTimeout(() => {
-          this.responseHeader = ''
-          this.responseDesc = ''
-          this.responsePersist = false
-        }, 8000)
-      }
     }
   },
   async created () {
@@ -1053,7 +949,12 @@ export default {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('/js/traininblocks-sw.js')
     }
-    window.addEventListener('beforeunload', this.confirmLeave)
+    window.addEventListener('beforeunload', (e) => {
+      if (this.dontLeave) {
+        e.preventDefault()
+        e.returnValue = 'Your changes might not be saved, are you sure you want to leave?'
+      }
+    })
     const self = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -1081,7 +982,6 @@ export default {
     }
   },
   methods: {
-
     async helper (mode, gaItem, gaAction) {
       switch (mode) {
         case 'client_store':
@@ -1221,16 +1121,6 @@ export default {
       this.silent_loading = false
     },
 
-    // OTHER SHARED METHODS
-
-    confirmLeave (e) {
-      if (this.dontLeave) {
-        const msg = 'Your changes might not be saved, are you sure you want to leave?'
-        e.returnValue = msg
-        return msg
-      }
-    },
-
     // CLIENT
 
     async clients_to_vue () {
@@ -1242,14 +1132,29 @@ export default {
         const textB = b.name.toUpperCase()
         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
       })
+      /*
+      if (!this.noClients && this.isTrainer) {
+        for (const client of this.clients) {
+          const planResponse = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
+          client.plans = planResponse.data.length === 0 ? false : planResponse.data
+          if (client.plans !== false) {
+            for (const plan of client.plans) {
+              const sessionsResponse = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
+              plan.sessions = sessionsResponse.data.length === 0 ? false : sessionsResponse.data
+            }
+          }
+        }
+      }
+      localStorage.setItem('clients', JSON.stringify(this.clients))
+      */
     },
     async clients_f () {
       try {
         const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
-        this.no_clients = response.data.length === 0
+        this.noClients = response.data.length === 0
         localStorage.setItem('clients', JSON.stringify(response.data))
       } catch (e) {
-        this.no_clients = false
+        this.noClients = false
         this.resolve_error(e)
       }
     },
@@ -1282,8 +1187,7 @@ export default {
         // Get the client information again as we have just updated the client
         await this.clients_f()
         await this.clients_to_vue()
-        this.responseHeader = 'Client updated'
-        this.responseDesc = 'All your changes have been saved'
+        this.$refs.response_pop_up.show('Client updated', 'All your changes have been saved')
         this.end_loading()
       } catch (e) {
         this.resolve_error(e)
@@ -1314,12 +1218,12 @@ export default {
       }
     },
     async client_archive (id, index) {
-      if (confirm('Are you sure you want to archive this client?')) {
+      if (await this.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
         this.dontLeave = true
         const client = this.clients.find(client => client.client_id === id)
         const email = client.email
         this.clients.splice(index, 1)
-        this.no_clients = this.clients.length === 0
+        this.noClients = this.clients.length === 0
         try {
           this.response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`).data
           const result = await this.$axios.post('/.netlify/functions/okta',
@@ -1346,8 +1250,7 @@ export default {
             )
           }
           this.helper('client_store', 'Client', 'archive')
-          this.responseHeader = 'Client archived'
-          this.responseDesc = 'Their data will be kept safe on the archive page'
+          this.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
           this.$router.push('/')
         } catch (e) {
           this.resolve_error(e)
@@ -1483,8 +1386,7 @@ export default {
             )
           }
         }
-        this.responseHeader = 'Session updated'
-        this.responseDesc = 'Your changes have been saved'
+        this.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
       } catch (e) {
         this.resolve_error(e)
       }

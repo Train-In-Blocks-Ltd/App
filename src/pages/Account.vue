@@ -134,7 +134,7 @@
               <button class="right_margin" type="submit" :disabled="password.check === null || password.new !== password.match">
                 Change your password
               </button>
-              <button class="cancel" @click.prevent="$modal.hide('reset-password'), will_body_scroll(true)">
+              <button class="red_button" @click.prevent="$modal.hide('reset-password'), will_body_scroll(true)">
                 Close
               </button>
             </div>
@@ -165,7 +165,11 @@
         </div>
       </div>
       <div class="theme">
-        <label for="theme" class="text--small">Theme:</label>
+        <label for="theme" class="text--small">
+          <b>
+            Theme
+          </b>
+        </label>
         <select
           v-model="$parent.claims.theme"
           name="theme"
@@ -213,6 +217,12 @@
 import { passChangeEmail, passChangeEmailText } from '../components/email'
 
 export default {
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.dontLeave = false
+      next()
+    }
+  },
   data () {
     return {
       password: {
@@ -280,8 +290,7 @@ export default {
             html: passChangeEmail()
           }
         )
-        this.$parent.responseHeader = 'Password changed'
-        this.$parent.responseDesc = 'Remember to not share it and keep it safe'
+        this.$parent.$refs.response_pop_up.show('Password changed', 'Remember to not share it and keep it safe')
         this.$parent.end_loading()
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct'

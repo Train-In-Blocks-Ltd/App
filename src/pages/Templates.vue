@@ -21,7 +21,7 @@
     display: flex;
     justify-content: space-between
   }
-  .header-options {
+  .header_options {
     display: flex;
     flex-direction: column;
     align-items: center
@@ -124,7 +124,7 @@
             name="template-name"
             pattern="[^\/]"
           ><br>
-          <div class="header-options">
+          <div class="header_options">
             <checkbox :item-id="template.id" :type="'v1'" aria-label="Select this template" />
             <inline-svg
               v-show="!isEditingTemplate"
@@ -164,6 +164,12 @@ export default {
     RichEditor,
     Checkbox,
     Multiselect
+  },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.dontLeave = false
+      next()
+    }
   },
   data () {
     return {
@@ -207,16 +213,13 @@ export default {
     helper (type) {
       switch (type) {
         case 'new':
-          this.$parent.responseHeader = 'New template created'
-          this.$parent.responseDesc = 'Edit and use it in a client\'s plan'
+          this.$parent.$refs.response_pop_up.show('New template created', 'Edit and use it in a client\'s plan')
           break
         case 'update':
-          this.$parent.responseHeader = 'Updated template'
-          this.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$refs.response_pop_up.show('Updated template', 'Your changes have been saved')
           break
         case 'delete':
-          this.$parent.responseHeader = this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template'
-          this.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$refs.response_pop_up.show(this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template', 'Your changes have been saved')
           break
       }
     },
@@ -234,6 +237,7 @@ export default {
       const template = this.$parent.templates.find(template => template.id === id)
       switch (state) {
         case 'edit':
+          this.$parent.dontLeave = true
           this.isEditingTemplate = true
           this.editTemplate = id
           this.forceStop += 1
@@ -245,6 +249,7 @@ export default {
           this.update_template(id)
           break
         case 'cancel':
+          this.$parent.dontLeave = false
           this.isEditingTemplate = false
           this.editTemplate = null
           template.template = this.tempEditorStore
@@ -294,9 +299,9 @@ export default {
       })
       this.selectedTemplates = []
     },
-    delete_multi_templates () {
+    async delete_multi_templates () {
       if (this.selectedTemplates.length !== 0) {
-        if (confirm('Are you sure you want to delete all the selected templates?')) {
+        if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete all the selected templates?', 'We will remove these templates from our database and it won\'t be recoverable.')) {
           this.selectedTemplates.forEach((templateId) => {
             this.delete_template(templateId)
           })

@@ -56,7 +56,7 @@ textarea {
         </div>
       </div>
       <button
-        class="cancel"
+        class="red_button"
         @click="$parent.$modal.hide('toolkit'), will_body_scroll(true)"
       >
         Close
