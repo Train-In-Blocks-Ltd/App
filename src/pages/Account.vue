@@ -270,7 +270,6 @@ export default {
     async change_password () {
       try {
         this.$parent.dontLeave = true
-        this.$parent.dontLeave = true
         this.password.error = ''
         await this.$axios.post('/.netlify/functions/okta',
           {

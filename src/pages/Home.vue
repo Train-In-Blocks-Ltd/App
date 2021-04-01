@@ -23,7 +23,7 @@
     <div v-if="isWhatsNewOpen" class="tab_overlay_content allow_y_overflow fadeIn delay fill_mode_both">
       <whats-new />
     </div>
-    <div v-if="isInstallOpen" class="tab_overlay_content icon_open_middle fadeIn delay fill_mode_both">
+    <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <install-app />
     </div>
     <div v-if="!isNewClientOpen" class="tab_option tab_option_large" aria-label="New Client" @click="isNewClientOpen = true, will_body_scroll(false)">

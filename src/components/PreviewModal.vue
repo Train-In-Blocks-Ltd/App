@@ -33,7 +33,6 @@ h2.title {
   margin-bottom: 2rem
 }
 button.red_button {
-  width: 30%;
   margin: 2rem 0
 }
 

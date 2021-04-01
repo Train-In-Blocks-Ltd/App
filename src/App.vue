@@ -1295,7 +1295,6 @@ export default {
     async get_portfolio (force) {
       try {
         if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
-          this.dontLeave = true
           let response
           if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
             response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
@@ -1350,7 +1349,6 @@ export default {
       }
     },
     async update_session (pid, sid, feedbackNotesUpdate) {
-      this.dontLeave = true
       const plan = this.clientUser.plans.find(plan => plan.id === pid)
       const session = plan.sessions.find(session => session.id === sid)
       const sessionId = session.id
