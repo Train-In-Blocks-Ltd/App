@@ -246,6 +246,7 @@ export default {
 
     async manage_subscription () {
       try {
+        this.$parent.dontLeave = true
         const response = await this.$axios.post('/.netlify/functions/create-manage-link',
           {
             id: this.$parent.claims.stripeId
@@ -268,6 +269,7 @@ export default {
     },
     async change_password () {
       try {
+        this.$parent.dontLeave = true
         this.$parent.dontLeave = true
         this.password.error = ''
         await this.$axios.post('/.netlify/functions/okta',
