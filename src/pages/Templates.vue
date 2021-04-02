@@ -61,6 +61,9 @@
     }
   }
   @media (max-width: 576px) {
+    .wrapper--template {
+      padding: .8rem
+    }
     input.template-name {
       width: 100%
     }

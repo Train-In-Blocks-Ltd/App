@@ -341,6 +341,9 @@
     .calendar, .wrapper-plan {
       margin: 4rem 0
     }
+    .wrapper--session, #plan_notes {
+      padding: .8rem
+    }
 
     /* Session */
     input.session-name {

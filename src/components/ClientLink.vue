@@ -94,6 +94,11 @@
       transform: scale(.99)
     }
   }
+  @media (max-width: 576px) {
+    .client_link {
+      padding: .8rem
+    }
+  }
 </style>
 
 <template>

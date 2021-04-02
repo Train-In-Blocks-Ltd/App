@@ -16,6 +16,13 @@
   hr {
     margin: 2rem 0
   }
+
+  /* Responsive */
+  @media (max-width: 576px) {
+    .wrapper--session {
+      padding: .8rem
+    }
+  }
 </style>
 
 <template>

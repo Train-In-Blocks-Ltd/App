@@ -36,6 +36,12 @@
   .wrapper_card_skeleton {
     margin: 4rem 0
   }
+
+  @media (max-width: 576px) {
+    .wrapper_card {
+      padding: .8rem
+    }
+  }
 </style>
 
 <template>

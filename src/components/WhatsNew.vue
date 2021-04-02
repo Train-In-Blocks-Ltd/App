@@ -14,6 +14,13 @@ img {
   padding: 2rem;
   box-shadow: var(--low_shadow)
 }
+
+/* Responsive */
+@media (max-width: 576px) {
+  button {
+    width: 100%
+  }
+}
 </style>
 
 <template>

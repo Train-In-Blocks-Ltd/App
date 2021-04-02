@@ -55,6 +55,9 @@
     }
   }
   @media (max-width: 567px) {
+    #client_notes {
+      padding: .8rem
+    }
     .periodise_grid {
       grid-template-columns: 1fr
     }

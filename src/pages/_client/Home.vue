@@ -90,7 +90,7 @@
   @media (max-width: 576px) {
     .client_info__options {
       display: grid;
-      grid-gap: .4rem;
+      grid-gap: 1rem;
       margin-top: 1rem
     }
   }
