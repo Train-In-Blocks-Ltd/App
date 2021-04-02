@@ -591,13 +591,13 @@ export default {
         formatter.setAttribute('aria-hidden', 'false')
         formatter.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          `left: ${x - 32}px; top: ${this.isMobile ? y : y + 22}px`
         )
       } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
         linker.setAttribute('aria-hidden', 'false')
         linker.setAttribute(
           'style',
-          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          `left: ${x - 32}px; top: ${this.isMobile ? y : y + 22}px`
         )
         this.linkAddress = sel.focusNode.parentNode.attributes.href.value
       } else if (containing && event.target.nodeName === 'IMG') {
