@@ -20,6 +20,9 @@ img {
   button {
     width: 100%
   }
+  .update_item {
+    padding: .8rem
+  }
 }
 </style>
 

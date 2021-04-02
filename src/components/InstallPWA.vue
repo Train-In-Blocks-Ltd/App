@@ -1,24 +1,29 @@
 <style scoped>
-  .cancel {
-    z-index: 99;
-    display: block
+.cancel {
+  z-index: 99;
+  display: block
+}
+.install_bottom_bar {
+  margin-top: 2rem
+}
+.instructions {
+  margin-top: 2rem
+}
+.img_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+  margin-top: 2rem
+}
+.img_container img {
+  border-radius: 10px;
+  max-width: 100%
+}
+@media (max-width: 576px) {
+  button {
+    width: 100%
   }
-  .install_bottom_bar {
-    margin-top: 2rem
-  }
-  .instructions {
-    margin-top: 2rem
-  }
-  .img_container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 1rem;
-    margin-top: 2rem
-  }
-  .img_container img {
-    border-radius: 10px;
-    max-width: 100%
-  }
+}
 </style>
 
 <template>

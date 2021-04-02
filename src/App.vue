@@ -568,7 +568,9 @@
   @media (max-width: 992px) {
     input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):hover,
     button:not(:disabled):hover,
-    .button:hover {
+    .button:hover,
+    select:hover,
+    textarea:hover {
       opacity: 1
     }
     #home,
@@ -583,6 +585,21 @@
     }
     .cursor:hover {
       opacity: 1
+    }
+
+    /* Tab options */
+    .tab_option_small:hover {
+      width: 3rem
+    }
+    .tab_option_large:hover {
+      width: 3rem
+    }
+    .tab_option:hover svg,
+    .tab_option:hover .notify_badge {
+      display: block
+    }
+    .tab_option:hover .text {
+      display: none
     }
   }
   @media (min-width: 769px) {
