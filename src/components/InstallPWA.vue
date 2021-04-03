@@ -23,6 +23,10 @@
   button {
     width: 100%
   }
+  .install_bottom_bar {
+    display: grid;
+    grid-gap: 1rem
+  }
 }
 </style>
 

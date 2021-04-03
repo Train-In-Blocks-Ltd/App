@@ -598,6 +598,14 @@
     .wrapper--calendar {
       margin: 2rem 0
     }
+    .form_button_bar {
+      display: grid;
+      grid-gap: 1rem;
+      margin-top: 2rem
+    }
+    .form_grid button {
+      width: 100%
+    }
   }
 
   /* REDUCED MOTION */

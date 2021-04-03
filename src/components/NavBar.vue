@@ -11,6 +11,7 @@
   position: fixed;
   background-color: var(--fore);
   box-shadow: var(--low_shadow);
+  border-radius: 10px 10px 0 0;
   transition: width .6s cubic-bezier(.165, .84, .44, 1)
 }
 .nav_item {
@@ -58,7 +59,8 @@
     top: 0;
     height: 100vh;
     min-height: 100%;
-    width: calc(38px + 2rem)
+    width: calc(38px + 2rem);
+    border-radius: 0
   }
   #sidebar:hover {
     width: 12rem
@@ -127,8 +129,9 @@
       </router-link>
       <a
         v-else-if="nav.forUser.includes(claims.user_type)"
-        :to="nav.link"
+        :href="nav.link"
         :title="nav.name"
+        target="_blank"
       >
         <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
         <p class="nav_item__text">
