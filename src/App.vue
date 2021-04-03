@@ -419,54 +419,6 @@
     transform: scale(.9)
   }
 
-  /* Navigation */
-  .sidebar {
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem 1rem;
-    position: fixed;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    transition: width .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .account_nav_item {
-    display: flex;
-    opacity: .6;
-    cursor: pointer;
-    font-size: 1rem;
-    margin: .8rem 0;
-    transition: var(--transition_standard)
-  }
-  .account_nav_item:hover,
-  .sidebar:hover .account_nav_item--text,
-  .account_nav_item a.router-link-exact-active {
-    opacity: 1
-  }
-  .account_nav_item:last-of-type {
-    padding-bottom: 0
-  }
-  .account_nav_item a {
-    display: flex;
-    text-decoration: none
-  }
-  .account_nav_item--text {
-    user-select: none;
-    color: var(--base);
-    text-decoration: none;
-    position: relative;
-    border: 0;
-    opacity: 0;
-    transition: var(--transition_standard)
-  }
-  .account_nav_item--icon {
-    margin: 0 .4rem 0 0;
-    height: 1.4rem;
-    vertical-align: bottom;
-    transition: var(--transition_standard)
-  }
-
   /* Tab options */
   .tab_option {
     user-select: none;
@@ -602,20 +554,6 @@
       display: none
     }
   }
-  @media (min-width: 769px) {
-    .sidebar {
-      top: 0;
-      height: 100vh;
-      min-height: 100%;
-      width: calc(38px + 2rem)
-    }
-    .sidebar:hover {
-      width: 12rem
-    }
-    .sidebar:hover main {
-      margin-left: 12rem
-    }
-  }
   @media (max-width: 768px) {
     /* Containers */
     .center_wrapped {
@@ -623,22 +561,6 @@
     }
     .tab_overlay_content {
       padding: 4rem 10vw 10rem 10vw
-    }
-
-    /* Sidebar */
-    .logo {
-      display: none
-    }
-    .sidebar {
-      bottom: 0;
-      width: 100vw;
-      flex-direction: row;
-      padding: 0;
-      justify-content: space-between;
-      border-right: none
-    }
-    .sidebar:hover .account_nav_item--text {
-      display: none
     }
 
     /* Container */
@@ -654,21 +576,6 @@
     #client-plan,
     #portfolio {
       padding: 2rem 5vw 5rem 5vw
-    }
-    .account_nav_item {
-      width: 100%;
-      margin: 0;
-      padding: 0
-    }
-    .account_nav_item a {
-      width: 100%;
-      height: 4rem
-    }
-    .account_nav_item--text {
-      display: none
-    }
-    .account_nav_item--icon {
-      margin: .8rem auto
     }
   }
 
@@ -711,10 +618,10 @@
     .icon_open--new_plan {
       transition: none
     }
-    .sidebar {
+    #sidebar {
       width: 12rem
     }
-    .account_nav_item--text {
+    .nav_item__text {
       opacity: 1
     }
     .fadeIn, .fadeOut {
@@ -769,115 +676,7 @@
     <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <policy :type="claims.user_type" />
     </modal>
-    <nav v-if="authenticated && claims" class="sidebar">
-      <div class="logo">
-        <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo_link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
-        </router-link>
-        <router-link v-if="claims.user_type === 'Client'" to="/clientUser" class="logo_link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
-        </router-link>
-      </div> <!-- .logo -->
-      <div class="account_nav_item">
-        <router-link
-          v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-          to="/"
-          title="Home"
-        >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Home" />
-          <p class="account_nav_item--text">
-            Home
-          </p>
-        </router-link>
-        <router-link
-          v-else-if="claims.user_type === 'Client'"
-          to="/clientUser"
-          title="Home"
-        >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Home" />
-          <p class="account_nav_item--text">
-            Home
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link
-          to="/clientUser"
-          title="Client Home"
-        >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Client Home" />
-          <p class="account_nav_item--text">
-            Client
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <a href="https://traininblocks.com/help" target="_blank" rel="noopener" title="Help">
-          <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav_item--icon fadeIn" aria-label="Help" />
-          <p class="account_nav_item--text">
-            Help
-          </p>
-        </a>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/templates" title="Templates">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav_item--icon fadeIn" aria-label="Templates" />
-          <p class="account_nav_item--text">
-            Templates
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/portfolio" title="Portfolio">
-          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav_item--icon fadeIn" aria-label="Portfolio" />
-          <p class="account_nav_item--text">
-            Portfolio
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/archive" title="Archive">
-          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav_item--icon fadeIn" aria-label="Archive" />
-          <p class="account_nav_item--text">
-            Archive
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/account" title="Account">
-          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav_item--icon fadeIn" aria-label="Account" />
-          <p class="account_nav_item--text">
-            Account
-          </p>
-        </router-link>
-      </div>
-      <div class="account_nav_item">
-        <router-link to="/logout" title="Logout" @click.native="logout()">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav_item--icon fadeIn" aria-label="Logout" />
-          <p class="account_nav_item--text">
-            Logout
-          </p>
-        </router-link>
-      </div>
-    </nav> <!-- .sidebar -->
+    <nav-bar :authenticated="authenticated" :claims="claims" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
         <router-view :key="$route.fullPath" />
@@ -889,10 +688,12 @@
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
+const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
 const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
 
 export default {
   components: {
+    NavBar,
     Policy
   },
   data () {
