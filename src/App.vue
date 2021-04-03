@@ -1,6 +1,4 @@
 <style>
-  @import './assets/styles/icon-anim';
-
   /* Global */
   * {
     box-sizing: border-box
@@ -851,20 +849,6 @@ export default {
 
     async is_authenticated () {
       this.authenticated = await this.$auth.isAuthenticated()
-    },
-    async logout () {
-      await this.$auth.signOut()
-      await this.is_authenticated()
-      localStorage.clear()
-      localStorage.setItem('versionBuild', this.versionBuild)
-      const cookies = document.cookie.split(';')
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i]
-        const eqPos = cookie.indexOf('=')
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      }
-      this.$ga.event('Auth', 'logout')
     },
     async setup () {
       if (localStorage.getItem('claims')) {

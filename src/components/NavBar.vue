@@ -1,4 +1,7 @@
 <style scoped>
+@import '../assets/styles/icon-anim';
+
+/* Nav bar */
 #sidebar {
   z-index: 10;
   display: flex;
@@ -17,6 +20,9 @@
   font-size: 1rem;
   margin: .8rem 0;
   transition: var(--transition_standard)
+}
+.nav_item:empty {
+  display: none
 }
 .nav_item:hover,
 #sidebar:hover .nav_item__text,
@@ -104,104 +110,31 @@
         <inline-svg :src="require('../assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
       </router-link>
     </div> <!-- .logo -->
-    <div class="nav_item">
-      <router-link
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        to="/"
-        title="Home"
-      >
-        <inline-svg :src="require('../assets/svg/home.svg')" class="nav_item__icon fadeIn" aria-label="Home" />
-        <p class="nav_item__text">
-          Home
-        </p>
-      </router-link>
-      <router-link
-        v-else-if="claims.user_type === 'Client'"
-        to="/clientUser"
-        title="Home"
-      >
-        <inline-svg :src="require('../assets/svg/home.svg')" class="nav_item__icon fadeIn" aria-label="Home" />
-        <p class="nav_item__text">
-          Home
-        </p>
-      </router-link>
-    </div>
     <div
-      v-if="claims.user_type === 'Admin'"
+      v-for="(nav, navIndex) in navLinks"
+      :key="`nav_${navIndex}`"
       class="nav_item"
     >
       <router-link
-        to="/clientUser"
-        title="Client Home"
+        v-if="nav.forUser.includes(claims.user_type) && nav.internal"
+        :to="nav.link"
+        :title="nav.name"
       >
-        <inline-svg :src="require('../assets/svg/home.svg')" class="nav_item__icon fadeIn" aria-label="Client Home" />
+        <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
         <p class="nav_item__text">
-          Client
+          {{ nav.name }}
         </p>
       </router-link>
-    </div>
-    <div
-      v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-      class="nav_item"
-    >
-      <a href="https://traininblocks.com/help" target="_blank" rel="noopener" title="Help">
-        <inline-svg :src="require('../assets/svg/help-desk.svg')" class="nav_item__icon fadeIn" aria-label="Help" />
+      <a
+        v-else-if="nav.forUser.includes(claims.user_type)"
+        :to="nav.link"
+        :title="nav.name"
+      >
+        <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
         <p class="nav_item__text">
-          Help
+          {{ nav.name }}
         </p>
       </a>
-    </div>
-    <div
-      v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-      class="nav_item"
-    >
-      <router-link to="/templates" title="Templates">
-        <inline-svg :src="require('../assets/svg/template.svg')" class="nav_item__icon fadeIn" aria-label="Templates" />
-        <p class="nav_item__text">
-          Templates
-        </p>
-      </router-link>
-    </div>
-    <div
-      v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-      class="nav_item"
-    >
-      <router-link to="/portfolio" title="Portfolio">
-        <inline-svg :src="require('../assets/svg/portfolio.svg')" class="nav_item__icon fadeIn" aria-label="Portfolio" />
-        <p class="nav_item__text">
-          Portfolio
-        </p>
-      </router-link>
-    </div>
-    <div
-      v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-      class="nav_item"
-    >
-      <router-link to="/archive" title="Archive">
-        <inline-svg :src="require('../assets/svg/archive.svg')" class="nav_item__icon fadeIn" aria-label="Archive" />
-        <p class="nav_item__text">
-          Archive
-        </p>
-      </router-link>
-    </div>
-    <div
-      v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-      class="nav_item"
-    >
-      <router-link to="/account" title="Account">
-        <inline-svg :src="require('../assets/svg/account.svg')" class="nav_item__icon fadeIn" aria-label="Account" />
-        <p class="nav_item__text">
-          Account
-        </p>
-      </router-link>
-    </div>
-    <div class="nav_item">
-      <router-link to="/logout" title="Logout" @click.native="logout()">
-        <inline-svg :src="require('../assets/svg/logout.svg')" class="nav_item__icon fadeIn" aria-label="Logout" />
-        <p class="nav_item__text">
-          Logout
-        </p>
-      </router-link>
     </div>
   </nav> <!-- #sidebar -->
 </template>
@@ -210,7 +143,39 @@
 export default {
   props: {
     authenticated: Boolean,
-    claims: Array
+    claims: Object
+  },
+  data () {
+    return {
+      navLinks: [
+        { name: 'Home', link: '/', svg: 'home.svg', forUser: ['Admin', 'Trainer'], internal: true },
+        { name: 'Home', link: '/clientUser', svg: 'home.svg', forUser: ['Client'], internal: true },
+        { name: 'Client', link: '/clientUser', svg: 'home.svg', forUser: ['Admin'], internal: true },
+        { name: 'Help', link: 'https://traininblocks.com/help/', svg: 'help-desk.svg', forUser: ['Admin', 'Trainer'], internal: false },
+        { name: 'Templates', link: '/templates', svg: 'templates.svg', forUser: ['Admin', 'Trainer'], internal: true },
+        { name: 'Portfolio', link: '/portfolio', svg: 'portfolio.svg', forUser: ['Admin', 'Trainer'], internal: true },
+        { name: 'Archive', link: '/archive', svg: 'archive.svg', forUser: ['Admin', 'Trainer'], internal: true },
+        { name: 'Logout', link: '/logout', svg: 'logout.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true }
+      ]
+    }
+  },
+  methods: {
+
+    // Auth
+    async logout () {
+      await this.$parent.$auth.signOut()
+      await this.$parent.is_authenticated()
+      localStorage.clear()
+      localStorage.setItem('versionBuild', this.versionBuild)
+      const cookies = document.cookie.split(';')
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i]
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      }
+      this.$ga.event('Auth', 'logout')
+    }
   }
 }
 </script>
