@@ -15,6 +15,12 @@ textarea {
 .result {
   margin-top: 2rem
 }
+
+@media (max-width: 576px) {
+  button.red_button {
+    width: 100%
+  }
+}
 </style>
 
 <template>

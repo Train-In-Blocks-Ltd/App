@@ -1,7 +1,20 @@
 <style>
-.editorActive {
-  border: 2px solid var(--base_faint)
+/* Editor object */
+.editor_object {
+  display: grid;
+  padding: 2rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  transition: var(--transition_standard)
 }
+.editorActive {
+  /* stylelint-disable-next-line */
+  border: 2px solid var(--base_faint) !important
+}
+
+/* Editor */
 div#rich_editor, div#rich_show_content {
   outline: none;
   -moz-appearance: none;
@@ -44,10 +57,16 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
+
+/* Responsive */
+@media (max-width: 576px) {
+  .editor_object {
+    padding: .8rem
+  }
+}
 </style>
 
 <style scoped>
-
 /* Attr */
 [data-placeholder]:empty:before {
   content: attr(data-placeholder);
@@ -193,7 +212,7 @@ div#rich_editor {
       :show-media="true"
       @close="previewDesc = null, previewHTML = null"
     />
-    <div v-if="editState">
+    <div v-if="editState" class="fadeIn">
       <div
         id="style_bar"
       >
@@ -361,12 +380,13 @@ div#rich_editor {
     <div
       v-if="!editState && !test_empty_html(htmlInjection)"
       id="rich_show_content"
+      class="fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
       v-html="update_content(remove_brackets(htmlInjection))"
     />
     <p
       v-if="!editState && test_empty_html(htmlInjection)"
-      class="placeholder grey"
+      class="placeholder grey fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
     >
       {{ emptyPlaceholder }}

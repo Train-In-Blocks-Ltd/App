@@ -1,11 +1,7 @@
 <style>
   /* Client Notes */
   #client_notes {
-    margin: 4rem 0;
-    padding: 2rem;
-    border-radius: 10px;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow)
+    margin: 4rem 0
   }
   .a--client_notes {
     color: var(--base);
@@ -55,9 +51,6 @@
     }
   }
   @media (max-width: 567px) {
-    #client_notes {
-      padding: .8rem
-    }
     .periodise_grid {
       grid-template-columns: 1fr
     }
@@ -81,7 +74,7 @@
       </p>
     </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
-    <div id="client_notes" :class="{ editorActive: editingClientNotes }">
+    <div id="client_notes" :class="{ editorActive: editingClientNotes }" class="editor_object">
       <h2>
         Client Information
       </h2>

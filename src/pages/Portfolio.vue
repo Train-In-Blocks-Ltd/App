@@ -25,22 +25,9 @@
   }
 
   /* Card */
-  .wrapper_card {
-    display: grid;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    padding: 2rem;
-    border-radius: 10px;
+  .portfolio_editor,
+  .portfolio_editor_skeleton {
     margin: 4rem 0
-  }
-  .wrapper_card_skeleton {
-    margin: 4rem 0
-  }
-
-  @media (max-width: 576px) {
-    .wrapper_card {
-      padding: .8rem
-    }
   }
 </style>
 
@@ -77,7 +64,7 @@
     <div
       v-if="!$parent.loading"
       :class="{ editorActive: editingPortfolio }"
-      class="wrapper_card"
+      class="editor_object portfolio_editor"
     >
       <h2>
         Portfolio
@@ -88,7 +75,7 @@
         @on-edit-change="resolve_portfolio_editor"
       />
     </div>
-    <skeleton v-else :type="'session'" class="wrapper_card_skeleton" />
+    <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
     <!-- <products /> -->
   </div>
 </template>

@@ -6,7 +6,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vw;
+    height: 100vh;
     background-color: #00000060
   }
 
@@ -207,13 +207,6 @@
     font-size: .8rem;
     margin-left: 1rem
   }
-  .wrapper--session, #plan_notes {
-    display: grid;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    padding: 2rem;
-    border-radius: 10px
-  }
   .session_header {
     display: flex;
     justify-content: space-between
@@ -340,9 +333,6 @@
     }
     .calendar, .wrapper-plan {
       margin: 4rem 0
-    }
-    .wrapper--session, #plan_notes {
-      padding: .8rem
     }
 
     /* Session */
@@ -608,7 +598,7 @@
       :show-media="true"
       @close="previewDesc = null, previewHTML = null"
     />
-    <div v-show="editSession !== null" class="dark_overlay" />
+    <div v-show="editSession !== null" class="dark_overlay fadeIn" />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in $parent.$parent.client_details.plans"
@@ -678,7 +668,11 @@
         </div> <!-- top_grid -->
         <div class="plan_grid">
           <div class="calendar">
-            <div id="plan_notes" :class="{ editorActive: editingPlanNotes }">
+            <div
+              id="plan_notes"
+              :class="{ editorActive: editingPlanNotes }"
+              class="editor_object"
+            >
               <h2>
                 Plan Notes
               </h2>
@@ -816,7 +810,7 @@
                     v-show="session.week_id === currentWeek"
                     :id="'session-' + session.id"
                     :key="indexed"
-                    class="wrapper--session fadeIn"
+                    class="editor_object fadeIn"
                     :class="{ editorActive: session.id === editSession }"
                     :style="{ zIndex: session.id === editSession ? 2 : 0 }"
                   >
@@ -1356,6 +1350,7 @@ export default {
       this.update_plan()
       this.$modal.hide('copy')
       this.deselect_all()
+      this.scan()
       this.$ga.event('Session', 'progress')
       this.$parent.$parent.end_loading()
     },
@@ -1367,9 +1362,11 @@ export default {
         }
       })
       this.currentWeek = parseInt(this.moveTarget)
-      this.$ga.event('Session', 'move')
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session', 'Your changes have been saved')
       this.deselect_all()
+      this.scan()
+      this.$ga.event('Session', 'move')
+      this.$parent.$parent.end_loading()
     },
     async duplicate_plan (clientId) {
       const plan = this.helper('match_plan')
