@@ -991,6 +991,7 @@ export default {
             name: this.client_details.name,
             email: this.client_details.email,
             number: this.client_details.number,
+            notifications: this.client_details.notifications,
             notes: clientNotesUpdate === undefined ? this.client_details.notes : clientNotesUpdate
           }
         )
