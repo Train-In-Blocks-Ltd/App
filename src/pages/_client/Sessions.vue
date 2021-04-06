@@ -1,4 +1,15 @@
 <style scoped>
+  /* Other */
+  .dark_overlay {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000060
+  }
+
   /* Client */
   .client_info {
     display: grid;
@@ -50,8 +61,7 @@
   }
   .icon--expand {
     cursor: pointer;
-    vertical-align: middle;
-    margin-top: .8rem;
+    margin: .8rem 0 0 auto;
     transition: var(--transition_smooth)
   }
   .icon--expand.expanded {
@@ -197,21 +207,17 @@
     font-size: .8rem;
     margin-left: 1rem
   }
-  .wrapper--session, #plan_notes {
-    display: grid;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    padding: 2rem;
-    border-radius: 10px
-  }
   .session_header {
     display: flex;
     justify-content: space-between
   }
-  .header-options {
+  .header_options {
     display: flex;
     flex-direction: column;
     align-items: center
+  }
+  .header_options > .slot_1 {
+    display: flex
   }
   .container--sessions {
     display: grid;
@@ -227,12 +233,11 @@
   .wrapper--template-options {
     margin: 2rem 0
   }
-  .feedback_wrapper {
-    margin: 1rem 0;
-    padding: 0
-  }
-  .bottom_bar .button {
-    margin: 0
+  .feedback_button {
+    margin-right: 1rem;
+    padding: .2rem 1rem;
+    border-radius: 3px;
+    height: 20px
   }
   .newSession, .incomplete {
     color: #B80000
@@ -346,30 +351,6 @@
 
 <template>
   <div id="plan">
-    <modal name="info" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-      <div class="modal--info">
-        <div class="center_wrapped">
-          <p><b>The format for tracking data</b></p><br>
-          <p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Back Squat: 3x6 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p>
-          <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p>
-          <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br>
-          <p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br>
-          <p><b>Examples</b></p><br>
-          <p><i>[Weight: 50kg]</i></p>
-          <p><i>[Vertical Jump: 43.3cm]</i></p>
-          <p><i>[Body Fat (%): 12]</i></p>
-          <p><i>[sRPE (CR10): 8]</i></p>
-          <p><i>[sRPE (Borg): 16]</i></p><br>
-          <p>See <i>Help</i> for more information</p><br>
-          <button class="cancel" @click="$modal.hide('info'), will_body_scroll(true)">
-            Close
-          </button>
-        </div>
-      </div>
-    </modal>
     <modal
       name="move"
       height="100%"
@@ -401,7 +382,7 @@
           <button type="submit">
             Move
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
+          <button class="red_button" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -436,7 +417,7 @@
           <button type="submit">
             Shift
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
+          <button class="red_button" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -480,7 +461,7 @@
             min="1"
             required
           ><br><br>
-          <button type="button" class="cancel" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
+          <button type="button" class="red_button" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
             Cancel
           </button>
           <button v-if="!simpleCopy" type="submit">
@@ -525,10 +506,10 @@
                 >
               </div>
               <br>
-              <button v-if="copyAcrossView !== 0" class="cancel" type="button" @click.prevent="copyAcrossView -= 1">
+              <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
                 Back
               </button>
-              <button v-if="copyAcrossView === 0" class="cancel" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
+              <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
                 Back
               </button>
               <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">
@@ -547,7 +528,7 @@
           <p class="grey">
             Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
           </p><br>
-          <button class="cancel" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
+          <button class="red_button" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
             Back
           </button>
           <button type="submit">
@@ -586,7 +567,7 @@
           <button type="submit">
             Duplicate
           </button>
-          <button class="cancel" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
+          <button class="red_button" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
             Cancel
           </button>
         </div>
@@ -611,6 +592,13 @@
       :selected="selectedSessions"
       @response="resolve_session_multiselect"
     />
+    <preview-modal
+      :desc="previewDesc"
+      :html="previewHTML"
+      :show-media="true"
+      @close="previewDesc = null, previewHTML = null"
+    />
+    <div v-show="editSession !== null" class="dark_overlay fadeIn" />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in $parent.$parent.client_details.plans"
@@ -680,13 +668,20 @@
         </div> <!-- top_grid -->
         <div class="plan_grid">
           <div class="calendar">
-            <div id="plan_notes" :class="{ editorActive: editingPlanNotes }">
+            <div
+              id="plan_notes"
+              :class="{ editorActive: editingPlanNotes }"
+              class="editor_object"
+            >
               <h2>
                 Plan Notes
               </h2>
               <rich-editor
                 :html-injection.sync="plan.notes"
+                :item-id="'plan_notes'"
+                :editing="editSession"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
+                :force-stop="forceStop"
                 @on-edit-change="resolve_plan_info_editor"
               />
             </div>
@@ -762,7 +757,12 @@
                       class="change_week_color"
                       @click="editingWeekColor = !editingWeekColor"
                     />
-                    <inline-svg id="info" :src="require('../../assets/svg/info.svg')" title="Info" @click="$modal.show('info'), will_body_scroll(false)" />
+                    <inline-svg
+                      id="info"
+                      :src="require('../../assets/svg/info.svg')"
+                      title="Info"
+                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', will_body_scroll(false)"
+                    />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
@@ -810,8 +810,9 @@
                     v-show="session.week_id === currentWeek"
                     :id="'session-' + session.id"
                     :key="indexed"
-                    class="wrapper--session fadeIn"
+                    class="editor_object fadeIn"
                     :class="{ editorActive: session.id === editSession }"
+                    :style="{ zIndex: session.id === editSession ? 2 : 0 }"
                   >
                     <div class="session_header">
                       <div class="right_margin">
@@ -837,8 +838,21 @@
                           @blur="scan()"
                         >
                       </div>
-                      <div class="header-options">
-                        <checkbox :item-id="session.id" :type="'v1'" aria-label="Select this session" />
+                      <div class="header_options">
+                        <div class="slot_1">
+                          <button
+                            v-if="session.feedback !== '' && session.feedback !== null"
+                            class="feedback_button"
+                            @click="previewHTML = session.feedback, previewDesc = `${session.name} on ${session.date}`, will_body_scroll(false)"
+                          >
+                            Feedback
+                          </button>
+                          <checkbox
+                            :item-id="session.id"
+                            :type="'v1'"
+                            aria-label="Select this session"
+                          />
+                        </div>
                         <inline-svg
                           v-show="!isEditingSession"
                           id="expand"
@@ -860,19 +874,6 @@
                       :force-stop="forceStop"
                       @on-edit-change="resolve_session_editor"
                     />
-                    <div v-if="session.id === showFeedback" class="feedback_wrapper fadeIn">
-                      <hr><br>
-                      <p><b>Feedback</b></p><br>
-                      <div class="show_html" v-html="session.feedback" />
-                    </div>
-                    <div v-if="expandedSessions.includes(session.id)" class="bottom_bar">
-                      <button v-if="session.feedback !== '' && session.feedback !== null && session.id !== showFeedback" @click="showFeedback = session.id">
-                        Feedback
-                      </button>
-                      <button v-if="session.feedback !== '' && session.feedback !== null && session.id === showFeedback" class="cancel" @click="showFeedback = null">
-                        Close Feedback
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -997,6 +998,7 @@ const RichEditor = () => import(/* webpackChunkName: "components.richeditor", we
 const SimpleChart = () => import(/* webpackChunkName: "components.simplechart", webpackPrefetch: true */ '../../components/SimpleChart')
 const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ '../../components/ColorPicker')
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPrefetch: true */ '../../components/Multiselect')
+const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ '../../components/PreviewModal')
 
 export default {
   components: {
@@ -1006,7 +1008,14 @@ export default {
     RichEditor,
     SimpleChart,
     ColorPicker,
-    Multiselect
+    Multiselect,
+    PreviewModal
+  },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.$parent.dontLeave = false
+      next()
+    }
   },
   data () {
     return {
@@ -1018,7 +1027,12 @@ export default {
       editingPlanNotes: false,
       isEditingSession: false,
       editSession: null,
-      showFeedback: '',
+
+      // Feedback
+
+      showFeedback: false,
+      previewHTML: null,
+      previewDesc: null,
 
       // SYSTEM
 
@@ -1115,7 +1129,7 @@ export default {
     this.scan()
   },
   beforeDestroy () {
-    this.$parent.$parent.templates = null
+    this.will_body_scroll(true)
   },
   methods: {
 
@@ -1158,6 +1172,7 @@ export default {
       const plan = this.helper('match_plan')
       switch (state) {
         case 'edit':
+          this.$parent.$parent.dontLeave = true
           this.editingPlanNotes = true
           this.tempEditorStore = plan.notes
           break
@@ -1166,6 +1181,7 @@ export default {
           this.update_plan(plan.notes)
           break
         case 'cancel':
+          this.$parent.$parent.dontLeave = false
           this.editingPlanNotes = false
           plan.notes = this.tempEditorStore
           break
@@ -1175,6 +1191,7 @@ export default {
       const session = this.helper('match_session', id)
       switch (state) {
         case 'edit':
+          this.$parent.$parent.dontLeave = true
           this.isEditingSession = true
           this.editSession = id
           this.forceStop += 1
@@ -1185,10 +1202,10 @@ export default {
           this.editSession = null
           this.update_session(id)
           this.scan()
-          this.$parent.$parent.responseHeader = 'Session updated'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
           break
         case 'cancel':
+          this.$parent.$parent.dontLeave = false
           this.isEditingSession = false
           this.editSession = null
           session.notes = this.tempEditorStore
@@ -1243,8 +1260,7 @@ export default {
       })
       this.$modal.hide('shift')
       this.$ga.event('Session', 'shift')
-      this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session'
-      this.$parent.$parent.responseDesc = 'Your changes have been saved'
+      this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
       this.deselect_all()
     },
     copy_across_check () {
@@ -1334,6 +1350,7 @@ export default {
       this.update_plan()
       this.$modal.hide('copy')
       this.deselect_all()
+      this.scan()
       this.$ga.event('Session', 'progress')
       this.$parent.$parent.end_loading()
     },
@@ -1345,47 +1362,45 @@ export default {
         }
       })
       this.currentWeek = parseInt(this.moveTarget)
-      this.$ga.event('Session', 'move')
-      this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session'
-      this.$parent.$parent.responseDesc = 'Your changes have been saved'
+      this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session', 'Your changes have been saved')
       this.deselect_all()
+      this.scan()
+      this.$ga.event('Session', 'move')
+      this.$parent.$parent.end_loading()
     },
     async duplicate_plan (clientId) {
       const plan = this.helper('match_plan')
       await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
       this.$modal.hide('duplicate')
-      this.$parent.$parent.responseHeader = 'Plan duplicated'
-      this.$parent.$parent.responseDesc = 'Access it on your client\'s profile'
+      this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
       this.$ga.event('Plan', 'duplicate')
     },
 
     // MULTI AND CHECKBOX
 
-    bulk_check (state) {
+    async bulk_check (state) {
       if (this.selectedSessions.length !== 0) {
-        if (confirm(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`)) {
+        if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
           this.helper('match_plan').sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               session.checked = state
               this.update_session(session.id)
             }
           })
-          this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated', 'Your changes have been saved')
           this.deselect_all()
         }
       }
     },
-    bulk_delete () {
+    async bulk_delete () {
       if (this.selectedSessions.length !== 0) {
-        if (confirm('Are you sure that you want to delete all the selected sessions?')) {
+        if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected sessions?', 'We will remove these sessions from our database and it won\'t be recoverable.')) {
           this.selectedSessions.forEach((sessionId) => {
             this.delete_session(sessionId)
           })
           this.$ga.event('Session', 'bulk_delete')
-          this.$parent.$parent.responseHeader = this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
           this.deselect_all()
         }
       }
@@ -1833,8 +1848,8 @@ export default {
     // DATABASE
 
     async create_plan (planName, clientId, planDuration, planColors, planNotes, planSessions) {
+      this.$parent.$parent.dontLeave = true
       try {
-        this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/programmes',
           {
             name: `Copy of ${planName}`,
@@ -1910,8 +1925,8 @@ export default {
       }
     },
     async delete_plan () {
-      if (confirm('Are you sure you want to delete this plan?')) {
-        this.$parent.$parent.dontLeave = true
+      this.$parent.$parent.dontLeave = true
+      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         const id = parseInt(this.$route.params.id)
         try {
           await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
@@ -1919,8 +1934,7 @@ export default {
           this.$parent.$parent.clients_to_vue()
           this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
           this.$ga.event('Session', 'delete')
-          this.$parent.$parent.responseHeader = 'Plan deleted'
-          this.$parent.$parent.responseDesc = 'Your changes have been saved'
+          this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
           this.$parent.$parent.end_loading()
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
@@ -1951,8 +1965,8 @@ export default {
       }
     },
     async add_session (isCopy, forceArr) {
+      this.$parent.$parent.dontLeave = true
       try {
-        this.$parent.$parent.dontLeave = true
         await this.$axios.put('https://api.traininblocks.com/workouts',
           {
             name: forceArr === undefined ? this.new_session.name : forceArr[0],
@@ -1970,11 +1984,9 @@ export default {
         this.adherence()
         this.$ga.event('Session', 'new')
         if (!isCopy) {
-          this.$parent.$parent.responseHeader = 'New session added'
-          this.$parent.$parent.responseDesc = 'Get programming!'
+          this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
         } else {
-          this.$parent.$parent.responseHeader = 'Sessions have been progressed'
-          this.$parent.$parent.responseDesc = 'Please go through them to make sure that you\'re happy with it'
+          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
         }
         this.new_session = {
           name: 'Untitled',
@@ -1989,8 +2001,8 @@ export default {
       }
     },
     async delete_session (id) {
+      this.$parent.$parent.dontLeave = true
       try {
-        this.$parent.$parent.dontLeave = true
         await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         await this.update_plan()

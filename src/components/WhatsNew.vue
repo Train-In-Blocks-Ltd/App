@@ -14,6 +14,16 @@ img {
   padding: 2rem;
   box-shadow: var(--low_shadow)
 }
+
+/* Responsive */
+@media (max-width: 576px) {
+  button {
+    width: 100%
+  }
+  .update_item {
+    padding: .8rem
+  }
+}
 </style>
 
 <template>
@@ -41,7 +51,7 @@ img {
       </div>
     </div>
     <br>
-    <button class="cancel" @click="$parent.isWhatsNewOpen = false, will_body_scroll(true), update_version()">
+    <button class="red_button" @click="$parent.isWhatsNewOpen = false, will_body_scroll(true), update_version()">
       Close
     </button>
   </div>

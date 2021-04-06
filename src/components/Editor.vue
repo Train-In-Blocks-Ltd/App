@@ -1,7 +1,20 @@
 <style>
-.editorActive {
-  border: 2px solid var(--base_faint)
+/* Editor object */
+.editor_object {
+  display: grid;
+  padding: 2rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  transition: var(--transition_standard)
 }
+.editorActive {
+  /* stylelint-disable-next-line */
+  border: 2px solid var(--base_faint) !important
+}
+
+/* Editor */
 div#rich_editor, div#rich_show_content {
   outline: none;
   -moz-appearance: none;
@@ -23,7 +36,8 @@ div#rich_editor div,
 div#rich_editor p,
 div#rich_show_content div,
 div#rich_show_content p {
-  margin: .6rem 0
+  margin: .6rem 0;
+  width: fit-content
 }
 div#rich_editor img,
 div#rich_show_content img {
@@ -44,10 +58,23 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
+div#rich_editor > div > strong,
+div#rich_editor > div > em,
+div#rich_editor > div > u {
+  cursor: pointer;
+  border: 1px solid var(--base_faint);
+  border-radius: 3px
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .editor_object {
+    padding: .8rem
+  }
+}
 </style>
 
 <style scoped>
-
 /* Attr */
 [data-placeholder]:empty:before {
   content: attr(data-placeholder);
@@ -56,11 +83,14 @@ div#rich_show_content a {
 }
 
 /* Tools */
-a#link_bar {
+a#link_bar, a#remover {
   color: var(--base);
   padding: .2rem .6rem
 }
-#style_bar, #link_bar {
+a#remover {
+  text-decoration: none
+}
+#style_bar, #link_bar, #remover {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -90,7 +120,7 @@ a#link_bar {
   transition: var(--transition_standard)
 }
 #rich_toolbar.showingPopup {
-  border-bottom: 2px solid transparent
+  border-bottom: 1px solid transparent
 }
 #rich_toolbar button {
   padding: 0;
@@ -111,7 +141,7 @@ a#link_bar {
   position: sticky;
   top: calc(1rem + 44.39px);
   background-color: var(--fore);
-  z-index: 99;
+  z-index: 1;
   display: flex;
   border-left: 1px solid var(--base_faint);
   border-right: 1px solid var(--base_faint);
@@ -123,6 +153,9 @@ a#link_bar {
   grid-gap: 1rem;
   max-height: 250px;
   overflow-y: auto
+}
+.pop_up--add_template > h2 {
+  margin-top: 1rem
 }
 .template_item svg {
   cursor: pointer;
@@ -143,6 +176,9 @@ button.add_link_submit {
   height: auto;
   margin: 0
 }
+#templates_search_none {
+  display: none
+}
 
 /* Editor */
 div#rich_editor {
@@ -152,6 +188,13 @@ div#rich_editor {
   border-top: none;
   border-radius: 0 0 10px 10px;
   transition: var(--transition_standard)
+}
+.bottom_bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: .6rem;
+  margin-top: 1rem;
+  z-index: 1
 }
 
 /* Responsive */
@@ -168,15 +211,29 @@ div#rich_editor {
 
 <template>
   <div id="wrapper--rich_editor">
-    <div v-if="editState">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <response-pop-up ref="response_pop_up" />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <global-overlay ref="overlay" />
+    </transition>
+    <preview-modal
+      :desc="previewDesc"
+      :html="previewHTML"
+      :show-media="true"
+      @close="previewDesc = null, previewHTML = null"
+    />
+    <div v-if="editState" class="fadeIn">
       <div
         id="style_bar"
+        aria-hidden="true"
+        style="display: none"
       >
         <button
           :class="{ activeStyle: boldActive }"
           title="Bold (CMD/Ctrl + B)"
           class="fadeIn"
-          @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('strong'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
         </button>
@@ -184,7 +241,7 @@ div#rich_editor {
           :class="{ activeStyle: italicActive }"
           title="Italic (CMD/Ctrl + I)"
           class="fadeIn"
-          @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('em'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
         </button>
@@ -192,15 +249,26 @@ div#rich_editor {
           :class="{ activeStyle: underlineActive }"
           title="Underline (CMD/Ctrl + U)"
           class="fadeIn"
-          @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('u'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
         </button>
       </div>
       <a
+        id="remover"
+        href="javascript:void(0)"
+        aria-hidden="true"
+        style="display: none"
+        @click="clear()"
+      >
+        Clear
+      </a>
+      <a
         id="link_bar"
         :href="linkAddress"
         target="_blank"
+        aria-hidden="true"
+        style="display: none"
       >
         {{ linkAddress }}
       </a>
@@ -248,7 +316,7 @@ div#rich_editor {
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             title="Use Template"
             :disabled="!inEditor"
-            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up()"
+            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up(), will_body_scroll(false)"
           >
             <inline-svg :src="require('../assets/svg/editor/template.svg')" />
           </button>
@@ -272,13 +340,14 @@ div#rich_editor {
           v-if="dataForTemplates.length !== 0"
           v-model="search"
           type="search"
-          aria-label="Search by name"
+          aria-label="Search templates"
           rel="search"
-          placeholder="Name"
+          placeholder="Search templates"
+          @input="isSearchEmpty()"
         >
-        <p v-show="search === ''">
+        <h2 v-show="search === ''">
           System templates
-        </p>
+        </h2>
         <div v-show="search === ''" class="template_item">
           <button @click="add_template('<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>')">
             Track with sets, reps, and load
@@ -294,52 +363,32 @@ div#rich_editor {
             Track with other measurements
           </button>
         </div>
-        <p>
+        <h2>
           Your templates
-        </p>
+        </h2>
         <div
           v-for="(item, index) in dataForTemplates"
           v-show="((!search) || ((item.name).toLowerCase()).startsWith(search.toLowerCase()))"
           :key="'template-' + index"
           class="template_item"
         >
-          <modal :name="'preview_template_' + item.id" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-            <div class="modal--preview_template">
-              <div class="center_wrapped">
-                <div v-if="previewTemplate !== null">
-                  <div class="show_html" v-html="previewTemplate" /><br>
-                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
-                    Close
-                  </button>
-                </div>
-                <div v-else>
-                  <h2>
-                    Something went wrong with the preview
-                  </h2>
-                  <p class="grey">
-                    Please try again
-                  </p><br>
-                  <button class="cancel" @click="$modal.hide(`preview_template_${item.id}`), will_body_scroll(true), previewTemplate = null">
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          </modal>
           <button @click="add_template(item.template)">
             {{ item.name }}
           </button>
           <inline-svg
             :src="require('../assets/svg/editor/preview.svg')"
-            @click="previewTemplate = item.template, $modal.show(`preview_template_${item.id}`), will_body_scroll(false)"
+            @click="previewDesc = item.name, previewHTML = item.template, will_body_scroll(false)"
           />
-        </div><br>
+        </div>
+        <p id="templates_search_none">
+          No templates found
+        </p><br>
       </div>
       <div
         id="rich_editor"
         contenteditable="true"
         data-placeholder="Start typing..."
-        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up()"
+        @click="save_selection(), check_cmd_state(), reset_link_pop_up(), reset_img_pop_up(), reset_template_pop_up(), will_body_scroll(true)"
         @keyup="save_selection(), update_edited_notes()"
         v-html="update_content(initialHTML)"
       />
@@ -348,19 +397,20 @@ div#rich_editor {
       <button @click="editState = false , $emit('on-edit-change', 'save', itemId)">
         Save
       </button>
-      <button class="cancel" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
+      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
         Cancel
       </button>
     </div>
     <div
       v-if="!editState && !test_empty_html(htmlInjection)"
       id="rich_show_content"
+      class="fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
       v-html="update_content(remove_brackets(htmlInjection))"
     />
     <p
       v-if="!editState && test_empty_html(htmlInjection)"
-      class="placeholder grey"
+      class="placeholder grey fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
     >
       {{ emptyPlaceholder }}
@@ -370,11 +420,15 @@ div#rich_editor {
 
 <script>
 import Compressor from 'compressorjs'
+const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ './PreviewModal')
 
 export default {
+  components: {
+    PreviewModal
+  },
   props: {
-    itemId: Number,
-    editing: Number,
+    itemId: [Number, String],
+    editing: [Number, String],
     htmlInjection: String,
     emptyPlaceholder: String,
     dataForTemplates: Array,
@@ -383,6 +437,7 @@ export default {
   data () {
     return {
       // System
+      isMobile: false,
       linkAddress: '',
       editState: false,
       search: '',
@@ -392,6 +447,7 @@ export default {
       editedHTML: '',
 
       // Style state
+      clearElem: null,
       boldActive: false,
       italicActive: false,
       underlineActive: false,
@@ -405,21 +461,24 @@ export default {
       showAddImage: false,
       base64Img: null,
       showAddTemplate: false,
-      previewTemplate: null
+
+      // Preview
+      previewDesc: null,
+      previewHTML: null
     }
   },
   watch: {
     editState () {
       this.initialHTML = this.htmlInjection
-      const isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      this.isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
       if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
         document.addEventListener('click', this.toggle_formatter)
-        document.addEventListener(isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.addEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener('click', this.toggle_formatter)
-        document.removeEventListener(isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.removeEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
       }
     },
     forceStop () {
@@ -432,6 +491,15 @@ export default {
 
     // Misc.
 
+    isSearchEmpty () {
+      let showNoneMsg = false
+      this.dataForTemplates.forEach((template) => {
+        if (!(((template.name).toLowerCase()).startsWith(this.search.toLowerCase()) && this.search !== '')) {
+          showNoneMsg = this.search !== ''
+        }
+      })
+      document.getElementById('templates_search_none').style.display = showNoneMsg ? 'block' : 'none'
+    },
     focus_on_editor () {
       document.getElementById('rich_editor').focus()
     },
@@ -538,6 +606,39 @@ export default {
 
     // TEXT
 
+    rich_formatter (style) {
+      const selection = window.getSelection()
+      if (selection.type === 'Range') {
+        const range = new Range()
+        const rangeSel = selection.getRangeAt(0)
+        range.setStart(rangeSel.startContainer, rangeSel.startOffset)
+        range.setEnd(rangeSel.endContainer, rangeSel.endOffset)
+        selection.removeAllRanges()
+        selection.addRange(range)
+        const rangeReversed = () => {
+          if (selection.anchorNode !== selection.focusNode) {
+            return selection.anchorNode.parentNode.nodeName !== style.toUpperCase()
+          }
+        }
+        const newEl = rangeReversed() ? selection.focusNode.parentNode.nodeName !== style.toUpperCase() : selection.anchorNode.parentNode.nodeName !== style.toUpperCase()
+        const element = rangeReversed() ? selection.focusNode.parentNode : selection.anchorNode.parentNode
+        if (newEl && !document.queryCommandState(style)) {
+          range.surroundContents(document.createElement(style))
+          range.surroundContents(document.createElement('span'))
+          range.startContainer.childNodes.forEach((node) => {
+            if (node.nodeName === 'SPAN') {
+              const openTagRegex = new RegExp(`<${style}>`, 'gi')
+              const closeTagRegex = new RegExp(`</${style}>`, 'gi')
+              node.childNodes[0].innerHTML = node.childNodes[0].innerHTML.replace(openTagRegex, '').replace(closeTagRegex, '')
+              node.outerHTML = node.outerHTML.replace(/<span>/gi, '').replace(/<\/span>/gi, '')
+            }
+          })
+        } else {
+          const textNode = document.createTextNode(element.textContent)
+          element.replaceWith(textNode)
+        }
+      }
+    },
     get_caret_coordinates () {
       let x = 0
       let y = 0
@@ -559,45 +660,66 @@ export default {
     toggle_formatter (event) {
       const contenteditable = document.getElementById('rich_editor')
       const formatter = document.getElementById('style_bar')
+      const remover = document.getElementById('remover')
       const linker = document.getElementById('link_bar')
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
       const sel = window.getSelection()
       this.inEditor = containing
-      if (containing && sel.type === 'Range' && x !== 0 && y !== 0) {
-        formatter.setAttribute('aria-hidden', 'false')
-        formatter.setAttribute(
-          'style',
-          `left: ${x - 32}px; top: ${y + 22}px`
-        )
-      } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
-        linker.setAttribute('aria-hidden', 'false')
-        linker.setAttribute(
-          'style',
-          `left: ${x - 32}px; top: ${y + 22}px`
-        )
-        this.linkAddress = sel.focusNode.parentNode.attributes.href.value
-      } else if (containing && event.target.nodeName === 'IMG') {
-        switch (event.target.style.cssText) {
-          case 'max-width: 80%;':
-            event.target.style = 'max-width: 60%;'
-            break
-          case 'max-width: 60%;':
-            event.target.style = 'max-width: 40%;'
-            break
-          case 'max-width: 40%;':
-            event.target.style = 'max-width: 80%;'
-            break
-          default:
-            event.target.style = 'max-width: 60%;'
-            break
+      if (sel.anchorOffset + sel.focusOffset !== 0) {
+        if (containing && sel.type === 'Range' && x !== 0 && y !== 0) {
+          formatter.setAttribute('aria-hidden', 'false')
+          formatter.setAttribute(
+            'style',
+            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          )
+        } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
+          linker.setAttribute('aria-hidden', 'false')
+          linker.setAttribute(
+            'style',
+            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          )
+          this.linkAddress = sel.focusNode.parentNode.attributes.href.value
+        } else if (containing && (sel.focusNode.parentNode.nodeName === 'STRONG' || sel.focusNode.parentNode.nodeName === 'EM' || sel.focusNode.parentNode.nodeName === 'U')) {
+          this.clearElem = sel.focusNode.parentNode
+          remover.setAttribute('aria-hidden', 'false')
+          remover.setAttribute(
+            'style',
+            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          )
+        } else if (containing && event.target.nodeName === 'IMG') {
+          switch (event.target.style.cssText) {
+            case 'max-width: 80%;':
+              event.target.style = 'max-width: 60%;'
+              break
+            case 'max-width: 60%;':
+              event.target.style = 'max-width: 40%;'
+              break
+            case 'max-width: 40%;':
+              event.target.style = 'max-width: 80%;'
+              break
+            default:
+              event.target.style = 'max-width: 60%;'
+              break
+          }
+        } else {
+          closeAll()
         }
       } else {
+        closeAll()
+      }
+      function closeAll () {
         formatter.setAttribute('aria-hidden', 'true')
         formatter.setAttribute('style', 'display: none')
         linker.setAttribute('aria-hidden', 'true')
         linker.setAttribute('style', 'display: none')
+        remover.setAttribute('aria-hidden', 'true')
+        remover.setAttribute('style', 'display: none')
       }
+    },
+    clear () {
+      const textNode = document.createTextNode(this.clearElem.textContent)
+      this.clearElem.replaceWith(textNode)
     },
     unwrap (wrapper) {
       const docFrag = document.createDocumentFragment()
@@ -606,50 +728,6 @@ export default {
         docFrag.appendChild(child)
       }
       wrapper.parentNode.replaceChild(docFrag, wrapper)
-    },
-    format_style (style) {
-      const el = window.getSelection()
-      if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
-      }
-      switch (style) {
-        case 'bold':
-          if (!document.queryCommandState('bold')) {
-            if (el.type === 'Range') {
-              if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<strong>${el.toString()}</strong>`, true)
-              }
-            }
-          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
-            this.unwrap(el.focusNode.parentNode)
-          }
-          this.update_edited_notes()
-          break
-        case 'italic':
-          if (!document.queryCommandState('italic')) {
-            if (el.type === 'Range') {
-              if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<em>${el.toString()}</em>`, true)
-              }
-            }
-          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
-            this.unwrap(el.focusNode.parentNode)
-          }
-          this.update_edited_notes()
-          break
-        case 'underline':
-          if (!document.queryCommandState('underline')) {
-            if (el.type === 'Range') {
-              if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<u>${el.toString()}</u>`, true)
-              }
-            }
-          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
-            this.unwrap(el.focusNode.parentNode)
-          }
-          this.update_edited_notes()
-          break
-      }
     },
 
     // LISTS
@@ -770,7 +848,7 @@ export default {
             }
           })
         } else {
-          alert('File size is too big, please compress it to 1MB or lower')
+          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
           document.getElementById('img_uploader').value = ''
         }
       }

@@ -105,6 +105,11 @@
       transform: rotate(90deg) translateY(0) scale(.9)
     }
   }
+  @media (max-width: 576px) {
+    .day_container {
+      padding: 1rem
+    }
+  }
 </style>
 
 <template>

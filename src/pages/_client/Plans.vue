@@ -1,11 +1,7 @@
 <style>
   /* Client Notes */
   #client_notes {
-    margin: 4rem 0;
-    padding: 2rem;
-    border-radius: 10px;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow)
+    margin: 4rem 0
   }
   .a--client_notes {
     color: var(--base);
@@ -78,7 +74,7 @@
       </p>
     </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
-    <div id="client_notes" :class="{ editorActive: editingClientNotes }">
+    <div id="client_notes" :class="{ editorActive: editingClientNotes }" class="editor_object">
       <h2>
         Client Information
       </h2>
@@ -119,6 +115,12 @@ export default {
     RichEditor,
     Periodise
   },
+  async beforeRouteLeave (to, from, next) {
+    if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$parent.$parent.dontLeave = false
+      next()
+    }
+  },
   props: {
     otherData: [Array, Boolean]
   },
@@ -152,6 +154,7 @@ export default {
     resolve_client_info_editor (state) {
       switch (state) {
         case 'edit':
+          this.$parent.$parent.dontLeave = true
           this.editingClientNotes = true
           this.tempEditorStore = this.$parent.$parent.client_details.notes
           break
@@ -160,6 +163,7 @@ export default {
           this.$parent.$parent.update_client()
           break
         case 'cancel':
+          this.$parent.$parent.dontLeave = false
           this.editingClientNotes = false
           this.$parent.$parent.client_details.notes = this.tempEditorStore
           break

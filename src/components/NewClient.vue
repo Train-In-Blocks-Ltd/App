@@ -53,11 +53,11 @@
       aria-label="Mobile"
       pattern="\d+"
     >
-    <div class="form_buttons">
+    <div class="form_button_bar">
       <button type="submit">
         Save
       </button>
-      <button class="cancel" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>
@@ -98,8 +98,7 @@ export default {
               notes: this.new_client.notes
             }
           )
-          this.$parent.$parent.responseHeader = `Added ${this.new_client.name}`
-          this.$parent.$parent.responseDesc = 'Well done on getting a new client'
+          this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.new_client.name}`, 'Well done on getting a new client')
           this.$parent.persistResponse = this.new_client.name
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()

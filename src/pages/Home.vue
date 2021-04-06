@@ -23,7 +23,7 @@
     <div v-if="isWhatsNewOpen" class="tab_overlay_content allow_y_overflow fadeIn delay fill_mode_both">
       <whats-new />
     </div>
-    <div v-if="isInstallOpen" class="tab_overlay_content icon_open_middle fadeIn delay fill_mode_both">
+    <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <install-app />
     </div>
     <div v-if="!isNewClientOpen" class="tab_option tab_option_large" aria-label="New Client" @click="isNewClientOpen = true, will_body_scroll(false)">
@@ -46,11 +46,11 @@
       </p>
     </div>
     <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
-    <p v-if="$parent.no_clients" class="text--holder text--small grey">
+    <p v-if="$parent.noClients" class="text--holder text--small grey">
       No clients added yet, use the button on the top-right of your screen.
     </p>
     <!-- Loop through clients -->
-    <div v-if="!$parent.no_clients && !$parent.error && $parent.clients && !$parent.loading" class="home--container">
+    <div v-if="!$parent.noClients && !$parent.error && $parent.clients && !$parent.loading" class="home--container">
       <input
         v-model="search"
         type="search"
@@ -75,7 +75,6 @@
             :number="client.number"
             :notes="client.notes"
             :class="{ recently_added: persistResponse === client.name }"
-            class="client_link"
           />
         </router-link>
       </div>

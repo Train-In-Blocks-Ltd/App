@@ -149,33 +149,30 @@ export default {
       })
       this.selectedClients = []
     },
-    delete_multi_clients () {
+    async delete_multi_clients () {
       if (this.selectedClients.length !== 0) {
-        if (confirm('Are you sure that you want to delete all the selected clients?')) {
+        if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected clients?', 'We will remove their data(s) from our database and it won\'t be recoverable.')) {
           this.selectedClients.forEach((clientId) => {
             this.$parent.client_delete(clientId)
           })
-          this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete'
-          this.$parent.responseDesc = 'All their data have been removed'
+          this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete', 'All their data have been removed')
           this.deselect_all()
         }
       }
     },
-    unarchive_single (id) {
-      if (confirm('Are you sure you want to unarchive this client?')) {
+    async unarchive_single (id) {
+      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to unarchive this client?', 'Their data will be recovered and available on the Home page.')) {
         this.$parent.client_unarchive(id)
+        this.$parent.$refs.response_pop_up.show('Client unarchived', 'You can access them back on the home page')
       }
-      this.$parent.responseHeader = 'Client unarchived'
-      this.$parent.responseDesc = 'You can access them back on the home page'
     },
-    unarchive_multi_clients () {
+    async unarchive_multi_clients () {
       if (this.selectedClients.length !== 0) {
-        if (confirm('Are you sure that you want to unarchive all the selected clients?')) {
+        if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to unarchive all the selected clients?', 'Their datas will be recovered and available on the Home page.')) {
           this.selectedClients.forEach((clientId) => {
             this.$parent.client_unarchive(clientId)
           })
-          this.$parent.responseHeader = this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client'
-          this.$parent.responseDesc = 'All their data have been recovered'
+          this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client', 'All their data have been recovered')
           this.deselect_all()
         }
       }
