@@ -36,7 +36,8 @@ div#rich_editor div,
 div#rich_editor p,
 div#rich_show_content div,
 div#rich_show_content p {
-  margin: .6rem 0
+  margin: .6rem 0;
+  width: fit-content
 }
 div#rich_editor img,
 div#rich_show_content img {
@@ -57,6 +58,13 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
+div#rich_editor > div > strong,
+div#rich_editor > div > em,
+div#rich_editor > div > u {
+  cursor: pointer;
+  border: 1px solid var(--base_faint);
+  border-radius: 3px
+}
 
 /* Responsive */
 @media (max-width: 576px) {
@@ -75,11 +83,14 @@ div#rich_show_content a {
 }
 
 /* Tools */
-a#link_bar {
+a#link_bar, a#remover {
   color: var(--base);
   padding: .2rem .6rem
 }
-#style_bar, #link_bar {
+a#remover {
+  text-decoration: none
+}
+#style_bar, #link_bar, #remover {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -215,12 +226,14 @@ div#rich_editor {
     <div v-if="editState" class="fadeIn">
       <div
         id="style_bar"
+        aria-hidden="true"
+        style="display: none"
       >
         <button
           :class="{ activeStyle: boldActive }"
           title="Bold (CMD/Ctrl + B)"
           class="fadeIn"
-          @click="format_style('bold'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('strong'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
         </button>
@@ -228,7 +241,7 @@ div#rich_editor {
           :class="{ activeStyle: italicActive }"
           title="Italic (CMD/Ctrl + I)"
           class="fadeIn"
-          @click="format_style('italic'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('em'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
         </button>
@@ -236,15 +249,26 @@ div#rich_editor {
           :class="{ activeStyle: underlineActive }"
           title="Underline (CMD/Ctrl + U)"
           class="fadeIn"
-          @click="format_style('underline'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('u'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
         </button>
       </div>
       <a
+        id="remover"
+        href="javascript:void(0)"
+        aria-hidden="true"
+        style="display: none"
+        @click="clear()"
+      >
+        Clear
+      </a>
+      <a
         id="link_bar"
         :href="linkAddress"
         target="_blank"
+        aria-hidden="true"
+        style="display: none"
       >
         {{ linkAddress }}
       </a>
@@ -423,6 +447,7 @@ export default {
       editedHTML: '',
 
       // Style state
+      clearElem: null,
       boldActive: false,
       italicActive: false,
       underlineActive: false,
@@ -581,6 +606,39 @@ export default {
 
     // TEXT
 
+    rich_formatter (style) {
+      const selection = window.getSelection()
+      if (selection.type === 'Range') {
+        const range = new Range()
+        const rangeSel = selection.getRangeAt(0)
+        range.setStart(rangeSel.startContainer, rangeSel.startOffset)
+        range.setEnd(rangeSel.endContainer, rangeSel.endOffset)
+        selection.removeAllRanges()
+        selection.addRange(range)
+        const rangeReversed = () => {
+          if (selection.anchorNode !== selection.focusNode) {
+            return selection.anchorNode.parentNode.nodeName !== style.toUpperCase()
+          }
+        }
+        const newEl = rangeReversed() ? selection.focusNode.parentNode.nodeName !== style.toUpperCase() : selection.anchorNode.parentNode.nodeName !== style.toUpperCase()
+        const element = rangeReversed() ? selection.focusNode.parentNode : selection.anchorNode.parentNode
+        if (newEl && !document.queryCommandState(style)) {
+          range.surroundContents(document.createElement(style))
+          range.surroundContents(document.createElement('span'))
+          range.startContainer.childNodes.forEach((node) => {
+            if (node.nodeName === 'SPAN') {
+              const openTagRegex = new RegExp(`<${style}>`, 'gi')
+              const closeTagRegex = new RegExp(`</${style}>`, 'gi')
+              node.childNodes[0].innerHTML = node.childNodes[0].innerHTML.replace(openTagRegex, '').replace(closeTagRegex, '')
+              node.outerHTML = node.outerHTML.replace(/<span>/gi, '').replace(/<\/span>/gi, '')
+            }
+          })
+        } else {
+          const textNode = document.createTextNode(element.textContent)
+          element.replaceWith(textNode)
+        }
+      }
+    },
     get_caret_coordinates () {
       let x = 0
       let y = 0
@@ -602,45 +660,66 @@ export default {
     toggle_formatter (event) {
       const contenteditable = document.getElementById('rich_editor')
       const formatter = document.getElementById('style_bar')
+      const remover = document.getElementById('remover')
       const linker = document.getElementById('link_bar')
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
       const sel = window.getSelection()
       this.inEditor = containing
-      if (containing && sel.type === 'Range' && x !== 0 && y !== 0) {
-        formatter.setAttribute('aria-hidden', 'false')
-        formatter.setAttribute(
-          'style',
-          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
-        )
-      } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
-        linker.setAttribute('aria-hidden', 'false')
-        linker.setAttribute(
-          'style',
-          `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
-        )
-        this.linkAddress = sel.focusNode.parentNode.attributes.href.value
-      } else if (containing && event.target.nodeName === 'IMG') {
-        switch (event.target.style.cssText) {
-          case 'max-width: 80%;':
-            event.target.style = 'max-width: 60%;'
-            break
-          case 'max-width: 60%;':
-            event.target.style = 'max-width: 40%;'
-            break
-          case 'max-width: 40%;':
-            event.target.style = 'max-width: 80%;'
-            break
-          default:
-            event.target.style = 'max-width: 60%;'
-            break
+      if (sel.anchorOffset + sel.focusOffset !== 0) {
+        if (containing && sel.type === 'Range' && x !== 0 && y !== 0) {
+          formatter.setAttribute('aria-hidden', 'false')
+          formatter.setAttribute(
+            'style',
+            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          )
+        } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
+          linker.setAttribute('aria-hidden', 'false')
+          linker.setAttribute(
+            'style',
+            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          )
+          this.linkAddress = sel.focusNode.parentNode.attributes.href.value
+        } else if (containing && (sel.focusNode.parentNode.nodeName === 'STRONG' || sel.focusNode.parentNode.nodeName === 'EM' || sel.focusNode.parentNode.nodeName === 'U')) {
+          this.clearElem = sel.focusNode.parentNode
+          remover.setAttribute('aria-hidden', 'false')
+          remover.setAttribute(
+            'style',
+            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
+          )
+        } else if (containing && event.target.nodeName === 'IMG') {
+          switch (event.target.style.cssText) {
+            case 'max-width: 80%;':
+              event.target.style = 'max-width: 60%;'
+              break
+            case 'max-width: 60%;':
+              event.target.style = 'max-width: 40%;'
+              break
+            case 'max-width: 40%;':
+              event.target.style = 'max-width: 80%;'
+              break
+            default:
+              event.target.style = 'max-width: 60%;'
+              break
+          }
+        } else {
+          closeAll()
         }
       } else {
+        closeAll()
+      }
+      function closeAll () {
         formatter.setAttribute('aria-hidden', 'true')
         formatter.setAttribute('style', 'display: none')
         linker.setAttribute('aria-hidden', 'true')
         linker.setAttribute('style', 'display: none')
+        remover.setAttribute('aria-hidden', 'true')
+        remover.setAttribute('style', 'display: none')
       }
+    },
+    clear () {
+      const textNode = document.createTextNode(this.clearElem.textContent)
+      this.clearElem.replaceWith(textNode)
     },
     unwrap (wrapper) {
       const docFrag = document.createDocumentFragment()
@@ -649,50 +728,6 @@ export default {
         docFrag.appendChild(child)
       }
       wrapper.parentNode.replaceChild(docFrag, wrapper)
-    },
-    format_style (style) {
-      const el = window.getSelection()
-      if (document.activeElement.contentEditable !== 'true') {
-        this.focus_on_editor()
-      }
-      switch (style) {
-        case 'bold':
-          if (!document.queryCommandState('bold')) {
-            if (el.type === 'Range') {
-              if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<strong>${el.toString()}</strong>`, true)
-              }
-            }
-          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
-            this.unwrap(el.focusNode.parentNode)
-          }
-          this.update_edited_notes()
-          break
-        case 'italic':
-          if (!document.queryCommandState('italic')) {
-            if (el.type === 'Range') {
-              if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<em>${el.toString()}</em>`, true)
-              }
-            }
-          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
-            this.unwrap(el.focusNode.parentNode)
-          }
-          this.update_edited_notes()
-          break
-        case 'underline':
-          if (!document.queryCommandState('underline')) {
-            if (el.type === 'Range') {
-              if (el.focusNode.nodeName === '#text') {
-                this.paste_html_at_caret(`<u>${el.toString()}</u>`, true)
-              }
-            }
-          } else if (el.focusNode.parentNode.id !== 'rich_editor') {
-            this.unwrap(el.focusNode.parentNode)
-          }
-          this.update_edited_notes()
-          break
-      }
     },
 
     // LISTS
