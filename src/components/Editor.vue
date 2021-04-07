@@ -58,9 +58,7 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
-div#rich_editor strong,
-div#rich_editor em,
-div#rich_editor u {
+div#rich_editor div > :is(strong, em, u) {
   cursor: pointer;
   border: 1px solid var(--base_faint);
   border-radius: 3px
