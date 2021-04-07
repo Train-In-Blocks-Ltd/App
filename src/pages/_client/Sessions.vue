@@ -1935,10 +1935,10 @@ export default {
           await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()
-          this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
           this.$ga.event('Session', 'delete')
           this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
           this.$parent.$parent.end_loading()
+          this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
         }
