@@ -178,20 +178,18 @@ export default {
 
     // Auth
     async logout () {
-      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to log out?', 'It\'s good practice to do so if you\'re using a shared device.')) {
-        await this.$parent.$auth.signOut()
-        await this.$parent.is_authenticated()
-        localStorage.clear()
-        localStorage.setItem('versionBuild', this.versionBuild)
-        const cookies = document.cookie.split(';')
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i]
-          const eqPos = cookie.indexOf('=')
-          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
-        }
-        this.$ga.event('Auth', 'logout')
+      await this.$parent.$auth.signOut()
+      await this.$parent.is_authenticated()
+      localStorage.clear()
+      localStorage.setItem('versionBuild', this.versionBuild)
+      const cookies = document.cookie.split(';')
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i]
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
+      this.$ga.event('Auth', 'logout')
     }
   }
 }
