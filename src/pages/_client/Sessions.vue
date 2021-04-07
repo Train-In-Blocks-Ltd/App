@@ -1452,8 +1452,8 @@ export default {
     check_for_week_sessions () {
       let arr = 0
       const sessions = this.helper('match_plan').sessions
+      this.noSessions = sessions === false
       if (sessions && !this.noSessions) {
-        this.noSessions = sessions === false
         sessions.forEach((session) => {
           if (session.week_id === this.currentWeek) {
             arr += 1
@@ -1983,15 +1983,18 @@ export default {
         )
         // Get the sessions from the API because we've just created a new one
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
-        this.sort_sessions(this.helper('match_plan'))
-        this.scan()
-        this.check_for_new()
-        this.adherence()
-        this.$ga.event('Session', 'new')
         if (!isCopy) {
           this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
         } else {
           this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
+        }
+        if (forceArr === undefined) {
+          this.sort_sessions(this.helper('match_plan'))
+          this.scan()
+          this.check_for_new()
+          this.adherence()
+          this.$ga.event('Session', 'new')
+          this.check_for_week_sessions()
         }
         this.new_session = {
           name: 'Untitled',
@@ -2000,7 +2003,6 @@ export default {
           week_id: '',
           block_color: ''
         }
-        this.check_for_week_sessions()
         this.$parent.$parent.end_loading()
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
