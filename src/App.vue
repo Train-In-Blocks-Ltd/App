@@ -1046,6 +1046,7 @@ export default {
           }
           this.helper('client_store', 'Client', 'archive')
           this.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
+          this.end_loading()
           this.$router.push('/')
         } catch (e) {
           this.resolve_error(e)
