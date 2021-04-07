@@ -208,6 +208,17 @@ div#rich_editor {
     display: grid;
     grid-gap: .6rem
   }
+
+  /* Styler */
+  div#styler {
+    /* stylelint-disable-next-line */
+    top: 40vh !important;
+    /* stylelint-disable-next-line */
+    left: unset !important;
+    right: .6rem;
+    display: grid;
+    grid-gap: 1rem
+  }
 }
 </style>
 
