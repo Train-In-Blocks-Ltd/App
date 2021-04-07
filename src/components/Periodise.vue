@@ -46,7 +46,7 @@
   transition: var(--transition_standard)
 }
 .plan_order svg:hover {
-  opacity: .6
+  opacity: var(--light_opacity)
 }
 svg.left {
   transform: rotate(90deg)
@@ -64,7 +64,7 @@ svg.right {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  opacity: .6;
+  opacity: var(--light_opacity);
   width: 100%;
   height: 10px
 }

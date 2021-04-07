@@ -26,7 +26,7 @@
   transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
 }
 .policies:hover {
-  opacity: .6
+  opacity: var(--light_opacity)
 }
 .policies:active {
   transform: scale(.9)

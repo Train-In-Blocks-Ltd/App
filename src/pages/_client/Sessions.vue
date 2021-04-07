@@ -91,7 +91,7 @@
     transition: var(--transition_standard)
   }
   .a--plan_notes:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
 
   /* Plan Table */
@@ -164,7 +164,7 @@
     transition: var(--transition_standard)
   }
   .change_week_color:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .change_week_color.noColor {
     /* stylelint-disable-next-line */
@@ -179,7 +179,7 @@
     transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
   }
   #info:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   #info:active {
     transform: scale(.9)
@@ -250,7 +250,7 @@
     text-decoration: underline
   }
   .editingChecked:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
 
   /* Graph */

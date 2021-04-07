@@ -30,7 +30,7 @@
     margin-left: 1rem
   }
   .disabled, .disabled:hover {
-    opacity: .6;
+    opacity: var(--light_opacity);
     cursor: default
   }
   hr {

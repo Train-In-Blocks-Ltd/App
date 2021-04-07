@@ -66,7 +66,7 @@
     transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   #okta-signin-submit:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   #okta-signin-submit:active {
     transform: scale(.96)

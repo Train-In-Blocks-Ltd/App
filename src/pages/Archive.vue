@@ -20,7 +20,7 @@
     transition: transform .1s, opacity .6s cubic-bezier(.165, .84, .44, 1)
   }
   .archive_icon:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .archive_icon:active {
     transform: scale(.9)

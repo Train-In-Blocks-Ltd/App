@@ -16,7 +16,7 @@
 }
 .nav_item {
   display: flex;
-  opacity: .6;
+  opacity: var(--light_opacity);
   cursor: pointer;
   font-size: 1rem;
   margin: .8rem 0;

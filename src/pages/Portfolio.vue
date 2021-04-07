@@ -9,7 +9,7 @@
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   .trainer_info input:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .trainer_info input:focus {
     opacity: 1;

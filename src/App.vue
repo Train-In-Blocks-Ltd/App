@@ -17,7 +17,8 @@
     --calendar_highlight: #FFFFEE;
     --skeleton_1: #F4F4F4;
     --skeleton_2: #E4E4E4;
-    --link: blue
+    --link: blue;
+    --light_opacity: .6
   }
 
   /* Animation */
@@ -232,7 +233,7 @@
     transition: var(--transition_standard)
   }
   .cursor:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .allow_y_overflow {
     overflow-y: auto
@@ -262,7 +263,7 @@
     text-overflow: ellipsis
   }
   .disabled, .disabled:hover {
-    opacity: .6;
+    opacity: var(--light_opacity);
     cursor: default
   }
 
@@ -279,7 +280,7 @@
     margin-right: .2rem
   }
   .a_link:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
 
   /* Box buttons */
@@ -301,7 +302,7 @@
     transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   button:hover:not(:disabled) {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   button:active:not(:disabled) {
     transform: scale(.96)
@@ -312,7 +313,7 @@
   button:disabled,
   button[disabled] {
     cursor: not-allowed;
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .green_button {
     color: white;
@@ -353,11 +354,11 @@
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
   select:not(:focus):hover,
   textarea:not(:focus):hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
     cursor: not-allowed;
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus,
   select:focus,
@@ -411,7 +412,7 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   .logo_link:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .logo_link:active {
     transform: scale(.9)
@@ -516,24 +517,8 @@
 
   /* Responsiveness */
   @media (max-width: 992px) {
-    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):hover,
-    button:not(:disabled):hover,
-    .button:hover,
-    select:hover,
-    textarea:hover {
-      opacity: 1
-    }
-    #home,
-    #client,
-    #account,
-    #archive,
-    #logout,
-    #templates,
-    #client-plan,
-    #portfolio {
-      padding: 4rem 10vw
-    }
-    .cursor:hover {
+    /* Hover */
+    *:hover {
       opacity: 1
     }
 

@@ -33,7 +33,7 @@ div#rich_show_content,
 div#rich_show_content:hover,
 .placeholder:hover {
   border: 1px solid var(--base_light);
-  opacity: .6
+  opacity: var(--light_opacity)
 }
 div#rich_editor :is(div, p),
 div#rich_show_content :is(div, p) {
@@ -49,7 +49,7 @@ div#rich_show_content img {
   transition: .4s all cubic-bezier(.165, .84, .44, 1)
 }
 div#rich_editor img:hover {
-  opacity: .6
+  opacity: var(--light_opacity)
 }
 div#rich_editor input[type='checkbox'],
 div#rich_show_content input[type='checkbox'] {
@@ -128,7 +128,7 @@ a#remover {
   background-color: transparent
 }
 .activeStyle {
-  opacity: .4
+  opacity: var(--light_opacity)
 }
 #rich_toolbar svg, #styler svg {
   height: 20px;
@@ -165,7 +165,7 @@ a#remover {
   transition: var(--transition_standard)
 }
 .template_item svg:hover {
-  opacity: .6
+  opacity: var(--light_opacity)
 }
 .input--add_link {
   padding: .2rem .4rem;

@@ -31,7 +31,7 @@ svg#confirm_close path {
   transition: var(--transition_standard)
 }
 .confirm_pop_up svg:hover {
-  opacity: .6
+  opacity: var(--light_opacity)
 }
 
 /* Button */

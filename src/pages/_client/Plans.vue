@@ -11,7 +11,7 @@
     transition: var(--transition_standard)
   }
   .a--client_notes:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .client_notes-msg {
     margin: 1rem 0
