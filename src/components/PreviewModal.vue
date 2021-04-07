@@ -1,28 +1,25 @@
 <style>
 /* Preview HTML */
-.preview_html {
+.preview_modal .preview_html {
   font-size: .8rem;
   margin-top: .4rem
 }
-.preview_html * {
+.preview_modal .preview_html * {
   color: var(--base);
   transition: var(--transition_standard)
 }
-.preview_html p {
+.preview_modal .preview_html p {
   margin: .4rem 0
 }
-.preview_html h1,
-.preview_html h2 {
+.preview_modal .preview_html :is(h1, h2) {
   font-size: 1rem
 }
-.preview_html img,
-.preview_html iframe {
+.preview_modal .preview_html :is(img, iframe) {
   max-width: 100%;
   border-radius: 10px;
   margin: 1rem 0
 }
-.noMedia img,
-.noMedia iframe {
+.noMedia :is(img, iframe) {
   display: none
 }
 </style>
@@ -45,7 +42,7 @@ button.red_button {
 </style>
 
 <template>
-  <div>
+  <div class="preview_modal">
     <div :class="{ opened_sections: html !== '' && html !== null }" class="section_overlay" />
     <div v-if="html !== '' && html !== null" class="tab_overlay_content fadeIn delay fill_mode_both">
       <h2 class="title">

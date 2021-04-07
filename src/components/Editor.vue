@@ -738,6 +738,7 @@ export default {
           remover.setAttribute('style', 'display: none')
         }
       }
+      this.update_edited_notes()
     },
     clear () {
       const textNode = document.createTextNode(this.clearElem.textContent)
