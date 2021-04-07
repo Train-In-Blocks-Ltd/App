@@ -7,7 +7,7 @@
   border-radius: 10px;
   background-color: var(--fore);
   box-shadow: var(--low_shadow);
-  transition: var(--transition_standard)
+  transition: .6s border cubic-bezier(.165, .84, .44, 1)
 }
 .editorActive {
   /* stylelint-disable-next-line */
@@ -58,9 +58,9 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
-div#rich_editor > div > strong,
-div#rich_editor > div > em,
-div#rich_editor > div > u {
+div#rich_editor strong,
+div#rich_editor em,
+div#rich_editor u {
   cursor: pointer;
   border: 1px solid var(--base_faint);
   border-radius: 3px
@@ -83,14 +83,14 @@ div#rich_editor > div > u {
 }
 
 /* Tools */
-a#link_bar, a#remover {
+a#linker, a#remover {
   color: var(--base);
   padding: .2rem .6rem
 }
 a#remover {
   text-decoration: none
 }
-#style_bar, #link_bar, #remover {
+#styler, #linker, #remover {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -100,7 +100,7 @@ a#remover {
   box-shadow: var(--high_shadow);
   transition: var(--transition_standard)
 }
-#style_bar button {
+#styler button {
   padding: 0;
   margin: .2rem .6rem;
   color: var(--base);
@@ -131,7 +131,7 @@ a#remover {
 .activeStyle {
   opacity: .4
 }
-#rich_toolbar svg, #style_bar svg {
+#rich_toolbar svg, #styler svg {
   height: 20px;
   width: 20px
 }
@@ -225,7 +225,7 @@ div#rich_editor {
     />
     <div v-if="editState" class="fadeIn">
       <div
-        id="style_bar"
+        id="styler"
         aria-hidden="true"
         style="display: none"
       >
@@ -264,7 +264,7 @@ div#rich_editor {
         Clear
       </a>
       <a
-        id="link_bar"
+        id="linker"
         :href="linkAddress"
         target="_blank"
         aria-hidden="true"
@@ -659,9 +659,9 @@ export default {
     },
     toggle_formatter (event) {
       const contenteditable = document.getElementById('rich_editor')
-      const formatter = document.getElementById('style_bar')
+      const formatter = document.getElementById('styler')
       const remover = document.getElementById('remover')
-      const linker = document.getElementById('link_bar')
+      const linker = document.getElementById('linker')
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
       const sel = window.getSelection()
@@ -673,6 +673,7 @@ export default {
             'style',
             `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
           )
+          closeAll(['linker', 'remover'])
         } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
           linker.setAttribute('aria-hidden', 'false')
           linker.setAttribute(
@@ -680,6 +681,7 @@ export default {
             `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
           )
           this.linkAddress = sel.focusNode.parentNode.attributes.href.value
+          closeAll(['styler', 'remover'])
         } else if (containing && (sel.focusNode.parentNode.nodeName === 'STRONG' || sel.focusNode.parentNode.nodeName === 'EM' || sel.focusNode.parentNode.nodeName === 'U')) {
           this.clearElem = sel.focusNode.parentNode
           remover.setAttribute('aria-hidden', 'false')
@@ -687,6 +689,7 @@ export default {
             'style',
             `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
           )
+          closeAll(['styler', 'linker'])
         } else if (containing && event.target.nodeName === 'IMG') {
           switch (event.target.style.cssText) {
             case 'max-width: 80%;':
@@ -703,18 +706,24 @@ export default {
               break
           }
         } else {
-          closeAll()
+          closeAll(['all'])
         }
       } else {
-        closeAll()
+        closeAll(['all'])
       }
-      function closeAll () {
-        formatter.setAttribute('aria-hidden', 'true')
-        formatter.setAttribute('style', 'display: none')
-        linker.setAttribute('aria-hidden', 'true')
-        linker.setAttribute('style', 'display: none')
-        remover.setAttribute('aria-hidden', 'true')
-        remover.setAttribute('style', 'display: none')
+      function closeAll (type) {
+        if (type.includes('styler') || type.includes('all')) {
+          formatter.setAttribute('aria-hidden', 'true')
+          formatter.setAttribute('style', 'display: none')
+        }
+        if (type.includes('linker') || type.includes('all')) {
+          linker.setAttribute('aria-hidden', 'true')
+          linker.setAttribute('style', 'display: none')
+        }
+        if (type.includes('remover') || type.includes('all')) {
+          remover.setAttribute('aria-hidden', 'true')
+          remover.setAttribute('style', 'display: none')
+        }
       }
     },
     clear () {
