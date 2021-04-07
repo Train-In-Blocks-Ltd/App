@@ -129,7 +129,7 @@ export default {
       }
     },
 
-    // DATABASE
+    // Database
 
     async update (notesUpdate) {
       this.$parent.silent_loading = true

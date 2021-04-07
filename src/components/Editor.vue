@@ -15,12 +15,14 @@
 }
 
 /* Editor */
-div#rich_editor, div#rich_show_content {
+div#rich_editor,
+div#rich_show_content {
   outline: none;
   -moz-appearance: none;
   -webkit-appearance: none
 }
-div#rich_show_content, .placeholder {
+div#rich_show_content,
+.placeholder {
   cursor: pointer;
   padding: 1rem;
   border: 1px solid var(--base_faint);
@@ -28,14 +30,13 @@ div#rich_show_content, .placeholder {
   margin-top: 1rem;
   transition: .6s opacity cubic-bezier(.165, .84, .44, 1), .6s border cubic-bezier(.165, .84, .44, 1)
 }
-div#rich_show_content:hover, .placeholder:hover {
+div#rich_show_content:hover,
+.placeholder:hover {
   border: 1px solid var(--base_light);
   opacity: .6
 }
-div#rich_editor div,
-div#rich_editor p,
-div#rich_show_content div,
-div#rich_show_content p {
+div#rich_editor :is(div, p),
+div#rich_show_content :is(div, p) {
   margin: .6rem 0;
   width: fit-content
 }
@@ -58,7 +59,7 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
-div#rich_editor div > :is(strong, em, u) {
+div#rich_editor :is(div, p) > :is(strong, em, u) {
   cursor: pointer;
   border: 1px solid var(--base_faint);
   border-radius: 3px
@@ -135,7 +136,9 @@ a#remover {
 }
 
 /* Pop-ups */
-.pop_up--add_link, .pop_up--add_image, .pop_up--add_template {
+.pop_up--add_link,
+.pop_up--add_image,
+.pop_up--add_template {
   position: sticky;
   top: calc(1rem + 44.39px);
   background-color: var(--fore);
@@ -197,7 +200,8 @@ div#rich_editor {
 
 /* Responsive */
 @media (max-width: 768px) {
-  div#rich_show_content img, div#rich_show_content iframe {
+  div#rich_show_content img,
+  div#rich_show_content iframe {
     max-width: 100%
   }
   .pop_up--add_link {
