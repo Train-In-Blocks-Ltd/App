@@ -56,6 +56,9 @@
   .client--options a {
     margin-left: auto
   }
+  .client--options a svg {
+    margin-left: .4rem
+  }
 
   /* Client Notes */
   .client_notes--header {
@@ -129,6 +132,7 @@
             @click="$modal.show('toolkit'), will_body_scroll(false)"
           >
             Toolkit
+            <inline-svg :src="require('../../assets/svg/calculate.svg')" />
           </a>
           <a
             v-if="clients.client_id == $route.params.client_id && showOptions"
@@ -137,6 +141,7 @@
             @click="$parent.client_archive(clients.client_id, index)"
           >
             Archive Client
+            <inline-svg :src="require('../../assets/svg/archive.svg')" />
           </a>
         </div>
       </div>

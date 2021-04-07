@@ -75,6 +75,9 @@
   .plan_options a {
     margin-right: 1rem
   }
+  .plan_options a svg {
+    margin-right: .4rem
+  }
   .switch_cal {
     margin-bottom: .4rem
   }
@@ -645,7 +648,7 @@
               class="a_link"
               href="javascript:void(0)"
             >
-              <inline-svg :src="require('../../assets/svg/back.svg')" />
+              <inline-svg id="back" :src="require('../../assets/svg/back.svg')" />
               Back to profile
             </router-link>
             <a

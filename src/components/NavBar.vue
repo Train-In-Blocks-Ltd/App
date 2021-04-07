@@ -38,6 +38,7 @@
   text-decoration: none
 }
 .nav_item__text {
+  white-space: nowrap;
   user-select: none;
   color: var(--base);
   text-decoration: none;
@@ -117,8 +118,19 @@
       :key="`nav_${navIndex}`"
       class="nav_item"
     >
+      <a
+        v-if="nav.name === 'Log out'"
+        :href="nav.link"
+        :title="nav.name"
+        @click="logout()"
+      >
+        <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
+        <p class="nav_item__text">
+          {{ nav.name }}
+        </p>
+      </a>
       <router-link
-        v-if="nav.forUser.includes(claims.user_type) && nav.internal"
+        v-else-if="nav.forUser.includes(claims.user_type) && nav.internal"
         :to="nav.link"
         :title="nav.name"
       >
@@ -158,7 +170,7 @@ export default {
         { name: 'Templates', link: '/templates', svg: 'templates.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Portfolio', link: '/portfolio', svg: 'portfolio.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Archive', link: '/archive', svg: 'archive.svg', forUser: ['Admin', 'Trainer'], internal: true },
-        { name: 'Logout', link: '/logout', svg: 'logout.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true }
+        { name: 'Log out', link: 'javascript:void(0)', svg: 'logout.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true }
       ]
     }
   },
@@ -166,18 +178,20 @@ export default {
 
     // Auth
     async logout () {
-      await this.$parent.$auth.signOut()
-      await this.$parent.is_authenticated()
-      localStorage.clear()
-      localStorage.setItem('versionBuild', this.versionBuild)
-      const cookies = document.cookie.split(';')
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i]
-        const eqPos = cookie.indexOf('=')
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to log out?', 'It\'s good practice to do so if you\'re using a shared device.')) {
+        await this.$parent.$auth.signOut()
+        await this.$parent.is_authenticated()
+        localStorage.clear()
+        localStorage.setItem('versionBuild', this.versionBuild)
+        const cookies = document.cookie.split(';')
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i]
+          const eqPos = cookie.indexOf('=')
+          const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
+          document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        }
+        this.$ga.event('Auth', 'logout')
       }
-      this.$ga.event('Auth', 'logout')
     }
   }
 }

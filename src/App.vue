@@ -276,8 +276,7 @@
   }
   .a_link svg {
     height: 22px;
-    width: 22px;
-    margin-right: .2rem
+    width: 22px
   }
   .a_link:hover {
     opacity: var(--light_opacity)
