@@ -199,6 +199,11 @@ export default {
         this.client_plans.sort((a, b) => {
           return new Date(a.ordered) - new Date(b.ordered)
         })
+        this.client_plans.forEach((plan, index) => {
+          if (plan.ordered !== index) {
+            plan.ordered = index
+          }
+        })
         this.$emit('update:plans', this.client_plans)
       }
     },

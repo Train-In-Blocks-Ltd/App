@@ -577,7 +577,7 @@
       </form>
     </modal>
     <div
-      v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions"
+      v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions && !noSessions"
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small fadeIn"
       aria-label="Statistics"
@@ -1451,8 +1451,10 @@ export default {
     },
     check_for_week_sessions () {
       let arr = 0
-      if (!this.noSessions) {
-        this.helper('match_plan').sessions.forEach((session) => {
+      const sessions = this.helper('match_plan').sessions
+      if (sessions && !this.noSessions) {
+        this.noSessions = sessions === false
+        sessions.forEach((session) => {
           if (session.week_id === this.currentWeek) {
             arr += 1
             this.weekSessions.push(session.id)
@@ -1651,7 +1653,7 @@ export default {
       const plan = this.helper('match_plan')
       this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
       this.maxWeek = plan.duration
-      if (plan.sessions !== null && !this.noSessions) {
+      if (plan.sessions && !this.noSessions) {
         plan.sessions.forEach((object) => {
           this.sessionDates.push({
             title: object.name,
@@ -1998,6 +2000,7 @@ export default {
           week_id: '',
           block_color: ''
         }
+        this.check_for_week_sessions()
         this.$parent.$parent.end_loading()
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
@@ -2011,6 +2014,7 @@ export default {
         await this.update_plan()
 
         this.$ga.event('Session', 'delete')
+        this.check_for_week_sessions()
         this.$parent.$parent.end_loading()
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
