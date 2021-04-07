@@ -651,12 +651,11 @@
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="center_wrapped">
-          <p>Something went wrong, please try that again</p>
-          <p class="grey">
+          <h4 v-text="errorMsg" />
+          <p v-if="errorMsg !== 'You are using the demo account. Your changes won\'t be saved'" class="grey">
             This problem has been reported to our developers
           </p>
           <br>
-          <p>{{ errorMsg }}</p><br>
           <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
             Close
           </button>
@@ -788,6 +787,20 @@ export default {
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.isTrainer = true
     }
+    this.$axios.interceptors.request.use((config) => {
+      if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
+        self.errorMsg = 'You are using the demo account. Your changes won\'t be saved'
+        self.$modal.show('error')
+        self.will_body_scroll(false)
+        self.loading = false
+        self.dontLeave = false
+        self.silent_loading = false
+        throw new self.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
+      }
+      return config
+    }, (error) => {
+      return Promise.reject(error)
+    })
   },
   methods: {
     async helper (mode, gaItem, gaAction) {

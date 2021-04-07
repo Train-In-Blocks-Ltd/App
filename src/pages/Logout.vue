@@ -33,7 +33,7 @@
           <h2>
             You will be redirected automatically
           </h2>
-          <a href="http://app.traininblocks.com" class="grey">Click here if it takes too long</a>
+          <a href="/" class="grey">Click here if it takes too long</a>
         </div>
       </div>
     </div>
