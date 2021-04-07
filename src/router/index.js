@@ -61,7 +61,8 @@ const router = new Router({
       path: '/account',
       component: ProfileComponent,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        requiresNonDemo: true
       }
     },
     {
@@ -188,6 +189,12 @@ const userType = async (to, from, next) => {
         next()
       } else if (result.user_type === 'Trainer') {
         // Navigate to Trainer Homepage
+        next({ path: '/' })
+      } else {
+        next()
+      }
+    } else if (to.matched.some(record => record.meta.requiresNonDemo)) {
+      if (result.email === 'demo@traininblocks.com') {
         next({ path: '/' })
       } else {
         next()
