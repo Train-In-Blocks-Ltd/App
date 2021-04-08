@@ -37,8 +37,7 @@ div#rich_show_content:hover,
 }
 div#rich_editor :is(div, p),
 div#rich_show_content :is(div, p) {
-  margin: .6rem 0;
-  width: fit-content
+  margin: .6rem 0
 }
 div#rich_editor img,
 div#rich_show_content img {
