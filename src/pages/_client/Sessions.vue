@@ -870,6 +870,7 @@
                     <rich-editor
                       v-show="expandedSessions.includes(session.id)"
                       :item-id="session.id"
+                      :week-id="currentWeek"
                       :editing="editSession"
                       :html-injection.sync="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"

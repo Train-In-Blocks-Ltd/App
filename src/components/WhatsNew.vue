@@ -64,7 +64,6 @@ export default {
       content: [
         { title: 'Dark mode', desc: 'Working at night? Let\'s take some strain off the eyes. You can turn on dark mode through your Account page.', img: 'dark-mode.png' },
         { title: 'New editor style', desc: 'We\'ve made a minor change to how the editor looks but it still works in a similar way. Simply click on the text to start editing.', img: 'editor-style.png' },
-        { title: 'Highlight formatting', desc: 'Want to bold, italic, or underline some text? Just highlight it and get stylish! The formatter will follow you to where you are working.', img: 'highlight.png' },
         { title: 'Plan overview', desc: 'You can now organise your plans in the order that they will occur. Much like a periodised model, you can see how the number of microcycles and their colour-code in this general overview.', img: 'new-plans.png' },
         { title: 'Printing sessions', desc: 'Want a physical copy or a PDF? You can simply select all the sessions that you wish to export and print from the menu.', img: 'print.png' },
         { title: 'Client-side improvements', desc: 'Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.', img: false }

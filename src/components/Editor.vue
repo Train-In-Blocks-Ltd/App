@@ -89,7 +89,7 @@ a#linker, a#remover {
 a#remover {
   text-decoration: none
 }
-#styler, #linker, #remover {
+#linker, #remover {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -98,12 +98,6 @@ a#remover {
   background-color: var(--fore);
   box-shadow: var(--high_shadow);
   transition: var(--transition_standard)
-}
-#styler button {
-  padding: 0;
-  margin: .2rem .6rem;
-  color: var(--base);
-  background-color: transparent
 }
 .re_toolbar_back {
   position: sticky;
@@ -130,7 +124,7 @@ a#remover {
 .activeStyle {
   opacity: var(--light_opacity)
 }
-#rich_toolbar svg, #styler svg {
+#rich_toolbar svg {
   height: 20px;
   width: 20px
 }
@@ -208,17 +202,6 @@ div#rich_editor {
     display: grid;
     grid-gap: .6rem
   }
-
-  /* Styler */
-  div#styler {
-    /* stylelint-disable-next-line */
-    top: 40vh !important;
-    /* stylelint-disable-next-line */
-    left: unset !important;
-    right: .6rem;
-    display: grid;
-    grid-gap: 1rem
-  }
 }
 </style>
 
@@ -237,36 +220,6 @@ div#rich_editor {
       @close="previewDesc = null, previewHTML = null"
     />
     <div v-if="editState" class="fadeIn">
-      <div
-        id="styler"
-        aria-hidden="true"
-        style="display: none"
-      >
-        <button
-          :class="{ activeStyle: boldActive }"
-          title="Bold (CMD/Ctrl + B)"
-          class="fadeIn"
-          @click="rich_formatter('b'), check_cmd_state(), focus_on_editor()"
-        >
-          <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-        </button>
-        <button
-          :class="{ activeStyle: italicActive }"
-          title="Italic (CMD/Ctrl + I)"
-          class="fadeIn"
-          @click="rich_formatter('i'), check_cmd_state(), focus_on_editor()"
-        >
-          <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-        </button>
-        <button
-          :class="{ activeStyle: underlineActive }"
-          title="Underline (CMD/Ctrl + U)"
-          class="fadeIn"
-          @click="rich_formatter('u'), check_cmd_state(), focus_on_editor()"
-        >
-          <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-        </button>
-      </div>
       <a
         id="remover"
         href="javascript:void(0)"
@@ -288,9 +241,33 @@ div#rich_editor {
       <div class="re_toolbar_back">
         <div id="rich_toolbar" :class="{ showingPopup: showAddLink || showAddImage || showAddTemplate }">
           <button
+            :class="{ activeStyle: boldActive }"
+            :disabled="!inEditor || isCaret"
+            title="Bold (CMD/Ctrl + B)"
+            @click="rich_formatter('b'), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+          </button>
+          <button
+            :class="{ activeStyle: italicActive }"
+            :disabled="!inEditor || isCaret"
+            title="Italic (CMD/Ctrl + I)"
+            @click="rich_formatter('i'), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+          </button>
+          <button
+            :class="{ activeStyle: underlineActive }"
+            :disabled="!inEditor || isCaret"
+            title="Underline (CMD/Ctrl + U)"
+            @click="rich_formatter('u'), check_cmd_state(), focus_on_editor()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+          </button>
+          <button
             :class="{ activeStyle: olActive }"
             title="Ordered List"
-            :disabled="!inEditor"
+            :disabled="!inEditor || !isCaret"
             @click="add_list('ol'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
@@ -298,7 +275,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: ulActive }"
             title="Unordered List"
-            :disabled="!inEditor"
+            :disabled="!inEditor || !isCaret"
             @click="add_list('ul'), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
@@ -329,7 +306,7 @@ div#rich_editor {
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             title="Use Template"
             :disabled="!inEditor"
-            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up(), will_body_scroll(false)"
+            @click="showAddTemplate = !showAddTemplate, reset_link_pop_up(), reset_img_pop_up(), will_body_scroll(false), $parent.go_to_event(itemId, weekId)"
           >
             <inline-svg :src="require('../assets/svg/editor/template.svg')" />
           </button>
@@ -441,6 +418,7 @@ export default {
   },
   props: {
     itemId: [Number, String],
+    weekId: Number,
     editing: [Number, String],
     htmlInjection: String,
     emptyPlaceholder: String,
@@ -460,6 +438,8 @@ export default {
       editedHTML: '',
 
       // Style state
+      targetElement: null,
+      isCaret: false,
       clearElem: null,
       boldActive: false,
       italicActive: false,
@@ -672,29 +652,23 @@ export default {
     },
     toggle_formatter (event) {
       const contenteditable = document.getElementById('rich_editor')
-      const formatter = document.getElementById('styler')
       const remover = document.getElementById('remover')
       const linker = document.getElementById('linker')
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
       const sel = window.getSelection()
       this.inEditor = containing
-      if (sel.anchorOffset + sel.focusOffset !== 0) {
-        if (containing && sel.type === 'Range' && x !== 0 && y !== 0) {
-          formatter.setAttribute('aria-hidden', 'false')
-          formatter.setAttribute(
-            'style',
-            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
-          )
-          closeAll(['linker', 'remover'])
-        } else if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
+      this.isCaret = sel.type === 'Caret'
+      if (sel.anchorOffset + sel.focusOffset !== 0 && containing) {
+        this.targetElement = event.target
+        if (containing && sel.focusNode.parentNode.nodeName === 'A' && x !== 0 && y !== 0) {
           linker.setAttribute('aria-hidden', 'false')
           linker.setAttribute(
             'style',
             `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
           )
           this.linkAddress = sel.focusNode.parentNode.attributes.href.value
-          closeAll(['styler', 'remover'])
+          closeAll(['remover'])
         } else if (containing && (sel.focusNode.parentNode.nodeName === 'B' || sel.focusNode.parentNode.nodeName === 'I' || sel.focusNode.parentNode.nodeName === 'U')) {
           this.clearElem = sel.focusNode.parentNode
           remover.setAttribute('aria-hidden', 'false')
@@ -702,7 +676,7 @@ export default {
             'style',
             `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
           )
-          closeAll(['styler', 'linker'])
+          closeAll(['linker'])
         } else if (containing && event.target.nodeName === 'IMG') {
           switch (event.target.style.cssText) {
             case 'max-width: 80%;':
@@ -725,10 +699,6 @@ export default {
         closeAll(['all'])
       }
       function closeAll (type) {
-        if (type.includes('styler') || type.includes('all')) {
-          formatter.setAttribute('aria-hidden', 'true')
-          formatter.setAttribute('style', 'display: none')
-        }
         if (type.includes('linker') || type.includes('all')) {
           linker.setAttribute('aria-hidden', 'true')
           linker.setAttribute('style', 'display: none')
@@ -761,43 +731,45 @@ export default {
       this.restore_selection()
       const sel = window.getSelection()
       const isEmpty = sel.focusNode.length || 0
-      if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
-        const range = new Range()
-        range.setStart(sel.focusNode, 0)
-        range.setEnd(sel.focusNode, sel.focusNode.length)
-        sel.removeAllRanges()
-        sel.addRange(range)
-        range.surroundContents(liNode)
-        range.surroundContents(olNode)
-        range.collapse(isEmpty === 0)
-      } else if (sel.focusNode.parentNode.parentNode.id !== 'rich_editor' || sel.focusNode.parentNode.id !== 'rich_editor') {
-        let dynamSel = sel.focusNode
-        const nodes = []
-        while (dynamSel.parentNode.id !== 'rich_editor') {
-          if (dynamSel.parentNode.nodeName === tag.toUpperCase()) {
-            dynamSel.parentNode.childNodes.forEach((node) => {
-              nodes.push(node.innerHTML)
-            })
-            nodes.reverse().forEach((node) => {
-              if (dynamSel.parentNode.parentNode.id !== 'rich_editor') {
-                dynamSel.parentNode.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
-              } else {
-                dynamSel.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
-              }
-            })
-            dynamSel.parentNode.remove()
-            break
-          } else if (dynamSel.parentNode.nodeName === 'OL' || dynamSel.parentNode.nodeName === 'UL') {
-            const html = dynamSel.parentNode.outerHTML
-            dynamSel.parentNode.insertAdjacentHTML('afterend', html.replace(`<${dynamSel.parentNode.nodeName.toLowerCase()}>`, `<${dynamSel.parentNode.nodeName === 'OL' ? 'ul' : 'ol'}>`).replace(`</${dynamSel.parentNode.nodeName.toLowerCase()}>`, `</${dynamSel.parentNode.nodeName === 'OL' ? 'ul' : 'ol'}>`))
-            dynamSel.parentNode.remove()
-            break
-          } else {
-            dynamSel = dynamSel.parentNode
+      if (sel.type === 'Caret') {
+        if (!document.queryCommandState('insertOrderedList') && !document.queryCommandState('insertUnorderedList')) {
+          const range = new Range()
+          range.setStart(sel.focusNode, 0)
+          range.setEnd(sel.focusNode, sel.focusNode.length)
+          sel.removeAllRanges()
+          sel.addRange(range)
+          range.surroundContents(liNode)
+          range.surroundContents(olNode)
+          range.collapse(isEmpty === 0)
+        } else if (sel.focusNode.parentNode.parentNode.id !== 'rich_editor' || sel.focusNode.parentNode.id !== 'rich_editor') {
+          let dynamSel = sel.focusNode
+          const nodes = []
+          while (dynamSel.parentNode.id !== 'rich_editor') {
+            if (dynamSel.parentNode.nodeName === tag.toUpperCase()) {
+              dynamSel.parentNode.childNodes.forEach((node) => {
+                nodes.push(node.innerHTML)
+              })
+              nodes.reverse().forEach((node) => {
+                if (dynamSel.parentNode.parentNode.id !== 'rich_editor') {
+                  dynamSel.parentNode.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+                } else {
+                  dynamSel.parentNode.insertAdjacentHTML('afterend', `<div>${node}</div>`)
+                }
+              })
+              dynamSel.parentNode.remove()
+              break
+            } else if (dynamSel.parentNode.nodeName === 'OL' || dynamSel.parentNode.nodeName === 'UL') {
+              const html = dynamSel.parentNode.outerHTML
+              dynamSel.parentNode.insertAdjacentHTML('afterend', html.replace(`<${dynamSel.parentNode.nodeName.toLowerCase()}>`, `<${dynamSel.parentNode.nodeName === 'OL' ? 'ul' : 'ol'}>`).replace(`</${dynamSel.parentNode.nodeName.toLowerCase()}>`, `</${dynamSel.parentNode.nodeName === 'OL' ? 'ul' : 'ol'}>`))
+              dynamSel.parentNode.remove()
+              break
+            } else {
+              dynamSel = dynamSel.parentNode
+            }
           }
         }
+        this.update_edited_notes()
       }
-      this.update_edited_notes()
     },
 
     // CHECKBOX
@@ -900,6 +872,7 @@ export default {
       }
       this.update_edited_notes()
       this.reset_template_pop_up()
+      this.will_body_scroll(true)
     },
     reset_template_pop_up () {
       this.showAddTemplate = false
