@@ -105,9 +105,6 @@ a {
 a:hover {
   opacity: var(--light_opacity)
 }
-.demo_details .info {
-  user-select: all
-}
 #login {
   text-align: left;
   margin: auto;
@@ -132,7 +129,8 @@ a:hover {
   margin-bottom: .6rem
 }
 .recovery {
-  margin: 1.25rem 0
+  margin-top: 4rem;
+  margin-bottom: 1rem
 }
 .recover_password {
   margin: .8rem 0
@@ -197,7 +195,7 @@ a:hover {
     <div class="other_options">
       <p>
         Need an account?
-        <a href="https://traininblocks.com">
+        <a href="https://traininblocks.com/#prices">
           Sign up here
         </a>
       </p>
