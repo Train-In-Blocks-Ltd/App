@@ -60,7 +60,7 @@ div#rich_show_content a {
   color: var(--link)
 }
 div#rich_editor > :is(b, i, u),
-div#rich_editor > :is(div, p) > :is(b, i, u) {
+div#rich_editor :is(div, p, li) > :is(b, i, u) {
   cursor: pointer;
   border: 1px solid var(--base_faint);
   border-radius: 3px

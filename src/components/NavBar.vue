@@ -130,7 +130,7 @@
         </p>
       </a>
       <router-link
-        v-else-if="nav.forUser.includes(claims.user_type) && nav.internal"
+        v-else-if="nav.forUser.includes(claims.user_type) && nav.internal && (nav.name === 'Account' ? claims.email !== 'demo@traininblocks.com' : true)"
         :to="nav.link"
         :title="nav.name"
       >
@@ -140,7 +140,7 @@
         </p>
       </router-link>
       <a
-        v-else-if="nav.forUser.includes(claims.user_type)"
+        v-else-if="nav.forUser.includes(claims.user_type) && nav.name !== 'Account'"
         :href="nav.link"
         :title="nav.name"
         target="_blank"

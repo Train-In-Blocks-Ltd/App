@@ -652,7 +652,7 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
-    <div class="demo_banner">
+    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="demo_banner">
       <a href="https://traininblocks.com" target="_blank" class="a_link text--tiny">
         Demo account: click here to sign up
       </a>
