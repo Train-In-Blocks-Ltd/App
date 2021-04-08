@@ -972,6 +972,7 @@ export default {
       }
       localStorage.setItem('clients', JSON.stringify(this.clients))
       */
+      this.noClients = this.clients.length === 0
     },
     async clients_f () {
       try {
