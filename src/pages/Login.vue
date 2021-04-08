@@ -195,7 +195,7 @@ a:hover {
     <div class="other_options">
       <p>
         Need an account?
-        <a href="https://traininblocks.com/#prices">
+        <a href="https://traininblocks.com/#pricing">
           Sign up here
         </a>
       </p>
