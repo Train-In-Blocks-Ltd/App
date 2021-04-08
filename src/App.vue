@@ -871,10 +871,10 @@ export default {
           this.claims.theme = 'system'
         }
         this.darkmode(this.claims.theme)
-        if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com') {
+        if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
           this.$modal.show('agreement')
-        } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com') {
+        } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
           this.$modal.show('agreement')
         }
