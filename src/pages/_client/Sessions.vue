@@ -491,7 +491,7 @@
                 {{ protocol[1][exerciseGroupIndex][0] }}
               </h2>
               <p class="grey">
-                {{ protocol[1][exerciseGroupIndex][1] }} {{ protocol[1][exerciseGroupIndex][2] }}
+                {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
               </p>
               <div
                 v-for="(exercise, exerciseIndex) in exercises"
@@ -764,7 +764,7 @@
                       id="info"
                       :src="require('../../assets/svg/info.svg')"
                       title="Info"
-                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', will_body_scroll(false)"
+                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', will_body_scroll(false)"
                     />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
@@ -1529,6 +1529,7 @@ export default {
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
           if (regex.test(exerciseDataPacket[1])) {
+            console.log('a')
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({
@@ -1553,12 +1554,13 @@ export default {
               this.showType = false
               this.dataValues.push(this.other_measures(protocol))
             }
-          }
-          if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
+          } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
             const dataForSum = () => {
               switch (this.selectedDataType) {
-                case 'Sets' || 'Reps':
-                  return this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
+                case 'Sets':
+                  return this.sets_reps(exerciseDataPacket, protocol, 'Sets')
+                case 'Reps':
+                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps')
                 case 'Load':
                   return this.load(exerciseDataPacket, protocol)
                 case 'Volume':

@@ -59,7 +59,8 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
-div#rich_editor :is(strong, em, u) {
+div#rich_editor > :is(b, i, u),
+div#rich_editor > :is(div, p) > :is(b, i, u) {
   cursor: pointer;
   border: 1px solid var(--base_faint);
   border-radius: 3px
@@ -246,7 +247,7 @@ div#rich_editor {
           :class="{ activeStyle: boldActive }"
           title="Bold (CMD/Ctrl + B)"
           class="fadeIn"
-          @click="rich_formatter('strong'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('b'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
         </button>
@@ -254,7 +255,7 @@ div#rich_editor {
           :class="{ activeStyle: italicActive }"
           title="Italic (CMD/Ctrl + I)"
           class="fadeIn"
-          @click="rich_formatter('em'), check_cmd_state(), focus_on_editor()"
+          @click="rich_formatter('i'), check_cmd_state(), focus_on_editor()"
         >
           <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
         </button>
@@ -314,7 +315,7 @@ div#rich_editor {
           <button
             title="Add Link"
             :disabled="!inEditor"
-            @click="showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
+            @click="set_link(), showAddLink = !showAddLink, reset_img_pop_up(), reset_template_pop_up()"
           >
             <inline-svg :src="require('../assets/svg/editor/link.svg')" />
           </button>
@@ -695,7 +696,7 @@ export default {
           )
           this.linkAddress = sel.focusNode.parentNode.attributes.href.value
           closeAll(['styler', 'remover'])
-        } else if (containing && (sel.focusNode.parentNode.nodeName === 'STRONG' || sel.focusNode.parentNode.nodeName === 'EM' || sel.focusNode.parentNode.nodeName === 'U')) {
+        } else if (containing && (sel.focusNode.parentNode.nodeName === 'B' || sel.focusNode.parentNode.nodeName === 'I' || sel.focusNode.parentNode.nodeName === 'U')) {
           this.clearElem = sel.focusNode.parentNode
           remover.setAttribute('aria-hidden', 'false')
           remover.setAttribute(
@@ -818,6 +819,10 @@ export default {
 
     // LINK
 
+    set_link () {
+      const sel = window.getSelection() || false
+      this.addLinkName = sel !== false ? sel.toString() : ''
+    },
     add_link () {
       let forceFocus = false
       if (this.savedSelection === null) {

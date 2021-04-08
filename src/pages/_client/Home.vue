@@ -182,7 +182,15 @@
               </p>
             </div>
             <button
-              v-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
+              v-if="clientAlreadyMsg === 'Restricted'"
+              class="button--verify button"
+              :disabled="clientAlready"
+              @click="create_client()"
+            >
+              {{ clientAlreadyMsg }}
+            </button>
+            <button
+              v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
               class="button--verify fadeIn"
               @click="$parent.client_details.notifications = $parent.client_details.notifications === 1 ? 0 : 1, $parent.update_client()"
             >
@@ -264,38 +272,42 @@ export default {
     // OKTA CLIENT
 
     async check_client () {
-      this.clientAlreadyMsg = 'Loading...'
-      try {
-        const result = await this.$axios.post('/.netlify/functions/okta',
-          {
-            type: 'GET',
-            url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
+      if (this.$parent.claims.email !== 'demo@traininblocks.com') {
+        this.clientAlreadyMsg = 'Loading...'
+        try {
+          const result = await this.$axios.post('/.netlify/functions/okta',
+            {
+              type: 'GET',
+              url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
+            }
+          )
+          if (result.data.length > 0) {
+            switch (result.data[0].status) {
+              case 'ACTIVE' || 'RECOVERY':
+                this.clientAlready = true
+                this.clientAlreadyMsg = 'User activated'
+                break
+              case 'PROVISIONED':
+                this.clientAlready = false
+                this.clientAlreadyMsg = 'Resend activation email'
+                break
+              case 'SUSPENDED':
+                this.clientSuspend = result.data[0].id
+                this.clientAlready = false
+                this.clientAlreadyMsg = 'Give Access'
+                break
+            }
+          } else {
+            this.clientAlready = false
+            this.clientAlreadyMsg = 'Give Access'
           }
-        )
-        if (result.data.length > 0) {
-          switch (result.data[0].status) {
-            case 'ACTIVE' || 'RECOVERY':
-              this.clientAlready = true
-              this.clientAlreadyMsg = 'User activated'
-              break
-            case 'PROVISIONED':
-              this.clientAlready = false
-              this.clientAlreadyMsg = 'Resend activation email'
-              break
-            case 'SUSPENDED':
-              this.clientSuspend = result.data[0].id
-              this.clientAlready = false
-              this.clientAlreadyMsg = 'Give Access'
-              break
-          }
-        } else {
-          this.clientAlready = false
-          this.clientAlreadyMsg = 'Give Access'
+        } catch (e) {
+          this.clientAlready = true
+          this.clientAlreadyMsg = 'Error'
+          this.$parent.resolve_error(e)
         }
-      } catch (e) {
-        this.clientAlready = true
-        this.clientAlreadyMsg = 'Error'
-        this.$parent.resolve_error(e)
+      } else {
+        this.clientAlreadyMsg = 'Restricted'
       }
     },
     async create_client () {

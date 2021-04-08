@@ -106,9 +106,23 @@
     /* stylelint-disable-next-line */
     font-size: 1.6rem !important
   }
-  em {
+  i {
     /* stylelint-disable-next-line */
     color: var(--base) !important
+  }
+  .demo_banner {
+    z-index: 11;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+    padding: .1rem;
+    background-color: var(--base)
+  }
+  .demo_banner a {
+    display: block;
+    color: var(--fore)
   }
   .notAuth {
     margin: 0
@@ -482,7 +496,6 @@
     background-color: var(--base_faint)
   }
   ::-webkit-scrollbar-thumb {
-    border-radius: 3px;
     background-color: var(--base)
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -639,6 +652,11 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
+    <div class="demo_banner">
+      <a href="https://traininblocks.com" target="_blank" class="a_link text--tiny">
+        Demo account: click here to sign up
+      </a>
+    </div>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <response-pop-up ref="response_pop_up" />
     </transition>
@@ -651,8 +669,8 @@
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="center_wrapped">
-          <h4 v-text="errorMsg" />
-          <p v-if="errorMsg !== 'You are using the demo account. Your changes won\'t be saved'" class="grey">
+          <p v-text="errorMsg" />
+          <p v-if="errorMsg !== 'You are using the demo account. Your changes cannot be saved.'" class="grey">
             This problem has been reported to our developers
           </p>
           <br>
@@ -789,7 +807,7 @@ export default {
     }
     this.$axios.interceptors.request.use((config) => {
       if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
-        self.errorMsg = 'You are using the demo account. Your changes won\'t be saved'
+        self.errorMsg = 'You are using the demo account. Your changes cannot be saved.'
         self.$modal.show('error')
         self.will_body_scroll(false)
         self.loading = false

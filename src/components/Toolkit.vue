@@ -45,7 +45,7 @@ textarea {
           v-show="selectedTool === tool.name"
           :key="`tool_${toolIndex}`"
         >
-          <p><strong>Data:</strong></p>
+          <p><b>Data:</b></p>
           <input
             v-for="(input, inputIndex) in tool.inputs"
             :id="`input_${input.id}`"

@@ -51,9 +51,9 @@
         or continue using it in the browser
       </h2>
       <div class="instructions">
-        <p><strong>For Safari</strong></p>
-        <p>1. Open the <em>Share</em> menu at the bottom of the screen</p>
-        <p>2. Select <em>Add to Home Screen</em></p>
+        <p><b>For Safari</b></p>
+        <p>1. Open the <i>Share</i> menu at the bottom of the screen</p>
+        <p>2. Select <i>Add to Home Screen</i></p>
         <div class="img_container">
           <img :src="require('../assets/install/1.jpg')" alt="Open share menu">
           <img :src="require('../assets/install/2.jpg')" alt="Add to home screen">
