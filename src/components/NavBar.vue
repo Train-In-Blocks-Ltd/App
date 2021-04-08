@@ -169,8 +169,8 @@ export default {
         { name: 'Help', link: 'https://traininblocks.com/help/', svg: 'help-desk.svg', forUser: ['Admin', 'Trainer'], internal: false },
         { name: 'Templates', link: '/templates', svg: 'templates.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Portfolio', link: '/portfolio', svg: 'portfolio.svg', forUser: ['Admin', 'Trainer'], internal: true },
-        { name: 'Account', link: '/account', svg: 'account.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Archive', link: '/archive', svg: 'archive.svg', forUser: ['Admin', 'Trainer'], internal: true },
+        { name: 'Account', link: '/account', svg: 'account.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Log out', link: 'javascript:void(0)', svg: 'logout.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true }
       ]
     }
