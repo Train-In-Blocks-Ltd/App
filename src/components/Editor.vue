@@ -58,12 +58,6 @@ div#rich_editor a,
 div#rich_show_content a {
   color: var(--link)
 }
-div#rich_editor > :is(b, i, u),
-div#rich_editor :is(div, p, li) > :is(b, i, u) {
-  cursor: pointer;
-  border: 1px solid var(--base_faint);
-  border-radius: 3px
-}
 
 /* Responsive */
 @media (max-width: 576px) {
@@ -82,14 +76,11 @@ div#rich_editor :is(div, p, li) > :is(b, i, u) {
 }
 
 /* Tools */
-a#linker, a#remover {
+a#linker {
   color: var(--base);
   padding: .2rem .6rem
 }
-a#remover {
-  text-decoration: none
-}
-#linker, #remover {
+#linker {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -221,15 +212,6 @@ div#rich_editor {
     />
     <div v-if="editState" class="fadeIn">
       <a
-        id="remover"
-        href="javascript:void(0)"
-        aria-hidden="true"
-        style="display: none"
-        @click="clear()"
-      >
-        Clear
-      </a>
-      <a
         id="linker"
         :href="linkAddress"
         target="_blank"
@@ -283,7 +265,7 @@ div#rich_editor {
           <button
             :class="{ activeStyle: ulActive }"
             title="Checkbox"
-            :disabled="!inEditor"
+            :disabled="!inEditor || !isCaret"
             @click="add_checkbox(), check_cmd_state(), focus_on_editor()"
           >
             <inline-svg :src="require('../assets/svg/editor/checkbox.svg')" />
@@ -464,14 +446,23 @@ export default {
     editState () {
       this.initialHTML = this.htmlInjection
       this.isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      const editor = document.querySelector('#rich_editor') || document
       if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
         document.addEventListener('keydown', this.toggle_formatter)
         document.addEventListener('click', this.toggle_formatter)
+        editor.addEventListener('select', this.toggle_formatter)
+        editor.addEventListener('focus', this.toggle_formatter)
+        document.addEventListener('blur', this.toggle_formatter)
+        editor.addEventListener('input', this.toggle_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener('keydown', this.toggle_formatter)
         document.removeEventListener('click', this.toggle_formatter)
+        editor.removeEventListener('select', this.toggle_formatter)
+        editor.removeEventListener('focus', this.toggle_formatter)
+        document.removeEventListener('blur', this.toggle_formatter)
+        editor.removeEventListener('input', this.toggle_formatter)
       }
     },
     forceStop () {
@@ -601,12 +592,12 @@ export default {
 
     rich_formatter (style) {
       const selection = window.getSelection()
+      this.save_selection()
       if (selection.type === 'Range') {
         const range = new Range()
         const rangeSel = selection.getRangeAt(0)
         range.setStart(rangeSel.startContainer, rangeSel.startOffset)
         range.setEnd(rangeSel.endContainer, rangeSel.endOffset)
-        selection.removeAllRanges()
         selection.addRange(range)
         const rangeReversed = () => {
           if (selection.anchorNode !== selection.focusNode) {
@@ -630,6 +621,7 @@ export default {
           const textNode = document.createTextNode(element.textContent)
           element.replaceWith(textNode)
         }
+        this.restore_selection()
       }
     },
     get_caret_coordinates () {
@@ -652,12 +644,12 @@ export default {
     },
     toggle_formatter (event) {
       const contenteditable = document.getElementById('rich_editor')
-      const remover = document.getElementById('remover')
+      const toolbar = document.getElementById('rich_toolbar')
       const linker = document.getElementById('linker')
       const { x, y } = this.get_caret_coordinates()
-      const containing = contenteditable.contains(event.target) || false
+      const containing = contenteditable.contains(event.target) || toolbar.contains(event.target) || false
       const sel = window.getSelection()
-      setTimeout(() => { this.inEditor = containing }, this.isMobile ? 100 : 0)
+      this.inEditor = containing
       this.isCaret = sel.type === 'Caret'
       if (sel.anchorOffset + sel.focusOffset !== 0 && containing) {
         this.targetElement = event.target
@@ -668,14 +660,7 @@ export default {
             `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
           )
           this.linkAddress = sel.focusNode.parentNode.attributes.href.value
-          closeAll(['remover'])
         } else if (containing && (sel.focusNode.parentNode.nodeName === 'B' || sel.focusNode.parentNode.nodeName === 'I' || sel.focusNode.parentNode.nodeName === 'U')) {
-          this.clearElem = sel.focusNode.parentNode
-          remover.setAttribute('aria-hidden', 'false')
-          remover.setAttribute(
-            'style',
-            `left: ${x - 32}px; top: ${this.isMobile ? y + 44 : y + 22}px`
-          )
           closeAll(['linker'])
         } else if (containing && event.target.nodeName === 'IMG') {
           switch (event.target.style.cssText) {
@@ -703,16 +688,8 @@ export default {
           linker.setAttribute('aria-hidden', 'true')
           linker.setAttribute('style', 'display: none')
         }
-        if (type.includes('remover') || type.includes('all')) {
-          remover.setAttribute('aria-hidden', 'true')
-          remover.setAttribute('style', 'display: none')
-        }
       }
       this.update_edited_notes()
-    },
-    clear () {
-      const textNode = document.createTextNode(this.clearElem.textContent)
-      this.clearElem.replaceWith(textNode)
     },
     unwrap (wrapper) {
       const docFrag = document.createDocumentFragment()
