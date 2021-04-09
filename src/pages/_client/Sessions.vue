@@ -1577,7 +1577,6 @@ export default {
       })
       if (this.selectedDataName === 'Plan Overview') {
         for (let x = 1; x <= this.dataValues.length; x++) {
-          console.log(x)
           this.labelValues.push(['Session ' + x])
         }
       }
