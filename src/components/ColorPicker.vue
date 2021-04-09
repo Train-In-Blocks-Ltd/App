@@ -11,7 +11,7 @@
     transition: var(--transition_standard)
   }
   .color:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
 
   @media (max-width: 576px) {

@@ -30,7 +30,7 @@
     margin-left: 1rem
   }
   .disabled, .disabled:hover {
-    opacity: .6;
+    opacity: var(--light_opacity);
     cursor: default
   }
   hr {
@@ -46,10 +46,17 @@
   }
 
   /* Responsive */
-
   @media (max-width: 992px) {
     .switch_cal {
       display: none
+    }
+    .plan_notes {
+      margin: 4rem 0
+    }
+  }
+  @media (max-width: 576px) {
+    .wrapper--session, .plan_notes {
+      padding: .8rem
     }
   }
 </style>

@@ -3,21 +3,14 @@
   .template_options {
     display: flex;
     justify-content: space-between;
-    margin-top: 2rem
+    margin: 2rem 0
   }
-  .container--templates {
+  .template_container {
     display: grid;
     grid-gap: 4rem;
     margin: 2rem 0
   }
-  .wrapper--template {
-    display: grid;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    padding: 2rem;
-    border-radius: 10px
-  }
-  .wrapper--template__header {
+  .template_wrapper__header {
     display: flex;
     justify-content: space-between
   }
@@ -96,16 +89,16 @@
         Select all
       </a>
     </div>
-    <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="container--templates">
+    <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="template_container">
       <div
         v-for="(template, index) in $parent.templates"
         v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
         :key="index"
         :class="{ editorActive: template.id === editTemplate }"
-        class="wrapper--template"
+        class="template_wrapper editor_object"
       >
-        <div class="wrapper--template__header">
+        <div class="template_wrapper__header">
           <span
             v-if="template.id !== editTemplate"
             class="text--name"
@@ -148,7 +141,7 @@
         />
       </div>
     </div>
-    <p v-else class="grey top_margin">
+    <p v-else class="grey text--small">
       No templates yet :(
     </p>
   </div>

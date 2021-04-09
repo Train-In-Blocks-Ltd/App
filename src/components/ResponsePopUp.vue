@@ -31,7 +31,7 @@ svg#response_close path {
   transition: var(--transition_standard)
 }
 .response_pop_up svg:hover {
-  opacity: .6
+  opacity: var(--light_opacity)
 }
 
 @supports not (backdrop-filter: blur(10px)) {

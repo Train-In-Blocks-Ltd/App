@@ -5,12 +5,15 @@
 #home__house,
 #portfolio_pen,
 #portfolio_case,
-#bin__lid {
+#bin__lid,
+#calculate,
+#back,
+#copy :is(#top, #right) {
   transition: var(--transition_standard)
 }
 
 /* Home */
-.account_nav_item:hover #home__house {
+.nav_item:hover #home__house {
   transform: translateY(-3px)
 }
 
@@ -19,29 +22,29 @@
   opacity: 0;
   transform: scaleY(0) translateY(1px)
 }
-.account_nav_item:hover #help-desk__bookmark {
+.nav_item:hover #help-desk__bookmark {
   opacity: 1;
   transform: scaleY(1)
 }
 
 /* Template */
-.account_nav_item:hover #template__t {
+.nav_item:hover #template__t {
   transform: translateY(4px)
 }
 
 /* Portfolio */
-.account_nav_item:hover #portfolio_pen {
+.nav_item:hover #portfolio_pen {
   transform: translateX(4px)
 }
-.account_nav_item:hover #portfolio_case {
+.nav_item:hover #portfolio_case {
   transform: translateX(-2px)
 }
 
 /* Archive */
-.account_nav_item:hover #archive__t, .archive_icon:hover #archive__t {
+:is(.nav_item, .archive_icon, .a_link):hover #archive__t {
   transform: translateY(-6px)
 }
-.archive_icon:hover #bin__lid {
+:is(.archive_icon, .a_link):hover #bin__lid {
   transform: translateX(6px)
 }
 
@@ -54,14 +57,32 @@
     transform: rotateZ(360deg)
   }
 }
-.account_nav_item:hover #account__cog {
+.nav_item:hover #account__cog {
   transform-origin: center;
   animation: inf-spin 5s infinite linear
 }
 
 /* Logout */
-.account_nav_item:hover #logout__arrow {
+.nav_item:hover #logout__arrow {
   transform: translateX(-6px)
+}
+
+/* Calculate */
+.a_link:hover #calculate {
+  transform: rotate(90deg)
+}
+
+/* Back */
+.a_link:hover #back {
+  transform: translateX(-5px)
+}
+
+/* Duplicate */
+.a_link:hover #copy #top {
+  transform: translateX(-1px)
+}
+.a_link:hover #copy #right {
+  transform: translateX(2px)
 }
 
 /* Reduced motion */
@@ -81,21 +102,24 @@
 /* No Hover */
 @media (max-width: 992px), (prefers-reduced-motion: reduce) {
   /* None */
-  .account_nav_item:hover #home__house,
-  .account_nav_item:hover #template__t,
-  .account_nav_item:hover #archive__t,
-  .archive_icon:hover #archive__t,
+  .nav_item:hover #home__house,
+  .nav_item:hover #template__t,
+  :is(.nav_item, .archive_icon, .a_link):hover #archive__t,
   .archive_icon:hover #bin__lid,
-  .account_nav_item:hover #account__cog,
-  .account_nav_item:hover #logout__arrow,
-  .account_nav_item:hover #portfolio_pen,
-  .account_nav_item:hover #portfolio_case {
+  .nav_item:hover #account__cog,
+  .nav_item:hover #logout__arrow,
+  .nav_item:hover #portfolio_pen,
+  .nav_item:hover #portfolio_case,
+  .a_link:hover #calculate,
+  .a_link:hover #back,
+  .a_link:hover #copy :is(#top, #right) {
     transform: none;
     animation: none
   }
 
   /* Help Desk */
-  #help-desk__bookmark, .account_nav_item:hover #help-desk__bookmark {
+  #help-desk__bookmark,
+  .nav_item:hover #help-desk__bookmark {
     opacity: 1;
     transform: scaleY(1)
   }

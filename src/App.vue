@@ -1,6 +1,4 @@
 <style>
-  @import './assets/styles/icon-anim';
-
   /* Global */
   * {
     box-sizing: border-box
@@ -19,7 +17,8 @@
     --calendar_highlight: #FFFFEE;
     --skeleton_1: #F4F4F4;
     --skeleton_2: #E4E4E4;
-    --link: blue
+    --link: blue;
+    --light_opacity: .6
   }
 
   /* Animation */
@@ -107,9 +106,23 @@
     /* stylelint-disable-next-line */
     font-size: 1.6rem !important
   }
-  em {
+  i {
     /* stylelint-disable-next-line */
     color: var(--base) !important
+  }
+  .demo_banner {
+    z-index: 11;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    text-align: center;
+    padding: .1rem;
+    background-color: var(--base)
+  }
+  .demo_banner a {
+    display: block;
+    color: var(--fore)
   }
   .notAuth {
     margin: 0
@@ -234,7 +247,7 @@
     transition: var(--transition_standard)
   }
   .cursor:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .allow_y_overflow {
     overflow-y: auto
@@ -264,7 +277,7 @@
     text-overflow: ellipsis
   }
   .disabled, .disabled:hover {
-    opacity: .6;
+    opacity: var(--light_opacity);
     cursor: default
   }
 
@@ -277,11 +290,10 @@
   }
   .a_link svg {
     height: 22px;
-    width: 22px;
-    margin-right: .2rem
+    width: 22px
   }
   .a_link:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
 
   /* Box buttons */
@@ -303,7 +315,7 @@
     transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   button:hover:not(:disabled) {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   button:active:not(:disabled) {
     transform: scale(.96)
@@ -314,7 +326,7 @@
   button:disabled,
   button[disabled] {
     cursor: not-allowed;
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .green_button {
     color: white;
@@ -355,11 +367,11 @@
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
   select:not(:focus):hover,
   textarea:not(:focus):hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
     cursor: not-allowed;
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus,
   select:focus,
@@ -413,58 +425,10 @@
     transition: 1s all cubic-bezier(.165, .84, .44, 1)
   }
   .logo_link:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .logo_link:active {
     transform: scale(.9)
-  }
-
-  /* Navigation */
-  .sidebar {
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem 1rem;
-    position: fixed;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    transition: width .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .account_nav_item {
-    display: flex;
-    opacity: .6;
-    cursor: pointer;
-    font-size: 1rem;
-    margin: .8rem 0;
-    transition: var(--transition_standard)
-  }
-  .account_nav_item:hover,
-  .sidebar:hover .account_nav_item--text,
-  .account_nav_item a.router-link-exact-active {
-    opacity: 1
-  }
-  .account_nav_item:last-of-type {
-    padding-bottom: 0
-  }
-  .account_nav_item a {
-    display: flex;
-    text-decoration: none
-  }
-  .account_nav_item--text {
-    user-select: none;
-    color: var(--base);
-    text-decoration: none;
-    position: relative;
-    border: 0;
-    opacity: 0;
-    transition: var(--transition_standard)
-  }
-  .account_nav_item--icon {
-    margin: 0 .4rem 0 0;
-    height: 1.4rem;
-    vertical-align: bottom;
-    transition: var(--transition_standard)
   }
 
   /* Tab options */
@@ -532,7 +496,6 @@
     background-color: var(--base_faint)
   }
   ::-webkit-scrollbar-thumb {
-    border-radius: 3px;
     background-color: var(--base)
   }
   ::-webkit-scrollbar-thumb:hover {
@@ -566,37 +529,24 @@
 
   /* Responsiveness */
   @media (max-width: 992px) {
-    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):hover,
-    button:not(:disabled):hover,
-    .button:hover {
+    /* Hover */
+    *:hover {
       opacity: 1
     }
-    #home,
-    #client,
-    #account,
-    #archive,
-    #logout,
-    #templates,
-    #client-plan,
-    #portfolio {
-      padding: 4rem 10vw
+
+    /* Tab options */
+    .tab_option_small:hover {
+      width: 3rem
     }
-    .cursor:hover {
-      opacity: 1
+    .tab_option_large:hover {
+      width: 3rem
     }
-  }
-  @media (min-width: 769px) {
-    .sidebar {
-      top: 0;
-      height: 100vh;
-      min-height: 100%;
-      width: calc(38px + 2rem)
+    .tab_option:hover svg,
+    .tab_option:hover .notify_badge {
+      display: block
     }
-    .sidebar:hover {
-      width: 12rem
-    }
-    .sidebar:hover main {
-      margin-left: 12rem
+    .tab_option:hover .text {
+      display: none
     }
   }
   @media (max-width: 768px) {
@@ -606,22 +556,6 @@
     }
     .tab_overlay_content {
       padding: 4rem 10vw 10rem 10vw
-    }
-
-    /* Sidebar */
-    .logo {
-      display: none
-    }
-    .sidebar {
-      bottom: 0;
-      width: 100vw;
-      flex-direction: row;
-      padding: 0;
-      justify-content: space-between;
-      border-right: none
-    }
-    .sidebar:hover .account_nav_item--text {
-      display: none
     }
 
     /* Container */
@@ -637,21 +571,6 @@
     #client-plan,
     #portfolio {
       padding: 2rem 5vw 5rem 5vw
-    }
-    .account_nav_item {
-      width: 100%;
-      margin: 0;
-      padding: 0
-    }
-    .account_nav_item a {
-      width: 100%;
-      height: 4rem
-    }
-    .account_nav_item--text {
-      display: none
-    }
-    .account_nav_item--icon {
-      margin: .8rem auto
     }
   }
 
@@ -676,6 +595,14 @@
     .wrapper--calendar {
       margin: 2rem 0
     }
+    .form_button_bar {
+      display: grid;
+      grid-gap: 1rem;
+      margin-top: 2rem
+    }
+    .form_grid button {
+      width: 100%
+    }
   }
 
   /* REDUCED MOTION */
@@ -694,10 +621,10 @@
     .icon_open--new_plan {
       transition: none
     }
-    .sidebar {
+    #sidebar {
       width: 12rem
     }
-    .account_nav_item--text {
+    .nav_item__text {
       opacity: 1
     }
     .fadeIn, .fadeOut {
@@ -725,6 +652,11 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
+    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="demo_banner">
+      <a href="https://traininblocks.com/#pricing" target="_blank" class="a_link text--tiny">
+        Demo account: click here to sign up
+      </a>
+    </div>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <response-pop-up ref="response_pop_up" />
     </transition>
@@ -737,12 +669,11 @@
     <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <div class="modal--error">
         <div class="center_wrapped">
-          <p>Something went wrong, please try that again</p>
-          <p class="grey">
+          <p v-text="errorMsg" />
+          <p v-if="errorMsg !== 'You are using the demo account. Your changes cannot be saved.'" class="grey">
             This problem has been reported to our developers
           </p>
           <br>
-          <p>{{ errorMsg }}</p><br>
           <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
             Close
           </button>
@@ -752,115 +683,7 @@
     <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
       <policy :type="claims.user_type" />
     </modal>
-    <nav v-if="authenticated && claims" class="sidebar">
-      <div class="logo">
-        <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo_link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
-        </router-link>
-        <router-link v-if="claims.user_type === 'Client'" to="/clientUser" class="logo_link" title="Home">
-          <inline-svg :src="require('./assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
-        </router-link>
-      </div> <!-- .logo -->
-      <div class="account_nav_item">
-        <router-link
-          v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-          to="/"
-          title="Home"
-        >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Home" />
-          <p class="account_nav_item--text">
-            Home
-          </p>
-        </router-link>
-        <router-link
-          v-else-if="claims.user_type === 'Client'"
-          to="/clientUser"
-          title="Home"
-        >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Home" />
-          <p class="account_nav_item--text">
-            Home
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link
-          to="/clientUser"
-          title="Client Home"
-        >
-          <inline-svg :src="require('./assets/svg/home.svg')" class="account_nav_item--icon fadeIn" aria-label="Client Home" />
-          <p class="account_nav_item--text">
-            Client
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <a href="https://traininblocks.com/help" target="_blank" rel="noopener" title="Help">
-          <inline-svg :src="require('./assets/svg/help-desk.svg')" class="account_nav_item--icon fadeIn" aria-label="Help" />
-          <p class="account_nav_item--text">
-            Help
-          </p>
-        </a>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/templates" title="Templates">
-          <inline-svg :src="require('./assets/svg/template.svg')" class="account_nav_item--icon fadeIn" aria-label="Templates" />
-          <p class="account_nav_item--text">
-            Templates
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/portfolio" title="Portfolio">
-          <inline-svg :src="require('./assets/svg/portfolio.svg')" class="account_nav_item--icon fadeIn" aria-label="Portfolio" />
-          <p class="account_nav_item--text">
-            Portfolio
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/archive" title="Archive">
-          <inline-svg :src="require('./assets/svg/archive.svg')" class="account_nav_item--icon fadeIn" aria-label="Archive" />
-          <p class="account_nav_item--text">
-            Archive
-          </p>
-        </router-link>
-      </div>
-      <div
-        v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'"
-        class="account_nav_item"
-      >
-        <router-link to="/account" title="Account">
-          <inline-svg :src="require('./assets/svg/account.svg')" class="account_nav_item--icon fadeIn" aria-label="Account" />
-          <p class="account_nav_item--text">
-            Account
-          </p>
-        </router-link>
-      </div>
-      <div class="account_nav_item">
-        <router-link to="/logout" title="Logout" @click.native="logout()">
-          <inline-svg :src="require('./assets/svg/logout.svg')" class="account_nav_item--icon fadeIn" aria-label="Logout" />
-          <p class="account_nav_item--text">
-            Logout
-          </p>
-        </router-link>
-      </div>
-    </nav> <!-- .sidebar -->
+    <nav-bar :authenticated="authenticated" :claims="claims" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
         <router-view :key="$route.fullPath" />
@@ -872,10 +695,12 @@
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
+const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
 const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
 
 export default {
   components: {
+    NavBar,
     Policy
   },
   data () {
@@ -920,7 +745,7 @@ export default {
 
       policyVersion: '1.1',
       versionName: 'Pegasus',
-      versionBuild: '3.2',
+      versionBuild: '3.2.3',
       newBuild: false,
       errorMsg: null,
       loading: false,
@@ -980,6 +805,20 @@ export default {
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
       this.isTrainer = true
     }
+    this.$axios.interceptors.request.use((config) => {
+      if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
+        self.errorMsg = 'You are using the demo account. Your changes cannot be saved.'
+        self.$modal.show('error')
+        self.will_body_scroll(false)
+        self.loading = false
+        self.dontLeave = false
+        self.silent_loading = false
+        throw new self.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
+      }
+      return config
+    }, (error) => {
+      return Promise.reject(error)
+    })
   },
   methods: {
     async helper (mode, gaItem, gaAction) {
@@ -1034,20 +873,6 @@ export default {
     async is_authenticated () {
       this.authenticated = await this.$auth.isAuthenticated()
     },
-    async logout () {
-      await this.$auth.signOut()
-      await this.is_authenticated()
-      localStorage.clear()
-      localStorage.setItem('versionBuild', this.versionBuild)
-      const cookies = document.cookie.split(';')
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i]
-        const eqPos = cookie.indexOf('=')
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      }
-      this.$ga.event('Auth', 'logout')
-    },
     async setup () {
       if (localStorage.getItem('claims')) {
         this.claims = JSON.parse(localStorage.getItem('claims'))
@@ -1064,10 +889,10 @@ export default {
           this.claims.theme = 'system'
         }
         this.darkmode(this.claims.theme)
-        if (this.claims.policy === undefined || this.claims.policy === []) {
+        if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
           this.$modal.show('agreement')
-        } else if (this.policyVersion !== this.claims.policy[2]) {
+        } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
           this.$modal.show('agreement')
         }
@@ -1147,6 +972,7 @@ export default {
       }
       localStorage.setItem('clients', JSON.stringify(this.clients))
       */
+      this.noClients = this.clients.length === 0
     },
     async clients_f () {
       try {
@@ -1181,6 +1007,7 @@ export default {
             name: this.client_details.name,
             email: this.client_details.email,
             number: this.client_details.number,
+            notifications: this.client_details.notifications,
             notes: clientNotesUpdate === undefined ? this.client_details.notes : clientNotesUpdate
           }
         )
@@ -1251,6 +1078,7 @@ export default {
           }
           this.helper('client_store', 'Client', 'archive')
           this.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
+          this.end_loading()
           this.$router.push('/')
         } catch (e) {
           this.resolve_error(e)
@@ -1295,7 +1123,6 @@ export default {
     async get_portfolio (force) {
       try {
         if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
-          this.dontLeave = true
           let response
           if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
             response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
@@ -1350,7 +1177,6 @@ export default {
       }
     },
     async update_session (pid, sid, feedbackNotesUpdate) {
-      this.dontLeave = true
       const plan = this.clientUser.plans.find(plan => plan.id === pid)
       const session = plan.sessions.find(session => session.id === sid)
       const sessionId = session.id

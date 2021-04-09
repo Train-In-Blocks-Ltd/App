@@ -6,7 +6,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vw;
+    height: 100vh;
     background-color: #00000060
   }
 
@@ -75,6 +75,9 @@
   .plan_options a {
     margin-right: 1rem
   }
+  .plan_options a svg {
+    margin-right: .4rem
+  }
   .switch_cal {
     margin-bottom: .4rem
   }
@@ -91,7 +94,7 @@
     transition: var(--transition_standard)
   }
   .a--plan_notes:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
 
   /* Plan Table */
@@ -164,7 +167,7 @@
     transition: var(--transition_standard)
   }
   .change_week_color:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .change_week_color.noColor {
     /* stylelint-disable-next-line */
@@ -179,7 +182,7 @@
     transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1)
   }
   #info:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   #info:active {
     transform: scale(.9)
@@ -206,13 +209,6 @@
   .container--sessions_header a {
     font-size: .8rem;
     margin-left: 1rem
-  }
-  .wrapper--session, #plan_notes {
-    display: grid;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    padding: 2rem;
-    border-radius: 10px
   }
   .session_header {
     display: flex;
@@ -257,7 +253,7 @@
     text-decoration: underline
   }
   .editingChecked:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
 
   /* Graph */
@@ -495,7 +491,7 @@
                 {{ protocol[1][exerciseGroupIndex][0] }}
               </h2>
               <p class="grey">
-                {{ protocol[1][exerciseGroupIndex][1] }} {{ protocol[1][exerciseGroupIndex][2] }}
+                {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
               </p>
               <div
                 v-for="(exercise, exerciseIndex) in exercises"
@@ -581,7 +577,7 @@
       </form>
     </modal>
     <div
-      v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions"
+      v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions && !noSessions"
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small fadeIn"
       aria-label="Statistics"
@@ -605,7 +601,7 @@
       :show-media="true"
       @close="previewDesc = null, previewHTML = null"
     />
-    <div v-show="editSession !== null" class="dark_overlay" />
+    <div v-show="editSession !== null" class="dark_overlay fadeIn" />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
       v-for="(plan, index) in $parent.$parent.client_details.plans"
@@ -652,7 +648,7 @@
               class="a_link"
               href="javascript:void(0)"
             >
-              <inline-svg :src="require('../../assets/svg/back.svg')" />
+              <inline-svg id="back" :src="require('../../assets/svg/back.svg')" />
               Back to profile
             </router-link>
             <a
@@ -675,7 +671,11 @@
         </div> <!-- top_grid -->
         <div class="plan_grid">
           <div class="calendar">
-            <div id="plan_notes" :class="{ editorActive: editingPlanNotes }">
+            <div
+              id="plan_notes"
+              :class="{ editorActive: editingPlanNotes }"
+              class="editor_object"
+            >
               <h2>
                 Plan Notes
               </h2>
@@ -764,7 +764,7 @@
                       id="info"
                       :src="require('../../assets/svg/info.svg')"
                       title="Info"
-                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><em>Exercise Name</em><b>:</b> <em>Sets</em> <b>x</b> <em>Reps</em> <b>at</b> <em>Load</em> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><em>Measurement</em><b>:</b> <em>Value</em> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', will_body_scroll(false)"
+                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', will_body_scroll(false)"
                     />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
@@ -813,7 +813,7 @@
                     v-show="session.week_id === currentWeek"
                     :id="'session-' + session.id"
                     :key="indexed"
-                    class="wrapper--session fadeIn"
+                    class="editor_object fadeIn"
                     :class="{ editorActive: session.id === editSession }"
                     :style="{ zIndex: session.id === editSession ? 2 : 0 }"
                   >
@@ -870,6 +870,7 @@
                     <rich-editor
                       v-show="expandedSessions.includes(session.id)"
                       :item-id="session.id"
+                      :week-id="currentWeek"
                       :editing="editSession"
                       :html-injection.sync="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
@@ -1353,6 +1354,7 @@ export default {
       this.update_plan()
       this.$modal.hide('copy')
       this.deselect_all()
+      this.scan()
       this.$ga.event('Session', 'progress')
       this.$parent.$parent.end_loading()
     },
@@ -1364,9 +1366,11 @@ export default {
         }
       })
       this.currentWeek = parseInt(this.moveTarget)
-      this.$ga.event('Session', 'move')
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session', 'Your changes have been saved')
       this.deselect_all()
+      this.scan()
+      this.$ga.event('Session', 'move')
+      this.$parent.$parent.end_loading()
     },
     async duplicate_plan (clientId) {
       const plan = this.helper('match_plan')
@@ -1448,8 +1452,10 @@ export default {
     },
     check_for_week_sessions () {
       let arr = 0
-      if (!this.noSessions) {
-        this.helper('match_plan').sessions.forEach((session) => {
+      const sessions = this.helper('match_plan').sessions
+      this.noSessions = sessions === false
+      if (sessions && !this.noSessions) {
+        sessions.forEach((session) => {
           if (session.week_id === this.currentWeek) {
             arr += 1
             this.weekSessions.push(session.id)
@@ -1524,6 +1530,7 @@ export default {
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
           if (regex.test(exerciseDataPacket[1])) {
+            console.log('a')
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({
@@ -1548,12 +1555,13 @@ export default {
               this.showType = false
               this.dataValues.push(this.other_measures(protocol))
             }
-          }
-          if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
+          } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
             const dataForSum = () => {
               switch (this.selectedDataType) {
-                case 'Sets' || 'Reps':
-                  return this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType)
+                case 'Sets':
+                  return this.sets_reps(exerciseDataPacket, protocol, 'Sets')
+                case 'Reps':
+                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps')
                 case 'Load':
                   return this.load(exerciseDataPacket, protocol)
                 case 'Volume':
@@ -1648,7 +1656,7 @@ export default {
       const plan = this.helper('match_plan')
       this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
       this.maxWeek = plan.duration
-      if (plan.sessions !== null && !this.noSessions) {
+      if (plan.sessions && !this.noSessions) {
         plan.sessions.forEach((object) => {
           this.sessionDates.push({
             title: object.name,
@@ -1848,6 +1856,7 @@ export default {
     // DATABASE
 
     async create_plan (planName, clientId, planDuration, planColors, planNotes, planSessions) {
+      this.$parent.$parent.dontLeave = true
       try {
         await this.$axios.put('https://api.traininblocks.com/programmes',
           {
@@ -1880,6 +1889,7 @@ export default {
     },
     async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
       this.$parent.$parent.silent_loading = true
+      this.$parent.$parent.dontLeave = true
       const plan = this.helper('match_plan')
       try {
         this.sort_sessions(plan)
@@ -1923,22 +1933,24 @@ export default {
       }
     },
     async delete_plan () {
+      this.$parent.$parent.dontLeave = true
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         const id = parseInt(this.$route.params.id)
         try {
           await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()
-          this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
           this.$ga.event('Session', 'delete')
           this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
           this.$parent.$parent.end_loading()
+          this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
         }
       }
     },
     async update_session (id) {
+      this.$parent.$parent.dontLeave = true
       const session = this.helper('match_session', id)
       try {
         await this.$axios.post('https://api.traininblocks.com/workouts',
@@ -1961,6 +1973,7 @@ export default {
       }
     },
     async add_session (isCopy, forceArr) {
+      this.$parent.$parent.dontLeave = true
       try {
         await this.$axios.put('https://api.traininblocks.com/workouts',
           {
@@ -1973,15 +1986,18 @@ export default {
         )
         // Get the sessions from the API because we've just created a new one
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
-        this.sort_sessions(this.helper('match_plan'))
-        this.scan()
-        this.check_for_new()
-        this.adherence()
-        this.$ga.event('Session', 'new')
         if (!isCopy) {
           this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
         } else {
           this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
+        }
+        if (forceArr === undefined) {
+          this.sort_sessions(this.helper('match_plan'))
+          this.scan()
+          this.check_for_new()
+          this.adherence()
+          this.$ga.event('Session', 'new')
+          this.check_for_week_sessions()
         }
         this.new_session = {
           name: 'Untitled',
@@ -1996,12 +2012,14 @@ export default {
       }
     },
     async delete_session (id) {
+      this.$parent.$parent.dontLeave = true
       try {
         await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         await this.update_plan()
 
         this.$ga.event('Session', 'delete')
+        this.check_for_week_sessions()
         this.$parent.$parent.end_loading()
       } catch (e) {
         this.$parent.$parent.resolve_error(e)

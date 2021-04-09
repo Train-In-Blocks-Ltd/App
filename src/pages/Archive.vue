@@ -20,7 +20,7 @@
     transition: transform .1s, opacity .6s cubic-bezier(.165, .84, .44, 1)
   }
   .archive_icon:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .archive_icon:active {
     transform: scale(.9)
@@ -49,7 +49,7 @@
       </a>
     </div>
     <br>
-    <p v-if="$parent.archive.no_archive" class="grey">
+    <p v-if="$parent.archive.no_archive" class="text--small grey">
       No clients are archived :)
     </p>
     <p v-if="$parent.error">

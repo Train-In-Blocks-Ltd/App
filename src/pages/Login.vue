@@ -1,159 +1,177 @@
-<style scoped>
-  a {
-    text-decoration: none;
-    color: var(--base)
-  }
-  #login {
-    text-align: left;
-    margin: auto;
-    padding: 6rem 4rem;
-    width: 550px
-  }
-  .cookies {
-    font-size: .75rem;
-    margin: 2rem 0
-  }
-  @media (max-width: 520px) {
-    #login {
-      width: 100%;
-      padding: 2rem;
-      height: 100%;
-      overflow-y: auto
-    }
-    .cookies {
-      margin-left: 0;
-      margin-right: 0
-    }
-  }
-  .error {
-    color: red
-  }
-  .button--container {
-    margin-top: 1rem
-  }
-  .signup {
-    margin-left: calc(20px + 60px + 20px);
-    margin-top: -.6rem;
-    margin-bottom: .6rem
-  }
-  .recovery {
-    margin-top: 1.25rem
-  }
-  .recover_password {
-    margin: .8rem 0
-  }
-</style>
 <style>
-  #okta-sign-in {
-    margin-left: 0
-  }
-  #okta-signin-submit {
-    outline: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    position: absolute;
-    user-select: none;
-    cursor: pointer;
-    border-radius: 5px;
-    opacity: 1;
-    text-transform: capitalize;
-    border: none;
-    padding: .6rem 1.6rem;
-    font-size: .8rem;
-    color: white;
-    background-color: var(--base);
-    margin: .6rem 0;
-    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  #okta-signin-submit:hover {
-    opacity: .6
-  }
-  #okta-signin-submit:active {
-    transform: scale(.96)
-  }
-  #okta-signin-submit:focus {
-    box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
-  }
-  #okta-signin-container {
-    position: relative
-  }
-  .o-form-button-bar {
-    margin-top: 1.25rem
-  }
-  .okta-form-title {
-    display: none
-  }
-  .auth-org-logo {
-    margin: 2rem 0
-  }
-  .auth-org-logo.logo > path {
-    fill: var(--base)
-  }
+#okta-sign-in {
+  outline: none;
+  margin-left: 0
+}
+#okta-signin-submit {
+  outline: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 5px;
+  opacity: 1;
+  text-transform: capitalize;
+  border: none;
+  padding: .6rem 1.6rem;
+  font-size: .8rem;
+  color: white;
+  background-color: var(--base);
+  margin: .6rem 0;
+  transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+}
+#okta-signin-submit:hover {
+  opacity: var(--light_opacity)
+}
+#okta-signin-submit:active {
+  transform: scale(.96)
+}
+#okta-signin-submit:focus {
+  box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
+}
+#okta-signin-container {
+  position: relative
+}
+.o-form-button-bar {
+  margin-top: 1.25rem
+}
+.okta-form-title {
+  display: none
+}
+.auth-org-logo {
+  margin: 2rem 0
+}
+.auth-org-logo.logo > path {
+  fill: var(--base)
+}
+.okta-form-label {
+  text-align: left
+}
+#okta-signin-username, #okta-signin-password {
+  margin: .8rem 0;
+  font-size: 1rem;
+  border-radius: 5px
+}
+.okta-form-input-error {
+  width: 100%;
+  color: #EB5757;
+  margin-top: .4rem;
+  margin-bottom: 1.4rem;
+  font-size: .75rem;
+  text-align: left
+}
+.o-form-input-name-remember {
+  text-align: left;
+  font-size: .9rem
+}
+.o-form-fieldset-container {
+  display: grid;
+  grid-gap: 1.5rem;
+  margin: 2rem 0
+}
+.custom-checkbox label {
+  padding-left: 4px
+}
+.custom-checkbox:after {
+  content: 'Please remember to manually logout if this is a shared computer.';
+  display: block;
+  margin-top: .5rem;
+  font-size: .75rem;
+  padding-left: calc(4px + 13px + 4px + 3px)
+}
+
+/* Responsive */
+@media (max-width: 576px) {
   .okta-form-label {
-    text-align: left
+    font-size: 1.5rem
   }
   #okta-signin-username, #okta-signin-password {
-    margin: .8rem 0;
-    font-size: 1rem;
-    border-radius: 5px
-  }
-  .okta-form-input-error {
-    width: 100%;
-    color: #EB5757;
-    margin-top: .4rem;
-    margin-bottom: 1.4rem;
-    font-size: .75rem;
-    text-align: left
-  }
-  .o-form-input-name-remember {
-    text-align: left;
     font-size: .9rem
   }
-  .o-form-fieldset-container {
-    display: grid;
-    grid-gap: 1.5rem;
-    margin: 2rem 0
+}
+.auth-footer {
+  display: none
+}
+</style>
+
+<style scoped>
+a {
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--base);
+  transition: var(--transition_standard)
+}
+a:hover {
+  opacity: var(--light_opacity)
+}
+#login {
+  text-align: left;
+  margin: auto;
+  padding: 6rem 4rem;
+  width: 550px
+}
+.other_options {
+  display: grid;
+  grid-gap: 1rem;
+  margin-top: 4rem
+}
+.cookies {
+  font-size: .75rem;
+  margin: 2rem 0
+}
+.error {
+  color: red
+}
+.signup {
+  margin-left: calc(20px + 60px + 20px);
+  margin-top: -.6rem;
+  margin-bottom: .6rem
+}
+.recovery {
+  margin-top: 4rem;
+  margin-bottom: 1rem
+}
+.recover_password {
+  margin: .8rem 0
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  a:hover {
+    opacity: 1
   }
-  .custom-checkbox label {
-    padding-left: 4px
+  #login {
+    width: 100%;
+    padding: 1.6rem;
+    height: 100%;
+    overflow-y: auto
   }
-  .custom-checkbox:after {
-    content: 'Please remember to manually logout if this is a shared computer.';
-    display: block;
-    margin-top: .5rem;
-    font-size: .75rem;
-    padding-left: calc(4px + 13px + 4px + 3px)
+  .cookies {
+    margin-left: 0;
+    margin-right: 0
   }
-  @media (max-width: 520px) {
-    .okta-form-label {
-      font-size: 1.5rem
-    }
-    #okta-signin-username, #okta-signin-password {
-      font-size: .9rem
-    }
-  }
-  .auth-footer {
-    display: none
-  }
+}
 </style>
 
 <template>
   <div v-if="!$parent.authenticated" id="login">
     <splash v-if="!splashed" />
     <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
-    <div id="okta-signin-container" />
-    <div class="button--container">
-      <form action="https://traininblocks.com">
-        <button class="signup" type="submit">
-          Sign Up
-        </button>
-      </form>
-      <div>
-        <button v-if="!open" @click="open = !open">
-          Forgot password?
-        </button>
+    <div>
+      <a href="javascript:void(0)" @click="showDemo = !showDemo">
+        <b>{{ showDemo ? 'Hide' : 'Demo account details' }} </b>
+      </a>
+    </div>
+    <div v-if="showDemo" class="demo_details">
+      <div class="info">
+        demo@traininblocks.com
+      </div>
+      <div class="info">
+        Testing123
       </div>
     </div>
+    <div id="okta-signin-container" />
     <form v-if="open" class="recovery" @submit.prevent="reset">
       <label>
         <p>Email:</p>
@@ -174,6 +192,20 @@
     <p v-if="error" class="error">
       {{ error }}
     </p>
+    <div class="other_options">
+      <p>
+        Need an account?
+        <a href="https://traininblocks.com/#pricing">
+          Sign up here
+        </a>
+      </p>
+      <p v-if="!open">
+        Forgot your password?
+        <a href="javascript:(0)" @click="open = !open">
+          Reset it here
+        </a>
+      </p>
+    </div>
     <p class="cookies">
       By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.
     </p>
@@ -195,6 +227,7 @@ export default {
   },
   data () {
     return {
+      showDemo: false,
       splashed: false,
       open: false,
       email: null,

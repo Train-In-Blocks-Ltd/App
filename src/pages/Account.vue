@@ -1,69 +1,75 @@
 <style scoped>
-  .details {
-    display: grid;
-    grid-gap: 1rem;
-    margin: 2rem 0
-  }
-  .theme {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .privacy {
-    display: grid
-  }
-  .policies:first-of-type {
-    margin-top: 2rem
-  }
-  .policies:last-of-type {
-    margin-bottom: 2rem
-  }
-  .policies {
-    width: fit-content;
-    text-decoration: none;
-    color: var(--base);
-    opacity: 1;
-    margin: .4rem 0;
-    transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  .policies:hover {
-    opacity: .6
-  }
-  .policies:active {
-    transform: scale(.9)
-  }
-  .details_container {
-    display: grid;
-    grid-gap: 4rem;
-    align-items: center
-  }
-  .form__options {
-    display: flex
-  }
-  .form__options label {
-    margin: auto 0
-  }
-  .text-reset {
-    font-size: .8rem
-  }
-  .allow-cookies {
-    align-self: center
-  }
-  .check {
-    border-color: red;
-    outline-color: red
-  }
-  .error {
-    color: red
-  }
-  .reset_password_button_bar {
-    display: flex
-  }
+.details {
+  display: grid;
+  grid-gap: 1rem;
+  margin: 2rem 0
+}
+.theme {
+  display: grid;
+  grid-gap: 1rem
+}
+.privacy {
+  display: grid
+}
+.policies:first-of-type {
+  margin-top: 2rem
+}
+.policies:last-of-type {
+  margin-bottom: 2rem
+}
+.policies {
+  width: fit-content;
+  text-decoration: none;
+  color: var(--base);
+  opacity: 1;
+  margin: .4rem 0;
+  transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+}
+.policies:hover {
+  opacity: var(--light_opacity)
+}
+.policies:active {
+  transform: scale(.9)
+}
+.details_container {
+  display: grid;
+  grid-gap: 4rem;
+  align-items: center
+}
+.form__options {
+  display: flex
+}
+.form__options label {
+  margin: auto 0
+}
+.text-reset {
+  font-size: .8rem
+}
+.allow-cookies {
+  align-self: center
+}
+.check {
+  border-color: red;
+  outline-color: red
+}
+.error {
+  color: red
+}
+.reset_password_button_bar {
+  display: flex
+}
 
-  @media (max-width: 768px) {
-    .policies:hover {
-      opacity: 1
-    }
+/* Responsive */
+@media (max-width: 768px) {
+  .policies:hover {
+    opacity: 1
   }
+}
+@media (max-width: 576px) {
+  .details_container button {
+    width: 100%
+  }
+}
 </style>
 
 <template>
@@ -246,6 +252,7 @@ export default {
 
     async manage_subscription () {
       try {
+        this.$parent.dontLeave = true
         const response = await this.$axios.post('/.netlify/functions/create-manage-link',
           {
             id: this.$parent.claims.stripeId

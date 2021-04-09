@@ -26,7 +26,7 @@
       aria-label="Duration"
       required
     >
-    <div class="form_buttons">
+    <div class="form_button_bar">
       <button type="submit">
         Save
       </button>

@@ -15,6 +15,12 @@ textarea {
 .result {
   margin-top: 2rem
 }
+
+@media (max-width: 576px) {
+  button.red_button {
+    width: 100%
+  }
+}
 </style>
 
 <template>
@@ -39,7 +45,7 @@ textarea {
           v-show="selectedTool === tool.name"
           :key="`tool_${toolIndex}`"
         >
-          <p><strong>Data:</strong></p>
+          <p><b>Data:</b></p>
           <input
             v-for="(input, inputIndex) in tool.inputs"
             :id="`input_${input.id}`"

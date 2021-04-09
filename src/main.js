@@ -129,7 +129,7 @@ Vue.mixin({
           html = html.replace(item[0], `<a href="${item[1]}" target="_blank">Watch video</a>`)
         })
       }
-      return html
+      return html === null ? html : html.replace(/<strong>/gi, '<b>').replace(/<\/strong>/gi, '</b>').replace(/<em>/gi, '<i>').replace(/<\/em>/gi, '<i>')
     },
 
     // Other

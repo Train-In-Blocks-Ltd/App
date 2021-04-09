@@ -53,7 +53,7 @@
 
   @keyframes fade {
     from {
-      opacity: .6
+      opacity: var(--light_opacity)
     }
     to {
       opacity: 1
@@ -73,6 +73,15 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 1rem
+  }
+  @media (max-width: 992px) {
+    .plans_layout {
+      margin-top: 2rem;
+      grid-template-columns: 1fr
+    }
+    .plans_layout > div {
+      margin: 0
+    }
   }
 </style>
 

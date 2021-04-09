@@ -9,7 +9,7 @@
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   .trainer_info input:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .trainer_info input:focus {
     opacity: 1;
@@ -25,15 +25,8 @@
   }
 
   /* Card */
-  .wrapper_card {
-    display: grid;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    padding: 2rem;
-    border-radius: 10px;
-    margin: 4rem 0
-  }
-  .wrapper_card_skeleton {
+  .portfolio_editor,
+  .portfolio_editor_skeleton {
     margin: 4rem 0
   }
 </style>
@@ -71,7 +64,7 @@
     <div
       v-if="!$parent.loading"
       :class="{ editorActive: editingPortfolio }"
-      class="wrapper_card"
+      class="editor_object portfolio_editor"
     >
       <h2>
         Portfolio
@@ -82,7 +75,7 @@
         @on-edit-change="resolve_portfolio_editor"
       />
     </div>
-    <skeleton v-else :type="'session'" class="wrapper_card_skeleton" />
+    <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
     <!-- <products /> -->
   </div>
 </template>
@@ -136,7 +129,7 @@ export default {
       }
     },
 
-    // DATABASE
+    // Database
 
     async update (notesUpdate) {
       this.$parent.silent_loading = true

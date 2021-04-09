@@ -47,7 +47,7 @@
     transition: var(--transition_standard)
   }
   .calendar_header__bar *:hover {
-    opacity: .6
+    opacity: var(--light_opacity)
   }
   .next_week {
     cursor: pointer;
@@ -74,7 +74,7 @@
     margin: auto
   }
   .disabled, .today.disabled:hover {
-    opacity: .6;
+    opacity: var(--light_opacity);
     cursor: default
   }
 
@@ -103,6 +103,11 @@
     }
     .prev_week:active {
       transform: rotate(90deg) translateY(0) scale(.9)
+    }
+  }
+  @media (max-width: 576px) {
+    .day_container {
+      padding: 1rem
     }
   }
 </style>

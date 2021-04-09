@@ -83,7 +83,7 @@
           <checkbox :item-id="product.id" :type="'v1'" aria-label="Select this product" />
         </div>
         <p>
-          <strong>A {{ product.type }} of <u>{{ product.price }}</u></strong>
+          <b>A {{ product.type }} of <u>{{ product.price }}</u></b>
         </p>
         <textarea v-model="product.desc" placeholder="Description" aria-label="Description" />
       </div>

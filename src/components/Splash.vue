@@ -54,7 +54,7 @@
   }
   @keyframes flashing {
     0% {
-      opacity: .7
+      opacity: var(--light_opacity)
     }
     100% {
       opacity: 1

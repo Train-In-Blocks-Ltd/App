@@ -460,7 +460,7 @@ export function email (link) {
                                   <td valign='top' class='mcnTextContent' style='padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #282828;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;'>
                                     All the best,<br>
                                     <br>
-                                    <strong>The Train In Blocks Team</strong>
+                                    <b>The Train In Blocks Team</b>
                                   </td>
                                 </tr>
                               </tbody>
@@ -959,7 +959,7 @@ export function resetEmail (link) {
                                   <td valign='top' class='mcnTextContent' style='padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #282828;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;'>
                                     All the best,<br>
                                     <br>
-                                    <strong>The Train In Blocks Team</strong>
+                                    <b>The Train In Blocks Team</b>
                                   </td>
                                 </tr>
                               </tbody>
@@ -1435,7 +1435,7 @@ export function deleteEmail () {
                                   <td valign='top' class='mcnTextContent' style='padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #282828;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;'>
                                     All the best,<br>
                                     <br>
-                                    <strong>The Train In Blocks Team</strong>
+                                    <b>The Train In Blocks Team</b>
                                   </td>
                                 </tr>
                               </tbody>
@@ -1906,7 +1906,7 @@ export function passChangeEmail () {
                                   <td valign='top' class='mcnTextContent' style='padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #282828;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;'>
                                     All the best,<br>
                                     <br>
-                                    <strong>The Train In Blocks Team</strong>
+                                    <b>The Train In Blocks Team</b>
                                   </td>
                                 </tr>
                               </tbody>
@@ -2394,7 +2394,7 @@ export function feedbackEmail (cId, pId) {
                                   <td valign='top' class='mcnTextContent' style='padding-top: 0;padding-right: 18px;padding-bottom: 9px;padding-left: 18px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #282828;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;'>
                                     All the best,<br>
                                     <br>
-                                    <strong>The Train In Blocks Team</strong>
+                                    <b>The Train In Blocks Team</b>
                                   </td>
                                 </tr>
                               </tbody>

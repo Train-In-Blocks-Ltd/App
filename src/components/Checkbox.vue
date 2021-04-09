@@ -74,7 +74,7 @@
 <script>
 export default {
   props: {
-    itemId: Number,
+    itemId: [Number, Boolean],
     type: String
   }
 }
