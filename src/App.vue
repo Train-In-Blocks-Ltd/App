@@ -772,7 +772,15 @@ export default {
   },
   async mounted () {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/js/traininblocks-sw.js')
+      navigator.serviceWorker.getRegistrations().then(
+        function (registrations) {
+          for (const registration of registrations) {
+            registration.unregister().then(function () {
+              navigator.serviceWorker.register('/traininblocks-sw.js')
+            })
+          }
+        }
+      )
     }
     window.addEventListener('beforeunload', (e) => {
       if (this.dontLeave) {

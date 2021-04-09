@@ -76,6 +76,9 @@ const webpackConfig = merge(baseWebpackConfig, {
       filename: config.build.index,
       template: 'index.html',
     }),
+    new InjectManifest({
+      swSrc: './src/traininblocks-sw.js',
+    }),
     new PreloadWebpackPlugin({
       rel: 'preload',
       include: 'initial',
@@ -85,11 +88,6 @@ const webpackConfig = merge(baseWebpackConfig, {
         return 'script'
       }
     })
-    /*
-    new InjectManifest({
-      swSrc: './src/sw.js',
-    })
-    */
   ]
 })
 if (process.env.REPORT) {
