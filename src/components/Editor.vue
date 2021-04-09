@@ -467,11 +467,11 @@ export default {
       if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
         document.addEventListener(this.isMobile ? 'touchend' : 'click', this.toggle_formatter)
-        document.addEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.addEventListener('keydown', this.toggle_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener(this.isMobile ? 'touchend' : 'click', this.toggle_formatter)
-        document.removeEventListener(this.isMobile ? 'touchstart' : 'keydown', this.toggle_formatter)
+        document.removeEventListener('keydown', this.toggle_formatter)
       }
     },
     forceStop () {
