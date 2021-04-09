@@ -467,11 +467,11 @@ export default {
       if (this.editState) {
         document.addEventListener('keyup', this.check_cmd_state)
         document.addEventListener('keydown', this.toggle_formatter)
-        document.addEventListener(this.isMobile ? 'touchstart' : 'click', this.toggle_formatter)
+        document.addEventListener('click', this.toggle_formatter)
       } else {
         document.removeEventListener('keyup', this.check_cmd_state)
         document.removeEventListener('keydown', this.toggle_formatter)
-        document.removeEventListener(this.isMobile ? 'touchstart' : 'click', this.toggle_formatter)
+        document.removeEventListener('click', this.toggle_formatter)
       }
     },
     forceStop () {
@@ -651,6 +651,7 @@ export default {
       return { x, y }
     },
     toggle_formatter (event) {
+      console.log(event)
       const contenteditable = document.getElementById('rich_editor')
       const remover = document.getElementById('remover')
       const linker = document.getElementById('linker')
