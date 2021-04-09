@@ -657,7 +657,7 @@ export default {
       const { x, y } = this.get_caret_coordinates()
       const containing = contenteditable.contains(event.target) || false
       const sel = window.getSelection()
-      this.inEditor = containing
+      setTimeout(() => { this.inEditor = containing }, this.isMobile ? 100 : 0)
       this.isCaret = sel.type === 'Caret'
       if (sel.anchorOffset + sel.focusOffset !== 0 && containing) {
         this.targetElement = event.target
