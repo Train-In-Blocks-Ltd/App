@@ -651,7 +651,6 @@ export default {
       return { x, y }
     },
     toggle_formatter (event) {
-      console.log(event)
       const contenteditable = document.getElementById('rich_editor')
       const remover = document.getElementById('remover')
       const linker = document.getElementById('linker')
