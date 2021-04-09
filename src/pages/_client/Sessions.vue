@@ -1309,7 +1309,7 @@ export default {
         let n = 0
         if (sessionItem[0] === sessionId) {
           sessionItem[1].forEach((exerciseGroup, exerciseGroupIndex) => {
-            const regEx = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
+            const regEx = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1].replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
             sessionNotes = sessionNotes.replace(regEx, (match) => {
               return n === exerciseGroupIndex ? `${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}: ${exerciseGroup[loc - 1]}` : match
             })
