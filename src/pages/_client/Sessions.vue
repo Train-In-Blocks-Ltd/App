@@ -1309,7 +1309,7 @@ export default {
         let n = 0
         if (sessionItem[0] === sessionId) {
           sessionItem[1].forEach((exerciseGroup, exerciseGroupIndex) => {
-            const regEx = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
+            const regEx = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1].replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
             sessionNotes = sessionNotes.replace(regEx, (match) => {
               return n === exerciseGroupIndex ? `${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}: ${exerciseGroup[loc - 1]}` : match
             })
@@ -1530,7 +1530,6 @@ export default {
           const regex = RegExp(tidyB, 'gi')
           const protocol = exerciseDataPacket[2].replace(/\s/g, '')
           if (regex.test(exerciseDataPacket[1])) {
-            console.log('a')
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({
@@ -1573,12 +1572,14 @@ export default {
               this.dataValues.push(overviewStore.reduce((a, b) => a + b))
               this.desc_stats(this.selectedDataType)
             }
-            for (let x = 1; x <= this.dataValues.length; x++) {
-              this.labelValues.push(['Session ' + x])
-            }
           }
         })
       })
+      if (this.selectedDataName === 'Plan Overview') {
+        for (let x = 1; x <= this.dataValues.length; x++) {
+          this.labelValues.push(['Session ' + x])
+        }
+      }
       this.resetGraph += 1
     },
 
