@@ -5,7 +5,9 @@
     "short_name": "Train In Blocks",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
+    "display_overrides": ["minimal-ui"],
     "display": "standalone",
+    "orientation": "portrait",
     "lang": "en-GB",
     "icons": [
         {
@@ -114,8 +116,27 @@
             ]
         }
     ],
+    "screenshots" : [
+        {
+          "src": "Android-Screenshot-1.jpg",
+          "sizes": "2340x1080",
+          "type": "image/jpg"
+        },
+        {
+          "src": "Android-Screenshot-2.jpg",
+          "sizes": "2340x1080",
+          "type": "image/jpg"
+        },
+        {
+          "src": "Android-Screenshot-3.jpg",
+          "sizes": "2340x1080",
+          "type": "image/jpg"
+        }
+    ],
+    "categories": ["fitness", "health", "lifestyle", "sports"],
     "related_applications": [{
         "platform": "webapp",
         "url": "https://app.traininblocks.com/site.webmanifest"
-    }]
+    }],
+    "prefer_related_applications": false
 }

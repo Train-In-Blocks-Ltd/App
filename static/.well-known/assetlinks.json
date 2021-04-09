@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "com.traininblocks.app.twa",
+                   "sha256_cert_fingerprints": ["1A:F8:13:2C:B5:2A:F8:94:A1:2F:52:0F:B8:C4:1B:6B:4E:18:4B:D9:A8:07:11:58:ED:DA:03:39:33:6E:8E:A1"] }
+    }]
