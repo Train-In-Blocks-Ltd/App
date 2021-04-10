@@ -100,8 +100,8 @@ Vue.mixin({
         })
       }
     },
-    remove_brackets_and_checkbox (dataIn) {
-      return dataIn !== null ? dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '') : dataIn
+    remove_brackets (dataIn) {
+      return dataIn !== null ? dataIn.replace(/[[\]]/g, '') : dataIn
     },
     proper_case (string) {
       const sentence = string.toLowerCase().split(' ')
@@ -109,27 +109,6 @@ Vue.mixin({
         sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
       }
       return sentence.join(' ')
-    },
-    update_content (html) {
-      let m
-      const arr = []
-      const updateIframeRegex = /<iframe.*?><\/iframe>/gmi
-      const updateURLRegex = /src="(.*?)"/gmi
-      while ((m = updateIframeRegex.exec(html)) !== null) {
-        if (m.index === updateIframeRegex.lastIndex) {
-          updateIframeRegex.lastIndex++
-        }
-        m.forEach((iframeMatch) => {
-          const url = iframeMatch.match(updateURLRegex)[0].replace('src=', '').replace(/"/g, '')
-          arr.push([iframeMatch, url])
-        })
-      }
-      if (arr.length !== 0) {
-        arr.forEach((item) => {
-          html = html.replace(item[0], `<a href="${item[1]}" target="_blank">Watch video</a>`)
-        })
-      }
-      return html === null ? html : html.replace(/<strong>/gi, '<b>').replace(/<\/strong>/gi, '</b>').replace(/<em>/gi, '<i>').replace(/<\/em>/gi, '<i>')
     },
 
     // Other

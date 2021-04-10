@@ -37,7 +37,7 @@
           <h2 class="grey">
             {{ $parent.portfolio.trainer_name }}
           </h2>
-          <div class="client_portfolio__notes" v-html="update_content(remove_brackets_and_checkbox($parent.portfolio.notes))" />
+          <div class="client_portfolio__notes" v-html="remove_brackets($parent.portfolio.notes)" />
           <button class="red_button" @click="isPortfolioOpen = false, will_body_scroll(true)">
             Close
           </button>
@@ -101,7 +101,7 @@
                   <span class="text--date">{{ session.date }}</span>
                 </div>
               </div>
-              <div class="show_html fadeIn" v-html="update_content(remove_brackets_and_checkbox(session.notes))" />
+              <div class="show_html fadeIn" v-html="remove_brackets(session.notes)" />
               <div class="bottom_bar">
                 <div :key="check" class="full_width_bar">
                   <button

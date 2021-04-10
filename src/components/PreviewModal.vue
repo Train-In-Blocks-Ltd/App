@@ -48,7 +48,7 @@ button.red_button {
       <h2 class="title">
         {{ desc }}
       </h2>
-      <div class="preview_html" :class="{ noMedia: !showMedia }" v-html="remove_brackets_and_checkbox(html)" />
+      <div class="preview_html" :class="{ noMedia: !showMedia }" v-html="remove_brackets(html)" />
       <button
         class="red_button"
         @click="$emit('close'), will_body_scroll(true)"
