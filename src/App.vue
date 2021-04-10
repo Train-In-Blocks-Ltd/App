@@ -670,8 +670,11 @@
       <div class="modal--error">
         <div class="center_wrapped">
           <p v-text="errorMsg" />
-          <p v-if="errorMsg !== 'You are using the demo account. Your changes cannot be saved.'" class="grey">
+          <p v-if="errorMsg !== 'You are using the demo account. Your changes cannot be saved.' && errorMsg !== 'Error: Network Error'" class="grey">
             This problem has been reported to our developers
+          </p>
+          <p v-if="errorMsg === 'Error: Network Error'">
+            You're probably offline. We'll try that request again once you're back online
           </p>
           <br>
           <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
@@ -694,7 +697,6 @@
 
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
-import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
 const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
 const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
 
@@ -757,12 +759,20 @@ export default {
         displayMode: 'browser tab',
         canInstall: false,
         installed: null
-      }
+      },
+      connected: true
     }
   },
   watch: {
     $route (to, from) {
       this.is_authenticated()
+    },
+    async connected () {
+      if (this.connected === true) {
+        await this.clients_f()
+        await this.archive_f()
+        this.setup()
+      }
     }
   },
   async created () {
@@ -771,13 +781,17 @@ export default {
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
-    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(
         function (registrations) {
-          for (const registration of registrations) {
-            registration.unregister().then(function () {
-              navigator.serviceWorker.register('/traininblocks-sw.js')
-            })
+          if (registrations.length !== 0) {
+            for (const registration of registrations) {
+              registration.unregister().then(function () {
+                navigator.serviceWorker.register('/traininblocks-sw.js')
+              })
+            }
+          } else {
+            navigator.serviceWorker.register('/traininblocks-sw.js')
           }
         }
       )
@@ -907,6 +921,14 @@ export default {
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
+      this.connected = navigator.onLine
+      const self = this
+      window.addEventListener('offline', function (event) {
+        self.connected = false
+      })
+      window.addEventListener('online', function (event) {
+        self.connected = true
+      })
     },
     async save_claims () {
       this.dontLeave = true

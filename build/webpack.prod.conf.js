@@ -7,7 +7,6 @@ const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-const {InjectManifest} = require('workbox-webpack-plugin')
 const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
 
 const webpackConfig = merge(baseWebpackConfig, {
@@ -75,9 +74,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: config.build.index,
       template: 'index.html',
-    }),
-    new InjectManifest({
-      swSrc: './src/traininblocks-sw.js',
     }),
     new PreloadWebpackPlugin({
       rel: 'preload',

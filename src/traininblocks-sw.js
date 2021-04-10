@@ -23,7 +23,27 @@ networkFirstPaths.forEach((path) => {
         bgSyncPlugin
       ]
     }),
-    ['POST', 'GET', 'PUT']
+    'POST'
+  )
+  registerRoute(
+    new RegExp(path),
+    new NetworkFirst({
+      cacheName: CACHE,
+      plugins: [
+        bgSyncPlugin
+      ]
+    }),
+    'GET'
+  )
+  registerRoute(
+    new RegExp(path),
+    new NetworkFirst({
+      cacheName: CACHE,
+      plugins: [
+        bgSyncPlugin
+      ]
+    }),
+    'PUT'
   )
 })
 
