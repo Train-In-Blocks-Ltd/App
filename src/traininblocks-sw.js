@@ -1,12 +1,9 @@
 import { BackgroundSyncPlugin } from 'workbox-background-sync'
 import { registerRoute } from 'workbox-routing'
 import { NetworkOnly, NetworkFirst } from 'workbox-strategies'
-/*
+import * as googleAnalytics from 'workbox-google-analytics'
 import { precacheAndRoute } from 'workbox-precaching'
 
-// Use with precache injection
-precacheAndRoute(self.__WB_MANIFEST)
-*/
 const CACHE = 'pwabuilder-precache'
 
 const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)/]
@@ -26,7 +23,27 @@ networkFirstPaths.forEach((path) => {
         bgSyncPlugin
       ]
     }),
-    ['POST', 'GET', 'PUT']
+    'POST'
+  )
+  registerRoute(
+    new RegExp(path),
+    new NetworkFirst({
+      cacheName: CACHE,
+      plugins: [
+        bgSyncPlugin
+      ]
+    }),
+    'GET'
+  )
+  registerRoute(
+    new RegExp(path),
+    new NetworkFirst({
+      cacheName: CACHE,
+      plugins: [
+        bgSyncPlugin
+      ]
+    }),
+    'PUT'
   )
 })
 
@@ -45,6 +62,11 @@ registerRoute(
     cacheName: CACHE
   })
 )
+
+// Use with precache injection
+precacheAndRoute(self.__WB_MANIFEST)
+
+googleAnalytics.initialize()
 
 self.addEventListener('install', function (event) {
   self.skipWaiting()
