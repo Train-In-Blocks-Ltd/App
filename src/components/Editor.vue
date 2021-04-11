@@ -15,6 +15,9 @@
 }
 
 /* Editor */
+div.ProseMirror {
+  outline: none
+}
 div#rich_editor > div[contenteditable],
 div#rich_show_content > :is(div, p) {
   outline: none;
@@ -53,6 +56,9 @@ div#rich_editor > div[contenteditable] img:hover {
 div#rich_editor > div[contenteditable] a,
 div#rich_show_content a {
   color: var(--link)
+}
+:is(div#rich_editor, div#rich_show_content) iframe {
+  display: none
 }
 
 /* Menububble */
@@ -200,6 +206,31 @@ li[data-done='false'] {
   width: 20px
 }
 
+/* Pop-ups */
+.template_menu {
+  position: sticky;
+  top: calc(1rem + 44.39px);
+  background-color: var(--fore);
+  z-index: 1;
+  border-left: 1px solid var(--base_faint);
+  border-right: 1px solid var(--base_faint);
+  border-bottom: 1px solid var(--base_faint);
+  padding: .8rem;
+  display: grid;
+  grid-gap: 1rem;
+  max-height: 250px;
+  overflow-y: auto
+}
+.template_menu > h2 {
+  margin-top: 1rem
+}
+.template_item {
+  width: fit-content
+}
+#templates_search_none {
+  display: none
+}
+
 /* Editor */
 div#rich_editor {
   padding: 1rem;
@@ -244,9 +275,11 @@ div#rich_editor.editorFocused {
       <global-overlay ref="overlay" />
     </transition>
     <preview-modal
+      v-if="previewHTML !== null"
       :desc="previewDesc"
       :html="previewHTML"
       :show-media="true"
+      :allow-select="true"
       @close="previewDesc = null, previewHTML = null"
     />
     <div
@@ -254,7 +287,7 @@ div#rich_editor.editorFocused {
       id="rich_show_content"
       class="fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
-      v-html="remove_brackets(htmlInjection)"
+      v-html="update_html(htmlInjection)"
     />
     <div v-else-if="editState" class="fadeIn">
       <div class="menu_bar_wrapper">
@@ -312,6 +345,13 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
             </button>
             <button
+              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+              class="fadeIn"
+              @click="showAddTemplate = !showAddTemplate, $parent.go_to_event(itemId, weekId), will_body_scroll(false)"
+            >
+              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+            </button>
+            <button
               class="fadeIn"
               @click="commands.undo"
             >
@@ -325,7 +365,45 @@ div#rich_editor.editorFocused {
             </button>
           </div>
         </editor-menu-bar>
-
+        <!-- TEMPLATE -->
+        <div v-if="showAddTemplate" class="template_menu small_border_radius">
+          <input
+            v-if="dataForTemplates.length !== 0"
+            v-model="search"
+            type="search"
+            aria-label="Search templates"
+            rel="search"
+            placeholder="Search templates"
+            @input="isSearchEmpty()"
+          >
+          <h2 v-show="search === ''">
+            System templates
+          </h2>
+          <button
+            v-for="(example, exampleIndex) in exampleTemplates"
+            v-show="search === ''"
+            :key="`example_${exampleIndex}`"
+            class="template_item"
+            @click="previewDesc = example.name, previewHTML = example.html"
+          >
+            {{ example.name }}
+          </button>
+          <h2>
+            Your templates
+          </h2>
+          <button
+            v-for="(item, index) in dataForTemplates"
+            v-show="((!search) || ((item.name).toLowerCase()).startsWith(search.toLowerCase()))"
+            :key="'template-' + index"
+            class="template_item"
+            @click="previewDesc = item.name, previewHTML = item.template"
+          >
+            {{ item.name }}
+          </button>
+          <p id="templates_search_none">
+            No templates found
+          </p><br>
+        </div>
         <editor-menu-bubble
           v-slot="{ commands, isActive, getMarkAttrs, menu }"
           class="menububble fadeIn"
@@ -385,10 +463,10 @@ div#rich_editor.editorFocused {
       {{ emptyPlaceholder }}
     </p>
     <div v-if="editState" class="bottom_bar">
-      <button @click="editState = false , $emit('on-edit-change', 'save', itemId)">
+      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), will_body_scroll(true)">
         Save
       </button>
-      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId)">
+      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId), will_body_scroll(true)">
         Cancel
       </button>
     </div>
@@ -409,6 +487,7 @@ export default {
   },
   props: {
     itemId: [Number, String],
+    weekId: Number,
     editing: [Number, String],
     htmlInjection: String,
     emptyPlaceholder: String,
@@ -433,7 +512,13 @@ export default {
       linkMenuIsActive: false,
 
       // Template
-      search: ''
+      search: '',
+      showAddTemplate: false,
+      exampleTemplates: [
+        { name: 'Track with sets, reps, and load', html: '<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>' },
+        { name: 'Track with sets, reps', html: '<div>[ EXERCISE: SETS x REPS ]</div>' },
+        { name: 'Track with other measurements', html: '<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>' }
+      ]
     }
   },
   watch: {
@@ -458,9 +543,13 @@ export default {
           ]
         })
         this.editor.on('update', () => { this.update_edited_notes() })
-        this.editor.on('focus', () => { this.caretInEditor = true })
+        this.editor.on('focus', () => {
+          this.caretInEditor = true
+          this.showAddTemplate = false
+          this.will_body_scroll(true)
+        })
         this.editor.on('blur', () => { this.caretInEditor = false })
-        this.editor.setContent(this.htmlInjection)
+        this.editor.setContent(this.update_html(this.htmlInjection))
       } else {
         this.editor.destroy()
       }
@@ -510,16 +599,6 @@ export default {
       })
       document.getElementById('templates_search_none').style.display = showNoneMsg ? 'block' : 'none'
     },
-    focus_on_editor () {
-      document.getElementById('rich_editor').focus()
-    },
-    remove_brackets (dataIn) {
-      if (dataIn !== null) {
-        return dataIn.replace(/[[\]]/g, '').replace(/(checkbox")/g, 'checkbox" disabled').replace('onclick="resize(this)"', '')
-      } else {
-        return dataIn
-      }
-    },
     test_empty_html (text) {
       if (text !== null) {
         const rmTags = text.replace(/<[^>]*>?/gm, '')
@@ -534,7 +613,7 @@ export default {
       }
     },
     update_edited_notes () {
-      this.$emit('update:htmlInjection', document.getElementById('rich_editor').innerHTML)
+      this.$emit('update:htmlInjection', document.getElementById('rich_editor').querySelector('.ProseMirror').innerHTML)
     }
   }
 }

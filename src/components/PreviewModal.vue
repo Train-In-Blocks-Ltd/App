@@ -32,6 +32,20 @@ h2.title {
 button.red_button {
   margin: 2rem 0
 }
+.copy_msg {
+  margin-bottom: 1rem
+}
+.allow_select {
+  cursor: pointer;
+  user-select: all;
+  padding: 1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: var(--transition_standard)
+}
+.allow_select:hover:not(.selected) {
+  border: 1px solid var(--base_faint)
+}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -48,7 +62,16 @@ button.red_button {
       <h2 class="title">
         {{ desc }}
       </h2>
-      <div class="preview_html" :class="{ noMedia: !showMedia }" v-html="remove_brackets(html)" />
+      <p v-if="allowSelect" class="copy_msg">
+        Select, copy, and paste it into your sessions
+      </p>
+      <div
+        class="preview_html"
+        :class="{ noMedia: !showMedia, allow_select: allowSelect, selected: focused }"
+        @click="focused = true"
+        @mouseleave="focused = false"
+        v-html="update_html(html)"
+      />
       <button
         class="red_button"
         @click="$emit('close'), will_body_scroll(true)"
@@ -65,7 +88,13 @@ export default {
     desc: String,
     type: String,
     html: String,
-    showMedia: Boolean
+    showMedia: Boolean,
+    allowSelect: Boolean
+  },
+  data () {
+    return {
+      focused: false
+    }
   }
 }
 </script>

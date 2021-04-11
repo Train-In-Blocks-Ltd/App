@@ -77,6 +77,26 @@ Vue.mixin({
       }
     },
 
+    // HTML
+
+    update_html (html) {
+      const regex = /<iframe[^>]+>.*?<\/iframe>/gi
+      let m
+      const arr = []
+      while ((m = regex.exec(html)) !== null) {
+        if (m.index === regex.lastIndex) {
+          regex.lastIndex++
+        }
+        m.forEach((match) => {
+          arr.push(match)
+        })
+      }
+      arr.forEach((item) => {
+        html = html.replace(item, '')
+      })
+      return html !== null ? html.replace(/[[\]]/g, '').replace('onclick="resize(this)"', '') : html
+    },
+
     // Date
 
     today () {
@@ -99,9 +119,6 @@ Vue.mixin({
           return new Date(a.date) - new Date(b.date)
         })
       }
-    },
-    remove_brackets (dataIn) {
-      return dataIn !== null ? dataIn.replace(/[[\]]/g, '') : dataIn
     },
     proper_case (string) {
       const sentence = string.toLowerCase().split(' ')
