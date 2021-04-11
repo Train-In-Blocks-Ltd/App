@@ -1,8 +1,4 @@
 <style>
-#policy_agreement {
-  display: block;
-  margin: 2rem 15vw
-}
 #policy h1 {
   /* stylelint-disable-next-line */
   font-size: 1.6rem !important
@@ -31,25 +27,19 @@
 }
 
 /* Responsiveness */
-@media (max-width: 992px) {
-  #policy_agreement {
-    margin: 2rem 10vw
-  }
-}
-@media (max-width: 768px) {
-  #policy_agreement {
-    margin: 2rem 5vw
-  }
-}
 @media (max-width: 576px) {
-  #policy_agreement {
-    margin: 2rem 0
+  input.agree_name {
+    margin-right: 0
+  }
+  .confirmation button {
+    width: 100%;
+    margin-top: 1rem
   }
 }
 </style>
 
 <template>
-  <form id="policy_agreement" @submit.prevent="agree_to_terms(), will_body_scroll(true), $modal.hide('agreement')">
+  <form id="policy_agreement" @submit.prevent="agree_to_terms(), will_body_scroll(true), $parent.showEULA = false">
     <div id="policy" v-html="eula.html" />
     <p id="agree_statement">
       <b>

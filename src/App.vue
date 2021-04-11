@@ -110,7 +110,7 @@
     /* stylelint-disable-next-line */
     color: var(--base) !important
   }
-  .demo_banner {
+  .top_banner {
     z-index: 11;
     position: fixed;
     top: 0;
@@ -120,7 +120,7 @@
     padding: .1rem;
     background-color: var(--base)
   }
-  .demo_banner a {
+  .top_banner :is(a, p) {
     display: block;
     color: var(--fore)
   }
@@ -603,6 +603,12 @@
     .form_grid button {
       width: 100%
     }
+
+    /* Inputs */
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
+    select.width_300 {
+      width: 100%
+    }
   }
 
   /* REDUCED MOTION */
@@ -652,10 +658,15 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
-    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="demo_banner">
+    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="top_banner fadeIn">
       <a href="https://traininblocks.com/#pricing" target="_blank" class="a_link text--tiny">
         Demo account: click here to sign up
       </a>
+    </div>
+    <div v-else-if="!connected" class="top_banner fadeIn">
+      <p class="text--tiny">
+        Offline mode: we will sync your data when you reconnect
+      </p>
     </div>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <response-pop-up ref="response_pop_up" />
@@ -666,24 +677,11 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <global-overlay ref="overlay" />
     </transition>
-    <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-      <div class="modal--error">
-        <div class="center_wrapped">
-          <p v-text="errorMsg" />
-          <p v-if="errorMsg !== 'You are using the demo account. Your changes cannot be saved.'" class="grey">
-            This problem has been reported to our developers
-          </p>
-          <br>
-          <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
-            Close
-          </button>
-        </div>
-      </div>
-    </modal>
-    <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
+    <div v-if="showEULA" class="tab_overlay_content fadeIn delay fill_mode_both">
       <policy :type="claims.user_type" />
-    </modal>
+    </div>
     <nav-bar :authenticated="authenticated" :claims="claims" />
+    <div :class="{ opened_sections: showEULA }" class="section_overlay" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
         <router-view :key="$route.fullPath" />
@@ -694,7 +692,6 @@
 
 <script>
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
-import(/* webpackChunkName: "traininblocks-sw", webpackPreload: true  */ './traininblocks-sw.js')
 const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
 const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
 
@@ -747,7 +744,7 @@ export default {
       versionName: 'Pegasus',
       versionBuild: '3.2.3',
       newBuild: false,
-      errorMsg: null,
+      showEULA: false,
       loading: false,
       dontLeave: false,
       silent_loading: false,
@@ -757,12 +754,20 @@ export default {
         displayMode: 'browser tab',
         canInstall: false,
         installed: null
-      }
+      },
+      connected: true
     }
   },
   watch: {
     $route (to, from) {
       this.is_authenticated()
+    },
+    async connected () {
+      if (this.connected === true) {
+        await this.clients_f()
+        await this.archive_f()
+        this.setup()
+      }
     }
   },
   async created () {
@@ -771,8 +776,20 @@ export default {
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
-    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/js/traininblocks-sw.js')
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(
+        function (registrations) {
+          if (registrations.length !== 0) {
+            for (const registration of registrations) {
+              registration.unregister().then(function () {
+                navigator.serviceWorker.register('/traininblocks-sw.js')
+              })
+            }
+          } else {
+            navigator.serviceWorker.register('/traininblocks-sw.js')
+          }
+        }
+      )
     }
     window.addEventListener('beforeunload', (e) => {
       if (this.dontLeave) {
@@ -807,8 +824,7 @@ export default {
     }
     this.$axios.interceptors.request.use((config) => {
       if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
-        self.errorMsg = 'You are using the demo account. Your changes cannot be saved.'
-        self.$modal.show('error')
+        self.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
         self.will_body_scroll(false)
         self.loading = false
         self.dontLeave = false
@@ -891,14 +907,22 @@ export default {
         this.darkmode(this.claims.theme)
         if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
-          this.$modal.show('agreement')
+          this.showEULA = true
         } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
-          this.$modal.show('agreement')
+          this.showEULA = true
         }
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
+      this.connected = navigator.onLine
+      const self = this
+      window.addEventListener('offline', function (event) {
+        self.connected = false
+      })
+      window.addEventListener('online', function (event) {
+        self.connected = true
+      })
     },
     async save_claims () {
       this.dontLeave = true
@@ -935,8 +959,7 @@ export default {
         )
       }
       this.end_loading()
-      this.errorMsg = msg.toString()
-      this.$modal.show('error')
+      this.$refs.response_pop_up.show('Error: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
       this.will_body_scroll(false)
       console.error(msg)
     },

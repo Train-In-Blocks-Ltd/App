@@ -1,7 +1,4 @@
 <style scoped>
-  #logout {
-    z-index: 999
-  }
   .logout_message {
     margin-top: 10vh
   }

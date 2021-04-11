@@ -24,7 +24,7 @@ Vue.use(Router)
 const oktaAuth = new OktaAuth({
   issuer: process.env.ISSUER + '/oauth2/default',
   clientId: process.env.CLIENT_ID,
-  redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host,
+  redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
   autoRenew: false,

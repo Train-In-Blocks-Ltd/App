@@ -120,32 +120,32 @@
         {
           "src": "Android-Screenshot-1.jpg",
           "sizes": "2340x1080",
-          "type": "image/jpg"
+          "type": "image/jpeg"
         },
         {
           "src": "Android-Screenshot-2.jpg",
           "sizes": "2340x1080",
-          "type": "image/jpg"
+          "type": "image/jpeg"
         },
         {
           "src": "Android-Screenshot-3.jpg",
           "sizes": "2340x1080",
-          "type": "image/jpg"
+          "type": "image/jpeg"
         },
         {
           "src": "iOS_screenshot-1.jpg",
           "sizes": "2340x1080",
-          "type": "image/jpg"
+          "type": "image/jpeg"
         },
         {
           "src": "iOS_screenshot-2.jpg",
           "sizes": "2340x1080",
-          "type": "image/jpg"
+          "type": "image/jpeg"
         },
         {
           "src": "iOS_screenshot-3.jpg",
           "sizes": "2340x1080",
-          "type": "image/jpg"
+          "type": "image/jpeg"
         }
     ],
     "categories": ["fitness", "health", "lifestyle", "sports"],
