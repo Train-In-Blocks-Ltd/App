@@ -110,7 +110,7 @@
     /* stylelint-disable-next-line */
     color: var(--base) !important
   }
-  .demo_banner {
+  .top_banner {
     z-index: 11;
     position: fixed;
     top: 0;
@@ -120,7 +120,7 @@
     padding: .1rem;
     background-color: var(--base)
   }
-  .demo_banner a {
+  .top_banner :is(a, p) {
     display: block;
     color: var(--fore)
   }
@@ -652,10 +652,15 @@
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
-    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="demo_banner">
+    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="top_banner fadeIn">
       <a href="https://traininblocks.com/#pricing" target="_blank" class="a_link text--tiny">
         Demo account: click here to sign up
       </a>
+    </div>
+    <div v-else-if="!connected" class="top_banner fadeIn">
+      <p class="text--tiny">
+        Offline mode: we will sync your data when you reconnect
+      </p>
     </div>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <response-pop-up ref="response_pop_up" />
