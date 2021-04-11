@@ -603,6 +603,12 @@
     .form_grid button {
       width: 100%
     }
+
+    /* Inputs */
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
+    select.width_300 {
+      width: 100%
+    }
   }
 
   /* REDUCED MOTION */
@@ -671,27 +677,11 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <global-overlay ref="overlay" />
     </transition>
-    <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-      <div class="modal--error">
-        <div class="center_wrapped">
-          <p v-text="errorMsg" />
-          <p v-if="errorMsg !== 'You are using the demo account. Your changes cannot be saved.' && errorMsg !== 'Error: Network Error'" class="grey">
-            This problem has been reported to our developers
-          </p>
-          <p v-if="errorMsg === 'Error: Network Error'">
-            You're probably offline. We'll try that request again once you're back online
-          </p>
-          <br>
-          <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
-            Close
-          </button>
-        </div>
-      </div>
-    </modal>
-    <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
+    <div v-if="showEULA" class="tab_overlay_content fadeIn delay fill_mode_both">
       <policy :type="claims.user_type" />
-    </modal>
+    </div>
     <nav-bar :authenticated="authenticated" :claims="claims" />
+    <div :class="{ opened_sections: showEULA }" class="section_overlay" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
         <router-view :key="$route.fullPath" />
@@ -754,7 +744,7 @@ export default {
       versionName: 'Pegasus',
       versionBuild: '3.2.3',
       newBuild: false,
-      errorMsg: null,
+      showEULA: false,
       loading: false,
       dontLeave: false,
       silent_loading: false,
@@ -834,8 +824,7 @@ export default {
     }
     this.$axios.interceptors.request.use((config) => {
       if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
-        self.errorMsg = 'You are using the demo account. Your changes cannot be saved.'
-        self.$modal.show('error')
+        self.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true)
         self.will_body_scroll(false)
         self.loading = false
         self.dontLeave = false
@@ -918,10 +907,10 @@ export default {
         this.darkmode(this.claims.theme)
         if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
-          this.$modal.show('agreement')
+          this.showEULA = true
         } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
-          this.$modal.show('agreement')
+          this.showEULA = true
         }
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
@@ -970,8 +959,7 @@ export default {
         )
       }
       this.end_loading()
-      this.errorMsg = msg.toString()
-      this.$modal.show('error')
+      this.$refs.response_pop_up.show('This problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You\'re probably offline. We\'ll try that request again once you\'re back online', true)
       this.will_body_scroll(false)
       console.error(msg)
     },
