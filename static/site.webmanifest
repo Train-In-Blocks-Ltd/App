@@ -131,6 +131,21 @@
           "src": "Android-Screenshot-3.jpg",
           "sizes": "2340x1080",
           "type": "image/jpg"
+        },
+        {
+          "src": "iOS_screenshot-1.jpg",
+          "sizes": "2340x1080",
+          "type": "image/jpg"
+        },
+        {
+          "src": "iOS_screenshot-2.jpg",
+          "sizes": "2340x1080",
+          "type": "image/jpg"
+        },
+        {
+          "src": "iOS_screenshot-3.jpg",
+          "sizes": "2340x1080",
+          "type": "image/jpg"
         }
     ],
     "categories": ["fitness", "health", "lifestyle", "sports"],
