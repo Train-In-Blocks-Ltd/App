@@ -82,7 +82,7 @@ export default {
   methods: {
     async save () {
       if (this.new_client.email === this.$parent.$parent.claims.email) {
-        this.$parent.$parent.$refs.response_pop_up.show('You cannot create a client with your own email address!', 'Please use a different one.', true)
+        this.$parent.$parent.$refs.response_pop_up.show('You cannot create a client with your own email address!', 'Please use a different one.', true, true)
         console.error('You cannot create a client with your own email address!')
       } else {
         this.$parent.response = ''

@@ -824,7 +824,7 @@ export default {
     }
     this.$axios.interceptors.request.use((config) => {
       if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
-        self.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true)
+        self.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
         self.will_body_scroll(false)
         self.loading = false
         self.dontLeave = false
@@ -959,7 +959,7 @@ export default {
         )
       }
       this.end_loading()
-      this.$refs.response_pop_up.show('This problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You\'re probably offline. We\'ll try that request again once you\'re back online', true)
+      this.$refs.response_pop_up.show('Error: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
       this.will_body_scroll(false)
       console.error(msg)
     },
