@@ -94,7 +94,7 @@ Vue.mixin({
       arr.forEach((item) => {
         html = html.replace(item, '')
       })
-      return html !== null ? html.replace(/[[\]]/g, '').replace('onclick="resize(this)"', '') : html
+      return html !== null ? html.replace(/[[\]]/g, '').replace('onclick="resize(this)"', '').replace('onclick="checkbox(this)"', '') : html
     },
 
     // Date
