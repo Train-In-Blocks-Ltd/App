@@ -83,7 +83,7 @@
     <form
       v-if="showPasswordReset"
       class="form_grid tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="change_password(), showPasswordReset = false, will_body_scroll(true)"
+      @submit.prevent="change_password()"
     >
       <div>
         <h1>
@@ -134,10 +134,10 @@
         class="input--forms small_border_radius"
         :class="{check: password.new !== password.match}"
         required
-        @input="password.error = password.new === password.match ? '' : 'New password does not match'"
+        @input="check_password"
       >
       <div class="reset_password_button_bar">
-        <button class="right_margin" type="submit" :disabled="password.check === null || password.new !== password.match">
+        <button class="right_margin" type="submit" :disabled="password.check || password.new !== password.match">
           Change your password
         </button>
         <button class="red_button" @click.prevent="showPasswordReset = false, will_body_scroll(true)">
@@ -265,10 +265,32 @@ export default {
     // PASSWORD
 
     check_password () {
-      if (!this.password.new.includes(this.$parent.claims.email) && this.password.new.match(/[0-9]+/) && this.password.new.length >= 8 && this.password.old.length >= 1) {
-        this.password.check = false
-      } else {
+      const self = this
+      function isUsername () {
+        const one = !self.password.new.includes(self.$parent.claims.email)
+        const two = self.password.new.split('').filter(function (e, i, a) {
+          // eslint-disable-next-line
+          return (self.$parent.claims.email.indexOf(e) !== -1)
+        }).length <= 6
+        if (one === true && two !== false) {
+          return true
+        } else {
+          return false
+        }
+      }
+      function requirements () {
+        return isUsername() && self.password.new.match(/[0-9]+/) !== null && self.password.new.length >= 8 && self.password.old.length >= 1
+      }
+      console.log(requirements() === false)
+      if (requirements() === false) {
         this.password.check = true
+        this.password.error = 'Please check the requirements'
+      } else if (this.password.new !== this.password.match) {
+        this.password.check = true
+        this.password.error = 'New password does not match'
+      } else {
+        this.password.check = false
+        this.password.error = ''
       }
     },
     async change_password () {
@@ -297,8 +319,10 @@ export default {
         )
         this.$parent.$refs.response_pop_up.show('Password changed', 'Remember to not share it and keep it safe')
         this.$parent.end_loading()
+        this.showPasswordReset = false
+        this.will_body_scroll(true)
       } catch (e) {
-        this.password.error = 'Something went wrong. Please make sure that your password is correct'
+        this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
         console.error(e)
         this.$parent.end_loading()
       }
