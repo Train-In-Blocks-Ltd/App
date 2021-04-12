@@ -836,6 +836,7 @@ export default {
       }
     },
     darkmode (mode) {
+      const matchedMedia = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
         document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
         document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
@@ -849,7 +850,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-      } else if (mode === 'system' && window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+      } else if (mode === 'system' && (matchedMedia === false ? false : matchedMedia.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
           this.darkmode(e.matches ? 'dark' : 'light')
