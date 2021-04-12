@@ -515,8 +515,11 @@
 
   /* Responsiveness */
   @media (max-width: 992px) {
-    /* Hover */
-    *:hover {
+    /* States */
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
+    select:not(:focus):hover,
+    textarea:not(:focus):hover,
+    button:hover:not(:disabled) {
       opacity: 1
     }
 

@@ -468,7 +468,7 @@ div#rich_editor.editorFocused {
     >
       {{ emptyPlaceholder }}
     </p>
-    <div v-if="editState" class="bottom_bar">
+    <div v-if="editState" class="bottom_bar fadeIn">
       <button @click="editState = false , $emit('on-edit-change', 'save', itemId), will_body_scroll(true)">
         Save
       </button>
