@@ -77,7 +77,7 @@ Vue.mixin({
 
     // HTML
 
-    update_html (html) {
+    update_html (html, rmBrackets) {
       const regex = /<iframe[^>]+>.*?<\/iframe>/gi
       let m
       const arr = []
@@ -92,7 +92,8 @@ Vue.mixin({
       arr.forEach((item) => {
         html = html.replace(item, '')
       })
-      return html !== null ? html.replace(/[[\]]/g, '').replace('onclick="resize(this)"', '').replace('onclick="checkbox(this)"', '') : html
+      html = rmBrackets ? html.replace(/[[\]]/g, '') : html
+      return html !== null ? html.replace('onclick="resize(this)"', '').replace('onclick="checkbox(this)"', '') : html
     },
 
     // Date

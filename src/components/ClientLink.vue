@@ -120,7 +120,7 @@
     <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">
       What client information do you currently have? Head over to this page and edit it.
     </p>
-    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="preview_html" v-html="update_html(notes)" />
+    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="preview_html" v-html="update_html(notes, true)" />
     <div v-if="archive" class="client_link__options">
       <checkbox :item-id="clientId" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
       <a href="javascript:void(0)" title="Unarchive" @click="$parent.unarchive_single(clientId)">

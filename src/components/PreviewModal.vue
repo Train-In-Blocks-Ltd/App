@@ -70,7 +70,7 @@ button.red_button {
         :class="{ noMedia: !showMedia, allow_select: allowSelect, selected: focused }"
         @click="focused = true"
         @mouseleave="focused = false"
-        v-html="update_html(html)"
+        v-html="update_html(html, true)"
       />
       <button
         class="red_button"
