@@ -595,6 +595,7 @@
       :desc="previewDesc"
       :html="previewHTML"
       :show-media="true"
+      :show-brackets="true"
       @close="previewDesc = null, previewHTML = null"
     />
     <div v-show="editSession !== null" class="dark_overlay fadeIn" />

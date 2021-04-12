@@ -70,7 +70,7 @@ button.red_button {
         :class="{ noMedia: !showMedia, allow_select: allowSelect, selected: focused }"
         @click="focused = true"
         @mouseleave="focused = false"
-        v-html="update_html(html, true)"
+        v-html="update_html(html, !showBrackets)"
       />
       <button
         class="red_button"
@@ -89,6 +89,7 @@ export default {
     type: String,
     html: String,
     showMedia: Boolean,
+    showBrackets: Boolean,
     allowSelect: Boolean
   },
   data () {

@@ -279,6 +279,7 @@ div#rich_editor.editorFocused {
       :desc="previewDesc"
       :html="previewHTML"
       :show-media="true"
+      :show-brackets="true"
       :allow-select="true"
       @close="previewDesc = null, previewHTML = null"
     />
