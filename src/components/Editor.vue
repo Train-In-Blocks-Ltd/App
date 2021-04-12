@@ -591,13 +591,13 @@ export default {
     // Misc.
 
     isSearchEmpty () {
-      let showNoneMsg = false
+      let showNoneMsg = true
       this.dataForTemplates.forEach((template) => {
-        if (!(((template.name).toLowerCase()).startsWith(this.search.toLowerCase()) && this.search !== '')) {
-          showNoneMsg = this.search !== ''
+        if (((template.name).toLowerCase()).startsWith(this.search.toLowerCase()) && this.search !== '') {
+          showNoneMsg = false
         }
       })
-      document.getElementById('templates_search_none').style.display = showNoneMsg ? 'block' : 'none'
+      document.getElementById('templates_search_none').style.display = showNoneMsg && this.search !== '' ? 'block' : 'none'
     },
     test_empty_html (text) {
       if (text !== null) {
