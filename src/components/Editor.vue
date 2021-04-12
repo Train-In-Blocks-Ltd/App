@@ -207,7 +207,7 @@ li[data-done='false'] {
 }
 
 /* Pop-ups */
-.template_menu {
+.template_menu, .image_menu {
   position: sticky;
   top: calc(1rem + 44.39px);
   background-color: var(--fore);
@@ -295,74 +295,80 @@ div#rich_editor.editorFocused {
           v-slot="{ commands, isActive }"
           :editor="editor"
         >
-          <div id="menu_bar" :class="{ editorFocused: caretInEditor }">
-            <button
-              class="fadeIn"
-              :class="{ 'is-active': isActive.bold() }"
-              @click="commands.bold"
-            >
-              <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              :class="{ 'is-active': isActive.italic() }"
-              @click="commands.italic"
-            >
-              <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              :class="{ 'is-active': isActive.underline() }"
-              @click="commands.underline"
-            >
-              <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              :class="{ 'is-active': isActive.ordered_list() }"
-              @click="commands.ordered_list"
-            >
-              <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              :class="{ 'is-active': isActive.bullet_list() }"
-              @click="commands.bullet_list"
-            >
-              <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              :class="{ 'is-active': isActive.todo_list() }"
-              @click="commands.todo_list"
-            >
-              <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              @click="showImagePrompt(commands.image)"
-            >
-              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-            </button>
-            <button
-              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-              class="fadeIn"
-              @click="showAddTemplate = !showAddTemplate, $parent.go_to_event(itemId, weekId), will_body_scroll(false)"
-            >
-              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              @click="commands.undo"
-            >
-              <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
-            </button>
-            <button
-              class="fadeIn"
-              @click="commands.redo"
-            >
-              <inline-svg :src="require('../assets/svg/editor/redo.svg')" />
-            </button>
+          <div>
+            <div id="menu_bar" :class="{ editorFocused: caretInEditor }">
+              <button
+                class="fadeIn"
+                :class="{ 'is-active': isActive.bold() }"
+                @click="commands.bold"
+              >
+                <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                :class="{ 'is-active': isActive.italic() }"
+                @click="commands.italic"
+              >
+                <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                :class="{ 'is-active': isActive.underline() }"
+                @click="commands.underline"
+              >
+                <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                :class="{ 'is-active': isActive.ordered_list() }"
+                @click="commands.ordered_list"
+              >
+                <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                :class="{ 'is-active': isActive.bullet_list() }"
+                @click="commands.bullet_list"
+              >
+                <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                :class="{ 'is-active': isActive.todo_list() }"
+                @click="commands.todo_list"
+              >
+                <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                @click="showAddImage = !showAddImage, showAddTemplate = false"
+              >
+                <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+              </button>
+              <button
+                v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+                class="fadeIn"
+                @click="showAddTemplate = !showAddTemplate, showAddImage = false, $parent.go_to_event(itemId, weekId)"
+              >
+                <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                @click="commands.undo"
+              >
+                <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
+              </button>
+              <button
+                class="fadeIn"
+                @click="commands.redo"
+              >
+                <inline-svg :src="require('../assets/svg/editor/redo.svg')" />
+              </button>
+            </div>
+            <!-- IMAGE -->
+            <div v-if="showAddImage" class="image_menu">
+              <input id="img_uploader" type="file" accept=".png, .jpeg, .jpg, .webp, .gif" @change="add_img(commands.image)">
+            </div>
           </div>
         </editor-menu-bar>
         <!-- TEMPLATE -->
@@ -413,7 +419,7 @@ div#rich_editor.editorFocused {
           <div
             class="menububble"
             :class="{ 'is-active': menu.isActive }"
-            :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+            :style="`left: ${menu.left}px; bottom: ${menu.bottom - 80}px;`"
           >
             <form
               v-if="linkMenuIsActive"
@@ -474,6 +480,7 @@ div#rich_editor.editorFocused {
 </template>
 
 <script>
+import Compressor from 'compressorjs'
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap'
 import { Bold, Italic, Underline, ListItem, BulletList, OrderedList, TodoItem, TodoList, Link, Image, History } from 'tiptap-extensions'
 const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ './PreviewModal')
@@ -511,6 +518,10 @@ export default {
       linkUrl: null,
       linkMenuIsActive: false,
 
+      // Image
+      showAddImage: false,
+      base64Img: null,
+
       // Template
       search: '',
       showAddTemplate: false,
@@ -522,6 +533,13 @@ export default {
     }
   },
   watch: {
+    showAddTemplate () {
+      if (this.showAddTemplate) {
+        this.will_body_scroll(false)
+      } else {
+        this.will_body_scroll(true)
+      }
+    },
     editState () {
       if (this.editState) {
         this.editor = new Editor({
@@ -546,6 +564,7 @@ export default {
         this.editor.on('focus', () => {
           this.caretInEditor = true
           this.showAddTemplate = false
+          this.showAddImage = false
           this.will_body_scroll(true)
         })
         this.editor.on('blur', () => { this.caretInEditor = false })
@@ -581,10 +600,32 @@ export default {
     },
 
     // IMG
-    showImagePrompt (command) {
-      const src = prompt('Enter the url of your image here')
-      if (src !== null) {
+
+    add_img (command) {
+      const file = document.getElementById('img_uploader').files[0]
+      const reader = new FileReader()
+      reader.addEventListener('load', () => {
+        const src = reader.result
         command({ src })
+        this.update_edited_notes()
+        this.showAddImage = false
+      }, false)
+      if (file) {
+        if (file.size < 1000000) {
+          // eslint-disable-next-line
+          new Compressor(file, {
+            quality: 0.6,
+            success (result) {
+              reader.readAsDataURL(result)
+            },
+            error (err) {
+              console.error(err.message)
+            }
+          })
+        } else {
+          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
+          document.getElementById('img_uploader').value = ''
+        }
       }
     },
 

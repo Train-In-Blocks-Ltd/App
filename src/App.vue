@@ -180,7 +180,7 @@
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
     left: 0;
-    z-index: 10;
+    z-index: 11;
     height: 100%;
     width: 100%;
     overflow-x: auto
