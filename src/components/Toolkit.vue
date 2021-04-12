@@ -24,50 +24,48 @@ textarea {
 </style>
 
 <template>
-  <div class="modal--toolkit">
-    <div class="center_wrapped">
-      <select
-        v-model="selectedTool"
-        class="text--small session_toolkit--select"
-        @change="result = null"
+  <div>
+    <select
+      v-model="selectedTool"
+      class="text--small session_toolkit--select"
+      @change="result = null"
+    >
+      <option
+        v-for="(toolSelect, toolSelectIndex) in calculators"
+        :key="`tool_select_${toolSelectIndex}`"
       >
-        <option
-          v-for="(toolSelect, toolSelectIndex) in calculators"
-          :key="`tool_select_${toolSelectIndex}`"
+        {{ toolSelect.name }}
+      </option>
+    </select>
+    <textarea rows="3" placeholder="Use this if you need to make quick notes" />
+    <div class="session_toolkit--content">
+      <div
+        v-for="(tool, toolIndex) in calculators"
+        v-show="selectedTool === tool.name"
+        :key="`tool_${toolIndex}`"
+      >
+        <p><b>Data:</b></p>
+        <input
+          v-for="(input, inputIndex) in tool.inputs"
+          :id="`input_${input.id}`"
+          :key="`tool_${inputIndex}`"
+          v-model="input.value"
+          type="number"
+          :placeholder="input.label"
+          :aria-label="input.label"
+          @input="calculate(tool.id)"
         >
-          {{ toolSelect.name }}
-        </option>
-      </select>
-      <textarea rows="3" placeholder="Use this if you need to make quick notes" />
-      <div class="session_toolkit--content">
-        <div
-          v-for="(tool, toolIndex) in calculators"
-          v-show="selectedTool === tool.name"
-          :key="`tool_${toolIndex}`"
-        >
-          <p><b>Data:</b></p>
-          <input
-            v-for="(input, inputIndex) in tool.inputs"
-            :id="`input_${input.id}`"
-            :key="`tool_${inputIndex}`"
-            v-model="input.value"
-            type="number"
-            :placeholder="input.label"
-            :aria-label="input.label"
-            @input="calculate(tool.id)"
-          >
-          <h2 class="result">
-            {{ tool.metric }}: {{ result || '_____' }} <span v-html="tool.units" />
-          </h2>
-        </div>
+        <h2 class="result">
+          {{ tool.metric }}: {{ result || '_____' }} <span v-html="tool.units" />
+        </h2>
       </div>
-      <button
-        class="red_button"
-        @click="$parent.$modal.hide('toolkit'), will_body_scroll(true)"
-      >
-        Close
-      </button>
     </div>
+    <button
+      class="red_button"
+      @click="$parent.showToolkit = false, will_body_scroll(true)"
+    >
+      Close
+    </button>
   </div>
 </template>
 

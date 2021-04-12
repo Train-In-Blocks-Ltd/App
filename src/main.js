@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
 import axios from 'axios'
 import { loadProgressBar } from 'axios-progress-bar'
@@ -25,7 +24,6 @@ Vue.use(VueAnalytics, {
   },
   disabled: true
 })
-Vue.use(VModal)
 Vue.use(InlineSvgPlugin)
 
 // Register component globally

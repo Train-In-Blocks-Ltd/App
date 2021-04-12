@@ -101,9 +101,10 @@
 
 <template>
   <div v-if="$parent.client_details" id="client">
-    <modal name="toolkit" height="100%" width="100%" :adaptive="true" :click-to-close="false">
+    <div :class="{ opened_sections: showToolkit }" class="section_overlay" />
+    <div v-if="showToolkit" class="tab_overlay_content fadeIn delay fill_mode_both">
       <toolkit />
-    </modal>
+    </div>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
       <div v-if="keepLoaded" class="floating_nav fadeIn">
         <div v-if="!showOptions" class="tab_option tab_option_small" aria-label="Menu" @click="showOptions = true">
@@ -129,7 +130,7 @@
             v-if="clients.client_id == $route.params.client_id && showOptions"
             class="a_link"
             href="javascript:void(0)"
-            @click="$modal.show('toolkit'), will_body_scroll(false)"
+            @click="showToolkit = true, will_body_scroll(false), showOptions = false"
           >
             Toolkit
             <inline-svg :src="require('../../assets/svg/calculate.svg')" />
@@ -138,7 +139,7 @@
             v-if="clients.client_id == $route.params.client_id && showOptions"
             class="a_link"
             href="javascript:void(0)"
-            @click="$parent.client_archive(clients.client_id, index)"
+            @click="showOptions = false, $parent.client_archive(clients.client_id, index)"
           >
             Archive Client
             <inline-svg :src="require('../../assets/svg/archive.svg')" />
@@ -229,6 +230,7 @@ export default {
 
       keepLoaded: false,
       showOptions: false,
+      showToolkit: false,
 
       // SESSIONS
 

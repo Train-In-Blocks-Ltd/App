@@ -68,7 +68,7 @@
   }
   .section_overlay.opened_sections {
     width: 100%;
-    z-index: 4
+    z-index: 10
   }
   @supports not (backdrop-filter: blur(10px)) {
     .section_overlay {
@@ -180,7 +180,7 @@
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
     left: 0;
-    z-index: 5;
+    z-index: 10;
     height: 100%;
     width: 100%;
     overflow-x: auto
@@ -196,25 +196,6 @@
   .version p {
     margin-left: .2rem;
     line-height: 1.65
-  }
-
-  /* Modals */
-  div.vm--modal {
-    /* stylelint-disable-next-line */
-    left: 0!important;
-    min-width: 100%;
-    overflow-y: auto;
-    background-color: var(--back)
-  }
-  div.vm--modal > div:not(#policy_agreement),
-  div.vm--modal > form {
-    padding: 2rem;
-    display: flex;
-    height: 100%
-  }
-  .center_wrapped {
-    margin: auto;
-    width: 500px
   }
 
   /* Fonts */
@@ -404,6 +385,11 @@
   }
   option {
     background-color: var(--fore)
+  }
+  .input_section {
+    display: grid;
+    grid-gap: 1rem;
+    margin: 2rem 0
   }
 
   /* Forms */

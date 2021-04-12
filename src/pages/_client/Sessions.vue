@@ -331,6 +331,9 @@
       display: grid;
       grid-gap: 1rem
     }
+    .plan_options .a_link {
+      width: fit-content
+    }
     .plan_grid {
       display: block
     }
@@ -354,228 +357,221 @@
 
 <template>
   <div id="plan">
-    <modal
-      name="move"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-      @opened="$refs.range.focus()"
+    <div :class="{ opened_sections: showMove || showShift || showCopyAcross || showDuplicate }" class="section_overlay" />
+    <form
+      v-if="showMove"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+      @submit.prevent="move_to_week(), showMove = false, will_body_scroll(true)"
     >
-      <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), will_body_scroll(true)">
-        <div class="center_wrapped">
-          <h2>
-            Move to a different microcycle
-          </h2>
-          <p class="grey">
-            This will change the colour code assigned to the sessions
-          </p><br>
-          <label for="range">Move to:</label>
-          <input
-            id="range"
-            ref="range"
-            v-model="moveTarget"
-            class="input--modal"
-            name="range"
-            type="number"
-            min="1"
-            :max="maxWeek"
-            required
-          ><br><br>
-          <button type="submit">
-            Move
-          </button>
-          <button class="red_button" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </modal>
-    <modal
-      name="shift"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-      @opened="$refs.range.focus()"
+      <h2>
+        Move to a different microcycle
+      </h2>
+      <p class="grey">
+        This will change the colour code assigned to the sessions
+      </p>
+      <div class="input_section">
+        <label for="range">Move to:</label>
+        <input
+          id="range"
+          ref="range"
+          v-model="moveTarget"
+          class="width_300"
+          name="range"
+          type="number"
+          min="1"
+          :max="maxWeek"
+          required
+        >
+      </div>
+      <button type="submit">
+        Move
+      </button>
+      <button class="red_button" @click.prevent="showMove = false, will_body_scroll(true)">
+        Cancel
+      </button>
+    </form>
+    <form
+      v-if="showShift"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+      @submit.prevent="shift_across(), showShift = false, will_body_scroll(true)"
     >
-      <form class="modal--shift" @submit.prevent="shift_across(), will_body_scroll(true)">
-        <div class="center_wrapped">
-          <h2>
-            Shift the dates of the sessions
-          </h2>
-          <p class="grey">
-            This will move the dates ahead or behind by the specified amount
-          </p><br>
-          <label for="range">Shift session dates by: </label>
-          <input
-            id="range"
-            ref="range"
-            v-model="shiftDays"
-            class="input--modal"
-            name="range"
-            type="number"
-            required
-          ><br><br>
-          <button type="submit">
-            Shift
-          </button>
-          <button class="red_button" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </modal>
-    <modal
-      name="copy"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-      @opened="$refs.range.focus()"
-    >
-      <div class="modal--copy">
-        <form v-if="copyAcrossPage === 0" class="center_wrapped" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
-          <h2>
-            Copy across to different microcycles
-          </h2>
-          <p class="grey">
-            Progress each session in just a few clicks
-          </p><br><br>
-          <label for="range">From {{ currentWeek }} to: </label>
+      <h2>
+        Shift the dates of the sessions
+      </h2>
+      <p class="grey">
+        This will move the dates ahead or behind by the specified amount
+      </p>
+      <div class="input_section">
+        <label for="range">Shift session dates by: </label>
+        <input
+          id="range"
+          ref="range"
+          v-model="shiftDays"
+          class="width_300"
+          name="range"
+          type="number"
+          required
+        >
+      </div>
+      <button type="submit">
+        Shift
+      </button>
+      <button class="red_button" @click.prevent="showShift = false, will_body_scroll(true)">
+        Cancel
+      </button>
+    </form>
+    <div v-if="showCopyAcross" class="tab_overlay_content fadeIn delay fill_mode_both">
+      <form v-if="copyAcrossPage === 0" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
+        <h2>
+          Copy across to different microcycles
+        </h2>
+        <p class="grey">
+          Progress each session in just a few clicks
+        </p>
+        <div class="input_section">
+          <label for="range">
+            From {{ currentWeek }} to:
+          </label>
           <input
             id="range"
             ref="range"
             v-model="copyTarget"
-            class="input--modal"
+            class="width_300"
             name="range"
             type="number"
             :min="currentWeek + 1"
             :max="maxWeek"
             required
           >
-          <br><br>
-          <label for="range">Days until next sessions: </label>
+        </div>
+        <div class="input_section">
+          <label for="range">
+            Days until next sessions:
+          </label>
           <input
             v-model="daysDiff"
-            class="input--modal"
+            class="width_300"
             name="range"
             type="number"
             min="1"
             required
-          ><br><br>
-          <button type="button" class="red_button" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
-            Cancel
-          </button>
-          <button v-if="!simpleCopy" type="submit">
-            Next
-          </button>
-          <button v-else @click.prevent="copy_across(), $modal.hide('copy'), will_body_scroll(true)">
-            Copy
-          </button>
-        </form>
-        <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1" class="center_wrapped">
-          <form
-            v-for="(protocol, protocolIndex) in copyAcrossProtocols"
-            v-show="copyAcrossPage === protocolIndex + 1"
-            :key="`protocol_${protocolIndex}`"
-            class="bottom_margin"
-            @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
           >
-            <div
-              v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[protocolIndex][1]"
-              v-show="copyAcrossView === exerciseGroupIndex"
-              :key="`exercise_${protocolIndex}_${exerciseGroupIndex}`"
-            >
-              <h2>
-                {{ protocol[1][exerciseGroupIndex][0] }}
-              </h2>
-              <p class="grey">
-                {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
-              </p>
-              <div
-                v-for="(exercise, exerciseIndex) in exercises"
-                :key="`exercise_${protocolIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
-              >
-                <br>
-                <label :for="`${protocol[1][0][0]}_${exerciseIndex}`">
-                  Week {{ currentWeek + exerciseIndex + 1 }}:
-                </label>
-                <input
-                  v-model="copyAcrossInputs[protocolIndex][1][exerciseGroupIndex][exerciseIndex]"
-                  :name="`${protocol[1][0][0]}_${exerciseIndex}`"
-                  type="text"
-                  required
-                >
-              </div>
-              <br>
-              <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
-                Back
-              </button>
-              <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
-                Back
-              </button>
-              <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">
-                Next
-              </button>
-              <button v-if="copyAcrossView !== copyAcrossInputs[protocolIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[protocolIndex][1].length - 1">
-                Next
-              </button>
-            </div>
-          </form>
         </div>
-        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), will_body_scroll(true)">
-          <h2>
-            You're all set
-          </h2>
-          <p class="grey">
-            Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
-          </p><br>
-          <button class="red_button" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
-            Back
-          </button>
-          <button type="submit">
-            Copy
-          </button>
+        <button
+          type="button"
+          class="red_button"
+          @click.prevent="showCopyAcross = false, will_body_scroll(true)"
+        >
+          Cancel
+        </button>
+        <button
+          v-if="!simpleCopy"
+          type="submit"
+        >
+          Next
+        </button>
+        <button
+          v-else
+          @click.prevent="copy_across(), showCopyAcross = false, will_body_scroll(true)"
+        >
+          Copy
+        </button>
+      </form>
+      <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1">
+        <form
+          v-for="(protocol, protocolIndex) in copyAcrossProtocols"
+          v-show="copyAcrossPage === protocolIndex + 1"
+          :key="`protocol_${protocolIndex}`"
+          class="bottom_margin"
+          @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
+        >
+          <div
+            v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[protocolIndex][1]"
+            v-show="copyAcrossView === exerciseGroupIndex"
+            :key="`exercise_${protocolIndex}_${exerciseGroupIndex}`"
+          >
+            <h2>
+              {{ protocol[1][exerciseGroupIndex][0] }}
+            </h2>
+            <p class="grey">
+              {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
+            </p>
+            <div
+              v-for="(exercise, exerciseIndex) in exercises"
+              :key="`exercise_${protocolIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
+            >
+              <br>
+              <label :for="`${protocol[1][0][0]}_${exerciseIndex}`">
+                Week {{ currentWeek + exerciseIndex + 1 }}:
+              </label>
+              <input
+                v-model="copyAcrossInputs[protocolIndex][1][exerciseGroupIndex][exerciseIndex]"
+                :name="`${protocol[1][0][0]}_${exerciseIndex}`"
+                type="text"
+                required
+              >
+            </div>
+            <br>
+            <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
+              Back
+            </button>
+            <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
+              Back
+            </button>
+            <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">
+              Next
+            </button>
+            <button v-if="copyAcrossView !== copyAcrossInputs[protocolIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[protocolIndex][1].length - 1">
+              Next
+            </button>
+          </div>
         </form>
       </div>
-    </modal>
-    <modal
-      name="duplicate"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-    >
-      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), will_body_scroll(true)">
-        <div class="center_wrapped">
-          <h2>
-            Create a similar plan
-          </h2>
-          <p class="grey">
-            Copy this plan to the same/different client
-          </p><br>
-          <select v-model="duplicateClientID" name="duplicate_client">
-            <option disabled>
-              Select a client
-            </option>
-            <option
-              v-for="(client, index) in $parent.$parent.clients"
-              :key="`client_${index}`"
-              :value="client.client_id"
-            >
-              {{ client.name }}
-            </option>
-          </select><br><br>
-          <button type="submit">
-            Duplicate
-          </button>
-          <button class="red_button" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
-            Cancel
-          </button>
-        </div>
+      <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), showCopyAcross = false, will_body_scroll(true)">
+        <h2>
+          You're all set
+        </h2>
+        <p class="grey">
+          Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
+        </p><br>
+        <button class="red_button" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
+          Back
+        </button>
+        <button type="submit">
+          Copy
+        </button>
       </form>
-    </modal>
+    </div>
+    <form
+      v-if="showDuplicate"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+      @submit.prevent="duplicate_plan(duplicateClientID), showDuplicate = false, will_body_scroll(true)"
+    >
+      <h2>
+        Create a similar plan
+      </h2>
+      <p class="grey">
+        Copy this plan to the same/different client
+      </p><br>
+      <select v-model="duplicateClientID" name="duplicate_client" class="width_300">
+        <option disabled>
+          Select a client
+        </option>
+        <option
+          v-for="(client, index) in $parent.$parent.clients"
+          :key="`client_${index}`"
+          :value="client.client_id"
+        >
+          {{ client.name }}
+        </option>
+      </select><br><br>
+      <button type="submit">
+        Duplicate
+      </button>
+      <button class="red_button" @click.prevent="showDuplicate = false, will_body_scroll(true)">
+        Cancel
+      </button>
+    </form>
     <div
       v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions && !noSessions"
       :class="{ icon_open_middle: $parent.keepLoaded }"
@@ -654,7 +650,7 @@
             <a
               class="a_link"
               href="javascript:void(0)"
-              @click="$modal.show('duplicate'), will_body_scroll(false)"
+              @click="showDuplicate = true, will_body_scroll(false)"
             >
               <inline-svg :src="require('../../assets/svg/copy.svg')" />
               Duplicate plan
@@ -1083,7 +1079,14 @@ export default {
         date: ''
       },
 
-      // MANIPULATION AND MODAL
+      // Modals
+
+      showMove: false,
+      showShift: false,
+      showCopyAcross: false,
+      showDuplicate: false,
+
+      // MANIPULATION
 
       moveTarget: 1,
       copyTarget: 2,
@@ -1150,15 +1153,15 @@ export default {
         case 'Copy Across':
           this.copyTarget = this.maxWeek
           this.copy_across_check()
-          this.$modal.show('copy')
+          this.showCopyAcross = true
           this.will_body_scroll(false)
           break
         case 'Move':
-          this.$modal.show('move')
+          this.showMove = true
           this.will_body_scroll(false)
           break
         case 'Shift':
-          this.$modal.show('shift')
+          this.showShift = true
           this.will_body_scroll(false)
           break
         case 'Print':
@@ -1262,7 +1265,6 @@ export default {
           this.update_session(session.id)
         }
       })
-      this.$modal.hide('shift')
       this.$ga.event('Session', 'shift')
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
       this.deselect_all()
@@ -1352,7 +1354,6 @@ export default {
       this.new_session.name = 'Untitled'
       this.today()
       this.update_plan()
-      this.$modal.hide('copy')
       this.deselect_all()
       this.scan()
       this.$ga.event('Session', 'progress')
@@ -1376,7 +1377,6 @@ export default {
       const plan = this.helper('match_plan')
       await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
-      this.$modal.hide('duplicate')
       this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
       this.$ga.event('Plan', 'duplicate')
     },
