@@ -68,7 +68,7 @@
   }
   .section_overlay.opened_sections {
     width: 100%;
-    z-index: 4
+    z-index: 10
   }
   @supports not (backdrop-filter: blur(10px)) {
     .section_overlay {
@@ -180,7 +180,7 @@
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
     left: 0;
-    z-index: 5;
+    z-index: 11;
     height: 100%;
     width: 100%;
     overflow-x: auto
@@ -196,25 +196,6 @@
   .version p {
     margin-left: .2rem;
     line-height: 1.65
-  }
-
-  /* Modals */
-  div.vm--modal {
-    /* stylelint-disable-next-line */
-    left: 0!important;
-    min-width: 100%;
-    overflow-y: auto;
-    background-color: var(--back)
-  }
-  div.vm--modal > div:not(#policy_agreement),
-  div.vm--modal > form {
-    padding: 2rem;
-    display: flex;
-    height: 100%
-  }
-  .center_wrapped {
-    margin: auto;
-    width: 500px
   }
 
   /* Fonts */
@@ -405,6 +386,11 @@
   option {
     background-color: var(--fore)
   }
+  .input_section {
+    display: grid;
+    grid-gap: 1rem;
+    margin: 2rem 0
+  }
 
   /* Forms */
   .form_grid {
@@ -529,8 +515,11 @@
 
   /* Responsiveness */
   @media (max-width: 992px) {
-    /* Hover */
-    *:hover {
+    /* States */
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
+    select:not(:focus):hover,
+    textarea:not(:focus):hover,
+    button:hover:not(:disabled) {
       opacity: 1
     }
 
@@ -742,7 +731,7 @@ export default {
 
       policyVersion: '1.1',
       versionName: 'Pegasus',
-      versionBuild: '3.2.3',
+      versionBuild: '3.2.4',
       newBuild: false,
       showEULA: false,
       loading: false,
@@ -850,6 +839,7 @@ export default {
       }
     },
     darkmode (mode) {
+      const matchedMedia = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
         document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
         document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
@@ -863,7 +853,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-      } else if (mode === 'system' && window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+      } else if (mode === 'system' && (matchedMedia === false ? false : matchedMedia.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
           this.darkmode(e.matches ? 'dark' : 'light')

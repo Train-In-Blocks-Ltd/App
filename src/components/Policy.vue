@@ -72,11 +72,12 @@ export default {
     } else {
       this.eula = require('./legal/eula.md')
     }
+    this.will_body_scroll(false)
   },
   methods: {
     agree_to_terms () {
-      this.$parent.$parent.claims.policy = [this.name, this.today(), this.$parent.$parent.policyVersion]
-      this.$parent.$parent.save_claims()
+      this.$parent.claims.policy = [this.name, this.today(), this.$parent.policyVersion]
+      this.$parent.save_claims()
     }
   }
 }

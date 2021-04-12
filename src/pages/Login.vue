@@ -160,7 +160,7 @@ a:hover {
     <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
     <div>
       <a href="javascript:void(0)" @click="showDemo = !showDemo">
-        <b>{{ showDemo ? 'Hide' : 'Demo account details' }} </b>
+        <b>{{ showDemo ? 'Hide' : 'Show demo account details' }} </b>
       </a>
     </div>
     <div v-if="showDemo" class="demo_details">
