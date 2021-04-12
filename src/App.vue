@@ -855,7 +855,7 @@ export default {
         document.documentElement.style.setProperty('--link', 'white')
       } else if (mode === 'system' && (matchedMedia === false ? false : matchedMedia.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
           this.darkmode(e.matches ? 'dark' : 'light')
         })
       } else {
