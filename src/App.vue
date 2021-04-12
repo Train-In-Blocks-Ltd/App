@@ -728,7 +728,7 @@ export default {
 
       policyVersion: '1.1',
       versionName: 'Pegasus',
-      versionBuild: '3.2.3',
+      versionBuild: '3.2.4',
       newBuild: false,
       showEULA: false,
       loading: false,
