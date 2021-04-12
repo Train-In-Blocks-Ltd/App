@@ -419,7 +419,7 @@ div#rich_editor.editorFocused {
           <div
             class="menububble"
             :class="{ 'is-active': menu.isActive }"
-            :style="`left: ${menu.left}px; bottom: ${menu.bottom - 80}px;`"
+            :style="`left: ${menu.left}px; bottom: ${menu.bottom - (isMobile ? 80 : 0)}px;`"
           >
             <form
               v-if="linkMenuIsActive"
@@ -505,6 +505,7 @@ export default {
     return {
 
       // Editor
+      isMobile: false,
       editor: null,
       editState: false,
       caretInEditor: false,
@@ -542,6 +543,7 @@ export default {
     },
     editState () {
       if (this.editState) {
+        this.isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
         this.editor = new Editor({
           content: '',
           extensions: [
