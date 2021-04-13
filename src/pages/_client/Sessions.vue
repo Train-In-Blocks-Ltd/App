@@ -262,7 +262,7 @@
     padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
     top: 0;
     left: 0;
-    z-index: 5;
+    z-index: 11;
     height: 100%;
     width: 100%;
     overflow-y: auto

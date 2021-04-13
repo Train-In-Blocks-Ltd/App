@@ -79,31 +79,44 @@ Vue.mixin({
 
     update_html (html, rmBrackets) {
       const regexIframe = /<iframe[^>]+>.*?<\/iframe>/gi
-      const regexInput = /<input[^>]+>/gi
+      console.log(html)
+      const regexInput = /<div [^>]+><input [^>]+><\/div><div [^>]+>([^>]+)<\/div>/gi
       let m
       let n
-      const arr = []
+      const arr1 = []
+      const arr2 = []
       while ((m = regexIframe.exec(html)) !== null) {
         if (m.index === regexIframe.lastIndex) {
           regexIframe.lastIndex++
         }
         m.forEach((match) => {
-          arr.push(match)
+          arr1.push(match)
         })
       }
       while ((n = regexInput.exec(html)) !== null) {
         if (n.index === regexInput.lastIndex) {
           regexInput.lastIndex++
         }
-        n.forEach((match) => {
-          arr.push(match)
+        let tempArr2 = []
+        n.forEach((match, groupIdx) => {
+          console.log(match, groupIdx)
+          if (groupIdx === 1) {
+            tempArr2.push(match)
+            arr2.push(tempArr2)
+            tempArr2 = []
+          } else {
+            tempArr2.push(match)
+          }
         })
       }
-      arr.forEach((item) => {
+      arr1.forEach((item) => {
         html = html.replace(item, '')
       })
+      arr2.forEach((item) => {
+        html = html.replace(item[0], `<li data-type="todo_item" data-done="false" data-drag-handle=""><span contenteditable="false" class="todo-checkbox"></span> <div contenteditable="true" class="todo-content"><p>${item[1]}</p></div></li>`)
+      })
       html = rmBrackets ? html.replace(/[[\]]/g, '') : html
-      return html !== null ? html.replace('onclick="resize(this)"', '').replace('onclick="checkbox(this)"', '').replace('contenteditable="true"', '') : html
+      return html !== null ? html.replace('onclick="resize(this)"', '').replace('contenteditable="true"', '') : html
     },
 
     // Date
