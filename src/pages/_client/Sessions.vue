@@ -1350,8 +1350,10 @@ export default {
       this.copyAcrossViewMax = 0
       this.copyAcrossInputs = []
       this.copyAcrossProtocols = []
-      this.new_session.name = 'Untitled'
-      this.today()
+      this.new_session = {
+        name: 'Untitled',
+        date: this.today()
+      }
       this.update_plan()
       this.deselect_all()
       this.scan()
@@ -1993,10 +1995,7 @@ export default {
         }
         this.new_session = {
           name: 'Untitled',
-          date: this.today(),
-          notes: null,
-          week_id: '',
-          block_color: ''
+          date: this.today()
         }
         this.$parent.$parent.end_loading()
       } catch (e) {
