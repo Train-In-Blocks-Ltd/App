@@ -371,6 +371,9 @@
     width: 100%;
     margin-bottom: 2rem
   }
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(.text--small, .text--large) {
+    max-height: 2.5rem
+  }
   input[type=color] {
     margin: 0 .4rem;
     background-color: transparent;
