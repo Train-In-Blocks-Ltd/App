@@ -79,7 +79,6 @@ Vue.mixin({
 
     update_html (html, rmBrackets) {
       const regexIframe = /<iframe[^>]+>.*?<\/iframe>/gi
-      console.log(html)
       const regexInput = /<div [^>]+><input [^>]+><\/div><div [^>]+>([^>]+)<\/div>/gi
       let m
       let n
@@ -99,7 +98,6 @@ Vue.mixin({
         }
         let tempArr2 = []
         n.forEach((match, groupIdx) => {
-          console.log(match, groupIdx)
           if (groupIdx === 1) {
             tempArr2.push(match)
             arr2.push(tempArr2)

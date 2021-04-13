@@ -281,7 +281,6 @@ export default {
       function requirements () {
         return isUsername() && self.password.new.match(/[0-9]+/) !== null && self.password.new.length >= 8 && self.password.old.length >= 1
       }
-      console.log(requirements() === false)
       if (requirements() === false) {
         this.password.check = true
         this.password.error = 'Please check the requirements'
