@@ -79,7 +79,8 @@ Vue.mixin({
 
     update_html (html, rmBrackets) {
       const regexIframe = /<iframe[^>]+>.*?<\/iframe>/gi
-      const regexInput = /<div [^>]+><input [^>]+><\/div><div [^>]+>([^>]+)<\/div>/gi
+      const regexInput1 = /<div[^>]+><input[^>]+><\/div><div[^>]+>([^>]+)<\/div>/gi
+      const regexInput2 = /<div[^>]+><input[^>]+><\/div>([^>]+)<\/div>/gi
       let m
       let n
       const arr1 = []
@@ -92,9 +93,24 @@ Vue.mixin({
           arr1.push(match)
         })
       }
-      while ((n = regexInput.exec(html)) !== null) {
-        if (n.index === regexInput.lastIndex) {
-          regexInput.lastIndex++
+      while ((n = regexInput1.exec(html)) !== null) {
+        if (n.index === regexInput1.lastIndex) {
+          regexInput1.lastIndex++
+        }
+        let tempArr2 = []
+        n.forEach((match, groupIdx) => {
+          if (groupIdx === 1) {
+            tempArr2.push(match)
+            arr2.push(tempArr2)
+            tempArr2 = []
+          } else {
+            tempArr2.push(match)
+          }
+        })
+      }
+      while ((n = regexInput2.exec(html)) !== null) {
+        if (n.index === regexInput2.lastIndex) {
+          regexInput2.lastIndex++
         }
         let tempArr2 = []
         n.forEach((match, groupIdx) => {
