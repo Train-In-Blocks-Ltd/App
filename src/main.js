@@ -78,14 +78,24 @@ Vue.mixin({
     // HTML
 
     update_html (html, rmBrackets) {
-      const regex = /<iframe[^>]+>.*?<\/iframe>/gi
+      const regexIframe = /<iframe[^>]+>.*?<\/iframe>/gi
+      const regexInput = /<input[^>]+>/gi
       let m
+      let n
       const arr = []
-      while ((m = regex.exec(html)) !== null) {
-        if (m.index === regex.lastIndex) {
-          regex.lastIndex++
+      while ((m = regexIframe.exec(html)) !== null) {
+        if (m.index === regexIframe.lastIndex) {
+          regexIframe.lastIndex++
         }
         m.forEach((match) => {
+          arr.push(match)
+        })
+      }
+      while ((n = regexInput.exec(html)) !== null) {
+        if (n.index === regexInput.lastIndex) {
+          regexInput.lastIndex++
+        }
+        n.forEach((match) => {
           arr.push(match)
         })
       }
@@ -93,7 +103,7 @@ Vue.mixin({
         html = html.replace(item, '')
       })
       html = rmBrackets ? html.replace(/[[\]]/g, '') : html
-      return html !== null ? html.replace('onclick="resize(this)"', '').replace('onclick="checkbox(this)"', '') : html
+      return html !== null ? html.replace('onclick="resize(this)"', '').replace('onclick="checkbox(this)"', '').replace('contenteditable="true"', '') : html
     },
 
     // Date
