@@ -276,8 +276,9 @@ export default {
           break
       }
     },
-    go_to_event (id, week) {
-      this.showing_current_session = week - 1
+    go_to_event (id) {
+      const idx = this.sessionDates.findIndex(session => session.session_id === id)
+      this.showing_current_session = idx
       setTimeout(() => {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)
