@@ -119,6 +119,9 @@ div#rich_show_content a {
 }
 
 /* Todo List */
+.preview_html span.todo-checkbox {
+  margin-top: .5rem
+}
 ul[data-type='todo_list'] {
   padding-left: 0
 }
