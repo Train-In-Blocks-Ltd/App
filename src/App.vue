@@ -395,6 +395,7 @@
   /* Forms */
   .form_grid {
     display: grid;
+    grid-auto-rows: max-content;
     grid-gap: 2rem
   }
   .form_grid button {
