@@ -262,7 +262,7 @@
     padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
     top: 0;
     left: 0;
-    z-index: 5;
+    z-index: 11;
     height: 100%;
     width: 100%;
     overflow-y: auto
@@ -595,6 +595,7 @@
       :desc="previewDesc"
       :html="previewHTML"
       :show-media="true"
+      :show-brackets="true"
       @close="previewDesc = null, previewHTML = null"
     />
     <div v-show="editSession !== null" class="dark_overlay fadeIn" />
@@ -1038,7 +1039,6 @@ export default {
 
       noSessions: false,
       expandedSessions: [],
-      todayDate: '',
       force: true,
 
       // WEEK
@@ -1076,7 +1076,7 @@ export default {
 
       new_session: {
         name: 'Untitled',
-        date: ''
+        date: this.today()
       },
 
       // Modals
@@ -1130,7 +1130,6 @@ export default {
     this.$parent.sessions = true
     this.noSessions = this.helper('match_plan').sessions === false
     this.$parent.$parent.get_templates()
-    this.today()
     this.check_for_new()
     this.adherence()
     this.scan()
@@ -1247,7 +1246,7 @@ export default {
       })
       plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          notesArr.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.update_html(session.notes)}</div>`)
+          notesArr.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.update_html(session.notes, true)}</div>`)
         }
       })
       const newWindow = window.open()
@@ -1351,8 +1350,10 @@ export default {
       this.copyAcrossViewMax = 0
       this.copyAcrossInputs = []
       this.copyAcrossProtocols = []
-      this.new_session.name = 'Untitled'
-      this.today()
+      this.new_session = {
+        name: 'Untitled',
+        date: this.today()
+      }
       this.update_plan()
       this.deselect_all()
       this.scan()
@@ -1585,14 +1586,6 @@ export default {
 
     // DATE/TIME
 
-    today () {
-      const today = new Date()
-      const dd = String(today.getDate()).padStart(2, '0')
-      const mm = String(today.getMonth() + 1).padStart(2, '0')
-      const yyyy = today.getFullYear()
-      this.new_session.date = `${yyyy}-${mm}-${dd}`
-      this.todayDate = `${yyyy}-${mm}-${dd}`
-    },
     add_days (date, days) {
       const d = new Date(date)
       d.setDate(d.getDate() + days)
@@ -2002,10 +1995,7 @@ export default {
         }
         this.new_session = {
           name: 'Untitled',
-          date: this.todayDate,
-          notes: null,
-          week_id: '',
-          block_color: ''
+          date: this.today()
         }
         this.$parent.$parent.end_loading()
       } catch (e) {

@@ -74,7 +74,7 @@
               Plan Notes
             </h2>
           </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_html fadeIn" v-html="update_html(plan.notes)" />
+          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_html fadeIn" v-html="update_html(plan.notes, true)" />
           <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_html grey">
             No plan notes added...
           </p>
@@ -147,7 +147,7 @@
                 <span class="text--date">{{ session.date }}</span>
               </div>
             </div>
-            <div class="show_html fadeIn" v-html="update_html(session.notes)" />
+            <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
             <div class="bottom_bar">
               <div :key="check" class="full_width_bar">
                 <button
@@ -276,8 +276,9 @@ export default {
           break
       }
     },
-    go_to_event (id, week) {
-      this.showing_current_session = week - 1
+    go_to_event (id) {
+      const idx = this.sessionDates.findIndex(session => session.session_id === id)
+      this.showing_current_session = idx
       setTimeout(() => {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)

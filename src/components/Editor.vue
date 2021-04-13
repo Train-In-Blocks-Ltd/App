@@ -119,6 +119,9 @@ div#rich_show_content a {
 }
 
 /* Todo List */
+.preview_html span.todo-checkbox {
+  margin-top: .5rem
+}
 ul[data-type='todo_list'] {
   padding-left: 0
 }
@@ -279,6 +282,7 @@ div#rich_editor.editorFocused {
       :desc="previewDesc"
       :html="previewHTML"
       :show-media="true"
+      :show-brackets="true"
       :allow-select="true"
       @close="previewDesc = null, previewHTML = null"
     />
@@ -287,7 +291,7 @@ div#rich_editor.editorFocused {
       id="rich_show_content"
       class="fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
-      v-html="update_html(htmlInjection)"
+      v-html="update_html(htmlInjection, true)"
     />
     <div v-else-if="editState" class="fadeIn">
       <div class="menu_bar_wrapper">
@@ -570,7 +574,7 @@ export default {
           this.will_body_scroll(true)
         })
         this.editor.on('blur', () => { this.caretInEditor = false })
-        this.editor.setContent(this.update_html(this.htmlInjection))
+        this.editor.setContent(this.update_html(this.htmlInjection, false))
       } else {
         this.editor.destroy()
       }

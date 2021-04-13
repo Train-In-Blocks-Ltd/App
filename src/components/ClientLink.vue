@@ -1,4 +1,48 @@
 <style>
+/* Todo List */
+.preview_html span.todo-checkbox {
+  margin-top: .5rem
+}
+ul[data-type='todo_list'] {
+  padding-left: 0
+}
+li[data-type='todo_item'] {
+  display: flex;
+  flex-direction: row
+}
+.todo-checkbox {
+  border: 2px solid var(--base);
+  height: .9rem;
+  width: .9rem;
+  box-sizing: border-box;
+  margin-right: 10px;
+  margin-top: .3rem;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  border-radius: .2rem;
+  background-color: transparent;
+  transition: .4s background
+}
+.todo-content {
+  flex: 1
+}
+.todo-content > p:last-of-type {
+  margin-bottom: 0
+}
+.todo-content > ul[data-type='todo_list'] {
+  margin: .5rem 0
+}
+li[data-done='true'] > .todo-content > p {
+  text-decoration: line-through
+}
+li[data-done='true'] > .todo-checkbox {
+  background-color: var(--base)
+}
+li[data-done='false'] {
+  text-decoration: none
+}
+
 /* Preview HTML */
 .client_link .preview_html {
   font-size: .8rem;
@@ -120,7 +164,7 @@
     <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">
       What client information do you currently have? Head over to this page and edit it.
     </p>
-    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="preview_html" v-html="update_html(notes)" />
+    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="preview_html" v-html="update_html(notes, true)" />
     <div v-if="archive" class="client_link__options">
       <checkbox :item-id="clientId" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
       <a href="javascript:void(0)" title="Unarchive" @click="$parent.unarchive_single(clientId)">

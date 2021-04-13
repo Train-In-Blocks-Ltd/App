@@ -101,6 +101,7 @@ button.red_button {
       :desc="planDesc"
       :html="planHTML"
       :show-media="true"
+      :show-brackets="false"
       @close="planDesc = null, planHTML = null"
     />
     <div class="periodise">
