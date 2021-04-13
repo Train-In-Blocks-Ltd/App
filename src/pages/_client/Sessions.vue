@@ -1039,7 +1039,6 @@ export default {
 
       noSessions: false,
       expandedSessions: [],
-      todayDate: '',
       force: true,
 
       // WEEK
@@ -1077,7 +1076,7 @@ export default {
 
       new_session: {
         name: 'Untitled',
-        date: ''
+        date: this.today()
       },
 
       // Modals
@@ -1131,7 +1130,6 @@ export default {
     this.$parent.sessions = true
     this.noSessions = this.helper('match_plan').sessions === false
     this.$parent.$parent.get_templates()
-    this.today()
     this.check_for_new()
     this.adherence()
     this.scan()
@@ -1586,14 +1584,6 @@ export default {
 
     // DATE/TIME
 
-    today () {
-      const today = new Date()
-      const dd = String(today.getDate()).padStart(2, '0')
-      const mm = String(today.getMonth() + 1).padStart(2, '0')
-      const yyyy = today.getFullYear()
-      this.new_session.date = `${yyyy}-${mm}-${dd}`
-      this.todayDate = `${yyyy}-${mm}-${dd}`
-    },
     add_days (date, days) {
       const d = new Date(date)
       d.setDate(d.getDate() + days)
@@ -2003,7 +1993,7 @@ export default {
         }
         this.new_session = {
           name: 'Untitled',
-          date: this.todayDate,
+          date: this.today(),
           notes: null,
           week_id: '',
           block_color: ''
