@@ -82,64 +82,27 @@ Vue.mixin({
       if (html === null) {
         return html
       }
-      const regexIframe = /<iframe[^>]+>.*?<\/iframe>/gi
-      const regexInput1 = /<div[^>]+><input[^>]+><\/div><div[^>]+>([^>]+)<\/div>/gi
-      const regexInput2 = /<div[^>]+><input[^>]+><\/div>([^>]+)<\/div>/gi
+      const regexIframe = /<iframe[^>]+src="([^"]+)"><\/iframe>/gi
       let m
-      let n
       const arr1 = []
-      const arr2 = []
-
       // Finds all iframes
       while ((m = regexIframe.exec(html)) !== null) {
         if (m.index === regexIframe.lastIndex) {
           regexIframe.lastIndex++
         }
-        m.forEach((match) => {
-          arr1.push(match)
-        })
-      }
-
-      // Finds all old checkboxes
-      while ((n = regexInput1.exec(html)) !== null) {
-        if (n.index === regexInput1.lastIndex) {
-          regexInput1.lastIndex++
-        }
-        let tempArr2 = []
-        n.forEach((match, groupIdx) => {
-          if (groupIdx === 1) {
-            tempArr2.push(match)
-            arr2.push(tempArr2)
-            tempArr2 = []
+        const tempArray = []
+        m.forEach((match, groupIndex) => {
+          if (groupIndex === 1) {
+            tempArray.push(match)
+            arr1.push(tempArray)
           } else {
-            tempArr2.push(match)
+            tempArray.push(match)
           }
         })
       }
-      while ((n = regexInput2.exec(html)) !== null) {
-        if (n.index === regexInput2.lastIndex) {
-          regexInput2.lastIndex++
-        }
-        let tempArr2 = []
-        n.forEach((match, groupIdx) => {
-          if (groupIdx === 1) {
-            tempArr2.push(match)
-            arr2.push(tempArr2)
-            tempArr2 = []
-          } else {
-            tempArr2.push(match)
-          }
-        })
-      }
-
       // Removes iframes
       arr1.forEach((item) => {
-        html = html.replace(item, '')
-      })
-
-      // Updates checkbox
-      arr2.forEach((item) => {
-        html = html.replace(item[0], `<li data-type="todo_item" data-done="false" data-drag-handle=""><span contenteditable="false" class="todo-checkbox"></span> <div contenteditable="true" class="todo-content"><p>${item[1]}</p></div></li>`)
+        html = html.replace(item[0], `<a href="${item[1]}" rel="noopener noreferrer nofollow">Watch video</a>`)
       })
       html = rmBrackets ? html.replace(/[[\]]/g, '') : html
       return html.replace('onclick="resize(this)"', '').replace('contenteditable="true"', '')
