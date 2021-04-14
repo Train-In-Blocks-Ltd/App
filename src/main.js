@@ -78,6 +78,9 @@ Vue.mixin({
     // HTML
 
     update_html (html, rmBrackets) {
+      if (html === null) {
+        return html
+      }
       const regexIframe = /<iframe[^>]+>.*?<\/iframe>/gi
       const regexInput1 = /<div[^>]+><input[^>]+><\/div><div[^>]+>([^>]+)<\/div>/gi
       const regexInput2 = /<div[^>]+><input[^>]+><\/div>([^>]+)<\/div>/gi
@@ -85,6 +88,8 @@ Vue.mixin({
       let n
       const arr1 = []
       const arr2 = []
+
+      // Finds all iframes
       while ((m = regexIframe.exec(html)) !== null) {
         if (m.index === regexIframe.lastIndex) {
           regexIframe.lastIndex++
@@ -93,6 +98,8 @@ Vue.mixin({
           arr1.push(match)
         })
       }
+
+      // Finds all old checkboxes
       while ((n = regexInput1.exec(html)) !== null) {
         if (n.index === regexInput1.lastIndex) {
           regexInput1.lastIndex++
@@ -123,14 +130,18 @@ Vue.mixin({
           }
         })
       }
+
+      // Removes iframes
       arr1.forEach((item) => {
         html = html.replace(item, '')
       })
+
+      // Updates checkbox
       arr2.forEach((item) => {
         html = html.replace(item[0], `<li data-type="todo_item" data-done="false" data-drag-handle=""><span contenteditable="false" class="todo-checkbox"></span> <div contenteditable="true" class="todo-content"><p>${item[1]}</p></div></li>`)
       })
       html = rmBrackets ? html.replace(/[[\]]/g, '') : html
-      return html !== null ? html.replace('onclick="resize(this)"', '').replace('contenteditable="true"', '') : html
+      return html.replace('onclick="resize(this)"', '').replace('contenteditable="true"', '')
     },
 
     // Date

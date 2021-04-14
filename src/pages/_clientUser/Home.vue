@@ -1,3 +1,18 @@
+<style>
+/* Show HTML */
+.show_html > :is(div, p) {
+  margin: .6rem 0
+}
+.show_html img {
+  border-radius: 10px;
+  max-width: 80%;
+  margin: 1rem 0
+}
+.show_html a {
+  color: var(--link)
+}
+</style>
+
 <style scoped>
   /* Containers */
   .container--sessions {
@@ -26,7 +41,7 @@
 </style>
 
 <template>
-  <div id="home">
+  <div id="home" class="view_container">
     <div v-if="$parent.portfolio">
       <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_overlay" />
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
@@ -79,13 +94,13 @@
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
-          v-if="todays_sessions_store.length === 0 && !$parent.loading"
+          v-else-if="todays_sessions_store.length === 0"
           class="text--holder text--small grey"
         >
           Nothing planned for today
         </p>
         <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
-          <div v-if="todays_sessions_store.length !== 0" class="container--sessions">
+          <div v-if="todays_sessions_store.length !== 0 && !$parent.loading" class="container--sessions">
             <div
               v-for="(session, sessionIndex) in plan.sessions"
               v-show="todays_sessions_store.includes(session.id)"
@@ -97,8 +112,8 @@
               <div :id="session.name" class="session_header client-side">
                 <div>
                   <span class="text--name"><b>{{ session.name }}</b></span><br>
-                  <span class="text--date">{{ $parent.day(session.date) }}</span>
-                  <span class="text--date">{{ session.date }}</span>
+                  <span class="text--tiny">{{ $parent.day(session.date) }}</span>
+                  <span class="text--tiny">{{ session.date }}</span>
                 </div>
               </div>
               <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
@@ -144,9 +159,9 @@
           Plans
         </h1>
         <skeleton v-if="$parent.loading" :type="'plan'" class="fadeIn" />
-        <periodise v-else :is-trainer="false" :plans.sync="$parent.clientUser.plans" />
+        <periodise v-else-if="!noPlans" :is-trainer="false" :plans.sync="$parent.clientUser.plans" />
         <p
-          v-if="noPlans && !$parent.loading"
+          v-else
           class="text--holder text--small grey"
         >
           No plans yet, please contact your trainer or coach for more information

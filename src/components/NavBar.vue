@@ -16,7 +16,6 @@
 }
 .nav_item {
   display: flex;
-  opacity: var(--light_opacity);
   cursor: pointer;
   font-size: 1rem;
   margin: .8rem 0;
@@ -35,7 +34,8 @@
 }
 .nav_item a {
   display: flex;
-  text-decoration: none
+  text-decoration: none;
+  opacity: var(--light_opacity)
 }
 .nav_item__text {
   white-space: nowrap;
@@ -99,6 +99,11 @@
   }
   .nav_item__icon {
     margin: .8rem auto
+  }
+}
+@media (prefers-reduced-motion: reduce) and (min-width: 769px) {
+  #sidebar {
+    width: 12rem
   }
 }
 </style>

@@ -16,7 +16,7 @@
   }
 </style>
 <template>
-  <div id="logout">
+  <div id="logout" class="view_container">
     <div class="logout_message">
       <div class="logout_message__top">
         <inline-svg :src="require('../assets/svg/logout_success.svg')" />

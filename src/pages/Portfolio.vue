@@ -32,7 +32,7 @@
 </style>
 
 <template>
-  <div id="portfolio">
+  <div id="portfolio" class="view_container">
     <div class="trainer_info">
       <input
         v-if="!$parent.loading"

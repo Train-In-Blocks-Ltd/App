@@ -73,7 +73,7 @@
       transition: var(--transition_standard)
     }
     .floating_nav a:active {
-      transform: scale(.9)
+      transform: var(--active_state)
     }
     div.floating_nav a:before {
       content: none
@@ -100,7 +100,11 @@
 </style>
 
 <template>
-  <div v-if="$parent.client_details" id="client">
+  <div
+    v-if="$parent.client_details"
+    id="client"
+    class="view_container"
+  >
     <div :class="{ opened_sections: showToolkit }" class="section_overlay" />
     <div v-if="showToolkit" class="tab_overlay_content fadeIn delay fill_mode_both">
       <toolkit />

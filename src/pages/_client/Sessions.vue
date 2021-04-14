@@ -185,7 +185,7 @@
     opacity: var(--light_opacity)
   }
   #info:active {
-    transform: scale(.9)
+    transform: var(--active_state)
   }
 
   /* Sessions */
@@ -817,9 +817,9 @@
                     <div class="session_header">
                       <div class="right_margin">
                         <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" class="text--date">{{ day(session.date) }}</span>
-                        <span v-if="session.id !== editSession" class="text--date">{{ session.date }}</span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
+                        <span v-if="session.id !== editSession" class="text--tiny">{{ day(session.date) }}</span>
+                        <span v-if="session.id !== editSession" class="text--tiny">{{ session.date }}</span><br v-if="session.id !== editSession">
+                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--tiny">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
                         <input
                           v-if="session.id === editSession"
                           v-model="session.name"
@@ -968,10 +968,10 @@
                 </div>
               </div>
               <div class="protocol_error">
-                <p v-show="protocolError.length !== 0" class="text--error">
+                <p v-show="protocolError.length !== 0" class="text--red">
                   There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
                 </p>
-                <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--error">
+                <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--red">
                   <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
                 </p>
               </div><br>

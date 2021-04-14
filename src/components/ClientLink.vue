@@ -136,7 +136,7 @@ li[data-done='false'] {
     box-shadow: var(--low_shadow)
   }
   .client_link:active {
-    transform: scale(.99)
+    transform: var(--active_state)
   }
 }
 @media (max-width: 576px) {

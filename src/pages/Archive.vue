@@ -23,12 +23,12 @@
     opacity: var(--light_opacity)
   }
   .archive_icon:active {
-    transform: scale(.9)
+    transform: var(--active_state)
   }
 </style>
 
 <template>
-  <div id="archive">
+  <div id="archive" class="view_container">
     <multiselect
       :type="'client'"
       :options="['Unarchive', 'Delete', 'Deselect']"
@@ -65,7 +65,7 @@
       class="search text--small"
       autocomplete="name"
     >
-    <div v-if="!$parent.archive.no_archive" class="container--clients">
+    <div v-if="!$parent.archive.no_archive" class="clients_container">
       <skeleton v-if="$parent.loading" :type="'archived'" />
       <div
         v-for="(clients, index) in $parent.archive.clients"

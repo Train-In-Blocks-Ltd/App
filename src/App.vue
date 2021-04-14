@@ -18,7 +18,8 @@
     --skeleton_1: #F4F4F4;
     --skeleton_2: #E4E4E4;
     --link: blue;
-    --light_opacity: .6
+    --light_opacity: .6;
+    --active_state: scale(.95)
   }
 
   /* Animation */
@@ -95,21 +96,8 @@
     display: grid;
     align-items: start
   }
-  h1, h2 {
-    margin: 0
-  }
-  h1, .text--large {
-    /* stylelint-disable-next-line */
-    font-size: 2.6rem !important
-  }
-  h2, .text--small {
-    /* stylelint-disable-next-line */
-    font-size: 1.6rem !important
-  }
-  i {
-    /* stylelint-disable-next-line */
-    color: var(--base) !important
-  }
+
+  /* System state */
   .top_banner {
     z-index: 11;
     position: fixed;
@@ -127,6 +115,8 @@
   .notAuth {
     margin: 0
   }
+
+  /* SVG colors */
   svg path {
     fill: var(--base)
   }
@@ -135,32 +125,8 @@
     stroke: var(--base)
   }
 
-  /* Show HTML */
-  .show_html > div,
-  .show_html > p {
-    margin: .6rem 0
-  }
-  .show_html img {
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 1rem 0
-  }
-  .show_html input[type='checkbox'] {
-    margin: .4rem
-  }
-  .show_html a {
-    color: var(--link)
-  }
-
   /* Containers */
-  #home,
-  #client,
-  #account,
-  #archive,
-  #logout,
-  #templates,
-  #client-plan,
-  #portfolio {
+  .view_container {
     background-color: var(--back);
     padding: 2rem 10vw
   }
@@ -199,14 +165,27 @@
   }
 
   /* Fonts */
-  h3 {
-    font-size: 2rem;
-    line-height: 1.2
-  }
-  p {
+  h1, h2, p {
     margin: 0
   }
-  .text--error, a.text--red {
+  h1, .text--large {
+    /* stylelint-disable-next-line */
+    font-size: 2.6rem !important
+  }
+  h2, .text--small {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important
+  }
+  h3 {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important;
+    line-height: 1.2
+  }
+  i {
+    /* stylelint-disable-next-line */
+    color: var(--base) !important
+  }
+  .text--red {
     color: rgb(184, 0, 0)
   }
   .text--holder {
@@ -216,8 +195,6 @@
     text-overflow: ellipsis;
     white-space: nowrap
   }
-  .text--date,
-  .text--checked,
   .text--tiny {
     font-size: .8rem
   }
@@ -299,7 +276,7 @@
     opacity: var(--light_opacity)
   }
   button:active:not(:disabled) {
-    transform: scale(.96)
+    transform: var(--active_state)
   }
   button:focus {
     box-shadow: 0 0 0 4px var(--base_light)
@@ -367,10 +344,6 @@
   select.width_300 {
     width: 300px
   }
-  .search {
-    width: 100%;
-    margin-bottom: 2rem
-  }
   input[type=color] {
     margin: 0 .4rem;
     background-color: transparent;
@@ -379,17 +352,21 @@
     cursor: pointer;
     transition: var(--transition_standard)
   }
-  ::placeholder {
-    color: var(--base_light);
-    opacity: 1; /* Firefox */
-  }
   option {
     background-color: var(--fore)
+  }
+  .search {
+    width: 100%;
+    margin-bottom: 2rem
   }
   .input_section {
     display: grid;
     grid-gap: 1rem;
     margin: 2rem 0
+  }
+  ::placeholder {
+    color: var(--base_light);
+    opacity: 1; /* Firefox */
   }
 
   /* Forms */
@@ -415,7 +392,7 @@
     opacity: var(--light_opacity)
   }
   .logo_link:active {
-    transform: scale(.9)
+    transform: var(--active_state)
   }
 
   /* Tab options */
@@ -474,6 +451,22 @@
     font-size: .6rem
   }
 
+  /* Loading bar */
+  #nprogress .bar {
+    /* stylelint-disable-next-line */
+    background-color: var(--base) !important
+  }
+  #nprogress .peg {
+    /* stylelint-disable-next-line */
+    box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
+  }
+  #nprogress .spinner-icon {
+    /* stylelint-disable-next-line */
+    border-top-color: var(--base) !important;
+    /* stylelint-disable-next-line */
+    border-left-color: var(--base) !important
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar {
     width: 10px;
@@ -490,31 +483,16 @@
   }
 
   /* Archive and Home */
-  .container--clients {
+  .clients_container {
     display: grid;
     grid-gap: 2rem;
     margin-bottom: 2rem
   }
-  .client_container p {
-    margin: 0
-  }
-
-  /* Plan links container */
   .client_link_wrapper {
     text-decoration: none
   }
 
-  /* Client-side */
-  .container--session-control {
-    display: flex;
-    justify-content: space-between
-  }
-  .session-counter {
-    align-self: center;
-    font-size: 1rem
-  }
-
-  /* Responsiveness */
+  /* 992 touchscreens */
   @media (max-width: 992px) {
     /* States */
     input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
@@ -552,18 +530,12 @@
     main {
       margin: 0
     }
-    #home,
-    #client,
-    #account,
-    #archive,
-    #logout,
-    #templates,
-    #client-plan,
-    #portfolio {
+    .view_container {
       padding: 2rem 5vw 5rem 5vw
     }
   }
 
+  /* 576 Mobiles */
   @media (max-width: 576px) {
     /* Elements */
     ::-webkit-scrollbar {
@@ -601,47 +573,17 @@
     }
   }
 
-  /* REDUCED MOTION */
+  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    button:active,
-    .button:active {
-      transform: scale(1)
+    :root {
+      --transition_standard: none
     }
-    .search,
-    .client_container > a:before,
-    .icon--expand,
-    .tab_option,
-    .icon_open--stats,
-    .icon_open--new_client,
-    .icon_open--install_PWA,
-    .icon_open--new_plan {
+    * {
       transition: none
-    }
-    #sidebar {
-      width: 12rem
-    }
-    .nav_item__text {
-      opacity: 1
     }
     .fadeIn, .fadeOut {
       animation: none
     }
-  }
-
-  /* Progress */
-  #nprogress .bar {
-    /* stylelint-disable-next-line */
-    background-color: var(--base) !important
-  }
-  #nprogress .peg {
-    /* stylelint-disable-next-line */
-    box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
-  }
-  #nprogress .spinner-icon {
-    /* stylelint-disable-next-line */
-    border-top-color: var(--base) !important;
-    /* stylelint-disable-next-line */
-    border-left-color: var(--base) !important
   }
 </style>
 

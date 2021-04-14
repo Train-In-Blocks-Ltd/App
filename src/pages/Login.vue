@@ -25,7 +25,7 @@
   opacity: var(--light_opacity)
 }
 #okta-signin-submit:active {
-  transform: scale(.96)
+  transform: var(--active_state)
 }
 #okta-signin-submit:focus {
   box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)

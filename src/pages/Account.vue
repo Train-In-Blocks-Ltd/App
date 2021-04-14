@@ -29,7 +29,7 @@
   opacity: var(--light_opacity)
 }
 .policies:active {
-  transform: scale(.9)
+  transform: var(--active_state)
 }
 .details_container {
   display: grid;
@@ -78,7 +78,11 @@
 </style>
 
 <template>
-  <div v-if="$parent.claims" id="account">
+  <div
+    v-if="$parent.claims"
+    id="account"
+    class="view_container"
+  >
     <div :class="{ opened_sections: showPasswordReset }" class="section_overlay" />
     <form
       v-if="showPasswordReset"

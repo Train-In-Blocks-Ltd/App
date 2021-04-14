@@ -1,3 +1,18 @@
+<style>
+/* Show HTML */
+.show_html > :is(div, p) {
+  margin: .6rem 0
+}
+.show_html img {
+  border-radius: 10px;
+  max-width: 80%;
+  margin: 1rem 0
+}
+.show_html a {
+  color: var(--link)
+}
+</style>
+
 <style scoped>
   .plan_name {
     margin-bottom: 4rem
@@ -62,7 +77,7 @@
 </style>
 
 <template>
-  <div id="client-plan">
+  <div id="client_side_plan" class="view_container">
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id" class="client_plan">
         <h1 class="plan_name">
@@ -143,8 +158,8 @@
             <div :id="session.name" class="session_header client-side">
               <div>
                 <span class="text--name"><b>{{ session.name }}</b></span><br>
-                <span class="text--date">{{ $parent.day(session.date) }}</span>
-                <span class="text--date">{{ session.date }}</span>
+                <span class="text--tiny">{{ $parent.day(session.date) }}</span>
+                <span class="text--tiny">{{ session.date }}</span>
               </div>
             </div>
             <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
