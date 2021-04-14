@@ -1175,33 +1175,33 @@ export default {
       }
     },
     resolve_plan_info_editor (state) {
-      const plan = this.helper('match_plan')
+      const PLAN = this.helper('match_plan')
       switch (state) {
         case 'edit':
           this.$parent.$parent.dontLeave = true
           this.editingPlanNotes = true
-          this.tempEditorStore = plan.notes
+          this.tempEditorStore = PLAN.notes
           break
         case 'save':
           this.editingPlanNotes = false
-          this.update_plan(plan.notes)
+          this.update_plan(PLAN.notes)
           break
         case 'cancel':
           this.$parent.$parent.dontLeave = false
           this.editingPlanNotes = false
-          plan.notes = this.tempEditorStore
+          PLAN.notes = this.tempEditorStore
           break
       }
     },
     resolve_session_editor (state, id) {
-      const session = this.helper('match_session', id)
+      const SESSION = this.helper('match_session', id)
       switch (state) {
         case 'edit':
           this.$parent.$parent.dontLeave = true
           this.isEditingSession = true
           this.editSession = id
           this.forceStop += 1
-          this.tempEditorStore = session.notes
+          this.tempEditorStore = SESSION.notes
           break
         case 'save':
           this.isEditingSession = false
@@ -1214,7 +1214,7 @@ export default {
           this.$parent.$parent.dontLeave = false
           this.isEditingSession = false
           this.editSession = null
-          session.notes = this.tempEditorStore
+          SESSION.notes = this.tempEditorStore
           this.scan()
           break
       }
@@ -1239,21 +1239,21 @@ export default {
     // MODALS AND TAB
 
     print () {
-      const notesArr = []
-      const plan = this.helper('match_plan')
-      plan.sessions.sort((a, b) => {
+      const NOTES_ARR = []
+      const PLAN = this.helper('match_plan')
+      PLAN.sessions.sort((a, b) => {
         return new Date(a.date) - new Date(b.date)
       })
-      plan.sessions.forEach((session) => {
+      PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          notesArr.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.update_html(session.notes, true)}</div>`)
+          NOTES_ARR.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.update_html(session.notes, true)}</div>`)
         }
       })
-      const newWindow = window.open()
-      const html = notesArr.join('')
-      newWindow.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}</style><div>${html}</div>`)
-      newWindow.stop()
-      newWindow.print()
+      const NEW_WINDOW = window.open()
+      const HTML = NOTES_ARR.join('')
+      NEW_WINDOW.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}</style><div>${HTML}</div>`)
+      NEW_WINDOW.stop()
+      NEW_WINDOW.print()
       this.$ga.event('Plan', 'print')
       this.deselect_all()
     },
@@ -1310,8 +1310,8 @@ export default {
         let n = 0
         if (sessionItem[0] === sessionId) {
           sessionItem[1].forEach((exerciseGroup, exerciseGroupIndex) => {
-            const regEx = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1].replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
-            sessionNotes = sessionNotes.replace(regEx, (match) => {
+            const REGEX = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1].replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
+            sessionNotes = sessionNotes.replace(REGEX, (match) => {
               return n === exerciseGroupIndex ? `${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}: ${exerciseGroup[loc - 1]}` : match
             })
             n++
@@ -1321,11 +1321,11 @@ export default {
       return sessionNotes
     },
     copy_across () {
-      const copysessions = []
+      const COPY_SESSIONS = []
       let weekCount = this.currentWeek + 1
       this.helper('match_plan').sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          copysessions.push({
+          COPY_SESSIONS.push({
             id: session.id,
             name: session.name,
             date: session.date,
@@ -1333,13 +1333,13 @@ export default {
           })
         }
       })
-      const startWeek = this.currentWeek
+      const START_WEEK = this.currentWeek
       for (; weekCount <= this.copyTarget; weekCount++) {
         this.currentWeek = weekCount
-        copysessions.forEach((session) => {
+        COPY_SESSIONS.forEach((session) => {
           this.new_session.name = session.name
-          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - startWeek))
-          this.currentCopySessionNotes = this.simpleCopy ? session.notes : this.copy_across_process(session.id, session.notes, weekCount - startWeek)
+          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - START_WEEK))
+          this.currentCopySessionNotes = this.simpleCopy ? session.notes : this.copy_across_process(session.id, session.notes, weekCount - START_WEEK)
           this.add_session(true)
         })
       }
@@ -1375,8 +1375,8 @@ export default {
       this.$parent.$parent.end_loading()
     },
     async duplicate_plan (clientId) {
-      const plan = this.helper('match_plan')
-      await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
+      const PLAN = this.helper('match_plan')
+      await this.create_plan(PLAN.name, clientId, PLAN.duration, PLAN.block_color, PLAN.notes, PLAN.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
       this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
       this.$ga.event('Plan', 'duplicate')
@@ -1433,8 +1433,8 @@ export default {
       if (!this.selectedSessions.includes(id)) {
         this.selectedSessions.push(id)
       } else {
-        const idx = this.selectedSessions.indexOf(id)
-        this.selectedSessions.splice(idx, 1)
+        const IDX = this.selectedSessions.indexOf(id)
+        this.selectedSessions.splice(IDX, 1)
       }
     },
     async create_session () {
@@ -1453,10 +1453,10 @@ export default {
     },
     check_for_week_sessions () {
       let arr = 0
-      const sessions = this.helper('match_plan').sessions
-      this.noSessions = sessions === false
-      if (sessions && !this.noSessions) {
-        sessions.forEach((session) => {
+      const SESSIONS = this.helper('match_plan').sessions
+      this.noSessions = SESSIONS === false
+      if (SESSIONS && !this.noSessions) {
+        SESSIONS.forEach((session) => {
           if (session.week_id === this.currentWeek) {
             arr += 1
             this.weekSessions.push(session.id)
@@ -1476,17 +1476,17 @@ export default {
     },
     toggle_expanded_sessions (id) {
       if (this.expandedSessions.includes(id)) {
-        const index = this.expandedSessions.indexOf(id)
-        if (index > -1) {
-          this.expandedSessions.splice(index, 1)
+        const INDEX = this.expandedSessions.indexOf(id)
+        if (INDEX > -1) {
+          this.expandedSessions.splice(INDEX, 1)
         }
       } else {
         this.expandedSessions.push(id)
       }
     },
     update_session_color () {
-      const plan = this.helper('match_plan')
-      plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
+      const PLAN = this.helper('match_plan')
+      PLAN.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
       this.editingWeekColor = false
       this.update_plan()
       this.scan()
@@ -1526,11 +1526,11 @@ export default {
       this.dataPacketStore.forEach((session) => {
         overviewStore = []
         session.forEach((exerciseDataPacket) => {
-          const tidyA = this.selectedDataName.replace(/\(/g, '\\(')
-          const tidyB = tidyA.replace(/\)/g, '\\)')
-          const regex = RegExp(tidyB, 'gi')
-          const protocol = exerciseDataPacket[2].replace(/\s/g, '')
-          if (regex.test(exerciseDataPacket[1])) {
+          const TIDY_A = this.selectedDataName.replace(/\(/g, '\\(')
+          const TIDY_B = TIDY_A.replace(/\)/g, '\\)')
+          const REGEX = RegExp(TIDY_B, 'gi')
+          const PROTOCOL = exerciseDataPacket[2].replace(/\s/g, '')
+          if (REGEX.test(exerciseDataPacket[1])) {
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
               this.optionsForDataType.push({
@@ -1545,30 +1545,30 @@ export default {
               })
             }
             if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x')) {
-              this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType))
+              this.dataValues.push(this.sets_reps(exerciseDataPacket, PROTOCOL, this.selectedDataType))
             } else if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
-              this.dataValues.push(this.load(exerciseDataPacket, protocol))
+              this.dataValues.push(this.load(exerciseDataPacket, PROTOCOL))
             } else if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
-              const agg = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+              const agg = this.sets_reps(exerciseDataPacket, PROTOCOL, 'Reps') * this.load(exerciseDataPacket, PROTOCOL)
               this.dataValues.push(agg)
             } else if (!exerciseDataPacket[2].includes('x')) {
               this.showType = false
-              this.dataValues.push(this.other_measures(protocol))
+              this.dataValues.push(this.other_measures(PROTOCOL))
             }
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
-            const dataForSum = () => {
+            const DATA_FOR_SUM = () => {
               switch (this.selectedDataType) {
                 case 'Sets':
-                  return this.sets_reps(exerciseDataPacket, protocol, 'Sets')
+                  return this.sets_reps(exerciseDataPacket, PROTOCOL, 'Sets')
                 case 'Reps':
-                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps')
+                  return this.sets_reps(exerciseDataPacket, PROTOCOL, 'Reps')
                 case 'Load':
-                  return this.load(exerciseDataPacket, protocol)
+                  return this.load(exerciseDataPacket, PROTOCOL)
                 case 'Volume':
-                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
+                  return this.sets_reps(exerciseDataPacket, PROTOCOL, 'Reps') * this.load(exerciseDataPacket, PROTOCOL)
               }
             }
-            overviewStore.push(dataForSum())
+            overviewStore.push(DATA_FOR_SUM())
             if (overviewStore.length !== 0) {
               this.dataValues.push(overviewStore.reduce((a, b) => a + b))
               this.desc_stats(this.selectedDataType)
@@ -1587,21 +1587,21 @@ export default {
     // DATE/TIME
 
     add_days (date, days) {
-      const d = new Date(date)
-      d.setDate(d.getDate() + days)
-      const year = d.getFullYear()
-      const month = d.getMonth() + 1
-      const dayDate = d.getDate()
-      return `${year}-${month}-${dayDate}`
+      const DATE = new Date(date)
+      DATE.setDate(DATE.getDate() + days)
+      const YEAR = DATE.getFullYear()
+      const MONTH = DATE.getMonth() + 1
+      const DAY = DATE.getDate()
+      return `${YEAR}-${MONTH}-${DAY}`
     },
     plan_duration (duration) {
       // Turn the duration of the plan into an array to render the boxes in the table
-      const arr = []
+      const ARR = []
       let i
       for (i = 1; i < parseInt(duration, 10) + 1; i++) {
-        arr.push(i)
+        ARR.push(i)
       }
-      return arr
+      return ARR
     },
 
     // INIT AND BACKGROUND
@@ -1617,23 +1617,23 @@ export default {
           }
         })
       }
-      const bar = document.getElementById('progress-bar')
-      if (bar) {
-        bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+      const PROGRESS_BAR = document.getElementById('progress-bar')
+      if (PROGRESS_BAR) {
+        PROGRESS_BAR.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
       }
     },
     expand_all (toExpand) {
       try {
-        const plan = this.helper('match_plan')
-        if (Array.isArray(plan.sessions)) {
-          if (plan.sessions.length !== 0) {
-            plan.sessions.forEach((session) => {
+        const PLAN = this.helper('match_plan')
+        if (Array.isArray(PLAN.sessions)) {
+          if (PLAN.sessions.length !== 0) {
+            PLAN.sessions.forEach((session) => {
               if (toExpand === 'Expand') {
                 this.expandedSessions.push(session.id)
               } else {
                 let x = 0
-                const y = this.expandedSessions.length
-                for (; x < y; x++) {
+                const Y = this.expandedSessions.length
+                for (; x < Y; x++) {
                   this.expandedSessions.pop()
                 }
               }
@@ -1647,11 +1647,11 @@ export default {
     scan () {
       this.dataPacketStore.length = 0
       this.sessionDates.length = 0
-      const plan = this.helper('match_plan')
-      this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
-      this.maxWeek = plan.duration
-      if (plan.sessions && !this.noSessions) {
-        plan.sessions.forEach((object) => {
+      const PLAN = this.helper('match_plan')
+      this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
+      this.maxWeek = PLAN.duration
+      if (PLAN.sessions && !this.noSessions) {
+        PLAN.sessions.forEach((object) => {
           this.sessionDates.push({
             title: object.name,
             date: object.date,
@@ -1677,24 +1677,24 @@ export default {
     // Init the dropdown selection with validation
     dropdown_init () {
       this.optionsForDataName = [{ id: 0, text: 'Plan Overview', value: 'Plan Overview' }]
-      const tempItemStore = []
-      const tempItemStoreLate = []
+      const TEMPORARY_ITEM_STORE = []
+      const TEMPORARY_ITEM_STORE_LATE = []
       let continueValue = 0
       this.dataPacketStore.forEach((item) => {
         item.forEach((exerciseDataPacket) => {
-          const tidyA = exerciseDataPacket[1].replace(/\(/g, '\\(')
-          const tidyB = tidyA.replace(/\)/g, '\\)')
-          const regexA = RegExp(tidyB, 'gi')
-          const itemCased = this.proper_case(exerciseDataPacket[1])
-          if (!regexA.test(tempItemStore) && exerciseDataPacket[2].includes('at')) {
-            tempItemStore.push(itemCased)
+          const TIDY_A = exerciseDataPacket[1].replace(/\(/g, '\\(')
+          const TIDY_B = TIDY_A.replace(/\)/g, '\\)')
+          const REGEX = RegExp(TIDY_B, 'gi')
+          const CASED_ITEM = this.proper_case(exerciseDataPacket[1])
+          if (!REGEX.test(TEMPORARY_ITEM_STORE) && exerciseDataPacket[2].includes('at')) {
+            TEMPORARY_ITEM_STORE.push(CASED_ITEM)
           }
-          if (!regexA.test(tempItemStoreLate) && !exerciseDataPacket[2].includes('at')) {
-            tempItemStoreLate.push(exerciseDataPacket[1])
+          if (!REGEX.test(TEMPORARY_ITEM_STORE_LATE) && !exerciseDataPacket[2].includes('at')) {
+            TEMPORARY_ITEM_STORE_LATE.push(exerciseDataPacket[1])
           }
         })
       })
-      tempItemStore.forEach((item, index) => {
+      TEMPORARY_ITEM_STORE.forEach((item, index) => {
         continueValue = index + 1
         this.optionsForDataName.push({
           id: continueValue,
@@ -1702,7 +1702,7 @@ export default {
           value: item
         })
       })
-      tempItemStoreLate.forEach((item, index) => {
+      TEMPORARY_ITEM_STORE_LATE.forEach((item, index) => {
         this.optionsForDataName.push({
           id: continueValue + index + 1,
           text: item,
@@ -1714,7 +1714,7 @@ export default {
     // REGEX
 
     sets_reps (exerciseDataPacket, protocol, selectedDataType) {
-      const tempSetsRepsStore = []
+      const TEMPORARY_SETS_REPS_STORE = []
       let setStore = null
       let extractedSetsReps = null
       let m
@@ -1749,10 +1749,10 @@ export default {
                   this.regexNumberBreakdown.lastIndex++
                 }
                 n.forEach((repsMatchExact) => {
-                  tempSetsRepsStore.push(parseInt(repsMatchExact))
+                  TEMPORARY_SETS_REPS_STORE.push(parseInt(repsMatchExact))
                 })
               }
-              extractedSetsReps = tempSetsRepsStore.reduce((a, b) => a + b)
+              extractedSetsReps = TEMPORARY_SETS_REPS_STORE.reduce((a, b) => a + b)
             } else {
               extractedSetsReps = parseInt(match) * parseInt(setStore)
             }
@@ -1762,8 +1762,8 @@ export default {
       return extractedSetsReps
     },
     load (exerciseDataPacket, protocol) {
-      const tempLoadStore = []
-      const sets = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
+      const TEMPORARY_LOADS_STORE = []
+      const SETS = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
       let sum = 0
       let isMultiple = false
       let m
@@ -1786,10 +1786,10 @@ export default {
               }
               n.forEach((loadMatchExact) => {
                 if (loadMatch.includes('/')) {
-                  tempLoadStore.push(parseFloat(loadMatchExact))
+                  TEMPORARY_LOADS_STORE.push(parseFloat(loadMatchExact))
                   isMultiple = true
                 } else {
-                  sum = parseFloat(loadMatchExact) * sets
+                  sum = parseFloat(loadMatchExact) * SETS
                 }
               })
             }
@@ -1797,7 +1797,7 @@ export default {
         })
       }
       if (isMultiple) {
-        sum = tempLoadStore.reduce((a, b) => a + b)
+        sum = TEMPORARY_LOADS_STORE.reduce((a, b) => a + b)
       }
       return sum
     },
@@ -1817,14 +1817,14 @@ export default {
     desc_stats (selectedDataType) {
       let storeMax = 0
       let store = 0
-      const sum = this.dataValues.reduce((a, b) => a + b)
+      const SUM = this.dataValues.reduce((a, b) => a + b)
       this.descData.total = {
         desc: `Total ${selectedDataType}: `,
-        value: sum
+        value: SUM
       }
       this.descData.average = {
         desc: `Average ${selectedDataType}: `,
-        value: (sum / this.dataValues.length).toFixed(1)
+        value: (SUM / this.dataValues.length).toFixed(1)
       }
       this.dataValues.forEach((value) => {
         storeMax = Math.max(storeMax, value)
@@ -1884,17 +1884,17 @@ export default {
     async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
       this.$parent.$parent.silent_loading = true
       this.$parent.$parent.dontLeave = true
-      const plan = this.helper('match_plan')
+      const PLAN = this.helper('match_plan')
       try {
-        this.sort_sessions(plan)
-        const response = await this.$axios.post('https://api.traininblocks.com/programmes',
+        this.sort_sessions(PLAN)
+        const RESPONSE = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
-            id: forceID === undefined ? plan.id : forceID,
-            name: forceName === undefined ? plan.name : `Copy of ${forceName}`,
-            duration: forceDuration === undefined ? plan.duration : forceDuration,
-            notes: forceNotes === undefined ? plan.notes : forceNotes,
-            block_color: forceColors === undefined ? plan.block_color : forceColors,
-            ordered: plan.ordered
+            id: forceID === undefined ? PLAN.id : forceID,
+            name: forceName === undefined ? PLAN.name : `Copy of ${forceName}`,
+            duration: forceDuration === undefined ? PLAN.duration : forceDuration,
+            notes: forceNotes === undefined ? PLAN.notes : forceNotes,
+            block_color: forceColors === undefined ? PLAN.block_color : forceColors,
+            ordered: PLAN.ordered
           }
         )
         // Set vue client_details data to new data
@@ -1902,7 +1902,7 @@ export default {
         // Loop through client_details plans
         for (x in this.$parent.$parent.client_details.plans) {
           if (this.$parent.$parent.client_details.plans[x].id === this.$route.params.id) {
-            this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
+            this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
           }
         }
         // Set vue client plans data to new data
@@ -1912,7 +1912,7 @@ export default {
           if (this.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
             for (y in this.$parent.$parent.clients[x].plans[y]) {
               if (this.$parent.$parent.clients[x].plans[y].id === this.$route.params.id) {
-                this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
+                this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
               }
             }
           }
@@ -1929,9 +1929,9 @@ export default {
     async delete_plan () {
       this.$parent.$parent.dontLeave = true
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
-        const id = parseInt(this.$route.params.id)
+        const ID = parseInt(this.$route.params.id)
         try {
-          await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+          await this.$axios.delete(`https://api.traininblocks.com/programmes/${ID}`)
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()
           this.$ga.event('Session', 'delete')
@@ -1945,16 +1945,16 @@ export default {
     },
     async update_session (id) {
       this.$parent.$parent.dontLeave = true
-      const session = this.helper('match_session', id)
+      const SESSION = this.helper('match_session', id)
       try {
         await this.$axios.post('https://api.traininblocks.com/workouts',
           {
-            id: session.id,
-            name: session.name,
-            date: session.date,
-            notes: session.notes,
-            week_id: session.week_id,
-            checked: session.checked
+            id: SESSION.id,
+            name: SESSION.name,
+            date: SESSION.date,
+            notes: SESSION.notes,
+            week_id: SESSION.week_id,
+            checked: SESSION.checked
           }
         )
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
