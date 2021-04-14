@@ -572,8 +572,12 @@ export default {
           this.showAddTemplate = false
           this.showAddImage = false
           this.will_body_scroll(true)
+          this.update_edited_notes()
         })
-        this.editor.on('blur', () => { this.caretInEditor = false })
+        this.editor.on('blur', () => {
+          this.caretInEditor = false
+          this.update_edited_notes()
+        })
         this.editor.setContent(this.update_html(this.htmlInjection, false))
       } else {
         this.editor.destroy()
