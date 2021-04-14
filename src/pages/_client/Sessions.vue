@@ -479,16 +479,16 @@
       </form>
       <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1">
         <form
-          v-for="(protocol, protocolIndex) in copyAcrossProtocols"
-          v-show="copyAcrossPage === protocolIndex + 1"
-          :key="`protocol_${protocolIndex}`"
+          v-for="(protocol, singleRepsIndex) in copyAcrossProtocols"
+          v-show="copyAcrossPage === singleRepsIndex + 1"
+          :key="`protocol_${singleRepsIndex}`"
           class="bottom_margin"
           @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
         >
           <div
-            v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[protocolIndex][1]"
+            v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[singleRepsIndex][1]"
             v-show="copyAcrossView === exerciseGroupIndex"
-            :key="`exercise_${protocolIndex}_${exerciseGroupIndex}`"
+            :key="`exercise_${singleRepsIndex}_${exerciseGroupIndex}`"
           >
             <h2>
               {{ protocol[1][exerciseGroupIndex][0] }}
@@ -498,14 +498,14 @@
             </p>
             <div
               v-for="(exercise, exerciseIndex) in exercises"
-              :key="`exercise_${protocolIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
+              :key="`exercise_${singleRepsIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
             >
               <br>
               <label :for="`${protocol[1][0][0]}_${exerciseIndex}`">
                 Week {{ currentWeek + exerciseIndex + 1 }}:
               </label>
               <input
-                v-model="copyAcrossInputs[protocolIndex][1][exerciseGroupIndex][exerciseIndex]"
+                v-model="copyAcrossInputs[singleRepsIndex][1][exerciseGroupIndex][exerciseIndex]"
                 :name="`${protocol[1][0][0]}_${exerciseIndex}`"
                 type="text"
                 required
@@ -515,13 +515,13 @@
             <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
               Back
             </button>
-            <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
+            <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[singleRepsIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
               Back
             </button>
-            <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">
+            <button v-if="copyAcrossView === copyAcrossInputs[singleRepsIndex][1].length - 1" type="submit">
               Next
             </button>
-            <button v-if="copyAcrossView !== copyAcrossInputs[protocolIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[protocolIndex][1].length - 1">
+            <button v-if="copyAcrossView !== copyAcrossInputs[singleRepsIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[singleRepsIndex][1].length - 1">
               Next
             </button>
           </div>
@@ -906,7 +906,7 @@
                       </select>
                     </label>
                   </div>
-                  <div v-if="showType" class="data-select__options">
+                  <div v-if="showDataTypeSelector" class="data-select__options">
                     <label for="measure-type">
                       Data type:<br>
                       <select
@@ -915,16 +915,29 @@
                         name="measure-type"
                         @change="sort_sessions(plan), scan(), selection()"
                       >
-                        <option value="Sets">Sets</option>
-                        <option value="Reps">Reps</option>
-                        <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">
-                          {{ optionData.text }}
+                        <option value="Sets">
+                          Sets
+                        </option>
+                        <option value="Reps">
+                          Reps
+                        </option>
+                        <option
+                          v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
+                          value="Load"
+                        >
+                          Load
+                        </option>
+                        <option
+                          v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
+                          value="Volume"
+                        >
+                          Volume
                         </option>
                       </select>
                     </label>
                   </div>
                 </div>
-                <div v-if="showType && descData.total.desc && !dataValues.includes(null)" class="data-desc">
+                <div v-if="showDataTypeSelector && descData.total.desc && !dataToVisualise.includes(null)" class="data-desc">
                   <div class="container--data-desc">
                     <p class="data-desc__desc">
                       <b>{{ descData.total.desc }}</b>
@@ -976,8 +989,8 @@
                 </p>
               </div><br>
               <simple-chart
-                v-if="!dataValues.includes(null)"
-                :data-points="dataValues"
+                v-if="!dataToVisualise.includes(null)"
+                :data-points="dataToVisualise"
                 :labels="labelValues"
                 :reset="resetGraph"
                 aria-label="Graph"
@@ -1064,11 +1077,11 @@ export default {
         min: '',
         change: ''
       },
+      showLoadsVolumeOptions: false,
       selectedDataName: 'Plan Overview',
       optionsForDataName: [],
-      optionsForDataType: [],
       selectedDataType: 'Sets',
-      showType: true,
+      showDataTypeSelector: true,
       isStatsOpen: false,
       resetGraph: 0,
 
@@ -1101,15 +1114,11 @@ export default {
       shiftDays: 1,
       duplicateClientID: 'Select a client',
 
-      // REGEX DATA //
+      // Regex data
 
-      dataValues: [],
+      dataToVisualise: [],
       labelValues: [],
       dataPacketStore: [],
-      regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
-      regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
-      regexLoadCapture: /(at|@)\s*(\d*)\s*\w*/gi,
-      regexNumberBreakdown: /[0-9.]+/gi,
       protocolError: [],
 
       // CALENDAR
@@ -1500,84 +1509,138 @@ export default {
     // CHART
 
     selection () {
+      class DataPoint {
+        constructor (dataPacket, returnDataType) {
+          this.sessionName = dataPacket[0]
+          this.sessionDate = dataPacket[3]
+          this.exerciseName = dataPacket[1]
+          this.protocol = dataPacket[2].replace(/\s/g, '')
+          this.returnDataType = returnDataType
+          this.regexSetsReps = /(\d*)x((\d*\/*)*)/gi
+          this.regexLoad = /at\s*((\d\.*\/*)*)\s*\w*/gi
+          this.regeGetNumber = /[0-9.]+/gi
+        }
+
+        get calculate () {
+          switch (this.returnDataType) {
+            case 'Sets':
+              return this.getSets()
+            case 'Reps':
+              return this.getReps()
+            case 'Load':
+              return this.getLoad()
+            case 'Volume':
+              return this.getReps() * this.getLoad()
+            case 'Other':
+              return this.getOtherMeasure()
+          }
+        }
+
+        getSets () {
+          let returnValue
+          let finder
+          while ((finder = this.regexSetsReps.exec(this.protocol)) !== null) {
+            if (finder.index === this.regexSetsReps.lastIndex) {
+              this.regexSetsReps.lastIndex++
+            }
+            finder.forEach((setsMatch, setsIndex) => {
+              if (setsIndex === 1) {
+                returnValue = parseFloat(setsMatch)
+              }
+            })
+          }
+          return returnValue
+        }
+
+        getReps () {
+          const NUM_OF_SETS = this.getSets()
+          let returnValue = 0
+          let repsFinder
+          while ((repsFinder = this.regexSetsReps.exec(this.protocol)) !== null) {
+            if (repsFinder.index === this.regexSetsReps.lastIndex) {
+              this.regexSetsReps.lastIndex++
+            }
+            repsFinder.forEach((repsMatch, repsIndex) => {
+              if (repsIndex === 2) {
+                if (repsMatch.includes('/')) {
+                  returnValue = repsMatch.split('/').reduce((a, b) => parseFloat(a) + parseFloat(b))
+                } else {
+                  returnValue = parseFloat(repsMatch) * NUM_OF_SETS
+                }
+              }
+            })
+          }
+          return returnValue
+        }
+
+        getLoad () {
+          const NUM_OF_SETS = this.getSets()
+          let returnValue = 0
+          let loadFinder
+          while ((loadFinder = this.regexLoad.exec(this.protocol)) !== null) {
+            if (loadFinder.index === this.regexLoad.lastIndex) {
+              this.regexLoad.lastIndex++
+            }
+            loadFinder.forEach((loadMatch, loadIndex) => {
+              if (loadIndex === 1) {
+                if (loadMatch.includes('/')) {
+                  returnValue = loadMatch.split('/').reduce((a, b) => parseFloat(a) + parseFloat(b))
+                } else {
+                  returnValue = parseFloat(loadMatch) * NUM_OF_SETS
+                }
+              }
+            })
+          }
+          return returnValue
+        }
+
+        getOtherMeasure () {
+          let returnValue
+          let numberFinder
+          while ((numberFinder = this.regeGetNumber.exec(this.protocol)) !== null) {
+            if (numberFinder.index === this.regeGetNumber.lastIndex) {
+              this.regeGetNumber.lastIndex++
+            }
+            numberFinder.forEach((numberMatch) => {
+              returnValue = parseFloat(numberMatch)
+            })
+          }
+          return returnValue
+        }
+      }
       this.descData.total = ''
       this.descData.average = ''
       this.descData.max = ''
       this.descData.min = ''
       this.descData.change = ''
-      this.dataValues = []
+      this.dataToVisualise = []
       this.labelValues = []
       this.protocolError = []
-      this.optionsForDataType = []
-      let overviewStore = []
-      this.showType = true
-      if (this.selectedDataName === 'Plan Overview') {
-        this.optionsForDataType.push({
-          id: 1,
-          text: 'Load',
-          value: 'Load'
-        })
-        this.optionsForDataType.push({
-          id: 2,
-          text: 'Volume',
-          value: 'Volume'
-        })
-      }
+      let extractedSessionProtocols = []
       this.dataPacketStore.forEach((session) => {
-        overviewStore = []
+        extractedSessionProtocols = []
         session.forEach((exerciseDataPacket) => {
-          const TIDY_A = this.selectedDataName.replace(/\(/g, '\\(')
-          const TIDY_B = TIDY_A.replace(/\)/g, '\\)')
-          const REGEX = RegExp(TIDY_B, 'gi')
-          const PROTOCOL = exerciseDataPacket[2].replace(/\s/g, '')
+          const EXERCISE_NAME = this.selectedDataName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')
+          const REGEX = RegExp(EXERCISE_NAME, 'gi')
           if (REGEX.test(exerciseDataPacket[1])) {
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
-            if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
-              this.optionsForDataType.push({
-                id: 1,
-                text: 'Load',
-                value: 'Load'
-              })
-              this.optionsForDataType.push({
-                id: 2,
-                text: 'Volume',
-                value: 'Volume'
-              })
-            }
-            if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x')) {
-              this.dataValues.push(this.sets_reps(exerciseDataPacket, PROTOCOL, this.selectedDataType))
-            } else if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
-              this.dataValues.push(this.load(exerciseDataPacket, PROTOCOL))
-            } else if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
-              const agg = this.sets_reps(exerciseDataPacket, PROTOCOL, 'Reps') * this.load(exerciseDataPacket, PROTOCOL)
-              this.dataValues.push(agg)
-            } else if (!exerciseDataPacket[2].includes('x')) {
-              this.showType = false
-              this.dataValues.push(this.other_measures(PROTOCOL))
-            }
+            this.showDataTypeSelector = exerciseDataPacket[2].includes('x') && this.protocolError.length === 0
+            this.showLoadsVolumeOptions = exerciseDataPacket[2].includes('at') && this.protocolError.length === 0
+            const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket[2].includes('x') ? this.selectedDataType : 'Other')
+            this.dataToVisualise.push(DATA_POINT.calculate)
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
-            const DATA_FOR_SUM = () => {
-              switch (this.selectedDataType) {
-                case 'Sets':
-                  return this.sets_reps(exerciseDataPacket, PROTOCOL, 'Sets')
-                case 'Reps':
-                  return this.sets_reps(exerciseDataPacket, PROTOCOL, 'Reps')
-                case 'Load':
-                  return this.load(exerciseDataPacket, PROTOCOL)
-                case 'Volume':
-                  return this.sets_reps(exerciseDataPacket, PROTOCOL, 'Reps') * this.load(exerciseDataPacket, PROTOCOL)
-              }
-            }
-            overviewStore.push(DATA_FOR_SUM())
-            if (overviewStore.length !== 0) {
-              this.dataValues.push(overviewStore.reduce((a, b) => a + b))
-              this.desc_stats(this.selectedDataType)
-            }
+            this.showDataTypeSelector = true
+            const DATA_POINT = new DataPoint(exerciseDataPacket, this.selectedDataType)
+            extractedSessionProtocols.push(DATA_POINT.calculate)
           }
         })
+        if (extractedSessionProtocols.length !== 0) {
+          this.dataToVisualise.push(extractedSessionProtocols.reduce((a, b) => a + b))
+          this.desc_stats(this.selectedDataType)
+        }
       })
       if (this.selectedDataName === 'Plan Overview') {
-        for (let x = 1; x <= this.dataValues.length; x++) {
+        for (let x = 1; x <= this.dataToVisualise.length; x++) {
           this.labelValues.push(['Session ' + x])
         }
       }
@@ -1711,122 +1774,19 @@ export default {
       })
     },
 
-    // REGEX
-
-    sets_reps (exerciseDataPacket, protocol, selectedDataType) {
-      const TEMPORARY_SETS_REPS_STORE = []
-      let setStore = null
-      let extractedSetsReps = null
-      let m
-      let n
-      while ((m = this.regexSetsReps.exec(protocol)) !== null) {
-        if (m.index === this.regexSetsReps.lastIndex) {
-          this.regexSetsReps.lastIndex++
-        }
-        m.forEach((match, groupIndex) => {
-          if (groupIndex === 1) {
-            setStore = parseInt(match)
-          }
-          if (selectedDataType === 'Sets' && groupIndex === 1) {
-            if (match === '' || isNaN(match)) {
-              this.protocolError.push({
-                sessionName: exerciseDataPacket[0],
-                exercise: exerciseDataPacket[1],
-                prot: exerciseDataPacket[2]
-              })
-            }
-            extractedSetsReps = parseInt(match)
-          } else if (selectedDataType === 'Reps' && groupIndex === 2) {
-            if (match === '' || isNaN(match)) {
-              this.protocolError.push({
-                sessionName: exerciseDataPacket[0],
-                exercise: exerciseDataPacket[1],
-                prot: exerciseDataPacket[2]
-              })
-            } else if (match.includes('/')) {
-              while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
-                if (n.index === this.regexNumberBreakdown.lastIndex) {
-                  this.regexNumberBreakdown.lastIndex++
-                }
-                n.forEach((repsMatchExact) => {
-                  TEMPORARY_SETS_REPS_STORE.push(parseInt(repsMatchExact))
-                })
-              }
-              extractedSetsReps = TEMPORARY_SETS_REPS_STORE.reduce((a, b) => a + b)
-            } else {
-              extractedSetsReps = parseInt(match) * parseInt(setStore)
-            }
-          }
-        })
-      }
-      return extractedSetsReps
-    },
-    load (exerciseDataPacket, protocol) {
-      const TEMPORARY_LOADS_STORE = []
-      const SETS = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
-      let sum = 0
-      let isMultiple = false
-      let m
-      let n
-      while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
-        if (m.index === this.regexLoadCapture.lastIndex) {
-          this.regexLoadCapture.lastIndex++
-        }
-        m.forEach((loadMatch, groupIndex) => {
-          if (groupIndex === 2 && isNaN(loadMatch)) {
-            this.protocolError.push({
-              sessionName: exerciseDataPacket[0],
-              exercise: exerciseDataPacket[1],
-              prot: exerciseDataPacket[2]
-            })
-          } else if (groupIndex === 2) {
-            while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
-              if (n.index === this.regexNumberBreakdown.lastIndex) {
-                this.regexNumberBreakdown.lastIndex++
-              }
-              n.forEach((loadMatchExact) => {
-                if (loadMatch.includes('/')) {
-                  TEMPORARY_LOADS_STORE.push(parseFloat(loadMatchExact))
-                  isMultiple = true
-                } else {
-                  sum = parseFloat(loadMatchExact) * SETS
-                }
-              })
-            }
-          }
-        })
-      }
-      if (isMultiple) {
-        sum = TEMPORARY_LOADS_STORE.reduce((a, b) => a + b)
-      }
-      return sum
-    },
-    other_measures (protocol) {
-      let data = 0
-      let m
-      while ((m = this.regexNumberBreakdown.exec(protocol)) !== null) {
-        if (m.index === this.regexNumberBreakdown.lastIndex) {
-          this.regexNumberBreakdown.lastIndex++
-        }
-        m.forEach((match) => {
-          data = parseFloat(match)
-        })
-      }
-      return data
-    },
     desc_stats (selectedDataType) {
       let storeMax = 0
       let store = 0
-      const SUM = this.dataValues.reduce((a, b) => a + b)
+      const SUM = this.dataToVisualise.reduce((a, b) => a + b)
       this.descData.total = {
         desc: `Total ${selectedDataType}: `,
         value: SUM
       }
       this.descData.average = {
         desc: `Average ${selectedDataType}: `,
-        value: (SUM / this.dataValues.length).toFixed(1)
+        value: (SUM / this.dataToVisualise.length).toFixed(1)
       }
-      this.dataValues.forEach((value) => {
+      this.dataToVisualise.forEach((value) => {
         storeMax = Math.max(storeMax, value)
       })
       this.descData.max = {
@@ -1834,7 +1794,7 @@ export default {
         value: storeMax
       }
       store = storeMax
-      this.dataValues.forEach((value) => {
+      this.dataToVisualise.forEach((value) => {
         store = Math.min(store, value)
       })
       this.descData.min = {

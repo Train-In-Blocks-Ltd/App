@@ -86,7 +86,7 @@
             :key="'dtVal_' + index"
             :cx="`${data[0][0]}%`"
             :cy="`${data[0][1]}%`"
-            r="6"
+            r="4"
             @click="select_point(data[1], data[2], data[3])"
           />
         </g>

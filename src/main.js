@@ -47,28 +47,29 @@ Vue.mixin({
     // Protocol
 
     pull_protocols (sessionName, text, date) {
-      const textNoHTML = text.replace(/<[^>]*>?/gm, '')
-      const tempStore = []
-      let m
-      while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
-        if (m.index === this.regexExtract.lastIndex) {
-          this.regexExtract.lastIndex++
+      const REGEX_EXTRACT_EXERCISES = /\[\s*(.*?)\s*:\s*(.*?)\]/gi
+      const HTML_REMOVED_TAGS = text.replace(/<[^>]*>?/gm, '')
+      const TEMPORARY_STORE = []
+      let finder
+      while ((finder = REGEX_EXTRACT_EXERCISES.exec(HTML_REMOVED_TAGS)) !== null) {
+        if (finder.index === REGEX_EXTRACT_EXERCISES.lastIndex) {
+          REGEX_EXTRACT_EXERCISES.lastIndex++
         }
-        m.forEach((match, groupIndex) => {
+        finder.forEach((match, groupIndex) => {
           if (groupIndex === 0) {
-            tempStore.push(sessionName)
+            TEMPORARY_STORE.push(sessionName)
           } else if (groupIndex === 1 || groupIndex === 2) {
-            tempStore.push(match)
+            TEMPORARY_STORE.push(match)
             if (groupIndex === 2) {
-              tempStore.push(date)
+              TEMPORARY_STORE.push(date)
             }
           }
         })
       }
-      if (tempStore !== null) {
+      if (TEMPORARY_STORE !== null) {
         const tempArray = []
-        for (let index = 0; index < tempStore.length; index += 4) {
-          const dataPacket = tempStore.slice(index, index + 4)
+        for (let index = 0; index < TEMPORARY_STORE.length; index += 4) {
+          const dataPacket = TEMPORARY_STORE.slice(index, index + 4)
           tempArray.push(dataPacket)
         }
         return tempArray
