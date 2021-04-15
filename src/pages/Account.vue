@@ -255,12 +255,12 @@ export default {
     async manage_subscription () {
       try {
         this.$parent.dontLeave = true
-        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
+        const RESPONSE = await this.$axios.post('/.netlify/functions/create-manage-link',
           {
             id: this.$parent.claims.stripeId
           }
         )
-        window.location.href = response.data
+        window.location.href = RESPONSE.data
       } catch (e) {
         this.$parent.resolve_error(e)
       }
@@ -269,21 +269,21 @@ export default {
     // PASSWORD
 
     check_password () {
-      const self = this
+      const SELF = this
       function isUsername () {
-        const one = !self.password.new.includes(self.$parent.claims.email)
-        const two = self.password.new.split('').filter(function (e, i, a) {
+        const ONE = !SELF.password.new.includes(SELF.$parent.claims.email)
+        const TWO = SELF.password.new.split('').filter(function (e, i, a) {
           // eslint-disable-next-line
-          return (self.$parent.claims.email.indexOf(e) !== -1)
+          return (SELF.$parent.claims.email.indexOf(e) !== -1)
         }).length <= 6
-        if (one === true && two !== false) {
+        if (ONE === true && TWO !== false) {
           return true
         } else {
           return false
         }
       }
       function requirements () {
-        return isUsername() && self.password.new.match(/[0-9]+/) !== null && self.password.new.length >= 8 && self.password.old.length >= 1
+        return isUsername() && SELF.password.new.match(/[0-9]+/) !== null && SELF.password.new.length >= 8 && SELF.password.old.length >= 1
       }
       if (requirements() === false) {
         this.password.check = true

@@ -292,35 +292,35 @@ export default {
       }
     },
     go_to_event (id) {
-      const idx = this.sessionDates.findIndex(session => session.session_id === id)
-      this.showing_current_session = idx
+      const SESSION_INDEX = this.sessionDates.findIndex(session => session.session_id === id)
+      this.showing_current_session = SESSION_INDEX
       setTimeout(() => {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)
     },
     complete (planId, sessionId) {
-      const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
-      const session = plan.sessions.find(session => session.id === sessionId)
-      if (session.checked === 0) {
-        session.checked = 1
+      const PLAN = this.$parent.clientUser.plans.find(plan => plan.id === planId)
+      const SESSION = PLAN.sessions.find(session => session.id === sessionId)
+      if (SESSION.checked === 0) {
+        SESSION.checked = 1
         this.check = 1
       } else {
-        session.checked = 0
+        SESSION.checked = 0
         this.check = 0
       }
       this.$parent.update_session(planId, sessionId)
     },
     scan () {
       this.sessionDates.length = 0
-      const plan = this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
-      const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
-      if (plan.sessions !== null) {
-        plan.sessions.forEach((session) => {
+      const PLAN = this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+      const WEEK_COLOR = PLAN.block_color.replace('[', '').replace(']', '').split(',')
+      if (PLAN.sessions !== null) {
+        PLAN.sessions.forEach((session) => {
           this.sessionDates.push({
             title: session.name,
             date: session.date,
-            color: weekColor[session.week_id - 1],
-            textColor: this.accessible_colors(weekColor[session.week_id - 1]),
+            color: WEEK_COLOR[session.week_id - 1],
+            textColor: this.accessible_colors(WEEK_COLOR[session.week_id - 1]),
             week_id: session.week_id,
             session_id: session.id
           })

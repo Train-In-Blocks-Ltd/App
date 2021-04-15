@@ -713,8 +713,8 @@ export default {
       navigator.serviceWorker.getRegistrations().then(
         function (registrations) {
           if (registrations.length !== 0) {
-            for (const registration of registrations) {
-              registration.unregister().then(function () {
+            for (const REGISTRATION of registrations) {
+              REGISTRATION.unregister().then(function () {
                 navigator.serviceWorker.register('/traininblocks-sw.js')
               })
             }
@@ -730,20 +730,20 @@ export default {
         e.returnValue = 'Your changes might not be saved, are you sure you want to leave?'
       }
     })
-    const self = this
+    const SELF = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
       // Stash the event so it can be triggered later.
-      self.pwa.deferredPrompt = e
+      SELF.pwa.deferredPrompt = e
       // Update UI notify the user they can install the PWA
       this.pwa.canInstall = true
     })
     if ('getInstalledRelatedApps' in navigator) {
-      const self = this
-      const relatedApps = await navigator.getInstalledRelatedApps()
-      if (relatedApps.length > 0) {
-        self.pwa.installed = true
+      const SELF = this
+      const RELATED_APPS = await navigator.getInstalledRelatedApps()
+      if (RELATED_APPS.length > 0) {
+        SELF.pwa.installed = true
       }
     }
     if (navigator.standalone) {
@@ -756,12 +756,12 @@ export default {
       this.isTrainer = true
     }
     this.$axios.interceptors.request.use((config) => {
-      if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
-        self.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
-        self.will_body_scroll(false)
-        self.loading = false
-        self.dontLeave = false
-        self.silent_loading = false
+      if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
+        SELF.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
+        SELF.will_body_scroll(false)
+        SELF.loading = false
+        SELF.dontLeave = false
+        SELF.silent_loading = false
         throw new self.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
       }
       return config
@@ -783,7 +783,7 @@ export default {
       }
     },
     darkmode (mode) {
-      const matchedMedia = window.matchMedia('(prefers-color-scheme)') || false
+      const MATCHED_MEDIA = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
         document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
         document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
@@ -797,7 +797,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-      } else if (mode === 'system' && (matchedMedia === false ? false : matchedMedia.media !== 'not all')) {
+      } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
           this.darkmode(e.matches ? 'dark' : 'light')
@@ -850,12 +850,12 @@ export default {
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
       await this.clients_to_vue()
       this.connected = navigator.onLine
-      const self = this
+      const SELF = this
       window.addEventListener('offline', function (event) {
-        self.connected = false
+        SELF.connected = false
       })
       window.addEventListener('online', function (event) {
-        self.connected = true
+        SELF.connected = true
       })
     },
     async save_claims () {
@@ -910,13 +910,13 @@ export default {
         await this.clients_f()
       }
       this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-        const textA = a.name.toUpperCase()
-        const textB = b.name.toUpperCase()
-        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        const NAME_A = a.name.toUpperCase()
+        const NAME_B = b.name.toUpperCase()
+        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
       })
       /*
       if (!this.noClients && this.isTrainer) {
-        for (const client of this.clients) {
+        for (const CLIENT of this.clients) {
           const planResponse = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
           client.plans = planResponse.data.length === 0 ? false : planResponse.data
           if (client.plans !== false) {
@@ -933,9 +933,9 @@ export default {
     },
     async clients_f () {
       try {
-        const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
-        this.noClients = response.data.length === 0
-        localStorage.setItem('clients', JSON.stringify(response.data))
+        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
+        this.noClients = RESPONSE.data.length === 0
+        localStorage.setItem('clients', JSON.stringify(RESPONSE.data))
       } catch (e) {
         this.noClients = false
         this.resolve_error(e)
@@ -985,17 +985,17 @@ export default {
         this.archive.no_archive = true
       } else {
         this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort((a, b) => {
-          const textA = a.name.toUpperCase()
-          const textB = b.name.toUpperCase()
-          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+          const NAME_A = a.name.toUpperCase()
+          const NAME_B = b.name.toUpperCase()
+          return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
         })
       }
     },
     async archive_f () {
       try {
-        const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
-        this.archive.no_archive = response.data.length === 0
-        localStorage.setItem('archive', JSON.stringify(response.data))
+        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
+        this.archive.no_archive = RESPONSE.data.length === 0
+        localStorage.setItem('archive', JSON.stringify(RESPONSE.data))
       } catch (e) {
         this.archive.no_archive = false
         this.error = e.toString()
@@ -1004,29 +1004,29 @@ export default {
     async client_archive (id, index) {
       if (await this.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
         this.dontLeave = true
-        const client = this.clients.find(client => client.client_id === id)
-        const email = client.email
+        const CLIENT = this.clients.find(client => client.client_id === id)
+        const EMAIL = CLIENT.email
         this.clients.splice(index, 1)
         this.noClients = this.clients.length === 0
         try {
           this.response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`).data
-          const result = await this.$axios.post('/.netlify/functions/okta',
+          const RESULT = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
-              url: `?filter=profile.email+eq+"${email}"&limit=1`
+              url: `?filter=profile.email+eq+"${EMAIL}"&limit=1`
             }
           )
-          if (result.data.length >= 1) {
+          if (RESULT.data.length >= 1) {
             await this.$axios.post('/.netlify/functions/okta',
               {
                 type: 'POST',
                 body: {},
-                url: `${result.data[0].id}/lifecycle/suspend`
+                url: `${RESULT.data[0].id}/lifecycle/suspend`
               }
             )
             await this.$axios.post('/.netlify/functions/send-email',
               {
-                to: email,
+                to: EMAIL,
                 subject: 'Account Deactivated',
                 text: deleteEmailText(),
                 html: deleteEmail()
@@ -1044,20 +1044,20 @@ export default {
     },
     async client_unarchive (id) {
       this.dontLeave = true
-      const client = this.archive.clients.find(client => client.client_id === id)
-      const arr = JSON.parse(localStorage.getItem('clients'))
-      arr.push(client)
+      const CLIENT = this.archive.clients.find(client => client.client_id === id)
+      const LOCAL_STORAGE_ARRAY = JSON.parse(localStorage.getItem('clients'))
+      LOCAL_STORAGE_ARRAY.push(CLIENT)
 
-      localStorage.setItem('clients', JSON.stringify(arr))
+      localStorage.setItem('clients', JSON.stringify(LOCAL_STORAGE_ARRAY))
       this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-        const textA = a.name.toUpperCase()
-        const textB = b.name.toUpperCase()
-        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        const NAME_A = a.name.toUpperCase()
+        const NAME_B = b.name.toUpperCase()
+        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
       })
       this.archive.no_archive = this.archive.clients.length === 0
       try {
-        const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-        this.response = response.data
+        const RESPONSE = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+        this.response = RESPONSE.data
         this.helper('client_store', 'Client', 'unarchive')
       } catch (e) {
         this.resolve_error(e)
@@ -1069,8 +1069,8 @@ export default {
     async get_templates (force) {
       try {
         if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
-          const response = await this.$axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
-          localStorage.setItem('templates', JSON.stringify(response.data))
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+          localStorage.setItem('templates', JSON.stringify(RESPONSE.data))
         }
         this.templates = JSON.parse(localStorage.getItem('templates'))
       } catch (e) {
@@ -1089,9 +1089,9 @@ export default {
               localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
             }
           } else {
-            const client = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
-            if (client.data[0].pt_id) {
-              response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
+            const CLIENT = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+            if (CLIENT.data[0].pt_id) {
+              response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${CLIENT.data[0].pt_id}`)
               if (response.data.length !== 0) {
                 localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
               }
@@ -1123,46 +1123,42 @@ export default {
     },
     async get_plans () {
       try {
-        const plans = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
-        this.clientUser.plans = plans.data
-        for (const i in this.clientUser.plans) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[i].id}`)
-          this.clientUser.plans[i].sessions = response.data
+        const PLANS = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+        this.clientUser.plans = PLANS.data
+        for (const PLAN_INDEX in this.clientUser.plans) {
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[PLAN_INDEX].id}`)
+          this.clientUser.plans[PLAN_INDEX].sessions = RESPONSE.data
         }
       } catch (e) {
         this.resolve_error(e)
       }
     },
     async update_session (pid, sid, feedbackNotesUpdate) {
-      const plan = this.clientUser.plans.find(plan => plan.id === pid)
-      const session = plan.sessions.find(session => session.id === sid)
-      const sessionId = session.id
-      const sessionName = session.name
-      const sessionChecked = session.checked
-      const sessionFeedback = session.feedback
+      const PLAN = this.clientUser.plans.find(plan => plan.id === pid)
+      const SESSION = PLAN.sessions.find(session => session.id === sid)
       try {
         await this.$axios.post('https://api.traininblocks.com/client-workouts',
           {
-            id: sessionId,
-            name: sessionName,
-            checked: sessionChecked,
-            feedback: feedbackNotesUpdate === undefined ? sessionFeedback : feedbackNotesUpdate
+            id: SESSION.id,
+            name: SESSION.name,
+            checked: SESSION.checked,
+            feedback: feedbackNotesUpdate === undefined ? SESSION.feedback : feedbackNotesUpdate
           }
         )
         this.$ga.event('Session', 'update')
-        const client = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
-        if (client.data[0].notifications === 1) {
-          if (sessionFeedback !== null) {
-            const ptEmail = await this.$axios.post('/.netlify/functions/okta',
+        const CLIENT = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+        if (CLIENT.data[0].notifications === 1) {
+          if (SESSION.feedback !== null) {
+            const PT_EMAIL = await this.$axios.post('/.netlify/functions/okta',
               {
                 type: 'GET',
-                url: `?filter=id+eq+"${client.data[0].pt_id}"&limit=1`
+                url: `?filter=id+eq+"${CLIENT.data[0].pt_id}"&limit=1`
               }
             )
             await this.$axios.post('/.netlify/functions/send-email',
               {
-                to: ptEmail.data[0].credentials.emails[0].value,
-                subject: this.claims.email + ' has submitted feedback for ' + sessionName,
+                to: PT_EMAIL.data[0].credentials.emails[0].value,
+                subject: this.claims.email + ' has submitted feedback for ' + SESSION.name,
                 text: feedbackEmailText(this.claims.client_id_db, pid),
                 html: feedbackEmail(this.claims.client_id_db, pid)
               }

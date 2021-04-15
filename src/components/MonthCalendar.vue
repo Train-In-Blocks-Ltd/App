@@ -185,40 +185,40 @@ export default {
   },
   methods: {
     get_month_number (month) {
-      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      return monthArr.indexOf(month) + 1
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      return MONTHS.indexOf(month) + 1
     },
     get_month () {
-      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      const today = new Date()
-      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + this.monthDiff, '0')
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      const TODAY = new Date()
+      const LAST_DAY_OF_MONTH = new Date(TODAY.getFullYear(), TODAY.getMonth() + this.monthDiff, '0')
       this.month = []
-      this.currentMonth = monthArr[lastDayOfMonth.getMonth()]
-      this.currentYear = lastDayOfMonth.getFullYear()
-      const monthEnd = lastDayOfMonth.getDate()
+      this.currentMonth = MONTHS[LAST_DAY_OF_MONTH.getMonth()]
+      this.currentYear = LAST_DAY_OF_MONTH.getFullYear()
+      const MONTH_END = LAST_DAY_OF_MONTH.getDate()
       let date
-      for (date = 1; date <= monthEnd; date++) {
-        const weekDay = new Date(`${this.currentYear}-${this.get_month_number(this.currentMonth).toLocaleString('en-US', { minimumIntegerDigits: 2 })}-${date.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`).getDay()
-        if (date === 1 && weekDay !== 1) {
+      for (date = 1; date <= MONTH_END; date++) {
+        const WEEKDAY = new Date(`${this.currentYear}-${this.get_month_number(this.currentMonth).toLocaleString('en-US', { minimumIntegerDigits: 2 })}-${date.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`).getDay()
+        if (date === 1 && WEEKDAY !== 1) {
           let holder
-          if (weekDay === 0) {
+          if (WEEKDAY === 0) {
             for (holder = 1; holder < 7; holder++) {
               this.month.push([[], ''])
             }
           } else {
-            for (holder = 1; holder < weekDay; holder++) {
+            for (holder = 1; holder < WEEKDAY; holder++) {
               this.month.push([[], ''])
             }
           }
         }
-        const datapack = []
+        const DATAPACKETS = []
         this.events.forEach((event) => {
-          const dateSplit = event.date.split('-')
-          if (parseInt(dateSplit[0]) === this.currentYear && parseInt(dateSplit[1] - 1) === lastDayOfMonth.getMonth() && parseInt(dateSplit[2]) === date) {
-            datapack.push(event)
+          const DATE_SPLIT = event.date.split('-')
+          if (parseInt(DATE_SPLIT[0]) === this.currentYear && parseInt(DATE_SPLIT[1] - 1) === LAST_DAY_OF_MONTH.getMonth() && parseInt(DATE_SPLIT[2]) === date) {
+            DATAPACKETS.push(event)
           }
         })
-        this.month.push([datapack, date, `${this.currentYear}-${String(this.get_month_number(this.currentMonth)).padStart(2, '0')}-${String(date).padStart(2, '0')}`])
+        this.month.push([DATAPACKETS, date, `${this.currentYear}-${String(this.get_month_number(this.currentMonth)).padStart(2, '0')}-${String(date).padStart(2, '0')}`])
       }
     }
   }

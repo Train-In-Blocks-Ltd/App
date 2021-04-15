@@ -40,8 +40,8 @@ Vue.mixin({
     // System
 
     will_body_scroll (state) {
-      const body = document.getElementsByTagName('body')[0]
-      state ? body.style.overflow = 'auto' : body.style.overflow = 'hidden'
+      const BODY = document.getElementsByTagName('body')[0]
+      state ? BODY.style.overflow = 'auto' : BODY.style.overflow = 'hidden'
     },
 
     // Protocol
@@ -67,12 +67,12 @@ Vue.mixin({
         })
       }
       if (TEMPORARY_STORE !== null) {
-        const tempArray = []
+        const PACKETS_ARRAY = []
         for (let index = 0; index < TEMPORARY_STORE.length; index += 4) {
-          const dataPacket = TEMPORARY_STORE.slice(index, index + 4)
-          tempArray.push(dataPacket)
+          const DATA_PACKET = TEMPORARY_STORE.slice(index, index + 4)
+          PACKETS_ARRAY.push(DATA_PACKET)
         }
-        return tempArray
+        return PACKETS_ARRAY
       }
     },
 
@@ -82,26 +82,26 @@ Vue.mixin({
       if (html === null) {
         return html
       }
-      const regexIframe = /<iframe[^>]+src="([^"]+)"><\/iframe>/gi
+      const REGEX_IFRAME = /<iframe[^>]+src="([^"]+)"><\/iframe>/gi
       let m
-      const arr1 = []
+      const TO_UPDATE_ARRAY = []
       // Finds all iframes
-      while ((m = regexIframe.exec(html)) !== null) {
-        if (m.index === regexIframe.lastIndex) {
-          regexIframe.lastIndex++
+      while ((m = REGEX_IFRAME.exec(html)) !== null) {
+        if (m.index === REGEX_IFRAME.lastIndex) {
+          REGEX_IFRAME.lastIndex++
         }
-        const tempArray = []
+        const MATCH_EXTRACT_COLLECTOR = []
         m.forEach((match, groupIndex) => {
           if (groupIndex === 1) {
-            tempArray.push(match)
-            arr1.push(tempArray)
+            MATCH_EXTRACT_COLLECTOR.push(match)
+            TO_UPDATE_ARRAY.push(MATCH_EXTRACT_COLLECTOR)
           } else {
-            tempArray.push(match)
+            MATCH_EXTRACT_COLLECTOR.push(match)
           }
         })
       }
       // Removes iframes
-      arr1.forEach((item) => {
+      TO_UPDATE_ARRAY.forEach((item) => {
         html = html.replace(item[0], `<a href="${item[1]}" rel="noopener noreferrer nofollow">Watch video</a>`)
       })
       html = rmBrackets ? html.replace(/[[\]]/g, '') : html
@@ -111,15 +111,15 @@ Vue.mixin({
     // Date
 
     today () {
-      const d = new Date()
-      const year = d.getFullYear()
-      const month = String(d.getMonth() + 1).padStart(2, '0')
-      const dayDate = String(d.getDate()).padStart(2, '0')
-      return `${year}-${month}-${dayDate}`
+      const DATE = new Date()
+      const YEAR = DATE.getFullYear()
+      const MONTH = String(DATE.getMonth() + 1).padStart(2, '0')
+      const DAY = String(DATE.getDate()).padStart(2, '0')
+      return `${YEAR}-${MONTH}-${DAY}`
     },
     day (date) {
-      const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-      return weekday[new Date(date).getDay()]
+      const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      return WEEKDAY[new Date(date).getDay()]
     },
 
     // Tidy
@@ -132,11 +132,11 @@ Vue.mixin({
       }
     },
     proper_case (string) {
-      const sentence = string.toLowerCase().split(' ')
-      for (let i = 0; i < sentence.length; i++) {
-        sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
+      const SENTENCE = string.toLowerCase().split(' ')
+      for (let i = 0; i < SENTENCE.length; i++) {
+        SENTENCE[i] = SENTENCE[i][0].toUpperCase() + SENTENCE[i].slice(1)
       }
-      return sentence.join(' ')
+      return SENTENCE.join(' ')
     },
 
     // Other
@@ -144,11 +144,11 @@ Vue.mixin({
     accessible_colors (hex) {
       if (hex !== undefined) {
         hex = hex.replace('#', '')
-        const r = parseInt(hex.substring(0, 2), 16)
-        const g = parseInt(hex.substring(2, 4), 16)
-        const b = parseInt(hex.substring(4, 6), 16)
-        const result = ((((r * 299) + (g * 587) + (b * 114)) / 1000) - 128) * -1000
-        return `rgb(${result}, ${result}, ${result})`
+        const RED = parseInt(hex.substring(0, 2), 16)
+        const GREEN = parseInt(hex.substring(2, 4), 16)
+        const BLUE = parseInt(hex.substring(4, 6), 16)
+        const RESULT = ((((RED * 299) + (GREEN * 587) + (BLUE * 114)) / 1000) - 128) * -1000
+        return `rgb(${RESULT}, ${RESULT}, ${RESULT})`
       }
     }
   }

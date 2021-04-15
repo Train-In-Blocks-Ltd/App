@@ -74,8 +74,8 @@ export default {
           }
         }
         // Get the new plans
-        const force = true
-        await this.$parent.$parent.get_client_details(force)
+        const FORCE = true
+        await this.$parent.$parent.get_client_details(FORCE)
 
         this.new_plan = {
           name: '',

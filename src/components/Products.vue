@@ -120,8 +120,8 @@ export default {
       if (!this.selectedProducts.includes(id)) {
         this.selectedProducts.push(id)
       } else {
-        const idx = this.selectedProducts.indexOf(id)
-        this.selectedProducts.splice(idx, 1)
+        const PRODUCT_INDEX = this.selectedProducts.indexOf(id)
+        this.selectedProducts.splice(PRODUCT_INDEX, 1)
       }
     },
     select_all () {

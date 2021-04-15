@@ -1762,10 +1762,10 @@ export default {
         // Appends the options to the select
         if (this.dataPacketStore !== null) {
           this.optionsForDataName = new Set()
-          for (const session of this.dataPacketStore) {
-            for (const dataPacket of session) {
-              const CASED_ITEM = this.proper_case(dataPacket[1])
-              this.optionsForDataName.add(dataPacket[2].includes('at') ? CASED_ITEM : dataPacket[1])
+          for (const SESSION of this.dataPacketStore) {
+            for (const DATA_PACKET of SESSION) {
+              const CASED_ITEM = this.proper_case(DATA_PACKET[1])
+              this.optionsForDataName.add(DATA_PACKET[2].includes('at') ? CASED_ITEM : DATA_PACKET[1])
             }
           }
           this.selection()

@@ -188,12 +188,12 @@ export default {
       await this.$parent.is_authenticated()
       localStorage.clear()
       localStorage.setItem('versionBuild', this.versionBuild)
-      const cookies = document.cookie.split(';')
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i]
-        const eqPos = cookie.indexOf('=')
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      const COOKIES = document.cookie.split(';')
+      for (let i = 0; i < COOKIES.length; i++) {
+        const COOKIE = COOKIES[i]
+        const EQ_POS = COOKIE.indexOf('=')
+        const NAME = EQ_POS > -1 ? COOKIE.substr(0, EQ_POS) : COOKIE
+        document.cookie = NAME + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
       }
       this.$ga.event('Auth', 'logout')
     }

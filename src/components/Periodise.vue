@@ -229,17 +229,17 @@ export default {
     async update_plan (id) {
       this.$parent.$parent.$parent.silent_loading = true
       this.$parent.$parent.$parent.dontLeave = true
-      const plan = this.client_plans.find(plan => plan.id === id)
+      const PLAN = this.client_plans.find(plan => plan.id === id)
       try {
-        this.sort_sessions(plan)
+        this.sort_sessions(PLAN)
         await this.$axios.post('https://api.traininblocks.com/programmes',
           {
-            id: plan.id,
-            name: plan.name,
-            duration: plan.duration,
-            notes: plan.notes,
-            block_color: plan.block_color,
-            ordered: plan.ordered
+            id: PLAN.id,
+            name: PLAN.name,
+            duration: PLAN.duration,
+            notes: PLAN.notes,
+            block_color: PLAN.block_color,
+            ordered: PLAN.ordered
           }
         )
         localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.$parent.clients))

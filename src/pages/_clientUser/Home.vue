@@ -254,13 +254,13 @@ export default {
       }
     },
     complete (planId, sessionId) {
-      const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
-      const session = plan.sessions.find(session => session.id === sessionId)
-      if (session.checked === 0) {
-        session.checked = 1
+      const PLAN = this.$parent.clientUser.plans.find(plan => plan.id === planId)
+      const SESSION = PLAN.sessions.find(session => session.id === sessionId)
+      if (SESSION.checked === 0) {
+        SESSION.checked = 1
         this.check = 1
       } else {
-        session.checked = 0
+        SESSION.checked = 0
         this.check = 0
       }
       this.$parent.update_session(planId, sessionId)

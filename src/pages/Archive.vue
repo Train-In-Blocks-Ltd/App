@@ -131,8 +131,8 @@ export default {
       if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)
       } else {
-        const idx = this.selectedClients.indexOf(id)
-        this.selectedClients.splice(idx, 1)
+        const CLIENT_INDEX = this.selectedClients.indexOf(id)
+        this.selectedClients.splice(CLIENT_INDEX, 1)
       }
     },
     select_all () {

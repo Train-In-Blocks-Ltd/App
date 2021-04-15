@@ -612,21 +612,21 @@ export default {
     // IMG
 
     add_img (command) {
-      const file = document.getElementById('img_uploader').files[0]
-      const reader = new FileReader()
-      reader.addEventListener('load', () => {
-        const src = reader.result
-        command({ src })
+      const FILE = document.getElementById('img_uploader').files[0]
+      const READER = new FileReader()
+      READER.addEventListener('load', () => {
+        const SRC = READER.result
+        command({ SRC })
         this.update_edited_notes()
         this.showAddImage = false
       }, false)
-      if (file) {
-        if (file.size < 1000000) {
+      if (FILE) {
+        if (FILE.size < 1000000) {
           // eslint-disable-next-line
           new Compressor(file, {
             quality: 0.6,
             success (result) {
-              reader.readAsDataURL(result)
+              READER.readAsDataURL(result)
             },
             error (err) {
               console.error(err.message)
@@ -652,9 +652,8 @@ export default {
     },
     test_empty_html (text) {
       if (text !== null) {
-        const rmTags = text.replace(/<[^>]*>?/gm, '')
-        const rmSpace = rmTags.replace(/&nbsp;/g, '').replace(/ /g, '')
-        if (rmSpace === '') {
+        const REMOVE_TAGS_AND_SPACE = text.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, '').replace(/ /g, '')
+        if (REMOVE_TAGS_AND_SPACE === '') {
           return true
         } else {
           return false

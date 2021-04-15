@@ -281,14 +281,14 @@ export default {
       if (this.$parent.claims.email !== 'demo@traininblocks.com') {
         this.clientAlreadyMsg = 'Loading...'
         try {
-          const result = await this.$axios.post('/.netlify/functions/okta',
+          const RESULT = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
               url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
             }
           )
-          if (result.data.length > 0) {
-            switch (result.data[0].status) {
+          if (RESULT.data.length > 0) {
+            switch (RESULT.data[0].status) {
               case 'ACTIVE' || 'RECOVERY':
                 this.clientAlready = true
                 this.clientAlreadyMsg = 'User activated'
@@ -298,7 +298,7 @@ export default {
                 this.clientAlreadyMsg = 'Resend activation email'
                 break
               case 'SUSPENDED':
-                this.clientSuspend = result.data[0].id
+                this.clientSuspend = RESULT.data[0].id
                 this.clientAlready = false
                 this.clientAlreadyMsg = 'Give Access'
                 break
@@ -320,25 +320,25 @@ export default {
       this.$parent.dontLeave = true
       try {
         if (this.clientAlreadyMsg === 'Resend activation email') {
-          const oktaOne = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
               url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
             }
           )
-          const oktaTwo = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_TWO = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {},
-              url: `${oktaOne.data[0].id}/lifecycle/reactivate?sendEmail=false`
+              url: `${OKTA_ONE.data[0].id}/lifecycle/reactivate?sendEmail=false`
             }
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
               to: this.$parent.client_details.email,
               subject: 'Welcome to Train In Blocks',
-              text: emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
         } else if (this.clientSuspend) {
@@ -349,7 +349,7 @@ export default {
               url: `${this.clientSuspend}/lifecycle/unsuspend`
             }
           )
-          const password = await this.$axios.post('/.netlify/functions/okta',
+          const PASSWORD = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {},
@@ -360,12 +360,12 @@ export default {
             {
               to: this.$parent.client_details.email,
               subject: 'Welcome Back to Train In Blocks',
-              text: resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              text: resetEmailText(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+              html: resetEmail(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
         } else {
-          const oktaOne = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {
@@ -384,19 +384,19 @@ export default {
               url: '?activate=false'
             }
           )
-          const oktaTwo = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_TWO = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {},
-              url: `${oktaOne.data.id}/lifecycle/activate?sendEmail=false`
+              url: `${OKTA_ONE.data.id}/lifecycle/activate?sendEmail=false`
             }
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
               to: this.$parent.client_details.email,
               subject: 'Welcome to Train In Blocks',
-              text: emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
         }
@@ -413,14 +413,14 @@ export default {
     async get_client_details (force) {
       this.$parent.loading = true
       try {
-        const client = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-        this.$parent.client_details = client
-        if (client.plans === undefined || !client.plans || force) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
-          client.plans = response.data.length === 0 ? false : response.data
+        const CLIENT = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+        this.$parent.client_details = CLIENT
+        if (CLIENT.plans === undefined || !CLIENT.plans || force) {
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/programmes/${CLIENT.client_id}`)
+          CLIENT.plans = RESPONSE.data.length === 0 ? false : RESPONSE.data
           localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
         }
-        if (client.plans !== false) {
+        if (CLIENT.plans !== false) {
           this.$parent.client_details.plans.forEach((plan) => {
             this.get_sessions(plan.id)
           })
@@ -433,10 +433,10 @@ export default {
     async get_sessions (planId, force) {
       force = force || false
       try {
-        const plan = this.$parent.client_details.plans.find(plan => plan.id === planId)
-        if (plan.sessions === undefined || force) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
-          plan.sessions = response.data.length === 0 ? false : response.data
+        const PLAN = this.$parent.client_details.plans.find(plan => plan.id === planId)
+        if (PLAN.sessions === undefined || force) {
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/workouts/${PLAN.id}`)
+          PLAN.sessions = RESPONSE.data.length === 0 ? false : RESPONSE.data
           localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
         }
         this.$parent.end_loading()

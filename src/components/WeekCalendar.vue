@@ -218,25 +218,25 @@ export default {
     // WEEK
 
     get_day (date) {
-      const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-      return days[date]
+      const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+      return DAYS[date]
     },
     get_week () {
       this.thisWeek = []
-      const d = new Date()
-      const day = d.getDay()
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-      const weekStart = new Date(d.setDate(diff + 7 * this.weekDiff))
-      const year = String(weekStart.getFullYear())
-      const month = String(weekStart.getMonth() + 1).padStart(2, '0')
-      const date = String(weekStart.getDate()).padStart(2, '0')
-      const currentMonday = {
-        date: `${year}-${month}-${date}`,
-        date_split: [year, month, date],
+      const DATE_CLASS = new Date()
+      const DAY = DATE_CLASS.getDay()
+      const DAYS_DIFFERENCE = DATE_CLASS.getDate() - DAY + (DAY === 0 ? -6 : 1)
+      const WEEK_START = new Date(DATE_CLASS.setDate(DAYS_DIFFERENCE + 7 * this.weekDiff))
+      const YEAR = String(WEEK_START.getFullYear())
+      const MONTH = String(WEEK_START.getMonth() + 1).padStart(2, '0')
+      const DATE = String(WEEK_START.getDate()).padStart(2, '0')
+      const CURRENT_MONDAY = {
+        date: `${YEAR}-${MONTH}-${DATE}`,
+        date_split: [YEAR, MONTH, DATE],
         events: []
       }
-      this.currentWeekStart = currentMonday
-      this.thisWeek.push(currentMonday)
+      this.currentWeekStart = CURRENT_MONDAY
+      this.thisWeek.push(CURRENT_MONDAY)
       for (let i = 1; i < 7; i++) {
         this.thisWeek.push({
           date: this.add_days(this.thisWeek[0].date, i),
@@ -249,17 +249,17 @@ export default {
       }, 100)
     },
     add_days (date, days) {
-      const d = new Date(date)
-      d.setDate(d.getDate() + days)
-      const year = d.getFullYear()
-      const month = String(d.getMonth() + 1).padStart(2, '0')
-      const dayDate = String(d.getDate()).padStart(2, '0')
-      return `${year}-${month}-${dayDate}`
+      const DATE_CLASS = new Date(date)
+      DATE_CLASS.setDate(DATE_CLASS.getDate() + days)
+      const YEAR = DATE_CLASS.getFullYear()
+      const MONTH = String(DATE_CLASS.getMonth() + 1).padStart(2, '0')
+      const DATE = String(DATE_CLASS.getDate()).padStart(2, '0')
+      return `${YEAR}-${MONTH}-${DATE}`
     },
     get_month (month) {
-      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       month = parseInt(month) - 1
-      return monthArr[month]
+      return MONTHS[month]
     }
   }
 }

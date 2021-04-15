@@ -227,14 +227,14 @@ export default {
       }
     },
     resolve_template_editor (state, id) {
-      const template = this.$parent.templates.find(template => template.id === id)
+      const TEMPLATE = this.$parent.templates.find(template => template.id === id)
       switch (state) {
         case 'edit':
           this.$parent.dontLeave = true
           this.isEditingTemplate = true
           this.editTemplate = id
           this.forceStop += 1
-          this.tempEditorStore = template.template
+          this.tempEditorStore = TEMPLATE.template
           break
         case 'save':
           this.isEditingTemplate = false
@@ -245,7 +245,7 @@ export default {
           this.$parent.dontLeave = false
           this.isEditingTemplate = false
           this.editTemplate = null
-          template.template = this.tempEditorStore
+          TEMPLATE.template = this.tempEditorStore
           break
       }
     },
@@ -264,15 +264,15 @@ export default {
       if (!this.selectedTemplates.includes(id)) {
         this.selectedTemplates.push(id)
       } else {
-        const idx = this.selectedTemplates.indexOf(id)
-        this.selectedTemplates.splice(idx, 1)
+        const TEMPLATE_INDEX = this.selectedTemplates.indexOf(id)
+        this.selectedTemplates.splice(TEMPLATE_INDEX, 1)
       }
     },
     toggle_expanded_templates (id) {
       if (this.expandedTemplates.includes(id)) {
-        const index = this.expandedTemplates.indexOf(id)
-        if (index > -1) {
-          this.expandedTemplates.splice(index, 1)
+        const TEMPLATE_INDEX = this.expandedTemplates.indexOf(id)
+        if (TEMPLATE_INDEX > -1) {
+          this.expandedTemplates.splice(TEMPLATE_INDEX, 1)
         }
       } else {
         this.expandedTemplates.push(id)
@@ -331,11 +331,11 @@ export default {
     async update_template (id) {
       try {
         this.$parent.dontLeave = true
-        const template = this.$parent.templates.find(template => template.id === id)
+        const TEMPLATE = this.$parent.templates.find(template => template.id === id)
         await this.$axios.post('https://api.traininblocks.com/templates',
           {
-            name: template.name,
-            template: template.template,
+            name: TEMPLATE.name,
+            template: TEMPLATE.template,
             id
           }
         )
