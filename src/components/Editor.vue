@@ -664,7 +664,7 @@ export default {
       }
     },
     update_edited_notes () {
-      this.$emit('update:htmlInjection', document.getElementById('rich_editor').querySelector('.ProseMirror').innerHTML)
+      this.$emit('update:htmlInjection', document.getElementById('rich_editor').querySelector('.ProseMirror').innerHTML.replace(/(<div>)([^<].*)(<\/div>)/gi, '<p>$2</p>'))
     }
   }
 }
