@@ -36,7 +36,8 @@
   .day_events__event {
     padding: .6rem 1rem;
     border-radius: 8px;
-    border: 3px solid transparent
+    border: 3px solid transparent;
+    overflow-wrap: anywhere
   }
   .showBorder {
     border: 3px solid var(--base)
@@ -164,7 +165,7 @@
             :key="'event-' + indexed"
             :style="{ backgroundColor: event.color }"
             :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
-            class="day_events__event cursor"
+            class="day_events__event cursor fadeIn"
             @click="$parent.go_to_event(event.session_id, event.week_id)"
           >
             <p :style="{ color: event.textColor }">

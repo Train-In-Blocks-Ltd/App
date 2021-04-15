@@ -16,7 +16,7 @@
 </style>
 
 <template>
-  <div id="home">
+  <div id="home" class="view_container">
     <div v-if="isNewClientOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <new-client />
     </div>
@@ -58,7 +58,7 @@
         class="text--small search"
         aria-label="Find a client"
       >
-      <div class="container--clients">
+      <div class="clients_container">
         <!-- Perform case insensitive search -->
         <router-link
           v-for="(client, index) in $parent.clients"

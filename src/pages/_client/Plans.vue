@@ -149,6 +149,7 @@ export default {
   created () {
     this.will_body_scroll(true)
     this.$parent.check_client()
+    this.noPlans = this.otherData === false
   },
   methods: {
     resolve_client_info_editor (state) {

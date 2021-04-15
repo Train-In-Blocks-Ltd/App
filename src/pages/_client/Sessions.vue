@@ -185,7 +185,7 @@
     opacity: var(--light_opacity)
   }
   #info:active {
-    transform: scale(.9)
+    transform: var(--active_state)
   }
 
   /* Sessions */
@@ -262,7 +262,7 @@
     padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
     top: 0;
     left: 0;
-    z-index: 5;
+    z-index: 11;
     height: 100%;
     width: 100%;
     overflow-y: auto
@@ -294,8 +294,22 @@
     margin: .4rem 0 2rem 0;
     font-size: 2.4rem
   }
+
+  /* Protocol error table */
   .protocol_error {
+    display: grid;
+    grid-gap: 1rem;
     margin-top: 4rem
+  }
+  .protocol_error table :is(th, td) {
+    padding: .6rem 0
+  }
+  .protocol_error table th {
+    text-align: left;
+    border-bottom: 1px solid rgb(184, 0, 0)
+  }
+  .protocol_error table td {
+    overflow-wrap: anywhere
   }
 
   @media (max-width: 992px) {
@@ -331,6 +345,9 @@
       display: grid;
       grid-gap: 1rem
     }
+    .plan_options .a_link {
+      width: fit-content
+    }
     .plan_grid {
       display: block
     }
@@ -349,233 +366,231 @@
       width: 100%;
       margin: 2rem 0
     }
+
+    /* Protocol error */
+    .protocol_error * {
+      font-size: .8rem
+    }
   }
 </style>
 
 <template>
   <div id="plan">
-    <modal
-      name="move"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-      @opened="$refs.range.focus()"
+    <div :class="{ opened_sections: showMove || showShift || showCopyAcross || showDuplicate }" class="section_overlay" />
+    <form
+      v-if="showMove"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+      @submit.prevent="move_to_week(), showMove = false, will_body_scroll(true)"
     >
-      <form class="modal--move" @submit.prevent="move_to_week(), $modal.hide('move'), will_body_scroll(true)">
-        <div class="center_wrapped">
-          <h2>
-            Move to a different microcycle
-          </h2>
-          <p class="grey">
-            This will change the colour code assigned to the sessions
-          </p><br>
-          <label for="range">Move to:</label>
-          <input
-            id="range"
-            ref="range"
-            v-model="moveTarget"
-            class="input--modal"
-            name="range"
-            type="number"
-            min="1"
-            :max="maxWeek"
-            required
-          ><br><br>
-          <button type="submit">
-            Move
-          </button>
-          <button class="red_button" @click.prevent="$modal.hide('move'), will_body_scroll(true)">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </modal>
-    <modal
-      name="shift"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-      @opened="$refs.range.focus()"
+      <h2>
+        Move to a different microcycle
+      </h2>
+      <p class="grey">
+        This will change the colour code assigned to the sessions
+      </p>
+      <div class="input_section">
+        <label for="range">Move to:</label>
+        <input
+          id="range"
+          ref="range"
+          v-model="moveTarget"
+          class="width_300"
+          name="range"
+          type="number"
+          min="1"
+          :max="maxWeek"
+          required
+        >
+      </div>
+      <button type="submit">
+        Move
+      </button>
+      <button class="red_button" @click.prevent="showMove = false, will_body_scroll(true)">
+        Cancel
+      </button>
+    </form>
+    <form
+      v-if="showShift"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+      @submit.prevent="shift_across(), showShift = false, will_body_scroll(true)"
     >
-      <form class="modal--shift" @submit.prevent="shift_across(), will_body_scroll(true)">
-        <div class="center_wrapped">
-          <h2>
-            Shift the dates of the sessions
-          </h2>
-          <p class="grey">
-            This will move the dates ahead or behind by the specified amount
-          </p><br>
-          <label for="range">Shift session dates by: </label>
-          <input
-            id="range"
-            ref="range"
-            v-model="shiftDays"
-            class="input--modal"
-            name="range"
-            type="number"
-            required
-          ><br><br>
-          <button type="submit">
-            Shift
-          </button>
-          <button class="red_button" @click.prevent="$modal.hide('shift'), will_body_scroll(true)">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </modal>
-    <modal
-      name="copy"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-      @opened="$refs.range.focus()"
-    >
-      <div class="modal--copy">
-        <form v-if="copyAcrossPage === 0" class="center_wrapped" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
-          <h2>
-            Copy across to different microcycles
-          </h2>
-          <p class="grey">
-            Progress each session in just a few clicks
-          </p><br><br>
-          <label for="range">From {{ currentWeek }} to: </label>
+      <h2>
+        Shift the dates of the sessions
+      </h2>
+      <p class="grey">
+        This will move the dates ahead or behind by the specified amount
+      </p>
+      <div class="input_section">
+        <label for="range">Shift session dates by: </label>
+        <input
+          id="range"
+          ref="range"
+          v-model="shiftDays"
+          class="width_300"
+          name="range"
+          type="number"
+          required
+        >
+      </div>
+      <button type="submit">
+        Shift
+      </button>
+      <button class="red_button" @click.prevent="showShift = false, will_body_scroll(true)">
+        Cancel
+      </button>
+    </form>
+    <div v-if="showCopyAcross" class="tab_overlay_content fadeIn delay fill_mode_both">
+      <form v-if="copyAcrossPage === 0" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
+        <h2>
+          Copy across to different microcycles
+        </h2>
+        <p class="grey">
+          Progress each session in just a few clicks
+        </p>
+        <div class="input_section">
+          <label for="range">
+            From {{ currentWeek }} to:
+          </label>
           <input
             id="range"
             ref="range"
             v-model="copyTarget"
-            class="input--modal"
+            class="width_300"
             name="range"
             type="number"
             :min="currentWeek + 1"
             :max="maxWeek"
             required
           >
-          <br><br>
-          <label for="range">Days until next sessions: </label>
+        </div>
+        <div class="input_section">
+          <label for="range">
+            Days until next sessions:
+          </label>
           <input
             v-model="daysDiff"
-            class="input--modal"
+            class="width_300"
             name="range"
             type="number"
             min="1"
             required
-          ><br><br>
-          <button type="button" class="red_button" @click.prevent="$modal.hide('copy'), will_body_scroll(true)">
-            Cancel
-          </button>
-          <button v-if="!simpleCopy" type="submit">
-            Next
-          </button>
-          <button v-else @click.prevent="copy_across(), $modal.hide('copy'), will_body_scroll(true)">
-            Copy
-          </button>
-        </form>
-        <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1" class="center_wrapped">
-          <form
-            v-for="(protocol, protocolIndex) in copyAcrossProtocols"
-            v-show="copyAcrossPage === protocolIndex + 1"
-            :key="`protocol_${protocolIndex}`"
-            class="bottom_margin"
-            @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
           >
-            <div
-              v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[protocolIndex][1]"
-              v-show="copyAcrossView === exerciseGroupIndex"
-              :key="`exercise_${protocolIndex}_${exerciseGroupIndex}`"
-            >
-              <h2>
-                {{ protocol[1][exerciseGroupIndex][0] }}
-              </h2>
-              <p class="grey">
-                {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
-              </p>
-              <div
-                v-for="(exercise, exerciseIndex) in exercises"
-                :key="`exercise_${protocolIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
-              >
-                <br>
-                <label :for="`${protocol[1][0][0]}_${exerciseIndex}`">
-                  Week {{ currentWeek + exerciseIndex + 1 }}:
-                </label>
-                <input
-                  v-model="copyAcrossInputs[protocolIndex][1][exerciseGroupIndex][exerciseIndex]"
-                  :name="`${protocol[1][0][0]}_${exerciseIndex}`"
-                  type="text"
-                  required
-                >
-              </div>
-              <br>
-              <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
-                Back
-              </button>
-              <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[protocolIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
-                Back
-              </button>
-              <button v-if="copyAcrossView === copyAcrossInputs[protocolIndex][1].length - 1" type="submit">
-                Next
-              </button>
-              <button v-if="copyAcrossView !== copyAcrossInputs[protocolIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[protocolIndex][1].length - 1">
-                Next
-              </button>
-            </div>
-          </form>
         </div>
-        <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), will_body_scroll(true)">
-          <h2>
-            You're all set
-          </h2>
-          <p class="grey">
-            Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
-          </p><br>
-          <button class="red_button" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
-            Back
-          </button>
-          <button type="submit">
-            Copy
-          </button>
+        <button
+          type="button"
+          class="red_button"
+          @click.prevent="showCopyAcross = false, will_body_scroll(true)"
+        >
+          Cancel
+        </button>
+        <button
+          v-if="!simpleCopy"
+          type="submit"
+        >
+          Next
+        </button>
+        <button
+          v-else
+          @click.prevent="copy_across(), showCopyAcross = false, will_body_scroll(true)"
+        >
+          Copy
+        </button>
+      </form>
+      <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1">
+        <form
+          v-for="(protocol, singleRepsIndex) in copyAcrossProtocols"
+          v-show="copyAcrossPage === singleRepsIndex + 1"
+          :key="`protocol_${singleRepsIndex}`"
+          class="bottom_margin"
+          @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
+        >
+          <div
+            v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[singleRepsIndex][1]"
+            v-show="copyAcrossView === exerciseGroupIndex"
+            :key="`exercise_${singleRepsIndex}_${exerciseGroupIndex}`"
+          >
+            <h2>
+              {{ protocol[1][exerciseGroupIndex][0] }}
+            </h2>
+            <p class="grey">
+              {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
+            </p>
+            <div
+              v-for="(exercise, exerciseIndex) in exercises"
+              :key="`exercise_${singleRepsIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
+            >
+              <br>
+              <label :for="`${protocol[1][0][0]}_${exerciseIndex}`">
+                Week {{ currentWeek + exerciseIndex + 1 }}:
+              </label>
+              <input
+                v-model="copyAcrossInputs[singleRepsIndex][1][exerciseGroupIndex][exerciseIndex]"
+                :name="`${protocol[1][0][0]}_${exerciseIndex}`"
+                type="text"
+                required
+              >
+            </div>
+            <br>
+            <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
+              Back
+            </button>
+            <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[singleRepsIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
+              Back
+            </button>
+            <button v-if="copyAcrossView === copyAcrossInputs[singleRepsIndex][1].length - 1" type="submit">
+              Next
+            </button>
+            <button v-if="copyAcrossView !== copyAcrossInputs[singleRepsIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[singleRepsIndex][1].length - 1">
+              Next
+            </button>
+          </div>
         </form>
       </div>
-    </modal>
-    <modal
-      name="duplicate"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-    >
-      <form class="modal--copy" @submit.prevent="duplicate_plan(duplicateClientID), $modal.hide('duplicate'), will_body_scroll(true)">
-        <div class="center_wrapped">
-          <h2>
-            Create a similar plan
-          </h2>
-          <p class="grey">
-            Copy this plan to the same/different client
-          </p><br>
-          <select v-model="duplicateClientID" name="duplicate_client">
-            <option disabled>
-              Select a client
-            </option>
-            <option
-              v-for="(client, index) in $parent.$parent.clients"
-              :key="`client_${index}`"
-              :value="client.client_id"
-            >
-              {{ client.name }}
-            </option>
-          </select><br><br>
-          <button type="submit">
-            Duplicate
-          </button>
-          <button class="red_button" @click.prevent="$modal.hide('duplicate'), will_body_scroll(true)">
-            Cancel
-          </button>
-        </div>
+      <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), showCopyAcross = false, will_body_scroll(true)">
+        <h2>
+          You're all set
+        </h2>
+        <p class="grey">
+          Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
+        </p><br>
+        <button class="red_button" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
+          Back
+        </button>
+        <button type="submit">
+          Copy
+        </button>
       </form>
-    </modal>
+    </div>
+    <form
+      v-if="showDuplicate"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+      @submit.prevent="duplicate_plan(duplicateClientID), showDuplicate = false, will_body_scroll(true)"
+    >
+      <h2>
+        Create a similar plan
+      </h2>
+      <p class="grey">
+        Copy this plan to the same/different client
+      </p><br>
+      <select v-model="duplicateClientID" name="duplicate_client" class="width_300">
+        <option disabled>
+          Select a client
+        </option>
+        <option
+          v-for="(client, index) in $parent.$parent.clients"
+          :key="`client_${index}`"
+          :value="client.client_id"
+        >
+          {{ client.name }}
+        </option>
+      </select><br><br>
+      <button type="submit">
+        Duplicate
+      </button>
+      <button class="red_button" @click.prevent="showDuplicate = false, will_body_scroll(true)">
+        Cancel
+      </button>
+    </form>
     <div
       v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions && !noSessions"
       :class="{ icon_open_middle: $parent.keepLoaded }"
@@ -599,6 +614,7 @@
       :desc="previewDesc"
       :html="previewHTML"
       :show-media="true"
+      :show-brackets="true"
       @close="previewDesc = null, previewHTML = null"
     />
     <div v-show="editSession !== null" class="dark_overlay fadeIn" />
@@ -654,7 +670,7 @@
             <a
               class="a_link"
               href="javascript:void(0)"
-              @click="$modal.show('duplicate'), will_body_scroll(false)"
+              @click="showDuplicate = true, will_body_scroll(false)"
             >
               <inline-svg :src="require('../../assets/svg/copy.svg')" />
               Duplicate plan
@@ -820,9 +836,9 @@
                     <div class="session_header">
                       <div class="right_margin">
                         <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" class="text--date">{{ day(session.date) }}</span>
-                        <span v-if="session.id !== editSession" class="text--date">{{ session.date }}</span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--checked">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
+                        <span v-if="session.id !== editSession" class="text--tiny">{{ day(session.date) }}</span>
+                        <span v-if="session.id !== editSession" class="text--tiny">{{ session.date }}</span><br v-if="session.id !== editSession">
+                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--tiny">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
                         <input
                           v-if="session.id === editSession"
                           v-model="session.name"
@@ -903,84 +919,95 @@
                         name="measure"
                         @change="sort_sessions(plan), scan(), selection()"
                       >
-                        <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
-                          {{ optionName.text }}
+                        <option value="Plan Overview">
+                          Plan Overview
+                        </option>
+                        <option
+                          v-for="(optionName, optionIndex) in optionsForDataName"
+                          :key="`data_option_${optionIndex}`"
+                          :value="optionName"
+                        >
+                          {{ optionName }}
                         </option>
                       </select>
                     </label>
                   </div>
-                  <div v-if="showType" class="data-select__options">
+                  <div v-if="showDataTypeSelector" class="data-select__options">
                     <label for="measure-type">
                       Data type:<br>
                       <select
+                        id="data_type_selector"
                         v-model="selectedDataType"
                         class="small_border_radius width_300 text--small"
                         name="measure-type"
                         @change="sort_sessions(plan), scan(), selection()"
                       >
-                        <option value="Sets">Sets</option>
-                        <option value="Reps">Reps</option>
-                        <option v-for="optionData in optionsForDataType" :key="'DT-' + optionData.id" :value="optionData.value">
-                          {{ optionData.text }}
+                        <option value="Sets">
+                          Sets
+                        </option>
+                        <option value="Reps">
+                          Reps
+                        </option>
+                        <option
+                          v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
+                          value="Load"
+                        >
+                          Load
+                        </option>
+                        <option
+                          v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
+                          value="Volume"
+                        >
+                          Volume
                         </option>
                       </select>
                     </label>
                   </div>
                 </div>
-                <div v-if="showType && descData.total.desc && !dataValues.includes(null)" class="data-desc">
-                  <div class="container--data-desc">
+                <div
+                  v-if="showDataTypeSelector && !dataToVisualise.includes(null)"
+                  class="data-desc"
+                >
+                  <div
+                    v-for="(desc, descIndex) in descData"
+                    :key="`desc_option_${descIndex}`"
+                    class="container--data-desc"
+                  >
                     <p class="data-desc__desc">
-                      <b>{{ descData.total.desc }}</b>
+                      <b>{{ desc[0] }} {{ selectedDataType }}</b>
                     </p>
                     <p class="data-desc__value">
-                      {{ descData.total.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      <b>{{ descData.average.desc }}</b>
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.average.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      <b>{{ descData.max.desc }}</b>
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.max.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      <b>{{ descData.min.desc }}</b>
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.min.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      {{ descData.change.desc }}
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.change.value }}
+                      {{ desc[1] }}
                     </p>
                   </div>
                 </div>
               </div>
-              <div class="protocol_error">
-                <p v-show="protocolError.length !== 0" class="text--error">
-                  There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
+              <div v-show="protocolError.length !== 0" class="protocol_error">
+                <p class="text--red">
+                  ERROR: Please check that the following exercises and measurements are using the correct format.
                 </p>
-                <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--error">
-                  <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
-                </p>
+                <table>
+                  <tr class="text--red">
+                    <th>Session</th>
+                    <th>Date</th>
+                    <th>Exercise</th>
+                    <th>Protocol</th>
+                  </tr>
+                  <tr
+                    v-for="(error, errorIndex) in protocolError"
+                    :key="`protocol_error_${errorIndex}`"
+                    class="text--red"
+                  >
+                    <td>{{ error.sessionName }}</td>
+                    <td>{{ error.sessionDate }}</td>
+                    <td>{{ error.exerciseName }}</td>
+                    <td>{{ error.protocol }}</td>
+                  </tr>
+                </table>
               </div><br>
               <simple-chart
-                v-if="!dataValues.includes(null)"
-                :data-points="dataValues"
+                v-if="!dataToVisualise.includes(null) && dataToVisualise !== []"
+                :data-points="dataToVisualise"
                 :labels="labelValues"
                 :reset="resetGraph"
                 aria-label="Graph"
@@ -1042,7 +1069,6 @@ export default {
 
       noSessions: false,
       expandedSessions: [],
-      todayDate: '',
       force: true,
 
       // WEEK
@@ -1061,18 +1087,12 @@ export default {
 
       // STATS
 
-      descData: {
-        total: '',
-        average: '',
-        max: '',
-        min: '',
-        change: ''
-      },
+      descData: [],
+      showLoadsVolumeOptions: false,
       selectedDataName: 'Plan Overview',
-      optionsForDataName: [],
-      optionsForDataType: [],
+      optionsForDataName: new Set(),
       selectedDataType: 'Sets',
-      showType: true,
+      showDataTypeSelector: true,
       isStatsOpen: false,
       resetGraph: 0,
 
@@ -1080,10 +1100,17 @@ export default {
 
       new_session: {
         name: 'Untitled',
-        date: ''
+        date: this.today()
       },
 
-      // MANIPULATION AND MODAL
+      // Modals
+
+      showMove: false,
+      showShift: false,
+      showCopyAcross: false,
+      showDuplicate: false,
+
+      // MANIPULATION
 
       moveTarget: 1,
       copyTarget: 2,
@@ -1098,15 +1125,11 @@ export default {
       shiftDays: 1,
       duplicateClientID: 'Select a client',
 
-      // REGEX DATA //
+      // Regex data
 
-      dataValues: [],
+      dataToVisualise: [],
       labelValues: [],
       dataPacketStore: [],
-      regexExtract: /\[\s*(.*?)\s*:\s*(.*?)\]/gi,
-      regexSetsReps: /(\d*)x((\d*\/*)*)/gi,
-      regexLoadCapture: /(at|@)\s*(\d*)\s*\w*/gi,
-      regexNumberBreakdown: /[0-9.]+/gi,
       protocolError: [],
 
       // CALENDAR
@@ -1127,7 +1150,6 @@ export default {
     this.$parent.sessions = true
     this.noSessions = this.helper('match_plan').sessions === false
     this.$parent.$parent.get_templates()
-    this.today()
     this.check_for_new()
     this.adherence()
     this.scan()
@@ -1150,15 +1172,15 @@ export default {
         case 'Copy Across':
           this.copyTarget = this.maxWeek
           this.copy_across_check()
-          this.$modal.show('copy')
+          this.showCopyAcross = true
           this.will_body_scroll(false)
           break
         case 'Move':
-          this.$modal.show('move')
+          this.showMove = true
           this.will_body_scroll(false)
           break
         case 'Shift':
-          this.$modal.show('shift')
+          this.showShift = true
           this.will_body_scroll(false)
           break
         case 'Print':
@@ -1173,33 +1195,33 @@ export default {
       }
     },
     resolve_plan_info_editor (state) {
-      const plan = this.helper('match_plan')
+      const PLAN = this.helper('match_plan')
       switch (state) {
         case 'edit':
           this.$parent.$parent.dontLeave = true
           this.editingPlanNotes = true
-          this.tempEditorStore = plan.notes
+          this.tempEditorStore = PLAN.notes
           break
         case 'save':
           this.editingPlanNotes = false
-          this.update_plan(plan.notes)
+          this.update_plan(PLAN.notes)
           break
         case 'cancel':
           this.$parent.$parent.dontLeave = false
           this.editingPlanNotes = false
-          plan.notes = this.tempEditorStore
+          PLAN.notes = this.tempEditorStore
           break
       }
     },
     resolve_session_editor (state, id) {
-      const session = this.helper('match_session', id)
+      const SESSION = this.helper('match_session', id)
       switch (state) {
         case 'edit':
           this.$parent.$parent.dontLeave = true
           this.isEditingSession = true
           this.editSession = id
           this.forceStop += 1
-          this.tempEditorStore = session.notes
+          this.tempEditorStore = SESSION.notes
           break
         case 'save':
           this.isEditingSession = false
@@ -1212,7 +1234,7 @@ export default {
           this.$parent.$parent.dontLeave = false
           this.isEditingSession = false
           this.editSession = null
-          session.notes = this.tempEditorStore
+          SESSION.notes = this.tempEditorStore
           this.scan()
           break
       }
@@ -1237,21 +1259,21 @@ export default {
     // MODALS AND TAB
 
     print () {
-      const notesArr = []
-      const plan = this.helper('match_plan')
-      plan.sessions.sort((a, b) => {
+      const NOTES_ARR = []
+      const PLAN = this.helper('match_plan')
+      PLAN.sessions.sort((a, b) => {
         return new Date(a.date) - new Date(b.date)
       })
-      plan.sessions.forEach((session) => {
+      PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          notesArr.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.remove_brackets_and_checkbox(this.update_content(session.notes))}</div>`)
+          NOTES_ARR.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.update_html(session.notes, true)}</div>`)
         }
       })
-      const newWindow = window.open()
-      const html = notesArr.join('')
-      newWindow.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}</style><div>${html}</div>`)
-      newWindow.stop()
-      newWindow.print()
+      const NEW_WINDOW = window.open()
+      const HTML = NOTES_ARR.join('')
+      NEW_WINDOW.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}</style><div>${HTML}</div>`)
+      NEW_WINDOW.stop()
+      NEW_WINDOW.print()
       this.$ga.event('Plan', 'print')
       this.deselect_all()
     },
@@ -1262,7 +1284,6 @@ export default {
           this.update_session(session.id)
         }
       })
-      this.$modal.hide('shift')
       this.$ga.event('Session', 'shift')
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
       this.deselect_all()
@@ -1309,8 +1330,8 @@ export default {
         let n = 0
         if (sessionItem[0] === sessionId) {
           sessionItem[1].forEach((exerciseGroup, exerciseGroupIndex) => {
-            const regEx = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1].replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
-            sessionNotes = sessionNotes.replace(regEx, (match) => {
+            const REGEX = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1].replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
+            sessionNotes = sessionNotes.replace(REGEX, (match) => {
               return n === exerciseGroupIndex ? `${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}: ${exerciseGroup[loc - 1]}` : match
             })
             n++
@@ -1320,11 +1341,11 @@ export default {
       return sessionNotes
     },
     copy_across () {
-      const copysessions = []
+      const COPY_SESSIONS = []
       let weekCount = this.currentWeek + 1
       this.helper('match_plan').sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          copysessions.push({
+          COPY_SESSIONS.push({
             id: session.id,
             name: session.name,
             date: session.date,
@@ -1332,13 +1353,13 @@ export default {
           })
         }
       })
-      const startWeek = this.currentWeek
+      const START_WEEK = this.currentWeek
       for (; weekCount <= this.copyTarget; weekCount++) {
         this.currentWeek = weekCount
-        copysessions.forEach((session) => {
+        COPY_SESSIONS.forEach((session) => {
           this.new_session.name = session.name
-          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - startWeek))
-          this.currentCopySessionNotes = this.simpleCopy ? session.notes : this.copy_across_process(session.id, session.notes, weekCount - startWeek)
+          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - START_WEEK))
+          this.currentCopySessionNotes = this.simpleCopy ? session.notes : this.copy_across_process(session.id, session.notes, weekCount - START_WEEK)
           this.add_session(true)
         })
       }
@@ -1349,10 +1370,11 @@ export default {
       this.copyAcrossViewMax = 0
       this.copyAcrossInputs = []
       this.copyAcrossProtocols = []
-      this.new_session.name = 'Untitled'
-      this.today()
+      this.new_session = {
+        name: 'Untitled',
+        date: this.today()
+      }
       this.update_plan()
-      this.$modal.hide('copy')
       this.deselect_all()
       this.scan()
       this.$ga.event('Session', 'progress')
@@ -1373,10 +1395,9 @@ export default {
       this.$parent.$parent.end_loading()
     },
     async duplicate_plan (clientId) {
-      const plan = this.helper('match_plan')
-      await this.create_plan(plan.name, clientId, plan.duration, plan.block_color, plan.notes, plan.sessions)
+      const PLAN = this.helper('match_plan')
+      await this.create_plan(PLAN.name, clientId, PLAN.duration, PLAN.block_color, PLAN.notes, PLAN.sessions)
       this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
-      this.$modal.hide('duplicate')
       this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
       this.$ga.event('Plan', 'duplicate')
     },
@@ -1432,8 +1453,8 @@ export default {
       if (!this.selectedSessions.includes(id)) {
         this.selectedSessions.push(id)
       } else {
-        const idx = this.selectedSessions.indexOf(id)
-        this.selectedSessions.splice(idx, 1)
+        const IDX = this.selectedSessions.indexOf(id)
+        this.selectedSessions.splice(IDX, 1)
       }
     },
     async create_session () {
@@ -1452,10 +1473,10 @@ export default {
     },
     check_for_week_sessions () {
       let arr = 0
-      const sessions = this.helper('match_plan').sessions
-      this.noSessions = sessions === false
-      if (sessions && !this.noSessions) {
-        sessions.forEach((session) => {
+      const SESSIONS = this.helper('match_plan').sessions
+      this.noSessions = SESSIONS === false
+      if (SESSIONS && !this.noSessions) {
+        SESSIONS.forEach((session) => {
           if (session.week_id === this.currentWeek) {
             arr += 1
             this.weekSessions.push(session.id)
@@ -1475,17 +1496,17 @@ export default {
     },
     toggle_expanded_sessions (id) {
       if (this.expandedSessions.includes(id)) {
-        const index = this.expandedSessions.indexOf(id)
-        if (index > -1) {
-          this.expandedSessions.splice(index, 1)
+        const INDEX = this.expandedSessions.indexOf(id)
+        if (INDEX > -1) {
+          this.expandedSessions.splice(INDEX, 1)
         }
       } else {
         this.expandedSessions.push(id)
       }
     },
     update_session_color () {
-      const plan = this.helper('match_plan')
-      plan.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
+      const PLAN = this.helper('match_plan')
+      PLAN.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
       this.editingWeekColor = false
       this.update_plan()
       this.scan()
@@ -1499,84 +1520,158 @@ export default {
     // CHART
 
     selection () {
-      this.descData.total = ''
-      this.descData.average = ''
-      this.descData.max = ''
-      this.descData.min = ''
-      this.descData.change = ''
-      this.dataValues = []
+      class DataPoint {
+        constructor (dataPacket, returnDataType) {
+          this.sessionName = dataPacket[0]
+          this.sessionDate = dataPacket[3]
+          this.exerciseName = dataPacket[1]
+          this.protocol = dataPacket[2].replace(/\s/g, '')
+          this.returnDataType = returnDataType
+          this.regexSetsReps = /(\d*)x((\d*\/*)*)/gi
+          this.regexLoad = /at\s*((\d\.*\/*)*)\s*\w*/gi
+          this.regeGetNumber = /[0-9.]+/gi
+        }
+
+        get calculate () {
+          switch (this.returnDataType) {
+            case 'Sets':
+              return this.getSets()
+            case 'Reps':
+              return this.getReps()
+            case 'Load':
+              return this.getLoad()
+            case 'Volume':
+              return this.getReps() * this.getLoad()
+            case 'Other':
+              return this.getOtherMeasure()
+          }
+        }
+
+        getSets () {
+          let returnValue
+          let finder
+          while ((finder = this.regexSetsReps.exec(this.protocol)) !== null) {
+            if (finder.index === this.regexSetsReps.lastIndex) {
+              this.regexSetsReps.lastIndex++
+            }
+            finder.forEach((setsMatch, setsIndex) => {
+              if (setsIndex === 1) {
+                returnValue = parseFloat(setsMatch)
+              }
+            })
+          }
+          return returnValue
+        }
+
+        getReps () {
+          const NUM_OF_SETS = this.getSets()
+          let returnValue = 0
+          let repsFinder
+          while ((repsFinder = this.regexSetsReps.exec(this.protocol)) !== null) {
+            if (repsFinder.index === this.regexSetsReps.lastIndex) {
+              this.regexSetsReps.lastIndex++
+            }
+            repsFinder.forEach((repsMatch, repsIndex) => {
+              if (repsIndex === 2) {
+                if (repsMatch.includes('/')) {
+                  returnValue = repsMatch.split('/').reduce((a, b) => parseFloat(a) + parseFloat(b))
+                } else {
+                  returnValue = parseFloat(repsMatch) * NUM_OF_SETS
+                }
+              }
+            })
+          }
+          return returnValue
+        }
+
+        getLoad () {
+          const NUM_OF_SETS = this.getSets()
+          let returnValue = 0
+          let loadFinder
+          while ((loadFinder = this.regexLoad.exec(this.protocol)) !== null) {
+            if (loadFinder.index === this.regexLoad.lastIndex) {
+              this.regexLoad.lastIndex++
+            }
+            loadFinder.forEach((loadMatch, loadIndex) => {
+              if (loadIndex === 1) {
+                if (loadMatch.includes('/')) {
+                  returnValue = loadMatch.split('/').reduce((a, b) => parseFloat(a) + parseFloat(b))
+                } else {
+                  returnValue = parseFloat(loadMatch) * NUM_OF_SETS
+                }
+              }
+            })
+          }
+          return returnValue
+        }
+
+        getOtherMeasure () {
+          let returnValue
+          let numberFinder
+          while ((numberFinder = this.regeGetNumber.exec(this.protocol)) !== null) {
+            if (numberFinder.index === this.regeGetNumber.lastIndex) {
+              this.regeGetNumber.lastIndex++
+            }
+            numberFinder.forEach((numberMatch) => {
+              returnValue = parseFloat(numberMatch)
+            })
+          }
+          return returnValue
+        }
+      }
+      this.dataToVisualise = []
       this.labelValues = []
       this.protocolError = []
-      this.optionsForDataType = []
-      let overviewStore = []
-      this.showType = true
-      if (this.selectedDataName === 'Plan Overview') {
-        this.optionsForDataType.push({
-          id: 1,
-          text: 'Load',
-          value: 'Load'
-        })
-        this.optionsForDataType.push({
-          id: 2,
-          text: 'Volume',
-          value: 'Volume'
-        })
-      }
+      let extractedSessionProtocols = []
       this.dataPacketStore.forEach((session) => {
-        overviewStore = []
+        extractedSessionProtocols = []
         session.forEach((exerciseDataPacket) => {
-          const tidyA = this.selectedDataName.replace(/\(/g, '\\(')
-          const tidyB = tidyA.replace(/\)/g, '\\)')
-          const regex = RegExp(tidyB, 'gi')
-          const protocol = exerciseDataPacket[2].replace(/\s/g, '')
-          if (regex.test(exerciseDataPacket[1])) {
+          const EXERCISE_NAME = this.selectedDataName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')
+          const REGEX = RegExp(EXERCISE_NAME, 'gi')
+          if (REGEX.test(exerciseDataPacket[1])) {
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
-            if (exerciseDataPacket[2].includes('at') && this.optionsForDataType.length !== 2 && this.protocolError.length === 0) {
-              this.optionsForDataType.push({
-                id: 1,
-                text: 'Load',
-                value: 'Load'
+            this.showDataTypeSelector = exerciseDataPacket[2].includes('x')
+            this.showLoadsVolumeOptions = exerciseDataPacket[2].includes('at')
+            this.selectedDataType = !this.showLoadsVolumeOptions && (this.selectedDataType === 'Load' || this.selectedDataType === 'Volume') ? 'Sets' : this.selectedDataType
+            const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket[2].includes('x') ? this.selectedDataType : 'Other')
+            if (isNaN(DATA_POINT.calculate)) {
+              this.protocolError.push({
+                sessionName: exerciseDataPacket[0],
+                sessionDate: exerciseDataPacket[3],
+                exerciseName: exerciseDataPacket[1],
+                protocol: exerciseDataPacket[2]
               })
-              this.optionsForDataType.push({
-                id: 2,
-                text: 'Volume',
-                value: 'Volume'
-              })
-            }
-            if ((this.selectedDataType === 'Sets' || this.selectedDataType === 'Reps') && exerciseDataPacket[2].includes('x')) {
-              this.dataValues.push(this.sets_reps(exerciseDataPacket, protocol, this.selectedDataType))
-            } else if (this.selectedDataType === 'Load' && exerciseDataPacket[2].includes('at')) {
-              this.dataValues.push(this.load(exerciseDataPacket, protocol))
-            } else if (this.selectedDataType === 'Volume' && exerciseDataPacket[2].includes('at')) {
-              const agg = this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
-              this.dataValues.push(agg)
-            } else if (!exerciseDataPacket[2].includes('x')) {
-              this.showType = false
-              this.dataValues.push(this.other_measures(protocol))
+            } else {
+              this.dataToVisualise.push(DATA_POINT.calculate)
             }
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
-            const dataForSum = () => {
-              switch (this.selectedDataType) {
-                case 'Sets':
-                  return this.sets_reps(exerciseDataPacket, protocol, 'Sets')
-                case 'Reps':
-                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps')
-                case 'Load':
-                  return this.load(exerciseDataPacket, protocol)
-                case 'Volume':
-                  return this.sets_reps(exerciseDataPacket, protocol, 'Reps') * this.load(exerciseDataPacket, protocol)
-              }
-            }
-            overviewStore.push(dataForSum())
-            if (overviewStore.length !== 0) {
-              this.dataValues.push(overviewStore.reduce((a, b) => a + b))
-              this.desc_stats(this.selectedDataType)
-            }
+            this.showDataTypeSelector = true
+            const DATA_POINT = new DataPoint(exerciseDataPacket, this.selectedDataType)
+            extractedSessionProtocols.push(DATA_POINT.calculate)
           }
         })
+
+        // Sums for Plan Overview
+        if (extractedSessionProtocols.length !== 0) {
+          this.dataToVisualise.push(extractedSessionProtocols.reduce((a, b) => a + b))
+        }
+
+        // Populates descriptive stats
+        if (this.dataToVisualise.length !== 0) {
+          const SUM = this.dataToVisualise.reduce((a, b) => a + b)
+          const MAX = Math.max(...this.dataToVisualise)
+          const MIN = Math.min(...this.dataToVisualise)
+          this.descData = [
+            ['Total', SUM],
+            ['Average', (SUM / this.dataToVisualise.length).toFixed(1)],
+            ['Maximum', MAX],
+            ['Minimum', MIN],
+            ['Percentage Change', (((MAX / MIN) - 1) * 100).toFixed(1)]
+          ]
+        }
       })
       if (this.selectedDataName === 'Plan Overview') {
-        for (let x = 1; x <= this.dataValues.length; x++) {
+        for (let x = 1; x <= this.dataToVisualise.length; x++) {
           this.labelValues.push(['Session ' + x])
         }
       }
@@ -1585,30 +1680,22 @@ export default {
 
     // DATE/TIME
 
-    today () {
-      const today = new Date()
-      const dd = String(today.getDate()).padStart(2, '0')
-      const mm = String(today.getMonth() + 1).padStart(2, '0')
-      const yyyy = today.getFullYear()
-      this.new_session.date = `${yyyy}-${mm}-${dd}`
-      this.todayDate = `${yyyy}-${mm}-${dd}`
-    },
     add_days (date, days) {
-      const d = new Date(date)
-      d.setDate(d.getDate() + days)
-      const year = d.getFullYear()
-      const month = d.getMonth() + 1
-      const dayDate = d.getDate()
-      return `${year}-${month}-${dayDate}`
+      const DATE = new Date(date)
+      DATE.setDate(DATE.getDate() + days)
+      const YEAR = DATE.getFullYear()
+      const MONTH = DATE.getMonth() + 1
+      const DAY = DATE.getDate()
+      return `${YEAR}-${MONTH}-${DAY}`
     },
     plan_duration (duration) {
       // Turn the duration of the plan into an array to render the boxes in the table
-      const arr = []
+      const ARR = []
       let i
       for (i = 1; i < parseInt(duration, 10) + 1; i++) {
-        arr.push(i)
+        ARR.push(i)
       }
-      return arr
+      return ARR
     },
 
     // INIT AND BACKGROUND
@@ -1624,23 +1711,23 @@ export default {
           }
         })
       }
-      const bar = document.getElementById('progress-bar')
-      if (bar) {
-        bar.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+      const PROGRESS_BAR = document.getElementById('progress-bar')
+      if (PROGRESS_BAR) {
+        PROGRESS_BAR.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
       }
     },
     expand_all (toExpand) {
       try {
-        const plan = this.helper('match_plan')
-        if (Array.isArray(plan.sessions)) {
-          if (plan.sessions.length !== 0) {
-            plan.sessions.forEach((session) => {
+        const PLAN = this.helper('match_plan')
+        if (Array.isArray(PLAN.sessions)) {
+          if (PLAN.sessions.length !== 0) {
+            PLAN.sessions.forEach((session) => {
               if (toExpand === 'Expand') {
                 this.expandedSessions.push(session.id)
               } else {
                 let x = 0
-                const y = this.expandedSessions.length
-                for (; x < y; x++) {
+                const Y = this.expandedSessions.length
+                for (; x < Y; x++) {
                   this.expandedSessions.pop()
                 }
               }
@@ -1654,11 +1741,11 @@ export default {
     scan () {
       this.dataPacketStore.length = 0
       this.sessionDates.length = 0
-      const plan = this.helper('match_plan')
-      this.weekColor.backgroundColor = plan.block_color.replace('[', '').replace(']', '').split(',')
-      this.maxWeek = plan.duration
-      if (plan.sessions && !this.noSessions) {
-        plan.sessions.forEach((object) => {
+      const PLAN = this.helper('match_plan')
+      this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
+      this.maxWeek = PLAN.duration
+      if (PLAN.sessions && !this.noSessions) {
+        PLAN.sessions.forEach((object) => {
           this.sessionDates.push({
             title: object.name,
             date: object.date,
@@ -1671,187 +1758,21 @@ export default {
             this.dataPacketStore.push(this.pull_protocols(object.name, object.notes, object.date))
           }
         })
+
         // Appends the options to the select
         if (this.dataPacketStore !== null) {
-          this.dropdown_init()
+          this.optionsForDataName = new Set()
+          for (const session of this.dataPacketStore) {
+            for (const dataPacket of session) {
+              const CASED_ITEM = this.proper_case(dataPacket[1])
+              this.optionsForDataName.add(dataPacket[2].includes('at') ? CASED_ITEM : dataPacket[1])
+            }
+          }
           this.selection()
         }
       }
       this.forceUpdate += 1
       this.check_for_week_sessions()
-    },
-
-    // Init the dropdown selection with validation
-    dropdown_init () {
-      this.optionsForDataName = [{ id: 0, text: 'Plan Overview', value: 'Plan Overview' }]
-      const tempItemStore = []
-      const tempItemStoreLate = []
-      let continueValue = 0
-      this.dataPacketStore.forEach((item) => {
-        item.forEach((exerciseDataPacket) => {
-          const tidyA = exerciseDataPacket[1].replace(/\(/g, '\\(')
-          const tidyB = tidyA.replace(/\)/g, '\\)')
-          const regexA = RegExp(tidyB, 'gi')
-          const itemCased = this.proper_case(exerciseDataPacket[1])
-          if (!regexA.test(tempItemStore) && exerciseDataPacket[2].includes('at')) {
-            tempItemStore.push(itemCased)
-          }
-          if (!regexA.test(tempItemStoreLate) && !exerciseDataPacket[2].includes('at')) {
-            tempItemStoreLate.push(exerciseDataPacket[1])
-          }
-        })
-      })
-      tempItemStore.forEach((item, index) => {
-        continueValue = index + 1
-        this.optionsForDataName.push({
-          id: continueValue,
-          text: item,
-          value: item
-        })
-      })
-      tempItemStoreLate.forEach((item, index) => {
-        this.optionsForDataName.push({
-          id: continueValue + index + 1,
-          text: item,
-          value: item
-        })
-      })
-    },
-
-    // REGEX
-
-    sets_reps (exerciseDataPacket, protocol, selectedDataType) {
-      const tempSetsRepsStore = []
-      let setStore = null
-      let extractedSetsReps = null
-      let m
-      let n
-      while ((m = this.regexSetsReps.exec(protocol)) !== null) {
-        if (m.index === this.regexSetsReps.lastIndex) {
-          this.regexSetsReps.lastIndex++
-        }
-        m.forEach((match, groupIndex) => {
-          if (groupIndex === 1) {
-            setStore = parseInt(match)
-          }
-          if (selectedDataType === 'Sets' && groupIndex === 1) {
-            if (match === '' || isNaN(match)) {
-              this.protocolError.push({
-                sessionName: exerciseDataPacket[0],
-                exercise: exerciseDataPacket[1],
-                prot: exerciseDataPacket[2]
-              })
-            }
-            extractedSetsReps = parseInt(match)
-          } else if (selectedDataType === 'Reps' && groupIndex === 2) {
-            if (match === '' || isNaN(match)) {
-              this.protocolError.push({
-                sessionName: exerciseDataPacket[0],
-                exercise: exerciseDataPacket[1],
-                prot: exerciseDataPacket[2]
-              })
-            } else if (match.includes('/')) {
-              while ((n = this.regexNumberBreakdown.exec(match)) !== null) {
-                if (n.index === this.regexNumberBreakdown.lastIndex) {
-                  this.regexNumberBreakdown.lastIndex++
-                }
-                n.forEach((repsMatchExact) => {
-                  tempSetsRepsStore.push(parseInt(repsMatchExact))
-                })
-              }
-              extractedSetsReps = tempSetsRepsStore.reduce((a, b) => a + b)
-            } else {
-              extractedSetsReps = parseInt(match) * parseInt(setStore)
-            }
-          }
-        })
-      }
-      return extractedSetsReps
-    },
-    load (exerciseDataPacket, protocol) {
-      const tempLoadStore = []
-      const sets = this.sets_reps(exerciseDataPacket, protocol, 'Sets')
-      let sum = 0
-      let isMultiple = false
-      let m
-      let n
-      while ((m = this.regexLoadCapture.exec(protocol)) !== null) {
-        if (m.index === this.regexLoadCapture.lastIndex) {
-          this.regexLoadCapture.lastIndex++
-        }
-        m.forEach((loadMatch, groupIndex) => {
-          if (groupIndex === 2 && isNaN(loadMatch)) {
-            this.protocolError.push({
-              sessionName: exerciseDataPacket[0],
-              exercise: exerciseDataPacket[1],
-              prot: exerciseDataPacket[2]
-            })
-          } else if (groupIndex === 2) {
-            while ((n = this.regexNumberBreakdown.exec(loadMatch)) !== null) {
-              if (n.index === this.regexNumberBreakdown.lastIndex) {
-                this.regexNumberBreakdown.lastIndex++
-              }
-              n.forEach((loadMatchExact) => {
-                if (loadMatch.includes('/')) {
-                  tempLoadStore.push(parseFloat(loadMatchExact))
-                  isMultiple = true
-                } else {
-                  sum = parseFloat(loadMatchExact) * sets
-                }
-              })
-            }
-          }
-        })
-      }
-      if (isMultiple) {
-        sum = tempLoadStore.reduce((a, b) => a + b)
-      }
-      return sum
-    },
-    other_measures (protocol) {
-      let data = 0
-      let m
-      while ((m = this.regexNumberBreakdown.exec(protocol)) !== null) {
-        if (m.index === this.regexNumberBreakdown.lastIndex) {
-          this.regexNumberBreakdown.lastIndex++
-        }
-        m.forEach((match) => {
-          data = parseFloat(match)
-        })
-      }
-      return data
-    },
-    desc_stats (selectedDataType) {
-      let storeMax = 0
-      let store = 0
-      const sum = this.dataValues.reduce((a, b) => a + b)
-      this.descData.total = {
-        desc: `Total ${selectedDataType}: `,
-        value: sum
-      }
-      this.descData.average = {
-        desc: `Average ${selectedDataType}: `,
-        value: (sum / this.dataValues.length).toFixed(1)
-      }
-      this.dataValues.forEach((value) => {
-        storeMax = Math.max(storeMax, value)
-      })
-      this.descData.max = {
-        desc: `Maximum ${selectedDataType}: `,
-        value: storeMax
-      }
-      store = storeMax
-      this.dataValues.forEach((value) => {
-        store = Math.min(store, value)
-      })
-      this.descData.min = {
-        desc: `Minimum ${selectedDataType}: `,
-        value: store
-      }
-      this.descData.change = {
-        desc: 'Percentage Change: ',
-        value: (((storeMax / store) - 1) * 100).toFixed(1) + '%'
-      }
     },
 
     // DATABASE
@@ -1891,17 +1812,17 @@ export default {
     async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
       this.$parent.$parent.silent_loading = true
       this.$parent.$parent.dontLeave = true
-      const plan = this.helper('match_plan')
+      const PLAN = this.helper('match_plan')
       try {
-        this.sort_sessions(plan)
-        const response = await this.$axios.post('https://api.traininblocks.com/programmes',
+        this.sort_sessions(PLAN)
+        const RESPONSE = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
-            id: forceID === undefined ? plan.id : forceID,
-            name: forceName === undefined ? plan.name : `Copy of ${forceName}`,
-            duration: forceDuration === undefined ? plan.duration : forceDuration,
-            notes: forceNotes === undefined ? plan.notes : forceNotes,
-            block_color: forceColors === undefined ? plan.block_color : forceColors,
-            ordered: plan.ordered
+            id: forceID === undefined ? PLAN.id : forceID,
+            name: forceName === undefined ? PLAN.name : `Copy of ${forceName}`,
+            duration: forceDuration === undefined ? PLAN.duration : forceDuration,
+            notes: forceNotes === undefined ? PLAN.notes : forceNotes,
+            block_color: forceColors === undefined ? PLAN.block_color : forceColors,
+            ordered: PLAN.ordered
           }
         )
         // Set vue client_details data to new data
@@ -1909,7 +1830,7 @@ export default {
         // Loop through client_details plans
         for (x in this.$parent.$parent.client_details.plans) {
           if (this.$parent.$parent.client_details.plans[x].id === this.$route.params.id) {
-            this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
+            this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
           }
         }
         // Set vue client plans data to new data
@@ -1919,7 +1840,7 @@ export default {
           if (this.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
             for (y in this.$parent.$parent.clients[x].plans[y]) {
               if (this.$parent.$parent.clients[x].plans[y].id === this.$route.params.id) {
-                this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, response.data)).replace('{"0":', '').replace('}}', '}'))
+                this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
               }
             }
           }
@@ -1936,9 +1857,9 @@ export default {
     async delete_plan () {
       this.$parent.$parent.dontLeave = true
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
-        const id = parseInt(this.$route.params.id)
+        const ID = parseInt(this.$route.params.id)
         try {
-          await this.$axios.delete(`https://api.traininblocks.com/programmes/${id}`)
+          await this.$axios.delete(`https://api.traininblocks.com/programmes/${ID}`)
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()
           this.$ga.event('Session', 'delete')
@@ -1952,16 +1873,16 @@ export default {
     },
     async update_session (id) {
       this.$parent.$parent.dontLeave = true
-      const session = this.helper('match_session', id)
+      const SESSION = this.helper('match_session', id)
       try {
         await this.$axios.post('https://api.traininblocks.com/workouts',
           {
-            id: session.id,
-            name: session.name,
-            date: session.date,
-            notes: session.notes,
-            week_id: session.week_id,
-            checked: session.checked
+            id: SESSION.id,
+            name: SESSION.name,
+            date: SESSION.date,
+            notes: SESSION.notes,
+            week_id: SESSION.week_id,
+            checked: SESSION.checked
           }
         )
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
@@ -2002,10 +1923,7 @@ export default {
         }
         this.new_session = {
           name: 'Untitled',
-          date: this.todayDate,
-          notes: null,
-          week_id: '',
-          block_color: ''
+          date: this.today()
         }
         this.$parent.$parent.end_loading()
       } catch (e) {

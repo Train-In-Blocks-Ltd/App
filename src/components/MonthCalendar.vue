@@ -76,6 +76,7 @@
 
   /* Event */
   .event {
+    overflow-wrap: anywhere;
     border: 2px solid transparent;
     border-radius: 5px;
     font-size: .7rem;

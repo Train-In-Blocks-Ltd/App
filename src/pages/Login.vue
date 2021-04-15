@@ -25,7 +25,7 @@
   opacity: var(--light_opacity)
 }
 #okta-signin-submit:active {
-  transform: scale(.96)
+  transform: var(--active_state)
 }
 #okta-signin-submit:focus {
   box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
@@ -160,7 +160,7 @@ a:hover {
     <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
     <div>
       <a href="javascript:void(0)" @click="showDemo = !showDemo">
-        <b>{{ showDemo ? 'Hide' : 'Demo account details' }} </b>
+        <b>{{ showDemo ? 'Hide' : 'Show demo account details' }} </b>
       </a>
     </div>
     <div v-if="showDemo" class="demo_details">

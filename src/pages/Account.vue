@@ -29,7 +29,7 @@
   opacity: var(--light_opacity)
 }
 .policies:active {
-  transform: scale(.9)
+  transform: var(--active_state)
 }
 .details_container {
   display: grid;
@@ -66,91 +66,92 @@
   }
 }
 @media (max-width: 576px) {
+  .reset_password_button_bar,
   .details_container button {
     width: 100%
+  }
+  .reset_password_button_bar {
+    display: grid;
+    grid-gap: 1rem
   }
 }
 </style>
 
 <template>
-  <div v-if="$parent.claims" id="account">
-    <modal
-      name="reset-password"
-      height="100%"
-      width="100%"
-      :adaptive="true"
-      :click-to-close="false"
-      @opened="$refs.pass.focus()"
+  <div
+    v-if="$parent.claims"
+    id="account"
+    class="view_container"
+  >
+    <div :class="{ opened_sections: showPasswordReset }" class="section_overlay" />
+    <form
+      v-if="showPasswordReset"
+      class="form_grid tab_overlay_content fadeIn delay fill_mode_both"
+      @submit.prevent="change_password()"
     >
-      <div class="modal--reset">
-        <div class="center_wrapped">
-          <form class="form_grid" @submit.prevent="change_password(), $modal.hide('reset-password'), will_body_scroll(true)">
-            <div>
-              <h1>
-                Stay safe
-              </h1>
-              <h2 class="grey">
-                Reset your password
-              </h2>
-            </div>
-            <input
-              ref="pass"
-              v-model="password.old"
-              type="password"
-              placeholder="Current password"
-              aria-label="Current password"
-              class="input--forms small_border_radius"
-              required
-            >
-            <div>
-              <h2>
-                Requirements
-              </h2>
-              <p class="grey">
-                Number (0-9)
-              </p>
-              <p class="grey">
-                At least 8 characters
-              </p>
-              <p class="grey">
-                Can't contain your username
-              </p>
-            </div>
-            <input
-              v-model="password.new"
-              type="password"
-              placeholder="New password"
-              aria-label="New password"
-              class="input--forms small_border_radius"
-              :class="{check: password.check}"
-              required
-              @input="check_password"
-            >
-            <input
-              v-model="password.match"
-              type="password"
-              placeholder="Confirm new password"
-              aria-label="Confirm new password"
-              class="input--forms small_border_radius"
-              :class="{check: password.new !== password.match}"
-              required
-              @input="password.error = password.new === password.match ? '' : 'New password does not match'"
-            >
-            <div class="reset_password_button_bar">
-              <button class="right_margin" type="submit" :disabled="password.check === null || password.new !== password.match">
-                Change your password
-              </button>
-              <button class="red_button" @click.prevent="$modal.hide('reset-password'), will_body_scroll(true)">
-                Close
-              </button>
-            </div>
-            <p v-if="password.error" class="error">
-              {{ password.error }}
-            </p>
-          </form>
-        </div>
+      <div>
+        <h1>
+          Stay safe
+        </h1>
+        <h2 class="grey">
+          Reset your password
+        </h2>
       </div>
-    </modal>
+      <input
+        ref="pass"
+        v-model="password.old"
+        type="password"
+        placeholder="Current password"
+        aria-label="Current password"
+        class="input--forms small_border_radius"
+        required
+      >
+      <div>
+        <h2>
+          Requirements
+        </h2>
+        <p class="grey">
+          Number (0-9)
+        </p>
+        <p class="grey">
+          At least 8 characters
+        </p>
+        <p class="grey">
+          Can't contain your username
+        </p>
+      </div>
+      <input
+        v-model="password.new"
+        type="password"
+        placeholder="New password"
+        aria-label="New password"
+        class="input--forms small_border_radius"
+        :class="{check: password.check}"
+        required
+        @input="check_password"
+      >
+      <input
+        v-model="password.match"
+        type="password"
+        placeholder="Confirm new password"
+        aria-label="Confirm new password"
+        class="input--forms small_border_radius"
+        :class="{check: password.new !== password.match}"
+        required
+        @input="check_password"
+      >
+      <div class="reset_password_button_bar">
+        <button class="right_margin" type="submit" :disabled="password.check || password.new !== password.match">
+          Change your password
+        </button>
+        <button class="red_button" @click.prevent="showPasswordReset = false, will_body_scroll(true)">
+          Close
+        </button>
+      </div>
+      <p v-if="password.error" class="error">
+        {{ password.error }}
+      </p>
+    </form>
     <h1>
       Your Account
     </h1>
@@ -165,7 +166,7 @@
           </button>
         </div>
         <div>
-          <button @click.prevent="$modal.show('reset-password'), will_body_scroll(false)">
+          <button @click.prevent="showPasswordReset = true, will_body_scroll(false)">
             Change Your Password
           </button>
         </div>
@@ -231,6 +232,7 @@ export default {
   },
   data () {
     return {
+      showPasswordReset: false,
       password: {
         old: null,
         new: null,
@@ -267,10 +269,31 @@ export default {
     // PASSWORD
 
     check_password () {
-      if (!this.password.new.includes(this.$parent.claims.email) && this.password.new.match(/[0-9]+/) && this.password.new.length >= 8 && this.password.old.length >= 1) {
-        this.password.check = false
-      } else {
+      const self = this
+      function isUsername () {
+        const one = !self.password.new.includes(self.$parent.claims.email)
+        const two = self.password.new.split('').filter(function (e, i, a) {
+          // eslint-disable-next-line
+          return (self.$parent.claims.email.indexOf(e) !== -1)
+        }).length <= 6
+        if (one === true && two !== false) {
+          return true
+        } else {
+          return false
+        }
+      }
+      function requirements () {
+        return isUsername() && self.password.new.match(/[0-9]+/) !== null && self.password.new.length >= 8 && self.password.old.length >= 1
+      }
+      if (requirements() === false) {
         this.password.check = true
+        this.password.error = 'Please check the requirements'
+      } else if (this.password.new !== this.password.match) {
+        this.password.check = true
+        this.password.error = 'New password does not match'
+      } else {
+        this.password.check = false
+        this.password.error = ''
       }
     },
     async change_password () {
@@ -299,8 +322,10 @@ export default {
         )
         this.$parent.$refs.response_pop_up.show('Password changed', 'Remember to not share it and keep it safe')
         this.$parent.end_loading()
+        this.showPasswordReset = false
+        this.will_body_scroll(true)
       } catch (e) {
-        this.password.error = 'Something went wrong. Please make sure that your password is correct'
+        this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
         console.error(e)
         this.$parent.end_loading()
       }

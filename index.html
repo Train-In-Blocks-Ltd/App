@@ -37,22 +37,6 @@
           elem.removeAttribute("checked")
         }
       }
-      const resize = function (elem) {
-        switch (elem.style.cssText) {
-          case 'max-width: 80%;':
-            elem.style = 'max-width: 60%;'
-            break
-          case 'max-width: 60%;':
-            elem.style = 'max-width: 40%;'
-            break
-          case 'max-width: 40%;':
-            elem.style = 'max-width: 80%;'
-            break
-          default:
-            elem.style = 'max-width: 60%;'
-            break
-        }
-      }
     </script>
   </body>
 </html>

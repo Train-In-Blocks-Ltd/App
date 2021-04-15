@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VModal from 'vue-js-modal'
 import VueAnalytics from 'vue-analytics'
 import axios from 'axios'
 import { loadProgressBar } from 'axios-progress-bar'
@@ -25,7 +24,6 @@ Vue.use(VueAnalytics, {
   },
   disabled: true
 })
-Vue.use(VModal)
 Vue.use(InlineSvgPlugin)
 
 // Register component globally
@@ -49,32 +47,65 @@ Vue.mixin({
     // Protocol
 
     pull_protocols (sessionName, text, date) {
-      const textNoHTML = text.replace(/<[^>]*>?/gm, '')
-      const tempStore = []
-      let m
-      while ((m = this.regexExtract.exec(textNoHTML)) !== null) {
-        if (m.index === this.regexExtract.lastIndex) {
-          this.regexExtract.lastIndex++
+      const REGEX_EXTRACT_EXERCISES = /\[\s*(.*?)\s*:\s*(.*?)\]/gi
+      const HTML_REMOVED_TAGS = text.replace(/<[^>]*>?/gm, '')
+      const TEMPORARY_STORE = []
+      let finder
+      while ((finder = REGEX_EXTRACT_EXERCISES.exec(HTML_REMOVED_TAGS)) !== null) {
+        if (finder.index === REGEX_EXTRACT_EXERCISES.lastIndex) {
+          REGEX_EXTRACT_EXERCISES.lastIndex++
         }
-        m.forEach((match, groupIndex) => {
+        finder.forEach((match, groupIndex) => {
           if (groupIndex === 0) {
-            tempStore.push(sessionName)
+            TEMPORARY_STORE.push(sessionName)
           } else if (groupIndex === 1 || groupIndex === 2) {
-            tempStore.push(match)
+            TEMPORARY_STORE.push(match)
             if (groupIndex === 2) {
-              tempStore.push(date)
+              TEMPORARY_STORE.push(date)
             }
           }
         })
       }
-      if (tempStore !== null) {
+      if (TEMPORARY_STORE !== null) {
         const tempArray = []
-        for (let index = 0; index < tempStore.length; index += 4) {
-          const dataPacket = tempStore.slice(index, index + 4)
+        for (let index = 0; index < TEMPORARY_STORE.length; index += 4) {
+          const dataPacket = TEMPORARY_STORE.slice(index, index + 4)
           tempArray.push(dataPacket)
         }
         return tempArray
       }
+    },
+
+    // HTML
+
+    update_html (html, rmBrackets) {
+      if (html === null) {
+        return html
+      }
+      const regexIframe = /<iframe[^>]+src="([^"]+)"><\/iframe>/gi
+      let m
+      const arr1 = []
+      // Finds all iframes
+      while ((m = regexIframe.exec(html)) !== null) {
+        if (m.index === regexIframe.lastIndex) {
+          regexIframe.lastIndex++
+        }
+        const tempArray = []
+        m.forEach((match, groupIndex) => {
+          if (groupIndex === 1) {
+            tempArray.push(match)
+            arr1.push(tempArray)
+          } else {
+            tempArray.push(match)
+          }
+        })
+      }
+      // Removes iframes
+      arr1.forEach((item) => {
+        html = html.replace(item[0], `<a href="${item[1]}" rel="noopener noreferrer nofollow">Watch video</a>`)
+      })
+      html = rmBrackets ? html.replace(/[[\]]/g, '') : html
+      return html.replace('onclick="resize(this)"', '').replace('contenteditable="true"', '')
     },
 
     // Date
@@ -100,36 +131,12 @@ Vue.mixin({
         })
       }
     },
-    remove_brackets_and_checkbox (dataIn) {
-      return dataIn !== null ? dataIn.replace(/[[\]]/g, '').replace(/<input /gmi, '<input disabled ').replace('onclick="resize(this)"', '') : dataIn
-    },
     proper_case (string) {
       const sentence = string.toLowerCase().split(' ')
       for (let i = 0; i < sentence.length; i++) {
         sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1)
       }
       return sentence.join(' ')
-    },
-    update_content (html) {
-      let m
-      const arr = []
-      const updateIframeRegex = /<iframe.*?><\/iframe>/gmi
-      const updateURLRegex = /src="(.*?)"/gmi
-      while ((m = updateIframeRegex.exec(html)) !== null) {
-        if (m.index === updateIframeRegex.lastIndex) {
-          updateIframeRegex.lastIndex++
-        }
-        m.forEach((iframeMatch) => {
-          const url = iframeMatch.match(updateURLRegex)[0].replace('src=', '').replace(/"/g, '')
-          arr.push([iframeMatch, url])
-        })
-      }
-      if (arr.length !== 0) {
-        arr.forEach((item) => {
-          html = html.replace(item[0], `<a href="${item[1]}" target="_blank">Watch video</a>`)
-        })
-      }
-      return html === null ? html : html.replace(/<strong>/gi, '<b>').replace(/<\/strong>/gi, '</b>').replace(/<em>/gi, '<i>').replace(/<\/em>/gi, '<i>')
     },
 
     // Other

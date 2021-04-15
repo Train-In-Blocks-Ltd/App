@@ -61,7 +61,7 @@
 </style>
 
 <template>
-  <div id="templates">
+  <div id="templates" class="view_container">
     <multiselect
       :type="'template'"
       :options="['Delete', 'Deselect']"

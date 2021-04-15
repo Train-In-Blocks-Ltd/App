@@ -18,7 +18,8 @@
     --skeleton_1: #F4F4F4;
     --skeleton_2: #E4E4E4;
     --link: blue;
-    --light_opacity: .6
+    --light_opacity: .6;
+    --active_state: scale(.95)
   }
 
   /* Animation */
@@ -68,7 +69,7 @@
   }
   .section_overlay.opened_sections {
     width: 100%;
-    z-index: 4
+    z-index: 10
   }
   @supports not (backdrop-filter: blur(10px)) {
     .section_overlay {
@@ -95,22 +96,9 @@
     display: grid;
     align-items: start
   }
-  h1, h2 {
-    margin: 0
-  }
-  h1, .text--large {
-    /* stylelint-disable-next-line */
-    font-size: 2.6rem !important
-  }
-  h2, .text--small {
-    /* stylelint-disable-next-line */
-    font-size: 1.6rem !important
-  }
-  i {
-    /* stylelint-disable-next-line */
-    color: var(--base) !important
-  }
-  .demo_banner {
+
+  /* System state */
+  .top_banner {
     z-index: 11;
     position: fixed;
     top: 0;
@@ -120,13 +108,15 @@
     padding: .1rem;
     background-color: var(--base)
   }
-  .demo_banner a {
+  .top_banner :is(a, p) {
     display: block;
     color: var(--fore)
   }
   .notAuth {
     margin: 0
   }
+
+  /* SVG colors */
   svg path {
     fill: var(--base)
   }
@@ -135,32 +125,8 @@
     stroke: var(--base)
   }
 
-  /* Show HTML */
-  .show_html > div,
-  .show_html > p {
-    margin: .6rem 0
-  }
-  .show_html img {
-    border-radius: 10px;
-    max-width: 80%;
-    margin: 1rem 0
-  }
-  .show_html input[type='checkbox'] {
-    margin: .4rem
-  }
-  .show_html a {
-    color: var(--link)
-  }
-
   /* Containers */
-  #home,
-  #client,
-  #account,
-  #archive,
-  #logout,
-  #templates,
-  #client-plan,
-  #portfolio {
+  .view_container {
     background-color: var(--back);
     padding: 2rem 10vw
   }
@@ -180,7 +146,7 @@
     padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
     top: 0;
     left: 0;
-    z-index: 5;
+    z-index: 11;
     height: 100%;
     width: 100%;
     overflow-x: auto
@@ -198,45 +164,38 @@
     line-height: 1.65
   }
 
-  /* Modals */
-  div.vm--modal {
-    /* stylelint-disable-next-line */
-    left: 0!important;
-    min-width: 100%;
-    overflow-y: auto;
-    background-color: var(--back)
-  }
-  div.vm--modal > div:not(#policy_agreement),
-  div.vm--modal > form {
-    padding: 2rem;
-    display: flex;
-    height: 100%
-  }
-  .center_wrapped {
-    margin: auto;
-    width: 500px
-  }
-
   /* Fonts */
-  h3 {
-    font-size: 2rem;
-    line-height: 1.2
-  }
-  p {
+  h1, h2, p {
     margin: 0
   }
-  .text--error, a.text--red {
-    color: rgb(184, 0, 0)
+  h1, .text--large {
+    /* stylelint-disable-next-line */
+    font-size: 2.6rem !important
+  }
+  h2, .text--small {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important
+  }
+  h3 {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important;
+    line-height: 1.2
+  }
+  i {
+    /* stylelint-disable-next-line */
+    color: var(--base) !important
+  }
+  .text--red {
+    /* stylelint-disable-next-line */
+    color: rgb(184, 0, 0) !important
   }
   .text--holder {
     margin: 2rem 0 8rem 0
   }
   .text--name {
     text-overflow: ellipsis;
-    white-space: nowrap
+    overflow-wrap: anywhere
   }
-  .text--date,
-  .text--checked,
   .text--tiny {
     font-size: .8rem
   }
@@ -318,7 +277,7 @@
     opacity: var(--light_opacity)
   }
   button:active:not(:disabled) {
-    transform: scale(.96)
+    transform: var(--active_state)
   }
   button:focus {
     box-shadow: 0 0 0 4px var(--base_light)
@@ -386,10 +345,6 @@
   select.width_300 {
     width: 300px
   }
-  .search {
-    width: 100%;
-    margin-bottom: 2rem
-  }
   input[type=color] {
     margin: 0 .4rem;
     background-color: transparent;
@@ -398,17 +353,27 @@
     cursor: pointer;
     transition: var(--transition_standard)
   }
+  option {
+    background-color: var(--fore)
+  }
+  .search {
+    width: 100%;
+    margin-bottom: 2rem
+  }
+  .input_section {
+    display: grid;
+    grid-gap: 1rem;
+    margin: 2rem 0
+  }
   ::placeholder {
     color: var(--base_light);
     opacity: 1; /* Firefox */
-  }
-  option {
-    background-color: var(--fore)
   }
 
   /* Forms */
   .form_grid {
     display: grid;
+    grid-auto-rows: max-content;
     grid-gap: 2rem
   }
   .form_grid button {
@@ -428,7 +393,7 @@
     opacity: var(--light_opacity)
   }
   .logo_link:active {
-    transform: scale(.9)
+    transform: var(--active_state)
   }
 
   /* Tab options */
@@ -487,6 +452,22 @@
     font-size: .6rem
   }
 
+  /* Loading bar */
+  #nprogress .bar {
+    /* stylelint-disable-next-line */
+    background-color: var(--base) !important
+  }
+  #nprogress .peg {
+    /* stylelint-disable-next-line */
+    box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
+  }
+  #nprogress .spinner-icon {
+    /* stylelint-disable-next-line */
+    border-top-color: var(--base) !important;
+    /* stylelint-disable-next-line */
+    border-left-color: var(--base) !important
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar {
     width: 10px;
@@ -503,34 +484,22 @@
   }
 
   /* Archive and Home */
-  .container--clients {
+  .clients_container {
     display: grid;
     grid-gap: 2rem;
     margin-bottom: 2rem
   }
-  .client_container p {
-    margin: 0
-  }
-
-  /* Plan links container */
   .client_link_wrapper {
     text-decoration: none
   }
 
-  /* Client-side */
-  .container--session-control {
-    display: flex;
-    justify-content: space-between
-  }
-  .session-counter {
-    align-self: center;
-    font-size: 1rem
-  }
-
-  /* Responsiveness */
+  /* 992 touchscreens */
   @media (max-width: 992px) {
-    /* Hover */
-    *:hover {
+    /* States */
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
+    select:not(:focus):hover,
+    textarea:not(:focus):hover,
+    button:hover:not(:disabled) {
       opacity: 1
     }
 
@@ -562,18 +531,12 @@
     main {
       margin: 0
     }
-    #home,
-    #client,
-    #account,
-    #archive,
-    #logout,
-    #templates,
-    #client-plan,
-    #portfolio {
+    .view_container {
       padding: 2rem 5vw 5rem 5vw
     }
   }
 
+  /* 576 Mobiles */
   @media (max-width: 576px) {
     /* Elements */
     ::-webkit-scrollbar {
@@ -603,59 +566,40 @@
     .form_grid button {
       width: 100%
     }
+
+    /* Inputs */
+    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
+    select.width_300 {
+      width: 100%
+    }
   }
 
-  /* REDUCED MOTION */
+  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    button:active,
-    .button:active {
-      transform: scale(1)
+    :root {
+      --transition_standard: none
     }
-    .search,
-    .client_container > a:before,
-    .icon--expand,
-    .tab_option,
-    .icon_open--stats,
-    .icon_open--new_client,
-    .icon_open--install_PWA,
-    .icon_open--new_plan {
+    * {
       transition: none
-    }
-    #sidebar {
-      width: 12rem
-    }
-    .nav_item__text {
-      opacity: 1
     }
     .fadeIn, .fadeOut {
       animation: none
     }
-  }
-
-  /* Progress */
-  #nprogress .bar {
-    /* stylelint-disable-next-line */
-    background-color: var(--base) !important
-  }
-  #nprogress .peg {
-    /* stylelint-disable-next-line */
-    box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
-  }
-  #nprogress .spinner-icon {
-    /* stylelint-disable-next-line */
-    border-top-color: var(--base) !important;
-    /* stylelint-disable-next-line */
-    border-left-color: var(--base) !important
   }
 </style>
 
 <template>
   <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
-    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="demo_banner">
+    <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="top_banner fadeIn">
       <a href="https://traininblocks.com/#pricing" target="_blank" class="a_link text--tiny">
         Demo account: click here to sign up
       </a>
+    </div>
+    <div v-else-if="!connected" class="top_banner fadeIn">
+      <p class="text--tiny">
+        Offline mode: we will sync your data when you reconnect
+      </p>
     </div>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <response-pop-up ref="response_pop_up" />
@@ -666,27 +610,11 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <global-overlay ref="overlay" />
     </transition>
-    <modal name="error" height="100%" width="100%" :adaptive="true" :click-to-close="false">
-      <div class="modal--error">
-        <div class="center_wrapped">
-          <p v-text="errorMsg" />
-          <p v-if="errorMsg !== 'You are using the demo account. Your changes cannot be saved.' && errorMsg !== 'Error: Network Error'" class="grey">
-            This problem has been reported to our developers
-          </p>
-          <p v-if="errorMsg === 'Error: Network Error'">
-            You're probably offline. We'll try that request again once you're back online
-          </p>
-          <br>
-          <button class="red_button" @click="$modal.hide('error'), will_body_scroll(true)">
-            Close
-          </button>
-        </div>
-      </div>
-    </modal>
-    <modal name="agreement" height="100%" width="100%" :adaptive="true" :click-to-close="false">
+    <div v-if="showEULA" class="tab_overlay_content fadeIn delay fill_mode_both">
       <policy :type="claims.user_type" />
-    </modal>
+    </div>
     <nav-bar :authenticated="authenticated" :claims="claims" />
+    <div :class="{ opened_sections: showEULA }" class="section_overlay" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
         <router-view :key="$route.fullPath" />
@@ -747,9 +675,9 @@ export default {
 
       policyVersion: '1.1',
       versionName: 'Pegasus',
-      versionBuild: '3.2.3',
+      versionBuild: '3.2.4',
       newBuild: false,
-      errorMsg: null,
+      showEULA: false,
       loading: false,
       dontLeave: false,
       silent_loading: false,
@@ -829,8 +757,7 @@ export default {
     }
     this.$axios.interceptors.request.use((config) => {
       if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
-        self.errorMsg = 'You are using the demo account. Your changes cannot be saved.'
-        self.$modal.show('error')
+        self.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
         self.will_body_scroll(false)
         self.loading = false
         self.dontLeave = false
@@ -856,6 +783,7 @@ export default {
       }
     },
     darkmode (mode) {
+      const matchedMedia = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
         document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
         document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
@@ -869,9 +797,9 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-      } else if (mode === 'system' && window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+      } else if (mode === 'system' && (matchedMedia === false ? false : matchedMedia.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
           this.darkmode(e.matches ? 'dark' : 'light')
         })
       } else {
@@ -913,10 +841,10 @@ export default {
         this.darkmode(this.claims.theme)
         if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
-          this.$modal.show('agreement')
+          this.showEULA = true
         } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
-          this.$modal.show('agreement')
+          this.showEULA = true
         }
       }
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
@@ -965,8 +893,7 @@ export default {
         )
       }
       this.end_loading()
-      this.errorMsg = msg.toString()
-      this.$modal.show('error')
+      this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
       this.will_body_scroll(false)
       console.error(msg)
     },
