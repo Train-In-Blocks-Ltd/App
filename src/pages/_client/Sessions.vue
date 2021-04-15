@@ -905,7 +905,13 @@
               <h1 class="bottom_margin">
                 Statistics
               </h1>
-              <inline-svg v-if="isStatsOpen" class="icon--options" :src="require('../../assets/svg/close.svg')" aria-label="Close" @click="isStatsOpen = false, will_body_scroll(true)" />
+              <inline-svg
+                v-if="isStatsOpen"
+                class="icon--options"
+                :src="require('../../assets/svg/close.svg')"
+                aria-label="Close"
+                @click="isStatsOpen = false, will_body_scroll(true)"
+              />
             </div>
             <div class="container--content">
               <div class="data-options">
@@ -982,7 +988,7 @@
                   </div>
                 </div>
               </div>
-              <div v-show="protocolError.length !== 0" class="protocol_error">
+              <div v-show="protocolErrors.length !== 0" class="protocol_error">
                 <p class="text--red">
                   ERROR: Please check that the following exercises and measurements are using the correct format.
                 </p>
@@ -994,7 +1000,7 @@
                     <th>Protocol</th>
                   </tr>
                   <tr
-                    v-for="(error, errorIndex) in protocolError"
+                    v-for="(error, errorIndex) in protocolErrors"
                     :key="`protocol_error_${errorIndex}`"
                     class="text--red"
                   >
@@ -1008,7 +1014,7 @@
               <simple-chart
                 v-if="!dataToVisualise.includes(null) && dataToVisualise !== []"
                 :data-points="dataToVisualise"
-                :labels="labelValues"
+                :labels="labelsToVisualise"
                 :reset="resetGraph"
                 aria-label="Graph"
                 class="fadeIn"
@@ -1128,9 +1134,9 @@ export default {
       // Regex data
 
       dataToVisualise: [],
-      labelValues: [],
-      dataPacketStore: [],
-      protocolError: [],
+      labelsToVisualise: [],
+      sessionDataPackets: [],
+      protocolErrors: [],
 
       // CALENDAR
 
@@ -1620,22 +1626,22 @@ export default {
         }
       }
       this.dataToVisualise = []
-      this.labelValues = []
-      this.protocolError = []
+      this.labelsToVisualise = []
+      this.protocolErrors = []
       let extractedSessionProtocols = []
-      this.dataPacketStore.forEach((session) => {
+      this.sessionDataPackets.forEach((session) => {
         extractedSessionProtocols = []
         session.forEach((exerciseDataPacket) => {
           const EXERCISE_NAME = this.selectedDataName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')
           const REGEX = RegExp(EXERCISE_NAME, 'gi')
           if (REGEX.test(exerciseDataPacket[1])) {
-            this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
+            this.labelsToVisualise.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             this.showDataTypeSelector = exerciseDataPacket[2].includes('x')
             this.showLoadsVolumeOptions = exerciseDataPacket[2].includes('at')
             this.selectedDataType = !this.showLoadsVolumeOptions && (this.selectedDataType === 'Load' || this.selectedDataType === 'Volume') ? 'Sets' : this.selectedDataType
             const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket[2].includes('x') ? this.selectedDataType : 'Other')
             if (isNaN(DATA_POINT.calculate)) {
-              this.protocolError.push({
+              this.protocolErrors.push({
                 sessionName: exerciseDataPacket[0],
                 sessionDate: exerciseDataPacket[3],
                 exerciseName: exerciseDataPacket[1],
@@ -1672,7 +1678,7 @@ export default {
       })
       if (this.selectedDataName === 'Plan Overview') {
         for (let x = 1; x <= this.dataToVisualise.length; x++) {
-          this.labelValues.push(['Session ' + x])
+          this.labelsToVisualise.push(['Session ' + x])
         }
       }
       this.resetGraph += 1
@@ -1739,9 +1745,9 @@ export default {
       }
     },
     scan () {
-      this.dataPacketStore.length = 0
-      this.sessionDates.length = 0
       const PLAN = this.helper('match_plan')
+      this.sessionDataPackets = []
+      this.sessionDates = []
       this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
       this.maxWeek = PLAN.duration
       if (PLAN.sessions && !this.noSessions) {
@@ -1755,14 +1761,14 @@ export default {
             session_id: object.id
           })
           if (object.notes !== null) {
-            this.dataPacketStore.push(this.pull_protocols(object.name, object.notes, object.date))
+            this.sessionDataPackets.push(this.pull_protocols(object.name, object.notes, object.date))
           }
         })
 
         // Appends the options to the select
-        if (this.dataPacketStore !== null) {
+        if (this.sessionDataPackets !== null) {
           this.optionsForDataName = new Set()
-          for (const SESSION of this.dataPacketStore) {
+          for (const SESSION of this.sessionDataPackets) {
             for (const DATA_PACKET of SESSION) {
               const CASED_ITEM = this.proper_case(DATA_PACKET[1])
               this.optionsForDataName.add(DATA_PACKET[2].includes('at') ? CASED_ITEM : DATA_PACKET[1])
