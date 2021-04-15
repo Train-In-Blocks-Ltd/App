@@ -900,8 +900,15 @@
                         name="measure"
                         @change="sort_sessions(plan), scan(), selection()"
                       >
-                        <option v-for="optionName in optionsForDataName" :key="'M' + optionName.id" :value="optionName.value">
-                          {{ optionName.text }}
+                        <option value="Plan Overview">
+                          Plan Overview
+                        </option>
+                        <option
+                          v-for="(optionName, optionIndex) in optionsForDataName"
+                          :key="`data_option_${optionIndex}`"
+                          :value="optionName"
+                        >
+                          {{ optionName }}
                         </option>
                       </select>
                     </label>
@@ -911,6 +918,7 @@
                       Data type:<br>
                       <select
                         v-model="selectedDataType"
+                        id="data_type_selector"
                         class="small_border_radius width_300 text--small"
                         name="measure-type"
                         @change="sort_sessions(plan), scan(), selection()"
@@ -937,45 +945,20 @@
                     </label>
                   </div>
                 </div>
-                <div v-if="showDataTypeSelector && descData.total.desc && !dataToVisualise.includes(null)" class="data-desc">
-                  <div class="container--data-desc">
+                <div
+                  v-if="showDataTypeSelector && !dataToVisualise.includes(null)"
+                  class="data-desc"
+                >
+                  <div
+                    v-for="(desc, descIndex) in descData"
+                    :key="`desc_option_${descIndex}`"
+                    class="container--data-desc"
+                  >
                     <p class="data-desc__desc">
-                      <b>{{ descData.total.desc }}</b>
+                      <b>{{ desc[0] }} {{ selectedDataType }}</b>
                     </p>
                     <p class="data-desc__value">
-                      {{ descData.total.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      <b>{{ descData.average.desc }}</b>
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.average.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      <b>{{ descData.max.desc }}</b>
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.max.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      <b>{{ descData.min.desc }}</b>
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.min.value }}
-                    </p>
-                  </div>
-                  <div class="container--data-desc">
-                    <p class="data-desc__desc">
-                      {{ descData.change.desc }}
-                    </p>
-                    <p class="data-desc__value">
-                      {{ descData.change.value }}
+                      {{ desc[1] }}
                     </p>
                   </div>
                 </div>
@@ -1070,16 +1053,10 @@ export default {
 
       // STATS
 
-      descData: {
-        total: '',
-        average: '',
-        max: '',
-        min: '',
-        change: ''
-      },
+      descData: [],
       showLoadsVolumeOptions: false,
       selectedDataName: 'Plan Overview',
-      optionsForDataName: [],
+      optionsForDataName: new Set(),
       selectedDataType: 'Sets',
       showDataTypeSelector: true,
       isStatsOpen: false,
@@ -1608,11 +1585,6 @@ export default {
           return returnValue
         }
       }
-      this.descData.total = ''
-      this.descData.average = ''
-      this.descData.max = ''
-      this.descData.min = ''
-      this.descData.change = ''
       this.dataToVisualise = []
       this.labelValues = []
       this.protocolError = []
@@ -1626,6 +1598,7 @@ export default {
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
             this.showDataTypeSelector = exerciseDataPacket[2].includes('x') && this.protocolError.length === 0
             this.showLoadsVolumeOptions = exerciseDataPacket[2].includes('at') && this.protocolError.length === 0
+            this.selectedDataType = !this.showLoadsVolumeOptions && (this.selectedDataType === 'Load' || this.selectedDataType === 'Volume') ? 'Sets' : this.selectedDataType
             const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket[2].includes('x') ? this.selectedDataType : 'Other')
             this.dataToVisualise.push(DATA_POINT.calculate)
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
@@ -1634,9 +1607,24 @@ export default {
             extractedSessionProtocols.push(DATA_POINT.calculate)
           }
         })
+
+        // Sums for Plan Overview
         if (extractedSessionProtocols.length !== 0) {
           this.dataToVisualise.push(extractedSessionProtocols.reduce((a, b) => a + b))
-          this.desc_stats(this.selectedDataType)
+        }
+
+        // Populates descriptive stats
+        if (this.dataToVisualise.length !== 0) {
+          const SUM = this.dataToVisualise.reduce((a, b) => a + b)
+          const MAX = Math.max(...this.dataToVisualise)
+          const MIN = Math.min(...this.dataToVisualise)
+          this.descData = [
+            ['Total', SUM],
+            ['Average', (SUM / this.dataToVisualise.length).toFixed(1)],
+            ['Maximum', MAX],
+            ['Minimum', MIN],
+            ['Percentage Change', (((MAX / MIN) - 1) * 100).toFixed(1)]
+          ]
         }
       })
       if (this.selectedDataName === 'Plan Overview') {
@@ -1727,84 +1715,21 @@ export default {
             this.dataPacketStore.push(this.pull_protocols(object.name, object.notes, object.date))
           }
         })
+
         // Appends the options to the select
         if (this.dataPacketStore !== null) {
-          this.dropdown_init()
+          this.optionsForDataName = new Set()
+          for (const session of this.dataPacketStore) {
+            for (const dataPacket of session) {
+              const CASED_ITEM = this.proper_case(dataPacket[1])
+              this.optionsForDataName.add(dataPacket[2].includes('at') ? CASED_ITEM : dataPacket[1])
+            }
+          }
           this.selection()
         }
       }
       this.forceUpdate += 1
       this.check_for_week_sessions()
-    },
-
-    // Init the dropdown selection with validation
-    dropdown_init () {
-      this.optionsForDataName = [{ id: 0, text: 'Plan Overview', value: 'Plan Overview' }]
-      const TEMPORARY_ITEM_STORE = []
-      const TEMPORARY_ITEM_STORE_LATE = []
-      let continueValue = 0
-      this.dataPacketStore.forEach((item) => {
-        item.forEach((exerciseDataPacket) => {
-          const TIDY_A = exerciseDataPacket[1].replace(/\(/g, '\\(')
-          const TIDY_B = TIDY_A.replace(/\)/g, '\\)')
-          const REGEX = RegExp(TIDY_B, 'gi')
-          const CASED_ITEM = this.proper_case(exerciseDataPacket[1])
-          if (!REGEX.test(TEMPORARY_ITEM_STORE) && exerciseDataPacket[2].includes('at')) {
-            TEMPORARY_ITEM_STORE.push(CASED_ITEM)
-          }
-          if (!REGEX.test(TEMPORARY_ITEM_STORE_LATE) && !exerciseDataPacket[2].includes('at')) {
-            TEMPORARY_ITEM_STORE_LATE.push(exerciseDataPacket[1])
-          }
-        })
-      })
-      TEMPORARY_ITEM_STORE.forEach((item, index) => {
-        continueValue = index + 1
-        this.optionsForDataName.push({
-          id: continueValue,
-          text: item,
-          value: item
-        })
-      })
-      TEMPORARY_ITEM_STORE_LATE.forEach((item, index) => {
-        this.optionsForDataName.push({
-          id: continueValue + index + 1,
-          text: item,
-          value: item
-        })
-      })
-    },
-
-    desc_stats (selectedDataType) {
-      let storeMax = 0
-      let store = 0
-      const SUM = this.dataToVisualise.reduce((a, b) => a + b)
-      this.descData.total = {
-        desc: `Total ${selectedDataType}: `,
-        value: SUM
-      }
-      this.descData.average = {
-        desc: `Average ${selectedDataType}: `,
-        value: (SUM / this.dataToVisualise.length).toFixed(1)
-      }
-      this.dataToVisualise.forEach((value) => {
-        storeMax = Math.max(storeMax, value)
-      })
-      this.descData.max = {
-        desc: `Maximum ${selectedDataType}: `,
-        value: storeMax
-      }
-      store = storeMax
-      this.dataToVisualise.forEach((value) => {
-        store = Math.min(store, value)
-      })
-      this.descData.min = {
-        desc: `Minimum ${selectedDataType}: `,
-        value: store
-      }
-      this.descData.change = {
-        desc: 'Percentage Change: ',
-        value: (((storeMax / store) - 1) * 100).toFixed(1) + '%'
-      }
     },
 
     // DATABASE
