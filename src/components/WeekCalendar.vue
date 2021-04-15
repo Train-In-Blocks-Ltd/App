@@ -36,7 +36,8 @@
   .day_events__event {
     padding: .6rem 1rem;
     border-radius: 8px;
-    border: 3px solid transparent
+    border: 3px solid transparent;
+    overflow-wrap: anywhere
   }
   .showBorder {
     border: 3px solid var(--base)

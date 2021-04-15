@@ -186,14 +186,15 @@
     color: var(--base) !important
   }
   .text--red {
-    color: rgb(184, 0, 0)
+    /* stylelint-disable-next-line */
+    color: rgb(184, 0, 0) !important
   }
   .text--holder {
     margin: 2rem 0 8rem 0
   }
   .text--name {
     text-overflow: ellipsis;
-    white-space: nowrap
+    overflow-wrap: anywhere
   }
   .text--tiny {
     font-size: .8rem
@@ -892,7 +893,7 @@ export default {
         )
       }
       this.end_loading()
-      this.$refs.response_pop_up.show('Error: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
+      this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
       this.will_body_scroll(false)
       console.error(msg)
     },

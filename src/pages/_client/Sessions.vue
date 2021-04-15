@@ -294,8 +294,22 @@
     margin: .4rem 0 2rem 0;
     font-size: 2.4rem
   }
+
+  /* Protocol error table */
   .protocol_error {
+    display: grid;
+    grid-gap: 1rem;
     margin-top: 4rem
+  }
+  .protocol_error table :is(th, td) {
+    padding: .6rem 0
+  }
+  .protocol_error table th {
+    text-align: left;
+    border-bottom: 1px solid rgb(184, 0, 0)
+  }
+  .protocol_error table td {
+    overflow-wrap: anywhere
   }
 
   @media (max-width: 992px) {
@@ -351,6 +365,11 @@
     .button--new-session {
       width: 100%;
       margin: 2rem 0
+    }
+
+    /* Protocol error */
+    .protocol_error * {
+      font-size: .8rem
     }
   }
 </style>
@@ -917,8 +936,8 @@
                     <label for="measure-type">
                       Data type:<br>
                       <select
-                        v-model="selectedDataType"
                         id="data_type_selector"
+                        v-model="selectedDataType"
                         class="small_border_radius width_300 text--small"
                         name="measure-type"
                         @change="sort_sessions(plan), scan(), selection()"
@@ -963,16 +982,31 @@
                   </div>
                 </div>
               </div>
-              <div class="protocol_error">
-                <p v-show="protocolError.length !== 0" class="text--red">
-                  There are some problems with your tracked exercises. Please check that the following measurements/exercises are using the correct format.
+              <div v-show="protocolError.length !== 0" class="protocol_error">
+                <p class="text--red">
+                  ERROR: Please check that the following exercises and measurements are using the correct format.
                 </p>
-                <p v-for="(error, indexer) in protocolError" v-show="protocolError.length !== 0" :key="indexer" class="text--red">
-                  <b>{{ error.prot }} for {{ error.exercise }} from {{ error.sessionName }}</b>
-                </p>
+                <table>
+                  <tr class="text--red">
+                    <th>Session</th>
+                    <th>Date</th>
+                    <th>Exercise</th>
+                    <th>Protocol</th>
+                  </tr>
+                  <tr
+                    v-for="(error, errorIndex) in protocolError"
+                    :key="`protocol_error_${errorIndex}`"
+                    class="text--red"
+                  >
+                    <td>{{ error.sessionName }}</td>
+                    <td>{{ error.sessionDate }}</td>
+                    <td>{{ error.exerciseName }}</td>
+                    <td>{{ error.protocol }}</td>
+                  </tr>
+                </table>
               </div><br>
               <simple-chart
-                v-if="!dataToVisualise.includes(null)"
+                v-if="!dataToVisualise.includes(null) && dataToVisualise !== []"
                 :data-points="dataToVisualise"
                 :labels="labelValues"
                 :reset="resetGraph"
@@ -1596,11 +1630,20 @@ export default {
           const REGEX = RegExp(EXERCISE_NAME, 'gi')
           if (REGEX.test(exerciseDataPacket[1])) {
             this.labelValues.push([exerciseDataPacket[0], exerciseDataPacket[3]])
-            this.showDataTypeSelector = exerciseDataPacket[2].includes('x') && this.protocolError.length === 0
-            this.showLoadsVolumeOptions = exerciseDataPacket[2].includes('at') && this.protocolError.length === 0
+            this.showDataTypeSelector = exerciseDataPacket[2].includes('x')
+            this.showLoadsVolumeOptions = exerciseDataPacket[2].includes('at')
             this.selectedDataType = !this.showLoadsVolumeOptions && (this.selectedDataType === 'Load' || this.selectedDataType === 'Volume') ? 'Sets' : this.selectedDataType
             const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket[2].includes('x') ? this.selectedDataType : 'Other')
-            this.dataToVisualise.push(DATA_POINT.calculate)
+            if (isNaN(DATA_POINT.calculate)) {
+              this.protocolError.push({
+                sessionName: exerciseDataPacket[0],
+                sessionDate: exerciseDataPacket[3],
+                exerciseName: exerciseDataPacket[1],
+                protocol: exerciseDataPacket[2]
+              })
+            } else {
+              this.dataToVisualise.push(DATA_POINT.calculate)
+            }
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
             this.showDataTypeSelector = true
             const DATA_POINT = new DataPoint(exerciseDataPacket, this.selectedDataType)
