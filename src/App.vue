@@ -165,21 +165,20 @@
   }
 
   /* Fonts */
-  h1, h2, p {
+  h1, h2, h3, p {
     margin: 0
   }
   h1, .text--large {
     /* stylelint-disable-next-line */
     font-size: 2.6rem !important
   }
-  h2, .text--small {
+  h2 {
+    /* stylelint-disable-next-line */
+    font-size: 2.6rem !important
+  }
+  h3, .text--small {
     /* stylelint-disable-next-line */
     font-size: 1.6rem !important
-  }
-  h3 {
-    /* stylelint-disable-next-line */
-    font-size: 1.6rem !important;
-    line-height: 1.2
   }
   i {
     /* stylelint-disable-next-line */

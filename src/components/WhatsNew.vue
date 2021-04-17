@@ -28,12 +28,12 @@ img {
 
 <template>
   <div class="bottom_margin">
-    <h1>
+    <h2>
       What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
-    </h1>
-    <h2 class="grey">
-      Dark mode, new styles, and bug fixes
     </h2>
+    <h3 class="grey">
+      Dark mode, new styles, and bug fixes
+    </h3>
     <br><br>
     <div class="update_wrapper">
       <div
@@ -42,9 +42,9 @@ img {
         class="update_item"
       >
         <img v-if="item.img" :src="require(`../assets/whats-new/${item.img}`)" :alt="item.title">
-        <h2>
+        <h3>
           {{ item.title }}
-        </h2>
+        </h3>
         <p class="grey">
           {{ item.desc }}
         </p>

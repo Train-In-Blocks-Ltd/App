@@ -55,9 +55,9 @@ textarea {
           :aria-label="input.label"
           @input="calculate(tool.id)"
         >
-        <h2 class="result">
+        <h3 class="result">
           {{ tool.metric }}: {{ result || '_____' }} <span v-html="tool.units" />
-        </h2>
+        </h3>
       </div>
     </div>
     <button

@@ -66,9 +66,9 @@
       :class="{ editorActive: editingPortfolio }"
       class="editor_object portfolio_editor"
     >
-      <h2>
+      <h3>
         Portfolio
-      </h2>
+      </h3>
       <rich-editor
         :html-injection.sync="$parent.portfolio.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"

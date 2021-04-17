@@ -1,9 +1,9 @@
 <template>
   <form class="form_grid add_plan" name="add_plan" @submit.prevent="create_plan(), $parent.isNewPlanOpen = false, will_body_scroll(true)">
     <div class="bottom_margin">
-      <h2>
+      <h3>
         Create a new plan and use it for exercise, nutrition or anything else
-      </h2>
+      </h3>
       <p class="grey">
         The duration is the microcycle which can be of any length
       </p>

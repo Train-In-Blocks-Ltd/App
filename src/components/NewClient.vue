@@ -17,9 +17,9 @@
     @submit.prevent="save(), $parent.isNewClientOpen = false, will_body_scroll(true)"
   >
     <div class="bottom_margin">
-      <h2>
+      <h3>
         Add a new client and email them access
-      </h2>
+      </h3>
       <p class="grey">
         Make sure that you have the correct email address, you won't be able to change it after
       </p>

@@ -80,14 +80,14 @@
   <div id="client_side_plan" class="view_container">
     <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id" class="client_plan">
-        <h1 class="plan_name">
+        <h2 class="plan_name">
           {{ plan.name }}
-        </h1>
+        </h2>
         <div class="plan_notes">
           <div class="plan_notes__header">
-            <h2 class="bottom_margin">
+            <h3 class="bottom_margin">
               Plan Notes
-            </h2>
+            </h3>
           </div>
           <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_html fadeIn" v-html="update_html(plan.notes, true)" />
           <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_html grey">
@@ -183,9 +183,9 @@
             </div>
             <div v-if="session.checked === 1">
               <hr>
-              <h2>
+              <h3>
                 Feedback
-              </h2>
+              </h3>
               <rich-editor
                 :item-id="session.id"
                 :editing="feedbackId"
@@ -198,9 +198,9 @@
           </div>
         </div>
         <div v-else>
-          <h2>
+          <h3>
             No sessions yet
-          </h2>
+          </h3>
           <p class="grey">
             Please contact your trainer or coach for more details
           </p>

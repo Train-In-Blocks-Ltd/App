@@ -111,9 +111,9 @@ button.red_button {
         class="plan"
       >
         <div class="plan_header">
-          <h2>
+          <h3>
             {{ plan.name }}
-          </h2>
+          </h3>
           <div class="plan_header__options">
             <div class="plan_a_links">
               <router-link

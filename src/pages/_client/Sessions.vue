@@ -382,9 +382,9 @@
       class="tab_overlay_content fadeIn delay fill_mode_both"
       @submit.prevent="move_to_week(), showMove = false, will_body_scroll(true)"
     >
-      <h2>
+      <h3>
         Move to a different microcycle
-      </h2>
+      </h3>
       <p class="grey">
         This will change the colour code assigned to the sessions
       </p>
@@ -414,9 +414,9 @@
       class="tab_overlay_content fadeIn delay fill_mode_both"
       @submit.prevent="shift_across(), showShift = false, will_body_scroll(true)"
     >
-      <h2>
+      <h3>
         Shift the dates of the sessions
-      </h2>
+      </h3>
       <p class="grey">
         This will move the dates ahead or behind by the specified amount
       </p>
@@ -441,9 +441,9 @@
     </form>
     <div v-if="showCopyAcross" class="tab_overlay_content fadeIn delay fill_mode_both">
       <form v-if="copyAcrossPage === 0" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
-        <h2>
+        <h3>
           Copy across to different microcycles
-        </h2>
+        </h3>
         <p class="grey">
           Progress each session in just a few clicks
         </p>
@@ -509,9 +509,9 @@
             v-show="copyAcrossView === exerciseGroupIndex"
             :key="`exercise_${singleRepsIndex}_${exerciseGroupIndex}`"
           >
-            <h2>
+            <h3>
               {{ protocol[1][exerciseGroupIndex][0] }}
-            </h2>
+            </h3>
             <p class="grey">
               {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
             </p>
@@ -547,9 +547,9 @@
         </form>
       </div>
       <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), showCopyAcross = false, will_body_scroll(true)">
-        <h2>
+        <h3>
           You're all set
-        </h2>
+        </h3>
         <p class="grey">
           Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
         </p><br>
@@ -566,9 +566,9 @@
       class="tab_overlay_content fadeIn delay fill_mode_both"
       @submit.prevent="duplicate_plan(duplicateClientID), showDuplicate = false, will_body_scroll(true)"
     >
-      <h2>
+      <h3>
         Create a similar plan
-      </h2>
+      </h3>
       <p class="grey">
         Copy this plan to the same/different client
       </p><br>
@@ -692,9 +692,9 @@
               :class="{ editorActive: editingPlanNotes }"
               class="editor_object"
             >
-              <h2>
+              <h3>
                 Plan Notes
-              </h2>
+              </h3>
               <rich-editor
                 :html-injection.sync="plan.notes"
                 :item-id="'plan_notes'"
@@ -732,9 +732,9 @@
           <div class="wrapper-plan">
             <div class="plan_table">
               <div class="plan_table__header">
-                <h2>
+                <h3>
                   Microcycles
-                </h2>
+                </h3>
                 <div class="wrapper-duration">
                   <label for="duration">Duration: </label>
                   <input
@@ -902,9 +902,9 @@
           </div>
           <div v-if="isStatsOpen" class="graph fadeIn delay fill_mode_both">
             <div class="section--top">
-              <h1 class="bottom_margin">
+              <h2 class="bottom_margin">
                 Statistics
-              </h1>
+              </h2>
               <inline-svg
                 v-if="isStatsOpen"
                 class="icon--options"
@@ -1272,7 +1272,7 @@ export default {
       })
       PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          NOTES_ARR.push(`<div class="session"><h1>${session.name}</h1><h2>${session.date}</h2><br>${this.update_html(session.notes, true)}</div>`)
+          NOTES_ARR.push(`<div class="session"><h2>${session.name}</h2><h3>${session.date}</h3><br>${this.update_html(session.notes, true)}</div>`)
         }
       })
       const NEW_WINDOW = window.open()

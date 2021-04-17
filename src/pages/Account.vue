@@ -90,12 +90,12 @@
       @submit.prevent="change_password()"
     >
       <div>
-        <h1>
+        <h2>
           Stay safe
-        </h1>
-        <h2 class="grey">
-          Reset your password
         </h2>
+        <h3 class="grey">
+          Reset your password
+        </h3>
       </div>
       <input
         ref="pass"
@@ -107,9 +107,9 @@
         required
       >
       <div>
-        <h2>
+        <h3>
           Requirements
-        </h2>
+        </h3>
         <p class="grey">
           Number (0-9)
         </p>
@@ -195,9 +195,9 @@
         </select>
       </div>
       <div class="privacy">
-        <h2>
+        <h3>
           Your Privacy and Data
-        </h2>
+        </h3>
         <p>You can find more information about our policies below:</p>
         <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
         <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>

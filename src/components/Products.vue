@@ -54,9 +54,9 @@
         <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
       </div>
     </transition>
-    <h1>
+    <h2>
       Products
-    </h1>
+    </h2>
     <div class="option_bar">
       <button>
         New product
@@ -77,9 +77,9 @@
         class="product"
       >
         <div class="header">
-          <h2>
+          <h3>
             {{ product.name }}
-          </h2>
+          </h3>
           <checkbox :item-id="product.id" :type="'v1'" aria-label="Select this product" />
         </div>
         <p>

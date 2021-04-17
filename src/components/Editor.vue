@@ -386,9 +386,9 @@ div#rich_editor.editorFocused {
             placeholder="Search templates"
             @input="isSearchEmpty()"
           >
-          <h2 v-show="search === ''">
+          <h3 v-show="search === ''">
             System templates
-          </h2>
+          </h3>
           <button
             v-for="(example, exampleIndex) in exampleTemplates"
             v-show="search === ''"
@@ -398,9 +398,9 @@ div#rich_editor.editorFocused {
           >
             {{ example.name }}
           </button>
-          <h2>
+          <h3>
             Your templates
-          </h2>
+          </h3>
           <button
             v-for="(item, index) in dataForTemplates"
             v-show="((!search) || ((item.name).toLowerCase()).startsWith(search.toLowerCase()))"

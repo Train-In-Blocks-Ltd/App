@@ -116,9 +116,9 @@
 <template>
   <div id="calendar_view">
     <div class="calendar_header">
-      <h1>
+      <h2>
         {{ get_month(thisWeek[0].date_split[1]) }} {{ thisWeek[0].date_split[0] }}
-      </h1>
+      </h2>
       <div class="calendar_header__bar">
         <inline-svg
           :src="require('../assets/svg/arrow.svg')"
@@ -147,9 +147,9 @@
         class="day_container"
       >
         <div class="day_header">
-          <h2>
+          <h3>
             {{ get_day(index) }}
-          </h2>
+          </h3>
           <p class="text--small grey">
             {{ day.date_split[2] }}
           </p>

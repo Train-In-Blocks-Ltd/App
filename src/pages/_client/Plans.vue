@@ -75,9 +75,9 @@
     </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
     <div id="client_notes" :class="{ editorActive: editingClientNotes }" class="editor_object">
-      <h2>
+      <h3>
         Client Information
-      </h2>
+      </h3>
       <rich-editor
         :html-injection.sync="$parent.$parent.client_details.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
@@ -85,9 +85,9 @@
       />
     </div>
     <div>
-      <h1>
+      <h2>
         Plans
-      </h1>
+      </h2>
       <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
       <periodise
         v-else-if="!noPlans"

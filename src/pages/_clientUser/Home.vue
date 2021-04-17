@@ -46,12 +46,12 @@
       <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_overlay" />
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
-          <h1>
+          <h2>
             {{ $parent.portfolio.business_name }}
-          </h1>
-          <h2 class="grey">
-            {{ $parent.portfolio.trainer_name }}
           </h2>
+          <h3 class="grey">
+            {{ $parent.portfolio.trainer_name }}
+          </h3>
           <div class="client_portfolio__notes" v-html="update_html($parent.portfolio.notes, true)" />
           <button class="red_button" @click="isPortfolioOpen = false, will_body_scroll(true)">
             Close
@@ -88,9 +88,9 @@
     <div id="client_home">
       <div class="client_home__today">
         <div class="client_home__today__header">
-          <h1>
+          <h2>
             Today
-          </h1>
+          </h2>
         </div>
         <skeleton v-if="$parent.loading" :type="'session'" />
         <p
@@ -137,9 +137,9 @@
               </div>
               <div v-if="session.checked === 1">
                 <hr>
-                <h2>
+                <h3>
                   Feedback
-                </h2>
+                </h3>
                 <rich-editor
                   :item-id="session.id"
                   :editing="feedbackId"
@@ -155,9 +155,9 @@
       </div>
       <div class="spacer" />
       <div class="client_home__plans">
-        <h1>
+        <h2>
           Plans
-        </h1>
+        </h2>
         <skeleton v-if="$parent.loading" :type="'plan'" class="fadeIn" />
         <periodise v-else-if="!noPlans" :is-trainer="false" :plans.sync="$parent.clientUser.plans" />
         <p

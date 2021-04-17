@@ -33,23 +33,23 @@
 <template>
   <div>
     <div v-if="$parent.$parent.pwa.canInstall">
-      <h1>
+      <h2>
         Save the app to your home screen
-      </h1>
-      <h2 class="grey">
+      </h2>
+      <h3 class="grey">
         Access it quickly with a clearer interface
-      </h2>
+      </h3>
     </div>
-    <h1 v-else-if="$parent.$parent.pwa.installed">
+    <h2 v-else-if="$parent.$parent.pwa.installed">
       You have the app saved to your mobile already!
-    </h1>
+    </h2>
     <div v-else-if="!$parent.$parent.pwa.canInstall">
-      <h1>
+      <h2>
         Save the app to your home screen
-      </h1>
-      <h2 class="grey">
-        or continue using it in the browser
       </h2>
+      <h3 class="grey">
+        or continue using it in the browser
+      </h3>
       <div class="instructions">
         <p><b>For Safari</b></p>
         <p>1. Open the <i>Share</i> menu at the bottom of the screen</p>

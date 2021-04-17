@@ -48,13 +48,13 @@
   <div id="simple_chart">
     <div v-if="dataPoints.length !== 0" class="content_wrapper">
       <div class="selected_bar">
-        <h2>
+        <h3>
           {{ focusText !== 'Select a point' ? focusText[1] : '' }}
           <br>
           <span v-if="focusText !== 'Select a point'" class="text--small grey">
             {{ focusText[2] === undefined ? '' : focusText[2] }}
           </span>
-        </h2>
+        </h3>
         <p class="text--small grey">
           {{ focusText !== 'Select a point' ? focusText[0] : focusText }}
         </p>
@@ -93,9 +93,9 @@
       </svg>
     </div>
     <div v-else>
-      <h2>
+      <h3>
         No data to plot on the graph
-      </h2>
+      </h3>
       <p class="grey">
         Make sure that you've used the correct format and have chosen a selection above
       </p>
@@ -114,8 +114,6 @@ export default {
     return {
       focusText: 'Select a point',
       padding: 10,
-      maxValue: null,
-      minValue: null,
       dataValues: [],
       pathValues: [],
       xInterval: null
@@ -137,16 +135,15 @@ export default {
       this.focusText = [d1, d2, d3]
     },
     process_and_plot () {
+      const MAX_VALUE = Math.max(...this.dataPoints)
       this.dataValues = []
       this.pathValues = []
       this.xInterval = (90 / this.dataPoints.length)
-      this.maxValue = Math.max(...this.dataPoints)
-      this.minValue = Math.min(...this.dataPoints)
       this.dataPoints.forEach((data, index) => {
         this.dataValues.push([
           [
             this.xInterval * (index + 1),
-            90 - (data * 0.8 / this.maxValue) * 100
+            90 - (data * 0.8 / MAX_VALUE) * 100
           ],
           data,
           this.labels[index][0],

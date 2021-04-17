@@ -59,9 +59,9 @@ button.red_button {
   <div class="preview_modal">
     <div :class="{ opened_sections: html !== '' && html !== null }" class="section_overlay" />
     <div v-if="html !== '' && html !== null" class="tab_overlay_content fadeIn delay fill_mode_both">
-      <h2 class="title">
+      <h3 class="title">
         {{ desc }}
-      </h2>
+      </h3>
       <p v-if="allowSelect" class="copy_msg">
         Select, copy, and paste it into your sessions
       </p>
