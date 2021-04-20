@@ -68,8 +68,7 @@
     transition: var(--transition_standard)
   }
   .section_overlay.opened_sections {
-    width: 100%;
-    z-index: 10
+    width: 100%
   }
   @supports not (backdrop-filter: blur(10px)) {
     .section_overlay {
