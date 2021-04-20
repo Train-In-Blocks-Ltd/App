@@ -78,7 +78,8 @@
   .event {
     overflow-wrap: anywhere;
     border: 2px solid transparent;
-    border-radius: 5px;
+    border-radius: 3px;
+    padding: .1rem;
     font-size: .7rem;
     text-align: center;
     margin: .4rem 0
@@ -176,6 +177,9 @@ export default {
     }
   },
   watch: {
+    events () {
+      this.get_month()
+    },
     forceUpdate () {
       this.get_month()
     }

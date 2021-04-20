@@ -225,18 +225,9 @@ export default {
   methods: {
     scan () {
       this.sessionDataPackets = []
-      this.sessionDates = []
       this.maxWeek = this.plan.duration
       if (this.plan.sessions && !this.noSessions) {
         this.plan.sessions.forEach((object) => {
-          this.sessionDates.push({
-            title: object.name,
-            date: object.date,
-            color: this.$parent.weekColor.backgroundColor[object.week_id - 1],
-            textColor: this.accessible_colors(this.$parent.weekColor.backgroundColor[object.week_id - 1]),
-            week_id: object.week_id,
-            session_id: object.id
-          })
           if (object.notes !== null) {
             this.sessionDataPackets.push(this.pull_protocols(object.name, object.notes, object.date))
           }

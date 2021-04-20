@@ -1,7 +1,7 @@
 <style>
 .multi-select {
   display: grid;
-  grid-gap: .4rem;
+  grid-gap: .8rem;
   position: fixed;
   top: 0;
   right: 0;
@@ -12,6 +12,9 @@
   z-index: 9;
   padding: 2rem;
   justify-items: end
+}
+.multi-select a > svg {
+  margin-left: .4rem
 }
 </style>
 
@@ -24,11 +27,13 @@
       <a
         v-for="(option, index) in options"
         :key="`${type}_option_${index}`"
+        :style="{ color: option.name === 'Delete' ? 'rgb(184, 0, 0)' : 'var(--base)' }"
         class="a_link"
         href="javascript:void(0)"
-        @click="$emit('response', option)"
+        @click="$emit('response', option.name)"
       >
-        {{ option }}
+        {{ option.name }}
+        <inline-svg v-if="option.svg !== null" :src="require(`../assets/${option.svg}`)" />
       </a>
     </div>
   </transition>

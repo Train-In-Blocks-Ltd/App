@@ -546,7 +546,7 @@
     </div>
     <multiselect
       :type="'session'"
-      :options="['Complete', 'Incomplete', 'Copy Across', 'Move', 'Shift', 'Print', 'Delete', 'Deselect']"
+      :options="multiselectOption"
       :selected="selectedSessions"
       @response="resolve_session_multiselect"
     />
@@ -894,6 +894,16 @@ export default {
       noSessions: false,
       expandedSessions: [],
       force: true,
+      multiselectOption: [
+        { name: 'Complete', svg: 'svg/multiselect/tick.svg' },
+        { name: 'Incomplete', svg: 'svg/multiselect/cross.svg' },
+        { name: 'Progress', svg: 'svg/copy.svg' },
+        { name: 'Move', svg: null },
+        { name: 'Shift', svg: null },
+        { name: 'Print', svg: null },
+        { name: 'Delete', svg: 'svg/bin.svg' },
+        { name: 'Deselect', svg: null }
+      ],
 
       // WEEK
 
@@ -955,6 +965,11 @@ export default {
       maxWeek: '2'
     }
   },
+  watch: {
+    editingWeekColor () {
+      this.updater()
+    }
+  },
   created () {
     this.will_body_scroll(true)
     this.$parent.sessions = true
@@ -962,7 +977,7 @@ export default {
     this.$parent.$parent.get_templates()
     this.check_for_new()
     this.adherence()
-    this.weekColor.backgroundColor = this.helper('match_plan').block_color.replace('[', '').replace(']', '').split(',')
+    this.updater()
   },
   beforeDestroy () {
     this.will_body_scroll(true)
@@ -979,7 +994,7 @@ export default {
         case 'Incomplete':
           this.bulk_check(0)
           break
-        case 'Copy Across':
+        case 'Progress':
           this.copyTarget = this.maxWeek
           this.copy_across_check()
           this.showCopyAcross = true
@@ -988,16 +1003,19 @@ export default {
         case 'Move':
           this.showMove = true
           this.will_body_scroll(false)
+          this.updater()
           break
         case 'Shift':
           this.showShift = true
           this.will_body_scroll(false)
+          this.updater()
           break
         case 'Print':
           this.print()
           break
         case 'Delete':
           this.bulk_delete()
+          this.updater()
           break
         case 'Deselect':
           this.deselect_all()
@@ -1050,6 +1068,20 @@ export default {
 
     // Background
 
+    updater () {
+      this.sessionDates = []
+      this.weekColor.backgroundColor = this.helper('match_plan').block_color.replace('[', '').replace(']', '').split(',')
+      for (const session of this.helper('match_plan').sessions) {
+        this.sessionDates.push({
+          title: session.name,
+          date: session.date,
+          color: this.weekColor.backgroundColor[session.week_id - 1],
+          textColor: this.accessible_colors(this.weekColor.backgroundColor[session.week_id - 1]),
+          week_id: session.week_id,
+          session_id: session.id
+        })
+      }
+    },
     helper (type, sessionId) {
       switch (type) {
         case 'match_plan':

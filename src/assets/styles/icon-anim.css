@@ -8,7 +8,8 @@
 #bin__lid,
 #calculate,
 #back,
-#copy :is(#top, #right) {
+#copy :is(#top, #right),
+:is(#tick, #cross) #mark {
   transition: var(--transition_standard)
 }
 
@@ -85,6 +86,22 @@
   transform: translateX(2px)
 }
 
+/* Multiselect */
+.a_link :is(#tick, #cross) {
+  transition: .2s transform cubic-bezier(.165, .84, .44, 1)
+}
+.a_link:hover :is(#tick, #cross) {
+  transform: scale(.8);
+  border-radius: 50%;
+  background-color: var(--base)
+}
+.a_link:hover :is(#tick, #cross) #mark {
+  fill: white
+}
+.a_link:hover :is(#tick, #cross) #circle {
+  fill: transparent
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   #logout__arrow,
@@ -112,7 +129,8 @@
   .nav_item:hover #portfolio_case,
   .a_link:hover #calculate,
   .a_link:hover #back,
-  .a_link:hover #copy :is(#top, #right) {
+  .a_link:hover #copy :is(#top, #right),
+  :is(#tick, #cross) #mark {
     transform: none;
     animation: none
   }

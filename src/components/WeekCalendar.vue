@@ -194,6 +194,9 @@ export default {
     }
   },
   watch: {
+    events () {
+      this.get_week()
+    },
     forceUpdate () {
       this.get_week()
     }
