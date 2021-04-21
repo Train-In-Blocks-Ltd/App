@@ -73,6 +73,7 @@
             :email="client.email"
             :number="client.number"
             :notes="client.notes"
+            :archive="false"
             :class="{ recently_added: persistResponse === client.name }"
           />
         </router-link>

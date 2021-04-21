@@ -110,15 +110,8 @@ li[data-done='false'] {
 .client_link.archived .name {
   color: var(--base)
 }
-.client_link__options {
-  display: flex;
-  align-items: center
-}
 
 @media (min-width: 769px) {
-  .client_link__options {
-    flex-direction: column
-  }
   .client_link.archived {
     display: flex;
     justify-content: space-between
@@ -127,10 +120,6 @@ li[data-done='false'] {
 @media (max-width: 768px) {
   .client_link:hover svg {
     fill: var(--base)
-  }
-  .client_link__options a,
-  .select_checkbox {
-    margin: 0 1rem 0 0
   }
   .client_link:hover {
     box-shadow: var(--low_shadow)
@@ -164,34 +153,36 @@ li[data-done='false'] {
     <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">
       What client information do you currently have? Head over to this page and edit it.
     </p>
-    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="preview_html" v-html="update_html(notes, true)" />
-    <div v-if="archive" class="client_link__options">
-      <checkbox :item-id="clientId" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
-      <a href="javascript:void(0)" title="Unarchive" @click="$parent.unarchive_single(clientId)">
-        <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive" />
-      </a>
-      <a href="javascript:void(0)" title="Delete" @click="soloDelete(clientId)">
-        <inline-svg :src="require('../assets/svg/bin.svg')" class="archive_icon" aria-label="Delete" />
-      </a>
-    </div>
+    <div
+      v-else-if="!archive"
+      class="preview_html"
+      v-html="update_html(notes, true)"
+    />
+    <checkbox
+      v-if="archive"
+      :item-id="clientId"
+      :type="'v2'"
+      class="select_checkbox"
+      aria-label="Select this client"
+    />
   </div>
 </template>
 
 <script>
-
 import Checkbox from './Checkbox'
 
 export default {
   components: {
     Checkbox
   },
-  props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
-  methods: {
-    async soloDelete (id) {
-      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete this client?', 'We will remove their data from our database and it won\'t be recoverable.')) {
-        this.$parent.$parent.client_delete(id)
-      }
-    }
+  props: {
+    name: String,
+    email: String,
+    number: String,
+    notes: String,
+    clientId: Number,
+    clientIndex: Number,
+    archive: Boolean
   }
 }
 </script>

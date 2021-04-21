@@ -64,7 +64,7 @@
   <div id="templates" class="view_container">
     <multiselect
       :type="'template'"
-      :options="['Delete', 'Deselect']"
+      :options="multiselectOptions"
       :selected="selectedTemplates"
       @response="resolve_template_multiselect"
     />
@@ -185,6 +185,10 @@ export default {
 
       // SELECTED AND EXPANDED
 
+      multiselectOptions: [
+        { name: 'Delete', svg: 'svg/bin.svg' },
+        { name: 'Deselect', svg: null }
+      ],
       selectedTemplates: [],
       expandedTemplates: []
     }

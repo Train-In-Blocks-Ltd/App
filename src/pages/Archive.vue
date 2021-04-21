@@ -31,7 +31,7 @@
   <div id="archive" class="view_container">
     <multiselect
       :type="'client'"
-      :options="['Unarchive', 'Delete', 'Deselect']"
+      :options="multiselectOptions"
       :selected="selectedClients"
       @response="resolve_archive_multiselect"
     />
@@ -102,7 +102,12 @@ export default {
   data () {
     return {
       search: '',
-      selectedClients: []
+      selectedClients: [],
+      multiselectOptions: [
+        { name: 'Unarchive', svg: 'archive' },
+        { name: 'Delete', svg: 'svg/bin.svg' },
+        { name: 'Deselect', svg: null }
+      ]
     }
   },
   async created () {
@@ -158,12 +163,6 @@ export default {
           this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete', 'All their data have been removed')
           this.deselect_all()
         }
-      }
-    },
-    async unarchive_single (id) {
-      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to unarchive this client?', 'Their data will be recovered and available on the Home page.')) {
-        this.$parent.client_unarchive(id)
-        this.$parent.$refs.response_pop_up.show('Client unarchived', 'You can access them back on the home page')
       }
     },
     async unarchive_multi_clients () {
