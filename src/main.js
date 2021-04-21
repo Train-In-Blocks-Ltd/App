@@ -105,7 +105,7 @@ Vue.mixin({
         html = html.replace(item[0], `<a href="${item[1]}" rel="noopener noreferrer nofollow">Watch video</a>`)
       })
       html = rmBrackets ? html.replace(/[[\]]/g, '') : html
-      return html.replace('onclick="resize(this)"', '').replace('contenteditable="true"', '')
+      return html.replace('onclick="resize(this)"', '').replace(/contenteditable="true"/gi, '')
     },
 
     // Date
