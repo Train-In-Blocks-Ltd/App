@@ -104,7 +104,7 @@ export default {
       search: '',
       selectedClients: [],
       multiselectOptions: [
-        { name: 'Unarchive', svg: 'archive' },
+        { name: 'Unarchive', svg: 'svg/archive.svg' },
         { name: 'Delete', svg: 'svg/bin.svg' },
         { name: 'Deselect', svg: null }
       ]
