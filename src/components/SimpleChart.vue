@@ -108,15 +108,14 @@ export default {
   props: {
     dataPoints: Array,
     labels: Array,
+    dates: Array,
     reset: Number
   },
   data () {
     return {
       focusText: 'Select a point',
-      padding: 10,
       dataValues: [],
-      pathValues: [],
-      xInterval: null
+      pathValues: []
     }
   },
   watch: {
@@ -135,31 +134,67 @@ export default {
       this.focusText = [d1, d2, d3]
     },
     process_and_plot () {
-      const MAX_VALUE = Math.max(...this.dataPoints)
-      this.dataValues = []
-      this.pathValues = []
-      this.xInterval = (90 / this.dataPoints.length)
-      this.dataPoints.forEach((data, index) => {
-        this.dataValues.push([
-          [
-            this.xInterval * (index + 1),
-            90 - (data * 0.8 / MAX_VALUE) * 100
-          ],
-          data,
-          this.labels[index][0],
-          this.labels[index][1]
-        ])
-      })
-      this.dataValues.forEach((data, index) => {
-        if (index < this.dataValues.length - 1) {
-          this.pathValues.push([
-            data[0][0],
-            data[0][1],
-            this.dataValues[index + 1][0][0],
-            this.dataValues[index + 1][0][1]
-          ])
+      class DataProcessor {
+        constructor (yDataset, xDataset, pointLabels, outputType, relativeToDate) {
+          this.yDataset = yDataset
+          this.xDataset = xDataset
+          this.pointLabels = pointLabels
+          this.outputType = outputType
+          this.maxValue = Math.max(...yDataset)
+          this.relativeToDate = relativeToDate
         }
-      })
+
+        get create () {
+          switch (this.outputType) {
+            case 'line':
+              this.makePoints(false)
+              return { processedPoints: this.processedPoints, processedPaths: this.makePaths() }
+          }
+        }
+
+        makePoints (toReturn) {
+          const RETURN_DATA_VALUES = []
+          this.yDataset.forEach((data, index) => {
+            /*
+            function relativeInterval () {
+            }
+            */
+            RETURN_DATA_VALUES.push([
+              [
+                // this.relativeToDate ? relativeInterval() : ((90 / this.dataPoints.length) * (index + 1)),
+                (90 / this.yDataset.length) * (index + 1),
+                90 - (data * 0.8 / this.maxValue) * 100
+              ],
+              data,
+              this.pointLabels[index][0],
+              this.pointLabels[index][1]
+            ])
+          })
+          if (toReturn) {
+            return RETURN_DATA_VALUES
+          } else {
+            this.processedPoints = RETURN_DATA_VALUES
+          }
+        }
+
+        makePaths () {
+          const RETURN_PATH_VALUES = []
+          this.processedPoints.forEach((data, index) => {
+            if (index < this.processedPoints.length - 1) {
+              RETURN_PATH_VALUES.push([
+                data[0][0],
+                data[0][1],
+                this.processedPoints[index + 1][0][0],
+                this.processedPoints[index + 1][0][1]
+              ])
+            }
+          })
+          return RETURN_PATH_VALUES
+        }
+      }
+      const DATA = new DataProcessor(this.dataPoints, this.dates, this.labels, 'line', false)
+      this.dataValues = DATA.create.processedPoints
+      this.pathValues = DATA.create.processedPaths
     }
   }
 }
