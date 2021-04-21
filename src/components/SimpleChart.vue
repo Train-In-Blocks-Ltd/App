@@ -109,6 +109,7 @@ export default {
     dataPoints: Array,
     labels: Array,
     dates: Array,
+    chartType: String,
     reset: Number
   },
   data () {
@@ -120,6 +121,9 @@ export default {
   },
   watch: {
     dataPoints () {
+      this.process_and_plot()
+    },
+    chartType () {
       this.process_and_plot()
     },
     reset () {
@@ -135,34 +139,44 @@ export default {
     },
     process_and_plot () {
       class DataProcessor {
-        constructor (yDataset, xDataset, pointLabels, outputType, relativeToDate) {
+        constructor (yDataset, xDataset, pointLabels, outputType) {
           this.yDataset = yDataset
           this.xDataset = xDataset
           this.pointLabels = pointLabels
           this.outputType = outputType
           this.maxValue = Math.max(...yDataset)
-          this.relativeToDate = relativeToDate
         }
 
         get create () {
           switch (this.outputType) {
             case 'line':
+              this.relativeToDate = false
               this.makePoints(false)
               return { processedPoints: this.processedPoints, processedPaths: this.makePaths() }
+            case 'scatter':
+              this.relativeToDate = true
+              return this.makePoints(true)
           }
         }
 
         makePoints (toReturn) {
           const RETURN_DATA_VALUES = []
           this.yDataset.forEach((data, index) => {
-            /*
-            function relativeInterval () {
+            function relativeInterval (xDataset, yDataset, index) {
+              const CURRENT_COUNT = (xDataset, index) => {
+                let returnCounter = 0
+                for (let i = 0; i < index; i++) {
+                  returnCounter += xDataset[i]
+                }
+                return returnCounter
+              }
+              const SUM_OF_DATE_DAYS = xDataset.reduce((a, b) => a + b)
+              const RETURN_INTERVAL_VALUE = index !== yDataset.length - 1 ? (90 / SUM_OF_DATE_DAYS) * (xDataset[index] + CURRENT_COUNT(xDataset, index)) : 90
+              return RETURN_INTERVAL_VALUE
             }
-            */
             RETURN_DATA_VALUES.push([
               [
-                // this.relativeToDate ? relativeInterval() : ((90 / this.dataPoints.length) * (index + 1)),
-                (90 / this.yDataset.length) * (index + 1),
+                this.relativeToDate ? relativeInterval(this.xDataset, this.yDataset, index) : ((90 / this.yDataset.length) * (index + 1)),
                 90 - (data * 0.8 / this.maxValue) * 100
               ],
               data,
@@ -192,9 +206,9 @@ export default {
           return RETURN_PATH_VALUES
         }
       }
-      const DATA = new DataProcessor(this.dataPoints, this.dates, this.labels, 'line', false)
-      this.dataValues = DATA.create.processedPoints
-      this.pathValues = DATA.create.processedPaths
+      const DATA = new DataProcessor(this.dataPoints, this.dates, this.labels, this.chartType)
+      this.dataValues = DATA.create.processedPoints || DATA.create
+      this.pathValues = DATA.create.processedPaths || []
     }
   }
 }

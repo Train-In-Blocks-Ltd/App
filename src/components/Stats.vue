@@ -24,10 +24,8 @@
   display: flex
 }
 .data-select {
+  display: grid;
   margin-right: 6rem
-}
-.data-select > div:first-child {
-  margin-bottom: 2rem
 }
 .data-select__options {
   display: grid;
@@ -59,6 +57,22 @@
 }
 .protocol_error table td {
   overflow-wrap: anywhere
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .data-options {
+    display: grid;
+    grid-gap: 4rem
+  }
+  .data-select {
+    margin-right: 0
+  }
+}
+@media (max-width: 768px) {
+  .visualise {
+    padding: 2rem 5vw 4rem 5vw
+  }
 }
 </style>
 
@@ -133,6 +147,25 @@
                 </select>
               </label>
             </div>
+            <div class="data-select__options">
+              <label for="chart-type">
+                Chart type:<br>
+                <select
+                  id="data_type_selector"
+                  v-model="selectedChartType"
+                  class="small_border_radius width_300 text--small"
+                  name="chart-type"
+                  @change="scan()"
+                >
+                  <option value="line">
+                    Line
+                  </option>
+                  <option value="scatter">
+                    Scatter
+                  </option>
+                </select>
+              </label>
+            </div>
           </div>
           <div
             v-if="showDataTypeSelector && !dataToVisualise.includes(null)"
@@ -179,6 +212,8 @@
           v-if="!dataToVisualise.includes(null) && dataToVisualise !== []"
           :data-points="dataToVisualise"
           :labels="labelsToVisualise"
+          :dates="dateDaysToVisualise"
+          :chart-type="selectedChartType"
           :reset="resetGraph"
           aria-label="Graph"
           class="fadeIn"
@@ -207,9 +242,11 @@ export default {
       optionsForDataName: new Set(),
       selectedDataType: 'Sets',
       showDataTypeSelector: true,
+      selectedChartType: 'line',
       resetGraph: 0,
       dataToVisualise: [],
       labelsToVisualise: [],
+      dateDaysToVisualise: [],
       sessionDataPackets: [],
       protocolErrors: []
     }
@@ -227,7 +264,7 @@ export default {
       this.sessionDataPackets = []
       this.maxWeek = this.plan.duration
       if (this.plan.sessions && !this.noSessions) {
-        this.plan.sessions.forEach((object) => {
+        this.sort_sessions(this.plan).sessions.forEach((object) => {
           if (object.notes !== null) {
             this.sessionDataPackets.push(this.pull_protocols(object.name, object.notes, object.date))
           }
@@ -350,11 +387,19 @@ export default {
       }
       this.dataToVisualise = []
       this.labelsToVisualise = []
+      this.dateDaysToVisualise = []
       this.protocolErrors = []
       let extractedSessionProtocols = []
-      this.sessionDataPackets.forEach((session) => {
+      this.sessionDataPackets.forEach((sessionDataPacket, sessionDataPacketIndex) => {
         extractedSessionProtocols = []
-        session.forEach((exerciseDataPacket) => {
+        const NEXT_SESSION = this.sessionDataPackets[sessionDataPacketIndex + 1] || false
+        const daysToNextSession = () => {
+          const REFERENCE_DATE = new Date(sessionDataPacket[0][3])
+          const TARGET_DATE = NEXT_SESSION !== false ? new Date(this.sessionDataPackets[sessionDataPacketIndex + 1][0][3]) : false
+          return TARGET_DATE !== false ? (TARGET_DATE.getTime() - REFERENCE_DATE.getTime()) / (1000 * 3600 * 24) : false
+        }
+        this.dateDaysToVisualise.push(daysToNextSession())
+        sessionDataPacket.forEach((exerciseDataPacket) => {
           const EXERCISE_NAME = this.selectedDataName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')
           const REGEX = RegExp(EXERCISE_NAME, 'gi')
           if (REGEX.test(exerciseDataPacket[1])) {

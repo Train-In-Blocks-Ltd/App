@@ -130,6 +130,7 @@ Vue.mixin({
           return new Date(a.date) - new Date(b.date)
         })
       }
+      return plan
     },
     proper_case (string) {
       const SENTENCE = string.toLowerCase().split(' ')
