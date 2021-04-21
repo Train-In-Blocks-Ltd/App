@@ -35,14 +35,12 @@
   .show_sessions_counter {
     margin: auto
   }
-  .show_sessions_left {
-    cursor: pointer;
-    transform: rotate(90deg)
+  :is(.show_sessions_left, .show_sessions_right) {
+    height: 36px;
+    width: 36px
   }
-  .show_sessions_right {
-    cursor: pointer;
-    transform: rotate(-90deg);
-    margin-left: 1rem
+  :is(.show_sessions_left, .show_sessions_right):not(.disabled):active {
+    transform: scale(.8)
   }
   .disabled, .disabled:hover {
     opacity: var(--light_opacity);
@@ -123,28 +121,28 @@
           <div class="show_sessions_nav">
             <inline-svg
               v-show="showing_current_session !== 0"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_left"
+              :src="require('../../assets/svg/arrow-left.svg')"
+              class="show_sessions_left cursor no_fill"
               @click="showing_current_session--"
             />
             <inline-svg
               v-show="showing_current_session === 0"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_left disabled"
+              :src="require('../../assets/svg/arrow-left.svg')"
+              class="show_sessions_left disabled no_fill"
             />
-            <p class="show_sessions_counter">
+            <p class="show_sessions_counter text--small">
               {{ showing_current_session + 1 }}/{{ plan.sessions.length }}
             </p>
             <inline-svg
               v-show="showing_current_session !== parseInt(plan.sessions.length) - 1"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_right"
+              :src="require('../../assets/svg/arrow-right.svg')"
+              class="show_sessions_right cursor no_fill"
               @click="showing_current_session++"
             />
             <inline-svg
               v-show="showing_current_session === parseInt(plan.sessions.length) - 1"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_right disabled"
+              :src="require('../../assets/svg/arrow-right.svg')"
+              class="show_sessions_right disabled no_fill"
             />
           </div>
           <div

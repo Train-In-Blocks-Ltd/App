@@ -604,7 +604,7 @@
               class="a_link"
               href="javascript:void(0)"
             >
-              <inline-svg id="back" :src="require('../../assets/svg/back.svg')" />
+              <inline-svg id="back" :src="require('../../assets/svg/arrow-left.svg')" />
               Back to profile
             </router-link>
             <a
@@ -895,12 +895,12 @@ export default {
       expandedSessions: [],
       force: true,
       multiselectOption: [
-        { name: 'Complete', svg: 'svg/multiselect/tick.svg' },
-        { name: 'Incomplete', svg: 'svg/multiselect/cross.svg' },
-        { name: 'Progress', svg: 'svg/copy.svg' },
-        { name: 'Move', svg: null },
-        { name: 'Shift', svg: null },
-        { name: 'Print', svg: null },
+        { name: 'Complete', svg: 'svg/tick.svg' },
+        { name: 'Incomplete', svg: 'svg/cross.svg' },
+        { name: 'Progress', svg: 'svg/arrow-right.svg' },
+        { name: 'Move', svg: 'svg/move.svg' },
+        { name: 'Shift', svg: 'svg/shift.svg' },
+        { name: 'Print', svg: 'svg/print.svg' },
         { name: 'Delete', svg: 'svg/bin.svg' },
         { name: 'Deselect', svg: null }
       ],

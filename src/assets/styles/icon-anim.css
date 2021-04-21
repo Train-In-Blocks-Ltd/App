@@ -9,7 +9,12 @@
 #calculate,
 #back,
 #copy :is(#top, #right),
-:is(#tick, #cross) #mark {
+:is(#tick, #cross) #mark,
+#arrow_right,
+#arrow_left,
+#box_one,
+#box_two,
+#paper {
   transition: var(--transition_standard)
 }
 
@@ -86,7 +91,7 @@
   transform: translateX(2px)
 }
 
-/* Multiselect */
+/* Multiselect - tick and cross */
 .a_link :is(#tick, #cross) {
   transition: .2s transform cubic-bezier(.165, .84, .44, 1)
 }
@@ -101,6 +106,33 @@
 .a_link:hover :is(#tick, #cross) #circle {
   fill: transparent
 }
+
+/* Multiselect - arrows */
+.a_link #shift #arrow_right {
+  transform: translateX(-1px)
+}
+.a_link #shift #arrow_left {
+  transform: translateX(1px)
+}
+.a_link:hover #arrow_right {
+  transform: translateX(2px)
+}
+.a_link:hover #shift #arrow_right {
+  transform: translateX(1px)
+}
+.a_link:hover #shift #arrow_left {
+  transform: translateX(-1px)
+}
+
+/* Multiselect - box */
+.a_link:hover #box_one {
+  transform: translateX(-7px)
+}
+.a_link:hover #box_two {
+  transform: translateX(7px)
+}
+
+/* Arrows */
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

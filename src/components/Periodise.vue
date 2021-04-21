@@ -48,12 +48,11 @@
 .plan_order svg:hover {
   opacity: var(--light_opacity)
 }
-svg.left {
-  transform: rotate(90deg)
-}
 svg.right {
-  margin-left: 1rem;
-  transform: rotate(-90deg)
+  margin-left: 1rem
+}
+svg:is(.left, .right):active {
+  transform: scale(.8)
 }
 
 /* Micros */
@@ -135,14 +134,14 @@ button.red_button {
             <div v-if="isTrainer" class="plan_order">
               <inline-svg
                 v-if="plan.ordered !== 0"
-                :src="require('../assets/svg/arrow.svg')"
-                class="left"
+                :src="require('../assets/svg/arrow-left.svg')"
+                class="left no_fill"
                 @click="change_order(plan.ordered, 'back')"
               />
               <inline-svg
                 v-if="plan.ordered !== client_plans.length - 1"
-                :src="require('../assets/svg/arrow.svg')"
-                class="right"
+                :src="require('../assets/svg/arrow-right.svg')"
+                class="right no_fill"
                 @click="change_order(plan.ordered, 'next')"
               />
             </div>

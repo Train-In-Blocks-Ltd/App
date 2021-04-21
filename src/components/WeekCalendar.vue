@@ -50,25 +50,13 @@
   .calendar_header__bar *:hover {
     opacity: var(--light_opacity)
   }
-  .next_week {
-    cursor: pointer;
-    transform: rotate(-90deg)
-  }
-  .next_week:hover {
-    transform: rotate(-90deg) translateY(5px)
-  }
-  .next_week:active {
-    transform: rotate(-90deg) translateY(5px) scale(.9)
-  }
+  .next_week,
   .prev_week {
-    cursor: pointer;
-    transform: rotate(90deg)
+    height: 36px;
+    width: 36px
   }
-  .prev_week:hover {
-    transform: rotate(90deg) translateY(-5px)
-  }
-  .prev_week:active {
-    transform: rotate(90deg) translateY(-5px) scale(.9)
+  :is(.next_week, .prev_week):active {
+    transform: scale(.8)
   }
   .today {
     cursor: pointer;
@@ -121,8 +109,8 @@
       </h2>
       <div class="calendar_header__bar">
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="prev_week"
+          :src="require('../assets/svg/arrow-left.svg')"
+          class="prev_week cursor no_fill"
           @click="weekDiff--, get_week()"
         />
         <p
@@ -133,8 +121,8 @@
           Today
         </p>
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="next_week"
+          :src="require('../assets/svg/arrow-right.svg')"
+          class="next_week cursor no_fill"
           @click="weekDiff++, get_week()"
         />
       </div>

@@ -12,25 +12,13 @@
   .calendar_header__bar *:hover {
     opacity: var(--light_opacity)
   }
-  .next_month {
-    cursor: pointer;
-    transform: rotate(-90deg)
-  }
-  .next_month:hover {
-    transform: rotate(-90deg) translateY(5px)
-  }
-  .next_month:active {
-    transform: rotate(-90deg) translateY(5px) scale(.9)
-  }
+  .next_month,
   .prev_month {
-    cursor: pointer;
-    transform: rotate(90deg)
+    height: 36px;
+    width: 36px
   }
-  .prev_month:hover {
-    transform: rotate(90deg) translateY(-5px)
-  }
-  .prev_month:active {
-    transform: rotate(90deg) translateY(-5px) scale(.9)
+  :is(.next_month, .prev_month):active {
+    transform: scale(.8)
   }
   .day_cell.is_today {
     background-color: var(--calendar_highlight);
@@ -97,8 +85,8 @@
       </h2>
       <div class="calendar_header__bar">
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="prev_month"
+          :src="require('../assets/svg/arrow-left.svg')"
+          class="prev_month cursor no_fill"
           @click="monthDiff--, get_month()"
         />
         <p
@@ -109,8 +97,8 @@
           Today
         </p>
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="next_month"
+          :src="require('../assets/svg/arrow-right.svg')"
+          class="next_month cursor no_fill"
           @click="monthDiff++, get_month()"
         />
       </div>

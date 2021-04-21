@@ -57,6 +57,7 @@
 
   /* Tab overlay */
   .section_overlay {
+    z-index: 10;
     height: 100%;
     position: fixed;
     top: 0;
@@ -673,7 +674,7 @@ export default {
 
       policyVersion: '1.1',
       versionName: 'Pegasus',
-      versionBuild: '3.2.4',
+      versionBuild: '3.2.5',
       newBuild: false,
       showEULA: false,
       loading: false,
