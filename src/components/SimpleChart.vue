@@ -155,7 +155,8 @@ export default {
               return { processedPoints: this.processedPoints, processedPaths: this.makePaths() }
             case 'scatter':
               this.relativeToDate = true
-              return this.makePoints(true)
+              this.makePoints(false)
+              return { processedPoints: this.makePoints(true), processedPaths: this.regression() }
           }
         }
 
@@ -204,6 +205,47 @@ export default {
             }
           })
           return RETURN_PATH_VALUES
+        }
+
+        regression () {
+          this.scaledXDataset = []
+          this.scaledYDataset = []
+          this.processedPoints.forEach((point) => {
+            this.scaledXDataset.push(point[0][0])
+            this.scaledYDataset.push(point[0][1])
+          })
+
+          // Sample means
+          this.xSampleMean = this.scaledXDataset.reduce((a, b) => a + b) / this.scaledXDataset.length
+          this.ySampleMean = this.scaledYDataset.reduce((a, b) => a + b) / this.scaledYDataset.length
+
+          // Sample SDs
+          const standardDeviation = (dataset, sampleMean) => {
+            const SUM_OF_SQUARES = []
+            dataset.forEach((datapoint) => {
+              SUM_OF_SQUARES.push(Math.pow((datapoint - sampleMean), 2))
+            })
+            return Math.sqrt(SUM_OF_SQUARES.reduce((a, b) => a + b) / (dataset.length - 1))
+          }
+          this.xSampleSD = standardDeviation(this.scaledXDataset, this.xSampleMean)
+          this.ySampleSD = standardDeviation(this.scaledYDataset, this.ySampleMean)
+
+          // Pearson's correlation
+          const SUM_OF_POINTS = []
+          for (let i = 0; i < this.scaledXDataset.length; i++) {
+            SUM_OF_POINTS.push(((this.scaledXDataset[i] - this.xSampleMean) / this.xSampleSD) * ((this.scaledYDataset[i] - this.ySampleMean) / this.ySampleSD))
+          }
+          this.rCorrelation = (SUM_OF_POINTS.reduce((a, b) => a + b) / (this.scaledXDataset.length - 1))
+
+          // Equation attributes
+          this.gradient = this.rCorrelation * this.ySampleSD / this.xSampleSD
+          this.yIntercept = this.ySampleMean - this.gradient * this.xSampleMean
+
+          // Line plot
+          const y = (x) => {
+            return this.gradient * x + this.yIntercept
+          }
+          return [[5, y(5), 90, y(90)]]
         }
       }
       const DATA = new DataProcessor(this.dataPoints, this.dates, this.labels, this.chartType)
