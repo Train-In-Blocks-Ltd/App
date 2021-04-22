@@ -75,6 +75,7 @@
         <g class="plot">
           <line
             v-for="(data, index) in pathValues"
+            v-show="!isNaN(data[1])"
             :key="'ptVal_' + index"
             :x1="`${data[0]}%`"
             :x2="`${data[2]}%`"

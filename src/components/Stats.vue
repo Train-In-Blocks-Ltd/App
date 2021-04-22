@@ -38,6 +38,7 @@
 .data-desc {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
   width: 100%
 }
 .data-desc__value {
@@ -183,7 +184,7 @@
               class="container--data-desc"
             >
               <p class="data-desc__desc">
-                <b>{{ desc[0] }} {{ selectedDataType }}</b>
+                <b>{{ desc[0] }}</b>
               </p>
               <p class="data-desc__value">
                 {{ desc[1] }}
@@ -441,11 +442,11 @@ export default {
           const MAX = Math.max(...this.dataToVisualise)
           const MIN = Math.min(...this.dataToVisualise)
           this.descData = [
-            ['Total', SUM],
-            ['Average', (SUM / this.dataToVisualise.length).toFixed(1)],
-            ['Maximum', MAX],
-            ['Minimum', MIN],
-            ['Percentage Change', (((MAX / MIN) - 1) * 100).toFixed(1)]
+            [`Total ${this.selectedDataType.toLowerCase()} from all sessions`, SUM],
+            [`Average ${this.selectedDataType.toLowerCase()} across all sessions`, (SUM / this.dataToVisualise.length).toFixed(1)],
+            [`Most amount of ${this.selectedDataType.toLowerCase()} from one session`, MAX],
+            [`Least amount of ${this.selectedDataType.toLowerCase()} from one session`, MIN],
+            [`% change in ${this.selectedDataType.toLowerCase()} from the lowest to the largest`, (((MAX / MIN) - 1) * 100).toFixed(1)]
           ]
         }
       })
