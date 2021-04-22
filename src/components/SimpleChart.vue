@@ -162,21 +162,21 @@ export default {
         makePoints (toReturn) {
           const RETURN_DATA_VALUES = []
           this.yDataset.forEach((data, index) => {
-            function relativeInterval (xDataset, yDataset, index) {
-              const CURRENT_COUNT = (xDataset, index) => {
-                let returnCounter = 0
+            function relativeInterval (xDataset, index) {
+              const sumOfPrevious = (xDataset, index) => {
+                let returnSum = 0
                 for (let i = 0; i < index; i++) {
-                  returnCounter += xDataset[i]
+                  returnSum += xDataset[i]
                 }
-                return returnCounter
+                return returnSum
               }
-              const SUM_OF_DATE_DAYS = xDataset.reduce((a, b) => a + b)
-              const RETURN_INTERVAL_VALUE = index !== yDataset.length - 1 ? (90 / SUM_OF_DATE_DAYS) * (xDataset[index] + CURRENT_COUNT(xDataset, index)) : 90
+              const SUM_OF_DATE_DAYS = xDataset.reduce((a, b) => a + (b === false ? 0 : b))
+              const RETURN_INTERVAL_VALUE = index !== 0 ? (90 / SUM_OF_DATE_DAYS) * sumOfPrevious(xDataset, index) : 5
               return RETURN_INTERVAL_VALUE
             }
             RETURN_DATA_VALUES.push([
               [
-                this.relativeToDate ? relativeInterval(this.xDataset, this.yDataset, index) : ((90 / this.yDataset.length) * (index + 1)),
+                this.relativeToDate ? relativeInterval(this.xDataset, index) : ((90 / this.yDataset.length) * (index + 1)),
                 90 - (data * 0.8 / this.maxValue) * 100
               ],
               data,

@@ -24,13 +24,16 @@
   display: flex
 }
 .data-select {
-  display: grid;
   margin-right: 6rem
 }
 .data-select__options {
-  display: grid;
-  grid-gap: 1rem;
-  width: fit-content
+  display: grid
+}
+.data-select__options select {
+  margin: .6rem 0
+}
+.data-select__options:not(:last-child) {
+  margin-bottom: 1rem
 }
 .data-desc {
   display: grid;
@@ -68,6 +71,9 @@
   .data-select {
     margin-right: 0
   }
+  .data-select__options {
+    display: grid
+  }
 }
 @media (max-width: 768px) {
   .visualise {
@@ -96,75 +102,75 @@
           <div class="data-select">
             <div class="data-select__options">
               <label for="measure">
-                Measurement:<br>
-                <select
-                  v-model="selectedDataName"
-                  class="small_border_radius width_300 text--small"
-                  name="measure"
-                  @change="scan()"
-                >
-                  <option value="Plan Overview">
-                    Plan Overview
-                  </option>
-                  <option
-                    v-for="(optionName, optionIndex) in optionsForDataName"
-                    :key="`data_option_${optionIndex}`"
-                    :value="optionName"
-                  >
-                    {{ optionName }}
-                  </option>
-                </select>
+                Measurement:
               </label>
+              <select
+                v-model="selectedDataName"
+                class="small_border_radius width_300"
+                name="measure"
+                @change="scan()"
+              >
+                <option value="Plan Overview">
+                  Plan Overview
+                </option>
+                <option
+                  v-for="(optionName, optionIndex) in optionsForDataName"
+                  :key="`data_option_${optionIndex}`"
+                  :value="optionName"
+                >
+                  {{ optionName }}
+                </option>
+              </select>
             </div>
             <div v-if="showDataTypeSelector" class="data-select__options">
               <label for="measure-type">
-                Data type:<br>
-                <select
-                  id="data_type_selector"
-                  v-model="selectedDataType"
-                  class="small_border_radius width_300 text--small"
-                  name="measure-type"
-                  @change="scan()"
-                >
-                  <option value="Sets">
-                    Sets
-                  </option>
-                  <option value="Reps">
-                    Reps
-                  </option>
-                  <option
-                    v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
-                    value="Load"
-                  >
-                    Load
-                  </option>
-                  <option
-                    v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
-                    value="Volume"
-                  >
-                    Volume
-                  </option>
-                </select>
+                Data type:
               </label>
+              <select
+                id="data_type_selector"
+                v-model="selectedDataType"
+                class="small_border_radius width_300"
+                name="measure-type"
+                @change="scan()"
+              >
+                <option value="Sets">
+                  Sets
+                </option>
+                <option value="Reps">
+                  Reps
+                </option>
+                <option
+                  v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
+                  value="Load"
+                >
+                  Load
+                </option>
+                <option
+                  v-if="selectedDataName === 'Plan Overview' || showLoadsVolumeOptions"
+                  value="Volume"
+                >
+                  Volume
+                </option>
+              </select>
             </div>
             <div class="data-select__options">
               <label for="chart-type">
-                Chart type:<br>
-                <select
-                  id="data_type_selector"
-                  v-model="selectedChartType"
-                  class="small_border_radius width_300 text--small"
-                  name="chart-type"
-                  @change="scan()"
-                >
-                  <option value="line">
-                    Line
-                  </option>
-                  <option value="scatter">
-                    Scatter
-                  </option>
-                </select>
+                Chart type:
               </label>
+              <select
+                id="data_type_selector"
+                v-model="selectedChartType"
+                class="small_border_radius width_300"
+                name="chart-type"
+                @change="scan()"
+              >
+                <option value="line">
+                  Line
+                </option>
+                <option value="scatter">
+                  Scatter
+                </option>
+              </select>
             </div>
           </div>
           <div
@@ -390,18 +396,12 @@ export default {
       this.dateDaysToVisualise = []
       this.protocolErrors = []
       let extractedSessionProtocols = []
+      const POSITION_LOOKUP = []
       const FILTERED_SESSION_PACKETS = this.sessionDataPackets.filter((el) => {
         return el.length !== 0
       })
       FILTERED_SESSION_PACKETS.forEach((sessionDataPacket, sessionDataPacketIndex) => {
         extractedSessionProtocols = []
-        const NEXT_SESSION = FILTERED_SESSION_PACKETS[sessionDataPacketIndex + 1] || false
-        const daysToNextSession = () => {
-          const REFERENCE_DATE = new Date(sessionDataPacket[0].sessionDate)
-          const TARGET_DATE = NEXT_SESSION !== false ? new Date(FILTERED_SESSION_PACKETS[sessionDataPacketIndex + 1][0].sessionDate) : false
-          return TARGET_DATE !== false ? (TARGET_DATE.getTime() - REFERENCE_DATE.getTime()) / (1000 * 3600 * 24) : false
-        }
-        this.dateDaysToVisualise.push(daysToNextSession())
         sessionDataPacket.forEach((exerciseDataPacket) => {
           const EXERCISE_NAME = this.selectedDataName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')
           const REGEX = RegExp(EXERCISE_NAME, 'gi')
@@ -411,7 +411,6 @@ export default {
             this.showLoadsVolumeOptions = exerciseDataPacket.exerciseProtocol.includes('at')
             this.selectedDataType = !this.showLoadsVolumeOptions && (this.selectedDataType === 'Load' || this.selectedDataType === 'Volume') ? 'Sets' : this.selectedDataType
             const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket.exerciseProtocol.includes('x') ? this.selectedDataType : 'Other')
-            console.log(DATA_POINT)
             if (isNaN(DATA_POINT.calculate)) {
               this.protocolErrors.push({
                 sessionName: exerciseDataPacket.sessionName,
@@ -421,6 +420,7 @@ export default {
               })
             } else {
               this.dataToVisualise.push(DATA_POINT.calculate)
+              POSITION_LOOKUP.push(sessionDataPacketIndex)
             }
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket.exerciseProtocol.includes('at')) {
             this.showDataTypeSelector = true
@@ -432,6 +432,7 @@ export default {
         // Sums for Plan Overview
         if (extractedSessionProtocols.length !== 0) {
           this.dataToVisualise.push(extractedSessionProtocols.reduce((a, b) => a + b))
+          POSITION_LOOKUP.push(sessionDataPacketIndex)
         }
 
         // Populates descriptive stats
@@ -448,6 +449,16 @@ export default {
           ]
         }
       })
+
+      // Sets days difference
+      POSITION_LOOKUP.forEach((index, nextIndex) => {
+        const NEXT_SESSION = FILTERED_SESSION_PACKETS[POSITION_LOOKUP[nextIndex + 1]] || false
+        const REFERENCE_DATE = new Date(FILTERED_SESSION_PACKETS[index][0].sessionDate)
+        const TARGET_DATE = NEXT_SESSION !== false ? new Date(NEXT_SESSION[0].sessionDate) : false
+        this.dateDaysToVisualise.push(TARGET_DATE !== false ? (TARGET_DATE.getTime() - REFERENCE_DATE.getTime()) / (1000 * 3600 * 24) : false)
+      })
+
+      // Sets labels
       if (this.selectedDataName === 'Plan Overview') {
         for (let x = 1; x <= this.dataToVisualise.length; x++) {
           this.labelsToVisualise.push(['Session ' + x])
