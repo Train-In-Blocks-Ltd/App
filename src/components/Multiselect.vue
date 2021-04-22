@@ -31,8 +31,11 @@
   width: 31px;
   margin-left: .8rem
 }
+.multi-select svg #shift path {
+  stroke: var(--base)
+}
 @supports not (backdrop-filter: blur(10px)) {
-  .multi-select_options {
+  .multi-select {
     background-color: var(--fore)
   }
 }
@@ -68,7 +71,7 @@
         <a
           v-for="(option, index) in options"
           :key="`${type}_option_${index}`"
-          :style="{ color: option.name === 'Delete' ? 'rgb(184, 0, 0)' : 'var(--base)' }"
+          :style="{ color: option.name === 'Delete' ? 'var(--base-red)' : 'var(--base)' }"
           class="a_link"
           href="javascript:void(0)"
           @click="$emit('response', option.name)"

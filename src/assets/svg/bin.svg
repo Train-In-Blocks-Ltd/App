@@ -1,6 +1,6 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="bin">
-<path style="fill: rgb(184, 0, 0)" id="bin__base" d="M4 6L5.89258 20.2559V20.2637C6.0236 21.2503 6.88032 22 7.875 22H16.123C17.1177 22 17.9744 21.2503 18.1055 20.2637L18.1074 20.2559L20 6H18L16.123 20H7.875L6 6H4Z" fill="black"/>
-<path style="fill: rgb(184, 0, 0)" id="bin__lid" d="M10 2L9 3H3V5H21V3H15L14 2H10Z" fill="black"/>
+<path style="fill: var(--base-red)" id="bin__base" d="M4 6L5.89258 20.2559V20.2637C6.0236 21.2503 6.88032 22 7.875 22H16.123C17.1177 22 17.9744 21.2503 18.1055 20.2637L18.1074 20.2559L20 6H18L16.123 20H7.875L6 6H4Z" fill="black"/>
+<path style="fill: var(--base-red)" id="bin__lid" d="M10 2L9 3H3V5H21V3H15L14 2H10Z" fill="black"/>
 </g>
 </svg>
