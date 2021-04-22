@@ -1111,7 +1111,7 @@ export default {
       })
       const NEW_WINDOW = window.open()
       const HTML = NOTES_ARR.join('')
-      NEW_WINDOW.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}</style><div>${HTML}</div>`)
+      NEW_WINDOW.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}@media print {.close_link {display: none}}</style><div><a class="close_link" href="javascript:void(0)" onclick="window.close()">Close print/export preview</a>${HTML}</div>`)
       NEW_WINDOW.stop()
       NEW_WINDOW.print()
       this.$ga.event('Plan', 'print')
