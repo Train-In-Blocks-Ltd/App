@@ -101,7 +101,7 @@
   background-color: var(--base)
 }
 .a_link:hover :is(#tick, #cross) #mark {
-  fill: white
+  fill: var(--fore)
 }
 .a_link:hover :is(#tick, #cross) #circle {
   fill: transparent

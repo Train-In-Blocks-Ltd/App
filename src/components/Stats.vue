@@ -24,7 +24,11 @@
   display: flex
 }
 .data-select {
-  margin-right: 6rem
+  padding: 1rem;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  border-radius: 10px;
+  margin-right: 4rem
 }
 .data-select__options {
   display: grid
@@ -39,6 +43,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 1rem;
+  padding: 1rem;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  border-radius: 10px;
   width: 100%
 }
 .data-desc__value {

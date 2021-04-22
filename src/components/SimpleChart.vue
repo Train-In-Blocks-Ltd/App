@@ -1,5 +1,9 @@
 <style scoped>
   #simple_chart {
+    padding: 1rem;
+    background-color: var(--fore);
+    box-shadow: var(--low_shadow);
+    border-radius: 10px;
     margin: 2rem 0
   }
   .content_wrapper {
