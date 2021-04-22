@@ -84,6 +84,10 @@ li[data-done='false'] {
   border-radius: 10px;
   transition: var(--transition_standard)
 }
+.client_link.archived {
+  display: flex;
+  justify-content: space-between
+}
 .client_link:hover {
   box-shadow: var(--high_shadow)
 }
@@ -111,12 +115,6 @@ li[data-done='false'] {
   color: var(--base)
 }
 
-@media (min-width: 769px) {
-  .client_link.archived {
-    display: flex;
-    justify-content: space-between
-  }
-}
 @media (max-width: 768px) {
   .client_link:hover svg {
     fill: var(--base)
