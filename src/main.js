@@ -46,34 +46,31 @@ Vue.mixin({
 
     // Protocol
 
-    pull_protocols (sessionName, text, date) {
+    pull_protocols (sessionName, text, sessionDate) {
       const REGEX_EXTRACT_EXERCISES = /\[\s*(.*?)\s*:\s*(.*?)\]/gi
       const HTML_REMOVED_TAGS = text.replace(/<[^>]*>?/gm, '')
-      const TEMPORARY_STORE = []
+      const RETURN_PACKETS = []
       let finder
       while ((finder = REGEX_EXTRACT_EXERCISES.exec(HTML_REMOVED_TAGS)) !== null) {
         if (finder.index === REGEX_EXTRACT_EXERCISES.lastIndex) {
           REGEX_EXTRACT_EXERCISES.lastIndex++
         }
+        const PACKET_BUILDER = {
+          sessionName,
+          sessionDate,
+          exerciseName: null,
+          exerciseProtocol: null
+        }
         finder.forEach((match, groupIndex) => {
-          if (groupIndex === 0) {
-            TEMPORARY_STORE.push(sessionName)
-          } else if (groupIndex === 1 || groupIndex === 2) {
-            TEMPORARY_STORE.push(match)
-            if (groupIndex === 2) {
-              TEMPORARY_STORE.push(date)
-            }
+          if (groupIndex === 1) {
+            PACKET_BUILDER.exerciseName = match
+          } else if (groupIndex === 2) {
+            PACKET_BUILDER.exerciseProtocol = match
           }
         })
+        RETURN_PACKETS.push(PACKET_BUILDER)
       }
-      if (TEMPORARY_STORE !== null) {
-        const PACKETS_ARRAY = []
-        for (let index = 0; index < TEMPORARY_STORE.length; index += 4) {
-          const DATA_PACKET = TEMPORARY_STORE.slice(index, index + 4)
-          PACKETS_ARRAY.push(DATA_PACKET)
-        }
-        return PACKETS_ARRAY
-      }
+      return RETURN_PACKETS
     },
 
     // HTML

@@ -275,8 +275,8 @@ export default {
           this.optionsForDataName = new Set()
           for (const SESSION of this.sessionDataPackets) {
             for (const DATA_PACKET of SESSION) {
-              const CASED_ITEM = this.proper_case(DATA_PACKET[1])
-              this.optionsForDataName.add(DATA_PACKET[2].includes('at') ? CASED_ITEM : DATA_PACKET[1])
+              const CASED_ITEM = this.proper_case(DATA_PACKET.exerciseName)
+              this.optionsForDataName.add(DATA_PACKET.exerciseProtocol.includes('at') ? CASED_ITEM : DATA_PACKET.exerciseName)
             }
           }
           this.selection()
@@ -288,10 +288,10 @@ export default {
     selection () {
       class DataPoint {
         constructor (dataPacket, returnDataType) {
-          this.sessionName = dataPacket[0]
-          this.sessionDate = dataPacket[3]
-          this.exerciseName = dataPacket[1]
-          this.protocol = dataPacket[2].replace(/\s/g, '')
+          this.sessionName = dataPacket.sessionName
+          this.sessionDate = dataPacket.sessionDate
+          this.exerciseName = dataPacket.exerciseName
+          this.protocol = dataPacket.exerciseProtocol.replace(/\s/g, '')
           this.returnDataType = returnDataType
           this.regexSetsReps = /(\d*)x((\d*\/*)*)/gi
           this.regexLoad = /at\s*((\d\.*\/*)*)\s*\w*/gi
@@ -390,35 +390,39 @@ export default {
       this.dateDaysToVisualise = []
       this.protocolErrors = []
       let extractedSessionProtocols = []
-      this.sessionDataPackets.forEach((sessionDataPacket, sessionDataPacketIndex) => {
+      const FILTERED_SESSION_PACKETS = this.sessionDataPackets.filter((el) => {
+        return el.length !== 0
+      })
+      FILTERED_SESSION_PACKETS.forEach((sessionDataPacket, sessionDataPacketIndex) => {
         extractedSessionProtocols = []
-        const NEXT_SESSION = this.sessionDataPackets[sessionDataPacketIndex + 1] || false
+        const NEXT_SESSION = FILTERED_SESSION_PACKETS[sessionDataPacketIndex + 1] || false
         const daysToNextSession = () => {
-          const REFERENCE_DATE = new Date(sessionDataPacket[0][3])
-          const TARGET_DATE = NEXT_SESSION !== false ? new Date(this.sessionDataPackets[sessionDataPacketIndex + 1][0][3]) : false
+          const REFERENCE_DATE = new Date(sessionDataPacket[0].sessionDate)
+          const TARGET_DATE = NEXT_SESSION !== false ? new Date(FILTERED_SESSION_PACKETS[sessionDataPacketIndex + 1][0].sessionDate) : false
           return TARGET_DATE !== false ? (TARGET_DATE.getTime() - REFERENCE_DATE.getTime()) / (1000 * 3600 * 24) : false
         }
         this.dateDaysToVisualise.push(daysToNextSession())
         sessionDataPacket.forEach((exerciseDataPacket) => {
           const EXERCISE_NAME = this.selectedDataName.replace(/\(/g, '\\(').replace(/\)/g, '\\)')
           const REGEX = RegExp(EXERCISE_NAME, 'gi')
-          if (REGEX.test(exerciseDataPacket[1])) {
-            this.labelsToVisualise.push([exerciseDataPacket[0], exerciseDataPacket[3]])
-            this.showDataTypeSelector = exerciseDataPacket[2].includes('x')
-            this.showLoadsVolumeOptions = exerciseDataPacket[2].includes('at')
+          if (REGEX.test(exerciseDataPacket.exerciseName)) {
+            this.labelsToVisualise.push([exerciseDataPacket.exerciseName, exerciseDataPacket.sessionDate])
+            this.showDataTypeSelector = exerciseDataPacket.exerciseProtocol.includes('x')
+            this.showLoadsVolumeOptions = exerciseDataPacket.exerciseProtocol.includes('at')
             this.selectedDataType = !this.showLoadsVolumeOptions && (this.selectedDataType === 'Load' || this.selectedDataType === 'Volume') ? 'Sets' : this.selectedDataType
-            const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket[2].includes('x') ? this.selectedDataType : 'Other')
+            const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket.exerciseProtocol.includes('x') ? this.selectedDataType : 'Other')
+            console.log(DATA_POINT)
             if (isNaN(DATA_POINT.calculate)) {
               this.protocolErrors.push({
-                sessionName: exerciseDataPacket[0],
-                sessionDate: exerciseDataPacket[3],
-                exerciseName: exerciseDataPacket[1],
-                protocol: exerciseDataPacket[2]
+                sessionName: exerciseDataPacket.sessionName,
+                sessionDate: exerciseDataPacket.sessionDate,
+                exerciseName: exerciseDataPacket.exerciseName,
+                protocol: exerciseDataPacket.exerciseProtocol
               })
             } else {
               this.dataToVisualise.push(DATA_POINT.calculate)
             }
-          } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket[2].includes('at')) {
+          } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket.exerciseProtocol.includes('at')) {
             this.showDataTypeSelector = true
             const DATA_POINT = new DataPoint(exerciseDataPacket, this.selectedDataType)
             extractedSessionProtocols.push(DATA_POINT.calculate)
