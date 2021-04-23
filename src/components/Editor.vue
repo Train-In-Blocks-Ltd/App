@@ -384,7 +384,7 @@ div#rich_editor.editorFocused {
             aria-label="Search templates"
             rel="search"
             placeholder="Search templates"
-            @input="isSearchEmpty()"
+            @input="is_search_empty()"
           >
           <h3 v-show="search === ''">
             System templates
@@ -418,7 +418,7 @@ div#rich_editor.editorFocused {
           v-slot="{ commands, isActive, getMarkAttrs, menu }"
           class="menububble fadeIn"
           :editor="editor"
-          @hide="hideLinkMenu"
+          @hide="hide_link_menu"
         >
           <div
             class="menububble"
@@ -436,7 +436,7 @@ div#rich_editor.editorFocused {
                 class="menububble__input"
                 type="text"
                 placeholder="https://"
-                @keydown.esc="hideLinkMenu"
+                @keydown.esc="hide_link_menu"
               >
               <button
                 class="menububble__button"
@@ -450,7 +450,7 @@ div#rich_editor.editorFocused {
               <button
                 class="menububble__button"
                 :class="{ 'is-active': isActive.link() }"
-                @click="showLinkMenu(getMarkAttrs('link'))"
+                @click="show_link_menu(getMarkAttrs('link'))"
               >
                 <span>{{ isActive.link() ? 'Update Link' : 'Add Link' }}</span>
                 <inline-svg :src="require('../assets/svg/editor/link.svg')" />
@@ -593,20 +593,20 @@ export default {
 
     // Link
 
-    showLinkMenu (attrs) {
+    show_link_menu (attrs) {
       this.linkUrl = attrs.href
       this.linkMenuIsActive = true
       this.$nextTick(() => {
         this.$refs.linkInput.focus()
       })
     },
-    hideLinkMenu () {
+    hide_link_menu () {
       this.linkUrl = null
       this.linkMenuIsActive = false
     },
     setLinkUrl (command, url) {
       command({ href: url })
-      this.hideLinkMenu()
+      this.hide_link_menu()
     },
 
     // IMG
@@ -641,7 +641,7 @@ export default {
 
     // Misc.
 
-    isSearchEmpty () {
+    is_search_empty () {
       let showNoneMsg = true
       this.dataForTemplates.forEach((template) => {
         if (((template.name).toLowerCase()).startsWith(this.search.toLowerCase()) && this.search !== '') {
