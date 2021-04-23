@@ -404,7 +404,7 @@ export default {
         this.$parent.resolve_error(e)
       }
       await this.check_client()
-      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true)
+      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true, true)
       this.$parent.end_loading()
     },
 

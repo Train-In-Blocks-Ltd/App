@@ -8,7 +8,7 @@
   }
   .content_wrapper {
     display: grid;
-    grid-gap: 2rem
+    grid-gap: .6rem
   }
   .selected_bar {
     display: flex;
@@ -18,6 +18,9 @@
     stroke: var(--base);
     stroke-dasharray: 0;
     stroke-width: 2
+  }
+  .x_axis_label {
+    text-align: center
   }
   .plot circle {
     cursor: pointer;
@@ -37,6 +40,14 @@
     transition: var(--transition_standard);
     animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
   }
+
+  /* Regression line
+  .scatter_line:hover {
+    cursor: pointer;
+    stroke: var(--base);
+    stroke-width: 4
+  }
+  */
 
   @keyframes show {
     from {
@@ -85,6 +96,7 @@
             :x2="`${data[2]}%`"
             :y1="`${data[1]}%`"
             :y2="`${data[3]}%`"
+            :class="{ scatter_line: chartType === 'scatter' }"
           />
           <circle
             v-for="(data, index) in dataValues"
@@ -96,6 +108,9 @@
           />
         </g>
       </svg>
+      <p class="x_axis_label">
+        {{ chartType === 'scatter' ? 'Sessions relative to days apart' : 'Sessions' }}
+      </p>
     </div>
     <div v-else>
       <h3>

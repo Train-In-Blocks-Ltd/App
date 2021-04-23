@@ -1,9 +1,3 @@
-<style>
-svg#response_close path {
-  fill: var(--back)
-}
-</style>
-
 <style scoped>
 .response_pop_up {
   position: fixed;
@@ -33,6 +27,9 @@ svg#response_close path {
 .response_pop_up svg:hover {
   opacity: var(--light_opacity)
 }
+.close_button {
+  margin-top: .6rem
+}
 
 @supports not (backdrop-filter: blur(10px)) {
   .response_pop_up {
@@ -56,11 +53,6 @@ svg#response_close path {
 
 <template>
   <div v-if="reveal" class="response_pop_up">
-    <inline-svg
-      id="response_close"
-      :src="require('../assets/svg/close.svg')"
-      @click="header = null, desc = null, persist = false, reveal = false"
-    />
     <p>
       <b>
         {{ header }}
@@ -69,6 +61,13 @@ svg#response_close path {
     <p>
       {{ desc }}
     </p>
+    <button
+      v-if="persist"
+      class="close_button"
+      @click="header = null, desc = null, persist = false, reveal = false"
+    >
+      Okay
+    </button>
   </div>
 </template>
 
