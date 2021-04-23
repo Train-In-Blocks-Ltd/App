@@ -49,6 +49,7 @@ module.exports = {
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
   },
+
   chainWebpack: (config) => {
     /* 
       Disable (or customize) prefetch, see:

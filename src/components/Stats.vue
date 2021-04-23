@@ -33,6 +33,9 @@
 .data-select__options {
   display: grid
 }
+.data-select__options label {
+  font-weight: bold
+}
 .data-select__options select {
   margin: .6rem 0
 }
@@ -58,7 +61,11 @@
 .protocol_error {
   display: grid;
   grid-gap: 1rem;
-  margin-top: 4rem
+  margin-top: 4rem;
+  background-color: var(--fore);
+  padding: 1rem;
+  box-shadow: var(--low_shadow);
+  border-radius: 10px
 }
 .protocol_error table :is(th, td) {
   padding: .6rem 0
@@ -111,7 +118,7 @@
           <div class="data-select">
             <div class="data-select__options">
               <label for="measure">
-                Measurement:
+                Measurement
               </label>
               <select
                 v-model="selectedDataName"
@@ -133,7 +140,7 @@
             </div>
             <div v-if="showDataTypeSelector" class="data-select__options">
               <label for="measure-type">
-                Data type:
+                Data type
               </label>
               <select
                 id="data_type_selector"
@@ -164,7 +171,7 @@
             </div>
             <div class="data-select__options">
               <label for="chart-type">
-                Chart type:
+                Chart type
               </label>
               <select
                 id="data_type_selector"
@@ -199,6 +206,9 @@
               </p>
             </div>
           </div>
+          <h3 v-else>
+            No data to show
+          </h3>
         </div>
         <div v-show="protocolErrors.length !== 0" class="protocol_error">
           <p class="text--red">

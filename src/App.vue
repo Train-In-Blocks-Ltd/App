@@ -259,11 +259,9 @@
   button {
     height: auto;
     width: auto;
-    max-height: 35px;
     user-select: none;
     cursor: pointer;
     border-radius: 5px;
-    opacity: 1;
     text-transform: capitalize;
     outline-width: 0;
     border: none;
@@ -271,7 +269,7 @@
     font-size: .8rem;
     color: var(--back);
     background-color: var(--base);
-    transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
+    transition: color .4s, background-color .4s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
   }
   button:hover:not(:disabled) {
     opacity: var(--light_opacity)
@@ -317,7 +315,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1rem;
     color: var(--base);
-    border: 1px solid var(--base_faint);
+    border: 2px solid var(--base_faint);
     border-radius: 8px;
     background-color: transparent;
     box-shadow: none;
@@ -335,7 +333,7 @@
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus,
   select:focus,
   textarea:focus {
-    border: 1px solid var(--base)
+    border: 2px solid var(--base)
   }
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
   select.small_border_radius {

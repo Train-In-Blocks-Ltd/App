@@ -28,14 +28,14 @@ div#rich_show_content,
 .placeholder {
   cursor: pointer;
   padding: 1rem;
-  border: 1px solid var(--base_faint);
+  border: 2px solid var(--base_faint);
   border-radius: 10px;
   margin-top: 1rem;
   transition: .6s opacity cubic-bezier(.165, .84, .44, 1), .6s border cubic-bezier(.165, .84, .44, 1)
 }
 div#rich_show_content:hover,
 .placeholder:hover {
-  border: 1px solid var(--base_light);
+  border: 2px solid var(--base_light);
   opacity: var(--light_opacity)
 }
 div#rich_editor > div[contenteditable] > :is(div, p),
@@ -193,7 +193,7 @@ li[data-done='false'] {
 }
 #menu_bar {
   background-color: var(--fore);
-  border: 1px solid var(--base_faint);
+  border: 2px solid var(--base_faint);
   border-radius: 10px 10px 0 0;
   padding: 0 1rem;
   transition: var(--transition_standard)
@@ -215,9 +215,9 @@ li[data-done='false'] {
   top: calc(1rem + 44.39px);
   background-color: var(--fore);
   z-index: 1;
-  border-left: 1px solid var(--base_faint);
-  border-right: 1px solid var(--base_faint);
-  border-bottom: 1px solid var(--base_faint);
+  border-left: 2px solid var(--base_faint);
+  border-right: 2px solid var(--base_faint);
+  border-bottom: 2px solid var(--base_faint);
   padding: .8rem;
   display: grid;
   grid-gap: 1rem;
@@ -238,7 +238,7 @@ li[data-done='false'] {
 div#rich_editor {
   padding: 1rem;
   outline-width: 0;
-  border: 1px solid var(--base_faint);
+  border: 2px solid var(--base_faint);
   border-top: none;
   border-radius: 0 0 10px 10px;
   transition: var(--transition_standard)
@@ -253,10 +253,10 @@ div#rich_editor {
 
 /* Caret In Editor */
 #menu_bar.editorFocused {
-  border: 1px solid var(--base)
+  border: 2px solid var(--base)
 }
 div#rich_editor.editorFocused {
-  border: 1px solid var(--base);
+  border: 2px solid var(--base);
   border-top: none
 }
 
