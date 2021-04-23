@@ -897,6 +897,7 @@ export default {
         { name: 'Complete', svg: 'svg/tick.svg' },
         { name: 'Incomplete', svg: 'svg/cross.svg' },
         { name: 'Progress', svg: 'svg/arrow-right.svg' },
+        // { name: 'Duplicate', svg: 'svg/copy.svg' },
         { name: 'Move', svg: 'svg/move.svg' },
         { name: 'Shift', svg: 'svg/shift.svg' },
         { name: 'Print', svg: 'svg/print.svg' },
