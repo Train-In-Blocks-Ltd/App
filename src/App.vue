@@ -447,7 +447,7 @@
     left: -10px;
     padding: 2px 5px;
     border-radius: 3px;
-    background: red;
+    background: var(--base);
     color: white;
     font-size: .6rem
   }

@@ -149,6 +149,7 @@
         :href="nav.link"
         :title="nav.name"
         target="_blank"
+        rel="noreferrer"
       >
         <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
         <p class="nav_item__text">
