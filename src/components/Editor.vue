@@ -344,6 +344,12 @@ div#rich_editor.editorFocused {
             <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
           </button>
           <button
+            :class="{ 'is-active': editor.isActive('taskList') }"
+            @click="editor.chain().focus().setHorizontalRule().run()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/horizontal-rule.svg')" />
+          </button>
+          <button
             class="fadeIn"
             :class="{ 'is-active': editor.isActive('link') }"
             @click="editor.isActive('link') ? editor.chain().focus().unsetLink().run() : setLinkUrl()"
