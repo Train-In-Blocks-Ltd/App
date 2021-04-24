@@ -452,12 +452,6 @@ export default {
     }
   },
   watch: {
-    value (value) {
-      if (this.editor.getHTML() === value) {
-        return
-      }
-      this.editor.commands.setContent(this.value, false)
-    },
     showAddTemplate () {
       if (this.showAddTemplate) {
         this.will_body_scroll(false)
