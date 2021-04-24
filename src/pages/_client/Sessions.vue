@@ -11,10 +11,10 @@
   }
 
   /* Plan Info */
-  .top_grid {
+  .client_plan_top_grid {
     display: grid;
     grid-gap: 1rem;
-    margin-top: 1rem
+    margin-top: 2rem
   }
   .wrapper--progress-bar {
     user-select: none;
@@ -266,6 +266,9 @@
     }
     input.session-name {
       width: 60%
+    }
+    .client_plan_top_grid {
+      margin-top: 1rem
     }
   }
 
@@ -553,7 +556,7 @@
       :key="index"
     >
       <div v-if="plan.id == $route.params.id">
-        <div class="top_grid">
+        <div class="client_plan_top_grid">
           <input
             v-model="plan.name"
             class="allow_text_overflow"

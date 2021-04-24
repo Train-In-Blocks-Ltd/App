@@ -1,102 +1,117 @@
-<style>
-  /* Client Info */
-  .client_info {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .client_email_bar {
-    display: flex;
-    margin: auto 0
-  }
-  .client_email {
-    margin-left: .6rem
-  }
-  .client_info__more_details {
-    display: grid;
-    grid-gap: .6rem
-  }
-  .client_info__options {
-    display: flex;
-    justify-content: space-between
-  }
+<style scoped>
+/* Client Info */
+.client_home_top_grid {
+  display: grid;
+  grid-template-columns: .2fr 1fr;
+  grid-gap: 1.6rem
+}
+.profile_image_placeholder {
+  height: 140px;
+  width: 140px;
+  border: 5px solid var(--base);
+  border-radius: 50%
+}
+.client_info {
+  display: grid;
+  grid-gap: 1rem
+}
+.client_email_bar {
+  display: flex;
+  margin: auto 0
+}
+.client_email {
+  margin-left: .6rem
+}
+.client_info__options {
+  display: flex;
+  justify-content: space-between
+}
 
-  /* Floating Nav */
-  .wrapper--floating_nav {
-    background-color: var(--fore);
-    width: 0;
-    height: 100%;
-    position: fixed;
-    right: 0;
-    top: 0;
-    padding: 0;
-    z-index: 4;
-    box-shadow: var(--low_shadow);
+/* Floating Nav */
+.wrapper--floating_nav {
+  background-color: var(--fore);
+  width: 0;
+  height: 100%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding: 0;
+  z-index: 4;
+  box-shadow: var(--low_shadow);
+  transition: var(--transition_standard)
+}
+.wrapper--floating_nav.openFloatingNav {
+  width: 14rem;
+  padding: 2rem
+}
+.floating_nav {
+  display: grid;
+  grid-gap: 2rem;
+  text-align: right
+}
+.floating_nav a {
+  text-align: right
+}
+.icon--options {
+  cursor: pointer;
+  margin-left: auto
+}
+.client--options {
+  display: grid;
+  grid-gap: 1rem
+}
+.client--options a {
+  margin-left: auto
+}
+.client--options a svg {
+  margin-left: .4rem
+}
+
+/* Client Notes */
+.client_notes--header {
+  color: var(--base);
+  padding: .6rem .8rem
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .floating_nav a {
+    grid-template-columns: 1fr;
     transition: var(--transition_standard)
   }
-  .wrapper--floating_nav.openFloatingNav {
-    width: 14rem;
-    padding: 2rem
+  .floating_nav a:active {
+    transform: var(--active_state)
   }
-  .floating_nav {
+  div.floating_nav a:before {
+    content: none
+  }
+  .floating_nav .text--hideable {
+    display: none
+  }
+}
+@media (max-width: 768px) {
+  .client_home_top_grid {
+    grid-template-columns: 1fr
+  }
+  .profile_image_placeholder {
+    width: 100px;
+    height: 100px;
+    margin: auto
+  }
+  #client .client_info input.client_info--name {
+    font-size: 2rem
+  }
+  .client_info {
+    width: 90vw
+  }
+}
+@media (max-width: 576px) {
+  .client_info__options {
     display: grid;
-    grid-gap: 2rem;
-    text-align: right
+    grid-gap: 1rem;
+    margin-top: 1rem
   }
-  .floating_nav a {
-    text-align: right
-  }
-  .icon--options {
-    cursor: pointer;
-    margin-left: auto
-  }
-  .client--options {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .client--options a {
-    margin-left: auto
-  }
-  .client--options a svg {
-    margin-left: .4rem
-  }
-
-  /* Client Notes */
-  .client_notes--header {
-    color: var(--base);
-    padding: .6rem .8rem
-  }
-
-  /* Responsiveness */
-  @media (max-width: 992px) {
-    .floating_nav a {
-      grid-template-columns: 1fr;
-      transition: var(--transition_standard)
-    }
-    .floating_nav a:active {
-      transform: var(--active_state)
-    }
-    div.floating_nav a:before {
-      content: none
-    }
-    .floating_nav .text--hideable {
-      display: none
-    }
-  }
-  @media (max-width: 768px) {
-    #client .client_info input.client_info--name {
-      font-size: 2rem
-    }
-    .client_info {
-      width: 90vw
-    }
-  }
-  @media (max-width: 576px) {
-    .client_info__options {
-      display: grid;
-      grid-gap: 1rem;
-      margin-top: 1rem
-    }
-  }
+}
 </style>
 
 <template>
@@ -151,8 +166,12 @@
         </div>
       </div>
     </div>
-    <div class="top_grid">
+    <div class="client_home_top_grid">
       <!-- Update the client details -->
+      <inline-svg
+        class="profile_image_placeholder"
+        :src="require('../../assets/svg/profile-image.svg')"
+      />
       <div class="client_info">
         <input
           v-model="$parent.client_details.name"
@@ -163,53 +182,51 @@
           :disabled="$parent.silent_loading"
           @blur="$parent.update_client()"
         >
-        <div class="client_info__more_details">
-          <input
-            id="phone"
-            v-model="$parent.client_details.number"
-            class="input--forms allow_text_overflow"
-            placeholder="Mobile"
-            aria-label="Mobile"
-            type="tel"
-            inputmode="tel"
-            autocomplete="tel"
-            minlength="9"
-            maxlength="14"
-            pattern="\d+"
-            :disabled="$parent.silent_loading"
-            @blur="$parent.update_client()"
-          >
-          <div v-if="!sessions" class="client_info__options">
-            <div class="client_email_bar">
-              <inline-svg :src="require('../../assets/svg/email.svg')" />
-              <p class="client_email">
-                {{ $parent.client_details.email }}
-              </p>
-            </div>
-            <button
-              v-if="clientAlreadyMsg === 'Restricted'"
-              class="button--verify button"
-              :disabled="clientAlready"
-              @click="create_client()"
-            >
-              {{ clientAlreadyMsg }}
-            </button>
-            <button
-              v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
-              class="button--verify fadeIn"
-              @click="$parent.client_details.notifications = $parent.client_details.notifications === 1 ? 0 : 1, $parent.update_client()"
-            >
-              {{ $parent.client_details.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
-            </button>
-            <button
-              v-else
-              class="button--verify button"
-              :disabled="clientAlready"
-              @click="create_client()"
-            >
-              {{ clientAlreadyMsg }}
-            </button>
+        <input
+          id="phone"
+          v-model="$parent.client_details.number"
+          class="input--forms allow_text_overflow"
+          placeholder="Mobile"
+          aria-label="Mobile"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          minlength="9"
+          maxlength="14"
+          pattern="\d+"
+          :disabled="$parent.silent_loading"
+          @blur="$parent.update_client()"
+        >
+        <div v-if="!sessions" class="client_info__options">
+          <div class="client_email_bar">
+            <inline-svg :src="require('../../assets/svg/email.svg')" />
+            <p class="client_email">
+              {{ $parent.client_details.email }}
+            </p>
           </div>
+          <button
+            v-if="clientAlreadyMsg === 'Restricted'"
+            class="button--verify button"
+            :disabled="clientAlready"
+            @click="create_client()"
+          >
+            {{ clientAlreadyMsg }}
+          </button>
+          <button
+            v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
+            class="button--verify fadeIn"
+            @click="$parent.client_details.notifications = $parent.client_details.notifications === 1 ? 0 : 1, $parent.update_client()"
+          >
+            {{ $parent.client_details.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
+          </button>
+          <button
+            v-else
+            class="button--verify button"
+            :disabled="clientAlready"
+            @click="create_client()"
+          >
+            {{ clientAlreadyMsg }}
+          </button>
         </div>
       </div>
     </div>

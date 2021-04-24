@@ -91,10 +91,19 @@ li[data-done='false'] {
 .client_link:hover {
   box-shadow: var(--high_shadow)
 }
-.client_link svg {
-  width: 20px;
-  fill: var(--base);
-  transition: var(--transition_standard)
+
+/* Client info top section */
+.client_information {
+  display: grid;
+  grid-template-columns: .1fr 1fr;
+  grid-gap: 1rem
+}
+.profile_image_placeholder {
+  margin: auto;
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--base)
 }
 
 /* Client link details */
@@ -111,11 +120,17 @@ li[data-done='false'] {
   color: var(--base);
   transition: var(--transition_standard)
 }
+.client_link__details svg {
+  width: 20px;
+  fill: var(--base);
+  transition: var(--transition_standard)
+}
 .client_link.archived .name {
   color: var(--base)
 }
 
 @media (max-width: 768px) {
+  /* States */
   .client_link:hover svg {
     fill: var(--base)
   }
@@ -124,6 +139,14 @@ li[data-done='false'] {
   }
   .client_link:active {
     transform: var(--active_state)
+  }
+
+  /* Image */
+  .client_information {
+    grid-template-columns: 1fr
+  }
+  .profile_image_placeholder {
+    margin: auto auto auto 0
   }
 }
 @media (max-width: 576px) {
@@ -135,17 +158,23 @@ li[data-done='false'] {
 
 <template>
   <div class="client_link">
-    <div>
-      <h3 class="name">
-        {{ name }}
-      </h3>
-      <div v-if="email !== ''" class="client_link__details">
-        <inline-svg :src="require('../assets/svg/email.svg')" />
-        <p>{{ email }}</p>
-      </div>
-      <div v-if="number !== ''" class="client_link__details">
-        <inline-svg :src="require('../assets/svg/mobile.svg')" />
-        <p>{{ number }}</p>
+    <div class="client_information">
+      <inline-svg
+        class="profile_image_placeholder"
+        :src="require('../assets/svg/profile-image.svg')"
+      />
+      <div>
+        <h3 class="name">
+          {{ name }}
+        </h3>
+        <div v-if="email !== ''" class="client_link__details">
+          <inline-svg :src="require('../assets/svg/email.svg')" />
+          <p>{{ email }}</p>
+        </div>
+        <div v-if="number !== ''" class="client_link__details">
+          <inline-svg :src="require('../assets/svg/mobile.svg')" />
+          <p>{{ number }}</p>
+        </div>
       </div>
     </div>
     <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">
