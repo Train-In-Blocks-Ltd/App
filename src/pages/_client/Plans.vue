@@ -79,7 +79,7 @@
         Client Information
       </h3>
       <rich-editor
-        :html-injection.sync="$parent.$parent.client_details.notes"
+        v-model="$parent.$parent.client_details.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
         @on-edit-change="resolve_client_info_editor"
       />

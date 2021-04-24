@@ -187,7 +187,7 @@
               <rich-editor
                 :item-id="session.id"
                 :editing="feedbackId"
-                :html-injection.sync="session.feedback"
+                v-model="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
                 :force-stop="forceStop"
                 @on-edit-change="resolve_feedback_editor"

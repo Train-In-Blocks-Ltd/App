@@ -35,17 +35,6 @@ button.red_button {
 .copy_msg {
   margin-bottom: 1rem
 }
-.allow_select {
-  cursor: pointer;
-  user-select: all;
-  padding: 1rem;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  transition: var(--transition_standard)
-}
-.allow_select:hover:not(.selected) {
-  border: 1px solid var(--base_faint)
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -62,12 +51,12 @@ button.red_button {
       <h3 class="title">
         {{ desc }}
       </h3>
-      <p v-if="allowSelect" class="copy_msg">
+      <p class="copy_msg">
         Select, copy, and paste it into your sessions
       </p>
       <div
         class="preview_html"
-        :class="{ noMedia: !showMedia, allow_select: allowSelect, selected: focused }"
+        :class="{ noMedia: !showMedia }"
         @click="focused = true"
         @mouseleave="focused = false"
         v-html="update_html(html, !showBrackets)"
@@ -89,13 +78,7 @@ export default {
     type: String,
     html: String,
     showMedia: Boolean,
-    showBrackets: Boolean,
-    allowSelect: Boolean
-  },
-  data () {
-    return {
-      focused: false
-    }
+    showBrackets: Boolean
   }
 }
 </script>

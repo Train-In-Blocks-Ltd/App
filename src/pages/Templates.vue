@@ -134,7 +134,7 @@
           v-show="expandedTemplates.includes(template.id)"
           :item-id="template.id"
           :editing="editTemplate"
-          :html-injection.sync="template.template"
+          v-model="template.template"
           :empty-placeholder="'What do you plan for your clients frequently?'"
           :force-stop="forceStop"
           @on-edit-change="resolve_template_editor"

@@ -635,7 +635,7 @@
                 Plan Notes
               </h3>
               <rich-editor
-                :html-injection.sync="plan.notes"
+                v-model="plan.notes"
                 :item-id="'plan_notes'"
                 :editing="editSession"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
@@ -825,7 +825,7 @@
                       :item-id="session.id"
                       :week-id="currentWeek"
                       :editing="editSession"
-                      :html-injection.sync="session.notes"
+                      v-model="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                       :data-for-templates="$parent.$parent.templates"
                       :force-stop="forceStop"

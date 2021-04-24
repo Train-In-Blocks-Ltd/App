@@ -1,6 +1,7 @@
 <style scoped>
-.confirm_pop_up {
+.input_pop_up {
   position: fixed;
+  width: 60%;
   top: 1rem;
   left: calc(38px + 3rem);
   background-color: var(--overlay_glass);
@@ -11,7 +12,10 @@
   padding: 1rem;
   z-index: 1000
 }
-.confirm_pop_up svg {
+.input_pop_up input {
+  margin-top: 1rem
+}
+.input_pop_up svg {
   cursor: pointer;
   height: 1.2rem;
   width: 1.2rem;
@@ -24,37 +28,41 @@
   border-radius: 50%;
   transition: var(--transition_standard)
 }
-.confirm_pop_up svg:hover {
+.input_pop_up svg:hover {
   opacity: var(--light_opacity)
 }
 
 /* Button */
-.confirm_button_bar {
+.input_button_bar {
   margin-top: 1rem
 }
 
 @supports not (backdrop-filter: blur(10px)) {
-  .confirm_pop_up {
+  .input_pop_up {
     background-color: var(--fore)
   }
 }
 @media (max-width: 992px) {
-  .confirm_pop_up svg:hover {
+  .input_pop_up svg:hover {
     fill: black;
     background-color: var(--fore);
     border-color: var(--base)
   }
 }
 @media (max-width: 768px) {
-  .confirm_pop_up {
-    max-width: 300px;
+  .input_pop_up {
+    width: 80%;
     left: .4rem
   }
 }
 </style>
 
 <template>
-  <div v-if="reveal" class="confirm_pop_up">
+  <form
+    v-if="reveal"
+    class="input_pop_up"
+    @submit.prevent="resolvePromise(urlLink), reveal = false"
+  >
     <p>
       <b>
         {{ header }}
@@ -63,15 +71,30 @@
     <p>
       {{ desc }}
     </p>
-    <div class="confirm_button_bar">
-      <button @click="resolvePromise(true), reveal = false">
-        Confirm
+    <input
+      v-if="inputType === 'link'"
+      v-model="urlLink"
+      type="text"
+      placeholder="Link URL"
+      aria-label="Link URL"
+      required
+    >
+    <input
+      v-else-if="inputType === 'image'"
+      id="img_uploader"
+      type="file"
+      accept=".png, .jpeg, .jpg, .webp, .gif"
+      @change="$parent.add_img(), reveal = false"
+    >
+    <div v-if="inputType !== 'image'" class="input_button_bar">
+      <button>
+        Submit
       </button>
       <button class="red_button" @click="resolvePromise(false), reveal = false">
         Cancel
       </button>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -81,7 +104,9 @@ export default {
       header: null,
       desc: null,
       reveal: false,
-      resolvePromise: undefined
+      resolvePromise: undefined,
+      urlLink: null,
+      inputType: null
     }
   },
   watch: {
@@ -94,10 +119,12 @@ export default {
     }
   },
   methods: {
-    show (header, desc) {
+    show (inputType, header, desc) {
+      this.inputType = inputType
       this.reveal = true
       this.header = header
       this.desc = desc
+      this.urlLink = null
       return new Promise((resolve) => {
         this.resolvePromise = resolve
       })

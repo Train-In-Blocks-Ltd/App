@@ -257,7 +257,7 @@
 
   /* Box buttons */
   button {
-    height: auto;
+    height: fit-content;
     width: auto;
     user-select: none;
     cursor: pointer;
