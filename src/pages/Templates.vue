@@ -95,8 +95,7 @@
         v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
         :key="index"
-        :class="{ editorActive: template.id === editTemplate }"
-        class="template_wrapper editor_object"
+        class="template_wrapper editor_object_complex"
       >
         <div class="template_wrapper__header">
           <span
@@ -132,9 +131,9 @@
         </div>
         <rich-editor
           v-show="expandedTemplates.includes(template.id)"
+          v-model="template.template"
           :item-id="template.id"
           :editing="editTemplate"
-          v-model="template.template"
           :empty-placeholder="'What do you plan for your clients frequently?'"
           :force-stop="forceStop"
           @on-edit-change="resolve_template_editor"

@@ -151,7 +151,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!sessions" class="top_grid">
+    <div class="top_grid">
       <!-- Update the client details -->
       <div class="client_info">
         <input
@@ -179,7 +179,7 @@
             :disabled="$parent.silent_loading"
             @blur="$parent.update_client()"
           >
-          <div class="client_info__options">
+          <div v-if="!sessions" class="client_info__options">
             <div class="client_email_bar">
               <inline-svg :src="require('../../assets/svg/email.svg')" />
               <p class="client_email">

@@ -106,7 +106,6 @@
               v-show="todays_sessions_store.includes(session.id)"
               :id="`session-${session.id}`"
               :key="sessionIndex"
-              :class="{ editorActive: feedbackId === session.id }"
               class="wrapper--session"
             >
               <div :id="session.name" class="session_header client-side">
@@ -141,9 +140,9 @@
                   Feedback
                 </h3>
                 <rich-editor
+                  v-model="session.feedback"
                   :item-id="session.id"
                   :editing="feedbackId"
-                  v-model="session.feedback"
                   :empty-placeholder="'What would you like to share with your trainer?'"
                   :force-stop="forceStop"
                   @on-edit-change="resolve_feedback_editor"

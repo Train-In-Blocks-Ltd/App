@@ -10,21 +10,11 @@
     background-color: #00000060
   }
 
-  /* Client */
-  .client_info {
-    display: grid;
-    grid-gap: 1rem
-  }
-
   /* Plan Info */
-  .plan_info {
-    display: flex;
-    flex-direction: column
-  }
-  #plan .plan_info label {
-    display: flex;
-    align-items: center;
-    grid-auto-columns: min-content
+  .top_grid {
+    display: grid;
+    grid-gap: 1rem;
+    margin-top: 1rem
   }
   .wrapper--progress-bar {
     user-select: none;
@@ -564,29 +554,15 @@
     >
       <div v-if="plan.id == $route.params.id">
         <div class="top_grid">
-          <div class="client_info">
-            <input
-              v-model="$parent.$parent.client_details.name"
-              class="text--large allow_text_overflow"
-              type="text"
-              aria-label="Client Name"
-              autocomplete="name"
-              :disabled="$parent.$parent.silent_loading"
-              @blur="$parent.$parent.update_client()"
-            >
-            <!-- Update the plan info -->
-            <div class="plan_info">
-              <input
-                v-model="plan.name"
-                class="text--small allow_text_overflow"
-                aria-label="Session name"
-                type="text"
-                name="name"
-                :disabled="$parent.$parent.silent_loading"
-                @blur="update_plan()"
-              >
-            </div>
-          </div><br>  <!-- client_info -->
+          <input
+            v-model="plan.name"
+            class="allow_text_overflow"
+            aria-label="Plan name"
+            type="text"
+            name="name"
+            :disabled="$parent.$parent.silent_loading"
+            @blur="update_plan()"
+          >
           <div class="wrapper--progress-bar">
             <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: noSessions }">
               <p v-if="!noSessions" class="grey">
@@ -596,7 +572,7 @@
                 Add some sessions to see programme adherence here...
               </p>
             </div>
-          </div><br>
+          </div>
           <div class="plan_options">
             <router-link
               :to="`/client/${$route.params.client_id}/`"
@@ -623,13 +599,12 @@
               Delete plan
             </a>
           </div>
-        </div> <!-- top_grid -->
+        </div>
         <div class="plan_grid">
           <div class="calendar">
             <div
               id="plan_notes"
-              :class="{ editorActive: editingPlanNotes }"
-              class="editor_object"
+              class="editor_object_standard"
             >
               <h3>
                 Plan Notes
@@ -768,8 +743,7 @@
                     v-show="session.week_id === currentWeek"
                     :id="'session-' + session.id"
                     :key="indexed"
-                    class="editor_object fadeIn"
-                    :class="{ editorActive: session.id === editSession }"
+                    class="editor_object_complex fadeIn"
                     :style="{ zIndex: session.id === editSession ? 2 : 0 }"
                   >
                     <div class="session_header">
@@ -822,10 +796,10 @@
                     </div>
                     <rich-editor
                       v-show="expandedSessions.includes(session.id)"
+                      v-model="session.notes"
                       :item-id="session.id"
                       :week-id="currentWeek"
                       :editing="editSession"
-                      v-model="session.notes"
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                       :data-for-templates="$parent.$parent.templates"
                       :force-stop="forceStop"

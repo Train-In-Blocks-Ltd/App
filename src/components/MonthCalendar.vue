@@ -1,88 +1,109 @@
 <style scoped>
+/* Container */
+#month_calendar {
+  background: var(--fore);
+  border-radius: 10px;
+  border: 3px solid var(--base);
+  margin-top: 1rem
+}
+.calendar_header h3 {
+  position: relative;
+  top: 0;
+  left: 2rem;
+  padding: .6rem;
+  background: var(--base);
+  color: var(--fore);
+  width: fit-content;
+  border-radius: 0 0 10px 10px
+}
+.calendar_header__bar {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem
+}
+.calendar_header__bar * {
+  transition: var(--transition_standard)
+}
+.calendar_header__bar *:hover {
+  opacity: var(--light_opacity)
+}
+.next_month,
+.prev_month {
+  height: 36px;
+  width: 36px
+}
+:is(.next_month, .prev_month):active {
+  transform: scale(.8)
+}
+.day_cell.is_today {
+  background-color: var(--calendar_highlight);
+  border-radius: 10px
+}
+.today {
+  cursor: pointer;
+  margin: auto
+}
+.disabled, .today.disabled:hover {
+  opacity: var(--light_opacity);
+  cursor: default
+}
 
-  /* Calendar Nav */
-  .calendar_header__bar {
-    display: flex;
-    justify-content: space-between;
-    margin: 1rem 0
-  }
-  .calendar_header__bar * {
-    transition: var(--transition_standard)
-  }
-  .calendar_header__bar *:hover {
-    opacity: var(--light_opacity)
-  }
-  .next_month,
-  .prev_month {
-    height: 36px;
-    width: 36px
-  }
-  :is(.next_month, .prev_month):active {
-    transform: scale(.8)
-  }
-  .day_cell.is_today {
-    background-color: var(--calendar_highlight);
-    border-radius: 10px
-  }
-  .today {
-    cursor: pointer;
-    margin: auto
-  }
-  .disabled, .today.disabled:hover {
-    opacity: var(--light_opacity);
-    cursor: default
-  }
+/* Month */
+.month_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: .6rem;
+  margin: 2rem
+}
+.days_label {
+  text-align: center
+}
 
-  /* Month */
+/* Day */
+.day_cell {
+  text-align: right;
+  min-height: 100px;
+  background-color: var(--fore);
+  border-radius: 10px;
+  padding: .6rem;
+  box-shadow: var(--low_shadow)
+}
+.holderCell {
+  background-color: transparent
+}
+
+/* Event */
+.event {
+  overflow-wrap: anywhere;
+  border: 2px solid transparent;
+  border-radius: 3px;
+  padding: .1rem;
+  font-size: .7rem;
+  text-align: center;
+  margin: .4rem 0
+}
+.showBorder {
+  border: 2px solid var(--base)
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .calendar_header h3 {
+    left: 1rem
+  }
+  .calendar_header__bar,
   .month_container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: .6rem
+    margin: 1rem
   }
-  .days_label {
-    text-align: center
-  }
-
-  /* Day */
-  .day_cell {
-    text-align: right;
-    min-height: 100px;
-    background-color: var(--fore);
-    border-radius: 10px;
-    padding: .6rem;
-    transition: var(--transition_standard)
-  }
-  .day_cell:hover {
-    box-shadow: var(--low_shadow)
-  }
-  .holderCell {
-    background-color: transparent
-  }
-  .holderCell:hover {
-    box-shadow: none
-  }
-
-  /* Event */
-  .event {
-    overflow-wrap: anywhere;
-    border: 2px solid transparent;
-    border-radius: 3px;
-    padding: .1rem;
-    font-size: .7rem;
-    text-align: center;
-    margin: .4rem 0
-  }
-  .showBorder {
-    border: 2px solid var(--base)
-  }
+}
 </style>
 
 <template>
   <div id="month_calendar">
     <div class="calendar_header">
-      <h2>
+      <h3>
         {{ currentMonth }} {{ currentYear }}
-      </h2>
+      </h3>
       <div class="calendar_header__bar">
         <inline-svg
           :src="require('../assets/svg/arrow-left.svg')"

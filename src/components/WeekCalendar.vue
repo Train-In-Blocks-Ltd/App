@@ -1,112 +1,134 @@
 <style scoped>
+/* Containers */
+#calendar_view {
+  background: var(--fore);
+  border-radius: 10px;
+  border: 3px solid var(--base);
+  margin-top: 1rem
+}
+.calendar_header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column
+}
+.calendar_header h3 {
+  position: relative;
+  top: 0;
+  left: 2rem;
+  padding: .6rem;
+  background: var(--base);
+  color: var(--fore);
+  width: fit-content;
+  border-radius: 0 0 10px 10px
+}
+.calendar_header__bar {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem
+}
+.week_container {
+  display: grid;
+  grid-gap: 2rem;
+  margin: 1rem;
+  background-color: var(--fore);
+  border-radius: 10px
+}
+.day_container {
+  display: grid;
+  grid-template-columns: .1fr 1fr;
+  grid-gap: 4rem;
+  padding: 1rem
+}
+.is_today {
+  background-color: var(--calendar_highlight);
+  box-shadow: var(--low_shadow);
+  border-radius: 10px
+}
+.day_events {
+  display: grid;
+  grid-gap: 1rem
+}
+.day_events__event {
+  padding: .6rem 1rem;
+  border-radius: 8px;
+  border: 3px solid transparent;
+  overflow-wrap: anywhere
+}
+.showBorder {
+  border: 3px solid var(--base)
+}
 
-  /* Containers */
-  .calendar_header {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column
-  }
-  .calendar_header__bar {
-    display: flex;
-    justify-content: space-between;
-    margin: 1rem 0
-  }
-  .week_container {
-    display: grid;
-    grid-gap: 2rem;
-    margin: 2rem 0;
-    background-color: var(--fore);
-    border-radius: 10px
-  }
-  .day_container {
-    display: grid;
-    grid-template-columns: .1fr 1fr;
-    grid-gap: 4rem;
-    padding: 2rem
-  }
-  .is_today {
-    background-color: var(--calendar_highlight);
-    box-shadow: var(--low_shadow);
-    border-radius: 10px
-  }
-  .day_events {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .day_events__event {
-    padding: .6rem 1rem;
-    border-radius: 8px;
-    border: 3px solid transparent;
-    overflow-wrap: anywhere
-  }
-  .showBorder {
-    border: 3px solid var(--base)
-  }
+/* Header bar */
+.calendar_header__bar * {
+  transition: var(--transition_standard)
+}
+.calendar_header__bar *:hover {
+  opacity: var(--light_opacity)
+}
+.next_week,
+.prev_week {
+  height: 36px;
+  width: 36px
+}
+:is(.next_week, .prev_week):active {
+  transform: scale(.8)
+}
+.today {
+  cursor: pointer;
+  margin: auto
+}
+.disabled, .today.disabled:hover {
+  opacity: var(--light_opacity);
+  cursor: default
+}
 
-  /* Header bar */
-  .calendar_header__bar * {
-    transition: var(--transition_standard)
-  }
+/* Day */
+.day_header {
+  display: flex;
+  justify-content: space-between
+}
+.day_header .text--small {
+  margin-left: .4rem
+}
+
+/* Responsive */
+@media (max-width: 992px) {
   .calendar_header__bar *:hover {
-    opacity: var(--light_opacity)
+    opacity: 1
   }
-  .next_week,
-  .prev_week {
-    height: 36px;
-    width: 36px
+  .next_week:hover {
+    transform: rotate(-90deg) translateY(0)
   }
-  :is(.next_week, .prev_week):active {
-    transform: scale(.8)
+  .next_week:active {
+    transform: rotate(-90deg) translateY(0) scale(.9)
   }
-  .today {
-    cursor: pointer;
-    margin: auto
+  .prev_week:hover {
+    transform: rotate(90deg) translateY(0)
   }
-  .disabled, .today.disabled:hover {
-    opacity: var(--light_opacity);
-    cursor: default
+  .prev_week:active {
+    transform: rotate(90deg) translateY(0) scale(.9)
   }
-
-  /* Day */
-  .day_header {
-    display: flex;
-    justify-content: space-between
+}
+@media (max-width: 576px) {
+  .day_container {
+    padding: 1rem
   }
-  .day_header .text--small {
-    margin-left: .4rem
+  .calendar_header h3 {
+    left: 1rem
   }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    .calendar_header__bar *:hover {
-      opacity: 1
-    }
-    .next_week:hover {
-      transform: rotate(-90deg) translateY(0)
-    }
-    .next_week:active {
-      transform: rotate(-90deg) translateY(0) scale(.9)
-    }
-    .prev_week:hover {
-      transform: rotate(90deg) translateY(0)
-    }
-    .prev_week:active {
-      transform: rotate(90deg) translateY(0) scale(.9)
-    }
+  .calendar_header__bar,
+  .week_container {
+    margin: 1rem
   }
-  @media (max-width: 576px) {
-    .day_container {
-      padding: 1rem
-    }
-  }
+}
 </style>
 
 <template>
   <div id="calendar_view">
     <div class="calendar_header">
-      <h2>
+      <h3>
         {{ get_month(thisWeek[0].date_split[1]) }} {{ thisWeek[0].date_split[0] }}
-      </h2>
+      </h3>
       <div class="calendar_header__bar">
         <inline-svg
           :src="require('../assets/svg/arrow-left.svg')"

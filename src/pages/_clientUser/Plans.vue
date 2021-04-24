@@ -14,64 +14,88 @@
 </style>
 
 <style scoped>
-  .plan_name {
-    margin-bottom: 4rem
-  }
-  .plan_notes, .wrapper--session {
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    border-radius: 10px;
-    padding: 2rem
-  }
-  .container--sessions {
-    margin: 4rem 0 2rem 0
-  }
+.plan_name {
+  margin-bottom: 4rem
+}
 
-  /* Navigate */
-  .show_sessions_nav {
-    display: flex;
-    margin: 2rem 0
-  }
-  .show_sessions_counter {
-    margin: auto
-  }
-  :is(.show_sessions_left, .show_sessions_right) {
-    height: 36px;
-    width: 36px
-  }
-  :is(.show_sessions_left, .show_sessions_right):not(.disabled):active {
-    transform: scale(.8)
-  }
-  .disabled, .disabled:hover {
-    opacity: var(--light_opacity);
-    cursor: default
-  }
-  hr {
-    margin: 2rem 0
-  }
+/* Editor object */
+.plan_notes {
+  border: 3px solid var(--base);
+  border-radius: 10px;
+  background-color: var(--fore);
+  transition: .6s border cubic-bezier(.165, .84, .44, 1)
+}
+.plan_notes h3 {
+  position: relative;
+  left: 2rem;
+  padding: .6rem;
+  letter-spacing: 2px;
+  width: fit-content;
+  background: var(--base);
+  color: var(--fore);
+  border-radius: 0 0 10px 10px
+}
+.plan_notes .show_html {
+  margin: 2rem
+}
+.wrapper--session {
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  border-radius: 10px;
+  padding: 2rem
+}
+.container--sessions {
+  margin: 4rem 0 2rem 0
+}
+
+/* Navigate */
+.show_sessions_nav {
+  display: flex;
+  margin: 2rem 0
+}
+.show_sessions_counter {
+  margin: auto
+}
+:is(.show_sessions_left, .show_sessions_right) {
+  height: 36px;
+  width: 36px
+}
+:is(.show_sessions_left, .show_sessions_right):not(.disabled):active {
+  transform: scale(.8)
+}
+.disabled, .disabled:hover {
+  opacity: var(--light_opacity);
+  cursor: default
+}
+hr {
+  margin: 2rem 0
+}
+.switch_cal {
+  margin-bottom: .4rem
+}
+
+/* Scroll */
+.container--sessions::-webkit-scrollbar {
+  height: 4px
+}
+
+/* Responsive */
+@media (max-width: 992px) {
   .switch_cal {
-    margin-bottom: .4rem
+    display: none
   }
-
-  /* Scroll */
-  .container--sessions::-webkit-scrollbar {
-    height: 4px
+}
+@media (max-width: 576px) {
+  .plan_notes h3 {
+    left: 1rem
   }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    .switch_cal {
-      display: none
-    }
-    .plan_notes {
-      margin: 4rem 0
-    }
+  .plan_notes #wrapper--rich_editor {
+    margin: 1rem
   }
-  @media (max-width: 576px) {
-    .wrapper--session, .plan_notes {
-      padding: .8rem
-    }
+  .wrapper--session {
+    padding: .8rem
   }
+}
 </style>
 
 <template>
@@ -82,13 +106,18 @@
           {{ plan.name }}
         </h2>
         <div class="plan_notes">
-          <div class="plan_notes__header">
-            <h3 class="bottom_margin">
-              Plan Notes
-            </h3>
-          </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_html fadeIn" v-html="update_html(plan.notes, true)" />
-          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_html grey">
+          <h3 class="bottom_margin">
+            Plan Notes
+          </h3>
+          <div
+            v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
+            class="show_html fadeIn"
+            v-html="update_html(plan.notes, true)"
+          />
+          <p
+            v-else-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
+            class="show_html grey"
+          >
             No plan notes added...
           </p>
         </div>
@@ -150,7 +179,6 @@
             v-show="showing_current_session === indexed"
             :id="`session-${session.id}`"
             :key="indexed"
-            :class="{ editorActive: feedbackId === session.id }"
             class="wrapper--session"
           >
             <div :id="session.name" class="session_header client-side">
@@ -185,9 +213,9 @@
                 Feedback
               </h3>
               <rich-editor
+                v-model="session.feedback"
                 :item-id="session.id"
                 :editing="feedbackId"
-                v-model="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
                 :force-stop="forceStop"
                 @on-edit-change="resolve_feedback_editor"

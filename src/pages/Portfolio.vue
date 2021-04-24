@@ -63,8 +63,7 @@
     </div>
     <div
       v-if="!$parent.loading"
-      :class="{ editorActive: editingPortfolio }"
-      class="editor_object portfolio_editor"
+      class="editor_object_standard portfolio_editor"
     >
       <h3>
         Portfolio

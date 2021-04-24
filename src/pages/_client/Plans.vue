@@ -74,7 +74,7 @@
       </p>
     </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
-    <div id="client_notes" :class="{ editorActive: editingClientNotes }" class="editor_object">
+    <div id="client_notes" class="editor_object_standard">
       <h3>
         Client Information
       </h3>

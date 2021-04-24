@@ -1,6 +1,24 @@
 <style>
 /* Editor object */
-.editor_object {
+.editor_object_standard {
+  border: 3px solid var(--base);
+  border-radius: 10px;
+  background-color: var(--fore);
+  transition: .6s border cubic-bezier(.165, .84, .44, 1)
+}
+.editor_object_standard h3 {
+  position: relative;
+  left: 2rem;
+  padding: .6rem;
+  width: fit-content;
+  background: var(--base);
+  color: var(--fore);
+  border-radius: 0 0 10px 10px
+}
+.editor_object_standard #wrapper--rich_editor {
+  margin: 2rem
+}
+.editor_object_complex {
   display: grid;
   padding: 2rem;
   border: 2px solid transparent;
@@ -8,10 +26,6 @@
   background-color: var(--fore);
   box-shadow: var(--low_shadow);
   transition: .6s border cubic-bezier(.165, .84, .44, 1)
-}
-.editorActive {
-  /* stylelint-disable-next-line */
-  border: 2px solid var(--base_faint) !important
 }
 
 /* Editor */
@@ -82,8 +96,11 @@ ul[data-type='taskList'] li > label {
 
 /* Responsive */
 @media (max-width: 576px) {
-  .editor_object {
-    padding: .8rem
+  .editor_object_standard h3 {
+    left: 1rem
+  }
+  .editor_object_standard #wrapper--rich_editor {
+    margin: 1rem
   }
 }
 </style>
