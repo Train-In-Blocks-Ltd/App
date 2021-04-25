@@ -204,7 +204,7 @@ export default {
     progress_process (sessionId, sessionNotes, loc) {
       this.progressDataInputs.forEach((session) => {
         let n = 0
-        if (session.id === sessionId) {
+        if (session.sessionId === sessionId) {
           session.sessionExercises.forEach((exercise, exericseIdx) => {
             const REGEX = new RegExp(`${exercise.exerciseName.replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${exercise.exerciseProtocol}`, 'g')
             sessionNotes = sessionNotes.replace(REGEX, (match) => {
@@ -227,7 +227,7 @@ export default {
           this.$parent.add_session({
             programmeId: parseInt(this.$route.params.id),
             sessionName: session.name,
-            sessionDate: this.add_days(session.date, this.daysDiff * (weekCount - START_WEEK)),
+            sessionDate: this.add_days(session.date, this.daysBetweenEachSession * (weekCount - START_WEEK)),
             sessionNotes: this.simpleProgress ? session.notes : this.progress_process(session.id, session.notes, weekCount - START_WEEK),
             sessionWeek: weekCount
           }, true)

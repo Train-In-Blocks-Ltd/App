@@ -605,7 +605,7 @@
                     class="a_link"
                     @click="select_all('week')"
                   >
-                    Select this week
+                    Select this microcycle
                   </a>
                   <a
                     v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
