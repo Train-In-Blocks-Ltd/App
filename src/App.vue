@@ -126,6 +126,12 @@
     stroke: var(--base)
   }
 
+  /* Other elements */
+  hr {
+    margin: 1rem 0;
+    border-color: var(--base_light)
+  }
+
   /* Containers */
   .view_container {
     background-color: var(--back);
@@ -446,7 +452,7 @@
     padding: 2px 5px;
     border-radius: 3px;
     background: var(--base);
-    color: white;
+    color: var(--fore);
     font-size: .6rem
   }
 

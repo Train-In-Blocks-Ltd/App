@@ -255,13 +255,7 @@
     }
   }
   @media (max-width: 768px) {
-    .graph {
-      padding: 2rem 5vw 4rem 5vw
-    }
     .expand-all:hover {
-      opacity: 1
-    }
-    #copy:hover {
       opacity: 1
     }
     input.session-name {
@@ -794,13 +788,6 @@ export default {
       // MANIPULATION
 
       moveTarget: 1,
-      copyTarget: 2,
-      simpleCopy: true,
-      copyAcrossPage: 0,
-      copyAcrossView: 0,
-      copyAcrossViewMax: 0,
-      copyAcrossProtocols: [],
-      copyAcrossInputs: [],
       daysDiff: 7,
       selectedSessions: [],
       shiftDays: 1,
@@ -890,7 +877,7 @@ export default {
           break
         case 'save':
           this.editingPlanNotes = false
-          this.update_plan(PLAN.notes)
+          this.update_plan()
           break
         case 'cancel':
           this.$parent.$parent.dontLeave = false
@@ -1214,19 +1201,20 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async update_plan (forceNotes, forceID, forceName, forceDuration, forceColors) {
+    async update_plan (data) {
       this.$parent.$parent.silent_loading = true
       this.$parent.$parent.dontLeave = true
       const PLAN = this.helper('match_plan')
+      const FORCE = data !== undefined
       try {
         this.sort_sessions(PLAN)
         const RESPONSE = await this.$axios.post('https://api.traininblocks.com/programmes',
           {
-            id: forceID === undefined ? PLAN.id : forceID,
-            name: forceName === undefined ? PLAN.name : `Copy of ${forceName}`,
-            duration: forceDuration === undefined ? PLAN.duration : forceDuration,
-            notes: forceNotes === undefined ? PLAN.notes : forceNotes,
-            block_color: forceColors === undefined ? PLAN.block_color : forceColors,
+            id: FORCE ? data.id : PLAN.id,
+            name: FORCE ? `Copy of ${data.name}` : PLAN.name,
+            duration: FORCE ? data.duration : PLAN.duration,
+            notes: FORCE ? data.notes : PLAN.notes,
+            block_color: FORCE ? data.block_color : PLAN.block_color,
             ordered: PLAN.ordered
           }
         )

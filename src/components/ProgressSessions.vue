@@ -89,30 +89,35 @@
             {{ session.sessionDate }}
           </p>
         </div>
-        <div
-          v-for="(exercise, exerciseIndex) in session.sessionExercises"
-          :key="`exercise_${sessionIndex}_${exerciseIndex}`"
-          class="exercise_group"
-        >
-          <p class="exercise_name">
-            <b>{{ exercise.exerciseName }}</b><br>Week {{ currentWeek }}: {{ exercise.exerciseProtocol }}
-          </p>
+        <div v-if="session.sessionExercises.length">
           <div
-            v-for="(progression, progressionIndex) in exercise.progression"
-            :key="`exercise_${sessionIndex}_${exerciseIndex}_${progressionIndex}`"
+            v-for="(exercise, exerciseIndex) in session.sessionExercises"
+            :key="`exercise_${sessionIndex}_${exerciseIndex}`"
+            class="exercise_group"
           >
-            <p>
-              Week {{ currentWeek + progressionIndex + 1 }}:
+            <p class="exercise_name">
+              <b>{{ exercise.exerciseName }}</b><br>Week {{ currentWeek }}: {{ exercise.exerciseProtocol }}
             </p>
-            <input
-              v-model="exercise.progression[progressionIndex]"
-              :aria-label="`${exercise.exerciseName}_${progressionIndex}`"
-              type="text"
-              required
+            <div
+              v-for="(progression, progressionIndex) in exercise.progression"
+              :key="`exercise_${sessionIndex}_${exerciseIndex}_${progressionIndex}`"
             >
+              <p>
+                Week {{ currentWeek + progressionIndex + 1 }}:
+              </p>
+              <input
+                v-model="exercise.progression[progressionIndex]"
+                :aria-label="`${exercise.exerciseName}_${progressionIndex}`"
+                type="text"
+                required
+              >
+            </div>
+            <hr v-if="exerciseIndex !== session.sessionExercises.length - 1">
           </div>
-          <hr v-if="exerciseIndex !== session.sessionExercises.length - 1">
         </div>
+        <p v-else>
+          No tracked data found in this session
+        </p>
         <div class="progression_bottom_bar">
           <button
             class="red_button"
