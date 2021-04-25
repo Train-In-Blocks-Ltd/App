@@ -309,7 +309,7 @@
 
 <template>
   <div id="plan">
-    <div :class="{ opened_sections: showMove || showShift || showCopyAcross || showDuplicate }" class="section_overlay" />
+    <div :class="{ opened_sections: showMove || showShift || showProgress || showDuplicate }" class="section_overlay" />
     <form
       v-if="showMove"
       class="tab_overlay_content fadeIn delay fill_mode_both"
@@ -372,127 +372,13 @@
         Cancel
       </button>
     </form>
-    <div v-if="showCopyAcross" class="tab_overlay_content fadeIn delay fill_mode_both">
-      <form v-if="copyAcrossPage === 0" @submit.prevent="copy_across_pull(), copyAcrossView = 0, copyAcrossPage += 1">
-        <h3>
-          Copy across to different microcycles
-        </h3>
-        <p class="grey">
-          Progress each session in just a few clicks
-        </p>
-        <div class="input_section">
-          <label for="range">
-            From {{ currentWeek }} to:
-          </label>
-          <input
-            id="range"
-            ref="range"
-            v-model="copyTarget"
-            class="width_300"
-            name="range"
-            type="number"
-            :min="currentWeek + 1"
-            :max="maxWeek"
-            required
-          >
-        </div>
-        <div class="input_section">
-          <label for="range">
-            Days until next sessions:
-          </label>
-          <input
-            v-model="daysDiff"
-            class="width_300"
-            name="range"
-            type="number"
-            min="1"
-            required
-          >
-        </div>
-        <button
-          type="button"
-          class="red_button"
-          @click.prevent="showCopyAcross = false, will_body_scroll(true)"
-        >
-          Cancel
-        </button>
-        <button
-          v-if="!simpleCopy"
-          type="submit"
-        >
-          Next
-        </button>
-        <button
-          v-else
-          @click.prevent="copy_across(), showCopyAcross = false, will_body_scroll(true)"
-        >
-          Copy
-        </button>
-      </form>
-      <div v-else-if="copyAcrossPage !== 0 && copyAcrossPage !== selectedSessions.length + 1">
-        <form
-          v-for="(protocol, singleRepsIndex) in copyAcrossProtocols"
-          v-show="copyAcrossPage === singleRepsIndex + 1"
-          :key="`protocol_${singleRepsIndex}`"
-          class="bottom_margin"
-          @submit.prevent="copyAcrossPage += 1, copyAcrossView = 0"
-        >
-          <div
-            v-for="(exercises, exerciseGroupIndex) in copyAcrossInputs[singleRepsIndex][1]"
-            v-show="copyAcrossView === exerciseGroupIndex"
-            :key="`exercise_${singleRepsIndex}_${exerciseGroupIndex}`"
-          >
-            <h3>
-              {{ protocol[1][exerciseGroupIndex][0] }}
-            </h3>
-            <p class="grey">
-              {{ protocol[1][exerciseGroupIndex][1] }}: {{ protocol[1][exerciseGroupIndex][2] }}
-            </p>
-            <div
-              v-for="(exercise, exerciseIndex) in exercises"
-              :key="`exercise_${singleRepsIndex}_${exerciseGroupIndex}_${exerciseIndex}`"
-            >
-              <br>
-              <label :for="`${protocol[1][0][0]}_${exerciseIndex}`">
-                Week {{ currentWeek + exerciseIndex + 1 }}:
-              </label>
-              <input
-                v-model="copyAcrossInputs[singleRepsIndex][1][exerciseGroupIndex][exerciseIndex]"
-                :name="`${protocol[1][0][0]}_${exerciseIndex}`"
-                type="text"
-                required
-              >
-            </div>
-            <br>
-            <button v-if="copyAcrossView !== 0" class="red_button" type="button" @click.prevent="copyAcrossView -= 1">
-              Back
-            </button>
-            <button v-if="copyAcrossView === 0" class="red_button" type="button" @click.prevent="copyAcrossView = copyAcrossInputs[singleRepsIndex - (copyAcrossPage === 1 ? 0 : 1)][1].length - 1, copyAcrossPage -= 1">
-              Back
-            </button>
-            <button v-if="copyAcrossView === copyAcrossInputs[singleRepsIndex][1].length - 1" type="submit">
-              Next
-            </button>
-            <button v-if="copyAcrossView !== copyAcrossInputs[singleRepsIndex][1].length - 1" @click.prevent="copyAcrossView += 1, copyAcrossViewMax = copyAcrossInputs[singleRepsIndex][1].length - 1">
-              Next
-            </button>
-          </div>
-        </form>
-      </div>
-      <form v-else-if="copyAcrossPage === selectedSessions.length + 1" class="center_wrapped" @submit.prevent="copy_across(), showCopyAcross = false, will_body_scroll(true)">
-        <h3>
-          You're all set
-        </h3>
-        <p class="grey">
-          Are you ready to progress the {{ selectedSessions.length > 1 ? 'sessions' : 'session' }}
-        </p><br>
-        <button class="red_button" @click.prevent="copyAcrossView = copyAcrossViewMax, copyAcrossPage -= 1">
-          Back
-        </button>
-        <button type="submit">
-          Copy
-        </button>
-      </form>
+    <div v-if="showProgress" class="tab_overlay_content fadeIn delay fill_mode_both">
+      <progress-sessions
+        :plan-data="helper('match_plan')"
+        :sessions-to-progress="selectedSessions"
+        :current-week="currentWeek"
+        :max-week="maxWeek"
+      />
     </div>
     <form
       v-if="showDuplicate"
@@ -703,7 +589,7 @@
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
                 <div>
-                  <button class="button--new-session" @click="create_session()">
+                  <button class="button--new-session" @click="create_new_session()">
                     New session
                   </button>
                 </div>
@@ -830,6 +716,7 @@ const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", 
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPrefetch: true */ '../../components/Multiselect')
 const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ '../../components/PreviewModal')
 const Statistics = () => import(/* webpackChunkName: "components.statistics", webpackPrefetch: true */ '../../components/Stats')
+const ProgressSessions = () => import(/* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ '../../components/ProgressSessions')
 
 export default {
   components: {
@@ -840,7 +727,8 @@ export default {
     ColorPicker,
     Multiselect,
     PreviewModal,
-    Statistics
+    Statistics,
+    ProgressSessions
   },
   async beforeRouteLeave (to, from, next) {
     if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
@@ -907,7 +795,7 @@ export default {
 
       showMove: false,
       showShift: false,
-      showCopyAcross: false,
+      showProgress: false,
       showDuplicate: false,
 
       // MANIPULATION
@@ -939,7 +827,7 @@ export default {
 
       allowMoreWeeks: false,
       currentWeek: 1,
-      maxWeek: '2'
+      maxWeek: 2
     }
   },
   watch: {
@@ -972,9 +860,7 @@ export default {
           this.bulk_check(0)
           break
         case 'Progress':
-          this.copyTarget = this.maxWeek
-          this.copy_across_check()
-          this.showCopyAcross = true
+          this.showProgress = true
           this.will_body_scroll(false)
           break
         case 'Move':
@@ -1046,9 +932,10 @@ export default {
     // Background
 
     updater () {
+      const PLAN = this.helper('match_plan')
       this.sessionDates = []
-      this.weekColor.backgroundColor = this.helper('match_plan').block_color.replace('[', '').replace(']', '').split(',')
-      for (const session of this.helper('match_plan').sessions) {
+      this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
+      for (const session of PLAN.sessions) {
         this.sessionDates.push({
           title: session.name,
           date: session.date,
@@ -1058,6 +945,7 @@ export default {
           session_id: session.id
         })
       }
+      this.maxWeek = PLAN.duration
     },
     helper (type, sessionId) {
       switch (type) {
@@ -1104,97 +992,6 @@ export default {
       this.$ga.event('Session', 'shift')
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
       this.deselect_all()
-    },
-    copy_across_check () {
-      this.simpleCopy = true
-      this.helper('match_plan').sessions.forEach((session) => {
-        if (this.selectedSessions.includes(session.id)) {
-          if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes, session.date).length !== 0) {
-            this.simpleCopy = false
-          }
-        }
-      })
-    },
-    copy_across_pull () {
-      let ignored = 0
-      this.copyAcrossInputs = []
-      this.copyAcrossProtocols = []
-      this.helper('match_plan').sessions.forEach((session, sessionIdx) => {
-        if (this.selectedSessions.includes(session.id)) {
-          this.copyAcrossProtocols.push([
-            session.id,
-            this.pull_protocols(session.name, session.notes, session.date)
-          ])
-          this.copyAcrossInputs.push([
-            session.id,
-            new Array(this.copyAcrossProtocols[sessionIdx - ignored][1].length)
-          ])
-          let i
-          for (i = 0; i < this.copyAcrossProtocols[sessionIdx - ignored][1].length; i++) {
-            this.copyAcrossInputs[sessionIdx - ignored][1][i] = new Array(this.copyTarget - this.currentWeek)
-            let e
-            for (e = 0; e < this.copyAcrossInputs[sessionIdx - ignored][1][i].length; e++) {
-              this.copyAcrossInputs[sessionIdx - ignored][1][i][e] = this.copyAcrossProtocols[sessionIdx - ignored][1][i][2]
-            }
-          }
-        } else {
-          ignored++
-        }
-      })
-    },
-    copy_across_process (sessionId, sessionNotes, loc) {
-      this.copyAcrossInputs.forEach((sessionItem, sessionItemId) => {
-        let n = 0
-        if (sessionItem[0] === sessionId) {
-          sessionItem[1].forEach((exerciseGroup, exerciseGroupIndex) => {
-            const REGEX = new RegExp(`${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1].replace('(', '\\(').replace(')', '\\)')}\\s*:\\s*${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][2]}`, 'g')
-            sessionNotes = sessionNotes.replace(REGEX, (match) => {
-              return n === exerciseGroupIndex ? `${this.copyAcrossProtocols[sessionItemId][1][exerciseGroupIndex][1]}: ${exerciseGroup[loc - 1]}` : match
-            })
-            n++
-          })
-        }
-      })
-      return sessionNotes
-    },
-    copy_across () {
-      const COPY_SESSIONS = []
-      let weekCount = this.currentWeek + 1
-      this.helper('match_plan').sessions.forEach((session) => {
-        if (this.selectedSessions.includes(session.id)) {
-          COPY_SESSIONS.push({
-            id: session.id,
-            name: session.name,
-            date: session.date,
-            notes: session.notes
-          })
-        }
-      })
-      const START_WEEK = this.currentWeek
-      for (; weekCount <= this.copyTarget; weekCount++) {
-        this.currentWeek = weekCount
-        COPY_SESSIONS.forEach((session) => {
-          this.new_session.name = session.name
-          this.new_session.date = this.add_days(session.date, this.daysDiff * (weekCount - START_WEEK))
-          this.currentCopySessionNotes = this.simpleCopy ? session.notes : this.copy_across_process(session.id, session.notes, weekCount - START_WEEK)
-          this.add_session(true)
-        })
-      }
-      this.currentCopySessionNotes = ''
-      this.copyTarget = 1
-      this.copyAcrossPage = 0
-      this.copyAcrossView = 0
-      this.copyAcrossViewMax = 0
-      this.copyAcrossInputs = []
-      this.copyAcrossProtocols = []
-      this.new_session = {
-        name: 'Untitled',
-        date: this.today()
-      }
-      this.update_plan()
-      this.deselect_all()
-      this.$ga.event('Session', 'progress')
-      this.$parent.$parent.end_loading()
     },
     move_to_week () {
       this.helper('match_plan').sessions.forEach((session) => {
@@ -1272,9 +1069,14 @@ export default {
         this.selectedSessions.splice(IDX, 1)
       }
     },
-    async create_session () {
-      await this.add_session(false)
-      this.$parent.$parent.end_loading()
+    async create_new_session () {
+      await this.add_session({
+        programme_id: parseInt(this.$route.params.id),
+        sessionName: 'Untitled',
+        sessionDate: this.today(),
+        sessionNotes: '',
+        sessionWeek: this.currentWeek
+      }, false)
     },
 
     // GENERAL
@@ -1333,14 +1135,6 @@ export default {
 
     // DATE/TIME
 
-    add_days (date, days) {
-      const DATE = new Date(date)
-      DATE.setDate(DATE.getDate() + days)
-      const YEAR = DATE.getFullYear()
-      const MONTH = DATE.getMonth() + 1
-      const DAY = DATE.getDate()
-      return `${YEAR}-${MONTH}-${DAY}`
-    },
     plan_duration (duration) {
       // Turn the duration of the plan into an array to render the boxes in the table
       const ARR = []
@@ -1409,13 +1203,13 @@ export default {
           this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, planDuration, planColors)
           if (planSessions) {
             planSessions.forEach((session) => {
-              this.add_session(false, [
-                session.name,
-                response.data[0]['LAST_INSERT_ID()'],
-                session.date,
-                session.notes,
-                session.week_id
-              ])
+              this.add_session({
+                programmeId: response.data[0]['LAST_INSERT_ID()'],
+                sessionName: session.name,
+                sessionDate: session.date,
+                sessionNotes: session.notes,
+                sessionWeek: session.week_id
+              }, false)
             })
           }
         })
@@ -1510,35 +1304,28 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async add_session (isCopy, forceArr) {
+    async add_session (data, isCopy) {
       this.$parent.$parent.dontLeave = true
       try {
         await this.$axios.put('https://api.traininblocks.com/workouts',
           {
-            name: forceArr === undefined ? this.new_session.name : forceArr[0],
-            programme_id: forceArr === undefined ? this.$route.params.id : forceArr[1],
-            date: forceArr === undefined ? this.new_session.date : forceArr[2],
-            notes: forceArr === undefined ? this.currentCopySessionNotes : forceArr[3],
-            week_id: forceArr === undefined ? this.currentWeek : forceArr[4]
+            name: data.sessionName,
+            programme_id: data.programmeId,
+            date: data.sessionDate,
+            notes: data.sessionNotes,
+            week_id: data.sessionWeek
           }
         )
-        // Get the sessions from the API because we've just created a new one
         await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
         if (!isCopy) {
           this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
-        } else {
-          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
-        }
-        if (forceArr === undefined) {
           this.sort_sessions(this.helper('match_plan'))
           this.check_for_new()
           this.adherence()
           this.$ga.event('Session', 'new')
           this.check_for_week_sessions()
-        }
-        this.new_session = {
-          name: 'Untitled',
-          date: this.today()
+        } else {
+          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
         }
         this.$parent.$parent.end_loading()
       } catch (e) {

@@ -120,6 +120,14 @@ Vue.mixin({
       const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
       return WEEKDAY[new Date(date).getDay()]
     },
+    add_days (date, days) {
+      const DATE = new Date(date)
+      DATE.setDate(DATE.getDate() + days)
+      const YEAR = DATE.getFullYear()
+      const MONTH = DATE.getMonth() + 1
+      const DAY = DATE.getDate()
+      return `${YEAR}-${MONTH}-${DAY}`
+    },
 
     // Tidy
 
