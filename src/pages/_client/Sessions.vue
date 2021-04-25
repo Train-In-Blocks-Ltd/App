@@ -833,9 +833,11 @@ export default {
     this.$parent.sessions = true
     this.noSessions = this.helper('match_plan').sessions === false
     this.$parent.$parent.get_templates()
-    this.check_for_new()
-    this.adherence()
-    this.updater()
+    if (!this.noSessions) {
+      this.check_for_new()
+      this.adherence()
+      this.updater()
+    }
   },
   beforeDestroy () {
     this.will_body_scroll(true)
@@ -1143,14 +1145,12 @@ export default {
     adherence () {
       this.sessionsDone = 0
       this.sessionsTotal = 0
-      if (!this.noSessions) {
-        this.helper('match_plan').sessions.forEach((session) => {
-          this.sessionsTotal += 1
-          if (session.checked === 1) {
-            this.sessionsDone++
-          }
-        })
-      }
+      this.helper('match_plan').sessions.forEach((session) => {
+        this.sessionsTotal += 1
+        if (session.checked === 1) {
+          this.sessionsDone++
+        }
+      })
       const PROGRESS_BAR = document.getElementById('progress-bar')
       if (PROGRESS_BAR) {
         PROGRESS_BAR.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
