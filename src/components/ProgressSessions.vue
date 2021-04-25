@@ -230,7 +230,7 @@ export default {
             sessionDate: this.add_days(session.date, this.daysBetweenEachSession * (weekCount - START_WEEK)),
             sessionNotes: this.simpleProgress ? session.notes : this.progress_process(session.id, session.notes, weekCount - START_WEEK),
             sessionWeek: weekCount
-          }, true)
+          }, 'progress')
         })
       }
       this.$parent.update_plan()

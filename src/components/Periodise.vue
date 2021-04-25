@@ -61,6 +61,7 @@ svg:is(.left, .right):active {
 }
 .microcycle {
   display: flex;
+  margin-top: auto;
   flex-direction: column;
   justify-content: space-around;
   opacity: var(--light_opacity);

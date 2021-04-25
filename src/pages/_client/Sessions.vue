@@ -589,7 +589,7 @@
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
                 <div>
-                  <button class="button--new-session" @click="create_new_session()">
+                  <button class="button--new-session" @click="new_session()">
                     New session
                   </button>
                 </div>
@@ -783,13 +783,6 @@ export default {
 
       sessionsDone: 0,
       sessionsTotal: 0,
-
-      // SESSION CREATION
-
-      new_session: {
-        name: 'Untitled',
-        date: this.today()
-      },
 
       // Modals
 
@@ -1009,7 +1002,7 @@ export default {
     async duplicate_plan (clientId) {
       const PLAN = this.helper('match_plan')
       await this.create_plan(PLAN.name, clientId, PLAN.duration, PLAN.block_color, PLAN.notes, PLAN.sessions)
-      this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
+      this.$router.push({ path: `/client/${clientId}/` })
       this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
       this.$ga.event('Plan', 'duplicate')
     },
@@ -1069,14 +1062,14 @@ export default {
         this.selectedSessions.splice(IDX, 1)
       }
     },
-    async create_new_session () {
+    async new_session () {
       await this.add_session({
-        programme_id: parseInt(this.$route.params.id),
+        programmeId: parseInt(this.$route.params.id),
         sessionName: 'Untitled',
         sessionDate: this.today(),
         sessionNotes: '',
         sessionWeek: this.currentWeek
-      }, false)
+      }, 'new')
     },
 
     // GENERAL
@@ -1204,12 +1197,13 @@ export default {
           if (planSessions) {
             planSessions.forEach((session) => {
               this.add_session({
+                clientId,
                 programmeId: response.data[0]['LAST_INSERT_ID()'],
                 sessionName: session.name,
                 sessionDate: session.date,
                 sessionNotes: session.notes,
                 sessionWeek: session.week_id
-              }, false)
+              }, 'duplicate')
             })
           }
         })
@@ -1295,7 +1289,7 @@ export default {
             checked: SESSION.checked
           }
         )
-        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), parseInt(this.$route.params.client_id), true)
         await this.update_plan()
         this.adherence()
         this.$ga.event('Session', 'update')
@@ -1304,7 +1298,7 @@ export default {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async add_session (data, isCopy) {
+    async add_session (data, type) {
       this.$parent.$parent.dontLeave = true
       try {
         await this.$axios.put('https://api.traininblocks.com/workouts',
@@ -1316,15 +1310,15 @@ export default {
             week_id: data.sessionWeek
           }
         )
-        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
-        if (!isCopy) {
+        await this.$parent.get_sessions(data.programmeId, type === 'duplicate' ? data.clientId : parseInt(this.$route.params.client_id), true)
+        if (type === 'new') {
           this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
           this.sort_sessions(this.helper('match_plan'))
           this.check_for_new()
           this.adherence()
           this.$ga.event('Session', 'new')
           this.check_for_week_sessions()
-        } else {
+        } else if (type === 'progress') {
           this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
         }
         this.$parent.$parent.end_loading()
@@ -1336,7 +1330,7 @@ export default {
       this.$parent.$parent.dontLeave = true
       try {
         await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
-        await this.$parent.get_sessions(parseInt(this.$route.params.id), true)
+        await this.$parent.get_sessions(parseInt(this.$route.params.id), parseInt(this.$route.params.client_id), true)
         await this.update_plan()
 
         this.$ga.event('Session', 'delete')

@@ -440,7 +440,7 @@ export default {
         }
         if (CLIENT.plans !== false) {
           this.$parent.client_details.plans.forEach((plan) => {
-            this.get_sessions(plan.id)
+            this.get_sessions(plan.id, parseInt(this.$route.params.client_id))
           })
         }
         this.$parent.end_loading()
@@ -448,10 +448,11 @@ export default {
         this.$parent.resolve_error(e)
       }
     },
-    async get_sessions (planId, force) {
+    async get_sessions (planId, clientId, force) {
       force = force || false
       try {
-        const PLAN = this.$parent.client_details.plans.find(plan => plan.id === planId)
+        const CLIENT = this.$parent.clients.find(client => client.client_id === clientId)
+        const PLAN = CLIENT.plans.find(plan => plan.id === planId)
         if (PLAN.sessions === undefined || force) {
           const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/workouts/${PLAN.id}`)
           PLAN.sessions = RESPONSE.data.length === 0 ? false : RESPONSE.data
