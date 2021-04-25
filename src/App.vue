@@ -605,7 +605,7 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <confirm-pop-up ref="confirm_pop_up" />
     </transition>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut ">
       <global-overlay ref="overlay" />
     </transition>
     <div v-if="showEULA" class="tab_overlay_content fadeIn delay fill_mode_both">
@@ -795,7 +795,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-        document.documentElement.style.setProperty('--base-red', 'red')
+        document.documentElement.style.setProperty('--base-red', 'white')
       } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {

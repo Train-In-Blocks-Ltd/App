@@ -6,10 +6,10 @@
   grid-gap: 1.6rem
 }
 .profile_image_placeholder {
-  padding: 1.4rem;
+  padding: 1.8rem;
   height: 140px;
   width: 140px;
-  border: 5px solid var(--base);
+  border: 4px solid var(--base);
   border-radius: 50%
 }
 .client_info {

@@ -444,7 +444,16 @@ export default {
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket.exerciseProtocol.includes('at')) {
             this.showDataTypeSelector = true
             const DATA_POINT = new DataPoint(exerciseDataPacket, this.selectedDataType)
-            extractedSessionProtocols.push(DATA_POINT.calculate)
+            if (isNaN(DATA_POINT.calculate)) {
+              this.protocolErrors.push({
+                sessionName: exerciseDataPacket.sessionName,
+                sessionDate: exerciseDataPacket.sessionDate,
+                exerciseName: exerciseDataPacket.exerciseName,
+                protocol: exerciseDataPacket.exerciseProtocol
+              })
+            } else {
+              extractedSessionProtocols.push(DATA_POINT.calculate)
+            }
           }
         })
 
