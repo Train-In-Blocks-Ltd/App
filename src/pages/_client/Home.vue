@@ -6,6 +6,7 @@
   grid-gap: 1.6rem
 }
 .profile_image_placeholder {
+  padding: 1.4rem;
   height: 140px;
   width: 140px;
   border: 5px solid var(--base);
