@@ -240,6 +240,8 @@
           :dates="dateDaysToVisualise"
           :chart-type="selectedChartType"
           :reset="resetGraph"
+          :data-type="{ name: selectedDataName, type: selectedDataType }"
+          :show-data-type="showDataTypeSelector"
           aria-label="Graph"
           class="fadeIn"
         />

@@ -1,62 +1,61 @@
 <style scoped>
-  #simple_chart {
-    padding: 1rem;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    border-radius: 10px;
-    margin: 2rem 0
-  }
-  .content_wrapper {
-    display: grid;
-    grid-gap: .6rem
-  }
-  .selected_bar {
-    display: flex;
-    justify-content: space-between
-  }
-  .x_axis line, .y_axis line {
-    stroke: var(--base);
-    stroke-dasharray: 0;
-    stroke-width: 2
-  }
-  .x_axis_label {
-    text-align: center
-  }
-  .plot circle {
-    cursor: pointer;
-    outline-width: 0;
-    fill: transparent;
-    stroke: var(--base);
-    stroke-width: 2;
-    transition: var(--transition_standard);
-    animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
-  }
-  .plot circle:hover {
-    fill: var(--base)
-  }
-  .plot line {
-    stroke: var(--base_faint);
-    stroke-width: 2;
-    transition: var(--transition_standard);
-    animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
-  }
+#simple_chart {
+  padding: 1rem;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  border-radius: 10px;
+  margin: 2rem 0
+}
+.content_wrapper {
+  display: grid;
+  grid-gap: 1rem
+}
+.selected_bar {
+  display: flex;
+  justify-content: space-between
+}
+.x_axis line, .y_axis line {
+  stroke: var(--base);
+  stroke-dasharray: 0;
+  stroke-width: 2
+}
+.x_axis_label {
+  margin-left: 1rem
+}
+.plot circle {
+  cursor: pointer;
+  outline-width: 0;
+  fill: transparent;
+  stroke: var(--base);
+  stroke-width: 2;
+  transition: var(--transition_standard);
+  animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
+}
+.plot circle:hover {
+  fill: var(--base)
+}
+.plot line {
+  stroke: var(--base_faint);
+  stroke-width: 2;
+  transition: var(--transition_standard);
+  animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
+}
 
-  /* Regression line
-  .scatter_line:hover {
-    cursor: pointer;
-    stroke: var(--base);
-    stroke-width: 4
-  }
-  */
+/* Scatter options */
+.scatter_options {
+  display: grid;
+  grid-gap: .6rem;
+  margin: 1rem
+}
 
-  @keyframes show {
-    from {
-      opacity: 0
-    }
-    to {
-      opacity: 1
-    }
+@keyframes show {
+  from {
+    opacity: 0
   }
+  to {
+    opacity: 1
+  }
+}
 </style>
 
 <template>
@@ -109,8 +108,31 @@
         </g>
       </svg>
       <p class="x_axis_label">
-        {{ chartType === 'scatter' ? 'Sessions relative to days apart' : 'Sessions' }}
+        <b>{{ chartType === 'scatter' ? 'Sessions relative to days apart' : 'Sessions' }}</b><br>
+        <span v-if="chartType === 'scatter' && !isNaN(rValue)">
+          Correlation (r): {{ rValue }}
+        </span>
       </p>
+      <div v-if="chartType === 'scatter' && !isNaN(rValue)" class="scatter_options">
+        <label for="prediction">
+          <b>
+            Predict {{ showDataType ? `${dataType.type.toLowerCase()} for ${dataType.name.toLowerCase()}` : dataType.name.toLowerCase() }}
+          </b>
+        </label>
+        <input
+          v-model="predictionDay"
+          class="width_300 small_border_radius"
+          name="prediction"
+          type="number"
+          placeholder="Days since starting the plan"
+        >
+        <p v-if="predictionDay">
+          Expected {{ showDataType ? dataType.type.toLowerCase() : dataType.name.toLowerCase() }}: {{ prediction(predictionDay) }}
+        </p>
+        <p v-if="predictionDay && predictionError">
+          Prediction error (RMS): {{ predictionError }}
+        </p>
+      </div>
     </div>
     <div v-else>
       <h3>
@@ -130,13 +152,22 @@ export default {
     labels: Array,
     dates: Array,
     chartType: String,
-    reset: Number
+    reset: Number,
+    dataType: Object,
+    showDataType: Boolean
   },
   data () {
     return {
       focusText: 'Select a point',
       dataValues: [],
-      pathValues: []
+      pathValues: [],
+
+      // Equation
+      gradient: null,
+      yIntercept: null,
+      rValue: null,
+      predictionDay: null,
+      predictionError: null
     }
   },
   watch: {
@@ -154,6 +185,16 @@ export default {
     this.process_and_plot()
   },
   methods: {
+
+    // Prediction
+    prediction (day) {
+      const SUM_OF_DAYS = this.dates.reduce((a, b) => a + b)
+      const PREDICTED_PROPORTION = (this.gradient * 90 * (day / SUM_OF_DAYS) + this.yIntercept).toFixed(2)
+      const MAX_Y_VALUE = Math.max(...this.dataPoints)
+      return (MAX_Y_VALUE * (90 + (10 - PREDICTED_PROPORTION)) / 90).toFixed(this.dataType.type === 'Sets' || this.dataType.type === 'Reps' ? 0 : 2)
+    },
+
+    // Init
     select_point (d1, d2, d3) {
       this.focusText = [d1, d2, d3]
     },
@@ -265,12 +306,26 @@ export default {
           const y = (x) => {
             return this.gradient * x + this.yIntercept
           }
+          const accuracy = () => {
+            const SUM_OF_SQUARES = []
+            for (const index in this.scaledXDataset) {
+              SUM_OF_SQUARES.push(Math.pow(this.scaledYDataset[index] - y(this.scaledXDataset[index]), 2))
+            }
+            return Math.sqrt(SUM_OF_SQUARES.reduce((a, b) => a + b) / this.scaledXDataset.length)
+          }
+          this.accuracy = accuracy()
           return [[5, y(5), 90, y(90)]]
         }
       }
       const DATA = new DataProcessor(this.dataPoints, this.dates, this.labels, this.chartType)
       this.dataValues = DATA.create.processedPoints || DATA.create
       this.pathValues = DATA.create.processedPaths || []
+      if (this.chartType === 'scatter') {
+        this.gradient = DATA.gradient
+        this.yIntercept = DATA.yIntercept
+        this.rValue = (DATA.rCorrelation * -1).toFixed(2)
+        this.predictionError = DATA.accuracy.toFixed(2)
+      }
     }
   }
 }
