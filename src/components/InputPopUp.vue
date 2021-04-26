@@ -86,8 +86,8 @@
       accept=".png, .jpeg, .jpg, .webp, .gif"
       @change="$parent.add_img(), reveal = false"
     >
-    <div v-if="inputType !== 'image'" class="input_button_bar">
-      <button>
+    <div class="input_button_bar">
+      <button v-if="inputType !== 'image'">
         Submit
       </button>
       <button class="red_button" @click="resolvePromise(false), reveal = false">

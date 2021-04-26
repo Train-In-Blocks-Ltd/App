@@ -29,10 +29,10 @@ img {
 <template>
   <div class="bottom_margin">
     <h2>
-      What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
+      {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}
     </h2>
     <h3 class="grey">
-      Dark mode, new styles, and bug fixes
+      Buffed editor, style, and statistics
     </h3>
     <br><br>
     <div class="update_wrapper">
@@ -41,7 +41,12 @@ img {
         :key="`item_${index}`"
         class="update_item"
       >
-        <img v-if="item.img" :src="require(`../assets/whats-new/${item.img}`)" :alt="item.title">
+        <img
+          v-if="item.img"
+          :src="require(`../assets/whats-new/${item.img}`)"
+          :alt="item.title"
+          loading="lazy"
+        >
         <h3>
           {{ item.title }}
         </h3>
@@ -62,11 +67,10 @@ export default {
   data () {
     return {
       content: [
-        { title: 'Dark mode', desc: 'Working at night? Let\'s take some strain off the eyes. You can turn on dark mode through your Account page.', img: 'dark-mode.png' },
-        { title: 'New editor style', desc: 'We\'ve made a minor change to how the editor looks but it still works in a similar way. Simply click on the text to start editing.', img: 'editor-style.png' },
-        { title: 'Plan overview', desc: 'You can now organise your plans in the order that they will occur. Much like a periodised model, you can see how the number of microcycles and their colour-code in this general overview.', img: 'new-plans.png' },
-        { title: 'Printing sessions', desc: 'Want a physical copy or a PDF? You can simply select all the sessions that you wish to export and print from the menu.', img: 'print.png' },
-        { title: 'Client-side improvements', desc: 'Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.', img: false }
+        { title: 'Editor improvements', desc: 'We\'ve added more to our editor! You can now insert templates directly into the text and add in dividers to organise your plans and sessions.', img: 'new-style.png' },
+        { title: 'More statistics', desc: 'Through re-designing our statistics feature, you can now enjoy better error reporting with tracked data — meaning that if there\'s a mistake with the tracking format, then you\'ll be able to find it easier.', img: 'stats.png' },
+        { title: 'Scatter graph', desc: 'Here\'s a way to analyse your clients\' performance. With the scatter graph, you\'ll be able to see the distribution of their sessions and the overall trend.', img: 'scatter.png' },
+        { title: 'Better multiselect', desc: 'Big, bold, and animated. There\'s something really satisfying about these icons. We\'ve placed more emphasis on making the mobile experience more seamless.', img: 'multi.png' }
       ]
     }
   },

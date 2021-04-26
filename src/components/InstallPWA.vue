@@ -55,8 +55,16 @@
         <p>1. Open the <i>Share</i> menu at the bottom of the screen</p>
         <p>2. Select <i>Add to Home Screen</i></p>
         <div class="img_container">
-          <img :src="require('../assets/install/1.jpg')" alt="Open share menu">
-          <img :src="require('../assets/install/2.jpg')" alt="Add to home screen">
+          <img
+            :src="require('../assets/install/1.jpg')"
+            alt="Open share menu"
+            loading="lazy"
+          >
+          <img
+            :src="require('../assets/install/2.jpg')"
+            alt="Add to home screen"
+            loading="lazy"
+          >
         </div>
       </div>
     </div>

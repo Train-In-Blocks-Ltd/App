@@ -102,6 +102,9 @@ ul[data-type='taskList'] li > label {
   .editor_object_standard #wrapper--rich_editor {
     margin: 1rem
   }
+  .editor_object_complex {
+    padding: 1rem
+  }
 }
 </style>
 
