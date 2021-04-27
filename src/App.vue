@@ -433,6 +433,10 @@ option {
   justify-content: center;
   text-align: center
 }
+.tab_option svg {
+  height: 20px;
+  width: 20px
+}
 .tab_option:hover svg,
 .tab_option:hover .notify_badge {
   display: none

@@ -43,7 +43,10 @@
 <template>
   <div id="home" class="view_container">
     <div v-if="$parent.portfolio">
-      <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen }" class="section_overlay" />
+      <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen || isProfileOpen }" class="section_overlay" />
+      <div v-if="isProfileOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
+        <client-profile :img="''" :claims="$parent.claims" />
+      </div>
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
           <h2>
@@ -62,19 +65,30 @@
         <install-app />
       </div>
       <div
+        v-if="!isProfileOpen"
+        aria-label="Profile"
+        class="tab_option tab_option_small"
+        @click="isProfileOpen = true, will_body_scroll(false)"
+      >
+        <inline-svg :src="require('../../assets/svg/client-profile.svg')" aria-label="Profile" />
+        <p class="text">
+          Profile
+        </p>
+      </div>
+      <div
         v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
         aria-label="Information"
-        class="tab_option tab_option_small"
+        class="tab_option tab_option_large icon_open_middle"
         @click="isPortfolioOpen = true, will_body_scroll(false)"
       >
-        <inline-svg :src="require('../../assets/svg/trainer.svg')" aria-label="Information" />
+        <inline-svg :src="require('../../assets/svg/info.svg')" aria-label="Information" />
         <p class="text">
-          Trainer
+          Information
         </p>
       </div>
       <div
         v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'"
-        :class="{ icon_open_middle: $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>' }"
+        :class="{ icon_open_bottom: $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>' }"
         class="tab_option tab_option_small"
         aria-label="Install App"
         @click="isInstallOpen = true, will_body_scroll(false)"
@@ -174,12 +188,14 @@
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
+const ClientProfile = () => import(/* webpackChunkName: "components.clientProfile", webpackPrefetch: true  */ '../../components/ClientProfile')
 
 export default {
   components: {
     RichEditor,
     InstallApp,
-    Periodise
+    Periodise,
+    ClientProfile
   },
   async beforeRouteLeave (to, from, next) {
     if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
@@ -194,6 +210,7 @@ export default {
 
       isPortfolioOpen: false,
       isInstallOpen: false,
+      isProfileOpen: false,
 
       // EDIT
 
