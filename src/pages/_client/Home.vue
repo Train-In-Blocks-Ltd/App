@@ -122,17 +122,17 @@
     class="view_container"
   >
     <div :class="{ opened_sections: showToolkit }" class="section_overlay" />
+    <div v-if="!showOptions" class="tab_option tab_option_small" aria-label="Menu" @click="showOptions = true">
+      <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options" />
+      <p class="text">
+        Options
+      </p>
+    </div>
     <div v-if="showToolkit" class="tab_overlay_content fadeIn delay fill_mode_both">
       <toolkit />
     </div>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
       <div v-if="keepLoaded" class="floating_nav fadeIn">
-        <div v-if="!showOptions" class="tab_option tab_option_small" aria-label="Menu" @click="showOptions = true">
-          <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options" />
-          <p class="text">
-            Options
-          </p>
-        </div>
         <inline-svg
           v-if="showOptions"
           class="icon--options fadeIn delay fill_mode_both"
