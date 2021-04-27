@@ -50,7 +50,7 @@
     </div>
     <br>
     <p v-if="$parent.archive.no_archive" class="text--small grey">
-      No clients are archived :)
+      No clients are archived
     </p>
     <p v-if="$parent.error">
       <b>{{ $parent.error }}</b>

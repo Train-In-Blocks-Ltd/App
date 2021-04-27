@@ -36,9 +36,9 @@
       <h2>
         Save the app to your home screen
       </h2>
-      <h3 class="grey">
+      <p class="text--small grey">
         Access it quickly with a clearer interface
-      </h3>
+      </p>
     </div>
     <h2 v-else-if="$parent.$parent.pwa.installed">
       You have the app saved to your mobile already!

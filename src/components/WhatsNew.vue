@@ -31,9 +31,9 @@ img {
     <h2>
       {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}
     </h2>
-    <h3 class="grey">
+    <p class="text--small grey">
       Buffed editor, style, statistics, and predictions
-    </h3>
+    </p>
     <br><br>
     <div class="update_wrapper">
       <div

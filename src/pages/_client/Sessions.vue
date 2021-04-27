@@ -756,7 +756,7 @@ export default {
         { name: 'Complete', svg: 'svg/tick.svg' },
         { name: 'Incomplete', svg: 'svg/cross.svg' },
         { name: 'Progress', svg: 'svg/arrow-right.svg' },
-        // { name: 'Duplicate', svg: 'svg/copy.svg' },
+        { name: 'Duplicate', svg: 'svg/copy.svg' },
         { name: 'Move', svg: 'svg/move.svg' },
         { name: 'Shift', svg: 'svg/shift.svg' },
         { name: 'Print', svg: 'svg/print.svg' },
@@ -844,6 +844,10 @@ export default {
         case 'Progress':
           this.showProgress = true
           this.will_body_scroll(false)
+          break
+        case 'Duplicate':
+          this.duplicate()
+          this.deselect_all()
           break
         case 'Move':
           this.showMove = true
@@ -945,6 +949,22 @@ export default {
 
     // MODALS AND TAB
 
+    duplicate () {
+      const TO_DUPLICATE = []
+      const SESSIONS = this.helper('match_plan').sessions
+      this.selectedSessions.forEach((sessionId) => {
+        TO_DUPLICATE.push(SESSIONS.find(session => session.id === sessionId))
+      })
+      TO_DUPLICATE.forEach((session) => {
+        this.add_session({
+          programmeId: parseInt(this.$route.params.id),
+          sessionName: `Copy of ${session.name}`,
+          sessionDate: session.date,
+          sessionNotes: session.notes,
+          sessionWeek: session.week_id
+        }, 'new')
+      })
+    },
     print () {
       const NOTES_ARR = []
       const PLAN = this.helper('match_plan')
@@ -992,8 +1012,8 @@ export default {
       const PLAN = this.helper('match_plan')
       await this.create_plan(PLAN.name, clientId, PLAN.duration, PLAN.block_color, PLAN.notes, PLAN.sessions)
       this.$router.push({ path: `/client/${clientId}/` })
-      this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
       this.$ga.event('Plan', 'duplicate')
+      this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
     },
 
     // MULTI AND CHECKBOX
@@ -1300,14 +1320,19 @@ export default {
         )
         await this.$parent.get_sessions(data.programmeId, type === 'duplicate' ? data.clientId : parseInt(this.$route.params.client_id), true)
         if (type === 'new') {
+          this.$ga.event('Session', 'new')
           this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
+        } else if (type === 'duplicate') {
+          this.$ga.event('Session', 'duplicate')
+          this.$parent.$parent.$refs.response_pop_up.show(`${this.selectedSessions.length > 1 ? 'Sessions' : 'Session'} duplicated`, 'Get programming!')
+        } else if (type === 'progress') {
+          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
+        }
+        if (type !== 'progress') {
           this.sort_sessions(this.helper('match_plan'))
           this.check_for_new()
           this.adherence()
-          this.$ga.event('Session', 'new')
           this.check_for_week_sessions()
-        } else if (type === 'progress') {
-          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
         }
         this.$parent.$parent.end_loading()
       } catch (e) {

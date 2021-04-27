@@ -103,7 +103,7 @@
         type="password"
         placeholder="Current password"
         aria-label="Current password"
-        class="input--forms small_border_radius"
+        class="input--forms width_300 small_border_radius"
         required
       >
       <div>
@@ -125,7 +125,7 @@
         type="password"
         placeholder="New password"
         aria-label="New password"
-        class="input--forms small_border_radius"
+        class="input--forms width_300 small_border_radius"
         :class="{check: password.check}"
         required
         @input="check_password"
@@ -135,7 +135,7 @@
         type="password"
         placeholder="Confirm new password"
         aria-label="Confirm new password"
-        class="input--forms small_border_radius"
+        class="input--forms width_300 small_border_radius"
         :class="{check: password.new !== password.match}"
         required
         @input="check_password"
