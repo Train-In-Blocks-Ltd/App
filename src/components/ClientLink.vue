@@ -99,7 +99,6 @@ li[data-done='false'] {
   grid-gap: 1rem
 }
 .profile_image_placeholder {
-  margin: auto;
   padding: .8rem;
   height: 80px;
   width: 80px;
