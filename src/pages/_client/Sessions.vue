@@ -551,7 +551,7 @@
                     v-for="item in plan_duration(plan.duration)"
                     :key="item"
                     class="container--week"
-                    @click="change_week(item), sort_sessions(plan)"
+                    @click="change_week(item)"
                   >
                     <div :class="{ weekActive: item === currentWeek }" class="week">
                       <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color" />
@@ -821,6 +821,7 @@ export default {
     this.noSessions = this.helper('match_plan').sessions === false
     this.$parent.$parent.get_templates()
     if (!this.noSessions) {
+      this.sort_sessions(this.helper('match_plan'))
       this.check_for_new()
       this.adherence()
       this.updater()
@@ -899,6 +900,7 @@ export default {
           this.editSession = id
           this.forceStop += 1
           this.tempEditorStore = SESSION.notes
+          this.go_to_event(SESSION.id, SESSION.week_id)
           break
         case 'save':
           this.isEditingSession = false

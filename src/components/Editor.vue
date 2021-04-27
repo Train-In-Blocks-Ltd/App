@@ -141,6 +141,12 @@ ul[data-type='taskList'] li > label {
   height: 20px;
   width: 20px
 }
+.separated {
+  border-right: 1px solid var(--base_faint);
+  border-radius: 0;
+  /* stylelint-disable-next-line */
+  padding-right: 1rem !important
+}
 
 /* Pop-ups */
 .template_menu {
@@ -308,6 +314,7 @@ div#rich_editor.editorFocused {
           <button
             class="fadeIn"
             :class="{ 'is-active': editor.isActive('bold') }"
+            title="Bold"
             @click="editor.chain().focus().toggleBold().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
@@ -315,13 +322,15 @@ div#rich_editor.editorFocused {
           <button
             class="fadeIn"
             :class="{ 'is-active': editor.isActive('italic') }"
+            title="Italic"
             @click="editor.chain().focus().toggleItalic().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
           </button>
           <button
-            class="fadeIn"
+            class="fadeIn separated"
             :class="{ 'is-active': editor.isActive('underline') }"
+            title="Underline"
             @click="editor.chain().focus().toggleUnderline().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
@@ -329,6 +338,7 @@ div#rich_editor.editorFocused {
           <button
             class="fadeIn"
             :class="{ 'is-active': editor.isActive('ordered_list') }"
+            title="Ordered list"
             @click="editor.chain().focus().toggleOrderedList().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
@@ -336,18 +346,21 @@ div#rich_editor.editorFocused {
           <button
             class="fadeIn"
             :class="{ 'is-active': editor.isActive('bullet_list') }"
+            title="Bullet list"
             @click="editor.chain().focus().toggleBulletList().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
           </button>
           <button
+            class="separated"
             :class="{ 'is-active': editor.isActive('taskList') }"
+            title="Checklist"
             @click="editor.chain().focus().toggleTaskList().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
           </button>
           <button
-            :class="{ 'is-active': editor.isActive('taskList') }"
+            title="Horizontal line"
             @click="editor.chain().focus().setHorizontalRule().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/horizontal-rule.svg')" />
@@ -355,12 +368,14 @@ div#rich_editor.editorFocused {
           <button
             class="fadeIn"
             :class="{ 'is-active': editor.isActive('link') }"
+            title="Hyperlink"
             @click="editor.isActive('link') ? editor.chain().focus().unsetLink().run() : setLinkUrl()"
           >
             <inline-svg :src="require('../assets/svg/editor/link.svg')" />
           </button>
           <button
             class="fadeIn"
+            title="Image"
             @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
           >
             <inline-svg :src="require('../assets/svg/editor/image.svg')" />
@@ -368,18 +383,29 @@ div#rich_editor.editorFocused {
           <button
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             class="fadeIn"
+            title="Template"
             @click="showAddTemplate = !showAddTemplate, $parent.go_to_event(itemId, weekId)"
           >
             <inline-svg :src="require('../assets/svg/editor/template.svg')" />
           </button>
           <button
+            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             class="fadeIn"
+            title="Track data"
+            @click="add_track_data()"
+          >
+            <inline-svg :src="require('../assets/svg/editor/track-data.svg')" />
+          </button>
+          <button
+            class="fadeIn"
+            title="Undo"
             @click="editor.chain().focus().undo().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
           </button>
           <button
             class="fadeIn"
+            title="Redo"
             @click="editor.chain().focus().redo().run()"
           >
             <inline-svg :src="require('../assets/svg/editor/redo.svg')" />
@@ -419,6 +445,7 @@ import Link from '@tiptap/extension-link'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Image from '@tiptap/extension-image'
+import Protocol from './protocol/Protocol'
 
 export default {
   components: {
@@ -479,7 +506,8 @@ export default {
             Link,
             TaskList,
             TaskItem,
-            Image
+            Image,
+            Protocol
           ],
           onUpdate: () => {
             this.$emit('input', this.editor.getHTML())
@@ -504,6 +532,11 @@ export default {
     }
   },
   methods: {
+
+    // Protocol
+    add_track_data () {
+      this.editor.commands.insertContent('<div data-type="protocol-item"></div>')
+    },
 
     // Link
 

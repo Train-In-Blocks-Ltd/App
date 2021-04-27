@@ -87,16 +87,19 @@
           <line x1="2%" x2="2%" y1="100%" y2="96%" />
         </g>
         <g class="plot">
-          <line
+          <g
             v-for="(data, index) in pathValues"
-            v-show="!isNaN(data[1])"
             :key="'ptVal_' + index"
-            :x1="`${data[0]}%`"
-            :x2="`${data[2]}%`"
-            :y1="`${data[1]}%`"
-            :y2="`${data[3]}%`"
-            :class="{ scatter_line: chartType === 'scatter' }"
-          />
+          >
+            <line
+              v-if="!isNaN(data[1])"
+              :x1="`${data[0]}%`"
+              :x2="`${data[2]}%`"
+              :y1="`${data[1]}%`"
+              :y2="`${data[3]}%`"
+              :class="{ scatter_line: chartType === 'scatter' }"
+            />
+          </g>
           <circle
             v-for="(data, index) in dataValues"
             :key="'dtVal_' + index"
