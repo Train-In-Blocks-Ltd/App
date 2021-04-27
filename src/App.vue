@@ -273,6 +273,7 @@ button {
   border: none;
   padding: .6rem 1.6rem;
   font-size: .8rem;
+  font-weight: bold;
   color: var(--back);
   background-color: var(--base);
   transition: color .4s, background-color .4s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)

@@ -124,6 +124,7 @@
           class="width_300 small_border_radius"
           name="prediction"
           type="number"
+          min="1"
           placeholder="Days since starting the plan"
         >
         <p v-if="predictionDay">
