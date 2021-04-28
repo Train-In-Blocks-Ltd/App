@@ -22,7 +22,6 @@
 .plan_notes {
   border: 3px solid var(--base);
   border-radius: 10px;
-  background-color: var(--fore);
   transition: .6s border cubic-bezier(.165, .84, .44, 1)
 }
 .plan_notes h3 {
@@ -39,8 +38,7 @@
   margin: 2rem
 }
 .wrapper--session {
-  background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  border: 3px solid var(--base);
   border-radius: 10px;
   padding: 2rem
 }
@@ -73,6 +71,14 @@ hr {
 .switch_cal {
   margin-bottom: .4rem
 }
+.switch_cal svg {
+  margin-right: .4rem
+}
+
+/* Other element */
+.complete_button {
+  margin-top: 2rem
+}
 
 /* Scroll */
 .container--sessions::-webkit-scrollbar {
@@ -94,6 +100,9 @@ hr {
   }
   .wrapper--session {
     padding: .8rem
+  }
+  .complete_button {
+    width: 100%
   }
 }
 </style>
@@ -189,24 +198,14 @@ hr {
               </div>
             </div>
             <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
-            <div class="bottom_bar">
-              <div :key="check" class="full_width_bar">
-                <button
-                  v-if="session.checked === 1 && !feedbackId"
-                  class="button--state green_button"
-                  @click="complete(plan.id, session.id)"
-                >
-                  Completed
-                </button>
-                <button
-                  v-if="session.checked === 0 && !feedbackId"
-                  class="button--state red_button"
-                  @click="complete(plan.id, session.id)"
-                >
-                  Click to complete
-                </button>
-              </div>
-            </div>
+            <button
+              v-if="!feedbackId"
+              class="complete_button"
+              :class="{ green_button: session.checked === 1, red_button: session.checked === 0 }"
+              @click="complete(plan.id, session.id)"
+            >
+              {{ session.checked === 1 ? 'Completed' : 'Click to complete' }}
+            </button>
             <div v-if="session.checked === 1">
               <hr>
               <h3>

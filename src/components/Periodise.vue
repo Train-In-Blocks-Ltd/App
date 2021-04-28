@@ -9,13 +9,9 @@
 }
 .plan {
   display: grid;
-  background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  border: 3px solid var(--base);
   border-radius: 10px;
   transition: var(--transition_standard)
-}
-.plan:hover {
-  box-shadow: var(--high_shadow)
 }
 .plan_header {
   display: grid;
@@ -69,10 +65,10 @@ svg:is(.left, .right):active {
   height: 10px
 }
 .microcycle:first-child {
-  border-radius: 0 0 0 10px
+  border-radius: 0 0 0 5px
 }
 .microcycle:last-child {
-  border-radius: 0 0 10px 0
+  border-radius: 0 0 5px 0
 }
 .noColor {
   border-top: 1px solid var(--base_faint)

@@ -1,7 +1,6 @@
 <style scoped>
 /* Container */
 #month_calendar {
-  background: var(--fore);
   border-radius: 10px;
   border: 3px solid var(--base);
   margin-top: 1rem

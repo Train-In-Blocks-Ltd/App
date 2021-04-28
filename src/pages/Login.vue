@@ -207,7 +207,7 @@ a:hover {
       </p>
     </div>
     <p class="cookies">
-      By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.
+      By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/legal/cookies-policy/">Cookie Policy</a>.
     </p>
     <div class="version">
       <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />

@@ -14,30 +14,34 @@
 </style>
 
 <style scoped>
-  /* Containers */
-  .container--sessions {
-    margin: 2rem 0
-  }
-  .wrapper--session {
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    border-radius: 10px;
-    padding: 2rem;
-    margin: 2rem 0
-  }
-  .client_portfolio__notes {
-    margin: 2rem 0
-  }
-  hr {
-    margin: 2rem 0
-  }
+/* Containers */
+.container--sessions {
+  margin: 2rem 0
+}
+.wrapper--session {
+  border: 3px solid var(--base);
+  border-radius: 10px;
+  padding: 2rem;
+  margin: 2rem 0
+}
+.client_portfolio__notes {
+  margin: 2rem 0
+}
+hr {
+  margin: 2rem 0
+}
 
-  /* Responsive */
-  @media (max-width: 576px) {
-    .wrapper--session {
-      padding: .8rem
-    }
+/* Other element */
+.complete_button {
+  margin-top: 2rem
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .wrapper--session {
+    padding: .8rem
   }
+}
 </style>
 
 <template>
@@ -130,24 +134,14 @@
                 </div>
               </div>
               <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
-              <div class="bottom_bar">
-                <div :key="check" class="full_width_bar">
-                  <button
-                    v-if="session.checked === 1 && !feedbackId"
-                    class="button--state green_button"
-                    @click="complete(plan.id, session.id)"
-                  >
-                    Completed
-                  </button>
-                  <button
-                    v-if="session.checked === 0 && !feedbackId"
-                    class="button--state red_button"
-                    @click="complete(plan.id, session.id)"
-                  >
-                    Click to complete
-                  </button>
-                </div>
-              </div>
+              <button
+                v-if="!feedbackId"
+                class="complete_button"
+                :class="{ green_button: session.checked === 1, red_button: session.checked === 0 }"
+                @click="complete(plan.id, session.id)"
+              >
+                {{ session.checked === 1 ? 'Completed' : 'Click to complete' }}
+              </button>
               <div v-if="session.checked === 1">
                 <hr>
                 <h3>

@@ -31,19 +31,19 @@
 /* Floating Nav */
 .wrapper--floating_nav {
   background-color: var(--fore);
-  width: 0;
+  width: 14rem;
   height: 100%;
+  transform: translateX(100%);
   position: fixed;
   right: 0;
   top: 0;
-  padding: 0;
+  padding: 2rem;
   z-index: 4;
   box-shadow: var(--low_shadow);
   transition: var(--transition_standard)
 }
 .wrapper--floating_nav.openFloatingNav {
-  width: 14rem;
-  padding: 2rem
+  transform: none
 }
 .floating_nav {
   display: grid;

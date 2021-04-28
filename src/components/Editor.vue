@@ -3,7 +3,6 @@
 .editor_object_standard {
   border: 3px solid var(--base);
   border-radius: 10px;
-  background-color: var(--fore);
   transition: .6s border cubic-bezier(.165, .84, .44, 1)
 }
 .editor_object_standard h3 {
@@ -21,10 +20,8 @@
 .editor_object_complex {
   display: grid;
   padding: 2rem;
-  border: 2px solid transparent;
+  border: 2px solid var(--base);
   border-radius: 10px;
-  background-color: var(--fore);
-  box-shadow: var(--low_shadow);
   transition: .6s border cubic-bezier(.165, .84, .44, 1)
 }
 

@@ -60,17 +60,18 @@
 .section_overlay {
   z-index: 10;
   height: 100%;
+  width: 100%;
+  transform: translateX(100%);
   position: fixed;
   top: 0;
   right: 0;
-  width: 0;
   background-color: var(--overlay_glass);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   transition: var(--transition_standard)
 }
 .section_overlay.opened_sections {
-  width: 100%
+  transform: none
 }
 @supports not (backdrop-filter: blur(10px)) {
   .section_overlay {
@@ -410,7 +411,8 @@ option {
   position: fixed;
   right: 0;
   top: 3rem;
-  width: 3rem;
+  width: 8rem;
+  transform: translateX(5rem);
   padding: .4rem 1rem .4rem .6rem;
   border-radius: 3px 0 0 3px;
   background-color: var(--fore);
@@ -424,14 +426,12 @@ option {
   top: 7.8rem
 }
 .tab_option_small:hover {
-  width: 6rem
+  padding-left: 1.6rem;
+  transform: translateX(2rem)
 }
 .tab_option_large:hover {
-  width: 8rem
-}
-.tab_option:hover {
-  justify-content: center;
-  text-align: center
+  padding-left: 1.8rem;
+  transform: none
 }
 .tab_option svg {
   height: 20px;

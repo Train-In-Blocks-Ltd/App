@@ -1,7 +1,6 @@
 <style scoped>
 /* Containers */
 #calendar_view {
-  background: var(--fore);
   border-radius: 10px;
   border: 3px solid var(--base);
   margin-top: 1rem
@@ -30,7 +29,6 @@
   display: grid;
   grid-gap: 2rem;
   margin: 1rem;
-  background-color: var(--fore);
   border-radius: 10px
 }
 .day_container {

@@ -67,6 +67,9 @@
   .switch_cal {
     margin-bottom: .4rem
   }
+  .switch_cal svg {
+    margin-right: .4rem
+  }
 
   /* Plan Grid */
   #plan_notes {

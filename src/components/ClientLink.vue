@@ -76,11 +76,9 @@ li[data-done='false'] {
   display: grid;
   padding: 2rem;
   grid-gap: 1rem;
-  font-weight: 400;
   color: var(--base);
   text-decoration: none;
-  box-shadow: var(--low_shadow);
-  background-color: var(--fore);
+  border: 2px solid var(--base);
   border-radius: 10px;
   transition: var(--transition_standard)
 }
