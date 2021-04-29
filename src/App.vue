@@ -101,7 +101,7 @@ main {
 
 /* System state */
 .top_banner {
-  z-index: 11;
+  z-index: 12;
   position: fixed;
   top: 0;
   left: 0;

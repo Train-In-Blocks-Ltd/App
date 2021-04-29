@@ -119,10 +119,9 @@ ul[data-type='taskList'] li > label {
   position: sticky;
   top: 0;
   padding-top: 1rem;
-  background-color: var(--fore)
+  background-color: var(--back)
 }
 #menu_bar {
-  background-color: var(--fore);
   border: 2px solid var(--base_faint);
   border-radius: 10px 10px 0 0;
   padding: 0 1rem;
