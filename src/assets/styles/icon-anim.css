@@ -34,7 +34,7 @@
 }
 
 /* Template */
-.nav_item:hover #template__t {
+.nav_item:hover #template__t, .nav_item a.router-link-exact-active #template__t {
   transform: translateY(4px)
 }
 
@@ -146,6 +146,15 @@
   #bin__lid {
     transition: none
   }
+}
+
+/* Active state */
+.nav_item a.router-link-exact-active #home__house,
+.nav_item a.router-link-exact-active :is(#portfolio_pen, #portfolio_case),
+.nav_item a.router-link-exact-active #archive__t,
+.nav_item a.router-link-exact-active #account__cog {
+  transform: none;
+  animation: none
 }
 
 /* No Hover */

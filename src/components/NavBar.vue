@@ -1,3 +1,17 @@
+<style>
+/* Active route */
+.nav_item a.router-link-exact-active svg {
+  background: var(--base)
+}
+.nav_item:hover a.router-link-exact-active svg {
+  transition: none;
+  transform: none
+}
+.nav_item a.router-link-exact-active svg path {
+  fill: var(--fore)
+}
+</style>
+
 <style scoped>
 @import '../assets/styles/icon-anim';
 
@@ -35,7 +49,8 @@
 .nav_item a {
   display: flex;
   text-decoration: none;
-  opacity: var(--light_opacity)
+  opacity: var(--light_opacity);
+  transition: var(--transition_standard)
 }
 .nav_item__text {
   white-space: nowrap;
@@ -45,12 +60,17 @@
   position: relative;
   border: 0;
   opacity: 0;
+  height: fit-content;
+  margin: auto 0;
   transition: var(--transition_standard)
 }
 .nav_item__icon {
   margin: 0 .4rem 0 0;
-  height: 1.4rem;
   vertical-align: bottom;
+  padding: .2rem;
+  border-radius: 5px;
+  height: 1.8rem;
+  width: 1.8rem;
   transition: var(--transition_standard)
 }
 
@@ -92,7 +112,11 @@
   }
   .nav_item a {
     width: 100%;
-    height: 4rem
+    height: 3.6rem
+  }
+  .nav_item a.router-link-exact-active {
+    background-color: var(--base);
+    border-radius: 10px 10px 0 0
   }
   .nav_item__text {
     display: none
