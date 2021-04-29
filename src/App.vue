@@ -13,7 +13,7 @@
   --base: #282828;
   --base_light: #585858;
   --base_faint: #28282840;
-  --base-red: rgb(184, 0, 0);
+  --base_red: rgb(184, 0, 0);
   --overlay_glass: #FFFFFFB3;
   --calendar_highlight: #FFFFEE;
   --skeleton_1: #F4F4F4;
@@ -194,7 +194,7 @@ i {
 }
 .text--red {
   /* stylelint-disable-next-line */
-  color: var(--base-red) !important
+  color: var(--base_red) !important
 }
 .text--holder {
   margin: 2rem 0 8rem 0
@@ -806,7 +806,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-        document.documentElement.style.setProperty('--base-red', 'white')
+        document.documentElement.style.setProperty('--base_red', 'white')
       } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
@@ -825,7 +825,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#F4F4F4')
         document.documentElement.style.setProperty('--skeleton_2', '#E4E4E4')
         document.documentElement.style.setProperty('--link', 'blue')
-        document.documentElement.style.setProperty('--base-red', 'rgb(184, 0, 0)')
+        document.documentElement.style.setProperty('--base_red', 'rgb(184, 0, 0)')
       }
     },
 

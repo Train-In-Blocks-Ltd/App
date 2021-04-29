@@ -44,6 +44,16 @@
       required
     >
     <input
+      v-model="new_client.confirm"
+      :style="{ borderColor: new_client.email !== new_client.confirm ? 'var(--base_red)' : ''}"
+      class="small_border_radius width_300"
+      type="email"
+      autocomplete="email"
+      placeholder="Confirm email*"
+      aria-label="Confirm email"
+      required
+    >
+    <input
       v-model="new_client.number"
       class="small_border_radius width_300"
       type="tel"
@@ -54,7 +64,10 @@
       pattern="\d+"
     >
     <div class="form_button_bar">
-      <button type="submit">
+      <button
+        :disabled="new_client.email === '' || new_client.email !== new_client.confirm"
+        type="submit"
+      >
         Save
       </button>
       <button class="red_button" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
@@ -71,6 +84,7 @@ export default {
       new_client: {
         name: '',
         email: '',
+        confirm: '',
         number: '',
         notes: ''
       }
@@ -104,6 +118,7 @@ export default {
           this.new_client = {
             name: '',
             email: '',
+            confirm: '',
             number: '',
             notes: ''
           }

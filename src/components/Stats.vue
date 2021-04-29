@@ -72,7 +72,7 @@
 }
 .protocol_error table th {
   text-align: left;
-  border-bottom: 1px solid var(--base-red)
+  border-bottom: 1px solid var(--base_red)
 }
 .protocol_error table td {
   overflow-wrap: anywhere
