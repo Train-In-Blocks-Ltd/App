@@ -1183,7 +1183,7 @@ export default {
     async create_plan (planName, clientId, planDuration, planColors, planNotes, planSessions) {
       this.$parent.$parent.dontLeave = true
       try {
-        await this.$axios.put('https://api.traininblocks.com/programmes',
+        await this.$axios.put('https://api.traininblocks.com/v2/plans',
           {
             name: `Copy of ${planName}`,
             client_id: clientId,
@@ -1220,7 +1220,7 @@ export default {
       const FORCE = data !== undefined
       try {
         this.sort_sessions(PLAN)
-        const RESPONSE = await this.$axios.post('https://api.traininblocks.com/programmes',
+        const RESPONSE = await this.$axios.post('https://api.traininblocks.com/v2/plans',
           {
             id: FORCE ? data.id : PLAN.id,
             name: FORCE ? `Copy of ${data.name}` : PLAN.name,
@@ -1263,7 +1263,7 @@ export default {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         const ID = parseInt(this.$route.params.id)
         try {
-          await this.$axios.delete(`https://api.traininblocks.com/programmes/${ID}`)
+          await this.$axios.delete(`https://api.traininblocks.com/v2/plans/${ID}`)
           await this.$parent.$parent.clients_f()
           this.$parent.$parent.clients_to_vue()
           this.$ga.event('Session', 'delete')
@@ -1279,7 +1279,7 @@ export default {
       this.$parent.$parent.dontLeave = true
       const SESSION = this.helper('match_session', id)
       try {
-        await this.$axios.post('https://api.traininblocks.com/workouts',
+        await this.$axios.post('https://api.traininblocks.com/v2/sessions',
           {
             id: SESSION.id,
             name: SESSION.name,
@@ -1302,7 +1302,7 @@ export default {
       let newSessionId
       this.$parent.$parent.dontLeave = true
       try {
-        await this.$axios.put('https://api.traininblocks.com/workouts',
+        await this.$axios.put('https://api.traininblocks.com/v2/sessions',
           {
             name: data.sessionName,
             programme_id: data.programmeId,
@@ -1338,7 +1338,7 @@ export default {
     async delete_session (id) {
       this.$parent.$parent.dontLeave = true
       try {
-        await this.$axios.delete(`https://api.traininblocks.com/workouts/${id}`)
+        await this.$axios.delete(`https://api.traininblocks.com/v2/sessions/${id}`)
         await this.$parent.get_sessions(parseInt(this.$route.params.id), parseInt(this.$route.params.client_id), true)
         await this.update_plan()
 

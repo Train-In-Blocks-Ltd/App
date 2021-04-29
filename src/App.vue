@@ -928,11 +928,11 @@ export default {
       /*
       if (!this.noClients && this.isTrainer) {
         for (const CLIENT of this.clients) {
-          const planResponse = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
+          const planResponse = await this.$axios.get(`https://api.traininblocks.com/v2/plans/${client.client_id}`)
           client.plans = planResponse.data.length === 0 ? false : planResponse.data
           if (client.plans !== false) {
             for (const plan of client.plans) {
-              const sessionsResponse = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
+              const sessionsResponse = await this.$axios.get(`https://api.traininblocks.com/v2/sessions/${plan.id}`)
               plan.sessions = sessionsResponse.data.length === 0 ? false : sessionsResponse.data
             }
           }
@@ -944,7 +944,7 @@ export default {
     },
     async clients_f () {
       try {
-        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
+        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/clients/${this.claims.sub}`)
         this.noClients = RESPONSE.data.length === 0
         localStorage.setItem('clients', JSON.stringify(RESPONSE.data))
       } catch (e) {
@@ -955,7 +955,7 @@ export default {
     async client_delete (id) {
       this.dontLeave = true
       try {
-        await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
+        await this.$axios.delete(`https://api.traininblocks.com/v2/clients/${id}`)
         this.helper('client_store', 'Client', 'delete')
         this.archive.no_archive = this.archive.clients.length === 0
       } catch (e) {
@@ -969,7 +969,7 @@ export default {
       this.silent_loading = true
       this.dontLeave = true
       try {
-        await this.$axios.post('https://api.traininblocks.com/clients',
+        await this.$axios.post('https://api.traininblocks.com/v2/clients',
           {
             id: this.client_details.client_id,
             name: this.client_details.name,
@@ -1004,7 +1004,7 @@ export default {
     },
     async archive_f () {
       try {
-        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
+        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/clients/${this.claims.sub}/archive`)
         this.archive.no_archive = RESPONSE.data.length === 0
         localStorage.setItem('archive', JSON.stringify(RESPONSE.data))
       } catch (e) {
@@ -1020,7 +1020,7 @@ export default {
         this.clients.splice(index, 1)
         this.noClients = this.clients.length === 0
         try {
-          this.response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`).data
+          this.response = await this.$axios.post(`https://api.traininblocks.com/v2/clients/archive/${id}`).data
           const RESULT = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
@@ -1067,7 +1067,7 @@ export default {
       })
       this.archive.no_archive = this.archive.clients.length === 0
       try {
-        const RESPONSE = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
+        const RESPONSE = await this.$axios.post(`https://api.traininblocks.com/v2/clients/unarchive/${id}`)
         this.response = RESPONSE.data
         this.helper('client_store', 'Client', 'unarchive')
       } catch (e) {
@@ -1080,7 +1080,7 @@ export default {
     async get_templates (force) {
       try {
         if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/templates/${this.claims.sub}`)
           localStorage.setItem('templates', JSON.stringify(RESPONSE.data))
         }
         this.templates = JSON.parse(localStorage.getItem('templates'))
@@ -1093,16 +1093,16 @@ export default {
         if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
           let response
           if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
-            response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
+            response = await this.$axios.get(`https://api.traininblocks.com/v2/portfolio/${this.claims.sub}`)
             if (response.data.length === 0) {
               this.create_portfolio()
             } else {
               localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
             }
           } else {
-            const CLIENT = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+            const CLIENT = await this.$axios.get(`https://api.traininblocks.com/v2/ptId/${this.claims.client_id_db}`)
             if (CLIENT.data[0].pt_id) {
-              response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${CLIENT.data[0].pt_id}`)
+              response = await this.$axios.get(`https://api.traininblocks.com/v2/portfolio/${CLIENT.data[0].pt_id}`)
               if (response.data.length !== 0) {
                 localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
               }
@@ -1118,7 +1118,7 @@ export default {
     async create_portfolio () {
       this.dontLeave = true
       try {
-        await this.$axios.put('https://api.traininblocks.com/portfolio',
+        await this.$axios.put('https://api.traininblocks.com/v2/portfolio',
           {
             pt_id: this.claims.sub,
             trainer_name: '',
@@ -1134,10 +1134,10 @@ export default {
     },
     async get_plans () {
       try {
-        const PLANS = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
+        const PLANS = await this.$axios.get(`https://api.traininblocks.com/v2/plans/${this.claims.client_id_db}`)
         this.clientUser.plans = PLANS.data
         for (const PLAN_INDEX in this.clientUser.plans) {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[PLAN_INDEX].id}`)
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/sessions/${this.clientUser.plans[PLAN_INDEX].id}`)
           this.clientUser.plans[PLAN_INDEX].sessions = RESPONSE.data
         }
       } catch (e) {
@@ -1148,7 +1148,7 @@ export default {
       const PLAN = this.clientUser.plans.find(plan => plan.id === pid)
       const SESSION = PLAN.sessions.find(session => session.id === sid)
       try {
-        await this.$axios.post('https://api.traininblocks.com/client-workouts',
+        await this.$axios.post('https://api.traininblocks.com/v2/client-workouts',
           {
             id: SESSION.id,
             name: SESSION.name,
@@ -1157,7 +1157,7 @@ export default {
           }
         )
         this.$ga.event('Session', 'update')
-        const CLIENT = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
+        const CLIENT = await this.$axios.get(`https://api.traininblocks.com/v2/ptId/${this.claims.client_id_db}`)
         if (CLIENT.data[0].notifications === 1) {
           if (SESSION.feedback !== null) {
             const PT_EMAIL = await this.$axios.post('/.netlify/functions/okta',

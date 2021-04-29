@@ -134,7 +134,7 @@ export default {
       this.$parent.silent_loading = true
       this.$parent.dontLeave = true
       try {
-        await this.$axios.post(`https://api.traininblocks.com/portfolio/${this.$parent.claims.sub}`,
+        await this.$axios.post(`https://api.traininblocks.com/v2/portfolio/${this.$parent.claims.sub}`,
           {
             trainer_name: this.$parent.portfolio.trainer_name,
             business_name: this.$parent.portfolio.business_name,

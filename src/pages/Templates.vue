@@ -312,7 +312,7 @@ export default {
     async new_template () {
       try {
         this.$parent.dontLeave = true
-        await this.$axios.put('https://api.traininblocks.com/templates',
+        await this.$axios.put('https://api.traininblocks.com/v2/templates',
           {
             pt_id: this.$parent.claims.sub,
             name: this.new_template_form.name,
@@ -335,7 +335,7 @@ export default {
       try {
         this.$parent.dontLeave = true
         const TEMPLATE = this.$parent.templates.find(template => template.id === id)
-        await this.$axios.post('https://api.traininblocks.com/templates',
+        await this.$axios.post('https://api.traininblocks.com/v2/templates',
           {
             name: TEMPLATE.name,
             template: TEMPLATE.template,
@@ -352,7 +352,7 @@ export default {
     async delete_template (id) {
       try {
         this.$parent.dontLeave = true
-        await this.$axios.delete(`https://api.traininblocks.com/templates/${id}`)
+        await this.$axios.delete(`https://api.traininblocks.com/v2/templates/${id}`)
         await this.$parent.get_templates(true)
         this.$parent.end_loading()
       } catch (e) {

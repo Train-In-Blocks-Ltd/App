@@ -102,7 +102,7 @@ export default {
         this.$parent.response = ''
         try {
           this.$parent.$parent.dontLeave = true
-          await this.$axios.put('https://api.traininblocks.com/clients',
+          await this.$axios.put('https://api.traininblocks.com/v2/clients',
             {
               name: this.new_client.name,
               pt_id: this.$parent.$parent.claims.sub,

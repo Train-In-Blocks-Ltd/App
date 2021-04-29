@@ -54,7 +54,7 @@ export default {
     async create_plan () {
       try {
         this.$parent.$parent.$parent.dontLeave = true
-        await this.$axios.put('https://api.traininblocks.com/programmes',
+        await this.$axios.put('https://api.traininblocks.com/v2/plans',
           {
             name: this.new_plan.name,
             client_id: this.$parent.$parent.$parent.client_details.client_id,

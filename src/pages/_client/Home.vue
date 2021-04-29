@@ -436,7 +436,7 @@ export default {
         const CLIENT = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
         this.$parent.client_details = CLIENT
         if (CLIENT.plans === undefined || !CLIENT.plans || force) {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/programmes/${CLIENT.client_id}`)
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/plans/${CLIENT.client_id}`)
           CLIENT.plans = RESPONSE.data.length === 0 ? false : RESPONSE.data
           localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
         }
@@ -456,7 +456,7 @@ export default {
         const CLIENT = this.$parent.clients.find(client => client.client_id === clientId)
         const PLAN = CLIENT.plans.find(plan => plan.id === planId)
         if (PLAN.sessions === undefined || force) {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/workouts/${PLAN.id}`)
+          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/sessions/${PLAN.id}`)
           PLAN.sessions = RESPONSE.data.length === 0 ? false : RESPONSE.data
           localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
         }

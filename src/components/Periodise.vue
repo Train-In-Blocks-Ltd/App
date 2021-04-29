@@ -228,7 +228,7 @@ export default {
       const PLAN = this.client_plans.find(plan => plan.id === id)
       try {
         this.sort_sessions(PLAN)
-        await this.$axios.post('https://api.traininblocks.com/programmes',
+        await this.$axios.post('https://api.traininblocks.com/v2/plans',
           {
             id: PLAN.id,
             name: PLAN.name,
