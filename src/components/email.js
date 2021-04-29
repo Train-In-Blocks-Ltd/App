@@ -2423,3 +2423,13 @@ export function feedbackEmailText (cId, pId) {
     
     The Train In Blocks Team`)
 }
+
+export function weeklyBreakdown (body) {
+  return (`** Here's a breakdown of what you did this week
+    ------------------------------------------------------------
+    ${body}
+
+    All the best,
+    
+    The Train In Blocks Team`)
+}
