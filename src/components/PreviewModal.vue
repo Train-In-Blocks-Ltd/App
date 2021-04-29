@@ -1,15 +1,14 @@
 <style>
 /* Preview HTML */
 .preview_modal .preview_html {
-  font-size: .8rem;
-  margin-top: .4rem
+  margin: 1rem 0 2rem 0
 }
 .preview_modal .preview_html * {
   color: var(--base);
   transition: var(--transition_standard)
 }
 .preview_modal .preview_html p {
-  margin: .4rem 0
+  margin: .6rem 0
 }
 .preview_modal .preview_html :is(h1, h2) {
   font-size: 1rem
@@ -28,9 +27,6 @@
 /* Other */
 h2.title {
   margin-bottom: 2rem
-}
-button.red_button {
-  margin: 2rem 0
 }
 .copy_msg {
   margin-bottom: 1rem
@@ -51,9 +47,6 @@ button.red_button {
       <h3 class="title">
         {{ desc }}
       </h3>
-      <p class="copy_msg">
-        Select, copy, and paste it into your sessions
-      </p>
       <div
         class="preview_html"
         :class="{ noMedia: !showMedia }"
