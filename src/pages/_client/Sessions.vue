@@ -1299,6 +1299,7 @@ export default {
       }
     },
     async add_session (data, type) {
+      let newSessionId
       this.$parent.$parent.dontLeave = true
       try {
         await this.$axios.put('https://api.traininblocks.com/workouts',
@@ -1309,9 +1310,12 @@ export default {
             notes: data.sessionNotes,
             week_id: data.sessionWeek
           }
-        )
+        ).then((response) => {
+          newSessionId = response.data[0]['LAST_INSERT_ID()']
+        })
         await this.$parent.get_sessions(data.programmeId, type === 'duplicate' ? data.clientId : parseInt(this.$route.params.client_id), true)
         if (type === 'new') {
+          this.go_to_event(newSessionId, this.currentWeek)
           this.$ga.event('Session', 'new')
           this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
         } else if (type === 'duplicate') {

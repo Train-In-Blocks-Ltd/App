@@ -27,7 +27,7 @@
 </style>
 
 <template>
-  <div id="color_picker">
+  <div id="color_picker" class="fadeIn">
     <div
       v-for="(paint, index) in colorPalette"
       :key="'color_' + index"

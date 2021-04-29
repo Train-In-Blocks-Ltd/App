@@ -68,7 +68,8 @@
   box-shadow: var(--low_shadow)
 }
 .holderCell {
-  background-color: transparent
+  background-color: transparent;
+  box-shadow: none
 }
 
 /* Event */
