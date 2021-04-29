@@ -134,14 +134,22 @@ hr {
                 </div>
               </div>
               <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
-              <button
-                v-if="!feedbackId"
-                class="complete_button"
-                :class="{ green_button: session.checked === 1, red_button: session.checked === 0 }"
-                @click="complete(plan.id, session.id)"
-              >
-                {{ session.checked === 1 ? 'Completed' : 'Click to complete' }}
-              </button>
+              <div :key="check">
+                <button
+                  v-if="session.checked === 1 && !feedbackId"
+                  class="complete_button green_button"
+                  @click="complete(plan.id, session.id)"
+                >
+                  Completed
+                </button>
+                <button
+                  v-if="session.checked === 0 && !feedbackId"
+                  class="complete_button red_button"
+                  @click="complete(plan.id, session.id)"
+                >
+                  Click to complete
+                </button>
+              </div>
               <div v-if="session.checked === 1">
                 <hr>
                 <h3>

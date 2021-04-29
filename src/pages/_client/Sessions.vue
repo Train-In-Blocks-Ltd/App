@@ -227,7 +227,7 @@
   }
   .feedback_button {
     margin-right: 1rem;
-    padding: .2rem 1rem;
+    padding: .4rem 1rem;
     border-radius: 3px
   }
   .newSession, .incomplete {
