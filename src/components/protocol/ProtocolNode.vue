@@ -3,10 +3,7 @@ div[data-type='protocol-item'] {
   padding: .6rem;
   border: 1px solid var(--base);
   border-radius: 5px;
-  width: fit-content
-}
-div[data-type='protocol-item'],
-.protocol_item {
+  width: fit-content;
   font-weight: bold
 }
 .protocol_item {

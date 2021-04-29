@@ -65,15 +65,15 @@ Vue.mixin({
         }
         finderNew.forEach((match, groupIndex) => {
           if (groupIndex === 1) {
-            PACKET_BUILDER.exerciseName = match
+            PACKET_BUILDER.exerciseName = match.replace(/<[^>]*>?/gmi, '')
           } else if (groupIndex === 2) {
-            PACKET_BUILDER.exerciseProtocol = match
+            PACKET_BUILDER.exerciseProtocol = match.replace(/<[^>]*>?/gmi, '')
           }
         })
         RETURN_PACKETS.push(PACKET_BUILDER)
       }
       let finderOld
-      const HTML_REMOVED_TAGS = text.replace(/<[^>]*>?/gm, '')
+      const HTML_REMOVED_TAGS = text.replace(/<[^>]*>?/gmi, '')
       while ((finderOld = REGEX_EXTRACT_EXERCISES.exec(HTML_REMOVED_TAGS)) !== null) {
         if (finderOld.index === REGEX_EXTRACT_EXERCISES.lastIndex) {
           REGEX_EXTRACT_EXERCISES.lastIndex++
