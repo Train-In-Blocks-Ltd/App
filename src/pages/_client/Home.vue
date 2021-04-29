@@ -108,8 +108,10 @@
 }
 @media (max-width: 576px) {
   .client_info__options {
-    display: grid;
-    grid-gap: 1rem;
+    display: block
+  }
+  .verify_button {
+    width: 100%;
     margin-top: 1rem
   }
 }
@@ -207,7 +209,7 @@
           </div>
           <button
             v-if="clientAlreadyMsg === 'Restricted'"
-            class="button--verify button"
+            class="verify_button button"
             :disabled="clientAlready"
             @click="create_client()"
           >
@@ -215,14 +217,14 @@
           </button>
           <button
             v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
-            class="button--verify fadeIn"
+            class="verify_button fadeIn"
             @click="$parent.client_details.notifications = $parent.client_details.notifications === 1 ? 0 : 1, $parent.update_client()"
           >
             {{ $parent.client_details.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
           </button>
           <button
             v-else
-            class="button--verify button"
+            class="verify_button button"
             :disabled="clientAlready"
             @click="create_client()"
           >

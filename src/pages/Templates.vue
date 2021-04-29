@@ -7,7 +7,7 @@
   }
   .template_container {
     display: grid;
-    grid-gap: 4rem;
+    grid-gap: 2rem;
     margin: 2rem 0
   }
   .template_wrapper__header {
