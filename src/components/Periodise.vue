@@ -223,7 +223,7 @@ export default {
       }
     },
     async update_plan (id) {
-      this.$parent.$parent.$parent.silent_loading = true
+      this.$parent.$parent.$parent.silentLoading = true
       this.$parent.$parent.$parent.dontLeave = true
       const PLAN = this.client_plans.find(plan => plan.id === id)
       try {

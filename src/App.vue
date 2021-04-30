@@ -689,7 +689,7 @@ export default {
       showEULA: false,
       loading: false,
       dontLeave: false,
-      silent_loading: false,
+      silentLoading: false,
       authenticated: false,
       pwa: {
         deferredPrompt: null,
@@ -770,7 +770,7 @@ export default {
         SELF.will_body_scroll(false)
         SELF.loading = false
         SELF.dontLeave = false
-        SELF.silent_loading = false
+        SELF.silentLoading = false
         throw new self.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
       }
       return config
@@ -911,7 +911,7 @@ export default {
     end_loading () {
       this.loading = false
       this.dontLeave = false
-      this.silent_loading = false
+      this.silentLoading = false
     },
 
     // CLIENT
@@ -966,7 +966,7 @@ export default {
     // CLIENT ARCHIVE
 
     async update_client (clientNotesUpdate) {
-      this.silent_loading = true
+      this.silentLoading = true
       this.dontLeave = true
       try {
         await this.$axios.post('https://api.traininblocks.com/v2/clients',

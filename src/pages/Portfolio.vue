@@ -42,7 +42,7 @@
         aria-label="Business name"
         type="text"
         autocomplete="name"
-        :disabled="$parent.silent_loading"
+        :disabled="$parent.silentLoading"
         @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >
@@ -55,7 +55,7 @@
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
-        :disabled="$parent.silent_loading"
+        :disabled="$parent.silentLoading"
         @blur="update($parent.portfolio.notes)"
         @input="editing_info = true"
       >
@@ -131,7 +131,7 @@ export default {
     // Database
 
     async update (notesUpdate) {
-      this.$parent.silent_loading = true
+      this.$parent.silentLoading = true
       this.$parent.dontLeave = true
       try {
         await this.$axios.post(`https://api.traininblocks.com/v2/portfolio/${this.$parent.claims.sub}`,

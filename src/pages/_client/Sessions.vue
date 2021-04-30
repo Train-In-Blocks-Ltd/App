@@ -434,7 +434,7 @@ input.session-date {
             aria-label="Plan name"
             type="text"
             name="name"
-            :disabled="$parent.$parent.silent_loading"
+            :disabled="$parent.$parent.silentLoading"
             @blur="update_plan()"
           >
           <div class="wrapper--progress-bar">
@@ -1214,7 +1214,7 @@ export default {
       }
     },
     async update_plan (data) {
-      this.$parent.$parent.silent_loading = true
+      this.$parent.$parent.silentLoading = true
       this.$parent.$parent.dontLeave = true
       const PLAN = this.helper('match_plan')
       const FORCE = data !== undefined

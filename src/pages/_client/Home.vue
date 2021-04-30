@@ -182,7 +182,7 @@
           type="text"
           aria-label="Client name"
           autocomplete="name"
-          :disabled="$parent.silent_loading"
+          :disabled="$parent.silentLoading"
           @blur="$parent.update_client()"
         >
         <input
@@ -197,7 +197,7 @@
           minlength="9"
           maxlength="14"
           pattern="\d+"
-          :disabled="$parent.silent_loading"
+          :disabled="$parent.silentLoading"
           @blur="$parent.update_client()"
         >
         <div v-if="!sessions" class="client_info__options">
