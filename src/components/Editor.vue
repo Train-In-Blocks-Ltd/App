@@ -57,7 +57,7 @@ div#rich_editor > div[contenteditable] img,
 div#rich_show_content img {
   cursor: pointer;
   border-radius: 10px;
-  max-width: 80%;
+  max-width: 40%;
   margin: 1rem 0;
   transition: .4s all cubic-bezier(.165, .84, .44, 1)
 }
@@ -92,6 +92,12 @@ ul[data-type='taskList'] li > label {
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  div#rich_editor > div[contenteditable] img,
+  div#rich_show_content img {
+    max-width: 100%
+  }
+}
 @media (max-width: 576px) {
   .editor_object_standard h3 {
     left: 1rem
