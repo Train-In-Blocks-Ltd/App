@@ -33,30 +33,27 @@
       :type="'client'"
       :options="multiselectOptions"
       :selected="selectedClients"
-      @response="resolve_archive_multiselect"
+      @response="resolveArchiveMultiselect"
     />
     <div class="top_bar">
       <h1>
         Archive
       </h1>
       <a
-        v-if="!$parent.archive.no_archive && selectedClients.length < $parent.archive.clients.length"
+        v-if="!archive.noArchive && selectedClients.length < archive.clients.length"
         href="javascript:void(0)"
         class="a_link"
-        @click="select_all()"
+        @click="selectAll()"
       >
         Select all
       </a>
     </div>
     <br>
-    <p v-if="$parent.archive.no_archive" class="text--small grey">
+    <p v-if="archive.noArchive" class="text--small grey">
       No clients are archived
     </p>
-    <p v-if="$parent.error">
-      <b>{{ $parent.error }}</b>
-    </p>
     <input
-      v-if="!$parent.archive.no_archive && !$parent.error && $parent.archive.clients"
+      v-if="!archive.noArchive && archive.clients"
       v-model="search"
       type="search"
       aria-label="search by name"
@@ -65,11 +62,11 @@
       class="search text--small"
       autocomplete="name"
     >
-    <div v-if="!$parent.archive.no_archive" class="clients_container">
-      <skeleton v-if="$parent.loading" :type="'archived'" />
+    <div v-if="!archive.noArchive" class="clients_container">
+      <skeleton v-if="loading" :type="'archived'" />
       <div
-        v-for="(clients, index) in $parent.archive.clients"
-        v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
+        v-for="(clients, index) in archive.clients"
+        v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !loading"
         :id="'a' + clients.client_id"
         :key="index"
         class="client_link_wrapper fadeIn"
@@ -91,6 +88,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const ClientLink = () => import(/* webpackChunkName: "components.clientlink", webpackPreload: true  */ '../components/ClientLink')
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
 
@@ -110,29 +108,33 @@ export default {
       ]
     }
   },
-  async created () {
-    this.$parent.loading = true
-    await this.$parent.setup()
-    await this.$parent.archive_to_vue()
+  computed: mapState([
+    'loading',
+    'archive'
+  ]),
+  created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.will_body_scroll(true)
-    this.$parent.end_loading()
+    this.$store.dispatch('endLoading')
   },
   methods: {
-
-    resolve_archive_multiselect (res) {
+    resolveArchiveMultiselect (res) {
       switch (res) {
         case 'Unarchive':
-          this.unarchive_multi_clients()
+          this.unarchiveClients()
           break
         case 'Delete':
-          this.delete_multi_clients()
+          this.deleteClients()
           break
         case 'Deselect':
-          this.deselect_all()
+          this.deselectAll()
           break
       }
     },
-    change_select_checkbox (id) {
+    changeSelectCheckbox (id) {
       if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)
       } else {
@@ -140,40 +142,57 @@ export default {
         this.selectedClients.splice(CLIENT_INDEX, 1)
       }
     },
-    select_all () {
-      this.$parent.archive.clients.forEach((client) => {
+    selectAll () {
+      this.archive.clients.forEach((client) => {
         if (!this.selectedClients.includes(client.client_id)) {
           this.selectedClients.push(client.client_id)
           document.getElementById(`sc-${client.client_id}`).checked = true
         }
       })
     },
-    deselect_all () {
-      this.$parent.archive.clients.forEach((client) => {
+    deselectAll () {
+      this.archive.clients.forEach((client) => {
         document.getElementById(`sc-${client.client_id}`).checked = false
       })
       this.selectedClients = []
     },
-    async delete_multi_clients () {
+    async deleteClients () {
       if (this.selectedClients.length !== 0) {
         if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected clients?', 'We will remove their data(s) from our database and it won\'t be recoverable.')) {
           this.selectedClients.forEach((clientId) => {
-            this.$parent.client_delete(clientId)
+            this.clientDelete(clientId)
           })
           this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete', 'All their data have been removed')
-          this.deselect_all()
+          this.deselectAll()
         }
       }
     },
-    async unarchive_multi_clients () {
+    async unarchiveClients () {
       if (this.selectedClients.length !== 0) {
         if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to unarchive all the selected clients?', 'Their datas will be recovered and available on the Home page.')) {
           this.selectedClients.forEach((clientId) => {
-            this.$parent.client_unarchive(clientId)
+            this.clientUnarchive(clientId)
           })
           this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client', 'All their data have been recovered')
-          this.deselect_all()
+          this.deselectAll()
         }
+      }
+    },
+
+    // Database
+
+    async clientDelete (clientId) {
+      try {
+        await this.$store.dispatch('clientDelete', clientId)
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async clientUnarchive (clientId) {
+      try {
+        await this.$store.dispatch('clientUnarchive', clientId)
+      } catch (e) {
+        this.$parent.resolve_error(e)
       }
     }
   }

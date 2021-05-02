@@ -51,7 +51,7 @@
         <p>
           <b>Selected {{ selectedProducts.length }} {{ selectedProducts.length === 1 ? 'product' : 'products' }} to ...</b>
         </p>
-        <a href="javascript:void(0)" class="a_link" @click="deselect_all()">Deselect</a>
+        <a href="javascript:void(0)" class="a_link" @click="deselectAll()">Deselect</a>
       </div>
     </transition>
     <h2>
@@ -65,7 +65,7 @@
         v-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
         href="javascript:void(0)"
         class="a_link select_all"
-        @click="select_all()"
+        @click="selectAll()"
       >
         Select all
       </a>
@@ -116,7 +116,7 @@ export default {
   methods: {
 
     // Checkbox
-    change_select_checkbox (id) {
+    changeSelectCheckbox (id) {
       if (!this.selectedProducts.includes(id)) {
         this.selectedProducts.push(id)
       } else {
@@ -124,7 +124,7 @@ export default {
         this.selectedProducts.splice(PRODUCT_INDEX, 1)
       }
     },
-    select_all () {
+    selectAll () {
       this.products.forEach((product) => {
         if (!this.selectedProducts.includes(product.id)) {
           this.selectedProducts.push(product.id)
@@ -132,7 +132,7 @@ export default {
         }
       })
     },
-    deselect_all () {
+    deselectAll () {
       this.products.forEach((product) => {
         document.getElementById(`sc-${product.id}`).checked = false
       })

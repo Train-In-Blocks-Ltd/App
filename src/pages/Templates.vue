@@ -84,7 +84,7 @@
         v-if="templates && selectedTemplates.length < templates.length"
         href="javascript:void(0)"
         class="a_link select_all"
-        @click="select_all()"
+        @click="selectAll()"
       >
         Select all
       </a>
@@ -206,8 +206,6 @@ export default {
       data: true
     })
     this.will_body_scroll(true)
-    this.$parent.setup()
-    this.getTemplate()
     this.$store.commit('setData', {
       attr: 'loading',
       data: false
@@ -239,7 +237,7 @@ export default {
           this.delete_multi_templates()
           break
         case 'Deselect':
-          this.deselect_all()
+          this.deselectAll()
           break
       }
     },
@@ -283,7 +281,7 @@ export default {
 
     // CHECKBOX
 
-    change_select_checkbox (id) {
+    changeSelectCheckbox (id) {
       if (!this.selectedTemplates.includes(id)) {
         this.selectedTemplates.push(id)
       } else {
@@ -301,7 +299,7 @@ export default {
         this.expandedTemplates.push(id)
       }
     },
-    select_all () {
+    selectAll () {
       this.templates.forEach((template) => {
         if (!this.selectedTemplates.includes(template.id)) {
           this.selectedTemplates.push(template.id)
@@ -309,7 +307,7 @@ export default {
         }
       })
     },
-    deselect_all () {
+    deselectAll () {
       this.templates.forEach((template) => {
         document.getElementById(`sc-${template.id}`).checked = false
       })
@@ -322,20 +320,13 @@ export default {
             this.deleteTemplate(templateId)
           })
           this.helper('delete')
-          this.deselect_all()
+          this.deselectAll()
         }
       }
     },
 
     // DATABASE
 
-    async getTemplate () {
-      try {
-        await this.$store.dispatch('getTemplates', false)
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-    },
     async createTemplate () {
       try {
         await this.$store.dispatch('newTemplate')

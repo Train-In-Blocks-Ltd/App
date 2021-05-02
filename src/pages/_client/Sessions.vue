@@ -299,7 +299,7 @@ input.session-date {
     <form
       v-if="showMove"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="move_to_week(), showMove = false, will_body_scroll(true)"
+      @submit.prevent="moveToWeek(), showMove = false, will_body_scroll(true)"
     >
       <h3>
         Move to a different microcycle
@@ -331,7 +331,7 @@ input.session-date {
     <form
       v-if="showShift"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="shift_across(), showShift = false, will_body_scroll(true)"
+      @submit.prevent="shiftAcross(), showShift = false, will_body_scroll(true)"
     >
       <h3>
         Shift the dates of the sessions
@@ -360,7 +360,7 @@ input.session-date {
     </form>
     <div v-if="showProgress" class="tab_overlay_content fadeIn delay fill_mode_both">
       <progress-sessions
-        :plan-data="helper('match_plan')"
+        :plan-data="$store.getters.helper('match_plan', $route.params.client_id, $route.params.id)"
         :sessions-to-progress="selectedSessions"
         :current-week="currentWeek"
         :max-week="maxWeek"
@@ -397,7 +397,7 @@ input.session-date {
       </button>
     </form>
     <div
-      v-if="!$parent.$parent.loading && !isStatsOpen && !$parent.showOptions && !noSessions"
+      v-if="!loading && !isStatsOpen && !$parent.showOptions && !noSessions"
       :class="{ icon_open_middle: $parent.keepLoaded }"
       class="tab_option tab_option_small fadeIn"
       aria-label="Statistics"
@@ -423,7 +423,7 @@ input.session-date {
     />
     <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
     <div
-      v-for="(plan, index) in $parent.$parent.client_details.plans"
+      v-for="(plan, index) in clientDetails.plans"
       :key="index"
     >
       <div v-if="plan.id == $route.params.id">
@@ -434,8 +434,8 @@ input.session-date {
             aria-label="Plan name"
             type="text"
             name="name"
-            :disabled="$parent.$parent.silentLoading"
-            @blur="update_plan()"
+            :disabled="silentLoading"
+            @blur="updatePlan()"
           >
           <div class="wrapper--progress-bar">
             <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: noSessions }">
@@ -467,7 +467,7 @@ input.session-date {
             <a
               class="a_link text--red"
               href="javascript:void(0)"
-              @click="delete_plan()"
+              @click="deletePlan()"
             >
               <inline-svg :src="require('../../assets/svg/bin.svg')" />
               Delete plan
@@ -489,7 +489,7 @@ input.session-date {
                 :editing="editSession"
                 :empty-placeholder="'What do you want to achieve in this plan?'"
                 :force-stop="forceStop"
-                @on-edit-change="resolve_plan_info_editor"
+                @on-edit-change="resolvePlanInfoEditor"
               />
             </div>
             <div class="wrapper--calendar">
@@ -532,17 +532,17 @@ input.session-date {
                     name="duration"
                     inputmode="decimal"
                     min="1"
-                    @change="update_plan(), maxWeek = plan.duration"
+                    @change="updatePlan(), maxWeek = plan.duration"
                   >
                 </div>
               </div>
               <div class="plan_table--container">
                 <div class="plan_table--container--plan_duration_container">
                   <div
-                    v-for="item in plan_duration(plan.duration)"
+                    v-for="item in planDuration(plan.duration)"
                     :key="item"
                     class="container--week"
-                    @click="change_week(item)"
+                    @click="changeWeek(item)"
                   >
                     <div :class="{ weekActive: item === currentWeek }" class="week">
                       <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color" />
@@ -574,21 +574,21 @@ input.session-date {
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
                 </div>
                 <div>
-                  <button class="button--new-session" @click="new_session()">
+                  <button class="button--new-session" @click="createNewSession()">
                     New session
                   </button>
                 </div>
               </div>
-              <p v-if="!$parent.$parent.loading && (noSessions || weekIsEmpty)" class="text--holder text--small grey">
+              <p v-if="!loading && (noSessions || weekIsEmpty)" class="text--holder text--small grey">
                 No sessions created yet
               </p>
-              <div v-if="!$parent.$parent.loading">
+              <div v-if="!loading">
                 <div v-if="plan.sessions" class="container--sessions_header">
                   <a
                     v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
-                    @click="select_all('week')"
+                    @click="selectAll('week')"
                   >
                     Select this microcycle
                   </a>
@@ -596,7 +596,7 @@ input.session-date {
                     v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
-                    @click="select_all('all')"
+                    @click="selectAll('all')"
                   >
                     Select all
                   </a>
@@ -604,7 +604,7 @@ input.session-date {
                     v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty"
                     href="javascript:void(0)"
                     class="a_link"
-                    @click="expand_all(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"
+                    @click="expandAll(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"
                   >
                     {{ expandedSessions.length !== 0 ? 'Collapse' : 'Expand' }} all
                   </a>
@@ -663,7 +663,7 @@ input.session-date {
                           :class="{ expanded: expandedSessions.includes(session.id) }"
                           :src="require('../../assets/svg/expand.svg')"
                           title="Info"
-                          @click="toggle_expanded_sessions(session.id)"
+                          @click="toggleExpandedSessions(session.id)"
                         />
                       </div>
                     </div>
@@ -676,7 +676,7 @@ input.session-date {
                       :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                       :data-for-templates="$parent.$parent.templates"
                       :force-stop="forceStop"
-                      @on-edit-change="resolve_session_editor"
+                      @on-edit-change="resolveSessionEditor"
                     />
                   </div>
                 </div>
@@ -692,6 +692,7 @@ input.session-date {
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true */ '../../components/Checkbox')
 const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/WeekCalendar')
 const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
@@ -715,7 +716,7 @@ export default {
     ProgressSessions
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+    if (this.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
       this.$parent.$parent.dontLeave = false
       next()
     }
@@ -800,6 +801,13 @@ export default {
       maxWeek: 2
     }
   },
+  computed: mapState([
+    'loading',
+    'silentLoading',
+    'dontLeave',
+    'clients',
+    'clientDetails'
+  ]),
   watch: {
     editingWeekColor () {
       this.updater()
@@ -808,11 +816,8 @@ export default {
   created () {
     this.will_body_scroll(true)
     this.$parent.sessions = true
-    this.noSessions = this.helper('match_plan').sessions === false
-    this.$parent.$parent.get_templates()
+    this.noSessions = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
     if (!this.noSessions) {
-      this.sort_sessions(this.helper('match_plan'))
-      this.check_for_new()
       this.adherence()
       this.updater()
     }
@@ -827,10 +832,10 @@ export default {
     resolve_session_multiselect (res) {
       switch (res) {
         case 'Complete':
-          this.bulk_check(1)
+          this.bulkCheck(1)
           break
         case 'Incomplete':
-          this.bulk_check(0)
+          this.bulkCheck(0)
           break
         case 'Progress':
           this.showProgress = true
@@ -838,7 +843,7 @@ export default {
           break
         case 'Duplicate':
           this.duplicate()
-          this.deselect_all()
+          this.deselectAll()
           break
         case 'Move':
           this.showMove = true
@@ -854,16 +859,16 @@ export default {
           this.print()
           break
         case 'Delete':
-          this.bulk_delete()
+          this.bulkDelete()
           this.updater()
           break
         case 'Deselect':
-          this.deselect_all()
+          this.deselectAll()
           break
       }
     },
-    resolve_plan_info_editor (state) {
-      const PLAN = this.helper('match_plan')
+    resolvePlanInfoEditor (state) {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       switch (state) {
         case 'edit':
           this.$parent.$parent.dontLeave = true
@@ -872,7 +877,7 @@ export default {
           break
         case 'save':
           this.editingPlanNotes = false
-          this.update_plan()
+          this.updatePlan()
           break
         case 'cancel':
           this.$parent.$parent.dontLeave = false
@@ -881,7 +886,7 @@ export default {
           break
       }
     },
-    resolve_session_editor (state, id) {
+    resolveSessionEditor (state, id) {
       const SESSION = this.helper('match_session', id)
       switch (state) {
         case 'edit':
@@ -890,7 +895,7 @@ export default {
           this.editSession = id
           this.forceStop += 1
           this.tempEditorStore = SESSION.notes
-          this.go_to_event(SESSION.id, SESSION.week_id)
+          this.goToEvent(SESSION.id, SESSION.week_id)
           break
         case 'save':
           this.isEditingSession = false
@@ -910,7 +915,7 @@ export default {
     // Background
 
     updater () {
-      const PLAN = this.helper('match_plan')
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       this.sessionDates = []
       this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
       for (const session of PLAN.sessions) {
@@ -925,31 +930,18 @@ export default {
       }
       this.maxWeek = PLAN.duration
     },
-    helper (type, sessionId) {
-      switch (type) {
-        case 'match_plan':
-          try {
-            return this.$parent.$parent.client_details.plans.find(plan => plan.id === parseInt(this.$route.params.id))
-          } catch {
-            setTimeout(() => { this.helper('match_plan') }, 1000)
-          }
-          break
-        case 'match_session':
-          return this.helper('match_plan').sessions.find(session => session.id === sessionId)
-      }
-    },
 
     // MODALS AND TAB
 
     duplicate () {
       const TO_DUPLICATE = []
-      const SESSIONS = this.helper('match_plan').sessions
+      const SESSIONS = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions
       this.selectedSessions.forEach((sessionId) => {
         TO_DUPLICATE.push(SESSIONS.find(session => session.id === sessionId))
       })
       TO_DUPLICATE.forEach((session) => {
-        this.add_session({
-          programmeId: parseInt(this.$route.params.id),
+        this.addSession({
+          planId: parseInt(this.$route.params.id),
           sessionName: `Copy of ${session.name}`,
           sessionDate: session.date,
           sessionNotes: session.notes,
@@ -959,7 +951,7 @@ export default {
     },
     print () {
       const NOTES_ARR = []
-      const PLAN = this.helper('match_plan')
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       PLAN.sessions.sort((a, b) => {
         return new Date(a.date) - new Date(b.date)
       })
@@ -974,10 +966,11 @@ export default {
       NEW_WINDOW.stop()
       NEW_WINDOW.print()
       this.$ga.event('Plan', 'print')
-      this.deselect_all()
+      this.deselectAll()
     },
-    shift_across () {
-      this.helper('match_plan').sessions.forEach((session) => {
+    shiftAcross () {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+      PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           session.date = this.add_days(session.date, parseInt(this.shiftDays))
           this.update_session(session.id)
@@ -985,10 +978,11 @@ export default {
       })
       this.$ga.event('Session', 'shift')
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
-      this.deselect_all()
+      this.deselectAll()
     },
-    move_to_week () {
-      this.helper('match_plan').sessions.forEach((session) => {
+    moveToWeek () {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+      PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           session.week_id = this.moveTarget
           this.update_session(session.id)
@@ -996,48 +990,43 @@ export default {
       })
       this.currentWeek = parseInt(this.moveTarget)
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session', 'Your changes have been saved')
-      this.deselect_all()
+      this.deselectAll()
       this.$ga.event('Session', 'move')
-      this.$parent.$parent.end_loading()
-    },
-    async duplicate_plan (clientId) {
-      const PLAN = this.helper('match_plan')
-      await this.create_plan(PLAN.name, clientId, PLAN.duration, PLAN.block_color, PLAN.notes, PLAN.sessions)
-      this.$router.push({ path: `/client/${clientId}/` })
-      this.$ga.event('Plan', 'duplicate')
-      this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
+      this.$store.dispatch('endLoading')
     },
 
     // MULTI AND CHECKBOX
 
-    async bulk_check (state) {
+    async bulkCheck (state) {
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
-          this.helper('match_plan').sessions.forEach((session) => {
+          const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+          PLAN.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               session.checked = state
               this.update_session(session.id)
             }
           })
           this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated', 'Your changes have been saved')
-          this.deselect_all()
+          this.deselectAll()
         }
       }
     },
-    async bulk_delete () {
+    async bulkDelete () {
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected sessions?', 'We will remove these sessions from our database and it won\'t be recoverable.')) {
           this.selectedSessions.forEach((sessionId) => {
-            this.delete_session(sessionId)
+            this.deleteSession(sessionId)
           })
-          this.$ga.event('Session', 'bulk_delete')
+          this.$ga.event('Session', 'bulkDelete')
           this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
-          this.deselect_all()
+          this.deselectAll()
         }
       }
     },
-    select_all (mode) {
-      this.helper('match_plan').sessions.forEach((session) => {
+    selectAll (mode) {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+      PLAN.sessions.forEach((session) => {
         if (!this.selectedSessions.includes(session.id)) {
           if (mode === 'all') {
             document.getElementById(`sc-${session.id}`).checked = true
@@ -1049,13 +1038,14 @@ export default {
         }
       })
     },
-    deselect_all () {
-      this.helper('match_plan').sessions.forEach((session) => {
+    deselectAll () {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+      PLAN.sessions.forEach((session) => {
         document.getElementById(`sc-${session.id}`).checked = false
       })
       this.selectedSessions = []
     },
-    change_select_checkbox (id) {
+    changeSelectCheckbox (id) {
       if (!this.selectedSessions.includes(id)) {
         this.selectedSessions.push(id)
       } else {
@@ -1063,9 +1053,10 @@ export default {
         this.selectedSessions.splice(IDX, 1)
       }
     },
-    async new_session () {
-      await this.add_session({
-        programmeId: parseInt(this.$route.params.id),
+    async createNewSession () {
+      await this.addSession({
+        clientId: this.$route.params.client_id,
+        planId: this.$route.params.id,
         sessionName: 'Untitled',
         sessionDate: this.today(),
         sessionNotes: '',
@@ -1075,16 +1066,16 @@ export default {
 
     // GENERAL
 
-    go_to_event (id, week) {
-      this.expand_all('Expand')
+    goToEvent (id, week) {
+      this.expandAll('Expand')
       this.currentWeek = week
       setTimeout(() => {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)
     },
-    check_for_week_sessions () {
+    checkForWeekSessions () {
       let arr = 0
-      const SESSIONS = this.helper('match_plan').sessions
+      const SESSIONS = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions
       this.noSessions = SESSIONS === false
       if (SESSIONS && !this.noSessions) {
         SESSIONS.forEach((session) => {
@@ -1096,16 +1087,7 @@ export default {
       }
       this.weekIsEmpty = arr === 0
     },
-    check_for_new () {
-      if (!this.noSessions) {
-        this.helper('match_plan').sessions.forEach((session) => {
-          if (session.notes === null || session.notes === '<p><br></p>') {
-            this.expandedSessions.push(session.id)
-          }
-        })
-      }
-    },
-    toggle_expanded_sessions (id) {
+    toggleExpandedSessions (id) {
       if (this.expandedSessions.includes(id)) {
         const INDEX = this.expandedSessions.indexOf(id)
         if (INDEX > -1) {
@@ -1115,22 +1097,21 @@ export default {
         this.expandedSessions.push(id)
       }
     },
-    update_session_color () {
-      const PLAN = this.helper('match_plan')
+    updateSessionColor () {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       PLAN.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
       this.editingWeekColor = false
-      this.update_plan()
+      this.updatePlan()
     },
-    change_week (weekID) {
+    changeWeek (weekID) {
       this.currentWeek = weekID
       this.moveTarget = weekID
-      this.check_for_week_sessions()
+      this.checkForWeekSessions()
     },
 
     // DATE/TIME
 
-    plan_duration (duration) {
-      // Turn the duration of the plan into an array to render the boxes in the table
+    planDuration (duration) {
       const ARR = []
       let i
       for (i = 1; i < parseInt(duration, 10) + 1; i++) {
@@ -1144,20 +1125,21 @@ export default {
     adherence () {
       this.sessionsDone = 0
       this.sessionsTotal = 0
-      this.helper('match_plan').sessions.forEach((session) => {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+      for (const SESSION of PLAN.sessions) {
         this.sessionsTotal += 1
-        if (session.checked === 1) {
+        if (SESSION.checked === 1) {
           this.sessionsDone++
         }
-      })
+      }
       const PROGRESS_BAR = document.getElementById('progress-bar')
       if (PROGRESS_BAR) {
         PROGRESS_BAR.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
       }
     },
-    expand_all (toExpand) {
+    expandAll (toExpand) {
       try {
-        const PLAN = this.helper('match_plan')
+        const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
         if (Array.isArray(PLAN.sessions)) {
           if (PLAN.sessions.length !== 0) {
             PLAN.sessions.forEach((session) => {
@@ -1180,142 +1162,98 @@ export default {
 
     // DATABASE
 
-    async create_plan (planName, clientId, planDuration, planColors, planNotes, planSessions) {
-      this.$parent.$parent.dontLeave = true
+    async duplicatePlan (clientId) {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       try {
-        await this.$axios.put('https://api.traininblocks.com/v2/plans',
-          {
-            name: `Copy of ${planName}`,
-            client_id: clientId,
-            duration: planDuration,
-            block_color: planColors,
-            ordered: this.$parent.$parent.client_details.plans.length
-          }
-        ).then((response) => {
-          this.update_plan(planNotes, response.data[0]['LAST_INSERT_ID()'], planName, planDuration, planColors)
-          if (planSessions) {
-            planSessions.forEach((session) => {
-              this.add_session({
-                clientId,
-                programmeId: response.data[0]['LAST_INSERT_ID()'],
-                sessionName: session.name,
-                sessionDate: session.date,
-                sessionNotes: session.notes,
-                sessionWeek: session.week_id
-              }, 'duplicate')
-            })
-          }
+        const NEW_PLAN_ID = await this.$store.dispatch('duplicatePlan', {
+          clientId,
+          planName: PLAN.name,
+          planDuration: PLAN.duration,
+          blockColor: PLAN.block_color,
+          planNotes: PLAN.notes
         })
-        await this.$parent.get_client_details(true)
-        this.$ga.event('Plan', 'new')
-        this.$parent.$parent.end_loading()
+        if (PLAN.sessions) {
+          PLAN.sessions.forEach((session) => {
+            this.addSession({
+              clientId,
+              planId: NEW_PLAN_ID,
+              sessionName: session.name,
+              sessionDate: session.date,
+              sessionNotes: session.notes,
+              sessionWeek: session.week_id
+            }, 'duplicate')
+          })
+        }
+        await this.$store.dispatch('getClientDetails', {
+          clientId,
+          force: true
+        })
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
       }
+      this.$router.push({ path: `/client/${clientId}/` })
+      this.$ga.event('Plan', 'duplicate')
+      this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
     },
-    async update_plan (data) {
-      this.$parent.$parent.silentLoading = true
-      this.$parent.$parent.dontLeave = true
-      const PLAN = this.helper('match_plan')
-      const FORCE = data !== undefined
+    async updatePlan () {
+      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       try {
-        this.sort_sessions(PLAN)
-        const RESPONSE = await this.$axios.post('https://api.traininblocks.com/v2/plans',
-          {
-            id: FORCE ? data.id : PLAN.id,
-            name: FORCE ? `Copy of ${data.name}` : PLAN.name,
-            duration: FORCE ? data.duration : PLAN.duration,
-            notes: FORCE ? data.notes : PLAN.notes,
-            block_color: FORCE ? data.block_color : PLAN.block_color,
-            ordered: PLAN.ordered
-          }
-        )
-        // Set vue client_details data to new data
-        let x
-        // Loop through client_details plans
-        for (x in this.$parent.$parent.client_details.plans) {
-          if (this.$parent.$parent.client_details.plans[x].id === this.$route.params.id) {
-            this.$parent.$parent.client_details.plans[x] = JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
-          }
-        }
-        // Set vue client plans data to new data
-        x = 0
-        let y
-        for (x in this.$parent.$parent.clients) {
-          if (this.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
-            for (y in this.$parent.$parent.clients[x].plans[y]) {
-              if (this.$parent.$parent.clients[x].plans[y].id === this.$route.params.id) {
-                this.$parent.$parent.clients[x].plans[y] = JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
-              }
-            }
-          }
-        }
-        // Update the localstorage with the plans
-        localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.clients))
+        await this.$store.dispatch('updatePlan', {
+          planId: PLAN.id,
+          planName: PLAN.name,
+          planDuration: PLAN.duration,
+          planNotes: PLAN.notes,
+          planBlockColor: PLAN.block_color,
+          planOrdered: PLAN.ordered
+        })
         this.$ga.event('Plan', 'update')
-        this.$parent.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async delete_plan () {
-      this.$parent.$parent.dontLeave = true
+    async deletePlan () {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
-        const ID = parseInt(this.$route.params.id)
         try {
-          await this.$axios.delete(`https://api.traininblocks.com/v2/plans/${ID}`)
-          await this.$parent.$parent.clients_f()
-          this.$parent.$parent.clients_to_vue()
+          await this.$store.dispatch('deletePlan', {
+            planId: this.$route.params.id
+          })
           this.$ga.event('Session', 'delete')
           this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
-          this.$parent.$parent.end_loading()
-          this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
+          this.$store.dispatch('endLoading')
+          this.$router.push({ path: `/client/${this.clientDetails.client_id}/` })
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
         }
       }
     },
-    async update_session (id) {
-      this.$parent.$parent.dontLeave = true
-      const SESSION = this.helper('match_session', id)
+    async updateSession (sessionId) {
       try {
-        await this.$axios.post('https://api.traininblocks.com/v2/sessions',
-          {
-            id: SESSION.id,
-            name: SESSION.name,
-            date: SESSION.date,
-            notes: SESSION.notes,
-            week_id: SESSION.week_id,
-            checked: SESSION.checked
-          }
-        )
-        await this.$parent.get_sessions(parseInt(this.$route.params.id), parseInt(this.$route.params.client_id), true)
-        await this.update_plan()
+        await this.$store.dispatch('updateSession', {
+          clientId: this.$route.params.client_id,
+          planId: this.$route.params.id,
+          sessionId
+        })
         this.adherence()
         this.$ga.event('Session', 'update')
-        this.$parent.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async add_session (data, type) {
-      let newSessionId
-      this.$parent.$parent.dontLeave = true
+    async addSession (data, type) {
       try {
-        await this.$axios.put('https://api.traininblocks.com/v2/sessions',
-          {
-            name: data.sessionName,
-            programme_id: data.programmeId,
-            date: data.sessionDate,
-            notes: data.sessionNotes,
-            week_id: data.sessionWeek
-          }
-        ).then((response) => {
-          newSessionId = response.data[0]['LAST_INSERT_ID()']
+        const NEW_SESSION_ID = await this.$store.dispatch('addSession', {
+          clientId: data.clientId,
+          sessionName: data.sessionName,
+          planId: data.planId,
+          sessionDate: data.sessionDate,
+          sessionNotes: data.sessionNotes,
+          sessionWeek: data.sessionWeek
         })
-        await this.$parent.get_sessions(data.programmeId, type === 'duplicate' ? data.clientId : parseInt(this.$route.params.client_id), true)
         if (type === 'new') {
-          this.go_to_event(newSessionId, this.currentWeek)
+          this.goToEvent(NEW_SESSION_ID, this.currentWeek)
           this.$ga.event('Session', 'new')
           this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
         } else if (type === 'duplicate') {
@@ -1325,26 +1263,24 @@ export default {
           this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
         }
         if (type !== 'progress') {
-          this.sort_sessions(this.helper('match_plan'))
-          this.check_for_new()
           this.adherence()
-          this.check_for_week_sessions()
+          this.checkForWeekSessions()
         }
-        this.$parent.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
       }
     },
-    async delete_session (id) {
-      this.$parent.$parent.dontLeave = true
+    async deleteSession (sessionId) {
       try {
-        await this.$axios.delete(`https://api.traininblocks.com/v2/sessions/${id}`)
-        await this.$parent.get_sessions(parseInt(this.$route.params.id), parseInt(this.$route.params.client_id), true)
-        await this.update_plan()
-
+        await this.$store.dispatch('deleteSession', {
+          clientId: this.$route.params.client_id,
+          planId: this.$route.params.id,
+          sessionId
+        })
         this.$ga.event('Session', 'delete')
-        this.check_for_week_sessions()
-        this.$parent.$parent.end_loading()
+        this.checkForWeekSessions()
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
       }

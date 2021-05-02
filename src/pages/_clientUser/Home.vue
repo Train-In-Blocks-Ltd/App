@@ -231,7 +231,6 @@ export default {
   async mounted () {
     this.$parent.loading = true
     this.will_body_scroll(true)
-    await this.$parent.setup()
     await this.$parent.get_plans()
     await this.$parent.get_portfolio()
     this.todays_session()

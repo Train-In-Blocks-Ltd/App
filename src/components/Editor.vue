@@ -386,7 +386,7 @@ div#rich_editor.editorFocused {
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             class="fadeIn"
             title="Template"
-            @click="showAddTemplate = !showAddTemplate, $parent.go_to_event(itemId, weekId)"
+            @click="showAddTemplate = !showAddTemplate, $parent.goToEvent(itemId, weekId)"
           >
             <inline-svg :src="require('../assets/svg/editor/template.svg')" />
           </button>

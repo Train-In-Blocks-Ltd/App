@@ -239,7 +239,7 @@ export default {
         })
       }
       this.$parent.update_plan()
-      this.$parent.deselect_all()
+      this.$parent.deselectAll()
       this.$ga.event('Session', 'progress')
       this.$parent.$parent.$parent.end_loading()
     }

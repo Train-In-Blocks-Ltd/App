@@ -110,14 +110,12 @@ export default {
     'dontLeave',
     'portfolio'
   ]),
-  async created () {
+  created () {
     this.$store.commit('setData', {
       attr: 'loading',
       data: true
     })
     this.will_body_scroll(true)
-    await this.$parent.setup()
-    await this.$store.dispatch('getPortfolio')
     this.$store.commit('setData', {
       attr: 'loading',
       data: false

@@ -285,7 +285,6 @@ export default {
   async mounted () {
     this.$parent.loading = true
     this.will_body_scroll(true)
-    await this.$parent.setup()
     await this.$parent.get_plans()
     await this.sort_sessions(this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id)))
     await this.scan()
@@ -324,7 +323,7 @@ export default {
           break
       }
     },
-    go_to_event (id) {
+    goToEvent (id) {
       const SESSION_INDEX = this.sessionDates.findIndex(session => session.session_id === id)
       this.showing_current_session = SESSION_INDEX
       setTimeout(() => {

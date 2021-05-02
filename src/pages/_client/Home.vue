@@ -119,7 +119,7 @@
 
 <template>
   <div
-    v-if="$parent.client_details"
+    v-if="clientDetails"
     id="client"
     class="view_container"
   >
@@ -143,13 +143,10 @@
           @click="showOptions = false"
         />
         <div
-          v-for="(clients, index) in $parent.clients"
-          v-show="clients.client_id == $route.params.client_id && showOptions"
-          :key="clients.client_id"
+          v-if="showOptions"
           class="client--options fadeIn delay fill_mode_both"
         >
           <a
-            v-if="clients.client_id == $route.params.client_id && showOptions"
             class="a_link"
             href="javascript:void(0)"
             @click="showToolkit = true, will_body_scroll(false), showOptions = false"
@@ -158,10 +155,9 @@
             <inline-svg :src="require('../../assets/svg/calculate.svg')" />
           </a>
           <a
-            v-if="clients.client_id == $route.params.client_id && showOptions"
             class="a_link"
             href="javascript:void(0)"
-            @click="showOptions = false, $parent.client_archive(clients.client_id, index)"
+            @click="$parent.client_archive($route.params.client_id, index), showOptions = false"
           >
             Archive Client
             <inline-svg :src="require('../../assets/svg/archive.svg')" />
@@ -177,17 +173,17 @@
       />
       <div class="client_info">
         <input
-          v-model="$parent.client_details.name"
+          v-model="clientDetails.name"
           class="client_info--name text--large"
           type="text"
           aria-label="Client name"
           autocomplete="name"
-          :disabled="$parent.silentLoading"
-          @blur="$parent.update_client()"
+          :disabled="silentLoading"
+          @blur="$parent.updateClient(clientDetails)"
         >
         <input
           id="phone"
-          v-model="$parent.client_details.number"
+          v-model="clientDetails.number"
           class="input--forms allow_text_overflow"
           placeholder="Mobile"
           aria-label="Mobile"
@@ -197,14 +193,14 @@
           minlength="9"
           maxlength="14"
           pattern="\d+"
-          :disabled="$parent.silentLoading"
-          @blur="$parent.update_client()"
+          :disabled="silentLoading"
+          @blur="$parent.updateClient(clientDetails)"
         >
         <div v-if="!sessions" class="client_info__options">
           <div class="client_email_bar">
             <inline-svg :src="require('../../assets/svg/email.svg')" />
             <p class="client_email">
-              {{ $parent.client_details.email }}
+              {{ clientDetails.email }}
             </p>
           </div>
           <button
@@ -218,9 +214,9 @@
           <button
             v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
             class="verify_button fadeIn"
-            @click="$parent.client_details.notifications = $parent.client_details.notifications === 1 ? 0 : 1, $parent.update_client()"
+            @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, $parent.updateClient(clientDetails)"
           >
-            {{ $parent.client_details.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
+            {{ clientDetails.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
           </button>
           <button
             v-else
@@ -234,12 +230,13 @@
       </div>
     </div>
     <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
-      <router-view :key="$route.fullPath" :other-data="$parent.client_details.plans" />
+      <router-view :key="$route.fullPath" :other-data="clientDetails.plans" />
     </transition>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { email, emailText, resetEmail, resetEmailText } from '../../components/email'
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
 
@@ -267,33 +264,29 @@ export default {
       clientSuspend: null
     }
   },
-  async created () {
-    this.loading = true
+  computed: mapState([
+    'silentLoading',
+    'clientDetails'
+  ]),
+  created () {
     this.will_body_scroll(true)
-    await this.$parent.setup()
-    await this.get_client_details()
-    this.__init__()
-    this.keepLoaded = true
-    this.$parent.end_loading()
-  },
-  beforeDestroy () {
-    this.keepLoaded = false
-    this.$parent.client_details = null
+    const CLIENT = this.$store.state.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+    if (CLIENT.plans !== false) {
+      for (const PLAN of CLIENT.plans) {
+        this.$store.dispatch('getSessions', {
+          planId: PLAN.id,
+          clientId: CLIENT.client_id,
+          force: false
+        })
+      }
+    }
+    this.$store.commit('setData', {
+      attr: 'clientDetails',
+      data: CLIENT
+    })
+    this.$store.dispatch('endLoading')
   },
   methods: {
-
-    // BACKGROUND
-
-    __init__ () {
-      let x
-      for (x in this.$parent.clients) {
-        // If client matches client in route
-        if (this.$parent.clients[x].client_id === this.$route.params.client_id) {
-          // Set client_details variable with client details
-          this.$parent.client_details = this.$parent.clients[x]
-        }
-      }
-    },
 
     // OKTA CLIENT
 
@@ -304,7 +297,7 @@ export default {
           const RESULT = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
-              url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
+              url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`
             }
           )
           if (RESULT.data.length > 0) {
@@ -343,7 +336,7 @@ export default {
           const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
-              url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
+              url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`
             }
           )
           const OKTA_TWO = await this.$axios.post('/.netlify/functions/okta',
@@ -355,7 +348,7 @@ export default {
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
-              to: this.$parent.client_details.email,
+              to: this.clientDetails.email,
               subject: 'Welcome to Train In Blocks',
               text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
               html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
@@ -378,7 +371,7 @@ export default {
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
-              to: this.$parent.client_details.email,
+              to: this.clientDetails.email,
               subject: 'Welcome Back to Train In Blocks',
               text: resetEmailText(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
               html: resetEmail(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
@@ -390,11 +383,11 @@ export default {
               type: 'POST',
               body: {
                 profile: {
-                  firstName: this.$parent.client_details.email,
-                  email: this.$parent.client_details.email,
-                  login: this.$parent.client_details.email,
+                  firstName: this.clientDetails.email,
+                  email: this.clientDetails.email,
+                  login: this.clientDetails.email,
                   ga: true,
-                  client_id_db: this.$parent.client_details.client_id,
+                  client_id_db: this.clientDetails.client_id,
                   user_type: 'Client'
                 },
                 groupIds: [
@@ -413,7 +406,7 @@ export default {
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
-              to: this.$parent.client_details.email,
+              to: this.clientDetails.email,
               subject: 'Welcome to Train In Blocks',
               text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
               html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
@@ -426,44 +419,6 @@ export default {
       await this.check_client()
       this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true, true)
       this.$parent.end_loading()
-    },
-
-    // DATABASE
-
-    async get_client_details (force) {
-      this.$parent.loading = true
-      try {
-        const CLIENT = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-        this.$parent.client_details = CLIENT
-        if (CLIENT.plans === undefined || !CLIENT.plans || force) {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/plans/${CLIENT.client_id}`)
-          CLIENT.plans = RESPONSE.data.length === 0 ? false : RESPONSE.data
-          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-        }
-        if (CLIENT.plans !== false) {
-          this.$parent.client_details.plans.forEach((plan) => {
-            this.get_sessions(plan.id, parseInt(this.$route.params.client_id))
-          })
-        }
-        this.$parent.end_loading()
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-    },
-    async get_sessions (planId, clientId, force) {
-      force = force || false
-      try {
-        const CLIENT = this.$parent.clients.find(client => client.client_id === clientId)
-        const PLAN = CLIENT.plans.find(plan => plan.id === planId)
-        if (PLAN.sessions === undefined || force) {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/sessions/${PLAN.id}`)
-          PLAN.sessions = RESPONSE.data.length === 0 ? false : RESPONSE.data
-          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-        }
-        this.$parent.end_loading()
-      } catch (e) {
-        console.log(e)
-      }
     }
   }
 }

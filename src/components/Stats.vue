@@ -310,7 +310,7 @@ export default {
         }
       }
       this.forceUpdate += 1
-      this.$parent.check_for_week_sessions()
+      this.$parent.checkForWeekSessions()
     },
     selection () {
       class DataPoint {

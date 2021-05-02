@@ -244,7 +244,6 @@ export default {
   },
   created () {
     this.$parent.loading = true
-    this.$parent.setup()
     this.will_body_scroll(true)
     this.$parent.end_loading()
   },

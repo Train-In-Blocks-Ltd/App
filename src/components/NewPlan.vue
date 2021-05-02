@@ -1,5 +1,5 @@
 <template>
-  <form class="form_grid add_plan" name="add_plan" @submit.prevent="create_plan(), $parent.isNewPlanOpen = false, will_body_scroll(true)">
+  <form class="form_grid add_plan" name="add_plan" @submit.prevent="createPlan(), $parent.isNewPlanOpen = false, will_body_scroll(true)">
     <div class="bottom_margin">
       <h3>
         Create a new plan and use it for exercise, nutrition or anything else
@@ -30,7 +30,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="red_button" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.isNewPlanOpen = false, will_body_scroll(true)">
         Close
       </button>
     </div>
@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -47,42 +49,31 @@ export default {
       }
     }
   },
+  computed: mapState([
+    'dontLeave',
+    'clientDetails',
+    'clients'
+  ]),
   mounted () {
     this.$refs.name.focus()
   },
   methods: {
-    async create_plan () {
+    async createPlan () {
       try {
-        this.$parent.$parent.$parent.dontLeave = true
-        await this.$axios.put('https://api.traininblocks.com/v2/plans',
-          {
-            name: this.new_plan.name,
-            client_id: this.$parent.$parent.$parent.client_details.client_id,
-            duration: this.new_plan.duration,
-            block_color: '',
-            ordered: this.$parent.$parent.$parent.client_details.plans === undefined || this.$parent.$parent.$parent.client_details.plans === false ? 0 : this.$parent.$parent.$parent.client_details.length
-          }
-        )
+        await this.$store.dispatch('createPlan', {
+          clientId: this.clientDetails.client_id,
+          name: this.new_plan.name,
+          duration: this.new_plan.duration,
+          ordered: this.clientDetails.plans === undefined || this.clientDetails.plans === false ? 0 : this.clientDetails.length
+        })
         this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')
         this.$parent.persistResponse = this.new_plan.name
-
-        // Set old plans to null so that they can be repopulated
-        let x
-        for (x in this.$parent.$parent.$parent.clients) {
-          if (this.$parent.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
-            this.$parent.$parent.$parent.clients[x].plans = null
-          }
-        }
-        // Get the new plans
-        const FORCE = true
-        await this.$parent.$parent.get_client_details(FORCE)
-
         this.new_plan = {
           name: '',
           duration: ''
         }
         this.$ga.event('Plan', 'new')
-        this.$parent.$parent.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.$parent.resolve_error(e)
       }

@@ -52,7 +52,7 @@
       class="checked_box"
       type="checkbox"
       style="display: none"
-      @change="$parent.change_select_checkbox(itemId)"
+      @change="$parent.changeSelectCheckbox(itemId)"
     >
     <input
       v-if="type === 'v2'"
@@ -60,7 +60,7 @@
       class="checked_box"
       type="checkbox"
       style="display: none"
-      @change="$parent.$parent.change_select_checkbox(itemId)"
+      @change="$parent.$parent.changeSelectCheckbox(itemId)"
     >
     <label :for="'sc-' + itemId" class="check">
       <svg width="18px" height="18px" viewBox="0 0 18 18" class="no_fill">

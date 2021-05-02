@@ -63,8 +63,7 @@
     </div>
     <div
       v-if="!isNewPlanOpen"
-      :class="{ icon_open_middle: $parent.keepLoaded }"
-      class="tab_option tab_option_small"
+      class="tab_option icon_open_middle tab_option_small"
       aria-label="New Plan"
       @click="isNewPlanOpen = true, will_body_scroll(false)"
     >
@@ -79,7 +78,7 @@
         Client Information
       </h3>
       <rich-editor
-        v-model="$parent.$parent.client_details.notes"
+        v-model="clientDetails.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
         @on-edit-change="resolve_client_info_editor"
       />
@@ -88,11 +87,11 @@
       <h2>
         Plans
       </h2>
-      <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
+      <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
       <periodise
         v-else-if="!noPlans"
         :is-trainer="true"
-        :plans.sync="$parent.$parent.client_details.plans"
+        :plans.sync="clientDetails.plans"
       />
       <p
         v-else
@@ -105,6 +104,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
@@ -116,8 +116,11 @@ export default {
     Periodise
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -141,6 +144,11 @@ export default {
       persistResponse: ''
     }
   },
+  computed: mapState([
+    'loading',
+    'dontLeave',
+    'clientDetails'
+  ]),
   watch: {
     otherData () {
       this.noPlans = this.otherData === false
@@ -155,18 +163,24 @@ export default {
     resolve_client_info_editor (state) {
       switch (state) {
         case 'edit':
-          this.$parent.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.editingClientNotes = true
-          this.tempEditorStore = this.$parent.$parent.client_details.notes
+          this.tempEditorStore = this.clientDetails.notes
           break
         case 'save':
           this.editingClientNotes = false
-          this.$parent.$parent.update_client()
+          this.$parent.$parent.updateClient(this.clientDetails)
           break
         case 'cancel':
-          this.$parent.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.editingClientNotes = false
-          this.$parent.$parent.client_details.notes = this.tempEditorStore
+          this.clientDetails.notes = this.tempEditorStore
           break
       }
     }

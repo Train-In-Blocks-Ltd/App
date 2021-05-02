@@ -161,7 +161,7 @@
           :style="{ backgroundColor: event.color, color: event.textColor }"
           :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
           class="event cursor fadeIn"
-          @click="$parent.go_to_event(event.session_id, event.week_id)"
+          @click="$parent.goToEvent(event.session_id, event.week_id)"
         >
           {{ event.title }}
         </p>

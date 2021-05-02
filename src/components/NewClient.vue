@@ -14,7 +14,7 @@
     name="add_client"
     class="form_grid add_client"
     spellcheck="false"
-    @submit.prevent="save(), $parent.isNewClientOpen = false, will_body_scroll(true)"
+    @submit.prevent="createClient(), $parent.isNewClientOpen = false, will_body_scroll(true)"
   >
     <div class="bottom_margin">
       <h3>
@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -90,22 +92,27 @@ export default {
       }
     }
   },
+  computed: mapState([
+    'claims'
+  ]),
   mounted () {
     this.$refs.name.focus()
   },
   methods: {
-    async save () {
-      if (this.new_client.email === this.$parent.$parent.claims.email) {
+    async createClient () {
+      if (this.new_client.email === this.claims.email) {
         this.$parent.$parent.$refs.response_pop_up.show('You cannot create a client with your own email address!', 'Please use a different one.', true, true)
         console.error('You cannot create a client with your own email address!')
       } else {
-        this.$parent.response = ''
         try {
-          this.$parent.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           await this.$axios.put('https://api.traininblocks.com/v2/clients',
             {
               name: this.new_client.name,
-              pt_id: this.$parent.$parent.claims.sub,
+              pt_id: this.claims.sub,
               email: this.new_client.email,
               number: this.new_client.number,
               notes: this.new_client.notes
@@ -113,8 +120,8 @@ export default {
           )
           this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.new_client.name}`, 'Well done on getting a new client')
           this.$parent.persistResponse = this.new_client.name
-          await this.$parent.$parent.clients_f()
-          this.$parent.$parent.clients_to_vue()
+          await this.$store.dispatch('clientsForceGet')
+          this.$store.dispatch('clientsToVue')
           this.new_client = {
             name: '',
             email: '',
@@ -123,7 +130,7 @@ export default {
             notes: ''
           }
           this.$ga.event('Client', 'new')
-          this.$parent.$parent.end_loading()
+          this.$store.dispatch('endLoading')
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
         }

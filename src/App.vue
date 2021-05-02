@@ -633,6 +633,7 @@ option {
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
 const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
@@ -652,38 +653,12 @@ export default {
         plans: null
       },
 
-      // CLIENT
-
-      client_details: null,
-
-      // ARCHIVE
-
-      archive: {
-        clients: {},
-        no_archive: false
-      },
-
-      // PORTFOLIO
-
-      portfolio: {
-        business_name: '',
-        trainer_name: '',
-        notes: ''
-      },
-
-      // TEMPLATE
-
-      templates: null,
-
       // SYSTEM
 
       policyVersion: '1.1',
       versionName: 'Pegasus',
       versionBuild: '3.2.5',
       newBuild: false,
-      loading: false,
-      dontLeave: false,
-      silentLoading: false,
       authenticated: false,
       pwa: {
         deferredPrompt: null,
@@ -694,14 +669,10 @@ export default {
       connected: true
     }
   },
-  computed: {
-    claims () {
-      return this.$store.state.claims
-    },
-    showEULA () {
-      return this.$store.state.showEULA
-    }
-  },
+  computed: mapState([
+    'claims',
+    'showEULA'
+  ]),
   watch: {
     $route (to, from) {
       this.is_authenticated()
@@ -779,6 +750,7 @@ export default {
     }, (error) => {
       return Promise.reject(error)
     })
+    await this.setup()
   },
   methods: {
     async helper (mode, gaItem, gaAction) {
@@ -874,9 +846,6 @@ export default {
       // Set auth header
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
 
-      // Get initial set of clients
-      await this.$store.dispatch('clientsToVue')
-
       // Set connection
       this.$store.commit('setData', {
         attr: 'connected',
@@ -902,6 +871,24 @@ export default {
           attr: 'newBuild',
           data: true
         })
+      }
+
+      // Get all data
+      try {
+        await this.$store.dispatch('clientsToVue')
+        if (this.$store.state.clients) {
+          for (const CLIENT of this.$store.state.clients) {
+            CLIENT.plans = this.$store.dispatch('getPlans', {
+              clientId: CLIENT.client_id,
+              force: true
+            })
+          }
+        }
+        await this.$store.dispatch('getTemplates', false)
+        await this.$store.dispatch('getPortfolio')
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.resolve_error(e)
       }
     },
     async save_claims () {
@@ -938,87 +925,16 @@ export default {
           }
         )
       }
-      this.end_loading()
+      this.$store.dispatch('endLoading')
       this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
       this.will_body_scroll(false)
-      console.error(msg)
-    },
-    end_loading () {
-      this.loading = false
-      this.dontLeave = false
-      this.silentLoading = false
     },
 
     // CLIENT
 
-    async clients_to_vue () {
-      if (!localStorage.getItem('clients')) {
-        await this.clients_f()
-      }
-      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-        const NAME_A = a.name.toUpperCase()
-        const NAME_B = b.name.toUpperCase()
-        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
-      })
-      /*
-      if (!this.noClients && this.isTrainer) {
-        for (const CLIENT of this.clients) {
-          const planResponse = await this.$axios.get(`https://api.traininblocks.com/v2/plans/${client.client_id}`)
-          client.plans = planResponse.data.length === 0 ? false : planResponse.data
-          if (client.plans !== false) {
-            for (const plan of client.plans) {
-              const sessionsResponse = await this.$axios.get(`https://api.traininblocks.com/v2/sessions/${plan.id}`)
-              plan.sessions = sessionsResponse.data.length === 0 ? false : sessionsResponse.data
-            }
-          }
-        }
-      }
-      localStorage.setItem('clients', JSON.stringify(this.clients))
-      */
-      this.noClients = this.clients.length === 0
-    },
-    async clients_f () {
+    async updateClient (client) {
       try {
-        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/clients/${this.claims.sub}`)
-        this.noClients = RESPONSE.data.length === 0
-        localStorage.setItem('clients', JSON.stringify(RESPONSE.data))
-      } catch (e) {
-        this.noClients = false
-        this.resolve_error(e)
-      }
-    },
-    async client_delete (id) {
-      this.dontLeave = true
-      try {
-        await this.$axios.delete(`https://api.traininblocks.com/v2/clients/${id}`)
-        this.helper('client_store', 'Client', 'delete')
-        this.archive.no_archive = this.archive.clients.length === 0
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-
-    // CLIENT ARCHIVE
-
-    async update_client (clientNotesUpdate) {
-      this.silentLoading = true
-      this.dontLeave = true
-      try {
-        await this.$axios.post('https://api.traininblocks.com/v2/clients',
-          {
-            id: this.client_details.client_id,
-            name: this.client_details.name,
-            email: this.client_details.email,
-            number: this.client_details.number,
-            notifications: this.client_details.notifications,
-            notes: clientNotesUpdate === undefined ? this.client_details.notes : clientNotesUpdate
-          }
-        )
-        // Get the client information again as we have just updated the client
-        await this.clients_f()
-        await this.clients_to_vue()
-        this.$refs.response_pop_up.show('Client updated', 'All your changes have been saved')
-        this.end_loading()
+        await this.$store.dispatch('updateClient', client)
       } catch (e) {
         this.resolve_error(e)
       }
@@ -1112,61 +1028,6 @@ export default {
 
     // GET METHODS
 
-    async get_templates (force) {
-      try {
-        if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/templates/${this.claims.sub}`)
-          localStorage.setItem('templates', JSON.stringify(RESPONSE.data))
-        }
-        this.templates = JSON.parse(localStorage.getItem('templates'))
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async get_portfolio (force) {
-      try {
-        if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
-          let response
-          if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
-            response = await this.$axios.get(`https://api.traininblocks.com/v2/portfolio/${this.claims.sub}`)
-            if (response.data.length === 0) {
-              this.create_portfolio()
-            } else {
-              localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
-            }
-          } else {
-            const CLIENT = await this.$axios.get(`https://api.traininblocks.com/v2/ptId/${this.claims.client_id_db}`)
-            if (CLIENT.data[0].pt_id) {
-              response = await this.$axios.get(`https://api.traininblocks.com/v2/portfolio/${CLIENT.data[0].pt_id}`)
-              if (response.data.length !== 0) {
-                localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
-              }
-            }
-          }
-        }
-        this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
-        this.end_loading()
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async create_portfolio () {
-      this.dontLeave = true
-      try {
-        await this.$axios.put('https://api.traininblocks.com/v2/portfolio',
-          {
-            pt_id: this.claims.sub,
-            trainer_name: '',
-            business_name: '',
-            notes: ''
-          }
-        )
-        await this.get_portfolio(true)
-        this.end_loading()
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
     async get_plans () {
       try {
         const PLANS = await this.$axios.get(`https://api.traininblocks.com/v2/plans/${this.claims.client_id_db}`)

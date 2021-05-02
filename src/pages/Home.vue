@@ -122,7 +122,6 @@ export default {
     })
   },
   mounted () {
-    this.$parent.setup()
     this.will_body_scroll(true)
     this.$store.commit('setData', {
       attr: 'loading',
