@@ -97,13 +97,22 @@ export const store = new Vuex.Store({
         case 'client_details':
           state.clientDetails = data.payload
           break
+        case 'client_plan': {
+          const CLIENT = state.clients.find(client => client.client_id === parseInt(data.clientId))
+          for (let plan of CLIENT.plans) {
+            if (plan.id === parseInt(data.planId)) {
+              plan = data.payload
+              break
+            }
+          }
+        }
       }
     },
 
     // Clients
 
     updateClient (state, data) {
-      const CLIENT = state.clients.find(client => client.client_id === data.clientId)
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(data.clientId))
       CLIENT[data.attr] = data.payload
     },
 
@@ -117,13 +126,18 @@ export const store = new Vuex.Store({
 
     setPortfolio (state, data) {
       state.portfolio = data
-    }
+    },
 
     // Account
 
     // Archive
 
     // Plan and sessions
+    updatePlanSessions (state, data) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(data.clientId))
+      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(data.planId))
+      PLAN.sessions = data.payload
+    }
   },
   actions: {
 
@@ -540,12 +554,13 @@ export const store = new Vuex.Store({
             attr: 'plans',
             payload: RESPONSE.data.length === 0 ? false : RESPONSE.data
           })
+          localStorage.setItem('clients', JSON.stringify(state.clients))
         }
         if (CLIENT.plans !== false) {
-          state.client_details.plans.forEach((plan) => {
+          CLIENT.plans.forEach((plan) => {
             dispatch('getSessions', {
               planId: plan.id,
-              clientId: data.clientId,
+              clientId: CLIENT.client_id,
               force: false
             })
           })
@@ -554,7 +569,6 @@ export const store = new Vuex.Store({
           type: 'client_details',
           payload: CLIENT
         })
-        localStorage.setItem('clients', JSON.stringify(state.clients))
         commit('setLoading')
       } catch (e) {
         dispatch('resolveError', e)
@@ -562,20 +576,200 @@ export const store = new Vuex.Store({
     },
     async getSessions ({ dispatch, commit, state }, data) {
       try {
-        const CLIENT = state.clients.find(client => client.client_id === data.clientId)
-        const PLAN = CLIENT.plans.find(plan => plan.id === data.planId)
+        const CLIENT = state.clients.find(client => client.client_id === parseInt(data.clientId))
+        const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(data.planId))
         if (!PLAN.sessions || data.force) {
           const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/sessions/${PLAN.id}`)
-          PLAN.sessions = RESPONSE.data.length === 0 ? false : RESPONSE.data
+          commit('updatePlanSessions', {
+            clientId: CLIENT.client_id,
+            planId: PLAN.id,
+            payload: RESPONSE.data.length === 0 ? false : RESPONSE.data
+          })
         }
         localStorage.setItem('clients', JSON.stringify(state.clients))
         commit('setLoading')
       } catch (e) {
         dispatch('resolveError', e)
       }
-    }
+    },
 
     // Plan and sessions
+
+    // (clientId, planName, planDuration, blockColor, planNotes, planSessions)
+    async duplicatePlan ({ dispatch, commit, state }, data) {
+      commit('setLoading', ['dontLeave'])
+      try {
+        await axios.put('https://api.traininblocks.com/v2/plans',
+          {
+            name: `Copy of ${data.planName}`,
+            client_id: parseInt(data.clientId),
+            duration: data.planDuration,
+            block_color: data.blockColor,
+            ordered: state.client_details.plans.length
+          }
+        ).then((response) => {
+          const CLIENT = state.clients.find(client => client.client_id === parseInt(data.clientId))
+          const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(data.planId))
+          dispatch('updatePlan', {
+            id: response.data[0]['LAST_INSERT_ID()'],
+            name: PLAN.name,
+            duration: PLAN.duration,
+            notes: data.planNotes,
+            block_color: PLAN.blockColor,
+            ordered: PLAN.ordered
+          })
+          if (data.planSessions) {
+            data.planSessions.forEach((session) => {
+              this.add_session({
+                clientId: parseInt(data.clientId),
+                planId: response.data[0]['LAST_INSERT_ID()'],
+                sessionName: session.name,
+                sessionDate: session.date,
+                sessionNotes: session.notes,
+                sessionWeek: session.week_id
+              }, 'duplicate')
+            })
+          }
+        })
+        await dispatch('getClientDetails', {
+          clientId: data.clientId,
+          force: true
+        })
+        this.$ga.event('Plan', 'new')
+        commit('setLoading')
+      } catch (e) {
+        dispatch('resolveError', e)
+      }
+    },
+
+    // (clientId, planId, planName, planDuration, planNotes, planBlockColor, planOrdered)
+    async updatePlan ({ dispatch, commit, state }, data) {
+      commit('setLoading', ['silentLoading', 'dontLeave'])
+      try {
+        const RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans',
+          {
+            id: data.planId,
+            name: data.planName,
+            duration: data.planDuration,
+            notes: data.planNotes,
+            block_color: data.planBlockColor,
+            ordered: data.planOrdered
+          }
+        )
+        commit('setSystemData', {
+          type: 'client_plan',
+          clientId: data.clientId,
+          planId: data.planId,
+          payload: JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
+        })
+        localStorage.setItem('clients', JSON.stringify(state.clients))
+        this.$ga.event('Plan', 'update')
+        commit('setLoading')
+      } catch (e) {
+        dispatch('resolveError', e)
+      }
+    },
+    async deletePlan ({ dispatch, commit }, data) {
+      commit('setLoading', ['dontLeave'])
+      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
+        try {
+          await axios.delete(`https://api.traininblocks.com/v2/plans/${parseInt(data.planId)}`)
+          await dispatch('clientForceGet')
+          await dispatch('clientsToVue')
+          this.$ga.event('Session', 'delete')
+          this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
+          commit('setLoading')
+          this.$router.push({ path: `/client/${this.$parent.$parent.client_details.client_id}/` })
+        } catch (e) {
+          dispatch('resolveError', e)
+        }
+      }
+    },
+    async updateSession ({ dispatch, commit, getters }, data) {
+      commit('setLoading', ['dontLeave'])
+      this.$parent.$parent.dontLeave = true
+      const SESSION = getters.helper('match_session', data.clientId, data.planId, data.sessionId)
+      try {
+        await axios.post('https://api.traininblocks.com/v2/sessions',
+          {
+            id: SESSION.id,
+            name: SESSION.name,
+            date: SESSION.date,
+            notes: SESSION.notes,
+            week_id: SESSION.week_id,
+            checked: SESSION.checked
+          }
+        )
+        await dispatch('getSessions', {
+          clientId: data.clientId,
+          planId: data.planId,
+          force: true
+        })
+        this.adherence()
+        this.$ga.event('Session', 'update')
+        commit('setLoading')
+      } catch (e) {
+        dispatch('resolveError', e)
+      }
+    },
+    async addSession ({ dispatch, commit }, data) {
+      let newSessionId
+      commit('setLoading', ['dontLeave'])
+      try {
+        await axios.put('https://api.traininblocks.com/v2/sessions',
+          {
+            name: data.sessionName,
+            programme_id: data.planId,
+            date: data.sessionDate,
+            notes: data.sessionNotes,
+            week_id: data.sessionWeek
+          }
+        ).then((response) => {
+          newSessionId = response.data[0]['LAST_INSERT_ID()']
+        })
+        await dispatch('getSessions', {
+          clientId: data.clientId,
+          planId: data.planId,
+          force: true
+        })
+        if (data.type === 'new') {
+          this.go_to_event(newSessionId, this.currentWeek)
+          this.$ga.event('Session', 'new')
+          this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
+        } else if (data.type === 'duplicate') {
+          this.$ga.event('Session', 'duplicate')
+          this.$parent.$parent.$refs.response_pop_up.show(`${this.selectedSessions.length > 1 ? 'Sessions' : 'Session'} duplicated`, 'Get programming!')
+        } else if (data.type === 'progress') {
+          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
+        }
+        if (data.type !== 'progress') {
+          this.sort_sessions(this.helper('match_plan'))
+          this.check_for_new()
+          this.adherence()
+          this.check_for_week_sessions()
+        }
+        commit('setLoading')
+      } catch (e) {
+        dispatch('resolveError', e)
+      }
+    },
+    async delete_session ({ dispatch, commit }, data) {
+      commit('setLoading', ['dontLeave'])
+      try {
+        await axios.delete(`https://api.traininblocks.com/v2/sessions/${parseInt(data.sessionId)}`)
+        await dispatch('getSessions', {
+          clientId: data.clientId,
+          planId: data.planId,
+          force: true
+        })
+
+        this.$ga.event('Session', 'delete')
+        this.check_for_week_sessions()
+        this.$parent.$parent.end_loading()
+      } catch (e) {
+        dispatch('resolveError', e)
+      }
+    }
   },
   getters: {
 
@@ -600,12 +794,13 @@ export const store = new Vuex.Store({
     // Client details
 
     // Plan and sessions
-    sessionPlanHelper: (state, getters) => (type, planId, sessionId) => {
+    helper: (state, getters) => (type, clientId, planId, sessionId) => {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
       switch (type) {
         case 'match_plan':
-          return state.plans.find(plan => plan.id === parseInt(planId))
+          return CLIENT.plans.find(plan => plan.id === parseInt(planId))
         case 'match_session': {
-          const PLAN = getters.sessionPlanHelper('match_plan', planId)
+          const PLAN = getters.helper('match_plan', clientId, planId)
           return PLAN.sessions.find(session => session.id === parseInt(sessionId))
         }
       }
