@@ -648,17 +648,12 @@ export default {
       // USER
 
       isTrainer: false,
-      claims: {
-        user_type: 0
-      },
       clientUser: {
         plans: null
       },
 
       // CLIENT
 
-      clients: null,
-      noClients: false,
       client_details: null,
 
       // ARCHIVE
@@ -686,7 +681,6 @@ export default {
       versionName: 'Pegasus',
       versionBuild: '3.2.5',
       newBuild: false,
-      showEULA: false,
       loading: false,
       dontLeave: false,
       silentLoading: false,
@@ -698,6 +692,14 @@ export default {
         installed: null
       },
       connected: true
+    }
+  },
+  computed: {
+    claims () {
+      return this.$store.state.claims
+    },
+    showEULA () {
+      return this.$store.state.showEULA
     }
   },
   watch: {
@@ -835,39 +837,72 @@ export default {
       this.authenticated = await this.$auth.isAuthenticated()
     },
     async setup () {
-      if (localStorage.getItem('claims')) {
-        this.claims = JSON.parse(localStorage.getItem('claims'))
-      } else {
-        this.claims = this.$auth.getUser()
-      }
-      if (this.claims) {
-        if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
-          this.claims.ga = true
+      // Set claims
+      this.$store.commit('setData', {
+        attr: 'claims',
+        data: localStorage.getItem('claims') ? JSON.parse(localStorage.getItem('claims')) : this.$auth.getUser()
+      })
+      const CLAIMS = this.$store.state.claims
+      if (CLAIMS) {
+        if (!CLAIMS.ga || !CLAIMS) {
+          this.$store.commit('setData', {
+            attr: 'ga',
+            data: true
+          })
         }
-        this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
+        if (!CLAIMS.theme || !CLAIMS) {
+          this.$store.commit('setData', {
+            attr: 'theme',
+            data: 'system'
+          })
+        }
 
-        if (this.claims.theme === undefined || this.claims === undefined || this.claims === null) {
-          this.claims.theme = 'system'
-        }
-        this.darkmode(this.claims.theme)
-        if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
+        // Set analytics and theme
+        CLAIMS.ga !== false ? this.$ga.enable() : this.$ga.disable()
+        this.darkmode(CLAIMS.theme)
+
+        // Set EULA
+        if ((!CLAIMS.policy || this.$store.state.policyVersion !== CLAIMS.policy[2]) && CLAIMS.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
           this.will_body_scroll(false)
-          this.showEULA = true
-        } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
-          this.will_body_scroll(false)
-          this.showEULA = true
+          this.$store.commit('setData', {
+            attr: 'showEULA',
+            data: true
+          })
         }
       }
+
+      // Set auth header
       this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
-      await this.clients_to_vue()
-      this.connected = navigator.onLine
+
+      // Get initial set of clients
+      await this.$store.dispatch('clientsToVue')
+
+      // Set connection
+      this.$store.commit('setData', {
+        attr: 'connected',
+        data: navigator.onLine
+      })
       const SELF = this
       window.addEventListener('offline', function (event) {
-        SELF.connected = false
+        SELF.$store.commit('setData', {
+          attr: 'connected',
+          data: false
+        })
       })
       window.addEventListener('online', function (event) {
-        SELF.connected = true
+        SELF.$store.commit('setData', {
+          attr: 'connected',
+          data: true
+        })
       })
+
+      // Check build
+      if (localStorage.getItem('versionBuild') !== this.$store.state.versionBuild) {
+        this.$store.commit('setData', {
+          attr: 'newBuild',
+          data: true
+        })
+      }
     },
     async save_claims () {
       this.dontLeave = true

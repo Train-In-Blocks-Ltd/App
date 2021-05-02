@@ -35,41 +35,41 @@
   <div id="portfolio" class="view_container">
     <div class="trainer_info">
       <input
-        v-if="!$parent.loading"
-        v-model="$parent.portfolio.business_name"
+        v-if="!loading"
+        v-model="portfolio.business_name"
         class="trainer_info__business text--large"
         placeholder="Business name"
         aria-label="Business name"
         type="text"
         autocomplete="name"
-        :disabled="$parent.silentLoading"
-        @blur="update($parent.portfolio.notes)"
+        :disabled="silentLoading"
+        @blur="updatePortfolio(portfolio.notes)"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_large'" />
       <input
-        v-if="!$parent.loading"
-        v-model="$parent.portfolio.trainer_name"
+        v-if="!loading"
+        v-model="portfolio.trainer_name"
         class="input--forms allow_text_overflow"
         placeholder="Trainer Name"
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
-        :disabled="$parent.silentLoading"
-        @blur="update($parent.portfolio.notes)"
+        :disabled="silentLoading"
+        @blur="updatePortfolio(portfolio.notes)"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
     </div>
     <div
-      v-if="!$parent.loading"
+      v-if="!loading"
       class="editor_object_standard portfolio_editor"
     >
       <h3>
         Portfolio
       </h3>
       <rich-editor
-        v-model="$parent.portfolio.notes"
+        v-model="portfolio.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
         @on-edit-change="resolve_portfolio_editor"
       />
@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
 // const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '../components/Products')
 
@@ -89,8 +90,11 @@ export default {
     // Products
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -100,51 +104,62 @@ export default {
       tempEditorStore: null
     }
   },
+  computed: mapState([
+    'loading',
+    'silentLoading',
+    'dontLeave',
+    'portfolio'
+  ]),
   async created () {
-    this.$parent.loading = true
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.will_body_scroll(true)
     await this.$parent.setup()
-    await this.$parent.get_portfolio()
-    this.$parent.end_loading()
+    await this.$store.dispatch('getPortfolio')
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: false
+    })
   },
   methods: {
-
     resolve_portfolio_editor (state) {
       switch (state) {
         case 'edit':
-          this.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.editingPortfolio = true
-          this.tempEditorStore = this.$parent.portfolio.notes
+          this.tempEditorStore = this.portfolio.notes
           break
         case 'save':
           this.editingPortfolio = false
-          this.update(this.$parent.portfolio.notes)
+          this.updatePortfolio(this.portfolio.notes)
           break
         case 'cancel':
-          this.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.editingPortfolio = false
-          this.$parent.portfolio.notes = this.tempEditorStore
+          this.$store.commit('setDataDeep', {
+            attrParent: 'portfolio',
+            attrChild: 'notes',
+            data: this.tempEditorStore
+          })
           break
       }
     },
 
     // Database
 
-    async update (notesUpdate) {
-      this.$parent.silentLoading = true
-      this.$parent.dontLeave = true
+    async updatePortfolio () {
       try {
-        await this.$axios.post(`https://api.traininblocks.com/v2/portfolio/${this.$parent.claims.sub}`,
-          {
-            trainer_name: this.$parent.portfolio.trainer_name,
-            business_name: this.$parent.portfolio.business_name,
-            notes: notesUpdate
-          }
-        )
-        await this.$parent.get_portfolio(true)
+        await this.$store.dispatch('updatePortfolio')
         this.$ga.event('Portfolio', 'update')
         this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
-        this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
       }

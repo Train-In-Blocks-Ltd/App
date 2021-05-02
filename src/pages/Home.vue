@@ -37,7 +37,7 @@
       <p class="text">
         What's New
       </p>
-      <span v-if="$parent.newBuild" class="notify_badge">New</span>
+      <span v-if="newBuild" class="notify_badge">New</span>
     </div>
     <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_bottom tab_option_small" aria-label="Install App" @click="isInstallOpen = true, will_body_scroll(false)">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App" />
@@ -46,10 +46,10 @@
       </p>
     </div>
     <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
-    <p v-if="$parent.noClients" class="text--holder text--small grey">
+    <p v-if="noClients" class="text--holder text--small grey">
       No clients added yet, use the button on the top-right of your screen.
     </p>
-    <div v-else-if="!$parent.noClients && !$parent.loading" class="home--container">
+    <div v-else-if="!noClients && !loading" class="home--container">
       <input
         v-model="search"
         type="search"
@@ -61,8 +61,8 @@
       <div class="clients_container">
         <!-- Perform case insensitive search -->
         <router-link
-          v-for="(client, index) in $parent.clients"
-          v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !$parent.loading"
+          v-for="(client, index) in clients"
+          v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !loading"
           :id="'a' + client.client_id"
           :key="index"
           :to="'/client/'+client.client_id+'/'"
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const ClientLink = () => import(/* webpackChunkName: "components.clientlink", webpackPreload: true  */ '../components/ClientLink')
 const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
 const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
@@ -101,39 +102,32 @@ export default {
   },
   data () {
     return {
-
-      // CLIENT CREATION
-
       persistResponse: '',
-
-      // TAB STATES
-
       isNewClientOpen: false,
       isInstallOpen: false,
       isWhatsNewOpen: false,
-
-      // OTHER
-
       search: ''
     }
   },
-  mounted () {
-    this.$parent.loading = true
-    this.$parent.setup()
-    this.$parent.client_details = null
-    this.version()
-    this.will_body_scroll(true)
-    this.$parent.end_loading()
+  computed: mapState([
+    'newBuild',
+    'clients',
+    'noClients',
+    'loading'
+  ]),
+  created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
   },
-  methods: {
-
-    // BACKGROUND AND MISC.
-
-    version () {
-      if (localStorage.getItem('versionBuild') !== this.$parent.versionBuild) {
-        this.$parent.newBuild = true
-      }
-    }
+  mounted () {
+    this.$parent.setup()
+    this.will_body_scroll(true)
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: false
+    })
   }
 }
 </script>

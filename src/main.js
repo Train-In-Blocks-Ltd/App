@@ -12,6 +12,7 @@ import InputPopUp from './components/InputPopUp'
 import GlobalOverlay from './components/GlobalOverlay'
 import App from './App'
 import router from './router'
+import { store } from './store/store'
 
 loadProgressBar()
 
@@ -187,6 +188,7 @@ Vue.mixin({
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

@@ -77,11 +77,11 @@
       aria-label="Find a template"
     >
     <div class="template_options">
-      <button @click="new_template()">
+      <button @click="createTemplate()">
         New Template
       </button>
       <a
-        v-if="$parent.templates !== null && $parent.templates.length !== 0 && selectedTemplates.length < $parent.templates.length"
+        v-if="templates && selectedTemplates.length < templates.length"
         href="javascript:void(0)"
         class="a_link select_all"
         @click="select_all()"
@@ -89,9 +89,9 @@
         Select all
       </a>
     </div>
-    <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="template_container">
+    <div v-if="templates" class="template_container">
       <div
-        v-for="(template, index) in $parent.templates"
+        v-for="(template, index) in templates"
         v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
         :key="index"
@@ -147,6 +147,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
@@ -158,8 +159,11 @@ export default {
     Multiselect
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -192,15 +196,22 @@ export default {
       expandedTemplates: []
     }
   },
+  computed: mapState([
+    'dontLeave',
+    'templates'
+  ]),
   created () {
-    this.$parent.loading = true
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.will_body_scroll(true)
     this.$parent.setup()
-    this.$parent.end_loading()
-  },
-  async mounted () {
-    await this.$parent.get_templates()
-    this.check_for_new()
+    this.getTemplate()
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: false
+    })
   },
   methods: {
 
@@ -210,12 +221,15 @@ export default {
       switch (type) {
         case 'new':
           this.$parent.$refs.response_pop_up.show('New template created', 'Edit and use it in a client\'s plan')
+          this.$ga.event('Template', 'new')
           break
         case 'update':
           this.$parent.$refs.response_pop_up.show('Updated template', 'Your changes have been saved')
+          this.$ga.event('Template', 'update')
           break
         case 'delete':
           this.$parent.$refs.response_pop_up.show(this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template', 'Your changes have been saved')
+          this.$ga.event('Template', 'delete')
           break
       }
     },
@@ -230,10 +244,13 @@ export default {
       }
     },
     resolve_template_editor (state, id) {
-      const TEMPLATE = this.$parent.templates.find(template => template.id === id)
+      const TEMPLATE = this.templates.find(template => template.id === id)
       switch (state) {
         case 'edit':
-          this.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.isEditingTemplate = true
           this.editTemplate = id
           this.forceStop += 1
@@ -242,10 +259,13 @@ export default {
         case 'save':
           this.isEditingTemplate = false
           this.editTemplate = null
-          this.update_template(id)
+          this.updateTemplate(id)
           break
         case 'cancel':
-          this.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.isEditingTemplate = false
           this.editTemplate = null
           TEMPLATE.template = this.tempEditorStore
@@ -254,7 +274,7 @@ export default {
     },
     check_for_new () {
       this.expandedTemplates = []
-      this.$parent.templates.forEach((template) => {
+      this.templates.forEach((template) => {
         if (template.template === null || template.template === '<p><br></p>') {
           this.expandedTemplates.push(template.id)
         }
@@ -282,7 +302,7 @@ export default {
       }
     },
     select_all () {
-      this.$parent.templates.forEach((template) => {
+      this.templates.forEach((template) => {
         if (!this.selectedTemplates.includes(template.id)) {
           this.selectedTemplates.push(template.id)
           document.getElementById(`sc-${template.id}`).checked = true
@@ -290,7 +310,7 @@ export default {
       })
     },
     deselect_all () {
-      this.$parent.templates.forEach((template) => {
+      this.templates.forEach((template) => {
         document.getElementById(`sc-${template.id}`).checked = false
       })
       this.selectedTemplates = []
@@ -299,7 +319,7 @@ export default {
       if (this.selectedTemplates.length !== 0) {
         if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete all the selected templates?', 'We will remove these templates from our database and it won\'t be recoverable.')) {
           this.selectedTemplates.forEach((templateId) => {
-            this.delete_template(templateId)
+            this.deleteTemplate(templateId)
           })
           this.helper('delete')
           this.deselect_all()
@@ -309,52 +329,33 @@ export default {
 
     // DATABASE
 
-    async new_template () {
+    async getTemplate () {
       try {
-        this.$parent.dontLeave = true
-        await this.$axios.put('https://api.traininblocks.com/v2/templates',
-          {
-            pt_id: this.$parent.claims.sub,
-            name: this.new_template_form.name,
-            template: this.new_template_form.template
-          }
-        )
-        await this.$parent.get_templates(true)
+        await this.$store.dispatch('getTemplates', false)
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async createTemplate () {
+      try {
+        await this.$store.dispatch('newTemplate')
         this.check_for_new()
-        this.new_template_form = {
-          name: 'Untitled',
-          note: ''
-        }
         this.helper('new')
-        this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
       }
     },
-    async update_template (id) {
+    async updateTemplate (templateId) {
       try {
-        this.$parent.dontLeave = true
-        const TEMPLATE = this.$parent.templates.find(template => template.id === id)
-        await this.$axios.post('https://api.traininblocks.com/v2/templates',
-          {
-            name: TEMPLATE.name,
-            template: TEMPLATE.template,
-            id
-          }
-        )
-        await this.$parent.get_templates(true)
+        await this.$store.dispatch('updateTemplate', templateId)
         this.helper('update')
-        this.$parent.end_loading()
       } catch (e) {
         this.$parent.resolve_error(e)
       }
     },
-    async delete_template (id) {
+    async deleteTemplate (templateId) {
       try {
-        this.$parent.dontLeave = true
-        await this.$axios.delete(`https://api.traininblocks.com/v2/templates/${id}`)
-        await this.$parent.get_templates(true)
-        this.$parent.end_loading()
+        await this.$store.dispatch('deleteTemplate', templateId)
       } catch (e) {
         this.$parent.resolve_error(e)
       }
