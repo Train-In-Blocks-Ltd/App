@@ -622,7 +622,7 @@ option {
     <div v-if="showEULA" class="tab_overlay_content fadeIn delay fill_mode_both">
       <policy :type="claims.user_type" />
     </div>
-    <nav-bar :authenticated="authenticated" :claims="claims" />
+    <nav-bar v-if="authenticated" :authenticated="authenticated" :claims="claims" />
     <div :class="{ opened_sections: showEULA }" class="section_overlay" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
@@ -837,7 +837,7 @@ export default {
         this.darkmode(CLAIMS.theme)
 
         // Set EULA
-        if ((!CLAIMS.policy || this.$store.state.policyVersion !== CLAIMS.policy[2]) && CLAIMS.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
+        if ((!CLAIMS.policy || this.$store.state.policyVersion !== CLAIMS.policy[2]) && CLAIMS.email !== 'demo@traininblocks.com' && this.authenticated) {
           this.willBodyScroll(false)
           this.$store.commit('setData', {
             attr: 'showEULA',

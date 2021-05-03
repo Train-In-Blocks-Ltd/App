@@ -133,7 +133,7 @@
 </style>
 
 <template>
-  <nav v-if="authenticated && claims" id="sidebar">
+  <nav id="sidebar">
     <div class="logo">
       <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo_link" title="Home">
         <inline-svg :src="require('../assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
@@ -187,7 +187,6 @@
 <script>
 export default {
   props: {
-    authenticated: Boolean,
     claims: Object
   },
   data () {

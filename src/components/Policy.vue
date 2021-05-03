@@ -39,7 +39,7 @@
 </style>
 
 <template>
-  <form id="policy_agreement" @submit.prevent="agree_to_terms(), willBodyScroll(true), $parent.showEULA = false">
+  <form id="policy_agreement" @submit.prevent="agreeToTerms(), willBodyScroll(true)">
     <div id="policy" v-html="eula.html" />
     <p id="agree_statement">
       <b>
@@ -75,9 +75,17 @@ export default {
     this.willBodyScroll(false)
   },
   methods: {
-    agree_to_terms () {
-      this.$parent.claims.policy = [this.name, this.today(), this.$parent.policyVersion]
+    agreeToTerms () {
+      this.$store.commit('setDataDeep', {
+        attrParent: 'claims',
+        attrChild: 'policy',
+        data: [this.name, this.today(), this.$parent.policyVersion]
+      })
       this.$parent.saveClaims()
+      this.$store.commit('setData', {
+        attr: 'showEULA',
+        data: false
+      })
     }
   }
 }
