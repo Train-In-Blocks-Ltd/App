@@ -309,7 +309,10 @@ export default {
     // BACKGROUND AND MISC.
 
     async reset () {
-      this.$parent.dontLeave = true
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       this.error = null
       this.success = null
       try {
@@ -321,9 +324,9 @@ export default {
         this.open = false
         this.email = null
         this.success = 'An email has been sent successfully.'
-        this.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.end_loading()
+        this.$store.dispatch('endLoading')
         this.error = 'An error occurred. Are you sure your email is correct?'
         console.error(e)
       }

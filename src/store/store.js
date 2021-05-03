@@ -152,31 +152,6 @@ export const store = new Vuex.Store({
         data: false
       })
     },
-    async saveClaims ({ dispatch, commit, state }) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      try {
-        await axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              profile: {
-                ga: state.claims.ga,
-                theme: state.claims.theme,
-                policy: state.claims.policy
-              }
-            },
-            url: `${state.claims.sub}`
-          }
-        )
-        localStorage.removeItem('claims')
-        dispatch('endLoading')
-      } catch (e) {
-        dispatch('resolveError', e)
-      }
-    },
     async resolveError ({ dispatch, state }, msg) {
       if (state.claims.user_type !== 'Admin') {
         await axios.post('/.netlify/functions/error',
@@ -478,6 +453,24 @@ export const store = new Vuex.Store({
         text: passChangeEmailText(),
         html: passChangeEmail()
       })
+    },
+    async saveClaims ({ commit, state }) {
+      commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
+      await axios.post('/.netlify/functions/okta', {
+        type: 'POST',
+        body: {
+          profile: {
+            ga: state.claims.ga,
+            theme: state.claims.theme,
+            policy: state.claims.policy
+          }
+        },
+        url: `${state.claims.sub}`
+      })
+      localStorage.removeItem('claims')
     },
 
     // Plans

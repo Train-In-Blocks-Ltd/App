@@ -328,7 +328,10 @@ export default {
       }
     },
     async giveAccess () {
-      this.$parent.dontLeave = true
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       try {
         if (this.clientAlreadyMsg === 'Resend activation email') {
           const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
@@ -416,7 +419,7 @@ export default {
       }
       await this.checkClient()
       this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true, true)
-      this.$parent.end_loading()
+      this.$store.dispatch('endLoading')
     },
     async updateClient (client) {
       try {

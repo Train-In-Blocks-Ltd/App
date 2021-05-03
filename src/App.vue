@@ -758,9 +758,7 @@ export default {
       if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
         SELF.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
         SELF.willBodyScroll(false)
-        SELF.loading = false
-        SELF.dontLeave = false
-        SELF.silentLoading = false
+        SELF.$store.dispatch('endLoading')
         throw new self.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
       }
       return config
@@ -896,24 +894,10 @@ export default {
         this.resolve_error(e)
       }
     },
-    async save_claims () {
-      this.dontLeave = true
+    async saveClaims () {
       try {
-        await this.$axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              profile: {
-                ga: this.claims.ga,
-                theme: this.claims.theme,
-                policy: this.claims.policy
-              }
-            },
-            url: `${this.claims.sub}`
-          }
-        )
-        localStorage.removeItem('claims')
-        this.dontLeave = false
+        await this.$store.dispatch('saveClaims')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.resolve_error(e)
       }

@@ -716,7 +716,10 @@ export default {
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.$parent.dontLeave = false
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -870,7 +873,10 @@ export default {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       switch (state) {
         case 'edit':
-          this.$parent.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.editingPlanNotes = true
           this.tempEditorStore = PLAN.notes
           break
@@ -879,7 +885,10 @@ export default {
           this.updatePlan()
           break
         case 'cancel':
-          this.$parent.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.editingPlanNotes = false
           PLAN.notes = this.tempEditorStore
           break
@@ -889,7 +898,10 @@ export default {
       const SESSION = this.helper('match_session', id)
       switch (state) {
         case 'edit':
-          this.$parent.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.isEditingSession = true
           this.editSession = id
           this.forceStop += 1
@@ -903,7 +915,10 @@ export default {
           this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
           break
         case 'cancel':
-          this.$parent.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.isEditingSession = false
           this.editSession = null
           SESSION.notes = this.tempEditorStore

@@ -77,7 +77,7 @@ export default {
   methods: {
     agree_to_terms () {
       this.$parent.claims.policy = [this.name, this.today(), this.$parent.policyVersion]
-      this.$parent.save_claims()
+      this.$parent.saveClaims()
     }
   }
 }

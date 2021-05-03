@@ -79,7 +79,7 @@
 
 <template>
   <div
-    v-if="$parent.claims"
+    v-if="claims"
     id="account"
     class="view_container"
   >
@@ -155,12 +155,12 @@
     <h1>
       Your Account
     </h1>
-    <form v-if="$parent.claims" class="details_container">
+    <form v-if="claims" class="details_container">
       <div class="details">
         <p style="margin-bottom: 1rem">
-          <b>Email: </b>{{ $parent.claims.email }}
+          <b>Email: </b>{{ claims.email }}
         </p>
-        <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
+        <div v-if="claims.user_type != 'Client' || claims.user_type == 'Admin'">
           <button @click.prevent="manageSubscription()">
             Manage Your Subscription
           </button>
@@ -178,10 +178,10 @@
           </b>
         </label>
         <select
-          v-model="$parent.claims.theme"
+          v-model="claims.theme"
           name="theme"
           class="width_300"
-          @change="$parent.darkmode($parent.claims.theme), $parent.save_claims()"
+          @change="$parent.darkmode(claims.theme), $parent.saveClaims()"
         >
           <option value="system">
             System default
@@ -206,7 +206,7 @@
         <div class="form__options">
           <label for="cookies">
             Allow Third Party Cookies:
-            <input v-model="$parent.claims.ga" class="allow-cookies" type="checkbox" @change="$parent.save_claims()">
+            <input v-model="claims.ga" class="allow-cookies" type="checkbox" @change="$parent.saveClaims()">
           </label>
         </div>
       </div>
@@ -221,10 +221,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -240,10 +244,12 @@ export default {
       }
     }
   },
+  computed: mapState([
+    'dontLeave',
+    'claims'
+  ]),
   created () {
-    this.$parent.loading = true
     this.willBodyScroll(true)
-    this.$parent.end_loading()
   },
   methods: {
 
@@ -251,10 +257,9 @@ export default {
 
     async manageSubscription () {
       try {
-        this.$parent.dontLeave = true
         const RESPONSE = await this.$axios.post('/.netlify/functions/create-manage-link',
           {
-            id: this.$parent.claims.stripeId
+            id: this.claims.stripeId
           }
         )
         window.location.href = RESPONSE.data
@@ -268,10 +273,10 @@ export default {
     checkPassword () {
       const SELF = this
       function isUsername () {
-        const ONE = !SELF.password.new.includes(SELF.$parent.claims.email)
+        const ONE = !SELF.password.new.includes(SELF.claims.email)
         const TWO = SELF.password.new.split('').filter(function (e, i, a) {
           // eslint-disable-next-line
-          return (SELF.$parent.claims.email.indexOf(e) !== -1)
+          return (SELF.claims.email.indexOf(e) !== -1)
         }).length <= 6
         if (ONE === true && TWO !== false) {
           return true

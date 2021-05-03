@@ -241,7 +241,7 @@ export default {
       this.$parent.update_plan()
       this.$parent.deselectAll()
       this.$ga.event('Session', 'progress')
-      this.$parent.$parent.$parent.end_loading()
+      this.$store.dispatch('endLoading')
     }
   }
 }
