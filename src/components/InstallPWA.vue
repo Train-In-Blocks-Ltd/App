@@ -71,7 +71,7 @@
     <div class="install_bottom_bar">
       <button
         v-if="$parent.$parent.pwa.canInstall"
-        @click="installPWA(), $parent.isInstallOpen = false, will_body_scroll(true)"
+        @click="installPWA(), $parent.isInstallOpen = false, willBodyScroll(true)"
       >
         Install
       </button>
@@ -84,7 +84,7 @@
           Launch
         </button>
       </a>
-      <button class="red_button" @click="$parent.isInstallOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click="$parent.isInstallOpen = false, willBodyScroll(true)">
         Close
       </button>
     </div>

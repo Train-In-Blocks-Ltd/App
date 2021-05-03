@@ -39,7 +39,7 @@
 </style>
 
 <template>
-  <form id="policy_agreement" @submit.prevent="agree_to_terms(), will_body_scroll(true), $parent.showEULA = false">
+  <form id="policy_agreement" @submit.prevent="agree_to_terms(), willBodyScroll(true), $parent.showEULA = false">
     <div id="policy" v-html="eula.html" />
     <p id="agree_statement">
       <b>
@@ -72,7 +72,7 @@ export default {
     } else {
       this.eula = require('./legal/eula.md')
     }
-    this.will_body_scroll(false)
+    this.willBodyScroll(false)
   },
   methods: {
     agree_to_terms () {

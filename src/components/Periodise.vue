@@ -102,7 +102,7 @@ button.red_button {
     />
     <div class="periodise">
       <div
-        v-for="(plan, planIndex) in client_plans"
+        v-for="(plan, planIndex) in clientDetails.plans"
         :key="`plan_${planIndex}`"
         class="plan"
       >
@@ -123,7 +123,7 @@ button.red_button {
                 v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
                 href="javascript:void(0)"
                 class="a_link"
-                @click="planDesc = plan.name, planHTML = plan.notes, will_body_scroll(false)"
+                @click="planDesc = plan.name, planHTML = plan.notes, willBodyScroll(false)"
               >
                 Notes
               </a>
@@ -136,7 +136,7 @@ button.red_button {
                 @click="change_order(plan.ordered, 'back')"
               />
               <inline-svg
-                v-if="plan.ordered !== client_plans.length - 1"
+                v-if="plan.ordered !== clientDetails.plans.length - 1"
                 :src="require('../assets/svg/arrow-right.svg')"
                 class="right no_fill"
                 @click="change_order(plan.ordered, 'next')"
@@ -166,85 +166,115 @@ export default {
     PreviewModal
   },
   props: {
-    isTrainer: Boolean,
-    plans: [Array, Boolean]
+    isTrainer: Boolean
   },
   data () {
     return {
-      client_plans: this.plans,
       planDesc: null,
       planHTML: null
     }
   },
-  watch: {
-    plans () {
-      this.client_plans = this.plans
+  computed: {
+    clientDetails () {
+      return this.$store.state[this.isTrainer ? 'clientDetails' : 'clientUser']
     }
   },
-  created () {
-    this.sort_plans()
-  },
   methods: {
-    sort_plans () {
+    sortPlans () {
       if (this.plans !== false) {
-        this.client_plans.forEach((plan, index) => {
-          if (plan.ordered === null) {
-            plan.ordered = index
-            this.$emit('update:plans', this.client_plans)
+        this.clientDetails.plans.forEach((plan, index) => {
+          if (plan.ordered === null || plan.ordered !== index) {
+            this.$store.dispatch('updatePlan', {
+              clientId: this.$route.params.client_id,
+              planId: plan.id,
+              planName: plan.name,
+              planDuration: plan.duration,
+              planNotes: plan.notes,
+              planBlockColor: plan.block_color,
+              planOrdered: index
+            })
           }
         })
-        this.client_plans.sort((a, b) => {
+        this.clientDetails.plans.sort((a, b) => {
           return new Date(a.ordered) - new Date(b.ordered)
         })
-        this.client_plans.forEach((plan, index) => {
-          if (plan.ordered !== index) {
-            plan.ordered = index
-          }
-        })
-        this.$emit('update:plans', this.client_plans)
       }
     },
     change_order (planOrder, direction) {
       switch (direction) {
         case 'next':
-          this.client_plans[planOrder + 1].ordered = planOrder
-          this.update_plan(this.client_plans[planOrder + 1].id)
-          this.client_plans[planOrder].ordered = planOrder + 1
-          this.update_plan(this.client_plans[planOrder].id)
-          this.sort_plans()
+          this.$store.commit('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder + 1].id,
+            attr: 'ordered',
+            data: planOrder
+          })
+          this.$store.commit('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder].id,
+            attr: 'ordered',
+            data: planOrder + 1
+          })
+          this.sortPlans()
+          this.$store.dispatch('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder + 1].id,
+            planName: this.clientDetails.plans[planOrder + 1].name,
+            planDuration: this.clientDetails.plans[planOrder + 1].duration,
+            planNotes: this.clientDetails.plans[planOrder + 1].notes,
+            planBlockColor: this.clientDetails.plans[planOrder + 1].block_color,
+            planOrdered: this.clientDetails.plans[planOrder + 1].ordered
+          })
+          this.$store.dispatch('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder].id,
+            planName: this.clientDetails.plans[planOrder].name,
+            planDuration: this.clientDetails.plans[planOrder].duration,
+            planNotes: this.clientDetails.plans[planOrder].notes,
+            planBlockColor: this.clientDetails.plans[planOrder].block_color,
+            planOrdered: this.clientDetails.plans[planOrder].ordered
+          })
           break
         case 'back':
-          this.client_plans[planOrder - 1].ordered = planOrder
-          this.update_plan(this.client_plans[planOrder - 1].id)
-          this.client_plans[planOrder].ordered = planOrder - 1
-          this.update_plan(this.client_plans[planOrder].id)
-          this.sort_plans()
+          this.$store.commit('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder - 1].id,
+            attr: 'ordered',
+            data: planOrder
+          })
+          this.$store.commit('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder].id,
+            attr: 'ordered',
+            data: planOrder - 1
+          })
+          this.sortPlans()
+          this.$store.dispatch('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder - 1].id,
+            planName: this.clientDetails.plans[planOrder - 1].name,
+            planDuration: this.clientDetails.plans[planOrder - 1].duration,
+            planNotes: this.clientDetails.plans[planOrder - 1].notes,
+            planBlockColor: this.clientDetails.plans[planOrder - 1].block_color,
+            planOrdered: this.clientDetails.plans[planOrder - 1].ordered
+          })
+          this.$store.dispatch('updatePlan', {
+            clientId: this.$route.params.client_id,
+            planId: this.clientDetails.plans[planOrder].id,
+            planName: this.clientDetails.plans[planOrder].name,
+            planDuration: this.clientDetails.plans[planOrder].duration,
+            planNotes: this.clientDetails.plans[planOrder].notes,
+            planBlockColor: this.clientDetails.plans[planOrder].block_color,
+            planOrdered: this.clientDetails.plans[planOrder].ordered
+          })
           break
       }
-    },
-    async update_plan (id) {
-      this.$parent.$parent.$parent.silentLoading = true
-      this.$parent.$parent.$parent.dontLeave = true
-      const PLAN = this.client_plans.find(plan => plan.id === id)
-      try {
-        this.sort_sessions(PLAN)
-        await this.$axios.post('https://api.traininblocks.com/v2/plans',
-          {
-            id: PLAN.id,
-            name: PLAN.name,
-            duration: PLAN.duration,
-            notes: PLAN.notes,
-            block_color: PLAN.block_color,
-            ordered: PLAN.ordered
-          }
-        )
-        localStorage.setItem('clients', JSON.stringify(this.$parent.$parent.$parent.clients))
-        this.$ga.event('Plan', 'update')
-        this.$parent.$parent.$parent.$refs.response_pop_up.show('Plan updated', 'Your changes have been saved')
-        this.$parent.$parent.$parent.end_loading()
-      } catch (e) {
-        this.$parent.$parent.$parent.resolve_error(e)
-      }
+      const CLIENT = this.$store.state.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+      this.$store.commit('setData', {
+        attr: 'clientDetails',
+        data: CLIENT
+      })
+      this.$store.dispatch('endLoading')
     }
   }
 }

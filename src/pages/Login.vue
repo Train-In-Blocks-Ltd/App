@@ -243,7 +243,7 @@ export default {
       OktaSignIn = module.default
     })
     this.splashed = true
-    this.will_body_scroll(true)
+    this.willBodyScroll(true)
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
         baseUrl: process.env.ISSUER,
@@ -278,7 +278,7 @@ export default {
         scopes
       }).then(async (tokens) => {
         self.splashed = false
-        self.will_body_scroll(false)
+        self.willBodyScroll(false)
         await this.$auth.handleLoginRedirect(tokens)
       }).catch((err) => {
         throw err

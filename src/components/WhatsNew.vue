@@ -56,7 +56,7 @@ img {
       </div>
     </div>
     <br>
-    <button class="red_button" @click="$parent.isWhatsNewOpen = false, will_body_scroll(true), update_version()">
+    <button class="red_button" @click="$parent.isWhatsNewOpen = false, willBodyScroll(true), update_version()">
       Close
     </button>
   </div>

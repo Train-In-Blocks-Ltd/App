@@ -42,7 +42,7 @@ Vue.mixin({
 
     // System
 
-    will_body_scroll (state) {
+    willBodyScroll (state) {
       const BODY = document.getElementsByTagName('body')[0]
       state ? BODY.style.overflow = 'auto' : BODY.style.overflow = 'hidden'
     },

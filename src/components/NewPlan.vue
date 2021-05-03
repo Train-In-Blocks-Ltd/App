@@ -1,5 +1,5 @@
 <template>
-  <form class="form_grid add_plan" name="add_plan" @submit.prevent="createPlan(), $parent.isNewPlanOpen = false, will_body_scroll(true)">
+  <form class="form_grid add_plan" name="add_plan" @submit.prevent="createPlan(), $parent.isNewPlanOpen = false, willBodyScroll(true)">
     <div class="bottom_margin">
       <h3>
         Create a new plan and use it for exercise, nutrition or anything else
@@ -30,7 +30,7 @@
       <button type="submit">
         Save
       </button>
-      <button class="red_button" @click.prevent="$parent.isNewPlanOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.isNewPlanOpen = false, willBodyScroll(true)">
         Close
       </button>
     </div>
@@ -64,7 +64,7 @@ export default {
           clientId: this.clientDetails.client_id,
           name: this.new_plan.name,
           duration: this.new_plan.duration,
-          ordered: this.clientDetails.plans === undefined || this.clientDetails.plans === false ? 0 : this.clientDetails.length
+          ordered: !this.clientDetails.plans ? 0 : this.clientDetails.length
         })
         this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')
         this.$parent.persistResponse = this.new_plan.name

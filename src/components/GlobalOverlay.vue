@@ -23,7 +23,7 @@ export default {
   },
   watch: {
     show () {
-      this.will_body_scroll(!this.show)
+      this.willBodyScroll(!this.show)
     }
   }
 }

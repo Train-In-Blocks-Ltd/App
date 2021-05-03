@@ -110,7 +110,7 @@
           class="icon--options cursor"
           :src="require('../assets/svg/close.svg')"
           aria-label="Close"
-          @click="$parent.isStatsOpen = false, will_body_scroll(true)"
+          @click="$parent.isStatsOpen = false, willBodyScroll(true)"
         />
       </div>
       <div class="container--content">

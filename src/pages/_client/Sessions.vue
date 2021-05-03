@@ -299,7 +299,7 @@ input.session-date {
     <form
       v-if="showMove"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="moveToWeek(), showMove = false, will_body_scroll(true)"
+      @submit.prevent="moveToWeek(), showMove = false, willBodyScroll(true)"
     >
       <h3>
         Move to a different microcycle
@@ -324,14 +324,14 @@ input.session-date {
       <button type="submit">
         Move
       </button>
-      <button class="red_button" @click.prevent="showMove = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="showMove = false, willBodyScroll(true)">
         Cancel
       </button>
     </form>
     <form
       v-if="showShift"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="shiftAcross(), showShift = false, will_body_scroll(true)"
+      @submit.prevent="shiftAcross(), showShift = false, willBodyScroll(true)"
     >
       <h3>
         Shift the dates of the sessions
@@ -354,7 +354,7 @@ input.session-date {
       <button type="submit">
         Shift
       </button>
-      <button class="red_button" @click.prevent="showShift = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="showShift = false, willBodyScroll(true)">
         Cancel
       </button>
     </form>
@@ -369,7 +369,7 @@ input.session-date {
     <form
       v-if="showDuplicate"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="duplicate_plan(duplicateClientID), showDuplicate = false, will_body_scroll(true)"
+      @submit.prevent="duplicate_plan(duplicateClientID), showDuplicate = false, willBodyScroll(true)"
     >
       <h3>
         Create a similar plan
@@ -392,16 +392,15 @@ input.session-date {
       <button type="submit">
         Duplicate
       </button>
-      <button class="red_button" @click.prevent="showDuplicate = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="showDuplicate = false, willBodyScroll(true)">
         Cancel
       </button>
     </form>
     <div
       v-if="!loading && !isStatsOpen && !$parent.showOptions && !noSessions"
-      :class="{ icon_open_middle: $parent.keepLoaded }"
-      class="tab_option tab_option_small fadeIn"
+      class="tab_option icon_open_middle tab_option_small fadeIn"
       aria-label="Statistics"
-      @click="isStatsOpen = true, will_body_scroll(false)"
+      @click="isStatsOpen = true, willBodyScroll(false)"
     >
       <inline-svg :src="require('../../assets/svg/stats.svg')" />
       <p class="text">
@@ -459,7 +458,7 @@ input.session-date {
             <a
               class="a_link"
               href="javascript:void(0)"
-              @click="showDuplicate = true, will_body_scroll(false)"
+              @click="showDuplicate = true, willBodyScroll(false)"
             >
               <inline-svg :src="require('../../assets/svg/copy.svg')" />
               Duplicate plan
@@ -568,7 +567,7 @@ input.session-date {
                       id="info"
                       :src="require('../../assets/svg/info.svg')"
                       title="Info"
-                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', will_body_scroll(false)"
+                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', willBodyScroll(false)"
                     />
                   </div>
                   <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
@@ -646,7 +645,7 @@ input.session-date {
                           <button
                             v-if="session.feedback !== '' && session.feedback !== null"
                             class="feedback_button"
-                            @click="previewHTML = session.feedback, previewDesc = `${session.name} on ${session.date}`, will_body_scroll(false)"
+                            @click="previewHTML = session.feedback, previewDesc = `${session.name} on ${session.date}`, willBodyScroll(false)"
                           >
                             Feedback
                           </button>
@@ -814,7 +813,7 @@ export default {
     }
   },
   created () {
-    this.will_body_scroll(true)
+    this.willBodyScroll(true)
     this.$parent.sessions = true
     this.noSessions = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
     if (!this.noSessions) {
@@ -823,7 +822,7 @@ export default {
     }
   },
   beforeDestroy () {
-    this.will_body_scroll(true)
+    this.willBodyScroll(true)
   },
   methods: {
 
@@ -839,7 +838,7 @@ export default {
           break
         case 'Progress':
           this.showProgress = true
-          this.will_body_scroll(false)
+          this.willBodyScroll(false)
           break
         case 'Duplicate':
           this.duplicate()
@@ -847,12 +846,12 @@ export default {
           break
         case 'Move':
           this.showMove = true
-          this.will_body_scroll(false)
+          this.willBodyScroll(false)
           this.updater()
           break
         case 'Shift':
           this.showShift = true
-          this.will_body_scroll(false)
+          this.willBodyScroll(false)
           this.updater()
           break
         case 'Print':
@@ -900,7 +899,7 @@ export default {
         case 'save':
           this.isEditingSession = false
           this.editSession = null
-          this.update_session(id)
+          this.updateSession(id)
           this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
           break
         case 'cancel':
@@ -972,8 +971,14 @@ export default {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          session.date = this.add_days(session.date, parseInt(this.shiftDays))
-          this.update_session(session.id)
+          this.$store.commit('updatePlanSingleSession', {
+            clientId: this.$route.params.client_id,
+            planId: this.$route.params.id,
+            sessionId: session.id,
+            attr: 'date',
+            data: this.add_days(session.date, parseInt(this.shiftDays))
+          })
+          this.updateSession(session.id)
         }
       })
       this.$ga.event('Session', 'shift')
@@ -984,8 +989,14 @@ export default {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          session.week_id = this.moveTarget
-          this.update_session(session.id)
+          this.$store.commit('updatePlanSingleSession', {
+            clientId: this.$route.params.client_id,
+            planId: this.$route.params.id,
+            sessionId: session.id,
+            attr: 'week_id',
+            data: this.moveTarget
+          })
+          this.updateSession(session.id)
         }
       })
       this.currentWeek = parseInt(this.moveTarget)
@@ -997,14 +1008,20 @@ export default {
 
     // MULTI AND CHECKBOX
 
-    async bulkCheck (state) {
+    async bulkCheck (boolState) {
       if (this.selectedSessions.length !== 0) {
-        if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${state === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
+        if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${boolState === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
           const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
           PLAN.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
-              session.checked = state
-              this.update_session(session.id)
+              this.$store.commit('updatePlanSingleSession', {
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+                sessionId: session.id,
+                attr: 'checked',
+                data: boolState
+              })
+              this.updateSession(session.id)
             }
           })
           this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated', 'Your changes have been saved')

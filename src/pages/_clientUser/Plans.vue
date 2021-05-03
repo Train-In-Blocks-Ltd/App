@@ -109,7 +109,7 @@ hr {
 
 <template>
   <div id="client_side_plan" class="view_container">
-    <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
+    <div v-for="(plan, index) in clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id" class="client_plan">
         <h2 class="plan_name">
           {{ plan.name }}
@@ -154,7 +154,7 @@ hr {
             class="fadeIn"
           />
         </div>
-        <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
+        <skeleton v-if="loading" :type="'session'" class="container--sessions" />
         <div v-else-if="plan.sessions.length !== 0" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
@@ -193,7 +193,7 @@ hr {
             <div :id="session.name" class="session_header client-side">
               <div>
                 <span class="text--name"><b>{{ session.name }}</b></span><br>
-                <span class="text--tiny">{{ $parent.day(session.date) }}</span>
+                <span class="text--tiny">{{ day(session.date) }}</span>
                 <span class="text--tiny">{{ session.date }}</span>
               </div>
             </div>
@@ -202,14 +202,14 @@ hr {
               <button
                 v-if="session.checked === 1 && !feedbackId"
                 class="complete_button green_button"
-                @click="complete(plan.id, session.id)"
+                @click="complete(plan.id, session.id, session.checked)"
               >
                 Completed
               </button>
               <button
                 v-if="session.checked === 0 && !feedbackId"
                 class="complete_button red_button"
-                @click="complete(plan.id, session.id)"
+                @click="complete(plan.id, session.id, session.checked)"
               >
                 Click to complete
               </button>
@@ -225,7 +225,7 @@ hr {
                 :editing="feedbackId"
                 :empty-placeholder="'What would you like to share with your trainer?'"
                 :force-stop="forceStop"
-                @on-edit-change="resolve_feedback_editor"
+                @on-edit-change="resolveFeedbackEditor"
               />
             </div>
           </div>
@@ -245,6 +245,7 @@ hr {
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/WeekCalendar')
 const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
@@ -256,8 +257,11 @@ export default {
     RichEditor
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -282,22 +286,28 @@ export default {
       forceUpdate: 0
     }
   },
-  async mounted () {
-    this.$parent.loading = true
-    this.will_body_scroll(true)
-    await this.$parent.get_plans()
-    await this.sort_sessions(this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id)))
-    await this.scan()
-    this.$parent.end_loading()
+  computed: mapState([
+    'loading',
+    'dontLeave',
+    'clientUser'
+  ]),
+  async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
+    this.willBodyScroll(true)
+    await this.$parent.getClientSidePlans()
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
     // BACKGROUND AND MISC.
 
-    resolve_feedback_editor (state, id) {
+    resolveFeedbackEditor (state, id) {
       let plan
       let session
-      this.$parent.clientUser.plans.forEach((planItem) => {
+      this.clientUser.plans.forEach((planItem) => {
         planItem.sessions.forEach((sessionItem) => {
           if (sessionItem.id === id) {
             plan = planItem
@@ -307,17 +317,23 @@ export default {
       })
       switch (state) {
         case 'edit':
-          this.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.feedbackId = id
           this.forceStop += 1
           this.tempEditorStore = session.feedback
           break
         case 'save':
           this.feedbackId = null
-          this.$parent.update_session(plan.id, session.id)
+          this.$parent.updateClientSideSession(plan.id, session.id)
           break
         case 'cancel':
-          this.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.feedbackId = null
           session.feedback = this.tempEditorStore
           break
@@ -330,21 +346,30 @@ export default {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)
     },
-    complete (planId, sessionId) {
-      const PLAN = this.$parent.clientUser.plans.find(plan => plan.id === planId)
-      const SESSION = PLAN.sessions.find(session => session.id === sessionId)
-      if (SESSION.checked === 0) {
-        SESSION.checked = 1
+    complete (planId, sessionId, currentChecked) {
+      if (!currentChecked) {
+        this.$store.commit('updateClientUserPlanSingleSession', {
+          planId,
+          sessionId,
+          attr: 'checked',
+          data: 1
+        })
         this.check = 1
       } else {
-        SESSION.checked = 0
+        this.$store.commit('updateClientUserPlanSingleSession', {
+          planId,
+          sessionId,
+          attr: 'checked',
+          data: 0
+        })
         this.check = 0
       }
-      this.$parent.update_session(planId, sessionId)
+      this.$parent.updateClientSideSession(planId, sessionId)
+      this.$store.dispatch('endLoading')
     },
     scan () {
       this.sessionDates.length = 0
-      const PLAN = this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+      const PLAN = this.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
       const WEEK_COLOR = PLAN.block_color.replace('[', '').replace(']', '').split(',')
       if (PLAN.sessions !== null) {
         PLAN.sessions.forEach((session) => {

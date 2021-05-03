@@ -9,7 +9,7 @@
 <script>
 export default {
   created () {
-    this.will_body_scroll(true)
+    this.willBodyScroll(true)
   }
 }
 </script>

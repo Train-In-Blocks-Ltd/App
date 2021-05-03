@@ -65,7 +65,7 @@
       v-if="!isNewPlanOpen"
       class="tab_option icon_open_middle tab_option_small"
       aria-label="New Plan"
-      @click="isNewPlanOpen = true, will_body_scroll(false)"
+      @click="isNewPlanOpen = true, willBodyScroll(false)"
     >
       <inline-svg class="no_fill" :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
       <p class="text">
@@ -155,8 +155,8 @@ export default {
     }
   },
   created () {
-    this.will_body_scroll(true)
-    this.$parent.check_client()
+    this.willBodyScroll(true)
+    this.$parent.checkClient()
     this.noPlans = this.otherData === false
   },
   methods: {
@@ -172,7 +172,7 @@ export default {
           break
         case 'save':
           this.editingClientNotes = false
-          this.$parent.$parent.updateClient(this.clientDetails)
+          this.$parent.updateClient(this.clientDetails)
           break
         case 'cancel':
           this.$store.commit('setData', {

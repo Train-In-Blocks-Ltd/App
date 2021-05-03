@@ -14,7 +14,7 @@
     name="add_client"
     class="form_grid add_client"
     spellcheck="false"
-    @submit.prevent="createClient(), $parent.isNewClientOpen = false, will_body_scroll(true)"
+    @submit.prevent="createClient(), $parent.isNewClientOpen = false, willBodyScroll(true)"
   >
     <div class="bottom_margin">
       <h3>
@@ -70,7 +70,7 @@
       >
         Save
       </button>
-      <button class="red_button" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.isNewClientOpen = false, willBodyScroll(true)">
         Close
       </button>
     </div>

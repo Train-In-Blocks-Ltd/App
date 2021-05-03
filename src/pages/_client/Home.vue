@@ -134,7 +134,7 @@
       <toolkit />
     </div>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
-      <div v-if="keepLoaded" class="floating_nav fadeIn">
+      <div class="floating_nav fadeIn">
         <inline-svg
           v-if="showOptions"
           class="icon--options fadeIn delay fill_mode_both"
@@ -149,7 +149,7 @@
           <a
             class="a_link"
             href="javascript:void(0)"
-            @click="showToolkit = true, will_body_scroll(false), showOptions = false"
+            @click="showToolkit = true, willBodyScroll(false), showOptions = false"
           >
             Toolkit
             <inline-svg :src="require('../../assets/svg/calculate.svg')" />
@@ -157,7 +157,7 @@
           <a
             class="a_link"
             href="javascript:void(0)"
-            @click="$parent.client_archive($route.params.client_id, index), showOptions = false"
+            @click="clientArchive($route.params.client_id), showOptions = false"
           >
             Archive Client
             <inline-svg :src="require('../../assets/svg/archive.svg')" />
@@ -179,7 +179,7 @@
           aria-label="Client name"
           autocomplete="name"
           :disabled="silentLoading"
-          @blur="$parent.updateClient(clientDetails)"
+          @blur="updateClient(clientDetails)"
         >
         <input
           id="phone"
@@ -194,7 +194,7 @@
           maxlength="14"
           pattern="\d+"
           :disabled="silentLoading"
-          @blur="$parent.updateClient(clientDetails)"
+          @blur="updateClient(clientDetails)"
         >
         <div v-if="!sessions" class="client_info__options">
           <div class="client_email_bar">
@@ -207,14 +207,14 @@
             v-if="clientAlreadyMsg === 'Restricted'"
             class="verify_button button"
             :disabled="clientAlready"
-            @click="create_client()"
+            @click="giveAccess()"
           >
             {{ clientAlreadyMsg }}
           </button>
           <button
             v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
             class="verify_button fadeIn"
-            @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, $parent.updateClient(clientDetails)"
+            @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, updateClient(clientDetails)"
           >
             {{ clientDetails.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
           </button>
@@ -222,7 +222,7 @@
             v-else
             class="verify_button button"
             :disabled="clientAlready"
-            @click="create_client()"
+            @click="giveAccess()"
           >
             {{ clientAlreadyMsg }}
           </button>
@@ -249,7 +249,6 @@ export default {
 
       // BACKGROUND
 
-      keepLoaded: false,
       showOptions: false,
       showToolkit: false,
 
@@ -269,28 +268,27 @@ export default {
     'clientDetails'
   ]),
   created () {
-    this.will_body_scroll(true)
-    const CLIENT = this.$store.state.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-    if (CLIENT.plans !== false) {
-      for (const PLAN of CLIENT.plans) {
-        this.$store.dispatch('getSessions', {
-          planId: PLAN.id,
-          clientId: CLIENT.client_id,
-          force: false
-        })
-      }
-    }
+    this.willBodyScroll(true)
     this.$store.commit('setData', {
       attr: 'clientDetails',
-      data: CLIENT
+      data: this.$store.state.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
     })
+    if (this.clientDetails.plans !== false) {
+      this.clientDetails.plans.forEach((plan) => {
+        this.$store.dispatch('getSessions', {
+          planId: plan.id,
+          clientId: this.$route.params.client_id,
+          force: false
+        })
+      })
+    }
     this.$store.dispatch('endLoading')
   },
   methods: {
 
     // OKTA CLIENT
 
-    async check_client () {
+    async checkClient () {
       if (this.$parent.claims.email !== 'demo@traininblocks.com') {
         this.clientAlreadyMsg = 'Loading...'
         try {
@@ -329,7 +327,7 @@ export default {
         this.clientAlreadyMsg = 'Restricted'
       }
     },
-    async create_client () {
+    async giveAccess () {
       this.$parent.dontLeave = true
       try {
         if (this.clientAlreadyMsg === 'Resend activation email') {
@@ -416,9 +414,34 @@ export default {
       } catch (e) {
         this.$parent.resolve_error(e)
       }
-      await this.check_client()
+      await this.checkClient()
       this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true, true)
       this.$parent.end_loading()
+    },
+    async updateClient (client) {
+      try {
+        await this.$store.dispatch('updateClient', client)
+      } catch (e) {
+        this.$parent.resolve_error(e)
+      }
+    },
+    async clientArchive (clientId) {
+      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
+        try {
+          const CLIENT = this.$store.state.clients.find(client => client.client_id === parseInt(clientId))
+          const INDEX = this.$store.state.clients.indexOf(CLIENT)
+          await this.$store.dispatch('clientArchive', {
+            clientId,
+            index: INDEX
+          })
+          this.$ga.event('Client', 'archive')
+          this.$parent.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
+          this.$store.dispatch('endLoading')
+          this.$router.push('/')
+        } catch (e) {
+          this.$parent.resolve_error(e)
+        }
+      }
     }
   }
 }

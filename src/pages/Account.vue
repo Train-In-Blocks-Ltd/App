@@ -87,7 +87,7 @@
     <form
       v-if="showPasswordReset"
       class="form_grid tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="change_password()"
+      @submit.prevent="changePassword()"
     >
       <div>
         <h2>
@@ -128,7 +128,7 @@
         class="input--forms width_300 small_border_radius"
         :class="{check: password.check}"
         required
-        @input="check_password"
+        @input="checkPassword"
       >
       <input
         v-model="password.match"
@@ -138,13 +138,13 @@
         class="input--forms width_300 small_border_radius"
         :class="{check: password.new !== password.match}"
         required
-        @input="check_password"
+        @input="checkPassword"
       >
       <div class="reset_password_button_bar">
         <button class="right_margin" type="submit" :disabled="password.check || password.new !== password.match">
           Change your password
         </button>
-        <button class="red_button" @click.prevent="showPasswordReset = false, will_body_scroll(true)">
+        <button class="red_button" @click.prevent="showPasswordReset = false, willBodyScroll(true)">
           Close
         </button>
       </div>
@@ -161,12 +161,12 @@
           <b>Email: </b>{{ $parent.claims.email }}
         </p>
         <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-          <button @click.prevent="manage_subscription()">
+          <button @click.prevent="manageSubscription()">
             Manage Your Subscription
           </button>
         </div>
         <div>
-          <button @click.prevent="showPasswordReset = true, will_body_scroll(false)">
+          <button @click.prevent="showPasswordReset = true, willBodyScroll(false)">
             Change Your Password
           </button>
         </div>
@@ -221,8 +221,6 @@
 </template>
 
 <script>
-import { passChangeEmail, passChangeEmailText } from '../components/email'
-
 export default {
   async beforeRouteLeave (to, from, next) {
     if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
@@ -244,14 +242,14 @@ export default {
   },
   created () {
     this.$parent.loading = true
-    this.will_body_scroll(true)
+    this.willBodyScroll(true)
     this.$parent.end_loading()
   },
   methods: {
 
     // BACKGROUND AND MISC.
 
-    async manage_subscription () {
+    async manageSubscription () {
       try {
         this.$parent.dontLeave = true
         const RESPONSE = await this.$axios.post('/.netlify/functions/create-manage-link',
@@ -267,7 +265,7 @@ export default {
 
     // PASSWORD
 
-    check_password () {
+    checkPassword () {
       const SELF = this
       function isUsername () {
         const ONE = !SELF.password.new.includes(SELF.$parent.claims.email)
@@ -295,38 +293,27 @@ export default {
         this.password.error = ''
       }
     },
-    async change_password () {
+    async changePassword () {
       try {
-        this.$parent.dontLeave = true
         this.password.error = ''
-        await this.$axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              oldPassword: this.password.old,
-              newPassword: this.password.new
-            },
-            url: `${this.$parent.claims.sub}/credentials/change_password`
-          }
-        )
-        this.password.old = null
-        this.password.new = null
-        await this.$axios.post('/.netlify/functions/send-email',
-          {
-            to: this.$parent.claims.email,
-            subject: 'Password Changed',
-            text: passChangeEmailText(),
-            html: passChangeEmail()
-          }
-        )
+        await this.$store.dispatch('changePassword', {
+          old: this.password.old,
+          new: this.password.new
+        })
         this.$parent.$refs.response_pop_up.show('Password changed', 'Remember to not share it and keep it safe')
-        this.$parent.end_loading()
         this.showPasswordReset = false
-        this.will_body_scroll(true)
+        this.willBodyScroll(true)
+        this.password = {
+          old: null,
+          new: null,
+          match: null,
+          check: null,
+          error: null
+        }
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
-        console.error(e)
-        this.$parent.end_loading()
+        this.$parent.resolve_error(e)
       }
     }
   }

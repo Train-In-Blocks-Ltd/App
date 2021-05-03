@@ -428,10 +428,10 @@ div#rich_editor.editorFocused {
       {{ emptyPlaceholder }}
     </p>
     <div v-if="editState" class="bottom_bar fadeIn">
-      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), will_body_scroll(true)">
+      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
         Save
       </button>
-      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId), will_body_scroll(true)">
+      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)">
         Cancel
       </button>
     </div>
@@ -492,9 +492,9 @@ export default {
   watch: {
     showAddTemplate () {
       if (this.showAddTemplate) {
-        this.will_body_scroll(false)
+        this.willBodyScroll(false)
       } else {
-        this.will_body_scroll(true)
+        this.willBodyScroll(true)
       }
     },
     editState () {
@@ -517,7 +517,7 @@ export default {
           onFocus: () => {
             this.caretInEditor = true
             this.showAddTemplate = false
-            this.will_body_scroll(true)
+            this.willBodyScroll(true)
           },
           onBlur: () => {
             this.caretInEditor = false

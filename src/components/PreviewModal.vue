@@ -56,7 +56,7 @@ h2.title {
       />
       <button
         class="red_button"
-        @click="$emit('close'), will_body_scroll(true)"
+        @click="$emit('close'), willBodyScroll(true)"
       >
         Close
       </button>

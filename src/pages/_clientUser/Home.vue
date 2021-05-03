@@ -46,21 +46,21 @@ hr {
 
 <template>
   <div id="home" class="view_container">
-    <div v-if="$parent.portfolio">
+    <div v-if="portfolio">
       <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen || isProfileOpen }" class="section_overlay" />
       <div v-if="isProfileOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
-        <client-profile :img="''" :claims="$parent.claims" />
+        <client-profile :img="''" :claims="claims" />
       </div>
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
           <h2>
-            {{ $parent.portfolio.business_name }}
+            {{ portfolio.business_name }}
           </h2>
           <h3 class="grey">
-            {{ $parent.portfolio.trainer_name }}
+            {{ portfolio.trainer_name }}
           </h3>
-          <div class="client_portfolio__notes" v-html="update_html($parent.portfolio.notes, true)" />
-          <button class="red_button" @click="isPortfolioOpen = false, will_body_scroll(true)">
+          <div class="client_portfolio__notes" v-html="update_html(portfolio.notes, true)" />
+          <button class="red_button" @click="isPortfolioOpen = false, willBodyScroll(true)">
             Close
           </button>
         </div>
@@ -72,7 +72,7 @@ hr {
         v-if="!isProfileOpen"
         aria-label="Profile"
         class="tab_option tab_option_small"
-        @click="isProfileOpen = true, will_body_scroll(false)"
+        @click="isProfileOpen = true, willBodyScroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/client-profile.svg')" aria-label="Profile" />
         <p class="text">
@@ -80,10 +80,10 @@ hr {
         </p>
       </div>
       <div
-        v-if="!isPortfolioOpen && $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>'"
+        v-if="!isPortfolioOpen && portfolio.notes !== '' && portfolio.notes !== '<p><br></p>'"
         aria-label="Information"
         class="tab_option tab_option_large icon_open_middle"
-        @click="isPortfolioOpen = true, will_body_scroll(false)"
+        @click="isPortfolioOpen = true, willBodyScroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/info.svg')" aria-label="Information" />
         <p class="text">
@@ -92,10 +92,10 @@ hr {
       </div>
       <div
         v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'"
-        :class="{ icon_open_bottom: $parent.portfolio.notes !== '' && $parent.portfolio.notes !== '<p><br></p>' }"
+        :class="{ icon_open_bottom: portfolio.notes !== '' && portfolio.notes !== '<p><br></p>' }"
         class="tab_option tab_option_small"
         aria-label="Install App"
-        @click="isInstallOpen = true, will_body_scroll(false)"
+        @click="isInstallOpen = true, willBodyScroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
         <p class="text">
@@ -110,18 +110,18 @@ hr {
             Today
           </h2>
         </div>
-        <skeleton v-if="$parent.loading" :type="'session'" />
+        <skeleton v-if="loading" :type="'session'" />
         <p
-          v-else-if="todays_sessions_store.length === 0"
+          v-else-if="clientUser.sessionsToday.length === 0"
           class="text--holder text--small grey"
         >
           Nothing planned for today
         </p>
-        <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
-          <div v-if="todays_sessions_store.length !== 0 && !$parent.loading" class="container--sessions">
+        <div v-for="(plan, index) in clientUser.plans" :key="index">
+          <div v-if="clientUser.sessionsToday.length !== 0 && !loading" class="container--sessions">
             <div
               v-for="(session, sessionIndex) in plan.sessions"
-              v-show="todays_sessions_store.includes(session.id)"
+              v-show="clientUser.sessionsToday.includes(session.id)"
               :id="`session-${session.id}`"
               :key="sessionIndex"
               class="wrapper--session"
@@ -129,7 +129,7 @@ hr {
               <div :id="session.name" class="session_header client-side">
                 <div>
                   <span class="text--name"><b>{{ session.name }}</b></span><br>
-                  <span class="text--tiny">{{ $parent.day(session.date) }}</span>
+                  <span class="text--tiny">{{ day(session.date) }}</span>
                   <span class="text--tiny">{{ session.date }}</span>
                 </div>
               </div>
@@ -138,14 +138,14 @@ hr {
                 <button
                   v-if="session.checked === 1 && !feedbackId"
                   class="complete_button green_button"
-                  @click="complete(plan.id, session.id)"
+                  @click="complete(plan.id, session.id, session.checked)"
                 >
                   Completed
                 </button>
                 <button
                   v-if="session.checked === 0 && !feedbackId"
                   class="complete_button red_button"
-                  @click="complete(plan.id, session.id)"
+                  @click="complete(plan.id, session.id, session.checked)"
                 >
                   Click to complete
                 </button>
@@ -161,7 +161,7 @@ hr {
                   :editing="feedbackId"
                   :empty-placeholder="'What would you like to share with your trainer?'"
                   :force-stop="forceStop"
-                  @on-edit-change="resolve_feedback_editor"
+                  @on-edit-change="resolveFeedbackEditor"
                 />
               </div>
             </div>
@@ -173,8 +173,8 @@ hr {
         <h2>
           Plans
         </h2>
-        <skeleton v-if="$parent.loading" :type="'plan'" class="fadeIn" />
-        <periodise v-else-if="!noPlans" :is-trainer="false" :plans.sync="$parent.clientUser.plans" />
+        <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
+        <periodise v-else-if="clientUser.plans" :is-trainer="false" :plans.sync="clientUser.plans" />
         <p
           v-else
           class="text--holder text--small grey"
@@ -187,6 +187,7 @@ hr {
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
@@ -200,8 +201,11 @@ export default {
     ClientProfile
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -222,29 +226,34 @@ export default {
 
       // SYSTEM
 
-      noPlans: true,
       check: null,
-      todays_sessions_store: [],
       showing_current_session: 0
     }
   },
-  async mounted () {
-    this.$parent.loading = true
-    this.will_body_scroll(true)
-    await this.$parent.get_plans()
-    await this.$parent.get_portfolio()
-    this.todays_session()
-    this.$parent.clientUser.plans.length === 0 ? this.noPlans = true : this.noPlans = false
-    this.$parent.end_loading()
+  computed: mapState([
+    'loading',
+    'dontLeave',
+    'clientUser',
+    'claims',
+    'portfolio'
+  ]),
+  async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
+    this.willBodyScroll(true)
+    await this.$parent.getClientSidePlans()
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
     // BACKGROUND AND MISC.
 
-    resolve_feedback_editor (state, id) {
+    resolveFeedbackEditor (state, id) {
       let plan
       let session
-      this.$parent.clientUser.plans.forEach((planItem) => {
+      this.clientUser.plans.forEach((planItem) => {
         planItem.sessions.forEach((sessionItem) => {
           if (sessionItem.id === id) {
             plan = planItem
@@ -254,42 +263,48 @@ export default {
       })
       switch (state) {
         case 'edit':
-          this.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.feedbackId = id
           this.forceStop += 1
           this.tempEditorStore = session.feedback
           break
         case 'save':
           this.feedbackId = null
-          this.$parent.update_session(plan.id, session.id)
+          this.$parent.updateClientSideSession(plan.id, session.id)
           break
         case 'cancel':
-          this.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.feedbackId = null
           session.feedback = this.tempEditorStore
           break
       }
     },
-    complete (planId, sessionId) {
-      const PLAN = this.$parent.clientUser.plans.find(plan => plan.id === planId)
-      const SESSION = PLAN.sessions.find(session => session.id === sessionId)
-      if (SESSION.checked === 0) {
-        SESSION.checked = 1
+    complete (planId, sessionId, currentChecked) {
+      if (!currentChecked) {
+        this.$store.commit('updateClientUserPlanSingleSession', {
+          planId,
+          sessionId,
+          attr: 'checked',
+          data: 1
+        })
         this.check = 1
       } else {
-        SESSION.checked = 0
+        this.$store.commit('updateClientUserPlanSingleSession', {
+          planId,
+          sessionId,
+          attr: 'checked',
+          data: 0
+        })
         this.check = 0
       }
-      this.$parent.update_session(planId, sessionId)
-    },
-    todays_session () {
-      this.$parent.clientUser.plans.forEach((plan) => {
-        plan.sessions.forEach((session) => {
-          if (session.date === this.today()) {
-            this.todays_sessions_store.push(session.id)
-          }
-        })
-      })
+      this.$parent.updateClientSideSession(planId, sessionId)
+      this.$store.dispatch('endLoading')
     }
   }
 }

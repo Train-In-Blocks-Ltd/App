@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import { deleteEmail, deleteEmailText, passChangeEmail, passChangeEmailText } from '../components/email'
+import { deleteEmail, deleteEmailText, passChangeEmail, passChangeEmailText, feedbackEmail, feedbackEmailText } from '../components/email'
 
 Vue.use(Vuex)
 
@@ -36,7 +36,8 @@ export const store = new Vuex.Store({
     clients: null,
     clientDetails: null,
     clientUser: {
-      plans: null
+      plans: null,
+      sessionsToday: []
     },
 
     // Portfolio
@@ -92,10 +93,45 @@ export const store = new Vuex.Store({
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       CLIENT[payload.attr] = payload.data
     },
+    updatePlan (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
+      PLAN[payload.attr] = payload.data
+    },
     updatePlanSessions (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN.sessions = payload.data
+    },
+    updatePlanSingleSession (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
+      const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
+      SESSION[payload.attr] = payload.data
+    },
+
+    // Client user
+    updateClientUserPlanSessions (state, payload) {
+      const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
+      PLAN[payload.attr] = payload.data
+
+      const today = () => {
+        const DATE = new Date()
+        const YEAR = DATE.getFullYear()
+        const MONTH = String(DATE.getMonth() + 1).padStart(2, '0')
+        const DAY = String(DATE.getDate()).padStart(2, '0')
+        return `${YEAR}-${MONTH}-${DAY}`
+      }
+      for (const SESSION of PLAN.sessions) {
+        if (SESSION.date === today() && !state.sessionsToday.includes(SESSION.id)) {
+          state.clientUser.sessionsToday.push(SESSION.id)
+        }
+      }
+    },
+    updateClientUserPlanSingleSession (state, payload) {
+      const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
+      const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
+      SESSION[payload.attr] = payload.data
     }
   },
   actions: {
@@ -184,27 +220,6 @@ export const store = new Vuex.Store({
         console.error(e)
       }
     },
-    async clientUpdate ({ dispatch, commit }, payload) {
-      commit('setLoading', ['silentLoading', 'dontLeave'])
-      try {
-        await axios.post('https://api.traininblocks.com/v2/clients',
-          {
-            id: payload.client_id,
-            name: payload.name,
-            email: payload.email,
-            number: payload.number,
-            notifications: payload.notifications,
-            notes: payload.notes
-          }
-        )
-        await dispatch('clientsForceGet')
-        await dispatch('clientsToVue')
-        // this.$refs.response_pop_up.show('Client updated', 'All your changes have been saved')
-        dispatch('endLoading')
-      } catch (e) {
-        dispatch('resolveError', e)
-      }
-    },
     async archiveToVue ({ dispatch, commit }) {
       if (!localStorage.getItem('archive')) {
         await dispatch('archiveForceGet')
@@ -231,50 +246,41 @@ export const store = new Vuex.Store({
       }
     },
     async clientArchive ({ dispatch, commit, state }, payload) {
-      if (await this.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
-        commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        commit('setData', {
-          attr: 'clients',
-          data: state.clients.splice(payload.index, 1)
-        })
-        const CLIENT = state.clients.find(client => client.client_id === payload.id)
-        const EMAIL = CLIENT.email
-        try {
-          this.response = await axios.post(`https://api.traininblocks.com/v2/clients/archive/${payload.id}`).data
-          const RESULT = await axios.post('/.netlify/functions/okta',
-            {
-              type: 'GET',
-              url: `?filter=profile.email+eq+"${EMAIL}"&limit=1`
-            }
-          )
-          if (RESULT.data.length >= 1) {
-            await axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {},
-                url: `${RESULT.data[0].id}/lifecycle/suspend`
-              }
-            )
-            await axios.post('/.netlify/functions/send-email',
-              {
-                to: EMAIL,
-                subject: 'Account Deactivated',
-                text: deleteEmailText(),
-                html: deleteEmail()
-              }
-            )
-          }
-          await dispatch('clientsAndArchiveHelper')
-          this.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
-          dispatch('endLoading')
-          this.$router.push('/')
-        } catch (e) {
-          dispatch('resolveError', e)
+      commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
+      commit('setData', {
+        attr: 'clients',
+        data: state.clients.splice(payload.index, 1)
+      })
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const EMAIL = CLIENT.email
+      await axios.post(`https://api.traininblocks.com/v2/clients/archive/${payload.clientId}`)
+      const RESULT = await axios.post('/.netlify/functions/okta',
+        {
+          type: 'GET',
+          url: `?filter=profile.email+eq+"${EMAIL}"&limit=1`
         }
+      )
+      if (RESULT.data.length >= 1) {
+        await axios.post('/.netlify/functions/okta',
+          {
+            type: 'POST',
+            body: {},
+            url: `${RESULT.data[0].id}/lifecycle/suspend`
+          }
+        )
+        await axios.post('/.netlify/functions/send-email',
+          {
+            to: EMAIL,
+            subject: 'Account Deactivated',
+            text: deleteEmailText(),
+            html: deleteEmail()
+          }
+        )
       }
+      await dispatch('clientsAndArchiveHelper')
     },
     async clientUnarchive ({ dispatch, commit, state }, clientId) {
       commit('setData', {
@@ -294,7 +300,7 @@ export const store = new Vuex.Store({
         attr: 'clients',
         data: SORTED_CLIENTS
       })
-      await axios.post(`https://api.traininblocks.com/v2/clients/unarchive/${parseInt(clientId)}`)
+      await axios.post(`https://api.traininblocks.com/v2/clients/unarchive/${clientId}`)
       await dispatch('clientsAndArchiveHelper')
       dispatch('endLoading')
     },
@@ -453,36 +459,25 @@ export const store = new Vuex.Store({
 
     // Account
 
-    async changePassword ({ dispatch, commit, state }, payload) {
+    async changePassword ({ commit, state }, payload) {
       commit('setData', {
         attr: 'dontLeave',
         data: true
       })
-      try {
-        await axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              oldPassword: payload.password.old,
-              newPassword: payload.password.new
-            },
-            url: `${state.claims.sub}/credentials/change_password`
-          }
-        )
-        await axios.post('/.netlify/functions/send-email',
-          {
-            to: state.claims.email,
-            subject: 'Password Changed',
-            text: passChangeEmailText(),
-            html: passChangeEmail()
-          }
-        )
-        // this.$parent.$refs.response_pop_up.show('Password changed', 'Remember to not share it and keep it safe')
-        dispatch('endLoading')
-        this.will_body_scroll(true)
-      } catch (e) {
-        dispatch('resolveError', e)
-      }
+      await axios.post('/.netlify/functions/okta', {
+        type: 'POST',
+        body: {
+          oldPassword: payload.old,
+          newPassword: payload.new
+        },
+        url: `${state.claims.sub}/credentials/change_password`
+      })
+      await axios.post('/.netlify/functions/send-email', {
+        to: state.claims.email,
+        subject: 'Password Changed',
+        text: passChangeEmailText(),
+        html: passChangeEmail()
+      })
     },
 
     // Plans
@@ -557,7 +552,7 @@ export const store = new Vuex.Store({
         data: true
       })
       const RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans', {
-        id: payload.planId,
+        id: parseInt(payload.planId),
         name: payload.planName,
         duration: payload.planDuration,
         notes: payload.planNotes,
@@ -579,28 +574,6 @@ export const store = new Vuex.Store({
       await axios.delete(`https://api.traininblocks.com/v2/plans/${parseInt(payload.planId)}`)
       await dispatch('clientForceGet')
       await dispatch('clientsToVue')
-    },
-    async updateSession ({ dispatch, commit, getters }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
-      await axios.post('https://api.traininblocks.com/v2/sessions',
-        {
-          id: SESSION.id,
-          name: SESSION.name,
-          date: SESSION.date,
-          notes: SESSION.notes,
-          week_id: SESSION.week_id,
-          checked: SESSION.checked
-        }
-      )
-      await dispatch('getSessions', {
-        clientId: payload.clientId,
-        planId: payload.planId,
-        force: true
-      })
     },
 
     // Sessions
@@ -645,6 +618,28 @@ export const store = new Vuex.Store({
       })
       return newSessionId
     },
+    async updateSession ({ dispatch, commit, getters }, payload) {
+      commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
+      const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
+      await axios.post('https://api.traininblocks.com/v2/sessions',
+        {
+          id: SESSION.id,
+          name: SESSION.name,
+          date: SESSION.date,
+          notes: SESSION.notes,
+          week_id: SESSION.week_id,
+          checked: SESSION.checked
+        }
+      )
+      await dispatch('getSessions', {
+        clientId: payload.clientId,
+        planId: payload.planId,
+        force: true
+      })
+    },
     async deleteSession ({ dispatch, commit }, payload) {
       commit('setData', {
         attr: 'dontLeave',
@@ -656,6 +651,55 @@ export const store = new Vuex.Store({
         planId: parseInt(payload.planId),
         force: true
       })
+    },
+
+    // Client-side
+
+    async getClientSidePlans ({ commit, state }) {
+      const PLANS = await axios.get(`https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`)
+      commit('setDataDeep', {
+        attrParent: 'clientUser',
+        attrChild: 'plans',
+        data: PLANS.data
+      })
+      if (state.clientUser.plans) {
+        for (const PLAN of state.clientUser.plans) {
+          const RESPONSE_SESSIONS = await axios.get(`https://api.traininblocks.com/v2/sessions/${PLAN.id}`)
+          const SORTED_SESSIONS = RESPONSE_SESSIONS.data.sort((a, b) => {
+            return new Date(a.date) - new Date(b.date)
+          })
+          commit('updateClientUserPlanSessions', {
+            planId: PLAN.id,
+            attr: 'sessions',
+            data: SORTED_SESSIONS
+          })
+        }
+      }
+    },
+    async updateClientSideSession ({ state }, payload) {
+      const CLIENT = await axios.get(`https://api.traininblocks.com/v2/ptId/${state.claims.client_id_db}`)
+      const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
+      const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
+      await axios.post('https://api.traininblocks.com/v2/client-sessions', {
+        id: SESSION.id,
+        name: SESSION.name,
+        checked: SESSION.checked,
+        feedback: SESSION.feedback
+      })
+      if (CLIENT.data[0].notifications === 1) {
+        if (SESSION.feedback !== null) {
+          const PT_EMAIL = await axios.post('/.netlify/functions/okta', {
+            type: 'GET',
+            url: `?filter=id+eq+"${CLIENT.data[0].pt_id}"&limit=1`
+          })
+          await axios.post('/.netlify/functions/send-email', {
+            to: PT_EMAIL.data[0].credentials.emails[0].value,
+            subject: state.claims.email + ' has submitted feedback for ' + SESSION.name,
+            text: feedbackEmailText(state.claims.client_id_db, parseInt(payload.planId)),
+            html: feedbackEmail(state.claims.client_id_db, parseInt(payload.planId))
+          })
+        }
+      }
     }
   },
   getters: {

@@ -34,7 +34,7 @@
     <h3 class="client_email">
       {{ claims.email }}
     </h3>
-    <button class="red_button" @click="$parent.isProfileOpen = false, will_body_scroll(true)">
+    <button class="red_button" @click="$parent.isProfileOpen = false, willBodyScroll(true)">
       Close
     </button>
   </div>

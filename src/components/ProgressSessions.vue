@@ -65,7 +65,7 @@
       <button
         type="button"
         class="red_button"
-        @click.prevent="$parent.showProgress = false, will_body_scroll(true)"
+        @click.prevent="$parent.showProgress = false, willBodyScroll(true)"
       >
         Cancel
       </button>
@@ -134,7 +134,7 @@
     </div>
     <form
       v-else-if="progressPage === 2"
-      @submit.prevent="progress_complete(), $parent.showProgress = false, will_body_scroll(true)"
+      @submit.prevent="progress_complete(), $parent.showProgress = false, willBodyScroll(true)"
     >
       <h3>
         You're all set

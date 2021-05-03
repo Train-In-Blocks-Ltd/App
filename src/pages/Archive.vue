@@ -117,7 +117,7 @@ export default {
       attr: 'loading',
       data: true
     })
-    this.will_body_scroll(true)
+    this.willBodyScroll(true)
     this.$store.dispatch('endLoading')
   },
   methods: {

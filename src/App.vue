@@ -634,7 +634,6 @@ option {
 
 <script>
 import { mapState } from 'vuex'
-import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
 const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
 const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
 
@@ -671,7 +670,8 @@ export default {
   },
   computed: mapState([
     'claims',
-    'showEULA'
+    'showEULA',
+    'clients'
   ]),
   watch: {
     $route (to, from) {
@@ -683,11 +683,28 @@ export default {
         await this.archive_f()
         this.setup()
       }
+    },
+    clients () {
+      try {
+        if (this.clients) {
+          for (const CLIENT of this.clients) {
+            if (!CLIENT.plans) {
+              CLIENT.plans = this.$store.dispatch('getPlans', {
+                clientId: CLIENT.client_id,
+                force: true
+              })
+            }
+          }
+        }
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.resolve_error(e)
+      }
     }
   },
   async created () {
     this.is_authenticated()
-    this.will_body_scroll(false)
+    this.willBodyScroll(false)
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
@@ -740,7 +757,7 @@ export default {
     this.$axios.interceptors.request.use((config) => {
       if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
         SELF.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
-        SELF.will_body_scroll(false)
+        SELF.willBodyScroll(false)
         SELF.loading = false
         SELF.dontLeave = false
         SELF.silentLoading = false
@@ -753,18 +770,6 @@ export default {
     await this.setup()
   },
   methods: {
-    async helper (mode, gaItem, gaAction) {
-      switch (mode) {
-        case 'client_store':
-          await this.archive_f()
-          this.archive_to_vue()
-          await this.clients_f()
-          this.clients_to_vue()
-          this.$ga.event(gaItem, gaAction)
-          this.end_loading()
-          break
-      }
-    },
     darkmode (mode) {
       const MATCHED_MEDIA = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
@@ -835,7 +840,7 @@ export default {
 
         // Set EULA
         if ((!CLAIMS.policy || this.$store.state.policyVersion !== CLAIMS.policy[2]) && CLAIMS.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
-          this.will_body_scroll(false)
+          this.willBodyScroll(false)
           this.$store.commit('setData', {
             attr: 'showEULA',
             data: true
@@ -927,156 +932,31 @@ export default {
       }
       this.$store.dispatch('endLoading')
       this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
-      this.will_body_scroll(false)
+      this.willBodyScroll(false)
     },
 
-    // CLIENT
+    // Client-side
 
-    async updateClient (client) {
+    async getClientSidePlans () {
       try {
-        await this.$store.dispatch('updateClient', client)
+        await this.$store.dispatch('getClientSidePlans')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.resolve_error(e)
       }
     },
-    async archive_to_vue () {
-      if (!localStorage.getItem('archive')) {
-        await this.archive_f()
-      }
-      if (JSON.parse(localStorage.getItem('archive')).length === 0) {
-        this.archive.no_archive = true
-      } else {
-        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort((a, b) => {
-          const NAME_A = a.name.toUpperCase()
-          const NAME_B = b.name.toUpperCase()
-          return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
+    async updateClientSideSession (planId, sessionId) {
+      try {
+        await this.$store.dispatch('updateClientSideSession', {
+          planId,
+          sessionId
         })
-      }
-    },
-    async archive_f () {
-      try {
-        const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/clients/${this.claims.sub}/archive`)
-        this.archive.no_archive = RESPONSE.data.length === 0
-        localStorage.setItem('archive', JSON.stringify(RESPONSE.data))
-      } catch (e) {
-        this.archive.no_archive = false
-        this.error = e.toString()
-      }
-    },
-    async client_archive (id, index) {
-      if (await this.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
-        this.dontLeave = true
-        const CLIENT = this.clients.find(client => client.client_id === id)
-        const EMAIL = CLIENT.email
-        this.clients.splice(index, 1)
-        this.noClients = this.clients.length === 0
-        try {
-          this.response = await this.$axios.post(`https://api.traininblocks.com/v2/clients/archive/${id}`).data
-          const RESULT = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'GET',
-              url: `?filter=profile.email+eq+"${EMAIL}"&limit=1`
-            }
-          )
-          if (RESULT.data.length >= 1) {
-            await this.$axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {},
-                url: `${RESULT.data[0].id}/lifecycle/suspend`
-              }
-            )
-            await this.$axios.post('/.netlify/functions/send-email',
-              {
-                to: EMAIL,
-                subject: 'Account Deactivated',
-                text: deleteEmailText(),
-                html: deleteEmail()
-              }
-            )
-          }
-          this.helper('client_store', 'Client', 'archive')
-          this.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
-          this.end_loading()
-          this.$router.push('/')
-        } catch (e) {
-          this.resolve_error(e)
-        }
-      }
-    },
-    async client_unarchive (id) {
-      this.dontLeave = true
-      const CLIENT = this.archive.clients.find(client => client.client_id === id)
-      const LOCAL_STORAGE_ARRAY = JSON.parse(localStorage.getItem('clients'))
-      LOCAL_STORAGE_ARRAY.push(CLIENT)
-
-      localStorage.setItem('clients', JSON.stringify(LOCAL_STORAGE_ARRAY))
-      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-        const NAME_A = a.name.toUpperCase()
-        const NAME_B = b.name.toUpperCase()
-        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
-      })
-      this.archive.no_archive = this.archive.clients.length === 0
-      try {
-        const RESPONSE = await this.$axios.post(`https://api.traininblocks.com/v2/clients/unarchive/${id}`)
-        this.response = RESPONSE.data
-        this.helper('client_store', 'Client', 'unarchive')
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-
-    // GET METHODS
-
-    async get_plans () {
-      try {
-        const PLANS = await this.$axios.get(`https://api.traininblocks.com/v2/plans/${this.claims.client_id_db}`)
-        this.clientUser.plans = PLANS.data
-        for (const PLAN_INDEX in this.clientUser.plans) {
-          const RESPONSE = await this.$axios.get(`https://api.traininblocks.com/v2/sessions/${this.clientUser.plans[PLAN_INDEX].id}`)
-          this.clientUser.plans[PLAN_INDEX].sessions = RESPONSE.data
-        }
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async update_session (pid, sid, feedbackNotesUpdate) {
-      const PLAN = this.clientUser.plans.find(plan => plan.id === pid)
-      const SESSION = PLAN.sessions.find(session => session.id === sid)
-      try {
-        await this.$axios.post('https://api.traininblocks.com/v2/client-workouts',
-          {
-            id: SESSION.id,
-            name: SESSION.name,
-            checked: SESSION.checked,
-            feedback: feedbackNotesUpdate === undefined ? SESSION.feedback : feedbackNotesUpdate
-          }
-        )
         this.$ga.event('Session', 'update')
-        const CLIENT = await this.$axios.get(`https://api.traininblocks.com/v2/ptId/${this.claims.client_id_db}`)
-        if (CLIENT.data[0].notifications === 1) {
-          if (SESSION.feedback !== null) {
-            const PT_EMAIL = await this.$axios.post('/.netlify/functions/okta',
-              {
-                type: 'GET',
-                url: `?filter=id+eq+"${CLIENT.data[0].pt_id}"&limit=1`
-              }
-            )
-            await this.$axios.post('/.netlify/functions/send-email',
-              {
-                to: PT_EMAIL.data[0].credentials.emails[0].value,
-                subject: this.claims.email + ' has submitted feedback for ' + SESSION.name,
-                text: feedbackEmailText(this.claims.client_id_db, pid),
-                html: feedbackEmail(this.claims.client_id_db, pid)
-              }
-            )
-          }
-        }
         this.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.resolve_error(e)
       }
-      this.end_loading()
     }
   }
 }

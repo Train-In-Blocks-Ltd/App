@@ -62,7 +62,7 @@ textarea {
     </div>
     <button
       class="red_button"
-      @click="$parent.showToolkit = false, will_body_scroll(true)"
+      @click="$parent.showToolkit = false, willBodyScroll(true)"
     >
       Close
     </button>
