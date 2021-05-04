@@ -125,7 +125,7 @@ export const store = new Vuex.Store({
       }
       for (const SESSION of PLAN.sessions) {
         if (SESSION.date === today() && !state.sessionsToday.includes(SESSION.id)) {
-          state.clientUser.sessionsToday.push(SESSION.id)
+          state.clientUser.sessionsToday.push(SESSION)
         }
       }
     },

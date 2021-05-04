@@ -977,7 +977,7 @@ export default {
       })
       PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          NOTES_ARR.push(`<div class="session"><h2>${session.name}</h2><h3>${session.date}</h3><br>${this.update_html(session.notes, true)}</div>`)
+          NOTES_ARR.push(`<div class="session"><h2>${session.name}</h2><h3>${session.date}</h3><br>${this.updateHTML(session.notes, true)}</div>`)
         }
       })
       const NEW_WINDOW = window.open()

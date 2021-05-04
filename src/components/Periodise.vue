@@ -120,7 +120,7 @@ button.red_button {
                 {{ isTrainer ? 'Edit' : 'View' }}
               </router-link>
               <a
-                v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
+                v-if="plan.notes && plan.notes !== '<p></p>'"
                 href="javascript:void(0)"
                 class="a_link"
                 @click="planDesc = plan.name, planHTML = plan.notes, willBodyScroll(false)"

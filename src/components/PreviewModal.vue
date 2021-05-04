@@ -52,7 +52,7 @@ h2.title {
         :class="{ noMedia: !showMedia }"
         @click="focused = true"
         @mouseleave="focused = false"
-        v-html="update_html(html, !showBrackets)"
+        v-html="updateHTML(html, !showBrackets)"
       />
       <button
         class="red_button"

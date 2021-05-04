@@ -59,7 +59,7 @@ hr {
           <h3 class="grey">
             {{ portfolio.trainer_name }}
           </h3>
-          <div class="client_portfolio__notes" v-html="update_html(portfolio.notes, true)" />
+          <div class="client_portfolio__notes" v-html="updateHTML(portfolio.notes, true)" />
           <button class="red_button" @click="isPortfolioOpen = false, willBodyScroll(true)">
             Close
           </button>
@@ -80,7 +80,7 @@ hr {
         </p>
       </div>
       <div
-        v-if="!isPortfolioOpen && portfolio.notes !== '' && portfolio.notes !== '<p><br></p>'"
+        v-if="!isPortfolioOpen && portfolio && portfolio.notes !== '<p></p>'"
         aria-label="Information"
         class="tab_option tab_option_large icon_open_middle"
         @click="isPortfolioOpen = true, willBodyScroll(false)"
@@ -92,8 +92,8 @@ hr {
       </div>
       <div
         v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'"
-        :class="{ icon_open_bottom: portfolio.notes !== '' && portfolio.notes !== '<p><br></p>' }"
-        class="tab_option tab_option_small"
+        :class="{ icon_open_bottom: portfolio && portfolio.notes !== '<p></p>' }"
+        class="tab_option icon_open_middle tab_option_small"
         aria-label="Install App"
         @click="isInstallOpen = true, willBodyScroll(false)"
       >
@@ -111,62 +111,60 @@ hr {
           </h2>
         </div>
         <skeleton v-if="loading" :type="'session'" />
+        <div v-else-if="clientUser.sessionsToday.length !== 0" class="container--sessions">
+          <div
+            v-for="(session, sessionIndex) in clientUser.sessionsToday"
+            v-show="clientUser.sessionsToday.includes(session.id)"
+            :id="`session-${session.id}`"
+            :key="sessionIndex"
+            class="wrapper--session"
+          >
+            <div :id="session.name" class="session_header client-side">
+              <div>
+                <span class="text--name"><b>{{ session.name }}</b></span><br>
+                <span class="text--tiny">{{ day(session.date) }}</span>
+                <span class="text--tiny">{{ session.date }}</span>
+              </div>
+            </div>
+            <div class="show_html fadeIn" v-html="updateHTML(session.notes, true)" />
+            <div :key="check">
+              <button
+                v-if="session.checked === 1 && !feedbackId"
+                class="complete_button green_button"
+                @click="complete(plan.id, session.id, session.checked)"
+              >
+                Completed
+              </button>
+              <button
+                v-if="session.checked === 0 && !feedbackId"
+                class="complete_button red_button"
+                @click="complete(plan.id, session.id, session.checked)"
+              >
+                Click to complete
+              </button>
+            </div>
+            <div v-if="session.checked === 1">
+              <hr>
+              <h3>
+                Feedback
+              </h3>
+              <rich-editor
+                v-model="session.feedback"
+                :item-id="session.id"
+                :editing="feedbackId"
+                :empty-placeholder="'What would you like to share with your trainer?'"
+                :force-stop="forceStop"
+                @on-edit-change="resolveFeedbackEditor"
+              />
+            </div>
+          </div>
+        </div>
         <p
-          v-else-if="clientUser.sessionsToday.length === 0"
+          v-else
           class="text--holder text--small grey"
         >
           Nothing planned for today
         </p>
-        <div v-for="(plan, index) in clientUser.plans" :key="index">
-          <div v-if="clientUser.sessionsToday.length !== 0 && !loading" class="container--sessions">
-            <div
-              v-for="(session, sessionIndex) in plan.sessions"
-              v-show="clientUser.sessionsToday.includes(session.id)"
-              :id="`session-${session.id}`"
-              :key="sessionIndex"
-              class="wrapper--session"
-            >
-              <div :id="session.name" class="session_header client-side">
-                <div>
-                  <span class="text--name"><b>{{ session.name }}</b></span><br>
-                  <span class="text--tiny">{{ day(session.date) }}</span>
-                  <span class="text--tiny">{{ session.date }}</span>
-                </div>
-              </div>
-              <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
-              <div :key="check">
-                <button
-                  v-if="session.checked === 1 && !feedbackId"
-                  class="complete_button green_button"
-                  @click="complete(plan.id, session.id, session.checked)"
-                >
-                  Completed
-                </button>
-                <button
-                  v-if="session.checked === 0 && !feedbackId"
-                  class="complete_button red_button"
-                  @click="complete(plan.id, session.id, session.checked)"
-                >
-                  Click to complete
-                </button>
-              </div>
-              <div v-if="session.checked === 1">
-                <hr>
-                <h3>
-                  Feedback
-                </h3>
-                <rich-editor
-                  v-model="session.feedback"
-                  :item-id="session.id"
-                  :editing="feedbackId"
-                  :empty-placeholder="'What would you like to share with your trainer?'"
-                  :force-stop="forceStop"
-                  @on-edit-change="resolveFeedbackEditor"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <div class="spacer" />
       <div class="client_home__plans">

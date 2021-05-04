@@ -181,7 +181,7 @@ li[data-done='false'] {
     <div
       v-else-if="!archive"
       class="preview_html"
-      v-html="update_html(notes, true)"
+      v-html="updateHTML(notes, true)"
     />
     <checkbox
       v-if="archive"

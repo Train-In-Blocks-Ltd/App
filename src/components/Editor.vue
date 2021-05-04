@@ -308,118 +308,120 @@ div#rich_editor.editorFocused {
       id="rich_show_content"
       class="fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
-      v-html="update_html(value, true)"
+      v-html="updateHTML(value, true)"
     />
-    <div v-else-if="editState" class="fadeIn">
-      <div class="menu_bar_wrapper">
-        <div id="menu_bar" :class="{ editorFocused: caretInEditor }">
-          <button
-            class="fadeIn"
-            :class="{ 'is-active': editor.isActive('bold') }"
-            title="Bold"
-            @click="editor.chain().focus().toggleBold().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-          </button>
-          <button
-            class="fadeIn"
-            :class="{ 'is-active': editor.isActive('italic') }"
-            title="Italic"
-            @click="editor.chain().focus().toggleItalic().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-          </button>
-          <button
-            class="fadeIn separated"
-            :class="{ 'is-active': editor.isActive('underline') }"
-            title="Underline"
-            @click="editor.chain().focus().toggleUnderline().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-          </button>
-          <button
-            class="fadeIn"
-            :class="{ 'is-active': editor.isActive('ordered_list') }"
-            title="Ordered list"
-            @click="editor.chain().focus().toggleOrderedList().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
-          </button>
-          <button
-            class="fadeIn"
-            :class="{ 'is-active': editor.isActive('bullet_list') }"
-            title="Bullet list"
-            @click="editor.chain().focus().toggleBulletList().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
-          </button>
-          <button
-            class="separated"
-            :class="{ 'is-active': editor.isActive('taskList') }"
-            title="Checklist"
-            @click="editor.chain().focus().toggleTaskList().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
-          </button>
-          <button
-            title="Horizontal line"
-            @click="editor.chain().focus().setHorizontalRule().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/horizontal-rule.svg')" />
-          </button>
-          <button
-            class="fadeIn"
-            :class="{ 'is-active': editor.isActive('link') }"
-            title="Hyperlink"
-            @click="editor.isActive('link') ? editor.chain().focus().unsetLink().run() : setLinkUrl()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/link.svg')" />
-          </button>
-          <button
-            class="fadeIn"
-            title="Image"
-            @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
-          >
-            <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-          </button>
-          <button
-            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-            class="fadeIn"
-            title="Template"
-            @click="showAddTemplate = !showAddTemplate, $parent.goToEvent(itemId, weekId)"
-          >
-            <inline-svg :src="require('../assets/svg/editor/template.svg')" />
-          </button>
-          <button
-            v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-            class="fadeIn"
-            title="Track data"
-            @click="addTrackData()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/track-data.svg')" />
-          </button>
-          <button
-            class="fadeIn"
-            title="Undo"
-            @click="editor.chain().focus().undo().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
-          </button>
-          <button
-            class="fadeIn"
-            title="Redo"
-            @click="editor.chain().focus().redo().run()"
-          >
-            <inline-svg :src="require('../assets/svg/editor/redo.svg')" />
-          </button>
+    <transition v-else-if="editState" enter-active-class="fadeIn">
+      <div>
+        <div class="menu_bar_wrapper">
+          <div id="menu_bar" :class="{ editorFocused: caretInEditor }">
+            <button
+              class="fadeIn"
+              :class="{ 'is-active': editor.isActive('bold') }"
+              title="Bold"
+              @click="editor.chain().focus().toggleBold().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+            </button>
+            <button
+              class="fadeIn"
+              :class="{ 'is-active': editor.isActive('italic') }"
+              title="Italic"
+              @click="editor.chain().focus().toggleItalic().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+            </button>
+            <button
+              class="fadeIn separated"
+              :class="{ 'is-active': editor.isActive('underline') }"
+              title="Underline"
+              @click="editor.chain().focus().toggleUnderline().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+            </button>
+            <button
+              class="fadeIn"
+              :class="{ 'is-active': editor.isActive('ordered_list') }"
+              title="Ordered list"
+              @click="editor.chain().focus().toggleOrderedList().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
+            </button>
+            <button
+              class="fadeIn"
+              :class="{ 'is-active': editor.isActive('bullet_list') }"
+              title="Bullet list"
+              @click="editor.chain().focus().toggleBulletList().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+            </button>
+            <button
+              class="separated"
+              :class="{ 'is-active': editor.isActive('taskList') }"
+              title="Checklist"
+              @click="editor.chain().focus().toggleTaskList().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
+            </button>
+            <button
+              title="Horizontal line"
+              @click="editor.chain().focus().setHorizontalRule().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/horizontal-rule.svg')" />
+            </button>
+            <button
+              class="fadeIn"
+              :class="{ 'is-active': editor.isActive('link') }"
+              title="Hyperlink"
+              @click="editor.isActive('link') ? editor.chain().focus().unsetLink().run() : setLinkUrl()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+            </button>
+            <button
+              class="fadeIn"
+              title="Image"
+              @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
+            >
+              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+            </button>
+            <button
+              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+              class="fadeIn"
+              title="Template"
+              @click="showAddTemplate = !showAddTemplate, $parent.goToEvent(itemId, weekId)"
+            >
+              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+            </button>
+            <button
+              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+              class="fadeIn"
+              title="Track data"
+              @click="addTrackData()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/track-data.svg')" />
+            </button>
+            <button
+              class="fadeIn"
+              title="Undo"
+              @click="editor.chain().focus().undo().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
+            </button>
+            <button
+              class="fadeIn"
+              title="Redo"
+              @click="editor.chain().focus().redo().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/redo.svg')" />
+            </button>
+          </div>
         </div>
+        <editor-content
+          id="rich_editor"
+          :editor="editor"
+          :class="{ editorFocused: caretInEditor }"
+        />
       </div>
-      <editor-content
-        id="rich_editor"
-        :editor="editor"
-        :class="{ editorFocused: caretInEditor }"
-      />
-    </div>
+    </transition>
     <p
       v-else
       class="placeholder grey fadeIn"

@@ -119,9 +119,9 @@ hr {
             Plan Notes
           </h3>
           <div
-            v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''"
+            v-if="plan.notes && plan.notes !== '<p></p>'"
             class="show_html fadeIn"
-            v-html="update_html(plan.notes, true)"
+            v-html="updateHTML(plan.notes, true)"
           />
           <p
             v-else-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
@@ -197,7 +197,7 @@ hr {
                 <span class="text--tiny">{{ session.date }}</span>
               </div>
             </div>
-            <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
+            <div class="show_html fadeIn" v-html="updateHTML(session.notes, true)" />
             <div :key="check">
               <button
                 v-if="session.checked === 1 && !feedbackId"

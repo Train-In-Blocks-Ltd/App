@@ -99,7 +99,7 @@ Vue.mixin({
 
     // HTML
 
-    update_html (html, rmBrackets) {
+    updateHTML (html, rmBrackets) {
       if (html === null) {
         return html
       }
