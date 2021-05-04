@@ -69,8 +69,15 @@
       >
         Cancel
       </button>
-      <button type="submit">
+      <button v-if="!simpleProgress" type="submit">
         Next
+      </button>
+      <button
+        v-else
+        type="button"
+        @click.prevent="progressComplete()"
+      >
+        Copy across
       </button>
     </form>
     <div v-else-if=" progressPage === 1">
@@ -229,16 +236,19 @@ export default {
       const START_WEEK = this.currentWeek
       for (let weekCount = this.currentWeek + 1; weekCount <= this.progressTarget; weekCount++) {
         PROGRESS_SESSIONS.forEach((session) => {
-          this.$parent.add_session({
-            programmeId: parseInt(this.$route.params.id),
+          this.$parent.addSession({
+            clientId: this.$route.params.client_id,
+            planId: this.$route.params.id,
             sessionName: session.name,
-            sessionDate: this.add_days(session.date, this.daysBetweenEachSession * (weekCount - START_WEEK)),
+            sessionDate: this.addDays(session.date, this.daysBetweenEachSession * (weekCount - START_WEEK)),
             sessionNotes: this.simpleProgress ? session.notes : this.progress_process(session.id, session.notes, weekCount - START_WEEK),
             sessionWeek: weekCount
           }, 'progress')
         })
       }
-      this.$parent.updatePlan()
+      this.$parent.currentWeek = this.progressTarget
+      this.progressTarget = this.maxWeek
+      this.daysBetweenEachSession = 7
       this.$parent.deselectAll()
       this.$ga.event('Session', 'progress')
       this.$store.dispatch('endLoading')

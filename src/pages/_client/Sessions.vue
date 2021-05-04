@@ -369,7 +369,7 @@ input.session-date {
     <form
       v-if="showDuplicate"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="duplicate_plan(duplicateClientID), showDuplicate = false, willBodyScroll(true)"
+      @submit.prevent="duplicatePlan(duplicateClientID), showDuplicate = false, willBodyScroll(true)"
     >
       <h3>
         Create a similar plan
@@ -955,13 +955,16 @@ export default {
 
     duplicate () {
       const TO_DUPLICATE = []
-      const SESSIONS = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions
+      const CLIENT_ID = this.$route.params.client_id
+      const PLAN_ID = this.$route.params.id
+      const SESSIONS = this.$store.getters.helper('match_plan', CLIENT_ID, PLAN_ID).sessions
       this.selectedSessions.forEach((sessionId) => {
         TO_DUPLICATE.push(SESSIONS.find(session => session.id === sessionId))
       })
       TO_DUPLICATE.forEach((session) => {
         this.addSession({
-          planId: parseInt(this.$route.params.id),
+          clientId: CLIENT_ID,
+          planId: PLAN_ID,
           sessionName: `Copy of ${session.name}`,
           sessionDate: session.date,
           sessionNotes: session.notes,
@@ -997,14 +1000,16 @@ export default {
             planId: this.$route.params.id,
             sessionId: session.id,
             attr: 'date',
-            data: this.add_days(session.date, parseInt(this.shiftDays))
+            data: this.addDays(session.date, parseInt(this.shiftDays))
           })
           this.updateSession(session.id)
         }
       })
-      this.$ga.event('Session', 'shift')
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
+      this.shiftDays = 1
       this.deselectAll()
+      this.$ga.event('Session', 'shift')
+      this.$store.dispatch('endLoading')
     },
     moveToWeek () {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
@@ -1022,6 +1027,7 @@ export default {
       })
       this.currentWeek = parseInt(this.moveTarget)
       this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session', 'Your changes have been saved')
+      this.moveTarget = 1
       this.deselectAll()
       this.$ga.event('Session', 'move')
       this.$store.dispatch('endLoading')
@@ -1230,7 +1236,7 @@ export default {
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
       }
-      this.$router.push({ path: `/client/${clientId}/` })
+      // this.$router.push({ path: `/client/${clientId}/` })
       this.$ga.event('Plan', 'duplicate')
       this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
     },

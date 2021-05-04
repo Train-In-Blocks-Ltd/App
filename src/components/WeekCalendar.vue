@@ -249,8 +249,8 @@ export default {
       this.thisWeek.push(CURRENT_MONDAY)
       for (let i = 1; i < 7; i++) {
         this.thisWeek.push({
-          date: this.add_days(this.thisWeek[0].date, i),
-          date_split: this.add_days(this.thisWeek[0].date, i).split('-'),
+          date: this.addDays(this.thisWeek[0].date, i),
+          date_split: this.addDays(this.thisWeek[0].date, i).split('-'),
           events: []
         })
       }
@@ -258,7 +258,7 @@ export default {
         this.appendEvents()
       }, 100)
     },
-    add_days (date, days) {
+    addDays (date, days) {
       const DATE_CLASS = new Date(date)
       DATE_CLASS.setDate(DATE_CLASS.getDate() + days)
       const YEAR = DATE_CLASS.getFullYear()

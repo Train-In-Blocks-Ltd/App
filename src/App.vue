@@ -747,12 +747,6 @@ export default {
         data: 'standalone'
       })
     }
-    if (this.claims.user_type === ('Trainer' || 'Admin')) {
-      this.$store.commit('setData', {
-        attr: 'isTrainer',
-        data: true
-      })
-    }
     this.$axios.interceptors.request.use((config) => {
       if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
         SELF.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
@@ -820,6 +814,12 @@ export default {
         data: localStorage.getItem('claims') ? JSON.parse(localStorage.getItem('claims')) : this.$auth.getUser()
       })
       const CLAIMS = this.$store.state.claims
+      if (CLAIMS.user_type === 'Trainer' || CLAIMS.user_type === 'Admin') {
+        this.$store.commit('setData', {
+          attr: 'isTrainer',
+          data: true
+        })
+      }
       if (CLAIMS) {
         if (!CLAIMS.ga || !CLAIMS) {
           this.$store.commit('setData', {
