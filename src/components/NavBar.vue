@@ -209,7 +209,7 @@ export default {
     // Auth
     async logout () {
       await this.$parent.$auth.signOut()
-      await this.$parent.is_authenticated()
+      await this.$parent.isAuthenticated()
       localStorage.clear()
       localStorage.setItem('versionBuild', this.versionBuild)
       const COOKIES = document.cookie.split(';')

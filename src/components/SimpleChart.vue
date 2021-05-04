@@ -176,17 +176,17 @@ export default {
   },
   watch: {
     dataPoints () {
-      this.process_and_plot()
+      this.processAndPlot()
     },
     chartType () {
-      this.process_and_plot()
+      this.processAndPlot()
     },
     reset () {
       this.focusText = 'Select a point'
     }
   },
   mounted () {
-    this.process_and_plot()
+    this.processAndPlot()
   },
   methods: {
 
@@ -202,7 +202,7 @@ export default {
     select_point (d1, d2, d3) {
       this.focusText = [d1, d2, d3]
     },
-    process_and_plot () {
+    processAndPlot () {
       class DataProcessor {
         constructor (yDataset, xDataset, pointLabels, outputType) {
           this.yDataset = yDataset

@@ -56,7 +56,7 @@ img {
       </div>
     </div>
     <br>
-    <button class="red_button" @click="$parent.isWhatsNewOpen = false, willBodyScroll(true), update_version()">
+    <button class="red_button" @click="$parent.isWhatsNewOpen = false, willBodyScroll(true), updateVersion()">
       Close
     </button>
   </div>
@@ -77,7 +77,7 @@ export default {
     }
   },
   methods: {
-    update_version () {
+    updateVersion () {
       localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)
       this.$parent.$parent.newBuild = false
     }

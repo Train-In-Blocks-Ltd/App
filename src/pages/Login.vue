@@ -297,7 +297,7 @@ export default {
     }
   },
   async beforeDestroy () {
-    await this.$parent.is_authenticated()
+    await this.$parent.isAuthenticated()
     await this.$parent.setup()
     if (this.$ga && !this.$parent.authenticated) {
       this.$ga.event('Auth', 'login')

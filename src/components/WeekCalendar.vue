@@ -131,19 +131,19 @@
         <inline-svg
           :src="require('../assets/svg/arrow-left.svg')"
           class="prev_week cursor no_fill"
-          @click="weekDiff--, get_week()"
+          @click="weekDiff--, getWeek()"
         />
         <p
           :class="{ disabled: weekDiff === 0 }"
           class="today"
-          @click="weekDiff = 0, get_week()"
+          @click="weekDiff = 0, getWeek()"
         >
           Today
         </p>
         <inline-svg
           :src="require('../assets/svg/arrow-right.svg')"
           class="next_week cursor no_fill"
-          @click="weekDiff++, get_week()"
+          @click="weekDiff++, getWeek()"
         />
       </div>
     </div>
@@ -203,20 +203,20 @@ export default {
   },
   watch: {
     events () {
-      this.get_week()
+      this.getWeek()
     },
     forceUpdate () {
-      this.get_week()
+      this.getWeek()
     }
   },
   created () {
-    this.get_week()
+    this.getWeek()
   },
   methods: {
 
     // EVENTS
 
-    append_events () {
+    appendEvents () {
       this.thisWeek.forEach((day) => {
         this.events.forEach((event) => {
           if (day.date === event.date) {
@@ -232,7 +232,7 @@ export default {
       const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
       return DAYS[date]
     },
-    get_week () {
+    getWeek () {
       this.thisWeek = []
       const DATE_CLASS = new Date()
       const DAY = DATE_CLASS.getDay()
@@ -256,7 +256,7 @@ export default {
         })
       }
       setTimeout(() => {
-        this.append_events()
+        this.appendEvents()
       }, 100)
     },
     add_days (date, days) {

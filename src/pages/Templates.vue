@@ -234,7 +234,7 @@ export default {
     resolve_template_multiselect (res) {
       switch (res) {
         case 'Delete':
-          this.delete_multi_templates()
+          this.deleteMultiTemplates()
           break
         case 'Deselect':
           this.deselectAll()
@@ -270,7 +270,7 @@ export default {
           break
       }
     },
-    check_for_new () {
+    checkForNew () {
       this.expandedTemplates = []
       this.templates.forEach((template) => {
         if (template.template === null || template.template === '<p><br></p>') {
@@ -313,7 +313,7 @@ export default {
       })
       this.selectedTemplates = []
     },
-    async delete_multi_templates () {
+    async deleteMultiTemplates () {
       if (this.selectedTemplates.length !== 0) {
         if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete all the selected templates?', 'We will remove these templates from our database and it won\'t be recoverable.')) {
           this.selectedTemplates.forEach((templateId) => {
@@ -330,7 +330,7 @@ export default {
     async createTemplate () {
       try {
         await this.$store.dispatch('newTemplate')
-        this.check_for_new()
+        this.checkForNew()
         this.helper('new')
       } catch (e) {
         this.$parent.resolve_error(e)

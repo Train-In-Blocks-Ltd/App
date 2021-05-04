@@ -420,278 +420,271 @@ input.session-date {
       :show-brackets="true"
       @close="previewDesc = null, previewHTML = null"
     />
-    <!-- Loop through plans and v-if plan matches route so that plan data object is available throughout -->
-    <div
-      v-for="(plan, index) in clientDetails.plans"
-      :key="index"
-    >
-      <div v-if="plan.id == $route.params.id">
-        <div class="client_plan_top_grid">
-          <input
-            v-model="plan.name"
-            class="allow_text_overflow"
-            aria-label="Plan name"
-            type="text"
-            name="name"
-            :disabled="silentLoading"
-            @blur="updatePlan()"
-          >
-          <div class="wrapper--progress-bar">
-            <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: noSessions }">
-              <p v-if="!noSessions" class="grey">
-                Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
-              </p>
-              <p v-if="noSessions" class="grey">
-                Add some sessions to see programme adherence here...
-              </p>
-            </div>
-          </div>
-          <div class="plan_options">
-            <router-link
-              :to="`/client/${$route.params.client_id}/`"
-              class="a_link"
-              href="javascript:void(0)"
-            >
-              <inline-svg id="back" :src="require('../../assets/svg/arrow-left.svg')" />
-              Back to profile
-            </router-link>
-            <a
-              class="a_link"
-              href="javascript:void(0)"
-              @click="showDuplicate = true, willBodyScroll(false)"
-            >
-              <inline-svg :src="require('../../assets/svg/copy.svg')" />
-              Duplicate plan
-            </a>
-            <a
-              class="a_link text--red"
-              href="javascript:void(0)"
-              @click="deletePlan()"
-            >
-              <inline-svg :src="require('../../assets/svg/bin.svg')" />
-              Delete plan
-            </a>
+    <div>
+      <div class="client_plan_top_grid">
+        <input
+          v-model="plan.name"
+          class="allow_text_overflow"
+          aria-label="Plan name"
+          type="text"
+          name="name"
+          :disabled="silentLoading"
+          @blur="updatePlan()"
+        >
+        <div class="wrapper--progress-bar">
+          <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: noSessions }">
+            <p v-if="!noSessions" class="grey">
+              Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
+            </p>
+            <p v-if="noSessions" class="grey">
+              Add some sessions to see programme adherence here...
+            </p>
           </div>
         </div>
-        <div class="plan_grid">
-          <div class="calendar">
-            <div
-              id="plan_notes"
-              class="editor_object_standard"
-            >
-              <h3>
-                Plan Notes
-              </h3>
-              <rich-editor
-                v-model="plan.notes"
-                :item-id="'plan_notes'"
-                :editing="editSession"
-                :empty-placeholder="'What do you want to achieve in this plan?'"
-                :force-stop="forceStop"
-                @on-edit-change="resolvePlanInfoEditor"
-              />
-            </div>
-            <div class="wrapper--calendar">
-              <a
-                class="a_link switch_cal"
-                href="javascript:void(0)"
-                @click="showMonthlyCal = !showMonthlyCal"
-              >
-                <inline-svg :src="require('../../assets/svg/calendar.svg')" />
-                Switch to {{ !showMonthlyCal ? 'month' : 'week' }} view
-              </a>
-              <week-calendar
-                v-if="!showMonthlyCal"
-                :events="sessionDates"
-                :force-update="forceUpdate"
-                :is-trainer="true"
-                class="fadeIn"
-              />
-              <month-calendar
-                v-else
-                :events="sessionDates"
-                :force-update="forceUpdate"
-                :is-trainer="true"
-                class="fadeIn"
-              />
-            </div>
+        <div class="plan_options">
+          <router-link
+            :to="`/client/${$route.params.client_id}/`"
+            class="a_link"
+            href="javascript:void(0)"
+          >
+            <inline-svg id="back" :src="require('../../assets/svg/arrow-left.svg')" />
+            Back to profile
+          </router-link>
+          <a
+            class="a_link"
+            href="javascript:void(0)"
+            @click="showDuplicate = true, willBodyScroll(false)"
+          >
+            <inline-svg :src="require('../../assets/svg/copy.svg')" />
+            Duplicate plan
+          </a>
+          <a
+            class="a_link text--red"
+            href="javascript:void(0)"
+            @click="deletePlan()"
+          >
+            <inline-svg :src="require('../../assets/svg/bin.svg')" />
+            Delete plan
+          </a>
+        </div>
+      </div>
+      <div class="plan_grid">
+        <div class="calendar">
+          <div
+            id="plan_notes"
+            class="editor_object_standard"
+          >
+            <h3>
+              Plan Notes
+            </h3>
+            <rich-editor
+              v-model="plan.notes"
+              :item-id="'plan_notes'"
+              :editing="editSession"
+              :empty-placeholder="'What do you want to achieve in this plan?'"
+              :force-stop="forceStop"
+              @on-edit-change="resolvePlanInfoEditor"
+            />
           </div>
-          <div class="wrapper-plan">
-            <div class="plan_table">
-              <div class="plan_table__header">
-                <h3>
-                  Microcycles
-                </h3>
-                <div class="wrapper-duration">
-                  <label for="duration">Duration: </label>
-                  <input
-                    id="duration"
-                    v-model="plan.duration"
-                    type="number"
-                    name="duration"
-                    inputmode="decimal"
-                    min="1"
-                    @change="updatePlan(), maxWeek = plan.duration"
-                  >
-                </div>
+          <div class="wrapper--calendar">
+            <a
+              class="a_link switch_cal"
+              href="javascript:void(0)"
+              @click="showMonthlyCal = !showMonthlyCal"
+            >
+              <inline-svg :src="require('../../assets/svg/calendar.svg')" />
+              Switch to {{ !showMonthlyCal ? 'month' : 'week' }} view
+            </a>
+            <week-calendar
+              v-if="!showMonthlyCal"
+              :events="sessionDates"
+              :force-update="forceUpdate"
+              :is-trainer="true"
+              class="fadeIn"
+            />
+            <month-calendar
+              v-else
+              :events="sessionDates"
+              :force-update="forceUpdate"
+              :is-trainer="true"
+              class="fadeIn"
+            />
+          </div>
+        </div>
+        <div class="wrapper-plan">
+          <div class="plan_table">
+            <div class="plan_table__header">
+              <h3>
+                Microcycles
+              </h3>
+              <div class="wrapper-duration">
+                <label for="duration">Duration: </label>
+                <input
+                  id="duration"
+                  v-model="plan.duration"
+                  type="number"
+                  name="duration"
+                  inputmode="decimal"
+                  min="1"
+                  @change="updatePlan(), maxWeek = plan.duration"
+                >
               </div>
-              <div class="plan_table--container">
-                <div class="plan_table--container--plan_duration_container">
-                  <div
-                    v-for="item in planDuration(plan.duration)"
-                    :key="item"
-                    class="container--week"
-                    @click="changeWeek(item)"
-                  >
-                    <div :class="{ weekActive: item === currentWeek }" class="week">
-                      <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color" />
-                      <div class="week__number">
-                        {{ item }}
-                      </div>
+            </div>
+            <div class="plan_table--container">
+              <div class="plan_table--container--plan_duration_container">
+                <div
+                  v-for="item in planDuration(plan.duration)"
+                  :key="item"
+                  class="container--week"
+                  @click="changeWeek(item)"
+                >
+                  <div :class="{ weekActive: item === currentWeek }" class="week">
+                    <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color" />
+                    <div class="week__number">
+                      {{ item }}
                     </div>
                   </div>
                 </div>
               </div>
-            </div> <!-- plan_table -->
-            <div class="sessions">
-              <div class="session--header">
-                <div class="session--header__left">
-                  <div class="session--header__left__top">
-                    <div
-                      :style="{ backgroundColor: weekColor.backgroundColor[currentWeek - 1] }"
-                      :class="{ noColor: weekColor.backgroundColor[currentWeek - 1] === 'null' }"
-                      class="change_week_color"
-                      @click="editingWeekColor = !editingWeekColor"
-                    />
-                    <inline-svg
-                      id="info"
-                      :src="require('../../assets/svg/info.svg')"
-                      title="Info"
-                      @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', willBodyScroll(false)"
-                    />
-                  </div>
-                  <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
-                </div>
-                <div>
-                  <button class="button--new-session" @click="createNewSession()">
-                    New session
-                  </button>
-                </div>
-              </div>
-              <p v-if="!loading && (noSessions || weekIsEmpty)" class="text--holder text--small grey">
-                No sessions created yet
-              </p>
-              <div v-if="!loading">
-                <div v-if="plan.sessions" class="container--sessions_header">
-                  <a
-                    v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
-                    href="javascript:void(0)"
-                    class="a_link"
-                    @click="selectAll('week')"
-                  >
-                    Select this microcycle
-                  </a>
-                  <a
-                    v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
-                    href="javascript:void(0)"
-                    class="a_link"
-                    @click="selectAll('all')"
-                  >
-                    Select all
-                  </a>
-                  <a
-                    v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty"
-                    href="javascript:void(0)"
-                    class="a_link"
-                    @click="expandAll(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"
-                  >
-                    {{ expandedSessions.length !== 0 ? 'Collapse' : 'Expand' }} all
-                  </a>
-                </div>
-                <!-- New session -->
-                <div v-if="!noSessions" class="container--sessions">
-                  <!-- Loop through sessions -->
+            </div>
+          </div> <!-- plan_table -->
+          <div class="sessions">
+            <div class="session--header">
+              <div class="session--header__left">
+                <div class="session--header__left__top">
                   <div
-                    v-for="(session, indexed) in plan.sessions"
-                    v-show="session.week_id === currentWeek"
-                    :id="'session-' + session.id"
-                    :key="indexed"
-                    class="editor_object_complex fadeIn"
-                  >
-                    <div class="session_header">
-                      <div class="right_margin">
-                        <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" class="text--tiny">{{ day(session.date) }}</span>
-                        <span v-if="session.id !== editSession" class="text--tiny">{{ session.date }}</span><br v-if="session.id !== editSession">
-                        <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--tiny">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
-                        <input
-                          v-if="session.id === editSession"
-                          v-model="session.name"
-                          class="session-name small_border_radius"
-                          type="text"
-                          name="session-name"
-                          pattern="[^\/]"
+                    :style="{ backgroundColor: weekColor.backgroundColor[currentWeek - 1] }"
+                    :class="{ noColor: weekColor.backgroundColor[currentWeek - 1] === 'null' }"
+                    class="change_week_color"
+                    @click="editingWeekColor = !editingWeekColor"
+                  />
+                  <inline-svg
+                    id="info"
+                    :src="require('../../assets/svg/info.svg')"
+                    title="Info"
+                    @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', willBodyScroll(false)"
+                  />
+                </div>
+                <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
+              </div>
+              <div>
+                <button class="button--new-session" @click="createNewSession()">
+                  New session
+                </button>
+              </div>
+            </div>
+            <p v-if="!loading && (noSessions || weekIsEmpty)" class="text--holder text--small grey">
+              No sessions created yet
+            </p>
+            <div v-if="!loading">
+              <div v-if="plan.sessions" class="container--sessions_header">
+                <a
+                  v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                  href="javascript:void(0)"
+                  class="a_link"
+                  @click="selectAll('week')"
+                >
+                  Select this microcycle
+                </a>
+                <a
+                  v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                  href="javascript:void(0)"
+                  class="a_link"
+                  @click="selectAll('all')"
+                >
+                  Select all
+                </a>
+                <a
+                  v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty"
+                  href="javascript:void(0)"
+                  class="a_link"
+                  @click="expandAll(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"
+                >
+                  {{ expandedSessions.length !== 0 ? 'Collapse' : 'Expand' }} all
+                </a>
+              </div>
+              <!-- New session -->
+              <div v-if="!noSessions" class="container--sessions">
+                <!-- Loop through sessions -->
+                <div
+                  v-for="(session, indexed) in plan.sessions"
+                  v-show="session.week_id === currentWeek"
+                  :id="'session-' + session.id"
+                  :key="indexed"
+                  class="editor_object_complex fadeIn"
+                >
+                  <div class="session_header">
+                    <div class="right_margin">
+                      <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
+                      <span v-if="session.id !== editSession" class="text--tiny">{{ day(session.date) }}</span>
+                      <span v-if="session.id !== editSession" class="text--tiny">{{ session.date }}</span><br v-if="session.id !== editSession">
+                      <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--tiny">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
+                      <input
+                        v-if="session.id === editSession"
+                        v-model="session.name"
+                        class="session-name small_border_radius"
+                        type="text"
+                        name="session-name"
+                        pattern="[^\/]"
+                      >
+                      <input
+                        v-if="session.id === editSession"
+                        v-model="session.date"
+                        class="session-date small_border_radius"
+                        type="date"
+                        name="session-date"
+                      >
+                    </div>
+                    <div class="header_options">
+                      <div class="slot_1">
+                        <button
+                          v-if="session.feedback !== '' && session.feedback !== null"
+                          class="feedback_button"
+                          @click="previewHTML = session.feedback, previewDesc = `${session.name} on ${session.date}`, willBodyScroll(false)"
                         >
-                        <input
-                          v-if="session.id === editSession"
-                          v-model="session.date"
-                          class="session-date small_border_radius"
-                          type="date"
-                          name="session-date"
-                        >
-                      </div>
-                      <div class="header_options">
-                        <div class="slot_1">
-                          <button
-                            v-if="session.feedback !== '' && session.feedback !== null"
-                            class="feedback_button"
-                            @click="previewHTML = session.feedback, previewDesc = `${session.name} on ${session.date}`, willBodyScroll(false)"
-                          >
-                            Feedback
-                          </button>
-                          <checkbox
-                            :item-id="session.id"
-                            :type="'v1'"
-                            aria-label="Select this session"
-                          />
-                        </div>
-                        <inline-svg
-                          v-show="!isEditingSession"
-                          id="expand"
-                          class="icon--expand"
-                          :class="{ expanded: expandedSessions.includes(session.id) }"
-                          :src="require('../../assets/svg/expand.svg')"
-                          title="Info"
-                          @click="toggleExpandedSessions(session.id)"
+                          Feedback
+                        </button>
+                        <checkbox
+                          :item-id="session.id"
+                          :type="'v1'"
+                          aria-label="Select this session"
                         />
                       </div>
+                      <inline-svg
+                        v-show="!isEditingSession"
+                        id="expand"
+                        class="icon--expand"
+                        :class="{ expanded: expandedSessions.includes(session.id) }"
+                        :src="require('../../assets/svg/expand.svg')"
+                        title="Info"
+                        @click="toggleExpandedSessions(session.id)"
+                      />
                     </div>
-                    <rich-editor
-                      v-show="expandedSessions.includes(session.id)"
-                      v-model="session.notes"
-                      :item-id="session.id"
-                      :week-id="currentWeek"
-                      :editing="editSession"
-                      :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
-                      :data-for-templates="$parent.$parent.templates"
-                      :force-stop="forceStop"
-                      @on-edit-change="resolveSessionEditor"
-                    />
                   </div>
+                  <rich-editor
+                    v-show="expandedSessions.includes(session.id)"
+                    v-model="session.notes"
+                    :item-id="session.id"
+                    :week-id="currentWeek"
+                    :editing="editSession"
+                    :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
+                    :data-for-templates="$parent.$parent.templates"
+                    :force-stop="forceStop"
+                    @on-edit-change="resolveSessionEditor"
+                  />
                 </div>
               </div>
-              <skeleton v-else type="session" />
-            </div><!-- sessions -->
-          </div>
-          <statistics :plan="plan" :show="isStatsOpen" />
-        </div> <!-- plan_grid -->
-      </div>
+            </div>
+            <skeleton v-else type="session" />
+          </div><!-- sessions -->
+        </div>
+        <statistics :plan="plan" :show="isStatsOpen" />
+      </div> <!-- plan_grid -->
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true */ '../../components/Checkbox')
 const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/WeekCalendar')
 const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
@@ -803,13 +796,26 @@ export default {
       maxWeek: 2
     }
   },
-  computed: mapState([
-    'loading',
-    'silentLoading',
-    'dontLeave',
-    'clients',
-    'clientDetails'
-  ]),
+  computed: {
+    loading () {
+      return this.$store.state.loading
+    },
+    silentLoading () {
+      return this.$store.state.silentLoading
+    },
+    dontLeave () {
+      return this.$store.state.dontLeave
+    },
+    plan () {
+      return this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+    },
+    clients () {
+      return this.$store.state.clients
+    },
+    clientDetails () {
+      return this.$store.state.clientDetails
+    }
+  },
   watch: {
     editingWeekColor () {
       this.updater()

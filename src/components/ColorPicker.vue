@@ -58,7 +58,7 @@ export default {
   watch: {
     selectedColor () {
       this.$emit('update:injectedColor', this.selectedColor)
-      this.$parent.update_session_color()
+      this.$parent.updateSessionColor()
     }
   }
 }

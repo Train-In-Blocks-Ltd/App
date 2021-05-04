@@ -108,19 +108,19 @@
         <inline-svg
           :src="require('../assets/svg/arrow-left.svg')"
           class="prev_month cursor no_fill"
-          @click="monthDiff--, get_month()"
+          @click="monthDiff--, getMonth()"
         />
         <p
           :class="{ disabled: monthDiff === 1 }"
           class="today"
-          @click="monthDiff = 1, get_month()"
+          @click="monthDiff = 1, getMonth()"
         >
           Today
         </p>
         <inline-svg
           :src="require('../assets/svg/arrow-right.svg')"
           class="next_month cursor no_fill"
-          @click="monthDiff++, get_month()"
+          @click="monthDiff++, getMonth()"
         />
       </div>
     </div>
@@ -187,21 +187,21 @@ export default {
   },
   watch: {
     events () {
-      this.get_month()
+      this.getMonth()
     },
     forceUpdate () {
-      this.get_month()
+      this.getMonth()
     }
   },
   mounted () {
-    this.get_month()
+    this.getMonth()
   },
   methods: {
-    get_month_number (month) {
+    getMonthNumber (month) {
       const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       return MONTHS.indexOf(month) + 1
     },
-    get_month () {
+    getMonth () {
       const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       const TODAY = new Date()
       const LAST_DAY_OF_MONTH = new Date(TODAY.getFullYear(), TODAY.getMonth() + this.monthDiff, '0')
@@ -211,7 +211,7 @@ export default {
       const MONTH_END = LAST_DAY_OF_MONTH.getDate()
       let date
       for (date = 1; date <= MONTH_END; date++) {
-        const WEEKDAY = new Date(`${this.currentYear}-${this.get_month_number(this.currentMonth).toLocaleString('en-US', { minimumIntegerDigits: 2 })}-${date.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`).getDay()
+        const WEEKDAY = new Date(`${this.currentYear}-${this.getMonthNumber(this.currentMonth).toLocaleString('en-US', { minimumIntegerDigits: 2 })}-${date.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`).getDay()
         if (date === 1 && WEEKDAY !== 1) {
           let holder
           if (WEEKDAY === 0) {
@@ -231,7 +231,7 @@ export default {
             DATAPACKETS.push(event)
           }
         })
-        this.month.push([DATAPACKETS, date, `${this.currentYear}-${String(this.get_month_number(this.currentMonth)).padStart(2, '0')}-${String(date).padStart(2, '0')}`])
+        this.month.push([DATAPACKETS, date, `${this.currentYear}-${String(this.getMonthNumber(this.currentMonth)).padStart(2, '0')}-${String(date).padStart(2, '0')}`])
       }
     }
   }

@@ -261,7 +261,7 @@ div#rich_editor.editorFocused {
           aria-label="Search templates"
           rel="search"
           placeholder="Search templates"
-          @input="is_search_empty()"
+          @input="isSearchEmpty()"
         >
         <h3 v-show="search === ''">
           System templates
@@ -394,7 +394,7 @@ div#rich_editor.editorFocused {
             v-if="dataForTemplates !== undefined && dataForTemplates !== null"
             class="fadeIn"
             title="Track data"
-            @click="add_track_data()"
+            @click="addTrackData()"
           >
             <inline-svg :src="require('../assets/svg/editor/track-data.svg')" />
           </button>
@@ -536,7 +536,7 @@ export default {
   methods: {
 
     // Protocol
-    add_track_data () {
+    addTrackData () {
       this.editor.commands.insertContent('<div data-type="protocol-item"></div>')
     },
 
@@ -552,7 +552,7 @@ export default {
 
     // IMG
 
-    add_img () {
+    addImg () {
       const FILE = document.getElementById('img_uploader').files[0]
       const READER = new FileReader()
       READER.addEventListener('load', () => {
@@ -580,7 +580,7 @@ export default {
 
     // Misc.
 
-    is_search_empty () {
+    isSearchEmpty () {
       let showNoneMsg = true
       this.dataForTemplates.forEach((template) => {
         if (((template.name).toLowerCase()).startsWith(this.search.toLowerCase()) && this.search !== '') {

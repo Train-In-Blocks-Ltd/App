@@ -25,7 +25,7 @@
   <div>
     <form
       v-if="progressPage === 0"
-      @submit.prevent="progress_pull(), progressSection = 0, progressPage += 1"
+      @submit.prevent="progressPull(), progressSection = 0, progressPage += 1"
     >
       <h3>
         Copy across to different microcycles
@@ -134,7 +134,7 @@
     </div>
     <form
       v-else-if="progressPage === 2"
-      @submit.prevent="progress_complete(), $parent.showProgress = false, willBodyScroll(true)"
+      @submit.prevent="progressComplete(), $parent.showProgress = false, willBodyScroll(true)"
     >
       <h3>
         You're all set
@@ -191,7 +191,7 @@ export default {
     })
   },
   methods: {
-    progress_pull () {
+    progressPull () {
       this.progressDataInputs = []
       this.sessionsToProgress.forEach((sessionId, sessionIdx) => {
         const SESSION = this.planData.sessions.find(session => session.id === sessionId)
@@ -221,7 +221,7 @@ export default {
       })
       return sessionNotes
     },
-    progress_complete () {
+    progressComplete () {
       const PROGRESS_SESSIONS = []
       this.sessionsToProgress.forEach((sessionId) => {
         PROGRESS_SESSIONS.push(this.planData.sessions.find(session => session.id === sessionId))
@@ -238,7 +238,7 @@ export default {
           }, 'progress')
         })
       }
-      this.$parent.update_plan()
+      this.$parent.updatePlan()
       this.$parent.deselectAll()
       this.$ga.event('Session', 'progress')
       this.$store.dispatch('endLoading')

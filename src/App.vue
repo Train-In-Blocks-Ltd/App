@@ -675,12 +675,12 @@ export default {
   ]),
   watch: {
     $route (to, from) {
-      this.is_authenticated()
+      this.isAuthenticated()
     },
     async connected () {
       if (this.connected === true) {
-        await this.clients_f()
-        await this.archive_f()
+        await this.$store.dispatch('clientsForceGet')
+        await this.$store.dispatch('archiveForceGet')
         this.setup()
       }
     },
@@ -703,7 +703,7 @@ export default {
     }
   },
   async created () {
-    this.is_authenticated()
+    this.isAuthenticated()
     this.willBodyScroll(false)
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
@@ -808,7 +808,7 @@ export default {
 
     // AUTH
 
-    async is_authenticated () {
+    async isAuthenticated () {
       this.authenticated = await this.$auth.isAuthenticated()
     },
     async setup () {
