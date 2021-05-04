@@ -203,13 +203,13 @@ export default {
     change_order (planOrder, direction) {
       switch (direction) {
         case 'next':
-          this.$store.commit('updatePlan', {
+          this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
             planId: this.clientDetails.plans[planOrder + 1].id,
             attr: 'ordered',
             data: planOrder
           })
-          this.$store.commit('updatePlan', {
+          this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
             planId: this.clientDetails.plans[planOrder].id,
             attr: 'ordered',
@@ -236,13 +236,13 @@ export default {
           })
           break
         case 'back':
-          this.$store.commit('updatePlan', {
+          this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
             planId: this.clientDetails.plans[planOrder - 1].id,
             attr: 'ordered',
             data: planOrder
           })
-          this.$store.commit('updatePlan', {
+          this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
             planId: this.clientDetails.plans[planOrder].id,
             attr: 'ordered',

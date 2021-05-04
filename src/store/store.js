@@ -80,7 +80,11 @@ export const store = new Vuex.Store({
         state.archive.noArchive = state.archive.clients.length === 0
       }
     },
-    updateClientPlan (state, payload) {
+    updateClient (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      CLIENT[payload.attr] = payload.data
+    },
+    updatePlanWhole (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       for (let plan of CLIENT.plans) {
         if (plan.id === parseInt(payload.planId)) {
@@ -89,11 +93,7 @@ export const store = new Vuex.Store({
         }
       }
     },
-    updateClient (state, payload) {
-      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-      CLIENT[payload.attr] = payload.data
-    },
-    updatePlan (state, payload) {
+    updatePlanAttr (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN[payload.attr] = payload.data
@@ -111,6 +111,7 @@ export const store = new Vuex.Store({
     },
 
     // Client user
+
     updateClientUserPlanSessions (state, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN[payload.attr] = payload.data
@@ -152,14 +153,12 @@ export const store = new Vuex.Store({
         data: false
       })
     },
-    async resolveError ({ dispatch, state }, msg) {
+    async resolveDeepError ({ dispatch, state }, msg) {
       if (state.claims.user_type !== 'Admin') {
-        await axios.post('/.netlify/functions/error',
-          {
-            msg,
-            claims: state.claims
-          }
-        )
+        await axios.post('/.netlify/functions/error', {
+          msg,
+          claims: state.claims
+        })
       }
       dispatch('endLoading')
       console.error(msg)
@@ -187,12 +186,12 @@ export const store = new Vuex.Store({
         data: SORTED_CLIENTS
       })
     },
-    async clientsForceGet ({ state }) {
+    async clientsForceGet ({ dispatch, state }) {
       try {
         const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}`)
         localStorage.setItem('clients', JSON.stringify(RESPONSE.data))
       } catch (e) {
-        console.error(e)
+        dispatch('resolveDeepError', e)
       }
     },
     async archiveToVue ({ dispatch, commit }) {
@@ -212,13 +211,37 @@ export const store = new Vuex.Store({
         })
       }
     },
-    async archiveForceGet ({ state }) {
+    async archiveForceGet ({ dispatch, state }) {
       try {
         const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}/archive`)
         localStorage.setItem('archive', JSON.stringify(RESPONSE.data))
       } catch (e) {
-        console.error(e)
+        dispatch('resolveDeepError', e)
       }
+    },
+    async updateClient ({ dispatch, commit }, payload) {
+      commit('setData', {
+        attr: 'silentLoading',
+        data: true
+      })
+      commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
+      await axios.post('https://api.traininblocks.com/v2/clients',
+        {
+          id: payload.client_id,
+          name: payload.name,
+          email: payload.email,
+          number: payload.number,
+          notifications: payload.notifications,
+          notes: payload.notes
+        }
+      )
+      // Get the client information again as we have just updated the client
+      await dispatch('clientsForceGet')
+      await dispatch('clientsToVue')
+      dispatch('endLoading')
     },
     async clientArchive ({ dispatch, commit, state }, payload) {
       commit('setData', {
@@ -286,30 +309,6 @@ export const store = new Vuex.Store({
       })
       await axios.delete(`https://api.traininblocks.com/v2/clients/${parseInt(clientId)}`)
       await dispatch('clientsAndArchiveHelper')
-      dispatch('endLoading')
-    },
-    async updateClient ({ dispatch, commit }, payload) {
-      commit('setData', {
-        attr: 'silentLoading',
-        data: true
-      })
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      await axios.post('https://api.traininblocks.com/v2/clients',
-        {
-          id: payload.client_id,
-          name: payload.name,
-          email: payload.email,
-          number: payload.number,
-          notifications: payload.notifications,
-          notes: payload.notes
-        }
-      )
-      // Get the client information again as we have just updated the client
-      await dispatch('clientsForceGet')
-      await dispatch('clientsToVue')
       dispatch('endLoading')
     },
 
@@ -397,6 +396,21 @@ export const store = new Vuex.Store({
         dispatch('resolveError', e)
       }
     },
+    async createPortfolio ({ dispatch, commit, state }) {
+      try {
+        await axios.put('https://api.traininblocks.com/v2/portfolio',
+          {
+            pt_id: state.claims.sub,
+            trainer_name: '',
+            business_name: '',
+            notes: ''
+          }
+        )
+        await dispatch('getPortfolio')
+      } catch (e) {
+        dispatch('resolveDeepError', e)
+      }
+    },
     async updatePortfolio ({ dispatch, commit, state }) {
       commit('setData', {
         attr: 'silentLoading',
@@ -415,21 +429,6 @@ export const store = new Vuex.Store({
       )
       await dispatch('getPortfolio')
       dispatch('endLoading')
-    },
-    async createPortfolio ({ dispatch, commit, state }) {
-      try {
-        await axios.put('https://api.traininblocks.com/v2/portfolio',
-          {
-            pt_id: state.claims.sub,
-            trainer_name: '',
-            business_name: '',
-            notes: ''
-          }
-        )
-        await dispatch('getPortfolio')
-      } catch (e) {
-        console.error(e)
-      }
     },
 
     // Account
@@ -552,7 +551,7 @@ export const store = new Vuex.Store({
         block_color: payload.planBlockColor,
         ordered: payload.planOrdered
       })
-      commit('updateClientPlan', {
+      commit('updatePlanWhole', {
         clientId: payload.clientId,
         planId: payload.planId,
         data: JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
