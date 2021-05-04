@@ -29,7 +29,7 @@ img {
 <template>
   <div class="bottom_margin">
     <h2>
-      {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}
+      {{ versionName }} {{ versionBuild }}
     </h2>
     <p class="text--small grey">
       Buffed editor, style, statistics, and predictions
@@ -63,6 +63,8 @@ img {
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
@@ -76,10 +78,17 @@ export default {
       ]
     }
   },
+  computed: mapState([
+    'versionName',
+    'versionBuild'
+  ]),
   methods: {
     updateVersion () {
-      localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)
-      this.$parent.$parent.newBuild = false
+      localStorage.setItem('versionBuild', this.versionBuild)
+      this.$store.commit('setData', {
+        attr: 'newBuild',
+        data: false
+      })
     }
   }
 }

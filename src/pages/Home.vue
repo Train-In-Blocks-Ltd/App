@@ -39,7 +39,7 @@
       </p>
       <span v-if="newBuild" class="notify_badge">New</span>
     </div>
-    <div v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'" class="tab_option icon_open_bottom tab_option_small" aria-label="Install App" @click="isInstallOpen = true, willBodyScroll(false)">
+    <div v-if="!isInstallOpen && pwa.displayMode === 'browser tab'" class="tab_option icon_open_bottom tab_option_small" aria-label="Install App" @click="isInstallOpen = true, willBodyScroll(false)">
       <inline-svg :src="require('../assets/svg/install-pwa.svg')" aria-label="Install App" />
       <p class="text">
         Install
@@ -113,7 +113,8 @@ export default {
     'newBuild',
     'clients',
     'noClients',
-    'loading'
+    'loading',
+    'pwa'
   ]),
   created () {
     this.$store.commit('setData', {

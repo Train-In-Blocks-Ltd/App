@@ -191,8 +191,7 @@
 export default {
   props: {
     events: Array,
-    forceUpdate: Number,
-    isTrainer: Boolean
+    forceUpdate: Number
   },
   data () {
     return {

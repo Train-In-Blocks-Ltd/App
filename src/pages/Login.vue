@@ -155,7 +155,7 @@ a:hover {
 </style>
 
 <template>
-  <div v-if="!$parent.authenticated" id="login">
+  <div v-if="!authenticated" id="login">
     <splash v-if="!splashed" />
     <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
     <div>
@@ -212,13 +212,14 @@ a:hover {
     <div class="version">
       <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />
       <p class="text--tiny">
-        <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
+        <b>{{ versionName }} {{ versionBuild }}</b>
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Splash from '../components/Splash'
 
 export default {
@@ -236,6 +237,11 @@ export default {
       success: null
     }
   },
+  computed: mapState([
+    'authenticated',
+    'versionName',
+    'versionBuild'
+  ]),
   async mounted () {
     const scopes = ['openid', 'profile', 'email']
     let OktaSignIn
@@ -299,7 +305,7 @@ export default {
   async beforeDestroy () {
     await this.$parent.isAuthenticated()
     await this.$parent.setup()
-    if (this.$ga && !this.$parent.authenticated) {
+    if (this.$ga && !this.authenticated) {
       this.$ga.event('Auth', 'login')
     }
   },

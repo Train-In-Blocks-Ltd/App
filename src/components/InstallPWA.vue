@@ -32,7 +32,7 @@
 
 <template>
   <div>
-    <div v-if="$parent.$parent.pwa.canInstall">
+    <div v-if="pwa.canInstall">
       <h2>
         Save the app to your home screen
       </h2>
@@ -40,10 +40,10 @@
         Access it quickly with a clearer interface
       </p>
     </div>
-    <h2 v-else-if="$parent.$parent.pwa.installed">
+    <h2 v-else-if="pwa.installed">
       You have the app saved to your mobile already!
     </h2>
-    <div v-else-if="!$parent.$parent.pwa.canInstall">
+    <div v-else-if="!pwa.canInstall">
       <h2>
         Save the app to your home screen
       </h2>
@@ -70,13 +70,13 @@
     </div>
     <div class="install_bottom_bar">
       <button
-        v-if="$parent.$parent.pwa.canInstall"
+        v-if="pwa.canInstall"
         @click="installPWA(), $parent.isInstallOpen = false, willBodyScroll(true)"
       >
         Install
       </button>
       <a
-        v-else-if="!$parent.$parent.pwa.canInstall && $parent.$parent.pwa.installed"
+        v-else-if="!pwa.canInstall && pwa.installed"
         href="https://app.traininblocks.com"
         target="_blank"
       >
@@ -94,19 +94,35 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
+  computed: mapState([
+    'pwa'
+  ]),
   methods: {
     installPWA () {
       // Show the install prompt
-      this.$parent.$parent.pwa.deferredPrompt.prompt()
+      this.pwa.deferredPrompt.prompt()
       // Wait for the user to respond to the prompt
-      this.$parent.$parent.pwa.deferredPrompt.userChoice.then((choiceResult) => {
+      this.pwa.deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
           // Hide the app provided install promotion
-          this.$parent.$parent.pwa.canInstall = false
-          this.$parent.$parent.pwa.displayMode = 'standalone'
+          this.$store.commit('setDataDeep', {
+            attrParent: 'pwa',
+            attrChild: 'canInstall',
+            data: false
+          })
+          this.$store.commit('setDataDeep', {
+            attrParent: 'pwa',
+            attrChild: 'displayMode',
+            data: 'standalone'
+          })
         } else {
-          this.$parent.$parent.pwa.canInstall = true
+          this.$store.commit('setDataDeep', {
+            attrParent: 'pwa',
+            attrChild: 'canInstall',
+            data: true
+          })
         }
       })
     }

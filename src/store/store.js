@@ -10,7 +10,6 @@ export const store = new Vuex.Store({
 
     // Auth
 
-    auth: null,
     authenticated: false,
     isTrainer: false,
     claims: {

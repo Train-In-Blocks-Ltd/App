@@ -165,9 +165,6 @@ export default {
   components: {
     PreviewModal
   },
-  props: {
-    isTrainer: Boolean
-  },
   data () {
     return {
       planDesc: null,
@@ -177,6 +174,9 @@ export default {
   computed: {
     clientDetails () {
       return this.$store.state[this.isTrainer ? 'clientDetails' : 'clientUser']
+    },
+    isTrainer () {
+      return this.$store.state.isTrainer
     }
   },
   methods: {

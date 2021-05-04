@@ -79,7 +79,7 @@ export default {
       this.$store.commit('setDataDeep', {
         attrParent: 'claims',
         attrChild: 'policy',
-        data: [this.name, this.today(), this.$parent.policyVersion]
+        data: [this.name, this.today(), this.$store.state.policyVersion]
       })
       this.$parent.saveClaims()
       this.$store.commit('setData', {

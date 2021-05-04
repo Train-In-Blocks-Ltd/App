@@ -211,7 +211,7 @@ export default {
       await this.$parent.$auth.signOut()
       await this.$parent.isAuthenticated()
       localStorage.clear()
-      localStorage.setItem('versionBuild', this.versionBuild)
+      localStorage.setItem('versionBuild', this.$store.state.versionBuild)
       const COOKIES = document.cookie.split(';')
       for (let i = 0; i < COOKIES.length; i++) {
         const COOKIE = COOKIES[i]

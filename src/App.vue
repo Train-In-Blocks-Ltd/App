@@ -598,7 +598,6 @@ option {
 </style>
 
 <template>
-  <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
     <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="top_banner fadeIn">
       <a href="https://traininblocks.com/#pricing" target="_blank" class="a_link text--tiny">
@@ -642,36 +641,12 @@ export default {
     NavBar,
     Policy
   },
-  data () {
-    return {
-
-      // USER
-
-      isTrainer: false,
-      clientUser: {
-        plans: null
-      },
-
-      // SYSTEM
-
-      policyVersion: '1.1',
-      versionName: 'Pegasus',
-      versionBuild: '3.2.5',
-      newBuild: false,
-      authenticated: false,
-      pwa: {
-        deferredPrompt: null,
-        displayMode: 'browser tab',
-        canInstall: false,
-        installed: null
-      },
-      connected: true
-    }
-  },
   computed: mapState([
+    'authenticated',
     'claims',
     'showEULA',
-    'clients'
+    'clients',
+    'connected'
   ]),
   watch: {
     $route (to, from) {
@@ -733,26 +708,50 @@ export default {
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
+
       // Stash the event so it can be triggered later.
-      SELF.pwa.deferredPrompt = e
+      SELF.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'deferredPrompt',
+        data: e
+      })
+
       // Update UI notify the user they can install the PWA
-      this.pwa.canInstall = true
+      SELF.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'canInstall',
+        data: true
+      })
     })
     if ('getInstalledRelatedApps' in navigator) {
-      const SELF = this
       const RELATED_APPS = await navigator.getInstalledRelatedApps()
       if (RELATED_APPS.length > 0) {
-        SELF.pwa.installed = true
+        this.$store.commit('setDataDeep', {
+          attrParent: 'pwa',
+          attrChild: 'installed',
+          data: true
+        })
       }
     }
     if (navigator.standalone) {
-      this.pwa.displayMode = 'standalone-ios'
+      this.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'displayMode',
+        data: 'standalone-ios'
+      })
     }
     if (window.matchMedia('(display-mode: standalone)').matches) {
-      this.pwa.displayMode = 'standalone'
+      this.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'displayMode',
+        data: 'standalone'
+      })
     }
     if (this.claims.user_type === ('Trainer' || 'Admin')) {
-      this.isTrainer = true
+      this.$store.commit('setData', {
+        attr: 'isTrainer',
+        data: true
+      })
     }
     this.$axios.interceptors.request.use((config) => {
       if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
@@ -809,7 +808,10 @@ export default {
     // AUTH
 
     async isAuthenticated () {
-      this.authenticated = await this.$auth.isAuthenticated()
+      this.$store.commit('setData', {
+        attr: 'authenticated',
+        data: await this.$auth.isAuthenticated()
+      })
     },
     async setup () {
       // Set claims

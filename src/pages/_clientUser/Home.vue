@@ -91,7 +91,7 @@ hr {
         </p>
       </div>
       <div
-        v-if="!isInstallOpen && $parent.pwa.displayMode === 'browser tab'"
+        v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
         :class="{ icon_open_bottom: portfolio && portfolio.notes !== '<p></p>' }"
         class="tab_option icon_open_middle tab_option_small"
         aria-label="Install App"
@@ -233,7 +233,8 @@ export default {
     'dontLeave',
     'clientUser',
     'claims',
-    'portfolio'
+    'portfolio',
+    'pwa'
   ]),
   async created () {
     this.$store.commit('setData', {
