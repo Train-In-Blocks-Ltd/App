@@ -165,55 +165,47 @@ export const store = new Vuex.Store({
 
     // Clients
 
-    async clientsAndArchiveHelper ({ dispatch }) {
-      await dispatch('archiveForceGet')
-      dispatch('archiveToVue')
-      await dispatch('clientsForceGet')
-      dispatch('clientsToVue')
+    async getClientsAndArchive ({ dispatch }) {
+      await dispatch('getClients', true)
+      await dispatch('getArchive', true)
     },
-    async clientsToVue ({ dispatch, commit }) {
-      if (!localStorage.getItem('clients')) {
-        await dispatch('clientsForceGet')
-      }
-      const SORTED_CLIENTS = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-        const NAME_A = a.name.toUpperCase()
-        const NAME_B = b.name.toUpperCase()
-        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
-      })
-      commit('setData', {
-        attr: 'clients',
-        data: SORTED_CLIENTS
-      })
-    },
-    async clientsForceGet ({ dispatch, state }) {
+    async getClients ({ dispatch, commit, state }, force) {
       try {
-        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}`)
-        localStorage.setItem('clients', JSON.stringify(RESPONSE.data))
-      } catch (e) {
-        dispatch('resolveDeepError', e)
-      }
-    },
-    async archiveToVue ({ dispatch, commit }) {
-      if (!localStorage.getItem('archive')) {
-        await dispatch('archiveForceGet')
-      }
-      if (JSON.parse(localStorage.getItem('archive')).length !== 0) {
-        const SORTED_ARCHIVE_CLIENTS = JSON.parse(localStorage.getItem('archive')).sort((a, b) => {
+        if (!localStorage.getItem('clients') || force) {
+          const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}`)
+          localStorage.setItem('clients', JSON.stringify(RESPONSE.data))
+        }
+        const SORTED_CLIENTS = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
           const NAME_A = a.name.toUpperCase()
           const NAME_B = b.name.toUpperCase()
           return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
         })
-        commit('setDataDeep', {
-          attrParent: 'archive',
-          attrChild: 'clients',
-          data: SORTED_ARCHIVE_CLIENTS
+        commit('setData', {
+          attr: 'clients',
+          data: SORTED_CLIENTS
         })
+      } catch (e) {
+        dispatch('resolveDeepError', e)
       }
     },
-    async archiveForceGet ({ dispatch, state }) {
+    async getArchive ({ dispatch, commit, state }, force) {
       try {
-        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}/archive`)
-        localStorage.setItem('archive', JSON.stringify(RESPONSE.data))
+        if (!localStorage.getItem('archive') || force) {
+          const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}/archive`)
+          localStorage.setItem('archive', JSON.stringify(RESPONSE.data))
+        }
+        if (JSON.parse(localStorage.getItem('archive')).length !== 0) {
+          const SORTED_ARCHIVE_CLIENTS = JSON.parse(localStorage.getItem('archive')).sort((a, b) => {
+            const NAME_A = a.name.toUpperCase()
+            const NAME_B = b.name.toUpperCase()
+            return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
+          })
+          commit('setDataDeep', {
+            attrParent: 'archive',
+            attrChild: 'clients',
+            data: SORTED_ARCHIVE_CLIENTS
+          })
+        }
       } catch (e) {
         dispatch('resolveDeepError', e)
       }
@@ -238,8 +230,7 @@ export const store = new Vuex.Store({
         }
       )
       // Get the client information again as we have just updated the client
-      await dispatch('clientsForceGet')
-      await dispatch('clientsToVue')
+      await dispatch('getClients', true)
       dispatch('endLoading')
     },
     async clientArchive ({ dispatch, commit, state }, payload) {
@@ -277,7 +268,7 @@ export const store = new Vuex.Store({
           }
         )
       }
-      await dispatch('clientsAndArchiveHelper')
+      await dispatch('getClientsAndArchive')
     },
     async clientUnarchive ({ dispatch, commit, state }, clientId) {
       commit('setData', {
@@ -298,7 +289,7 @@ export const store = new Vuex.Store({
         data: SORTED_CLIENTS
       })
       await axios.post(`https://api.traininblocks.com/v2/clients/unarchive/${clientId}`)
-      await dispatch('clientsAndArchiveHelper')
+      await dispatch('getClientsAndArchive')
       dispatch('endLoading')
     },
     async clientDelete ({ dispatch, commit }, clientId) {
@@ -307,7 +298,7 @@ export const store = new Vuex.Store({
         data: true
       })
       await axios.delete(`https://api.traininblocks.com/v2/clients/${parseInt(clientId)}`)
-      await dispatch('clientsAndArchiveHelper')
+      await dispatch('getClientsAndArchive')
       dispatch('endLoading')
     },
 
@@ -473,7 +464,7 @@ export const store = new Vuex.Store({
 
     // Plans
 
-    async getPlans ({ commit, state }, payload) {
+    async getPlans ({ dispatch, commit, state }, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       if (!CLIENT.plans || payload.force) {
         const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/plans/${CLIENT.client_id}`)
@@ -482,6 +473,15 @@ export const store = new Vuex.Store({
           attr: 'plans',
           data: RESPONSE.data.length === 0 ? false : RESPONSE.data
         })
+        if (CLIENT.plans !== false) {
+          CLIENT.plans.forEach((plan) => {
+            dispatch('getSessions', {
+              planId: plan.id,
+              clientId: CLIENT.client_id,
+              force: false
+            })
+          })
+        }
         localStorage.setItem('clients', JSON.stringify(state.clients))
       }
     },
@@ -504,7 +504,7 @@ export const store = new Vuex.Store({
         force: true
       })
     },
-    // (clientId, planName, planDuration, blockColor, planNotes, planSessions)
+    // payload => clientId, planId, planName, planDuration, blockColor, planNotes, planSessions
     async duplicatePlan ({ dispatch, commit, state }, payload) {
       let newPlanId
       commit('setData', {
@@ -516,7 +516,7 @@ export const store = new Vuex.Store({
         client_id: parseInt(payload.clientId),
         duration: payload.planDuration,
         block_color: payload.blockColor,
-        ordered: state.client_details.plans.length
+        ordered: state.clientDetails.plans.length
       }).then((response) => {
         newPlanId = response.data[0]['LAST_INSERT_ID()']
         const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
@@ -557,14 +557,12 @@ export const store = new Vuex.Store({
       })
       localStorage.setItem('clients', JSON.stringify(state.clients))
     },
-    async deletePlan ({ dispatch, commit }, payload) {
+    async deletePlan ({ commit }, payload) {
       commit('setData', {
         attr: 'dontLeave',
         data: true
       })
-      await axios.delete(`https://api.traininblocks.com/v2/plans/${parseInt(payload.planId)}`)
-      await dispatch('clientForceGet')
-      await dispatch('clientsToVue')
+      await axios.delete(`https://api.traininblocks.com/v2/plans/${payload.planId}`)
     },
 
     // Sessions

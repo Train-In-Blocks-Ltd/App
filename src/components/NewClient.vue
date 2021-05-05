@@ -120,8 +120,7 @@ export default {
           )
           this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.new_client.name}`, 'Well done on getting a new client')
           this.$parent.persistResponse = this.new_client.name
-          await this.$store.dispatch('clientsForceGet')
-          this.$store.dispatch('clientsToVue')
+          await this.$store.dispatch('getClients', true)
           this.new_client = {
             name: '',
             email: '',

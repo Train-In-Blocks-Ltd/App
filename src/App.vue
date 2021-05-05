@@ -654,8 +654,8 @@ export default {
     },
     async connected () {
       if (this.connected === true) {
-        await this.$store.dispatch('clientsForceGet')
-        await this.$store.dispatch('archiveForceGet')
+        await this.$store.dispatch('getClients', true)
+        await this.$store.dispatch('getArchive', true)
         this.setup()
       }
     },
@@ -880,15 +880,7 @@ export default {
 
       // Get all data
       try {
-        await this.$store.dispatch('clientsToVue')
-        if (this.$store.state.clients) {
-          for (const CLIENT of this.$store.state.clients) {
-            CLIENT.plans = this.$store.dispatch('getPlans', {
-              clientId: CLIENT.client_id,
-              force: true
-            })
-          }
-        }
+        await this.$store.dispatch('getClients', false)
         await this.$store.dispatch('getTemplates', false)
         await this.$store.dispatch('getPortfolio')
         this.$store.dispatch('endLoading')

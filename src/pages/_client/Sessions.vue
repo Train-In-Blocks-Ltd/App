@@ -1211,6 +1211,7 @@ export default {
       try {
         const NEW_PLAN_ID = await this.$store.dispatch('duplicatePlan', {
           clientId,
+          planId: PLAN.id,
           planName: PLAN.name,
           planDuration: PLAN.duration,
           blockColor: PLAN.block_color,
@@ -1228,7 +1229,7 @@ export default {
             }, 'duplicate')
           })
         }
-        await this.$store.dispatch('getClientDetails', {
+        await this.$store.dispatch('getPlans', {
           clientId,
           force: true
         })
@@ -1236,7 +1237,7 @@ export default {
       } catch (e) {
         this.$parent.$parent.resolve_error(e)
       }
-      // this.$router.push({ path: `/client/${clientId}/` })
+      this.$router.push({ path: `/client/${clientId}/` })
       this.$ga.event('Plan', 'duplicate')
       this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
     },
@@ -1261,12 +1262,17 @@ export default {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         try {
           await this.$store.dispatch('deletePlan', {
+            clientId: this.$route.params.client_id,
             planId: this.$route.params.id
           })
           this.$ga.event('Session', 'delete')
           this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
           this.$store.dispatch('endLoading')
           this.$router.push({ path: `/client/${this.clientDetails.client_id}/` })
+          this.$store.dispatch('getPlans', {
+            clientId: this.clientDetails.client_id,
+            force: true
+          })
         } catch (e) {
           this.$parent.$parent.resolve_error(e)
         }

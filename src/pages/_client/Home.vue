@@ -265,23 +265,15 @@ export default {
   },
   computed: mapState([
     'silentLoading',
+    'clients',
     'clientDetails'
   ]),
   created () {
     this.willBodyScroll(true)
     this.$store.commit('setData', {
       attr: 'clientDetails',
-      data: this.$store.state.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+      data: this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
     })
-    if (this.clientDetails.plans !== false) {
-      this.clientDetails.plans.forEach((plan) => {
-        this.$store.dispatch('getSessions', {
-          planId: plan.id,
-          clientId: this.$route.params.client_id,
-          force: false
-        })
-      })
-    }
     this.$store.dispatch('endLoading')
   },
   methods: {
