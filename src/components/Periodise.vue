@@ -104,7 +104,7 @@ button.red_button {
       <div
         v-for="(plan, planIndex) in clientDetails.plans"
         :key="`plan_${planIndex}`"
-        class="plan"
+        class="plan fadeIn"
       >
         <div class="plan_header">
           <h3>

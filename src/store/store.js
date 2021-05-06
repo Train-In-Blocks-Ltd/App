@@ -506,33 +506,48 @@ export const store = new Vuex.Store({
     },
     // payload => clientId, planId, planName, planDuration, blockColor, planNotes, planSessions
     async duplicatePlan ({ dispatch, commit, state }, payload) {
-      let newPlanId
       commit('setData', {
         attr: 'dontLeave',
         data: true
       })
-      await axios.put('https://api.traininblocks.com/v2/plans', {
+      const NEW_PLAN_RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
         name: `Copy of ${payload.planName}`,
         client_id: parseInt(payload.clientId),
         duration: payload.planDuration,
         block_color: payload.blockColor,
         ordered: state.clientDetails.plans.length
-      }).then((response) => {
-        newPlanId = response.data[0]['LAST_INSERT_ID()']
-        const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-        const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-        dispatch('updatePlan', {
-          planId: response.data[0]['LAST_INSERT_ID()'],
-          planName: PLAN.name,
-          planDuration: PLAN.duration,
-          planNotes: payload.planNotes,
-          planBlockColor: PLAN.blockColor,
-          planOrdered: PLAN.ordered
-        })
       })
-      return newPlanId
+      const NEW_PLAN_ID = NEW_PLAN_RESPONSE.data[0]['LAST_INSERT_ID()']
+      await dispatch('getPlans', {
+        clientId: payload.clientId,
+        force: true
+      })
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const PLAN = CLIENT.plans.find(plan => plan.id === NEW_PLAN_ID)
+      await dispatch('updatePlan', {
+        clientId: payload.clientId,
+        planId: NEW_PLAN_ID,
+        planName: PLAN.name,
+        planDuration: PLAN.duration,
+        planNotes: payload.planNotes,
+        planBlockColor: PLAN.block_color,
+        planOrdered: PLAN.ordered
+      })
+      if (payload.planSessions !== false) {
+        payload.planSessions.forEach((session) => {
+          dispatch('addSession', {
+            clientId: payload.clientId,
+            sessionName: session.name,
+            planId: NEW_PLAN_ID,
+            sessionDate: session.date,
+            sessionNotes: session.notes,
+            sessionWeek: session.week_id
+          })
+        })
+      }
+      return NEW_PLAN_ID
     },
-    // (clientId, planId, planName, planDuration, planNotes, planBlockColor, planOrdered)
+    // payload => clientId, planId, planName, planDuration, planNotes, planBlockColor, planOrdered
     async updatePlan ({ commit, state }, payload) {
       commit('setData', {
         attr: 'silentLoading',

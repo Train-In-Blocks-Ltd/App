@@ -1209,29 +1209,14 @@ export default {
     async duplicatePlan (clientId) {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       try {
-        const NEW_PLAN_ID = await this.$store.dispatch('duplicatePlan', {
+        await this.$store.dispatch('duplicatePlan', {
           clientId,
           planId: PLAN.id,
           planName: PLAN.name,
           planDuration: PLAN.duration,
           blockColor: PLAN.block_color,
-          planNotes: PLAN.notes
-        })
-        if (PLAN.sessions) {
-          PLAN.sessions.forEach((session) => {
-            this.addSession({
-              clientId,
-              planId: NEW_PLAN_ID,
-              sessionName: session.name,
-              sessionDate: session.date,
-              sessionNotes: session.notes,
-              sessionWeek: session.week_id
-            }, 'duplicate')
-          })
-        }
-        await this.$store.dispatch('getPlans', {
-          clientId,
-          force: true
+          planNotes: PLAN.notes,
+          planSessions: PLAN.sessions
         })
         this.$store.dispatch('endLoading')
       } catch (e) {
