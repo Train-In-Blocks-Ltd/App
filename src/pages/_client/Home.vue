@@ -230,7 +230,7 @@
       </div>
     </div>
     <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
-      <router-view :key="$route.fullPath" :other-data="clientDetails.plans" />
+      <router-view :key="$route.fullPath" />
     </transition>
   </div>
 </template>
@@ -268,13 +268,13 @@ export default {
     'clients',
     'clientDetails'
   ]),
-  created () {
+  async created () {
     this.willBodyScroll(true)
+    await this.$parent.setup()
     this.$store.commit('setData', {
       attr: 'clientDetails',
       data: this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
     })
-    this.$store.dispatch('endLoading')
   },
   methods: {
 

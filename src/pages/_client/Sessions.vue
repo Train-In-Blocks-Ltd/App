@@ -573,10 +573,8 @@ input.session-date {
                 </button>
               </div>
             </div>
-            <p v-if="!loading && (noSessions || weekIsEmpty)" class="text--holder text--small grey">
-              No sessions created yet
-            </p>
-            <div v-if="!loading">
+            <skeleton v-if="loading" :type="'session'" />
+            <div v-else-if="!noSessions && !weekIsEmpty">
               <div v-if="plan.sessions" class="container--sessions_header">
                 <a
                   v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
@@ -675,7 +673,9 @@ input.session-date {
                 </div>
               </div>
             </div>
-            <skeleton v-else type="session" />
+            <p v-else class="text--holder text--small grey">
+              No sessions created yet
+            </p>
           </div><!-- sessions -->
         </div>
         <statistics :plan="plan" :show="isStatsOpen" />
@@ -824,9 +824,10 @@ export default {
       this.updater()
     }
   },
-  created () {
+  async created () {
     this.willBodyScroll(true)
     this.$parent.sessions = true
+    await this.$store.dispatch('getTemplates', false)
     this.noSessions = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
     if (!this.noSessions) {
       this.adherence()

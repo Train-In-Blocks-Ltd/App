@@ -117,6 +117,7 @@ export default {
     })
     this.willBodyScroll(true)
     await this.$parent.setup()
+    await this.$store.dispatch('getPortfolio')
     this.$store.dispatch('endLoading')
   },
   methods: {

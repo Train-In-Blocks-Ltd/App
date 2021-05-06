@@ -663,7 +663,7 @@ export default {
   },
   async created () {
     this.isAuthenticated()
-    this.willBodyScroll(false)
+    this.willBodyScroll(true)
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
@@ -863,21 +863,9 @@ export default {
           })
         }
 
-        // Get all data
+        // Get data
         try {
           await this.$store.dispatch('getClients', false)
-          await this.$store.dispatch('getTemplates', false)
-          await this.$store.dispatch('getPortfolio')
-          if (this.clients) {
-            for (const CLIENT of this.clients) {
-              if (!CLIENT.plans) {
-                CLIENT.plans = this.$store.dispatch('getPlans', {
-                  clientId: CLIENT.client_id,
-                  force: true
-                })
-              }
-            }
-          }
           this.$store.dispatch('endLoading')
         } catch (e) {
           this.resolveError(e)

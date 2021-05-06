@@ -242,7 +242,8 @@ export default {
       data: true
     })
     this.willBodyScroll(true)
-    this.$parent.setup()
+    await this.$parent.setup()
+    await this.$store.dispatch('getPortfolio')
     await this.$parent.getClientSidePlans()
     this.$store.dispatch('endLoading')
   },

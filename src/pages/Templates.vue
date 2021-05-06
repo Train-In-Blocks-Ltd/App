@@ -89,7 +89,8 @@
         Select all
       </a>
     </div>
-    <div v-if="templates" class="template_container">
+    <skeleton v-if="loading" :type="'session'" />
+    <div v-else-if="templates" class="template_container">
       <div
         v-for="(template, index) in templates"
         v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
@@ -197,6 +198,7 @@ export default {
     }
   },
   computed: mapState([
+    'loading',
     'dontLeave',
     'templates'
   ]),
@@ -207,6 +209,7 @@ export default {
     })
     this.willBodyScroll(true)
     await this.$parent.setup()
+    await this.$store.dispatch('getTemplates', false)
     this.$store.dispatch('endLoading')
   },
   methods: {

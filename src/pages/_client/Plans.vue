@@ -120,9 +120,6 @@ export default {
       next()
     }
   },
-  props: {
-    otherData: [Array, Boolean]
-  },
   data () {
     return {
 
@@ -146,11 +143,6 @@ export default {
     'clients',
     'clientDetails'
   ]),
-  watch: {
-    otherData () {
-      this.noPlans = this.otherData === false
-    }
-  },
   async created () {
     this.$store.commit('setData', {
       attr: 'loading',
@@ -165,7 +157,7 @@ export default {
         force: true
       })
     }
-    this.noPlans = this.otherData === false
+    this.noPlans = this.clientDetails.plans === false
     this.$store.dispatch('endLoading')
   },
   methods: {

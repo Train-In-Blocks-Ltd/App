@@ -84,6 +84,19 @@ export const store = new Vuex.Store({
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       CLIENT[payload.attr] = payload.data
     },
+    addNewPlan (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      CLIENT.plans.push({
+        name: payload.name,
+        id: parseInt(payload.planId),
+        client_id: parseInt(payload.clientId),
+        duration: payload.duration,
+        block_color: payload.blockColor,
+        notes: payload.notes,
+        ordered: payload.ordered,
+        sessions: payload.sessions
+      })
+    },
     updatePlanWhole (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       for (let plan of CLIENT.plans) {
@@ -98,6 +111,20 @@ export const store = new Vuex.Store({
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN[payload.attr] = payload.data
     },
+    addNewSession (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
+      PLAN.sessions.push({
+        programme_id: payload.planId,
+        id: payload.sessionId,
+        name: payload.name,
+        date: payload.date,
+        notes: payload.notes,
+        week_id: payload.weekId,
+        feedback: payload.feedback,
+        checked: payload.checked
+      })
+    },
     updatePlanSessions (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -108,6 +135,14 @@ export const store = new Vuex.Store({
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
       SESSION[payload.attr] = payload.data
+    },
+    addNewTemplate (state, payload) {
+      state.templates.push({
+        id: payload.templateId,
+        pt_id: payload.ptId,
+        name: payload.name,
+        template: payload.template
+      })
     },
 
     // Client user
@@ -321,14 +356,20 @@ export const store = new Vuex.Store({
         attr: 'dontLeave',
         data: true
       })
-      await axios.put('https://api.traininblocks.com/v2/templates',
-        {
-          pt_id: state.claims.sub,
+      await axios.put('https://api.traininblocks.com/v2/templates', {
+        pt_id: state.claims.sub,
+        name: 'Untitled',
+        template: ''
+      }).then((response) => {
+        commit('addNewTemplate', {
+          templateId: response.data[0]['LAST_INSERT_ID()'],
+          ptId: state.claims.sub,
           name: 'Untitled',
           template: ''
-        }
-      )
-      await dispatch('getTemplates', true)
+        })
+      }).catch((e) => {
+        console.error(e)
+      })
       dispatch('endLoading')
     },
     async updateTemplate ({ dispatch, commit, state }, templateId) {
@@ -466,6 +507,7 @@ export const store = new Vuex.Store({
 
     // Plans
 
+    // payload => clientId, force
     async getPlans ({ dispatch, commit, state }, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       if (!CLIENT.plans || payload.force) {
@@ -487,7 +529,7 @@ export const store = new Vuex.Store({
         localStorage.setItem('clients', JSON.stringify(state.clients))
       }
     },
-    async createPlan ({ dispatch, commit }, payload) {
+    async createPlan ({ commit, state }, payload) {
       commit('setData', {
         attr: 'dontLeave',
         data: true
@@ -500,11 +542,19 @@ export const store = new Vuex.Store({
           block_color: '',
           ordered: payload.ordered
         }
-      )
-      await dispatch('getPlans', {
-        clientId: payload.clientId,
-        force: true
+      ).then((response) => {
+        commit('addNewPlan', {
+          name: payload.name,
+          planId: response.data[0]['LAST_INSERT_ID()'],
+          clientId: parseInt(payload.clientId),
+          duration: payload.duration,
+          blockColor: '',
+          notes: null,
+          ordered: payload.ordered,
+          sessions: false
+        })
       })
+      localStorage.setItem('clients', JSON.stringify(state.clients))
     },
     // payload => clientId, planId, planName, planDuration, blockColor, planNotes, planSessions
     async duplicatePlan ({ dispatch, commit, state }, payload) {
@@ -600,27 +650,32 @@ export const store = new Vuex.Store({
       }
       localStorage.setItem('clients', JSON.stringify(state.clients))
     },
-    async addSession ({ dispatch, commit }, payload) {
+    async addSession ({ commit }, payload) {
       let newSessionId
       commit('setData', {
         attr: 'dontLeave',
         data: true
       })
-      await axios.put('https://api.traininblocks.com/v2/sessions',
-        {
+      await axios.put('https://api.traininblocks.com/v2/sessions', {
+        name: payload.sessionName,
+        programme_id: parseInt(payload.planId),
+        date: payload.sessionDate,
+        notes: payload.sessionNotes,
+        week_id: payload.sessionWeek
+      }).then((response) => {
+        newSessionId = response.data[0]['LAST_INSERT_ID()']
+        commit('addNewSession', {
+          planId: parseInt(payload.planId),
+          sessionId: newSessionId,
           name: payload.sessionName,
-          programme_id: parseInt(payload.planId),
           date: payload.sessionDate,
           notes: payload.sessionNotes,
-          week_id: payload.sessionWeek
-        }
-      ).then((response) => {
-        newSessionId = response.data[0]['LAST_INSERT_ID()']
-      })
-      await dispatch('getSessions', {
-        clientId: payload.clientId,
-        planId: payload.planId,
-        force: true
+          weekId: payload.sessionWeek,
+          feedback: null,
+          checked: 0
+        })
+      }).catch((e) => {
+        console.error(e)
       })
       return newSessionId
     },
