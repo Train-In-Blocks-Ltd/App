@@ -226,7 +226,8 @@ export const store = new Vuex.Store({
           email: payload.email,
           number: payload.number,
           notifications: payload.notifications,
-          notes: payload.notes
+          notes: payload.notes,
+          profile_img: payload.profile_img
         }
       )
       // Get the client information again as we have just updated the client

@@ -88,11 +88,7 @@
         Plans
       </h2>
       <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-      <periodise
-        v-else-if="!noPlans"
-        :is-trainer="true"
-        :plans.sync="clientDetails.plans"
-      />
+      <periodise v-else-if="!noPlans" />
       <p
         v-else
         class="text--holder text--small grey"
@@ -147,6 +143,7 @@ export default {
   computed: mapState([
     'loading',
     'dontLeave',
+    'clients',
     'clientDetails'
   ]),
   watch: {
@@ -154,10 +151,22 @@ export default {
       this.noPlans = this.otherData === false
     }
   },
-  created () {
+  async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.willBodyScroll(true)
     this.$parent.checkClient()
+    const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+    if (!this.clientDetails.plans) {
+      await this.$store.dispatch('getPlans', {
+        clientId: CLIENT.client_id,
+        force: true
+      })
+    }
     this.noPlans = this.otherData === false
+    this.$store.dispatch('endLoading')
   },
   methods: {
     resolve_client_info_editor (state) {

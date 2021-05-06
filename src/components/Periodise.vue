@@ -102,7 +102,7 @@ button.red_button {
     />
     <div class="periodise">
       <div
-        v-for="(plan, planIndex) in clientDetails.plans"
+        v-for="(plan, planIndex) in plans"
         :key="`plan_${planIndex}`"
         class="plan fadeIn"
       >
@@ -136,7 +136,7 @@ button.red_button {
                 @click="change_order(plan.ordered, 'back')"
               />
               <inline-svg
-                v-if="plan.ordered !== clientDetails.plans.length - 1"
+                v-if="plan.ordered !== plans.length - 1"
                 :src="require('../assets/svg/arrow-right.svg')"
                 class="right no_fill"
                 @click="change_order(plan.ordered, 'next')"
@@ -175,6 +175,9 @@ export default {
     clientDetails () {
       return this.$store.state[this.isTrainer ? 'clientDetails' : 'clientUser']
     },
+    plans () {
+      return this.$store.state[this.isTrainer ? 'clientDetails' : 'clientUser'].plans
+    },
     isTrainer () {
       return this.$store.state.isTrainer
     }
@@ -182,7 +185,7 @@ export default {
   methods: {
     sortPlans () {
       if (this.plans !== false) {
-        this.clientDetails.plans.forEach((plan, index) => {
+        this.plans.forEach((plan, index) => {
           if (plan.ordered === null || plan.ordered !== index) {
             this.$store.dispatch('updatePlan', {
               clientId: this.$route.params.client_id,
@@ -195,7 +198,7 @@ export default {
             })
           }
         })
-        this.clientDetails.plans.sort((a, b) => {
+        this.plans.sort((a, b) => {
           return new Date(a.ordered) - new Date(b.ordered)
         })
       }
@@ -205,67 +208,67 @@ export default {
         case 'next':
           this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder + 1].id,
+            planId: this.plans[planOrder + 1].id,
             attr: 'ordered',
             data: planOrder
           })
           this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder].id,
+            planId: this.plans[planOrder].id,
             attr: 'ordered',
             data: planOrder + 1
           })
           this.sortPlans()
           this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder + 1].id,
-            planName: this.clientDetails.plans[planOrder + 1].name,
-            planDuration: this.clientDetails.plans[planOrder + 1].duration,
-            planNotes: this.clientDetails.plans[planOrder + 1].notes,
-            planBlockColor: this.clientDetails.plans[planOrder + 1].block_color,
-            planOrdered: this.clientDetails.plans[planOrder + 1].ordered
+            planId: this.plans[planOrder + 1].id,
+            planName: this.plans[planOrder + 1].name,
+            planDuration: this.plans[planOrder + 1].duration,
+            planNotes: this.plans[planOrder + 1].notes,
+            planBlockColor: this.plans[planOrder + 1].block_color,
+            planOrdered: this.plans[planOrder + 1].ordered
           })
           this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder].id,
-            planName: this.clientDetails.plans[planOrder].name,
-            planDuration: this.clientDetails.plans[planOrder].duration,
-            planNotes: this.clientDetails.plans[planOrder].notes,
-            planBlockColor: this.clientDetails.plans[planOrder].block_color,
-            planOrdered: this.clientDetails.plans[planOrder].ordered
+            planId: this.plans[planOrder].id,
+            planName: this.plans[planOrder].name,
+            planDuration: this.plans[planOrder].duration,
+            planNotes: this.plans[planOrder].notes,
+            planBlockColor: this.plans[planOrder].block_color,
+            planOrdered: this.plans[planOrder].ordered
           })
           break
         case 'back':
           this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder - 1].id,
+            planId: this.plans[planOrder - 1].id,
             attr: 'ordered',
             data: planOrder
           })
           this.$store.commit('updatePlanAttr', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder].id,
+            planId: this.plans[planOrder].id,
             attr: 'ordered',
             data: planOrder - 1
           })
           this.sortPlans()
           this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder - 1].id,
-            planName: this.clientDetails.plans[planOrder - 1].name,
-            planDuration: this.clientDetails.plans[planOrder - 1].duration,
-            planNotes: this.clientDetails.plans[planOrder - 1].notes,
-            planBlockColor: this.clientDetails.plans[planOrder - 1].block_color,
-            planOrdered: this.clientDetails.plans[planOrder - 1].ordered
+            planId: this.plans[planOrder - 1].id,
+            planName: this.plans[planOrder - 1].name,
+            planDuration: this.plans[planOrder - 1].duration,
+            planNotes: this.plans[planOrder - 1].notes,
+            planBlockColor: this.plans[planOrder - 1].block_color,
+            planOrdered: this.plans[planOrder - 1].ordered
           })
           this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
-            planId: this.clientDetails.plans[planOrder].id,
-            planName: this.clientDetails.plans[planOrder].name,
-            planDuration: this.clientDetails.plans[planOrder].duration,
-            planNotes: this.clientDetails.plans[planOrder].notes,
-            planBlockColor: this.clientDetails.plans[planOrder].block_color,
-            planOrdered: this.clientDetails.plans[planOrder].ordered
+            planId: this.plans[planOrder].id,
+            planName: this.plans[planOrder].name,
+            planDuration: this.plans[planOrder].duration,
+            planNotes: this.plans[planOrder].notes,
+            planBlockColor: this.plans[planOrder].block_color,
+            planOrdered: this.plans[planOrder].ordered
           })
           break
       }

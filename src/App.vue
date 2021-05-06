@@ -658,23 +658,6 @@ export default {
         await this.$store.dispatch('getArchive', true)
         this.setup()
       }
-    },
-    clients () {
-      try {
-        if (this.clients) {
-          for (const CLIENT of this.clients) {
-            if (!CLIENT.plans) {
-              CLIENT.plans = this.$store.dispatch('getPlans', {
-                clientId: CLIENT.client_id,
-                force: true
-              })
-            }
-          }
-        }
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.resolve_error(e)
-      }
     }
   },
   async created () {
@@ -883,6 +866,16 @@ export default {
         await this.$store.dispatch('getClients', false)
         await this.$store.dispatch('getTemplates', false)
         await this.$store.dispatch('getPortfolio')
+        if (this.clients) {
+          for (const CLIENT of this.clients) {
+            if (!CLIENT.plans) {
+              CLIENT.plans = this.$store.dispatch('getPlans', {
+                clientId: CLIENT.client_id,
+                force: true
+              })
+            }
+          }
+        }
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.resolve_error(e)
