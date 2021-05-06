@@ -112,12 +112,13 @@ export default {
     'loading',
     'archive'
   ]),
-  created () {
+  async created () {
     this.$store.commit('setData', {
       attr: 'loading',
       data: true
     })
     this.willBodyScroll(true)
+    await this.$parent.setup()
     this.$store.dispatch('endLoading')
   },
   methods: {
@@ -185,14 +186,14 @@ export default {
       try {
         await this.$store.dispatch('clientDelete', clientId)
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     },
     async clientUnarchive (clientId) {
       try {
         await this.$store.dispatch('clientUnarchive', clientId)
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     }
   }

@@ -66,7 +66,7 @@
           :id="'a' + client.client_id"
           :key="index"
           :to="'/client/'+client.client_id+'/'"
-          class="client_link_wrapper fadeIn fill_mode_both delay_long"
+          class="client_link_wrapper fadeIn fill_mode_both delay"
         >
           <client-link
             :name="client.name"
@@ -116,18 +116,13 @@ export default {
     'loading',
     'pwa'
   ]),
-  created () {
+  async created () {
     this.$store.commit('setData', {
       attr: 'loading',
       data: true
     })
-  },
-  mounted () {
-    this.willBodyScroll(true)
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: false
-    })
+    await this.$parent.setup()
+    this.$store.dispatch('endLoading')
   }
 }
 </script>

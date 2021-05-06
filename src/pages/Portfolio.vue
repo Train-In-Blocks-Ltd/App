@@ -110,16 +110,14 @@ export default {
     'dontLeave',
     'portfolio'
   ]),
-  created () {
+  async created () {
     this.$store.commit('setData', {
       attr: 'loading',
       data: true
     })
     this.willBodyScroll(true)
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: false
-    })
+    await this.$parent.setup()
+    this.$store.dispatch('endLoading')
   },
   methods: {
     resolve_portfolio_editor (state) {
@@ -159,7 +157,7 @@ export default {
         this.$ga.event('Portfolio', 'update')
         this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     }
   }

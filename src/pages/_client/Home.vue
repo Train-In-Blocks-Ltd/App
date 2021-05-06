@@ -313,7 +313,7 @@ export default {
         } catch (e) {
           this.clientAlready = true
           this.clientAlreadyMsg = 'Error'
-          this.$parent.resolve_error(e)
+          this.$parent.resolveError(e)
         }
       } else {
         this.clientAlreadyMsg = 'Restricted'
@@ -407,7 +407,7 @@ export default {
           )
         }
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
       await this.checkClient()
       this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true, true)
@@ -417,7 +417,7 @@ export default {
       try {
         await this.$store.dispatch('updateClient', client)
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     },
     async clientArchive (clientId) {
@@ -434,7 +434,7 @@ export default {
           this.$store.dispatch('endLoading')
           this.$router.push('/')
         } catch (e) {
-          this.$parent.resolve_error(e)
+          this.$parent.resolveError(e)
         }
       }
     }

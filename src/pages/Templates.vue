@@ -200,16 +200,14 @@ export default {
     'dontLeave',
     'templates'
   ]),
-  created () {
+  async created () {
     this.$store.commit('setData', {
       attr: 'loading',
       data: true
     })
     this.willBodyScroll(true)
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: false
-    })
+    await this.$parent.setup()
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
@@ -333,7 +331,7 @@ export default {
         this.checkForNew()
         this.helper('new')
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     },
     async updateTemplate (templateId) {
@@ -341,14 +339,14 @@ export default {
         await this.$store.dispatch('updateTemplate', templateId)
         this.helper('update')
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     },
     async deleteTemplate (templateId) {
       try {
         await this.$store.dispatch('deleteTemplate', templateId)
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     }
   }

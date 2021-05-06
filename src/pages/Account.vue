@@ -250,8 +250,14 @@ export default {
     'versionName',
     'versionBuild'
   ]),
-  created () {
+  async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.willBodyScroll(true)
+    await this.$parent.setup()
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
@@ -266,7 +272,7 @@ export default {
         )
         window.location.href = RESPONSE.data
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     },
 
@@ -320,7 +326,7 @@ export default {
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     }
   }

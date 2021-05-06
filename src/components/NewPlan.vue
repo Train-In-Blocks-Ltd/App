@@ -75,7 +75,7 @@ export default {
         this.$ga.event('Plan', 'new')
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.$parent.resolve_error(e)
+        this.$parent.$parent.$parent.resolveError(e)
       }
     }
   }

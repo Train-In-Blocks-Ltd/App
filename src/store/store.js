@@ -18,6 +18,7 @@ export const store = new Vuex.Store({
 
     // System
 
+    instanceReady: false,
     loading: false,
     silentLoading: false,
     dontLeave: false,

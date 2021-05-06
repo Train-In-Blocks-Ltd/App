@@ -646,7 +646,8 @@ export default {
     'claims',
     'showEULA',
     'clients',
-    'connected'
+    'connected',
+    'instanceReady'
   ]),
   watch: {
     $route (to, from) {
@@ -656,7 +657,7 @@ export default {
       if (this.connected === true) {
         await this.$store.dispatch('getClients', true)
         await this.$store.dispatch('getArchive', true)
-        this.setup()
+        await this.setup()
       }
     }
   },
@@ -741,7 +742,6 @@ export default {
     }, (error) => {
       return Promise.reject(error)
     })
-    await this.setup()
   },
   methods: {
     darkmode (mode) {
@@ -790,95 +790,104 @@ export default {
         data: await this.$auth.isAuthenticated()
       })
     },
-    async setup () {
-      // Set claims
-      this.$store.commit('setData', {
-        attr: 'claims',
-        data: localStorage.getItem('claims') ? JSON.parse(localStorage.getItem('claims')) : this.$auth.getUser()
-      })
-      const CLAIMS = this.$store.state.claims
-      if (CLAIMS.user_type === 'Trainer' || CLAIMS.user_type === 'Admin') {
+    async setup (force) {
+      force = force || false
+      if (!this.instanceReady || force) {
+        // Set claims
         this.$store.commit('setData', {
-          attr: 'isTrainer',
-          data: true
+          attr: 'claims',
+          data: localStorage.getItem('claims') ? JSON.parse(localStorage.getItem('claims')) : this.$auth.getUser()
         })
-      }
-      if (CLAIMS) {
-        if (!CLAIMS.ga || !CLAIMS) {
+        const CLAIMS = this.$store.state.claims
+        if (CLAIMS.user_type === 'Trainer' || CLAIMS.user_type === 'Admin') {
           this.$store.commit('setData', {
-            attr: 'ga',
+            attr: 'isTrainer',
             data: true
           })
         }
-        if (!CLAIMS.theme || !CLAIMS) {
-          this.$store.commit('setData', {
-            attr: 'theme',
-            data: 'system'
-          })
-        }
+        if (CLAIMS) {
+          if (!CLAIMS.ga || !CLAIMS) {
+            this.$store.commit('setData', {
+              attr: 'ga',
+              data: true
+            })
+          }
+          if (!CLAIMS.theme || !CLAIMS) {
+            this.$store.commit('setData', {
+              attr: 'theme',
+              data: 'system'
+            })
+          }
 
-        // Set analytics and theme
-        CLAIMS.ga !== false ? this.$ga.enable() : this.$ga.disable()
-        this.darkmode(CLAIMS.theme)
+          // Set analytics and theme
+          CLAIMS.ga !== false ? this.$ga.enable() : this.$ga.disable()
+          this.darkmode(CLAIMS.theme)
 
-        // Set EULA
-        if ((!CLAIMS.policy || this.$store.state.policyVersion !== CLAIMS.policy[2]) && CLAIMS.email !== 'demo@traininblocks.com' && this.authenticated) {
-          this.willBodyScroll(false)
-          this.$store.commit('setData', {
-            attr: 'showEULA',
-            data: true
-          })
-        }
-      }
-
-      // Set auth header
-      this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
-
-      // Set connection
-      this.$store.commit('setData', {
-        attr: 'connected',
-        data: navigator.onLine
-      })
-      const SELF = this
-      window.addEventListener('offline', function (event) {
-        SELF.$store.commit('setData', {
-          attr: 'connected',
-          data: false
-        })
-      })
-      window.addEventListener('online', function (event) {
-        SELF.$store.commit('setData', {
-          attr: 'connected',
-          data: true
-        })
-      })
-
-      // Check build
-      if (localStorage.getItem('versionBuild') !== this.$store.state.versionBuild) {
-        this.$store.commit('setData', {
-          attr: 'newBuild',
-          data: true
-        })
-      }
-
-      // Get all data
-      try {
-        await this.$store.dispatch('getClients', false)
-        await this.$store.dispatch('getTemplates', false)
-        await this.$store.dispatch('getPortfolio')
-        if (this.clients) {
-          for (const CLIENT of this.clients) {
-            if (!CLIENT.plans) {
-              CLIENT.plans = this.$store.dispatch('getPlans', {
-                clientId: CLIENT.client_id,
-                force: true
-              })
-            }
+          // Set EULA
+          if ((!CLAIMS.policy || this.$store.state.policyVersion !== CLAIMS.policy[2]) && CLAIMS.email !== 'demo@traininblocks.com' && this.authenticated) {
+            this.willBodyScroll(false)
+            this.$store.commit('setData', {
+              attr: 'showEULA',
+              data: true
+            })
           }
         }
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.resolve_error(e)
+
+        // Set auth header
+        this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
+
+        // Set connection
+        this.$store.commit('setData', {
+          attr: 'connected',
+          data: navigator.onLine
+        })
+        const SELF = this
+        window.addEventListener('offline', function (event) {
+          SELF.$store.commit('setData', {
+            attr: 'connected',
+            data: false
+          })
+        })
+        window.addEventListener('online', function (event) {
+          SELF.$store.commit('setData', {
+            attr: 'connected',
+            data: true
+          })
+        })
+
+        // Check build
+        if (localStorage.getItem('versionBuild') !== this.$store.state.versionBuild) {
+          this.$store.commit('setData', {
+            attr: 'newBuild',
+            data: true
+          })
+        }
+
+        // Get all data
+        try {
+          await this.$store.dispatch('getClients', false)
+          await this.$store.dispatch('getTemplates', false)
+          await this.$store.dispatch('getPortfolio')
+          if (this.clients) {
+            for (const CLIENT of this.clients) {
+              if (!CLIENT.plans) {
+                CLIENT.plans = this.$store.dispatch('getPlans', {
+                  clientId: CLIENT.client_id,
+                  force: true
+                })
+              }
+            }
+          }
+          this.$store.dispatch('endLoading')
+        } catch (e) {
+          this.resolveError(e)
+        }
+
+        // Stops setup from running more than once
+        this.$store.commit('setData', {
+          attr: 'instanceReady',
+          data: true
+        })
       }
     },
     async saveClaims () {
@@ -886,13 +895,13 @@ export default {
         await this.$store.dispatch('saveClaims')
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.resolve_error(e)
+        this.resolveError(e)
       }
     },
 
     // SYSTEM STATE
 
-    async resolve_error (msg) {
+    async resolveError (msg) {
       if (this.claims.user_type !== 'Admin') {
         await this.$axios.post('/.netlify/functions/error',
           {
@@ -913,7 +922,7 @@ export default {
         await this.$store.dispatch('getClientSidePlans')
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.resolve_error(e)
+        this.resolveError(e)
       }
     },
     async updateClientSideSession (planId, sessionId) {
@@ -926,7 +935,7 @@ export default {
         this.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.resolve_error(e)
+        this.resolveError(e)
       }
     }
   }

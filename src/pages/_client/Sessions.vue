@@ -1223,7 +1223,7 @@ export default {
         })
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.resolve_error(e)
+        this.$parent.$parent.resolveError(e)
       }
       this.$router.push({ path: `/client/${clientId}/` })
       this.$ga.event('Plan', 'duplicate')
@@ -1243,7 +1243,7 @@ export default {
         this.$ga.event('Plan', 'update')
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.resolve_error(e)
+        this.$parent.$parent.resolveError(e)
       }
     },
     async deletePlan () {
@@ -1262,7 +1262,7 @@ export default {
             force: true
           })
         } catch (e) {
-          this.$parent.$parent.resolve_error(e)
+          this.$parent.$parent.resolveError(e)
         }
       }
     },
@@ -1277,7 +1277,7 @@ export default {
         this.$ga.event('Session', 'update')
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.resolve_error(e)
+        this.$parent.$parent.resolveError(e)
       }
     },
     async addSession (data, type) {
@@ -1306,7 +1306,7 @@ export default {
         }
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.resolve_error(e)
+        this.$parent.$parent.resolveError(e)
       }
     },
     async deleteSession (sessionId) {
@@ -1320,7 +1320,7 @@ export default {
         this.checkForWeekSessions()
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.resolve_error(e)
+        this.$parent.$parent.resolveError(e)
       }
     }
   }
