@@ -391,6 +391,7 @@ div#rich_editor.editorFocused {
             >
               <inline-svg :src="require('../assets/svg/editor/template.svg')" />
             </button>
+            <!-- Track data
             <button
               v-if="dataForTemplates !== undefined && dataForTemplates !== null"
               class="fadeIn"
@@ -399,6 +400,7 @@ div#rich_editor.editorFocused {
             >
               <inline-svg :src="require('../assets/svg/editor/track-data.svg')" />
             </button>
+            -->
             <button
               class="fadeIn"
               title="Undo"

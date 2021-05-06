@@ -382,7 +382,7 @@ input.session-date {
           Select a client
         </option>
         <option
-          v-for="(client, index) in $parent.$parent.clients"
+          v-for="(client, index) in clients"
           :key="`client_${index}`"
           :value="client.client_id"
         >
@@ -668,7 +668,7 @@ input.session-date {
                     :week-id="currentWeek"
                     :editing="editSession"
                     :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
-                    :data-for-templates="$parent.$parent.templates"
+                    :data-for-templates="templates"
                     :force-stop="forceStop"
                     @on-edit-change="resolveSessionEditor"
                   />
@@ -812,6 +812,9 @@ export default {
     clients () {
       return this.$store.state.clients
     },
+    templates () {
+      return this.$store.state.templates
+    },
     clientDetails () {
       return this.$store.state.clientDetails
     }
@@ -901,7 +904,7 @@ export default {
       }
     },
     resolveSessionEditor (state, id) {
-      const SESSION = this.helper('match_session', id)
+      const SESSION = this.$store.getters.helper('match_session', this.$route.params.client_id, this.$route.params.id, id)
       switch (state) {
         case 'edit':
           this.$store.commit('setData', {

@@ -73,8 +73,8 @@ export default {
         { title: 'More statistics', desc: 'Through re-designing our statistics feature, you can now enjoy better error reporting with tracked data — meaning that if there\'s a mistake with the tracking format, then you\'ll be able to find it easier.', img: 'stats.png' },
         { title: 'Scatter graph', desc: 'Here\'s a way to analyse your clients\' performance. With the scatter graph, you\'ll be able to see the distribution of their sessions and the overall trend.', img: 'scatter.png' },
         { title: 'Better multiselect', desc: 'Big, bold, and animated. There\'s something really satisfying about these icons. We\'ve placed more emphasis on making the mobile experience more seamless.', img: 'multi.png' },
-        { title: 'Prediction', desc: 'You can now look into a crystal ball and see into the future... not quite. Through doing a regression on the data you have tracked, we can estimate what the future value is depending on the day since the start of that plan.', img: 'prediction.png' },
-        { title: 'More tracking options', desc: ' Add tracked data sections into your sessions. This way, you can easily see which exercises are tracked and which aren\'t. Follow the same tracking format but without the square brackets. You can still use our square brackets method if your want to build more complex exercises.', img: 'protocol.png' }
+        { title: 'Prediction', desc: 'You can now look into a crystal ball and see into the future... not quite. Through doing a regression on the data you have tracked, we can estimate what the future value is depending on the day since the start of that plan.', img: 'prediction.png' }
+        // { title: 'More tracking options', desc: ' Add tracked data sections into your sessions. This way, you can easily see which exercises are tracked and which aren\'t. Follow the same tracking format but without the square brackets. You can still use our square brackets method if your want to build more complex exercises.', img: 'protocol.png' }
       ]
     }
   },
