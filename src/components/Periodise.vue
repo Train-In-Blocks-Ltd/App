@@ -183,27 +183,28 @@ export default {
     }
   },
   methods: {
-    sortPlans () {
+    async sortPlans () {
       if (this.plans !== false) {
-        this.plans.forEach((plan, index) => {
-          if (plan.ordered === null || plan.ordered !== index) {
-            this.$store.dispatch('updatePlan', {
+        for (const INDEX in this.plans) {
+          const PLAN = this.plans[INDEX]
+          if (PLAN.ordered === null || PLAN.ordered !== INDEX) {
+            await this.$store.dispatch('updatePlan', {
               clientId: this.$route.params.client_id,
-              planId: plan.id,
-              planName: plan.name,
-              planDuration: plan.duration,
-              planNotes: plan.notes,
-              planBlockColor: plan.block_color,
-              planOrdered: index
+              planId: PLAN.id,
+              planName: PLAN.name,
+              planDuration: PLAN.duration,
+              planNotes: PLAN.notes,
+              planBlockColor: PLAN.block_color,
+              planOrdered: INDEX
             })
           }
-        })
+        }
         this.plans.sort((a, b) => {
           return new Date(a.ordered) - new Date(b.ordered)
         })
       }
     },
-    changeOrder (planOrder, direction) {
+    async changeOrder (planOrder, direction) {
       this.$store.commit('setData', {
         attr: 'silentLoading',
         data: true
@@ -227,7 +228,7 @@ export default {
             data: planOrder + 1
           })
           this.sortPlans()
-          this.$store.dispatch('updatePlan', {
+          await this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
             planId: this.plans[planOrder + 1].id,
             planName: this.plans[planOrder + 1].name,
@@ -236,7 +237,7 @@ export default {
             planBlockColor: this.plans[planOrder + 1].block_color,
             planOrdered: this.plans[planOrder + 1].ordered
           })
-          this.$store.dispatch('updatePlan', {
+          await this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
             planId: this.plans[planOrder].id,
             planName: this.plans[planOrder].name,
@@ -260,7 +261,7 @@ export default {
             data: planOrder - 1
           })
           this.sortPlans()
-          this.$store.dispatch('updatePlan', {
+          await this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
             planId: this.plans[planOrder - 1].id,
             planName: this.plans[planOrder - 1].name,
@@ -269,7 +270,7 @@ export default {
             planBlockColor: this.plans[planOrder - 1].block_color,
             planOrdered: this.plans[planOrder - 1].ordered
           })
-          this.$store.dispatch('updatePlan', {
+          await this.$store.dispatch('updatePlan', {
             clientId: this.$route.params.client_id,
             planId: this.plans[planOrder].id,
             planName: this.plans[planOrder].name,

@@ -410,7 +410,7 @@ export const store = new Vuex.Store({
         dispatch('resolveError', e)
       }
     },
-    async createPortfolio ({ dispatch, commit, state }) {
+    async createPortfolio ({ dispatch, state }) {
       try {
         await axios.put('https://api.traininblocks.com/v2/portfolio', {
           pt_id: state.claims.sub,
@@ -512,7 +512,7 @@ export const store = new Vuex.Store({
       localStorage.setItem('clients', JSON.stringify(state.clients))
     },
     // payload => clientId, planId, planName, planDuration, blockColor, planNotes, planSessions
-    async duplicatePlan ({ dispatch, commit, state }, payload) {
+    async duplicatePlan ({ dispatch, state }, payload) {
       const NEW_PLAN_RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
         name: `Copy of ${payload.planName}`,
         client_id: parseInt(payload.clientId),
@@ -632,6 +632,7 @@ export const store = new Vuex.Store({
         checked: SESSION.checked
       })
     },
+    // payload => clientId, planId, sessionId
     async deleteSession ({ commit }, payload) {
       await axios.delete(`https://api.traininblocks.com/v2/sessions/${payload.sessionId}`)
       commit('removeSession', {
@@ -664,6 +665,7 @@ export const store = new Vuex.Store({
         }
       }
     },
+    // payload => planId, sessionId
     async updateClientSideSession ({ state }, payload) {
       const CLIENT = await axios.get(`https://api.traininblocks.com/v2/ptId/${state.claims.client_id_db}`)
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
