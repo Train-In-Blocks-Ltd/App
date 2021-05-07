@@ -825,14 +825,19 @@ export default {
     }
   },
   async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.willBodyScroll(true)
     this.$parent.sessions = true
     await this.$store.dispatch('getTemplates', false)
-    this.noSessions = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
+    this.noSessions = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
     if (!this.noSessions) {
       this.adherence()
       this.updater()
     }
+    this.$store.dispatch('endLoading')
   },
   beforeDestroy () {
     this.willBodyScroll(true)
@@ -947,14 +952,14 @@ export default {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       this.sessionDates = []
       this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
-      for (const session of PLAN.sessions) {
+      for (const SESSION of PLAN.sessions) {
         this.sessionDates.push({
-          title: session.name,
-          date: session.date,
-          color: this.weekColor.backgroundColor[session.week_id - 1],
-          textColor: this.accessible_colors(this.weekColor.backgroundColor[session.week_id - 1]),
-          week_id: session.week_id,
-          session_id: session.id
+          title: SESSION.name,
+          date: SESSION.date,
+          color: this.weekColor.backgroundColor[SESSION.week_id - 1],
+          textColor: this.accessible_colors(this.weekColor.backgroundColor[SESSION.week_id - 1]),
+          week_id: SESSION.week_id,
+          session_id: SESSION.id
         })
       }
       this.maxWeek = PLAN.duration

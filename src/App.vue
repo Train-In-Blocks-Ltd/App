@@ -662,6 +662,10 @@ export default {
     }
   },
   async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.isAuthenticated()
     this.willBodyScroll(true)
     this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
@@ -742,6 +746,7 @@ export default {
     }, (error) => {
       return Promise.reject(error)
     })
+    this.$store.dispatch('endLoading')
   },
   methods: {
     darkmode (mode) {

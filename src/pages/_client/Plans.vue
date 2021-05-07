@@ -144,10 +144,6 @@ export default {
     'clientDetails'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
     this.willBodyScroll(true)
     this.$parent.checkClient()
     const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))

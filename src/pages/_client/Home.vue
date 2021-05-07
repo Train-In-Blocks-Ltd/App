@@ -269,11 +269,20 @@ export default {
     'clientDetails'
   ]),
   async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
     this.willBodyScroll(true)
     await this.$parent.setup()
+    const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+    await this.$store.dispatch('getPlans', {
+      clientId: CLIENT.client_id,
+      force: true
+    })
     this.$store.commit('setData', {
       attr: 'clientDetails',
-      data: this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+      data: CLIENT
     })
   },
   methods: {
@@ -436,12 +445,7 @@ export default {
             attr: 'dontLeave',
             data: true
           })
-          const CLIENT = this.$store.state.clients.find(client => client.client_id === parseInt(clientId))
-          const INDEX = this.$store.state.clients.indexOf(CLIENT)
-          await this.$store.dispatch('clientArchive', {
-            clientId,
-            index: INDEX
-          })
+          await this.$store.dispatch('clientArchive', clientId)
           this.$ga.event('Client', 'archive')
           this.$parent.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
           this.$store.dispatch('endLoading')
