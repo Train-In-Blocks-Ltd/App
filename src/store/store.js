@@ -264,8 +264,15 @@ export const store = new Vuex.Store({
       }
     },
     async updateClient ({ state }) {
+      const CLIENT = state.clientDetails
       await axios.post('https://api.traininblocks.com/v2/clients', {
-        ...state.clientDetails
+        id: CLIENT.client_id,
+        name: CLIENT.name,
+        email: CLIENT.email,
+        number: CLIENT.number,
+        notifications: CLIENT.notifications,
+        notes: CLIENT.notes,
+        profile_img: CLIENT.profile_img
       })
     },
     // payload => clientId, index
