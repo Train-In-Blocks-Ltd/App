@@ -104,15 +104,6 @@ export const store = new Vuex.Store({
         sessions: payload.sessions
       })
     },
-    updateAllPlans (state, payload) {
-      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-      for (let plan of CLIENT.plans) {
-        if (plan.id === parseInt(payload.planId)) {
-          plan = payload.data
-          break
-        }
-      }
-    },
     updatePlanAttr (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -272,9 +263,9 @@ export const store = new Vuex.Store({
         dispatch('resolveDeepError', e)
       }
     },
-    async updateClient (payload) {
+    async updateClient ({ state }) {
       await axios.post('https://api.traininblocks.com/v2/clients', {
-        ...payload
+        ...state.clientDetails
       })
     },
     // payload => clientId, index
@@ -541,19 +532,9 @@ export const store = new Vuex.Store({
       return NEW_PLAN_ID
     },
     // payload => clientId, planId, planName, planDuration, planNotes, planBlockColor, planOrdered
-    async updatePlan ({ commit, state }, payload) {
-      const RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans', {
-        id: parseInt(payload.planId),
-        name: payload.planName,
-        duration: payload.planDuration,
-        notes: payload.planNotes,
-        block_color: payload.planBlockColor,
-        ordered: payload.planOrdered
-      })
-      commit('updateAllPlans', {
-        clientId: payload.clientId,
-        planId: payload.planId,
-        data: JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
+    async updatePlan ({ state }, payload) {
+      await axios.post('https://api.traininblocks.com/v2/plans', {
+        ...payload
       })
       localStorage.setItem('clients', JSON.stringify(state.clients))
     },

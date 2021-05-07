@@ -1280,14 +1280,7 @@ export default {
     async updatePlan () {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       try {
-        await this.$store.dispatch('updatePlan', {
-          planId: PLAN.id,
-          planName: PLAN.name,
-          planDuration: PLAN.duration,
-          planNotes: PLAN.notes,
-          planBlockColor: PLAN.block_color,
-          planOrdered: PLAN.ordered
-        })
+        await this.$store.dispatch('updatePlan', PLAN)
         this.$ga.event('Plan', 'update')
         this.$store.dispatch('endLoading')
       } catch (e) {
