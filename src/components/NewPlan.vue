@@ -60,19 +60,23 @@ export default {
   methods: {
     async createPlan () {
       try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         await this.$store.dispatch('createPlan', {
           clientId: this.clientDetails.client_id,
           name: this.new_plan.name,
           duration: this.new_plan.duration,
           ordered: !this.clientDetails.plans ? 0 : this.clientDetails.length
         })
-        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')
         this.$parent.persistResponse = this.new_plan.name
         this.new_plan = {
           name: '',
           duration: ''
         }
         this.$ga.event('Plan', 'new')
+        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.$parent.resolveError(e)

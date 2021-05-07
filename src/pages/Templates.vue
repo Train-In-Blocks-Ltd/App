@@ -90,13 +90,13 @@
       </a>
     </div>
     <skeleton v-if="loading" :type="'session'" />
-    <div v-else-if="templates" class="template_container">
+    <div v-else-if="templates" class="template_container fadeIn">
       <div
         v-for="(template, index) in templates"
         v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
         :key="index"
-        class="template_wrapper editor_object_complex"
+        class="template_wrapper editor_object_complex fadeIn"
       >
         <div class="template_wrapper__header">
           <span
@@ -330,24 +330,39 @@ export default {
 
     async createTemplate () {
       try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         await this.$store.dispatch('newTemplate')
         this.checkForNew()
         this.helper('new')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }
     },
     async updateTemplate (templateId) {
       try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         await this.$store.dispatch('updateTemplate', templateId)
         this.helper('update')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }
     },
     async deleteTemplate (templateId) {
       try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         await this.$store.dispatch('deleteTemplate', templateId)
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }

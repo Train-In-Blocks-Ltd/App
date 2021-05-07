@@ -880,6 +880,10 @@ export default {
     },
     async saveClaims () {
       try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         await this.$store.dispatch('saveClaims')
         this.$store.dispatch('endLoading')
       } catch (e) {

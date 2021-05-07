@@ -308,6 +308,10 @@ export default {
     },
     async changePassword () {
       try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         this.password.error = ''
         await this.$store.dispatch('changePassword', {
           old: this.password.old,

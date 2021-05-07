@@ -133,13 +133,13 @@ button.red_button {
                 v-if="plan.ordered !== 0"
                 :src="require('../assets/svg/arrow-left.svg')"
                 class="left no_fill"
-                @click="change_order(plan.ordered, 'back')"
+                @click="changeOrder(plan.ordered, 'back')"
               />
               <inline-svg
                 v-if="plan.ordered !== plans.length - 1"
                 :src="require('../assets/svg/arrow-right.svg')"
                 class="right no_fill"
-                @click="change_order(plan.ordered, 'next')"
+                @click="changeOrder(plan.ordered, 'next')"
               />
             </div>
           </div>
@@ -203,7 +203,15 @@ export default {
         })
       }
     },
-    change_order (planOrder, direction) {
+    changeOrder (planOrder, direction) {
+      this.$store.commit('setData', {
+        attr: 'silentLoading',
+        data: true
+      })
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       switch (direction) {
         case 'next':
           this.$store.commit('updatePlanAttr', {

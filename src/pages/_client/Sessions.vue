@@ -919,10 +919,15 @@ export default {
           this.goToEvent(SESSION.id, SESSION.week_id)
           break
         case 'save':
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.isEditingSession = false
           this.editSession = null
           this.updateSession(id)
           this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
+          this.$store.dispatch('endLoading')
           break
         case 'cancel':
           this.$store.commit('setData', {
@@ -958,6 +963,10 @@ export default {
     // MODALS AND TAB
 
     duplicate () {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       const TO_DUPLICATE = []
       const CLIENT_ID = this.$route.params.client_id
       const PLAN_ID = this.$route.params.id
@@ -975,6 +984,7 @@ export default {
           sessionWeek: session.week_id
         }, 'new')
       })
+      this.$store.dispatch('endLoading')
     },
     print () {
       const NOTES_ARR = []
@@ -996,10 +1006,14 @@ export default {
       this.deselectAll()
     },
     shiftAcross () {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit('updatePlanSingleSession', {
+          this.$store.commit('updateSessionAttr', {
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
             sessionId: session.id,
@@ -1016,10 +1030,14 @@ export default {
       this.$store.dispatch('endLoading')
     },
     moveToWeek () {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       PLAN.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit('updatePlanSingleSession', {
+          this.$store.commit('updateSessionAttr', {
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
             sessionId: session.id,
@@ -1040,12 +1058,16 @@ export default {
     // MULTI AND CHECKBOX
 
     async bulkCheck (boolState) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${boolState === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
           const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
           PLAN.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
-              this.$store.commit('updatePlanSingleSession', {
+              this.$store.commit('updateSessionAttr', {
                 clientId: this.$route.params.client_id,
                 planId: this.$route.params.id,
                 sessionId: session.id,
@@ -1059,18 +1081,34 @@ export default {
           this.deselectAll()
         }
       }
+      this.$store.dispatch('endLoading')
     },
     async bulkDelete () {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected sessions?', 'We will remove these sessions from our database and it won\'t be recoverable.')) {
-          this.selectedSessions.forEach((sessionId) => {
-            this.deleteSession(sessionId)
-          })
-          this.$ga.event('Session', 'bulkDelete')
-          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
+          for (const SESSION_ID of this.selectedSessions) {
+            try {
+              await this.$store.dispatch('deleteSession', {
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+                sessionId: SESSION_ID
+              })
+            } catch (e) {
+              this.$parent.$parent.resolveError(e)
+            }
+          }
+          this.checkForWeekSessions()
           this.deselectAll()
+          this.$ga.event('Session', 'delete')
+          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
+          this.$store.dispatch('endLoading')
         }
       }
+      this.$store.dispatch('endLoading')
     },
     selectAll (mode) {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
@@ -1102,6 +1140,10 @@ export default {
       }
     },
     async createNewSession () {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       await this.addSession({
         clientId: this.$route.params.client_id,
         planId: this.$route.params.id,
@@ -1110,6 +1152,7 @@ export default {
         sessionNotes: '',
         sessionWeek: this.currentWeek
       }, 'new')
+      this.$store.dispatch('endLoading')
     },
 
     // GENERAL
@@ -1211,8 +1254,12 @@ export default {
     // DATABASE
 
     async duplicatePlan (clientId) {
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
         await this.$store.dispatch('duplicatePlan', {
           clientId,
           planId: PLAN.id,
@@ -1222,13 +1269,13 @@ export default {
           planNotes: PLAN.notes,
           planSessions: PLAN.sessions
         })
+        this.$ga.event('Plan', 'duplicate')
+        this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
         this.$store.dispatch('endLoading')
+        this.$router.push({ path: `/client/${clientId}/` })
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
-      this.$router.push({ path: `/client/${clientId}/` })
-      this.$ga.event('Plan', 'duplicate')
-      this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
     },
     async updatePlan () {
       const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
@@ -1250,6 +1297,10 @@ export default {
     async deletePlan () {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         try {
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           await this.$store.dispatch('deletePlan', {
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id
@@ -1258,10 +1309,6 @@ export default {
           this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
           this.$store.dispatch('endLoading')
           this.$router.push({ path: `/client/${this.clientDetails.client_id}/` })
-          this.$store.dispatch('getPlans', {
-            clientId: this.clientDetails.client_id,
-            force: true
-          })
         } catch (e) {
           this.$parent.$parent.resolveError(e)
         }
@@ -1285,8 +1332,8 @@ export default {
       try {
         const NEW_SESSION_ID = await this.$store.dispatch('addSession', {
           clientId: data.clientId,
-          sessionName: data.sessionName,
           planId: data.planId,
+          sessionName: data.sessionName,
           sessionDate: data.sessionDate,
           sessionNotes: data.sessionNotes,
           sessionWeek: data.sessionWeek
@@ -1305,20 +1352,6 @@ export default {
           this.adherence()
           this.checkForWeekSessions()
         }
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.$parent.$parent.resolveError(e)
-      }
-    },
-    async deleteSession (sessionId) {
-      try {
-        await this.$store.dispatch('deleteSession', {
-          clientId: this.$route.params.client_id,
-          planId: this.$route.params.id,
-          sessionId
-        })
-        this.$ga.event('Session', 'delete')
-        this.checkForWeekSessions()
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)

@@ -415,7 +415,16 @@ export default {
     },
     async updateClient (client) {
       try {
+        this.$store.commit('setData', {
+          attr: 'silentLoading',
+          data: true
+        })
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         await this.$store.dispatch('updateClient', client)
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }
@@ -423,6 +432,10 @@ export default {
     async clientArchive (clientId) {
       if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
         try {
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           const CLIENT = this.$store.state.clients.find(client => client.client_id === parseInt(clientId))
           const INDEX = this.$store.state.clients.indexOf(CLIENT)
           await this.$store.dispatch('clientArchive', {

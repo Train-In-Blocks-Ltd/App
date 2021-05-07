@@ -68,6 +68,7 @@ export const store = new Vuex.Store({
     showEULA: false
   },
   mutations: {
+    // System
     setData (state, payload) {
       state[payload.attr] = payload.data
       if (payload.attr === 'clients') {
@@ -84,6 +85,12 @@ export const store = new Vuex.Store({
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       CLIENT[payload.attr] = payload.data
     },
+    removeClient (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      state.archive.clients.splice(state.archive.clients.indexOf(CLIENT), 1)
+    },
+
+    // Plans
     addNewPlan (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       CLIENT.plans.push({
@@ -97,7 +104,7 @@ export const store = new Vuex.Store({
         sessions: payload.sessions
       })
     },
-    updatePlanWhole (state, payload) {
+    updateAllPlans (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       for (let plan of CLIENT.plans) {
         if (plan.id === parseInt(payload.planId)) {
@@ -111,6 +118,13 @@ export const store = new Vuex.Store({
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN[payload.attr] = payload.data
     },
+    removePlan (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
+      CLIENT.plans.splice(CLIENT.plans.indexOf(PLAN), 1)
+    },
+
+    // Sessions
     addNewSession (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -125,17 +139,25 @@ export const store = new Vuex.Store({
         checked: payload.checked
       })
     },
-    updatePlanSessions (state, payload) {
+    updateAllSessions (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN.sessions = payload.data
     },
-    updatePlanSingleSession (state, payload) {
+    updateSessionAttr (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
       SESSION[payload.attr] = payload.data
     },
+    removeSession (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
+      const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
+      PLAN.sessions.splice(PLAN.sessions.indexOf(SESSION), 1)
+    },
+
+    // Templates
     addNewTemplate (state, payload) {
       state.templates.push({
         id: payload.templateId,
@@ -143,6 +165,10 @@ export const store = new Vuex.Store({
         name: payload.name,
         template: payload.template
       })
+    },
+    removeTemplate (state, payload) {
+      const TEMPLATE = state.templates.find(template => template.id === parseInt(payload.templateId))
+      state.templates.splice(state.templates.indexOf(TEMPLATE), 1)
     },
 
     // Client user
@@ -246,35 +272,19 @@ export const store = new Vuex.Store({
         dispatch('resolveDeepError', e)
       }
     },
-    async updateClient ({ dispatch, commit }, payload) {
-      commit('setData', {
-        attr: 'silentLoading',
-        data: true
+    async updateClient (payload) {
+      await axios.post('https://api.traininblocks.com/v2/clients', {
+        id: payload.client_id,
+        name: payload.name,
+        email: payload.email,
+        number: payload.number,
+        notifications: payload.notifications,
+        notes: payload.notes,
+        profile_img: payload.profile_img
       })
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      await axios.post('https://api.traininblocks.com/v2/clients',
-        {
-          id: payload.client_id,
-          name: payload.name,
-          email: payload.email,
-          number: payload.number,
-          notifications: payload.notifications,
-          notes: payload.notes,
-          profile_img: payload.profile_img
-        }
-      )
-      // Get the client information again as we have just updated the client
-      await dispatch('getClients', true)
-      dispatch('endLoading')
     },
-    async clientArchive ({ dispatch, commit, state }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    // payload => clientId, index
+    async clientArchive ({ commit, state }, payload) {
       commit('setData', {
         attr: 'clients',
         data: state.clients.splice(payload.index, 1)
@@ -282,36 +292,26 @@ export const store = new Vuex.Store({
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const EMAIL = CLIENT.email
       await axios.post(`https://api.traininblocks.com/v2/clients/archive/${payload.clientId}`)
-      const RESULT = await axios.post('/.netlify/functions/okta',
-        {
-          type: 'GET',
-          url: `?filter=profile.email+eq+"${EMAIL}"&limit=1`
-        }
-      )
-      if (RESULT.data.length >= 1) {
-        await axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {},
-            url: `${RESULT.data[0].id}/lifecycle/suspend`
-          }
-        )
-        await axios.post('/.netlify/functions/send-email',
-          {
-            to: EMAIL,
-            subject: 'Account Deactivated',
-            text: deleteEmailText(),
-            html: deleteEmail()
-          }
-        )
-      }
-      await dispatch('getClientsAndArchive')
-    },
-    async clientUnarchive ({ dispatch, commit, state }, clientId) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
+      const RESULT = await axios.post('/.netlify/functions/okta', {
+        type: 'GET',
+        url: `?filter=profile.email+eq+"${EMAIL}"&limit=1`
       })
+      if (RESULT.data.length >= 1) {
+        await axios.post('/.netlify/functions/okta', {
+          type: 'POST',
+          body: {},
+          url: `${RESULT.data[0].id}/lifecycle/suspend`
+        })
+        await axios.post('/.netlify/functions/send-email', {
+          to: EMAIL,
+          subject: 'Account Deactivated',
+          text: deleteEmailText(),
+          html: deleteEmail()
+        })
+      }
+    },
+    // payload => clientId
+    async clientUnarchive ({ commit, state }, clientId) {
       const CLIENT = state.archive.clients.find(client => client.client_id === parseInt(clientId))
       const LOCAL_STORAGE_ARRAY = JSON.parse(localStorage.getItem('clients'))
       LOCAL_STORAGE_ARRAY.push(CLIENT)
@@ -326,17 +326,13 @@ export const store = new Vuex.Store({
         data: SORTED_CLIENTS
       })
       await axios.post(`https://api.traininblocks.com/v2/clients/unarchive/${clientId}`)
-      await dispatch('getClientsAndArchive')
-      dispatch('endLoading')
     },
-    async clientDelete ({ dispatch, commit }, clientId) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
+    // payload => clientId
+    async clientDelete ({ commit }, clientId) {
+      await axios.delete(`https://api.traininblocks.com/v2/clients/${clientId}`)
+      commit('removeClient', {
+        clientId
       })
-      await axios.delete(`https://api.traininblocks.com/v2/clients/${parseInt(clientId)}`)
-      await dispatch('getClientsAndArchive')
-      dispatch('endLoading')
     },
 
     // Templates
@@ -351,51 +347,36 @@ export const store = new Vuex.Store({
         data: JSON.parse(localStorage.getItem('templates'))
       })
     },
-    async newTemplate ({ dispatch, commit, state }) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      await axios.put('https://api.traininblocks.com/v2/templates', {
+    async newTemplate ({ commit, state }) {
+      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/templates', {
         pt_id: state.claims.sub,
         name: 'Untitled',
         template: ''
-      }).then((response) => {
-        commit('addNewTemplate', {
-          templateId: response.data[0]['LAST_INSERT_ID()'],
-          ptId: state.claims.sub,
-          name: 'Untitled',
-          template: ''
-        })
       }).catch((e) => {
         console.error(e)
       })
-      dispatch('endLoading')
-    },
-    async updateTemplate ({ dispatch, commit, state }, templateId) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
+      commit('addNewTemplate', {
+        templateId: RESPONSE.data[0]['LAST_INSERT_ID()'],
+        ptId: state.claims.sub,
+        name: 'Untitled',
+        template: ''
       })
+    },
+    // payload => templateId
+    async updateTemplate ({ state }, templateId) {
       const TEMPLATE = state.templates.find(template => template.id === parseInt(templateId))
-      await axios.post('https://api.traininblocks.com/v2/templates',
-        {
-          name: TEMPLATE.name,
-          template: TEMPLATE.template,
-          id: parseInt(templateId)
-        }
-      )
-      await dispatch('getTemplates', true)
-      dispatch('endLoading')
-    },
-    async deleteTemplate ({ dispatch, commit }, templateId) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
+      await axios.post('https://api.traininblocks.com/v2/templates', {
+        name: TEMPLATE.name,
+        template: TEMPLATE.template,
+        id: parseInt(templateId)
       })
-      await axios.delete(`https://api.traininblocks.com/v2/templates/${parseInt(templateId)}`)
-      await dispatch('getTemplates', true)
-      dispatch('endLoading')
+    },
+    // payload => templateId
+    async deleteTemplate ({ commit }, templateId) {
+      await axios.delete(`https://api.traininblocks.com/v2/templates/${templateId}`)
+      commit('removeTemplate', {
+        templateId
+      })
     },
 
     // Portfolio
@@ -431,46 +412,28 @@ export const store = new Vuex.Store({
     },
     async createPortfolio ({ dispatch, commit, state }) {
       try {
-        await axios.put('https://api.traininblocks.com/v2/portfolio',
-          {
-            pt_id: state.claims.sub,
-            trainer_name: '',
-            business_name: '',
-            notes: ''
-          }
-        )
+        await axios.put('https://api.traininblocks.com/v2/portfolio', {
+          pt_id: state.claims.sub,
+          trainer_name: '',
+          business_name: '',
+          notes: ''
+        })
         await dispatch('getPortfolio')
       } catch (e) {
         dispatch('resolveDeepError', e)
       }
     },
-    async updatePortfolio ({ dispatch, commit, state }) {
-      commit('setData', {
-        attr: 'silentLoading',
-        data: true
+    async updatePortfolio ({ state }) {
+      await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
+        trainer_name: state.portfolio.trainer_name,
+        business_name: state.portfolio.business_name,
+        notes: state.portfolio.notes
       })
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`,
-        {
-          trainer_name: state.portfolio.trainer_name,
-          business_name: state.portfolio.business_name,
-          notes: state.portfolio.notes
-        }
-      )
-      await dispatch('getPortfolio')
-      dispatch('endLoading')
     },
 
     // Account
 
-    async changePassword ({ commit, state }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    async changePassword ({ state }, payload) {
       await axios.post('/.netlify/functions/okta', {
         type: 'POST',
         body: {
@@ -486,11 +449,7 @@ export const store = new Vuex.Store({
         html: passChangeEmail()
       })
     },
-    async saveClaims ({ commit, state }) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    async saveClaims ({ state }) {
       await axios.post('/.netlify/functions/okta', {
         type: 'POST',
         body: {
@@ -529,39 +488,31 @@ export const store = new Vuex.Store({
         localStorage.setItem('clients', JSON.stringify(state.clients))
       }
     },
+    // payload => clientId, name, duration, ordered
     async createPlan ({ commit, state }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
+      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
+        name: payload.name,
+        client_id: parseInt(payload.clientId),
+        duration: payload.duration,
+        block_color: '',
+        ordered: payload.ordered
+      }).catch((e) => {
+        console.error(e)
       })
-      await axios.put('https://api.traininblocks.com/v2/plans',
-        {
-          name: payload.name,
-          client_id: parseInt(payload.clientId),
-          duration: payload.duration,
-          block_color: '',
-          ordered: payload.ordered
-        }
-      ).then((response) => {
-        commit('addNewPlan', {
-          name: payload.name,
-          planId: response.data[0]['LAST_INSERT_ID()'],
-          clientId: parseInt(payload.clientId),
-          duration: payload.duration,
-          blockColor: '',
-          notes: null,
-          ordered: payload.ordered,
-          sessions: false
-        })
+      commit('addNewPlan', {
+        name: payload.name,
+        planId: RESPONSE.data[0]['LAST_INSERT_ID()'],
+        clientId: payload.clientId,
+        duration: payload.duration,
+        blockColor: '',
+        notes: null,
+        ordered: payload.ordered,
+        sessions: false
       })
       localStorage.setItem('clients', JSON.stringify(state.clients))
     },
     // payload => clientId, planId, planName, planDuration, blockColor, planNotes, planSessions
     async duplicatePlan ({ dispatch, commit, state }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
       const NEW_PLAN_RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
         name: `Copy of ${payload.planName}`,
         client_id: parseInt(payload.clientId),
@@ -601,14 +552,6 @@ export const store = new Vuex.Store({
     },
     // payload => clientId, planId, planName, planDuration, planNotes, planBlockColor, planOrdered
     async updatePlan ({ commit, state }, payload) {
-      commit('setData', {
-        attr: 'silentLoading',
-        data: true
-      })
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
       const RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans', {
         id: parseInt(payload.planId),
         name: payload.planName,
@@ -617,23 +560,25 @@ export const store = new Vuex.Store({
         block_color: payload.planBlockColor,
         ordered: payload.planOrdered
       })
-      commit('updatePlanWhole', {
+      commit('updateAllPlans', {
         clientId: payload.clientId,
         planId: payload.planId,
         data: JSON.parse(JSON.stringify(Object.assign({}, RESPONSE.data)).replace('{"0":', '').replace('}}', '}'))
       })
       localStorage.setItem('clients', JSON.stringify(state.clients))
     },
+    // payload => clientId, planId
     async deletePlan ({ commit }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
       await axios.delete(`https://api.traininblocks.com/v2/plans/${payload.planId}`)
+      commit('removePlan', {
+        clientId: payload.clientId,
+        planId: payload.planId
+      })
     },
 
     // Sessions
 
+    // payload => clientId, planId, force
     async getSessions ({ commit, state }, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -642,7 +587,7 @@ export const store = new Vuex.Store({
         const SORTED_RESPONSE = RESPONSE.data.sort((a, b) => {
           return new Date(a.date) - new Date(b.date)
         })
-        commit('updatePlanSessions', {
+        commit('updateAllSessions', {
           clientId: CLIENT.client_id,
           planId: PLAN.id,
           data: SORTED_RESPONSE.length === 0 ? false : SORTED_RESPONSE
@@ -650,67 +595,49 @@ export const store = new Vuex.Store({
       }
       localStorage.setItem('clients', JSON.stringify(state.clients))
     },
+    // payload => clientId, planId, sessionName, sessionDate, sessionNotes, sessionWeek
     async addSession ({ commit }, payload) {
-      let newSessionId
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      await axios.put('https://api.traininblocks.com/v2/sessions', {
+      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/sessions', {
         name: payload.sessionName,
         programme_id: parseInt(payload.planId),
         date: payload.sessionDate,
         notes: payload.sessionNotes,
         week_id: payload.sessionWeek
-      }).then((response) => {
-        newSessionId = response.data[0]['LAST_INSERT_ID()']
-        commit('addNewSession', {
-          planId: parseInt(payload.planId),
-          sessionId: newSessionId,
-          name: payload.sessionName,
-          date: payload.sessionDate,
-          notes: payload.sessionNotes,
-          weekId: payload.sessionWeek,
-          feedback: null,
-          checked: 0
-        })
       }).catch((e) => {
         console.error(e)
       })
-      return newSessionId
-    },
-    async updateSession ({ dispatch, commit, getters }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
-      await axios.post('https://api.traininblocks.com/v2/sessions',
-        {
-          id: SESSION.id,
-          name: SESSION.name,
-          date: SESSION.date,
-          notes: SESSION.notes,
-          week_id: SESSION.week_id,
-          checked: SESSION.checked
-        }
-      )
-      await dispatch('getSessions', {
+      const NEW_SESSION_ID = RESPONSE.data[0]['LAST_INSERT_ID()']
+      commit('addNewSession', {
         clientId: payload.clientId,
         planId: payload.planId,
-        force: true
+        sessionId: NEW_SESSION_ID,
+        name: payload.sessionName,
+        date: payload.sessionDate,
+        notes: payload.sessionNotes,
+        weekId: payload.sessionWeek,
+        feedback: null,
+        checked: 0
+      })
+      return NEW_SESSION_ID
+    },
+    // payload => clientId, planId, sessionId
+    async updateSession ({ getters }, payload) {
+      const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
+      await axios.post('https://api.traininblocks.com/v2/sessions', {
+        id: SESSION.id,
+        name: SESSION.name,
+        date: SESSION.date,
+        notes: SESSION.notes,
+        week_id: SESSION.week_id,
+        checked: SESSION.checked
       })
     },
-    async deleteSession ({ dispatch, commit }, payload) {
-      commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    async deleteSession ({ commit }, payload) {
       await axios.delete(`https://api.traininblocks.com/v2/sessions/${payload.sessionId}`)
-      await dispatch('getSessions', {
-        clientId: parseInt(payload.clientId),
-        planId: parseInt(payload.planId),
-        force: true
+      commit('removeSession', {
+        clientId: payload.clientId,
+        planId: payload.planId,
+        sessionId: payload.sessionId
       })
     },
 
