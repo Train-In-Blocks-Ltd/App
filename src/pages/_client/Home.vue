@@ -179,7 +179,7 @@
           aria-label="Client name"
           autocomplete="name"
           :disabled="silentLoading"
-          @blur="updateClient(clientDetails)"
+          @blur="updateClient()"
         >
         <input
           id="phone"
@@ -194,7 +194,7 @@
           maxlength="14"
           pattern="\d+"
           :disabled="silentLoading"
-          @blur="updateClient(clientDetails)"
+          @blur="updateClient()"
         >
         <div v-if="!sessions" class="client_info__options">
           <div class="client_email_bar">
@@ -214,7 +214,7 @@
           <button
             v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
             class="verify_button fadeIn"
-            @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, updateClient(clientDetails)"
+            @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, updateClient()"
           >
             {{ clientDetails.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
           </button>
@@ -413,7 +413,7 @@ export default {
       this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true, true)
       this.$store.dispatch('endLoading')
     },
-    async updateClient (client) {
+    async updateClient () {
       try {
         this.$store.commit('setData', {
           attr: 'silentLoading',
@@ -423,7 +423,7 @@ export default {
           attr: 'dontLeave',
           data: true
         })
-        await this.$store.dispatch('updateClient', client)
+        await this.$store.dispatch('updateClient')
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)

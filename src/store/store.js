@@ -274,13 +274,7 @@ export const store = new Vuex.Store({
     },
     async updateClient (payload) {
       await axios.post('https://api.traininblocks.com/v2/clients', {
-        id: payload.client_id,
-        name: payload.name,
-        email: payload.email,
-        number: payload.number,
-        notifications: payload.notifications,
-        notes: payload.notes,
-        profile_img: payload.profile_img
+        ...payload
       })
     },
     // payload => clientId, index
@@ -366,9 +360,7 @@ export const store = new Vuex.Store({
     async updateTemplate ({ state }, templateId) {
       const TEMPLATE = state.templates.find(template => template.id === parseInt(templateId))
       await axios.post('https://api.traininblocks.com/v2/templates', {
-        name: TEMPLATE.name,
-        template: TEMPLATE.template,
-        id: parseInt(templateId)
+        ...TEMPLATE
       })
     },
     // payload => templateId
@@ -425,9 +417,7 @@ export const store = new Vuex.Store({
     },
     async updatePortfolio ({ state }) {
       await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
-        trainer_name: state.portfolio.trainer_name,
-        business_name: state.portfolio.business_name,
-        notes: state.portfolio.notes
+        ...state.portfolio
       })
     },
 
