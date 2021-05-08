@@ -833,6 +833,8 @@ export default {
     this.$parent.sessions = true
     await this.$store.dispatch('getTemplates', false)
     this.noSessions = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
+  },
+  mounted () {
     if (!this.noSessions) {
       this.adherence()
       this.updater()
@@ -944,25 +946,6 @@ export default {
           SESSION.notes = this.tempEditorStore
           break
       }
-    },
-
-    // Background
-
-    updater () {
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      this.sessionDates = []
-      this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
-      for (const SESSION of PLAN.sessions) {
-        this.sessionDates.push({
-          title: SESSION.name,
-          date: SESSION.date,
-          color: this.weekColor.backgroundColor[SESSION.week_id - 1],
-          textColor: this.accessible_colors(this.weekColor.backgroundColor[SESSION.week_id - 1]),
-          week_id: SESSION.week_id,
-          session_id: SESSION.id
-        })
-      }
-      this.maxWeek = PLAN.duration
     },
 
     // MODALS AND TAB
@@ -1218,19 +1201,39 @@ export default {
 
     // INIT AND BACKGROUND
 
-    adherence () {
-      this.sessionsDone = 0
-      this.sessionsTotal = 0
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      for (const SESSION of PLAN.sessions) {
-        this.sessionsTotal += 1
-        if (SESSION.checked === 1) {
-          this.sessionsDone++
+    async updater () {
+      const PLAN = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+      this.sessionDates = []
+      this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
+      if (PLAN.sessions) {
+        for (const SESSION of PLAN.sessions) {
+          this.sessionDates.push({
+            title: SESSION.name,
+            date: SESSION.date,
+            color: this.weekColor.backgroundColor[SESSION.week_id - 1],
+            textColor: this.accessible_colors(this.weekColor.backgroundColor[SESSION.week_id - 1]),
+            week_id: SESSION.week_id,
+            session_id: SESSION.id
+          })
         }
       }
-      const PROGRESS_BAR = document.getElementById('progress-bar')
-      if (PROGRESS_BAR) {
-        PROGRESS_BAR.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+      this.maxWeek = PLAN.duration
+    },
+    async adherence () {
+      this.sessionsDone = 0
+      this.sessionsTotal = 0
+      const PLAN = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+      if (PLAN.sessions) {
+        for (const SESSION of PLAN.sessions) {
+          this.sessionsTotal += 1
+          if (SESSION.checked === 1) {
+            this.sessionsDone++
+          }
+        }
+        const PROGRESS_BAR = document.getElementById('progress-bar')
+        if (PROGRESS_BAR) {
+          PROGRESS_BAR.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+        }
       }
     },
     expandAll (toExpand) {
