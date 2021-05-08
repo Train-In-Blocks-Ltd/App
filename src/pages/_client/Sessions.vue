@@ -887,7 +887,6 @@ export default {
       }
     },
     resolvePlanInfoEditor (state) {
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       switch (state) {
         case 'edit':
           this.$store.commit('setData', {
@@ -895,7 +894,7 @@ export default {
             data: true
           })
           this.editingPlanNotes = true
-          this.tempEditorStore = PLAN.notes
+          this.tempEditorStore = this.plan.notes
           break
         case 'save':
           this.editingPlanNotes = false
@@ -907,7 +906,12 @@ export default {
             data: false
           })
           this.editingPlanNotes = false
-          PLAN.notes = this.tempEditorStore
+          this.$store.commit('updatePlanAttr', {
+            clientId: this.clientDetails.client_id,
+            planId: this.plan.id,
+            attr: 'notes',
+            data: this.tempEditorStore
+          })
           break
       }
     },
@@ -985,11 +989,10 @@ export default {
     },
     print () {
       const NOTES_ARR = []
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      PLAN.sessions.sort((a, b) => {
+      this.plan.sessions.sort((a, b) => {
         return new Date(a.date) - new Date(b.date)
       })
-      PLAN.sessions.forEach((session) => {
+      this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           NOTES_ARR.push(`<div class="session"><h2>${session.name}</h2><h3>${session.date}</h3><br>${this.updateHTML(session.notes, true)}</div>`)
         }
@@ -1007,8 +1010,7 @@ export default {
         attr: 'dontLeave',
         data: true
       })
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      PLAN.sessions.forEach((session) => {
+      this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           this.$store.commit('updateSessionAttr', {
             clientId: this.$route.params.client_id,
@@ -1031,8 +1033,7 @@ export default {
         attr: 'dontLeave',
         data: true
       })
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      PLAN.sessions.forEach((session) => {
+      this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           this.$store.commit('updateSessionAttr', {
             clientId: this.$route.params.client_id,
@@ -1061,8 +1062,7 @@ export default {
       })
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${boolState === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
-          const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-          PLAN.sessions.forEach((session) => {
+          this.plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
               this.$store.commit('updateSessionAttr', {
                 clientId: this.$route.params.client_id,
@@ -1110,8 +1110,7 @@ export default {
       this.$store.dispatch('endLoading')
     },
     selectAll (mode) {
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      PLAN.sessions.forEach((session) => {
+      this.plan.sessions.forEach((session) => {
         if (!this.selectedSessions.includes(session.id)) {
           if (mode === 'all') {
             document.getElementById(`sc-${session.id}`).checked = true
@@ -1193,8 +1192,12 @@ export default {
       }
     },
     updateSessionColor () {
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      PLAN.block_color = JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
+      this.$store.commit('updatePlanAttr', {
+        clientId: this.clientDetails.client_id,
+        planId: this.plan.id,
+        attr: 'block_color',
+        data: JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
+      })
       this.editingWeekColor = false
       this.updatePlan()
     },
@@ -1217,12 +1220,11 @@ export default {
 
     // INIT AND BACKGROUND
 
-    async updater () {
-      const PLAN = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+    updater () {
       this.sessionDates = []
-      this.weekColor.backgroundColor = PLAN.block_color.replace('[', '').replace(']', '').split(',')
-      if (PLAN.sessions) {
-        for (const SESSION of PLAN.sessions) {
+      this.weekColor.backgroundColor = this.plan.block_color.replace('[', '').replace(']', '').split(',')
+      if (this.plan.sessions) {
+        for (const SESSION of this.plan.sessions) {
           this.sessionDates.push({
             title: SESSION.name,
             date: SESSION.date,
@@ -1233,14 +1235,13 @@ export default {
           })
         }
       }
-      this.maxWeek = PLAN.duration
+      this.maxWeek = this.plan.duration
     },
-    async adherence () {
+    adherence () {
       this.sessionsDone = 0
       this.sessionsTotal = 0
-      const PLAN = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      if (PLAN.sessions) {
-        for (const SESSION of PLAN.sessions) {
+      if (this.plan.sessions) {
+        for (const SESSION of this.plan.sessions) {
           this.sessionsTotal += 1
           if (SESSION.checked === 1) {
             this.sessionsDone++
@@ -1254,10 +1255,9 @@ export default {
     },
     expandAll (toExpand) {
       try {
-        const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-        if (Array.isArray(PLAN.sessions)) {
-          if (PLAN.sessions.length !== 0) {
-            PLAN.sessions.forEach((session) => {
+        if (Array.isArray(this.plan.sessions)) {
+          if (this.plan.sessions.length !== 0) {
+            this.plan.sessions.forEach((session) => {
               if (toExpand === 'Expand') {
                 this.expandedSessions.push(session.id)
               } else {
@@ -1283,15 +1283,14 @@ export default {
           attr: 'dontLeave',
           data: true
         })
-        const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
         await this.$store.dispatch('duplicatePlan', {
           clientId,
-          planId: PLAN.id,
-          planName: PLAN.name,
-          planDuration: PLAN.duration,
-          blockColor: PLAN.block_color,
-          planNotes: PLAN.notes,
-          planSessions: PLAN.sessions
+          planId: this.plan.id,
+          planName: this.plan.name,
+          planDuration: this.plan.duration,
+          blockColor: this.plan.block_color,
+          planNotes: this.plan.notes,
+          planSessions: this.plan.sessions
         })
         this.$ga.event('Plan', 'duplicate')
         this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
@@ -1302,9 +1301,12 @@ export default {
       }
     },
     async updatePlan () {
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
       try {
-        await this.$store.dispatch('updatePlan', PLAN)
+        this.$store.commit('setData', {
+          attr: 'loading',
+          data: true
+        })
+        await this.$store.dispatch('updatePlan', this.plan)
         this.$ga.event('Plan', 'update')
         this.$store.dispatch('endLoading')
       } catch (e) {

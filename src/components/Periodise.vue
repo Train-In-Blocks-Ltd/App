@@ -128,6 +128,7 @@ button.red_button {
                 Notes
               </a>
             </div>
+            <!--
             <div v-if="isTrainer" class="plan_order">
               <inline-svg
                 v-if="plan.ordered !== 0"
@@ -142,6 +143,7 @@ button.red_button {
                 @click="changeOrder(plan.ordered, 'next')"
               />
             </div>
+            -->
           </div>
         </div>
         <div class="microcycles">
@@ -180,6 +182,7 @@ export default {
     }
   },
   methods: {
+    /*
     async sortPlans () {
       if (this.plans !== false) {
         for (const INDEX in this.plans) {
@@ -200,7 +203,7 @@ export default {
           return new Date(a.ordered) - new Date(b.ordered)
         })
       }
-    },
+    }
     async changeOrder (planOrder, direction) {
       this.$store.commit('setData', {
         attr: 'silentLoading',
@@ -280,6 +283,7 @@ export default {
       }
       this.$store.dispatch('endLoading')
     }
+    */
   }
 }
 </script>

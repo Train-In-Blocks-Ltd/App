@@ -111,6 +111,14 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
+    updateEntirePlan (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
+      for (let plan of CLIENT.plans) {
+        if (plan.id === payload.id) {
+          plan = payload
+        }
+      }
+    },
     updatePlanAttr (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -517,10 +525,11 @@ export const store = new Vuex.Store({
       }
     },
     // payload => client_id, id (plan), name, duration, notes, block_color, ordered
-    async updatePlan ({ state }, payload) {
+    async updatePlan ({ commit }, payload) {
       await axios.post('https://api.traininblocks.com/v2/plans', {
         ...payload
       })
+      commit('updateEntirePlan', payload)
     },
     // payload => clientId, planId
     async deletePlan ({ commit }, payload) {
