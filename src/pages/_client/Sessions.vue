@@ -950,7 +950,7 @@ export default {
 
     // MODALS AND TAB
 
-    duplicate () {
+    async duplicate () {
       this.$store.commit('setData', {
         attr: 'loading',
         data: true
@@ -966,16 +966,16 @@ export default {
       this.selectedSessions.forEach((sessionId) => {
         TO_DUPLICATE.push(SESSIONS.find(session => session.id === sessionId))
       })
-      TO_DUPLICATE.forEach((session) => {
-        this.addSession({
+      for (const SESSION of TO_DUPLICATE) {
+        await this.addSession({
           clientId: CLIENT_ID,
           planId: PLAN_ID,
-          sessionName: `Copy of ${session.name}`,
-          sessionDate: session.date,
-          sessionNotes: session.notes,
-          sessionWeek: session.week_id
+          sessionName: `Copy of ${SESSION.name}`,
+          sessionDate: SESSION.date,
+          sessionNotes: SESSION.notes,
+          sessionWeek: SESSION.week_id
         })
-      })
+      }
       this.adherence()
       this.checkForWeekSessions()
       this.updater()
@@ -1100,6 +1100,8 @@ export default {
           }
           this.checkForWeekSessions()
           this.deselectAll()
+          this.expandAll('Collapse')
+          this.updater()
           this.$ga.event('Session', 'delete')
           this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
           this.$store.dispatch('endLoading')
@@ -1122,9 +1124,8 @@ export default {
       })
     },
     deselectAll () {
-      const PLAN = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
-      PLAN.sessions.forEach((session) => {
-        document.getElementById(`sc-${session.id}`).checked = false
+      this.selectedSessions.forEach((id) => {
+        document.getElementById(`sc-${id}`).checked = false
       })
       this.selectedSessions = []
     },
