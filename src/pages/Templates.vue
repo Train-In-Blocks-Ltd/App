@@ -209,7 +209,7 @@ export default {
     })
     this.willBodyScroll(true)
     await this.$parent.setup()
-    await this.$store.dispatch('getTemplates', false)
+    await this.$store.dispatch('getTemplates')
     this.$store.dispatch('endLoading')
   },
   methods: {

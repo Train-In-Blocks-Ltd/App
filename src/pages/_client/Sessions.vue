@@ -602,7 +602,7 @@ input.session-date {
                 </a>
               </div>
               <!-- New session -->
-              <div v-if="!noSessions" class="container--sessions">
+              <div v-if="!noSessions && !loading" class="container--sessions">
                 <!-- Loop through sessions -->
                 <div
                   v-for="(session, indexed) in plan.sessions"
@@ -952,6 +952,10 @@ export default {
 
     duplicate () {
       this.$store.commit('setData', {
+        attr: 'loading',
+        data: true
+      })
+      this.$store.commit('setData', {
         attr: 'dontLeave',
         data: true
       })
@@ -970,8 +974,13 @@ export default {
           sessionDate: session.date,
           sessionNotes: session.notes,
           sessionWeek: session.week_id
-        }, 'new')
+        })
       })
+      this.adherence()
+      this.checkForWeekSessions()
+      this.updater()
+      this.$ga.event('Session', 'duplicate')
+      this.$parent.$parent.$refs.response_pop_up.show(`${this.selectedSessions.length > 1 ? 'Sessions' : 'Session'} duplicated`, 'Get programming!')
       this.$store.dispatch('endLoading')
     },
     print () {
@@ -1132,14 +1141,20 @@ export default {
         attr: 'dontLeave',
         data: true
       })
-      await this.addSession({
+      const NEW_SESSION_ID = await this.addSession({
         clientId: this.$route.params.client_id,
         planId: this.$route.params.id,
         sessionName: 'Untitled',
         sessionDate: this.today(),
         sessionNotes: '',
         sessionWeek: this.currentWeek
-      }, 'new')
+      })
+      this.adherence()
+      this.checkForWeekSessions()
+      this.updater()
+      this.goToEvent(NEW_SESSION_ID, this.currentWeek)
+      this.$ga.event('Session', 'new')
+      this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
       this.$store.dispatch('endLoading')
     },
 
@@ -1329,7 +1344,7 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
-    async addSession (data, type) {
+    async addSession (data) {
       try {
         const NEW_SESSION_ID = await this.$store.dispatch('addSession', {
           client_id: parseInt(data.clientId),
@@ -1341,21 +1356,7 @@ export default {
             week_id: data.sessionWeek
           }
         })
-        if (type === 'new') {
-          this.goToEvent(NEW_SESSION_ID, this.currentWeek)
-          this.$ga.event('Session', 'new')
-          this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
-        } else if (type === 'duplicate') {
-          this.$ga.event('Session', 'duplicate')
-          this.$parent.$parent.$refs.response_pop_up.show(`${this.selectedSessions.length > 1 ? 'Sessions' : 'Session'} duplicated`, 'Get programming!')
-        } else if (type === 'progress') {
-          this.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
-        }
-        if (type !== 'progress') {
-          this.adherence()
-          this.checkForWeekSessions()
-        }
-        this.$store.dispatch('endLoading')
+        return NEW_SESSION_ID
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }

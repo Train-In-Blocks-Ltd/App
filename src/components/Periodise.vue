@@ -172,9 +172,6 @@ export default {
     }
   },
   computed: {
-    clientDetails () {
-      return this.$store.state[this.isTrainer ? 'clientDetails' : 'clientUser']
-    },
     plans () {
       return this.$store.state[this.isTrainer ? 'clientDetails' : 'clientUser'].plans
     },
@@ -281,11 +278,6 @@ export default {
           })
           break
       }
-      const CLIENT = this.$store.state.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-      this.$store.commit('setData', {
-        attr: 'clientDetails',
-        data: CLIENT
-      })
       this.$store.dispatch('endLoading')
     }
   }

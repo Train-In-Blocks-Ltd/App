@@ -69,15 +69,8 @@
       >
         Cancel
       </button>
-      <button v-if="!simpleProgress" type="submit">
+      <button type="submit">
         Next
-      </button>
-      <button
-        v-else
-        type="button"
-        @click.prevent="progressComplete()"
-      >
-        Copy across
       </button>
     </form>
     <div v-else-if=" progressPage === 1">
@@ -183,19 +176,8 @@ export default {
 
       // Processing
       sessionDataset: [],
-      simpleProgress: true,
       progressDataInputs: []
     }
-  },
-  created () {
-    this.simpleProgress = true
-    this.planData.sessions.forEach((session) => {
-      if (this.sessionsToProgress.includes(session.id)) {
-        if (this.pull_protocols(session.name, session.notes === null ? '' : session.notes, session.date).length !== 0) {
-          this.simpleProgress = false
-        }
-      }
-    })
   },
   methods: {
     progressPull () {
@@ -229,6 +211,10 @@ export default {
       return sessionNotes
     },
     progressComplete () {
+      this.$store.commit('setData', {
+        attr: 'loading',
+        data: true
+      })
       const PROGRESS_SESSIONS = []
       this.sessionsToProgress.forEach((sessionId) => {
         PROGRESS_SESSIONS.push(this.planData.sessions.find(session => session.id === sessionId))
@@ -241,9 +227,9 @@ export default {
             planId: this.$route.params.id,
             sessionName: session.name,
             sessionDate: this.addDays(session.date, this.daysBetweenEachSession * (weekCount - START_WEEK)),
-            sessionNotes: this.simpleProgress ? session.notes : this.progress_process(session.id, session.notes, weekCount - START_WEEK),
+            sessionNotes: this.progress_process(session.id, session.notes, weekCount - START_WEEK),
             sessionWeek: weekCount
-          }, 'progress')
+          })
         })
       }
       this.$parent.currentWeek = this.progressTarget
@@ -251,6 +237,7 @@ export default {
       this.daysBetweenEachSession = 7
       this.$parent.deselectAll()
       this.$ga.event('Session', 'progress')
+      this.$parent.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')
       this.$store.dispatch('endLoading')
     }
   }
