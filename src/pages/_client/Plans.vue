@@ -148,10 +148,7 @@ export default {
     this.$parent.checkClient()
     const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
     if (!this.clientDetails.plans) {
-      await this.$store.dispatch('getPlans', {
-        clientId: CLIENT.client_id,
-        force: true
-      })
+      await this.$store.dispatch('getPlans', CLIENT.client_id)
     }
     this.noPlans = this.clientDetails.plans === false
     this.$store.dispatch('endLoading')

@@ -189,13 +189,13 @@ export default {
           const PLAN = this.plans[INDEX]
           if (PLAN.ordered === null || PLAN.ordered !== INDEX) {
             await this.$store.dispatch('updatePlan', {
-              clientId: this.$route.params.client_id,
-              planId: PLAN.id,
-              planName: PLAN.name,
-              planDuration: PLAN.duration,
-              planNotes: PLAN.notes,
-              planBlockColor: PLAN.block_color,
-              planOrdered: INDEX
+              client_id: this.$route.params.client_id,
+              id: PLAN.id,
+              name: PLAN.name,
+              duration: PLAN.duration,
+              notes: PLAN.notes,
+              block_olor: PLAN.block_color,
+              ordered: INDEX
             })
           }
         }
@@ -229,22 +229,22 @@ export default {
           })
           this.sortPlans()
           await this.$store.dispatch('updatePlan', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder + 1].id,
-            planName: this.plans[planOrder + 1].name,
-            planDuration: this.plans[planOrder + 1].duration,
-            planNotes: this.plans[planOrder + 1].notes,
-            planBlockColor: this.plans[planOrder + 1].block_color,
-            planOrdered: this.plans[planOrder + 1].ordered
+            client_id: this.$route.params.client_id,
+            id: this.plans[planOrder + 1].id,
+            name: this.plans[planOrder + 1].name,
+            duration: this.plans[planOrder + 1].duration,
+            notes: this.plans[planOrder + 1].notes,
+            block_color: this.plans[planOrder + 1].block_color,
+            ordered: this.plans[planOrder + 1].ordered
           })
           await this.$store.dispatch('updatePlan', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder].id,
-            planName: this.plans[planOrder].name,
-            planDuration: this.plans[planOrder].duration,
-            planNotes: this.plans[planOrder].notes,
-            planBlockColor: this.plans[planOrder].block_color,
-            planOrdered: this.plans[planOrder].ordered
+            client_id: this.$route.params.client_id,
+            id: this.plans[planOrder].id,
+            name: this.plans[planOrder].name,
+            duration: this.plans[planOrder].duration,
+            notes: this.plans[planOrder].notes,
+            block_color: this.plans[planOrder].block_color,
+            ordered: this.plans[planOrder].ordered
           })
           break
         case 'back':
@@ -262,22 +262,22 @@ export default {
           })
           this.sortPlans()
           await this.$store.dispatch('updatePlan', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder - 1].id,
-            planName: this.plans[planOrder - 1].name,
-            planDuration: this.plans[planOrder - 1].duration,
-            planNotes: this.plans[planOrder - 1].notes,
-            planBlockColor: this.plans[planOrder - 1].block_color,
-            planOrdered: this.plans[planOrder - 1].ordered
+            client_id: this.$route.params.client_id,
+            id: this.plans[planOrder - 1].id,
+            name: this.plans[planOrder - 1].name,
+            duration: this.plans[planOrder - 1].duration,
+            notes: this.plans[planOrder - 1].notes,
+            block_color: this.plans[planOrder - 1].block_color,
+            ordered: this.plans[planOrder - 1].ordered
           })
           await this.$store.dispatch('updatePlan', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder].id,
-            planName: this.plans[planOrder].name,
-            planDuration: this.plans[planOrder].duration,
-            planNotes: this.plans[planOrder].notes,
-            planBlockColor: this.plans[planOrder].block_color,
-            planOrdered: this.plans[planOrder].ordered
+            client_id: this.$route.params.client_id,
+            id: this.plans[planOrder].id,
+            name: this.plans[planOrder].name,
+            duration: this.plans[planOrder].duration,
+            notes: this.plans[planOrder].notes,
+            block_color: this.plans[planOrder].block_color,
+            ordered: this.plans[planOrder].ordered
           })
           break
       }

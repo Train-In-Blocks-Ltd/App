@@ -1332,12 +1332,14 @@ export default {
     async addSession (data, type) {
       try {
         const NEW_SESSION_ID = await this.$store.dispatch('addSession', {
-          clientId: data.clientId,
-          planId: data.planId,
-          sessionName: data.sessionName,
-          sessionDate: data.sessionDate,
-          sessionNotes: data.sessionNotes,
-          sessionWeek: data.sessionWeek
+          client_id: parseInt(data.clientId),
+          data: {
+            programme_id: parseInt(data.planId),
+            name: data.sessionName,
+            date: data.sessionDate,
+            notes: data.sessionNotes,
+            week_id: data.sessionWeek
+          }
         })
         if (type === 'new') {
           this.goToEvent(NEW_SESSION_ID, this.currentWeek)

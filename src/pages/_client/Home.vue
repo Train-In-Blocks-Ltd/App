@@ -276,10 +276,7 @@ export default {
     this.willBodyScroll(true)
     await this.$parent.setup()
     const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-    await this.$store.dispatch('getPlans', {
-      clientId: CLIENT.client_id,
-      force: true
-    })
+    await this.$store.dispatch('getPlans', CLIENT.client_id)
     this.$store.commit('setData', {
       attr: 'clientDetails',
       data: CLIENT

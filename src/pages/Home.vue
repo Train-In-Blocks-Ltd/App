@@ -121,6 +121,10 @@ export default {
       attr: 'loading',
       data: true
     })
+    this.$store.commit('setData', {
+      attr: 'clientDetails',
+      data: null
+    })
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
   }
