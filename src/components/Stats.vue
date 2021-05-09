@@ -56,6 +56,13 @@
   margin: .4rem 0 2rem 0;
   font-size: 2.4rem
 }
+.graph_placeholder {
+  padding: 1rem;
+  box-shadow: var(--low_shadow);
+  border-radius: 10px;
+  background-color: var(--fore);
+  margin-top: 2rem
+}
 
 /* Protocol error table */
 .protocol_error {
@@ -190,7 +197,7 @@
             </div>
           </div>
           <div
-            v-if="showDataTypeSelector && !dataToVisualise.includes(null)"
+            v-if="showDataTypeSelector && dataToVisualise.length !== 0"
             class="data-desc"
           >
             <div
@@ -206,9 +213,6 @@
               </p>
             </div>
           </div>
-          <h3 v-else>
-            No data to show
-          </h3>
         </div>
         <div v-show="protocolErrors.length !== 0" class="protocol_error">
           <p class="text--red">
@@ -232,9 +236,9 @@
               <td>{{ error.protocol }}</td>
             </tr>
           </table>
-        </div><br>
+        </div>
         <simple-chart
-          v-if="!dataToVisualise.includes(null) && dataToVisualise !== []"
+          v-if="dataToVisualise.length !== 0"
           :data-points="dataToVisualise"
           :labels="labelsToVisualise"
           :dates="dateDaysToVisualise"
@@ -245,6 +249,14 @@
           aria-label="Graph"
           class="fadeIn"
         />
+        <div v-else class="graph_placeholder">
+          <h3>
+            No data to plot on the graph
+          </h3>
+          <p class="grey">
+            Make sure that you've used the correct format and have chosen a selection above
+          </p>
+        </div>
       </div>
     </div>
   </div>

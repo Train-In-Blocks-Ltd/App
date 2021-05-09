@@ -605,7 +605,7 @@ input.session-date {
               <div v-if="!noSessions && !loading" class="container--sessions">
                 <!-- Loop through sessions -->
                 <div
-                  v-for="(session, indexed) in plan.sessions"
+                  v-for="(session, indexed) in sessionsSorter(plan.sessions)"
                   v-show="session.week_id === currentWeek"
                   :id="'session-' + session.id"
                   :key="indexed"
@@ -1220,6 +1220,12 @@ export default {
 
     // INIT AND BACKGROUND
 
+    sessionsSorter (data) {
+      data = data.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
+      })
+      return data
+    },
     updater () {
       this.sessionDates = []
       this.weekColor.backgroundColor = this.plan.block_color.replace('[', '').replace(']', '').split(',')

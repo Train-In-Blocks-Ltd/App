@@ -60,7 +60,7 @@
 
 <template>
   <div id="simple_chart">
-    <div v-if="dataPoints.length !== 0" class="content_wrapper">
+    <div class="content_wrapper">
       <div class="selected_bar">
         <h3>
           {{ focusText !== 'Select a point' ? focusText[1] : '' }}
@@ -137,14 +137,6 @@
           Prediction error (RMS): {{ predictionError }}
         </p>
       </div>
-    </div>
-    <div v-else>
-      <h3>
-        No data to plot on the graph
-      </h3>
-      <p class="grey">
-        Make sure that you've used the correct format and have chosen a selection above
-      </p>
     </div>
   </div>
 </template>
