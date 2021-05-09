@@ -26,6 +26,9 @@
 }
 
 /* Editor */
+button.menu_button:focus {
+  box-shadow: none
+}
 div.ProseMirror {
   outline: none
 }
@@ -315,7 +318,7 @@ div#rich_editor.editorFocused {
         <div class="menu_bar_wrapper">
           <div id="menu_bar" :class="{ editorFocused: caretInEditor }">
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               :class="{ 'is-active': editor.isActive('bold') }"
               title="Bold"
               @click="editor.chain().focus().toggleBold().run()"
@@ -323,7 +326,7 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
             </button>
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               :class="{ 'is-active': editor.isActive('italic') }"
               title="Italic"
               @click="editor.chain().focus().toggleItalic().run()"
@@ -331,7 +334,7 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
             </button>
             <button
-              class="fadeIn separated"
+              class="fadeIn menu_button separated"
               :class="{ 'is-active': editor.isActive('underline') }"
               title="Underline"
               @click="editor.chain().focus().toggleUnderline().run()"
@@ -339,7 +342,7 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
             </button>
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               :class="{ 'is-active': editor.isActive('ordered_list') }"
               title="Ordered list"
               @click="editor.chain().focus().toggleOrderedList().run()"
@@ -347,7 +350,7 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
             </button>
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               :class="{ 'is-active': editor.isActive('bullet_list') }"
               title="Bullet list"
               @click="editor.chain().focus().toggleBulletList().run()"
@@ -355,7 +358,7 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
             </button>
             <button
-              class="separated"
+              class="separated menu_button"
               :class="{ 'is-active': editor.isActive('taskList') }"
               title="Checklist"
               @click="editor.chain().focus().toggleTaskList().run()"
@@ -363,13 +366,15 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
             </button>
             <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('horizontalRule') }"
               title="Horizontal line"
               @click="editor.chain().focus().setHorizontalRule().run()"
             >
               <inline-svg :src="require('../assets/svg/editor/horizontal-rule.svg')" />
             </button>
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               :class="{ 'is-active': editor.isActive('link') }"
               title="Hyperlink"
               @click="editor.isActive('link') ? editor.chain().focus().unsetLink().run() : setLinkUrl()"
@@ -377,7 +382,7 @@ div#rich_editor.editorFocused {
               <inline-svg :src="require('../assets/svg/editor/link.svg')" />
             </button>
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               title="Image"
               @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
             >
@@ -385,7 +390,7 @@ div#rich_editor.editorFocused {
             </button>
             <button
               v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-              class="fadeIn"
+              class="fadeIn menu_button"
               title="Template"
               @click="showAddTemplate = !showAddTemplate, $parent.goToEvent(itemId, weekId)"
             >
@@ -402,14 +407,14 @@ div#rich_editor.editorFocused {
             </button>
             -->
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               title="Undo"
               @click="editor.chain().focus().undo().run()"
             >
               <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
             </button>
             <button
-              class="fadeIn"
+              class="fadeIn menu_button"
               title="Redo"
               @click="editor.chain().focus().redo().run()"
             >
