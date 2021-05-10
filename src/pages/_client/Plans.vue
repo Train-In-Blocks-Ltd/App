@@ -150,7 +150,7 @@ export default {
     if (!this.clientDetails.plans) {
       await this.$store.dispatch('getPlans', CLIENT.client_id)
     }
-    this.noPlans = this.clientDetails.plans === false
+    this.noPlans = (this.clientDetails.plans === false || this.clientDetails.plans.length === 0)
     this.$store.dispatch('endLoading')
   },
   methods: {
