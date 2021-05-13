@@ -184,7 +184,7 @@ ul[data-type='taskList'] li > label {
   font-size: .8rem;
   padding: 1rem;
   background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  border: 2px solid var(--base);
   border-radius: 5px;
   overflow-y: auto
 }
