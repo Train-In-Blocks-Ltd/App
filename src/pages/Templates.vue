@@ -317,11 +317,18 @@ export default {
     async deleteMultiTemplates () {
       if (this.selectedTemplates.length !== 0) {
         if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete all the selected templates?', 'We will remove these templates from our database and it won\'t be recoverable.')) {
-          this.selectedTemplates.forEach((templateId) => {
-            this.deleteTemplate(templateId)
-          })
-          this.helper('delete')
-          this.deselectAll()
+          try {
+            this.$store.commit('setData', {
+              attr: 'dontLeave',
+              data: true
+            })
+            await this.$store.dispatch('deleteTemplate', this.selectedTemplates)
+            this.$store.dispatch('endLoading')
+            this.helper('delete')
+            this.deselectAll()
+          } catch (e) {
+            this.$parent.resolveError(e)
+          }
         }
       }
     },
@@ -350,18 +357,6 @@ export default {
         })
         await this.$store.dispatch('updateTemplate', templateId)
         this.helper('update')
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.$parent.resolveError(e)
-      }
-    },
-    async deleteTemplate (templateId) {
-      try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('deleteTemplate', templateId)
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)

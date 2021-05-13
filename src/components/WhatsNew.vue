@@ -10,9 +10,9 @@ img {
 }
 .update_item {
   background-color: var(--fore);
+  border: 3px solid var(--base);
   border-radius: 10px;
-  padding: 2rem;
-  box-shadow: var(--low_shadow)
+  padding: 2rem
 }
 
 /* Responsive */

@@ -166,9 +166,7 @@ export default {
         })
         if (this.selectedClients.length !== 0) {
           if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected clients?', 'We will remove their data(s) from our database and it won\'t be recoverable.')) {
-            for (const CLIENT_ID of this.selectedClients) {
-              await this.$store.dispatch('clientDelete', CLIENT_ID)
-            }
+            await this.$store.dispatch('clientDelete', this.selectedClients)
             this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Clients deleted' : 'Client Delete', 'All their data have been removed')
             this.deselectAll()
           }
@@ -186,9 +184,7 @@ export default {
         })
         if (this.selectedClients.length !== 0) {
           if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to unarchive all the selected clients?', 'Their datas will be recovered and available on the Home page.')) {
-            for (const CLIENT_ID of this.selectedClients) {
-              await this.$store.dispatch('clientUnarchive', CLIENT_ID)
-            }
+            await this.$store.dispatch('clientUnarchive', this.selectedClients)
             this.$parent.$refs.response_pop_up.show(this.selectedClients.length > 1 ? 'Unarchived clients' : 'Unarchived client', 'All their data have been recovered')
             this.deselectAll()
           }

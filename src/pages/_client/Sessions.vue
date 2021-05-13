@@ -1087,16 +1087,14 @@ export default {
       })
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected sessions?', 'We will remove these sessions from our database and it won\'t be recoverable.')) {
-          for (const SESSION_ID of this.selectedSessions) {
-            try {
-              await this.$store.dispatch('deleteSession', {
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
-                sessionId: SESSION_ID
-              })
-            } catch (e) {
-              this.$parent.$parent.resolveError(e)
-            }
+          try {
+            await this.$store.dispatch('deleteSession', {
+              clientId: this.$route.params.client_id,
+              planId: this.$route.params.id,
+              sessionIds: this.selectedSessions
+            })
+          } catch (e) {
+            this.$parent.$parent.resolveError(e)
           }
           this.checkForWeekSessions()
           this.deselectAll()

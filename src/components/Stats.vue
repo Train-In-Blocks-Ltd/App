@@ -26,7 +26,7 @@
 .data-select {
   padding: 1rem;
   background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  border: 3px solid var(--base);
   border-radius: 10px;
   margin-right: 4rem
 }
@@ -48,7 +48,7 @@
   grid-gap: 1rem;
   padding: 1rem;
   background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  border: 3px solid var(--base);
   border-radius: 10px;
   width: 100%
 }
@@ -58,7 +58,7 @@
 }
 .graph_placeholder {
   padding: 1rem;
-  box-shadow: var(--low_shadow);
+  border: 3px solid var(--base);
   border-radius: 10px;
   background-color: var(--fore);
   margin-top: 2rem
@@ -71,7 +71,7 @@
   margin-top: 4rem;
   background-color: var(--fore);
   padding: 1rem;
-  box-shadow: var(--low_shadow);
+  border: 3px solid var(--base);
   border-radius: 10px
 }
 .protocol_error table :is(th, td) {

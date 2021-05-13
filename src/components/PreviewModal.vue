@@ -25,6 +25,10 @@
 
 <style scoped>
 /* Other */
+.title_container {
+  display: flex;
+  justify-content: space-between
+}
 h2.title {
   margin-bottom: 2rem
 }
@@ -44,9 +48,17 @@ h2.title {
   <div class="preview_modal">
     <div :class="{ opened_sections: html !== '' && html !== null }" class="section_overlay" />
     <div v-if="html !== '' && html !== null" class="tab_overlay_content fadeIn delay fill_mode_both">
-      <h3 class="title">
-        {{ desc }}
-      </h3>
+      <div class="title_container">
+        <h3 class="title">
+          {{ desc }}
+        </h3>
+        <inline-svg
+          class="icon--options cursor"
+          :src="require('../assets/svg/close.svg')"
+          aria-label="Close"
+          @click="$emit('close'), willBodyScroll(true)"
+        />
+      </div>
       <div
         class="preview_html"
         :class="{ noMedia: !showMedia }"
@@ -54,12 +66,6 @@ h2.title {
         @mouseleave="focused = false"
         v-html="updateHTML(html, !showBrackets)"
       />
-      <button
-        class="red_button"
-        @click="$emit('close'), willBodyScroll(true)"
-      >
-        Close
-      </button>
     </div>
   </div>
 </template>

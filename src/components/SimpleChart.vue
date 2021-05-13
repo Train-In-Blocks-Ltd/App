@@ -2,7 +2,7 @@
 #simple_chart {
   padding: 1rem;
   background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  border: 3px solid var(--base);
   border-radius: 10px;
   margin: 2rem 0
 }

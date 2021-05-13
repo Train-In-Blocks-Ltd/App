@@ -89,19 +89,24 @@ export const store = new Vuex.Store({
       const IDX = state.clients.indexOf(client)
       state.clients.splice(IDX, 1)
     },
-    unarchiveClient (state, client) {
-      const IDX = state.archive.clients.indexOf(client)
-      state.archive.clients.splice(IDX, 1)
-      state.clients.push(client)
-      state.clients.sort((a, b) => {
-        const NAME_A = a.name.toUpperCase()
-        const NAME_B = b.name.toUpperCase()
-        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
+    unarchiveClient (state, payload) {
+      payload.forEach((clientId) => {
+        const CLIENT = state.archive.clients.find(client => client.client_id === clientId)
+        const IDX = state.archive.clients.indexOf(CLIENT)
+        state.archive.clients.splice(IDX, 1)
+        state.clients.push(CLIENT)
+        state.clients.sort((a, b) => {
+          const NAME_A = a.name.toUpperCase()
+          const NAME_B = b.name.toUpperCase()
+          return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
+        })
       })
     },
     removeClient (state, payload) {
-      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-      state.archive.clients.splice(state.archive.clients.indexOf(CLIENT), 1)
+      payload.forEach((clientId) => {
+        const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
+        state.archive.clients.splice(state.archive.clients.indexOf(CLIENT), 1)
+      })
     },
 
     // Plans
@@ -154,10 +159,12 @@ export const store = new Vuex.Store({
       SESSION[payload.attr] = payload.data
     },
     removeSession (state, payload) {
-      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-      const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
-      PLAN.sessions.splice(PLAN.sessions.indexOf(SESSION), 1)
+      payload.sessionIds.forEach((sessionId) => {
+        const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+        const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
+        const SESSION = PLAN.sessions.find(session => session.id === sessionId)
+        PLAN.sessions.splice(PLAN.sessions.indexOf(SESSION), 1)
+      })
     },
 
     // Templates
@@ -170,8 +177,10 @@ export const store = new Vuex.Store({
       })
     },
     removeTemplate (state, payload) {
-      const TEMPLATE = state.templates.find(template => template.id === parseInt(payload.templateId))
-      state.templates.splice(state.templates.indexOf(TEMPLATE), 1)
+      payload.forEach((templateId) => {
+        const TEMPLATE = state.templates.find(template => template.id === templateId)
+        state.templates.splice(state.templates.indexOf(TEMPLATE), 1)
+      })
     },
 
     // Client user
@@ -303,18 +312,23 @@ export const store = new Vuex.Store({
         })
       }
     },
-    // payload => clientId
-    async clientUnarchive ({ commit, state }, clientId) {
-      const CLIENT = state.archive.clients.find(client => client.client_id === parseInt(clientId))
-      commit('unarchiveClient', CLIENT)
-      await axios.post(`https://api.traininblocks.com/v2/clients/unarchive/${clientId}`)
-    },
-    // payload => clientId
-    async clientDelete ({ commit }, clientId) {
-      await axios.delete(`https://api.traininblocks.com/v2/clients/${clientId}`)
-      commit('removeClient', {
-        clientId
+    // payload => clientIds
+    async clientUnarchive ({ commit }, clientIds) {
+      const POST_DATA = []
+      clientIds.forEach((clientId) => {
+        POST_DATA.push({ id: clientId })
       })
+      commit('unarchiveClient', clientIds)
+      await axios.post('https://api.traininblocks.com/v2/batch/clients/unarchive', POST_DATA)
+    },
+    // payload => clients
+    async clientDelete ({ commit }, clients) {
+      const DELETE_IDS = []
+      clients.forEach((clientId) => {
+        DELETE_IDS.push({ id: clientId })
+      })
+      await axios.delete('https://api.traininblocks.com/v2/batch/clients', DELETE_IDS)
+      commit('removeClient', clients)
     },
 
     // Templates
@@ -350,18 +364,20 @@ export const store = new Vuex.Store({
         ...TEMPLATE
       })
     },
-    // payload => templateId
-    async deleteTemplate ({ commit }, templateId) {
-      await axios.delete(`https://api.traininblocks.com/v2/templates/${templateId}`)
-      commit('removeTemplate', {
-        templateId
+    // payload => selectedTemplates
+    async deleteTemplate ({ commit }, templateIds) {
+      const DELETE_IDS = []
+      templateIds.forEach((templateId) => {
+        DELETE_IDS.push({ id: templateId })
       })
+      await axios.delete('https://api.traininblocks.com/v2/batch/templates', DELETE_IDS)
+      commit('removeTemplate', templateIds)
     },
 
     // Portfolio
 
     async getPortfolio ({ dispatch, commit, state }) {
-      if (!state.portfolio) {
+      if (!state.portfolio || !state.portfolio.business_name || !state.portfolio.trainer_name) {
         let portfolioData
         if (state.claims.user_type === 'Trainer' || state.claims.user_type === 'Admin') {
           const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`)
@@ -587,13 +603,17 @@ export const store = new Vuex.Store({
         checked: SESSION.checked
       })
     },
-    // payload => clientId, planId, sessionId
+    // payload => clientId, planId, sessionIds
     async deleteSession ({ commit }, payload) {
-      await axios.delete(`https://api.traininblocks.com/v2/sessions/${payload.sessionId}`)
+      const DELETE_IDS = []
+      payload.sessionIds.forEach((sessionId) => {
+        DELETE_IDS.push({ id: sessionId })
+      })
+      await axios.delete('https://api.traininblocks.com/v2/batch/sessions', DELETE_IDS)
       commit('removeSession', {
         clientId: payload.clientId,
         planId: payload.planId,
-        sessionId: payload.sessionId
+        sessionIds: payload.sessionIds
       })
     },
 
