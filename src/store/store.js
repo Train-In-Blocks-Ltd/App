@@ -327,7 +327,9 @@ export const store = new Vuex.Store({
       clients.forEach((clientId) => {
         DELETE_IDS.push({ id: clientId })
       })
-      await axios.delete('https://api.traininblocks.com/v2/batch/clients', DELETE_IDS)
+      await axios.delete('https://api.traininblocks.com/v2/batch/clients', {
+        data: DELETE_IDS
+      })
       commit('removeClient', clients)
     },
 
@@ -370,7 +372,9 @@ export const store = new Vuex.Store({
       templateIds.forEach((templateId) => {
         DELETE_IDS.push({ id: templateId })
       })
-      await axios.delete('https://api.traininblocks.com/v2/batch/templates', DELETE_IDS)
+      await axios.delete('https://api.traininblocks.com/v2/batch/templates', {
+        data: DELETE_IDS
+      })
       commit('removeTemplate', templateIds)
     },
 
@@ -609,7 +613,9 @@ export const store = new Vuex.Store({
       payload.sessionIds.forEach((sessionId) => {
         DELETE_IDS.push({ id: sessionId })
       })
-      await axios.delete('https://api.traininblocks.com/v2/batch/sessions', DELETE_IDS)
+      await axios.delete('https://api.traininblocks.com/v2/batch/sessions', {
+        data: DELETE_IDS
+      })
       commit('removeSession', {
         clientId: payload.clientId,
         planId: payload.planId,
