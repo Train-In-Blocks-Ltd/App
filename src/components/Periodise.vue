@@ -128,22 +128,6 @@ button.red_button {
                 Notes
               </a>
             </div>
-            <!--
-            <div v-if="isTrainer" class="plan_order">
-              <inline-svg
-                v-if="plan.ordered !== 0"
-                :src="require('../assets/svg/arrow-left.svg')"
-                class="left no_fill"
-                @click="changeOrder(plan.ordered, 'back')"
-              />
-              <inline-svg
-                v-if="plan.ordered !== plans.length - 1"
-                :src="require('../assets/svg/arrow-right.svg')"
-                class="right no_fill"
-                @click="changeOrder(plan.ordered, 'next')"
-              />
-            </div>
-            -->
           </div>
         </div>
         <div class="microcycles">
@@ -167,123 +151,15 @@ export default {
   components: {
     PreviewModal
   },
+  props: {
+    plans: Array,
+    isTrainer: Boolean
+  },
   data () {
     return {
       planDesc: null,
       planHTML: null
     }
-  },
-  computed: {
-    plans () {
-      return this.$store.state[this.isTrainer ? 'clientDetails' : 'clientUser'].plans
-    },
-    isTrainer () {
-      return this.$store.state.isTrainer
-    }
-  },
-  methods: {
-    /*
-    async sortPlans () {
-      if (this.plans !== false) {
-        for (const INDEX in this.plans) {
-          const PLAN = this.plans[INDEX]
-          if (PLAN.ordered === null || PLAN.ordered !== INDEX) {
-            await this.$store.dispatch('updatePlan', {
-              client_id: this.$route.params.client_id,
-              id: PLAN.id,
-              name: PLAN.name,
-              duration: PLAN.duration,
-              notes: PLAN.notes,
-              block_olor: PLAN.block_color,
-              ordered: INDEX
-            })
-          }
-        }
-        this.plans.sort((a, b) => {
-          return new Date(a.ordered) - new Date(b.ordered)
-        })
-      }
-    }
-    async changeOrder (planOrder, direction) {
-      this.$store.commit('setData', {
-        attr: 'silentLoading',
-        data: true
-      })
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      switch (direction) {
-        case 'next':
-          this.$store.commit('updatePlanAttr', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder + 1].id,
-            attr: 'ordered',
-            data: planOrder
-          })
-          this.$store.commit('updatePlanAttr', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder].id,
-            attr: 'ordered',
-            data: planOrder + 1
-          })
-          this.sortPlans()
-          await this.$store.dispatch('updatePlan', {
-            client_id: this.$route.params.client_id,
-            id: this.plans[planOrder + 1].id,
-            name: this.plans[planOrder + 1].name,
-            duration: this.plans[planOrder + 1].duration,
-            notes: this.plans[planOrder + 1].notes,
-            block_color: this.plans[planOrder + 1].block_color,
-            ordered: this.plans[planOrder + 1].ordered
-          })
-          await this.$store.dispatch('updatePlan', {
-            client_id: this.$route.params.client_id,
-            id: this.plans[planOrder].id,
-            name: this.plans[planOrder].name,
-            duration: this.plans[planOrder].duration,
-            notes: this.plans[planOrder].notes,
-            block_color: this.plans[planOrder].block_color,
-            ordered: this.plans[planOrder].ordered
-          })
-          break
-        case 'back':
-          this.$store.commit('updatePlanAttr', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder - 1].id,
-            attr: 'ordered',
-            data: planOrder
-          })
-          this.$store.commit('updatePlanAttr', {
-            clientId: this.$route.params.client_id,
-            planId: this.plans[planOrder].id,
-            attr: 'ordered',
-            data: planOrder - 1
-          })
-          this.sortPlans()
-          await this.$store.dispatch('updatePlan', {
-            client_id: this.$route.params.client_id,
-            id: this.plans[planOrder - 1].id,
-            name: this.plans[planOrder - 1].name,
-            duration: this.plans[planOrder - 1].duration,
-            notes: this.plans[planOrder - 1].notes,
-            block_color: this.plans[planOrder - 1].block_color,
-            ordered: this.plans[planOrder - 1].ordered
-          })
-          await this.$store.dispatch('updatePlan', {
-            client_id: this.$route.params.client_id,
-            id: this.plans[planOrder].id,
-            name: this.plans[planOrder].name,
-            duration: this.plans[planOrder].duration,
-            notes: this.plans[planOrder].notes,
-            block_color: this.plans[planOrder].block_color,
-            ordered: this.plans[planOrder].ordered
-          })
-          break
-      }
-      this.$store.dispatch('endLoading')
-    }
-    */
   }
 }
 </script>

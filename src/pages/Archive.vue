@@ -171,7 +171,7 @@ export default {
             this.deselectAll()
           }
         }
-        this.$$store.dispatch('endLoading')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }

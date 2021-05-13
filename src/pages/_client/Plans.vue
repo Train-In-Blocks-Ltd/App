@@ -88,7 +88,7 @@
         Plans
       </h2>
       <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-      <periodise v-else-if="!noPlans" />
+      <periodise v-else-if="!noPlans" :is-trainer="true" :plans.sync="clientDetails.plans" />
       <p
         v-else
         class="text--holder text--small grey"

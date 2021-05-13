@@ -104,7 +104,7 @@ export const store = new Vuex.Store({
     },
     removeClient (state, payload) {
       payload.forEach((clientId) => {
-        const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
+        const CLIENT = state.archive.clients.find(client => client.client_id === parseInt(clientId))
         state.archive.clients.splice(state.archive.clients.indexOf(CLIENT), 1)
       })
     },
@@ -197,8 +197,8 @@ export const store = new Vuex.Store({
         return `${YEAR}-${MONTH}-${DAY}`
       }
       for (const SESSION of PLAN.sessions) {
-        if (SESSION.date === today() && !state.sessionsToday.includes(SESSION.id)) {
-          state.clientUser.sessionsToday.push(SESSION)
+        if (SESSION.date === today() && !state.clientUser.sessionsToday.includes(SESSION.id)) {
+          state.clientUser.sessionsToday.push({ planId: parseInt(payload.planId), ...SESSION })
         }
       }
     },

@@ -114,7 +114,6 @@ hr {
         <div v-else-if="clientUser.sessionsToday.length !== 0" class="container--sessions">
           <div
             v-for="(session, sessionIndex) in clientUser.sessionsToday"
-            v-show="clientUser.sessionsToday.includes(session.id)"
             :id="`session-${session.id}`"
             :key="sessionIndex"
             class="wrapper--session"
@@ -131,14 +130,14 @@ hr {
               <button
                 v-if="session.checked === 1 && !feedbackId"
                 class="complete_button green_button"
-                @click="complete(plan.id, session.id, session.checked)"
+                @click="complete(session.planId, session.id, session.checked)"
               >
                 Completed
               </button>
               <button
                 v-if="session.checked === 0 && !feedbackId"
                 class="complete_button red_button"
-                @click="complete(plan.id, session.id, session.checked)"
+                @click="complete(session.planId, session.id, session.checked)"
               >
                 Click to complete
               </button>
