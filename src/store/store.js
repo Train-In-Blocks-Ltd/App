@@ -185,6 +185,9 @@ export const store = new Vuex.Store({
 
     // Client user
 
+    updateClientUserProfileImage (state, payload) {
+      state.clientUser.profile_img = payload
+    },
     updateClientUserPlanSessions (state, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN[payload.attr] = payload.data
@@ -624,7 +627,14 @@ export const store = new Vuex.Store({
     },
 
     // Client-side
-
+    async updateProfileImage ({ dispatch, commit, state }, src) {
+      await axios.post('https://api.traininblocks.com/v2/clientUser/clients', {
+        id: state.claims.client_id_db,
+        profile_img: src
+      })
+      commit('updateClientUserProfileImage', src)
+      dispatch('endLoading')
+    },
     async getClientSidePlans ({ commit, state }) {
       const PLANS = await axios.get(`https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`)
       commit('setDataDeep', {

@@ -96,6 +96,11 @@ li[data-done='false'] {
   grid-template-columns: .1fr 1fr;
   grid-gap: 1rem
 }
+.client_information img {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%
+}
 .profile_image_placeholder {
   padding: .8rem;
   height: 80px;
@@ -143,7 +148,8 @@ li[data-done='false'] {
   .client_information {
     grid-template-columns: 1fr
   }
-  .profile_image_placeholder {
+  .profile_image_placeholder,
+  .client_information img {
     margin: auto auto auto 0
   }
 }
@@ -157,7 +163,9 @@ li[data-done='false'] {
 <template>
   <div class="client_link">
     <div class="client_information">
+      <img v-if="img" :src="img" alt="Profile img">
       <inline-svg
+        v-else
         class="profile_image_placeholder"
         :src="require('../assets/svg/profile-image.svg')"
       />
@@ -207,7 +215,8 @@ export default {
     notes: String,
     clientId: Number,
     clientIndex: Number,
-    archive: Boolean
+    archive: Boolean,
+    img: String
   }
 }
 </script>

@@ -49,7 +49,7 @@ hr {
     <div v-if="portfolio">
       <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen || isProfileOpen }" class="section_overlay" />
       <div v-if="isProfileOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
-        <client-profile :img="''" :claims="claims" />
+        <client-profile />
       </div>
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">

@@ -5,6 +5,11 @@
   grid-template-columns: .2fr 1fr;
   grid-gap: 1.6rem
 }
+.client_home_top_grid img {
+  height: 140px;
+  width: 140px;
+  border-radius: 50%
+}
 .profile_image_placeholder {
   padding: 1.8rem;
   height: 140px;
@@ -94,7 +99,8 @@
   .client_home_top_grid {
     grid-template-columns: 1fr
   }
-  .profile_image_placeholder {
+  .profile_image_placeholder,
+  .client_home_top_grid img {
     width: 100px;
     height: 100px;
     margin: auto
@@ -166,8 +172,9 @@
       </div>
     </div>
     <div class="client_home_top_grid">
-      <!-- Update the client details -->
+      <img v-if="clientDetails.profile_img" :src="img" alt="Profile img">
       <inline-svg
+        v-else
         class="profile_image_placeholder"
         :src="require('../../assets/svg/profile-image.svg')"
       />

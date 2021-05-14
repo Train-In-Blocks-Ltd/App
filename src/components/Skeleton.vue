@@ -50,6 +50,14 @@
     height: 6rem;
     width: 60%
   }
+  .circle {
+    height: 140px;
+    width: 140px;
+    border-radius: 50%;
+    margin: 0 auto;
+    background-color: var(--skeleton_2);
+    animation: fade .6s linear infinite alternate-reverse
+  }
 
   @keyframes fade {
     from {
@@ -124,6 +132,7 @@
     <div v-if="type === 'input_small'" class="rect mini_padding">
       <div class="rect__small_text" />
     </div>
+    <div v-if="type === 'profile_img'" class="circle" />
   </div>
 </template>
 

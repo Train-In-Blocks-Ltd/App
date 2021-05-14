@@ -2,7 +2,13 @@
 .profile_container {
   text-align: center
 }
-.profile_container svg {
+.profile_container img {
+  height: 140px;
+  width: 140px;
+  border-radius: 50%;
+  margin: 0 auto
+}
+.profile_container .img_icon {
   padding: 1.8rem;
   height: 140px;
   width: 140px;
@@ -22,29 +28,94 @@
 </style>
 
 <template>
-  <div class="profile_container">
-    <div class="profile_img">
-      <img v-if="img !== ''" :src="img" alt="Profile img">
-      <inline-svg
-        v-else
-        :src="require('../assets/svg/profile-image.svg')"
-        class="img_icon cursor"
+  <div>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <input-pop-up ref="input_pop_up" />
+    </transition>
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <global-overlay ref="overlay" />
+    </transition>
+    <div class="profile_container">
+      <skeleton v-if="loading" :type="'profile_img'" />
+      <div v-else class="profile_img">
+        <img
+          v-if="clientUser.profile_img"
+          :src="clientUser.profile_img"
+          class="cursor"
+          alt="Profile img"
+          @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
+        >
+        <inline-svg
+          v-else
+          :src="require('../assets/svg/profile-image.svg')"
+          class="img_icon cursor"
+          @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
+        />
+      </div>
+      <skeleton
+        v-if="loading"
+        :type="'input_small'"
+        class="client_email"
       />
+      <h3 v-else class="client_email">
+        {{ claims.email }}
+      </h3>
+      <button class="red_button" @click="$parent.isProfileOpen = false, willBodyScroll(true)">
+        Close
+      </button>
     </div>
-    <h3 class="client_email">
-      {{ claims.email }}
-    </h3>
-    <button class="red_button" @click="$parent.isProfileOpen = false, willBodyScroll(true)">
-      Close
-    </button>
   </div>
 </template>
 
 <script>
+import Compressor from 'compressorjs'
+import { mapState } from 'vuex'
+
 export default {
-  props: {
-    img: String,
-    claims: Object
+  computed: mapState([
+    'loading',
+    'claims',
+    'clientUser'
+  ]),
+  methods: {
+    addImg () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        this.$store.commit('setData', {
+          attr: 'loading',
+          data: true
+        })
+        const FILE = document.getElementById('img_uploader').files[0]
+        const READER = new FileReader()
+        READER.addEventListener('load', () => {
+          const SRC = READER.result
+          this.$store.dispatch('updateProfileImage', SRC)
+        }, false)
+        if (FILE) {
+          if (FILE.size < 1000000) {
+            // eslint-disable-next-line
+            new Compressor(FILE, {
+              quality: 0.6,
+              success (result) {
+                READER.readAsDataURL(result)
+              },
+              error (err) {
+                console.error(err.message)
+              }
+            })
+          } else {
+            this.$parent.$parent.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
+            document.getElementById('img_uploader').value = ''
+          }
+        }
+        // endLoading occurs at the end of updateProfileImage action to update component
+      } catch (e) {
+        this.$parent.$parent.resolveError(e)
+      }
+    }
   }
 }
 </script>
