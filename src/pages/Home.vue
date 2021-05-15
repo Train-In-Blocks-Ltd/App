@@ -74,6 +74,7 @@
             :number="client.number"
             :notes="client.notes"
             :archive="false"
+            :img="client.profile_image"
             :class="{ recently_added: persistResponse === client.name }"
           />
         </router-link>

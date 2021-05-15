@@ -186,7 +186,7 @@ export const store = new Vuex.Store({
     // Client user
 
     updateClientUserProfileImage (state, payload) {
-      state.clientUser.profile_img = payload
+      state.clientUser.profile_image = payload
     },
     updateClientUserPlanSessions (state, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -288,7 +288,7 @@ export const store = new Vuex.Store({
         number: CLIENT.number,
         notifications: CLIENT.notifications,
         notes: CLIENT.notes,
-        profile_img: CLIENT.profile_img
+        profile_image: CLIENT.profile_image
       })
     },
     // payload => clientId
@@ -630,7 +630,7 @@ export const store = new Vuex.Store({
     async updateProfileImage ({ dispatch, commit, state }, src) {
       await axios.post('https://api.traininblocks.com/v2/clientUser/clients', {
         id: state.claims.client_id_db,
-        profile_img: src
+        profile_image: src
       })
       commit('updateClientUserProfileImage', src)
       dispatch('endLoading')

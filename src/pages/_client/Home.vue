@@ -8,6 +8,7 @@
 .client_home_top_grid img {
   height: 140px;
   width: 140px;
+  filter: grayscale(.8);
   border-radius: 50%
 }
 .profile_image_placeholder {
@@ -172,7 +173,7 @@
       </div>
     </div>
     <div class="client_home_top_grid">
-      <img v-if="clientDetails.profile_img" :src="img" alt="Profile img">
+      <img v-if="clientDetails.profile_image" :src="clientDetails.profile_image" alt="Profile img">
       <inline-svg
         v-else
         class="profile_image_placeholder"

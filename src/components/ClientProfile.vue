@@ -6,6 +6,7 @@
   height: 140px;
   width: 140px;
   border-radius: 50%;
+  filter: grayscale(.8);
   margin: 0 auto
 }
 .profile_container .img_icon {
@@ -36,11 +37,11 @@
       <global-overlay ref="overlay" />
     </transition>
     <div class="profile_container">
-      <skeleton v-if="loading" :type="'profile_img'" />
-      <div v-else class="profile_img">
+      <skeleton v-if="loading" :type="'profile_image'" />
+      <div v-else class="profile_image">
         <img
-          v-if="clientUser.profile_img"
-          :src="clientUser.profile_img"
+          v-if="clientUser.profile_image"
+          :src="clientUser.profile_image"
           class="cursor"
           alt="Profile img"
           @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"

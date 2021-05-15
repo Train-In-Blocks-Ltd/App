@@ -81,6 +81,7 @@
           :client-id="clients.client_id"
           :client-index="index"
           :archive="true"
+          :img="clients.profile_image"
         />
       </div>
     </div>

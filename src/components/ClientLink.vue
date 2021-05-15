@@ -99,6 +99,7 @@ li[data-done='false'] {
 .client_information img {
   height: 80px;
   width: 80px;
+  filter: grayscale(.8);
   border-radius: 50%
 }
 .profile_image_placeholder {

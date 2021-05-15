@@ -132,7 +132,7 @@
     <div v-if="type === 'input_small'" class="rect mini_padding">
       <div class="rect__small_text" />
     </div>
-    <div v-if="type === 'profile_img'" class="circle" />
+    <div v-if="type === 'profile_image'" class="circle" />
   </div>
 </template>
 
