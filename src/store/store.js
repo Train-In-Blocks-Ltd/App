@@ -1,11 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import createPersistedState from 'vuex-persistedstate'
 import { deleteEmail, deleteEmailText, passChangeEmail, passChangeEmailText, feedbackEmail, feedbackEmailText } from '../components/email'
+
+let plugins
+
+if (process.env.NODE_ENV === 'production') {
+  plugins = [createPersistedState]
+}
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
+  plugins: plugins,
   state: {
 
     // Auth
