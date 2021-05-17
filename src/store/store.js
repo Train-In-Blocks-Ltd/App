@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'production') {
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-  plugins: plugins,
+  plugins,
   state: {
 
     // Auth
