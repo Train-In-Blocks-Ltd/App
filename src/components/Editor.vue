@@ -485,9 +485,6 @@ export default {
       linkUrl: null,
       linkMenuIsActive: false,
 
-      // Image
-      base64Img: null,
-
       // Template
       search: '',
       showAddTemplate: false,
@@ -565,9 +562,11 @@ export default {
       const FILE = document.getElementById('img_uploader').files[0]
       const READER = new FileReader()
       READER.addEventListener('load', () => {
-        const SRC = READER.result
-        this.editor.chain().focus().setImage({ src: SRC }).run()
+        this.$axios.post('/.netlify/functions/upload', { file: READER.result.toString() }).then((response) => {
+          this.editor.chain().focus().setImage({ src: response.data.url }).run()
+        })
       }, false)
+
       if (FILE) {
         if (FILE.size < 1000000) {
           // eslint-disable-next-line
