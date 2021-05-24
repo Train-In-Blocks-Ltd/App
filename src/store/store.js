@@ -257,7 +257,7 @@ export const store = new Vuex.Store({
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/${state.claims.sub}`)
 
       // Sets clients
-      const SORTED_CLIENTS = RESPONSE.data.clients.sort((a, b) => {
+      const SORTED_CLIENTS = RESPONSE.data[0].sort((a, b) => {
         const NAME_A = a.name.toUpperCase()
         const NAME_B = b.name.toUpperCase()
         return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
@@ -268,7 +268,7 @@ export const store = new Vuex.Store({
       })
 
       // Sets archive
-      const SORTED_ARCHIVE_CLIENTS = RESPONSE.data.archive.clients.sort((a, b) => {
+      const SORTED_ARCHIVE_CLIENTS = RESPONSE.data[1].sort((a, b) => {
         const NAME_A = a.name.toUpperCase()
         const NAME_B = b.name.toUpperCase()
         return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
@@ -282,15 +282,15 @@ export const store = new Vuex.Store({
       // Sets templates and portfolio
       commit('setData', {
         attr: 'templates',
-        data: RESPONSE.data.templates
+        data: RESPONSE.data[2]
       })
 
-      if (RESPONSE.data.portfolio.length === 0) {
+      if (RESPONSE.data[3].length === 0) {
         await dispatch('createPortfolio')
       } else {
         commit('setData', {
           attr: 'portfolio',
-          data: RESPONSE.data.portfolio
+          data: RESPONSE.data[3]
         })
       }
     },
