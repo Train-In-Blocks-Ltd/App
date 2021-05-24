@@ -655,8 +655,6 @@ export default {
     },
     async connected () {
       if (this.connected === true) {
-        await this.$store.dispatch('getClients', true)
-        await this.$store.dispatch('getArchive', true)
         await this.setup()
       }
     }
@@ -868,12 +866,14 @@ export default {
           })
         }
 
-        // Get data
-        try {
-          await this.$store.dispatch('getClients', false)
-          this.$store.dispatch('endLoading')
-        } catch (e) {
-          this.resolveError(e)
+        // Get data if not client
+        if (this.claims.user_type === 'Admin' || this.claims.user_type === 'Trainer') {
+          try {
+            this.$store.dispatch('getHighLevelData')
+            this.$store.dispatch('endLoading')
+          } catch (e) {
+            this.resolveError(e)
+          }
         }
 
         // Stops setup from running more than once
@@ -900,12 +900,10 @@ export default {
 
     async resolveError (msg) {
       if (this.claims.user_type !== 'Admin') {
-        await this.$axios.post('/.netlify/functions/error',
-          {
-            msg,
-            claims: this.claims
-          }
-        )
+        await this.$axios.post('/.netlify/functions/error', {
+          msg,
+          claims: this.claims
+        })
       }
       this.$store.dispatch('endLoading')
       this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
@@ -914,8 +912,9 @@ export default {
 
     // Client-side
 
-    async getClientSidePlans () {
+    async getClientSideData () {
       try {
+        await this.$store.dispatch('getClientSidePortfolio')
         await this.$store.dispatch('getClientSidePlans')
         this.$store.dispatch('endLoading')
       } catch (e) {

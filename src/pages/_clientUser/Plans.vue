@@ -297,7 +297,7 @@ export default {
       data: true
     })
     this.willBodyScroll(true)
-    await this.$parent.getClientSidePlans()
+    await this.$parent.getClientSideData()
     this.$store.dispatch('endLoading')
   },
   methods: {

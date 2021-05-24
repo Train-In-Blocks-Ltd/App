@@ -831,7 +831,6 @@ export default {
     })
     this.willBodyScroll(true)
     this.$parent.sessions = true
-    await this.$store.dispatch('getTemplates', false)
     this.noSessions = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
   },
   mounted () {

@@ -89,6 +89,11 @@ export const store = new Vuex.Store({
         state.archive.noArchive = state.archive.clients.length === 0
       }
     },
+    addNewClient (state, payload) {
+      state.clients.push({
+        ...payload
+      })
+    },
     updateClient (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       CLIENT[payload.attr] = payload.data
@@ -247,45 +252,64 @@ export const store = new Vuex.Store({
       dispatch('endLoading')
       console.error(msg)
     },
+    async getHighLevelData ({ dispatch, commit, state }) {
+      // Main data call
+      const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/${state.claims.sub}`)
+
+      // Sets clients
+      const SORTED_CLIENTS = RESPONSE.data.clients.sort((a, b) => {
+        const NAME_A = a.name.toUpperCase()
+        const NAME_B = b.name.toUpperCase()
+        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
+      })
+      commit('setData', {
+        attr: 'clients',
+        data: SORTED_CLIENTS
+      })
+
+      // Sets archive
+      const SORTED_ARCHIVE_CLIENTS = RESPONSE.data.archive.clients.sort((a, b) => {
+        const NAME_A = a.name.toUpperCase()
+        const NAME_B = b.name.toUpperCase()
+        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
+      })
+      commit('setDataDeep', {
+        attrParent: 'archive',
+        attrChild: 'clients',
+        data: SORTED_ARCHIVE_CLIENTS
+      })
+
+      // Sets templates and portfolio
+      commit('setData', {
+        attr: 'templates',
+        data: RESPONSE.data.templates
+      })
+
+      if (RESPONSE.data.portfolio.length === 0) {
+        await dispatch('createPortfolio')
+      } else {
+        commit('setData', {
+          attr: 'portfolio',
+          data: RESPONSE.data.portfolio
+        })
+      }
+    },
+
+    // Sets templates
 
     // Clients
 
-    async getClientsAndArchive ({ dispatch }) {
-      await dispatch('getClients', true)
-      await dispatch('getArchive', true)
-    },
-    async getClients ({ dispatch, commit, state }) {
-      try {
-        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}`)
-        const SORTED_CLIENTS = RESPONSE.data.sort((a, b) => {
-          const NAME_A = a.name.toUpperCase()
-          const NAME_B = b.name.toUpperCase()
-          return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
-        })
-        commit('setData', {
-          attr: 'clients',
-          data: SORTED_CLIENTS
-        })
-      } catch (e) {
-        dispatch('resolveDeepError', e)
-      }
-    },
-    async getArchive ({ dispatch, commit, state }, force) {
-      try {
-        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clients/${state.claims.sub}/archive`)
-        const SORTED_ARCHIVE_CLIENTS = RESPONSE.data.sort((a, b) => {
-          const NAME_A = a.name.toUpperCase()
-          const NAME_B = b.name.toUpperCase()
-          return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
-        })
-        commit('setDataDeep', {
-          attrParent: 'archive',
-          attrChild: 'clients',
-          data: SORTED_ARCHIVE_CLIENTS
-        })
-      } catch (e) {
-        dispatch('resolveDeepError', e)
-      }
+    async createClient ({ commit }, payload) {
+      const NEW_CLIENT = await axios.put('https://api.traininblocks.com/v2/clients', {
+        ...payload
+      })
+      delete payload.pt_id
+      commit('addNewClient', {
+        id: NEW_CLIENT.data[0]['LAST_INSERT_ID()'],
+        notifications: 1,
+        profile_image: '',
+        ...payload
+      })
     },
     async updateClient ({ state }) {
       const CLIENT = state.clientDetails
@@ -346,15 +370,6 @@ export const store = new Vuex.Store({
 
     // Templates
 
-    async getTemplates ({ commit, state }) {
-      if (!state.templates) {
-        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/templates/${state.claims.sub}`)
-        commit('setData', {
-          attr: 'templates',
-          data: RESPONSE.data
-        })
-      }
-    },
     async newTemplate ({ commit, state }) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/templates', {
         pt_id: state.claims.sub,
@@ -391,43 +406,21 @@ export const store = new Vuex.Store({
 
     // Portfolio
 
-    async getPortfolio ({ dispatch, commit, state }) {
-      if (!state.portfolio || !state.portfolio.business_name || !state.portfolio.trainer_name) {
-        let portfolioData
-        if (state.claims.user_type === 'Trainer' || state.claims.user_type === 'Admin') {
-          const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`)
-          if (RESPONSE.data.length === 0) {
-            await dispatch('createPortfolio')
-          } else {
-            portfolioData = RESPONSE.data[0]
-          }
-        } else {
-          const CLIENT = await axios.get(`https://api.traininblocks.com/v2/ptId/${state.claims.client_id_db}`)
-          if (CLIENT.data[0].pt_id) {
-            const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/portfolio/${CLIENT.data[0].pt_id}`)
-            if (RESPONSE.data.length !== 0) {
-              portfolioData = RESPONSE.data[0]
-            }
-          }
-        }
-        commit('setData', {
-          attr: 'portfolio',
-          data: portfolioData
-        })
-      }
-    },
     async createPortfolio ({ dispatch, state }) {
-      try {
-        await axios.put('https://api.traininblocks.com/v2/portfolio', {
-          pt_id: state.claims.sub,
+      await axios.put('https://api.traininblocks.com/v2/portfolio', {
+        pt_id: state.claims.sub,
+        trainer_name: '',
+        business_name: '',
+        notes: ''
+      })
+      dispatch('setData', {
+        attr: 'portfolio',
+        data: {
           trainer_name: '',
           business_name: '',
           notes: ''
-        })
-        await dispatch('getPortfolio')
-      } catch (e) {
-        dispatch('resolveDeepError', e)
-      }
+        }
+      })
     },
     async updatePortfolio ({ state }) {
       await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
@@ -635,6 +628,7 @@ export const store = new Vuex.Store({
     },
 
     // Client-side
+
     async updateProfileImage ({ dispatch, commit, state }, src) {
       await axios.post('https://api.traininblocks.com/v2/clientUser/clients', {
         id: state.claims.client_id_db,
@@ -642,6 +636,18 @@ export const store = new Vuex.Store({
       })
       commit('updateClientUserProfileImage', src)
       dispatch('endLoading')
+    },
+    async getClientSidePortfolio ({ commit, state }) {
+      const CLIENT = await axios.get(`https://api.traininblocks.com/v2/ptId/${state.claims.client_id_db}`)
+      if (CLIENT.data[0].pt_id) {
+        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/portfolio/${CLIENT.data[0].pt_id}`)
+        if (RESPONSE.data.length !== 0) {
+          commit('setData', {
+            attr: 'portfolio',
+            data: RESPONSE.data[0]
+          })
+        }
+      }
     },
     async getClientSidePlans ({ commit, state }) {
       const PLANS = await axios.get(`https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`)

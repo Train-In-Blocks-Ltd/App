@@ -99,7 +99,7 @@ export default {
     this.$refs.name.focus()
   },
   methods: {
-    async createClient () {
+    createClient () {
       if (this.new_client.email === this.claims.email) {
         this.$parent.$parent.$refs.response_pop_up.show('You cannot create a client with your own email address!', 'Please use a different one.', true, true)
         console.error('You cannot create a client with your own email address!')
@@ -109,18 +109,15 @@ export default {
             attr: 'dontLeave',
             data: true
           })
-          await this.$axios.put('https://api.traininblocks.com/v2/clients',
-            {
-              name: this.new_client.name,
-              pt_id: this.claims.sub,
-              email: this.new_client.email,
-              number: this.new_client.number,
-              notes: this.new_client.notes
-            }
-          )
+          this.$store.dispatch('createClient', {
+            name: this.new_client.name,
+            pt_id: this.claims.sub,
+            email: this.new_client.email,
+            number: this.new_client.number,
+            notes: this.new_client.notes
+          })
           this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.new_client.name}`, 'Well done on getting a new client')
           this.$parent.persistResponse = this.new_client.name
-          await this.$store.dispatch('getClients', true)
           this.new_client = {
             name: '',
             email: '',
