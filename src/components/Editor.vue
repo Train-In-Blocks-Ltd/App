@@ -568,7 +568,7 @@ export default {
       }, false)
 
       if (FILE) {
-        if (FILE.size < 1000000) {
+        if (FILE.size < 450000) {
           // eslint-disable-next-line
           new Compressor(FILE, {
             quality: 0.6,
@@ -580,7 +580,7 @@ export default {
             }
           })
         } else {
-          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
+          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 400kb or lower', true, true)
           document.getElementById('img_uploader').value = ''
         }
       }
