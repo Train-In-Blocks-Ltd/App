@@ -169,6 +169,7 @@ export default {
           } else {
             this.$parent.$parent.$refs.response_pop_up.show('File size is too big', 'Please compress it to 400kb or lower', true, true)
             document.getElementById('img_uploader').value = ''
+            this.$store.dispatch('endLoading')
           }
         }
         // endLoading occurs at the end of updateProfileImage action to update component
