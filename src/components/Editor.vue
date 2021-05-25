@@ -384,7 +384,7 @@ div#rich_editor.editorFocused {
             <button
               class="fadeIn menu_button"
               title="Image"
-              @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
+              @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 400kb')"
             >
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
             </button>

@@ -39,6 +39,9 @@ export const store = new Vuex.Store({
     },
     connected: true,
 
+    // Bookings
+    bookings: [],
+
     // Clients
 
     clients: null,
