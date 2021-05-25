@@ -290,7 +290,7 @@ export const store = new Vuex.Store({
       } else {
         commit('setData', {
           attr: 'portfolio',
-          data: RESPONSE.data[3]
+          data: { ...RESPONSE.data[3][0] }
         })
       }
     },
