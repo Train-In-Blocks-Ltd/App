@@ -424,7 +424,7 @@ export default {
         this.$parent.resolveError(e)
       }
       await this.checkClient()
-      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true, true)
+      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox', true, true)
       this.$store.dispatch('endLoading')
     },
     async updateClient () {

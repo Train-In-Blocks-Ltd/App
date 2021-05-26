@@ -142,10 +142,12 @@ export default {
           attr: 'dontLeave',
           data: true
         })
+        /*
         this.$store.commit('setData', {
           attr: 'loading',
           data: true
         })
+        */
         const FILE = document.getElementById('img_uploader').files[0]
         const READER = new FileReader()
         const self = this

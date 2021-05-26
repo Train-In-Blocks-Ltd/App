@@ -48,6 +48,7 @@ export const store = new Vuex.Store({
     clientDetails: null,
     clientUser: {
       plans: null,
+      profile_image: null,
       sessionsToday: []
     },
 
@@ -638,18 +639,21 @@ export const store = new Vuex.Store({
         profile_image: src
       })
       commit('updateClientUserProfileImage', src)
-      dispatch('endLoading')
+      // dispatch('endLoading')
     },
     async getClientSidePortfolio ({ commit, state }) {
-      const CLIENT = await axios.get(`https://api.traininblocks.com/v2/ptId/${state.claims.client_id_db}`)
-      if (CLIENT.data[0].pt_id) {
-        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/portfolio/${CLIENT.data[0].pt_id}`)
-        if (RESPONSE.data.length !== 0) {
-          commit('setData', {
-            attr: 'portfolio',
-            data: RESPONSE.data[0]
-          })
-        }
+      const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
+      console.log(RESPONSE)
+      if (RESPONSE.data) {
+        commit('setData', {
+          attr: 'portfolio',
+          data: RESPONSE.data[0][0]
+        })
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attrChild: 'profile_image',
+          data: RESPONSE.data[2][0].profile_image
+        })
       }
     },
     async getClientSidePlans ({ commit, state }) {
@@ -675,7 +679,6 @@ export const store = new Vuex.Store({
     },
     // payload => planId, sessionId
     async updateClientSideSession ({ state }, payload) {
-      const CLIENT = await axios.get(`https://api.traininblocks.com/v2/ptId/${state.claims.client_id_db}`)
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
       const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
       await axios.post('https://api.traininblocks.com/v2/client-sessions', {
@@ -684,11 +687,11 @@ export const store = new Vuex.Store({
         checked: SESSION.checked,
         feedback: SESSION.feedback
       })
-      if (CLIENT.data[0].notifications === 1) {
+      if (state.portfolio.notifications === 1) {
         if (SESSION.feedback !== null) {
           const PT_EMAIL = await axios.post('/.netlify/functions/okta', {
             type: 'GET',
-            url: `?filter=id+eq+"${CLIENT.data[0].pt_id}"&limit=1`
+            url: `?filter=id+eq+"${state.portfolio.pt_id}"&limit=1`
           })
           await axios.post('/.netlify/functions/send-email', {
             to: PT_EMAIL.data[0].credentials.emails[0].value,
