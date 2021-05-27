@@ -286,7 +286,6 @@ export default {
         scopes
       }).then(async (tokens) => {
         self.splashed = false
-        self.willBodyScroll(false)
         await this.$auth.handleLoginRedirect(tokens)
       }).catch((err) => {
         throw err
