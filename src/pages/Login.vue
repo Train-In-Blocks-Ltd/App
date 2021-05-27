@@ -186,13 +186,15 @@ a:hover {
         Send recovery email
       </button>
     </form>
-    <p v-if="success">
-      {{ success }}
-    </p>
-    <p v-if="error" class="error">
-      {{ error }}
-    </p>
     <div class="other_options">
+      <div>
+        <p v-if="success">
+          {{ success }}
+        </p>
+        <p v-if="error" class="error">
+          {{ error }}
+        </p>
+      </div>
       <p>
         Need an account?
         <a href="https://traininblocks.com/#pricing">
