@@ -171,10 +171,6 @@ const userType = async (to, from, next) => {
     result = false
   }
   if (result) {
-    if (from.matched.some(record => record.path === '/implicit/callback') && result.user_type === 'Admin') {
-      localStorage.removeItem('archive')
-      localStorage.removeItem('clients')
-    }
     if (to.matched.some(record => record.meta.requiresTrainer)) {
       if (result.user_type === 'Admin') {
         next()
