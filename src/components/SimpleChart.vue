@@ -48,12 +48,32 @@
   margin: 1rem
 }
 
+/* List view */
+.data_list_view {
+  margin-top: 1rem
+}
+.data_list_view .row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: .4rem 1rem
+}
+.data_list_view .row:not(:first-child) {
+  border-top: 1px solid var(--base_faint)
+}
+
 @keyframes show {
   from {
     opacity: 0
   }
   to {
     opacity: 1
+  }
+}
+
+/* Responsive */
+@media (max-width: 567px) {
+  .data_list_view {
+    font-size: .8rem
   }
 }
 </style>
@@ -136,6 +156,22 @@
         <p v-if="predictionDay && predictionError">
           Prediction error (RMS): {{ predictionError }}
         </p>
+      </div>
+      <div class="data_list_view">
+        <div class="row">
+          <p><b>Measure</b></p>
+          <p><b>Date</b></p>
+          <p><b>Value</b></p>
+        </div>
+        <div
+          v-for="(dataValue, dataValueIndex) in dataPoints"
+          :key="`dataValue_${dataValueIndex}`"
+          class="row"
+        >
+          <p>{{ labels[dataValueIndex][0] }}</p>
+          <p>{{ labels[dataValueIndex][1] }}</p>
+          <p>{{ dataValue }}</p>
+        </div>
       </div>
     </div>
   </div>
