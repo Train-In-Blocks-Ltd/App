@@ -133,6 +133,11 @@
       <div class="rect__small_text" />
     </div>
     <div v-if="type === 'profile_image'" class="circle" />
+    <div v-if="type === 'bookings'" class="rect large_padding">
+      <div class="rect__small_text" />
+      <div class="rect__content two" />
+      <div class="rect__content one" />
+    </div>
   </div>
 </template>
 

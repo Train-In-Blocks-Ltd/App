@@ -24,6 +24,9 @@
 }
 
 /* Bookings */
+.bookings_container_skeleton {
+  margin: 2rem 0
+}
 .bookings_container {
   padding: 1rem;
   background-color: var(--fore);
@@ -91,7 +94,12 @@
       <p v-else class="text--small client_email">
         {{ claims.email }}
       </p>
-      <div class="bookings_container">
+      <skeleton
+        v-if="loading"
+        :type="'bookings'"
+        class="bookings_container_skeleton"
+      />
+      <div v-else class="bookings_container">
         <h3>Upcoming</h3>
         <div class="bookings_sub_container">
           <div v-if="bookings.length !== 0" class="bookings_wrapper">
