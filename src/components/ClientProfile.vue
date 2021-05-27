@@ -142,12 +142,6 @@ export default {
           attr: 'dontLeave',
           data: true
         })
-        /*
-        this.$store.commit('setData', {
-          attr: 'loading',
-          data: true
-        })
-        */
         const FILE = document.getElementById('img_uploader').files[0]
         const READER = new FileReader()
         const self = this
@@ -171,10 +165,9 @@ export default {
           } else {
             this.$parent.$parent.$refs.response_pop_up.show('File size is too big', 'Please compress it to 400kb or lower', true, true)
             document.getElementById('img_uploader').value = ''
-            this.$store.dispatch('endLoading')
           }
         }
-        // endLoading occurs at the end of updateProfileImage action to update component
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }

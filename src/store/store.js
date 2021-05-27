@@ -309,7 +309,7 @@ export const store = new Vuex.Store({
       })
       delete payload.pt_id
       commit('addNewClient', {
-        id: NEW_CLIENT.data[0]['LAST_INSERT_ID()'],
+        client_id: NEW_CLIENT.data[0]['LAST_INSERT_ID()'],
         notifications: 1,
         profile_image: '',
         ...payload
@@ -633,21 +633,20 @@ export const store = new Vuex.Store({
 
     // Client-side
 
-    async updateProfileImage ({ dispatch, commit, state }, src) {
+    async updateProfileImage ({ commit, state }, src) {
       await axios.post('https://api.traininblocks.com/v2/clientUser/clients', {
         id: state.claims.client_id_db,
         profile_image: src
       })
       commit('updateClientUserProfileImage', src)
-      // dispatch('endLoading')
     },
     async getClientSidePortfolio ({ commit, state }) {
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
-      console.log(RESPONSE)
-      if (RESPONSE.data) {
+      const PORTFOLIO_RESPONSE = await axios.get(`https://api.traininblocks.com/portfolio/${RESPONSE.data[0][0].pt_id}`)
+      if (PORTFOLIO_RESPONSE.data) {
         commit('setData', {
           attr: 'portfolio',
-          data: RESPONSE.data[0][0]
+          data: PORTFOLIO_RESPONSE.data[0]
         })
         commit('setDataDeep', {
           attrParent: 'clientUser',
