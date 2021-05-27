@@ -113,11 +113,12 @@
             </div>
           </div>
           <p v-else class="grey">
-            No bookings made or confirmed
+            No bookings yet, your clients will be able to request a time and date
           </p>
           <form class="request_booking_container" @submit.prevent="bookSession()">
             <p><b>Make a request</b></p>
             <input type="date" aria-label="Date" required>
+            <input type="time" aria-label="Time" required>
             <textarea
               class="additional_notes"
               rows="5"
@@ -125,6 +126,7 @@
               aria-label="Additional information"
               required
             />
+            <button>Submit</button>
           </form>
         </div>
       </div>

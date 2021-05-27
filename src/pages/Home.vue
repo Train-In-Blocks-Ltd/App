@@ -1,18 +1,24 @@
 <style>
-  /* Containers */
-  .home--container {
-    display: grid;
-    margin-bottom: 2rem
-  }
-  .search_skeleton {
-    margin-bottom: 2rem
-  }
+/* Containers */
+.home--container {
+  display: grid;
+  margin-bottom: 2rem
+}
+.skeleton_margin {
+  margin-bottom: 2rem
+}
+.skeleton_margin.shorter {
+  width: 40%
+}
+.search {
+  margin-top: 1rem
+}
 
-  @media (max-width: 768px) {
-    .home--container {
-      width: 100%
-    }
+@media (max-width: 768px) {
+  .home--container {
+    width: 100%
   }
+}
 </style>
 
 <template>
@@ -50,6 +56,8 @@
       No clients added yet, use the button on the top-right of your screen.
     </p>
     <div v-else-if="!noClients && !loading" class="home--container">
+      <bookings />
+      <h2>Clients</h2>
       <input
         v-model="search"
         type="search"
@@ -81,7 +89,8 @@
       </div>
     </div>
     <div v-else>
-      <skeleton :type="'input_large'" class="search_skeleton" />
+      <skeleton :type="'client'" class="skeleton_margin" />
+      <skeleton :type="'input_large'" class="skeleton_margin" />
       <skeleton :type="'client'" />
     </div>
   </div>
@@ -93,13 +102,15 @@ const ClientLink = () => import(/* webpackChunkName: "components.clientlink", we
 const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
 const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/InstallPWA')
+const Bookings = () => import(/* webpackChunkName: "components.bookings", webpackPreload: true  */ '../components/Bookings')
 
 export default {
   components: {
     ClientLink,
     NewClient,
     WhatsNew,
-    InstallApp
+    InstallApp,
+    Bookings
   },
   data () {
     return {
