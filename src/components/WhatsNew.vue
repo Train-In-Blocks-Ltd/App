@@ -1,4 +1,7 @@
 <style scoped>
+.close_icon {
+  float: right
+}
 img {
   width: 100%;
   border-radius: 10px;
@@ -28,6 +31,12 @@ img {
 
 <template>
   <div class="bottom_margin">
+    <inline-svg
+      class="close_icon cursor"
+      :src="require('../assets/svg/close.svg')"
+      aria-label="Close"
+      @click="$parent.isWhatsNewOpen = false, willBodyScroll(true), updateVersion()"
+    />
     <h2>
       {{ versionName }} {{ versionBuild }}
     </h2>
@@ -55,10 +64,6 @@ img {
         </p>
       </div>
     </div>
-    <br>
-    <button class="red_button" @click="$parent.isWhatsNewOpen = false, willBodyScroll(true), updateVersion()">
-      Close
-    </button>
   </div>
 </template>
 

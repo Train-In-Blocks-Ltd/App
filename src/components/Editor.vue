@@ -3,6 +3,7 @@
 .editor_object_standard {
   border: 3px solid var(--base);
   border-radius: 10px;
+  background: var(--back);
   transition: .6s border cubic-bezier(.165, .84, .44, 1)
 }
 .editor_object_standard h3 {
@@ -15,11 +16,13 @@
   border-radius: 0 0 10px 10px
 }
 .editor_object_standard #wrapper--rich_editor {
+  background: var(--back);
   margin: 2rem
 }
 .editor_object_complex {
   display: grid;
   padding: 2rem;
+  background: var(--back);
   border: 2px solid var(--base);
   border-radius: 10px;
   transition: .6s border cubic-bezier(.165, .84, .44, 1)
@@ -154,6 +157,10 @@ ul[data-type='taskList'] li > label {
 }
 
 /* Pop-ups */
+.close_icon {
+  display: flex;
+  justify-self: end
+}
 .template_menu {
   display: grid;
   grid-gap: 1rem
@@ -257,6 +264,12 @@ div#rich_editor.editorFocused {
     </transition>
     <div v-if="showAddTemplate" class="tab_overlay_content fadeIn delay fill_mode_both small_border_radius">
       <div class="template_menu">
+        <inline-svg
+          class="close_icon cursor"
+          :src="require('../assets/svg/close.svg')"
+          aria-label="Close"
+          @click="showAddTemplate = false, search = ''"
+        />
         <input
           v-if="dataForTemplates.length !== 0"
           v-model="search"
@@ -300,10 +313,7 @@ div#rich_editor.editorFocused {
         </div>
         <p id="templates_search_none">
           No templates found
-        </p><br>
-        <button class="red_button" @click="showAddTemplate = false, search = ''">
-          Cancel
-        </button>
+        </p>
       </div>
     </div>
     <div
@@ -396,16 +406,6 @@ div#rich_editor.editorFocused {
             >
               <inline-svg :src="require('../assets/svg/editor/template.svg')" />
             </button>
-            <!-- Track data
-            <button
-              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-              class="fadeIn"
-              title="Track data"
-              @click="addTrackData()"
-            >
-              <inline-svg :src="require('../assets/svg/editor/track-data.svg')" />
-            </button>
-            -->
             <button
               class="fadeIn menu_button"
               title="Undo"

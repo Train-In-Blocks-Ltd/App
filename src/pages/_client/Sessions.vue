@@ -1,4 +1,15 @@
 <style scoped>
+/* Other */
+.dark_overlay {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000060
+}
+
 /* Plan Info */
 .client_plan_top_grid {
   display: grid;
@@ -420,6 +431,7 @@ input.session-date {
       :show-brackets="true"
       @close="previewDesc = null, previewHTML = null"
     />
+    <div v-show="editSession !== null" class="dark_overlay fadeIn" />
     <div>
       <div class="client_plan_top_grid">
         <input
@@ -609,6 +621,7 @@ input.session-date {
                   v-show="session.week_id === currentWeek"
                   :id="'session-' + session.id"
                   :key="indexed"
+                  :style="{ zIndex: session.id === editSession ? 2 : 0 }"
                   class="editor_object_complex fadeIn"
                 >
                   <div class="session_header">
