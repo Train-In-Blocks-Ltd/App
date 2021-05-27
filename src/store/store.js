@@ -642,11 +642,10 @@ export const store = new Vuex.Store({
     },
     async getClientSidePortfolio ({ commit, state }) {
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
-      const PORTFOLIO_RESPONSE = await axios.get(`https://api.traininblocks.com/portfolio/${RESPONSE.data[0][0].pt_id}`)
-      if (PORTFOLIO_RESPONSE.data) {
+      if (RESPONSE.data) {
         commit('setData', {
           attr: 'portfolio',
-          data: PORTFOLIO_RESPONSE.data[0]
+          data: RESPONSE.data[1][0]
         })
         commit('setDataDeep', {
           attrParent: 'clientUser',
