@@ -94,7 +94,8 @@ import { mapState } from 'vuex'
 export default {
   computed: mapState([
     'clients',
-    'bookings'
+    'bookings',
+    'loading'
   ])
 }
 </script>
