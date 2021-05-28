@@ -914,7 +914,7 @@ export default {
 
     async getClientSideData () {
       try {
-        await this.$store.dispatch('getClientSidePortfolio')
+        await this.$store.dispatch('getClientSideInfo')
         await this.$store.dispatch('getClientSidePlans')
         this.$store.dispatch('endLoading')
       } catch (e) {

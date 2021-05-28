@@ -30,6 +30,9 @@
 hr {
   margin: 2rem 0
 }
+.close_icon {
+  float: right
+}
 
 /* Other element */
 .complete_button {
@@ -53,6 +56,12 @@ hr {
       </div>
       <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <div class="client_home__portfolio">
+          <inline-svg
+            class="close_icon cursor"
+            :src="require('../../assets/svg/close.svg')"
+            aria-label="Close"
+            @click="isPortfolioOpen = false, willBodyScroll(true)"
+          />
           <h2>
             {{ portfolio.business_name }}
           </h2>
@@ -60,9 +69,6 @@ hr {
             {{ portfolio.trainer_name }}
           </h3>
           <div class="client_portfolio__notes" v-html="updateHTML(portfolio.notes, true)" />
-          <button class="red_button" @click="isPortfolioOpen = false, willBodyScroll(true)">
-            Close
-          </button>
         </div>
       </div>
       <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">

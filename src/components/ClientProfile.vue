@@ -18,9 +18,12 @@
   border: 4px solid var(--base);
   border-radius: 50%
 }
-.profile_container .client_email {
-  text-align: center;
-  margin-top: 1rem
+.client_user_details {
+  display: grid;
+  grid-gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  justify-items: center
 }
 
 /* Bookings */
@@ -86,14 +89,41 @@
           @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 400kb')"
         />
       </div>
-      <skeleton
-        v-if="loading"
-        :type="'input_small'"
-        class="client_email"
-      />
-      <p v-else class="text--small client_email">
-        {{ claims.email }}
-      </p>
+      <div class="client_user_details">
+        <skeleton
+          v-if="loading"
+          :type="'input_small'"
+        />
+        <input
+          v-else
+          v-model="clientUser.name"
+          :disabled="silentLoading"
+          class="small_border_radius width_300"
+          type="name"
+          inputmode="name"
+          autocomplete="name"
+          placeholder="Name"
+          aria-label="Name"
+          @blur="updateClientDetails()"
+        >
+        <skeleton
+          v-if="loading"
+          :type="'input_small'"
+        />
+        <input
+          v-else
+          v-model="clientUser.number"
+          :disabled="silentLoading"
+          class="small_border_radius width_300"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder="Mobile"
+          aria-label="Mobile"
+          pattern="\d+"
+          @blur="updateClientDetails()"
+        >
+      </div>
       <skeleton
         v-if="loading"
         :type="'bookings'"
@@ -141,6 +171,7 @@ import { mapState } from 'vuex'
 export default {
   computed: mapState([
     'loading',
+    'silentLoading',
     'claims',
     'clientUser',
     'bookings'
@@ -157,7 +188,12 @@ export default {
         const self = this
         READER.addEventListener('load', () => {
           this.$axios.post('/.netlify/functions/upload', { file: READER.result.toString() }).then((response) => {
-            self.$store.dispatch('updateProfileImage', response.data.url)
+            self.$store.dispatch('updateClientSideDetails', {
+              id: this.claims.client_id_db,
+              name: this.clientUser.name,
+              number: this.clientUser.number,
+              profile_image: response.data.url
+            })
           })
         }, false)
         if (FILE) {
@@ -178,6 +214,26 @@ export default {
           }
         }
         this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.$parent.resolveError(e)
+      }
+    },
+    updateClientDetails () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        this.$store.commit('setData', {
+          attr: 'silentLoading',
+          data: true
+        })
+        this.$store.dispatch('updateClientSideDetails', {
+          id: this.claims.client_id_db,
+          name: this.clientUser.name,
+          number: this.clientUser.number,
+          profile_image: this.clientUser.profile_image
+        })
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }

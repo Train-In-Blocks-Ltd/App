@@ -625,14 +625,24 @@ export const store = new Vuex.Store({
 
     // Client-side
 
-    async updateProfileImage ({ commit, state }, src) {
+    async updateClientSideDetails ({ dispatch, commit }, payload) {
       await axios.post('https://api.traininblocks.com/v2/clientUser/clients', {
-        id: state.claims.client_id_db,
-        profile_image: src
+        ...payload
       })
-      commit('updateClientUserProfileImage', src)
+      commit('updateClientUserProfileImage', payload.profile_image)
+      commit('setDataDeep', {
+        attrParent: 'clientUser',
+        attrChild: 'name',
+        data: payload.name
+      })
+      commit('setDataDeep', {
+        attrParent: 'clientUser',
+        attrChild: 'number',
+        data: payload.number
+      })
+      dispatch('endLoading')
     },
-    async getClientSidePortfolio ({ commit, state }) {
+    async getClientSideInfo ({ commit, state }) {
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
       if (RESPONSE.data) {
         commit('setData', {
@@ -643,6 +653,21 @@ export const store = new Vuex.Store({
           attrParent: 'clientUser',
           attrChild: 'profile_image',
           data: RESPONSE.data[2][0].profile_image
+        })
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attrChild: 'name',
+          data: RESPONSE.data[0][0].name
+        })
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attrChild: 'number',
+          data: RESPONSE.data[0][0].number
+        })
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attrChild: 'pt_id',
+          data: RESPONSE.data[0][0].pt_id
         })
       }
     },
