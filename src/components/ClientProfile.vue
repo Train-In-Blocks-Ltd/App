@@ -22,8 +22,14 @@
   display: grid;
   grid-gap: 1rem;
   margin-top: 2rem;
-  margin-bottom: 4rem;
-  justify-items: center
+  margin-bottom: 4rem
+}
+.input_skeleton {
+  width: 300px
+}
+.client_user_details > input,
+.input_skeleton {
+  margin: auto
 }
 
 /* Bookings */
@@ -93,6 +99,7 @@
         <skeleton
           v-if="loading"
           :type="'input_small'"
+          class="input_skeleton"
         />
         <input
           v-else
@@ -109,6 +116,7 @@
         <skeleton
           v-if="loading"
           :type="'input_small'"
+          class="input_skeleton"
         />
         <input
           v-else
@@ -126,7 +134,7 @@
       </div>
       <skeleton
         v-if="loading"
-        :type="'bookings'"
+        :type="'client'"
         class="bookings_container_skeleton"
       />
       <div v-else class="bookings_container">
