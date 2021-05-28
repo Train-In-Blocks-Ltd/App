@@ -642,7 +642,7 @@ export const store = new Vuex.Store({
 
     // Bookings
 
-    // payload => client_id, date, time, notes, status
+    // payload => clientId, date, time, notes, status
     async createBooking ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/bookings', {
         ...payload
@@ -658,10 +658,14 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
-    // payload => booking_id
+    // payload => clientId, bookingIds (array of id for booking)
     async deleteBooking ({ commit }, payload) {
+      const DELETE_IDS = []
+      payload.bookingIds.forEach((bookingId) => {
+        DELETE_IDS.push({ id: bookingId })
+      })
       await axios.delete('https://api.traininblocks.com/v2/batch/bookings', {
-        data: payload.bookingIds
+        data: DELETE_IDS
       })
       commit('removeBooking', {
         clientId: payload.clientId,
