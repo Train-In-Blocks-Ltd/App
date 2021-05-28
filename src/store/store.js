@@ -615,14 +615,7 @@ export const store = new Vuex.Store({
     // payload => clientId, planId, sessionId
     async updateSession ({ getters }, payload) {
       const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
-      await axios.post('https://api.traininblocks.com/v2/sessions', {
-        id: SESSION.id,
-        name: SESSION.name,
-        date: SESSION.date,
-        notes: SESSION.notes,
-        week_id: SESSION.week_id,
-        checked: SESSION.checked
-      })
+      await axios.post('https://api.traininblocks.com/v2/sessions', { ...SESSION })
     },
     // payload => clientId, planId, sessionIds
     async deleteSession ({ commit }, payload) {
@@ -652,11 +645,11 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
-    // payload => id (booking), date, time, notes, status
-    async updateBooking ({ commit }, payload) {
-      await axios.post('https://api.traininblocks.com/v2/bookings', {
-        ...payload
-      })
+    // payload => clientId, id (booking)
+    async updateBooking ({ state }, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      const BOOKING = CLIENT.bookings.find(booking => booking.id === parseInt(payload.id))
+      await axios.post('https://api.traininblocks.com/v2/bookings', { ...BOOKING })
     },
     // payload => clientId, bookingIds (array of id for booking)
     async deleteBooking ({ commit }, payload) {
