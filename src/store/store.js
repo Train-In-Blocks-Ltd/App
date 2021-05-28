@@ -192,6 +192,23 @@ export const store = new Vuex.Store({
       })
     },
 
+    // Bookings
+
+    // payload => clientId, id (booking), date, time, notes, status
+    addNewBooking (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      delete payload.client_id
+      CLIENT.bookings.push({ ...payload })
+    },
+    // payload => clientId, bookingIds (array of id of booking)
+    removeBooking (state, payload) {
+      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
+      payload.bookingIds.forEach((bookingId) => {
+        const BOOKING = CLIENT.bookings.find(booking => booking.id === bookingId)
+        CLIENT.bookings.splice(CLIENT.bookings.indexOf(BOOKING), 1)
+      })
+    },
+
     // Client user
 
     updateClientUserProfileImage (state, payload) {
@@ -620,6 +637,35 @@ export const store = new Vuex.Store({
         clientId: payload.clientId,
         planId: payload.planId,
         sessionIds: payload.sessionIds
+      })
+    },
+
+    // Bookings
+
+    // payload => client_id, date, time, notes, status
+    async createBooking ({ commit }, payload) {
+      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/bookings', {
+        ...payload
+      })
+      payload.id = RESPONSE.data[0]['LAST_INSERT_ID()']
+      commit('addNewBooking', {
+        ...payload
+      })
+    },
+    // payload => id (booking), date, time, notes, status
+    async updateBooking ({ commit }, payload) {
+      await axios.post('https://api.traininblocks.com/v2/bookings', {
+        ...payload
+      })
+    },
+    // payload => booking_id
+    async deleteBooking ({ commit }, payload) {
+      await axios.delete('https://api.traininblocks.com/v2/batch/bookings', {
+        data: payload.bookingIds
+      })
+      commit('removeBooking', {
+        clientId: payload.clientId,
+        bookingIds: payload.bookingIds
       })
     },
 
