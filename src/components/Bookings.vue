@@ -58,24 +58,41 @@
       <form class="request_booking_container" @submit.prevent="bookSession()">
         <p><b>Create a booking</b></p>
         <select
-          id="client_booking_select"
+          v-model="booking_form.clientId"
           name="client_booking_select"
           aria-label="Select a client"
           required
         >
           <option
+            value="Select a client"
+            disabled
+          >
+            Select a client
+          </option>
+          <option
             v-for="(client, clientIndex) in clients"
             :key="`client_booking_select_${clientIndex}`"
-            :value="client.name"
+            :value="client.client_id"
           >
             {{ client.name }}
           </option>
         </select>
         <div class="date_time_wrapper">
-          <input type="date" aria-label="Date" required>
-          <input type="time" aria-label="Time" required>
+          <input
+            v-model="booking_form.date"
+            type="date"
+            aria-label="Date"
+            required
+          >
+          <input
+            v-model="booking_form.time"
+            type="time"
+            aria-label="Time"
+            required
+          >
         </div>
         <textarea
+          v-model="booking_form.notes"
           class="additional_notes"
           rows="5"
           placeholder="Additonal information"
@@ -92,10 +109,66 @@
 import { mapState } from 'vuex'
 
 export default {
+  data () {
+    return {
+
+      // Bookings
+
+      booking_form: {
+        clientId: 'Select a client',
+        date: null,
+        time: null,
+        notes: null
+      }
+    }
+  },
   computed: mapState([
     'clients',
     'bookings',
     'loading'
-  ])
+  ]),
+  methods: {
+
+    // Bookings
+
+    async createBooking () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('createBooking', {
+          client_id: this.booking_form.clientId,
+          date: this.booking_form.date,
+          time: this.booking_form.time,
+          notes: this.booking_form.notes,
+          status: 'Pending'
+        })
+        this.booking_form = {
+          date: null,
+          time: null,
+          notes: null
+        }
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    },
+    async cancelBooking (bookingId) {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('createBooking', {
+          clientId: this.booking_form.clientId,
+          bookingId
+        })
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    }
+  }
 }
 </script>

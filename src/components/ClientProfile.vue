@@ -155,9 +155,20 @@
           </p>
           <form class="request_booking_container" @submit.prevent="bookSession()">
             <p><b>Make a request</b></p>
-            <input type="date" aria-label="Date" required>
-            <input type="time" aria-label="Time" required>
+            <input
+              v-model="booking_form.date"
+              type="date"
+              aria-label="Date"
+              required
+            >
+            <input
+              v-model="booking_form.time"
+              type="time"
+              aria-label="Time"
+              required
+            >
             <textarea
+              v-model="booking_form.notes"
               class="additional_notes"
               rows="5"
               placeholder="Additonal information"
@@ -177,6 +188,15 @@ import Compressor from 'compressorjs'
 import { mapState } from 'vuex'
 
 export default {
+  data () {
+    return {
+      booking_form: {
+        date: null,
+        time: null,
+        notes: null
+      }
+    }
+  },
   computed: mapState([
     'loading',
     'silentLoading',
@@ -242,6 +262,47 @@ export default {
           number: this.clientUser.number,
           profile_image: this.clientUser.profile_image
         })
+      } catch (e) {
+        this.$parent.$parent.resolveError(e)
+      }
+    },
+
+    // Bookings
+
+    async createBooking () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('createBooking', {
+          client_id: this.claims.client_id_db,
+          date: this.booking_form.date,
+          time: this.booking_form.time,
+          notes: this.booking_form.notes,
+          status: 'Pending'
+        })
+        this.booking_form = {
+          date: null,
+          time: null,
+          notes: null
+        }
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.$parent.resolveError(e)
+      }
+    },
+    async cancelBooking (bookingId) {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('createBooking', {
+          clientId: this.claims.client_id_db,
+          bookingId
+        })
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
