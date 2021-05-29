@@ -42,7 +42,7 @@
       class="bookings_container_skeleton"
     />
     <div v-else class="bookings_sub_container">
-      <div v-if="bookings.length !== 0" class="bookings_wrapper">
+      <div v-if="checkForBookings()" class="bookings_wrapper">
         <div
           v-for="(booking, bookingIndex) in bookings"
           :key="`bookings_${bookingIndex}`"
@@ -128,6 +128,11 @@ export default {
     'loading'
   ]),
   methods: {
+
+    checkForBookings () {
+      const BOOKINGS = this.bookings || false
+      return BOOKINGS ? this.bookings.length !== 0 : false
+    },
 
     // Bookings
 
