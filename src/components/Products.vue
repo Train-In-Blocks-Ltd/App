@@ -11,6 +11,9 @@
   #products > .option_bar button {
     margin: auto 0
   }
+  #products > .option_bar button:only-child {
+    margin-left: auto
+  }
 
   /* Products container */
   .products_container {
@@ -42,18 +45,21 @@
   .product > .header > div {
     margin-left: auto
   }
+  .product_pricing {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1rem
+  }
 </style>
 
 <template>
   <div id="products">
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <div v-if="selectedProducts.length !== 0" class="multi-select">
-        <p>
-          <b>Selected {{ selectedProducts.length }} {{ selectedProducts.length === 1 ? 'product' : 'products' }} to ...</b>
-        </p>
-        <a href="javascript:void(0)" class="a_link" @click="deselectAll()">Deselect</a>
-      </div>
-    </transition>
+    <multiselect
+      :type="'product'"
+      :options="multiselectOptions"
+      :selected="selectedProducts"
+      @response="resolveProductsMultiselect"
+    />
     <h2>
       Products
     </h2>
@@ -70,52 +76,129 @@
         Select all
       </a>
     </div>
-    <div class="products_container">
-      <div
+    <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
+    <div v-else-if="products.length !== 0" class="products_container">
+      <form
         v-for="(product, productIndex) in products"
         :key="`product_${productIndex}`"
         class="product"
       >
         <div class="header">
-          <h3>
-            {{ product.name }}
-          </h3>
-          <checkbox :item-id="product.id" :type="'v1'" aria-label="Select this product" />
+          <input
+            v-model="product.name"
+            :disabled="silentLoading"
+            type="text"
+            class="text--small small_border_radius"
+            placeholder="Name"
+            aria-label="Name"
+            required
+          >
+          <checkbox
+            :item-id="product.id"
+            :type="'v1'"
+            aria-label="Select this product"
+          />
         </div>
-        <p>
-          <b>A {{ product.type }} of <u>{{ product.price }}</u></b>
-        </p>
-        <textarea v-model="product.desc" placeholder="Description" aria-label="Description" />
-      </div>
+        <div class="product_pricing">
+          <select
+            v-model="product.type"
+            :disabled="silentLoading"
+            class="small_border_radius"
+            placeholder="Type"
+            aria-label="Type"
+          >
+            <option value="one-off">
+              One-off
+            </option>
+            <option value="monthly">
+              Monthly
+            </option>
+            <option value="yearly">
+              Yearly
+            </option>
+          </select>
+          <select
+            v-model="product.currency"
+            :disabled="silentLoading"
+            class="small_border_radius"
+            placeholder="Currency"
+            aria-label="Currency"
+          >
+            <option
+              v-for="(currency, currencyIndex) in currencies"
+              :key="`currency_${currencyIndex}`"
+              :value="currency"
+            >
+              {{ currency }}
+            </option>
+          </select>
+          <input
+            v-model="product.price"
+            :disabled="silentLoading"
+            type="number"
+            class="small_border_radius"
+            placeholder="Price"
+            aria-label="Price"
+            step="0.01"
+            min="0"
+            required
+          >
+        </div>
+        <textarea
+          v-model="product.desc"
+          :disabled="silentLoading"
+          class="small_border_radius"
+          rows="5"
+          placeholder="Description"
+          aria-label="Description"
+          required
+        />
+      </form>
     </div>
+    <p v-else class="text--small grey">
+      No products created yet. Create a new product and start taking payments.
+    </p>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
+const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
 
 export default {
   components: {
-    Checkbox
-  },
-  props: {
-    userStripeId: String
-    // product: Array
+    Checkbox,
+    Multiselect
   },
   data () {
     return {
-      // These are temporary data
-      products: [
-        { id: 1, name: '4 sessions', desc: 'Just a test data', price: '£40', type: 'single', productStripeId: 'ABC' },
-        { id: 2, name: '8 sessions', desc: 'Just a test data', price: '£70', type: 'single', productStripeId: 'ABC' },
-        { id: 3, name: '12 week plan', desc: 'Just a test data', price: '£120', type: 'monthly', productStripeId: 'ABC' }
+      selectedProducts: [],
+      multiselectOptions: [
+        { name: 'Delete', svg: 'svg/bin.svg' },
+        { name: 'Deselect', svg: null }
       ],
-      selectedProducts: []
+      currencies: ['GBP', 'USD', 'JPY', 'AUD', 'CAD']
     }
   },
+  computed: mapState([
+    'loading',
+    'silentLoading',
+    'products'
+  ]),
   methods: {
 
     // Checkbox
+    resolveProductsMultiselect (res) {
+      switch (res) {
+        case 'Delete':
+          // this.deleteProducts()
+          break
+        case 'Deselect':
+          this.deselectAll()
+          break
+      }
+    },
     changeSelectCheckbox (id) {
       if (!this.selectedProducts.includes(id)) {
         this.selectedProducts.push(id)

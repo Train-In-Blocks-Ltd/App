@@ -140,9 +140,9 @@
       <div v-else class="bookings_container">
         <h3>Upcoming</h3>
         <div class="bookings_sub_container">
-          <div v-if="bookings.length !== 0" class="bookings_wrapper">
+          <div v-if="clientUser.bookings.length !== 0" class="bookings_wrapper">
             <div
-              v-for="(booking, bookingIndex) in bookings"
+              v-for="(booking, bookingIndex) in clientUser.bookings"
               :key="`bookings_${bookingIndex}`"
               class="booking_event"
             >
@@ -157,19 +157,21 @@
             <p><b>Make a request</b></p>
             <input
               v-model="booking_form.date"
+              class="small_border_radius"
               type="date"
               aria-label="Date"
               required
             >
             <input
               v-model="booking_form.time"
+              class="small_border_radius"
               type="time"
               aria-label="Time"
               required
             >
             <textarea
               v-model="booking_form.notes"
-              class="additional_notes"
+              class="additional_notes small_border_radius"
               rows="5"
               placeholder="Additonal information"
               aria-label="Additional information"

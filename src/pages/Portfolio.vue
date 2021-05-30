@@ -75,19 +75,19 @@
       />
     </div>
     <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
-    <!-- <products /> -->
+    <products />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
-// const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '../components/Products')
+const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '../components/Products')
 
 export default {
   components: {
-    RichEditor
-    // Products
+    RichEditor,
+    Products
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {

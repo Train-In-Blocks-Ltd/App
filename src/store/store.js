@@ -41,7 +41,8 @@ export const store = new Vuex.Store({
     clientUser: {
       plans: null,
       profile_image: null,
-      sessionsToday: []
+      sessionsToday: [],
+      bookings: []
     },
 
     // Portfolio
@@ -51,6 +52,9 @@ export const store = new Vuex.Store({
       trainer_name: '',
       notes: ''
     },
+
+    // Products
+    products: [],
 
     // Template
 
@@ -202,6 +206,20 @@ export const store = new Vuex.Store({
     removeBooking (state, payload) {
       const BOOKING = state.bookings.find(booking => booking.id === parseInt(payload.bookingId))
       state.bookings.splice(state.bookings.indexOf(BOOKING), 1)
+    },
+
+    // Bookings
+
+    // payload => client_id, id (booking), date, time, notes, status
+    addNewProduct (state, payload) {
+      state.products.push({ ...payload })
+    },
+    // payload => bookingId
+    removeProduct (state, productIds) {
+      productIds.forEach((productId) => {
+        const PRODUCT = state.products.find(product => product.id === parseInt(productId))
+        state.products.splice(state.products.indexOf(PRODUCT), 1)
+      })
     },
 
     // Client user
@@ -409,7 +427,7 @@ export const store = new Vuex.Store({
         ...TEMPLATE
       })
     },
-    // payload => selectedTemplates
+    // payload => templatesIds (selectedTemplates)
     async deleteTemplate ({ commit }, templateIds) {
       const DELETE_IDS = []
       templateIds.forEach((templateId) => {
@@ -443,6 +461,36 @@ export const store = new Vuex.Store({
       await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
         ...state.portfolio
       })
+    },
+
+    // Products
+
+    // payload => name, desc, price, type, stripeId
+    async createProduct ({ commit }, payload) {
+      await axios.put('https://api.traininblocks.com/v2/products', {
+        ...payload
+      })
+      commit('addNewProduct', {
+        ...payload
+      })
+    },
+    // payload => name, desc, price, type, stripeId
+    async updateProduct ({ commit }, payload) {
+      const { productId, ...POST_DATA } = payload
+      await axios.post(`https://api.traininblocks.com/v2/products/${productId}`, {
+        ...POST_DATA
+      })
+    },
+    // payload => productIds (selectedProducts)
+    async deleteProduct ({ commit }, productIds) {
+      const DELETE_IDS = []
+      productIds.forEach((productId) => {
+        DELETE_IDS.push({ id: productId })
+      })
+      await axios.delete('https://api.traininblocks.com/v2/batch/product', {
+        data: DELETE_IDS
+      })
+      commit('removeProduct', productIds)
     },
 
     // Account

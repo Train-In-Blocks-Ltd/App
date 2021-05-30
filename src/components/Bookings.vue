@@ -59,6 +59,7 @@
         <p><b>Create a booking</b></p>
         <select
           v-model="booking_form.clientId"
+          class="small_border_radius"
           name="client_booking_select"
           aria-label="Select a client"
           required
@@ -80,12 +81,14 @@
         <div class="date_time_wrapper">
           <input
             v-model="booking_form.date"
+            class="small_border_radius"
             type="date"
             aria-label="Date"
             required
           >
           <input
             v-model="booking_form.time"
+            class="small_border_radius"
             type="time"
             aria-label="Time"
             required
@@ -93,7 +96,7 @@
         </div>
         <textarea
           v-model="booking_form.notes"
-          class="additional_notes"
+          class="additional_notes small_border_radius"
           rows="5"
           placeholder="Additonal information"
           aria-label="Additional information"
