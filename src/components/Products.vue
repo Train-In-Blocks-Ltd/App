@@ -220,6 +220,52 @@ export default {
         document.getElementById(`sc-${product.id}`).checked = false
       })
       this.selectedProducts = []
+    },
+
+    // Products
+
+    async createProduct () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('createProduct', {
+          name: null,
+          desc: null,
+          price: null,
+          type: 'One-off'
+        })
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.$parent.resolveError(e)
+      }
+    },
+    async updateProduct (productId) {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('updateProduct', productId)
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.$parent.resolveError(e)
+      }
+    },
+    async deleteProduct () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('deleteProduct', {
+          productIds: this.selectedProducts
+        })
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.$parent.resolveError(e)
+      }
     }
   }
 }

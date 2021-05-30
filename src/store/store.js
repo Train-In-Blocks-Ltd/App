@@ -465,7 +465,7 @@ export const store = new Vuex.Store({
 
     // Products
 
-    // payload => name, desc, price, type, stripeId
+    // payload => name, desc, price, type
     async createProduct ({ commit }, payload) {
       await axios.put('https://api.traininblocks.com/v2/products', {
         ...payload
@@ -474,9 +474,9 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
-    // payload => name, desc, price, type, stripeId
-    async updateProduct ({ commit }, payload) {
-      const { productId, ...POST_DATA } = payload
+    // payload => productId
+    async updateProduct ({ state }, productId) {
+      const POST_DATA = state.products.find(product => product.id === parseInt(productId))
       await axios.post(`https://api.traininblocks.com/v2/products/${productId}`, {
         ...POST_DATA
       })
