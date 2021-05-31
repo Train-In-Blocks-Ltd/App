@@ -25,56 +25,56 @@
   }
 
   /* Card */
-  .portfolio_editor,
-  .portfolio_editor_skeleton {
+  .business_editor,
+  .business_editor_skeleton {
     margin: 4rem 0
   }
 </style>
 
 <template>
-  <div id="portfolio" class="view_container">
+  <div id="business" class="view_container">
     <div class="trainer_info">
       <input
         v-if="!loading"
-        v-model="portfolio.business_name"
+        v-model="business.business_name"
         class="trainer_info__business text--large"
         placeholder="Business name"
         aria-label="Business name"
         type="text"
         autocomplete="name"
         :disabled="silentLoading"
-        @blur="updatePortfolio(portfolio.notes)"
+        @blur="updateBusiness(business.notes)"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_large'" />
       <input
         v-if="!loading"
-        v-model="portfolio.trainer_name"
+        v-model="business.trainer_name"
         class="input--forms allow_text_overflow"
         placeholder="Trainer Name"
         aria-label="Trainer Name"
         type="text"
         autocomplete="name"
         :disabled="silentLoading"
-        @blur="updatePortfolio(portfolio.notes)"
+        @blur="updateBusiness(business.notes)"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
     </div>
     <div
       v-if="!loading"
-      class="editor_object_standard portfolio_editor"
+      class="editor_object_standard business_editor"
     >
       <h3>
-        Portfolio
+        Business
       </h3>
       <rich-editor
-        v-model="portfolio.notes"
+        v-model="business.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
-        @on-edit-change="resolve_portfolio_editor"
+        @on-edit-change="resolve_business_editor"
       />
     </div>
-    <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
+    <skeleton v-else :type="'session'" class="business_editor_skeleton" />
     <products />
   </div>
 </template>
@@ -100,7 +100,7 @@ export default {
   },
   data () {
     return {
-      editingPortfolio: false,
+      editingBusiness: false,
       tempEditorStore: null
     }
   },
@@ -108,7 +108,7 @@ export default {
     'loading',
     'silentLoading',
     'dontLeave',
-    'portfolio'
+    'business'
   ]),
   async created () {
     this.$store.commit('setData', {
@@ -120,28 +120,28 @@ export default {
     this.$store.dispatch('endLoading')
   },
   methods: {
-    resolve_portfolio_editor (state) {
+    resolve_business_editor (state) {
       switch (state) {
         case 'edit':
           this.$store.commit('setData', {
             attr: 'dontLeave',
             data: true
           })
-          this.editingPortfolio = true
-          this.tempEditorStore = this.portfolio.notes
+          this.editingBusiness = true
+          this.tempEditorStore = this.business.notes
           break
         case 'save':
-          this.editingPortfolio = false
-          this.updatePortfolio(this.portfolio.notes)
+          this.editingBusiness = false
+          this.updateBusiness(this.business.notes)
           break
         case 'cancel':
           this.$store.commit('setData', {
             attr: 'dontLeave',
             data: false
           })
-          this.editingPortfolio = false
+          this.editingBusiness = false
           this.$store.commit('setDataDeep', {
-            attrParent: 'portfolio',
+            attrParent: 'business',
             attrChild: 'notes',
             data: this.tempEditorStore
           })
@@ -151,7 +151,7 @@ export default {
 
     // Database
 
-    async updatePortfolio () {
+    async updateBusiness () {
       try {
         this.$store.commit('setData', {
           attr: 'silentLoading',
@@ -161,9 +161,9 @@ export default {
           attr: 'dontLeave',
           data: true
         })
-        await this.$store.dispatch('updatePortfolio')
-        this.$ga.event('Portfolio', 'update')
-        this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
+        await this.$store.dispatch('updateBusiness')
+        this.$ga.event('Business', 'update')
+        this.$parent.$refs.response_pop_up.show('Business updated', 'Your clients can access this information')
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)

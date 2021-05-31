@@ -24,7 +24,7 @@
   padding: 2rem;
   margin: 2rem 0
 }
-.client_portfolio__notes {
+.client_business__notes {
   margin: 2rem 0
 }
 hr {
@@ -49,26 +49,26 @@ hr {
 
 <template>
   <div id="home" class="view_container">
-    <div v-if="portfolio">
-      <div :class="{ opened_sections: isPortfolioOpen || isInstallOpen || isProfileOpen }" class="section_overlay" />
+    <div v-if="business">
+      <div :class="{ opened_sections: isBusinessOpen || isInstallOpen || isProfileOpen }" class="section_overlay" />
       <div v-if="isProfileOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
         <client-profile />
       </div>
-      <div v-if="isPortfolioOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
-        <div class="client_home__portfolio">
+      <div v-if="isBusinessOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
+        <div class="client_home__business">
           <inline-svg
             class="close_icon cursor"
             :src="require('../../assets/svg/close.svg')"
             aria-label="Close"
-            @click="isPortfolioOpen = false, willBodyScroll(true)"
+            @click="isBusinessOpen = false, willBodyScroll(true)"
           />
           <h2>
-            {{ portfolio.business_name }}
+            {{ business.business_name }}
           </h2>
           <h3 class="grey">
-            {{ portfolio.trainer_name }}
+            {{ business.trainer_name }}
           </h3>
-          <div class="client_portfolio__notes" v-html="updateHTML(portfolio.notes, true)" />
+          <div class="client_business__notes" v-html="updateHTML(business.notes, true)" />
         </div>
       </div>
       <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
@@ -86,10 +86,10 @@ hr {
         </p>
       </div>
       <div
-        v-if="!isPortfolioOpen && portfolio && portfolio.notes !== '<p></p>'"
+        v-if="!isBusinessOpen && business && business.notes !== '<p></p>'"
         aria-label="Information"
         class="tab_option tab_option_large icon_open_middle"
-        @click="isPortfolioOpen = true, willBodyScroll(false)"
+        @click="isBusinessOpen = true, willBodyScroll(false)"
       >
         <inline-svg :src="require('../../assets/svg/info.svg')" aria-label="Information" />
         <p class="text">
@@ -98,7 +98,7 @@ hr {
       </div>
       <div
         v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
-        :class="{ icon_open_bottom: portfolio && portfolio.notes !== '<p></p>' }"
+        :class="{ icon_open_bottom: business && business.notes !== '<p></p>' }"
         class="tab_option icon_open_middle tab_option_small"
         aria-label="Install App"
         @click="isInstallOpen = true, willBodyScroll(false)"
@@ -217,7 +217,7 @@ export default {
 
       // TAB
 
-      isPortfolioOpen: false,
+      isBusinessOpen: false,
       isInstallOpen: false,
       isProfileOpen: false,
 
@@ -238,7 +238,7 @@ export default {
     'dontLeave',
     'clientUser',
     'claims',
-    'portfolio',
+    'business',
     'pwa'
   ]),
   async created () {
