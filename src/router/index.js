@@ -9,7 +9,7 @@ const LogoutComponent = () => import(/* webpackChunkName: "logout" */ '@/pages/L
 const NotFound = () => import(/* webpackChunkName: "notfound" */ '@/pages/NotFound')
 const ArchiveComponent = () => import(/* webpackChunkName: "archive" */ '@/pages/Archive')
 const TemplateComponent = () => import(/* webpackChunkName: "templates" */ '@/pages/Templates')
-const BusinessComponent = () => import(/* webpackChunkName: "business" */ '@/pages/Business')
+const PortfolioComponent = () => import(/* webpackChunkName: "portfolio" */ '@/pages/Portfolio')
 
 const ClientComponent = () => import(/* webpackChunkName: "client.home" */ '@/pages/_client/Home')
 const ClientPlans = () => import(/* webpackChunkName: "client.plans" */ '@/pages/_client/Plans')
@@ -74,8 +74,8 @@ const router = new Router({
       }
     },
     {
-      path: '/business',
-      component: BusinessComponent,
+      path: '/portfolio',
+      component: PortfolioComponent,
       meta: {
         requiresAuth: true,
         requiresTrainer: true

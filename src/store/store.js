@@ -45,9 +45,9 @@ export const store = new Vuex.Store({
       bookings: []
     },
 
-    // Business
+    // Portfolio
 
-    business: {
+    portfolio: {
       business_name: '',
       trainer_name: '',
       notes: ''
@@ -305,17 +305,17 @@ export const store = new Vuex.Store({
         data: SORTED_ARCHIVE_CLIENTS
       })
 
-      // Sets templates and business
+      // Sets templates and portfolio
       commit('setData', {
         attr: 'templates',
         data: RESPONSE.data[2]
       })
 
       if (RESPONSE.data[3].length === 0) {
-        await dispatch('createBusiness')
+        await dispatch('createPortfolio')
       } else {
         commit('setData', {
-          attr: 'business',
+          attr: 'portfolio',
           data: { ...RESPONSE.data[3][0] }
         })
       }
@@ -439,17 +439,17 @@ export const store = new Vuex.Store({
       commit('removeTemplate', templateIds)
     },
 
-    // Business
+    // Portfolio
 
-    async createBusiness ({ dispatch, state }) {
-      await axios.put('https://api.traininblocks.com/v2/business', {
+    async createPortfolio ({ dispatch, state }) {
+      await axios.put('https://api.traininblocks.com/v2/portfolio', {
         pt_id: state.claims.sub,
         trainer_name: '',
         business_name: '',
         notes: ''
       })
       dispatch('setData', {
-        attr: 'business',
+        attr: 'portfolio',
         data: {
           trainer_name: '',
           business_name: '',
@@ -457,9 +457,9 @@ export const store = new Vuex.Store({
         }
       })
     },
-    async updateBusiness ({ state }) {
-      await axios.post(`https://api.traininblocks.com/v2/business/${state.claims.sub}`, {
-        ...state.business
+    async updatePortfolio ({ state }) {
+      await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
+        ...state.portfolio
       })
     },
 
@@ -729,7 +729,7 @@ export const store = new Vuex.Store({
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
       if (RESPONSE.data) {
         commit('setData', {
-          attr: 'business',
+          attr: 'portfolio',
           data: RESPONSE.data[1][0]
         })
         commit('setDataDeep', {
@@ -785,11 +785,11 @@ export const store = new Vuex.Store({
         checked: SESSION.checked,
         feedback: SESSION.feedback
       })
-      if (state.business.notifications === 1) {
+      if (state.portfolio.notifications === 1) {
         if (SESSION.feedback !== null) {
           const PT_EMAIL = await axios.post('/.netlify/functions/okta', {
             type: 'GET',
-            url: `?filter=id+eq+"${state.business.pt_id}"&limit=1`
+            url: `?filter=id+eq+"${state.portfolio.pt_id}"&limit=1`
           })
           await axios.post('/.netlify/functions/send-email', {
             to: PT_EMAIL.data[0].credentials.emails[0].value,

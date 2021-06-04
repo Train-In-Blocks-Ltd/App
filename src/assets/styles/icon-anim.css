@@ -3,8 +3,8 @@
 #template__t,
 #help-desk__bookmark,
 #home__house,
-#business_pen,
-#business_case,
+#portfolio_pen,
+#portfolio_case,
 #bin__lid,
 #calculate,
 #back,
@@ -38,11 +38,11 @@
   transform: translateY(4px)
 }
 
-/* Business */
-.nav_item:hover #business_pen {
+/* Portfolio */
+.nav_item:hover #portfolio_pen {
   transform: translateX(4px)
 }
-.nav_item:hover #business_case {
+.nav_item:hover #portfolio_case {
   transform: translateX(-2px)
 }
 
@@ -141,8 +141,8 @@
   #template__t,
   #help-desk__bookmark,
   #home__house,
-  #business_pen,
-  #business_case,
+  #portfolio_pen,
+  #portfolio_case,
   #bin__lid {
     transition: none
   }
@@ -150,7 +150,7 @@
 
 /* Active state */
 .nav_item a.router-link-exact-active #home__house,
-.nav_item a.router-link-exact-active :is(#business_pen, #business_case),
+.nav_item a.router-link-exact-active :is(#portfolio_pen, #portfolio_case),
 .nav_item a.router-link-exact-active #archive__t,
 .nav_item a.router-link-exact-active #account__cog {
   transform: none;
@@ -166,8 +166,8 @@
   .archive_icon:hover #bin__lid,
   .nav_item:hover #account__cog,
   .nav_item:hover #logout__arrow,
-  .nav_item:hover #business_pen,
-  .nav_item:hover #business_case,
+  .nav_item:hover #portfolio_pen,
+  .nav_item:hover #portfolio_case,
   .a_link:hover #calculate,
   .a_link:hover #back,
   .a_link:hover #copy :is(#top, #right),
