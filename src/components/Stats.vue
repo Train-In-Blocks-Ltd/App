@@ -276,6 +276,8 @@ export default {
   data () {
     return {
       descData: [],
+      largestValue: null,
+      smallestValue: null,
       showLoadsVolumeOptions: false,
       selectedDataName: 'Plan Overview',
       optionsForDataName: new Set(),
@@ -326,7 +328,8 @@ export default {
     },
     selection () {
       class DataPoint {
-        constructor (dataPacket, returnDataType) {
+        constructor (parent, dataPacket, returnDataType) {
+          this.parent = parent
           this.sessionName = dataPacket.sessionName
           this.sessionDate = dataPacket.sessionDate
           this.exerciseName = dataPacket.exerciseName
@@ -340,7 +343,7 @@ export default {
         get calculate () {
           switch (this.returnDataType) {
             case 'Sets':
-              return this.getSets()
+              return this.getSets(true)
             case 'Reps':
               return this.getReps()
             case 'Load':
@@ -352,7 +355,7 @@ export default {
           }
         }
 
-        getSets () {
+        getSets (returnAdditionalDescData) {
           let returnValue
           let finder
           while ((finder = this.regexSetsReps.exec(this.protocol)) !== null) {
@@ -362,6 +365,10 @@ export default {
             finder.forEach((setsMatch, setsIndex) => {
               if (setsIndex === 1) {
                 returnValue = parseFloat(setsMatch)
+                if (returnAdditionalDescData) {
+                  this.parent.largestValue = this.parent.largestValue === null ? parseFloat(setsMatch) : (this.parent.largestValue < parseFloat(setsMatch) ? parseFloat(setsMatch) : this.parent.largestValue)
+                  this.parent.smallestValue = this.parent.smallestValue === null ? parseFloat(setsMatch) : (this.parent.smallestValue > parseFloat(setsMatch) ? parseFloat(setsMatch) : this.parent.smallestValue)
+                }
               }
             })
           }
@@ -369,7 +376,7 @@ export default {
         }
 
         getReps () {
-          const NUM_OF_SETS = this.getSets()
+          const NUM_OF_SETS = this.getSets(false)
           let returnValue = 0
           let repsFinder
           while ((repsFinder = this.regexSetsReps.exec(this.protocol)) !== null) {
@@ -379,9 +386,16 @@ export default {
             repsFinder.forEach((repsMatch, repsIndex) => {
               if (repsIndex === 2) {
                 if (repsMatch.includes('/')) {
-                  returnValue = repsMatch.split('/').reduce((a, b) => parseFloat(a) + parseFloat(b))
+                  const SPLIT_VALUE = repsMatch.split('/').map(Number)
+                  returnValue = SPLIT_VALUE.reduce((a, b) => a + b)
+                  const LARGEST = Math.max(SPLIT_VALUE)
+                  const SMALLEST = Math.min(SPLIT_VALUE)
+                  this.parent.largestValue = this.parent.largestValue === null ? LARGEST : (this.parent.largestValue < LARGEST ? LARGEST : this.parent.largestValue)
+                  this.parent.smallestValue = this.parent.smallestValue === null ? SMALLEST : (this.parent.smallestValue > SMALLEST ? SMALLEST : this.parent.smallestValue)
                 } else {
                   returnValue = parseFloat(repsMatch) * NUM_OF_SETS
+                  this.parent.largestValue = this.parent.largestValue === null ? parseFloat(repsMatch) : (this.parent.largestValue < parseFloat(repsMatch) ? parseFloat(repsMatch) : this.parent.largestValue)
+                  this.parent.smallestValue = this.parent.smallestValue === null ? parseFloat(repsMatch) : (this.parent.smallestValue > parseFloat(repsMatch) ? parseFloat(repsMatch) : this.parent.smallestValue)
                 }
               }
             })
@@ -390,7 +404,7 @@ export default {
         }
 
         getLoad () {
-          const NUM_OF_SETS = this.getSets()
+          const NUM_OF_SETS = this.getSets(false)
           let returnValue = 0
           let loadFinder
           while ((loadFinder = this.regexLoad.exec(this.protocol)) !== null) {
@@ -400,9 +414,16 @@ export default {
             loadFinder.forEach((loadMatch, loadIndex) => {
               if (loadIndex === 1) {
                 if (loadMatch.includes('/')) {
-                  returnValue = loadMatch.split('/').reduce((a, b) => parseFloat(a) + parseFloat(b))
+                  const SPLIT_VALUE = loadMatch.split('/').map(Number)
+                  returnValue = SPLIT_VALUE.reduce((a, b) => a + b)
+                  const LARGEST = Math.max(SPLIT_VALUE)
+                  const SMALLEST = Math.min(SPLIT_VALUE)
+                  this.parent.largestValue = this.parent.largestValue === null ? LARGEST : (this.parent.largestValue < LARGEST ? LARGEST : this.parent.largestValue)
+                  this.parent.smallestValue = this.parent.smallestValue === null ? SMALLEST : (this.parent.smallestValue > SMALLEST ? SMALLEST : this.parent.smallestValue)
                 } else {
                   returnValue = parseFloat(loadMatch) * NUM_OF_SETS
+                  this.parent.largestValue = this.parent.largestValue === null ? parseFloat(loadMatch) : (this.parent.largestValue < parseFloat(loadMatch) ? parseFloat(loadMatch) : this.parent.largestValue)
+                  this.parent.smallestValue = this.parent.smallestValue === null ? parseFloat(loadMatch) : (this.parent.smallestValue > parseFloat(loadMatch) ? parseFloat(loadMatch) : this.parent.smallestValue)
                 }
               }
             })
@@ -424,6 +445,8 @@ export default {
           return returnValue
         }
       }
+      this.largestValue = null
+      this.smallestValue = null
       this.dataToVisualise = []
       this.labelsToVisualise = []
       this.dateDaysToVisualise = []
@@ -443,7 +466,7 @@ export default {
             this.showDataTypeSelector = exerciseDataPacket.exerciseProtocol.includes('x')
             this.showLoadsVolumeOptions = exerciseDataPacket.exerciseProtocol.includes('at')
             this.selectedDataType = !this.showLoadsVolumeOptions && (this.selectedDataType === 'Load' || this.selectedDataType === 'Volume') ? 'Sets' : this.selectedDataType
-            const DATA_POINT = new DataPoint(exerciseDataPacket, exerciseDataPacket.exerciseProtocol.includes('x') ? this.selectedDataType : 'Other')
+            const DATA_POINT = new DataPoint(this, exerciseDataPacket, exerciseDataPacket.exerciseProtocol.includes('x') ? this.selectedDataType : 'Other')
             if (isNaN(DATA_POINT.calculate)) {
               this.protocolErrors.push({
                 sessionName: exerciseDataPacket.sessionName,
@@ -457,7 +480,7 @@ export default {
             }
           } else if (this.selectedDataName === 'Plan Overview' && exerciseDataPacket.exerciseProtocol.includes('at')) {
             this.showDataTypeSelector = true
-            const DATA_POINT = new DataPoint(exerciseDataPacket, this.selectedDataType)
+            const DATA_POINT = new DataPoint(this, exerciseDataPacket, this.selectedDataType)
             if (isNaN(DATA_POINT.calculate)) {
               this.protocolErrors.push({
                 sessionName: exerciseDataPacket.sessionName,
@@ -485,10 +508,17 @@ export default {
           this.descData = [
             [`Total ${this.selectedDataType.toLowerCase()} from all sessions`, SUM],
             [`Average ${this.selectedDataType.toLowerCase()} across all sessions`, (SUM / this.dataToVisualise.length).toFixed(1)],
-            [`Most amount of ${this.selectedDataType.toLowerCase()} from one session`, MAX],
-            [`Least amount of ${this.selectedDataType.toLowerCase()} from one session`, MIN],
+            [`Most total amount of ${this.selectedDataType.toLowerCase()} from a session`, MAX],
+            [`Least total amount of ${this.selectedDataType.toLowerCase()} from a session`, MIN],
             [`% change in ${this.selectedDataType.toLowerCase()} from the lowest to the largest`, (((MAX / MIN) - 1) * 100).toFixed(1)]
           ]
+          if (this.selectedDataType !== 'Volume' && this.selectedDataName !== 'Plan Overview') {
+            this.descData = [
+              ...this.descData,
+              [`${this.selectedDataType === 'Load' ? 'Heaviest' : 'Largest'} ${this.selectedDataType.toLowerCase()}`, this.largestValue],
+              [`${this.selectedDataType === 'Load' ? 'Lightest' : 'Smallest'} ${this.selectedDataType.toLowerCase()}`, this.smallestValue]
+            ]
+          }
         }
       })
 
