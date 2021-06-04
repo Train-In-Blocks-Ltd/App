@@ -287,6 +287,7 @@ export default {
       resetGraph: 0,
       dataToVisualise: [],
       labelsToVisualise: [],
+      planOverviewDates: [],
       dateDaysToVisualise: [],
       sessionDataPackets: [],
       protocolErrors: []
@@ -449,6 +450,7 @@ export default {
       this.smallestValue = null
       this.dataToVisualise = []
       this.labelsToVisualise = []
+      this.planOverviewDates = []
       this.dateDaysToVisualise = []
       this.protocolErrors = []
       let extractedSessionProtocols = []
@@ -494,33 +496,37 @@ export default {
           }
         })
 
+        if (this.selectedDataName === 'Plan Overview') {
+          this.planOverviewDates.push(sessionDataPacket[0].sessionDate)
+        }
+
         // Sums for Plan Overview
         if (extractedSessionProtocols.length !== 0) {
           this.dataToVisualise.push(extractedSessionProtocols.reduce((a, b) => a + b))
           POSITION_LOOKUP.push(sessionDataPacketIndex)
         }
-
-        // Populates descriptive stats
-        if (this.dataToVisualise.length !== 0) {
-          const SUM = this.dataToVisualise.reduce((a, b) => a + b)
-          const MAX = Math.max(...this.dataToVisualise)
-          const MIN = Math.min(...this.dataToVisualise)
-          this.descData = [
-            [`Total ${this.selectedDataType.toLowerCase()} from all sessions`, SUM],
-            [`Average ${this.selectedDataType.toLowerCase()} across all sessions`, (SUM / this.dataToVisualise.length).toFixed(1)],
-            [`Most total amount of ${this.selectedDataType.toLowerCase()} from a session`, MAX],
-            [`Least total amount of ${this.selectedDataType.toLowerCase()} from a session`, MIN],
-            [`% change in ${this.selectedDataType.toLowerCase()} from the lowest to the largest`, (((MAX / MIN) - 1) * 100).toFixed(1)]
-          ]
-          if (this.selectedDataType !== 'Volume' && this.selectedDataName !== 'Plan Overview') {
-            this.descData = [
-              ...this.descData,
-              [`${this.selectedDataType === 'Load' ? 'Heaviest' : 'Largest'} ${this.selectedDataType.toLowerCase()}`, this.largestValue],
-              [`${this.selectedDataType === 'Load' ? 'Lightest' : 'Smallest'} ${this.selectedDataType.toLowerCase()}`, this.smallestValue]
-            ]
-          }
-        }
       })
+
+      // Populates descriptive stats
+      if (this.dataToVisualise.length !== 0) {
+        const SUM = this.dataToVisualise.reduce((a, b) => a + b)
+        const MAX = Math.max(...this.dataToVisualise)
+        const MIN = Math.min(...this.dataToVisualise)
+        this.descData = [
+          [`Total ${this.selectedDataType.toLowerCase()} from all sessions`, SUM],
+          [`Average ${this.selectedDataType.toLowerCase()} across all sessions`, (SUM / this.dataToVisualise.length).toFixed(1)],
+          [`Most total amount of ${this.selectedDataType.toLowerCase()} from a session`, MAX],
+          [`Least total amount of ${this.selectedDataType.toLowerCase()} from a session`, MIN],
+          [`% change in ${this.selectedDataType.toLowerCase()} from the lowest to the largest`, (((MAX / MIN) - 1) * 100).toFixed(1)]
+        ]
+        if (this.selectedDataType !== 'Volume' && this.selectedDataName !== 'Plan Overview') {
+          this.descData = [
+            ...this.descData,
+            [`${this.selectedDataType === 'Load' ? 'Heaviest' : 'Largest'} ${this.selectedDataType.toLowerCase()}`, this.largestValue],
+            [`${this.selectedDataType === 'Load' ? 'Lightest' : 'Smallest'} ${this.selectedDataType.toLowerCase()}`, this.smallestValue]
+          ]
+        }
+      }
 
       // Sets days difference
       POSITION_LOOKUP.forEach((index, nextIndex) => {
@@ -533,7 +539,7 @@ export default {
       // Sets labels
       if (this.selectedDataName === 'Plan Overview') {
         for (let x = 1; x <= this.dataToVisualise.length; x++) {
-          this.labelsToVisualise.push(['Session ' + x])
+          this.labelsToVisualise.push(['Session ' + x, this.planOverviewDates[x - 1]])
         }
       }
       this.resetGraph += 1

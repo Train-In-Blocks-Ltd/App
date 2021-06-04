@@ -344,7 +344,8 @@ textarea:focus {
   border: 2px solid var(--base)
 }
 input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
-select.small_border_radius {
+select.small_border_radius,
+textarea.small_border_radius {
   border-radius: 5px
 }
 input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
