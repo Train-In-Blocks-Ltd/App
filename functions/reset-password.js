@@ -530,46 +530,54 @@ exports.handler = async function handler (event, context, callback) {
     })
   } else if (event.body) {
     const data = JSON.parse(event.body)
-    try {
-      const oktaOne = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=profile.email+eq+"${data.email}"&limit=1`,
-        {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: authHeader
+    if (data.email !== 'demo@traininblocks.com') {
+      try {
+        const oktaOne = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=profile.email+eq+"${data.email}"&limit=1`,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: authHeader
+            }
           }
-        }
-      )
-      const id = oktaOne.data[0].id
-      const oktaTwo = await axios.post(`https://dev-183252.okta.com/api/v1/users/${id}/lifecycle/reset_password?sendEmail=false`,
-        {},
-        {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: authHeader
+        )
+        const id = oktaOne.data[0].id
+        const oktaTwo = await axios.post(`https://dev-183252.okta.com/api/v1/users/${id}/lifecycle/reset_password?sendEmail=false`,
+          {},
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: authHeader
+            }
           }
+        )
+        // options
+        const mailOptions = {
+          from: 'Train In Blocks <hello@traininblocks.com>',
+          to: data.email,
+          subject: 'Password Reset',
+          text: passEmailText(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
+          html: passEmail(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
         }
-      )
-      // options
-      const mailOptions = {
-        from: 'Train In Blocks <hello@traininblocks.com>',
-        to: data.email,
-        subject: 'Password Reset',
-        text: passEmailText(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-        html: passEmail(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+        await transporter.sendMail(mailOptions)
+        return callback(null, {
+          statusCode: 200,
+          headers,
+          body: 'Email sent successfully'
+        })
+      } catch (e) {
+        return callback(null, {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify(e, response)
+        })
       }
-      await transporter.sendMail(mailOptions)
+    } else {
       return callback(null, {
-        statusCode: 200,
+        statusCode: 401,
         headers,
-        body: 'Email sent successfully'
-      })
-    } catch (e) {
-      return callback(null, {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify(e, response)
+        body: ''
       })
     }
   } else {

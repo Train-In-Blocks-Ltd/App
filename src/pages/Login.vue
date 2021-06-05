@@ -168,7 +168,7 @@ a:hover {
         demo@traininblocks.com
       </div>
       <div class="info">
-        Testing123
+        testingaccount123
       </div>
     </div>
     <div id="okta-signin-container" />
@@ -312,20 +312,25 @@ export default {
       this.$parent.dontLeave = true
       this.error = null
       this.success = null
-      try {
-        await this.$axios.post('/.netlify/functions/reset-password',
-          {
-            email: this.email
-          }
-        )
-        this.open = false
-        this.email = null
-        this.success = 'An email has been sent successfully.'
+      if (this.email !== 'demo@traininblocks.com') {
+        try {
+          await this.$axios.post('/.netlify/functions/reset-password',
+            {
+              email: this.email
+            }
+          )
+          this.open = false
+          this.email = null
+          this.success = 'An email has been sent successfully.'
+          this.$parent.end_loading()
+        } catch (e) {
+          this.$parent.end_loading()
+          this.error = 'An error occurred. Are you sure your email is correct?'
+          console.error(e)
+        }
+      } else {
         this.$parent.end_loading()
-      } catch (e) {
-        this.$parent.end_loading()
-        this.error = 'An error occurred. Are you sure your email is correct?'
-        console.error(e)
+        this.error = 'An error occurred.'
       }
     }
   }
