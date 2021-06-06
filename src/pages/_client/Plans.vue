@@ -143,15 +143,10 @@ export default {
     'clients',
     'clientDetails'
   ]),
-  async created () {
+  created () {
     this.willBodyScroll(true)
     this.$parent.checkClient()
-    const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-    if (!this.clientDetails.plans) {
-      await this.$store.dispatch('getPlans', CLIENT.client_id)
-    }
     this.noPlans = (this.clientDetails.plans === false || this.clientDetails.plans.length === 0)
-    this.$store.dispatch('endLoading')
   },
   methods: {
     resolve_client_info_editor (state) {

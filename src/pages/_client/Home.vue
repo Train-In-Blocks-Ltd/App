@@ -289,6 +289,7 @@ export default {
       attr: 'clientDetails',
       data: CLIENT
     })
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
