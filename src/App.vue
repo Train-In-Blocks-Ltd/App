@@ -870,7 +870,7 @@ export default {
         // Get data if not client
         if (this.claims.user_type === 'Admin' || this.claims.user_type === 'Trainer') {
           try {
-            this.$store.dispatch('getHighLevelData')
+            await this.$store.dispatch('getHighLevelData')
             this.$store.dispatch('endLoading')
           } catch (e) {
             this.resolveError(e)
