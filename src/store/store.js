@@ -669,15 +669,15 @@ export const store = new Vuex.Store({
       const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
       await axios.post('https://api.traininblocks.com/v2/sessions', { ...SESSION })
     },
-    // payload => clientId, planId, sessionId
+    // payload => clientId, planId, sessionIds
     async batchUpdateSession ({ getters }, payload) {
-      const SESSION = []
-      console.log(payload)
-      payload.sessionIds.forEach((session) => {
-        console.log(session)
-        SESSION.push(getters.helper('match_session', payload.clientId, payload.planId, session))
+      const POST_DATA = []
+      payload.sessionIds.forEach((sessionId) => {
+        POST_DATA.push(getters.helper('match_session', payload.clientId, payload.planId, sessionId))
       })
-      await axios.post('https://api.traininblocks.com/v2/batch/sessions', { ...SESSION })
+      await axios.post('https://api.traininblocks.com/v2/batch/sessions', {
+        ...POST_DATA
+      })
     },
     // payload => clientId, planId, sessionIds
     async deleteSession ({ commit }, payload) {
