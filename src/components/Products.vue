@@ -1,55 +1,58 @@
 <style scoped>
-  #products {
-    margin: 4rem 0
-  }
-  #products > .option_bar {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 4rem;
-    margin-bottom: 2rem
-  }
-  #products > .option_bar button {
-    margin: auto 0
-  }
-  #products > .option_bar button:only-child {
-    margin-left: auto
-  }
+#products {
+  margin: 4rem 0
+}
+#products > .option_bar {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4rem;
+  margin-bottom: 2rem
+}
+#products > .option_bar > div:last-child {
+  display: flex
+}
+#products > .option_bar button {
+  margin: auto 0
+}
+#products > .option_bar button:only-child {
+  margin-left: 1rem
+}
 
-  /* Products container */
-  .products_container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 1rem
-  }
+/* Products container */
+.products_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem
+}
 
-  /* Products */
-  .product {
-    display: grid;
-    grid-gap: 1rem;
-    padding: 2rem;
-    box-shadow: var(--low_shadow);
-    border-radius: 10px;
-    background-color: var(--fore);
-    transition: var(--transition_standard)
-  }
-  .product > .header {
-    display: grid;
-    grid-template-columns: 1fr .1fr;
-    grid-gap: 1rem
-  }
-  .product > .header > h2 {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden
-  }
-  .product > .header > div {
-    margin-left: auto
-  }
-  .product_pricing {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 1rem
-  }
+/* Products */
+.product {
+  display: grid;
+  grid-gap: 1rem;
+  padding: 2rem;
+  box-shadow: var(--low_shadow);
+  border-radius: 10px;
+  background-color: var(--fore);
+  transition: var(--transition_standard)
+}
+.product > .header {
+  display: grid;
+  grid-template-columns: 1fr .1fr;
+  grid-gap: 1rem
+}
+.product > .header > h2 {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+.product > .header > div {
+  margin-left: auto
+}
+.product_pricing {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 1rem
+}
 </style>
 
 <template>
@@ -60,21 +63,23 @@
       :selected="selectedProducts"
       @response="resolveProductsMultiselect"
     />
-    <h2>
-      Products
-    </h2>
     <div class="option_bar">
-      <button>
-        New product
-      </button>
-      <a
-        v-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
-        href="javascript:void(0)"
-        class="a_link select_all"
-        @click="selectAll()"
-      >
-        Select all
-      </a>
+      <h2>
+        Products
+      </h2>
+      <div>
+        <button>
+          New product
+        </button>
+        <a
+          v-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
+          href="javascript:void(0)"
+          class="a_link select_all"
+          @click="selectAll()"
+        >
+          Select all
+        </a>
+      </div>
     </div>
     <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
     <div v-else-if="products.length !== 0" class="products_container">
