@@ -394,7 +394,7 @@ div#rich_editor.editorFocused {
             <button
               class="fadeIn menu_button"
               title="Image"
-              @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 400kb')"
+              @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
             >
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
             </button>
@@ -568,7 +568,7 @@ export default {
       }, false)
 
       if (FILE) {
-        if (FILE.size < 450000) {
+        if (FILE.size < 1100000) {
           // eslint-disable-next-line
           new Compressor(FILE, {
             quality: 0.6,
@@ -580,7 +580,7 @@ export default {
             }
           })
         } else {
-          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 400kb or lower', true, true)
+          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
           document.getElementById('img_uploader').value = ''
         }
       }
