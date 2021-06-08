@@ -86,13 +86,13 @@
           :src="clientUser.profile_image"
           class="cursor"
           alt="Profile img"
-          @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 400kb')"
+          @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
         >
         <inline-svg
           v-else
           :src="require('../assets/svg/profile-image.svg')"
           class="img_icon cursor"
-          @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 400kb')"
+          @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
         />
       </div>
       <div class="client_user_details">
@@ -227,7 +227,7 @@ export default {
           })
         }, false)
         if (FILE) {
-          if (FILE.size < 450000) {
+          if (FILE.size < 1100000) {
             // eslint-disable-next-line
             new Compressor(FILE, {
               quality: 0.6,
@@ -239,7 +239,7 @@ export default {
               }
             })
           } else {
-            this.$parent.$parent.$refs.response_pop_up.show('File size is too big', 'Please compress it to 400kb or lower', true, true)
+            this.$parent.$parent.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
             document.getElementById('img_uploader').value = ''
           }
         }
