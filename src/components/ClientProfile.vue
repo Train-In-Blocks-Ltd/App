@@ -279,8 +279,7 @@ export default {
         })
         await this.$store.dispatch('createBooking', {
           client_id: this.claims.client_id_db,
-          date: this.booking_form.date,
-          time: this.booking_form.time,
+          datetime: this.booking_form.date + this.booking_form.time,
           notes: this.booking_form.notes,
           status: 'Pending'
         })

@@ -320,14 +320,11 @@ export const store = new Vuex.Store({
         })
       }
 
-      // Sets bookings and assigns name to it (Adds the latest name which disregards previous names)
+      // Sets bookings
       commit('setData', {
         attr: 'bookings',
         data: RESPONSE.data[4]
       })
-      for (const BOOKING in state.bookings) {
-        BOOKING.name = state.clients.find(client => client.client_id === BOOKING.client_id).name
-      }
     },
 
     // Sets templates
@@ -697,7 +694,7 @@ export const store = new Vuex.Store({
 
     // Bookings
 
-    // payload => clientId, date, time, notes, status
+    // payload => clientId, datetime, notes, status
     async createBooking ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/bookings', {
         ...payload
@@ -746,6 +743,12 @@ export const store = new Vuex.Store({
           attrParent: 'clientUser',
           attrChild: 'profile_image',
           data: RESPONSE.data[2][0].profile_image
+        })
+        // Sets bookings
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attr: 'bookings',
+          data: RESPONSE.data[3]
         })
         commit('setDataDeep', {
           attrParent: 'clientUser',

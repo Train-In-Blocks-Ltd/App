@@ -1,4 +1,3 @@
-
 const qs = require('querystring')
 const axios = require('axios')
 const authHeader = 'SSWS 00r26hoJMP9lITIbqrR596dGTWAL0I8lFljhdxfaBV'
