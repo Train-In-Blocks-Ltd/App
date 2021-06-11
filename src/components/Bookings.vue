@@ -55,7 +55,7 @@
       <p v-else class="grey">
         No bookings made or confirmed
       </p>
-      <form class="request_booking_container" @submit.prevent="bookSession()">
+      <form class="request_booking_container" @submit.prevent="createBooking()">
         <p><b>Create a booking</b></p>
         <select
           v-model="booking_form.clientId"
@@ -158,7 +158,7 @@ export default {
         }
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e)
       }
     },
     async cancelBooking (bookingId) {
@@ -173,7 +173,7 @@ export default {
         })
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e)
       }
     }
   }
