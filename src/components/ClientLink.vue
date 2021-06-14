@@ -78,7 +78,7 @@ li[data-done='false'] {
   grid-gap: 1rem;
   color: var(--base);
   text-decoration: none;
-  border: 2px solid var(--base);
+  border: 3px solid var(--base);
   border-radius: 10px;
   transition: var(--transition_standard)
 }

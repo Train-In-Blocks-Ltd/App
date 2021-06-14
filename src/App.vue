@@ -6,6 +6,7 @@
 :root {
   --transition_smooth: .4s all;
   --transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
+  --inset_shadow: #28282810;
   --low_shadow: 0 0 20px 10px #28282808;
   --high_shadow: 0 0 20px 10px #28282816;
   --back: #F9F9F9;
@@ -151,7 +152,7 @@ hr {
 }
 .tab_overlay_content {
   position: fixed;
-  padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
+  padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
   top: 0;
   left: 0;
   z-index: 11;
@@ -751,6 +752,7 @@ export default {
     darkmode (mode) {
       const MATCHED_MEDIA = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
+        document.documentElement.style.setProperty('--inset_shadow', '#FFFFFF20')
         document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
         document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
         document.documentElement.style.setProperty('--back', '#282828')
@@ -770,6 +772,7 @@ export default {
           this.darkmode(e.matches ? 'dark' : 'light')
         })
       } else {
+        document.documentElement.style.setProperty('--inset_shadow', '#28282810')
         document.documentElement.style.setProperty('--low_shadow', '0 0 20px 10px #28282808')
         document.documentElement.style.setProperty('--high_shadow', '0 0 20px 10px #28282816')
         document.documentElement.style.setProperty('--back', '#F9F9F9')

@@ -198,9 +198,13 @@ export const store = new Vuex.Store({
 
     // Bookings
 
-    // payload => client_id, id (booking), date, time, notes, status
+    // payload => client_id, id (booking), date, time, notes, status, isClientSide
     addNewBooking (state, payload) {
+      delete payload.isClientSide
       state.bookings.push({ ...payload })
+      state.bookings.sort((a, b) => {
+        return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
+      })
     },
     // payload => bookingId
     removeBooking (state, payload) {
@@ -208,7 +212,7 @@ export const store = new Vuex.Store({
       state.bookings.splice(state.bookings.indexOf(BOOKING), 1)
     },
 
-    // Bookings
+    // Products
 
     // payload => client_id, id (booking), date, time, notes, status
     addNewProduct (state, payload) {
@@ -224,25 +228,19 @@ export const store = new Vuex.Store({
 
     // Client user
 
+    addNewBookingClientSide (state, payload) {
+      delete payload.isClientSide
+      state.clientUser.bookings.push({ ...payload })
+      state.clientUser.bookings.sort((a, b) => {
+        return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
+      })
+    },
+    setClientUserPlan (state, payload) {
+      const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
+      PLAN.sessions = payload.sessions
+    },
     updateClientUserProfileImage (state, payload) {
       state.clientUser.profile_image = payload
-    },
-    updateClientUserPlanSessions (state, payload) {
-      const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
-      PLAN[payload.attr] = payload.data
-
-      const today = () => {
-        const DATE = new Date()
-        const YEAR = DATE.getFullYear()
-        const MONTH = String(DATE.getMonth() + 1).padStart(2, '0')
-        const DAY = String(DATE.getDate()).padStart(2, '0')
-        return `${YEAR}-${MONTH}-${DAY}`
-      }
-      for (const SESSION of PLAN.sessions) {
-        if (SESSION.date === today() && !state.clientUser.sessionsToday.includes(SESSION.id)) {
-          state.clientUser.sessionsToday.push({ planId: parseInt(payload.planId), ...SESSION })
-        }
-      }
     },
     updateClientUserPlanSingleSession (state, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -323,11 +321,11 @@ export const store = new Vuex.Store({
       // Sets bookings
       commit('setData', {
         attr: 'bookings',
-        data: RESPONSE.data[4]
+        data: RESPONSE.data[4].sort((a, b) => {
+          return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
+        })
       })
     },
-
-    // Sets templates
 
     // Clients
 
@@ -526,7 +524,7 @@ export const store = new Vuex.Store({
     // Plans
 
     // payload => clientId, force
-    async getPlans ({ dispatch, commit, state }, clientId) {
+    async getPlans ({ commit, state }, clientId) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
       if (!CLIENT.plans) {
         const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/plans/${CLIENT.client_id}`)
@@ -543,7 +541,7 @@ export const store = new Vuex.Store({
             clientId,
             planId: plan.id,
             attr: 'sessions',
-            data: SESSION_DATA
+            data: SESSION_DATA.length === 0 ? false : SESSION_DATA
           })
         })
       }
@@ -686,7 +684,7 @@ export const store = new Vuex.Store({
         ...payload
       })
       payload.id = RESPONSE.data[0]['LAST_INSERT_ID()']
-      commit('addNewBooking', {
+      commit(payload.isClientSide ? 'addNewBookingClientSide' : 'addNewBooking', {
         ...payload
       })
     },
@@ -730,11 +728,14 @@ export const store = new Vuex.Store({
           attrChild: 'profile_image',
           data: RESPONSE.data[2][0].profile_image
         })
+
         // Sets bookings
         commit('setDataDeep', {
           attrParent: 'clientUser',
-          attr: 'bookings',
-          data: RESPONSE.data[3]
+          attrChild: 'bookings',
+          data: RESPONSE.data[3].sort((a, b) => {
+            return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
+          })
         })
         commit('setDataDeep', {
           attrParent: 'clientUser',
@@ -754,25 +755,21 @@ export const store = new Vuex.Store({
       }
     },
     async getClientSidePlans ({ commit, state }) {
-      const PLANS = await axios.get(`https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`)
+      const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`)
       commit('setDataDeep', {
         attrParent: 'clientUser',
         attrChild: 'plans',
-        data: PLANS.data
+        data: RESPONSE.data[0]
       })
-      if (state.clientUser.plans) {
-        for (const PLAN of state.clientUser.plans) {
-          const RESPONSE_SESSIONS = await axios.get(`https://api.traininblocks.com/v2/sessions/${PLAN.id}`)
-          const SORTED_SESSIONS = RESPONSE_SESSIONS.data.sort((a, b) => {
-            return new Date(a.date) - new Date(b.date)
-          })
-          commit('updateClientUserPlanSessions', {
-            planId: PLAN.id,
-            attr: 'sessions',
-            data: SORTED_SESSIONS
-          })
-        }
-      }
+
+      // Resolves sessions and assigns to correct plan
+      state.clientUser.plans.forEach((plan) => {
+        const SESSION_DATA = RESPONSE.data[1].filter(session => parseInt(session.programme_id) === plan.id) || false
+        commit('setClientUserPlan', {
+          planId: plan.id,
+          sessions: SESSION_DATA.length === 0 ? false : SESSION_DATA
+        })
+      })
     },
     // payload => planId, sessionId
     async updateClientSideSession ({ state }, payload) {

@@ -180,6 +180,16 @@ Vue.mixin({
         const RESULT = ((((RED * 299) + (GREEN * 587) + (BLUE * 114)) / 1000) - 128) * -1000
         return `rgb(${RESULT}, ${RESULT}, ${RESULT})`
       }
+    },
+    statusColor (status) {
+      switch (status) {
+        case 'Pending':
+          return 'var(--base_light)'
+        case 'Scheduled':
+          return 'green'
+        case 'Cancelled' || 'Declined':
+          return 'var(--base_red)'
+      }
     }
   }
 })

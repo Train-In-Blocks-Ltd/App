@@ -12,9 +12,20 @@
 }
 .bookings_sub_container {
   display: grid;
-  grid-template-columns: 1fr .8fr;
-  grid-gap: 1rem;
+  grid-template-columns: 1fr .9fr;
+  grid-gap: 1.6rem;
   margin-top: 1rem
+}
+.bookings_wrapper {
+  display: grid;
+  grid-gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0 1rem;
+  box-shadow: inset 0 -10px 10px -10px var(--inset_shadow), inset 0 10px 10px -10px var(--inset_shadow)
+}
+.bookings_wrapper::-webkit-scrollbar {
+  width: 6px
 }
 .date_time_wrapper {
   display: grid;
@@ -22,8 +33,28 @@
   grid-gap: .4rem
 }
 
+/* Booking event */
+.booking_event {
+  display: grid;
+  grid-gap: 2rem;
+  border: 3px solid var(--base);
+  padding: 1rem;
+  border-radius: 10px
+}
+.booking_event__details {
+  display: grid;
+  grid-gap: .6rem
+}
+.booking_event__status {
+  display: flex;
+  justify-content: space-between
+}
+.booking_event__status > a {
+  color: var(--base_red)
+}
+
 /* Responsive */
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .bookings_sub_container {
     display: block
   }
@@ -48,8 +79,28 @@
           :key="`bookings_${bookingIndex}`"
           class="booking_event"
         >
-          <p>{{ booking.date }}</p>
-          <p>{{ booking.notes }}</p>
+          <div class="booking_event__details">
+            <p>
+              <b>
+                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime }} with {{ clients.find(client => client.client_id === booking.client_id).name }}
+              </b>
+            </p>
+            <p>
+              {{ booking.notes }}
+            </p>
+          </div>
+          <div class="booking_event__status">
+            <p :style="{ color: statusColor(booking.status) }">
+              {{ booking.status }}
+            </p>
+            <a
+              href="javascript:void(0)"
+              class="a_link"
+              @click="cancelBooking(booking.client_id, booking.id)"
+            >
+              Delete
+            </a>
+          </div>
         </div>
       </div>
       <p v-else class="grey">
@@ -149,31 +200,36 @@ export default {
           client_id: this.booking_form.clientId,
           datetime: this.booking_form.date + ' ' + this.booking_form.time,
           notes: this.booking_form.notes,
-          status: 'Pending'
+          status: 'Scheduled',
+          isClientSide: false
         })
         this.booking_form = {
           date: null,
           time: null,
           notes: null
         }
+        this.$parent.$parent.$refs.response_pop_up.show('Booking created', 'Your client will be notified')
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
     },
-    async cancelBooking (bookingId) {
-      try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('createBooking', {
-          clientId: this.booking_form.clientId,
-          bookingId
-        })
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.$parent.$parent.resolveError(e)
+    async cancelBooking (clientId, bookingId) {
+      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
+        try {
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
+          await this.$store.dispatch('deleteBooking', {
+            clientId,
+            bookingId
+          })
+          this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your client will be notified')
+          this.$store.dispatch('endLoading')
+        } catch (e) {
+          this.$parent.$parent.resolveError(e)
+        }
       }
     }
   }
