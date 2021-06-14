@@ -533,17 +533,19 @@ export const store = new Vuex.Store({
         commit('updateClient', {
           clientId: CLIENT.client_id,
           attr: 'plans',
-          data: RESPONSE.data.length === 0 ? false : RESPONSE.data
+          data: RESPONSE.data.length === 0 ? false : RESPONSE.data[0]
         })
-        if (CLIENT.plans !== false) {
-          CLIENT.plans.forEach((plan) => {
-            dispatch('getSessions', {
-              planId: plan.id,
-              clientId: CLIENT.client_id,
-              force: false
-            })
+
+        // Resolves sessions and assigns to correct plan
+        CLIENT.plans.forEach((plan) => {
+          const SESSION_DATA = RESPONSE.data[1].filter(session => parseInt(session.programme_id) === plan.id) || false
+          commit('updatePlanAttr', {
+            clientId,
+            planId: plan.id,
+            attr: 'sessions',
+            data: SESSION_DATA
           })
-        }
+        })
       }
     },
     // payload => clientId, name, duration, ordered
@@ -628,22 +630,6 @@ export const store = new Vuex.Store({
 
     // Sessions
 
-    // payload => clientId, planId, force
-    async getSessions ({ commit, state }, payload) {
-      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-      if (!PLAN.sessions || payload.force) {
-        const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/sessions/${PLAN.id}`)
-        const SORTED_RESPONSE = RESPONSE.data.sort((a, b) => {
-          return new Date(a.date) - new Date(b.date)
-        })
-        commit('updateAllSessions', {
-          clientId: CLIENT.client_id,
-          planId: PLAN.id,
-          data: SORTED_RESPONSE.length === 0 ? false : SORTED_RESPONSE
-        })
-      }
-    },
     // payload => client_id, data: { programme_id, name, date, notes, week_id }
     async addSession ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/sessions', {
