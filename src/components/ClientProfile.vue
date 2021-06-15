@@ -70,6 +70,7 @@
   display: grid;
   grid-gap: 2rem;
   border: 3px solid var(--base);
+  height: fit-content;
   padding: 1rem;
   border-radius: 10px
 }
@@ -173,14 +174,14 @@
         <div class="bookings_sub_container">
           <div v-if="clientUser.bookings.length !== 0" class="bookings_wrapper">
             <div
-              v-for="(booking, bookingIndex) in bookingsSorter(clientUser.bookings)"
+              v-for="(booking, bookingIndex) in clientUser.bookings"
               :key="`bookings_${bookingIndex}`"
               class="booking_event"
             >
               <div class="booking_event__details">
                 <p>
                   <b>
-                    {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime }}
+                    {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }}
                   </b>
                 </p>
                 <p>
@@ -194,9 +195,9 @@
                 <a
                   href="javascript:void(0)"
                   class="a_link"
-                  @click="cancelBooking(booking.client_id, booking.id)"
+                  @click="cancelBooking(booking.id)"
                 >
-                  Delete
+                  Cancel
                 </a>
               </div>
             </div>
@@ -354,7 +355,8 @@ export default {
           })
           await this.$store.dispatch('deleteBooking', {
             clientId: this.claims.client_id_db,
-            bookingId
+            bookingId,
+            isTrainer: false
           })
           this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your trainer will be notified')
           this.$store.dispatch('endLoading')

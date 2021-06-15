@@ -38,19 +38,35 @@
   display: grid;
   grid-gap: 2rem;
   border: 3px solid var(--base);
+  height: fit-content;
   padding: 1rem;
   border-radius: 10px
 }
-.booking_event__details {
-  display: grid;
-  grid-gap: .6rem
+.booking_event .booking_event__details > p:first-child {
+  margin: 0
 }
 .booking_event__status {
   display: flex;
   justify-content: space-between
 }
-.booking_event__status > a {
+.booking_event__status > a:last-child {
   color: var(--base_red)
+}
+.booking_event.request > div:first-child:before {
+  content: 'New request';
+  display: flex;
+  height: fit-content;
+  width: fit-content;
+  padding: .2rem .6rem;
+  margin-left: auto;
+  background-color: var(--base);
+  color: var(--fore);
+  font-size: .8rem;
+  border-radius: 3px;
+  transform: translate(.6rem, -.6rem)
+}
+.accept_request {
+  color: green
 }
 
 /* Responsive */
@@ -77,12 +93,13 @@
         <div
           v-for="(booking, bookingIndex) in bookings"
           :key="`bookings_${bookingIndex}`"
+          :class="{ request: booking.status === 'Pending' }"
           class="booking_event"
         >
           <div class="booking_event__details">
             <p>
               <b>
-                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime }} with {{ clients.find(client => client.client_id === booking.client_id).name }}
+                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }} with {{ clients.find(client => client.client_id === booking.client_id).name }}
               </b>
             </p>
             <p>
@@ -90,15 +107,27 @@
             </p>
           </div>
           <div class="booking_event__status">
-            <p :style="{ color: statusColor(booking.status) }">
+            <p
+              v-if="booking.status !== 'Pending'"
+              :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }"
+            >
               {{ booking.status }}
             </p>
             <a
+              v-else
+              href="javascript:void(0)"
+              aria-label="Accept booking"
+              class="a_link accept_request"
+              @click="acceptBookingRequest(booking.id)"
+            >
+              Accept
+            </a>
+            <a
               href="javascript:void(0)"
               class="a_link"
-              @click="cancelBooking(booking.client_id, booking.id)"
+              @click="cancelBooking(booking.id, booking.client_id)"
             >
-              Delete
+              Cancel
             </a>
           </div>
         </div>
@@ -153,7 +182,9 @@
           aria-label="Additional information"
           required
         />
-        <button>Create</button>
+        <button>
+          Create
+        </button>
       </form>
     </div>
   </div>
@@ -214,7 +245,25 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
-    async cancelBooking (clientId, bookingId) {
+    async acceptBookingRequest (id) {
+      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to accept this booking?', 'It will appear as scheduled on your client\'s profile.')) {
+        try {
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
+          await this.$store.dispatch('updateBooking', {
+            id,
+            status: 'Scheduled'
+          })
+          this.$parent.$parent.$refs.response_pop_up.show('Booking request accepted', 'Your client will be notified')
+          this.$store.dispatch('endLoading')
+        } catch (e) {
+          this.$parent.$parent.resolveError(e)
+        }
+      }
+    },
+    async cancelBooking (bookingId, clientId) {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
         try {
           this.$store.commit('setData', {
@@ -223,7 +272,8 @@ export default {
           })
           await this.$store.dispatch('deleteBooking', {
             clientId,
-            bookingId
+            bookingId,
+            isTrainer: true
           })
           this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your client will be notified')
           this.$store.dispatch('endLoading')

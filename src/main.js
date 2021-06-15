@@ -142,6 +142,10 @@ Vue.mixin({
       const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
       return WEEKDAY[new Date(date).getDay()]
     },
+    shortTime (datetime) {
+      const TIME = new Date(datetime)
+      return `${TIME.getHours()}:${(TIME.getMinutes() < 10 ? '0' : '') + TIME.getMinutes()}`
+    },
     addDays (date, days) {
       const DATE = new Date(date)
       DATE.setDate(DATE.getDate() + days)

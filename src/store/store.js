@@ -206,6 +206,11 @@ export const store = new Vuex.Store({
         return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
       })
     },
+    // payload => id (booking), status
+    updateBooking (state, payload) {
+      const BOOKING = state.bookings.find(booking => booking.id === parseInt(payload.id))
+      BOOKING.status = payload.status
+    },
     // payload => bookingId
     removeBooking (state, payload) {
       const BOOKING = state.bookings.find(booking => booking.id === parseInt(payload.bookingId))
@@ -234,6 +239,10 @@ export const store = new Vuex.Store({
       state.clientUser.bookings.sort((a, b) => {
         return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
       })
+    },
+    removeBookingClientSide (state, payload) {
+      const BOOKING = state.clientUser.bookings.find(booking => booking.id === parseInt(payload.bookingId))
+      state.clientUser.bookings.splice(state.clientUser.bookings.indexOf(BOOKING), 1)
     },
     setClientUserPlan (state, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -536,7 +545,7 @@ export const store = new Vuex.Store({
 
         // Resolves sessions and assigns to correct plan
         CLIENT.plans.forEach((plan) => {
-          const SESSION_DATA = RESPONSE.data[1].filter(session => parseInt(session.programme_id) === plan.id) || false
+          const SESSION_DATA = RESPONSE.data[1].filter(session => session.programme_id === plan.id) || false
           commit('updatePlanAttr', {
             clientId,
             planId: plan.id,
@@ -688,12 +697,20 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
+    // payload => id (booking), status
+    async updateBooking ({ commit }, payload) {
+      await axios.post('https://api.traininblocks.com/v2/bookings', {
+        ...payload
+      })
+      commit('updateBooking', {
+        ...payload
+      })
+    },
     // payload => clientId, bookingIds (array of id for booking)
     async deleteBooking ({ commit }, payload) {
       await axios.delete(`https://api.traininblocks.com/v2/bookings/${payload.bookingId}`)
-      commit('removeBooking', {
-        clientId: payload.clientId,
-        bookingId: payload.bookingId
+      commit(`removeBooking${payload.isTrainer ? '' : 'ClientSide'}`, {
+        ...payload
       })
     },
 
@@ -764,7 +781,7 @@ export const store = new Vuex.Store({
 
       // Resolves sessions and assigns to correct plan
       state.clientUser.plans.forEach((plan) => {
-        const SESSION_DATA = RESPONSE.data[1].filter(session => parseInt(session.programme_id) === plan.id) || false
+        const SESSION_DATA = RESPONSE.data[1].filter(session => session.programme_id === plan.id) || false
         commit('setClientUserPlan', {
           planId: plan.id,
           sessions: SESSION_DATA.length === 0 ? false : SESSION_DATA
