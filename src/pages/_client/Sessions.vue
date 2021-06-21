@@ -1251,7 +1251,7 @@ export default {
           })
         }
       }
-      this.maxWeek = this.plan.duration
+      this.maxWeek = parseInt(this.plan.duration)
     },
     adherence () {
       this.sessionsDone = 0
