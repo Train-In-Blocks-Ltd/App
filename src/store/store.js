@@ -543,6 +543,26 @@ export const store = new Vuex.Store({
           data: RESPONSE.data.length === 0 ? false : RESPONSE.data[0]
         })
 
+        // Looks for base64 and replaces it with cloudinary instead
+        for (const SESSION of RESPONSE.data[1]) {
+          if (SESSION.notes.includes('base64')) {
+            const BASE64_REGEX = /<img\s*?src="(.*?)".*?>/gi
+            let finder
+            while ((finder = BASE64_REGEX.exec(SESSION.notes)) !== null) {
+              if (finder.index === BASE64_REGEX.lastIndex) {
+                BASE64_REGEX.lastIndex++
+              }
+              finder.forEach((match, groupIndex) => {
+                if (groupIndex === 1) {
+                  this.$axios.post('/.netlify/functions/upload', { file: match }).then((response) => {
+                    SESSION.notes = SESSION.notes.replace(match, response.data.url)
+                  })
+                }
+              })
+            }
+          }
+        }
+
         // Resolves sessions and assigns to correct plan
         CLIENT.plans.forEach((plan) => {
           const SESSION_DATA = RESPONSE.data[1].filter(session => session.programme_id === plan.id) || false
