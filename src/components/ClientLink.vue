@@ -118,8 +118,6 @@ li[data-done='false'] {
 }
 .client_link__details p,
 .name {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
   margin: auto 0;
   color: var(--base);
   transition: var(--transition_standard)
