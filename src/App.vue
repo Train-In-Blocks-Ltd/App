@@ -749,6 +749,15 @@ export default {
     this.$store.dispatch('endLoading')
   },
   methods: {
+
+    // -----------------------------
+    // System
+    // -----------------------------
+
+    /**
+     * Gives darkmode theme to the app.
+     * @param {string} mode - The mode to switch to.
+     */
     darkmode (mode) {
       const MATCHED_MEDIA = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
@@ -789,14 +798,40 @@ export default {
       }
     },
 
-    // AUTH
+    /**
+     * Processes captured error and sends to Jira.
+     * @param {string} msg - The error text.
+     */
+    async resolveError (msg) {
+      if (this.claims.user_type !== 'Admin') {
+        await this.$axios.post('/.netlify/functions/error', {
+          msg,
+          claims: this.claims
+        })
+      }
+      this.$store.dispatch('endLoading')
+      this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
+      this.willBodyScroll(false)
+    },
 
+    // -----------------------------
+    // Auth
+    // -----------------------------
+
+    /**
+     * Checks if the user is authenticated and sets the Vuex state accordingly.
+     */
     async isAuthenticated () {
       this.$store.commit('setData', {
         attr: 'authenticated',
         data: await this.$auth.isAuthenticated()
       })
     },
+
+    /**
+     * Initiates all the crucial setup for the app.
+     * @param {boolean} - Whether this process is forced.
+     */
     async setup (force) {
       force = force || false
       if (!this.instanceReady || force) {
@@ -887,6 +922,10 @@ export default {
         })
       }
     },
+
+    /**
+     * Saves the user's claims to Okta.
+     */
     async saveClaims () {
       try {
         this.$store.commit('setData', {
@@ -900,22 +939,13 @@ export default {
       }
     },
 
-    // SYSTEM STATE
-
-    async resolveError (msg) {
-      if (this.claims.user_type !== 'Admin') {
-        await this.$axios.post('/.netlify/functions/error', {
-          msg,
-          claims: this.claims
-        })
-      }
-      this.$store.dispatch('endLoading')
-      this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
-      this.willBodyScroll(false)
-    },
-
+    // -----------------------------
     // Client-side
+    // -----------------------------
 
+    /**
+     * Gets all the data for setup on the client-side
+     */
     async getClientSideData () {
       try {
         await this.$store.dispatch('getClientSideInfo')
@@ -925,6 +955,12 @@ export default {
         this.resolveError(e)
       }
     },
+
+    /**
+     * Updates a client-side session.
+     * @param {integer} planId - The id of the plan.
+     * @param {integer} sessionId - The id of the session to update.
+     */
     async updateClientSideSession (planId, sessionId) {
       try {
         await this.$store.dispatch('updateClientSideSession', {

@@ -42,6 +42,10 @@ Vue.mixin({
 
     // System
 
+    /**
+     * Toggles body scroll.
+     * @param {boolean} state
+     */
     willBodyScroll (state) {
       const BODY = document.getElementsByTagName('body')[0]
       state ? BODY.style.overflow = 'auto' : BODY.style.overflow = 'hidden'
@@ -49,6 +53,13 @@ Vue.mixin({
 
     // Protocol
 
+    /**
+     * Extracts anything that is wrapped in square brackets
+     * @param {string} sessionName - The title or name of the session.
+     * @param {string} text - The body or notes of the session.
+     * @param {date} sessionDate - The date of the session.
+     * @returns Data packets of exercises
+     */
     pull_protocols (sessionName, text, sessionDate) {
       const REGEX_EXTRACT_EXERCISES = /\[\s*(.*?)\s*:\s*(.*?)\]/gi
       const REGEX_EXTRACT_EXERCISES_NEW = /<div data-type="protocol-item">\s*(.*?)\s*:\s*(.*?)<\/div>/gi
@@ -99,6 +110,12 @@ Vue.mixin({
 
     // HTML
 
+    /**
+     * Processes the HTML before preview or injection to expected standards.
+     * @param {string} html - The HTML input or to be displayed.
+     * @param {boolean} rmBrackets - To show the square brackets or not in the processed returned HTML.
+     * @returns The processed html ready to view or injected into a editor.
+     */
     updateHTML (html, rmBrackets) {
       if (html === null) {
         return html
@@ -131,6 +148,9 @@ Vue.mixin({
 
     // Date
 
+    /**
+     * @returns Today's date in YYY-MM-DD
+     */
     today () {
       const DATE = new Date()
       const YEAR = DATE.getFullYear()
@@ -138,14 +158,33 @@ Vue.mixin({
       const DAY = String(DATE.getDate()).padStart(2, '0')
       return `${YEAR}-${MONTH}-${DAY}`
     },
+
+    /**
+     * Takes in the date and returns the day of the week.
+     * @param {date} date - The day of the week
+     * @returns The day of the week.
+     */
     day (date) {
       const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
       return WEEKDAY[new Date(date).getDay()]
     },
+
+    /**
+     * Process into a short-form datetime.
+     * @param {datetime} datetime - The input datetime.
+     * @returns Short-form datetime.
+     */
     shortTime (datetime) {
       const TIME = new Date(datetime)
       return `${TIME.getHours()}:${(TIME.getMinutes() < 10 ? '0' : '') + TIME.getMinutes()}`
     },
+
+    /**
+     * Adds days to the date provided.
+     * @param {date} date - The date to add days to.
+     * @param {integer} days - The number of days to add to date.
+     * @returns The processed date.
+     */
     addDays (date, days) {
       const DATE = new Date(date)
       DATE.setDate(DATE.getDate() + days)
@@ -157,6 +196,11 @@ Vue.mixin({
 
     // Tidy
 
+    /**
+     * Sorts the sessions of a plan.
+     * @param {object} plan - The plan of which sessions would be sorted.
+     * @returns The plan with sorted sessions by date.
+     */
     sort_sessions (plan) {
       if (plan.sessions) {
         plan.sessions.sort((a, b) => {
@@ -165,6 +209,12 @@ Vue.mixin({
       }
       return plan
     },
+
+    /**
+     * Gives proper casing to text.
+     * @param {string} string - The text to receive proper casing.
+     * @returns The proper-cased text.
+     */
     proper_case (string) {
       const SENTENCE = string.toLowerCase().split(' ')
       for (let i = 0; i < SENTENCE.length; i++) {
@@ -175,6 +225,11 @@ Vue.mixin({
 
     // Other
 
+    /**
+     * Determines if a colour has acceptable contrast and returns ideal colour.
+     * @param {string} hex - The current colour.
+     * @returns The appropriate text colour.
+     */
     accessible_colors (hex) {
       if (hex !== undefined) {
         hex = hex.replace('#', '')
@@ -185,6 +240,12 @@ Vue.mixin({
         return `rgb(${RESULT}, ${RESULT}, ${RESULT})`
       }
     },
+
+    /**
+     * Determines the colour of the text for booking statuses.
+     * @param {string} status - The status of the booking.
+     * @returns The colour of the text.
+     */
     statusColor (status) {
       switch (status) {
         case 'Pending':
