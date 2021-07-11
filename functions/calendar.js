@@ -224,12 +224,11 @@ const ics = function (uidDomain, prodId) {
   }
 }
 
-const qs = require('querystring')
 const axios = require('axios')
 const authHeader = 'SSWS 00r26hoJMP9lITIbqrR596dGTWAL0I8lFljhdxfaBV'
 const headers = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
   'Content-Type': 'application/json; charset=UTF-8',
   'X-Frame-Options': 'DENY',
   'Strict-Transport-Security': 'max-age=15552000; preload',
@@ -239,17 +238,21 @@ const headers = {
 }
 
 let response
+let data
 
 exports.handler = async function handler (event, context, callback) {
+  // If options request return 200
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
       headers,
       body: ''
     })
+  // if email in query string
   } else if (event.queryStringParameters.email) {
     try {
-      response = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=id+eq+"${event.queryStringParameters.email}"&limit=1`,
+      // Search okta for email
+      response = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=profile.email+eq+"${event.queryStringParameters.email}"&limit=1`,
         {
           headers: {
             Accept: 'application/json',
@@ -258,18 +261,54 @@ exports.handler = async function handler (event, context, callback) {
           }
         }
       )
+      // if email found in okta then get events from db
+      if (response.data.length > 0) {
+        // if calendar enabled in settings
+        if (response.data[0].profile.calendar === true) {
+          data = await axios.get(`https://api.traininblocks.com/v2/${response.data[0].id}`, {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: 'APIKEY TrainInBlocksCalendarNetlifyFunctionAbacus'
+            }
+          })
+          // create calendar
+          const cal = ics()
+          // add calendar events for bookings
+          if (data.data[4].length > 0) {
+            for (const booking of data.data[4]) {
+              let date
+              date = new Date(booking.datetime)
+              date = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+              cal.addEvent('Train In Blocks Meeting with' + data.data[0].find(client => client.client_id === booking.client_id).name, booking.notes, '', date, date)
+            }
+          }
 
-      if (PT_EMAIL.data[0].calendar === true) {
-        data = axios.
+          // update headers to include content-type calendar
+          headers['Content-Type'] = 'text/calendar'
+          // return calendar
+          return callback(null, {
+            statusCode: 200,
+            headers,
+            body: cal.build()
+          })
+        // if calendar not enabled return 401
+        } else {
+          return callback(null, {
+            statusCode: 401,
+            headers,
+            body: 'Not Authorized - Please enable calendar in user settings'
+          })
+        }
+      // if calendar not enabled return 401
+      } else {
+        return callback(null, {
+          statusCode: 401,
+          headers,
+          body: 'Not Authorized - Email not found'
+        })
       }
-      const cal = ics()
-      let date
-
-      return callback(null, {
-        statusCode: 200,
-        headers,
-        body: cal.build()
-      })
+    // return 500 on error
     } catch (e) {
       return callback(null, {
         statusCode: 500,
@@ -277,6 +316,7 @@ exports.handler = async function handler (event, context, callback) {
         body: JSON.stringify(e, response)
       })
     }
+  // return 400 on missing query paramters
   } else {
     return callback(null, {
       statusCode: 400,
@@ -285,21 +325,3 @@ exports.handler = async function handler (event, context, callback) {
     })
   }
 }
-    
-
-  return getShowsAPI().then(async (response) => {
-    const IDs = await response
-    
-    for (const ID of IDs) {
-      await getShowsEpisodate(ID.data.id).then((response) => {
-        let i
-        for (i = 0; i < (response.tvShow.episodes).length; i++) {
-          const episode = response.tvShow.episodes[i]
-          if (episode.air_date) {
-            date = new Date(episode.air_date)
-            date.setDate(date.getDate() + 1)
-            date = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-            cal.addEvent(response.tvShow.name + ' | ' + episode.name, '', '', date, date)
-          }
-        }
-      })
