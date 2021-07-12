@@ -99,6 +99,14 @@ export default {
     this.$refs.name.focus()
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Creates a new client.
+     */
     createClient () {
       if (this.new_client.email === this.claims.email) {
         this.$parent.$parent.$refs.response_pop_up.show('You cannot create a client with your own email address!', 'Please use a different one.', true, true)

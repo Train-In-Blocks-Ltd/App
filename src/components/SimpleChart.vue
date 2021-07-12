@@ -218,7 +218,15 @@ export default {
   },
   methods: {
 
-    // Prediction
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Generates a prediction based on the day.
+     * @param {integer} day - The day specified by the user.
+     * @returns A prediction based on previous data.
+     */
     prediction (day) {
       const SUM_OF_DAYS = this.dates.reduce((a, b) => a + b)
       const PREDICTED_PROPORTION = (this.gradient * 90 * (day / SUM_OF_DAYS) + this.yIntercept).toFixed(2)
@@ -226,10 +234,16 @@ export default {
       return (MAX_Y_VALUE * (90 + (10 - PREDICTED_PROPORTION)) / 90).toFixed(this.dataType.type === 'Sets' || this.dataType.type === 'Reps' ? 0 : 2)
     },
 
-    // Init
+    /**
+     * Shows the details of the selected point.
+     */
     select_point (d1, d2, d3) {
       this.focusText = [d1, d2, d3]
     },
+
+    /**
+     * Processes the prop data and plots it.
+     */
     processAndPlot () {
       class DataProcessor {
         constructor (yDataset, xDataset, pointLabels, outputType) {
@@ -253,6 +267,11 @@ export default {
           }
         }
 
+        /**
+         * Instantiates the points.
+         * @param {boolean} toReturn - Whether to return the positional data.
+         * @returns If specified, the positional data of the point.
+         */
         makePoints (toReturn) {
           const RETURN_DATA_VALUES = []
           this.yDataset.forEach((data, index) => {
@@ -285,6 +304,10 @@ export default {
           }
         }
 
+        /**
+         * Creates the path to connect each point.
+         * @returns The path data.
+         */
         makePaths () {
           const RETURN_PATH_VALUES = []
           this.processedPoints.forEach((data, index) => {
@@ -300,6 +323,10 @@ export default {
           return RETURN_PATH_VALUES
         }
 
+        /**
+         * Calculates a least-squares regression.
+         * @returns The path for the regression line.
+         */
         regression () {
           this.scaledXDataset = []
           this.scaledYDataset = []
@@ -349,6 +376,7 @@ export default {
           return [[5, y(5), 90, y(90)]]
         }
       }
+
       const DATA = new DataProcessor(this.dataPoints, this.dates, this.labels, this.chartType)
       this.dataValues = DATA.create.processedPoints || DATA.create
       this.pathValues = DATA.create.processedPaths || []

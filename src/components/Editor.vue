@@ -541,13 +541,20 @@ export default {
   },
   methods: {
 
-    // Protocol
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Adds tracked data custom node.
+     */
     addTrackData () {
       this.editor.commands.insertContent('<div data-type="protocol-item"></div>')
     },
 
-    // Link
-
+    /**
+     * Sets the link of the selected text.
+     */
     async setLinkUrl () {
       const SRC = await this.$refs.input_pop_up.show('link', 'Enter the URL link', 'Make sure to include the https://')
       if (!SRC) {
@@ -556,8 +563,9 @@ export default {
       this.editor.chain().focus().setLink({ href: SRC }).run()
     },
 
-    // IMG
-
+    /**
+     * Adds an image.
+     */
     addImg () {
       const FILE = document.getElementById('img_uploader').files[0]
       const READER = new FileReader()
@@ -586,8 +594,13 @@ export default {
       }
     },
 
+    // -----------------------------
     // Misc.
+    // -----------------------------
 
+    /**
+     * Checks if the template search is empty.
+     */
     isSearchEmpty () {
       let showNoneMsg = true
       this.dataForTemplates.forEach((template) => {
@@ -597,6 +610,10 @@ export default {
       })
       document.getElementById('templates_search_none').style.display = showNoneMsg && this.search !== '' ? 'block' : 'none'
     },
+
+    /**
+     * Tests injected html to see if it's empty.
+     */
     test_empty_html (text) {
       if (text !== null) {
         const REMOVE_TAGS_AND_SPACE = text.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, '').replace(/ /g, '')

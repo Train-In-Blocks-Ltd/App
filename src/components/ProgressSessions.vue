@@ -180,6 +180,14 @@ export default {
     }
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Pulls all the protocols in the selected session, ready for the user to manipulate before progressing.
+     */
     progressPull () {
       this.progressDataInputs = []
       this.sessionsToProgress.forEach((sessionId, sessionIdx) => {
@@ -195,6 +203,14 @@ export default {
         })
       })
     },
+
+    /**
+     * Processes the required changes to the temporary sessions before posting it to the database.
+     * @param {integer} sessionId - The id of the session.
+     * @param {string} sessionNotes - The notes of the session.
+     * @param {integer} loc - The week_id of the new changes stored in the change matrix. This matrix is a Vue data that contains the new changes.
+     * @returns The processed session notes.
+     */
     progress_process (sessionId, sessionNotes, loc) {
       this.progressDataInputs.forEach((session) => {
         let n = 0
@@ -210,6 +226,10 @@ export default {
       })
       return sessionNotes
     },
+
+    /**
+     * Initiates the changes and POST it to the database.
+     */
     progressComplete () {
       this.$store.commit('setData', {
         attr: 'loading',

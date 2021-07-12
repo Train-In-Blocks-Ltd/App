@@ -119,6 +119,18 @@ export default {
     }
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Shows the input alert.
+     * @param {string} inputType - The mode of the alert.
+     * @param {string} header - The title of the alert.
+     * @param {string} desc - The description of the alert.
+     * @returns A promise to resolve the state of the alert.
+     */
     show (inputType, header, desc) {
       this.inputType = inputType
       this.reveal = true

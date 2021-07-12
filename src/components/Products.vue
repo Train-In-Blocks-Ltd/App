@@ -193,7 +193,14 @@ export default {
   ]),
   methods: {
 
+    // -----------------------------
     // Checkbox
+    // -----------------------------
+
+    /**
+     * Resolves the action taken from the product multi-select.
+     * @param {string} res - The action taken.
+     */
     resolveProductsMultiselect (res) {
       switch (res) {
         case 'Delete':
@@ -204,6 +211,11 @@ export default {
           break
       }
     },
+
+    /**
+     * Toggles the state of the custom checkbox component.
+     * @param {integer} id - The id of the product.
+     */
     changeSelectCheckbox (id) {
       if (!this.selectedProducts.includes(id)) {
         this.selectedProducts.push(id)
@@ -212,6 +224,10 @@ export default {
         this.selectedProducts.splice(PRODUCT_INDEX, 1)
       }
     },
+
+    /**
+     * Selects all the products.
+     */
     selectAll () {
       this.products.forEach((product) => {
         if (!this.selectedProducts.includes(product.id)) {
@@ -220,6 +236,10 @@ export default {
         }
       })
     },
+
+    /**
+     * Deselects all the products.
+     */
     deselectAll () {
       this.products.forEach((product) => {
         document.getElementById(`sc-${product.id}`).checked = false
@@ -227,8 +247,13 @@ export default {
       this.selectedProducts = []
     },
 
-    // Products
+    // -----------------------------
+    // Database
+    // -----------------------------
 
+    /**
+     * Creates a new product.
+     */
     async createProduct () {
       try {
         this.$store.commit('setData', {
@@ -246,6 +271,11 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Updates a product.
+     * @param {integer} productId - The id of the product.
+     */
     async updateProduct (productId) {
       try {
         this.$store.commit('setData', {
@@ -258,6 +288,10 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Deletes the selected products.
+     */
     async deleteProduct () {
       try {
         this.$store.commit('setData', {

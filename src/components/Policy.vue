@@ -75,6 +75,14 @@ export default {
     this.willBodyScroll(false)
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Agree to EULA terms.
+     */
     agreeToTerms () {
       this.$store.commit('setDataDeep', {
         attrParent: 'claims',

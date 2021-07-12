@@ -213,8 +213,13 @@ export default {
   },
   methods: {
 
-    // EVENTS
+    // -----------------------------
+    // Events
+    // -----------------------------
 
+    /**
+     * Adds the event to the correct day of the week.
+     */
     appendEvents () {
       this.thisWeek.forEach((day) => {
         this.events.forEach((event) => {
@@ -225,12 +230,23 @@ export default {
       })
     },
 
-    // WEEK
+    // -----------------------------
+    // Week
+    // -----------------------------
 
+    /**
+     * Determines the day based on the date provided.
+     * @param {date} date - The date provided.
+     * @returns The day of the week.
+     */
     get_day (date) {
       const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
       return DAYS[date]
     },
+
+    /**
+     * Generates the current week.
+     */
     getWeek () {
       this.thisWeek = []
       const DATE_CLASS = new Date()
@@ -258,6 +274,13 @@ export default {
         this.appendEvents()
       }, 100)
     },
+
+    /**
+     * Adds specified days to the date provided.
+     * @param {date} date - The date provided.
+     * @param {integer} days - The days to add.
+     * @returns The new date.
+     */
     addDays (date, days) {
       const DATE_CLASS = new Date(date)
       DATE_CLASS.setDate(DATE_CLASS.getDate() + days)
@@ -266,6 +289,12 @@ export default {
       const DATE = String(DATE_CLASS.getDate()).padStart(2, '0')
       return `${YEAR}-${MONTH}-${DATE}`
     },
+
+    /**
+     * Determines the month based on the month index provided.
+     * @param {integer} month - The month index provided.
+     * @returns The month as a string.
+     */
     get_month (month) {
       const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       month = parseInt(month) - 1

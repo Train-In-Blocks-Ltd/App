@@ -258,6 +258,14 @@ export default {
     'clientUser'
   ]),
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Adds a user profile image.
+     */
     addImg () {
       try {
         this.$store.commit('setData', {
@@ -299,6 +307,10 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Updates the client details.
+     */
     updateClientDetails () {
       try {
         this.$store.commit('setData', {
@@ -320,8 +332,13 @@ export default {
       }
     },
 
-    // Bookings
+    // -----------------------------
+    // Database
+    // -----------------------------
 
+    /**
+     * Opens a new booking request.
+     */
     async createBooking () {
       try {
         this.$store.commit('setData', {
@@ -346,6 +363,11 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Cancels a booking.
+     * @param {integer} bookingId - The id of the booking.
+     */
     async cancelBooking (bookingId) {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
         try {

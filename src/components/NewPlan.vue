@@ -58,6 +58,14 @@ export default {
     this.$refs.name.focus()
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Creates a new plan.
+     */
     async createPlan () {
       try {
         this.$store.commit('setData', {

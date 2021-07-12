@@ -100,6 +100,18 @@ export default {
     }
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Shows the response alert.
+     * @param {string} header - The title of the alert.
+     * @param {string} desc - The description of the alert.
+     * @param {boolean} persist - Whether the alert will persist until the user closes it.
+     * @param {boolean} cover - Whether the alert will also have a dark overlay to prevent user actions on other elements.
+     */
     show (header, desc, persist, cover) {
       this.header = header
       this.desc = desc
