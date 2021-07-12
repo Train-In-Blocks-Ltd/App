@@ -88,6 +88,14 @@ export default {
     'versionBuild'
   ]),
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Updates the version stored in local storage.
+     */
     updateVersion () {
       localStorage.setItem('versionBuild', this.versionBuild)
       this.$store.commit('setData', {

@@ -196,10 +196,24 @@ export default {
     this.getMonth()
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Converts index to month.
+     * @param {integer} month - Month as an index.
+     * @returns The month as a string.
+     */
     getMonthNumber (month) {
       const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       return MONTHS.indexOf(month) + 1
     },
+
+    /**
+     * Initiates the calendar, adds interactibles, and populates it.
+     */
     getMonth () {
       const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       const TODAY = new Date()

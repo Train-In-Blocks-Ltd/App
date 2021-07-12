@@ -167,6 +167,15 @@ export default {
     }
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Calculates based on the calculator selected.
+     * @param {string} cal - The selected calculator.
+     */
     calculate (cal) {
       switch (cal) {
         case 'mhr_tanaka': {

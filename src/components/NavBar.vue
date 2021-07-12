@@ -206,7 +206,13 @@ export default {
   },
   methods: {
 
+    // -----------------------------
     // Auth
+    // -----------------------------
+
+    /**
+     * Logs out the user.
+     */
     async logout () {
       await this.$parent.$auth.signOut()
       await this.$parent.isAuthenticated()

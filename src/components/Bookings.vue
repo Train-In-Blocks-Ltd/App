@@ -214,13 +214,25 @@ export default {
   ]),
   methods: {
 
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Checks for bookings.
+     */
     checkForBookings () {
       const BOOKINGS = this.bookings || false
       return BOOKINGS ? this.bookings.length !== 0 : false
     },
 
-    // Bookings
+    // -----------------------------
+    // Database
+    // -----------------------------
 
+    /**
+     * Creates a new booking.
+     */
     async createBooking () {
       try {
         this.$store.commit('setData', {
@@ -245,6 +257,11 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Accepts a booking request made by the client-user.
+     * @param {integer} id - The id of the booking.
+     */
     async acceptBookingRequest (id) {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to accept this booking?', 'It will appear as scheduled on your client\'s profile.')) {
         try {
@@ -263,6 +280,12 @@ export default {
         }
       }
     },
+
+    /**
+     * Cancels a booking.
+     * @param {integer} bookingId - The id of the booking.
+     * @param {integer} clientId - The id of the client.
+     */
     async cancelBooking (bookingId, clientId) {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
         try {

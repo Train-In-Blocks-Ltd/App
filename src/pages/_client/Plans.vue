@@ -146,6 +146,15 @@ export default {
     this.$parent.checkClient()
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Resolves the client information editor.
+     * @param {string} state - The returned state from the editor.
+     */
     resolve_client_info_editor (state) {
       switch (state) {
         case 'edit':

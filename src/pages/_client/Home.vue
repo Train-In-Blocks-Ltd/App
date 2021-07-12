@@ -293,8 +293,13 @@ export default {
   },
   methods: {
 
+    // -----------------------------
     // OKTA CLIENT
+    // -----------------------------
 
+    /**
+     * Checks if the client already exists on Okta.
+     */
     async checkClient () {
       if (this.$parent.claims.email !== 'demo@traininblocks.com') {
         this.clientAlreadyMsg = 'Loading...'
@@ -428,6 +433,14 @@ export default {
       this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox', true, true)
       this.$store.dispatch('endLoading')
     },
+
+    // -----------------------------
+    // Database
+    // -----------------------------
+
+    /**
+     * Updates the client.
+     */
     async updateClient () {
       try {
         this.$store.commit('setData', {
@@ -444,6 +457,11 @@ export default {
         this.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Archives the client.
+     * @param {integer} clientId - The id of the client.
+     */
     async clientArchive (clientId) {
       if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
         try {

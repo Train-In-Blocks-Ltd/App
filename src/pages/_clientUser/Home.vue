@@ -253,8 +253,15 @@ export default {
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // -----------------------------
+    // General
+    // -----------------------------
 
+    /**
+     * Resolves the state of the feeback editor.
+     * @param {string} state - The returned state of the editor.
+     * @param {integer} id - The id of the session.
+     */
     resolveFeedbackEditor (state, id) {
       let plan
       let session
@@ -290,6 +297,13 @@ export default {
           break
       }
     },
+
+    /**
+     * Toggles the complete state of the session.
+     * @param {integer} planId - The id of the plan.
+     * @param {integer} sessionId - The id of the session.
+     * @param {integer} currentChecked - The new state of the session.
+     */
     complete (planId, sessionId, currentChecked) {
       if (!currentChecked) {
         this.$store.commit('updateClientUserPlanSingleSession', {

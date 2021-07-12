@@ -302,6 +302,14 @@ export default {
     this.scan()
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Scans the sessions and updates the stats.
+     */
     scan () {
       this.sessionDataPackets = []
       this.maxWeek = parseInt(this.plan.duration)
@@ -327,7 +335,14 @@ export default {
       this.forceUpdate += 1
       this.$parent.checkForWeekSessions()
     },
+
+    /**
+     * Calculates and generates data on selected a new option.
+     */
     selection () {
+      /**
+       * Creates a data point
+       */
       class DataPoint {
         constructor (parent, dataPacket, returnDataType) {
           this.parent = parent
@@ -341,6 +356,10 @@ export default {
           this.regeGetNumber = /[0-9.]+/gi
         }
 
+        /**
+         * Indexes the correct function to extract for each type of data.
+         * @returns The extracted value.
+         */
         get calculate () {
           switch (this.returnDataType) {
             case 'Sets':
@@ -356,6 +375,11 @@ export default {
           }
         }
 
+        /**
+         * Extracts the sets.
+         * @param {boolean} returnAdditionalDescData - Whether to load the largest and smallest value to Vue data.
+         * @returns The extracted value.
+         */
         getSets (returnAdditionalDescData) {
           let returnValue
           let finder
@@ -376,6 +400,10 @@ export default {
           return returnValue
         }
 
+        /**
+         * Extracts the reps.
+         * @returns The extracted value.
+         */
         getReps () {
           const NUM_OF_SETS = this.getSets(false)
           let returnValue = 0
@@ -404,6 +432,10 @@ export default {
           return returnValue
         }
 
+        /**
+         * Extracts the loads.
+         * @returns The extracted value.
+         */
         getLoad () {
           const NUM_OF_SETS = this.getSets(false)
           let returnValue = 0
@@ -432,6 +464,10 @@ export default {
           return returnValue
         }
 
+        /**
+         * Extracts all other measures.
+         * @returns The extracted value.
+         */
         getOtherMeasure () {
           let returnValue
           let numberFinder
@@ -446,6 +482,7 @@ export default {
           return returnValue
         }
       }
+
       this.largestValue = null
       this.smallestValue = null
       this.dataToVisualise = []

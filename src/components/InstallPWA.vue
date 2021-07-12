@@ -100,6 +100,14 @@ export default {
     'pwa'
   ]),
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Shows the install PWA prompt.
+     */
     installPWA () {
       // Show the install prompt
       this.pwa.deferredPrompt.prompt()

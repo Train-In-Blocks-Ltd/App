@@ -94,6 +94,17 @@ export default {
     }
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Shows the confirmation alert.
+     * @param {string} header - The title of the alert.
+     * @param {string} desc - The description of the alert.
+     * @returns A promise to resolve the state of the alert.
+     */
     show (header, desc) {
       this.reveal = true
       this.header = header

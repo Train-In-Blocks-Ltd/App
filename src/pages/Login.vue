@@ -312,8 +312,13 @@ export default {
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // -----------------------------
+    // General
+    // -----------------------------
 
+    /**
+     * Resets the app state.
+     */
     async reset () {
       this.$store.commit('setData', {
         attr: 'dontLeave',
