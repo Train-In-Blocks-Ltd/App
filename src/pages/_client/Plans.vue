@@ -88,7 +88,7 @@
         Plans
       </h2>
       <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-      <periodise v-else-if="!noPlans" :is-trainer="true" :plans.sync="clientDetails.plans" />
+      <periodise v-else-if="clientDetails.plans.length !== 0" :is-trainer="true" :plans.sync="clientDetails.plans" />
       <p
         v-else
         class="text--holder text--small grey"
@@ -123,8 +123,6 @@ export default {
   data () {
     return {
 
-      noPlans: false,
-
       // EDIT
 
       tempEditorStore: null,
@@ -146,7 +144,6 @@ export default {
   created () {
     this.willBodyScroll(true)
     this.$parent.checkClient()
-    this.noPlans = (this.clientDetails.plans === false || this.clientDetails.plans.length === 0)
   },
   methods: {
     resolve_client_info_editor (state) {
