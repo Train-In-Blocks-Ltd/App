@@ -681,9 +681,10 @@ export const store = new Vuex.Store({
      * @param {object} payload - { name, desc, price, type }
      */
     async createProduct ({ commit }, payload) {
-      await axios.put('https://api.traininblocks.com/v2/products', {
+      const response = await axios.put('https://api.traininblocks.com/v2/products', {
         ...payload
       })
+      console.log(response)
       commit('addNewProduct', {
         ...payload
       })
