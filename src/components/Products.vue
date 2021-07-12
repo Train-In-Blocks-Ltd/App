@@ -193,7 +193,7 @@
           >
         </div>
         <textarea
-          v-model="product.desc"
+          v-model="product.notes"
           :disabled="silentLoading"
           class="small_border_radius"
           rows="5"
@@ -312,8 +312,10 @@ export default {
           data: true
         })
         await this.$store.dispatch('createProduct', {
+          pt_id: this.claims.sub,
+          title: null,
           name: null,
-          desc: null,
+          notes: null,
           price: null,
           type: 'One-off'
         })
