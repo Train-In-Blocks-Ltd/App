@@ -40,7 +40,7 @@
         Archive
       </h1>
       <a
-        v-if="!archive.noArchive && selectedClients.length < archive.clients.length"
+        v-if="archive.clients.length !== 0 && selectedClients.length < archive.clients.length"
         href="javascript:void(0)"
         class="a_link"
         @click="selectAll()"
@@ -49,40 +49,41 @@
       </a>
     </div>
     <br>
-    <p v-if="archive.noArchive" class="text--small grey">
+    <p v-if="archive.clients.length === 0" class="text--small grey">
       No clients are archived
     </p>
-    <input
-      v-if="!archive.noArchive && archive.clients"
-      v-model="search"
-      type="search"
-      aria-label="search by name"
-      rel="search"
-      placeholder="Name"
-      class="search text--small"
-      autocomplete="name"
-    >
-    <div v-if="!archive.noArchive" class="clients_container">
-      <skeleton v-if="loading" :type="'archived'" />
-      <div
-        v-for="(clients, index) in archive.clients"
-        v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !loading"
-        :id="'a' + clients.client_id"
-        :key="index"
-        class="client_link_wrapper fadeIn"
-        :to="'/client/'+clients.client_id+'/'"
+    <div v-else>
+      <input
+        v-model="search"
+        type="search"
+        aria-label="search by name"
+        rel="search"
+        placeholder="Name"
+        class="search text--small"
+        autocomplete="name"
       >
-        <client-link
-          class="client_link archived"
-          :name="clients.name"
-          :email="clients.email"
-          :number="clients.number"
-          :notes="clients.notes"
-          :client-id="clients.client_id"
-          :client-index="index"
-          :archive="true"
-          :img="clients.profile_image"
-        />
+      <div class="clients_container">
+        <skeleton v-if="loading" :type="'archived'" />
+        <div
+          v-for="(clients, index) in archive.clients"
+          v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !loading"
+          :id="'a' + clients.client_id"
+          :key="index"
+          class="client_link_wrapper fadeIn"
+          :to="'/client/'+clients.client_id+'/'"
+        >
+          <client-link
+            class="client_link archived"
+            :name="clients.name"
+            :email="clients.email"
+            :number="clients.number"
+            :notes="clients.notes"
+            :client-id="clients.client_id"
+            :client-index="index"
+            :archive="true"
+            :img="clients.profile_image"
+          />
+        </div>
       </div>
     </div>
   </div>

@@ -101,6 +101,12 @@ export const store = new Vuex.Store({
     archiveClient (state, client) {
       const IDX = state.clients.indexOf(client)
       state.clients.splice(IDX, 1)
+      state.archive.clients.push(client)
+      state.archive.clients.sort((a, b) => {
+        const NAME_A = a.name.toUpperCase()
+        const NAME_B = b.name.toUpperCase()
+        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
+      })
     },
     unarchiveClient (state, payload) {
       payload.forEach((clientId) => {
