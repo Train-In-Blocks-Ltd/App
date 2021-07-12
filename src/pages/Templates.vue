@@ -213,8 +213,14 @@ export default {
   },
   methods: {
 
-    // BACKGROUND
+    // -----------------------------
+    // Background
+    // -----------------------------
 
+    /**
+     * Resolves template funtions.
+     * @param {string} type - The associated template action taken.
+     */
     helper (type) {
       switch (type) {
         case 'new':
@@ -231,6 +237,11 @@ export default {
           break
       }
     },
+
+    /**
+     * Resolves the action taken from the multi-select.
+     * @param {string} res - The action taken.
+     */
     resolve_template_multiselect (res) {
       switch (res) {
         case 'Delete':
@@ -241,6 +252,12 @@ export default {
           break
       }
     },
+
+    /**
+     * Resolves the editor state before taking the corresponding action.
+     * @param {string} state - The returned state of the editor.
+     * @param {integer} id - The id of the template.
+     */
     resolve_template_editor (state, id) {
       const TEMPLATE = this.templates.find(template => template.id === id)
       switch (state) {
@@ -270,6 +287,10 @@ export default {
           break
       }
     },
+
+    /**
+     * Determines if new templates were create before expanding it.
+     */
     checkForNew () {
       this.expandedTemplates = []
       this.templates.forEach((template) => {
@@ -279,8 +300,14 @@ export default {
       })
     },
 
-    // CHECKBOX
+    // -----------------------------
+    // Checkbox
+    // -----------------------------
 
+    /**
+     * Changes the state of the custom checkbox component.
+     * @param {integer} id - The id of the template.
+     */
     changeSelectCheckbox (id) {
       if (!this.selectedTemplates.includes(id)) {
         this.selectedTemplates.push(id)
@@ -289,6 +316,11 @@ export default {
         this.selectedTemplates.splice(TEMPLATE_INDEX, 1)
       }
     },
+
+    /**
+     * Expands the main body of the template.
+     * @param {integer} id - The id of the template.
+     */
     toggle_expanded_templates (id) {
       if (this.expandedTemplates.includes(id)) {
         const TEMPLATE_INDEX = this.expandedTemplates.indexOf(id)
@@ -299,6 +331,10 @@ export default {
         this.expandedTemplates.push(id)
       }
     },
+
+    /**
+     * Selects all templates.
+     */
     selectAll () {
       this.templates.forEach((template) => {
         if (!this.selectedTemplates.includes(template.id)) {
@@ -307,6 +343,10 @@ export default {
         }
       })
     },
+
+    /**
+     * Deselects all templates.
+     */
     deselectAll () {
       this.templates.forEach((template) => {
         document.getElementById(`sc-${template.id}`).checked = false
@@ -332,8 +372,13 @@ export default {
       }
     },
 
-    // DATABASE
+    // -----------------------------
+    // Database
+    // -----------------------------
 
+    /**
+     * Creates a new template.
+     */
     async createTemplate () {
       try {
         this.$store.commit('setData', {
@@ -348,6 +393,11 @@ export default {
         this.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Updates a template.
+     * @param {integer} templateId - The id of the template.
+     */
     async updateTemplate (templateId) {
       try {
         this.$store.commit('setData', {

@@ -284,8 +284,13 @@ export default {
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // -----------------------------
+    // General
+    // -----------------------------
 
+    /**
+     * Redirects the user to their Stripe management page.
+     */
     async manageSubscription () {
       try {
         const RESPONSE = await this.$axios.post('/.netlify/functions/create-manage-link',
@@ -299,8 +304,13 @@ export default {
       }
     },
 
-    // PASSWORD
+    // -----------------------------
+    // Password
+    // -----------------------------
 
+    /**
+     * Validates the password.
+     */
     checkPassword () {
       const SELF = this
       function isUsername () {
@@ -329,6 +339,10 @@ export default {
         this.password.error = ''
       }
     },
+
+    /**
+     * Changes the password.
+     */
     async changePassword () {
       try {
         this.$store.commit('setData', {
@@ -357,7 +371,9 @@ export default {
       }
     },
 
-    // Copy Calendar Link
+    /**
+     * Generates the user's calendar link.
+     */
     copyCalendarLink () {
       const link = `http://app.traininblocks.com/.netlify/functions/calendar?email=${this.claims.email}`
       const self = this

@@ -120,6 +120,15 @@ export default {
     this.$store.dispatch('endLoading')
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Resolves the state of the portfolio editor.
+     * @param {string} state - The returned state of the editor.
+     */
     resolve_portfolio_editor (state) {
       switch (state) {
         case 'edit':
@@ -149,8 +158,13 @@ export default {
       }
     },
 
+    // -----------------------------
     // Database
+    // -----------------------------
 
+    /**
+     * Updates the portfolio.
+     */
     async updatePortfolio () {
       try {
         this.$store.commit('setData', {

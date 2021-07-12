@@ -124,6 +124,15 @@ export default {
     this.$store.dispatch('endLoading')
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Resolves the archive multi-select.
+     * @param {string} res - The action selected from the multi-select.
+     */
     resolveArchiveMultiselect (res) {
       switch (res) {
         case 'Unarchive':
@@ -137,6 +146,11 @@ export default {
           break
       }
     },
+
+    /**
+     * Changes the state of the client link checkbox.
+     * @param {integer} id - The id of the client.
+     */
     changeSelectCheckbox (id) {
       if (!this.selectedClients.includes(id)) {
         this.selectedClients.push(id)
@@ -145,6 +159,10 @@ export default {
         this.selectedClients.splice(CLIENT_INDEX, 1)
       }
     },
+
+    /**
+     * Selects all the clients.
+     */
     selectAll () {
       this.archive.clients.forEach((client) => {
         if (!this.selectedClients.includes(client.client_id)) {
@@ -153,12 +171,24 @@ export default {
         }
       })
     },
+
+    /**
+     * Deselects all the clients.
+     */
     deselectAll () {
       this.archive.clients.forEach((client) => {
         document.getElementById(`sc-${client.client_id}`).checked = false
       })
       this.selectedClients = []
     },
+
+    // -----------------------------
+    // Database
+    // -----------------------------
+
+    /**
+     * Deletes trhe selected clients.
+     */
     async deleteClients () {
       try {
         this.$store.commit('setData', {
@@ -177,6 +207,10 @@ export default {
         this.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Unarchives the selected clients.
+     */
     async unarchiveClients () {
       try {
         this.$store.commit('setData', {
