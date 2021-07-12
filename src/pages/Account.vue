@@ -279,9 +279,6 @@ export default {
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
   },
-  mounted () {
-    console.log(this.claims)
-  },
   methods: {
 
     // BACKGROUND AND MISC.
