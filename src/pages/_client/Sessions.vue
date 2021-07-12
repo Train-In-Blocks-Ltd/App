@@ -986,7 +986,7 @@ export default {
     // -----------------------------
 
     /**
-     * Duplicates the plan.
+     * Duplicates the selected sessions.
      */
     async duplicate () {
       this.$store.commit('setData', {

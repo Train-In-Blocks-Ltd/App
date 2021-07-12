@@ -76,28 +76,56 @@ export const store = new Vuex.Store({
     showEULA: false
   },
   mutations: {
+
+    // -----------------------------
     // System
+    // -----------------------------
+
+    /**
+     * Sets the first level of any object data.
+     * @param {object} payload - { attr, data }
+     */
     setData (state, payload) {
       state[payload.attr] = payload.data
       if (payload.attr === 'clients') {
         state.noClients = state.clients.length === 0
       }
     },
+
+    /**
+     * Sets the second level of any object data.
+     * @param {object} payload - { attrParent, attrChild, data }
+     */
     setDataDeep (state, payload) {
       state[payload.attrParent][payload.attrChild] = payload.data
       if (payload.attrParent === 'archive') {
         state.archive.noArchive = state.archive.clients.length === 0
       }
     },
+
+    /**
+     * Pushes a new client to 'clients'.
+     * @param {object} payload - { ...client_params }
+     */
     addNewClient (state, payload) {
       state.clients.push({
         ...payload
       })
     },
+
+    /**
+     * Updates a client.
+     * @param {object} payload - { clientId, attr, data }
+     */
     updateClient (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       CLIENT[payload.attr] = payload.data
     },
+
+    /**
+     * Pushes a client to 'archive' and splices them from 'clients'.
+     * @param {object} client - The client object.
+     */
     archiveClient (state, client) {
       const IDX = state.clients.indexOf(client)
       state.clients.splice(IDX, 1)
@@ -108,6 +136,11 @@ export const store = new Vuex.Store({
         return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
       })
     },
+
+    /**
+     * Pushes clients to 'clients' and splices them from 'archive'.
+     * @param {object} payload - { clientIds }
+     */
     unarchiveClient (state, payload) {
       payload.forEach((clientId) => {
         const CLIENT = state.archive.clients.find(client => client.client_id === clientId)
@@ -121,6 +154,11 @@ export const store = new Vuex.Store({
         })
       })
     },
+
+    /**
+     * Removes clients from archive permenently.
+     * @param {object} payload - { clientIds }
+     */
     removeClient (state, payload) {
       payload.forEach((clientId) => {
         const CLIENT = state.archive.clients.find(client => client.client_id === parseInt(clientId))
@@ -128,13 +166,25 @@ export const store = new Vuex.Store({
       })
     },
 
+    // -----------------------------
     // Plans
+    // -----------------------------
+
+    /**
+     * Adds a new plan to a client.
+     * @param {object} payload - { client_id, ...plan_params }
+     */
     addNewPlan (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
       CLIENT.plans.push({
         ...payload
       })
     },
+
+    /**
+     * Updates an entire plan
+     * @param {object} payload - { client_id, ...plan_params }
+     */
     updateEntirePlan (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
       for (let plan of CLIENT.plans) {
@@ -143,18 +193,35 @@ export const store = new Vuex.Store({
         }
       }
     },
+
+    /**
+     * Updates a single plan parameter.
+     * @param {object} payload - { clientId, planId, attr, data }
+     */
     updatePlanAttr (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN[payload.attr] = payload.data
     },
+
+    /**
+     * Removes a plan from a client.
+     * @param {object} payload - { clientId, planId }
+     */
     removePlan (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       CLIENT.plans.splice(CLIENT.plans.indexOf(PLAN), 1)
     },
 
+    // -----------------------------
     // Sessions
+    // -----------------------------
+
+    /**
+     * Pushes the new session to the plan.
+     * @param {object} payload - { client_id, programme_id, ...session_params }
+     */
     addNewSession (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.programme_id))
@@ -166,17 +233,32 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
+
+    /**
+     * Updates all the sessions in a plan.
+     * @param {object} payload - { clientId, planId, data }
+     */
     updateAllSessions (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN.sessions = payload.data
     },
+
+    /**
+     * Updates a parameter of a single session.
+     * @param {object} payload - { clientId, planId, sessionId, attr, data }
+     */
     updateSessionAttr (state, payload) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
       const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
       const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
       SESSION[payload.attr] = payload.data
     },
+
+    /**
+     * Removes sessions from a plan.
+     * @param {object} payload - { clientId, planId, sessionIds }
+     */
     removeSession (state, payload) {
       payload.sessionIds.forEach((sessionId) => {
         const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
@@ -186,7 +268,14 @@ export const store = new Vuex.Store({
       })
     },
 
+    // -----------------------------
     // Templates
+    // -----------------------------
+
+    /**
+     * Pushes a new template to 'templates'.
+     * @param {object} payload - { templateId, ptId, name, template }
+     */
     addNewTemplate (state, payload) {
       state.templates.push({
         id: payload.templateId,
@@ -195,16 +284,26 @@ export const store = new Vuex.Store({
         template: payload.template
       })
     },
-    removeTemplate (state, payload) {
-      payload.forEach((templateId) => {
+
+    /**
+     * Removes templates from 'templates'.
+     * @param {object} templateIds - Single or multiple ids of templates.
+     */
+    removeTemplate (state, templateIds) {
+      templateIds.forEach((templateId) => {
         const TEMPLATE = state.templates.find(template => template.id === templateId)
         state.templates.splice(state.templates.indexOf(TEMPLATE), 1)
       })
     },
 
+    // -----------------------------
     // Bookings
+    // -----------------------------
 
-    // payload => client_id, id (booking), date, time, notes, status, isClientSide
+    /**
+     * Pushes new booking to 'bookings'.
+     * @param {object} payload - { client_id, id (booking), date, time, notes, status, isClientSide }
+     */
     addNewBooking (state, payload) {
       delete payload.isClientSide
       state.bookings.push({ ...payload })
@@ -212,24 +311,40 @@ export const store = new Vuex.Store({
         return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
       })
     },
-    // payload => id (booking), status
+
+    /**
+     * Updates a booking.
+     * @param {object} payload - { id (booking), status }
+     */
     updateBooking (state, payload) {
       const BOOKING = state.bookings.find(booking => booking.id === parseInt(payload.id))
       BOOKING.status = payload.status
     },
-    // payload => bookingId
-    removeBooking (state, payload) {
-      const BOOKING = state.bookings.find(booking => booking.id === parseInt(payload.bookingId))
+
+    /**
+     * Removes a booking.
+     * @param {object} bookingId - The id of the booking.
+     */
+    removeBooking (state, bookingId) {
+      const BOOKING = state.bookings.find(booking => booking.id === parseInt(bookingId))
       state.bookings.splice(state.bookings.indexOf(BOOKING), 1)
     },
 
+    // -----------------------------
     // Products
+    // -----------------------------
 
-    // payload => client_id, id (booking), date, time, notes, status
+    /**
+     * Pushes a new product to 'products'.
+     * @param {object} payload - { ...product_params }
+     */
     addNewProduct (state, payload) {
       state.products.push({ ...payload })
     },
-    // payload => bookingId
+    /**
+     * Removes products from 'products'.
+     * @param {array} productIds - The ids of products.
+     */
     removeProduct (state, productIds) {
       productIds.forEach((productId) => {
         const PRODUCT = state.products.find(product => product.id === parseInt(productId))
@@ -237,8 +352,14 @@ export const store = new Vuex.Store({
       })
     },
 
-    // Client user
+    // -----------------------------
+    // Client-user
+    // -----------------------------
 
+    /**
+     * Pushes a new booking to 'clientUser.bookings'.
+     * @param {object} payload - { ...booking_params }
+     */
     addNewBookingClientSide (state, payload) {
       delete payload.isClientSide
       state.clientUser.bookings.push({ ...payload })
@@ -246,17 +367,37 @@ export const store = new Vuex.Store({
         return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
       })
     },
+
+    /**
+     * Removes a booking from 'clientUser.bookings'.
+     * @param {object} payload - { bookingId }
+     */
     removeBookingClientSide (state, payload) {
       const BOOKING = state.clientUser.bookings.find(booking => booking.id === parseInt(payload.bookingId))
       state.clientUser.bookings.splice(state.clientUser.bookings.indexOf(BOOKING), 1)
     },
+
+    /**
+     * Updates the sessions of the plan.
+     * @param {object} payload - { sessions }
+     */
     setClientUserPlan (state, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
       PLAN.sessions = payload.sessions
     },
-    updateClientUserProfileImage (state, payload) {
-      state.clientUser.profile_image = payload
+
+    /**
+     * Loads the client-user profile image.
+     * @param {object} profileImage - The profile iamge.
+     */
+    updateClientUserProfileImage (state, profileImage) {
+      state.clientUser.profile_image = profileImage
     },
+
+    /**
+     * Updates an attribute for a single session from the client-user.
+     * @param {object} payload - { planId, sessionId, attr, data }
+     */
     updateClientUserPlanSingleSession (state, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
       const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
@@ -265,8 +406,13 @@ export const store = new Vuex.Store({
   },
   actions: {
 
+    // -----------------------------
     // System
+    // -----------------------------
 
+    /**
+     * Ends all loading.
+     */
     endLoading ({ commit }) {
       commit('setData', {
         attr: 'loading',
@@ -281,6 +427,11 @@ export const store = new Vuex.Store({
         data: false
       })
     },
+
+    /**
+     * Resolves any error in store.js.
+     * @param {string} msg - The error message.
+     */
     async resolveDeepError ({ dispatch, state }, msg) {
       if (state.claims.user_type !== 'Admin') {
         await axios.post('/.netlify/functions/error', {
@@ -291,6 +442,10 @@ export const store = new Vuex.Store({
       dispatch('endLoading')
       console.error(msg)
     },
+
+    /**
+     * Gets all the data for the trainer-user's session.
+     */
     async getHighLevelData ({ dispatch, commit, state }) {
       // Main data call
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/${state.claims.sub}`)
@@ -342,8 +497,14 @@ export const store = new Vuex.Store({
       })
     },
 
+    // -----------------------------
     // Clients
+    // -----------------------------
 
+    /**
+     * Creates a new client.
+     * @param {object} payload - { pt_id, ..client_params }
+     */
     async createClient ({ commit }, payload) {
       const NEW_CLIENT = await axios.put('https://api.traininblocks.com/v2/clients', {
         ...payload
@@ -356,6 +517,10 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
+
+    /**
+     * Updates a client.
+     */
     async updateClient ({ state }) {
       const CLIENT = state.clientDetails
       await axios.post('https://api.traininblocks.com/v2/clients', {
@@ -368,7 +533,11 @@ export const store = new Vuex.Store({
         profile_image: CLIENT.profile_image
       })
     },
-    // payload => clientId
+
+    /**
+     * Archives a client
+     * @param {integer} clientId - The id of the client.
+     */
     async clientArchive ({ commit, state }, clientId) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
       commit('archiveClient', CLIENT)
@@ -392,7 +561,11 @@ export const store = new Vuex.Store({
         })
       }
     },
-    // payload => clientIds
+
+    /**
+     * Unarchive clients.
+     * @param {array} clientIds - The ids of clients.
+     */
     async clientUnarchive ({ commit }, clientIds) {
       const POST_DATA = []
       clientIds.forEach((clientId) => {
@@ -401,20 +574,29 @@ export const store = new Vuex.Store({
       commit('unarchiveClient', clientIds)
       await axios.post('https://api.traininblocks.com/v2/batch/clients/unarchive', POST_DATA)
     },
-    // payload => clients
-    async clientDelete ({ commit }, clients) {
+
+    /**
+     * Delete clients from the archive.
+     * @param {array} clientIds - The ids of clients.
+     */
+    async clientDelete ({ commit }, clientIds) {
       const DELETE_IDS = []
-      clients.forEach((clientId) => {
+      clientIds.forEach((clientId) => {
         DELETE_IDS.push({ id: clientId })
       })
       await axios.delete('https://api.traininblocks.com/v2/batch/clients', {
         data: DELETE_IDS
       })
-      commit('removeClient', clients)
+      commit('removeClient', clientIds)
     },
 
+    // -----------------------------
     // Templates
+    // -----------------------------
 
+    /**
+     * Adds a new template.
+     */
     async newTemplate ({ commit, state }) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/templates', {
         pt_id: state.claims.sub,
@@ -430,14 +612,22 @@ export const store = new Vuex.Store({
         template: ''
       })
     },
-    // payload => templateId
+
+    /**
+     * Updates a template.
+     * @param {integer} templateId - The id of the template.
+     */
     async updateTemplate ({ state }, templateId) {
       const TEMPLATE = state.templates.find(template => template.id === parseInt(templateId))
       await axios.post('https://api.traininblocks.com/v2/templates', {
         ...TEMPLATE
       })
     },
-    // payload => templatesIds (selectedTemplates)
+
+    /**
+     * Delete templates.
+     * @param {array} templateIds - The ids of templates.
+     */
     async deleteTemplate ({ commit }, templateIds) {
       const DELETE_IDS = []
       templateIds.forEach((templateId) => {
@@ -449,8 +639,13 @@ export const store = new Vuex.Store({
       commit('removeTemplate', templateIds)
     },
 
+    // -----------------------------
     // Portfolio
+    // -----------------------------
 
+    /**
+     * Creates a portfolio.
+     */
     async createPortfolio ({ dispatch, state }) {
       await axios.put('https://api.traininblocks.com/v2/portfolio', {
         pt_id: state.claims.sub,
@@ -467,15 +662,24 @@ export const store = new Vuex.Store({
         }
       })
     },
+
+    /**
+     * Updates the portfolio.
+     */
     async updatePortfolio ({ state }) {
       await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
         ...state.portfolio
       })
     },
 
+    // -----------------------------
     // Products
+    // -----------------------------
 
-    // payload => name, desc, price, type
+    /**
+     * Creates a new product.
+     * @param {object} payload - { name, desc, price, type }
+     */
     async createProduct ({ commit }, payload) {
       await axios.put('https://api.traininblocks.com/v2/products', {
         ...payload
@@ -484,7 +688,11 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
-    // payload => productId
+
+    /**
+     * Updates a product.
+     * @param {integer} productId - The id of the product.
+     */
     async updateProduct ({ state }, productId) {
       const POST_DATA = state.products.find(product => product.id === parseInt(productId))
       await axios.post(`https://api.traininblocks.com/v2/products/${productId}`, {
@@ -492,6 +700,11 @@ export const store = new Vuex.Store({
       })
     },
     // payload => productIds (selectedProducts)
+
+    /**
+     * Deletes products.
+     * @param {array} productIds - The ids of products.
+     */
     async deleteProduct ({ commit }, productIds) {
       const DELETE_IDS = []
       productIds.forEach((productId) => {
@@ -503,8 +716,14 @@ export const store = new Vuex.Store({
       commit('removeProduct', productIds)
     },
 
+    // -----------------------------
     // Account
+    // -----------------------------
 
+    /**
+     * Changes the user's password.
+     * @param {object} payload - { old, new }
+     */
     async changePassword ({ state }, payload) {
       await axios.post('/.netlify/functions/okta', {
         type: 'POST',
@@ -521,6 +740,10 @@ export const store = new Vuex.Store({
         html: passChangeEmail()
       })
     },
+
+    /**
+     * Updates the user's claims on Okta.
+     */
     async saveClaims ({ state }) {
       await axios.post('/.netlify/functions/okta', {
         type: 'POST',
@@ -536,9 +759,14 @@ export const store = new Vuex.Store({
       localStorage.removeItem('claims')
     },
 
+    // -----------------------------
     // Plans
+    // -----------------------------
 
-    // payload => clientId, force
+    /**
+     * Get all the plans and sessions for a client.
+     * @param {integer} clientId - The id of the client.
+     */
     async getPlans ({ commit, state }, clientId) {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
       if (!CLIENT.plans) {
@@ -563,7 +791,11 @@ export const store = new Vuex.Store({
         }
       }
     },
-    // payload => clientId, name, duration, ordered
+
+    /**
+     * Creates a new plan.
+     * @param {object} payload - { clientId, name, duration, ordered }
+     */
     async createPlan ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
         name: payload.name,
@@ -583,7 +815,11 @@ export const store = new Vuex.Store({
         sessions: false
       })
     },
-    // payload => clientId, planId, planName, planDuration, blockColor, planNotes, planSessions
+
+    /**
+     * Duplicates a plan.
+     * @param {object} payload - { clientId, planId, planName, planDuration, blockColor, planNotes, planSessions }
+     */
     async duplicatePlan ({ dispatch, commit, state }, payload) {
       const NEW_PLAN_RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
         name: `Copy of ${payload.planName}`,
@@ -627,14 +863,22 @@ export const store = new Vuex.Store({
         })
       }
     },
-    // payload => client_id, id (plan), name, duration, notes, block_color, ordered
+
+    /**
+     * Updates a plan.
+     * @param {object} payload - { client_id, id (plan), name, duration, notes, block_color, ordered }
+     */
     async updatePlan ({ commit }, payload) {
       await axios.post('https://api.traininblocks.com/v2/plans', {
         ...payload
       })
       commit('updateEntirePlan', payload)
     },
-    // payload => clientId, planId
+
+    /**
+     * Deletes a plan.
+     * @param {object} payload - { clientId, planId }
+     */
     async deletePlan ({ commit }, payload) {
       await axios.delete(`https://api.traininblocks.com/v2/plans/${payload.planId}`)
       commit('removePlan', {
@@ -643,9 +887,15 @@ export const store = new Vuex.Store({
       })
     },
 
+    // -----------------------------
     // Sessions
+    // -----------------------------
 
-    // payload => client_id, data: { programme_id, name, date, notes, week_id }
+    /**
+     * Creates a new session.
+     * @param {object} payload - { client_id, data: { programme_id, name, date, notes, week_id } }
+     * @returns The new session's id.
+     */
     async addSession ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/sessions', {
         ...payload.data
@@ -662,12 +912,20 @@ export const store = new Vuex.Store({
       })
       return NEW_SESSION_ID
     },
-    // payload => clientId, planId, sessionId
+
+    /**
+     * Updates a session.
+     * @param {object} payload - { clientId, planid, sessionId }
+     */
     async updateSession ({ getters }, payload) {
       const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
       await axios.post('https://api.traininblocks.com/v2/sessions', { ...SESSION })
     },
-    // payload => clientId, planId, sessionIds
+
+    /**
+     * Update multiple sessions.
+     * @param {object} payload - { clientId, planId, sessionIds }
+     */
     async batchUpdateSession ({ getters }, payload) {
       const POST_DATA = []
       payload.sessionIds.forEach((sessionId) => {
@@ -677,7 +935,11 @@ export const store = new Vuex.Store({
         ...POST_DATA
       })
     },
-    // payload => clientId, planId, sessionIds
+
+    /**
+     * Delete single/multiple session(s).
+     * @param {object} payload - { clientId, planId, sessionIds }
+     */
     async deleteSession ({ commit }, payload) {
       const DELETE_IDS = []
       payload.sessionIds.forEach((sessionId) => {
@@ -693,9 +955,15 @@ export const store = new Vuex.Store({
       })
     },
 
+    // -----------------------------
     // Bookings
+    // -----------------------------
 
     // payload => clientId, datetime, notes, status
+    /**
+     * Creates a new booking.
+     * @param {object} payload - { clientId, datetime, notes, status }
+     */
     async createBooking ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/bookings', {
         ...payload
@@ -705,7 +973,11 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
-    // payload => id (booking), status
+
+    /**
+     * Updates a booking.
+     * @param {object} payload - { id (booking), status }
+     */
     async updateBooking ({ commit }, payload) {
       await axios.post('https://api.traininblocks.com/v2/bookings', {
         ...payload
@@ -714,16 +986,24 @@ export const store = new Vuex.Store({
         ...payload
       })
     },
-    // payload => clientId, bookingIds (array of id for booking)
+
+    /**
+     * Deletes a booking.
+     * @param {object} payload - { isTrainer, bookingId }
+     */
     async deleteBooking ({ commit }, payload) {
       await axios.delete(`https://api.traininblocks.com/v2/bookings/${payload.bookingId}`)
-      commit(`removeBooking${payload.isTrainer ? '' : 'ClientSide'}`, {
-        ...payload
-      })
+      commit(`removeBooking${payload.isTrainer ? '' : 'ClientSide'}`, payload.bookingId)
     },
 
+    // -----------------------------
     // Client-side
+    // -----------------------------
 
+    /**
+     * Updates client-user's details.
+     * @param {object} payload - { ...client_params }
+     */
     async updateClientSideDetails ({ dispatch, commit }, payload) {
       await axios.post('https://api.traininblocks.com/v2/clientUser/clients', {
         ...payload
@@ -741,6 +1021,10 @@ export const store = new Vuex.Store({
       })
       dispatch('endLoading')
     },
+
+    /**
+     * Gets client-user's data for app session.
+     */
     async getClientSideInfo ({ commit, state }) {
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
       if (RESPONSE.data) {
@@ -779,6 +1063,10 @@ export const store = new Vuex.Store({
         })
       }
     },
+
+    /**
+     * Gets client-user's plan data for app session.
+     */
     async getClientSidePlans ({ commit, state }) {
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`)
       commit('setDataDeep', {
@@ -796,7 +1084,11 @@ export const store = new Vuex.Store({
         })
       })
     },
-    // payload => planId, sessionId
+
+    /**
+     * Updates a client-user's session.
+     * @param {object} payload - { planId, sessionId }
+     */
     async updateClientSideSession ({ state }, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
       const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
@@ -823,6 +1115,11 @@ export const store = new Vuex.Store({
     }
   },
   getters: {
+
+    /**
+     * Helps gets plans or sessions.
+     * @returns Sepecified data.
+     */
     helper: (state, getters) => (type, clientId, planId, sessionId) => {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
       switch (type) {
