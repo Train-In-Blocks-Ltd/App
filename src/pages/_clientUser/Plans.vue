@@ -302,8 +302,15 @@ export default {
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // -----------------------------
+    // General
+    // -----------------------------
 
+    /**
+     * Resolves the state of the feedback editor.
+     * @param {string} state - The returned state of the editor.
+     * @param {integer} id - The id of the session.
+     */
     resolveFeedbackEditor (state, id) {
       let plan
       let session
@@ -339,6 +346,11 @@ export default {
           break
       }
     },
+
+    /**
+     * Scrolls towards the target session.
+     * @param {integer} id - The id of the session.
+     */
     goToEvent (id) {
       const SESSION_INDEX = this.sessionDates.findIndex(session => session.session_id === id)
       this.showing_current_session = SESSION_INDEX
@@ -346,6 +358,13 @@ export default {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)
     },
+
+    /**
+     * Toggles the complete state of the session.
+     * @param {integer} planId - The id of the plan.
+     * @param {integer} sessionId - The id of the session.
+     * @param {integer} currentChecked - The new state of the session.
+     */
     complete (planId, sessionId, currentChecked) {
       if (!currentChecked) {
         this.$store.commit('updateClientUserPlanSingleSession', {
@@ -367,6 +386,10 @@ export default {
       this.$parent.updateClientSideSession(planId, sessionId)
       this.$store.dispatch('endLoading')
     },
+
+    /**
+     * Scans the sessions and updates the page.
+     */
     scan () {
       this.sessionDates.length = 0
       const PLAN = this.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))

@@ -858,8 +858,14 @@ export default {
   },
   methods: {
 
-    // Resolvers
+    // -----------------------------
+    // General
+    // -----------------------------
 
+    /**
+     * Resolves the actions taken from the session multi-select.
+     * @param {string} res - The action taken from the multi-select.
+     */
     resolve_session_multiselect (res) {
       switch (res) {
         case 'Complete':
@@ -898,6 +904,11 @@ export default {
           break
       }
     },
+
+    /**
+     * Resolves the state of the plan notes editor.
+     * @param {string} state - The returned state of the editor.
+     */
     resolvePlanInfoEditor (state) {
       switch (state) {
         case 'edit':
@@ -927,6 +938,12 @@ export default {
           break
       }
     },
+
+    /**
+     * Resolves the state of the session editor.
+     * @param {string} state - The returned state of the editor.
+     * @param {integer} id - The id of the session.
+     */
     resolveSessionEditor (state, id) {
       const SESSION = this.$store.getters.helper('match_session', this.$route.params.client_id, this.$route.params.id, id)
       switch (state) {
@@ -964,8 +981,13 @@ export default {
       }
     },
 
-    // MODALS AND TAB
+    // -----------------------------
+    // Modals and tabs
+    // -----------------------------
 
+    /**
+     * Duplicates the plan.
+     */
     async duplicate () {
       this.$store.commit('setData', {
         attr: 'loading',
@@ -999,6 +1021,10 @@ export default {
       this.$parent.$parent.$refs.response_pop_up.show(`${this.selectedSessions.length > 1 ? 'Sessions' : 'Session'} duplicated`, 'Get programming!')
       this.$store.dispatch('endLoading')
     },
+
+    /**
+     * Opens a new tab with the print preview of all the selected sessions.
+     */
     print () {
       const NOTES_ARR = []
       this.plan.sessions.sort((a, b) => {
@@ -1017,6 +1043,10 @@ export default {
       this.$ga.event('Plan', 'print')
       this.deselectAll()
     },
+
+    /**
+     * Shifts the selected sessions by specified days.
+     */
     shiftAcross () {
       this.$store.commit('setData', {
         attr: 'dontLeave',
@@ -1040,6 +1070,10 @@ export default {
       this.$ga.event('Session', 'shift')
       this.$store.dispatch('endLoading')
     },
+
+    /**
+     * Moves the selected sessions to specified week.
+     */
     moveToWeek () {
       this.$store.commit('setData', {
         attr: 'dontLeave',
@@ -1065,8 +1099,14 @@ export default {
       this.$store.dispatch('endLoading')
     },
 
-    // MULTI AND CHECKBOX
+    // -----------------------------
+    // Checkbox and multi-select
+    // -----------------------------
 
+    /**
+     * Toggles the complete/incomplete state of the selected sessions.
+     * @param {integer} boolState - The state of the session, 1 - complete, 0 - incomplete.
+     */
     async bulkCheck (boolState) {
       this.$store.commit('setData', {
         attr: 'dontLeave',
@@ -1092,6 +1132,10 @@ export default {
       }
       this.$store.dispatch('endLoading')
     },
+
+    /**
+     * Deletes all the selected sessions.
+     */
     async bulkDelete () {
       this.$store.commit('setData', {
         attr: 'dontLeave',
@@ -1119,6 +1163,11 @@ export default {
       }
       this.$store.dispatch('endLoading')
     },
+
+    /**
+     * Selects all the sessions in the plan or week.
+     * @param {string} mode - To select all session or all sessions in the current week ('all' or 'week').
+     */
     selectAll (mode) {
       this.plan.sessions.forEach((session) => {
         if (!this.selectedSessions.includes(session.id)) {
@@ -1132,12 +1181,20 @@ export default {
         }
       })
     },
+
+    /**
+     * Deselects all the sessions.
+     */
     deselectAll () {
       this.selectedSessions.forEach((id) => {
         document.getElementById(`sc-${id}`).checked = false
       })
       this.selectedSessions = []
     },
+
+    /**
+     * Toggles the state of the custom checkbox component.
+     */
     changeSelectCheckbox (id) {
       if (!this.selectedSessions.includes(id)) {
         this.selectedSessions.push(id)
@@ -1146,6 +1203,10 @@ export default {
         this.selectedSessions.splice(IDX, 1)
       }
     },
+
+    /**
+     * Creates a new session.
+     */
     async createNewSession () {
       this.$store.commit('setData', {
         attr: 'dontLeave',
@@ -1168,8 +1229,15 @@ export default {
       this.$store.dispatch('endLoading')
     },
 
-    // GENERAL
+    // -----------------------------
+    // Misc
+    // -----------------------------
 
+    /**
+     * Scrolls to session.
+     * @param {integer} id - The id of the session.
+     * @param {integer} week - The week containing the session.
+     */
     goToEvent (id, week) {
       this.expandAll('Expand')
       this.currentWeek = week
@@ -1177,6 +1245,10 @@ export default {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)
     },
+
+    /**
+     * Checks if the current week has sessions.
+     */
     checkForWeekSessions () {
       let arr = 0
       const SESSIONS = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions
@@ -1191,6 +1263,11 @@ export default {
       }
       this.weekIsEmpty = arr === 0
     },
+
+    /**
+     * Expands the main body of the targetted session.
+     * @param {integer} id - The id of the session.
+     */
     toggleExpandedSessions (id) {
       if (this.expandedSessions.includes(id)) {
         const INDEX = this.expandedSessions.indexOf(id)
@@ -1201,6 +1278,10 @@ export default {
         this.expandedSessions.push(id)
       }
     },
+
+    /**
+     * Updates the week color.
+     */
     updateSessionColor () {
       this.$store.commit('updatePlanAttr', {
         clientId: this.clientDetails.client_id,
@@ -1211,14 +1292,26 @@ export default {
       this.editingWeekColor = false
       this.updatePlan()
     },
+
+    /**
+     * Switch to a different week.
+     * @param {integer} - The id of the week.
+     */
     changeWeek (weekID) {
       this.currentWeek = weekID
       this.moveTarget = weekID
       this.checkForWeekSessions()
     },
 
-    // DATE/TIME
+    // -----------------------------
+    // Datetime
+    // -----------------------------
 
+    /**
+     * Returns the duration of the plan as an array to be iterated.
+     * @param {integer} duration - The length of the plan.
+     * @returns The duration array.
+     */
     planDuration (duration) {
       const ARR = []
       let i
@@ -1228,14 +1321,25 @@ export default {
       return ARR
     },
 
-    // INIT AND BACKGROUND
+    // -----------------------------
+    // Background
+    // -----------------------------
 
+    /**
+     * Sorts the session.
+     * @param {array} data - The sessions array to be sorted.
+     * @returns The sorted sessions array.
+     */
     sessionsSorter (data) {
       data = data.sort((a, b) => {
         return new Date(a.date) - new Date(b.date)
       })
       return data
     },
+
+    /**
+     * Updates the state of the plan page to show the correct data.
+     */
     updater () {
       this.sessionDates = []
       this.weekColor.backgroundColor = this.plan.block_color.replace('[', '').replace(']', '').split(',')
@@ -1253,6 +1357,10 @@ export default {
       }
       this.maxWeek = parseInt(this.plan.duration)
     },
+
+    /**
+     * Determines and visualises the ratio of completed and incompleted sessions.
+     */
     adherence () {
       this.sessionsDone = 0
       this.sessionsTotal = 0
@@ -1269,6 +1377,11 @@ export default {
         }
       }
     },
+
+    /**
+     * Expand or unexpand all sessions.
+     * @param {string} toExpand - Whether to expand or unexpand.
+     */
     expandAll (toExpand) {
       try {
         if (Array.isArray(this.plan.sessions)) {
@@ -1291,8 +1404,14 @@ export default {
       }
     },
 
-    // DATABASE
+    // -----------------------------
+    // Database
+    // -----------------------------
 
+    /**
+     * Duplicates the plan to select client.
+     * @param {integer} clientId - The client to copy the plan to.
+     */
     async duplicatePlan (clientId) {
       try {
         this.$store.commit('setData', {
@@ -1316,6 +1435,10 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Updates the details of the plan.
+     */
     async updatePlan () {
       try {
         this.$store.commit('setData', {
@@ -1329,6 +1452,10 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Deletes the plan.
+     */
     async deletePlan () {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         try {
@@ -1349,6 +1476,11 @@ export default {
         }
       }
     },
+
+    /**
+     * Updates the selected sessions.
+     * @param {array} sessionIds - The ids of the sessions.
+     */
     async batchUpdateSession (sessionIds) {
       try {
         await this.$store.dispatch('batchUpdateSession', {
@@ -1363,6 +1495,11 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Updates a single session.
+     * @param {integer} sessionId - The id of the session.
+     */
     async updateSession (sessionId) {
       try {
         await this.$store.dispatch('updateSession', {
@@ -1377,6 +1514,12 @@ export default {
         this.$parent.$parent.resolveError(e)
       }
     },
+
+    /**
+     * Creates a new session with our without existing data.
+     * @param {object} data - Pre-existing session data.
+     * @returns The id of the new session.
+     */
     async addSession (data) {
       try {
         const NEW_SESSION_ID = await this.$store.dispatch('addSession', {
