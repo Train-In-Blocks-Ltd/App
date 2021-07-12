@@ -194,6 +194,25 @@
           </option>
         </select>
       </div>
+      <div class="calendar">
+        <label for="calendar" class="text--small">
+          <b>
+            Calendar
+          </b>
+        </label>
+        <br>
+        <div class="form__options">
+          <label>
+            Enable calendar link:
+            <input v-model="claims.Calendar" class="claims-calendar" type="checkbox" @change="$parent.saveClaims()">
+          </label>
+        </div>
+        <p class="text--tiny">
+          Anyone with the link will be able to see all of your bookings
+        </p>
+        <br>
+        <button v-if="claims.Calendar" @click.prevent="copyCalendarLink()" v-html="calendarText" />
+      </div>
       <div class="privacy">
         <h3>
           Your Privacy and Data
@@ -204,7 +223,7 @@
         <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
         <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
         <div class="form__options">
-          <label for="cookies">
+          <label>
             Allow Third Party Cookies:
             <input v-model="claims.ga" class="allow-cookies" type="checkbox" @change="$parent.saveClaims()">
           </label>
@@ -241,7 +260,8 @@ export default {
         match: null,
         check: null,
         error: null
-      }
+      },
+      calendarText: 'Get your calendar link'
     }
   },
   computed: mapState([
@@ -258,6 +278,9 @@ export default {
     this.willBodyScroll(true)
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
+  },
+  mounted () {
+    console.log(this.claims)
   },
   methods: {
 
@@ -332,6 +355,17 @@ export default {
         this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
         this.$parent.resolveError(e)
       }
+    },
+
+    // Copy Calendar Link
+    copyCalendarLink () {
+      const link = `http://app.traininblocks.com/.netlify/functions/calendar?email=${this.claims.email}`
+      const self = this
+      navigator.clipboard.writeText(link).then(function () {
+        self.calendarText = 'Copied!'
+      }, function (err) {
+        self.calendarText = 'Could not copy text: ' + err
+      })
     }
   }
 }
