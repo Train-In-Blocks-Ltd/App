@@ -752,7 +752,8 @@ export const store = new Vuex.Store({
           profile: {
             ga: state.claims.ga,
             theme: state.claims.theme,
-            policy: state.claims.policy
+            policy: state.claims.policy,
+            calendar: state.claims.calendar
           }
         },
         url: `${state.claims.sub}`

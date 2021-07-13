@@ -204,14 +204,23 @@
         <div class="form__options">
           <label>
             Enable calendar link:
-            <input v-model="claims.Calendar" class="claims-calendar" type="checkbox" @change="$parent.saveClaims()">
+            <input
+              v-model="claims.calendar"
+              class="claims-calendar"
+              type="checkbox"
+              @change="$parent.saveClaims()"
+            >
           </label>
         </div>
         <p class="text--tiny">
           Anyone with the link will be able to see all of your bookings
         </p>
         <br>
-        <button v-if="claims.Calendar" @click.prevent="copyCalendarLink()" v-html="calendarText" />
+        <button
+          v-if="claims.calendar"
+          @click.prevent="copyCalendarLink()"
+          v-html="calendarText"
+        />
       </div>
       <div class="privacy">
         <h3>
@@ -241,6 +250,7 @@
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
