@@ -495,27 +495,17 @@ function passEmailText (link) {
     The Train In Blocks Team`)
 }
 const axios = require('axios')
-const authHeader = 'SSWS 00r26hoJMP9lITIbqrR596dGTWAL0I8lFljhdxfaBV'
 const smtpTransport = require('nodemailer-smtp-transport')
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json; charset=UTF-8',
-  'X-Frame-Options': 'DENY',
-  'Strict-Transport-Security': 'max-age=15552000; preload',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': 'default-src "self"'
-}
-// setup nodemailer
 const nodemailer = require('nodemailer')
+const CUSTOM_ENV = require('../config/prod.env')
+const headers = require('./helpers/headers')
 const transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp-relay.gmail.com',
   secure: true,
   auth: {
-    user: 'joe.bailey@traininblocks.com',
-    pass: 'fczhxioeejfvtpbi'
+    user: CUSTOM_ENV.GOOGLE_WORKSPACE.USERNAME,
+    pass: CUSTOM_ENV.GOOGLE_WORKSPACE.PASSWORD
   }
 }))
 
@@ -536,7 +526,7 @@ exports.handler = async function handler (event, context, callback) {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            Authorization: authHeader
+            Authorization: CUSTOM_ENV.OKTA_AUTH
           }
         }
       )
@@ -547,7 +537,7 @@ exports.handler = async function handler (event, context, callback) {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            Authorization: authHeader
+            Authorization: CUSTOM_ENV.OKTA_AUTH
           }
         }
       )
@@ -556,8 +546,8 @@ exports.handler = async function handler (event, context, callback) {
         from: 'Train In Blocks <hello@traininblocks.com>',
         to: data.email,
         subject: 'Password Reset',
-        text: passEmailText(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-        html: passEmail(oktaTwo.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+        text: passEmailText(oktaTwo.data.resetPasswordUrl.replace(CUSTOM_ENV.ISSUER, 'https://auth.traininblocks.com')),
+        html: passEmail(oktaTwo.data.resetPasswordUrl.replace(CUSTOM_ENV.ISSUER, 'https://auth.traininblocks.com'))
       }
       await transporter.sendMail(mailOptions)
       return callback(null, {
