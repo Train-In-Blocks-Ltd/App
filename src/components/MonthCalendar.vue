@@ -1,89 +1,85 @@
-<style scoped>
-/* Container */
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 #month_calendar {
   border-radius: 10px;
-  border: 3px solid var(--base);
+  border: 3px solid $base;
   margin-top: 1rem
 }
-.calendar_header h3 {
-  position: relative;
-  top: 0;
-  left: 2rem;
-  padding: .6rem;
-  background: var(--base);
-  color: var(--fore);
-  width: fit-content;
-  border-radius: 0 0 10px 10px
+.calendar_header {
+  h3 {
+    position: relative;
+    top: 0;
+    left: 2rem;
+    padding: .6rem;
+    background: $base;
+    color: $fore;
+    width: fit-content;
+    border-radius: 0 0 10px 10px
+  }
+  .calendar_header__bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem;
+    * {
+      transition: $transition_standard;
+      &:hover {
+        opacity: $light_opacity
+      }
+    }
+    .next_month,
+    .prev_month {
+      height: 36px;
+      width: 36px;
+      &:active {
+        transform: scale(.8)
+      }
+    }
+    .today {
+      cursor: pointer;
+      margin: auto;
+      &.disabled:hover {
+        opacity: $light_opacity;
+        cursor: default
+      }
+    }
+  }
 }
-.calendar_header__bar {
-  display: flex;
-  justify-content: space-between;
-  margin: 2rem
-}
-.calendar_header__bar * {
-  transition: var(--transition_standard)
-}
-.calendar_header__bar *:hover {
-  opacity: var(--light_opacity)
-}
-.next_month,
-.prev_month {
-  height: 36px;
-  width: 36px
-}
-:is(.next_month, .prev_month):active {
-  transform: scale(.8)
-}
-.day_cell.is_today {
-  background-color: var(--calendar_highlight);
-  border-radius: 10px
-}
-.today {
-  cursor: pointer;
-  margin: auto
-}
-.disabled, .today.disabled:hover {
-  opacity: var(--light_opacity);
-  cursor: default
-}
-
-/* Month */
 .month_container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-gap: .6rem;
-  margin: 2rem
-}
-.days_label {
-  text-align: center
-}
-
-/* Day */
-.day_cell {
-  text-align: right;
-  min-height: 100px;
-  background-color: var(--fore);
-  border-radius: 10px;
-  padding: .6rem;
-  box-shadow: var(--low_shadow)
-}
-.holderCell {
-  background-color: transparent;
-  box-shadow: none
-}
-
-/* Event */
-.event {
-  overflow-wrap: anywhere;
-  border: 2px solid transparent;
-  border-radius: 3px;
-  padding: .1rem;
-  font-size: .7rem;
-  text-align: center;
-  margin: .4rem 0
-}
-.showBorder {
-  border: 2px solid var(--base)
+  margin: 2rem;
+  .days_label {
+    text-align: center
+  }
+  .day_cell {
+    text-align: right;
+    min-height: 100px;
+    background-color: $fore;
+    border-radius: 10px;
+    padding: .6rem;
+    box-shadow: $low_shadow;
+    &.holderCell {
+      background-color: transparent;
+      box-shadow: none
+    }
+    &.is_today {
+      background-color: $calendar_highlight;
+      border-radius: 10px
+    }
+    .event {
+      overflow-wrap: anywhere;
+      border: 2px solid transparent;
+      border-radius: 3px;
+      padding: .1rem;
+      font-size: .7rem;
+      text-align: center;
+      margin: .4rem 0;
+      &.showBorder {
+        border: 2px solid $base
+      }
+    }
+  }
 }
 
 /* Responsive */

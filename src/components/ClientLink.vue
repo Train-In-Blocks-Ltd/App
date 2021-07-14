@@ -22,27 +22,26 @@
 </style>
 
 <style lang="scss" scoped>
-
-/* Other */
+@import '../assets/styles/variables.scss';
 
 /* Client Link */
 .client_link {
   display: grid;
   padding: 2rem;
   grid-gap: 1rem;
-  color: var(--base);
+  color: $base;
   text-decoration: none;
-  border: 3px solid var(--base);
+  border: 3px solid $base;
   border-radius: 10px;
-  transition: var(--transition_standard);
+  transition: $transition_standard;
   &:hover {
-    box-shadow: var(--high_shadow)
+    box-shadow: $high_shadow
   }
   &.archived {
     display: flex;
     justify-content: space-between;
     .name {
-      color: var(--base)
+      color: $base
     }
   }
 
@@ -62,7 +61,7 @@
       height: 80px;
       width: 80px;
       border-radius: 50%;
-      border: 3px solid var(--base)
+      border: 3px solid $base
     }
 
     /* Client link details */
@@ -72,13 +71,13 @@
       grid-gap: 1rem;
       p, .name {
         margin: auto 0;
-        color: var(--base);
-        transition: var(--transition_standard)
+        color: $base;
+        transition: $transition_standard
       }
       svg {
         width: 20px;
-        fill: var(--base);
-        transition: var(--transition_standard)
+        fill: $base;
+        transition: $transition_standard
       }
     }
   }
@@ -92,13 +91,13 @@
 @media (max-width: 768px) {
   .client_link {
     &:hover {
-      box-shadow: var(--low_shadow);
+      box-shadow: $low_shadow;
       svg {
-        fill: var(--base)
+        fill: $base
       }
     }
     &:active {
-      transform: var(--active_state)
+      transform: $active_state
     }
     .client_information {
       grid-template-columns: 1fr;

@@ -1,4 +1,5 @@
 <style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 .profile_container {
   .close_icon {
     float: right
@@ -16,7 +17,7 @@
     padding: 1.8rem;
     height: 140px;
     width: 140px;
-    border: 4px solid var(--base);
+    border: 4px solid $base;
     border-radius: 50%
   }
   .client_user_details {
@@ -45,8 +46,8 @@
   /* Booking outer container */
   .bookings_container {
     padding: 1rem;
-    background-color: var(--fore);
-    border: 3px solid var(--base);
+    background-color: $fore;
+    border: 3px solid $base;
     border-radius: 10px;
     margin: 2rem 0;
 
@@ -70,7 +71,7 @@
         max-height: 300px;
         overflow-y: auto;
         padding: 0 1rem;
-        box-shadow: inset 0 -10px 10px -10px var(--inset_shadow), inset 0 10px 10px -10px var(--inset_shadow);
+        box-shadow: inset 0 -10px 10px -10px $inset_shadow, inset 0 10px 10px -10px $inset_shadow;
         &::-webkit-scrollbar {
           width: 6px
         }
@@ -79,7 +80,7 @@
         .booking_event {
           display: grid;
           grid-gap: 2rem;
-          border: 3px solid var(--base);
+          border: 3px solid $base;
           height: fit-content;
           padding: 1rem;
           border-radius: 10px;
@@ -91,7 +92,7 @@
             display: flex;
             justify-content: space-between;
             > a {
-              color: var(--base_red)
+              color: $base_red
             }
           }
         }

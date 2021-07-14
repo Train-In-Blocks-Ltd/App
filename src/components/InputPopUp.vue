@@ -1,52 +1,51 @@
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 .input_pop_up {
   position: fixed;
   width: 60%;
   top: 1rem;
   left: calc(38px + 3rem);
-  background-color: var(--overlay_glass);
+  background-color: $overlay_glass;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: var(--low_shadow);
+  box-shadow: $low_shadow;
   border-radius: 5px;
   padding: 1rem;
-  z-index: 1000
-}
-.input_pop_up input {
-  margin-top: 1rem
-}
-.input_pop_up svg {
-  cursor: pointer;
-  height: 1.2rem;
-  width: 1.2rem;
-  position: fixed;
-  padding: .2rem;
-  right: -.5rem;
-  top: -.5rem;
-  background-color: var(--base);
-  border: 1px solid var(--fore);
-  border-radius: 50%;
-  transition: var(--transition_standard)
-}
-.input_pop_up svg:hover {
-  opacity: var(--light_opacity)
-}
-
-/* Button */
-.input_button_bar {
-  margin-top: 1rem
+  z-index: 1000;
+  input {
+    margin-top: 1rem
+  }
+  svg {
+    cursor: pointer;
+    height: 1.2rem;
+    width: 1.2rem;
+    position: fixed;
+    padding: .2rem;
+    right: -.5rem;
+    top: -.5rem;
+    background-color: $base;
+    border: 1px solid $fore;
+    border-radius: 50%;
+    transition: $transition_standard;
+    &:hover {
+      opacity: $light_opacity
+    }
+  }
+  .input_button_bar {
+    margin-top: 1rem
+  }
 }
 
 @supports not (backdrop-filter: blur(10px)) {
   .input_pop_up {
-    background-color: var(--fore)
+    background-color: $fore
   }
 }
 @media (max-width: 992px) {
   .input_pop_up svg:hover {
     fill: black;
-    background-color: var(--fore);
-    border-color: var(--base)
+    background-color: $fore;
+    border-color: $base
   }
 }
 @media (max-width: 768px) {

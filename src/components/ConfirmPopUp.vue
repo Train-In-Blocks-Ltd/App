@@ -1,12 +1,13 @@
 <style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 .confirm_pop_up {
   position: fixed;
   top: 1rem;
   left: calc(38px + 3rem);
-  background-color: var(--overlay_glass);
+  background-color: $overlay_glass;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: var(--low_shadow);
+  box-shadow: $low_shadow;
   border-radius: 5px;
   padding: 1rem;
   z-index: 1000;
@@ -17,7 +18,7 @@
 
 @supports not (backdrop-filter: blur(10px)) {
   .confirm_pop_up {
-    background-color: var(--fore)
+    background-color: $fore
   }
 }
 @media (max-width: 768px) {

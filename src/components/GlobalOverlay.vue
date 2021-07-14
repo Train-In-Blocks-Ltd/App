@@ -1,4 +1,4 @@
-<style scoped>
+<style lang="scss" scoped>
 .overlay {
   z-index: 999;
   position: fixed;
