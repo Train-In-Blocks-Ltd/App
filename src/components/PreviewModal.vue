@@ -1,45 +1,36 @@
-<style>
-/* Preview HTML */
-.preview_modal .preview_html {
-  margin: 1rem 0 2rem 0
-}
-.preview_modal .preview_html * {
-  color: var(--base);
-  transition: var(--transition_standard)
-}
-.preview_modal .preview_html p {
-  margin: .6rem 0
-}
-.preview_modal .preview_html :is(h1, h2) {
-  font-size: 1rem
-}
-.preview_modal .preview_html :is(img, iframe) {
-  max-width: 100%;
-  border-radius: 10px;
-  margin: 1rem 0
-}
-.noMedia :is(img, iframe) {
-  display: none
+<style lang="scss">
+@import '../assets/styles/variables.scss';
+.preview_modal {
+  .preview_html {
+    margin: 1rem 0 2rem 0;
+    &.noMedia :is(img, iframe) {
+      display: none
+    }
+    * {
+      color: $base;
+      transition: $transition_standard
+    }
+    p {
+      margin: .6rem 0
+    }
+    :is(h1, h2) {
+      font-size: 1rem
+    }
+    :is(img, iframe) {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 1rem 0
+    }
+  }
 }
 </style>
 
-<style scoped>
-/* Other */
+<style lang="scss" scoped>
 .title_container {
   display: flex;
-  justify-content: space-between
-}
-h2.title {
-  margin-bottom: 2rem
-}
-.copy_msg {
-  margin-bottom: 1rem
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  button.red_button {
-    width: 100%
+  justify-content: space-between;
+  h3.title {
+    margin-bottom: 2rem
   }
 }
 </style>

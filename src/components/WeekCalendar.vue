@@ -1,122 +1,130 @@
-<style scoped>
-/* Containers */
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 #calendar_view {
   border-radius: 10px;
-  border: 3px solid var(--base);
-  margin-top: 1rem
-}
-.calendar_header {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column
-}
-.calendar_header h3 {
-  position: relative;
-  top: 0;
-  left: 2rem;
-  padding: .6rem;
-  background: var(--base);
-  color: var(--fore);
-  width: fit-content;
-  border-radius: 0 0 10px 10px
-}
-.calendar_header__bar {
-  display: flex;
-  justify-content: space-between;
-  margin: 2rem
-}
-.week_container {
-  display: grid;
-  grid-gap: 2rem;
-  margin: 1rem;
-  border-radius: 10px
-}
-.day_container {
-  display: grid;
-  grid-template-columns: .1fr 1fr;
-  grid-gap: 4rem;
-  padding: 1rem
-}
-.is_today {
-  background-color: var(--calendar_highlight);
-  box-shadow: var(--low_shadow);
-  border-radius: 10px
-}
-.day_events {
-  display: grid;
-  grid-gap: 1rem
-}
-.day_events__event {
-  padding: .6rem 1rem;
-  border-radius: 8px;
-  border: 3px solid transparent;
-  overflow-wrap: anywhere
-}
-.showBorder {
-  border: 3px solid var(--base)
-}
-
-/* Header bar */
-.calendar_header__bar * {
-  transition: var(--transition_standard)
-}
-.calendar_header__bar *:hover {
-  opacity: var(--light_opacity)
-}
-.next_week,
-.prev_week {
-  height: 36px;
-  width: 36px
-}
-:is(.next_week, .prev_week):active {
-  transform: scale(.8)
-}
-.today {
-  cursor: pointer;
-  margin: auto
-}
-.disabled, .today.disabled:hover {
-  opacity: var(--light_opacity);
-  cursor: default
-}
-
-/* Day */
-.day_header {
-  display: flex;
-  justify-content: space-between
-}
-.day_header .text--small {
-  margin-left: .4rem
+  border: 3px solid $base;
+  margin-top: 1rem;
+  .calendar_header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    h3 {
+      position: relative;
+      top: 0;
+      left: 2rem;
+      padding: .6rem;
+      background: $base;
+      color: $fore;
+      width: fit-content;
+      border-radius: 0 0 10px 10px
+    }
+    .calendar_header__bar {
+      display: flex;
+      justify-content: space-between;
+      margin: 2rem;
+      * {
+        transition: $transition_standard;
+        &:hover {
+          opacity: $light_opacity
+        }
+      }
+      .next_week,
+      .prev_week {
+        height: 36px;
+        width: 36px;
+        &:active {
+          transform: scale(.8)
+        }
+      }
+      .today {
+        cursor: pointer;
+        margin: auto;
+        &.disabled,
+        &.disabled:hover {
+          opacity: $light_opacity;
+          cursor: default
+        }
+      }
+    }
+  }
+  .week_container {
+    display: grid;
+    grid-gap: 2rem;
+    margin: 1rem;
+    border-radius: 10px;
+    .day_container {
+      display: grid;
+      grid-template-columns: .1fr 1fr;
+      grid-gap: 4rem;
+      padding: 1rem;
+      &.is_today {
+        background-color: $calendar_highlight;
+        box-shadow: $low_shadow;
+        border-radius: 10px
+      }
+      .day_header {
+        display: flex;
+        justify-content: space-between;
+        .text--small {
+          margin-left: .4rem
+        }
+      }
+      .day_events {
+        display: grid;
+        grid-gap: 1rem;
+        .day_events__event {
+          padding: .6rem 1rem;
+          border-radius: 8px;
+          border: 3px solid transparent;
+          overflow-wrap: anywhere;
+          &.showBorder {
+            border: 3px solid $base
+          }
+        }
+      }
+    }
+  }
 }
 
-/* Responsive */
 @media (max-width: 992px) {
-  .calendar_header__bar *:hover {
-    opacity: 1
-  }
-  .next_week:hover {
-    transform: rotate(-90deg) translateY(0)
-  }
-  .next_week:active {
-    transform: rotate(-90deg) translateY(0) scale(.9)
-  }
-  .prev_week:hover {
-    transform: rotate(90deg) translateY(0)
-  }
-  .prev_week:active {
-    transform: rotate(90deg) translateY(0) scale(.9)
+  #calendar_view .calendar_header .calendar_header__bar {
+    *:hover {
+      opacity: 1
+    }
+    .next_week {
+      &:hover {
+        transform: rotate(-90deg) translateY(0)
+      }
+      &:active {
+        transform: rotate(-90deg) translateY(0) scale(.9)
+      }
+    }
+    .prev_week {
+      &:hover {
+        transform: rotate(90deg) translateY(0)
+      }
+      &:active {
+        transform: rotate(90deg) translateY(0) scale(.9)
+      }
+    }
   }
 }
 @media (max-width: 576px) {
-  .day_container {
-    padding: 1rem
-  }
-  .calendar_header h3 {
-    left: 1rem
-  }
-  .calendar_header__bar,
-  .week_container {
-    margin: 1rem
+  #calendar_view {
+    .calendar_header {
+      h3 {
+        left: 1rem
+      }
+      .calendar_header__bar {
+        margin: 1rem
+      }
+    }
+    .week_container {
+      margin: 1rem;
+      .day_container {
+        padding: 1rem
+      }
+    }
   }
 }
 </style>

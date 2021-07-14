@@ -1,57 +1,58 @@
-<style>
+<style lang="scss">
+@import '../assets/styles/variables.scss';
 .multi-select {
   z-index: 9;
   position: fixed;
   top: 0;
   right: 0;
-  background-color: var(--overlay_glass);
+  background-color: $overlay_glass;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: var(--low_shadow);
+  box-shadow: $low_shadow;
   width: 100%;
-  padding: 2rem 2rem 2rem calc(38px + 4rem)
-}
-.selection_indicator {
-  text-align: center;
-  font-size: 1.4rem;
-  margin-bottom: 2rem
-}
-.multi-select_options {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 1rem
-}
-.multi-select_options a {
-  width: fit-content;
-  margin: auto;
-  font-size: 1.4rem
-}
-.multi-select_options a > svg {
-  height: 31px;
-  width: 31px;
-  margin-left: .8rem
-}
-.multi-select svg #shift path {
-  stroke: var(--base)
+  padding: 2rem 2rem 2rem calc(38px + 4rem);
+  svg #shift path {
+    stroke: $base
+  }
+  .selection_indicator {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 2rem
+  }
+  .multi-select_options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1rem;
+    a {
+      width: fit-content;
+      margin: auto;
+      font-size: 1.4rem;
+      > svg {
+        height: 31px;
+        width: 31px;
+        margin-left: .8rem
+      }
+    }
+  }
 }
 @supports not (backdrop-filter: blur(10px)) {
   .multi-select {
-    background-color: var(--fore)
+    background-color: $fore
   }
 }
 
 /* Responsiveness */
 @media (max-width: 768px) {
   .multi-select {
-    padding: 2rem
-  }
-  .multi-select_options a,
-  .selection_indicator {
-    font-size: 1rem
-  }
-  .multi-select_options a > svg {
-    height: 22px;
-    width: 22px
+    padding: 2rem;
+    .multi-select_options a,
+    .selection_indicator {
+      font-size: 1rem
+    }
+    .multi-select_options a > svg {
+      height: 22px;
+      width: 22px
+    }
   }
 }
 @media (max-width: 576px) {
@@ -71,7 +72,7 @@
         <a
           v-for="(option, index) in options"
           :key="`${type}_option_${index}`"
-          :style="{ color: option.name === 'Delete' ? 'var(--base_red)' : 'var(--base)' }"
+          :style="{ color: option.name === 'Delete' ? '$base_red)' : '$base)' }"
           class="a_link"
           href="javascript:void(0)"
           @click="$emit('response', option.name)"

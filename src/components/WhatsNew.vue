@@ -1,28 +1,25 @@
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 .close_icon {
   float: right
 }
-img {
-  width: 100%;
-  border-radius: 10px;
-  margin: 1rem 0
-}
 .update_wrapper {
   display: grid;
-  grid-gap: 4rem
-}
-.update_item {
-  background-color: var(--fore);
-  border: 3px solid var(--base);
-  border-radius: 10px;
-  padding: 2rem
+  grid-gap: 4rem;
+  .update_item {
+    background-color: $fore;
+    border: 3px solid $base;
+    border-radius: 10px;
+    padding: 2rem;
+    img {
+      width: 100%;
+      border-radius: 10px;
+      margin: 1rem 0
+    }
+  }
 }
 
-/* Responsive */
 @media (max-width: 576px) {
-  button {
-    width: 100%
-  }
   .update_item {
     padding: .8rem
   }

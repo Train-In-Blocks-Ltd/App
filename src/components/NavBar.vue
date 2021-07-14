@@ -1,19 +1,24 @@
-<style>
-/* Active route */
-.nav_item a.router-link-exact-active svg {
-  background: var(--base)
-}
-.nav_item:hover a.router-link-exact-active svg {
-  transition: none;
-  transform: none
-}
-.nav_item a.router-link-exact-active svg path {
-  fill: var(--fore)
+<style lang="scss">
+@import '../assets/styles/variables.scss';
+.nav_item {
+  a.router-link-exact-active {
+    svg {
+      background: $base;
+      path {
+        fill: $fore
+      }
+    }
+  }
+  &:hover a.router-link-exact-active svg {
+    transition: none;
+    transform: none
+  }
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
 @import '../assets/styles/icon-anim';
+@import '../assets/styles/variables.scss';
 
 /* Nav bar */
 #sidebar {
@@ -23,8 +28,8 @@
   justify-content: flex-end;
   padding: 2rem 1rem;
   position: fixed;
-  background-color: var(--fore);
-  box-shadow: var(--low_shadow);
+  background-color: $fore;
+  box-shadow: $low_shadow;
   border-radius: 10px 10px 0 0;
   transition: width .6s cubic-bezier(.165, .84, .44, 1)
 }
@@ -33,45 +38,49 @@
   cursor: pointer;
   font-size: 1rem;
   margin: .8rem 0;
-  transition: var(--transition_standard)
+  transition: $transition_standard;
+  &:empty {
+    display: none
+  }
+  &:hover {
+    a {
+      opacity: 1
+    }
+  }
+  &:last-of-type {
+    padding-bottom: 0
+  }
+  a {
+    display: flex;
+    text-decoration: none;
+    opacity: $light_opacity;
+    transition: $transition_standard
+  }
+  .nav_item__text {
+    white-space: nowrap;
+    user-select: none;
+    color: $base;
+    text-decoration: none;
+    position: relative;
+    border: 0;
+    opacity: 0;
+    height: fit-content;
+    margin: auto 0;
+    transition: $transition_standard
+  }
+  .nav_item__icon {
+    margin: 0 .4rem 0 0;
+    vertical-align: bottom;
+    padding: .2rem;
+    border-radius: 5px;
+    height: 1.8rem;
+    width: 1.8rem;
+    transition: $transition_standard
+  }
 }
-.nav_item:empty {
-  display: none
-}
-.nav_item:hover,
 #sidebar:hover .nav_item__text,
 .nav_item a.router-link-exact-active {
   opacity: 1
-}
-.nav_item:last-of-type {
-  padding-bottom: 0
-}
-.nav_item a {
-  display: flex;
-  text-decoration: none;
-  opacity: var(--light_opacity);
-  transition: var(--transition_standard)
-}
-.nav_item__text {
-  white-space: nowrap;
-  user-select: none;
-  color: var(--base);
-  text-decoration: none;
-  position: relative;
-  border: 0;
-  opacity: 0;
-  height: fit-content;
-  margin: auto 0;
-  transition: var(--transition_standard)
-}
-.nav_item__icon {
-  margin: 0 .4rem 0 0;
-  vertical-align: bottom;
-  padding: .2rem;
-  border-radius: 5px;
-  height: 1.8rem;
-  width: 1.8rem;
-  transition: var(--transition_standard)
 }
 
 /* Responsive */
@@ -81,48 +90,48 @@
     height: 100vh;
     min-height: 100%;
     width: calc(38px + 2rem);
-    border-radius: 0
-  }
-  #sidebar:hover {
-    width: 12rem
-  }
-  #sidebar:hover main {
-    margin-left: 12rem
+    border-radius: 0;
+    &:hover {
+      width: 12rem;
+      main {
+        margin-left: 12rem
+      }
+    }
   }
 }
 @media (max-width: 768px) {
-  .logo {
-    display: none
-  }
   #sidebar {
     bottom: 0;
     width: 100vw;
     flex-direction: row;
     padding: 0;
     justify-content: space-between;
-    border-right: none
-  }
-  #sidebar:hover .nav_item__text {
-    display: none
+    border-right: none;
+    &:hover .nav_item__text {
+      display: none
+    }
+    .logo {
+      display: none
+    }
   }
   .nav_item {
     width: 100%;
     margin: 0;
-    padding: 0
-  }
-  .nav_item a {
-    width: 100%;
-    height: 3.8rem
-  }
-  .nav_item a.router-link-exact-active {
-    background-color: var(--base);
-    border-radius: 10px 10px 0 0
-  }
-  .nav_item__text {
-    display: none
-  }
-  .nav_item__icon {
-    margin: .8rem auto
+    padding: 0;
+    a {
+      width: 100%;
+      height: 3.8rem;
+      &.router-link-exact-active {
+        background-color: $base;
+        border-radius: 10px 10px 0 0
+      }
+    }
+    .nav_item__text {
+      display: none
+    }
+    .nav_item__icon {
+      margin: .8rem auto
+    }
   }
 }
 @media (prefers-reduced-motion: reduce) and (min-width: 769px) {

@@ -1,39 +1,49 @@
-<style>
-#policy h1 {
-  /* stylelint-disable-next-line */
-  font-size: 1.6rem !important
-}
-#policy h2 {
-  /* stylelint-disable-next-line */
-  font-size: 1rem !important
-}
-#policy p, #policy b, #agree_statement b {
-  /* stylelint-disable-next-line */
-  font-size: .8rem !important;
-  margin: 1rem 0
-}
-#policy li {
-  font-size: .8rem;
-  list-style-type: lower-roman
-}
-#agree_statement {
-  margin: 2rem 0
-}
-.confirmation button {
-  margin-bottom: 2rem
-}
-.agree_name {
-  margin-right: 1rem
+<style lang="scss">
+#policy {
+  h1 {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important
+  }
+  h2 {
+    /* stylelint-disable-next-line */
+    font-size: 1rem !important
+  }
+  li {
+    font-size: .8rem;
+    list-style-type: lower-roman
+  }
+  p, b {
+    /* stylelint-disable-next-line */
+    font-size: .8rem !important;
+    margin: 1rem 0
+  }
+  #agree_statement {
+    margin: 2rem 0;
+    b {
+      /* stylelint-disable-next-line */
+      font-size: .8rem !important;
+      margin: 1rem 0
+    }
+  }
+  .confirmation {
+    .agree_name {
+      margin-right: 1rem
+    }
+    button {
+      margin-bottom: 2rem
+    }
+  }
 }
 
-/* Responsiveness */
 @media (max-width: 576px) {
-  input.agree_name {
-    margin-right: 0
-  }
-  .confirmation button {
-    width: 100%;
-    margin-top: 1rem
+  .confirmation {
+    .agree_name {
+      margin-right: 0
+    }
+    button {
+      width: 100%;
+      margin-top: 1rem
+    }
   }
 }
 </style>
@@ -47,7 +57,13 @@
       </b>
     </p>
     <div class="confirmation">
-      <input v-model="name" class="width_300 small_border_radius agree_name" type="name" placeholder="Your full name" required>
+      <input
+        v-model="name"
+        class="width_300 small_border_radius agree_name"
+        type="name"
+        placeholder="Your full name"
+        required
+      >
       <button :disabled="name === ''">
         Agree
       </button>

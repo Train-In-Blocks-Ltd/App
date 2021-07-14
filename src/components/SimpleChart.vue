@@ -1,64 +1,67 @@
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 #simple_chart {
   padding: 1rem;
-  background-color: var(--fore);
-  border: 3px solid var(--base);
+  background-color: $fore;
+  border: 3px solid $base;
   border-radius: 10px;
-  margin: 2rem 0
-}
-.content_wrapper {
-  display: grid;
-  grid-gap: 1rem
-}
-.selected_bar {
-  display: flex;
-  justify-content: space-between
-}
-.x_axis line, .y_axis line {
-  stroke: var(--base);
-  stroke-dasharray: 0;
-  stroke-width: 2
-}
-.x_axis_label {
-  margin-left: 1rem
-}
-.plot circle {
-  cursor: pointer;
-  outline-width: 0;
-  fill: transparent;
-  stroke: var(--base);
-  stroke-width: 2;
-  transition: var(--transition_standard);
-  animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
-}
-.plot circle:hover {
-  fill: var(--base)
-}
-.plot line {
-  stroke: var(--base_faint);
-  stroke-width: 2;
-  transition: var(--transition_standard);
-  animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
-}
+  margin: 2rem 0;
+  .content_wrapper {
+    display: grid;
+    grid-gap: 1rem;
+    .selected_bar {
+      display: flex;
+      justify-content: space-between
+    }
+    .x_axis line, .y_axis line {
+      stroke: $base;
+      stroke-dasharray: 0;
+      stroke-width: 2
+    }
+    .x_axis_label {
+      margin-left: 1rem
+    }
+    .plot {
+      circle {
+        cursor: pointer;
+        outline-width: 0;
+        fill: transparent;
+        stroke: $base;
+        stroke-width: 2;
+        transition: $transition_standard;
+        animation: 1.6s show cubic-bezier(.165, .84, .44, 1);
+        &:hover {
+          fill: $base
+        }
+      }
+      line {
+        stroke: $base_faint;
+        stroke-width: 2;
+        transition: $transition_standard;
+        animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
+      }
+    }
 
-/* Scatter options */
-.scatter_options {
-  display: grid;
-  grid-gap: .6rem;
-  margin: 1rem
-}
+    /* Scatter options */
+    .scatter_options {
+      display: grid;
+      grid-gap: .6rem;
+      margin: 1rem
+    }
 
-/* List view */
-.data_list_view {
-  margin-top: 1rem
-}
-.data_list_view .row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding: .4rem 1rem
-}
-.data_list_view .row:not(:first-child) {
-  border-top: 1px solid var(--base_faint)
+    /* List view */
+    .data_list_view {
+      margin-top: 1rem;
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: .4rem 1rem;
+        &:not(:first-child) {
+          border-top: 1px solid $base_faint
+        }
+      }
+    }
+  }
 }
 
 @keyframes show {
@@ -69,8 +72,6 @@
     opacity: 1
   }
 }
-
-/* Responsive */
 @media (max-width: 567px) {
   .data_list_view {
     font-size: .8rem

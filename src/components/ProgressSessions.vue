@@ -1,21 +1,23 @@
-<style scoped>
-.progression_editor,
-.exercise_group {
+<style lang="scss" scoped>
+.progression_editor {
   display: grid;
-  grid-gap: 1rem
-}
-.exercise_group:not(:last-child) {
-  margin-bottom: 2rem
-}
-.progression_bottom_bar {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1rem
+  grid-gap: 1rem;
+  .exercise_group {
+    display: grid;
+    grid-gap: 1rem;
+    &:not(:last-child) {
+      margin-bottom: 2rem
+    }
+  }
+  .progression_bottom_bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 1rem
+  }
 }
 
-/* Responsiveness */
 @media (max-width: 768px) {
-  .progression_bottom_bar {
+  .progression_editor .progression_bottom_bar {
     grid-template-columns: 1fr
   }
 }

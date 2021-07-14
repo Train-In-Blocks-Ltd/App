@@ -1,4 +1,4 @@
-<style scoped>
+<style lang="scss" scoped>
 .close_icon {
   margin-bottom: 2rem;
   float: right
@@ -7,22 +7,14 @@ textarea {
   margin-top: 2rem;
   resize: none
 }
-
-/* Toolkit */
 .session_toolkit--content {
-  margin: 2rem 0
-}
-.session_toolkit--content > div {
-  display: grid;
-  grid-gap: 1rem
-}
-.result {
-  margin-top: 2rem
-}
-
-@media (max-width: 576px) {
-  button.red_button {
-    width: 100%
+  margin: 2rem 0;
+  > div {
+    display: grid;
+    grid-gap: 1rem
+  }
+  .result {
+    margin-top: 2rem
   }
 }
 </style>

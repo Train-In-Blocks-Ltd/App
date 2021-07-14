@@ -1,69 +1,61 @@
-<style scoped>
-/* Plan and periodise */
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 .periodise {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 1rem;
   margin-top: 2rem;
-  margin-bottom: 4rem
-}
-.plan {
-  display: grid;
-  border: 3px solid var(--base);
-  border-radius: 10px;
-  transition: var(--transition_standard)
-}
-.plan_header {
-  display: grid;
-  grid-gap: 1rem;
-  padding: 2rem
-}
-.plan_header h2 {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden
-}
-.plan_header__options {
-  display: flex;
-  justify-content: space-between
-}
-.plan_header__options a {
-  margin-right: 1rem
-}
-.plan_a_links {
-  display: flex
-}
-
-/* Micros */
-.microcycles {
-  display: flex
-}
-.microcycle {
-  display: flex;
-  margin-top: auto;
-  flex-direction: column;
-  justify-content: space-around;
-  opacity: var(--light_opacity);
-  width: 100%;
-  height: 10px
-}
-.microcycle:first-child {
-  border-radius: 0 0 0 5px
-}
-.microcycle:last-child {
-  border-radius: 0 0 5px 0
-}
-.noColor {
-  border-top: 1px solid var(--base_faint)
-}
-.noColor:not(.noColor:last-child) {
-  border-right: 1px solid var(--base_faint)
-}
-
-/* Other */
-button.red_button {
-  margin-top: 2rem;
-  width: 100%
+  margin-bottom: 4rem;
+  .plan {
+    display: grid;
+    border: 3px solid $base;
+    border-radius: 10px;
+    transition: $transition_standard;
+    .plan_header {
+      display: grid;
+      grid-gap: 1rem;
+      padding: 2rem;
+      h3 {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden
+      }
+      .plan_header__options {
+        display: flex;
+        justify-content: space-between;
+        .plan_a_links {
+          display: flex;
+          a {
+            margin-right: 1rem
+          }
+        }
+      }
+    }
+    .microcycles {
+      display: flex;
+      .microcycle {
+        display: flex;
+        margin-top: auto;
+        flex-direction: column;
+        justify-content: space-around;
+        opacity: $light_opacity;
+        width: 100%;
+        height: 10px;
+        &:first-child {
+          border-radius: 0 0 0 5px
+        }
+        &:last-child {
+          border-radius: 0 0 5px 0
+        }
+        &.noColor {
+          border-top: 1px solid $base_faint;
+          &:not(.noColor:last-child) {
+            border-right: 1px solid $base_faint
+          }
+        }
+      }
+    }
+  }
 }
 
 /* Responsive */

@@ -1,11 +1,10 @@
-<style scoped>
-  /* Add New Client */
+<style lang="scss" scoped>
   .add_client {
-    grid-gap: 1rem
-  }
-  .add_client label {
-    display: grid;
-    grid-gap: .5rem
+    grid-gap: 1rem;
+    label {
+      display: grid;
+      grid-gap: .5rem
+    }
   }
 </style>
 
