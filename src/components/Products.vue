@@ -239,8 +239,8 @@ export default {
     'products',
     'claims'
   ]),
-  mounted () {
-    this.checkConnectedAccount()
+  async mounted () {
+    await this.checkConnectedAccount()
   },
   methods: {
 

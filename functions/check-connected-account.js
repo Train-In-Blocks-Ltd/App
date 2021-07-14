@@ -37,6 +37,7 @@ exports.handler = async function handler (event, context, callback) {
     })
   } else if (event.body && response.data.active === true) {
     try {
+      console.log(event.multiValueHeaders.referer[0])
       if (JSON.parse(event.body).connectedAccountId) {
         const account = await stripe.accounts.retrieve(
           JSON.parse(event.body).connectedAccountId
@@ -46,20 +47,20 @@ exports.handler = async function handler (event, context, callback) {
           return callback(null, {
             statusCode: 200,
             headers,
-            body: true
+            body: 'true'
           })
         } else {
           return callback(null, {
             statusCode: 200,
             headers,
-            body: false
+            body: 'false'
           })
         }
       } else {
         return callback(null, {
           statusCode: 200,
           headers,
-          body: false
+          body: 'false'
         })
       }
     } catch (e) {

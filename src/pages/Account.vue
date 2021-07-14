@@ -225,7 +225,7 @@
         </p>
         <div class="guide_links">
           <a
-            :href="`https://calendar.google.com/calendar/u/0/r?cid=http://app.traininblocks.com/.netlify/functions/calendar?email=${claims.email}`"
+            :href="GoogleCalendarLink"
             target="_blank"
             rel="noreferrer"
             class="a_link"
@@ -305,7 +305,8 @@ export default {
         check: null,
         error: null
       },
-      calendarText: 'Get your calendar link'
+      calendarText: 'Get your calendar link',
+      GoogleCalendarLink: ''
     }
   },
   computed: mapState([
@@ -322,6 +323,9 @@ export default {
     this.willBodyScroll(true)
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
+  },
+  mounted () {
+    this.GoogleCalendarLink = `https://calendar.google.com/calendar/u/0/r?cid=${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
   },
   methods: {
 
@@ -416,7 +420,7 @@ export default {
      * Generates the user's calendar link.
      */
     copyCalendarLink () {
-      const link = `http://app.traininblocks.com/.netlify/functions/calendar?email=${this.claims.email}`
+      const link = `${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
       const self = this
       navigator.clipboard.writeText(link).then(function () {
         self.calendarText = 'Copied!'
