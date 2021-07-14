@@ -79,8 +79,7 @@ export default {
         await this.$store.dispatch('createPlan', {
           clientId: this.clientDetails.client_id,
           name: this.new_plan.name,
-          duration: this.new_plan.duration,
-          ordered: !this.clientDetails.plans ? 0 : this.clientDetails.length
+          duration: this.new_plan.duration
         })
         this.$ga.event('Plan', 'new')
         this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')

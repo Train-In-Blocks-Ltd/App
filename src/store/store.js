@@ -796,15 +796,14 @@ export const store = new Vuex.Store({
 
     /**
      * Creates a new plan.
-     * @param {object} payload - { clientId, name, duration, ordered }
+     * @param {object} payload - { clientId, name, duration }
      */
     async createPlan ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
         name: payload.name,
         client_id: parseInt(payload.clientId),
         duration: payload.duration,
-        block_color: '',
-        ordered: payload.ordered
+        block_color: ''
       })
       commit('addNewPlan', {
         name: payload.name,
@@ -813,7 +812,6 @@ export const store = new Vuex.Store({
         duration: payload.duration,
         block_color: '',
         notes: null,
-        ordered: payload.ordered,
         sessions: false
       })
     },
@@ -827,8 +825,7 @@ export const store = new Vuex.Store({
         name: `Copy of ${payload.planName}`,
         client_id: parseInt(payload.clientId),
         duration: payload.planDuration,
-        block_color: payload.blockColor,
-        ordered: state.clientDetails.plans.length
+        block_color: payload.blockColor
       })
       const NEW_PLAN_ID = NEW_PLAN_RESPONSE.data[0]['LAST_INSERT_ID()']
       commit('addNewPlan', {
@@ -838,7 +835,6 @@ export const store = new Vuex.Store({
         duration: payload.planDuration,
         block_color: payload.blockColor,
         notes: payload.planNotes,
-        ordered: state.clientDetails.plans.length,
         sessions: false
       })
       await dispatch('updatePlan', {
@@ -847,8 +843,7 @@ export const store = new Vuex.Store({
         client_id: payload.clientId,
         duration: payload.planDuration,
         block_color: payload.blockColor,
-        notes: payload.planNotes,
-        ordered: state.clientDetails.plans.length
+        notes: payload.planNotes
       })
       if (payload.planSessions !== false) {
         payload.planSessions.forEach((session) => {
@@ -868,7 +863,7 @@ export const store = new Vuex.Store({
 
     /**
      * Updates a plan.
-     * @param {object} payload - { client_id, id (plan), name, duration, notes, block_color, ordered }
+     * @param {object} payload - { client_id, id (plan), name, duration, notes, block_color }
      */
     async updatePlan ({ commit }, payload) {
       await axios.post('https://api.traininblocks.com/v2/plans', {

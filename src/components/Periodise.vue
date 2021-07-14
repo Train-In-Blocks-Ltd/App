@@ -30,25 +30,8 @@
 .plan_header__options a {
   margin-right: 1rem
 }
-
-/* Plan ordered and links */
-.plan_order, .plan_a_links {
+.plan_a_links {
   display: flex
-}
-.plan_order svg {
-  height: 24px;
-  width: 24px;
-  cursor: pointer;
-  transition: var(--transition_standard)
-}
-.plan_order svg:hover {
-  opacity: var(--light_opacity)
-}
-svg.right {
-  margin-left: 1rem
-}
-svg:is(.left, .right):active {
-  transform: scale(.8)
 }
 
 /* Micros */
