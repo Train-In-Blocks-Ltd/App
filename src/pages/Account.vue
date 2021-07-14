@@ -58,6 +58,14 @@
 .reset_password_button_bar {
   display: flex
 }
+.guide_links {
+  display: grid;
+  grid-gap: .6rem;
+  margin-top: 1rem
+}
+.guide_links a {
+  font-weight: bold
+}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -215,6 +223,24 @@
         <p class="text--tiny">
           Anyone with the link will be able to see all of your bookings
         </p>
+        <div class="guide_links">
+          <a
+            href="https://karenapp.io/books/gc/google-calendar-integration/how-to-sync-a-webcal-to-my-calendars-in-google-calendar/"
+            target="_blank"
+            rel="noreferrer"
+            class="a_link"
+          >
+            Google calendar
+          </a>
+          <a
+            href="https://support.apple.com/en-gb/guide/calendar/icl1022/mac"
+            target="_blank"
+            rel="noreferrer"
+            class="a_link"
+          >
+            Apple calendar
+          </a>
+        </div>
         <br>
         <button
           v-if="claims.calendar"
