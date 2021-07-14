@@ -500,7 +500,6 @@ import Link from '@tiptap/extension-link'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Image from '@tiptap/extension-image'
-import Protocol from './protocol/Protocol'
 
 export default {
   components: {
@@ -558,8 +557,7 @@ export default {
             Link,
             TaskList,
             TaskItem,
-            Image,
-            Protocol
+            Image
           ],
           onUpdate: () => {
             this.$emit('input', this.editor.getHTML())
