@@ -58,6 +58,14 @@ module.exports = {
       {
         test: /\.md$/,
         loader: 'frontmatter-markdown-loader'
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   },

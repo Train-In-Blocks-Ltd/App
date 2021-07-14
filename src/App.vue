@@ -1,4 +1,4 @@
-<style>
+<style lang="scss">
 /* Global */
 * {
   box-sizing: border-box

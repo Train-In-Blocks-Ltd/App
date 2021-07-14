@@ -1,0 +1,18 @@
+$transition_smooth: .4s all;
+$transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
+$inset_shadow: #28282810;
+$low_shadow: 0 0 20px 10px #28282808;
+$high_shadow: 0 0 20px 10px #28282816;
+$back: #F9F9F9;
+$fore: white;
+$base: #282828;
+$base_light: #585858;
+$base_faint: #28282840;
+$base_red: rgb(184, 0, 0);
+$overlay_glass: #FFFFFFB3;
+$calendar_highlight: #FFFFEE;
+$skeleton_1: #F4F4F4;
+$skeleton_2: #E4E4E4;
+$link: blue;
+$light_opacity: .6;
+$active_state: scale(.95)
