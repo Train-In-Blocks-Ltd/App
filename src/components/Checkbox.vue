@@ -1,4 +1,5 @@
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 .check {
   cursor: pointer;
   position: relative;
@@ -6,41 +7,43 @@
   width: 1rem;
   height: 1rem;
   -webkit-tap-highlight-color: transparent;
-  transform: translate3d(0, 0, 0)
-}
-.check svg {
-  position: relative;
-  z-index: 1;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke: var(--base_faint);
-  stroke-width: 1.5;
   transform: translate3d(0, 0, 0);
-  transition: all .2s ease
-}
-.check svg path {
-  stroke-dasharray: 60;
-  stroke-dashoffset: 0
-}
-.check svg polyline {
-  stroke-dasharray: 22;
-  stroke-dashoffset: 66
-}
-.check:hover svg {
-  stroke: var(--base)
+  svg {
+    position: relative;
+    z-index: 1;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: $base_faint;
+    stroke-width: 1.5;
+    transform: translate3d(0, 0, 0);
+    transition: all .2s ease;
+    path {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 0
+    }
+    polyline {
+      stroke-dasharray: 22;
+      stroke-dashoffset: 66
+    }
+  }
+  &:hover {
+    svg {
+      stroke: $base
+    }
+  }
 }
 .checked_box:checked + .check svg {
-  stroke: var(--base)
-}
-.checked_box:checked + .check svg path {
-  stroke-dashoffset: 60;
-  transition: all .3s linear
-}
-.checked_box:checked + .check svg polyline {
-  stroke-dashoffset: 42;
-  transition: all .2s linear;
-  transition-delay: .15s
+  stroke: $base;
+  path {
+    stroke-dashoffset: 60;
+    transition: all .3s linear
+  }
+  polyline {
+    stroke-dashoffset: 42;
+    transition: all .2s linear;
+    transition-delay: .15s
+  }
 }
 </style>
 

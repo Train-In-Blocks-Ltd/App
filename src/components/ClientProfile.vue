@@ -1,97 +1,115 @@
-<style scoped>
-.close_icon {
-  float: right
-}
-.profile_image {
-  text-align: center
-}
-.profile_container img {
-  height: 140px;
-  width: 140px;
-  border-radius: 50%;
-  filter: grayscale(.8)
-}
-.profile_container .img_icon {
-  padding: 1.8rem;
-  height: 140px;
-  width: 140px;
-  border: 4px solid var(--base);
-  border-radius: 50%
-}
-.client_user_details {
-  display: grid;
-  grid-gap: 1rem;
-  margin-top: 2rem;
-  margin-bottom: 4rem
-}
-.input_skeleton {
-  width: 300px
-}
-.client_user_details > input,
-.input_skeleton {
-  margin: auto
-}
+<style lang="scss" scoped>
+.profile_container {
+  .close_icon {
+    float: right
+  }
+  .profile_image {
+    text-align: center
+  }
+  img {
+    height: 140px;
+    width: 140px;
+    border-radius: 50%;
+    filter: grayscale(.8)
+  }
+  .img_icon {
+    padding: 1.8rem;
+    height: 140px;
+    width: 140px;
+    border: 4px solid var(--base);
+    border-radius: 50%
+  }
+  .client_user_details {
+    display: grid;
+    grid-gap: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    > input {
+      margin: auto
+    }
+    .input_skeleton {
+      width: 300px;
+      margin: auto
+    }
+  }
 
-/* Bookings */
-.bookings_container_skeleton {
-  margin: 2rem 0
-}
-.bookings_container {
-  padding: 1rem;
-  background-color: var(--fore);
-  border: 3px solid var(--base);
-  border-radius: 10px;
-  margin: 2rem 0
-}
-.request_booking_container {
-  display: grid;
-  grid-gap: 1rem
-}
-.bookings_sub_container {
-  display: grid;
-  grid-template-columns: 1fr .9fr;
-  grid-gap: 1.6rem;
-  margin-top: 1rem
-}
-.bookings_wrapper {
-  display: grid;
-  grid-gap: 1rem;
-  max-height: 300px;
-  overflow-y: auto;
-  padding: 0 1rem;
-  box-shadow: inset 0 -10px 10px -10px var(--inset_shadow), inset 0 10px 10px -10px var(--inset_shadow)
-}
-.bookings_wrapper::-webkit-scrollbar {
-  width: 6px
-}
+  // -----------------------------
+  // Bookings
+  // -----------------------------
 
-/* Booking event */
-.booking_event {
-  display: grid;
-  grid-gap: 2rem;
-  border: 3px solid var(--base);
-  height: fit-content;
-  padding: 1rem;
-  border-radius: 10px
-}
-.booking_event__details {
-  display: grid;
-  grid-gap: .6rem
-}
-.booking_event__status {
-  display: flex;
-  justify-content: space-between
-}
-.booking_event__status > a {
-  color: var(--base_red)
+  /* Booking skeleton */
+  .bookings_container_skeleton {
+    margin: 2rem 0
+  }
+
+  /* Booking outer container */
+  .bookings_container {
+    padding: 1rem;
+    background-color: var(--fore);
+    border: 3px solid var(--base);
+    border-radius: 10px;
+    margin: 2rem 0;
+
+    /* Booking inner container */
+    .bookings_sub_container {
+      display: grid;
+      grid-template-columns: 1fr .9fr;
+      grid-gap: 1.6rem;
+      margin-top: 1rem;
+
+      /* Container for creating bookings */
+      .request_booking_container {
+        display: grid;
+        grid-gap: 1rem
+      }
+
+      /* Container for booking events */
+      .bookings_wrapper {
+        display: grid;
+        grid-gap: 1rem;
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 0 1rem;
+        box-shadow: inset 0 -10px 10px -10px var(--inset_shadow), inset 0 10px 10px -10px var(--inset_shadow);
+        &::-webkit-scrollbar {
+          width: 6px
+        }
+
+        /* Booking event */
+        .booking_event {
+          display: grid;
+          grid-gap: 2rem;
+          border: 3px solid var(--base);
+          height: fit-content;
+          padding: 1rem;
+          border-radius: 10px;
+          .booking_event__details {
+            display: grid;
+            grid-gap: .6rem
+          }
+          .booking_event__status {
+            display: flex;
+            justify-content: space-between;
+            > a {
+              color: var(--base_red)
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 @media (max-width: 576px) {
-  .bookings_sub_container {
-    display: block
-  }
-  .request_booking_container {
-    margin-top: 2rem
+  .profile_container {
+    .bookings_container {
+      .bookings_sub_container {
+        display: block;
+        .request_booking_container {
+          margin-top: 2rem
+        }
+      }
+    }
   }
 }
 </style>
