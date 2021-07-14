@@ -225,12 +225,20 @@
         </p>
         <div class="guide_links">
           <a
-            href="https://karenapp.io/books/gc/google-calendar-integration/how-to-sync-a-webcal-to-my-calendars-in-google-calendar/"
+            :href="`https://calendar.google.com/calendar/u/0/r?cid=http://app.traininblocks.com/.netlify/functions/calendar?email=${claims.email}`"
             target="_blank"
             rel="noreferrer"
             class="a_link"
           >
-            Google calendar
+            Add to Google calendar
+          </a>
+          <a
+            href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c"
+            target="_blank"
+            rel="noreferrer"
+            class="a_link"
+          >
+            Add to Outlook calendar
           </a>
           <a
             href="https://support.apple.com/en-gb/guide/calendar/icl1022/mac"
@@ -238,7 +246,7 @@
             rel="noreferrer"
             class="a_link"
           >
-            Apple calendar
+            Add to Apple calendar
           </a>
         </div>
         <br>
