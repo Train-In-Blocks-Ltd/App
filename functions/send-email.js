@@ -1,25 +1,16 @@
 const qs = require('querystring')
 const axios = require('axios')
 const smtpTransport = require('nodemailer-smtp-transport')
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json; charset=UTF-8',
-  'X-Frame-Options': 'DENY',
-  'Strict-Transport-Security': 'max-age=15552000; preload',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': 'default-src "self"'
-}
-// setup nodemailer
 const nodemailer = require('nodemailer')
+const CUSTOM_ENV = require('../config/prod.env')
+const headers = require('./helpers/headers')
 const transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp-relay.gmail.com',
   secure: true,
   auth: {
-    user: 'joe.bailey@traininblocks.com',
-    pass: 'fczhxioeejfvtpbi'
+    user: CUSTOM_ENV.GOOGLE_WORKSPACE.USERNAME,
+    pass: CUSTOM_ENV.GOOGLE_WORKSPACE.PASSWORD
   }
 }))
 
@@ -27,7 +18,7 @@ let response
 
 exports.handler = async function handler (event, context, callback) {
   const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.CLIENT_ID}`,
     qs.stringify({
       token: accessToken[1],
       token_type_hint: 'access_token'

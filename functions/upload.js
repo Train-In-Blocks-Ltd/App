@@ -1,27 +1,19 @@
 const qs = require('querystring')
 const cloudinary = require('cloudinary').v2
-cloudinary.config({
-  cloud_name: 'train-in-blocks',
-  api_key: '896869656247474',
-  api_secret: 'KLXFI8z7O2SmPD6gVlYMJ597aHQ'
-})
 const axios = require('axios')
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json; charset=UTF-8',
-  'X-Frame-Options': 'DENY',
-  'Strict-Transport-Security': 'max-age=15552000; preload',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': 'default-src "self"'
-}
+const CUSTOM_ENV = require('../config/prod.env')
+const headers = require('./helpers/headers')
+cloudinary.config({
+  cloud_name: CUSTOM_ENV.CLOUDINARY.CLOUD_NAME,
+  api_key: CUSTOM_ENV.CLOUDINARY.API_KEY,
+  api_secret: CUSTOM_ENV.CLOUDINARY.API_SECRET
+})
 
 let response
 
 exports.handler = async function handler (event, context, callback) {
   const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.CLIENT_ID}`,
     qs.stringify({
       token: accessToken[1],
       token_type_hint: 'access_token'

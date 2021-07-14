@@ -1,23 +1,16 @@
 
 const qs = require('querystring')
 const axios = require('axios')
-const stripe = require('stripe')('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')
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json; charset=UTF-8',
-  'X-Frame-Options': 'DENY',
-  'Strict-Transport-Security': 'max-age=15552000; preload',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': 'default-src "self"'
-}
+const CUSTOM_ENV = require('../config/prod.env')
+/* eslint-disable-next-line */
+const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
+const headers = require('././helpers/headers')
 
 let response
 
 exports.handler = async function handler (event, context, callback) {
   const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.CLIENT_ID}`,
     qs.stringify({
       token: accessToken[1],
       token_type_hint: 'access_token'
@@ -37,12 +30,10 @@ exports.handler = async function handler (event, context, callback) {
     })
   } else if (event.body && response.data.active === true) {
     try {
-      console.log(event.multiValueHeaders.referer[0])
       if (JSON.parse(event.body).connectedAccountId) {
         const account = await stripe.accounts.retrieve(
           JSON.parse(event.body).connectedAccountId
         )
-        console.log(account)
         if (account.id !== 'acct_1GLXT9BYbiJubfJM' && account.charges_enabled) {
           return callback(null, {
             statusCode: 200,

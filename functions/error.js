@@ -1,18 +1,8 @@
-// This code sample uses the 'node-fetch' library:
-// https://www.npmjs.com/package/node-fetch
 const qs = require('querystring')
 const axios = require('axios')
 const beautify = require('json-beautify')
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json; charset=UTF-8',
-  'X-Frame-Options': 'DENY',
-  'Strict-Transport-Security': 'max-age=15552000; preload',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': 'default-src "self"'
-}
+const CUSTOM_ENV = require('../config/prod.env')
+const headers = require('./helpers/headers')
 function bodyData (msg, claims) {
   return `{
     "update": {},
@@ -61,7 +51,7 @@ let response
 
 exports.handler = async function handler (event, context, callback) {
   const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
+  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.CLIENT_ID}`,
     qs.stringify({
       token: accessToken[1],
       token_type_hint: 'access_token'
@@ -87,7 +77,7 @@ exports.handler = async function handler (event, context, callback) {
         {
           headers: {
             Authorization: `Basic ${Buffer.from(
-              'joe.bailey@traininblocks.com:FE98Xa9rXzGV1w7Ut6YXD397'
+              `${CUSTOM_ENV.ATLASSIAN.USERNAME}:${CUSTOM_ENV.ATLASSIAN.PASSWORD}`
             ).toString('base64')}`,
             Accept: 'application/json',
             'Content-Type': 'application/json'

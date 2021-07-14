@@ -3,15 +3,14 @@
   publish = "dist"
   functions = "functions"
 
-# note: each of these fields are OPTIONAL and should only be used if you need an override
 [dev]
   framework = "vue"
   port = 8080
   targetPort = 8081
 
 [[redirects]]
-  from = "https://app-train-in-blocks.netlify.app/*"
-  to = "https://app.traininblocks.com/:splat"
+  from = "https =//app-train-in-blocks.netlify.app/*"
+  to = "https =//app.traininblocks.com/ =splat"
   status = 301
   force = true
 
@@ -34,5 +33,3 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Content-Security-Policy = "upgrade-insecure-requests"
-
-
