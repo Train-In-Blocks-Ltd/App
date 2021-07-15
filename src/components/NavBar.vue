@@ -1,5 +1,19 @@
 <style lang="scss">
 @import '../assets/styles/variables.scss';
+.logo {
+  margin-bottom: auto;
+  .logo_link {
+    display: block;
+    width: 38px;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1);
+    &:hover {
+      opacity: $light_opacity
+    }
+    &:active {
+      transform: $active_state
+    }
+  }
+}
 .nav_item {
   a.router-link-exact-active {
     svg {

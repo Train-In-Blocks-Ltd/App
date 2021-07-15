@@ -1,108 +1,108 @@
-<style>
-/* Show HTML */
-.show_html > :is(div, p) {
-  margin: .6rem 0
-}
-.show_html img {
-  border-radius: 10px;
-  max-width: 80%;
-  margin: 1rem 0
-}
-.show_html a {
-  color: var(--link)
+<style lang="scss">
+@import '../../assets/styles/variables.scss';
+.show_html {
+  > :is(div, p) {
+    margin: .6rem 0
+  }
+  img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  a {
+    color: $link
+  }
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../../assets/styles/variables.scss';
 .plan_name {
   margin-bottom: 4rem
 }
 
 /* Editor object */
 .plan_notes {
-  border: 3px solid var(--base);
+  border: 3px solid $base;
   border-radius: 10px;
-  transition: .6s border cubic-bezier(.165, .84, .44, 1)
-}
-.plan_notes h3 {
-  position: relative;
-  left: 2rem;
-  padding: .6rem;
-  letter-spacing: 2px;
-  width: fit-content;
-  background: var(--base);
-  color: var(--fore);
-  border-radius: 0 0 10px 10px
-}
-.plan_notes .show_html {
-  margin: 2rem
-}
-.wrapper--session {
-  border: 3px solid var(--base);
-  border-radius: 10px;
-  padding: 2rem
+  transition: .6s border cubic-bezier(.165, .84, .44, 1);
+  h3 {
+    position: relative;
+    left: 2rem;
+    padding: .6rem;
+    letter-spacing: 2px;
+    width: fit-content;
+    background: $base;
+    color: $fore;
+    border-radius: 0 0 10px 10px
+  }
+  .show_html {
+    margin: 2rem
+  }
 }
 .container--sessions {
-  margin: 4rem 0 2rem 0
+  margin: 4rem 0 2rem 0;
+  &::-webkit-scrollbar {
+    height: 4px
+  }
+  .wrapper--session {
+    border: 3px solid $base;
+    border-radius: 10px;
+    padding: 2rem;
+    .complete_button {
+      margin-top: 2rem
+    }
+  }
 }
 
 /* Navigate */
 .show_sessions_nav {
   display: flex;
-  margin: 2rem 0
-}
-.show_sessions_counter {
-  margin: auto
-}
-:is(.show_sessions_left, .show_sessions_right) {
-  height: 36px;
-  width: 36px
-}
-:is(.show_sessions_left, .show_sessions_right):not(.disabled):active {
-  transform: scale(.8)
-}
-.disabled, .disabled:hover {
-  opacity: var(--light_opacity);
-  cursor: default
+  margin: 2rem 0;
+  .show_sessions_counter {
+    margin: auto
+  }
+  :is(.show_sessions_left, .show_sessions_right) {
+    height: 36px;
+    width: 36px;
+    &:not(.disabled):active {
+      transform: scale(.8)
+    }
+    &.disabled, &.disabled:hover {
+      opacity: $light_opacity;
+      cursor: default
+    }
+  }
 }
 hr {
   margin: 2rem 0
 }
 .switch_cal {
-  margin-bottom: .4rem
-}
-.switch_cal svg {
-  margin-right: .4rem
-}
-
-/* Other element */
-.complete_button {
-  margin-top: 2rem
+  margin-bottom: .4rem;
+  svg {
+    margin-right: .4rem
+  }
 }
 
-/* Scroll */
-.container--sessions::-webkit-scrollbar {
-  height: 4px
-}
-
-/* Responsive */
 @media (max-width: 992px) {
   .switch_cal {
     display: none
   }
 }
 @media (max-width: 576px) {
-  .plan_notes h3 {
-    left: 1rem
+  .plan_notes {
+    h3 {
+      left: 1rem
+    }
+    #wrapper--rich_editor {
+      margin: 1rem
+    }
   }
-  .plan_notes #wrapper--rich_editor {
-    margin: 1rem
-  }
-  .wrapper--session {
-    padding: .8rem
-  }
-  .complete_button {
-    width: 100%
+  .container--sessions .wrapper--session {
+    padding: .8rem;
+    .complete_button {
+      width: 100%
+    }
   }
 }
 </style>

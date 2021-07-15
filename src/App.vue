@@ -1,27 +1,9 @@
 <style lang="scss">
+@import './assets/styles/variables.scss';
+
 /* Global */
 * {
   box-sizing: border-box
-}
-:root {
-  --transition_smooth: .4s all;
-  --transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
-  --inset_shadow: #28282810;
-  --low_shadow: 0 0 20px 10px #28282808;
-  --high_shadow: 0 0 20px 10px #28282816;
-  --back: #F9F9F9;
-  --fore: white;
-  --base: #282828;
-  --base_light: #585858;
-  --base_faint: #28282840;
-  --base_red: rgb(184, 0, 0);
-  --overlay_glass: #FFFFFFB3;
-  --calendar_highlight: #FFFFEE;
-  --skeleton_1: #F4F4F4;
-  --skeleton_2: #E4E4E4;
-  --link: blue;
-  --light_opacity: .6;
-  --active_state: scale(.95)
 }
 
 /* Animation */
@@ -66,17 +48,17 @@
   position: fixed;
   top: 0;
   right: 0;
-  background-color: var(--overlay_glass);
+  background-color: $overlay_glass;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  transition: var(--transition_standard)
-}
-.section_overlay.opened_sections {
-  transform: none
+  transition: $transition_standard;
+  &.opened_sections {
+    transform: none
+  }
 }
 @supports not (backdrop-filter: blur(10px)) {
   .section_overlay {
-    background-color: var(--fore)
+    background-color: $fore
   }
 }
 
@@ -88,11 +70,11 @@ body {
   display: grid;
   font-size: 16px;
   line-height: 1.42;
-  background-color: var(--back)
+  background-color: $back
 }
 #app {
-  color: var(--base);
-  background-color: var(--back)
+  color: $base;
+  background-color: $back
 }
 main {
   margin-left: calc(38px + 2rem);
@@ -109,46 +91,41 @@ main {
   width: 100vw;
   text-align: center;
   padding: .1rem;
-  background-color: var(--base)
-}
-.top_banner :is(a, p) {
-  display: block;
-  color: var(--fore)
+  background-color: $base;
+  :is(a, p) {
+    display: block;
+    color: $fore
+  }
 }
 .notAuth {
   margin: 0
 }
 
 /* SVG colors */
-svg path {
-  fill: var(--base)
-}
-svg.no_fill path {
-  fill: none;
-  stroke: var(--base)
+svg {
+  path {
+    fill: $base
+  }
+  &.no_fill path {
+    fill: none;
+    stroke: $base
+  }
 }
 
 /* Other elements */
 hr {
   margin: 1rem 0;
-  border-color: var(--base_light)
+  border-color: $base_light
 }
 
 /* Containers */
 .view_container {
-  background-color: var(--back);
+  background-color: $back;
   padding: 2rem 10vw
-}
-.container--title {
-  display: flex;
-  margin: 2rem 0
 }
 .wrapper--calendar {
   margin: 6rem 0;
   user-select: none
-}
-.full_width_bar {
-  width: 100%
 }
 .tab_overlay_content {
   position: fixed;
@@ -166,11 +143,11 @@ hr {
 
 /* Versioning */
 .version {
-  display: flex
-}
-.version p {
-  margin-left: .2rem;
-  line-height: 1.65
+  display: flex;
+  p {
+    margin-left: .2rem;
+    line-height: 1.65
+  }
 }
 
 /* Fonts */
@@ -191,11 +168,11 @@ h3, .text--small {
 }
 i {
   /* stylelint-disable-next-line */
-  color: var(--base) !important
+  color: $base !important
 }
 .text--red {
   /* stylelint-disable-next-line */
-  color: var(--base_red) !important
+  color: $base_red !important
 }
 .text--holder {
   margin: 2rem 0 8rem 0
@@ -211,10 +188,10 @@ i {
 /* Tailwinds */
 .cursor {
   cursor: pointer;
-  transition: var(--transition_standard)
-}
-.cursor:hover {
-  opacity: var(--light_opacity)
+  transition: $transition_standard;
+  &:hover {
+    opacity: $light_opacity
+  }
 }
 .allow_y_overflow {
   overflow-y: auto
@@ -223,7 +200,7 @@ i {
   display: flex
 }
 .recently_added {
-  border: 1px solid var(--base)
+  border: 1px solid $base
 }
 .no_margin {
   margin: 0
@@ -238,29 +215,29 @@ i {
   margin-right: 1rem
 }
 .grey {
-  color: var(--base_light)
+  color: $base_light
 }
 .allow_text_overflow {
   text-overflow: ellipsis
 }
 .disabled, .disabled:hover {
-  opacity: var(--light_opacity);
+  opacity: $light_opacity;
   cursor: default
 }
 
 /* Text buttons */
 .a_link {
   display: flex;
-  color: var(--base);
+  color: $base;
   text-decoration: none;
-  transition: 1s all cubic-bezier(.165, .84, .44, 1)
-}
-.a_link svg {
-  height: 22px;
-  width: 22px
-}
-.a_link:hover {
-  opacity: var(--light_opacity)
+  transition: 1s all cubic-bezier(.165, .84, .44, 1);
+  &:hover {
+    opacity: $light_opacity
+  }
+  svg {
+    height: 22px;
+    width: 22px
+  }
 }
 
 /* Box buttons */
@@ -276,39 +253,39 @@ button {
   padding: .6rem 1.6rem;
   font-size: .8rem;
   font-weight: bold;
-  color: var(--back);
-  background-color: var(--base);
-  transition: color .4s, background-color .4s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-}
-button:hover:not(:disabled) {
-  opacity: var(--light_opacity)
-}
-button:active:not(:disabled) {
-  transform: var(--active_state)
-}
-button:focus {
-  box-shadow: 0 0 0 4px var(--base_light)
-}
-button:disabled,
-button[disabled] {
-  cursor: not-allowed;
-  opacity: var(--light_opacity)
-}
-.green_button {
-  color: white;
-  background-color: green
-}
-.red_button {
-  color: white;
-  background-color: #B80000
+  color: $back;
+  background-color: $base;
+  transition: color .4s, background-color .4s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
+  &:hover:not(:disabled) {
+    opacity: $light_opacity
+  }
+  &:active:not(:disabled) {
+    transform: $active_state
+  }
+  &:focus {
+    box-shadow: 0 0 0 4px $base_light
+  }
+  &:disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: $light_opacity
+  }
+  &.green_button {
+    color: white;
+    background-color: green
+  }
+  &.red_button {
+    color: white;
+    background-color: #B80000
+  }
 }
 
 /* Editor wrapper */
 .session_header {
-  height: fit-content
-}
-.session_header.client-side {
-  height: 3.2rem
+  height: fit-content;
+  &.client-side {
+    height: 3.2rem
+  }
 }
 
 /* Inputs */
@@ -323,31 +300,25 @@ textarea {
   resize: none;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1rem;
-  color: var(--base);
-  border: 2px solid var(--base_faint);
+  color: $base;
+  border: 2px solid $base_faint;
   border-radius: 8px;
   background-color: transparent;
   box-shadow: none;
-  transition: var(--transition_standard)
-}
-input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
-select:not(:focus):hover,
-textarea:not(:focus):hover {
-  opacity: var(--light_opacity)
+  transition: $transition_standard;
+  &:not(:focus):hover {
+    opacity: $light_opacity
+  }
+  &:focus {
+    border: 2px solid $base
+  }
+  &.small_border_radius {
+    border-radius: 5px
+  }
 }
 input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
   cursor: not-allowed;
-  opacity: var(--light_opacity)
-}
-input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus,
-select:focus,
-textarea:focus {
-  border: 2px solid var(--base)
-}
-input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
-select.small_border_radius,
-textarea.small_border_radius {
-  border-radius: 5px
+  opacity: $light_opacity
 }
 input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
 select.width_300 {
@@ -359,10 +330,10 @@ input[type=color] {
   padding: 0 .14rem;
   outline-width: 0;
   cursor: pointer;
-  transition: var(--transition_standard)
+  transition: $transition_standard
 }
 option {
-  background-color: var(--fore)
+  background-color: $fore
 }
 .search {
   width: 100%;
@@ -374,7 +345,7 @@ option {
   margin: 2rem 0
 }
 ::placeholder {
-  color: var(--base_light);
+  color: $base_light;
   opacity: 1; /* Firefox */
 }
 
@@ -382,26 +353,10 @@ option {
 .form_grid {
   display: grid;
   grid-auto-rows: max-content;
-  grid-gap: 2rem
-}
-.form_grid button {
-  margin-right: .6rem
-}
-
-/* Logo */
-.logo {
-  margin-bottom: auto
-}
-.logo_link {
-  display: block;
-  width: 38px;
-  transition: 1s all cubic-bezier(.165, .84, .44, 1)
-}
-.logo_link:hover {
-  opacity: var(--light_opacity)
-}
-.logo_link:active {
-  transform: var(--active_state)
+  grid-gap: 2rem;
+  button {
+    margin-right: .6rem
+  }
 }
 
 /* Tab options */
@@ -417,66 +372,67 @@ option {
   transform: translateX(5rem);
   padding: .4rem 1rem .4rem .6rem;
   border-radius: 3px 0 0 3px;
-  background-color: var(--fore);
-  box-shadow: var(--low_shadow);
-  transition: var(--transition_standard)
-}
-.icon_open_middle {
-  top: 5.4rem
-}
-.icon_open_bottom {
-  top: 7.8rem
-}
-.tab_option_small:hover {
-  padding-left: 1.6rem;
-  transform: translateX(2rem)
-}
-.tab_option_large:hover {
-  padding-left: 1.8rem;
-  transform: none
-}
-.tab_option svg {
-  height: 20px;
-  width: 20px
-}
-.tab_option:hover svg,
-.tab_option:hover .notify_badge {
-  display: none
-}
-.tab_option .text {
-  font-size: .8rem;
-  display: none;
-  white-space: nowrap;
-  transition: var(--transition_standard)
-}
-.tab_option:hover .text {
-  display: block
-}
-.notify_badge {
-  position: absolute;
-  top: -5px;
-  left: -10px;
-  padding: 2px 5px;
-  border-radius: 3px;
-  background: var(--base);
-  color: var(--fore);
-  font-size: .6rem
+  background-color: $fore;
+  box-shadow: $low_shadow;
+  transition: $transition_standard;
+  &:hover :is(svg, .notify_badge, .text) {
+    display: none
+  }
+  &.icon_open_middle {
+    top: 5.4rem
+  }
+  &.icon_open_bottom {
+    top: 7.8rem
+  }
+  &.tab_option_small:hover {
+    padding-left: 1.6rem;
+    transform: translateX(2rem)
+  }
+  &.tab_option_large:hover {
+    padding-left: 1.8rem;
+    transform: none
+  }
+  svg {
+    height: 20px;
+    width: 20px;
+    &:hover {
+      display: none
+    }
+  }
+  .notify_badge {
+    position: absolute;
+    top: -5px;
+    left: -10px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background: $base;
+    color: $fore;
+    font-size: .6rem
+  }
+  .text {
+    font-size: .8rem;
+    display: none;
+    white-space: nowrap;
+    transition: $transition_standard
+  }
 }
 
 /* Loading bar */
-#nprogress .bar {
-  /* stylelint-disable-next-line */
-  background-color: var(--base) !important
-}
-#nprogress .peg {
-  /* stylelint-disable-next-line */
-  box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
-}
-#nprogress .spinner-icon {
-  /* stylelint-disable-next-line */
-  border-top-color: var(--base) !important;
-  /* stylelint-disable-next-line */
-  border-left-color: var(--base) !important
+#nprogress {
+  .bar {
+    /* stylelint-disable-next-line */
+    background-color: $base !important
+  }
+  .peg {
+    /* stylelint-disable-next-line */
+    box-shadow: 0 0 10px $base, 0 0 5px $base !important
+  }
+  .spinner-icon {
+    /* stylelint-disable-next-line */
+    border-top-color: $base !important;
+    /* stylelint-disable-next-line */
+    border-left-color: $base !important
+  }
 }
 
 /* Scrollbar */
@@ -485,13 +441,13 @@ option {
   height: 10px
 }
 ::-webkit-scrollbar-track {
-  background-color: var(--base_faint)
+  background-color: $base_faint
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--base)
-}
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--base_faint)
+  background-color: $base;
+  &:hover {
+    background-color: $base_faint
+  }
 }
 
 /* Archive and Home */
@@ -515,39 +471,32 @@ option {
   }
 
   /* Tab options */
-  .tab_option_small:hover {
-    width: 3rem
-  }
-  .tab_option_large:hover {
-    width: 3rem
-  }
-  .tab_option:hover svg,
-  .tab_option:hover .notify_badge {
-    display: block
-  }
-  .tab_option:hover .text {
-    display: none
+  .tab_option {
+    &:hover :is(svg, .notify_badge) {
+      display: block
+    }
+    &:hover .text {
+      display: none
+    }
+    &.tab_option_small:hover {
+      width: 3rem
+    }
+    &.tab_option_large:hover {
+      width: 3rem
+    }
   }
 }
 @media (max-width: 768px) {
-  /* Containers */
-  .center_wrapped {
-    width: 300px
-  }
-  .tab_overlay_content {
-    padding: 4rem 10vw 10rem 10vw
-  }
-
-  /* Container */
   main {
     margin: 0
   }
   .view_container {
     padding: 2rem 5vw 5rem 5vw
   }
+  .tab_overlay_content {
+    padding: 4rem 10vw 10rem 10vw
+  }
 }
-
-/* 576 Mobiles */
 @media (max-width: 576px) {
   /* Elements */
   ::-webkit-scrollbar {
@@ -560,22 +509,18 @@ option {
   h2, .text--small {
     font-size: 1.2rem
   }
-  .button--state {
-    width: 100%
-  }
-  .center_wrapped {
-    max-width: 300px
-  }
   .wrapper--calendar {
     margin: 2rem 0
   }
-  .form_button_bar {
-    display: grid;
-    grid-gap: 1rem;
-    margin-top: 2rem
-  }
-  .form_grid button {
-    width: 100%
+  .form_grid {
+    .form_button_bar {
+      display: grid;
+      grid-gap: 1rem;
+      margin-top: 2rem;
+      button {
+        width: 100%
+      }
+    }
   }
 
   /* Inputs */
@@ -587,9 +532,6 @@ option {
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  :root {
-    --transition_standard: none
-  }
   * {
     transition: none
   }

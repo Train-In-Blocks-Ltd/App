@@ -1,28 +1,30 @@
-<style>
-/* Show HTML */
-.show_html > :is(div, p) {
-  margin: .6rem 0
-}
-.show_html img {
-  border-radius: 10px;
-  max-width: 80%;
-  margin: 1rem 0
-}
-.show_html a {
-  color: var(--link)
+<style lang="scss">
+@import '../../assets/styles/variables.scss';
+.show_html {
+  > :is(div, p) {
+    margin: .6rem 0
+  }
+  img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  a {
+    color: $link
+  }
 }
 </style>
 
-<style scoped>
-/* Containers */
+<style lang="scss" scoped>
+@import '../../assets/styles/variables.scss';
 .container--sessions {
-  margin: 2rem 0
-}
-.wrapper--session {
-  border: 3px solid var(--base);
-  border-radius: 10px;
-  padding: 2rem;
-  margin: 2rem 0
+  margin: 2rem 0;
+  .wrapper--session {
+    border: 3px solid $base;
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 2rem 0
+  }
 }
 .client_portfolio__notes {
   margin: 2rem 0
@@ -33,15 +35,12 @@ hr {
 .close_icon {
   float: right
 }
-
-/* Other element */
 .complete_button {
   margin-top: 2rem
 }
 
-/* Responsive */
 @media (max-width: 576px) {
-  .wrapper--session {
+  .container--sessions .wrapper--session {
     padding: .8rem
   }
 }

@@ -1,42 +1,42 @@
-<style scoped>
-/* Client Info */
+<style lang="scss" scoped>
+@import '../../assets/styles/variables.scss';
 .client_home_top_grid {
   display: grid;
   grid-template-columns: .2fr 1fr;
-  grid-gap: 1.6rem
-}
-.client_home_top_grid img {
-  height: 140px;
-  width: 140px;
-  filter: grayscale(.8);
-  border-radius: 50%
-}
-.profile_image_placeholder {
-  padding: 1.8rem;
-  height: 140px;
-  width: 140px;
-  border: 4px solid var(--base);
-  border-radius: 50%
-}
-.client_info {
-  display: grid;
-  grid-gap: 1rem
-}
-.client_email_bar {
-  display: flex;
-  margin: auto 0
-}
-.client_email {
-  margin-left: .6rem
-}
-.client_info__options {
-  display: flex;
-  justify-content: space-between
+  grid-gap: 1.6rem;
+  img {
+    height: 140px;
+    width: 140px;
+    filter: grayscale(.8);
+    border-radius: 50%
+  }
+  .profile_image_placeholder {
+    padding: 1.8rem;
+    height: 140px;
+    width: 140px;
+    border: 4px solid $base;
+    border-radius: 50%
+  }
+  .client_info {
+    display: grid;
+    grid-gap: 1rem;
+    .client_info__options {
+      display: flex;
+      justify-content: space-between;
+      .client_email_bar {
+        display: flex;
+        margin: auto 0;
+        .client_email {
+          margin-left: .6rem
+        }
+      }
+    }
+  }
 }
 
 /* Floating Nav */
 .wrapper--floating_nav {
-  background-color: var(--fore);
+  background-color: $fore;
   width: 14rem;
   height: 100%;
   transform: translateX(100%);
@@ -45,81 +45,76 @@
   top: 0;
   padding: 2rem;
   z-index: 4;
-  box-shadow: var(--low_shadow);
-  transition: var(--transition_standard)
-}
-.wrapper--floating_nav.openFloatingNav {
-  transform: none
-}
-.floating_nav {
-  display: grid;
-  grid-gap: 2rem;
-  text-align: right
-}
-.floating_nav a {
-  text-align: right
-}
-.icon--options {
-  cursor: pointer;
-  margin-left: auto
-}
-.client--options {
-  display: grid;
-  grid-gap: 1rem
-}
-.client--options a {
-  margin-left: auto
-}
-.client--options a svg {
-  margin-left: .4rem
-}
-
-/* Client Notes */
-.client_notes--header {
-  color: var(--base);
-  padding: .6rem .8rem
+  box-shadow: $low_shadow;
+  transition: $transition_standard;
+  &.openFloatingNav {
+    transform: none
+  }
+  .floating_nav {
+    display: grid;
+    grid-gap: 2rem;
+    text-align: right;
+    a {
+      text-align: right
+    }
+    .icon--options {
+      cursor: pointer;
+      margin-left: auto
+    }
+    .client--options {
+      display: grid;
+      grid-gap: 1rem;
+      a {
+        margin-left: auto;
+        svg {
+          margin-left: .4rem
+        }
+      }
+    }
+  }
 }
 
-/* Responsiveness */
 @media (max-width: 992px) {
-  .floating_nav a {
-    grid-template-columns: 1fr;
-    transition: var(--transition_standard)
-  }
-  .floating_nav a:active {
-    transform: var(--active_state)
-  }
-  div.floating_nav a:before {
-    content: none
-  }
-  .floating_nav .text--hideable {
-    display: none
+  .wrapper--floating_nav .floating_nav {
+    a {
+      grid-template-columns: 1fr;
+      transition: $transition_standard;
+      &:active {
+        transform: $active_state
+      }
+      &:before {
+        content: none
+      }
+    }
+    .text--hideable {
+      display: none
+    }
   }
 }
 @media (max-width: 768px) {
   .client_home_top_grid {
-    grid-template-columns: 1fr
-  }
-  .profile_image_placeholder,
-  .client_home_top_grid img {
-    width: 100px;
-    height: 100px;
-    margin: auto
-  }
-  #client .client_info input.client_info--name {
-    font-size: 2rem
-  }
-  .client_info {
-    width: 90vw
+    grid-template-columns: 1fr;
+    .profile_image_placeholder,
+    img {
+      width: 100px;
+      height: 100px;
+      margin: auto
+    }
+    .client_info {
+      width: 90vw;
+      input.client_info--name {
+        font-size: 2rem
+      }
+    }
   }
 }
 @media (max-width: 576px) {
-  .client_info__options {
-    display: block
-  }
-  .verify_button {
-    width: 100%;
-    margin-top: 1rem
+  .client_home_top_grid .client_info .client_info__options {
+    display: block;
+    .verify_button {
+      width: 100%;
+      margin-top: 1rem
+    }
   }
 }
 </style>

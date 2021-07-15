@@ -1,61 +1,16 @@
-<style>
-  /* Client Notes */
-  #client_notes {
-    margin: 4rem 0
-  }
-  .a--client_notes {
-    color: var(--base);
-    font-size: .8rem;
-    margin-left: 1rem;
-    align-self: center;
-    transition: var(--transition_standard)
-  }
-  .a--client_notes:hover {
-    opacity: var(--light_opacity)
-  }
-  .client_notes-msg {
-    margin: 1rem 0
-  }
-
-  /* Periodise Grid */
-  .periodise_grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 1rem;
-    margin-top: 2rem;
-    margin-bottom: 4rem
-  }
-
-  /* Add plan Form */
-  .button--new_plan {
-    margin: 1rem 0 2rem 0
-  }
-  .add_plan_link {
-    padding-top: 1rem
-  }
-  .add_plan_link h3 {
-    margin-top: 0
-  }
-  .add_plan {
-    grid-gap: 1rem
-  }
-  .add_plan label {
+<style lang="scss">
+#client_notes {
+  margin: 4rem 0
+}
+.add_plan {
+  grid-gap: 1rem;
+  label {
     display: grid;
     grid-gap: .5rem
   }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    .periodise_grid {
-      grid-template-columns: 1fr 1fr
-    }
-  }
-  @media (max-width: 567px) {
-    .periodise_grid {
-      grid-template-columns: 1fr
-    }
-  }
+}
 </style>
+
 <template>
   <div>
     <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
