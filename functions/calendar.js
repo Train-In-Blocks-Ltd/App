@@ -260,7 +260,7 @@ exports.handler = async function handler (event, context, callback) {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              Authorization: 'APIKEY TrainInBlocksCalendarNetlifyFunctionAbacus'
+              Authorization: CUSTOM_ENV.TIB_API
             }
           })
           // create calendar

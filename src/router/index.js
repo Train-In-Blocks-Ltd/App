@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import OktaVue, { LoginCallback } from '@okta/okta-vue'
 import { OktaAuth } from '@okta/okta-auth-js'
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../config/prod.env') : require('../../config/dev.env')
 
 const LoginComponent = () => import(/* webpackChunkName: "login" */ '@/pages/Login')
 const ProfileComponent = () => import(/* webpackChunkName: "account" */ '@/pages/Account')
@@ -22,8 +23,8 @@ const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home'
 
 Vue.use(Router)
 const oktaAuth = new OktaAuth({
-  issuer: process.env.ISSUER_STRING + '/oauth2/default',
-  clientId: process.env.CLIENT_ID_STRING,
+  issuer: CUSTOM_ENV.OKTA.ISSUER + '/oauth2/default',
+  clientId: CUSTOM_ENV.OKTA.CLIENT_ID,
   redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,

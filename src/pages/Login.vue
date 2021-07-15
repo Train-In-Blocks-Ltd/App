@@ -220,6 +220,7 @@ a {
 <script>
 import { mapState } from 'vuex'
 import Splash from '../components/Splash'
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../config/prod.env') : require('../../config/dev.env')
 
 export default {
   components: {
@@ -251,9 +252,9 @@ export default {
     this.willBodyScroll(true)
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
-        baseUrl: process.env.CLIENT_ID_STRING,
-        issuer: process.env.ISSUER_STRING + '/oauth2/default',
-        clientId: process.env.CLIENT_ID_STRING,
+        baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,
+        issuer: CUSTOM_ENV.OKTA.ISSUER + '/oauth2/default',
+        clientId: CUSTOM_ENV.OKTA.CLIENT_ID,
         redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
         i18n: {
           en: {
@@ -269,7 +270,7 @@ export default {
         authParams: {
           pkce: true,
           display: 'page',
-          issuer: process.env.ISSUER_STRING + '/oauth2/default',
+          issuer: CUSTOM_ENV.OKTA.ISSUER + '/oauth2/default',
           scopes,
           tokenManager: {
             autoRenew: true,

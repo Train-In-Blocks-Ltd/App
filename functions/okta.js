@@ -57,14 +57,14 @@ exports.handler = async function handler (event, context, callback) {
           body: JSON.stringify(e, response)
         })
       }
-    } else if (data.type === 'GET' && response.data.active) {
+    } else if (data.type === 'GET') {
       try {
         const response = await axios.get('https://dev-183252.okta.com/api/v1/users/' + data.url,
           {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              Authorization: CUSTOM_ENV.OKTA_AUTH
+              Authorization: CUSTOM_ENV.OKTA.AUTH_KEY
             }
           }
         )

@@ -242,6 +242,7 @@
 import { mapState } from 'vuex'
 import { email, emailText, resetEmail, resetEmailText } from '../../components/email'
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
 export default {
   components: {
@@ -307,11 +308,12 @@ export default {
           )
           if (RESULT.data.length > 0) {
             switch (RESULT.data[0].status) {
-              case 'ACTIVE' || 'RECOVERY':
+              case 'ACTIVE':
                 this.clientAlready = true
                 this.clientAlreadyMsg = 'User activated'
                 break
               case 'PROVISIONED':
+              case 'RECOVERY':
                 this.clientAlready = false
                 this.clientAlreadyMsg = 'Resend activation email'
                 break
@@ -358,8 +360,8 @@ export default {
             {
               to: this.clientDetails.email,
               subject: 'Welcome to Train In Blocks',
-              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com')),
-              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com'))
+              text: emailText(OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')),
+              html: email(OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
         } else if (this.clientSuspend) {
@@ -381,8 +383,8 @@ export default {
             {
               to: this.clientDetails.email,
               subject: 'Welcome Back to Train In Blocks',
-              text: resetEmailText(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com')),
-              html: resetEmail(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com'))
+              text: resetEmailText(PASSWORD.data.resetPasswordUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')),
+              html: resetEmail(PASSWORD.data.resetPasswordUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
         } else {
@@ -416,8 +418,8 @@ export default {
             {
               to: this.clientDetails.email,
               subject: 'Welcome to Train In Blocks',
-              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com')),
-              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com'))
+              text: emailText(OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')),
+              html: email(OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com'))
             }
           )
         }
