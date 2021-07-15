@@ -358,8 +358,8 @@ export default {
             {
               to: this.clientDetails.email,
               subject: 'Welcome to Train In Blocks',
-              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com')),
+              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com'))
             }
           )
         } else if (this.clientSuspend) {
@@ -381,8 +381,8 @@ export default {
             {
               to: this.clientDetails.email,
               subject: 'Welcome Back to Train In Blocks',
-              text: resetEmailText(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: resetEmail(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              text: resetEmailText(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com')),
+              html: resetEmail(PASSWORD.data.resetPasswordUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com'))
             }
           )
         } else {
@@ -416,8 +416,8 @@ export default {
             {
               to: this.clientDetails.email,
               subject: 'Welcome to Train In Blocks',
-              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              text: emailText(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com')),
+              html: email(OKTA_TWO.data.activationUrl.replace(process.env.ISSUER_STRING, 'https://auth.traininblocks.com'))
             }
           )
         }

@@ -7,7 +7,7 @@ let response
 
 exports.handler = async function handler (event, context, callback) {
   const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.CLIENT_ID}`,
+  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
     qs.stringify({
       token: accessToken[1],
       token_type_hint: 'access_token'
@@ -34,7 +34,7 @@ exports.handler = async function handler (event, context, callback) {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              Authorization: CUSTOM_ENV.OKTA_AUTH
+              Authorization: CUSTOM_ENV.OKTA.AUTH_KEY
             }
           }
         )

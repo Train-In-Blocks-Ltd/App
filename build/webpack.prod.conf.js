@@ -53,10 +53,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    // http://vuejs.github.io/vue-loader/en/workflow/production.html
-    new webpack.DefinePlugin({	
-      'process.env': require('../config/prod.env')	
-    }),
+    new webpack.EnvironmentPlugin(require('../config/prod.env')),
     // extract css into its own file
     new ExtractTextPlugin({
       filename: utils.assetsPath('css/[name].css')

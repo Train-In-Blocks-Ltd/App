@@ -43,15 +43,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       ? { warnings: false, errors: true }
       : false,
     proxy: config.dev.proxyTable,
-    quiet: true,
+    quiet: false,
     watchOptions: {
       poll: config.dev.poll,
     }
   },
   plugins: [
-    new webpack.DefinePlugin({	
-      'process.env': require('../config/dev.env')	
-    }),
+    new webpack.EnvironmentPlugin(require('../config/dev.env')),
     new webpack.HotModuleReplacementPlugin(),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({

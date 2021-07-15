@@ -526,7 +526,7 @@ exports.handler = async function handler (event, context, callback) {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            Authorization: CUSTOM_ENV.OKTA_AUTH
+            Authorization: CUSTOM_ENV.OKTA.AUTH_KEY
           }
         }
       )
@@ -537,7 +537,7 @@ exports.handler = async function handler (event, context, callback) {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            Authorization: CUSTOM_ENV.OKTA_AUTH
+            Authorization: CUSTOM_ENV.OKTA.AUTH_KEY
           }
         }
       )
@@ -546,8 +546,8 @@ exports.handler = async function handler (event, context, callback) {
         from: 'Train In Blocks <hello@traininblocks.com>',
         to: data.email,
         subject: 'Password Reset',
-        text: passEmailText(oktaTwo.data.resetPasswordUrl.replace(CUSTOM_ENV.ISSUER, 'https://auth.traininblocks.com')),
-        html: passEmail(oktaTwo.data.resetPasswordUrl.replace(CUSTOM_ENV.ISSUER, 'https://auth.traininblocks.com'))
+        text: passEmailText(oktaTwo.data.resetPasswordUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')),
+        html: passEmail(oktaTwo.data.resetPasswordUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com'))
       }
       await transporter.sendMail(mailOptions)
       return callback(null, {

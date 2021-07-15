@@ -224,7 +224,8 @@ const ics = function (uidDomain, prodId) {
   }
 }
 const axios = require('axios')
-const authHeader = process.env.ISSUER
+const CUSTOM_ENV = require('../config/prod.env')
+const authHeader = CUSTOM_ENV.OKTA.ISSUER
 const headers = require('././helpers/headers')
 
 let response

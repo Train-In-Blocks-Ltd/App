@@ -22,8 +22,8 @@ const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home'
 
 Vue.use(Router)
 const oktaAuth = new OktaAuth({
-  issuer: process.env.ISSUER + '/oauth2/default',
-  clientId: process.env.CLIENT_ID,
+  issuer: process.env.ISSUER_STRING + '/oauth2/default',
+  clientId: process.env.CLIENT_ID_STRING,
   redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,

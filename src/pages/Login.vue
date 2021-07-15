@@ -251,9 +251,9 @@ export default {
     this.willBodyScroll(true)
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
-        baseUrl: process.env.ISSUER,
-        issuer: process.env.ISSUER + '/oauth2/default',
-        clientId: process.env.CLIENT_ID,
+        baseUrl: process.env.CLIENT_ID_STRING,
+        issuer: process.env.ISSUER_STRING + '/oauth2/default',
+        clientId: process.env.CLIENT_ID_STRING,
         redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
         i18n: {
           en: {
@@ -269,7 +269,7 @@ export default {
         authParams: {
           pkce: true,
           display: 'page',
-          issuer: process.env.ISSUER + '/oauth2/default',
+          issuer: process.env.ISSUER_STRING + '/oauth2/default',
           scopes,
           tokenManager: {
             autoRenew: true,
