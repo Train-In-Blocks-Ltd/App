@@ -47,10 +47,10 @@
 }
 
 /* Archive */
-:is(.nav_item, .archive_icon, .a_link):hover #archive__t {
+:is(.nav_item, .a_link):hover #archive__t {
   transform: translateY(-6px)
 }
-:is(.archive_icon, .a_link):hover #bin__lid {
+:is(.a_link):hover #bin__lid {
   transform: translateX(6px)
 }
 
@@ -162,8 +162,7 @@
   /* None */
   .nav_item:hover #home__house,
   .nav_item:hover #template__t,
-  :is(.nav_item, .archive_icon, .a_link):hover #archive__t,
-  .archive_icon:hover #bin__lid,
+  :is(.nav_item, .a_link):hover #archive__t,
   .nav_item:hover #account__cog,
   .nav_item:hover #logout__arrow,
   .nav_item:hover #portfolio_pen,

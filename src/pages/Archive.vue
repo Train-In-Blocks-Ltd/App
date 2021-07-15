@@ -1,30 +1,8 @@
-<style scoped>
-  .top_bar {
-    display: flex;
-    justify-content: space-between
-  }
-  .client_update {
-    padding: 1rem 0;
-    justify-self: end
-  }
-  .client_update a {
-    float: left
-  }
-  .client_update a:first-of-type {
-    margin-right: 1rem
-  }
-</style>
-
-<style>
-  .archive_icon, .archive_icon path {
-    transition: transform .1s, opacity .6s cubic-bezier(.165, .84, .44, 1)
-  }
-  .archive_icon:hover {
-    opacity: var(--light_opacity)
-  }
-  .archive_icon:active {
-    transform: var(--active_state)
-  }
+<style lang="scss">
+.top_bar {
+  display: flex;
+  justify-content: space-between
+}
 </style>
 
 <template>

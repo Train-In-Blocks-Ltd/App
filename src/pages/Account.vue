@@ -1,52 +1,60 @@
-<style scoped>
-.details {
-  display: grid;
-  grid-gap: 1rem;
-  margin: 2rem 0
-}
-.theme {
-  display: grid;
-  grid-gap: 1rem
-}
-.privacy {
-  display: grid
-}
-.policies:first-of-type {
-  margin-top: 2rem
-}
-.policies:last-of-type {
-  margin-bottom: 2rem
-}
-.policies {
-  width: fit-content;
-  text-decoration: none;
-  color: var(--base);
-  opacity: 1;
-  margin: .4rem 0;
-  transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-}
-.policies:hover {
-  opacity: var(--light_opacity)
-}
-.policies:active {
-  transform: var(--active_state)
-}
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 .details_container {
   display: grid;
   grid-gap: 4rem;
-  align-items: center
+  align-items: center;
+  .details {
+    display: grid;
+    grid-gap: 1rem;
+    margin: 2rem 0
+  }
+  .theme {
+    display: grid;
+    grid-gap: 1rem
+  }
+  .calendar {
+    .guide_links {
+      display: grid;
+      grid-gap: .6rem;
+      margin-top: 1rem;
+      a {
+        font-weight: bold
+      }
+    }
+  }
+  .privacy {
+    display: grid;
+    .policies {
+      width: fit-content;
+      text-decoration: none;
+      color: $base;
+      opacity: 1;
+      margin: .4rem 0;
+      transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
+      &:hover {
+        opacity: $light_opacity
+      }
+      &:active {
+        transform: $active_state
+      }
+      &:first-of-type {
+        margin-top: 2rem
+      }
+      &:last-of-type {
+        margin-bottom: 2rem
+      }
+    }
+  }
 }
 .form__options {
-  display: flex
-}
-.form__options label {
-  margin: auto 0
-}
-.text-reset {
-  font-size: .8rem
-}
-.allow-cookies {
-  align-self: center
+  display: flex;
+  label {
+    margin: auto 0
+  }
+  .allow-cookies {
+    align-self: center
+  }
 }
 .check {
   border-color: red;
@@ -57,14 +65,6 @@
 }
 .reset_password_button_bar {
   display: flex
-}
-.guide_links {
-  display: grid;
-  grid-gap: .6rem;
-  margin-top: 1rem
-}
-.guide_links a {
-  font-weight: bold
 }
 
 /* Responsive */

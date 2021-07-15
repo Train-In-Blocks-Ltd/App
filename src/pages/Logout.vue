@@ -1,12 +1,12 @@
-<style scoped>
+<style lang="scss" scoped>
   .logout_message {
-    margin-top: 10vh
-  }
-  .logout_message__top {
-    display: flex
-  }
-  .logout_message__top svg {
-    margin-right: 2rem
+    margin-top: 10vh;
+    .logout_message__top {
+      display: flex;
+      svg {
+        margin-right: 2rem
+      }
+    }
   }
   @media (max-width: 768px) {
     .logout_message__top {

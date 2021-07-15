@@ -1,37 +1,38 @@
-<style>
-#okta-sign-in {
-  outline: none;
-  margin-left: 0
-}
-#okta-signin-submit {
-  outline: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  position: absolute;
-  user-select: none;
-  cursor: pointer;
-  border-radius: 5px;
-  opacity: 1;
-  text-transform: capitalize;
-  border: none;
-  padding: .6rem 1.6rem;
-  font-size: .8rem;
-  color: white;
-  background-color: var(--base);
-  margin: .6rem 0;
-  transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-}
-#okta-signin-submit:hover {
-  opacity: var(--light_opacity)
-}
-#okta-signin-submit:active {
-  transform: var(--active_state)
-}
-#okta-signin-submit:focus {
-  box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
-}
+<style lang="scss">
+@import '../assets/styles/variables.scss';
 #okta-signin-container {
-  position: relative
+  position: relative;
+  #okta-sign-in {
+    outline: none;
+    margin-left: 0;
+    #okta-signin-submit {
+      outline: none;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      position: absolute;
+      user-select: none;
+      cursor: pointer;
+      border-radius: 5px;
+      opacity: 1;
+      text-transform: capitalize;
+      border: none;
+      padding: .6rem 1.6rem;
+      font-size: .8rem;
+      color: white;
+      background-color: $base;
+      margin: .6rem 0;
+      transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
+      &:hover {
+        opacity: $light_opacity
+      }
+      &:active {
+        transform: $active_state
+      }
+      &:focus {
+        box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
+      }
+    }
+  }
 }
 .o-form-button-bar {
   margin-top: 1.25rem
@@ -43,7 +44,7 @@
   margin: 2rem 0
 }
 .auth-org-logo.logo > path {
-  fill: var(--base)
+  fill: $base
 }
 .okta-form-label {
   text-align: left
@@ -70,18 +71,19 @@
   grid-gap: 1.5rem;
   margin: 2rem 0
 }
-.custom-checkbox label {
-  padding-left: 4px
-}
-.custom-checkbox:after {
-  content: 'Please remember to manually logout if this is a shared computer.';
-  display: block;
-  margin-top: .5rem;
-  font-size: .75rem;
-  padding-left: calc(4px + 13px + 4px + 3px)
+.custom-checkbox {
+  label {
+    padding-left: 4px
+  }
+  &:after {
+    content: 'Please remember to manually logout if this is a shared computer.';
+    display: block;
+    margin-top: .5rem;
+    font-size: .75rem;
+    padding-left: calc(4px + 13px + 4px + 3px)
+  }
 }
 
-/* Responsive */
 @media (max-width: 576px) {
   .okta-form-label {
     font-size: 1.5rem
@@ -95,48 +97,43 @@
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
 a {
   font-weight: bold;
   text-decoration: none;
-  color: var(--base);
-  transition: var(--transition_standard)
-}
-a:hover {
-  opacity: var(--light_opacity)
+  color: $base;
+  transition: $transition_standard;
+  &:hover {
+    opacity: $light_opacity
+  }
 }
 #login {
   text-align: left;
   margin: auto;
   padding: 6rem 4rem;
-  width: 550px
-}
-.other_options {
-  display: grid;
-  grid-gap: 1rem;
-  margin-top: 4rem
-}
-.cookies {
-  font-size: .75rem;
-  margin: 2rem 0
-}
-.error {
-  color: red
-}
-.signup {
-  margin-left: calc(20px + 60px + 20px);
-  margin-top: -.6rem;
-  margin-bottom: .6rem
-}
-.recovery {
-  margin-top: 4rem;
-  margin-bottom: 1rem
-}
-.recover_password {
-  margin: .8rem 0
+  width: 550px;
+  .other_options {
+    display: grid;
+    grid-gap: 1rem;
+    margin-top: 4rem;
+    .error {
+      color: red
+    }
+  }
+  .cookies {
+    font-size: .75rem;
+    margin: 2rem 0
+  }
+  .recovery {
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+    .recover_password {
+      margin: .8rem 0
+    }
+  }
 }
 
-/* Responsive */
 @media (max-width: 576px) {
   a:hover {
     opacity: 1

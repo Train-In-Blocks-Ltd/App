@@ -1,34 +1,34 @@
-<style scoped>
-  /* Trainer Info */
-  .trainer_info input {
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
+.trainer_info {
+  input {
     width: 100%;
     background-color: initial;
-    border: 1px solid var(--base_faint);
+    border: 1px solid $base_faint;
     padding: .6rem 1rem;
     border-radius: 8px;
-    transition: .4s all cubic-bezier(.165, .84, .44, 1)
+    transition: .4s all cubic-bezier(.165, .84, .44, 1);
+    &:hover {
+      opacity: $light_opacity
+    }
+    &:focus {
+      opacity: 1;
+      border: 1px solid $base;
+      padding: .6rem 1.4rem
+    }
   }
-  .trainer_info input:hover {
-    opacity: var(--light_opacity)
-  }
-  .trainer_info input:focus {
-    opacity: 1;
-    border: 1px solid var(--base);
-    padding: .6rem 1.4rem
-  }
-  .trainer_info .trainer_info__business {
+  .trainer_info__business {
     max-width: 100%;
     margin-bottom: 1rem
   }
   .business_name_skeleton {
     margin-top: 1rem
   }
-
-  /* Card */
-  .portfolio_editor,
-  .portfolio_editor_skeleton {
-    margin: 4rem 0
-  }
+}
+.portfolio_editor,
+.portfolio_editor_skeleton {
+  margin: 4rem 0
+}
 </style>
 
 <template>

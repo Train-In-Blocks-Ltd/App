@@ -1,63 +1,59 @@
-<style scoped>
-  /* Containers */
-  .template_options {
-    display: flex;
-    justify-content: space-between;
-    margin: 2rem 0
-  }
-  .template_container {
-    display: grid;
-    grid-gap: 2rem;
-    margin: 2rem 0
-  }
+<style lang="scss" scoped>
+@import '../assets/styles/variables.scss';
+.template_options {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0
+}
+.template_container {
+  display: grid;
+  grid-gap: 2rem;
+  margin: 2rem 0;
   .template_wrapper__header {
     display: flex;
-    justify-content: space-between
-  }
-  .header_options {
-    display: flex;
-    flex-direction: column;
-    align-items: center
-  }
-
-  /* Inputs */
-  .newTemplate {
-    color: #B80000
-  }
-
-  /* Icons */
-  .icon--expand {
-    cursor: pointer;
-    vertical-align: middle;
-    margin-top: .8rem;
-    transition: var(--transition_smooth)
-  }
-  .icon--expand.expanded {
-    transform: rotate(180deg)
-  }
-
-  @media (max-width: 768px) {
-    .multi-select {
-      padding: 2rem;
-      width: 100%;
-      background-color: var(--fore);
-      box-shadow: var(--high_shadow)
+    justify-content: space-between;
+    span.newTemplate {
+      color: #B80000
     }
-    .multi-select a {
+    .header_options {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .icon--expand {
+        cursor: pointer;
+        vertical-align: middle;
+        margin-top: .8rem;
+        transition: $transition_smooth;
+        &.expanded {
+          transform: rotate(180deg)
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .multi-select {
+    padding: 2rem;
+    width: 100%;
+    background-color: $fore;
+    box-shadow: $high_shadow;
+    a {
       grid-template-columns: 1fr
     }
-    .multi-select svg {
+    svg {
       margin-left: auto
     }
-    input.template-name {
-      width: 60%
-    }
   }
-  @media (max-width: 576px) {
-    input.template-name {
-      width: 100%
-    }
+  .template_options .template_container .template_wrapper__header .template-name {
+    width: 60%
   }
+}
+@media (max-width: 576px) {
+  .template_options .template_container .template_wrapper__header .template-name {
+    width: 100%
+  }
+}
 </style>
 
 <template>

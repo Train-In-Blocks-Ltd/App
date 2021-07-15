@@ -1,17 +1,16 @@
-<style>
-/* Containers */
+<style lang="scss">
 .home--container {
   display: grid;
-  margin-bottom: 2rem
+  margin-bottom: 2rem;
+  .search {
+    margin-top: 1rem
+  }
 }
 .skeleton_margin {
-  margin-bottom: 2rem
-}
-.skeleton_margin.shorter {
-  width: 40%
-}
-.search {
-  margin-top: 1rem
+  margin-bottom: 2rem;
+  &.shorter {
+    width: 40%
+  }
 }
 
 @media (max-width: 768px) {
