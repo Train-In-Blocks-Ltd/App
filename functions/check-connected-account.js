@@ -4,7 +4,8 @@ const axios = require('axios')
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
 /* eslint-disable-next-line */
 const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
-const headers = require('././helpers/headers')
+const headerFile = require('././helpers/headers')
+const headers = JSON.parse(headerFile)
 
 let response
 
@@ -23,7 +24,6 @@ exports.handler = async function handler (event, context, callback) {
         }
       }
     )
-    console.log(response)
     if (event.httpMethod === 'OPTIONS') {
       return callback(null, {
         statusCode: 200,
@@ -31,14 +31,12 @@ exports.handler = async function handler (event, context, callback) {
         body: ''
       })
     } else if (event.body && response.data.active === true) {
-      console.log(true)
       try {
         if (JSON.parse(event.body).connectedAccountId) {
           const account = await stripe.accounts.retrieve(
             JSON.parse(event.body).connectedAccountId
           )
           if (account.id !== 'acct_1GLXT9BYbiJubfJM' && account.charges_enabled) {
-            console.log(true)
             return callback(null, {
               statusCode: 200,
               headers,
