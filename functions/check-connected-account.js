@@ -5,6 +5,8 @@ const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/pr
 /* eslint-disable-next-line */
 const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
 const headers = require('././helpers/headers')
+console.log(CUSTOM_ENV)
+console.log(stripe)
 
 let response
 
@@ -22,6 +24,7 @@ exports.handler = async function handler (event, context, callback) {
       }
     }
   )
+  console.log(response)
   if (event.httpMethod === 'OPTIONS') {
     return callback(null, {
       statusCode: 200,
@@ -29,12 +32,15 @@ exports.handler = async function handler (event, context, callback) {
       body: ''
     })
   } else if (event.body && response.data.active === true) {
+    console.log(true)
     try {
       if (JSON.parse(event.body).connectedAccountId) {
         const account = await stripe.accounts.retrieve(
           JSON.parse(event.body).connectedAccountId
         )
+        console.log(account)
         if (account.id !== 'acct_1GLXT9BYbiJubfJM' && account.charges_enabled) {
+          console.log(true)
           return callback(null, {
             statusCode: 200,
             headers,
