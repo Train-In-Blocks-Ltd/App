@@ -53,8 +53,8 @@ exports.handler = async function handler (event, context, callback) {
       }
       const accountLinks = await stripe.accountLinks.create({
         account: account.id,
-        refresh_url: event.multiValueHeaders.referer[0] ? event.multiValueHeaders.referer[0] : 'https://app.traininblocks.com/portfolio',
-        return_url: event.multiValueHeaders.referer[0] ? event.multiValueHeaders.referer[0] : 'https://app.traininblocks.com/portfolio',
+        refresh_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/portfolio' ? 'https://app.traininblocks.com/portfolio' : 'https://dev.traininblocks.com/portfolio',
+        return_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/portfolio' ? 'https://app.traininblocks.com/portfolio' : 'https://dev.traininblocks.com/portfolio',
         type: 'account_onboarding'
       })
       return callback(null, {
