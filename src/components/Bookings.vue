@@ -26,7 +26,7 @@
       grid-gap: 1rem;
       max-height: 300px;
       overflow-y: auto;
-      padding: 0 1rem;
+      padding-right: 1rem;
       box-shadow: inset 0 -10px 10px -10px $inset_shadow, inset 0 10px 10px -10px $inset_shadow
     }
     .bookings_wrapper::-webkit-scrollbar {

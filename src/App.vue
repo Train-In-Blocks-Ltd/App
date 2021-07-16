@@ -463,7 +463,11 @@ option {
   text-decoration: none
 }
 
-/* 992 touchscreens */
+@media (min-width: 1440px) {
+  .view_container {
+    padding: 2rem 15vw
+  }
+}
 @media (max-width: 992px) {
   /* States */
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,

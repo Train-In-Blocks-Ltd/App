@@ -2,7 +2,7 @@
 @import '../assets/styles/variables.scss';
 .periodise {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   grid-gap: 1rem;
   margin-top: 2rem;
   margin-bottom: 4rem;
@@ -58,7 +58,11 @@
   }
 }
 
-/* Responsive */
+@media (min-width: 1440px) {
+  .periodise {
+    grid-template-columns: repeat(3, 1fr)
+  }
+}
 @media (max-width: 992px) {
   .periodise {
     grid-template-columns: 1fr
