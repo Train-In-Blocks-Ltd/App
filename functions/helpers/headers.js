@@ -1,5 +1,5 @@
 'use strict'
-module.exports.headers = {
+module.exports = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Content-Type': 'application/json; charset=UTF-8',
