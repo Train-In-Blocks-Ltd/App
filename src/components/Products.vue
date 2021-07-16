@@ -106,7 +106,16 @@
       <h2>
         Products
       </h2>
-      <a v-if="!stripe" href="javascript:void(0)" class="stripe-connect" @click="stripeConnect"><span>Connect with</span></a>
+      <a
+        v-if="!stripe"
+        href="javascript:void(0)"
+        class="stripe-connect"
+        @click="stripeConnect"
+      >
+        <span>
+          Connect with
+        </span>
+      </a>
       <div v-else>
         <button>
           New product
@@ -360,14 +369,18 @@ export default {
     /* Connect to Stripe */
     async stripeConnect () {
       try {
-        const RESPONSE = await this.$axios.post('/.netlify/functions/create-connected-account',
-          {
-            email: this.claims.email,
-            connectedAccountId: this.claims.connectedAccountId
-          }
-        )
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/create-connected-account', {
+          email: this.claims.email,
+          connectedAccountId: this.claims.connectedAccountId
+        })
         this.claims.connectedAccountId = RESPONSE.data.connectedAccountId
+        await this.$store.dispatch('saveClaims')
         window.location.href = RESPONSE.data.url
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
@@ -375,12 +388,15 @@ export default {
 
     async checkConnectedAccount () {
       try {
-        const RESPONSE = await this.$axios.post('/.netlify/functions/check-connected-account',
-          {
-            connectedAccountId: this.claims.connectedAccountId
-          }
-        )
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/check-connected-account', {
+          connectedAccountId: this.claims.connectedAccountId
+        })
         this.stripe = RESPONSE.data
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }

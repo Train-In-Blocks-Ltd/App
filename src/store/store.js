@@ -495,6 +495,12 @@ export const store = new Vuex.Store({
           return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
         })
       })
+
+      // Sets products
+      commit('setData', {
+        attr: 'products',
+        data: RESPONSE.data[5]
+      })
     },
 
     // -----------------------------
@@ -681,10 +687,10 @@ export const store = new Vuex.Store({
      * @param {object} payload - { name, desc, price, type }
      */
     async createProduct ({ commit }, payload) {
-      const response = await axios.put('https://api.traininblocks.com/v2/products', {
+      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/products', {
         ...payload
       })
-      console.log(response)
+      payload.id = RESPONSE.data['LAST_INSERT_ID()']
       commit('addNewProduct', {
         ...payload
       })
@@ -959,14 +965,14 @@ export const store = new Vuex.Store({
     // payload => clientId, datetime, notes, status
     /**
      * Creates a new booking.
-     * @param {object} payload - { clientId, datetime, notes, status }
+     * @param {object} payload - { clientId, datetime, notes, status, isTrainer }
      */
     async createBooking ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/bookings', {
         ...payload
       })
       payload.id = RESPONSE.data[0]['LAST_INSERT_ID()']
-      commit(payload.isClientSide ? 'addNewBookingClientSide' : 'addNewBooking', {
+      commit(payload.isTrainer ? 'addNewBooking' : 'addNewBookingClientSide', {
         ...payload
       })
     },
@@ -1025,24 +1031,7 @@ export const store = new Vuex.Store({
     async getClientSideInfo ({ commit, state }) {
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
       if (RESPONSE.data) {
-        commit('setData', {
-          attr: 'portfolio',
-          data: RESPONSE.data[1][0]
-        })
-        commit('setDataDeep', {
-          attrParent: 'clientUser',
-          attrChild: 'profile_image',
-          data: RESPONSE.data[2][0].profile_image
-        })
-
-        // Sets bookings
-        commit('setDataDeep', {
-          attrParent: 'clientUser',
-          attrChild: 'bookings',
-          data: RESPONSE.data[3].sort((a, b) => {
-            return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
-          })
-        })
+        // Sets user details
         commit('setDataDeep', {
           attrParent: 'clientUser',
           attrChild: 'name',
@@ -1058,6 +1047,36 @@ export const store = new Vuex.Store({
           attrChild: 'pt_id',
           data: RESPONSE.data[0][0].pt_id
         })
+
+        // Sets portfolio
+        commit('setData', {
+          attr: 'portfolio',
+          data: RESPONSE.data[1][0]
+        })
+
+        // Sets profile image
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attrChild: 'profile_image',
+          data: RESPONSE.data[2][0].profile_image
+        })
+
+        // Sets bookings
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attrChild: 'bookings',
+          data: RESPONSE.data[3].sort((a, b) => {
+            return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
+          })
+        })
+
+        /* Sets products
+        commit('setDataDeep', {
+          attrParent: 'clientUser',
+          attrChild: 'products',
+          data: RESPONSE.data[4]
+        })
+        */
       }
     },
 

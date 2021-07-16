@@ -73,7 +73,7 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .bookings_sub_container {
+  #bookings .bookings_sub_container {
     display: block;
     .request_booking_container {
       margin-top: 2rem

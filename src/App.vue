@@ -375,8 +375,11 @@ option {
   background-color: $fore;
   box-shadow: $low_shadow;
   transition: $transition_standard;
-  &:hover :is(svg, .notify_badge, .text) {
+  &:hover :is(svg, .notify_badge) {
     display: none
+  }
+  &:hover .text {
+    display: block
   }
   &.icon_open_middle {
     top: 5.4rem
