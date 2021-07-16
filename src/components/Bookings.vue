@@ -96,7 +96,7 @@
           v-for="(booking, bookingIndex) in bookings"
           :key="`bookings_${bookingIndex}`"
           :class="{ request: booking.status === 'Pending' }"
-          class="booking_event"
+          class="booking_event fadeIn"
         >
           <div class="booking_event__details">
             <p>
@@ -246,7 +246,7 @@ export default {
           datetime: this.booking_form.date + ' ' + this.booking_form.time,
           notes: this.booking_form.notes,
           status: 'Scheduled',
-          isClientSide: false
+          isTrainer: true
         })
         this.booking_form = {
           date: null,
