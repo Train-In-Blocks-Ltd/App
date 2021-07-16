@@ -50,56 +50,64 @@ function bodyData (msg, claims) {
 let response
 
 exports.handler = async function handler (event, context, callback) {
-  const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
-    qs.stringify({
-      token: accessToken[1],
-      token_type_hint: 'access_token'
-    }),
-    {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
+  if (event.headers.authorization) {
+    const accessToken = event.headers.authorization.split(' ')
+    response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
+      qs.stringify({
+        token: accessToken[1],
+        token_type_hint: 'access_token'
+      }),
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
-    }
-  )
-  if (event.httpMethod === 'OPTIONS') {
-    return callback(null, {
-      statusCode: 200,
-      headers,
-      body: ''
-    })
-  } else if (event.body && response.data.active === true) {
-    const data = JSON.parse(event.body)
-    try {
-      const atlassian = await axios.post('https://traininblocks.atlassian.net/rest/api/3/issue',
-        bodyData(data.msg, data.claims),
-        {
-          headers: {
-            Authorization: `Basic ${Buffer.from(
-              `${CUSTOM_ENV.ATLASSIAN.USERNAME}:${CUSTOM_ENV.ATLASSIAN.PASSWORD}`
-            ).toString('base64')}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
+    )
+    if (event.httpMethod === 'OPTIONS') {
       return callback(null, {
         statusCode: 200,
         headers,
-        body: JSON.stringify(atlassian.data)
+        body: ''
       })
-    } catch (e) {
+    } else if (event.body && response.data.active === true) {
+      const data = JSON.parse(event.body)
+      try {
+        const atlassian = await axios.post('https://traininblocks.atlassian.net/rest/api/3/issue',
+          bodyData(data.msg, data.claims),
+          {
+            headers: {
+              Authorization: `Basic ${Buffer.from(
+                `${CUSTOM_ENV.ATLASSIAN.USERNAME}:${CUSTOM_ENV.ATLASSIAN.PASSWORD}`
+              ).toString('base64')}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+        return callback(null, {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(atlassian.data)
+        })
+      } catch (e) {
+        return callback(null, {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify(e.response.data)
+        })
+      }
+    } else {
       return callback(null, {
-        statusCode: 500,
+        statusCode: 401,
         headers,
-        body: JSON.stringify(e.response.data)
+        body: '401 - Unauthorized'
       })
     }
   } else {
     return callback(null, {
       statusCode: 401,
       headers,
-      body: ''
+      body: '401 - Unauthorized'
     })
   }
 }

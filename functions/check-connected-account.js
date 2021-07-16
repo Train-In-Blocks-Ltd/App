@@ -5,47 +5,52 @@ const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/pr
 /* eslint-disable-next-line */
 const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
 const headers = require('././helpers/headers')
-console.log(CUSTOM_ENV)
-console.log(stripe)
 
 let response
 
 exports.handler = async function handler (event, context, callback) {
-  const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
-    qs.stringify({
-      token: accessToken[1],
-      token_type_hint: 'access_token'
-    }),
-    {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
+  if (event.headers.authorization) {
+    const accessToken = event.headers.authorization.split(' ')
+    response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
+      qs.stringify({
+        token: accessToken[1],
+        token_type_hint: 'access_token'
+      }),
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
-    }
-  )
-  console.log(response)
-  if (event.httpMethod === 'OPTIONS') {
-    return callback(null, {
-      statusCode: 200,
-      headers,
-      body: ''
-    })
-  } else if (event.body && response.data.active === true) {
-    console.log(true)
-    try {
-      if (JSON.parse(event.body).connectedAccountId) {
-        const account = await stripe.accounts.retrieve(
-          JSON.parse(event.body).connectedAccountId
-        )
-        console.log(account)
-        if (account.id !== 'acct_1GLXT9BYbiJubfJM' && account.charges_enabled) {
-          console.log(true)
-          return callback(null, {
-            statusCode: 200,
-            headers,
-            body: 'true'
-          })
+    )
+    console.log(response)
+    if (event.httpMethod === 'OPTIONS') {
+      return callback(null, {
+        statusCode: 200,
+        headers,
+        body: ''
+      })
+    } else if (event.body && response.data.active === true) {
+      console.log(true)
+      try {
+        if (JSON.parse(event.body).connectedAccountId) {
+          const account = await stripe.accounts.retrieve(
+            JSON.parse(event.body).connectedAccountId
+          )
+          if (account.id !== 'acct_1GLXT9BYbiJubfJM' && account.charges_enabled) {
+            console.log(true)
+            return callback(null, {
+              statusCode: 200,
+              headers,
+              body: 'true'
+            })
+          } else {
+            return callback(null, {
+              statusCode: 200,
+              headers,
+              body: 'false'
+            })
+          }
         } else {
           return callback(null, {
             statusCode: 200,
@@ -53,25 +58,25 @@ exports.handler = async function handler (event, context, callback) {
             body: 'false'
           })
         }
-      } else {
+      } catch (e) {
         return callback(null, {
-          statusCode: 200,
+          statusCode: 500,
           headers,
-          body: 'false'
+          body: JSON.stringify(e, response)
         })
       }
-    } catch (e) {
+    } else {
       return callback(null, {
-        statusCode: 500,
+        statusCode: 401,
         headers,
-        body: JSON.stringify(e, response)
+        body: ''
       })
     }
   } else {
     return callback(null, {
       statusCode: 401,
       headers,
-      body: ''
+      body: '401 - Unauthorized'
     })
   }
 }

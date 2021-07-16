@@ -566,7 +566,7 @@ exports.handler = async function handler (event, context, callback) {
     return callback(null, {
       statusCode: 401,
       headers,
-      body: ''
+      body: '401 - Unauthorized'
     })
   }
 }
