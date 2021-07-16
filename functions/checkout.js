@@ -5,7 +5,7 @@ Requires:
 */
 const qs = require('querystring')
 const axios = require('axios')
-const CUSTOM_ENV = require('../config/prod.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
 /* eslint-disable-next-line */
 const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
 const headers = require('././helpers/headers')

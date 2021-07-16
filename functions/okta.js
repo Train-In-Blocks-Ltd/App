@@ -1,6 +1,6 @@
 const qs = require('querystring')
 const axios = require('axios')
-const CUSTOM_ENV = require('../config/prod.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
 const headers = require('./helpers/headers')
 
 let response

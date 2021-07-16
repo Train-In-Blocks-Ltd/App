@@ -1,7 +1,7 @@
 
 const qs = require('querystring')
 const axios = require('axios')
-const CUSTOM_ENV = require('../config/prod.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
 /* eslint-disable-next-line */
 const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
 const headers = require('./helpers/headers')
@@ -53,8 +53,8 @@ exports.handler = async function handler (event, context, callback) {
       }
       const accountLinks = await stripe.accountLinks.create({
         account: account.id,
-        refresh_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/portfolio' ? 'https://app.traininblocks.com/portfolio' : 'https://dev.traininblocks.com/portfolio',
-        return_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/portfolio' ? 'https://app.traininblocks.com/portfolio' : 'https://dev.traininblocks.com/portfolio',
+        refresh_url: event.multiValueHeaders.referer[0] ? event.multiValueHeaders.referer[0] : 'https://app.traininblocks.com/portfolio',
+        return_url: event.multiValueHeaders.referer[0] ? event.multiValueHeaders.referer[0] : 'https://app.traininblocks.com/portfolio',
         type: 'account_onboarding'
       })
       return callback(null, {

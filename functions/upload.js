@@ -1,7 +1,7 @@
 const qs = require('querystring')
 const cloudinary = require('cloudinary').v2
 const axios = require('axios')
-const CUSTOM_ENV = require('../config/prod.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
 const headers = require('./helpers/headers')
 cloudinary.config({
   cloud_name: CUSTOM_ENV.CLOUDINARY.CLOUD_NAME,
