@@ -689,7 +689,7 @@ export default {
         SELF.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
         SELF.willBodyScroll(false)
         SELF.$store.dispatch('endLoading')
-        throw new self.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
+        throw new SELF.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
       }
       return config
     }, (error) => {

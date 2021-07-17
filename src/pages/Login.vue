@@ -165,7 +165,7 @@ a {
         demo@traininblocks.com
       </div>
       <div class="info">
-        Testing123
+        testingaccount123
       </div>
     </div>
     <div id="okta-signin-container" />
