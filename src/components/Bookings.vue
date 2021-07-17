@@ -4,12 +4,23 @@
 /* Bookings */
 #bookings {
   margin-bottom: 2rem;
+  .all_bookings {
+    .close_icon {
+      float: right
+    }
+    .container {
+      margin-top: 2rem
+    }
+  }
   .bookings_container_skeleton {
     margin: 2rem 0
   }
   .request_booking_container {
-    display: grid;
-    grid-gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    > *:not(:last-child) {
+      margin-bottom: 1rem
+    }
     .date_time_wrapper {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -21,14 +32,6 @@
     grid-template-columns: 1fr .9fr;
     grid-gap: 1.6rem;
     margin-top: 1rem;
-    .bookings_wrapper {
-      display: grid;
-      grid-gap: 1rem;
-      max-height: 300px;
-      overflow-y: auto;
-      padding-right: 1rem;
-      box-shadow: inset 0 -10px 10px -10px $inset_shadow, inset 0 10px 10px -10px $inset_shadow
-    }
     .bookings_wrapper::-webkit-scrollbar {
       width: 6px
     }
@@ -36,24 +39,14 @@
 }
 
 /* Booking event */
-.booking_event {
+.booking {
   display: grid;
-  grid-gap: 2rem;
-  border: 3px solid $base;
+  grid-gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $base_faint;
   height: fit-content;
-  padding: 1rem;
-  border-radius: 10px;
-  .booking_event__details > p:first-child {
-    margin: 0
-  }
-  .booking_event__status {
-    display: flex;
-    justify-content: space-between;
-    > a:last-child {
-      color: $base_red
-    }
-  }
-  .booking_event.request > div:first-child:before {
+  &.request > div:first-child:before {
     content: 'New request';
     display: flex;
     height: fit-content;
@@ -64,7 +57,24 @@
     color: $fore;
     font-size: .8rem;
     border-radius: 3px;
-    transform: translate(.6rem, -.6rem)
+    float: right
+  }
+  .details > p:first-child {
+    margin: 0
+  }
+  .status {
+    display: flex;
+    justify-content: space-between;
+    > .options {
+      display: flex;
+      > .accept {
+        color: $base_green;
+        margin-right: 1rem
+      }
+      > .reject {
+        color: $base_red
+      }
+    }
   }
   .accept_request {
     color: green
@@ -84,21 +94,28 @@
 
 <template>
   <div id="bookings">
-    <h2>Upcoming</h2>
-    <skeleton
-      v-if="loading"
-      :type="'bookings'"
-      class="bookings_container_skeleton"
-    />
-    <div v-else class="bookings_sub_container">
-      <div v-if="checkForBookings()" class="bookings_wrapper">
+    <div :class="{ opened_sections: showAllBookings }" class="section_overlay" />
+    <div
+      v-if="showAllBookings"
+      class="all_bookings tab_overlay_content fadeIn delay fill_mode_both small_border_radius"
+    >
+      <inline-svg
+        class="close_icon cursor"
+        :src="require('../assets/svg/close.svg')"
+        aria-label="Close"
+        @click="showAllBookings = false, willBodyScroll(true)"
+      />
+      <h2>
+        All bookings
+      </h2>
+      <div class="container">
         <div
           v-for="(booking, bookingIndex) in bookings"
-          :key="`bookings_${bookingIndex}`"
+          :key="`all_bookings_${bookingIndex}`"
           :class="{ request: booking.status === 'Pending' }"
-          class="booking_event fadeIn"
+          class="booking fadeIn"
         >
-          <div class="booking_event__details">
+          <div class="details">
             <p>
               <b>
                 {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }} with {{ clients.find(client => client.client_id === booking.client_id).name }}
@@ -108,31 +125,89 @@
               {{ booking.notes }}
             </p>
           </div>
-          <div class="booking_event__status">
-            <p
-              v-if="booking.status !== 'Pending'"
-              :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }"
-            >
+          <div class="status">
+            <p :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }">
               {{ booking.status }}
             </p>
-            <a
-              v-else
-              href="javascript:void(0)"
-              aria-label="Accept booking"
-              class="a_link accept_request"
-              @click="acceptBookingRequest(booking.id)"
-            >
-              Accept
-            </a>
-            <a
-              href="javascript:void(0)"
-              class="a_link"
-              @click="cancelBooking(booking.id, booking.client_id)"
-            >
-              Cancel
-            </a>
+            <div class="options">
+              <a
+                v-if="booking.status === 'Pending'"
+                href="javascript:void(0)"
+                aria-label="Accept booking"
+                class="a_link accept"
+                @click="acceptBookingRequest(booking.id)"
+              >
+                Accept
+              </a>
+              <a
+                href="javascript:void(0)"
+                class="a_link reject"
+                @click="cancelBooking(booking.id, booking.client_id)"
+              >
+                {{ booking.status === "Pending" ? 'Reject' : (isInThePast(booking) ? 'Delete' : 'Cancel') }}
+              </a>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+    <h2>Upcoming</h2>
+    <skeleton
+      v-if="loading"
+      :type="'bookings'"
+      class="bookings_container_skeleton"
+    />
+    <div v-else class="bookings_sub_container">
+      <div v-if="checkForBookings()" class="bookings_wrapper">
+        <div
+          v-for="(booking, bookingIndex) in futureBookings(bookings).slice(0, 3)"
+          :key="`bookings_${bookingIndex}`"
+          :class="{ request: booking.status === 'Pending' }"
+          class="booking fadeIn"
+        >
+          <div class="details">
+            <p>
+              <b>
+                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }} with {{ clients.find(client => client.client_id === booking.client_id).name }}
+              </b>
+            </p>
+            <p>
+              {{ booking.notes }}
+            </p>
+          </div>
+          <div class="status">
+            <p :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }">
+              {{ booking.status }}
+            </p>
+            <div class="options">
+              <a
+                v-if="booking.status === 'Pending'"
+                href="javascript:void(0)"
+                aria-label="Accept booking"
+                class="a_link accept"
+                @click="acceptBookingRequest(booking.id)"
+              >
+                Accept
+              </a>
+              <a
+                href="javascript:void(0)"
+                class="a_link reject"
+                @click="cancelBooking(booking.id, booking.client_id)"
+              >
+                {{ booking.status === "Pending" ? 'Reject' : (isInThePast(booking) ? 'Delete' : 'Cancel') }}
+              </a>
+            </div>
+          </div>
+        </div>
+        <a
+          href="javascript:void(0)"
+          class="a_link cursor"
+          @click="showAllBookings = true, willBodyScroll(false)"
+        >
+          <b>
+            View all bookings
+          </b>
+        </a>
       </div>
       <p v-else class="grey">
         No bookings made or confirmed
@@ -143,6 +218,7 @@
           v-model="booking_form.clientId"
           class="small_border_radius"
           name="client_booking_select"
+          aria-placeholder="Select a client"
           aria-label="Select a client"
           required
         >
@@ -165,6 +241,7 @@
             v-model="booking_form.date"
             class="small_border_radius"
             type="date"
+            placeholder="Date"
             aria-label="Date"
             required
           >
@@ -172,6 +249,7 @@
             v-model="booking_form.time"
             class="small_border_radius"
             type="time"
+            placeholder="Time"
             aria-label="Time"
             required
           >
@@ -206,7 +284,11 @@ export default {
         date: null,
         time: null,
         notes: null
-      }
+      },
+
+      // System
+
+      showAllBookings: false
     }
   },
   computed: mapState([
@@ -226,6 +308,15 @@ export default {
     checkForBookings () {
       const BOOKINGS = this.bookings || false
       return BOOKINGS ? this.bookings.length !== 0 : false
+    },
+
+    /**
+     * Checks if the bookings have future bookings.
+     * @param {array} bookings - The bookings.
+     * @returns Future bookings.
+     */
+    futureBookings (bookings) {
+      return bookings.filter(booking => new Date(booking.datetime) > new Date())
     },
 
     // -----------------------------

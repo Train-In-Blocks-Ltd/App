@@ -45,7 +45,7 @@
 
   /* Booking outer container */
   .bookings_container {
-    padding: 1rem;
+    padding: 2rem;
     background-color: $fore;
     border: 3px solid $base;
     border-radius: 10px;
@@ -60,43 +60,40 @@
 
       /* Container for creating bookings */
       .request_booking_container {
-        display: grid;
-        grid-gap: 1rem
+        display: flex;
+        flex-direction: column;
+        *:not(:last-child) {
+          margin-bottom: 1rem
+        }
       }
 
       /* Container for booking events */
       .bookings_wrapper {
-        display: grid;
-        grid-gap: 1rem;
-        max-height: 300px;
-        overflow-y: auto;
-        padding: 0 1rem;
-        box-shadow: inset 0 -10px 10px -10px $inset_shadow, inset 0 10px 10px -10px $inset_shadow;
         &::-webkit-scrollbar {
           width: 6px
         }
-
-        /* Booking event */
-        .booking_event {
-          display: grid;
-          grid-gap: 2rem;
-          border: 3px solid $base;
-          height: fit-content;
-          padding: 1rem;
-          border-radius: 10px;
-          .booking_event__details {
-            display: grid;
-            grid-gap: .6rem
-          }
-          .booking_event__status {
-            display: flex;
-            justify-content: space-between;
-            > a {
-              color: $base_red
-            }
-          }
-        }
       }
+    }
+  }
+}
+
+/* Booking event */
+.booking {
+  display: grid;
+  grid-gap: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid $base_faint;
+  padding-bottom: 1rem;
+  height: fit-content;
+  .details {
+    display: grid;
+    grid-gap: .6rem
+  }
+  .status {
+    display: flex;
+    justify-content: space-between;
+    > a {
+      color: $base_red
     }
   }
 }
@@ -195,9 +192,9 @@
             <div
               v-for="(booking, bookingIndex) in clientUser.bookings"
               :key="`bookings_${bookingIndex}`"
-              class="booking_event fadeIn"
+              class="booking fadeIn"
             >
-              <div class="booking_event__details">
+              <div class="details">
                 <p>
                   <b>
                     {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }}
@@ -207,8 +204,11 @@
                   {{ booking.notes }}
                 </p>
               </div>
-              <div class="booking_event__status">
-                <p :style="{ color: statusColor(booking.status) }">
+              <div
+                v-if="!isInThePast(booking) || booking.status !== 'Scheduled'"
+                class="status"
+              >
+                <p :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }">
                   {{ booking.status }}
                 </p>
                 <a
@@ -230,6 +230,7 @@
               v-model="booking_form.date"
               class="small_border_radius"
               type="date"
+              placeholder="Date"
               aria-label="Date"
               required
             >
@@ -237,6 +238,7 @@
               v-model="booking_form.time"
               class="small_border_radius"
               type="time"
+              placeholder="Time"
               aria-label="Time"
               required
             >
