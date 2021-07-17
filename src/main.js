@@ -254,6 +254,15 @@ Vue.mixin({
         case 'Cancelled' || 'Declined':
           return 'var(--base_red)'
       }
+    },
+
+    /**
+     * Checks if the booking is in the past.
+     * @param {object} booking- The booking.
+     * @returns A boolean of if the booking is in the past.
+     */
+    isInThePast (booking) {
+      return new Date(booking.datetime) < new Date()
     }
   }
 })
