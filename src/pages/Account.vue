@@ -223,7 +223,10 @@
         <p class="text--tiny">
           Anyone with the link will be able to see all of your bookings
         </p>
-        <div class="guide_links">
+        <div
+          v-if="claims.calendar"
+          class="guide_links"
+        >
           <a
             :href="GoogleCalendarLink"
             target="_blank"
