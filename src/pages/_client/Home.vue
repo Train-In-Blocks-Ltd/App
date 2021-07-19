@@ -101,7 +101,6 @@
       margin: auto
     }
     .client_info {
-      width: 90vw;
       input.client_info--name {
         font-size: 2rem
       }
