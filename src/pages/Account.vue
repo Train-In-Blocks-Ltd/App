@@ -19,6 +19,7 @@
       grid-gap: .6rem;
       margin-top: 1rem;
       a {
+        width: fit-content;
         font-weight: bold
       }
     }
@@ -264,10 +265,18 @@
           Your Privacy and Data
         </h3>
         <p>You can find more information about our policies below:</p>
-        <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
-        <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
-        <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
-        <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
+        <a
+          v-for="(policy, policyIndex) in policies"
+          :key="`policy_${policyIndex}`"
+          :href="policy.link"
+          class="policies"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <b>
+            {{ policy.title }}
+          </b>
+        </a>
         <div class="form__options">
           <label>
             Allow Third Party Cookies:
@@ -309,7 +318,21 @@ export default {
         error: null
       },
       calendarText: 'Get your calendar link',
-      GoogleCalendarLink: ''
+      GoogleCalendarLink: '',
+      policies: [
+        {
+          title: 'Privacy and Data Policy',
+          link: 'http://traininblocks.com/legal/privacy-and-data-policy'
+        },
+        {
+          title: 'Cookies Policy',
+          link: 'http://traininblocks.com/legal/cookies-policy'
+        },
+        {
+          title: 'Terms of Use',
+          link: 'http://traininblocks.com/legal/terms-of-use'
+        }
+      ]
     }
   },
   computed: mapState([

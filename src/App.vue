@@ -779,7 +779,7 @@ export default {
 
     /**
      * Initiates all the crucial setup for the app.
-     * @param {boolean} - Whether this process is forced.
+     * @param {boolean} force - Whether this process is forced.
      */
     async setup (force) {
       force = force || false
