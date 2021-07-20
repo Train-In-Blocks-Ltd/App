@@ -768,7 +768,6 @@ export const store = new Vuex.Store({
         },
         url: `${state.claims.sub}`
       })
-      localStorage.removeItem('claims')
     },
 
     // -----------------------------
