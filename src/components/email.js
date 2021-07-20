@@ -2546,7 +2546,7 @@ const htmls = (type, data) => {
     case 'weekly-breakdown':
       return `<table>${data.body}</table>`
     case 'client-feedback':
-      return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/block/${data.pId}">See feedback</a></p>`
+      return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}">See feedback</a></p>`
     case 'booking-requested':
       return `<p>${data.clientName} has requested for a booking on ${data.datetime}.</p>`
     case 'booking-rejected':
