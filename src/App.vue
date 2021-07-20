@@ -723,7 +723,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-        document.documentElement.style.setProperty('--base_red', 'white')
+        document.documentElement.style.setProperty('--base_red', 'rgb(184, 0, 0)')
       } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
