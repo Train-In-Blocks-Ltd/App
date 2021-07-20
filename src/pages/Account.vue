@@ -18,31 +18,19 @@
       grid-gap: .6rem;
       margin-top: 1rem;
       a {
-        width: fit-content;
+        display: inline;
         font-weight: bold
       }
     }
   }
   .privacy {
-    display: grid;
-    .policies {
-      width: fit-content;
-      text-decoration: none;
-      color: var(--base);
-      opacity: 1;
-      margin: .4rem 0;
-      transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
-      &:hover {
-        opacity: var(--light_opacity)
-      }
-      &:active {
-        transform: var(--active_state)
-      }
-      &:first-of-type {
-        margin-top: 2rem
-      }
-      &:last-of-type {
-        margin-bottom: 2rem
+    .policy_links {
+      display: grid;
+      grid-gap: .6rem;
+      margin: 1rem 0;
+      a {
+        display: inline;
+        font-weight: bold
       }
     }
   }
@@ -227,30 +215,19 @@
           v-if="claims.calendar"
           class="guide_links"
         >
-          <a
-            :href="GoogleCalendarLink"
-            target="_blank"
-            rel="noreferrer"
-            class="a_link"
+          <p
+            v-for="(guide, guideIndex) in calendarGuides"
+            :key="`cal_${guideIndex}`"
           >
-            Add to Google calendar
-          </a>
-          <a
-            href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c"
-            target="_blank"
-            rel="noreferrer"
-            class="a_link"
-          >
-            Add to Outlook calendar
-          </a>
-          <a
-            href="https://support.apple.com/en-gb/guide/calendar/icl1022/mac"
-            target="_blank"
-            rel="noreferrer"
-            class="a_link"
-          >
-            Add to Apple calendar
-          </a>
+            <a
+              :href="guide.link"
+              target="_blank"
+              rel="noreferrer"
+              class="a_link"
+            >
+              Add to {{ guide.name }} calendar
+            </a>
+          </p>
         </div>
         <br>
         <button
@@ -264,18 +241,23 @@
           Your Privacy and Data
         </h3>
         <p>You can find more information about our policies below:</p>
-        <a
-          v-for="(policy, policyIndex) in policies"
-          :key="`policy_${policyIndex}`"
-          :href="policy.link"
-          class="policies"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <b>
-            {{ policy.title }}
-          </b>
-        </a>
+        <div class="policy_links">
+          <p
+            v-for="(policy, policyIndex) in policies"
+            :key="`policy_${policyIndex}`"
+          >
+            <a
+              :href="policy.link"
+              target="_blank"
+              rel="noreferrer"
+              class="a_link"
+            >
+              <b>
+                {{ policy.title }}
+              </b>
+            </a>
+          </p>
+        </div>
         <div class="form__options">
           <label>
             Allow Third Party Cookies:
@@ -317,7 +299,20 @@ export default {
         error: null
       },
       calendarText: 'Get your calendar link',
-      GoogleCalendarLink: '',
+      calendarGuides: [
+        {
+          name: 'Google',
+          link: ''
+        },
+        {
+          name: 'Outlook',
+          link: 'https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c'
+        },
+        {
+          name: 'Apple',
+          link: 'https://support.apple.com/en-gb/guide/calendar/icl1022/mac'
+        }
+      ],
       policies: [
         {
           title: 'Privacy and Data Policy',
@@ -350,7 +345,7 @@ export default {
     this.$store.dispatch('endLoading')
   },
   mounted () {
-    this.GoogleCalendarLink = `https://calendar.google.com/calendar/u/0/r?cid=${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
+    this.calendarGuides[0].link = `https://calendar.google.com/calendar/u/0/r?cid=${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
   },
   methods: {
 
