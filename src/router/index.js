@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import OktaVue, { LoginCallback } from '@okta/okta-vue'
 import { OktaAuth } from '@okta/okta-auth-js'
+import { store } from '../store/store'
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../config/prod.env') : require('../../config/dev.env')
 
 const LoginComponent = () => import(/* webpackChunkName: "login" */ '@/pages/Login')
@@ -160,6 +161,10 @@ const userType = async (to, from, next) => {
   let result
   if (await Vue.prototype.$auth.isAuthenticated()) {
     const claims = await Vue.prototype.$auth.getUser()
+    store.commit('setData', {
+      attr: 'claims',
+      data: claims
+    })
     if (claims !== undefined && claims !== null) {
       result = claims
     } else {

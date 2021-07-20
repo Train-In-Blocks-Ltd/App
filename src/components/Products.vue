@@ -116,7 +116,7 @@
         </span>
       </a>
       <div v-else>
-        <button>
+        <button @click="createProduct()">
           New product
         </button>
         <a
@@ -318,10 +318,9 @@ export default {
         })
         await this.$store.dispatch('createProduct', {
           pt_id: this.claims.sub,
-          title: null,
-          name: null,
-          notes: null,
-          price: null,
+          name: '',
+          notes: '',
+          price: '',
           type: 'One-off'
         })
         this.$store.dispatch('endLoading')
@@ -387,6 +386,10 @@ export default {
 
     async checkConnectedAccount () {
       try {
+        this.$store.commit('setData', {
+          attr: 'silentLoading',
+          data: true
+        })
         this.$store.commit('setData', {
           attr: 'dontLeave',
           data: true

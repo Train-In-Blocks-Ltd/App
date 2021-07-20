@@ -684,7 +684,11 @@ export const store = new Vuex.Store({
 
     /**
      * Creates a new product.
-     * @param {object} payload - { name, desc, price, type }
+     * @param {string} payload.pt_id - The pt's id.
+     * @param {string} payload.name - The name of the product.
+     * @param {string} payload.desc - The description of the product.
+     * @param {string} payload.price - The price of the product.
+     * @param {string} payload.type - The payment type of the product, either one-off or recurring.
      */
     async createProduct ({ commit }, payload) {
       const RESPONSE = await axios.put('https://api.traininblocks.com/v2/products', {
