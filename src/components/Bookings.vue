@@ -325,7 +325,7 @@ export default {
     /**
      * Creates a new booking.
      */
-    async createBooking () {
+    async createBooking (client) {
       try {
         this.$store.commit('setData', {
           attr: 'dontLeave',

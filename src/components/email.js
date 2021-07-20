@@ -2412,6 +2412,16 @@ export function feedbackEmail (cId, pId) {
   )
 }
 
+// -----------------------------
+// Text
+// -----------------------------
+
+/**
+ * The email body to notify the trainer-user that a client has given feedback.
+ * @param {integer} cId - The client's id.
+ * @param {integer} pId - The trainer's id.
+ * @returns The body text of the email.
+ */
 export function feedbackEmailText (cId, pId) {
   return (`** Your client has given some feedback
     ------------------------------------------------------------
@@ -2424,9 +2434,15 @@ export function feedbackEmailText (cId, pId) {
     The Train In Blocks Team`)
 }
 
+/**
+ * The email body to notify the trainer-user of their weekly activities.
+ * @param {string} body - The text content of the email.
+ * @returns The body text for the email.
+ */
 export function weeklyBreakdown (body) {
   return (`** Here's a breakdown of what you did this week
     ------------------------------------------------------------
+
     ${body}
 
     All the best,
@@ -2481,4 +2497,76 @@ export function bookingAccepted (datetime) {
     All the best,
     
     The Train In Blocks Team`)
+}
+
+// -----------------------------
+// Template
+// -----------------------------
+
+export function textEmail (title, html) {
+  return (
+    `<!doctype html>
+    <html xmlns='http://www.w3.org/1999/xhtml' xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office'>
+      <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <style type='text/css'>
+          body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.42;
+            background-color: #F9F9F9
+          }
+          #content {
+            margin: 2rem 0
+          }
+        </style>
+      </head>
+      <body>
+        <div id="email">
+          
+          <!-- Header -->
+
+          <table id="header" role="presentation" width="100%">
+            <tr>
+              <td>
+                <img align='left' alt='' src='https://app.traininblocks.com/emailLogo.png' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Content -->
+
+          <table id="content" role="presentation" width="100%">
+            <tr>
+              <td>
+                <h1>
+                  ${title}
+                </h1>
+                <div class="content-text">
+                  ${html}
+                </div>
+                <p>
+                  All the best,<br><strong>The Train In Blocks Team</strong>
+                </p>  
+              </td>
+            </tr>
+          </table>
+
+          <!-- Footer
+
+          <table id="footer" role="presentation" width="100%">
+            <tr>
+              <td>
+
+              </td>
+            </tr>
+          </table>
+
+          -->
+        </div>
+      </body>
+    </html>`
+  )
 }
