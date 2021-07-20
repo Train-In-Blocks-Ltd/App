@@ -155,7 +155,7 @@ hr {
           />
         </div>
         <skeleton v-if="loading" :type="'session'" class="container--sessions" />
-        <div v-else-if="plan.sessions.length !== 0" class="container--sessions">
+        <div v-else-if="plan.sessions" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
               v-show="showing_current_session !== 0"
@@ -234,7 +234,7 @@ hr {
           <h3>
             No sessions yet
           </h3>
-          <p class="grey">
+          <p class="grey text--small">
             Please contact your trainer or coach for more details
           </p>
           <div class="spacer" />
