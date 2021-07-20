@@ -2433,3 +2433,52 @@ export function weeklyBreakdown (body) {
     
     The Train In Blocks Team`)
 }
+
+/**
+ * The email body to notify the trainer-user that a new booking request has been received.
+ * @param {string} clientName - The client's name that requested a booking.
+ * @param {string} datetime - The date and time requested.
+ * @returns The body text for the email.
+ */
+export function bookingRequest (clientName, datetime) {
+  return (`** Your client has requested for a session
+    ------------------------------------------------------------
+    
+    ${clientName} has requested a session for ${datetime}. Head over to the app now to accept or reject this booking.
+
+    All the best,
+    
+    The Train In Blocks Team`)
+}
+
+/**
+ * The email body to notify the client-user of a cancelled/rejected booking.
+ * @param {string} datetime - The date and time for when the booking would have taken place.
+ * @returns The body text for the email.
+ */
+export function bookingCancelled (datetime) {
+  return (`** Your trainer has cancelled/rejected a booking
+    ------------------------------------------------------------
+    
+    The booking for ${datetime} has been cancelled/rejected by your trainer.
+
+    All the best,
+    
+    The Train In Blocks Team`)
+}
+
+/**
+ * The email body to notify the client-user of an accepted/confirmed booking.
+ * @param {string} datetime - The date and time for when the booking will take place.
+ * @returns The body text for the email.
+ */
+export function bookingAccepted (datetime) {
+  return (`** Your trainer has accepted/confirmed a booking
+    ------------------------------------------------------------
+    
+    The booking for ${datetime} has been accepted/confirmed by your trainer.
+
+    All the best,
+    
+    The Train In Blocks Team`)
+}

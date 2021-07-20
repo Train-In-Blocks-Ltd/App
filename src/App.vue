@@ -710,40 +710,38 @@ export default {
     darkmode (mode) {
       const MATCHED_MEDIA = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
-        document.documentElement.style.setProperty('--inset_shadow', '#FFFFFF20')
-        document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
-        document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
-        document.documentElement.style.setProperty('--back', '#282828')
-        document.documentElement.style.setProperty('--fore', '#383838')
-        document.documentElement.style.setProperty('--base', 'white')
-        document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
-        document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
-        document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
-        document.documentElement.style.setProperty('--calendar_highlight', '#686868')
-        document.documentElement.style.setProperty('--skeleton_1', '#686868')
-        document.documentElement.style.setProperty('--skeleton_2', '#484848')
-        document.documentElement.style.setProperty('--link', 'white')
-        document.documentElement.style.setProperty('--base_red', 'rgb(184, 0, 0)')
+        document.documentElement.style.setProperty('var(--inset_shadow)', '#FFFFFF20')
+        document.documentElement.style.setProperty('var(--low_shadow)', '0 0 2px 0 #FFFFFF60')
+        document.documentElement.style.setProperty('var(--high_shadow)', '0 0 2px 0 white')
+        document.documentElement.style.setProperty('var(--back)', '#282828')
+        document.documentElement.style.setProperty('var(--fore)', '#383838')
+        document.documentElement.style.setProperty('var(--base)', 'white')
+        document.documentElement.style.setProperty('var(--base_light)', '#FFFFFF94')
+        document.documentElement.style.setProperty('var(--base_faint)', '#FFFFFF40')
+        document.documentElement.style.setProperty('var(--overlay_glass)', '#282828B3')
+        document.documentElement.style.setProperty('var(--calendar_highlight)', '#686868')
+        document.documentElement.style.setProperty('var(--skeleton_1)', '#686868')
+        document.documentElement.style.setProperty('var(--skeleton_2)', '#484848')
+        document.documentElement.style.setProperty('var(--link)', 'white')
       } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
           this.darkmode(e.matches ? 'dark' : 'light')
         })
       } else {
-        document.documentElement.style.setProperty('--inset_shadow', '#28282810')
-        document.documentElement.style.setProperty('--low_shadow', '0 0 20px 10px #28282808')
-        document.documentElement.style.setProperty('--high_shadow', '0 0 20px 10px #28282816')
-        document.documentElement.style.setProperty('--back', '#F9F9F9')
-        document.documentElement.style.setProperty('--fore', 'white')
-        document.documentElement.style.setProperty('--base', '#282828')
-        document.documentElement.style.setProperty('--base_light', '#585858')
-        document.documentElement.style.setProperty('--base_faint', '#28282840')
-        document.documentElement.style.setProperty('--overlay_glass', '#FFFFFFB3')
-        document.documentElement.style.setProperty('--calendar_highlight', '#FFFFEE')
-        document.documentElement.style.setProperty('--skeleton_1', '#F4F4F4')
-        document.documentElement.style.setProperty('--skeleton_2', '#E4E4E4')
-        document.documentElement.style.setProperty('--link', 'blue')
-        document.documentElement.style.setProperty('--base_red', 'rgb(184, 0, 0)')
+        document.documentElement.style.setProperty('var(--inset_shadow)', '#28282810')
+        document.documentElement.style.setProperty('var(--low_shadow)', '0 0 20px 10px #28282808')
+        document.documentElement.style.setProperty('var(--high_shadow)', '0 0 20px 10px #28282816')
+        document.documentElement.style.setProperty('var(--back)', '#F9F9F9')
+        document.documentElement.style.setProperty('var(--fore)', 'white')
+        document.documentElement.style.setProperty('var(--base)', '#282828')
+        document.documentElement.style.setProperty('var(--base_light)', '#585858')
+        document.documentElement.style.setProperty('var(--base_faint)', '#28282840')
+        document.documentElement.style.setProperty('var(--overlay_glass)', '#FFFFFFB3')
+        document.documentElement.style.setProperty('var(--calendar_highlight)', '#FFFFEE')
+        document.documentElement.style.setProperty('var(--skeleton_1)', '#F4F4F4')
+        document.documentElement.style.setProperty('var(--skeleton_2)', '#E4E4E4')
+        document.documentElement.style.setProperty('var(--link)', 'blue')
       }
     },
 
@@ -787,23 +785,22 @@ export default {
         // Set claims
         this.$store.commit('setData', {
           attr: 'claims',
-          data: localStorage.getItem('claims') ? JSON.parse(localStorage.getItem('claims')) : this.$auth.getUser()
+          data: await this.$auth.getUser()
         })
-        const CLAIMS = this.$store.state.claims
-        if (CLAIMS.user_type === 'Trainer' || CLAIMS.user_type === 'Admin') {
+        if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
           this.$store.commit('setData', {
             attr: 'isTrainer',
             data: true
           })
         }
-        if (CLAIMS) {
-          if (!CLAIMS.ga || !CLAIMS) {
+        if (this.claims) {
+          if (!this.claims.ga || !this.claims) {
             this.$store.commit('setData', {
               attr: 'ga',
               data: true
             })
           }
-          if (!CLAIMS.theme || !CLAIMS) {
+          if (!this.claims.theme || !this.claims) {
             this.$store.commit('setData', {
               attr: 'theme',
               data: 'system'
@@ -811,11 +808,11 @@ export default {
           }
 
           // Set analytics and theme
-          CLAIMS.ga !== false ? this.$ga.enable() : this.$ga.disable()
-          this.darkmode(CLAIMS.theme)
+          this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
+          this.darkmode(this.claims.theme)
 
           // Set EULA
-          if ((!CLAIMS.policy || this.$store.state.policyVersion !== CLAIMS.policy[2]) && CLAIMS.email !== 'demo@traininblocks.com' && this.authenticated) {
+          if ((!this.claims.policy || this.$store.state.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.authenticated) {
             this.willBodyScroll(false)
             this.$store.commit('setData', {
               attr: 'showEULA',
