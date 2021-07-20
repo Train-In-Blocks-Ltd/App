@@ -1,3 +1,8 @@
+/**
+ * @file Contains all the custom email templates.
+ * @author Train In Blocks Ltd.
+ */
+
 export function email (link) {
   return (
     `<!doctype html>
@@ -2413,7 +2418,7 @@ export function feedbackEmail (cId, pId) {
 }
 
 // -----------------------------
-// Text
+// Text version of email bodies
 // -----------------------------
 
 /**
@@ -2427,7 +2432,7 @@ export function feedbackEmailText (cId, pId) {
     ------------------------------------------------------------
     Log in to find out what your client has said about the session.
     
-    View feedback (https://app.traininblocks.com/client/${cId}/block/${pId})
+    View feedback (https://app.traininblocks.com/client/${cId}/plan/${pId})
 
     All the best,
     
@@ -2500,10 +2505,63 @@ export function bookingAccepted (datetime) {
 }
 
 // -----------------------------
+// Builder and content
+// -----------------------------
+
+/**
+ * Builds an email HTML template to send to users.
+ * @param {string} type - The email body text to use.
+ * @param {object} data - Additional specific details required to fill the email.
+ * @returns The built email.
+ */
+export function emailBuilder (type, data) {
+  return baseEmail({
+    title: titles[type],
+    html: htmls(type, data)
+  })
+}
+
+/** A dictionary of all the email titles. */
+const titles = {
+  'weekly-breakdown': 'Here\'s a breakdown of what you did this week',
+  'client-feedback': 'Your client has given some feedback',
+  'booking-requested': 'Your client has requested for a booking',
+  'booking-rejected': 'Your trainer has rejected/cancelled a booking',
+  'booking-accepted': 'Your trainer has accepted/confirmed a booking'
+}
+
+/**
+ * Contains all the email HTMLs.
+ * @param {string} type - The email body text to use.
+ * @param {object} data - Additional specific details required to fill the email.
+ * @returns The filled HTML for the email.
+ */
+const htmls = (type, data) => {
+  switch (type) {
+    case 'weekly-breakdown':
+      return `<table>${data.body}</table>`
+    case 'client-feedback':
+      return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/block/${data.pId}">See feedback</a></p>`
+    case 'booking-requested':
+      return `<p>${data.clientName} has requested for a booking on ${data.datetime}.</p>`
+    case 'booking-rejected':
+      return `<p>The booking for ${data.datetime} has been rejected/cancelled by your trainer.</p>`
+    case 'booking-accepted':
+      return `<p>The booking for ${data.datetime} has been accepted/confirmed by your trainer.</p>`
+  }
+}
+
+// -----------------------------
 // Template
 // -----------------------------
 
-export function textEmail (title, html) {
+/**
+ * The base email template.
+ * @param {string} data.title - The email title.
+ * @param {string} data.html - The email content in HTML.
+ * @returns The built email.
+ */
+function baseEmail (data) {
   return (
     `<!doctype html>
     <html xmlns='http://www.w3.org/1999/xhtml' xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office'>
@@ -2542,10 +2600,10 @@ export function textEmail (title, html) {
             <tr>
               <td>
                 <h1>
-                  ${title}
+                  ${data.title}
                 </h1>
                 <div class="content-text">
-                  ${html}
+                  ${data.html}
                 </div>
                 <p>
                   All the best,<br><strong>The Train In Blocks Team</strong>
