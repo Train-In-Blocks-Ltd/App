@@ -2513,6 +2513,11 @@ export function bookingAccepted (datetime) {
  * @param {string} type - The email body text to use.
  * @param {object} data - Additional specific details required to fill the email.
  * @returns The built email.
+ * @example <caption>An example of how to generate an HTML template for the client feedback email.</caption>
+ * emailBuilder ('client-feedback', {
+ *  cId: ...,
+ *  pId: ...
+ * })
  */
 export function emailBuilder (type, data) {
   return baseEmail({
