@@ -20,8 +20,11 @@
   }
   .multi-select_options {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 1rem;
+    &.evenColumns {
+      grid-template-columns: repeat(2, 1fr)
+    }
     a {
       width: fit-content;
       margin: auto;
@@ -67,7 +70,10 @@
       <p class="selection_indicator">
         <b>Selected {{ selected.length }} {{ selected.length === 1 ? type : `${type}s` }} to ...</b>
       </p>
-      <div class="multi-select_options">
+      <div
+        :class="{ evenColumns: options.length % 3 !== 0 }"
+        class="multi-select_options"
+      >
         <a
           v-for="(option, index) in options"
           :key="`${type}_option_${index}`"

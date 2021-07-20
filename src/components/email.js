@@ -2482,3 +2482,70 @@ export function bookingAccepted (datetime) {
     
     The Train In Blocks Team`)
 }
+
+export function textEmail (title, html) {
+  return (
+    `<!doctype html>
+    <html xmlns='http://www.w3.org/1999/xhtml' xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office'>
+      <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <style type='text/css'>
+          body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.42;
+            background-color: #F9F9F9
+          }
+          #content {
+            margin: 2rem 0
+          }
+        </style>
+      </head>
+      <body>
+        <div id="email">
+          
+          <!-- Header -->
+
+          <table id="header" role="presentation" width="100%">
+            <tr>
+              <td>
+                <h1>
+                  ${title}
+                </h1>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Content -->
+
+          <table id="content" role="presentation" width="100%">
+            <tr>
+              <td>
+                <div class="content-text">
+                  ${html}
+                </div>
+                <p>
+                  All the best,<br><strong>The Train In Blocks Team</strong>
+                </p>  
+              </td>
+            </tr>
+          </table>
+
+          <!-- Footer
+
+          <table id="footer" role="presentation" width="100%">
+            <tr>
+              <td>
+
+              </td>
+            </tr>
+          </table>
+
+          -->
+        </div>
+      </body>
+    </html>`
+  )
+}
