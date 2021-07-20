@@ -218,7 +218,7 @@
       }
     }
     .newSession, .incomplete {
-      color: #B80000
+      color: var(--base_red)
     }
     .completed {
       color: green

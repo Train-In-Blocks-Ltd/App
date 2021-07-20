@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     span.newTemplate {
-      color: #B80000
+      color: var(--base_red)
     }
     .header_options {
       display: flex;
