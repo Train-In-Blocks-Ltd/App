@@ -280,8 +280,8 @@ export default {
 
       booking_form: {
         clientId: 'Select a client',
-        date: null,
-        time: null,
+        date: this.today(),
+        time: this.timeNow(),
         notes: null
       },
 

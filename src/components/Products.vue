@@ -91,6 +91,9 @@
     }
   }
 }
+.select_all {
+  margin: auto 1rem auto 0
+}
 </style>
 
 <template>
@@ -116,9 +119,6 @@
         </span>
       </a>
       <div v-else>
-        <button @click="createProduct()">
-          New product
-        </button>
         <a
           v-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
           href="javascript:void(0)"
@@ -127,6 +127,9 @@
         >
           Select all
         </a>
+        <button @click="createProduct()">
+          New product
+        </button>
       </div>
     </div>
     <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
@@ -145,6 +148,7 @@
             placeholder="Name"
             aria-label="Name"
             required
+            @blur="updateProduct(product.id)"
           >
           <checkbox
             :item-id="product.id"
@@ -159,6 +163,7 @@
             class="small_border_radius"
             placeholder="Type"
             aria-label="Type"
+            @change="updateProduct(product.id)"
           >
             <option value="one-off">
               One-off
@@ -195,6 +200,7 @@
             step="0.01"
             min="0"
             required
+            @blur="updateProduct(product.id)"
           >
         </div>
         <textarea
@@ -205,6 +211,7 @@
           placeholder="Description"
           aria-label="Description"
           required
+          @blur="updateProduct(product.id)"
         />
       </form>
     </div>
@@ -260,7 +267,7 @@ export default {
     resolveProductsMultiselect (res) {
       switch (res) {
         case 'Delete':
-          // this.deleteProducts()
+          this.deleteProducts()
           break
         case 'Deselect':
           this.deselectAll()
@@ -349,15 +356,14 @@ export default {
     /**
      * Deletes the selected products.
      */
-    async deleteProduct () {
+    async deleteProducts () {
       try {
         this.$store.commit('setData', {
           attr: 'dontLeave',
           data: true
         })
-        await this.$store.dispatch('deleteProduct', {
-          productIds: this.selectedProducts
-        })
+        await this.$store.dispatch('deleteProduct', this.selectedProducts)
+        this.deselectAll()
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)

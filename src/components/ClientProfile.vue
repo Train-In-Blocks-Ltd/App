@@ -265,8 +265,8 @@ export default {
   data () {
     return {
       booking_form: {
-        date: null,
-        time: null,
+        date: this.today(),
+        time: this.datetime(),
         notes: null
       }
     }

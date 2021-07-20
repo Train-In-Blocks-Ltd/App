@@ -148,7 +148,7 @@ Vue.mixin({
     // Date
 
     /**
-     * @returns Today's date in YYY-MM-DD
+     * @returns Today's date in YYY-MM-DD.
      */
     today () {
       const DATE = new Date()
@@ -156,6 +156,16 @@ Vue.mixin({
       const MONTH = String(DATE.getMonth() + 1).padStart(2, '0')
       const DAY = String(DATE.getDate()).padStart(2, '0')
       return `${YEAR}-${MONTH}-${DAY}`
+    },
+
+    /**
+     * @returns The current time in HH:MM.
+     */
+    timeNow () {
+      const DATE = new Date()
+      const HOUR = DATE.getHours()
+      const MIN = DATE.getMinutes()
+      return `${HOUR}:${MIN}`
     },
 
     /**

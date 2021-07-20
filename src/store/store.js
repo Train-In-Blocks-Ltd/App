@@ -706,7 +706,10 @@ export const store = new Vuex.Store({
      */
     async updateProduct ({ state }, productId) {
       const POST_DATA = state.products.find(product => product.id === parseInt(productId))
-      await axios.post(`https://api.traininblocks.com/v2/products/${productId}`, {
+      delete POST_DATA.pt_id
+      delete POST_DATA.created_at
+      delete POST_DATA.updated_at
+      await axios.post('https://api.traininblocks.com/v2/products', {
         ...POST_DATA
       })
     },
@@ -721,7 +724,7 @@ export const store = new Vuex.Store({
       productIds.forEach((productId) => {
         DELETE_IDS.push({ id: productId })
       })
-      await axios.delete('https://api.traininblocks.com/v2/batch/product', {
+      await axios.delete('https://api.traininblocks.com/v2/batch/products', {
         data: DELETE_IDS
       })
       commit('removeProduct', productIds)
