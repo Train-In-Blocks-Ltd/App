@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .large_margin {
   margin: 4rem 0
 }
@@ -18,12 +17,12 @@
 .plans_layout > div, .rect {
   display: grid;
   grid-gap: 2rem;
-  background-color: $skeleton_2;
+  background-color: var(--skeleton_2);
   border-radius: 10px;
   animation: fade .6s linear infinite alternate-reverse
 }
 .rect__title, .rect__content, .rect__box, .rect__large_text, .rect__small_text {
-  background: linear-gradient(90deg, $skeleton_1 8%, $skeleton_2 18%, $skeleton_1 33%);
+  background: linear-gradient(90deg, var(--skeleton_1) 8%, var(--skeleton_2) 18%, var(--skeleton_1) 33%);
   border-radius: 10px;
   animation: shimmer 5s linear infinite forwards
 }
@@ -56,13 +55,13 @@
   width: 140px;
   border-radius: 50%;
   margin: 0 auto;
-  background-color: $skeleton_2;
+  background-color: var(--skeleton_2);
   animation: fade .6s linear infinite alternate-reverse
 }
 
 @keyframes fade {
   from {
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
   to {
     opacity: 1

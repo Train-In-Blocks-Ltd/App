@@ -1,9 +1,27 @@
 <style lang="scss">
-@import './assets/styles/variables.scss';
-
 /* Global */
 * {
   box-sizing: border-box
+}
+:root {
+  --transition_smooth: .4s all;
+  --transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
+  --low_shadow: 0 0 20px 10px #28282808;
+  --high_shadow: 0 0 20px 10px #28282816;
+  --back: #F9F9F9;
+  --fore: white;
+  --base: #282828;
+  --base_light: #585858;
+  --base_faint: #28282840;
+  --base_red: rgb(184, 0, 0);
+  --base_green: green;
+  --overlay_glass: #FFFFFFB3;
+  --calendar_highlight: #FFFFEE;
+  --skeleton_1: #F4F4F4;
+  --skeleton_2: #E4E4E4;
+  --link: blue;
+  --light_opacity: .6;
+  --active_state: scale(.95)
 }
 
 /* Animation */
@@ -48,17 +66,17 @@
   position: fixed;
   top: 0;
   right: 0;
-  background-color: $overlay_glass;
+  background-color: var(--overlay_glass);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  transition: $transition_standard;
+  transition: var(--transition_standard);
   &.opened_sections {
     transform: none
   }
 }
 @supports not (backdrop-filter: blur(10px)) {
   .section_overlay {
-    background-color: $fore
+    background-color: var(--fore)
   }
 }
 
@@ -70,11 +88,11 @@ body {
   display: grid;
   font-size: 16px;
   line-height: 1.42;
-  background-color: $back
+  background-color: var(--back)
 }
 #app {
-  color: $base;
-  background-color: $back
+  color: var(--base);
+  background-color: var(--back)
 }
 main {
   margin-left: calc(38px + 2rem);
@@ -91,10 +109,10 @@ main {
   width: 100vw;
   text-align: center;
   padding: .1rem;
-  background-color: $base;
+  background-color: var(--base);
   :is(a, p) {
     display: block;
-    color: $fore
+    color: var(--fore)
   }
 }
 .notAuth {
@@ -104,23 +122,23 @@ main {
 /* SVG colors */
 svg {
   path {
-    fill: $base
+    fill: var(--base)
   }
   &.no_fill path {
     fill: none;
-    stroke: $base
+    stroke: var(--base)
   }
 }
 
 /* Other elements */
 hr {
   margin: 1rem 0;
-  border-color: $base_light
+  border-color: var(--base_light)
 }
 
 /* Containers */
 .view_container {
-  background-color: $back;
+  background-color: var(--back);
   padding: 2rem 10vw
 }
 .wrapper--calendar {
@@ -168,11 +186,11 @@ h3, .text--small {
 }
 i {
   /* stylelint-disable-next-line */
-  color: $base !important
+  color: var(--base) !important
 }
 .text--red {
   /* stylelint-disable-next-line */
-  color: $base_red !important
+  color: var(--base_red) !important
 }
 .text--holder {
   margin: 2rem 0 8rem 0
@@ -188,9 +206,9 @@ i {
 /* Tailwinds */
 .cursor {
   cursor: pointer;
-  transition: $transition_standard;
+  transition: var(--transition_standard);
   &:hover {
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
 }
 .allow_y_overflow {
@@ -200,7 +218,7 @@ i {
   display: flex
 }
 .recently_added {
-  border: 1px solid $base
+  border: 1px solid var(--base)
 }
 .no_margin {
   margin: 0
@@ -215,24 +233,24 @@ i {
   margin-right: 1rem
 }
 .grey {
-  color: $base_light
+  color: var(--base_light)
 }
 .allow_text_overflow {
   text-overflow: ellipsis
 }
 .disabled, .disabled:hover {
-  opacity: $light_opacity;
+  opacity: var(--light_opacity);
   cursor: default
 }
 
 /* Text buttons */
 .a_link {
   display: flex;
-  color: $base;
+  color: var(--base);
   text-decoration: none;
   transition: 1s all cubic-bezier(.165, .84, .44, 1);
   &:hover {
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
   svg {
     height: 22px;
@@ -253,22 +271,22 @@ button {
   padding: .6rem 1.6rem;
   font-size: .8rem;
   font-weight: bold;
-  color: $back;
-  background-color: $base;
+  color: var(--back);
+  background-color: var(--base);
   transition: color .4s, background-color .4s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
   &:hover:not(:disabled) {
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
   &:active:not(:disabled) {
-    transform: $active_state
+    transform: var(--active_state)
   }
   &:focus {
-    box-shadow: 0 0 0 4px $base_light
+    box-shadow: 0 0 0 4px var(--base_light)
   }
   &:disabled,
   &[disabled] {
     cursor: not-allowed;
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
   &.green_button {
     color: white;
@@ -300,17 +318,17 @@ textarea {
   resize: none;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1rem;
-  color: $base;
-  border: 2px solid $base_faint;
+  color: var(--base);
+  border: 2px solid var(--base_faint);
   border-radius: 8px;
   background-color: transparent;
   box-shadow: none;
-  transition: $transition_standard;
+  transition: var(--transition_standard);
   &:not(:focus):hover {
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
   &:focus {
-    border: 2px solid $base
+    border: 2px solid var(--base)
   }
   &.small_border_radius {
     border-radius: 5px
@@ -318,7 +336,7 @@ textarea {
 }
 input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
   cursor: not-allowed;
-  opacity: $light_opacity
+  opacity: var(--light_opacity)
 }
 input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
 select.width_300 {
@@ -330,10 +348,10 @@ input[type=color] {
   padding: 0 .14rem;
   outline-width: 0;
   cursor: pointer;
-  transition: $transition_standard
+  transition: var(--transition_standard)
 }
 option {
-  background-color: $fore
+  background-color: var(--fore)
 }
 .search {
   width: 100%;
@@ -345,7 +363,7 @@ option {
   margin: 2rem 0
 }
 ::placeholder {
-  color: $base_light;
+  color: var(--base_light);
   opacity: 1; /* Firefox */
 }
 
@@ -372,9 +390,9 @@ option {
   transform: translateX(5rem);
   padding: .4rem 1rem .4rem .6rem;
   border-radius: 3px 0 0 3px;
-  background-color: $fore;
-  box-shadow: $low_shadow;
-  transition: $transition_standard;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  transition: var(--transition_standard);
   &:hover :is(svg, .notify_badge) {
     display: none
   }
@@ -408,15 +426,15 @@ option {
     left: -10px;
     padding: 2px 5px;
     border-radius: 3px;
-    background: $base;
-    color: $fore;
+    background: var(--base);
+    color: var(--fore);
     font-size: .6rem
   }
   .text {
     font-size: .8rem;
     display: none;
     white-space: nowrap;
-    transition: $transition_standard
+    transition: var(--transition_standard)
   }
 }
 
@@ -424,17 +442,17 @@ option {
 #nprogress {
   .bar {
     /* stylelint-disable-next-line */
-    background-color: $base !important
+    background-color: var(--base) !important
   }
   .peg {
     /* stylelint-disable-next-line */
-    box-shadow: 0 0 10px $base, 0 0 5px $base !important
+    box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
   }
   .spinner-icon {
     /* stylelint-disable-next-line */
-    border-top-color: $base !important;
+    border-top-color: var(--base) !important;
     /* stylelint-disable-next-line */
-    border-left-color: $base !important
+    border-left-color: var(--base) !important
   }
 }
 
@@ -444,12 +462,12 @@ option {
   height: 10px
 }
 ::-webkit-scrollbar-track {
-  background-color: $base_faint
+  background-color: var(--base_faint)
 }
 ::-webkit-scrollbar-thumb {
-  background-color: $base;
+  background-color: var(--base);
   &:hover {
-    background-color: $base_faint
+    background-color: var(--base_faint)
   }
 }
 
@@ -710,38 +728,36 @@ export default {
     darkmode (mode) {
       const MATCHED_MEDIA = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
-        document.documentElement.style.setProperty('var(--inset_shadow)', '#FFFFFF20')
-        document.documentElement.style.setProperty('var(--low_shadow)', '0 0 2px 0 #FFFFFF60')
-        document.documentElement.style.setProperty('var(--high_shadow)', '0 0 2px 0 white')
-        document.documentElement.style.setProperty('var(--back)', '#282828')
-        document.documentElement.style.setProperty('var(--fore)', '#383838')
-        document.documentElement.style.setProperty('var(--base)', 'white')
-        document.documentElement.style.setProperty('var(--base_light)', '#FFFFFF94')
-        document.documentElement.style.setProperty('var(--base_faint)', '#FFFFFF40')
-        document.documentElement.style.setProperty('var(--overlay_glass)', '#282828B3')
-        document.documentElement.style.setProperty('var(--calendar_highlight)', '#686868')
-        document.documentElement.style.setProperty('var(--skeleton_1)', '#686868')
-        document.documentElement.style.setProperty('var(--skeleton_2)', '#484848')
-        document.documentElement.style.setProperty('var(--link)', 'white')
+        document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
+        document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
+        document.documentElement.style.setProperty('--back', '#282828')
+        document.documentElement.style.setProperty('--fore', '#383838')
+        document.documentElement.style.setProperty('--base', 'white')
+        document.documentElement.style.setProperty('--base_light', '#FFFFFF94')
+        document.documentElement.style.setProperty('--base_faint', '#FFFFFF40')
+        document.documentElement.style.setProperty('--overlay_glass', '#282828B3')
+        document.documentElement.style.setProperty('--calendar_highlight', '#686868')
+        document.documentElement.style.setProperty('--skeleton_1', '#686868')
+        document.documentElement.style.setProperty('--skeleton_2', '#484848')
+        document.documentElement.style.setProperty('--link', 'white')
       } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
           this.darkmode(e.matches ? 'dark' : 'light')
         })
       } else {
-        document.documentElement.style.setProperty('var(--inset_shadow)', '#28282810')
-        document.documentElement.style.setProperty('var(--low_shadow)', '0 0 20px 10px #28282808')
-        document.documentElement.style.setProperty('var(--high_shadow)', '0 0 20px 10px #28282816')
-        document.documentElement.style.setProperty('var(--back)', '#F9F9F9')
-        document.documentElement.style.setProperty('var(--fore)', 'white')
-        document.documentElement.style.setProperty('var(--base)', '#282828')
-        document.documentElement.style.setProperty('var(--base_light)', '#585858')
-        document.documentElement.style.setProperty('var(--base_faint)', '#28282840')
-        document.documentElement.style.setProperty('var(--overlay_glass)', '#FFFFFFB3')
-        document.documentElement.style.setProperty('var(--calendar_highlight)', '#FFFFEE')
-        document.documentElement.style.setProperty('var(--skeleton_1)', '#F4F4F4')
-        document.documentElement.style.setProperty('var(--skeleton_2)', '#E4E4E4')
-        document.documentElement.style.setProperty('var(--link)', 'blue')
+        document.documentElement.style.setProperty('--low_shadow', '0 0 20px 10px #28282808')
+        document.documentElement.style.setProperty('--high_shadow', '0 0 20px 10px #28282816')
+        document.documentElement.style.setProperty('--back', '#F9F9F9')
+        document.documentElement.style.setProperty('--fore', 'white')
+        document.documentElement.style.setProperty('--base', '#282828')
+        document.documentElement.style.setProperty('--base_light', '#585858')
+        document.documentElement.style.setProperty('--base_faint', '#28282840')
+        document.documentElement.style.setProperty('--overlay_glass', '#FFFFFFB3')
+        document.documentElement.style.setProperty('--calendar_highlight', '#FFFFEE')
+        document.documentElement.style.setProperty('--skeleton_1', '#F4F4F4')
+        document.documentElement.style.setProperty('--skeleton_2', '#E4E4E4')
+        document.documentElement.style.setProperty('--link', 'blue')
       }
     },
 

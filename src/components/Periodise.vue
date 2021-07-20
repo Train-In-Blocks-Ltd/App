@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .periodise {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -8,9 +7,9 @@
   margin-bottom: 4rem;
   .plan {
     display: grid;
-    border: 3px solid $base;
+    border: 3px solid var(--base);
     border-radius: 10px;
-    transition: $transition_standard;
+    transition: var(--transition_standard);
     .plan_header {
       display: grid;
       grid-gap: 1rem;
@@ -38,7 +37,7 @@
         margin-top: auto;
         flex-direction: column;
         justify-content: space-around;
-        opacity: $light_opacity;
+        opacity: var(--light_opacity);
         width: 100%;
         height: 10px;
         &:first-child {
@@ -48,9 +47,9 @@
           border-radius: 0 0 5px 0
         }
         &.noColor {
-          border-top: 1px solid $base_faint;
+          border-top: 1px solid var(--base_faint);
           &:not(.noColor:last-child) {
-            border-right: 1px solid $base_faint
+            border-right: 1px solid var(--base_faint)
           }
         }
       }

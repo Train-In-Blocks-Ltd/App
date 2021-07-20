@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .instructions {
   margin-top: 2rem;
   .img_container {

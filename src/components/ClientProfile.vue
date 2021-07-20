@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .profile_container {
   .close_icon {
     float: right
@@ -17,7 +16,7 @@
     padding: 1.8rem;
     height: 140px;
     width: 140px;
-    border: 4px solid $base;
+    border: 4px solid var(--base);
     border-radius: 50%
   }
   .client_user_details {
@@ -46,8 +45,8 @@
   /* Booking outer container */
   .bookings_container {
     padding: 2rem;
-    background-color: $fore;
-    border: 3px solid $base;
+    background-color: var(--fore);
+    border: 3px solid var(--base);
     border-radius: 10px;
     margin: 2rem 0;
 
@@ -82,7 +81,7 @@
   display: grid;
   grid-gap: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid $base_faint;
+  border-bottom: 1px solid var(--base_faint);
   padding-bottom: 1rem;
   height: fit-content;
   .details {
@@ -93,7 +92,7 @@
     display: flex;
     justify-content: space-between;
     > a {
-      color: $base_red
+      color: var(--base_red)
     }
   }
 }

@@ -1,5 +1,4 @@
 <style lang="scss">
-@import '../../assets/styles/variables.scss';
 .show_html {
   > :is(div, p) {
     margin: .6rem 0
@@ -10,17 +9,16 @@
     margin: 1rem 0
   }
   a {
-    color: $link
+    color: var(--link)
   }
 }
 </style>
 
 <style lang="scss" scoped>
-@import '../../assets/styles/variables.scss';
 .container--sessions {
   margin: 2rem 0;
   .wrapper--session {
-    border: 3px solid $base;
+    border: 3px solid var(--base);
     border-radius: 10px;
     padding: 2rem;
     margin: 2rem 0

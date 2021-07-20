@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .details_container {
   display: grid;
   grid-gap: 4rem;
@@ -29,15 +28,15 @@
     .policies {
       width: fit-content;
       text-decoration: none;
-      color: $base;
+      color: var(--base);
       opacity: 1;
       margin: .4rem 0;
       transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
       &:hover {
-        opacity: $light_opacity
+        opacity: var(--light_opacity)
       }
       &:active {
-        transform: $active_state
+        transform: var(--active_state)
       }
       &:first-of-type {
         margin-top: 2rem

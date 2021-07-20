@@ -1,8 +1,7 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 #calendar_view {
   border-radius: 10px;
-  border: 3px solid $base;
+  border: 3px solid var(--base);
   margin-top: 1rem;
   .calendar_header {
     display: flex;
@@ -13,8 +12,8 @@
       top: 0;
       left: 2rem;
       padding: .6rem;
-      background: $base;
-      color: $fore;
+      background: var(--base);
+      color: var(--fore);
       width: fit-content;
       border-radius: 0 0 10px 10px
     }
@@ -23,9 +22,9 @@
       justify-content: space-between;
       margin: 2rem;
       * {
-        transition: $transition_standard;
+        transition: var(--transition_standard);
         &:hover {
-          opacity: $light_opacity
+          opacity: var(--light_opacity)
         }
       }
       .next_week,
@@ -41,7 +40,7 @@
         margin: auto;
         &.disabled,
         &.disabled:hover {
-          opacity: $light_opacity;
+          opacity: var(--light_opacity);
           cursor: default
         }
       }
@@ -58,8 +57,8 @@
       grid-gap: 4rem;
       padding: 1rem;
       &.is_today {
-        background-color: $calendar_highlight;
-        box-shadow: $low_shadow;
+        background-color: var(--calendar_highlight);
+        box-shadow: var(--low_shadow);
         border-radius: 10px
       }
       .day_header {
@@ -78,7 +77,7 @@
           border: 3px solid transparent;
           overflow-wrap: anywhere;
           &.showBorder {
-            border: 3px solid $base
+            border: 3px solid var(--base)
           }
         }
       }

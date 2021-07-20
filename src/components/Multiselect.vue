@@ -1,18 +1,17 @@
 <style lang="scss">
-@import '../assets/styles/variables.scss';
 .multi-select {
   z-index: 9;
   position: fixed;
   top: 0;
   right: 0;
-  background-color: $overlay_glass;
+  background-color: var(--overlay_glass);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: $low_shadow;
+  box-shadow: var(--low_shadow);
   width: 100%;
   padding: 2rem 2rem 2rem calc(38px + 4rem);
   svg #shift path {
-    stroke: $base
+    stroke: var(--base)
   }
   .selection_indicator {
     text-align: center;
@@ -37,7 +36,7 @@
 }
 @supports not (backdrop-filter: blur(10px)) {
   .multi-select {
-    background-color: $fore
+    background-color: var(--fore)
   }
 }
 

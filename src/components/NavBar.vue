@@ -1,6 +1,5 @@
 <style lang="scss">
 @import '../assets/styles/icon-anim.scss';
-@import '../assets/styles/variables.scss';
 .logo {
   margin-bottom: auto;
   .logo_link {
@@ -8,19 +7,19 @@
     width: 38px;
     transition: 1s all cubic-bezier(.165, .84, .44, 1);
     &:hover {
-      opacity: $light_opacity
+      opacity: var(--light_opacity)
     }
     &:active {
-      transform: $active_state
+      transform: var(--active_state)
     }
   }
 }
 .nav_item {
   a.router-link-exact-active {
     svg {
-      background: $base;
+      background: var(--base);
       path {
-        fill: $fore
+        fill: var(--fore)
       }
     }
   }
@@ -32,7 +31,6 @@
 </style>
 
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 
 /* Nav bar */
 #sidebar {
@@ -42,8 +40,8 @@
   justify-content: flex-end;
   padding: 2rem 1rem;
   position: fixed;
-  background-color: $fore;
-  box-shadow: $low_shadow;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
   border-radius: 10px 10px 0 0;
   transition: width .6s cubic-bezier(.165, .84, .44, 1)
 }
@@ -52,7 +50,7 @@
   cursor: pointer;
   font-size: 1rem;
   margin: .8rem 0;
-  transition: $transition_standard;
+  transition: var(--transition_standard);
   &:empty {
     display: none
   }
@@ -67,20 +65,20 @@
   a {
     display: flex;
     text-decoration: none;
-    opacity: $light_opacity;
-    transition: $transition_standard
+    opacity: var(--light_opacity);
+    transition: var(--transition_standard)
   }
   .nav_item__text {
     white-space: nowrap;
     user-select: none;
-    color: $base;
+    color: var(--base);
     text-decoration: none;
     position: relative;
     border: 0;
     opacity: 0;
     height: fit-content;
     margin: auto 0;
-    transition: $transition_standard
+    transition: var(--transition_standard)
   }
   .nav_item__icon {
     margin: 0 .4rem 0 0;
@@ -89,7 +87,7 @@
     border-radius: 5px;
     height: 1.8rem;
     width: 1.8rem;
-    transition: $transition_standard
+    transition: var(--transition_standard)
   }
 }
 #sidebar:hover .nav_item__text,
@@ -136,7 +134,7 @@
       width: 100%;
       height: 3.8rem;
       &.router-link-exact-active {
-        background-color: $base;
+        background-color: var(--base);
         border-radius: 10px 10px 0 0
       }
     }

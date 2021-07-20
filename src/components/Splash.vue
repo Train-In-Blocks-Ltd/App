@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 #splash {
   height: 100%;
   width: 100%;
@@ -55,7 +54,7 @@
 }
 @keyframes flashing {
   0% {
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
   100% {
     opacity: 1

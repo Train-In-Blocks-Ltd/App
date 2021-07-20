@@ -1,13 +1,12 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .response_pop_up {
   position: fixed;
   top: 1rem;
   left: calc(38px + 3rem);
-  background-color: $overlay_glass;
+  background-color: var(--overlay_glass);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  box-shadow: $low_shadow;
+  box-shadow: var(--low_shadow);
   border-radius: 5px;
   padding: 1rem;
   z-index: 1000;
@@ -19,12 +18,12 @@
     padding: .2rem;
     right: -.5rem;
     top: -.5rem;
-    background-color: $base;
-    border: 1px solid $fore;
+    background-color: var(--base);
+    border: 1px solid var(--fore);
     border-radius: 50%;
-    transition: $transition_standard;
+    transition: var(--transition_standard);
     &:hover {
-      opacity: $light_opacity
+      opacity: var(--light_opacity)
     }
   }
   .close_button {
@@ -34,14 +33,14 @@
 
 @supports not (backdrop-filter: blur(10px)) {
   .response_pop_up {
-    background-color: $fore
+    background-color: var(--fore)
   }
 }
 @media (max-width: 992px) {
   .response_pop_up svg:hover {
     fill: black;
-    background-color: $fore;
-    border-color: $base
+    background-color: var(--fore);
+    border-color: var(--base)
   }
 }
 @media (max-width: 768px) {

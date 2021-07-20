@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 
 /* Bookings */
 #bookings {
@@ -44,7 +43,7 @@
   grid-gap: 1rem;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid $base_faint;
+  border-bottom: 1px solid var(--base_faint);
   height: fit-content;
   &.request > div:first-child:before {
     content: 'New request';
@@ -53,8 +52,8 @@
     width: fit-content;
     padding: .2rem .6rem;
     margin-left: auto;
-    background-color: $base;
-    color: $fore;
+    background-color: var(--base);
+    color: var(--fore);
     font-size: .8rem;
     border-radius: 3px;
     float: right
@@ -68,11 +67,11 @@
     > .options {
       display: flex;
       > .accept {
-        color: $base_green;
+        color: var(--base_green);
         margin-right: 1rem
       }
       > .reject {
-        color: $base_red
+        color: var(--base_red)
       }
     }
   }

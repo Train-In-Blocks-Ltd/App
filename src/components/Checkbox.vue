@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .check {
   cursor: pointer;
   position: relative;
@@ -14,7 +13,7 @@
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke: $base_faint;
+    stroke: var(--base_faint);
     stroke-width: 1.5;
     transform: translate3d(0, 0, 0);
     transition: all .2s ease;
@@ -29,12 +28,12 @@
   }
   &:hover {
     svg {
-      stroke: $base
+      stroke: var(--base)
     }
   }
 }
 .checked_box:checked + .check svg {
-  stroke: $base;
+  stroke: var(--base);
   path {
     stroke-dashoffset: 60;
     transition: all .3s linear

@@ -1,19 +1,18 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .trainer_info {
   input {
     width: 100%;
     background-color: initial;
-    border: 1px solid $base_faint;
+    border: 1px solid var(--base_faint);
     padding: .6rem 1rem;
     border-radius: 8px;
     transition: .4s all cubic-bezier(.165, .84, .44, 1);
     &:hover {
-      opacity: $light_opacity
+      opacity: var(--light_opacity)
     }
     &:focus {
       opacity: 1;
-      border: 1px solid $base;
+      border: 1px solid var(--base);
       padding: .6rem 1.4rem
     }
   }

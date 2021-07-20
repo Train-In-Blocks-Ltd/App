@@ -1,5 +1,4 @@
 <style lang="scss">
-@import '../../assets/styles/variables.scss';
 .show_html {
   > :is(div, p) {
     margin: .6rem 0
@@ -10,20 +9,19 @@
     margin: 1rem 0
   }
   a {
-    color: $link
+    color: var(--link)
   }
 }
 </style>
 
 <style lang="scss" scoped>
-@import '../../assets/styles/variables.scss';
 .plan_name {
   margin-bottom: 4rem
 }
 
 /* Editor object */
 .plan_notes {
-  border: 3px solid $base;
+  border: 3px solid var(--base);
   border-radius: 10px;
   transition: .6s border cubic-bezier(.165, .84, .44, 1);
   h3 {
@@ -32,8 +30,8 @@
     padding: .6rem;
     letter-spacing: 2px;
     width: fit-content;
-    background: $base;
-    color: $fore;
+    background: var(--base);
+    color: var(--fore);
     border-radius: 0 0 10px 10px
   }
   .show_html {
@@ -46,7 +44,7 @@
     height: 4px
   }
   .wrapper--session {
-    border: 3px solid $base;
+    border: 3px solid var(--base);
     border-radius: 10px;
     padding: 2rem;
     .complete_button {
@@ -69,7 +67,7 @@
       transform: scale(.8)
     }
     &.disabled, &.disabled:hover {
-      opacity: $light_opacity;
+      opacity: var(--light_opacity);
       cursor: default
     }
   }

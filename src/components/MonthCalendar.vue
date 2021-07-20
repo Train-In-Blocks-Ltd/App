@@ -1,8 +1,7 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 #month_calendar {
   border-radius: 10px;
-  border: 3px solid $base;
+  border: 3px solid var(--base);
   margin-top: 1rem
 }
 .calendar_header {
@@ -11,8 +10,8 @@
     top: 0;
     left: 2rem;
     padding: .6rem;
-    background: $base;
-    color: $fore;
+    background: var(--base);
+    color: var(--fore);
     width: fit-content;
     border-radius: 0 0 10px 10px
   }
@@ -21,9 +20,9 @@
     justify-content: space-between;
     margin: 2rem;
     * {
-      transition: $transition_standard;
+      transition: var(--transition_standard);
       &:hover {
-        opacity: $light_opacity
+        opacity: var(--light_opacity)
       }
     }
     .next_month,
@@ -38,7 +37,7 @@
       cursor: pointer;
       margin: auto;
       &.disabled:hover {
-        opacity: $light_opacity;
+        opacity: var(--light_opacity);
         cursor: default
       }
     }
@@ -55,16 +54,16 @@
   .day_cell {
     text-align: right;
     min-height: 100px;
-    background-color: $fore;
+    background-color: var(--fore);
     border-radius: 10px;
     padding: .6rem;
-    box-shadow: $low_shadow;
+    box-shadow: var(--low_shadow);
     &.holderCell {
       background-color: transparent;
       box-shadow: none
     }
     &.is_today {
-      background-color: $calendar_highlight;
+      background-color: var(--calendar_highlight);
       border-radius: 10px
     }
     .event {
@@ -76,7 +75,7 @@
       text-align: center;
       margin: .4rem 0;
       &.showBorder {
-        border: 2px solid $base
+        border: 2px solid var(--base)
       }
     }
   }

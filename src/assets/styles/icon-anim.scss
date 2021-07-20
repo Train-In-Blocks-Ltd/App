@@ -1,4 +1,3 @@
-@import '../styles/variables.scss';
 #logout__arrow,
 #archive__t,
 #template__t,
@@ -16,7 +15,7 @@
 #box_one,
 #box_two,
 #paper {
-  transition: $transition_standard
+  transition: var(--transition_standard)
 }
 
 /* Home */
@@ -99,10 +98,10 @@
 .a_link:hover :is(#tick, #cross) {
   transform: scale(.8);
   border-radius: 50%;
-  background-color: $base
+  background-color: var(--base)
 }
 .a_link:hover :is(#tick, #cross) #mark {
-  fill: $fore
+  fill: var(--fore)
 }
 .a_link:hover :is(#tick, #cross) #circle {
   fill: transparent

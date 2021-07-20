@@ -1,9 +1,8 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 #simple_chart {
   padding: 1rem;
-  background-color: $fore;
-  border: 3px solid $base;
+  background-color: var(--fore);
+  border: 3px solid var(--base);
   border-radius: 10px;
   margin: 2rem 0;
   .content_wrapper {
@@ -14,7 +13,7 @@
       justify-content: space-between
     }
     .x_axis line, .y_axis line {
-      stroke: $base;
+      stroke: var(--base);
       stroke-dasharray: 0;
       stroke-width: 2
     }
@@ -26,18 +25,18 @@
         cursor: pointer;
         outline-width: 0;
         fill: transparent;
-        stroke: $base;
+        stroke: var(--base);
         stroke-width: 2;
-        transition: $transition_standard;
+        transition: var(--transition_standard);
         animation: 1.6s show cubic-bezier(.165, .84, .44, 1);
         &:hover {
-          fill: $base
+          fill: var(--base)
         }
       }
       line {
-        stroke: $base_faint;
+        stroke: var(--base_faint);
         stroke-width: 2;
-        transition: $transition_standard;
+        transition: var(--transition_standard);
         animation: 1.6s show cubic-bezier(.165, .84, .44, 1)
       }
     }
@@ -57,7 +56,7 @@
         grid-template-columns: repeat(3, 1fr);
         padding: .4rem 1rem;
         &:not(:first-child) {
-          border-top: 1px solid $base_faint
+          border-top: 1px solid var(--base_faint)
         }
       }
     }

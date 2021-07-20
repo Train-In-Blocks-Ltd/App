@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../../assets/styles/variables.scss';
 
 /* Other */
 .dark_overlay {
@@ -19,7 +18,7 @@
   margin-top: 2rem;
   .wrapper--progress-bar {
     user-select: none;
-    border: 1px solid $base_faint;
+    border: 1px solid var(--base_faint);
     border-radius: 3px;
     transition: .4s all cubic-bezier(.165, .84, .44, 1);
     #progress-bar {
@@ -101,22 +100,22 @@
           display: grid;
           grid-template-rows: 6px 90px;
           cursor: pointer;
-          background-color: $fore;
+          background-color: var(--fore);
           min-width: 50px;
           height: 74px;
           width: 100%;
           border-radius: 5px;
-          transition: $transition_standard;
+          transition: var(--transition_standard);
           &:hover {
-            box-shadow: $low_shadow
+            box-shadow: var(--low_shadow)
           }
           &.weekActive {
             border-bottom: 2px solid #EEEEEE;
-            box-shadow: $high_shadow;
-            background-color: $fore;
+            box-shadow: var(--high_shadow);
+            background-color: var(--fore);
             height: 94px;
             &:hover {
-              box-shadow: $low_shadow
+              box-shadow: var(--low_shadow)
             }
           }
           .week__color {
@@ -145,30 +144,30 @@
       .change_week_color {
         height: 2rem;
         width: 4rem;
-        border: 2px solid $base;
+        border: 2px solid var(--base);
         border-radius: 5px;
         cursor: pointer;
-        transition: $transition_standard;
+        transition: var(--transition_standard);
         &:hover {
-          opacity: $light_opacity
+          opacity: var(--light_opacity)
         }
         &.noColor {
           /* stylelint-disable-next-line */
-          background-color: $fore !important
+          background-color: var(--fore) !important
         }
       }
 
       /* Info */
       #info {
-        fill: $base;
+        fill: var(--base);
         margin-left: 1rem;
         cursor: pointer;
         transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1);
         &:hover {
-          opacity: $light_opacity
+          opacity: var(--light_opacity)
         }
         &:active {
-          transform: $active_state
+          transform: var(--active_state)
         }
       }
     }
@@ -212,7 +211,7 @@
       .icon--expand {
         cursor: pointer;
         margin: .8rem 0 0 auto;
-        transition: $transition_smooth;
+        transition: var(--transition_smooth);
         &.expanded {
           transform: rotate(180deg)
         }

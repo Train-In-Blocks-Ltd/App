@@ -1,5 +1,4 @@
 <style lang="scss">
-@import '../assets/styles/variables.scss';
 
 /* Preview HTML */
 .client_link {
@@ -7,8 +6,8 @@
     font-size: .8rem;
     margin-top: .4rem;
     * {
-      color: $base;
-      transition: $transition_standard
+      color: var(--base);
+      transition: var(--transition_standard)
     }
     p {
       margin: .4rem 0
@@ -22,26 +21,25 @@
 </style>
 
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 
 /* Client Link */
 .client_link {
   display: grid;
   padding: 2rem;
   grid-gap: 1rem;
-  color: $base;
+  color: var(--base);
   text-decoration: none;
-  border: 3px solid $base;
+  border: 3px solid var(--base);
   border-radius: 10px;
-  transition: $transition_standard;
+  transition: var(--transition_standard);
   &:hover {
-    box-shadow: $high_shadow
+    box-shadow: var(--high_shadow)
   }
   &.archived {
     display: flex;
     justify-content: space-between;
     .name {
-      color: $base
+      color: var(--base)
     }
   }
 
@@ -61,7 +59,7 @@
       height: 80px;
       width: 80px;
       border-radius: 50%;
-      border: 3px solid $base
+      border: 3px solid var(--base)
     }
 
     /* Client link details */
@@ -71,13 +69,13 @@
       grid-gap: 1rem;
       p, .name {
         margin: auto 0;
-        color: $base;
-        transition: $transition_standard
+        color: var(--base);
+        transition: var(--transition_standard)
       }
       svg {
         width: 20px;
-        fill: $base;
-        transition: $transition_standard
+        fill: var(--base);
+        transition: var(--transition_standard)
       }
     }
   }
@@ -91,13 +89,13 @@
 @media (max-width: 768px) {
   .client_link {
     &:hover {
-      box-shadow: $low_shadow;
+      box-shadow: var(--low_shadow);
       svg {
-        fill: $base
+        fill: var(--base)
       }
     }
     &:active {
-      transform: $active_state
+      transform: var(--active_state)
     }
     .client_information {
       grid-template-columns: 1fr;

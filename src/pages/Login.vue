@@ -1,5 +1,4 @@
 <style lang="scss">
-@import '../assets/styles/variables.scss';
 #okta-signin-container {
   position: relative;
   #okta-sign-in {
@@ -19,14 +18,14 @@
       padding: .6rem 1.6rem;
       font-size: .8rem;
       color: white;
-      background-color: $base;
+      background-color: var(--base);
       margin: .6rem 0;
       transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
       &:hover {
-        opacity: $light_opacity
+        opacity: var(--light_opacity)
       }
       &:active {
-        transform: $active_state
+        transform: var(--active_state)
       }
       &:focus {
         box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
@@ -44,7 +43,7 @@
   margin: 2rem 0
 }
 .auth-org-logo.logo > path {
-  fill: $base
+  fill: var(--base)
 }
 .okta-form-label {
   text-align: left
@@ -98,14 +97,13 @@
 </style>
 
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 a {
   font-weight: bold;
   text-decoration: none;
-  color: $base;
-  transition: $transition_standard;
+  color: var(--base);
+  transition: var(--transition_standard);
   &:hover {
-    opacity: $light_opacity
+    opacity: var(--light_opacity)
   }
 }
 #login {

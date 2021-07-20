@@ -1,23 +1,22 @@
 <style lang="scss">
-@import '../assets/styles/variables.scss';
 
 /* Editor objects */
 .editor_object_standard {
-  border: 3px solid $base;
+  border: 3px solid var(--base);
   border-radius: 10px;
-  background: $back;
+  background: var(--back);
   transition: .6s border cubic-bezier(.165, .84, .44, 1);
   h3 {
     position: relative;
     left: 2rem;
     padding: .6rem;
     width: fit-content;
-    background: $base;
-    color: $fore;
+    background: var(--base);
+    color: var(--fore);
     border-radius: 0 0 10px 10px
   }
   #wrapper--rich_editor {
-    background: $back;
+    background: var(--back);
     margin: 2rem
   }
 
@@ -29,8 +28,8 @@
 .editor_object_complex {
   display: grid;
   padding: 2rem;
-  background: $back;
-  border: 2px solid $base;
+  background: var(--back);
+  border: 2px solid var(--base);
   border-radius: 10px;
   transition: .6s border cubic-bezier(.165, .84, .44, 1);
 
@@ -58,13 +57,13 @@
 @mixin editor-main {
   cursor: pointer;
   padding: 1rem;
-  border: 2px solid $base_faint;
+  border: 2px solid var(--base_faint);
   border-radius: 10px;
   margin-top: 1rem;
   transition: .6s opacity cubic-bezier(.165, .84, .44, 1), .6s border cubic-bezier(.165, .84, .44, 1);
   &:hover {
-    border: 2px solid $base_light;
-    opacity: $light_opacity
+    border: 2px solid var(--base_light);
+    opacity: var(--light_opacity)
   }
 }
 .placeholder {
@@ -92,7 +91,7 @@ div#rich_show_content {
     transition: .4s all cubic-bezier(.165, .84, .44, 1)
   }
   a {
-    color: $link
+    color: var(--link)
   }
   .ProseMirror {
     outline: none
@@ -120,11 +119,11 @@ div#rich_editor {
       margin: 1rem 0;
       transition: .4s all cubic-bezier(.165, .84, .44, 1);
       &:hover {
-        opacity: $light_opacity
+        opacity: var(--light_opacity)
       }
     }
     a {
-      color: $link
+      color: var(--link)
     }
   }
 }
@@ -157,7 +156,6 @@ div#rich_editor {
 </style>
 
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 
 // -----------------------------
 // Menu and placeholder
@@ -176,26 +174,26 @@ div#rich_editor {
   position: sticky;
   top: 0;
   padding-top: 1rem;
-  background-color: $back;
+  background-color: var(--back);
 
   /* Inner container of menu */
   #menu_bar {
-    border: 2px solid $base_faint;
+    border: 2px solid var(--base_faint);
     border-radius: 10px 10px 0 0;
     padding: 0 1rem;
-    transition: $transition_standard;
+    transition: var(--transition_standard);
     &.editorFocused {
-      border: 2px solid $base
+      border: 2px solid var(--base)
     }
     button {
       padding: 0;
       margin: .8rem 1rem .6rem 0;
-      color: $base;
+      color: var(--base);
       background-color: transparent;
 
       /* Adds a vertical line */
       &.separated {
-        border-right: 1px solid $base_faint;
+        border-right: 1px solid var(--base_faint);
         border-radius: 0;
         /* stylelint-disable-next-line */
         padding-right: 1rem !important
@@ -241,8 +239,8 @@ div#rich_editor {
         max-height: 400px;
         font-size: .8rem;
         padding: 1rem;
-        background-color: $fore;
-        border: 2px solid $base;
+        background-color: var(--fore);
+        border: 2px solid var(--base);
         border-radius: 5px;
         overflow-y: auto;
         &::-webkit-scrollbar {
@@ -259,12 +257,12 @@ div#rich_editor {
 div#rich_editor {
   padding: 1rem;
   outline-width: 0;
-  border: 2px solid $base_faint;
+  border: 2px solid var(--base_faint);
   border-top: none;
   border-radius: 0 0 10px 10px;
-  transition: $transition_standard;
+  transition: var(--transition_standard);
   &.editorFocused {
-    border: 2px solid $base;
+    border: 2px solid var(--base);
     border-top: none
   }
 }

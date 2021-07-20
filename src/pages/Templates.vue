@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .template_options {
   display: flex;
   justify-content: space-between;
@@ -23,7 +22,7 @@
         cursor: pointer;
         vertical-align: middle;
         margin-top: .8rem;
-        transition: $transition_smooth;
+        transition: var(--transition_smooth);
         &.expanded {
           transform: rotate(180deg)
         }
@@ -36,8 +35,8 @@
   .multi-select {
     padding: 2rem;
     width: 100%;
-    background-color: $fore;
-    box-shadow: $high_shadow;
+    background-color: var(--fore);
+    box-shadow: var(--high_shadow);
     a {
       grid-template-columns: 1fr
     }

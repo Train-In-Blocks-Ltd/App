@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../../assets/styles/variables.scss';
 .client_home_top_grid {
   display: grid;
   grid-template-columns: .2fr 1fr;
@@ -14,7 +13,7 @@
     padding: 1.8rem;
     height: 140px;
     width: 140px;
-    border: 4px solid $base;
+    border: 4px solid var(--base);
     border-radius: 50%
   }
   .client_info {
@@ -36,7 +35,7 @@
 
 /* Floating Nav */
 .wrapper--floating_nav {
-  background-color: $fore;
+  background-color: var(--fore);
   width: 14rem;
   height: 100%;
   transform: translateX(100%);
@@ -45,8 +44,8 @@
   top: 0;
   padding: 2rem;
   z-index: 4;
-  box-shadow: $low_shadow;
-  transition: $transition_standard;
+  box-shadow: var(--low_shadow);
+  transition: var(--transition_standard);
   &.openFloatingNav {
     transform: none
   }
@@ -78,9 +77,9 @@
   .wrapper--floating_nav .floating_nav {
     a {
       grid-template-columns: 1fr;
-      transition: $transition_standard;
+      transition: var(--transition_standard);
       &:active {
-        transform: $active_state
+        transform: var(--active_state)
       }
       &:before {
         content: none

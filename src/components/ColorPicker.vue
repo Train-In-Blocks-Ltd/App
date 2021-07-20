@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 #color_picker {
   display: flex;
   .color {
@@ -8,9 +7,9 @@
     border-radius: 5px;
     cursor: pointer;
     margin-right: 1rem;
-    transition: $transition_standard;
+    transition: var(--transition_standard);
     &:hover {
-      opacity: $light_opacity
+      opacity: var(--light_opacity)
     }
   }
 }

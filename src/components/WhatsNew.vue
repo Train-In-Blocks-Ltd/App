@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .close_icon {
   float: right
 }
@@ -7,8 +6,8 @@
   display: grid;
   grid-gap: 4rem;
   .update_item {
-    background-color: $fore;
-    border: 3px solid $base;
+    background-color: var(--fore);
+    border: 3px solid var(--base);
     border-radius: 10px;
     padding: 2rem;
     img {

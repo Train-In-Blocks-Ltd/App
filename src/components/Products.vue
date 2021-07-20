@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 #products {
   margin: 4rem 0;
   > .option_bar {
@@ -25,10 +24,10 @@
       display: grid;
       grid-gap: 1rem;
       padding: 2rem;
-      box-shadow: $low_shadow;
+      box-shadow: var(--low_shadow);
       border-radius: 10px;
-      background-color: $fore;
-      transition: $transition_standard;
+      background-color: var(--fore);
+      transition: var(--transition_standard);
       > .header {
         display: grid;
         grid-template-columns: 1fr .1fr;

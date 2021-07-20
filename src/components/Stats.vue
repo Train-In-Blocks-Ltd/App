@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-@import '../assets/styles/variables.scss';
 .visualise {
   position: fixed;
   padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
@@ -20,8 +19,8 @@
       display: flex;
       .data-select {
         padding: 1rem;
-        background-color: $fore;
-        border: 3px solid $base;
+        background-color: var(--fore);
+        border: 3px solid var(--base);
         border-radius: 10px;
         margin-right: 4rem;
         .data-select__options {
@@ -42,8 +41,8 @@
         grid-template-columns: 1fr 1fr;
         grid-gap: 1rem;
         padding: 1rem;
-        background-color: $fore;
-        border: 3px solid $base;
+        background-color: var(--fore);
+        border: 3px solid var(--base);
         border-radius: 10px;
         width: 100%;
         .data-desc__value {
@@ -58,9 +57,9 @@
       display: grid;
       grid-gap: 1rem;
       margin-top: 4rem;
-      background-color: $fore;
+      background-color: var(--fore);
       padding: 1rem;
-      border: 3px solid $base;
+      border: 3px solid var(--base);
       border-radius: 10px;
       table {
         :is(th, td) {
@@ -68,7 +67,7 @@
         }
         th {
           text-align: left;
-          border-bottom: 1px solid $base_red
+          border-bottom: 1px solid var(--base_red)
         }
         td {
           overflow-wrap: anywhere
@@ -79,9 +78,9 @@
     /* Placeholder on empty */
     .graph_placeholder {
       padding: 1rem;
-      border: 3px solid $base;
+      border: 3px solid var(--base);
       border-radius: 10px;
-      background-color: $fore;
+      background-color: var(--fore);
       margin-top: 2rem
     }
   }

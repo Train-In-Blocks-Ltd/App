@@ -1,5 +1,4 @@
 <style lang="scss">
-@import '../assets/styles/variables.scss';
 .preview_modal {
   .preview_html {
     margin: 1rem 0 2rem 0;
@@ -7,8 +6,8 @@
       display: none
     }
     * {
-      color: $base;
-      transition: $transition_standard
+      color: var(--base);
+      transition: var(--transition_standard)
     }
     p {
       margin: .6rem 0
