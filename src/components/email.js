@@ -2412,6 +2412,16 @@ export function feedbackEmail (cId, pId) {
   )
 }
 
+// -----------------------------
+// Text
+// -----------------------------
+
+/**
+ * The email body to notify the trainer-user that a client has given feedback.
+ * @param {integer} cId - The client's id.
+ * @param {integer} pId - The trainer's id.
+ * @returns The body text of the email.
+ */
 export function feedbackEmailText (cId, pId) {
   return (`** Your client has given some feedback
     ------------------------------------------------------------
@@ -2424,9 +2434,15 @@ export function feedbackEmailText (cId, pId) {
     The Train In Blocks Team`)
 }
 
+/**
+ * The email body to notify the trainer-user of their weekly activities.
+ * @param {string} body - The text content of the email.
+ * @returns The body text for the email.
+ */
 export function weeklyBreakdown (body) {
   return (`** Here's a breakdown of what you did this week
     ------------------------------------------------------------
+
     ${body}
 
     All the best,
@@ -2483,6 +2499,10 @@ export function bookingAccepted (datetime) {
     The Train In Blocks Team`)
 }
 
+// -----------------------------
+// Template
+// -----------------------------
+
 export function textEmail (title, html) {
   return (
     `<!doctype html>
@@ -2511,9 +2531,7 @@ export function textEmail (title, html) {
           <table id="header" role="presentation" width="100%">
             <tr>
               <td>
-                <h1>
-                  ${title}
-                </h1>
+                <img align='left' alt='' src='https://app.traininblocks.com/emailLogo.png' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
               </td>
             </tr>
           </table>
@@ -2523,6 +2541,9 @@ export function textEmail (title, html) {
           <table id="content" role="presentation" width="100%">
             <tr>
               <td>
+                <h1>
+                  ${title}
+                </h1>
                 <div class="content-text">
                   ${html}
                 </div>
