@@ -419,7 +419,7 @@
               Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
             </p>
             <p v-if="noSessions" class="grey">
-              Add some sessions to see programme adherence here...
+              No sessions created yet
             </p>
           </div>
         </div>
