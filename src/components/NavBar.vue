@@ -1,4 +1,5 @@
 <style lang="scss">
+@import '../assets/styles/icon-anim.scss';
 @import '../assets/styles/variables.scss';
 .logo {
   margin-bottom: auto;
@@ -31,7 +32,6 @@
 </style>
 
 <style lang="scss" scoped>
-@import '../assets/styles/icon-anim';
 @import '../assets/styles/variables.scss';
 
 /* Nav bar */
