@@ -158,18 +158,13 @@ const onAuthRequired = async (to, from, next) => {
 
 const userType = async (to, from, next) => {
   let result
-  if (!localStorage.getItem('claims') && await Vue.prototype.$auth.isAuthenticated()) {
+  if (await Vue.prototype.$auth.isAuthenticated()) {
     const claims = await Vue.prototype.$auth.getUser()
     if (claims !== undefined && claims !== null) {
-      localStorage.setItem('claims', JSON.stringify(claims))
       result = claims
     } else {
       result = false
     }
-  } else if (localStorage.getItem('claims')) {
-    result = JSON.parse(localStorage.getItem('claims'))
-  } else {
-    result = false
   }
   if (result) {
     if (to.matched.some(record => record.meta.requiresTrainer)) {
