@@ -320,7 +320,7 @@ export default {
           pt_id: this.claims.sub,
           name: '',
           notes: '',
-          price: '',
+          price: 0.00,
           type: 'One-off'
         })
         this.$store.dispatch('endLoading')
