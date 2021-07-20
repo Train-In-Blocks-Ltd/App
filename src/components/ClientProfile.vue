@@ -266,7 +266,7 @@ export default {
     return {
       booking_form: {
         date: this.today(),
-        time: this.datetime(),
+        time: this.timeNow(),
         notes: null
       }
     }
