@@ -160,16 +160,22 @@ const onAuthRequired = async (to, from, next) => {
 const userType = async (to, from, next) => {
   let result
   if (await Vue.prototype.$auth.isAuthenticated()) {
-    const claims = await Vue.prototype.$auth.getUser()
+    if (sessionStorage.getItem('claims')) {
+      console.log(false)
+      result = JSON.parse(sessionStorage.getItem('claims'))
+    } else {
+      const claims = await Vue.prototype.$auth.getUser()
+      if (claims !== undefined && claims !== null) {
+        result = claims
+      } else {
+        result = false
+      }
+      sessionStorage.setItem('claims', JSON.stringify(result))
+    }
     store.commit('setData', {
       attr: 'claims',
-      data: claims
+      data: result
     })
-    if (claims !== undefined && claims !== null) {
-      result = claims
-    } else {
-      result = false
-    }
   }
   if (result) {
     if (to.matched.some(record => record.meta.requiresTrainer)) {
