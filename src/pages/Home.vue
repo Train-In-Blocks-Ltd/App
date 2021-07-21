@@ -51,10 +51,12 @@
       </p>
     </div>
     <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
-    <p v-if="noClients" class="text--holder text--small grey">
-      No clients added yet, use the button on the top-right of your screen.
-    </p>
-    <div v-else-if="!noClients && !loading" class="home--container">
+    <div v-if="loading">
+      <skeleton :type="'client'" class="skeleton_margin" />
+      <skeleton :type="'input_large'" class="skeleton_margin" />
+      <skeleton :type="'client'" />
+    </div>
+    <div v-else-if="!noClients" class="home--container">
       <bookings />
       <h2>Clients</h2>
       <input
@@ -87,11 +89,9 @@
         </router-link>
       </div>
     </div>
-    <div v-else>
-      <skeleton :type="'client'" class="skeleton_margin" />
-      <skeleton :type="'input_large'" class="skeleton_margin" />
-      <skeleton :type="'client'" />
-    </div>
+    <p v-else class="text--holder text--small grey">
+      No clients added yet, use the button on the top-right of your screen.
+    </p>
   </div>
 </template>
 
