@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import { deleteEmail, deleteEmailText, passChangeEmail, passChangeEmailText, feedbackEmail, feedbackEmailText } from '../components/email'
+import { passwordChanged, clientAccountDeactivated, emailBuilder, clientFeedback } from '../components/email'
 
 Vue.use(Vuex)
 
@@ -156,7 +156,7 @@ export const store = new Vuex.Store({
     },
 
     /**
-     * Removes clients from archive permenently.
+     * Removes clients from archive permanently.
      * @param {object} payload - { clientIds }
      */
     removeClient (state, payload) {
@@ -388,7 +388,7 @@ export const store = new Vuex.Store({
 
     /**
      * Loads the client-user profile image.
-     * @param {object} profileImage - The profile iamge.
+     * @param {object} profileImage - The profile image.
      */
     updateClientUserProfileImage (state, profileImage) {
       state.clientUser.profile_image = profileImage
@@ -562,8 +562,8 @@ export const store = new Vuex.Store({
         await axios.post('/.netlify/functions/send-email', {
           to: EMAIL,
           subject: 'Account Deactivated',
-          text: deleteEmailText(),
-          html: deleteEmail()
+          text: clientAccountDeactivated(),
+          html: emailBuilder('client-account-deactivated')
         })
       }
     },
@@ -746,8 +746,8 @@ export const store = new Vuex.Store({
       await axios.post('/.netlify/functions/send-email', {
         to: state.claims.email,
         subject: 'Password Changed',
-        text: passChangeEmailText(),
-        html: passChangeEmail()
+        text: passwordChanged(),
+        html: emailBuilder('password-changed')
       })
     },
 
@@ -920,7 +920,7 @@ export const store = new Vuex.Store({
 
     /**
      * Updates a session.
-     * @param {object} payload - { clientId, planid, sessionId }
+     * @param {object} payload - { clientId, planId, sessionId }
      */
     async updateSession ({ getters }, payload) {
       const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
@@ -1125,8 +1125,11 @@ export const store = new Vuex.Store({
           await axios.post('/.netlify/functions/send-email', {
             to: PT_EMAIL.data[0].credentials.emails[0].value,
             subject: state.claims.email + ' has submitted feedback for ' + SESSION.name,
-            text: feedbackEmailText(state.claims.client_id_db, parseInt(payload.planId)),
-            html: feedbackEmail(state.claims.client_id_db, parseInt(payload.planId))
+            text: clientFeedback(state.claims.client_id_db, parseInt(payload.planId)),
+            html: emailBuilder('client-feedback', {
+              cId: state.claims.client_id_db,
+              pId: parseInt(payload.planId)
+            })
           })
         }
       }
@@ -1136,7 +1139,7 @@ export const store = new Vuex.Store({
 
     /**
      * Helps gets plans or sessions.
-     * @returns Sepecified data.
+     * @returns Specified data.
      */
     helper: (state, getters) => (type, clientId, planId, sessionId) => {
       const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))

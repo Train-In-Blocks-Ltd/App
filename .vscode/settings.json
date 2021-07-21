@@ -4,5 +4,10 @@
         "javascriptreact",
         "vue"
     ],
-    "typewriterAutoScroll.enable": true
+    "typewriterAutoScroll.enable": true,
+    "cSpell.words": [
+        "datetime",
+        "dont",
+        "vuex"
+    ]
 }
