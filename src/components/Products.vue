@@ -328,6 +328,7 @@ export default {
           name: '',
           notes: '',
           price: 0.00,
+          currency: 'GBP',
           type: 'One-off'
         })
         this.$store.dispatch('endLoading')
@@ -357,7 +358,7 @@ export default {
      * Deletes the selected products.
      */
     async deleteProducts () {
-      if (await this.$parent.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected products?', 'We will remove these products from our database and it won\'t be recoverable.')) {
+      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected products?', 'We will remove these products from our database and it won\'t be recoverable.')) {
         try {
           this.$store.commit('setData', {
             attr: 'dontLeave',
