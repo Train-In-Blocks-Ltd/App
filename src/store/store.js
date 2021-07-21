@@ -706,14 +706,10 @@ export const store = new Vuex.Store({
      */
     async updateProduct ({ state }, productId) {
       const POST_DATA = state.products.find(product => product.id === parseInt(productId))
-      delete POST_DATA.pt_id
-      delete POST_DATA.created_at
-      delete POST_DATA.updated_at
       await axios.post('https://api.traininblocks.com/v2/products', {
         ...POST_DATA
       })
     },
-    // payload => productIds (selectedProducts)
 
     /**
      * Deletes products.

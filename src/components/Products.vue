@@ -329,7 +329,7 @@ export default {
           notes: '',
           price: 0.00,
           currency: 'GBP',
-          type: 'One-off'
+          type: 'monthly'
         })
         this.$store.dispatch('endLoading')
       } catch (e) {
