@@ -1,5 +1,9 @@
 <template>
-  <form class="form_grid add_plan" name="add_plan" @submit.prevent="createPlan(), $parent.isNewPlanOpen = false, willBodyScroll(true)">
+  <form
+    class="form_grid add_plan"
+    name="add_plan"
+    @submit.prevent="createPlan(), $parent.isNewPlanOpen = false, willBodyScroll(true)"
+  >
     <div class="bottom_margin">
       <h3>
         Create a new plan and use it for exercise, nutrition or anything else

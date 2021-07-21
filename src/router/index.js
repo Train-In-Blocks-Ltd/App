@@ -161,7 +161,6 @@ const userType = async (to, from, next) => {
   let result
   if (await Vue.prototype.$auth.isAuthenticated()) {
     if (sessionStorage.getItem('claims')) {
-      console.log(false)
       result = JSON.parse(sessionStorage.getItem('claims'))
     } else {
       const claims = await Vue.prototype.$auth.getUser()

@@ -1,6 +1,5 @@
 <style lang="scss" scoped>
   .add_client {
-    grid-gap: 1rem;
     label {
       display: grid;
       grid-gap: .5rem

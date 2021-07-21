@@ -339,7 +339,8 @@ input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]
   opacity: var(--light_opacity)
 }
 input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
-select.width_300 {
+select.width_300,
+textarea.width_300 {
   width: 300px
 }
 input[type=color] {
@@ -371,7 +372,7 @@ option {
 .form_grid {
   display: grid;
   grid-auto-rows: max-content;
-  grid-gap: 2rem;
+  grid-gap: 1rem;
   button {
     margin-right: .6rem
   }

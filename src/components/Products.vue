@@ -104,6 +104,114 @@
       :selected="selectedProducts"
       @response="resolveProductsMultiselect"
     />
+    <div
+      v-if="!isNewProductOpen"
+      class="tab_option tab_option_large"
+      aria-label="Create a new product"
+      @click="isNewProductOpen = true, willBodyScroll(false)"
+    >
+      <inline-svg
+        :src="require('../assets/svg/install-pwa.svg')"
+        aria-label="Create a new product"
+      />
+      <p class="text">
+        New product
+      </p>
+    </div>
+    <div
+      v-if="isNewProductOpen"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+    >
+      <form
+        name="add_product"
+        class="form_grid add_product"
+        spellcheck="false"
+        @submit.prevent="createProduct(), isNewProductOpen = false, willBodyScroll(true)"
+      >
+        <div class="bottom_margin">
+          <h3>
+            Add a new product
+          </h3>
+          <p class="grey">
+            Start collecting payments from your clients and get paid
+          </p>
+        </div>
+        <input
+          v-model="newProduct.name"
+          class="small_border_radius width_300"
+          type="text"
+          autocomplete="name"
+          placeholder="Name"
+          aria-label="Name"
+          required
+        >
+        <select
+          v-model="newProduct.type"
+          class="small_border_radius width_300"
+          placeholder="Type"
+          aria-label="Type"
+          required
+        >
+          <option value="null" disabled>
+            Payment type
+          </option>
+          <option value="one-off">
+            One-off
+          </option>
+          <option value="monthly">
+            Monthly
+          </option>
+          <option value="yearly">
+            Yearly
+          </option>
+        </select>
+        <select
+          v-model="newProduct.currency"
+          class="small_border_radius width_300"
+          placeholder="Currency"
+          aria-label="Currency"
+          required
+        >
+          <option value="null" disabled>
+            Currency
+          </option>
+          <option
+            v-for="(currency, currencyIndex) in currencies"
+            :key="`currency_add_product_${currencyIndex}`"
+            :value="currency"
+          >
+            {{ currency }}
+          </option>
+        </select>
+        <input
+          v-model="newProduct.price"
+          type="number"
+          class="small_border_radius width_300"
+          placeholder="Price"
+          aria-label="Price"
+          step="0.01"
+          min="0"
+          required
+        >
+        <textarea
+          v-model="newProduct.notes"
+          class="small_border_radius width_300"
+          rows="5"
+          placeholder="Description"
+          aria-label="Description"
+          required
+        />
+        <div class="form_button_bar">
+          <button type="submit">
+            Save
+          </button>
+          <button class="red_button" @click.prevent="isNewProductOpen = false, willBodyScroll(true)">
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+    <div :class="{opened_sections: isNewProductOpen }" class="section_overlay" />
     <div class="option_bar">
       <h2>
         Products
@@ -118,19 +226,14 @@
           Connect with
         </span>
       </a>
-      <div v-else>
-        <a
-          v-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
-          href="javascript:void(0)"
-          class="a_link select_all"
-          @click="selectAll()"
-        >
-          Select all
-        </a>
-        <button @click="createProduct()">
-          New product
-        </button>
-      </div>
+      <a
+        v-else-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
+        href="javascript:void(0)"
+        class="a_link select_all"
+        @click="selectAll()"
+      >
+        Select all
+      </a>
     </div>
     <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
     <div v-else-if="products.length !== 0" class="products_container">
@@ -236,6 +339,14 @@ export default {
   },
   data () {
     return {
+      isNewProductOpen: false,
+      newProduct: {
+        name: null,
+        notes: null,
+        price: 0.00,
+        currency: null,
+        type: null
+      },
       stripe: false,
       selectedProducts: [],
       multiselectOptions: [
@@ -325,12 +436,15 @@ export default {
         })
         await this.$store.dispatch('createProduct', {
           pt_id: this.claims.sub,
-          name: '',
-          notes: '',
-          price: 0.00,
-          currency: 'GBP',
-          type: 'monthly'
+          ...this.newProduct
         })
+        this.newProduct = {
+          name: null,
+          notes: null,
+          price: 0.00,
+          currency: null,
+          type: null
+        }
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)

@@ -3,7 +3,6 @@
   margin: 4rem 0
 }
 .add_plan {
-  grid-gap: 1rem;
   label {
     display: grid;
     grid-gap: .5rem
