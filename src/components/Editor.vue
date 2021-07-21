@@ -189,15 +189,7 @@ div#rich_editor {
       padding: 0;
       margin: .8rem 1rem .6rem 0;
       color: var(--base);
-      background-color: transparent;
-
-      /* Adds a vertical line */
-      &.separated {
-        border-right: 1px solid var(--base_faint);
-        border-radius: 0;
-        /* stylelint-disable-next-line */
-        padding-right: 1rem !important
-      }
+      background-color: transparent
     }
     svg {
       height: 20px;
@@ -386,7 +378,7 @@ div#rich_editor {
               <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
             </button>
             <button
-              class="fadeIn menu_button separated"
+              class="fadeIn menu_button"
               :class="{ 'is-active': editor.isActive('underline') }"
               title="Underline"
               @click="editor.chain().focus().toggleUnderline().run()"
@@ -410,7 +402,7 @@ div#rich_editor {
               <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
             </button>
             <button
-              class="separated menu_button"
+              class="menu_button"
               :class="{ 'is-active': editor.isActive('taskList') }"
               title="Checklist"
               @click="editor.chain().focus().toggleTaskList().run()"
