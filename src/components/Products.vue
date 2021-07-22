@@ -587,7 +587,6 @@ export default {
           connectedAccountId: this.claims.connectedAccountId
         })
         this.stripe = RESPONSE.data
-        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }

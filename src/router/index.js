@@ -160,6 +160,7 @@ const onAuthRequired = async (to, from, next) => {
 const userType = async (to, from, next) => {
   let result
   if (await Vue.prototype.$auth.isAuthenticated()) {
+    Vue.prototype.$axios.defaults.headers.common.Authorization = `Bearer ${await Vue.prototype.$auth.getAccessToken()}`
     if (sessionStorage.getItem('claims')) {
       result = JSON.parse(sessionStorage.getItem('claims'))
     } else {

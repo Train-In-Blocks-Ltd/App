@@ -630,14 +630,13 @@ export default {
       }
     }
   },
-  async created () {
+  created () {
     this.$store.commit('setData', {
       attr: 'loading',
       data: true
     })
     this.isAuthenticated()
     this.willBodyScroll(true)
-    this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
     if ('serviceWorker' in navigator) {
