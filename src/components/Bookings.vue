@@ -212,7 +212,6 @@
         No bookings made or confirmed
       </p>
       <form class="request_booking_container" @submit.prevent="createBooking()">
-        <p><b>Create a booking</b></p>
         <select
           v-model="booking_form.clientId"
           class="small_border_radius"
@@ -262,7 +261,7 @@
           required
         />
         <button>
-          Create
+          Create booking
         </button>
       </form>
     </div>
