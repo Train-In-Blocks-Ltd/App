@@ -324,7 +324,7 @@ export default {
     /**
      * Creates a new booking.
      */
-    async createBooking (client) {
+    async createBooking () {
       try {
         this.$store.commit('setData', {
           attr: 'dontLeave',
@@ -338,8 +338,9 @@ export default {
           isTrainer: true
         })
         this.booking_form = {
-          date: null,
-          time: null,
+          clientId: 'Select a client',
+          date: this.today(),
+          time: this.timeNow(),
           notes: null
         }
         this.$parent.$parent.$refs.response_pop_up.show('Booking created', 'Your client will be notified')

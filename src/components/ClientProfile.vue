@@ -224,7 +224,6 @@
             No bookings yet, your clients will be able to request a time and date
           </p>
           <form class="request_booking_container" @submit.prevent="createBooking()">
-            <p><b>Make a request</b></p>
             <input
               v-model="booking_form.date"
               class="small_border_radius"
@@ -249,7 +248,9 @@
               aria-label="Additional information"
               required
             />
-            <button>Submit</button>
+            <button>
+              Request a booking
+            </button>
           </form>
         </div>
       </div>
