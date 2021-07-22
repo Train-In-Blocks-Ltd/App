@@ -17,6 +17,7 @@
 .plans_layout > div, .rect {
   display: grid;
   grid-gap: 2rem;
+  width: 100%;
   background-color: var(--skeleton_2);
   border-radius: 10px;
   animation: fade .6s linear infinite alternate-reverse
@@ -31,7 +32,9 @@
   width: 80%
 }
 .rect__small_text {
-  height: 1.6rem;
+  height: 1.6rem
+}
+.width_60 {
   width: 60%
 }
 .rect__title, .rect__content {
@@ -81,7 +84,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1rem;
-  &.largeScreen {
+  &.largeScreen:not(.keepSmall) {
     grid-template-columns: repeat(3, 1fr)
   }
 }
@@ -105,18 +108,32 @@
       <div class="rect__content two" />
       <div class="rect__box" />
     </div>
-    <div v-if="type === 'plan'" :class="{ largeScreen: screenSize >= 1440 }" class="plans_layout">
-      <div class="small_margin large_padding">
+    <div
+      v-if="type === 'plan' || type === 'product'"
+      :class="{ largeScreen: screenSize >= 1440, keepSmall: type === 'product'}"
+      class="plans_layout"
+    >
+      <div
+        :class="{ small_margin: type !== 'product' }"
+        class="large_padding"
+      >
         <div class="rect__title" />
         <div class="rect__content one" />
         <div class="rect__content one" />
       </div>
-      <div class="small_margin large_padding">
+      <div
+        :class="{ small_margin: type !== 'product' }"
+        class="large_padding"
+      >
         <div class="rect__title" />
         <div class="rect__content one" />
         <div class="rect__content one" />
       </div>
-      <div v-if="screenSize >= 1440" class="small_margin large_padding">
+      <div
+        v-if="screenSize >= 1440 && type !== 'product'"
+        :class="{ small_margin: type !== 'product' }"
+        class="large_padding"
+      >
         <div class="rect__title" />
         <div class="rect__content one" />
         <div class="rect__content one" />
@@ -138,13 +155,16 @@
       <div class="rect__large_text" />
     </div>
     <div v-if="type === 'input_small'" class="rect mini_padding">
-      <div class="rect__small_text" />
+      <div class="rect__small_text width_60" />
     </div>
     <div v-if="type === 'profile_image'" class="circle" />
     <div v-if="type === 'bookings'" class="rect large_padding">
-      <div class="rect__small_text" />
+      <div class="rect__small_text width_60" />
       <div class="rect__content two" />
       <div class="rect__content one" />
+    </div>
+    <div v-if="type === 'button'" class="rect mini_padding">
+      <div class="rect__small_text" />
     </div>
   </div>
 </template>

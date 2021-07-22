@@ -15,10 +15,14 @@
         margin-left: 1rem
       }
     }
+    .stripe_skeleton {
+      margin: auto 0;
+      width: 160px
+    }
   }
   .products_container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 1rem;
     .product {
       display: grid;
@@ -51,12 +55,12 @@
 
 /* Stripe Button */
 .stripe-connect {
+  display: flex;
+  margin: auto 0;
+  padding: .4rem .8rem;
   background: #635BFF;
-  display: inline-block;
-  height: 38px;
   text-decoration: none;
-  width: 180px;
-  border-radius: 4px;
+  border-radius: 5px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   user-select: none;
@@ -69,29 +73,46 @@
   }
   span {
     color: white;
-    display: block;
-    font-family: sohne-var, Helvetica Neue, Arial, sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 14px;
-    padding: 11px 0 0 24px;
-    position: relative;
-    text-align: left;
-    &:after {
-      background-repeat: no-repeat;
-      background-size: 49.58px;
-      background-image: url('../assets/svg/stripe.svg');
-      content: '';
-      height: 20px;
-      left: 62%;
-      position: absolute;
-      top: 28.95%;
-      width: 49.58px
-    }
+    font-size: 15px
+  }
+  svg {
+    height: fit-content;
+    width: 50px
   }
 }
 .select_all {
   margin: auto 1rem auto 0
+}
+
+@media (max-width: 992px) {
+  #products {
+    .products_container {
+      grid-template-columns: 1fr
+    }
+  }
+}
+@media (max-width: 576px) {
+  #products {
+    .products_container {
+      .product {
+        padding: 1rem
+      }
+    }
+  }
+}
+@media (max-width: 425px) {
+  #products {
+    .option_bar {
+      .stripe_skeleton {
+        width: 100px
+      }
+      .stripe-connect {
+        span {
+          display: none
+        }
+      }
+    }
+  }
 }
 </style>
 
@@ -215,8 +236,13 @@
       <h2>
         Products
       </h2>
+      <skeleton
+        v-if="loading || silentLoading"
+        :type="'button'"
+        class="stripe_skeleton"
+      />
       <a
-        v-if="!stripe"
+        v-else-if="!stripe"
         href="javascript:void(0)"
         class="stripe-connect"
         @click="stripeConnect"
@@ -224,6 +250,10 @@
         <span>
           Connect with
         </span>
+        <inline-svg
+          :src="require('../assets/svg/stripe.svg')"
+          aria-label="Connect with stripe"
+        />
       </a>
       <a
         v-else-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
@@ -234,8 +264,15 @@
         Select all
       </a>
     </div>
-    <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-    <div v-else-if="products.length !== 0" class="products_container">
+    <skeleton
+      v-if="loading || silentLoading"
+      :type="'product'"
+      class="fadeIn"
+    />
+    <div
+      v-else-if="products.length !== 0"
+      class="products_container"
+    >
       <form
         v-for="(product, productIndex) in products"
         :key="`product_${productIndex}`"

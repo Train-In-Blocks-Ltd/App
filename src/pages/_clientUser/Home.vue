@@ -42,6 +42,7 @@ hr {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 2rem;
+  margin-top: 2rem;
   .product {
     display: grid;
     grid-gap: 1rem;
@@ -58,9 +59,19 @@ hr {
   }
 }
 
+@media (max-width: 992px) {
+  .products {
+    grid-template-columns: 1fr
+  }
+}
 @media (max-width: 576px) {
   .container--sessions .wrapper--session {
     padding: .8rem
+  }
+  .products {
+    .product {
+      padding: 1rem
+    }
   }
 }
 </style>
@@ -86,11 +97,21 @@ hr {
           <h3 class="grey">
             {{ portfolio.trainer_name }}
           </h3>
+          <skeleton
+            v-if="loading"
+            :type="'session'"
+          />
           <div
+            v-else
             class="client_portfolio__notes"
             v-html="updateHTML(portfolio.notes, true)"
           />
-          <div class="products">
+          <div class="spacer" />
+          <h2>
+            Products
+          </h2>
+          <skeleton v-if="loading" :type="'product'" />
+          <div v-else class="products">
             <div
               v-for="(product, productIndex) in clientUser.products"
               :key="`product_${productIndex}`"

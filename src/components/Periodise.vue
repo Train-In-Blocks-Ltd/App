@@ -67,6 +67,15 @@
     grid-template-columns: 1fr
   }
 }
+@media (max-width: 576px) {
+  .periodise {
+    .plan {
+      .plan_header {
+        padding: 1rem
+      }
+    }
+  }
+}
 </style>
 
 <template>
