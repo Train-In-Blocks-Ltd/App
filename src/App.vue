@@ -387,6 +387,7 @@ option {
   position: fixed;
   right: 0;
   top: 3rem;
+  height: 33px;
   width: 8rem;
   transform: translateX(5rem);
   padding: .4rem 1rem .4rem .6rem;
