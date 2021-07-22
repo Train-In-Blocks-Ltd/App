@@ -46,8 +46,22 @@
       }
       > .product_pricing {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 1rem
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 1rem;
+        .price {
+          display: flex;
+          justify-content: space-between;
+          > select {
+            border-radius: 5px 0 0 5px;
+            border-right: none;
+            &:focus + input {
+              border-left: 2px solid var(--base)
+            }
+          }
+          > input {
+            border-radius: 0 5px 5px 0
+          }
+        }
       }
     }
   }
@@ -305,6 +319,9 @@
             aria-label="Type"
             @change="updateProduct(product.id)"
           >
+            <option disabled>
+              Type
+            </option>
             <option value="one-off">
               One-off
             </option>
@@ -315,34 +332,39 @@
               Yearly
             </option>
           </select>
-          <select
-            v-model="product.currency"
-            :disabled="silentLoading"
-            class="small_border_radius"
-            placeholder="Currency"
-            aria-label="Currency"
-          >
-            <option
-              v-for="(currency, currencyIndex) in currencies"
-              :key="`currency_${currencyIndex}`"
-              :value="currency"
+          <div class="price">
+            <select
+              v-model="product.currency"
+              :disabled="silentLoading"
+              class="small_border_radius"
+              placeholder="Currency"
+              aria-label="Currency"
             >
-              {{ currency }}
-            </option>
-          </select>
-          <input
-            v-model="product.price"
-            :disabled="silentLoading"
-            type="number"
-            class="small_border_radius"
-            placeholder="Price"
-            aria-label="Price"
-            step="0.01"
-            min="0"
-            required
-            @change="productChanged = true"
-            @blur="resolveIfProductChanged(product.id)"
-          >
+              <option disabled>
+                Currency
+              </option>
+              <option
+                v-for="(currency, currencyIndex) in currencies"
+                :key="`currency_${currencyIndex}`"
+                :value="currency"
+              >
+                {{ currency }}
+              </option>
+            </select>
+            <input
+              v-model="product.price"
+              :disabled="silentLoading"
+              type="number"
+              class="small_border_radius"
+              placeholder="Price"
+              aria-label="Price"
+              step="0.01"
+              min="0"
+              required
+              @change="productChanged = true"
+              @blur="resolveIfProductChanged(product.id)"
+            >
+          </div>
         </div>
         <textarea
           v-model="product.notes"
