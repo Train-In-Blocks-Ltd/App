@@ -224,6 +224,7 @@
           <option
             value="Select a client"
             disabled
+            selected
           >
             Select a client
           </option>

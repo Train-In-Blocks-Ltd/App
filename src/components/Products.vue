@@ -172,7 +172,7 @@
           aria-label="Type"
           required
         >
-          <option value="null" disabled>
+          <option value="null" disabled selected>
             Type
           </option>
           <option value="one-off">
@@ -192,7 +192,7 @@
           aria-label="Currency"
           required
         >
-          <option value="null" disabled>
+          <option value="null" disabled selected>
             Currency
           </option>
           <option
@@ -312,7 +312,7 @@
             aria-label="Type"
             @change="updateProduct(product.id)"
           >
-            <option disabled>
+            <option disabled selected>
               Type
             </option>
             <option value="one-off">
@@ -333,7 +333,7 @@
               placeholder="Currency"
               aria-label="Currency"
             >
-              <option disabled>
+              <option disabled selected>
                 Currency
               </option>
               <option
