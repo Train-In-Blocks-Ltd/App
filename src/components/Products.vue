@@ -111,7 +111,7 @@
       @click="isNewProductOpen = true, willBodyScroll(false)"
     >
       <inline-svg
-        :src="require('../assets/svg/install-pwa.svg')"
+        :src="require('../assets/svg/product.svg')"
         aria-label="Create a new product"
       />
       <p class="text">
@@ -251,7 +251,8 @@
             placeholder="Name"
             aria-label="Name"
             required
-            @blur="updateProduct(product.id)"
+            @change="productChanged = true"
+            @blur="resolveIfProductChanged(product.id)"
           >
           <checkbox
             :item-id="product.id"
@@ -303,7 +304,8 @@
             step="0.01"
             min="0"
             required
-            @blur="updateProduct(product.id)"
+            @change="productChanged = true"
+            @blur="resolveIfProductChanged(product.id)"
           >
         </div>
         <textarea
@@ -314,7 +316,8 @@
           placeholder="Description"
           aria-label="Description"
           required
-          @blur="updateProduct(product.id)"
+          @change="productChanged = true"
+          @blur="resolveIfProductChanged(product.id)"
         />
       </form>
     </div>
@@ -347,6 +350,7 @@ export default {
         currency: null,
         type: null
       },
+      productChanged: false,
       stripe: false,
       selectedProducts: [],
       multiselectOptions: [
@@ -383,6 +387,12 @@ export default {
         case 'Deselect':
           this.deselectAll()
           break
+      }
+    },
+
+    resolveIfProductChanged (id) {
+      if (this.productChanged) {
+        this.updateProduct(id)
       }
     },
 
@@ -462,6 +472,7 @@ export default {
           data: true
         })
         await this.$store.dispatch('updateProduct', productId)
+        this.productChanged = false
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
