@@ -42,7 +42,8 @@ export const store = new Vuex.Store({
       plans: null,
       profile_image: null,
       sessionsToday: [],
-      bookings: []
+      bookings: [],
+      products: []
     },
 
     // Portfolio
@@ -1072,13 +1073,12 @@ export const store = new Vuex.Store({
           })
         })
 
-        /* Sets products
+        // Sets products
         commit('setDataDeep', {
           attrParent: 'clientUser',
           attrChild: 'products',
           data: RESPONSE.data[4]
         })
-        */
       }
     },
 

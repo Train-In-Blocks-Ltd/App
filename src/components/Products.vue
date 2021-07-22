@@ -24,9 +24,8 @@
       display: grid;
       grid-gap: 1rem;
       padding: 2rem;
-      box-shadow: var(--low_shadow);
+      border: 3px solid var(--base);
       border-radius: 10px;
-      background-color: var(--fore);
       transition: var(--transition_standard);
       > .header {
         display: grid;
@@ -390,6 +389,10 @@ export default {
       }
     },
 
+    /**
+     * Checks if any changes were made to the product before posting it to the database.
+     * @param {integer} id - The id of the product.
+     */
     resolveIfProductChanged (id) {
       if (this.productChanged) {
         this.updateProduct(id)

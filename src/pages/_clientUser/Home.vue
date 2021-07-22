@@ -37,6 +37,27 @@ hr {
   margin-top: 2rem
 }
 
+/* Products */
+.products {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2rem;
+  .product {
+    display: grid;
+    grid-gap: 1rem;
+    border: 3px solid var(--base);
+    border-radius: 10px;
+    padding: 2rem;
+    .header {
+      display: flex;
+      justify-content: space-between
+    }
+    .type {
+      text-transform: capitalize
+    }
+  }
+}
+
 @media (max-width: 576px) {
   .container--sessions .wrapper--session {
     padding: .8rem
@@ -65,7 +86,32 @@ hr {
           <h3 class="grey">
             {{ portfolio.trainer_name }}
           </h3>
-          <div class="client_portfolio__notes" v-html="updateHTML(portfolio.notes, true)" />
+          <div
+            class="client_portfolio__notes"
+            v-html="updateHTML(portfolio.notes, true)"
+          />
+          <div class="products">
+            <div
+              v-for="(product, productIndex) in clientUser.products"
+              :key="`product_${productIndex}`"
+              class="product"
+            >
+              <div class="header">
+                <h3>
+                  {{ product.name }}
+                </h3>
+                <button>
+                  Purchase
+                </button>
+              </div>
+              <p>
+                <b class="type">{{ product.type }}</b> payment of <b>{{ `${product.price} ${product.currency}` }}</b>
+              </p>
+              <p>
+                {{ product.notes }}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
