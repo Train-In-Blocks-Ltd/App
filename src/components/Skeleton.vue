@@ -113,25 +113,18 @@
       :class="{ largeScreen: screenSize >= 1440, keepSmall: type === 'product'}"
       class="plans_layout"
     >
-      <div
-        :class="{ small_margin: type !== 'product' }"
-        class="large_padding"
-      >
+      <div class="large_padding small_margin">
         <div class="rect__title" />
         <div class="rect__content one" />
         <div class="rect__content one" />
       </div>
-      <div
-        :class="{ small_margin: type !== 'product' }"
-        class="large_padding"
-      >
+      <div class="large_padding small_margin">
         <div class="rect__title" />
         <div class="rect__content one" />
         <div class="rect__content one" />
       </div>
       <div
         v-if="screenSize >= 1440 && type !== 'product'"
-        :class="{ small_margin: type !== 'product' }"
         class="large_padding"
       >
         <div class="rect__title" />
