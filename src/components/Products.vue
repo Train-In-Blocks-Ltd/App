@@ -139,20 +139,6 @@
       @response="resolveProductsMultiselect"
     />
     <div
-      v-if="!isNewProductOpen"
-      class="tab_option tab_option_large"
-      aria-label="Create a new product"
-      @click="isNewProductOpen = true, willBodyScroll(false)"
-    >
-      <inline-svg
-        :src="require('../assets/svg/product.svg')"
-        aria-label="Create a new product"
-      />
-      <p class="text">
-        New product
-      </p>
-    </div>
-    <div
       v-if="isNewProductOpen"
       class="tab_overlay_content fadeIn delay fill_mode_both"
     >
@@ -187,7 +173,7 @@
           required
         >
           <option value="null" disabled>
-            Payment type
+            Type
           </option>
           <option value="one-off">
             One-off
@@ -269,14 +255,21 @@
           aria-label="Connect with stripe"
         />
       </a>
-      <a
+      <div
         v-else-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
-        href="javascript:void(0)"
-        class="a_link select_all"
-        @click="selectAll()"
+        class="options"
       >
-        Select all
-      </a>
+        <a
+          href="javascript:void(0)"
+          class="a_link select_all"
+          @click="selectAll()"
+        >
+          Select all
+        </a>
+        <button @click="isNewProductOpen = true, willBodyScroll(false)">
+          New product
+        </button>
+      </div>
     </div>
     <skeleton
       v-if="loading || silentLoading"
