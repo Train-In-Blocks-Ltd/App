@@ -163,8 +163,8 @@ Vue.mixin({
      */
     timeNow () {
       const DATE = new Date()
-      const HOUR = DATE.getHours().padStart(2, '0')
-      const MIN = DATE.getMinutes().padStart(2, '0')
+      const HOUR = String(DATE.getHours()).padStart(2, '0')
+      const MIN = String(DATE.getMinutes()).padStart(2, '0')
       return `${HOUR}:${MIN}`
     },
 
