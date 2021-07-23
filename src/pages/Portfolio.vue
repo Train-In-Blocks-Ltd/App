@@ -100,10 +100,12 @@ export default {
   data () {
     return {
       editingPortfolio: false,
-      tempEditorStore: null
+      tempEditorStore: null,
+      stripe: false
     }
   },
   computed: mapState([
+    'claims',
     'loading',
     'silentLoading',
     'dontLeave',
@@ -116,6 +118,7 @@ export default {
     })
     this.willBodyScroll(true)
     await this.$parent.setup()
+    await this.checkConnectedAccount()
     this.$store.dispatch('endLoading')
   },
   methods: {
@@ -178,6 +181,50 @@ export default {
         this.$ga.event('Portfolio', 'update')
         this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
         this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    },
+
+    // -----------------------------
+    // Stripe connect
+    // -----------------------------
+
+    /**
+     * Connects to Stripe.
+     */
+    async stripeConnect () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/create-connected-account', {
+          email: this.claims.email,
+          connectedAccountId: this.claims.connectedAccountId
+        })
+        this.claims.connectedAccountId = RESPONSE.data.connectedAccountId
+        await this.$store.dispatch('saveClaims')
+        window.location.href = RESPONSE.data.url
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    },
+
+    /**
+     * Checks if the user already has a connected Stripe account.
+     */
+    async checkConnectedAccount () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/check-connected-account', {
+          connectedAccountId: this.claims.connectedAccountId
+        })
+        this.stripe = RESPONSE.data
       } catch (e) {
         this.$parent.resolveError(e)
       }

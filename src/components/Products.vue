@@ -237,15 +237,15 @@
         Products
       </h2>
       <skeleton
-        v-if="loading || silentLoading"
+        v-if="loading"
         :type="'button'"
         class="stripe_skeleton"
       />
       <a
-        v-else-if="!stripe"
+        v-else-if="!$parent.stripe"
         href="javascript:void(0)"
         class="stripe-connect"
-        @click="stripeConnect()"
+        @click="$parent.stripeConnect()"
       >
         <span>
           Connect with
@@ -372,7 +372,7 @@
         />
       </form>
     </div>
-    <p v-else-if="stripe" class="text--small grey">
+    <p v-else-if="$parent.stripe" class="text--small grey">
       No products created yet. Create a new product and start taking payments.
     </p>
     <p v-else class="text--small grey">
@@ -402,7 +402,6 @@ export default {
         type: null
       },
       productChanged: false,
-      stripe: false,
       selectedProducts: [],
       multiselectOptions: [
         { name: 'Delete', svg: 'svg/bin.svg' },
@@ -417,9 +416,6 @@ export default {
     'products',
     'claims'
   ]),
-  async mounted () {
-    await this.checkConnectedAccount()
-  },
   methods: {
 
     // -----------------------------
@@ -550,55 +546,6 @@ export default {
         } catch (e) {
           this.$parent.$parent.resolveError(e)
         }
-      }
-    },
-
-    // -----------------------------
-    // Stripe connect
-    // -----------------------------
-
-    /**
-     * Connects to Stripe.
-     */
-    async stripeConnect () {
-      try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        const RESPONSE = await this.$axios.post('/.netlify/functions/create-connected-account', {
-          email: this.claims.email,
-          connectedAccountId: this.claims.connectedAccountId
-        })
-        this.claims.connectedAccountId = RESPONSE.data.connectedAccountId
-        await this.$store.dispatch('saveClaims')
-        window.location.href = RESPONSE.data.url
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.$parent.$parent.resolveError(e)
-      }
-    },
-
-    /**
-     * Checks if the user already has a connected Stripe account.
-     */
-    async checkConnectedAccount () {
-      try {
-        this.$store.commit('setData', {
-          attr: 'silentLoading',
-          data: true
-        })
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        const RESPONSE = await this.$axios.post('/.netlify/functions/check-connected-account', {
-          connectedAccountId: this.claims.connectedAccountId
-        })
-        this.stripe = RESPONSE.data
-        this.$store.dispatch('endLoading')
-      } catch (e) {
-        this.$parent.$parent.resolveError(e)
       }
     }
   }

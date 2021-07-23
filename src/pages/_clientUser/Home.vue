@@ -243,14 +243,14 @@ hr {
       </div>
       <div class="products_section">
         <h2>
-          Products
+          {{ clientUser.products.length > 1 ? 'Services' : "Service" }}
         </h2>
         <skeleton v-if="loading" :type="'product'" />
         <div v-else class="products">
           <div
             v-for="(product, productIndex) in clientUser.products"
             :key="`product_${productIndex}`"
-            class="product"
+            class="product fadeIn"
           >
             <div class="header">
               <h3>
