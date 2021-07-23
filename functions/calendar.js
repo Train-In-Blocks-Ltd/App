@@ -225,7 +225,7 @@ const ics = function (uidDomain, prodId) {
 }
 const axios = require('axios')
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
-const authHeader = CUSTOM_ENV.OKTA.ISSUER
+const authHeader = CUSTOM_ENV.OKTA.AUTH_KEY
 const headers = require('././helpers/headers')
 
 let response
@@ -256,27 +256,59 @@ exports.handler = async function handler (event, context, callback) {
       if (response.data.length > 0) {
         // if calendar enabled in settings
         if (response.data[0].profile.calendar === true) {
-          data = await axios.get(`https://api.traininblocks.com/v2/${response.data[0].id}`, {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: CUSTOM_ENV.TIB_API
-            }
-          })
           // create calendar
           const cal = ics()
-          // add calendar events for bookings
-          if (data.data[4].length > 0) {
-            for (const booking of data.data[4]) {
-              let date
-              date = new Date(booking.datetime)
-              date = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-              cal.addEvent('Train In Blocks Meeting with' + data.data[0].find(client => client.client_id === booking.client_id).name, booking.notes, '', date, date)
+          // update headers to include content-type calendar
+          headers['Content-Type'] = 'text/calendar'
+          // If client user
+          if (response.data[0].profile.user_type === 'Client') {
+            data = await axios.get(`https://api.traininblocks.com/v2/clientUser/${response.data[0].profile.client_id_db}`, {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: CUSTOM_ENV.TIB_API
+              }
+            })
+            // add calendar events for bookings
+            if (data.data[3].length > 0) {
+              for (const booking of data.data[3]) {
+                let date
+                date = new Date(booking.datetime)
+                date = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+                cal.addEvent('Train In Blocks Meeting', booking.notes, '', date, date)
+              }
+            } else {
+              return callback(null, {
+                statusCode: 200,
+                headers,
+                body: 'No Bookings'
+              })
+            }
+          } else {
+            data = await axios.get(`https://api.traininblocks.com/v2/${response.data[0].id}`, {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: CUSTOM_ENV.TIB_API
+              }
+            })
+            // add calendar events for bookings
+            if (data.data[4].length > 0) {
+              for (const booking of data.data[4]) {
+                let date
+                date = new Date(booking.datetime)
+                date = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+                cal.addEvent('Train In Blocks Meeting with' + data.data[0].find(client => client.client_id === booking.client_id).name, booking.notes, '', date, date)
+              }
+            } else {
+              return callback(null, {
+                statusCode: 200,
+                headers,
+                body: 'No Bookings'
+              })
             }
           }
 
-          // update headers to include content-type calendar
-          headers['Content-Type'] = 'text/calendar'
           // return calendar
           return callback(null, {
             statusCode: 200,

@@ -359,7 +359,7 @@
         Copy this plan to the same/different client
       </p><br>
       <select v-model="duplicateClientID" name="duplicate_client" class="width_300">
-        <option disabled>
+        <option disabled selected>
           Select a client
         </option>
         <option

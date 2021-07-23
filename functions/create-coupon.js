@@ -31,28 +31,22 @@ exports.handler = async function handler (event, context, callback) {
       })
     } else if (event.body && response.data.active === true) {
       try {
-        if (JSON.parse(event.body).connectedAccountId) {
-          const account = await stripe.accounts.retrieve(
-            JSON.parse(event.body).connectedAccountId
-          )
-          if (account.id !== 'acct_1GLXT9BYbiJubfJM' && account.charges_enabled) {
-            return callback(null, {
-              statusCode: 200,
-              headers,
-              body: 'true'
-            })
-          } else {
-            return callback(null, {
-              statusCode: 200,
-              headers,
-              body: 'false'
-            })
-          }
-        } else {
+        if (JSON.parse(event.body).email) {
+          const coupon = await stripe.coupons.create({
+              percent_off: 25,
+              duration: 'repeating',
+              duration_in_months: 3,
+            });
           return callback(null, {
             statusCode: 200,
             headers,
-            body: 'false'
+            body: JSON.stringify(coupon)
+          })
+        } else {
+          return callback(null, {
+            statusCode: 400,
+            headers,
+            body: 'Please provide email address'
           })
         }
       } catch (e) {
