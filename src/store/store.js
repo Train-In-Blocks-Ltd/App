@@ -71,8 +71,8 @@ export const store = new Vuex.Store({
     // Versioning
 
     policyVersion: '1.1',
-    versionName: 'Pegasus',
-    versionBuild: '3.2.5',
+    versionName: 'Andromeda',
+    versionBuild: '4.0',
     newBuild: false,
     showEULA: false
   },

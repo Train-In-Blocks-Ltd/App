@@ -6,7 +6,7 @@
   .details {
     display: grid;
     grid-gap: 1rem;
-    margin: 2rem 0
+    margin-top: 2rem
   }
   .theme {
     display: grid;
@@ -267,7 +267,7 @@
       </div>
     </form><br><br>
     <div class="version">
-      <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />
+      <inline-svg :src="require('../assets/svg/andromeda-icon.svg')" aria-label="Andromeda" />
       <p class="text--tiny">
         <b>{{ versionName }} {{ versionBuild }}</b>
       </p>
