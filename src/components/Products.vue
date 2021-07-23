@@ -110,8 +110,11 @@
     width: 50px
   }
 }
+.options {
+  gap: 1rem
+}
 .select_all {
-  margin: auto 1rem auto 0
+  margin: auto
 }
 
 @media (max-width: 992px) {
@@ -310,6 +313,15 @@
         <button @click="isNewProductOpen = true, willBodyScroll(false)">
           New product
         </button>
+        <a :href="`https://dashboard.stripe.com/b/${claims.connectedAccountId}`" class="stripe-connect" target="_blank">
+          <span>
+            Login to
+          </span>
+          <inline-svg
+            :src="require('../assets/svg/stripe.svg')"
+            aria-label="Login to stripe"
+          />
+        </a>
       </div>
     </div>
     <skeleton
