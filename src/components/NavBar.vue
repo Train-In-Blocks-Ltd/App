@@ -220,7 +220,7 @@ export default {
         { name: 'Templates', link: '/templates', svg: 'templates.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Portfolio', link: '/portfolio', svg: 'portfolio.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Archive', link: '/archive', svg: 'archive.svg', forUser: ['Admin', 'Trainer'], internal: true },
-        { name: 'Account', link: '/account', svg: 'account.svg', forUser: ['Admin', 'Trainer'], internal: true },
+        { name: 'Account', link: '/account', svg: 'account.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true },
         { name: 'Log out', link: 'javascript:void(0)', svg: 'logout.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true }
       ]
     }
@@ -238,6 +238,7 @@ export default {
       await this.$parent.$auth.signOut()
       await this.$parent.isAuthenticated()
       localStorage.clear()
+      sessionStorage.clear()
       localStorage.setItem('versionBuild', this.$store.state.versionBuild)
       const COOKIES = document.cookie.split(';')
       for (let i = 0; i < COOKIES.length; i++) {
