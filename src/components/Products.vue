@@ -245,7 +245,7 @@
         v-else-if="!stripe"
         href="javascript:void(0)"
         class="stripe-connect"
-        @click="stripeConnect"
+        @click="stripeConnect()"
       >
         <span>
           Connect with
@@ -257,7 +257,7 @@
       </a>
       <div
         v-else-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
-        class="options"
+        class="options fadeIn"
       >
         <a
           href="javascript:void(0)"
@@ -283,7 +283,7 @@
       <form
         v-for="(product, productIndex) in products"
         :key="`product_${productIndex}`"
-        class="product"
+        class="product fadeIn"
       >
         <div class="header">
           <input
@@ -553,7 +553,13 @@ export default {
       }
     },
 
-    /* Connect to Stripe */
+    // -----------------------------
+    // Stripe connect
+    // -----------------------------
+
+    /**
+     * Connects to Stripe.
+     */
     async stripeConnect () {
       try {
         this.$store.commit('setData', {
@@ -573,6 +579,9 @@ export default {
       }
     },
 
+    /**
+     * Checks if the user already has a connected Stripe account.
+     */
     async checkConnectedAccount () {
       try {
         this.$store.commit('setData', {
@@ -587,6 +596,7 @@ export default {
           connectedAccountId: this.claims.connectedAccountId
         })
         this.stripe = RESPONSE.data
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
