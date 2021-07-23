@@ -552,7 +552,8 @@ option {
 
   /* Inputs */
   input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
-  select.width_300 {
+  select.width_300,
+  textarea.width_300 {
     width: 100%
   }
 }

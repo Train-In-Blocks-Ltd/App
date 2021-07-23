@@ -243,7 +243,7 @@ hr {
       </div>
       <div class="products_section">
         <h2>
-          {{ clientUser.products.length > 1 ? 'Services' : "Service" }}
+          Services
         </h2>
         <skeleton v-if="loading" :type="'product'" />
         <div v-else class="products">

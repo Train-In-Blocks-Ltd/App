@@ -1,6 +1,23 @@
 <style lang="scss" scoped>
 #products {
   margin: 4rem 0;
+  form {
+    .price {
+      display: flex;
+      > select {
+        width: 150px;
+        border-radius: 5px 0 0 5px;
+        border-right: none;
+        &:focus + input {
+          border-left: 2px solid var(--base)
+        }
+      }
+      > input {
+        width: 150px;
+        border-radius: 0 5px 5px 0
+      }
+    }
+  }
   > .option_bar {
     display: flex;
     justify-content: space-between;
@@ -50,7 +67,6 @@
         grid-gap: 1rem;
         .price {
           display: flex;
-          justify-content: space-between;
           > select {
             border-radius: 5px 0 0 5px;
             border-right: none;
@@ -107,9 +123,32 @@
 }
 @media (max-width: 576px) {
   #products {
+    form {
+      .price {
+        > select {
+          width: 100%
+        }
+        > input {
+          width: 100%
+        }
+      }
+    }
     .products_container {
       .product {
         padding: 1rem
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  #products {
+    .option_bar {
+      display: grid;
+      justify-content: initial;
+      grid-gap: 1.6rem;
+      .options {
+        justify-content: space-between
       }
     }
   }
@@ -185,34 +224,36 @@
             Yearly
           </option>
         </select>
-        <select
-          v-model="newProduct.currency"
-          class="small_border_radius width_300"
-          placeholder="Currency"
-          aria-label="Currency"
-          required
-        >
-          <option value="null" disabled selected>
-            Currency
-          </option>
-          <option
-            v-for="(currency, currencyIndex) in currencies"
-            :key="`currency_add_product_${currencyIndex}`"
-            :value="currency"
+        <div class="price">
+          <select
+            v-model="newProduct.currency"
+            class="small_border_radius"
+            placeholder="Currency"
+            aria-label="Currency"
+            required
           >
-            {{ currency }}
-          </option>
-        </select>
-        <input
-          v-model="newProduct.price"
-          type="number"
-          class="small_border_radius width_300"
-          placeholder="Price"
-          aria-label="Price"
-          step="0.01"
-          min="0"
-          required
-        >
+            <option value="null" disabled selected>
+              Currency
+            </option>
+            <option
+              v-for="(currency, currencyIndex) in currencies"
+              :key="`currency_add_product_${currencyIndex}`"
+              :value="currency"
+            >
+              {{ currency }}
+            </option>
+          </select>
+          <input
+            v-model="newProduct.price"
+            type="number"
+            class="small_border_radius"
+            placeholder="Price"
+            aria-label="Price"
+            step="0.01"
+            min="0"
+            required
+          >
+        </div>
         <textarea
           v-model="newProduct.notes"
           class="small_border_radius width_300"
