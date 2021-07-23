@@ -378,20 +378,8 @@ export default {
      */
     checkPassword () {
       const SELF = this
-      function isUsername () {
-        const ONE = !SELF.password.new.includes(SELF.claims.email)
-        const TWO = SELF.password.new.split('').filter(function (e, i, a) {
-          // eslint-disable-next-line
-          return (SELF.claims.email.indexOf(e) !== -1)
-        }).length <= 6
-        if (ONE === true && TWO !== false) {
-          return true
-        } else {
-          return false
-        }
-      }
       function requirements () {
-        return isUsername() && SELF.password.new.match(/[0-9]+/) !== null && SELF.password.new.length >= 8 && SELF.password.old.length >= 1
+        return SELF.password.new.match(/[0-9]+/) !== null && SELF.password.new.length >= 8 && SELF.password.old.length >= 1
       }
       if (requirements() === false) {
         this.password.check = true
@@ -432,7 +420,6 @@ export default {
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
-        this.$parent.resolveError(e)
       }
     },
 
