@@ -125,7 +125,7 @@
       </div>
       <div
         v-if="screenSize >= 1440 && type !== 'product'"
-        class="large_padding"
+        class="large_padding small_margin"
       >
         <div class="rect__title" />
         <div class="rect__content one" />
