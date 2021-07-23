@@ -308,7 +308,6 @@ exports.handler = async function handler (event, context, callback) {
               })
             }
           }
-
           // return calendar
           return callback(null, {
             statusCode: 200,

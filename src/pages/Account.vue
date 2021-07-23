@@ -265,7 +265,27 @@
           </label>
         </div>
       </div>
-    </form><br><br>
+      <div class="referral">
+        <h3>
+          Referral Code
+        </h3>
+        <p>Generate a referral code to gift to your fellow trainers:</p>
+        <br>
+        <button
+          v-if="!coupon"
+          @click.prevent="generateCoupon()"
+        >
+          Generate Coupon
+        </button>
+        <button
+          v-else
+          @click.prevent="copyCoupon()"
+          v-html="copyCouponText"
+        />
+      </div>
+    </form>
+    <br>
+    <br>
     <div class="version">
       <inline-svg :src="require('../assets/svg/andromeda-icon.svg')" aria-label="Andromeda" />
       <p class="text--tiny">
@@ -326,7 +346,9 @@ export default {
           title: 'Terms of Use',
           link: 'http://traininblocks.com/legal/terms-of-use'
         }
-      ]
+      ],
+      coupon: false,
+      copyCouponText: 'Copy Coupon'
     }
   },
   computed: mapState([
@@ -433,6 +455,32 @@ export default {
         self.calendarText = 'Copied!'
       }, function (err) {
         self.calendarText = 'Could not copy text: ' + err
+      })
+    },
+    async generateCoupon () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/create-coupon',
+          {
+            email: this.claims.email
+          }
+        )
+        this.coupon = RESPONSE.data
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    },
+    copyCoupon () {
+      const link = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+      const self = this
+      navigator.clipboard.writeText(link).then(function () {
+        self.copyCouponText = 'Copied!'
+      }, function (err) {
+        self.copyCouponText = 'Could not copy text: ' + err
       })
     }
   }

@@ -1,4 +1,3 @@
-
 const qs = require('querystring')
 const axios = require('axios')
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
@@ -33,10 +32,11 @@ exports.handler = async function handler (event, context, callback) {
       try {
         if (JSON.parse(event.body).email) {
           const coupon = await stripe.coupons.create({
-              percent_off: 25,
-              duration: 'repeating',
-              duration_in_months: 3,
-            });
+            percent_off: 5,
+            duration: 'repeating',
+            duration_in_months: 3,
+            name: JSON.parse(event.body).email.toUpperCase().replace(/[\W_]+/g, '')
+          })
           return callback(null, {
             statusCode: 200,
             headers,
