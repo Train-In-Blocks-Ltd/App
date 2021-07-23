@@ -505,11 +505,11 @@ option {
     &:hover .text {
       display: none
     }
-    &.tab_option_small:hover {
-      width: 3rem
-    }
+    &.tab_option_small:hover,
     &.tab_option_large:hover {
-      width: 3rem
+      opacity: var(--light_opacity);
+      padding-left: .6rem;
+      transform: translateX(5rem)
     }
   }
 }
