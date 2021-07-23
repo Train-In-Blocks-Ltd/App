@@ -387,6 +387,7 @@ option {
   position: fixed;
   right: 0;
   top: 3rem;
+  height: 33px;
   width: 8rem;
   transform: translateX(5rem);
   padding: .4rem 1rem .4rem .6rem;
@@ -629,14 +630,13 @@ export default {
       }
     }
   },
-  async created () {
+  created () {
     this.$store.commit('setData', {
       attr: 'loading',
       data: true
     })
     this.isAuthenticated()
     this.willBodyScroll(true)
-    this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
   },
   async mounted () {
     if ('serviceWorker' in navigator) {

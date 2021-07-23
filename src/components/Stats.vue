@@ -133,7 +133,7 @@
                 name="measure"
                 @change="scan()"
               >
-                <option value="Plan Overview">
+                <option value="Plan Overview" selected>
                   Plan Overview
                 </option>
                 <option
@@ -156,7 +156,7 @@
                 name="measure-type"
                 @change="scan()"
               >
-                <option value="Sets">
+                <option value="Sets" selected>
                   Sets
                 </option>
                 <option value="Reps">
@@ -187,7 +187,7 @@
                 name="chart-type"
                 @change="scan()"
               >
-                <option value="line">
+                <option value="line" selected>
                   Line
                 </option>
                 <option value="scatter">

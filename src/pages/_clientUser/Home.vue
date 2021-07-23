@@ -38,39 +38,58 @@ hr {
 }
 
 /* Products */
-.products {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 2rem;
-  margin-top: 2rem;
-  .product {
+.products_section {
+  margin: 4rem 0;
+  .products {
     display: grid;
-    grid-gap: 1rem;
-    border: 3px solid var(--base);
-    border-radius: 10px;
-    padding: 2rem;
-    .header {
-      display: flex;
-      justify-content: space-between
-    }
-    .type {
-      text-transform: capitalize
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2rem;
+    margin-top: 2rem;
+    .product {
+      display: grid;
+      grid-gap: 1rem;
+      border: 3px solid var(--base);
+      border-radius: 10px;
+      padding: 2rem;
+      .header {
+        display: flex;
+        justify-content: space-between
+      }
+      .type {
+        text-transform: capitalize
+      }
+      > button {
+        display: none
+      }
     }
   }
 }
 
 @media (max-width: 992px) {
-  .products {
-    grid-template-columns: 1fr
+  .products_section {
+    .products {
+      grid-template-columns: 1fr
+    }
   }
 }
 @media (max-width: 576px) {
   .container--sessions .wrapper--session {
     padding: .8rem
   }
-  .products {
-    .product {
-      padding: 1rem
+  .products_section {
+    .products {
+      .product {
+        padding: 1rem;
+        .header {
+          button {
+            display: none
+          }
+        }
+        > button {
+          display: block;
+          margin-top: 1rem
+        }
+      }
     }
   }
 }
@@ -106,33 +125,6 @@ hr {
             class="client_portfolio__notes"
             v-html="updateHTML(portfolio.notes, true)"
           />
-          <div class="spacer" />
-          <h2>
-            Products
-          </h2>
-          <skeleton v-if="loading" :type="'product'" />
-          <div v-else class="products">
-            <div
-              v-for="(product, productIndex) in clientUser.products"
-              :key="`product_${productIndex}`"
-              class="product"
-            >
-              <div class="header">
-                <h3>
-                  {{ product.name }}
-                </h3>
-                <button>
-                  Purchase
-                </button>
-              </div>
-              <p>
-                <b class="type">{{ product.type }}</b> payment of <b>{{ `${product.price} ${product.currency}` }}</b>
-              </p>
-              <p>
-                {{ product.notes }}
-              </p>
-            </div>
-          </div>
         </div>
       </div>
       <div v-if="isInstallOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
@@ -248,6 +240,37 @@ hr {
         >
           No plans yet, please contact your trainer or coach for more information
         </p>
+      </div>
+      <div class="products_section">
+        <h2>
+          Products
+        </h2>
+        <skeleton v-if="loading" :type="'product'" />
+        <div v-else class="products">
+          <div
+            v-for="(product, productIndex) in clientUser.products"
+            :key="`product_${productIndex}`"
+            class="product"
+          >
+            <div class="header">
+              <h3>
+                {{ product.name }}
+              </h3>
+              <button>
+                Purchase
+              </button>
+            </div>
+            <p>
+              <b class="type">{{ product.type }}</b> payment of <b>{{ `${product.price} ${product.currency}` }}</b>
+            </p>
+            <p>
+              {{ product.notes }}
+            </p>
+            <button>
+              Purchase
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

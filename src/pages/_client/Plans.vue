@@ -8,23 +8,21 @@
     grid-gap: .5rem
   }
 }
+.plans_section {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    button {
+      margin: auto 0
+    }
+  }
+}
 </style>
 
 <template>
   <div>
     <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <new-plan />
-    </div>
-    <div
-      v-if="!isNewPlanOpen"
-      class="tab_option icon_open_middle tab_option_small"
-      aria-label="New Plan"
-      @click="isNewPlanOpen = true, willBodyScroll(false)"
-    >
-      <inline-svg class="no_fill" :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
-      <p class="text">
-        New Plan
-      </p>
     </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
     <div id="client_notes" class="editor_object_standard">
@@ -37,12 +35,25 @@
         @on-edit-change="resolve_client_info_editor"
       />
     </div>
-    <div>
-      <h2>
-        Plans
-      </h2>
-      <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-      <periodise v-else-if="clientDetails.plans.length !== 0" :is-trainer="true" :plans.sync="clientDetails.plans" />
+    <div class="plans_section">
+      <div class="header">
+        <h2>
+          Plans
+        </h2>
+        <button @click="isNewPlanOpen = true, willBodyScroll(false)">
+          New Plan
+        </button>
+      </div>
+      <skeleton
+        v-if="loading"
+        :type="'plan'"
+        class="fadeIn"
+      />
+      <periodise
+        v-else-if="clientDetails.plans.length !== 0"
+        :is-trainer="true"
+        :plans.sync="clientDetails.plans"
+      />
       <p
         v-else
         class="text--holder text--small grey"
