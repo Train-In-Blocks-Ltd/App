@@ -35,7 +35,7 @@ exports.handler = async function handler (event, context, callback) {
       })
     } else if (event.body && response.data.active === true) {
       try {
-        if (JSON.parse(event.body).productId) {
+        if (JSON.parse(event.body).productId && JSON.parse(event.body).ptId && JSON.parse(event.body).email) {
           // Get Connected Account Id
           const Okta = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=id+eq+"${JSON.parse(event.body).ptId}"&limit=1`,
             {
@@ -47,7 +47,7 @@ exports.handler = async function handler (event, context, callback) {
             }
           )
           // Search db for productId
-          const db = await axios.get('https://api.traininblocks.com/v2', {
+          const db = await axios.get(`https://api.traininblocks.com/v2/${JSON.parse(event.body).ptId}`, {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
@@ -58,21 +58,22 @@ exports.handler = async function handler (event, context, callback) {
           // Create checkout session
           const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
+            customer_email: JSON.parse(event.body).email,
             line_items: [{
-              name: product.title,
+              name: product.name,
               amount: product.price,
-              currency: 'gbp',
+              currency: product.currency,
               quantity: 1
             }],
             payment_intent_data: {
-              application_fee_amount: 0.5 + product.price * 0.05,
+              application_fee_amount: Math.round(0.5 + product.price * 0.05),
               transfer_data: {
                 destination: Okta.data[0].profile.connectedAccountId
               }
             },
             mode: 'payment',
-            success_url: 'https://example.com/success',
-            cancel_url: 'https://example.com/failure'
+            success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
+            cancel_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
           })
           // Include url in response
           return callback(null, {

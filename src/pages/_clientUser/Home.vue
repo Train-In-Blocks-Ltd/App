@@ -256,7 +256,7 @@ hr {
               <h3>
                 {{ product.name }}
               </h3>
-              <button>
+              <button @click.prevent="checkout(product.id)">
                 Purchase
               </button>
             </div>
@@ -266,7 +266,7 @@ hr {
             <p>
               {{ product.notes }}
             </p>
-            <button>
+            <button @click.prevent="checkout(product.id)">
               Purchase
             </button>
           </div>
@@ -411,6 +411,23 @@ export default {
       }
       this.$parent.updateClientSideSession(planId, sessionId)
       this.$store.dispatch('endLoading')
+    },
+    async checkout (productId) {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/checkout', {
+          productId,
+          ptId: this.clientUser.pt_id,
+          email: this.claims.email
+        })
+        window.location.href = RESPONSE.data
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
     }
   }
 }
