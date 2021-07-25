@@ -173,7 +173,7 @@ hr {
           </h2>
         </div>
         <skeleton v-if="loading" :type="'session'" />
-        <div v-else-if="clientUser.sessionsToday.length !== 0" class="container--sessions">
+        <div v-else-if="clientUser.sessionsToday" class="container--sessions">
           <div
             v-for="(session, sessionIndex) in clientUser.sessionsToday"
             :id="`session-${session.id}`"

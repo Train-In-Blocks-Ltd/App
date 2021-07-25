@@ -454,10 +454,6 @@ export default {
         })
         await this.$store.dispatch('updateClient')
         this.$store.dispatch('endLoading')
-        this.$store.commit('setData', {
-          attr: 'silentLoading',
-          data: false
-        })
       } catch (e) {
         this.$parent.resolveError(e)
       }

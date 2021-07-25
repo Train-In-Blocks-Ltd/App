@@ -420,6 +420,10 @@ export const store = new Vuex.Store({
         data: false
       })
       commit('setData', {
+        attr: 'silentLoading',
+        data: false
+      })
+      commit('setData', {
         attr: 'dontLeave',
         data: false
       })
@@ -1022,10 +1026,6 @@ export const store = new Vuex.Store({
         data: payload.number
       })
       dispatch('endLoading')
-      commit('setData', {
-        attr: 'silentLoading',
-        data: false
-      })
     },
 
     /**
@@ -1093,9 +1093,19 @@ export const store = new Vuex.Store({
         data: RESPONSE.data[0]
       })
 
+      // Finds all the sessions for today and adds it to sessionsToday
+      const DATE = new Date()
+      const TODAYS_DATE = `${DATE.getFullYear()}-${String(DATE.getMonth() + 1).padStart(2, '0')}-${String(DATE.getDate()).padStart(2, '0')}`
+      const TODAYS_SESSIONS_DATA = RESPONSE.data[1].filter(session => session.date === TODAYS_DATE)
+      commit('setDataDeep', {
+        attrParent: 'clientUser',
+        attrChild: 'sessionsToday',
+        data: TODAYS_SESSIONS_DATA.length === 0 ? false : TODAYS_SESSIONS_DATA
+      })
+
       // Resolves sessions and assigns to correct plan
       state.clientUser.plans.forEach((plan) => {
-        const SESSION_DATA = RESPONSE.data[1].filter(session => session.programme_id === plan.id) || false
+        const SESSION_DATA = RESPONSE.data[1].filter(session => session.programme_id === plan.id)
         commit('setClientUserPlan', {
           planId: plan.id,
           sessions: SESSION_DATA.length === 0 ? false : SESSION_DATA

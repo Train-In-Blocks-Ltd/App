@@ -594,12 +594,12 @@ option {
       <policy :type="claims.user_type" />
     </div>
     <skeleton
-      v-if="!authenticated || (loading && !instanceReady)"
+      v-if="(!authenticated || (loading && !instanceReady)) && $route.path !== '/login'"
       :type="'nav'"
       class="fadeIn"
     />
     <nav-bar
-      v-else
+      v-else-if="$route.path !== '/login'"
       :authenticated="authenticated"
       :claims="claims"
       class="fadeIn"
@@ -726,7 +726,6 @@ export default {
     }, (error) => {
       return Promise.reject(error)
     })
-    this.$store.dispatch('endLoading')
   },
   methods: {
 
@@ -886,7 +885,6 @@ export default {
         if (this.claims.user_type === 'Admin' || this.claims.user_type === 'Trainer') {
           try {
             await this.$store.dispatch('getHighLevelData')
-            this.$store.dispatch('endLoading')
           } catch (e) {
             this.resolveError(e)
           }
@@ -927,7 +925,6 @@ export default {
       try {
         await this.$store.dispatch('getClientSideInfo')
         await this.$store.dispatch('getClientSidePlans')
-        this.$store.dispatch('endLoading')
       } catch (e) {
         this.resolveError(e)
       }
