@@ -8,7 +8,7 @@
 // -----------------------------
 
 /**
- * Notifies the trainer that they can activate their account.
+ * Notifies the client that they can activate their account.
  * @param {string} link - The link to activate the account.
  * @returns The body text for the email.
  */
@@ -16,10 +16,7 @@ export function activateAccount (link) {
   return (
     `** Almost there...
     ------------------------------------------------------------
-    Welcome to Train In Blocks. We provide an affordable means of creating a be=
-    spoke exercise plan - quickly and effectively. Combined with your skil=
-    ls and knowledge, you can start generating more leads and revenue for your =
-    personal training/coaching business.
+    Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.
     
     You just need to activate your account below to get started!
     
@@ -185,7 +182,7 @@ export function emailBuilder (type, data) {
 
 /** A dictionary of all the email titles. */
 const titles = {
-  'activate-account': 'Almost there...',
+  'activate-account': 'Activate your account',
   'password-changed': 'Password changed',
   'weekly-breakdown': 'Here\'s a breakdown of what you did this week',
   'client-account-reactivated': 'Welcome back',
@@ -205,17 +202,17 @@ const titles = {
 const htmls = (type, data) => {
   switch (type) {
     case 'activate-account':
-      return `<p>Welcome to Train In Blocks. We provide an affordable means of creating a bespoke exercise plan - quickly and effectively. Combined with your skills and knowledge, you can start generating more leads and revenue for your personal training/coaching business.<br>You just need to activate your account below to get started!<br><a href='${data.link}' target='_blank'>Activate Your Account</a></p>`
+      return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.<br><a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a></p>`
     case 'password-changed':
       return '<p>Your password has been changed. If you did not change your password please contact us immediately at hello@traininblocks.com.</p>'
     case 'weekly-breakdown':
       return `<table>${data.body}</table>`
     case 'client-account-reactivated':
-      return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!<br><a href='${data.link}' target='_blank'>Re-activate Your Account</a></p>`
+      return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!<br><a href="${data.link}" target="_blank" class="link-button">Re-activate Your Account</a></p>`
     case 'client-account-deactivated':
       return '<p>Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.</p>'
     case 'client-feedback':
-      return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}">See feedback</a></p>`
+      return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a></p>`
     case 'booking-requested':
       return `<p>${data.clientName} has requested for a booking on ${data.datetime}.</p>`
     case 'booking-rejected':
@@ -252,6 +249,19 @@ function baseEmail (data) {
           }
           #content {
             margin: 2rem 0
+          }
+          .link-button {
+            padding 1rem;
+            margin: 2rem 0;
+            width: fit-content;
+            color: white;
+            background-color: #282828;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: .6s all;
+          }
+          .link-button:hover {
+            opacity: .6;
           }
         </style>
       </head>
