@@ -86,9 +86,10 @@
 /* Stripe Button */
 .stripe-connect {
   display: flex;
+  height: fit-content;
   margin: auto 0;
   padding: .4rem .8rem;
-  background: #635BFF;
+  background: var(--base);
   text-decoration: none;
   border-radius: 5px;
   -moz-border-radius: 4px;
@@ -98,16 +99,19 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   -webkit-font-smoothing: antialiased;
+  transition: var(--transition_standard);
   &:hover {
-    background: #7A73FF
+    opacity: .6
   }
   span {
-    color: white;
-    font-size: 15px
+    color: var(--fore);
+    font-size: .8rem;
+    font-weight: bold;
+    margin: auto 0
   }
   svg {
     height: fit-content;
-    width: 50px
+    width: 46px
   }
 }
 .options {
@@ -121,6 +125,21 @@
   #products {
     .products_container {
       grid-template-columns: 1fr
+    }
+  }
+}
+@media (max-width: 768px) {
+  #products {
+    .option_bar {
+      display: grid;
+      justify-content: initial;
+      grid-gap: 1.6rem;
+      .options {
+        justify-content: space-between;
+        a:first-child {
+          margin: auto auto auto 0
+        }
+      }
     }
   }
 }
@@ -144,18 +163,6 @@
   }
 }
 
-@media (max-width: 576px) {
-  #products {
-    .option_bar {
-      display: grid;
-      justify-content: initial;
-      grid-gap: 1.6rem;
-      .options {
-        justify-content: space-between
-      }
-    }
-  }
-}
 @media (max-width: 425px) {
   #products {
     .option_bar {
