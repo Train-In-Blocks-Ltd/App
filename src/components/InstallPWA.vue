@@ -2,20 +2,62 @@
 .instructions {
   margin-top: 2rem;
   .img_container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 1rem;
+    display: flex;
     margin-top: 2rem;
-    .img_container img {
+    img {
       border-radius: 10px;
-      max-width: 100%
+      width: 25%;
+      &:first-child {
+        margin-right: 1rem
+      }
     }
   }
 }
 .install_bottom_bar {
   margin-top: 2rem
 }
+
+@media (max-width: 1440px) {
+  .instructions {
+    .img_container {
+      img {
+        width: 30%
+      }
+    }
+  }
+}
+@media (max-width: 992px) {
+  .instructions {
+    .img_container {
+      img {
+        width: 40%
+      }
+    }
+  }
+}
+@media (max-width: 768px) {
+  .instructions {
+    .img_container {
+      img {
+        width: 50%
+      }
+    }
+  }
+}
 @media (max-width: 576px) {
+  .instructions {
+    .img_container {
+      display: grid;
+      grid-gap: 2rem;
+      margin: 4rem 0;
+      img {
+        width: 100%;
+        &:first-child {
+          margin-right: 0
+        }
+      }
+    }
+  }
   .install_bottom_bar {
     display: grid;
     grid-gap: 1rem;
