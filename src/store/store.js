@@ -513,7 +513,7 @@ export const store = new Vuex.Store({
      * @param {object} payload - { pt_id, ..client_params }
      */
     async createClient ({ commit }, payload) {
-      const NEW_CLIENT = await axios.put('https://api.traininblocks.com/v2/clients', {
+      const NEW_CLIENT = await axios.post('https://api.traininblocks.com/v2/clients', {
         ...payload
       })
       delete payload.pt_id
@@ -530,7 +530,7 @@ export const store = new Vuex.Store({
      */
     async updateClient ({ state }) {
       const CLIENT = state.clientDetails
-      await axios.post('https://api.traininblocks.com/v2/clients', {
+      await axios.put('https://api.traininblocks.com/v2/clients', {
         id: CLIENT.client_id,
         name: CLIENT.name,
         email: CLIENT.email,
@@ -549,7 +549,7 @@ export const store = new Vuex.Store({
       const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
       commit('archiveClient', CLIENT)
       const EMAIL = CLIENT.email
-      await axios.post(`https://api.traininblocks.com/v2/clients/archive/${clientId}`)
+      await axios.put(`https://api.traininblocks.com/v2/clients/archive/${clientId}`)
       const RESULT = await axios.post('/.netlify/functions/okta', {
         type: 'GET',
         url: `?filter=profile.email+eq+"${EMAIL}"&limit=1`
@@ -579,7 +579,7 @@ export const store = new Vuex.Store({
         POST_DATA.push({ id: clientId })
       })
       commit('unarchiveClient', clientIds)
-      await axios.post('https://api.traininblocks.com/v2/batch/clients/unarchive', POST_DATA)
+      await axios.put('https://api.traininblocks.com/v2/batch/clients/unarchive', POST_DATA)
     },
 
     /**
@@ -605,7 +605,7 @@ export const store = new Vuex.Store({
      * Adds a new template.
      */
     async newTemplate ({ commit, state }) {
-      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/templates', {
+      const RESPONSE = await axios.post('https://api.traininblocks.com/v2/templates', {
         pt_id: state.claims.sub,
         name: 'Untitled',
         template: ''
@@ -626,7 +626,7 @@ export const store = new Vuex.Store({
      */
     async updateTemplate ({ state }, templateId) {
       const TEMPLATE = state.templates.find(template => template.id === parseInt(templateId))
-      await axios.post('https://api.traininblocks.com/v2/templates', {
+      await axios.put('https://api.traininblocks.com/v2/templates', {
         ...TEMPLATE
       })
     },
@@ -654,7 +654,7 @@ export const store = new Vuex.Store({
      * Creates a portfolio.
      */
     async createPortfolio ({ dispatch, state }) {
-      await axios.put('https://api.traininblocks.com/v2/portfolio', {
+      await axios.post('https://api.traininblocks.com/v2/portfolio', {
         pt_id: state.claims.sub,
         trainer_name: '',
         business_name: '',
@@ -674,7 +674,7 @@ export const store = new Vuex.Store({
      * Updates the portfolio.
      */
     async updatePortfolio ({ state }) {
-      await axios.post(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
+      await axios.put(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
         ...state.portfolio
       })
     },
@@ -692,7 +692,7 @@ export const store = new Vuex.Store({
      * @param {string} payload.type - The payment type of the product, either one-off or recurring.
      */
     async createProduct ({ commit }, payload) {
-      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/products', {
+      const RESPONSE = await axios.post('https://api.traininblocks.com/v2/products', {
         ...payload
       })
       payload.id = RESPONSE.data['LAST_INSERT_ID()']
@@ -707,7 +707,7 @@ export const store = new Vuex.Store({
      */
     async updateProduct ({ state }, productId) {
       const POST_DATA = state.products.find(product => product.id === parseInt(productId))
-      await axios.post('https://api.traininblocks.com/v2/products', {
+      await axios.put('https://api.traininblocks.com/v2/products', {
         ...POST_DATA
       })
     },
@@ -808,7 +808,7 @@ export const store = new Vuex.Store({
      * @param {object} payload - { clientId, name, duration }
      */
     async createPlan ({ commit }, payload) {
-      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
+      const RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans', {
         name: payload.name,
         client_id: parseInt(payload.clientId),
         duration: payload.duration,
@@ -830,7 +830,7 @@ export const store = new Vuex.Store({
      * @param {object} payload - { clientId, planId, planName, planDuration, blockColor, planNotes, planSessions }
      */
     async duplicatePlan ({ dispatch, commit, state }, payload) {
-      const NEW_PLAN_RESPONSE = await axios.put('https://api.traininblocks.com/v2/plans', {
+      const NEW_PLAN_RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans', {
         name: `Copy of ${payload.planName}`,
         client_id: parseInt(payload.clientId),
         duration: payload.planDuration,
@@ -875,7 +875,7 @@ export const store = new Vuex.Store({
      * @param {object} payload - { client_id, id (plan), name, duration, notes, block_color }
      */
     async updatePlan ({ commit }, payload) {
-      await axios.post('https://api.traininblocks.com/v2/plans', {
+      await axios.put('https://api.traininblocks.com/v2/plans', {
         ...payload
       })
       commit('updateEntirePlan', payload)
@@ -903,7 +903,7 @@ export const store = new Vuex.Store({
      * @returns The new session's id.
      */
     async addSession ({ commit }, payload) {
-      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/sessions', {
+      const RESPONSE = await axios.post('https://api.traininblocks.com/v2/sessions', {
         ...payload.data
       }).catch((e) => {
         console.error(e)
@@ -925,7 +925,7 @@ export const store = new Vuex.Store({
      */
     async updateSession ({ getters }, payload) {
       const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
-      await axios.post('https://api.traininblocks.com/v2/sessions', { ...SESSION })
+      await axios.put('https://api.traininblocks.com/v2/sessions', { ...SESSION })
     },
 
     /**
@@ -937,7 +937,7 @@ export const store = new Vuex.Store({
       payload.sessionIds.forEach((sessionId) => {
         POST_DATA.push(getters.helper('match_session', payload.clientId, payload.planId, sessionId))
       })
-      await axios.post('https://api.traininblocks.com/v2/batch/sessions', {
+      await axios.put('https://api.traininblocks.com/v2/batch/sessions', {
         ...POST_DATA
       })
     },
@@ -971,7 +971,7 @@ export const store = new Vuex.Store({
      * @param {object} payload - { clientId, datetime, notes, status, isTrainer }
      */
     async createBooking ({ commit }, payload) {
-      const RESPONSE = await axios.put('https://api.traininblocks.com/v2/bookings', {
+      const RESPONSE = await axios.post('https://api.traininblocks.com/v2/bookings', {
         ...payload
       })
       payload.id = RESPONSE.data[0]['LAST_INSERT_ID()']
@@ -985,7 +985,7 @@ export const store = new Vuex.Store({
      * @param {object} payload - { id (booking), status }
      */
     async updateBooking ({ commit }, payload) {
-      await axios.post('https://api.traininblocks.com/v2/bookings', {
+      await axios.put('https://api.traininblocks.com/v2/bookings', {
         ...payload
       })
       commit('updateBooking', {
@@ -1011,7 +1011,7 @@ export const store = new Vuex.Store({
      * @param {object} payload - { ...client_params }
      */
     async updateClientSideDetails ({ dispatch, commit }, payload) {
-      await axios.post('https://api.traininblocks.com/v2/clientUser/clients', {
+      await axios.put('https://api.traininblocks.com/v2/clientUser/clients', {
         ...payload
       })
       commit('updateClientUserProfileImage', payload.profile_image)
@@ -1110,7 +1110,7 @@ export const store = new Vuex.Store({
     async updateClientSideSession ({ state }, payload) {
       const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
       const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
-      await axios.post('https://api.traininblocks.com/v2/client-sessions', {
+      await axios.put('https://api.traininblocks.com/v2/client-sessions', {
         id: SESSION.id,
         name: SESSION.name,
         checked: SESSION.checked,
