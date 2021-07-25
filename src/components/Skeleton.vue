@@ -78,6 +78,14 @@
     background-position: 100rem 0
   }
 }
+@keyframes shimmerVertical {
+  from {
+    background-position: 0 0
+  }
+  to {
+    background-position: 0 100rem
+  }
+}
 
 /* Plans */
 .plans_layout {
@@ -95,6 +103,26 @@
   }
   .plans_layout > div {
     margin: 0
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: calc(38px + 2rem);
+  padding: 1rem;
+  background-color: var(--skeleton_2);
+  animation: fade .6s linear infinite alternate-reverse
+}
+@media (max-width: 768px) {
+  .sidebar {
+    top: unset;
+    bottom: 0;
+    height: 60.8px;
+    width: 100vw
   }
 }
 </style>
@@ -159,6 +187,7 @@
     <div v-if="type === 'button'" class="rect mini_padding">
       <div class="rect__small_text" />
     </div>
+    <div v-if="type === 'nav'" class="sidebar" />
   </div>
 </template>
 

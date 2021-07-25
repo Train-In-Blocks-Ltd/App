@@ -593,7 +593,17 @@ option {
     <div v-if="showEULA" class="tab_overlay_content fadeIn delay fill_mode_both">
       <policy :type="claims.user_type" />
     </div>
-    <nav-bar v-if="authenticated" :authenticated="authenticated" :claims="claims" />
+    <skeleton
+      v-if="!authenticated || (loading && !instanceReady)"
+      :type="'nav'"
+      class="fadeIn"
+    />
+    <nav-bar
+      v-else
+      :authenticated="authenticated"
+      :claims="claims"
+      class="fadeIn"
+    />
     <div :class="{ opened_sections: showEULA }" class="section_overlay" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
@@ -615,6 +625,7 @@ export default {
   },
   computed: mapState([
     'authenticated',
+    'loading',
     'claims',
     'showEULA',
     'clients',
