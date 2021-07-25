@@ -335,11 +335,11 @@ export default {
     updateClientDetails () {
       try {
         this.$store.commit('setData', {
-          attr: 'dontLeave',
+          attr: 'silentLoading',
           data: true
         })
         this.$store.commit('setData', {
-          attr: 'silentLoading',
+          attr: 'dontLeave',
           data: true
         })
         this.$store.dispatch('updateClientSideDetails', {

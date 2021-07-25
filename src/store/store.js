@@ -420,10 +420,6 @@ export const store = new Vuex.Store({
         data: false
       })
       commit('setData', {
-        attr: 'silentLoading',
-        data: false
-      })
-      commit('setData', {
         attr: 'dontLeave',
         data: false
       })
@@ -1026,6 +1022,10 @@ export const store = new Vuex.Store({
         data: payload.number
       })
       dispatch('endLoading')
+      commit('setData', {
+        attr: 'silentLoading',
+        data: false
+      })
     },
 
     /**

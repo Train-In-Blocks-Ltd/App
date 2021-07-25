@@ -288,7 +288,7 @@
         Products
       </h2>
       <skeleton
-        v-if="loading"
+        v-if="loading || silentLoading"
         :type="'button'"
         class="stripe_skeleton"
       />

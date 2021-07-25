@@ -181,6 +181,10 @@ export default {
         this.$ga.event('Portfolio', 'update')
         this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
         this.$store.dispatch('endLoading')
+        this.$store.commit('setData', {
+          attr: 'silentLoading',
+          data: false
+        })
       } catch (e) {
         this.$parent.resolveError(e)
       }
@@ -218,13 +222,17 @@ export default {
     async checkConnectedAccount () {
       try {
         this.$store.commit('setData', {
-          attr: 'dontLeave',
+          attr: 'silentLoading',
           data: true
         })
         const RESPONSE = await this.$axios.post('/.netlify/functions/check-connected-account', {
           connectedAccountId: this.claims.connectedAccountId
         })
         this.stripe = RESPONSE.data
+        this.$store.commit('setData', {
+          attr: 'silentLoading',
+          data: false
+        })
       } catch (e) {
         this.$parent.resolveError(e)
       }
