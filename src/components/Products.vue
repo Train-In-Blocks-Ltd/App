@@ -87,6 +87,7 @@
 .stripe-connect {
   display: flex;
   height: fit-content;
+  width: fit-content;
   margin: auto 0;
   padding: .4rem .8rem;
   background: var(--base);
@@ -130,7 +131,7 @@
 }
 @media (max-width: 768px) {
   #products {
-    .option_bar {
+    .option_bar.connected {
       display: grid;
       justify-content: initial;
       grid-gap: 1.6rem;
@@ -283,7 +284,7 @@
       </form>
     </div>
     <div :class="{opened_sections: isNewProductOpen }" class="section_overlay" />
-    <div class="option_bar">
+    <div :class="{ connected: $parent.stripe }" class="option_bar">
       <h2>
         Products
       </h2>
