@@ -243,6 +243,7 @@ function baseEmail (data) {
           body {
             font-family: Arial, Helvetica, sans-serif;
             margin: 0;
+            padding: 10vh 10vw;
             font-size: 16px;
             line-height: 1.42;
             background-color: #F9F9F9
@@ -251,12 +252,13 @@ function baseEmail (data) {
             margin: 2rem 0
           }
           .link-button {
-            padding 1rem;
+            display: block;
+            padding: 1rem;
             margin: 2rem 0;
             width: fit-content;
             color: white;
             background-color: #282828;
-            border-radius: 10px;
+            border-radius: 5px;
             text-decoration: none;
             transition: .6s all;
           }
@@ -273,7 +275,7 @@ function baseEmail (data) {
           <table id="header" role="presentation" width="100%">
             <tr>
               <td>
-                <img align='left' alt='' src='https://app.traininblocks.com/emailLogo.svg' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
+                <img align='left' alt='' src='https://dev.traininblocks.com/emailLogo.svg' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
               </td>
             </tr>
           </table>
