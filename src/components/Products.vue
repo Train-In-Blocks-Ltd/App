@@ -338,7 +338,7 @@
       class="fadeIn"
     />
     <div
-      v-else-if="products.length !== 0"
+      v-else-if="products.length !== 0 && $parent.stripe"
       class="products_container"
     >
       <form
