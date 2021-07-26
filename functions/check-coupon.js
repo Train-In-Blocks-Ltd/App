@@ -3,7 +3,7 @@ const axios = require('axios')
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
 /* eslint-disable-next-line */
 const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
-const headers = require('././helpers/headers')
+const headers = require('./helpers/headers')
 
 let response
 
@@ -31,17 +31,11 @@ exports.handler = async function handler (event, context, callback) {
     } else if (event.body && response.data.active === true) {
       try {
         if (JSON.parse(event.body).email) {
-          const coupon = await stripe.promotionCodes.create({
-            coupon: 'Referee-20',
-            code: JSON.parse(event.body).email.toUpperCase().replace(/[\W_]+/g, ''),
-            restrictions: {
-              first_time_transaction: true
-            }
-          })
+          const coupons = await stripe.promotionCodes.list()
           return callback(null, {
             statusCode: 200,
             headers,
-            body: JSON.stringify(coupon)
+            body: JSON.stringify(coupons)
           })
         } else {
           return callback(null, {
