@@ -213,7 +213,7 @@
                 <a
                   href="javascript:void(0)"
                   class="a_link"
-                  @click="cancelBooking(booking.id)"
+                  @click="cancelBooking(booking.id, booking.datetime)"
                 >
                   Cancel
                 </a>
@@ -367,7 +367,7 @@ export default {
           data: true
         })
         await this.$store.dispatch('createBooking', {
-          client_id: this.claims.client_id_db,
+          clientId: this.claims.client_id_db,
           datetime: this.booking_form.date + ' ' + this.booking_form.time,
           notes: this.booking_form.notes,
           status: 'Pending',
@@ -388,8 +388,9 @@ export default {
     /**
      * Cancels a booking.
      * @param {integer} bookingId - The id of the booking.
+     * @param {datetime} datetime - The id of the booking.
      */
-    async cancelBooking (bookingId) {
+    async cancelBooking (bookingId, datetime) {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
         try {
           this.$store.commit('setData', {
@@ -399,6 +400,7 @@ export default {
           await this.$store.dispatch('deleteBooking', {
             clientId: this.claims.client_id_db,
             bookingId,
+            datetime,
             isTrainer: false
           })
           this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your trainer will be notified')
