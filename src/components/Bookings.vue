@@ -1,4 +1,7 @@
 <style lang="scss" scoped>
+.a_link {
+  display: inline
+}
 
 /* Bookings */
 #bookings {

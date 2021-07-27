@@ -74,7 +74,7 @@ exports.handler = async function handler (event, context, callback) {
           return callback(null, {
             statusCode: 200,
             headers,
-            body: session.url
+            body: session.id
           })
         } else {
           return callback(null, {

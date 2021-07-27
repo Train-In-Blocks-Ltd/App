@@ -348,7 +348,7 @@ export default {
         }
       ],
       coupon: false,
-      copyCouponText: 'Copy Coupon'
+      copyCouponText: null
     }
   },
   computed: mapState([
@@ -366,7 +366,8 @@ export default {
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
   },
-  mounted () {
+  async mounted () {
+    await this.checkCoupon()
     this.calendarGuides[0].link = `https://calendar.google.com/calendar/u/0/r?cid=${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
   },
   methods: {
@@ -453,9 +454,35 @@ export default {
       const self = this
       navigator.clipboard.writeText(link).then(function () {
         self.calendarText = 'Copied!'
+        setTimeout(function () {
+          self.calendarText = 'Get your calendar link'
+        }, 2000)
       }, function (err) {
         self.calendarText = 'Could not copy text: ' + err
       })
+    },
+    /*
+     * Coupons
+     */
+    async checkCoupon () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/check-coupon',
+          {
+            email: this.claims.email
+          }
+        )
+        if (RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))) {
+          this.coupon = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          this.copyCouponText = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        }
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
     },
     async generateCoupon () {
       try {
@@ -463,12 +490,12 @@ export default {
           attr: 'dontLeave',
           data: true
         })
-        const RESPONSE = await this.$axios.post('/.netlify/functions/create-coupon',
+        await this.$axios.post('/.netlify/functions/create-coupon',
           {
             email: this.claims.email
           }
         )
-        this.coupon = RESPONSE.data
+        this.coupon = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
@@ -479,6 +506,9 @@ export default {
       const self = this
       navigator.clipboard.writeText(link).then(function () {
         self.copyCouponText = 'Copied!'
+        setTimeout(function () {
+          self.copyCouponText = self.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        }, 2000)
       }, function (err) {
         self.copyCouponText = 'Could not copy text: ' + err
       })

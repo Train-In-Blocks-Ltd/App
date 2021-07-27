@@ -615,8 +615,8 @@ option {
 
 <script>
 import { mapState } from 'vuex'
-const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
-const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
+import NavBar from './components/NavBar'
+import Policy from './components/Policy'
 
 export default {
   components: {

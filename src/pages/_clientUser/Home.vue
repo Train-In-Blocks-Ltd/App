@@ -278,6 +278,7 @@ hr {
 
 <script>
 import { mapState } from 'vuex'
+import { loadStripe } from '@stripe/stripe-js'
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
@@ -423,7 +424,8 @@ export default {
           ptId: this.clientUser.pt_id,
           email: this.claims.email
         })
-        window.location.href = RESPONSE.data
+        const stripe = await loadStripe('pk_live_shgxQjmTIkJSJjVJpi8N1RQO00aJHHNIWX')
+        stripe.redirectToCheckout({ sessionId: RESPONSE.data })
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
