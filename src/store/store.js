@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import { passwordChanged, clientAccountDeactivated, emailBuilder, clientFeedback } from '../components/email'
+import { passwordChanged, clientAccountDeactivated, emailBuilder, clientFeedback, bookingRequested, bookingRequestCancelled /*, bookingRejected, bookingAccepted */ } from '../components/email'
 
 Vue.use(Vuex)
 
@@ -361,7 +361,20 @@ export const store = new Vuex.Store({
      * Pushes a new booking to 'clientUser.bookings'.
      * @param {object} payload - { ...booking_params }
      */
-    addNewBookingClientSide (state, payload) {
+    async addNewBookingClientSide (state, payload) {
+      const PT_EMAIL = await axios.post('/.netlify/functions/okta', {
+        type: 'GET',
+        url: `?filter=id+eq+"${state.portfolio.pt_id}"&limit=1`
+      })
+      await axios.post('/.netlify/functions/send-email', {
+        to: PT_EMAIL.data[0].credentials.emails[0].value,
+        subject: state.clientUser.name + ' has requested a booking',
+        text: bookingRequested(state.claims.client_id_db, payload.datetime),
+        html: emailBuilder('booking-requested', {
+          clientName: state.clientUser.name,
+          datetime: payload.datetime
+        })
+      })
       delete payload.isClientSide
       state.clientUser.bookings.push({ ...payload })
       state.clientUser.bookings.sort((a, b) => {
@@ -373,7 +386,20 @@ export const store = new Vuex.Store({
      * Removes a booking from 'clientUser.bookings'.
      * @param {object} payload - { bookingId }
      */
-    removeBookingClientSide (state, payload) {
+    async removeBookingClientSide (state, payload) {
+      const PT_EMAIL = await axios.post('/.netlify/functions/okta', {
+        type: 'GET',
+        url: `?filter=id+eq+"${state.portfolio.pt_id}"&limit=1`
+      })
+      await axios.post('/.netlify/functions/send-email', {
+        to: PT_EMAIL.data[0].credentials.emails[0].value,
+        subject: state.clientUser.name + ' has requested a booking',
+        text: bookingRequestCancelled(state.claims.client_id_db, payload.datetime),
+        html: emailBuilder('booking-request-cancelled', {
+          clientName: state.clientUser.name,
+          datetime: payload.datetime
+        })
+      })
       const BOOKING = state.clientUser.bookings.find(booking => booking.id === parseInt(payload.bookingId))
       state.clientUser.bookings.splice(state.clientUser.bookings.indexOf(BOOKING), 1)
     },

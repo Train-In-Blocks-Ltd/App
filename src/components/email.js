@@ -127,6 +127,23 @@ export function bookingRequested (clientName, datetime) {
 }
 
 /**
+ * The email body to notify the trainer-user of a cancelled booking request.
+ * @param {string} clientName - The client's name that cancelled the booking.
+ * @param {string} datetime - The date and time for when the booking would have taken place.
+ * @returns The body text for the email.
+ */
+export function bookingRequestCancelled (clientName, datetime) {
+  return (`** Your client has cancelled their request for a session
+    ------------------------------------------------------------
+    
+    ${clientName} has cancelled their request for a session for ${datetime}.
+
+    All the best,
+    
+    The Train In Blocks Team`)
+}
+
+/**
  * The email body to notify the client-user of a cancelled/rejected booking.
  * @param {string} datetime - The date and time for when the booking would have taken place.
  * @returns The body text for the email.
@@ -189,6 +206,7 @@ const titles = {
   'client-account-deactivated': 'Account deactivated',
   'client-feedback': 'Your client has given some feedback',
   'booking-requested': 'Your client has requested for a booking',
+  'booking-request-canclled': 'Your client has canclled their request for a booking',
   'booking-rejected': 'Your trainer has rejected/cancelled a booking',
   'booking-accepted': 'Your trainer has accepted/confirmed a booking'
 }
@@ -215,6 +233,8 @@ const htmls = (type, data) => {
       return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a></p>`
     case 'booking-requested':
       return `<p>${data.clientName} has requested for a booking on ${data.datetime}.</p>`
+    case 'booking-request-cancelled':
+      return `<p>${data.clientName} has cancelled their request for a session for ${data.datetime}.</p>`
     case 'booking-rejected':
       return `<p>The booking for ${data.datetime} has been rejected/cancelled by your trainer.</p>`
     case 'booking-accepted':
