@@ -50,7 +50,6 @@ exports.handler = async function handler (event, context, callback) {
             }
           })
           const product = db.data[5].find(product => product.id === JSON.parse(event.body).productId)
-          console.log(stripe.checkout.sessions)
           // Create checkout session
           const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -75,7 +74,7 @@ exports.handler = async function handler (event, context, callback) {
           return callback(null, {
             statusCode: 200,
             headers,
-            body: session.url
+            body: session.id
           })
         } else {
           return callback(null, {
