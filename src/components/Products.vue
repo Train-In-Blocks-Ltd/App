@@ -292,7 +292,7 @@
       </form>
     </div>
     <div :class="{opened_sections: isNewProductOpen }" class="section_overlay" />
-    <div :class="{ connected: $parent.stripe }" class="option_bar">
+    <div :class="{ connected: isStripeConnected }" class="option_bar">
       <h2>
         Products
       </h2>
@@ -302,10 +302,10 @@
         class="stripe_skeleton"
       />
       <a
-        v-else-if="!$parent.stripe"
+        v-else-if="!isStripeConnected"
         href="javascript:void(0)"
         class="stripe-connect"
-        @click="$parent.stripeConnect()"
+        @click="isStripeConnectedConnect()"
       >
         <span>
           Connect with
@@ -346,7 +346,7 @@
       class="fadeIn"
     />
     <div
-      v-else-if="products.length !== 0 && $parent.stripe"
+      v-else-if="products.length !== 0 && isStripeConnected"
       class="products_container"
     >
       <form
@@ -441,7 +441,7 @@
         />
       </form>
     </div>
-    <p v-else-if="$parent.stripe" class="text--small grey">
+    <p v-else-if="isStripeConnected" class="text--small grey">
       No products created yet. Create a new product and start taking payments.
     </p>
     <p v-else class="text--small grey">
@@ -483,7 +483,8 @@ export default {
     'loading',
     'silentLoading',
     'products',
-    'claims'
+    'claims',
+    'isStripeConnected'
   ]),
   methods: {
 

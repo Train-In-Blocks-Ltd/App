@@ -47,6 +47,7 @@ export default {
   },
 
   // Products
+  isStripeConnected: false,
   products: [],
 
   // Template
