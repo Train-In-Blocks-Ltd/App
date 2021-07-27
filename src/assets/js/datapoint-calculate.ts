@@ -1,4 +1,13 @@
-export default class DataPoint {
+/**
+ * @file Contains the class to extract data from exercise protocols.
+ * @author Train In Blocks
+ * @version 1.0 
+ */
+
+/**
+ * @class Represents the data extracted from the protocols provided.
+ */
+export default class ExtractedData {
   static regexSetsReps = /(\d*)x((\d*\/*)*)/gi
   static regexLoad = /at\s*((\d\.*\/*)*)\s*\w*/gi
   static regexGetNumber = /[0-9.]+/gi
@@ -10,6 +19,12 @@ export default class DataPoint {
   protocol: string
   returnDataType: string
 
+  /**
+   * Starts the extraction process.
+   * @param vueParent - The vue parent component.
+   * @param dataPacket - The data to extract from.
+   * @param returnDataType - The type of data to extract. E.g., sets, reps, load, etc.
+   */
   public constructor (vueParent: VueParent, dataPacket: DataPacket, returnDataType: string) {
     this.vueParent = vueParent
     this.sessionName = dataPacket.sessionName
@@ -46,9 +61,9 @@ export default class DataPoint {
   private getSets (returnAdditionalDescData: boolean) {
     let returnValue
     let finder
-    while ((finder = DataPoint.regexSetsReps.exec(this.protocol)) !== null) {
-      if (finder.index === DataPoint.regexSetsReps.lastIndex) {
-        DataPoint.regexSetsReps.lastIndex++
+    while ((finder = ExtractedData.regexSetsReps.exec(this.protocol)) !== null) {
+      if (finder.index === ExtractedData.regexSetsReps.lastIndex) {
+        ExtractedData.regexSetsReps.lastIndex++
       }
       finder.forEach((setsMatch, setsIndex) => {
         if (setsIndex === 1) {
@@ -60,7 +75,7 @@ export default class DataPoint {
         }
       })
     }
-    return returnValue
+    return returnValue ?? 0
   }
 
   /**
@@ -69,19 +84,19 @@ export default class DataPoint {
     */
   private getReps () {
     const NUM_OF_SETS = this.getSets(false)
-    let returnValue = 0
+    let returnValue
     let repsFinder
-    while ((repsFinder = DataPoint.regexSetsReps.exec(this.protocol)) !== null) {
-      if (repsFinder.index === DataPoint.regexSetsReps.lastIndex) {
-        DataPoint.regexSetsReps.lastIndex++
+    while ((repsFinder = ExtractedData.regexSetsReps.exec(this.protocol)) !== null) {
+      if (repsFinder.index === ExtractedData.regexSetsReps.lastIndex) {
+        ExtractedData.regexSetsReps.lastIndex++
       }
       repsFinder.forEach((repsMatch, repsIndex) => {
         if (repsIndex === 2) {
           if (repsMatch.includes('/')) {
             const SPLIT_VALUE = repsMatch.split('/').map(Number)
             returnValue = SPLIT_VALUE.reduce((a, b) => a + b)
-            const LARGEST = Math.max(SPLIT_VALUE)
-            const SMALLEST = Math.min(SPLIT_VALUE)
+            const LARGEST = Math.max(...SPLIT_VALUE)
+            const SMALLEST = Math.min(...SPLIT_VALUE)
             this.vueParent.largestValue = this.vueParent.largestValue === null ? LARGEST : (this.vueParent.largestValue < LARGEST ? LARGEST : this.vueParent.largestValue)
             this.vueParent.smallestValue = this.vueParent.smallestValue === null ? SMALLEST : (this.vueParent.smallestValue > SMALLEST ? SMALLEST : this.vueParent.smallestValue)
           } else {
@@ -92,7 +107,7 @@ export default class DataPoint {
         }
       })
     }
-    return returnValue
+    return returnValue ?? 0
   }
 
   /**
@@ -101,19 +116,19 @@ export default class DataPoint {
     */
   private getLoad () {
     const NUM_OF_SETS = this.getSets(false)
-    let returnValue = 0
+    let returnValue
     let loadFinder
-    while ((loadFinder = DataPoint.regexLoad.exec(this.protocol)) !== null) {
-      if (loadFinder.index === DataPoint.regexLoad.lastIndex) {
-        DataPoint.regexLoad.lastIndex++
+    while ((loadFinder = ExtractedData.regexLoad.exec(this.protocol)) !== null) {
+      if (loadFinder.index === ExtractedData.regexLoad.lastIndex) {
+        ExtractedData.regexLoad.lastIndex++
       }
       loadFinder.forEach((loadMatch, loadIndex) => {
         if (loadIndex === 1) {
           if (loadMatch.includes('/')) {
             const SPLIT_VALUE = loadMatch.split('/').map(Number)
             returnValue = SPLIT_VALUE.reduce((a, b) => a + b)
-            const LARGEST = Math.max(SPLIT_VALUE)
-            const SMALLEST = Math.min(SPLIT_VALUE)
+            const LARGEST = Math.max(...SPLIT_VALUE)
+            const SMALLEST = Math.min(...SPLIT_VALUE)
             this.vueParent.largestValue = this.vueParent.largestValue === null ? LARGEST : (this.vueParent.largestValue < LARGEST ? LARGEST : this.vueParent.largestValue)
             this.vueParent.smallestValue = this.vueParent.smallestValue === null ? SMALLEST : (this.vueParent.smallestValue > SMALLEST ? SMALLEST : this.vueParent.smallestValue)
           } else {
@@ -124,7 +139,7 @@ export default class DataPoint {
         }
       })
     }
-    return returnValue
+    return returnValue ?? 0
   }
 
   /**
@@ -134,9 +149,9 @@ export default class DataPoint {
   private getOtherMeasure () {
     let returnValue
     let numberFinder
-    while ((numberFinder = DataPoint.regexGetNumber.exec(this.protocol)) !== null) {
-      if (numberFinder.index === DataPoint.regexGetNumber.lastIndex) {
-        DataPoint.regexGetNumber.lastIndex++
+    while ((numberFinder = ExtractedData.regexGetNumber.exec(this.protocol)) !== null) {
+      if (numberFinder.index === ExtractedData.regexGetNumber.lastIndex) {
+        ExtractedData.regexGetNumber.lastIndex++
       }
       numberFinder.forEach((numberMatch) => {
         returnValue = parseFloat(numberMatch)
