@@ -22,21 +22,6 @@ export default {
   },
 
   /**
-   * Resolves any error in store.js.
-   * @param {string} msg - The error message.
-   */
-  async resolveDeepError ({ dispatch, state }, msg) {
-    if (state.claims.user_type !== 'Admin') {
-      await this._vm.$axios.post('/.netlify/functions/error', {
-        msg,
-        claims: state.claims
-      })
-    }
-    dispatch('endLoading')
-    console.error(msg)
-  },
-
-  /**
    * Gets all the data for the trainer-user's session.
    */
   async getHighLevelData ({ dispatch, commit, state }) {
