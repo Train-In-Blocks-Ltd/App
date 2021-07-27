@@ -335,7 +335,7 @@ export default {
           data: true
         })
         await this.$store.dispatch('createBooking', {
-          client_id: this.booking_form.clientId,
+          clientId: this.booking_form.clientId,
           datetime: this.booking_form.date + ' ' + this.booking_form.time,
           notes: this.booking_form.notes,
           status: 'Scheduled',

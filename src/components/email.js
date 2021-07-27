@@ -110,6 +110,22 @@ export function clientFeedback (cId, pId) {
 }
 
 /**
+ * The email body to notify the client-user that a new booking has been scheduled.
+ * @param {string} datetime - The date and time requested.
+ * @returns The body text for the email.
+ */
+export function bookingCreated (datetime) {
+  return (`** Your client has requested for a session
+    ------------------------------------------------------------
+    
+    Your trainer has scheduled a session for ${datetime}. Head over to the app now to accept or reject this booking.
+
+    All the best,
+    
+    The Train In Blocks Team`)
+}
+
+/**
  * The email body to notify the trainer-user that a new booking request has been received.
  * @param {string} clientName - The client's name that requested a booking.
  * @param {string} datetime - The date and time requested.
@@ -197,6 +213,14 @@ export function emailBuilder (type, data) {
   })
 }
 
+/**
+ * @param {string} type - The email title text to use.
+ * @returns The email title.
+ */
+export function emailTitle (type) {
+  return titles[type]
+}
+
 /** A dictionary of all the email titles. */
 const titles = {
   'activate-account': 'Activate your account',
@@ -205,10 +229,11 @@ const titles = {
   'client-account-reactivated': 'Welcome back',
   'client-account-deactivated': 'Account deactivated',
   'client-feedback': 'Your client has given some feedback',
-  'booking-requested': 'Your client has requested for a booking',
-  'booking-request-canclled': 'Your client has canclled their request for a booking',
-  'booking-rejected': 'Your trainer has rejected/cancelled a booking',
-  'booking-accepted': 'Your trainer has accepted/confirmed a booking'
+  'booking-created': 'Your trainer has scheduled a booking',
+  'booking-requested': 'Your client has requested a booking',
+  'booking-request-cancelled': 'Your client has cancelled their request for a booking',
+  'booking-rejected': 'Your trainer has rejected a booking',
+  'booking-accepted': 'Your trainer has accepted a booking'
 }
 
 /**
@@ -231,14 +256,16 @@ const htmls = (type, data) => {
       return '<p>Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.</p>'
     case 'client-feedback':
       return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a></p>`
+    case 'booking-created':
+      return `<p>Your trainer has scheduled a booking on ${data.datetime}.</p>`
     case 'booking-requested':
-      return `<p>${data.clientName} has requested for a booking on ${data.datetime}.</p>`
+      return `<p>${data.clientName} has requested a booking on ${data.datetime}.</p>`
     case 'booking-request-cancelled':
       return `<p>${data.clientName} has cancelled their request for a session for ${data.datetime}.</p>`
     case 'booking-rejected':
-      return `<p>The booking for ${data.datetime} has been rejected/cancelled by your trainer.</p>`
+      return `<p>The booking for ${data.datetime} has been rejected by your trainer.</p>`
     case 'booking-accepted':
-      return `<p>The booking for ${data.datetime} has been accepted/confirmed by your trainer.</p>`
+      return `<p>The booking for ${data.datetime} has been accepted by your trainer.</p>`
   }
 }
 
@@ -305,9 +332,6 @@ function baseEmail (data) {
           <table id="content" role="presentation" width="100%">
             <tr>
               <td>
-                <h1>
-                  ${data.title}
-                </h1>
                 <div class="content-text">
                   ${data.html}
                 </div>
