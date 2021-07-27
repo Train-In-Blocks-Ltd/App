@@ -1,3 +1,11 @@
+<style lang="scss">
+    .stripe-connect svg :is(rect, path, polygon) {
+      /* stylelint-disable-next-line */
+      fill: var(--fore) !important
+    }
+
+</style>
+
 <style lang="scss" scoped>
 #products {
   margin: 4rem 0;
