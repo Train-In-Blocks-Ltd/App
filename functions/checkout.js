@@ -50,26 +50,68 @@ exports.handler = async function handler (event, context, callback) {
             }
           })
           const product = db.data[5].find(product => product.id === JSON.parse(event.body).productId)
+          let session
+          let recurring
+          if (product.type === 'monthly') {
+            recurring = 'month'
+          } else if (product.type === 'monthly') {
+            recurring = 'year'
+          }
           // Create checkout session
-          const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            customer_email: JSON.parse(event.body).email,
-            line_items: [{
-              name: product.name,
-              amount: product.price,
-              currency: product.currency,
-              quantity: 1
-            }],
-            payment_intent_data: {
-              application_fee_amount: Math.round(0.5 + product.price * 0.05),
-              transfer_data: {
-                destination: Okta.data[0].profile.connectedAccountId
-              }
-            },
-            mode: 'payment',
-            success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
-            cancel_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
-          })
+          if (product.type === 'one-off') {
+            session = await stripe.checkout.sessions.create({
+              payment_method_types: ['card'],
+              customer_email: JSON.parse(event.body).email,
+              line_items: [{
+                price_data: {
+                  currency: product.currency,
+                  product_data: {
+                    name: product.name,
+                    description: product.notes
+                  },
+                  unit_amount: product.price
+                },
+                quantity: 1
+              }],
+              payment_intent_data: {
+                application_fee_amount: Math.round(0.5 + product.price * 0.5),
+                transfer_data: {
+                  destination: Okta.data[0].profile.connectedAccountId
+                }
+              },
+              mode: 'payment',
+              success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
+              cancel_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
+            })
+          } else {
+            session = await stripe.checkout.sessions.create({
+              payment_method_types: ['card'],
+              customer_email: JSON.parse(event.body).email,
+              line_items: [{
+                price_data: {
+                  currency: product.currency,
+                  product_data: {
+                    name: product.name,
+                    description: product.notes
+                  },
+                  unit_amount: product.price,
+                  recurring: {
+                    interval: recurring
+                  }
+                },
+                quantity: 1
+              }],
+              subscription_data: {
+                application_fee_percent: 0.05,
+                transfer_data: {
+                  destination: Okta.data[0].profile.connectedAccountId
+                }
+              },
+              mode: 'subscription',
+              success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
+              cancel_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
+            })
+          }
           // Include url in response
           return callback(null, {
             statusCode: 200,
