@@ -378,8 +378,8 @@ export default {
           isTrainer: false
         })
         this.booking_form = {
-          date: null,
-          time: null,
+          date: this.today(),
+          time: this.timeNow(),
           notes: null
         }
         this.$parent.$parent.$refs.response_pop_up.show('Booking requested', 'Your trainer will be notified')
