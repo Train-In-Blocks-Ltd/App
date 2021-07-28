@@ -84,6 +84,9 @@
   border-bottom: 1px solid var(--base_faint);
   padding-bottom: 1rem;
   height: fit-content;
+  &.past {
+    opacity: var(--light_opacity)
+  }
   .details {
     display: grid;
     grid-gap: .6rem
@@ -194,6 +197,7 @@
             <div
               v-for="(booking, bookingIndex) in clientUser.bookings"
               :key="`bookings_${bookingIndex}`"
+              :class="{ past: isInThePast(booking) }"
               class="booking fadeIn"
             >
               <div class="details">
@@ -214,6 +218,7 @@
                   {{ isInThePast(booking) ? 'Past' : booking.status }}
                 </p>
                 <a
+                  v-if="!isInThePast(booking)"
                   href="javascript:void(0)"
                   class="a_link"
                   @click="cancelBooking(booking.id, booking.datetime)"

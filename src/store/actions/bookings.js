@@ -1,4 +1,4 @@
-import { bookingRequested, bookingRequestCancelled, bookingCreated, bookingAccepted, bookingRejected, emailBuilder, emailTitle } from '../../components/email'
+import { emailBuilder } from '../../components/email'
 
 export default {
   // -----------------------------
@@ -23,9 +23,8 @@ export default {
       })
       await this._vm.$axios.post('/.netlify/functions/send-email', {
         to: PT_EMAIL.data[0].credentials.emails[0].value,
-        subject: emailTitle('booking-requested'),
-        text: bookingRequested(state.clientUser.name, payload.datetime),
-        html: emailBuilder('booking-requested', {
+        subject: 'Your client has requested a booking',
+        ...emailBuilder('booking-requested', {
           clientName: state.clientUser.name,
           datetime: payload.datetime
         })
@@ -33,9 +32,8 @@ export default {
     } else {
       await this._vm.$axios.post('/.netlify/functions/send-email', {
         to: state.clients.find(client => client.client_id === payload.clientId).email,
-        subject: emailTitle('booking-created'),
-        text: bookingCreated(payload.datetime),
-        html: emailBuilder('booking-created', {
+        subject: 'Your trainer has scheduled a booking',
+        ...emailBuilder('booking-created', {
           datetime: payload.datetime
         })
       })
@@ -56,9 +54,8 @@ export default {
     })
     await this._vm.$axios.post('/.netlify/functions/send-email', {
       to: state.clients.find(client => client.id === payload.clientId).email,
-      subject: emailTitle('booking-accepted'),
-      text: bookingAccepted(state.bookings.find(booking => booking.id === payload.id).datetime),
-      html: emailBuilder('booking-accepted', {
+      subject: 'Your trainer has accepted a booking',
+      ...emailBuilder('booking-accepted', {
         datetime: state.bookings.find(booking => booking.id === payload.id).datetime
       })
     })
@@ -81,9 +78,8 @@ export default {
       })
       await this._vm.$axios.post('/.netlify/functions/send-email', {
         to: PT_EMAIL.data[0].credentials.emails[0].value,
-        subject: emailTitle('booking-request-cancelled'),
-        text: bookingRequestCancelled(state.clientUser.name, payload.datetime),
-        html: emailBuilder('booking-request-cancelled', {
+        subject: 'Your client has cancelled their request for a booking',
+        ...emailBuilder('booking-request-cancelled', {
           clientName: state.clientUser.name,
           datetime: payload.datetime
         })
@@ -91,9 +87,8 @@ export default {
     } else if (new Date(state.bookings.find(booking => booking.id === payload.bookingId).datetime) > new Date()) {
       await this._vm.$axios.post('/.netlify/functions/send-email', {
         to: state.clients.find(client => client.client_id === payload.clientId).email,
-        subject: emailTitle('booking-rejected'),
-        text: bookingRejected(state.bookings.find(booking => booking.id === payload.bookingId).datetime),
-        html: emailBuilder('booking-rejected', {
+        subject: 'Your trainer has rejected a booking',
+        ...emailBuilder('booking-rejected', {
           datetime: state.bookings.find(booking => booking.id === payload.bookingId).datetime
         })
       })

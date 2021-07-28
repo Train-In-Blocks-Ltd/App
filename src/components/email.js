@@ -4,194 +4,6 @@
  */
 
 // -----------------------------
-// Text version of email bodies
-// -----------------------------
-
-/**
- * Notifies the client that they can activate their account.
- * @param {string} link - The link to activate the account.
- * @returns The body text for the email.
- */
-export function activateAccount (link) {
-  return (
-    `** Almost there...
-    ------------------------------------------------------------
-    Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.
-    
-    You just need to activate your account below to get started!
-    
-    Activate Your Account (${link})
-
-    All the best,
-    
-    The Train In Blocks Team`
-  )
-}
-
-/**
- * Notifies the user that their account password has been changed.
- * @returns The body text for the email.
- */
-export function passwordChanged () {
-  return (`** Password Changed
-    ------------------------------------------------------------
-    Your password has been changed. If you did not change your password please contact us immediately at hello@traininblocks.com.
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the trainer-user of their weekly activities.
- * @param {string} body - The text content of the email.
- * @returns The body text for the email.
- */
-export function weeklyBreakdown (body) {
-  return (`** Here's a breakdown of what you did this week
-    ------------------------------------------------------------
-
-    ${body}
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the client-user that their account has been reactivated.
- * @param {string} link - The link to reactivate the account.
- * @returns The body text of the email.
- */
-export function clientAccountReactivated (link) {
-  return (`** Welcome Back...
-    ------------------------------------------------------------
-    Your trainer has re-activated your account.
-    
-    You just need to click the link below to get started!
-    
-    Re-activate Your Account (${link})
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the client-user that their account has been deactivated.
- * @returns The body text of the email.
- */
-export function clientAccountDeactivated () {
-  return (`** Account Deactivated
-    ------------------------------------------------------------
-    Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the trainer-user that a client has given feedback.
- * @param {integer} cId - The client's id.
- * @param {integer} pId - The trainer's id.
- * @returns The body text of the email.
- */
-export function clientFeedback (cId, pId) {
-  return (`** Your client has given some feedback
-    ------------------------------------------------------------
-    Log in to find out what your client has said about the session.
-    
-    View feedback (https://app.traininblocks.com/client/${cId}/plan/${pId})
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the client-user that a new booking has been scheduled.
- * @param {string} datetime - The date and time requested.
- * @returns The body text for the email.
- */
-export function bookingCreated (datetime) {
-  return (`** Your client has requested for a session
-    ------------------------------------------------------------
-    
-    Your trainer has scheduled a session for ${datetime}. Head over to the app now to accept or reject this booking.
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the trainer-user that a new booking request has been received.
- * @param {string} clientName - The client's name that requested a booking.
- * @param {string} datetime - The date and time requested.
- * @returns The body text for the email.
- */
-export function bookingRequested (clientName, datetime) {
-  return (`** Your client has requested for a session
-    ------------------------------------------------------------
-    
-    ${clientName} has requested a session for ${datetime}. Head over to the app now to accept or reject this booking.
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the trainer-user of a cancelled booking request.
- * @param {string} clientName - The client's name that cancelled the booking.
- * @param {string} datetime - The date and time for when the booking would have taken place.
- * @returns The body text for the email.
- */
-export function bookingRequestCancelled (clientName, datetime) {
-  return (`** Your client has cancelled their request for a session
-    ------------------------------------------------------------
-    
-    ${clientName} has cancelled their request for a session for ${datetime}.
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the client-user of a cancelled/rejected booking.
- * @param {string} datetime - The date and time for when the booking would have taken place.
- * @returns The body text for the email.
- */
-export function bookingRejected (datetime) {
-  return (`** Your trainer has cancelled/rejected a booking
-    ------------------------------------------------------------
-    
-    The booking for ${datetime} has been cancelled/rejected by your trainer.
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-/**
- * The email body to notify the client-user of an accepted/confirmed booking.
- * @param {string} datetime - The date and time for when the booking will take place.
- * @returns The body text for the email.
- */
-export function bookingAccepted (datetime) {
-  return (`** Your trainer has accepted/confirmed a booking
-    ------------------------------------------------------------
-    
-    The booking for ${datetime} has been accepted/confirmed by your trainer.
-
-    All the best,
-    
-    The Train In Blocks Team`)
-}
-
-// -----------------------------
 // Builder and content
 // -----------------------------
 
@@ -207,18 +19,13 @@ export function bookingAccepted (datetime) {
  * })
  */
 export function emailBuilder (type, data) {
-  return baseEmail({
-    title: titles[type],
-    html: htmls(type, data)
-  })
-}
-
-/**
- * @param {string} type - The email title text to use.
- * @returns The email title.
- */
-export function emailTitle (type) {
-  return titles[type]
+  return {
+    text: textEmail(type, data),
+    html: baseEmail({
+      title: titles[type],
+      html: bodyHtml(type, data)
+    })
+  }
 }
 
 /** A dictionary of all the email titles. */
@@ -236,13 +43,41 @@ const titles = {
   'booking-accepted': 'Your trainer has accepted a booking'
 }
 
+const textEmail = (type, data) => {
+  let processedText = bodyHtml(type, data).replace(/<p>/gi, '').replace(/<\/pa>/gi, '\n')
+  if (processedText.includes('href')) {
+    const regex = /<a.*?href="(.*?)".*?>/gi
+    let link
+    let finder
+    while ((finder = regex.exec(processedText)) !== null) {
+      if (finder.index === regex.lastIndex) {
+        regex.lastIndex++
+      }
+      finder.forEach((match, groupIndex) => {
+        if (groupIndex === 1) {
+          link = match
+        }
+      })
+    }
+    processedText = processedText.replace(/<a.*?>/gi, `(${link})`)
+  }
+  return `**${titles[type]}
+---------------------------
+
+${processedText}
+
+All the best,
+
+The Train In Blocks Team`
+}
+
 /**
  * Contains all the email HTMLs.
  * @param {string} type - The email body text to use.
  * @param {object} data - Additional specific details required to fill the email.
  * @returns The filled HTML for the email.
  */
-const htmls = (type, data) => {
+const bodyHtml = (type, data) => {
   switch (type) {
     case 'activate-account':
       return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.<br><a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a></p>`
@@ -322,7 +157,7 @@ function baseEmail (data) {
           <table id="header" role="presentation" width="100%">
             <tr>
               <td>
-                <img align='left' alt='' src='https://dev.traininblocks.com/emailLogo.svg' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
+                <img align='left' alt='' src='https://dev.traininblocks.com/emailLogo.png' width='118.44' style='max-width: 890px;padding-bottom: 0px;vertical-align: bottom;display: inline !important;border-radius: 0%;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;' class='mcnImage'>
               </td>
             </tr>
           </table>

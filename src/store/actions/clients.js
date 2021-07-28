@@ -1,4 +1,4 @@
-import { clientAccountDeactivated, emailBuilder } from '../../components/email'
+import { emailBuilder } from '../../components/email'
 
 export default {
   // -----------------------------
@@ -60,8 +60,7 @@ export default {
       await this._vm.$axios.post('/.netlify/functions/send-email', {
         to: EMAIL,
         subject: 'Account Deactivated',
-        text: clientAccountDeactivated(),
-        html: emailBuilder('client-account-deactivated')
+        ...emailBuilder('client-account-deactivated')
       })
     }
   },

@@ -1,4 +1,4 @@
-import { emailBuilder, clientFeedback } from '../../components/email'
+import { emailBuilder } from '../../components/email'
 
 export default {
   // -----------------------------
@@ -134,8 +134,7 @@ export default {
         await this._vm.$axios.post('/.netlify/functions/send-email', {
           to: PT_EMAIL.data[0].credentials.emails[0].value,
           subject: state.claims.email + ' has submitted feedback for ' + SESSION.name,
-          text: clientFeedback(state.claims.client_id_db, parseInt(payload.planId)),
-          html: emailBuilder('client-feedback', {
+          ...emailBuilder('client-feedback', {
             cId: state.claims.client_id_db,
             pId: parseInt(payload.planId)
           })

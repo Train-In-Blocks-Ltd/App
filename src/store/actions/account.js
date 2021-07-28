@@ -1,4 +1,4 @@
-import { passwordChanged, emailBuilder } from '../../components/email'
+import { emailBuilder } from '../../components/email'
 
 export default {
   // -----------------------------
@@ -21,8 +21,7 @@ export default {
     await this._vm.$axios.post('/.netlify/functions/send-email', {
       to: state.claims.email,
       subject: 'Password Changed',
-      text: passwordChanged(),
-      html: emailBuilder('password-changed')
+      ...emailBuilder('password-changed')
     })
   },
 
