@@ -48,6 +48,9 @@
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--base_faint);
   height: fit-content;
+  &.past {
+    opacity: var(--light_opacity)
+  }
   &.request > div:first-child:before {
     content: 'New request';
     display: flex;
@@ -117,7 +120,7 @@
         <div
           v-for="(booking, bookingIndex) in bookings"
           :key="`all_bookings_${bookingIndex}`"
-          :class="{ request: booking.status === 'Pending' }"
+          :class="{ request: booking.status === 'Pending', past: isInThePast(booking) }"
           class="booking fadeIn"
         >
           <div class="details">
@@ -347,7 +350,7 @@ export default {
           time: this.timeNow(),
           notes: null
         }
-        this.$parent.$parent.$refs.response_pop_up.show('Booking created', 'Your client will be notified')
+        this.$parent.$parent.$refs.response_pop_up.show('Booking created', 'Your client will be notified of any upcoming bookings that were created.')
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
@@ -369,7 +372,7 @@ export default {
             id,
             status: 'Scheduled'
           })
-          this.$parent.$parent.$refs.response_pop_up.show('Booking request accepted', 'Your client will be notified')
+          this.$parent.$parent.$refs.response_pop_up.show('Booking request accepted', 'Your client will be notified of any upcoming bookings that were accepeted.')
           this.$store.dispatch('endLoading')
         } catch (e) {
           this.$parent.$parent.resolveError(e)
@@ -394,7 +397,7 @@ export default {
             bookingId,
             isTrainer: true
           })
-          this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your client will be notified')
+          this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your client will be notified of any upcoming bookings that were cancelled.')
           this.$store.dispatch('endLoading')
         } catch (e) {
           this.$parent.$parent.resolveError(e)
