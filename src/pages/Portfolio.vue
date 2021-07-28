@@ -108,7 +108,8 @@ export default {
     'loading',
     'silentLoading',
     'dontLeave',
-    'portfolio'
+    'portfolio',
+    'hasCheckedStripeConnect'
   ]),
   async created () {
     this.$store.commit('setData', {
@@ -117,6 +118,7 @@ export default {
     })
     this.willBodyScroll(true)
     await this.$parent.setup()
+    await this.checkStripeConnect()
     this.$store.dispatch('endLoading')
   },
   methods: {
@@ -207,6 +209,21 @@ export default {
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
+      }
+    },
+    async checkStripeConnect () {
+      if (!this.hasCheckedStripeConnect) {
+        const RESPONSE_STRIPE = await this.$axios.post('/.netlify/functions/check-connected-account', {
+          connectedAccountId: this.claims.connectedAccountId
+        })
+        this.$store.commit('setData', {
+          attr: 'isStripeConnected',
+          data: RESPONSE_STRIPE.data
+        })
+        this.$store.commit('setData', {
+          attr: 'hasCheckedStripeConnect',
+          data: true
+        })
       }
     }
   }

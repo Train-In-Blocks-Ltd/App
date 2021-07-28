@@ -47,6 +47,7 @@ export default {
   },
 
   // Products
+  hasCheckedStripeConnect: false,
   isStripeConnected: false,
   products: [],
 

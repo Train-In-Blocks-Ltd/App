@@ -79,13 +79,5 @@ export default {
       attr: 'products',
       data: RESPONSE.data[5]
     })
-
-    const RESPONSE_STRIPE = await this._vm.$axios.post('/.netlify/functions/check-connected-account', {
-      connectedAccountId: state.claims.connectedAccountId
-    })
-    commit('setData', {
-      attr: 'isStripeConnected',
-      data: RESPONSE_STRIPE.data
-    })
   }
 }
