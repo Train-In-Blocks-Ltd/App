@@ -267,7 +267,7 @@
           aria-label="Additional information"
           required
         />
-        <button>
+        <button :disabled="disableCreateBookingButton">
           Create booking
         </button>
       </form>
@@ -290,6 +290,7 @@ export default {
         time: this.timeNow(),
         notes: null
       },
+      disableCreateBookingButton: true,
 
       // System
 
@@ -301,6 +302,14 @@ export default {
     'bookings',
     'loading'
   ]),
+  watch: {
+    booking_form: {
+      handler (val) {
+        this.disableCreateBookingButton = !(val.clientId && val.date && val.time && val.notes)
+      },
+      deep: true
+    }
+  },
   methods: {
 
     // -----------------------------

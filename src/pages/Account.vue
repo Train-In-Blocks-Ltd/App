@@ -137,10 +137,17 @@
         @input="checkPassword"
       >
       <div class="reset_password_button_bar">
-        <button class="right_margin" type="submit" :disabled="password.check || password.new !== password.match">
+        <button
+          class="right_margin"
+          type="submit"
+          :disabled="disableChangePasswordButton || password.check || password.new !== password.match"
+        >
           Change your password
         </button>
-        <button class="red_button" @click.prevent="showPasswordReset = false, willBodyScroll(true)">
+        <button
+          class="red_button"
+          @click.prevent="showPasswordReset = false, willBodyScroll(true)"
+        >
           Close
         </button>
       </div>
@@ -318,6 +325,7 @@ export default {
         check: null,
         error: null
       },
+      disableChangePasswordButton: true,
       calendarText: 'Get your calendar link',
       calendarGuides: [
         {
@@ -357,6 +365,14 @@ export default {
     'versionName',
     'versionBuild'
   ]),
+  watch: {
+    password: {
+      handler (val) {
+        this.disableChangePasswordButton = !(val.old && val.new && val.match && !val.check && !val.error)
+      },
+      deep: true
+    }
+  },
   async created () {
     this.$store.commit('setData', {
       attr: 'loading',

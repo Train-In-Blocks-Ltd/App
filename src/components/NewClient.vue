@@ -63,7 +63,7 @@
     >
     <div class="form_button_bar">
       <button
-        :disabled="new_client.email === '' || new_client.email !== new_client.confirm"
+        :disabled="disableCreateClientButton || new_client.email === '' || new_client.email !== new_client.confirm"
         type="submit"
       >
         Save
@@ -87,12 +87,21 @@ export default {
         confirm: '',
         number: '',
         notes: ''
-      }
+      },
+      disableCreateClientButton: true
     }
   },
   computed: mapState([
     'claims'
   ]),
+  watch: {
+    new_client: {
+      handler (val) {
+        this.disableCreateClientButton = !(val.name && val.email && val.confirm)
+      },
+      deep: true
+    }
+  },
   mounted () {
     this.$refs.name.focus()
   },

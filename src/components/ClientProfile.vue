@@ -257,7 +257,7 @@
               aria-label="Additional information"
               required
             />
-            <button>
+            <button :disabled="disableCreateBookingButton">
               Request a booking
             </button>
           </form>
@@ -278,7 +278,8 @@ export default {
         date: this.today(),
         time: this.timeNow(),
         notes: null
-      }
+      },
+      disableCreateBookingButton: true
     }
   },
   computed: mapState([
@@ -287,6 +288,14 @@ export default {
     'claims',
     'clientUser'
   ]),
+  watch: {
+    booking_form: {
+      handler (val) {
+        this.disableCreateBookingButton = !(val.date && val.time && val.notes)
+      },
+      deep: true
+    }
+  },
   methods: {
 
     // -----------------------------

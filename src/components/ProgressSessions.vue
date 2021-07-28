@@ -42,7 +42,7 @@
         <input
           id="range"
           ref="range"
-          v-model="progressTarget"
+          v-model="progressInputs.target"
           class="width_300"
           name="range"
           type="number"
@@ -56,7 +56,7 @@
           Days until next sessions:
         </label>
         <input
-          v-model="daysBetweenEachSession"
+          v-model="progressInputs.daysBetween"
           class="width_300"
           name="range"
           type="number"
@@ -71,7 +71,10 @@
       >
         Cancel
       </button>
-      <button type="submit">
+      <button
+        type="submit"
+        :disabled="disableProgressButton"
+      >
         Next
       </button>
     </form>
@@ -169,8 +172,11 @@ export default {
   data () {
     return {
       // User inputs
-      progressTarget: this.maxWeek,
-      daysBetweenEachSession: 7,
+      progressInputs: {
+        target: this.maxWeek,
+        daysBetween: 7
+      },
+      disableProgressButton: false,
 
       // Navigation
       progressPage: 0,
@@ -179,6 +185,14 @@ export default {
       // Processing
       sessionDataset: [],
       progressDataInputs: []
+    }
+  },
+  watch: {
+    progressInputs: {
+      handler (val) {
+        this.disableProgressButton = !(val.target && val.daysBetween)
+      },
+      deep: true
     }
   },
   methods: {
@@ -201,7 +215,7 @@ export default {
           sessionExercises: this.pull_protocols(SESSION.name, SESSION.notes, SESSION.date)
         })
         this.progressDataInputs[sessionIdx].sessionExercises.forEach((exercise) => {
-          exercise.progression = new Array(this.progressTarget - this.currentWeek).fill(exercise.exerciseProtocol)
+          exercise.progression = new Array(this.progressInputs.target - this.currentWeek).fill(exercise.exerciseProtocol)
         })
       })
     },
@@ -242,21 +256,21 @@ export default {
         PROGRESS_SESSIONS.push(this.planData.sessions.find(session => session.id === sessionId))
       })
       const START_WEEK = this.currentWeek
-      for (let weekCount = this.currentWeek + 1; weekCount <= this.progressTarget; weekCount++) {
+      for (let weekCount = this.currentWeek + 1; weekCount <= this.progressInputs.target; weekCount++) {
         PROGRESS_SESSIONS.forEach((session) => {
           this.$parent.addSession({
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
             sessionName: session.name,
-            sessionDate: this.addDays(session.date, this.daysBetweenEachSession * (weekCount - START_WEEK)),
+            sessionDate: this.addDays(session.date, this.progressInputs.daysBetween * (weekCount - START_WEEK)),
             sessionNotes: this.progress_process(session.id, session.notes, weekCount - START_WEEK),
             sessionWeek: weekCount
           })
         })
       }
-      this.$parent.currentWeek = this.progressTarget
-      this.progressTarget = this.maxWeek
-      this.daysBetweenEachSession = 7
+      this.$parent.currentWeek = this.progressInputs.target
+      this.progressInputs.target = this.maxWeek
+      this.progressInputs.daysBetween = 7
       this.$parent.deselectAll()
       this.$ga.event('Session', 'progress')
       this.$parent.$parent.$parent.$refs.response_pop_up.show('Sessions have been progressed', 'Please go through them to make sure that you\'re happy with it')

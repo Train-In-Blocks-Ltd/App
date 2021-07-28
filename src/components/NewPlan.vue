@@ -31,7 +31,10 @@
       required
     >
     <div class="form_button_bar">
-      <button type="submit">
+      <button
+        :disabled="disableCreatePlanButton"
+        type="submit"
+      >
         Save
       </button>
       <button class="red_button" @click.prevent="$parent.isNewPlanOpen = false, willBodyScroll(true)">
@@ -50,7 +53,8 @@ export default {
       new_plan: {
         name: '',
         duration: ''
-      }
+      },
+      disableCreatePlanButton: true
     }
   },
   computed: mapState([
@@ -58,6 +62,14 @@ export default {
     'clientDetails',
     'clients'
   ]),
+  watch: {
+    new_plan: {
+      handler (val) {
+        this.disableCreatePlanButton = !(val.name && val.duration)
+      },
+      deep: true
+    }
+  },
   mounted () {
     this.$refs.name.focus()
   },

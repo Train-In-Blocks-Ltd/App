@@ -221,19 +221,19 @@
           class="small_border_radius width_300"
           type="text"
           autocomplete="name"
-          placeholder="Name"
+          placeholder="Name*"
           aria-label="Name"
           required
         >
         <select
           v-model="newProduct.type"
           class="small_border_radius width_300"
-          placeholder="Type"
+          placeholder="Type*"
           aria-label="Type"
           required
         >
           <option :value="null">
-            Type
+            Type*
           </option>
           <option value="one-off">
             One-off
@@ -249,12 +249,12 @@
           <select
             v-model="newProduct.currency"
             class="small_border_radius"
-            placeholder="Currency"
+            placeholder="Currency*"
             aria-label="Currency"
             required
           >
             <option :value="null">
-              Currency
+              Currency*
             </option>
             <option
               v-for="(currency, currencyIndex) in currencies"
@@ -267,7 +267,7 @@
             v-model="newProduct.price"
             type="number"
             class="small_border_radius"
-            placeholder="Price"
+            placeholder="Price*"
             aria-label="Price"
             step="0.01"
             min="0"
@@ -278,12 +278,15 @@
           v-model="newProduct.notes"
           class="small_border_radius width_300"
           rows="5"
-          placeholder="Description"
+          placeholder="Description*"
           aria-label="Description"
           required
         />
         <div class="form_button_bar">
-          <button type="submit">
+          <button
+            :disabled="disableCreateProductButton"
+            type="submit"
+          >
             Save
           </button>
           <button class="red_button" @click.prevent="isNewProductOpen = false, willBodyScroll(true)">
@@ -471,6 +474,7 @@ export default {
         currency: null,
         type: null
       },
+      disableCreateProductButton: true,
       productChanged: false,
       selectedProducts: [],
       multiselectOptions: [
@@ -487,6 +491,14 @@ export default {
     'claims',
     'isStripeConnected'
   ]),
+  watch: {
+    newProduct: {
+      handler (val) {
+        this.disableCreateProductButton = !(val.name && val.notes && val.price && val.currency && val.type)
+      },
+      deep: true
+    }
+  },
   methods: {
 
     // -----------------------------

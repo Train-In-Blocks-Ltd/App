@@ -64,7 +64,7 @@
         placeholder="Your full name"
         required
       >
-      <button :disabled="name === ''">
+      <button :disabled="name === '' || disablePolicyAgreeButton">
         Agree
       </button>
     </div>
@@ -78,8 +78,14 @@ export default {
   },
   data () {
     return {
-      name: '',
-      eula: null
+      name: null,
+      eula: null,
+      disablePolicyAgreeButton: true
+    }
+  },
+  watch: {
+    name (val) {
+      this.disablePolicyAgreeButton = !val
     }
   },
   created () {

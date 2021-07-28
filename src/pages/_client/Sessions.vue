@@ -302,7 +302,10 @@
           required
         >
       </div>
-      <button type="submit">
+      <button
+        :disabled="disableMoveButton"
+        type="submit"
+      >
         Move
       </button>
       <button class="red_button" @click.prevent="showMove = false, willBodyScroll(true)">
@@ -332,7 +335,10 @@
           required
         >
       </div>
-      <button type="submit">
+      <button
+        :disabled="disableShiftButton"
+        type="submit"
+      >
         Shift
       </button>
       <button class="red_button" @click.prevent="showShift = false, willBodyScroll(true)">
@@ -375,7 +381,10 @@
           {{ client.name }}
         </option>
       </select><br><br>
-      <button type="submit">
+      <button
+        :disabled="disableDuplicatePlanButton"
+        type="submit"
+      >
         Duplicate
       </button>
       <button class="red_button" @click.prevent="showDuplicate = false, willBodyScroll(true)">
@@ -758,14 +767,15 @@ export default {
       showShift: false,
       showProgress: false,
       showDuplicate: false,
+      disableMoveButton: false,
+      disableShiftButton: false,
+      disableDuplicatePlanButton: true,
 
       // MANIPULATION
-
       moveTarget: 1,
-      daysDiff: 7,
-      selectedSessions: [],
       shiftDays: 1,
       duplicateClientID: null,
+      selectedSessions: [],
 
       // STATS
 
@@ -810,6 +820,15 @@ export default {
   watch: {
     editingWeekColor () {
       this.updater()
+    },
+    moveTarget (val) {
+      this.disableMoveButton = !val
+    },
+    shiftDays (val) {
+      this.disableShiftButton = !val
+    },
+    duplicateClientID (val) {
+      this.disableDuplicatePlanButton = !val
     }
   },
   async created () {
