@@ -120,7 +120,7 @@
         <div
           v-for="(booking, bookingIndex) in bookings"
           :key="`all_bookings_${bookingIndex}`"
-          :class="{ request: booking.status === 'Pending', past: isInThePast(booking) }"
+          :class="{ request: booking.status === 'Pending' && !isInThePast(booking), past: isInThePast(booking) }"
           class="booking fadeIn"
         >
           <div class="details">
@@ -139,7 +139,7 @@
             </p>
             <div class="options">
               <a
-                v-if="booking.status === 'Pending'"
+                v-if="booking.status === 'Pending' && !isInThePast(booking)"
                 href="javascript:void(0)"
                 aria-label="Accept booking"
                 class="a_link accept"
@@ -152,7 +152,7 @@
                 class="a_link reject"
                 @click="cancelBooking(booking.id, booking.client_id)"
               >
-                {{ booking.status === "Pending" ? 'Reject' : (isInThePast(booking) ? 'Delete' : 'Cancel') }}
+                {{ booking.status === "Pending" && !isInThePast(booking) ? 'Reject' : (isInThePast(booking) ? 'Delete' : 'Cancel') }}
               </a>
             </div>
           </div>
@@ -202,7 +202,7 @@
                 class="a_link reject"
                 @click="cancelBooking(booking.id, booking.client_id)"
               >
-                {{ booking.status === "Pending" ? 'Reject' : (isInThePast(booking) ? 'Delete' : 'Cancel') }}
+                {{ booking.status === "Pending" ? 'Reject' : 'Cancel' }}
               </a>
             </div>
           </div>
