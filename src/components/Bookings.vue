@@ -229,6 +229,9 @@
           aria-label="Select a client"
           required
         >
+          <option :value="null">
+            Select a client
+          </option>
           <option
             v-for="(client, clientIndex) in clients"
             :key="`client_booking_select_${clientIndex}`"
@@ -298,9 +301,6 @@ export default {
     'bookings',
     'loading'
   ]),
-  created () {
-    this.booking_form.clientId = this.clients[0].client_id
-  },
   methods: {
 
     // -----------------------------
@@ -345,7 +345,7 @@ export default {
           isTrainer: true
         })
         this.booking_form = {
-          clientId: this.clients[0].client_id,
+          clientId: null,
           date: this.today(),
           time: this.timeNow(),
           notes: null

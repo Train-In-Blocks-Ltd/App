@@ -362,7 +362,11 @@
         v-model="duplicateClientID"
         name="duplicate_client"
         class="width_300"
+        required
       >
+        <option :value="null">
+          Select a client
+        </option>
         <option
           v-for="(client, index) in clients"
           :key="`client_${index}`"
@@ -816,7 +820,6 @@ export default {
     this.willBodyScroll(true)
     this.$parent.sessions = true
     this.noSessions = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
-    this.duplicateClientID = this.clients[0].client_id
   },
   mounted () {
     if (!this.noSessions) {
