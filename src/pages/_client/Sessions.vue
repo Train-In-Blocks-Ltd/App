@@ -358,10 +358,11 @@
       <p class="grey">
         Copy this plan to the same/different client
       </p><br>
-      <select v-model="duplicateClientID" name="duplicate_client" class="width_300">
-        <option disabled selected>
-          Select a client
-        </option>
+      <select
+        v-model="duplicateClientID"
+        name="duplicate_client"
+        class="width_300"
+      >
         <option
           v-for="(client, index) in clients"
           :key="`client_${index}`"
@@ -760,7 +761,7 @@ export default {
       daysDiff: 7,
       selectedSessions: [],
       shiftDays: 1,
-      duplicateClientID: 'Select a client',
+      duplicateClientID: null,
 
       // STATS
 
@@ -815,6 +816,7 @@ export default {
     this.willBodyScroll(true)
     this.$parent.sessions = true
     this.noSessions = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
+    this.duplicateClientID = this.clients[0].client_id
   },
   mounted () {
     if (!this.noSessions) {

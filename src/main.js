@@ -257,7 +257,7 @@ Vue.mixin({
      */
     statusColor (status) {
       switch (status) {
-        case 'Pending':
+        case 'Pending' || 'Past':
           return 'var(--base_light)'
         case 'Scheduled':
           return 'green'

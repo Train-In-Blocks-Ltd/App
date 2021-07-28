@@ -91,6 +91,9 @@
   .status {
     display: flex;
     justify-content: space-between;
+    > p:first-child {
+      font-weight: bold
+    }
     > a {
       color: var(--base_red)
     }
@@ -207,8 +210,8 @@
                 v-if="!isInThePast(booking) || booking.status !== 'Scheduled'"
                 class="status"
               >
-                <p :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }">
-                  {{ booking.status }}
+                <p :style="{ color: statusColor(isInThePast(booking) ? 'Past' : booking.status) }">
+                  {{ isInThePast(booking) ? 'Past' : booking.status }}
                 </p>
                 <a
                   href="javascript:void(0)"
@@ -221,7 +224,7 @@
             </div>
           </div>
           <p v-else class="grey">
-            No bookings yet, your clients will be able to request a time and date
+            No bookings yet
           </p>
           <form class="request_booking_container" @submit.prevent="createBooking()">
             <input

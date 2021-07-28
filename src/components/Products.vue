@@ -230,9 +230,6 @@
           aria-label="Type"
           required
         >
-          <option value="null" disabled selected>
-            Type
-          </option>
           <option value="one-off">
             One-off
           </option>
@@ -251,9 +248,6 @@
             aria-label="Currency"
             required
           >
-            <option value="null" disabled selected>
-              Currency
-            </option>
             <option
               v-for="(currency, currencyIndex) in currencies"
               :key="`currency_add_product_${currencyIndex}`"
@@ -381,9 +375,6 @@
             aria-label="Type"
             @change="updateProduct(product.id)"
           >
-            <option disabled selected>
-              Type
-            </option>
             <option value="one-off">
               One-off
             </option>
@@ -402,9 +393,6 @@
               placeholder="Currency"
               aria-label="Currency"
             >
-              <option disabled selected>
-                Currency
-              </option>
               <option
                 v-for="(currency, currencyIndex) in currencies"
                 :key="`currency_${currencyIndex}`"
@@ -467,8 +455,8 @@ export default {
         name: null,
         notes: null,
         price: 0.00,
-        currency: null,
-        type: null
+        currency: 'GBP',
+        type: 'one-off'
       },
       productChanged: false,
       selectedProducts: [],

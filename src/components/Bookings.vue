@@ -67,6 +67,9 @@
   .status {
     display: flex;
     justify-content: space-between;
+    > p:first-child {
+      font-weight: bold
+    }
     > .options {
       display: flex;
       > .accept {
@@ -128,8 +131,8 @@
             </p>
           </div>
           <div class="status">
-            <p :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }">
-              {{ booking.status }}
+            <p :style="{ color: statusColor(isInThePast(booking) ? 'Past' : booking.status) }">
+              {{ isInThePast(booking) ? 'Past' : booking.status }}
             </p>
             <div class="options">
               <a
@@ -178,8 +181,8 @@
             </p>
           </div>
           <div class="status">
-            <p :style="{ color: statusColor(booking.status), fontWeight: booking.status === 'Scheduled' ? 'bold' : 'normal' }">
-              {{ booking.status }}
+            <p :style="{ color: statusColor(isInThePast(booking) ? 'Past' : booking.status) }">
+              {{ isInThePast(booking) ? 'Past' : booking.status }}
             </p>
             <div class="options">
               <a
@@ -223,13 +226,6 @@
           aria-label="Select a client"
           required
         >
-          <option
-            value="Select a client"
-            disabled
-            selected
-          >
-            Select a client
-          </option>
           <option
             v-for="(client, clientIndex) in clients"
             :key="`client_booking_select_${clientIndex}`"
@@ -282,7 +278,7 @@ export default {
       // Bookings
 
       booking_form: {
-        clientId: 'Select a client',
+        clientId: null,
         date: this.today(),
         time: this.timeNow(),
         notes: null
@@ -298,6 +294,9 @@ export default {
     'bookings',
     'loading'
   ]),
+  created () {
+    this.booking_form.clientId = this.clients[0].client_id
+  },
   methods: {
 
     // -----------------------------
