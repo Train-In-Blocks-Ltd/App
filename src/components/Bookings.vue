@@ -237,6 +237,7 @@
         <div class="date_time_wrapper">
           <input
             v-model="booking_form.date"
+            :min="today()"
             class="small_border_radius"
             type="date"
             placeholder="Date"
@@ -341,7 +342,7 @@ export default {
           isTrainer: true
         })
         this.booking_form = {
-          clientId: 'Select a client',
+          clientId: this.clients[0].client_id,
           date: this.today(),
           time: this.timeNow(),
           notes: null

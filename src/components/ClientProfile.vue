@@ -229,6 +229,7 @@
           <form class="request_booking_container" @submit.prevent="createBooking()">
             <input
               v-model="booking_form.date"
+              :min="today()"
               class="small_border_radius"
               type="date"
               placeholder="Date"
