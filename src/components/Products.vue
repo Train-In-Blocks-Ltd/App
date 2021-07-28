@@ -11,9 +11,12 @@
   margin: 4rem 0;
   form {
     .price {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      &.create-product {
+        width: 300px
+      }
       > select {
-        width: 150px;
         border-radius: 5px 0 0 5px;
         border-right: none;
         &:focus + input {
@@ -21,7 +24,6 @@
         }
       }
       > input {
-        width: 150px;
         border-radius: 0 5px 5px 0
       }
     }
@@ -240,7 +242,7 @@
             Yearly
           </option>
         </select>
-        <div class="price">
+        <div class="price create-product">
           <select
             v-model="newProduct.currency"
             class="small_border_radius"
