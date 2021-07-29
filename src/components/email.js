@@ -93,15 +93,15 @@ const bodyHtml = (type, data) => {
     case 'client-feedback':
       return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a></p>`
     case 'booking-created':
-      return `<p>Your trainer has scheduled a booking on ${data.datetime}.</p>`
+      return `<p>Your trainer has scheduled a booking on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
     case 'booking-requested':
-      return `<p>${data.clientName} has requested a booking on ${data.datetime}.</p>`
+      return `<p>${data.clientName} has requested a booking on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
     case 'booking-request-cancelled':
-      return `<p>${data.clientName} has cancelled their request for a session for ${data.datetime}.</p>`
+      return `<p>${data.clientName} has cancelled their request for a session on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
     case 'booking-rejected':
-      return `<p>The booking for ${data.datetime} has been rejected by your trainer.</p>`
+      return `<p>The booking for ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been rejected by your trainer.</p>`
     case 'booking-accepted':
-      return `<p>The booking for ${data.datetime} has been accepted by your trainer.</p>`
+      return `<p>The booking for ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been accepted by your trainer.</p>`
   }
 }
 
