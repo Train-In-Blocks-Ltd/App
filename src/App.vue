@@ -625,6 +625,7 @@ export default {
   },
   computed: mapState([
     'authenticated',
+    'clientUserLoaded',
     'loading',
     'claims',
     'showEULA',
@@ -924,11 +925,17 @@ export default {
      * Gets all the data for setup on the client-side
      */
     async getClientSideData () {
-      try {
-        await this.$store.dispatch('getClientSideInfo')
-        await this.$store.dispatch('getClientSidePlans')
-      } catch (e) {
-        this.resolveError(e)
+      if (!this.clientUserLoaded) {
+        try {
+          await this.$store.dispatch('getClientSideInfo')
+          await this.$store.dispatch('getClientSidePlans')
+          this.$store.commit('setData', {
+            attr: 'clientUserLoaded',
+            data: true
+          })
+        } catch (e) {
+          this.resolveError(e)
+        }
       }
     },
 

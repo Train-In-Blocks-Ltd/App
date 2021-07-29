@@ -285,6 +285,7 @@ export default {
     }
   },
   computed: mapState([
+    'clientUserLoaded',
     'loading',
     'dontLeave',
     'clientUser'
@@ -295,6 +296,7 @@ export default {
       data: true
     })
     this.willBodyScroll(true)
+    await this.$parent.setup()
     await this.$parent.getClientSideData()
     this.$store.dispatch('endLoading')
   },

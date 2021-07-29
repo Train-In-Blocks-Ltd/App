@@ -22,6 +22,7 @@ export default {
     installed: null
   },
   connected: true,
+  clientUserLoaded: false,
 
   // Bookings
   bookings: [],
@@ -55,7 +56,7 @@ export default {
 
   templates: null,
 
-  // archive
+  // Archive
 
   archive: {
     clients: {},

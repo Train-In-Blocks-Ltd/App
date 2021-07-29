@@ -322,6 +322,7 @@ export default {
     }
   },
   computed: mapState([
+    'clientUserLoaded',
     'loading',
     'dontLeave',
     'clientUser',
