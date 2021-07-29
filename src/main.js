@@ -273,6 +273,16 @@ Vue.mixin({
      */
     isInThePast (booking) {
       return new Date(booking.datetime) < new Date()
+    },
+
+    /**
+     * Make a data have fixed decimal places.
+     * @param {*} data - The data to have decimals.
+     * @param {integer} dp - The number of decimal places.
+     * @returns The data with specified decimal places.
+     */
+    makeDecimals (data, dp) {
+      return parseFloat(data).toFixed(dp)
     }
   }
 })

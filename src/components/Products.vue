@@ -271,6 +271,7 @@
             step="0.01"
             min="0"
             required
+            @change="newProduct.price = makeDecimals(newProduct.price, 2)"
           >
         </div>
         <textarea
@@ -426,7 +427,7 @@
               step="0.01"
               min="0"
               required
-              @change="productChanged = true"
+              @change="product.price = makeDecimals(product.price, 2), productChanged = true"
               @blur="resolveIfProductChanged(product.id)"
             >
           </div>
