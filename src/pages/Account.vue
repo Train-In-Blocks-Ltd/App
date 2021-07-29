@@ -279,7 +279,7 @@
         <p>Generate a referral code to gift to your fellow trainers:</p>
         <br>
         <button
-          v-if="!coupon"
+          v-if="!coupon.generated"
           @click.prevent="generateCoupon()"
         >
           Generate Coupon
@@ -287,7 +287,7 @@
         <button
           v-else
           @click.prevent="copyCoupon()"
-          v-html="copyCouponText"
+          v-html="coupon.code"
         />
       </div>
     </form>
@@ -354,16 +354,15 @@ export default {
           title: 'Terms of Use',
           link: 'http://traininblocks.com/legal/terms-of-use'
         }
-      ],
-      coupon: false,
-      copyCouponText: null
+      ]
     }
   },
   computed: mapState([
     'dontLeave',
     'claims',
     'versionName',
-    'versionBuild'
+    'versionBuild',
+    'coupon'
   ]),
   watch: {
     password: {
@@ -383,7 +382,9 @@ export default {
     this.$store.dispatch('endLoading')
   },
   async mounted () {
-    await this.checkCoupon()
+    if (!this.coupon.checked) {
+      await this.checkCoupon()
+    }
     this.calendarGuides[0].link = `https://calendar.google.com/calendar/u/0/r?cid=${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
   },
   methods: {
@@ -477,8 +478,9 @@ export default {
         self.calendarText = 'Could not copy text: ' + err
       })
     },
+
     /*
-     * Coupons
+     * Checks if the user already has coupons activated.
      */
     async checkCoupon () {
       try {
@@ -492,9 +494,22 @@ export default {
           }
         )
         if (RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')) && RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')).active) {
-          this.coupon = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
-          this.copyCouponText = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          this.$store.commit('setDataDeep', {
+            attrParent: 'coupon',
+            attrChild: 'generated',
+            data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          })
+          this.$store.commit('setDataDeep', {
+            attrParent: 'coupon',
+            attrChild: 'code',
+            data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          })
         }
+        this.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'checked',
+          data: true
+        })
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
@@ -511,8 +526,16 @@ export default {
             email: this.claims.email
           }
         )
-        this.coupon = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
-        this.copyCouponText = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        this.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'generated',
+          data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        })
+        this.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'code',
+          data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        })
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
@@ -522,12 +545,24 @@ export default {
       const link = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
       const self = this
       navigator.clipboard.writeText(link).then(function () {
-        self.copyCouponText = 'Copied!'
+        self.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'code',
+          data: 'Copied!'
+        })
         setTimeout(function () {
-          self.copyCouponText = self.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          self.$store.commit('setDataDeep', {
+            attrParent: 'coupon',
+            attrChild: 'code',
+            data: self.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          })
         }, 2000)
       }, function (err) {
-        self.copyCouponText = 'Could not copy text: ' + err
+        self.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'code',
+          data: 'Could not copy text: ' + err
+        })
       })
     }
   }

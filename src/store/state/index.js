@@ -69,5 +69,12 @@ export default {
   versionName: 'Andromeda',
   versionBuild: '4.0',
   newBuild: false,
-  showEULA: false
+  showEULA: false,
+
+  // Coupons
+  coupon: {
+    checked: false,
+    generated: false,
+    code: null
+  }
 }
