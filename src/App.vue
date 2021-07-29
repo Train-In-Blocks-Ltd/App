@@ -753,6 +753,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
         document.documentElement.style.setProperty('--base_red', 'white')
+        document.documentElement.style.setProperty('--base_green', 'white')
       } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
@@ -772,6 +773,7 @@ export default {
         document.documentElement.style.setProperty('--skeleton_2', '#E4E4E4')
         document.documentElement.style.setProperty('--link', 'blue')
         document.documentElement.style.setProperty('--base_red', 'rgb(184, 0, 0)')
+        document.documentElement.style.setProperty('--base_green', 'green')
       }
     },
 
