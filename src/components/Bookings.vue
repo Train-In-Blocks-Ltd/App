@@ -118,7 +118,7 @@
       </h2>
       <div class="container">
         <div
-          v-for="(booking, bookingIndex) in bookings"
+          v-for="(booking, bookingIndex) in bookings.filter(booking => booking.client_id === clientId)"
           :key="`all_bookings_${bookingIndex}`"
           :class="{ request: booking.status === 'Pending' && !isInThePast(booking), past: isInThePast(booking) }"
           class="booking fadeIn"
@@ -126,7 +126,7 @@
           <div class="details">
             <p>
               <b>
-                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }} with {{ clients.find(client => client.client_id === booking.client_id).name }}
+                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }}
               </b>
             </p>
             <p>
@@ -159,7 +159,7 @@
         </div>
       </div>
     </div>
-    <h2>Upcoming</h2>
+    <h2>Bookings</h2>
     <skeleton
       v-if="loading"
       :type="'bookings'"
@@ -168,7 +168,7 @@
     <div v-else class="bookings_sub_container">
       <div v-if="checkForBookings()" class="bookings_wrapper">
         <div
-          v-for="(booking, bookingIndex) in futureBookings(bookings).slice(0, 3)"
+          v-for="(booking, bookingIndex) in futureBookings(bookings.filter(booking => booking.client_id === clientId)).slice(0, 3)"
           :key="`bookings_${bookingIndex}`"
           :class="{ request: booking.status === 'Pending' }"
           class="booking fadeIn"
@@ -176,7 +176,7 @@
           <div class="details">
             <p>
               <b>
-                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }} with {{ clients.find(client => client.client_id === booking.client_id).name }}
+                {{ day(booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(booking.datetime) }}
               </b>
             </p>
             <p>
@@ -221,25 +221,6 @@
         No bookings made or confirmed
       </p>
       <form class="request_booking_container" @submit.prevent="createBooking()">
-        <select
-          v-model="booking_form.clientId"
-          class="small_border_radius"
-          name="client_booking_select"
-          aria-placeholder="Select a client"
-          aria-label="Select a client"
-          required
-        >
-          <option :value="null">
-            Select a client
-          </option>
-          <option
-            v-for="(client, clientIndex) in clients"
-            :key="`client_booking_select_${clientIndex}`"
-            :value="client.client_id"
-          >
-            {{ client.name }}
-          </option>
-        </select>
         <div class="date_time_wrapper">
           <input
             v-model="booking_form.date"
@@ -280,13 +261,15 @@
 import { mapState } from 'vuex'
 
 export default {
+  props: {
+    clientId: Number
+  },
   data () {
     return {
 
       // Bookings
 
       booking_form: {
-        clientId: null,
         date: this.today(),
         time: this.timeNow(),
         notes: null
@@ -306,7 +289,7 @@ export default {
   watch: {
     booking_form: {
       handler (val) {
-        this.disableCreateBookingButton = !(val.clientId && val.date && val.time && val.notes)
+        this.disableCreateBookingButton = !(val.date && val.time && val.notes)
       },
       deep: true
     }
@@ -348,22 +331,21 @@ export default {
           data: true
         })
         await this.$store.dispatch('createBooking', {
-          clientId: this.booking_form.clientId,
+          clientId: this.clientId,
           datetime: this.booking_form.date + ' ' + this.booking_form.time,
           notes: this.booking_form.notes,
           status: 'Scheduled',
           isTrainer: true
         })
         this.booking_form = {
-          clientId: null,
           date: this.today(),
           time: this.timeNow(),
           notes: null
         }
-        this.$parent.$parent.$refs.response_pop_up.show('Booking created', 'Your client will be notified of any upcoming bookings that were created.')
+        this.$parent.$parent.$parent.$refs.response_pop_up.show('Booking created', 'Your client will be notified of any upcoming bookings that were created.')
         this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.$parent.resolveError(e)
       }
     },
 
@@ -372,7 +354,7 @@ export default {
      * @param {integer} id - The id of the booking.
      */
     async acceptBookingRequest (id) {
-      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to accept this booking?', 'It will appear as scheduled on your client\'s profile.')) {
+      if (await this.$parent.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to accept this booking?', 'It will appear as scheduled on your client\'s profile.')) {
         try {
           this.$store.commit('setData', {
             attr: 'dontLeave',
@@ -382,10 +364,10 @@ export default {
             id,
             status: 'Scheduled'
           })
-          this.$parent.$parent.$refs.response_pop_up.show('Booking request accepted', 'Your client will be notified of any upcoming bookings that were accepeted.')
+          this.$parent.$parent.$parent.$refs.response_pop_up.show('Booking request accepted', 'Your client will be notified of any upcoming bookings that were accepeted.')
           this.$store.dispatch('endLoading')
         } catch (e) {
-          this.$parent.$parent.resolveError(e)
+          this.$parent.$parent.$parent.resolveError(e)
         }
       }
     },
@@ -396,7 +378,7 @@ export default {
      * @param {integer} clientId - The id of the client.
      */
     async cancelBooking (bookingId, clientId) {
-      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
+      if (await this.$parent.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
         try {
           this.$store.commit('setData', {
             attr: 'dontLeave',
@@ -407,10 +389,10 @@ export default {
             bookingId,
             isTrainer: true
           })
-          this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your client will be notified of any upcoming bookings that were cancelled.')
+          this.$parent.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your client will be notified of any upcoming bookings that were cancelled.')
           this.$store.dispatch('endLoading')
         } catch (e) {
-          this.$parent.$parent.resolveError(e)
+          this.$parent.$parent.$parent.resolveError(e)
         }
       }
     }

@@ -9,6 +9,7 @@
   }
 }
 .plans_section {
+  margin-top: 4rem;
   .header {
     display: flex;
     justify-content: space-between;
@@ -35,6 +36,7 @@
         @on-edit-change="resolve_client_info_editor"
       />
     </div>
+    <bookings :client-id="clientDetails.client_id" />
     <div class="plans_section">
       <div class="header">
         <h2>
@@ -69,12 +71,14 @@ import { mapState } from 'vuex'
 const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
+const Bookings = () => import(/* webpackChunkName: "components.bookings", webpackPreload: true  */ '../../components/Bookings')
 
 export default {
   components: {
     NewPlan,
     RichEditor,
-    Periodise
+    Periodise,
+    Bookings
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {

@@ -69,12 +69,10 @@
     </div>
     <div :class="{opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen}" class="section_overlay" />
     <div v-if="loading">
-      <skeleton :type="'client'" class="skeleton_margin" />
       <skeleton :type="'input_large'" class="skeleton_margin" />
       <skeleton :type="'client'" />
     </div>
     <div v-else-if="!noClients" class="home--container">
-      <bookings />
       <div class="header">
         <h2>Clients</h2>
         <button @click="isNewClientOpen = true, willBodyScroll(false)">
@@ -100,12 +98,8 @@
           class="client_link_wrapper fadeIn fill_mode_both delay"
         >
           <client-link
-            :name="client.name"
-            :email="client.email"
-            :number="client.number"
-            :notes="client.notes"
+            :client="client"
             :archive="false"
-            :img="client.profile_image"
             :class="{ recently_added: persistResponse === client.name }"
           />
         </router-link>
@@ -123,15 +117,13 @@ const ClientLink = () => import(/* webpackChunkName: "components.clientlink", we
 const NewClient = () => import(/* webpackChunkName: "components.newclient", webpackPrefetch: true  */ '../components/NewClient')
 const WhatsNew = () => import(/* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ '../components/WhatsNew')
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../components/InstallPWA')
-const Bookings = () => import(/* webpackChunkName: "components.bookings", webpackPreload: true  */ '../components/Bookings')
 
 export default {
   components: {
     ClientLink,
     NewClient,
     WhatsNew,
-    InstallApp,
-    Bookings
+    InstallApp
   },
   data () {
     return {

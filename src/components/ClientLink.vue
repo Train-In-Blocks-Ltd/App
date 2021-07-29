@@ -61,6 +61,15 @@
       border-radius: 50%;
       border: 3px solid var(--base)
     }
+    .today-tag {
+      float: right;
+      width: fit-content;
+      padding: .2rem 1rem;
+      border-radius: 3px;
+      color: var(--fore);
+      font-weight: bold;
+      background: var(--base_green)
+    }
 
     /* Client link details */
     .client_link__details {
@@ -116,37 +125,63 @@
 <template>
   <div class="client_link">
     <div class="client_information">
-      <img v-if="img" :src="img" alt="Profile img">
+      <img
+        v-if="client.img"
+        :src="client.img"
+        alt="Profile img"
+      >
       <inline-svg
         v-else
         class="profile_image_placeholder"
         :src="require('../assets/svg/profile-image.svg')"
       />
       <div>
+        <p
+          v-if="nextBooking"
+          class="today-tag text--tiny"
+        >
+          Today
+        </p>
         <h3 class="name">
-          {{ name }}
+          {{ client.name }}
         </h3>
-        <div v-if="email !== ''" class="client_link__details">
+        <div
+          v-if="client.email"
+          class="client_link__details"
+        >
           <inline-svg :src="require('../assets/svg/email.svg')" />
-          <p>{{ email }}</p>
+          <p>
+            {{ client.email }}
+          </p>
         </div>
-        <div v-if="number !== ''" class="client_link__details">
+        <div
+          v-if="client.number"
+          class="client_link__details"
+        >
           <inline-svg :src="require('../assets/svg/mobile.svg')" />
-          <p>{{ number }}</p>
+          <p>
+            {{ client.number }}
+          </p>
         </div>
       </div>
     </div>
-    <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">
+    <p v-if="nextBooking">
+      <b>Next booking:</b> {{ nextBooking }}
+    </p>
+    <p
+      v-if="(client.notes === null || client.notes === '<p><br></p>' || client.notes === '') && !archive"
+      class="grey"
+    >
       What client information do you currently have? Head over to this page and edit it.
     </p>
     <div
       v-else-if="!archive"
       class="preview_html"
-      v-html="updateHTML(notes, true)"
+      v-html="updateHTML(client.notes, true)"
     />
     <checkbox
       v-if="archive"
-      :item-id="clientId"
+      :item-id="client.client_id"
       :type="'v2'"
       class="select_checkbox"
       aria-label="Select this client"
@@ -155,6 +190,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Checkbox from './Checkbox'
 
 export default {
@@ -162,14 +198,24 @@ export default {
     Checkbox
   },
   props: {
-    name: String,
-    email: String,
-    number: String,
-    notes: String,
-    clientId: Number,
+    client: Object,
     clientIndex: Number,
-    archive: Boolean,
-    img: String
+    archive: Boolean
+  },
+  data () {
+    return {
+      nextBooking: false
+    }
+  },
+  computed: mapState([
+    'bookings'
+  ]),
+  created () {
+    const NEXT_BOOKING = this.bookings.filter(booking => booking.client_id === this.client.client_id)[0] || false
+    if (NEXT_BOOKING) {
+      const DATE_AND_TIME = NEXT_BOOKING.datetime.split(' ')
+      this.nextBooking = `${DATE_AND_TIME[0] === this.today() ? 'Today' : DATE_AND_TIME[0]} at ${DATE_AND_TIME[1]}`
+    }
   }
 }
 </script>

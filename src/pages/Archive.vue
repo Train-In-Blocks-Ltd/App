@@ -43,23 +43,18 @@
       <div class="clients_container">
         <skeleton v-if="loading" :type="'archived'" />
         <div
-          v-for="(clients, index) in archive.clients"
-          v-show="((!search) || ((clients.name).toLowerCase()).startsWith(search.toLowerCase())) && !loading"
-          :id="'a' + clients.client_id"
+          v-for="(client, index) in archive.clients"
+          v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !loading"
+          :id="'a' + client.client_id"
           :key="index"
           class="client_link_wrapper fadeIn"
-          :to="'/client/'+clients.client_id+'/'"
+          :to="'/client/'+client.client_id+'/'"
         >
           <client-link
             class="client_link archived"
-            :name="clients.name"
-            :email="clients.email"
-            :number="clients.number"
-            :notes="clients.notes"
-            :client-id="clients.client_id"
+            :client="client"
             :client-index="index"
             :archive="true"
-            :img="clients.profile_image"
           />
         </div>
       </div>
