@@ -32,7 +32,7 @@ exports.handler = async function handler (event, context, callback) {
       try {
         const link = await stripe.billingPortal.sessions.create({
           customer: JSON.parse(event.body).id,
-          return_url: 'https://app.traininblocks.com/account'
+          return_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/account' ? 'https://app.traininblocks.com/account' : 'https://dev.traininblocks.com/account'
         })
         return callback(null, {
           statusCode: 200,
