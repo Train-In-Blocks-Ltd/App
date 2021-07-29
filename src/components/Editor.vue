@@ -131,7 +131,6 @@ div#rich_editor {
   }
 }
 svg.edit_icon {
-  margin: auto 0;
   &.placeholder_icon {
     float: right
   }
