@@ -44,7 +44,7 @@ const titles = {
 }
 
 const textEmail = (type, data) => {
-  let processedText = bodyHtml(type, data).replace(/<p>/gi, '').replace(/<\/pa>/gi, '\n')
+  let processedText = bodyHtml(type, data).replace('<p>', '').replace('</p>', '\n').replace('</a>', '\n')
   if (processedText.includes('href')) {
     const regex = /<a.*?href="(.*?)".*?>/gi
     let link
@@ -167,11 +167,12 @@ function baseEmail (data) {
           <table id="content" role="presentation" width="100%">
             <tr>
               <td>
+                <h1>${data.title}</h1>
                 <div class="content-text">
                   ${data.html}
                 </div>
                 <p>
-                  All the best,<br><strong>The Train In Blocks Team</strong>
+                  All the best,<br><br><strong>The Train In Blocks Team</strong>
                 </p>  
               </td>
             </tr>
