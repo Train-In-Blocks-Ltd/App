@@ -34,6 +34,9 @@ exports.handler = async function handler (event, context, callback) {
           const coupon = await stripe.promotionCodes.create({
             coupon: 'Referee-20',
             code: JSON.parse(event.body).email.toUpperCase().replace(/[\W_]+/g, ''),
+            metadata: {
+              referrer: JSON.parse(event.body).email
+            },
             restrictions: {
               first_time_transaction: true
             }

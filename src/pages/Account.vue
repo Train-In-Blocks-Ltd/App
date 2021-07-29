@@ -491,7 +491,7 @@ export default {
             email: this.claims.email
           }
         )
-        if (RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))) {
+        if (RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')) && RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')).active) {
           this.coupon = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
           this.copyCouponText = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
         }
@@ -512,6 +512,7 @@ export default {
           }
         )
         this.coupon = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        this.copyCouponText = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
