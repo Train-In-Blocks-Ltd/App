@@ -252,6 +252,7 @@
           >
           <input
             v-model="booking_form.time"
+            :min="timeNow()"
             class="small_border_radius"
             type="time"
             placeholder="Time"
