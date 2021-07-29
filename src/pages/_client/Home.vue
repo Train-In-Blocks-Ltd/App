@@ -357,7 +357,6 @@ export default {
           await this.$axios.post('/.netlify/functions/send-email',
             {
               to: this.clientDetails.email,
-              subject: 'Welcome to Train In Blocks',
               ...emailBuilder('activate-account', {
                 link: OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
               })
@@ -381,7 +380,6 @@ export default {
           await this.$axios.post('/.netlify/functions/send-email',
             {
               to: this.clientDetails.email,
-              subject: 'Welcome Back to Train In Blocks',
               ...emailBuilder('client-account-reactivated', {
                 link: PASSWORD.data.resetPasswordUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
               })
@@ -417,7 +415,6 @@ export default {
           await this.$axios.post('/.netlify/functions/send-email',
             {
               to: this.clientDetails.email,
-              subject: 'Welcome to Train In Blocks',
               ...emailBuilder('activate-account', {
                 link: OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
               })

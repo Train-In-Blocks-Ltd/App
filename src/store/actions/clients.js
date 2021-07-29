@@ -59,7 +59,6 @@ export default {
       })
       await this._vm.$axios.post('/.netlify/functions/send-email', {
         to: EMAIL,
-        subject: 'Account Deactivated',
         ...emailBuilder('client-account-deactivated')
       })
     }

@@ -20,7 +20,6 @@ export default {
     })
     await this._vm.$axios.post('/.netlify/functions/send-email', {
       to: state.claims.email,
-      subject: 'Password Changed',
       ...emailBuilder('password-changed')
     })
   },

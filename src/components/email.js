@@ -20,6 +20,7 @@
  */
 export function emailBuilder (type, data) {
   return {
+    subject: titles[type],
     text: textEmail(type, data),
     html: baseEmail({
       title: titles[type],
@@ -133,6 +134,11 @@ function baseEmail (data) {
           #content {
             margin: 2rem 0
           }
+          .link {
+            text-decoration: none;
+            color: #282828;
+            font-size: 1rem;
+          }
           .link-button {
             display: block;
             padding: 1rem;
@@ -146,6 +152,21 @@ function baseEmail (data) {
           }
           .link-button:hover {
             opacity: .6;
+          }
+          #footer {
+            border-top: 2px solid #282828;
+            padding: 2rem 0;
+          }
+          #footer .content {
+            display: grid;
+            grid-gap: 1rem;
+          }
+          #footer p {
+            font-size: .8rem;
+          }
+          #footer .company-info {
+            display: flex;
+            justify-content: space-between;
           }
         </style>
       </head>
@@ -178,17 +199,26 @@ function baseEmail (data) {
             </tr>
           </table>
 
-          <!-- Footer
-
           <table id="footer" role="presentation" width="100%">
             <tr>
-              <td>
-
+              <td class="content">
+                <div>
+                  <a href="https://app.traininblocks.com" target="_blank" rel="noreferrer" class="link">App</a>
+                  <a href="https://traininblocks.com" target="_blank" rel="noreferrer" class="link">Website</a>
+                  <a href="https://www.instagram.com/traininblocks" target="_blank" rel="noreferrer" class="link">Instagram</a>
+                </div>
+                <div class="company-info">
+                  <p>
+                    <b>Wallingford</b> United Kingdom
+                  </p>
+                  <p>
+                    <b>Train In Blocks Ltd</b> 12515717
+                  </p>
+                </div>
               </td>
             </tr>
           </table>
 
-          -->
         </div>
       </body>
     </html>`

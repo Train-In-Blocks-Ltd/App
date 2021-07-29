@@ -133,7 +133,6 @@ export default {
         })
         await this._vm.$axios.post('/.netlify/functions/send-email', {
           to: PT_EMAIL.data[0].credentials.emails[0].value,
-          subject: state.claims.email + ' has submitted feedback for ' + SESSION.name,
           ...emailBuilder('client-feedback', {
             cId: state.claims.client_id_db,
             pId: parseInt(payload.planId)
