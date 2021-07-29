@@ -74,6 +74,9 @@
 div#rich_show_content {
   @include todo-list;
   @include editor-main;
+
+  display: grid;
+  grid-template-columns: 1fr 24px;
   > :is(div, p) {
     margin: .6rem 0;
     outline: none;
@@ -125,6 +128,16 @@ div#rich_editor {
     a {
       color: var(--link)
     }
+  }
+}
+svg.edit_icon {
+  margin: auto 0;
+  &.placeholder_icon {
+    float: right
+  }
+  path {
+    stroke: var(--base_light);
+    transition: var(--transition_standard)
   }
 }
 
@@ -355,8 +368,13 @@ div#rich_editor {
       id="rich_show_content"
       class="fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
-      v-html="updateHTML(value, true)"
-    />
+    >
+      <div v-html="updateHTML(value, true)" />
+      <inline-svg
+        :src="require('../assets/svg/editor/pencil.svg')"
+        class="edit_icon no_fill"
+      />
+    </div>
     <transition v-else-if="editState" enter-active-class="fadeIn">
       <div>
         <div class="menu_bar_wrapper">
@@ -469,6 +487,10 @@ div#rich_editor {
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
     >
       {{ emptyPlaceholder }}
+      <inline-svg
+        :src="require('../assets/svg/editor/pencil.svg')"
+        class="edit_icon placeholder_icon no_fill"
+      />
     </p>
     <div v-if="editState" class="bottom_bar fadeIn">
       <button @click="editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
