@@ -315,12 +315,14 @@ export default {
       let plan
       let session
       this.clientUser.plans.forEach((planItem) => {
-        planItem.sessions.forEach((sessionItem) => {
-          if (sessionItem.id === id) {
-            plan = planItem
-            session = sessionItem
-          }
-        })
+        if (planItem.sessions) {
+          planItem.sessions.forEach((sessionItem) => {
+            if (sessionItem.id === id) {
+              plan = planItem
+              session = sessionItem
+            }
+          })
+        }
       })
       switch (state) {
         case 'edit':
@@ -366,23 +368,13 @@ export default {
      * @param {integer} currentChecked - The new state of the session.
      */
     complete (planId, sessionId, currentChecked) {
-      if (!currentChecked) {
-        this.$store.commit('updateClientUserPlanSingleSession', {
-          planId,
-          sessionId,
-          attr: 'checked',
-          data: 1
-        })
-        this.check = 1
-      } else {
-        this.$store.commit('updateClientUserPlanSingleSession', {
-          planId,
-          sessionId,
-          attr: 'checked',
-          data: 0
-        })
-        this.check = 0
-      }
+      this.$store.commit('updateClientUserPlanSingleSession', {
+        planId,
+        sessionId,
+        attr: 'checked',
+        data: !currentChecked ? 1 : 0
+      })
+      this.check = !currentChecked ? 1 : 0
       this.$parent.updateClientSideSession(planId, sessionId)
       this.$store.dispatch('endLoading')
     },
