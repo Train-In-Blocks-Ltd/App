@@ -158,9 +158,8 @@
   #products {
     form {
       .price {
-        > select {
-          width: 100%
-        }
+        &.create-product,
+        > select,
         > input {
           width: 100%
         }
