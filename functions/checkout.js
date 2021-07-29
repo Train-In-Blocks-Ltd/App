@@ -69,7 +69,7 @@ exports.handler = async function handler (event, context, callback) {
                     name: product.name,
                     description: product.notes
                   },
-                  unit_amount: product.price
+                  unit_amount: product.price * 100
                 },
                 quantity: 1
               }],
@@ -94,7 +94,7 @@ exports.handler = async function handler (event, context, callback) {
                     name: product.name,
                     description: product.notes
                   },
-                  unit_amount: product.price,
+                  unit_amount: product.price * 100,
                   recurring: {
                     interval: recurring
                   }
