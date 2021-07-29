@@ -260,7 +260,7 @@ Vue.mixin({
         case 'Pending' || 'Past':
           return 'var(--base_light)'
         case 'Scheduled':
-          return 'green'
+          return 'var(--base_green)'
         case 'Cancelled' || 'Declined':
           return 'var(--base_red)'
       }

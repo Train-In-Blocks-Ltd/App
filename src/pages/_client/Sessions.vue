@@ -221,7 +221,7 @@
       color: var(--base_red)
     }
     .completed {
-      color: green
+      color: var(--base_green)
     }
   }
 }

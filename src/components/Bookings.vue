@@ -85,7 +85,7 @@
     }
   }
   .accept_request {
-    color: green
+    color: var(--base_green)
   }
 }
 
