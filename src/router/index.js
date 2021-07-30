@@ -19,6 +19,7 @@ const ClientSessions = () => import(/* webpackChunkName: "client.sessions" */ '@
 
 const ClientUserComponent = () => import(/* webpackChunkName: "client-user.home" */ '@/pages/_clientUser/Home')
 const ClientUserPlans = () => import(/* webpackChunkName: "client-user.plans" */ '@/pages/_clientUser/Plans')
+const ClientUserSuccess = () => import(/* webpackChunkName: "client-user.success" */ '@/pages/_clientUser/Success')
 
 const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home')
 
@@ -110,6 +111,14 @@ const router = new Router({
           }
         }
       ]
+    },
+    {
+      path: '/clientUser/success',
+      component: ClientUserSuccess,
+      meta: {
+        requiresAuth: true,
+        requiresClient: true
+      }
     },
     {
       path: '/clientUser',
