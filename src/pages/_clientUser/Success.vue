@@ -1,7 +1,10 @@
 <style lang="scss" scoped>
 #success {
   display: grid;
-  grid-gap: 2rem
+  grid-gap: 2rem;
+  .a_link {
+    width: fit-content
+  }
 }
 </style>
 

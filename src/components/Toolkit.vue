@@ -1,7 +1,6 @@
 <style lang="scss" scoped>
 .close_icon {
-  margin-bottom: 2rem;
-  float: right
+  margin-bottom: 2rem
 }
 textarea {
   margin-top: 2rem;

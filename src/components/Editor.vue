@@ -77,7 +77,7 @@ div#rich_show_content {
 
   display: grid;
   grid-template-columns: 1fr 24px;
-  > :is(div, p) {
+  > div:first-child > :is(div, p) {
     margin: .6rem 0;
     outline: none;
     -moz-appearance: none;
@@ -495,7 +495,10 @@ div#rich_editor {
       <button @click="editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
         Save
       </button>
-      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)">
+      <button
+        class="red_button"
+        @click="editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)"
+      >
         Cancel
       </button>
     </div>

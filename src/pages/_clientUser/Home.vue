@@ -30,9 +30,6 @@
 hr {
   margin: 2rem 0
 }
-.close_icon {
-  float: right
-}
 .complete_button {
   margin-top: 2rem
 }

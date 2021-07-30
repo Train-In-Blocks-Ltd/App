@@ -135,6 +135,9 @@ hr {
   margin: 1rem 0;
   border-color: var(--base_light)
 }
+.close_icon {
+  float: right
+}
 
 /* Containers */
 .view_container {

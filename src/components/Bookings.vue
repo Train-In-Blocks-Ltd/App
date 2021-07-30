@@ -7,9 +7,6 @@
 #bookings {
   margin-bottom: 2rem;
   .all_bookings {
-    .close_icon {
-      float: right
-    }
     .container {
       margin-top: 2rem
     }

@@ -1,8 +1,5 @@
 <style lang="scss" scoped>
 .profile_container {
-  .close_icon {
-    float: right
-  }
   .profile_image {
     text-align: center
   }

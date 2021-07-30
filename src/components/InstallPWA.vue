@@ -70,6 +70,13 @@
 
 <template>
   <div>
+    <inline-svg
+      v-if="!pwa.canInstall && !pwa.installed"
+      class="close_icon cursor"
+      :src="require('../assets/svg/close.svg')"
+      aria-label="Close"
+      @click="$parent.isInstallOpen = false, willBodyScroll(true)"
+    />
     <div v-if="pwa.canInstall">
       <h2>
         Save the app to your home screen
@@ -78,16 +85,21 @@
         Access it quickly with a clearer interface
       </p>
     </div>
-    <h2 v-else-if="pwa.installed">
-      You have the app saved to your mobile already!
-    </h2>
+    <div v-else-if="pwa.installed">
+      <h2>
+        You have the app saved to your mobile already!
+      </h2>
+      <p class="text--small grey">
+        Launch it or keep using it in the browser
+      </p>
+    </div>
     <div v-else-if="!pwa.canInstall">
       <h2>
         Save the app to your home screen
       </h2>
-      <h3 class="grey">
+      <p class="text--small grey">
         or continue using it in the browser
-      </h3>
+      </p>
       <div class="instructions">
         <p><b>For Safari</b></p>
         <p>1. Open the <i>Share</i> menu at the bottom of the screen</p>
@@ -122,7 +134,11 @@
           Launch
         </button>
       </a>
-      <button class="red_button" @click="$parent.isInstallOpen = false, willBodyScroll(true)">
+      <button
+        v-if="pwa.canInstall || pwa.installed"
+        class="red_button"
+        @click="$parent.isInstallOpen = false, willBodyScroll(true)"
+      >
         Close
       </button>
     </div>

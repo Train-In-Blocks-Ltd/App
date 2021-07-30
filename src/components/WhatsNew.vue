@@ -1,7 +1,4 @@
 <style lang="scss" scoped>
-.close_icon {
-  float: right
-}
 .update_wrapper {
   display: grid;
   grid-gap: 4rem;
