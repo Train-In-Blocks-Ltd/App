@@ -136,6 +136,8 @@ hr {
   border-color: var(--base_light)
 }
 .close_icon {
+  position: sticky;
+  top: 0;
   float: right
 }
 
