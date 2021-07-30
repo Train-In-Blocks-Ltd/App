@@ -2,14 +2,21 @@
 .home--container {
   display: grid;
   margin-bottom: 2rem;
-  .search {
-    margin-top: 1rem
-  }
   .header {
     display: flex;
     justify-content: space-between;
-    button {
-      margin: auto 0
+    margin-bottom: 2rem;
+    > div:last-child {
+      display: flex;
+      justify-content: flex-end;
+      button {
+        margin: auto 0 auto .6rem
+      }
+      input.search {
+        /* stylelint-disable-next-line */
+        width: 50% !important;
+        margin: auto 0
+      }
     }
   }
 }
@@ -22,7 +29,18 @@
 
 @media (max-width: 768px) {
   .home--container {
-    width: 100%
+    width: 100%;
+    .header {
+      display: grid;
+      grid-gap: 1rem;
+      justify-content: unset;
+      > div:last-child {
+        justify-content: space-between;
+        button {
+          margin-left: 0
+        }
+      }
+    }
   }
 }
 </style>
@@ -75,18 +93,20 @@
     <div v-else-if="!noClients" class="home--container">
       <div class="header">
         <h2>Clients</h2>
-        <button @click="isNewClientOpen = true, willBodyScroll(false)">
-          New Client
-        </button>
+        <div>
+          <input
+            v-model="search"
+            type="search"
+            rel="search"
+            placeholder="Find a client"
+            class="search"
+            aria-label="Find a client"
+          >
+          <button @click="isNewClientOpen = true, willBodyScroll(false)">
+            New Client
+          </button>
+        </div>
       </div>
-      <input
-        v-model="search"
-        type="search"
-        rel="search"
-        placeholder="Find a client"
-        class="text--small search"
-        aria-label="Find a client"
-      >
       <div class="clients_container">
         <!-- Perform case insensitive search -->
         <router-link

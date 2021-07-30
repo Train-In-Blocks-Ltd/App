@@ -389,7 +389,7 @@ option {
   cursor: pointer;
   position: fixed;
   right: 0;
-  top: 3rem;
+  top: 2rem;
   height: 33px;
   width: 8rem;
   transform: translateX(5rem);
@@ -405,10 +405,10 @@ option {
     display: block
   }
   &.icon_open_middle {
-    top: 5.4rem
+    top: 4.4rem
   }
   &.icon_open_bottom {
-    top: 7.8rem
+    top: 6.8rem
   }
   &.tab_option_small:hover {
     padding-left: 1.6rem;

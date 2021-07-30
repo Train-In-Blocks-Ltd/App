@@ -48,6 +48,10 @@
     display: grid;
     grid-template-columns: .1fr 1fr;
     grid-gap: 1rem;
+    > div:first-child {
+      display: flex;
+      justify-content: space-between
+    }
     img {
       height: 80px;
       width: 80px;
@@ -63,12 +67,16 @@
     }
     .today-tag {
       float: right;
+      height: fit-content;
       width: fit-content;
       padding: .2rem 1rem;
       border-radius: 3px;
       color: var(--fore);
       font-weight: bold;
-      background: var(--base_green)
+      background: var(--base_green);
+      &.small-screen {
+        display: none
+      }
     }
 
     /* Client link details */
@@ -112,6 +120,12 @@
       img {
         margin: auto auto auto 0
       }
+      .today-tag {
+        display: none;
+        &.small-screen {
+          display: block
+        }
+      }
     }
   }
 }
@@ -125,16 +139,24 @@
 <template>
   <div class="client_link">
     <div class="client_information">
-      <img
-        v-if="client.img"
-        :src="client.img"
-        alt="Profile img"
-      >
-      <inline-svg
-        v-else
-        class="profile_image_placeholder"
-        :src="require('../assets/svg/profile-image.svg')"
-      />
+      <div>
+        <img
+          v-if="client.img"
+          :src="client.img"
+          alt="Profile img"
+        >
+        <inline-svg
+          v-else
+          class="profile_image_placeholder"
+          :src="require('../assets/svg/profile-image.svg')"
+        />
+        <p
+          v-if="nextBooking"
+          class="today-tag small-screen text--tiny"
+        >
+          Today
+        </p>
+      </div>
       <div>
         <p
           v-if="nextBooking"
