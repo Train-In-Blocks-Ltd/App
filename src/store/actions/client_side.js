@@ -68,7 +68,7 @@ export default {
         attrParent: 'clientUser',
         attrChild: 'bookings',
         data: RESPONSE.data[3].sort((a, b) => {
-          return new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) - new Date(b.datetime.match(/\d{4}-\d{2}-\d{2}/)[0])
+          return new Date(a.datetime) - new Date(b.datetime)
         })
       })
 
