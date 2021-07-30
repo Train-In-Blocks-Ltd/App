@@ -151,7 +151,7 @@
           :src="require('../assets/svg/profile-image.svg')"
         />
         <p
-          v-if="nextBooking"
+          v-if="nextBooking.isToday"
           class="today-tag small-screen text--tiny"
         >
           Today
@@ -159,7 +159,7 @@
       </div>
       <div>
         <p
-          v-if="nextBooking"
+          v-if="nextBooking.isToday"
           class="today-tag text--tiny"
         >
           Today
@@ -187,8 +187,8 @@
         </div>
       </div>
     </div>
-    <p v-if="nextBooking">
-      <b>Next booking:</b> {{ nextBooking }}
+    <p v-if="nextBooking.datetime">
+      <b>Next booking:</b> {{ nextBooking.datetime }}
     </p>
     <p
       v-if="(client.notes === null || client.notes === '<p><br></p>' || client.notes === '') && !archive"
@@ -226,17 +226,21 @@ export default {
   },
   data () {
     return {
-      nextBooking: false
+      nextBooking: {
+        datetime: false,
+        isToday: false
+      }
     }
   },
   computed: mapState([
     'bookings'
   ]),
   created () {
-    const NEXT_BOOKING = this.bookings.filter(booking => booking.client_id === this.client.client_id)[0] || false
+    const NEXT_BOOKING = this.bookings.filter(booking => booking.client_id === this.client.client_id && new Date(booking.datetime) > new Date())[0] || false
     if (NEXT_BOOKING) {
       const DATE_AND_TIME = NEXT_BOOKING.datetime.split(' ')
-      this.nextBooking = `${DATE_AND_TIME[0] === this.today() ? 'Today' : DATE_AND_TIME[0]} at ${DATE_AND_TIME[1]}`
+      this.nextBooking.datetime = `${DATE_AND_TIME[0] === this.today() ? 'Today' : DATE_AND_TIME[0]} at ${DATE_AND_TIME[1]}`
+      this.nextBooking.isToday = DATE_AND_TIME[0] === this.today()
     }
   }
 }
