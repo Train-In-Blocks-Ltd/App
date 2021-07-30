@@ -1,21 +1,46 @@
 <style lang="scss" scoped>
+@mixin setting-section {
+  display: grid;
+  grid-gap: 1rem
+}
 .details_container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 2rem;
   margin-top: 2rem;
-  .details,
+  .details {
+    @include setting-section;
+
+    margin-bottom: 3rem;
+    .user-settings-button-bar {
+      display: flex;
+      > div:first-child {
+        margin-right: 1rem
+      }
+    }
+  }
   .theme {
-    display: grid;
-    grid-gap: 1rem;
+    @include setting-section;
+
     margin-bottom: 3rem
   }
+  .referral {
+    @include setting-section;
+    button {
+      width: fit-content
+    }
+  }
   .calendar {
+    @include setting-section;
+
     margin-bottom: 3rem;
+    button {
+      width: fit-content
+    }
     .guide_links {
       display: grid;
       grid-gap: .6rem;
-      margin-top: 1rem;
+      margin: 1rem 0;
       a {
         display: inline;
         font-weight: bold
@@ -23,6 +48,7 @@
     }
   }
   .privacy {
+    @include setting-section;
     .policy_links {
       display: grid;
       grid-gap: .6rem;
@@ -55,7 +81,7 @@
 }
 
 /* Responsive */
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .details_container {
     grid-template-columns: 1fr;
     grid-gap: 3rem
@@ -74,6 +100,19 @@
   .reset_password_button_bar {
     display: grid;
     grid-gap: 1rem
+  }
+}
+@media (max-width: 425px) {
+  .details_container {
+    .details {
+      .user-settings-button-bar {
+        display: grid;
+        grid-gap: 1rem;
+        > div:first-child {
+          margin-right: 0
+        }
+      }
+    }
   }
 }
 </style>
@@ -166,18 +205,21 @@
     <div v-if="claims" class="details_container">
       <div>
         <div class="details">
+          <h3>General settings</h3>
           <p style="margin-bottom: 1rem">
             <b>Email: </b>{{ claims.email }}
           </p>
-          <div v-if="claims.user_type != 'Client' || claims.user_type == 'Admin'">
-            <button @click.prevent="manageSubscription()">
-              Manage Your Subscription
-            </button>
-          </div>
-          <div>
-            <button @click.prevent="showPasswordReset = true, willBodyScroll(false)">
-              Change Your Password
-            </button>
+          <div class="user-settings-button-bar">
+            <div v-if="claims.user_type != 'Client' || claims.user_type == 'Admin'">
+              <button @click.prevent="manageSubscription()">
+                Manage Subscription
+              </button>
+            </div>
+            <div>
+              <button @click.prevent="showPasswordReset = true, willBodyScroll(false)">
+                Change Password
+              </button>
+            </div>
           </div>
         </div>
         <div class="theme">
@@ -208,7 +250,6 @@
             Referral Code
           </h3>
           <p>Generate a referral code to gift to your fellow trainers:</p>
-          <br>
           <button
             v-if="!coupon.generated"
             @click.prevent="generateCoupon()"
@@ -229,21 +270,22 @@
               Calendar
             </b>
           </label>
-          <br>
-          <div class="form__options">
-            <label>
-              Enable calendar link:
-              <input
-                v-model="claims.calendar"
-                class="claims-calendar"
-                type="checkbox"
-                @change="$parent.saveClaims()"
-              >
-            </label>
+          <div>
+            <div class="form__options">
+              <label>
+                Enable calendar link:
+                <input
+                  v-model="claims.calendar"
+                  class="claims-calendar"
+                  type="checkbox"
+                  @change="$parent.saveClaims()"
+                >
+              </label>
+            </div>
+            <p class="text--tiny">
+              Anyone with the link will be able to see all of your bookings
+            </p>
           </div>
-          <p class="text--tiny">
-            Anyone with the link will be able to see all of your bookings
-          </p>
           <div
             v-if="claims.calendar"
             class="guide_links"
@@ -262,7 +304,6 @@
               </a>
             </p>
           </div>
-          <br>
           <button
             v-if="claims.calendar"
             @click.prevent="copyCalendarLink()"
