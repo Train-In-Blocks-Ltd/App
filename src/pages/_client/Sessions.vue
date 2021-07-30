@@ -300,6 +300,7 @@
           min="1"
           :max="maxWeek"
           required
+          @input="checkForm('move')"
         >
       </div>
       <button
@@ -333,6 +334,7 @@
           name="range"
           type="number"
           required
+          @input="checkForm('shift')"
         >
       </div>
       <button
@@ -369,6 +371,7 @@
         name="duplicate_client"
         class="width_300"
         required
+        @change="checkForm('duplicate')"
       >
         <option :value="null">
           Select a client
@@ -820,15 +823,6 @@ export default {
   watch: {
     editingWeekColor () {
       this.updater()
-    },
-    moveTarget (val) {
-      this.disableMoveButton = !val
-    },
-    shiftDays (val) {
-      this.disableShiftButton = !val
-    },
-    duplicateClientID (val) {
-      this.disableDuplicatePlanButton = !val
     }
   },
   async created () {
@@ -855,6 +849,20 @@ export default {
     // -----------------------------
     // General
     // -----------------------------
+
+    checkForm (type) {
+      switch (type) {
+        case 'move':
+          this.disableMoveButton = !this.moveTarget
+          break
+        case 'shift':
+          this.disableShiftButton = !this.shiftDays
+          break
+        case 'duplicate':
+          this.disableDuplicatePlanButton = !this.duplicateClientID
+          break
+      }
+    },
 
     /**
      * Resolves the actions taken from the session multi-select.

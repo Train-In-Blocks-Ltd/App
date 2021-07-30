@@ -14,21 +14,23 @@
     </div>
     <input
       ref="name"
-      v-model="new_plan.name"
+      v-model="newPlan.name"
       class="small_border_radius width_300"
       type="text"
       placeholder="Name*"
       aria-label="Name"
       required
+      @input="checkForm()"
     >
     <input
-      v-model="new_plan.duration"
+      v-model="newPlan.duration"
       class="small_border_radius width_300"
       type="number"
       min="1"
       placeholder="Duration*"
       aria-label="Duration"
       required
+      @input="checkForm()"
     >
     <div class="form_button_bar">
       <button
@@ -50,7 +52,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      new_plan: {
+      newPlan: {
         name: '',
         duration: ''
       },
@@ -62,14 +64,6 @@ export default {
     'clientDetails',
     'clients'
   ]),
-  watch: {
-    new_plan: {
-      handler (val) {
-        this.disableCreatePlanButton = !(val.name && val.duration)
-      },
-      deep: true
-    }
-  },
   mounted () {
     this.$refs.name.focus()
   },
@@ -78,6 +72,10 @@ export default {
     // -----------------------------
     // General
     // -----------------------------
+
+    checkForm () {
+      this.disableCreatePlanButton = !(this.newPlan.name && this.newPlan.duration)
+    },
 
     /**
      * Creates a new plan.
@@ -94,12 +92,12 @@ export default {
         })
         await this.$store.dispatch('createPlan', {
           clientId: this.clientDetails.client_id,
-          name: this.new_plan.name,
-          duration: this.new_plan.duration
+          name: this.newPlan.name,
+          duration: this.newPlan.duration
         })
         this.$ga.event('Plan', 'new')
-        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')
-        this.new_plan = {
+        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.newPlan.name} created`, 'You\'re all set, get programming')
+        this.newPlan = {
           name: '',
           duration: ''
         }

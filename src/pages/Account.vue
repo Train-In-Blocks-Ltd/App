@@ -145,6 +145,7 @@
         aria-label="Current password"
         class="input--forms width_300 small_border_radius"
         required
+        @input="checkForm()"
       >
       <div>
         <h3>
@@ -168,7 +169,7 @@
         class="input--forms width_300 small_border_radius"
         :class="{check: password.check}"
         required
-        @input="checkPassword"
+        @input="checkPassword(), checkForm()"
       >
       <input
         v-model="password.match"
@@ -178,7 +179,7 @@
         class="input--forms width_300 small_border_radius"
         :class="{check: password.new !== password.match}"
         required
-        @input="checkPassword"
+        @input="checkPassword(), checkForm()"
       >
       <div class="reset_password_button_bar">
         <button
@@ -414,14 +415,6 @@ export default {
     'versionBuild',
     'coupon'
   ]),
-  watch: {
-    password: {
-      handler (val) {
-        this.disableChangePasswordButton = !(val.old && val.new && val.match && !val.check && !val.error)
-      },
-      deep: true
-    }
-  },
   async created () {
     this.$store.commit('setData', {
       attr: 'loading',
@@ -442,6 +435,10 @@ export default {
     // -----------------------------
     // General
     // -----------------------------
+
+    checkForm () {
+      this.disableChangePasswordButton = !(this.password.old && this.password.new && this.password.match && !this.password.check && !this.password.error)
+    },
 
     /**
      * Redirects the user to their Stripe management page.

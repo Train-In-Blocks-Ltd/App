@@ -369,6 +369,7 @@
             required
             @change="productChanged = true"
             @blur="resolveIfProductChanged(product.id)"
+            @input="checkForm()"
           >
           <checkbox
             :item-id="product.id"
@@ -429,6 +430,7 @@
               required
               @change="product.price = makeDecimals(product.price, 2), productChanged = true"
               @blur="resolveIfProductChanged(product.id)"
+              @input="checkForm()"
             >
           </div>
         </div>
@@ -442,6 +444,7 @@
           required
           @change="productChanged = true"
           @blur="resolveIfProductChanged(product.id)"
+          @input="checkForm()"
         />
       </form>
     </div>
@@ -491,15 +494,15 @@ export default {
     'claims',
     'isStripeConnected'
   ]),
-  watch: {
-    newProduct: {
-      handler (val) {
-        this.disableCreateProductButton = !(val.name && val.notes && val.price && val.currency && val.type)
-      },
-      deep: true
-    }
-  },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    checkForm () {
+      this.disableCreateProductButton = !(this.newProduct.name && this.newProduct.notes && this.newProduct.price && this.newProduct.currency && this.newProduct.type)
+    },
 
     // -----------------------------
     // Checkbox

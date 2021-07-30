@@ -24,35 +24,38 @@
     </div>
     <input
       ref="name"
-      v-model="new_client.name"
+      v-model="newClient.name"
       class="small_border_radius width_300"
       type="text"
       autocomplete="name"
       placeholder="Name*"
       aria-label="Name"
       required
+      @input="checkForm()"
     >
     <input
-      v-model="new_client.email"
+      v-model="newClient.email"
       class="small_border_radius width_300"
       type="email"
       autocomplete="email"
       placeholder="Email*"
       aria-label="Email"
       required
+      @input="checkForm()"
     >
     <input
-      v-model="new_client.confirm"
-      :style="{ borderColor: new_client.email !== new_client.confirm ? 'var(--base_red)' : ''}"
+      v-model="newClient.confirm"
+      :style="{ borderColor: newClient.email !== newClient.confirm ? 'var(--base_red)' : ''}"
       class="small_border_radius width_300"
       type="email"
       autocomplete="email"
       placeholder="Confirm email*"
       aria-label="Confirm email"
       required
+      @input="checkForm()"
     >
     <input
-      v-model="new_client.number"
+      v-model="newClient.number"
       class="small_border_radius width_300"
       type="tel"
       inputmode="tel"
@@ -60,10 +63,11 @@
       placeholder="Mobile"
       aria-label="Mobile"
       pattern="\d+"
+      @input="checkForm()"
     >
     <div class="form_button_bar">
       <button
-        :disabled="disableCreateClientButton || new_client.email === '' || new_client.email !== new_client.confirm"
+        :disabled="disableCreateClientButton || newClient.email === '' || newClient.email !== newClient.confirm"
         type="submit"
       >
         Save
@@ -81,7 +85,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      new_client: {
+      newClient: {
         name: '',
         email: '',
         confirm: '',
@@ -94,14 +98,6 @@ export default {
   computed: mapState([
     'claims'
   ]),
-  watch: {
-    new_client: {
-      handler (val) {
-        this.disableCreateClientButton = !(val.name && val.email && val.confirm)
-      },
-      deep: true
-    }
-  },
   mounted () {
     this.$refs.name.focus()
   },
@@ -111,11 +107,15 @@ export default {
     // General
     // -----------------------------
 
+    checkForm () {
+      this.disableCreateClientButton = !(this.newClient.name && this.newClient.email && this.newClient.confirm)
+    },
+
     /**
      * Creates a new client.
      */
     createClient () {
-      if (this.new_client.email === this.claims.email) {
+      if (this.newClient.email === this.claims.email) {
         this.$parent.$parent.$refs.response_pop_up.show('You cannot create a client with your own email address!', 'Please use a different one.', true, true)
         console.error('You cannot create a client with your own email address!')
       } else {
@@ -125,15 +125,15 @@ export default {
             data: true
           })
           this.$store.dispatch('createClient', {
-            name: this.new_client.name,
+            name: this.newClient.name,
             pt_id: this.claims.sub,
-            email: this.new_client.email,
-            number: this.new_client.number,
-            notes: this.new_client.notes
+            email: this.newClient.email,
+            number: this.newClient.number,
+            notes: this.newClient.notes
           })
-          this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.new_client.name}`, 'Well done on getting a new client')
-          this.$parent.persistResponse = this.new_client.name
-          this.new_client = {
+          this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.newClient.name}`, 'Well done on getting a new client')
+          this.$parent.persistResponse = this.newClient.name
+          this.newClient = {
             name: '',
             email: '',
             confirm: '',

@@ -230,30 +230,33 @@
           </p>
           <form class="request_booking_container" @submit.prevent="createBooking()">
             <input
-              v-model="booking_form.date"
+              v-model="bookingForm.date"
               :min="today()"
               class="small_border_radius"
               type="date"
               placeholder="Date"
               aria-label="Date"
               required
+              @input="checkForm()"
             >
             <input
-              v-model="booking_form.time"
-              :min="booking_form.date === (today()) ? timeNow() : null"
+              v-model="bookingForm.time"
+              :min="bookingForm.date === (today()) ? timeNow() : null"
               class="small_border_radius"
               type="time"
               placeholder="Time"
               aria-label="Time"
               required
+              @input="checkForm()"
             >
             <textarea
-              v-model="booking_form.notes"
+              v-model="bookingForm.notes"
               class="additional_notes small_border_radius"
               rows="5"
               placeholder="Additonal information"
               aria-label="Additional information"
               required
+              @input="checkForm()"
             />
             <button :disabled="disableCreateBookingButton">
               Request a booking
@@ -272,7 +275,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      booking_form: {
+      bookingForm: {
         date: this.today(),
         time: this.timeNow(),
         notes: null
@@ -286,20 +289,15 @@ export default {
     'claims',
     'clientUser'
   ]),
-  watch: {
-    booking_form: {
-      handler (val) {
-        this.disableCreateBookingButton = !(val.date && val.time && val.notes)
-      },
-      deep: true
-    }
-  },
   methods: {
 
     // -----------------------------
     // General
     // -----------------------------
 
+    checkForm () {
+      this.disableCreateBookingButton = !(this.bookingForm.date && this.bookingForm.time && this.bookingForm.notes)
+    },
     /**
      * Adds a user profile image.
      */
@@ -384,12 +382,12 @@ export default {
         })
         await this.$store.dispatch('createBooking', {
           clientId: this.claims.client_id_db,
-          datetime: this.booking_form.date + ' ' + this.booking_form.time,
-          notes: this.booking_form.notes,
+          datetime: this.bookingForm.date + ' ' + this.bookingForm.time,
+          notes: this.bookingForm.notes,
           status: 'Pending',
           isTrainer: false
         })
-        this.booking_form = {
+        this.bookingForm = {
           date: this.today(),
           time: this.timeNow(),
           notes: null

@@ -49,6 +49,7 @@
           :min="currentWeek + 1"
           :max="maxWeek"
           required
+          @input="checkForm()"
         >
       </div>
       <div class="input_section">
@@ -62,6 +63,7 @@
           type="number"
           min="1"
           required
+          @input="checkForm()"
         >
       </div>
       <button
@@ -187,19 +189,15 @@ export default {
       progressDataInputs: []
     }
   },
-  watch: {
-    progressInputs: {
-      handler (val) {
-        this.disableProgressButton = !(val.target && val.daysBetween)
-      },
-      deep: true
-    }
-  },
   methods: {
 
     // -----------------------------
     // General
     // -----------------------------
+
+    checkForm () {
+      this.disableProgressButton = !(this.progressInputs.target && this.progressInputs.daysBetween)
+    },
 
     /**
      * Pulls all the protocols in the selected session, ready for the user to manipulate before progressing.

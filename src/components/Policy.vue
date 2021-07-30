@@ -63,6 +63,7 @@
         type="name"
         placeholder="Your full name"
         required
+        @input="disablePolicyAgreeButton = !name"
       >
       <button :disabled="name === '' || disablePolicyAgreeButton">
         Agree
@@ -81,11 +82,6 @@ export default {
       name: null,
       eula: null,
       disablePolicyAgreeButton: true
-    }
-  },
-  watch: {
-    name (val) {
-      this.disablePolicyAgreeButton = !val
     }
   },
   created () {
