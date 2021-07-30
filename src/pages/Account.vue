@@ -1,18 +1,17 @@
 <style lang="scss" scoped>
 .details_container {
   display: grid;
-  grid-gap: 4rem;
-  align-items: center;
-  .details {
-    display: grid;
-    grid-gap: 1rem;
-    margin-top: 2rem
-  }
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2rem;
+  margin-top: 2rem;
+  .details,
   .theme {
     display: grid;
-    grid-gap: 1rem
+    grid-gap: 1rem;
+    margin-bottom: 3rem
   }
   .calendar {
+    margin-bottom: 3rem;
     .guide_links {
       display: grid;
       grid-gap: .6rem;
@@ -56,6 +55,12 @@
 }
 
 /* Responsive */
+@media (max-width: 992px) {
+  .details_container {
+    grid-template-columns: 1fr;
+    grid-gap: 3rem
+  }
+}
 @media (max-width: 768px) {
   .policies:hover {
     opacity: 1
@@ -158,139 +163,143 @@
     <h1>
       Your Account
     </h1>
-    <form v-if="claims" class="details_container">
-      <div class="details">
-        <p style="margin-bottom: 1rem">
-          <b>Email: </b>{{ claims.email }}
-        </p>
-        <div v-if="claims.user_type != 'Client' || claims.user_type == 'Admin'">
-          <button @click.prevent="manageSubscription()">
-            Manage Your Subscription
-          </button>
-        </div>
-        <div>
-          <button @click.prevent="showPasswordReset = true, willBodyScroll(false)">
-            Change Your Password
-          </button>
-        </div>
-      </div>
-      <div class="theme">
-        <label for="theme" class="text--small">
-          <b>
-            Theme
-          </b>
-        </label>
-        <select
-          v-model="claims.theme"
-          name="theme"
-          class="width_300"
-          @change="$parent.darkmode(claims.theme), $parent.saveClaims()"
-        >
-          <option value="system">
-            System default
-          </option>
-          <option value="light">
-            Light
-          </option>
-          <option value="dark">
-            Dark
-          </option>
-        </select>
-      </div>
-      <div class="calendar">
-        <label for="calendar" class="text--small">
-          <b>
-            Calendar
-          </b>
-        </label>
-        <br>
-        <div class="form__options">
-          <label>
-            Enable calendar link:
-            <input
-              v-model="claims.calendar"
-              class="claims-calendar"
-              type="checkbox"
-              @change="$parent.saveClaims()"
-            >
-          </label>
-        </div>
-        <p class="text--tiny">
-          Anyone with the link will be able to see all of your bookings
-        </p>
-        <div
-          v-if="claims.calendar"
-          class="guide_links"
-        >
-          <p
-            v-for="(guide, guideIndex) in calendarGuides"
-            :key="`cal_${guideIndex}`"
-          >
-            <a
-              :href="guide.link"
-              target="_blank"
-              rel="noreferrer"
-              class="a_link"
-            >
-              Add to {{ guide.name }} calendar
-            </a>
+    <div v-if="claims" class="details_container">
+      <div>
+        <div class="details">
+          <p style="margin-bottom: 1rem">
+            <b>Email: </b>{{ claims.email }}
           </p>
+          <div v-if="claims.user_type != 'Client' || claims.user_type == 'Admin'">
+            <button @click.prevent="manageSubscription()">
+              Manage Your Subscription
+            </button>
+          </div>
+          <div>
+            <button @click.prevent="showPasswordReset = true, willBodyScroll(false)">
+              Change Your Password
+            </button>
+          </div>
         </div>
-        <br>
-        <button
-          v-if="claims.calendar"
-          @click.prevent="copyCalendarLink()"
-          v-html="calendarText"
-        />
-      </div>
-      <div class="privacy">
-        <h3>
-          Your Privacy and Data
-        </h3>
-        <p>You can find more information about our policies below:</p>
-        <div class="policy_links">
-          <p
-            v-for="(policy, policyIndex) in policies"
-            :key="`policy_${policyIndex}`"
-          >
-            <a
-              :href="policy.link"
-              target="_blank"
-              rel="noreferrer"
-              class="a_link"
-            >
-              <b>
-                {{ policy.title }}
-              </b>
-            </a>
-          </p>
-        </div>
-        <div class="form__options">
-          <label>
-            Allow Third Party Cookies:
-            <input v-model="claims.ga" class="allow-cookies" type="checkbox" @change="$parent.saveClaims()">
+        <div class="theme">
+          <label for="theme" class="text--small">
+            <b>
+              Theme
+            </b>
           </label>
+          <select
+            v-model="claims.theme"
+            name="theme"
+            class="width_300"
+            @change="$parent.darkmode(claims.theme), $parent.saveClaims()"
+          >
+            <option value="system">
+              System default
+            </option>
+            <option value="light">
+              Light
+            </option>
+            <option value="dark">
+              Dark
+            </option>
+          </select>
+        </div>
+        <div class="referral">
+          <h3>
+            Referral Code
+          </h3>
+          <p>Generate a referral code to gift to your fellow trainers:</p>
+          <br>
+          <button
+            v-if="!coupon.generated"
+            @click.prevent="generateCoupon()"
+          >
+            Generate Coupon
+          </button>
+          <button
+            v-else
+            @click.prevent="copyCoupon()"
+            v-html="coupon.code"
+          />
         </div>
       </div>
-      <div class="referral">
-        <h3>
-          Referral Code
-        </h3>
-        <p>Generate a referral code to gift to your fellow trainers:</p>
-        <br>
-        <button
-          v-if="!coupon.generated"
-          @click.prevent="generateCoupon()"
-        >
-          Generate Coupon
-        </button>
-        <button
-          v-else
-          @click.prevent="copyCoupon()"
-          v-html="coupon.code"
-        />
+      <div>
+        <div class="calendar">
+          <label for="calendar" class="text--small">
+            <b>
+              Calendar
+            </b>
+          </label>
+          <br>
+          <div class="form__options">
+            <label>
+              Enable calendar link:
+              <input
+                v-model="claims.calendar"
+                class="claims-calendar"
+                type="checkbox"
+                @change="$parent.saveClaims()"
+              >
+            </label>
+          </div>
+          <p class="text--tiny">
+            Anyone with the link will be able to see all of your bookings
+          </p>
+          <div
+            v-if="claims.calendar"
+            class="guide_links"
+          >
+            <p
+              v-for="(guide, guideIndex) in calendarGuides"
+              :key="`cal_${guideIndex}`"
+            >
+              <a
+                :href="guide.link"
+                target="_blank"
+                rel="noreferrer"
+                class="a_link"
+              >
+                Add to {{ guide.name }} calendar
+              </a>
+            </p>
+          </div>
+          <br>
+          <button
+            v-if="claims.calendar"
+            @click.prevent="copyCalendarLink()"
+            v-html="calendarText"
+          />
+        </div>
+        <div class="privacy">
+          <h3>
+            Your Privacy and Data
+          </h3>
+          <p>You can find more information about our policies below:</p>
+          <div class="policy_links">
+            <p
+              v-for="(policy, policyIndex) in policies"
+              :key="`policy_${policyIndex}`"
+            >
+              <a
+                :href="policy.link"
+                target="_blank"
+                rel="noreferrer"
+                class="a_link"
+              >
+                <b>
+                  {{ policy.title }}
+                </b>
+              </a>
+            </p>
+          </div>
+          <div class="form__options">
+            <label>
+              Allow Third Party Cookies:
+              <input v-model="claims.ga" class="allow-cookies" type="checkbox" @change="$parent.saveClaims()">
+            </label>
+          </div>
+        </div>
       </div>
-    </form>
+    </div>
     <br>
     <br>
     <div class="version">
