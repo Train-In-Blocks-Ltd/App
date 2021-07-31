@@ -1,5 +1,5 @@
 <template>
-  <div style="display: grid; place-items: center; height: 100vh">
+  <div style="display: grid; place-items: center; min-height: 100vh; min-height: -webkit-fill-available">
     <p style="font-size: 2.5rem">
       Error 404 Page Not Found
     </p>

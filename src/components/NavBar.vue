@@ -99,8 +99,8 @@
 @media (min-width: 769px) {
   #sidebar {
     top: 0;
-    height: 100vh;
-    min-height: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
     width: calc(38px + 2rem);
     border-radius: 0;
     &:hover {
