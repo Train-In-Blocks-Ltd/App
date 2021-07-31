@@ -114,7 +114,7 @@
           Statistics
         </h2>
         <inline-svg
-          class="icon--options cursor"
+          class="close_icon cursor"
           :src="require('../assets/svg/close.svg')"
           aria-label="Close"
           @click="$parent.isStatsOpen = false, willBodyScroll(true)"

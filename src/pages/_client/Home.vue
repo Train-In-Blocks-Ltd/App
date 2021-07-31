@@ -56,6 +56,9 @@
     a {
       text-align: right
     }
+    .cursor {
+      margin-left: auto
+    }
     .icon--options {
       cursor: pointer;
       margin-left: auto
@@ -134,18 +137,17 @@
       <toolkit />
     </div>
     <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
-      <div class="floating_nav fadeIn">
+      <div
+        v-if="showOptions"
+        class="floating_nav fadeIn"
+      >
         <inline-svg
-          v-if="showOptions"
-          class="icon--options fadeIn delay fill_mode_both"
+          class="close_icon not_fixed cursor"
           :src="require('../../assets/svg/close.svg')"
           aria-label="Close"
           @click="showOptions = false"
         />
-        <div
-          v-if="showOptions"
-          class="client--options fadeIn delay fill_mode_both"
-        >
+        <div class="client--options">
           <a
             class="a_link"
             href="javascript:void(0)"

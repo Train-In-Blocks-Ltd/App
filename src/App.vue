@@ -136,12 +136,14 @@ hr {
   border-color: var(--base_light)
 }
 .close_icon {
-  position: fixed;
-  top: 4rem;
-  right: 5vw;
   padding: .2rem;
   border: 2px solid var(--base);
-  border-radius: 3px
+  border-radius: 3px;
+  &:not(.not_fixed) {
+    position: fixed;
+    top: 4rem;
+    right: 5vw
+  }
 }
 
 /* Containers */
