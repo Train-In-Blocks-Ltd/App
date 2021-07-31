@@ -136,9 +136,12 @@ hr {
   border-color: var(--base_light)
 }
 .close_icon {
-  position: sticky;
-  top: 0;
-  float: right
+  position: fixed;
+  top: 4rem;
+  right: 5vw;
+  padding: .2rem;
+  border: 2px solid var(--base);
+  border-radius: 3px
 }
 
 /* Containers */
