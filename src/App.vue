@@ -319,8 +319,6 @@ input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]
 select,
 textarea {
   outline: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
   width: 100%;
   padding: .6rem;
   resize: none;
@@ -332,6 +330,10 @@ textarea {
   background-color: transparent;
   box-shadow: none;
   transition: var(--transition_standard);
+  &:not(select) {
+    -moz-appearance: none;
+    -webkit-appearance: none
+  }
   &:not(:focus):hover {
     opacity: var(--light_opacity)
   }
