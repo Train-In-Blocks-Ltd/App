@@ -381,10 +381,9 @@ export default {
      * @param {integer} currentChecked - The new state of the session.
      */
     complete (planId, sessionId, currentChecked) {
-      this.$store.commit('updateClientUserPlanSingleSession', {
+      this.$store.commit('SET_CLIENT_USER_SESSION_CHECKED', {
         planId,
         sessionId,
-        attr: 'checked',
         data: !currentChecked ? 1 : 0
       })
       this.check = !currentChecked ? 1 : 0

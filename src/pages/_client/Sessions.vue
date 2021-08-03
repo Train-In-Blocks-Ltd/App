@@ -920,10 +920,9 @@ export default {
         case 'cancel':
           this.$store.commit('SET_DONT_LEAVE', false)
           this.editingPlanNotes = false
-          this.$store.commit('updatePlanAttr', {
+          this.$store.commit('SET_PLAN_NOTES', {
             clientId: this.clientDetails.client_id,
             planId: this.plan.id,
-            attr: 'notes',
             data: this.tempEditorStore
           })
           break
@@ -1027,11 +1026,10 @@ export default {
       this.$store.commit('SET_DONT_LEAVE', true)
       this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit('updateSessionAttr', {
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
+          this.$store.commit('SET_SESSION_DATE', {
+            clientId: parseInt(this.$route.params.client_id),
+            planId: parseInt(this.$route.params.id),
             sessionId: session.id,
-            attr: 'date',
             data: this.addDays(session.date, parseInt(this.shiftDays))
           })
         }
@@ -1051,11 +1049,10 @@ export default {
       this.$store.commit('SET_DONT_LEAVE', true)
       this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit('updateSessionAttr', {
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
+          this.$store.commit('SET_SESSION_WEEK_ID', {
+            clientId: parseInt(this.$route.params.client_id),
+            planId: parseInt(this.$route.params.id),
             sessionId: session.id,
-            attr: 'week_id',
             data: this.moveTarget
           })
         }
@@ -1083,11 +1080,10 @@ export default {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${boolState === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
           this.plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
-              this.$store.commit('updateSessionAttr', {
-                clientId: this.$route.params.client_id,
-                planId: this.$route.params.id,
+              this.$store.commit('SET_SESSION_CHECKED', {
+                clientId: parseInt(this.$route.params.client_id),
+                planId: parseInt(this.$route.params.id),
                 sessionId: session.id,
-                attr: 'checked',
                 data: boolState
               })
             }
@@ -1244,10 +1240,9 @@ export default {
      * Updates the week color.
      */
     updateSessionColor () {
-      this.$store.commit('updatePlanAttr', {
+      this.$store.commit('SET_PLAN_BLOCK_COLOR', {
         clientId: this.clientDetails.client_id,
         planId: this.plan.id,
-        attr: 'block_color',
         data: JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
       })
       this.editingWeekColor = false

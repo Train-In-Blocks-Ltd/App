@@ -4,7 +4,7 @@ import { State } from '../state'
 
 export default {
   /** Adds a new template. */
-  async CREATE_TEMPLATE ({ commit, state }: { commit: Commit, state: State }): Promise<void> {
+  async createTemplate ({ commit, state }: { commit: Commit, state: State }): Promise<void> {
     const NEW_TEMPLATE = {
       pt_id: state.claims.sub,
       name: 'Untitled',
@@ -27,7 +27,7 @@ export default {
    * Updates a template.
    * @param {number} templateId - The id of the template.
    */
-  async UPDATE_TEMPLATE ({ state }: { state: State }, templateId: number): Promise<void> {
+  async updateTemplate ({ state }: { state: State }, templateId: number): Promise<void> {
     const TEMPLATE = state.templates.find(template => template.id === templateId)
     await axios.put('https://api.traininblocks.com/v2/templates', {
       ...TEMPLATE
@@ -38,7 +38,7 @@ export default {
    * Delete templates.
    * @param {Array<number>} templateIds - The ids of templates.
    */
-  async DELETE_TEMPLATE ({ commit }: { commit: Commit }, templateIds: Array<number>): Promise<void> {
+  async deleteTemplate ({ commit }: { commit: Commit }, templateIds: Array<number>): Promise<void> {
     const DELETE_IDS: Array<{ id: number }> = []
     templateIds.forEach((templateId) => {
       DELETE_IDS.push({ id: templateId })

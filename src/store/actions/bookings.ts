@@ -12,7 +12,7 @@ export default {
    * @param {string} payload.status - The status of the booking.
    * @param {boolean} payload.isTrainer - Whether the trainer or client requested it.
    */
-  async CREATE_BOOKING ({ commit, state }: { commit: Commit, state: State }, payload: { id?: number, client_id: number, datetime: string, notes: string, status: string, isTrainer: boolean }): Promise<void> {
+  async createBooking ({ commit, state }: { commit: Commit, state: State }, payload: { id?: number, client_id: number, datetime: string, notes: string, status: string, isTrainer: boolean }): Promise<void> {
     const RESPONSE = await axios.post('https://api.traininblocks.com/v2/bookings', {
       ...payload
     })
@@ -48,7 +48,7 @@ export default {
    * @param {number} payload.client_id - The id of the client that the booking belongs to.
    * @param {string} payload.status - The new status of the booking.
    */
-  async UPDATE_BOOKING ({ commit, state }: { commit: Commit, state: State }, payload: { id: number, client_id: number, status: string  }): Promise<void> {
+  async updateBooking ({ commit, state }: { commit: Commit, state: State }, payload: { id: number, client_id: number, status: string  }): Promise<void> {
     await axios.put('https://api.traininblocks.com/v2/bookings', {
       ...payload
     })
@@ -70,7 +70,7 @@ export default {
    * @param {string} payload.datetime - The date and time.
    * @param {boolean} payload.isTrainer - Whether the user is a trainer or client.
    */
-  async DELETE_BOOKING ({ commit, state }: { commit: Commit, state: State }, payload: { id: number, client_id: number, datetime: string, isTrainer: boolean }): Promise<void> {
+  async deleteBooking ({ commit, state }: { commit: Commit, state: State }, payload: { id: number, client_id: number, datetime: string, isTrainer: boolean }): Promise<void> {
     const THIS_BOOKING: Booking | boolean = state.bookings.find((booking: Booking) => booking.id === payload.id) || false
     await axios.delete(`https://api.traininblocks.com/v2/bookings/${payload.id}`)
     if (!payload.isTrainer) {

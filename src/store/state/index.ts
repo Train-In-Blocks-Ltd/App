@@ -33,7 +33,9 @@ export const state: State = {
     notifications: 0
   },
   clientUser: {
+    pt_id: '',
     name: '',
+    number: '',
     plans: [],
     profile_image: '',
     sessionsToday: [],
@@ -193,7 +195,9 @@ export interface State {
   clients: Array<Client>,
   clientDetails: Client,
   clientUser: {
+    pt_id: string,
     name: string,
+    number: string,
     plans: Array<Plan>,
     profile_image: string,
     sessionsToday: Array<Session>,

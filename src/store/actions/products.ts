@@ -12,7 +12,7 @@ export default {
    * @param {string} payload.type - The payment type of the product, either one-off or recurring.
    * @param {string} payload.currency - The currency of the product.
    */
-  async CREATE_PRODUCT ({ commit }: { commit: Commit }, payload: { id?: number, pt_id: string, name: string, notes: string, price: string, type: string, currency: string }): Promise<void> {
+  async createProduct ({ commit }: { commit: Commit }, payload: { id?: number, pt_id: string, name: string, notes: string, price: string, type: string, currency: string }): Promise<void> {
     const RESPONSE = await axios.post('https://api.traininblocks.com/v2/products', {
       ...payload
     })
@@ -26,7 +26,7 @@ export default {
    * Updates a product.
    * @param {integer} productId - The id of the product.
    */
-  async UPDATE_PRODUCT ({ state }: { state: State }, productId: number): Promise<void> {
+  async updateProduct ({ state }: { state: State }, productId: number): Promise<void> {
     const POST_DATA = state.products.find((product: Product) => product.id === productId)
     await axios.put('https://api.traininblocks.com/v2/products', {
       ...POST_DATA
@@ -37,7 +37,7 @@ export default {
    * Deletes products.
    * @param {array} productIds - The ids of products.
    */
-  async DELETE_PRODUCT ({ commit }: { commit: Commit }, productIds: Array<number>) {
+  async deleteProduct ({ commit }: { commit: Commit }, productIds: Array<number>) {
     const DELETE_IDS: Array<{ id: number }> = []
     productIds.forEach((productId: number) => {
       DELETE_IDS.push({

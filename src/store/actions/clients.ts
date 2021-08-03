@@ -12,7 +12,7 @@ export default {
    * @param {string} payload.number - The mobile number of the client.
    * @param {string} payload.notes - The client notes.
    */
-  async CREATE_CLIENT ({ commit }: { commit: Commit }, payload: { pt_id: string, name: string, email: string, number: string, notes: string }): Promise<void> {
+  async createClient ({ commit }: { commit: Commit }, payload: { pt_id: string, name: string, email: string, number: string, notes: string }): Promise<void> {
     const NEW_CLIENT = await axios.post('https://api.traininblocks.com/v2/clients', {
       ...payload
     })
@@ -25,7 +25,7 @@ export default {
   },
 
   /** Updates a client. */
-  async UPDATE_CLIENT ({ state }: { state: State }) {
+  async updateClient ({ state }: { state: State }) {
     const CLIENT = state.clientDetails
     await axios.put('https://api.traininblocks.com/v2/clients', {
       id: CLIENT.client_id,
@@ -42,7 +42,7 @@ export default {
    * Archives a client.
    * @param {number} clientId - The id of the client.
    */
-  async ARCHIVE_CLIENT ({ commit, state }: { commit: Commit, state: State }, clientId: number): Promise<void> {
+  async archiveClient ({ commit, state }: { commit: Commit, state: State }, clientId: number): Promise<void> {
     const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === clientId) || false
     if (CLIENT) {
       commit('ARCHIVE_CLIENT', CLIENT)
@@ -70,7 +70,7 @@ export default {
    * Unarchive clients.
    * @param {Array<number>} clientIds - The ids of clients.
    */
-  async UNARCHIVE_CLIENT ({ commit }: { commit: Commit }, clientIds: Array<number>): Promise<void> {
+  async unarchiveClient ({ commit }: { commit: Commit }, clientIds: Array<number>): Promise<void> {
     const POST_DATA: Array<{ id: number }> = []
     clientIds.forEach((clientId) => {
       POST_DATA.push({
@@ -85,7 +85,7 @@ export default {
    * Delete clients from the archive.
    * @param {Array<number>} clientIds - The ids of clients.
    */
-  async DELETE_CLIENT ({ commit }: { commit: Commit }, clientIds: Array<number>): Promise<void> {
+  async deleteClient ({ commit }: { commit: Commit }, clientIds: Array<number>): Promise<void> {
     const DELETE_IDS: Array<{ id: number }> = []
     clientIds.forEach((clientId) => {
       DELETE_IDS.push({

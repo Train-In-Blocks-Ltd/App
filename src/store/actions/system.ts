@@ -4,14 +4,14 @@ import { Booking, Client, State } from '../state'
 
 export default {
   /** Ends all loading. */
-  END_LOADING ({ commit }: { commit: Commit }): void {
+  endLoading ({ commit }: { commit: Commit }): void {
     commit('SET_LOADING', false)
     commit('SET_SILENT_LOADING', false)
     commit('SET_DONT_LEAVE', false)
   },
 
   /** Gets all the data for the trainer-user's session. */
-  async GET_HIGH_LEVEL_DATA ({ dispatch, commit, state }: { dispatch: Dispatch, commit: Commit, state: State }): Promise<void> {
+  async getHighLevelData ({ dispatch, commit, state }: { dispatch: Dispatch, commit: Commit, state: State }): Promise<void> {
     // Main data call
     const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/${state.claims.sub}`)
 
@@ -21,10 +21,7 @@ export default {
       const NAME_B = b.name.toUpperCase()
       return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
     })
-    commit('', {
-      attr: 'clients',
-      data: SORTED_CLIENTS
-    })
+    commit('SET_CLIENTS', SORTED_CLIENTS)
 
     // Sets archive
     const SORTED_ARCHIVE_CLIENTS = RESPONSE.data[1].sort((a: Client, b: Client) => {
@@ -32,39 +29,23 @@ export default {
       const NAME_B = b.name.toUpperCase()
       return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
     })
-    commit('', {
-      attrParent: 'archive',
-      attrChild: 'clients',
-      data: SORTED_ARCHIVE_CLIENTS
-    })
+    commit('SET_ARCHIVE_CLIENTS', SORTED_ARCHIVE_CLIENTS)
 
     // Sets templates and portfolio
-    commit('', {
-      attr: 'templates',
-      data: RESPONSE.data[2]
-    })
+    commit('SET_TEMPLATES', RESPONSE.data[2])
 
     if (RESPONSE.data[3].length === 0) {
       await dispatch('createPortfolio')
     } else {
-      commit('', {
-        attr: 'portfolio',
-        data: { ...RESPONSE.data[3][0] }
-      })
+      commit('SET_PORTFOLIO', { ...RESPONSE.data[3][0] })
     }
 
     // Sets bookings
-    commit('', {
-      attr: 'bookings',
-      data: RESPONSE.data[4].sort((a: Booking, b: Booking) => {
-        return Number(new Date(a.datetime)) - Number(new Date(b.datetime))
-      })
-    })
+    commit('SET_BOOKINGS', RESPONSE.data[4].sort((a: Booking, b: Booking) => {
+      return Number(new Date(a.datetime)) - Number(new Date(b.datetime))
+    }))
 
     // Sets products
-    commit('', {
-      attr: 'products',
-      data: RESPONSE.data[5]
-    })
+    commit('SET_PRODUCTS', RESPONSE.data[5])
   }
 }

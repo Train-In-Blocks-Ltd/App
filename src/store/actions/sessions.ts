@@ -1,8 +1,7 @@
 import axios from 'axios'
 import { Commit } from 'vuex'
 import { Getters } from '../getters'
-import bookings from '../mutations/bookings'
-import { Session, State } from '../state'
+import { Session, Client, Plan, State } from '../state'
 
 export default {
   /**
@@ -15,7 +14,7 @@ export default {
    * @param {number} payload.data.week_id - The week/micro-cycle of the session.
    * @returns The new session's id.
    */
-  async CREATE_SESSION ({ commit }: { commit: Commit }, payload: { client_id: number, data: { programme_id: number, name: string, date: string, notes: string, week_id: number } }): Promise<number | undefined> {
+  async createSession ({ commit }: { commit: Commit }, payload: { client_id: number, data: { programme_id: number, name: string, date: string, notes: string, week_id: number } }): Promise<number | undefined> {
     const RESPONSE = await axios.post('https://api.traininblocks.com/v2/sessions', {
       ...payload.data
     }).catch((e: Error) => {
@@ -40,7 +39,7 @@ export default {
    * @param {number} payload.planId - The id of the plan.
    * @param {number} payload.sessionId - The id of the session.
    */
-  async UPDATE_SESSION ({ state, getters }: { state: State, getters: Getters }, payload: { clientId: number, planId: number, sessionId: number }): Promise<void> {
+  async updateSession ({ state, getters }: { state: State, getters: Getters }, payload: { clientId: number, planId: number, sessionId: number }): Promise<void> {
     const SESSION: Session | boolean = getters.getSession(state)(payload.clientId, payload.planId, payload.sessionId) || false
     if (SESSION) {
       await axios.put('https://api.traininblocks.com/v2/sessions', {
@@ -55,7 +54,7 @@ export default {
    * @param {number} payload.planId - The id of the plan.
    * @param {Array<number>} payload.sessionIds - The ids of the sessions.
    */
-  async BATCH_UPDATE_SESSION ({ state, getters }: { state: State, getters: Getters }, payload: { clientId: number, planId: number, sessionIds: Array<number> }): Promise<void> {
+  async batchUpdateSession ({ state, getters }: { state: State, getters: Getters }, payload: { clientId: number, planId: number, sessionIds: Array<number> }): Promise<void> {
     const POST_DATA: Array<Session> = []
     payload.sessionIds.forEach((sessionId: number) => {
       const SESSION: Session | boolean = getters.getSession(state)(payload.clientId, payload.planId, sessionId) || false
@@ -74,7 +73,7 @@ export default {
    * @param {number} payload.planId - The id of the plan.
    * @param {Array<number>} payload.sessionIds - The ids of the sessions.
    */
-  async DELETE_SESSION ({ commit }: { commit: Commit }, payload: { clientId: number, planId: number, sessionIds: Array<number> }): Promise<void> {
+  async deleteSession ({ commit }: { commit: Commit }, payload: { clientId: number, planId: number, sessionIds: Array<number> }): Promise<void> {
     const DELETE_IDS: Array<{ id: number }> = []
     payload.sessionIds.forEach((sessionId: number) => {
       DELETE_IDS.push({ id: sessionId })

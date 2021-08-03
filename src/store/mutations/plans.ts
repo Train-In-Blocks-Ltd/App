@@ -1,6 +1,25 @@
 import { Client, Plan, State } from '../state'
 
 export default {
+  SET_PLAN_NOTES (state: State, payload: { clientId: number, planId: number, data: string }): void {
+    const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === payload.clientId) || false
+    if (CLIENT && CLIENT.plans) {
+      const PLAN: Plan | boolean = CLIENT.plans.find((plan: Plan) => plan.id === payload.planId) || false
+      if (PLAN) {
+        PLAN.notes = payload.data
+      }
+    }
+  },
+  SET_PLAN_BLOCK_COLOR (state: State, payload: { clientId: number, planId: number, data: string }): void {
+    const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === payload.clientId) || false
+    if (CLIENT && CLIENT.plans) {
+      const PLAN: Plan | boolean = CLIENT.plans.find((plan: Plan) => plan.id === payload.planId) || false
+      if (PLAN) {
+        PLAN.block_color = payload.data
+      }
+    }
+  },
+
   /**
    * Adds a new plan to a client.
    * @param {Plan} payload
@@ -42,18 +61,6 @@ export default {
       }
     }
   },
-
-  /**
-   * Updates a single plan parameter.
-   * @param {any} payload - { clientId, planId, attr, data }
-   */
-  /*
-  updatePlanAttr (state: State, payload: any) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-    const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-    PLAN[payload.attr] = payload.data
-  },
-  */
 
   /**
    * Removes a plan from a client.

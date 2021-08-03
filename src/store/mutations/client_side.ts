@@ -1,6 +1,43 @@
-import { Plan, Booking, Session, State } from "../state"
+import { Plan, Product, Booking, Session, State } from "../state"
 
 export default {
+  SET_CLIENT_USER_LOADED (state: State, data: boolean): void {
+    state.clientUserLoaded = data
+  },
+  SET_CLIENT_USER_NAME (state: State, data: string): void {
+    state.clientUser.name = data
+  },
+  SET_CLIENT_USER_NUMBER (state: State, data: string): void {
+    state.clientUser.number = data
+  },
+  SET_CLIENT_USER_PT_ID (state: State, data: string): void {
+    state.clientUser.pt_id = data
+  },
+  SET_CLIENT_USER_PROFILE_IMAGE (state: State, data: string): void {
+    state.clientUser.profile_image = data
+  },
+  SET_CLIENT_USER_BOOKINGS (state: State, data: Array<Booking>): void {
+    state.clientUser.bookings = data
+  },
+  SET_CLIENT_USER_PRODUCTS (state: State, data: Array<Product>): void {
+    state.clientUser.products = data
+  },
+  SET_CLIENT_USER_PLANS (state: State, data: Array<Plan>): void {
+    state.clientUser.plans = data
+  },
+  SET_CLIENT_USER_SESSIONS_TODAY (state: State, data: Array<Session>): void {
+    state.clientUser.sessionsToday = data
+  },
+  SET_CLIENT_USER_SESSION_CHECKED (state: State, payload: { planId: number, sessionId: number, data: number }): void {
+    const PLAN: Plan | boolean = state.clientUser.plans.find((plan: Plan) => plan.id === payload.planId) || false
+    if (PLAN && PLAN.sessions) {
+      const SESSION: Session | boolean = PLAN.sessions.find((session: Session) => session.id === payload.sessionId) || false
+      if (SESSION) {
+        SESSION.checked = payload.data
+      }
+    }
+  },
+
   /**
    * Pushes a new booking to 'clientUser.bookings'.
    * @param {Booking} payload
@@ -50,26 +87,4 @@ export default {
   SET_PROFILE_IMAGE_CLIENT_SIDE (state: State, profileImage: string): void {
     state.clientUser.profile_image = profileImage
   }
-
-  /**
-   * Updates an attribute for a single session from the client-user.
-   * @param {any} payload - { planId, sessionId, attr, data }
-   */
-  /*
-  updateClientUserPlanSingleSession (state: State, payload: any) {
-    const PLANS: Array<Plan> = state.clientUser.plans || []
-    if (PLANS) {
-      const PLAN: Plan | boolean = PLANS.find((plan: Plan) => plan.id === parseInt(payload.planId)) || false
-      if (PLAN) {
-        const SESSIONS: Array<Session> = PLAN.sessions || []
-        if (SESSIONS) {
-          const SESSION: Session | boolean = SESSIONS.find((session: Session) => session.id === parseInt(payload.sessionId)) || false
-          if (SESSION) {
-            SESSION[payload.attr] = payload.data
-          }
-        }
-      }
-    }
-  }
-  */
 }

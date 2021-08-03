@@ -9,7 +9,7 @@ export default {
    * @param {string} payload.old - The old password.
    * @param {string} payload.new - The new password.
    */
-  async CHANGE_PASSWORD ({ state }: { state: State }, payload: { old: string, new: string}): Promise<void> {
+  async changePassword ({ state }: { state: State }, payload: { old: string, new: string}): Promise<void> {
     await axios.post('/.netlify/functions/okta', {
       type: 'POST',
       body: {
@@ -25,7 +25,7 @@ export default {
   },
 
   /** Updates the user's claims on Okta. */
-  async SAVE_CLAIMS ({ state }: { state: State }): Promise<void> {
+  async saveClaims ({ state }: { state: State }): Promise<void> {
     await axios.post('/.netlify/functions/okta', {
       type: 'POST',
       body: {

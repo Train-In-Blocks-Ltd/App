@@ -1,6 +1,10 @@
 import { Product, State } from '../state'
 
 export default {
+  SET_PRODUCTS (state: State, data: Array<Product>):void {
+    state.products = data
+  },
+
   /**
    * Pushes a new product to 'products'.
    * @param {Product} payload

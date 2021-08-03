@@ -1,6 +1,10 @@
 import { State, Template } from '../state'
 
 export default {
+  SET_TEMPLATES (state: State, data: Array<Template>):void {
+    state.templates = data
+  },
+
   /**
    * Pushes a new template to 'templates'.
    * @param {Template} payload

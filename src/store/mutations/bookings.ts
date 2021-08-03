@@ -1,6 +1,10 @@
 import { State, Booking } from "../state"
 
 export default {
+  SET_BOOKINGS (state: State, data: Array<Booking>):void {
+    state.bookings = data
+  },
+
   /**
    * Pushes new booking to 'bookings'.
    * @param {Booking} payload

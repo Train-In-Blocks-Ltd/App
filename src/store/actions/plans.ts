@@ -7,7 +7,7 @@ export default {
    * Get all the plans and sessions for a client.
    * @param {number} clientId - The id of the client.
    */
-  async GET_PLANS ({ commit, state }: { commit: Commit, state: State }, clientId: number): Promise<void> {
+  async getPlans ({ commit, state }: { commit: Commit, state: State }, clientId: number): Promise<void> {
     const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === clientId) || false
     if (CLIENT && !CLIENT.plans) {
       const RESPONSE = await axios.get(`https://api.traininblocks.com/v2/plans/${CLIENT.client_id}`)
@@ -23,10 +23,9 @@ export default {
         if (PLANS) {
           PLANS.forEach((plan: Plan) => {
             const SESSION_DATA = RESPONSE.data[1].filter((session: Session) => session.programme_id === plan.id) || false
-            commit('', {
+            commit('SET_SESSIONS', {
               clientId,
               planId: plan.id,
-              attr: 'sessions',
               data: SESSION_DATA.length === 0 ? false : SESSION_DATA
             })
           })
@@ -41,7 +40,7 @@ export default {
    * @param {string} payload.name - The name of the plan.
    * @param {number} payload.duration - The duration of the plan.
    */
-  async CREATE_PLAN ({ commit }: { commit: Commit }, payload: { clientId: number, name: string, duration: number }) {
+  async createPlan ({ commit }: { commit: Commit }, payload: { clientId: number, name: string, duration: number }) {
     const RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans', {
       name: payload.name,
       client_id: payload.clientId,
@@ -63,7 +62,7 @@ export default {
    * Duplicates a plan.
    * @param {object} payload - { clientId, planId, planName, planDuration, blockColor, planNotes, planSessions }
    */
-  async DUPLICATE_PLAN ({ dispatch, commit }: { dispatch: Dispatch, commit: Commit }, payload: { clientId: number, planId: number, planName: string, planDuration: number, blockColor: string, planNotes: string, planSessions: Array<Session> }) {
+  async duplicatePlan ({ dispatch, commit }: { dispatch: Dispatch, commit: Commit }, payload: { clientId: number, planId: number, planName: string, planDuration: number, blockColor: string, planNotes: string, planSessions: Array<Session> }) {
     const NEW_PLAN_RESPONSE = await axios.post('https://api.traininblocks.com/v2/plans', {
       name: `Copy of ${payload.planName}`,
       client_id: payload.clientId,
@@ -108,7 +107,7 @@ export default {
    * Updates a plan.
    * @param {object} payload - { client_id, id (plan), name, duration, notes, block_color }
    */
-  async UPDATE_PLAN ({ commit }: { commit: Commit }, payload: { client_id: number, id: number, name: string, duration: number, notes: string, block_color: string }) {
+  async updatePlan ({ commit }: { commit: Commit }, payload: { client_id: number, id: number, name: string, duration: number, notes: string, block_color: string }) {
     await axios.put('https://api.traininblocks.com/v2/plans', {
       ...payload
     })
@@ -119,7 +118,7 @@ export default {
    * Deletes a plan.
    * @param {object} payload - { clientId, planId }
    */
-  async DELETE_PLAN ({ commit }: { commit: Commit }, payload: { clientId: number, planId: number }) {
+  async deletePlan ({ commit }: { commit: Commit }, payload: { clientId: number, planId: number }) {
     await axios.delete(`https://api.traininblocks.com/v2/plans/${payload.planId}`)
     commit('REMOVE_PLAN', {
       clientId: payload.clientId,

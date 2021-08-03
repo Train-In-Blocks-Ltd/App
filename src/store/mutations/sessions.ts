@@ -1,6 +1,51 @@
 import { State, Session, Client, Plan } from '../state'
 
 export default {
+  SET_SESSIONS (state: State, payload: { clientId: number, planId: number, data: Array<Session> }): void {
+    const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === payload.clientId) || false
+    if (CLIENT) {
+      const PLAN: Plan | boolean = CLIENT.plans.find((plan: Plan) => plan.id === payload.planId) || false
+      if (PLAN) {
+        PLAN.sessions = payload.data
+      }
+    }
+  },
+  SET_SESSION_DATE (state: State, payload: { clientId: number, planId: number, sessionId: number, data: string }): void {
+    const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === payload.clientId) || false
+    if (CLIENT) {
+      const PLAN: Plan | boolean = CLIENT.plans.find((plan: Plan) => plan.id === payload.planId) || false
+      if (PLAN && PLAN.sessions) {
+        const SESSION: Session | boolean = PLAN.sessions.find((session: Session) => session.id === payload.sessionId) || false
+        if (SESSION) {
+          SESSION.date = payload.data
+        }
+      }
+    }
+  },
+  SET_SESSION_WEEK_ID (state: State, payload: { clientId: number, planId: number, sessionId: number, data: number }): void {
+    const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === payload.clientId) || false
+    if (CLIENT) {
+      const PLAN: Plan | boolean = CLIENT.plans.find((plan: Plan) => plan.id === payload.planId) || false
+      if (PLAN && PLAN.sessions) {
+        const SESSION: Session | boolean = PLAN.sessions.find((session: Session) => session.id === payload.sessionId) || false
+        if (SESSION) {
+          SESSION.week_id = payload.data
+        }
+      }
+    }
+  },
+  SET_SESSION_CHECKED (state: State, payload: { clientId: number, planId: number, sessionId: number, data: number }): void {
+    const CLIENT: Client | boolean = state.clients.find((client: Client) => client.client_id === payload.clientId) || false
+    if (CLIENT) {
+      const PLAN: Plan | boolean = CLIENT.plans.find((plan: Plan) => plan.id === payload.planId) || false
+      if (PLAN && PLAN.sessions) {
+        const SESSION: Session | boolean = PLAN.sessions.find((session: Session) => session.id === payload.sessionId) || false
+        if (SESSION) {
+          SESSION.checked = payload.data
+        }
+      }
+    }
+  },
 
   /**
    * Pushes the new session to the plan.
@@ -45,19 +90,6 @@ export default {
       }
     }
   },
-
-  /**
-   * Updates a parameter of a single session.
-   * @param {} payload - { clientId, planId, sessionId, attr, data }
-   */
-  /*
-  updateSessionAttr (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-    const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-    const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
-    SESSION[payload.attr] = payload.data
-  },
-  */
 
   /**
    * Removes sessions from a plan.

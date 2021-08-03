@@ -309,7 +309,7 @@ export default {
         const self = this
         READER.addEventListener('load', () => {
           this.$axios.post('/.netlify/functions/upload', { file: READER.result.toString() }).then((response) => {
-            self.$store.dispatch('updateClientSideDetails', {
+            self.$store.dispatch('updateDetailsClientSide', {
               id: this.claims.client_id_db,
               name: this.clientUser.name,
               number: this.clientUser.number,
@@ -347,7 +347,7 @@ export default {
       try {
         this.$store.commit('SET_SILENT_LOADING', true)
         this.$store.commit('SET_DONT_LEAVE', true)
-        this.$store.dispatch('updateClientSideDetails', {
+        this.$store.dispatch('updateDetailsClientSide', {
           id: this.claims.client_id_db,
           name: this.clientUser.name,
           number: this.clientUser.number,

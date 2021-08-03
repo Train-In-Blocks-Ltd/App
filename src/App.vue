@@ -880,8 +880,8 @@ export default {
     async getClientSideData () {
       if (!this.clientUserLoaded) {
         try {
-          await this.$store.dispatch('getClientSideInfo')
-          await this.$store.dispatch('getClientSidePlans')
+          await this.$store.dispatch('getInfoClientSide')
+          await this.$store.dispatch('getPlansClientSide')
           this.$store.commit('SET_CLIENT_USER_LOADED', true)
         } catch (e) {
           this.resolveError(e)
@@ -896,7 +896,7 @@ export default {
      */
     async updateClientSideSession (planId, sessionId) {
       try {
-        await this.$store.dispatch('updateClientSideSession', {
+        await this.$store.dispatch('updateSessionsClientSide', {
           planId,
           sessionId
         })

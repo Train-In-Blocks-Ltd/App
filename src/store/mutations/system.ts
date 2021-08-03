@@ -41,12 +41,6 @@ export default {
   SET_INSTANCE_READY (state: State, data: boolean): void {
     state.instanceReady = data
   },
-  SET_CLIENT_USER_LOADED (state: State, data: boolean): void {
-    state.clientUserLoaded = data
-  },
-  SET_CLIENT_DETAILS (state: State, data: Client): void {
-    state.clientDetails = data
-  },
   SET_IS_STRIPE_CONNECTED (state: State, data: boolean): void {
     state.isStripeConnected = data
   },
@@ -80,6 +74,17 @@ export default {
   SET_PORTFOLIO_NOTES (state: State, data: string): void {
     state.portfolio.notes = data
   },
+  SET_CLIENTS (state: State, data: Array<Client>):void {
+    state.clients = data
+  },
+  SET_ARCHIVE_CLIENTS (state: State, data: Array<Client>):void {
+    state.archive.clients = data
+  },
+  SET_CLIENT_DETAILS (state: State, data: Client): void {
+    state.clientDetails = data
+  },
+
+
 
   /**
    * Pushes a new client to 'clients'.
@@ -99,22 +104,6 @@ export default {
       ...payload
     })
   },
-
-  /**
-   * Updates a client.
-   * @param {object} payload - { clientId, attr, data }
-   */
-  /*
-  updateClient (state: State, payload: { clientId: number, attr: string, data: any }) {
-    const CLIENTS: Array<Client> = state.clients || []
-    if (CLIENTS) {
-      const CLIENT: Client | boolean = CLIENTS.find((client: Client) => client.client_id === payload.clientId) || false
-      if (CLIENT) {
-        CLIENT[payload.attr] = payload.data
-      }
-    }
-  },
-  */
 
   /**
    * Pushes a client to 'archive' and splices them from 'clients'.
