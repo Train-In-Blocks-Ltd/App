@@ -30,7 +30,7 @@
 export default {
   data () {
     return {
-      timeout: 5
+      timeout: 8
     }
   },
   async created () {
@@ -52,8 +52,8 @@ export default {
     )
     setTimeout(
       function () {
-        self.router.push('clientUser')
-      }, 5000
+        self.$router.push('/clientUser')
+      }, 8000
     )
   }
 }
