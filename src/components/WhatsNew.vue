@@ -1,25 +1,21 @@
-<style scoped>
-img {
-  width: 100%;
-  border-radius: 10px;
-  margin: 1rem 0
-}
+<style lang="scss" scoped>
 .update_wrapper {
   display: grid;
-  grid-gap: 4rem
-}
-.update_item {
-  background-color: var(--fore);
-  border-radius: 10px;
-  padding: 2rem;
-  box-shadow: var(--low_shadow)
+  grid-gap: 4rem;
+  .update_item {
+    background-color: var(--fore);
+    border: 3px solid var(--base);
+    border-radius: 10px;
+    padding: 2rem;
+    img {
+      width: 100%;
+      border-radius: 10px;
+      margin: 1rem 0
+    }
+  }
 }
 
-/* Responsive */
 @media (max-width: 576px) {
-  button {
-    width: 100%
-  }
   .update_item {
     padding: .8rem
   }
@@ -28,12 +24,18 @@ img {
 
 <template>
   <div class="bottom_margin">
-    <h1>
-      What's new in {{ $parent.$parent.versionName }} {{ $parent.$parent.versionBuild }}?
-    </h1>
-    <h2 class="grey">
-      Dark mode, new styles, and bug fixes
+    <inline-svg
+      class="close_icon cursor"
+      :src="require('../assets/svg/close.svg')"
+      aria-label="Close"
+      @click="$parent.isWhatsNewOpen = false, willBodyScroll(true), updateVersion()"
+    />
+    <h2>
+      {{ versionName }} {{ versionBuild }}
     </h2>
+    <p class="text--small grey">
+      Buffed editor, style, statistics, and predictions
+    </p>
     <br><br>
     <div class="update_wrapper">
       <div
@@ -41,39 +43,97 @@ img {
         :key="`item_${index}`"
         class="update_item"
       >
-        <img v-if="item.img" :src="require(`../assets/whats-new/${item.img}`)" :alt="item.title">
-        <h2>
+        <img
+          v-if="item.img"
+          :src="require(`../assets/whats-new/${item.img}`)"
+          :alt="item.title"
+          loading="lazy"
+        >
+        <h3>
           {{ item.title }}
-        </h2>
+        </h3>
         <p class="grey">
           {{ item.desc }}
         </p>
       </div>
     </div>
-    <br>
-    <button class="red_button" @click="$parent.isWhatsNewOpen = false, will_body_scroll(true), update_version()">
-      Close
-    </button>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
       content: [
-        { title: 'Dark mode', desc: 'Working at night? Let\'s take some strain off the eyes. You can turn on dark mode through your Account page.', img: 'dark-mode.png' },
-        { title: 'New editor style', desc: 'We\'ve made a minor change to how the editor looks but it still works in a similar way. Simply click on the text to start editing.', img: 'editor-style.png' },
-        { title: 'Plan overview', desc: 'You can now organise your plans in the order that they will occur. Much like a periodised model, you can see how the number of microcycles and their colour-code in this general overview.', img: 'new-plans.png' },
-        { title: 'Printing sessions', desc: 'Want a physical copy or a PDF? You can simply select all the sessions that you wish to export and print from the menu.', img: 'print.png' },
-        { title: 'Client-side improvements', desc: 'Your clients will now enjoy a smoother and faster interface. With access to the portfolio, they can get additional information about your services such as transformations, payments and plans.', img: false }
+        {
+          title: 'Stripe payments',
+          desc: 'Yes. You now have the ability to connect your Stripe account and take payments from your clients.',
+          img: 'payments.png'
+        },
+        {
+          title: 'Bookings',
+          desc: 'On your client\'s profile page, you can now schedule bookings wherever or whenever they may be. Your client will also have the ability to request bookings, you will be able to accept or reject their request.',
+          img: 'bookings.png'
+        },
+        {
+          title: 'Client profile',
+          desc: 'From their home page, they can add a profile picture, change their detials, and request bookings as mentioned previously.',
+          img: 'profile.png'
+        },
+        {
+          title: 'Calendar links',
+          desc: 'You can now obtain a link for your current bookings to subscribe to using your calendar of choice (Google, Apple, Microsoft, etc).',
+          img: 'calendar.png'
+        },
+        {
+          title: 'Referral discounts',
+          desc: 'We like to reward your loyalty. Get others on-board and we will give your permanent discounts on your subscription. The person you refer will also recieve a discount as an incentive.',
+          img: 'referral.png'
+        },
+        {
+          title: 'Stats table',
+          desc: 'Get more information from each session and programme. We\'ve added a table which summarises the data shown in the graph with the date and the session it occured at.',
+          img: 'stats.png'
+        },
+        {
+          title: 'Updated UI',
+          desc: 'Of course, a new update means better user interface and experience. We\'ve taken the time to listen to our user\'s feedback and have made some changes accordingly.',
+          img: 'new-design.png'
+        },
+        {
+          title: 'Offline support',
+          desc: 'If you lose connection whilst managing your clients and programmes, our app will now attempt to retry and give you access to some functions offline.',
+          img: ''
+        },
+        {
+          title: 'Faster and smaller',
+          desc: 'A lot of \'under-the-hood\' changes made which improved the speed and size of the app.',
+          img: ''
+        }
       ]
     }
   },
+  computed: mapState([
+    'versionName',
+    'versionBuild'
+  ]),
   methods: {
-    update_version () {
-      localStorage.setItem('versionBuild', this.$parent.$parent.versionBuild)
-      this.$parent.$parent.newBuild = false
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Updates the version stored in local storage.
+     */
+    updateVersion () {
+      localStorage.setItem('versionBuild', this.versionBuild)
+      this.$store.commit('setData', {
+        attr: 'newBuild',
+        data: false
+      })
     }
   }
 }

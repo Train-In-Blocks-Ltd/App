@@ -1,37 +1,37 @@
-<style>
-#okta-sign-in {
-  outline: none;
-  margin-left: 0
-}
-#okta-signin-submit {
-  outline: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  position: absolute;
-  user-select: none;
-  cursor: pointer;
-  border-radius: 5px;
-  opacity: 1;
-  text-transform: capitalize;
-  border: none;
-  padding: .6rem 1.6rem;
-  font-size: .8rem;
-  color: white;
-  background-color: var(--base);
-  margin: .6rem 0;
-  transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-}
-#okta-signin-submit:hover {
-  opacity: var(--light_opacity)
-}
-#okta-signin-submit:active {
-  transform: var(--active_state)
-}
-#okta-signin-submit:focus {
-  box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
-}
+<style lang="scss">
 #okta-signin-container {
-  position: relative
+  position: relative;
+  #okta-sign-in {
+    outline: none;
+    margin-left: 0;
+    #okta-signin-submit {
+      outline: none;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      position: absolute;
+      user-select: none;
+      cursor: pointer;
+      border-radius: 5px;
+      opacity: 1;
+      text-transform: capitalize;
+      border: none;
+      padding: .6rem 1.6rem;
+      font-size: .8rem;
+      color: white;
+      background-color: var(--base);
+      margin: .6rem 0;
+      transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
+      &:hover {
+        opacity: var(--light_opacity)
+      }
+      &:active {
+        transform: var(--active_state)
+      }
+      &:focus {
+        box-shadow: 0 0 0 4px rgba(76, 91, 106, .5)
+      }
+    }
+  }
 }
 .o-form-button-bar {
   margin-top: 1.25rem
@@ -70,18 +70,19 @@
   grid-gap: 1.5rem;
   margin: 2rem 0
 }
-.custom-checkbox label {
-  padding-left: 4px
-}
-.custom-checkbox:after {
-  content: 'Please remember to manually logout if this is a shared computer.';
-  display: block;
-  margin-top: .5rem;
-  font-size: .75rem;
-  padding-left: calc(4px + 13px + 4px + 3px)
+.custom-checkbox {
+  label {
+    padding-left: 4px
+  }
+  &:after {
+    content: 'Please remember to manually logout if this is a shared computer.';
+    display: block;
+    margin-top: .5rem;
+    font-size: .75rem;
+    padding-left: calc(4px + 13px + 4px + 3px)
+  }
 }
 
-/* Responsive */
 @media (max-width: 576px) {
   .okta-form-label {
     font-size: 1.5rem
@@ -95,48 +96,42 @@
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
 a {
   font-weight: bold;
   text-decoration: none;
   color: var(--base);
-  transition: var(--transition_standard)
-}
-a:hover {
-  opacity: var(--light_opacity)
+  transition: var(--transition_standard);
+  &:hover {
+    opacity: var(--light_opacity)
+  }
 }
 #login {
   text-align: left;
   margin: auto;
   padding: 6rem 4rem;
-  width: 550px
-}
-.other_options {
-  display: grid;
-  grid-gap: 1rem;
-  margin-top: 4rem
-}
-.cookies {
-  font-size: .75rem;
-  margin: 2rem 0
-}
-.error {
-  color: red
-}
-.signup {
-  margin-left: calc(20px + 60px + 20px);
-  margin-top: -.6rem;
-  margin-bottom: .6rem
-}
-.recovery {
-  margin-top: 4rem;
-  margin-bottom: 1rem
-}
-.recover_password {
-  margin: .8rem 0
+  width: 550px;
+  .other_options {
+    display: grid;
+    grid-gap: 1rem;
+    margin-top: 4rem;
+    .error {
+      color: red
+    }
+  }
+  .cookies {
+    font-size: .75rem;
+    margin: 2rem 0
+  }
+  .recovery {
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+    .recover_password {
+      margin: .8rem 0
+    }
+  }
 }
 
-/* Responsive */
 @media (max-width: 576px) {
   a:hover {
     opacity: 1
@@ -155,7 +150,7 @@ a:hover {
 </style>
 
 <template>
-  <div v-if="!$parent.authenticated" id="login">
+  <div v-if="!authenticated" id="login">
     <splash v-if="!splashed" />
     <inline-svg :src="require('../assets/svg/full-logo.svg')" class="auth-org-logo" />
     <div>
@@ -186,13 +181,15 @@ a:hover {
         Send recovery email
       </button>
     </form>
-    <p v-if="success">
-      {{ success }}
-    </p>
-    <p v-if="error" class="error">
-      {{ error }}
-    </p>
     <div class="other_options">
+      <div>
+        <p v-if="success">
+          {{ success }}
+        </p>
+        <p v-if="error" class="error">
+          {{ error }}
+        </p>
+      </div>
       <p>
         Need an account?
         <a href="https://traininblocks.com/#pricing">
@@ -207,19 +204,21 @@ a:hover {
       </p>
     </div>
     <p class="cookies">
-      By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/cookie-policy">Cookie Policy</a>.
+      By logging in and using this application you agree that essential first-party cookies will be placed on your computer. Non-essential third party cookies may also be placed but can be opted out of from your account page. For more information please read our <a href="https://traininblocks.com/legal/cookies-policy/">Cookie Policy</a>.
     </p>
     <div class="version">
-      <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />
+      <inline-svg :src="require('../assets/svg/andromeda-icon.svg')" aria-label="Andromeda" />
       <p class="text--tiny">
-        <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
+        <b>{{ versionName }} {{ versionBuild }}</b>
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Splash from '../components/Splash'
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../config/prod.env') : require('../../config/dev.env')
 
 export default {
   components: {
@@ -236,6 +235,11 @@ export default {
       success: null
     }
   },
+  computed: mapState([
+    'authenticated',
+    'versionName',
+    'versionBuild'
+  ]),
   async mounted () {
     const scopes = ['openid', 'profile', 'email']
     let OktaSignIn
@@ -243,12 +247,12 @@ export default {
       OktaSignIn = module.default
     })
     this.splashed = true
-    this.will_body_scroll(true)
+    this.willBodyScroll(true)
     this.$nextTick(function () {
       this.widget = new OktaSignIn({
-        baseUrl: process.env.ISSUER,
-        issuer: process.env.ISSUER + '/oauth2/default',
-        clientId: process.env.CLIENT_ID,
+        baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,
+        issuer: CUSTOM_ENV.OKTA.ISSUER + '/oauth2/default',
+        clientId: CUSTOM_ENV.OKTA.CLIENT_ID,
         redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
         i18n: {
           en: {
@@ -264,7 +268,7 @@ export default {
         authParams: {
           pkce: true,
           display: 'page',
-          issuer: process.env.ISSUER + '/oauth2/default',
+          issuer: CUSTOM_ENV.OKTA.ISSUER + '/oauth2/default',
           scopes,
           tokenManager: {
             autoRenew: true,
@@ -278,7 +282,6 @@ export default {
         scopes
       }).then(async (tokens) => {
         self.splashed = false
-        self.will_body_scroll(false)
         await this.$auth.handleLoginRedirect(tokens)
       }).catch((err) => {
         throw err
@@ -297,19 +300,26 @@ export default {
     }
   },
   async beforeDestroy () {
-    await this.$parent.is_authenticated()
+    await this.$parent.isAuthenticated()
     await this.$parent.setup()
-    await this.$parent.clients_f()
-    if (this.$ga && !this.$parent.authenticated) {
+    if (this.$ga && !this.authenticated) {
       this.$ga.event('Auth', 'login')
     }
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // -----------------------------
+    // General
+    // -----------------------------
 
+    /**
+     * Resets the app state.
+     */
     async reset () {
-      this.$parent.dontLeave = true
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       this.error = null
       this.success = null
       if (this.email !== 'demo@traininblocks.com') {
@@ -322,15 +332,15 @@ export default {
           this.open = false
           this.email = null
           this.success = 'An email has been sent successfully.'
-          this.$parent.end_loading()
+          this.$store.dispatch('endLoading')
         } catch (e) {
-          this.$parent.end_loading()
+          this.$store.dispatch('endLoading')
           this.error = 'An error occurred. Are you sure your email is correct?'
           console.error(e)
         }
       } else {
-        this.$parent.end_loading()
-        this.error = 'An error occurred.'
+        this.$store.dispatch('endLoading')
+        this.error = 'You cannot reset the password for the demo account'
       }
     }
   }

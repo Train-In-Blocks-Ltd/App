@@ -1,98 +1,60 @@
-<style>
-  /* Client Notes */
-  #client_notes {
-    margin: 4rem 0
-  }
-  .a--client_notes {
-    color: var(--base);
-    font-size: .8rem;
-    margin-left: 1rem;
-    align-self: center;
-    transition: var(--transition_standard)
-  }
-  .a--client_notes:hover {
-    opacity: var(--light_opacity)
-  }
-  .client_notes-msg {
-    margin: 1rem 0
-  }
-
-  /* Periodise Grid */
-  .periodise_grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 1rem;
-    margin-top: 2rem;
-    margin-bottom: 4rem
-  }
-
-  /* Add plan Form */
-  .button--new_plan {
-    margin: 1rem 0 2rem 0
-  }
-  .add_plan_link {
-    padding-top: 1rem
-  }
-  .add_plan_link h3 {
-    margin-top: 0
-  }
-  .add_plan {
-    grid-gap: 1rem
-  }
-  .add_plan label {
+<style lang="scss">
+#client_notes {
+  margin: 4rem 0
+}
+.add_plan {
+  label {
     display: grid;
     grid-gap: .5rem
   }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    .periodise_grid {
-      grid-template-columns: 1fr 1fr
+}
+.plans_section {
+  margin-top: 4rem;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    button {
+      margin: auto 0
     }
   }
-  @media (max-width: 567px) {
-    .periodise_grid {
-      grid-template-columns: 1fr
-    }
-  }
+}
 </style>
+
 <template>
   <div>
     <div v-if="isNewPlanOpen" class="tab_overlay_content fadeIn delay fill_mode_both">
       <new-plan />
     </div>
-    <div
-      v-if="!isNewPlanOpen"
-      :class="{ icon_open_middle: $parent.keepLoaded }"
-      class="tab_option tab_option_small"
-      aria-label="New Plan"
-      @click="isNewPlanOpen = true, will_body_scroll(false)"
-    >
-      <inline-svg class="no_fill" :src="require('../../assets/svg/new-plan.svg')" aria-label="New Plan" />
-      <p class="text">
-        New Plan
-      </p>
-    </div>
     <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
-    <div id="client_notes" :class="{ editorActive: editingClientNotes }" class="editor_object">
-      <h2>
+    <div id="client_notes" class="editor_object_standard">
+      <h3>
         Client Information
-      </h2>
+      </h3>
       <rich-editor
-        :html-injection.sync="$parent.$parent.client_details.notes"
+        v-model="clientDetails.notes"
         :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
         @on-edit-change="resolve_client_info_editor"
       />
     </div>
-    <div>
-      <h1>
-        Plans
-      </h1>
-      <skeleton v-if="$parent.$parent.loading" :type="'plan'" class="fadeIn" />
+    <bookings :client-id="clientDetails.client_id" />
+    <div class="plans_section">
+      <div class="header">
+        <h2>
+          Plans
+        </h2>
+        <button @click="isNewPlanOpen = true, willBodyScroll(false)">
+          New Plan
+        </button>
+      </div>
+      <skeleton
+        v-if="loading"
+        :type="'plan'"
+        class="fadeIn"
+      />
       <periodise
-        v-else-if="!noPlans"
+        v-else-if="clientDetails.plans.length !== 0"
         :is-trainer="true"
-        :plans.sync="$parent.$parent.client_details.plans"
+        :plans.sync="clientDetails.plans"
       />
       <p
         v-else
@@ -105,29 +67,30 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const NewPlan = () => import(/* webpackChunkName: "components.newplan", webpackPrefetch: true  */ '../../components/NewPlan')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPreload: true  */ '../../components/Periodise')
+const Bookings = () => import(/* webpackChunkName: "components.bookings", webpackPreload: true  */ '../../components/Bookings')
 
 export default {
   components: {
     NewPlan,
     RichEditor,
-    Periodise
+    Periodise,
+    Bookings
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.$parent.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
-  props: {
-    otherData: [Array, Boolean]
-  },
   data () {
     return {
-
-      noPlans: false,
 
       // EDIT
 
@@ -141,32 +104,47 @@ export default {
       persistResponse: ''
     }
   },
-  watch: {
-    otherData () {
-      this.noPlans = this.otherData === false
-    }
-  },
+  computed: mapState([
+    'loading',
+    'dontLeave',
+    'clients',
+    'clientDetails'
+  ]),
   created () {
-    this.will_body_scroll(true)
-    this.$parent.check_client()
-    this.noPlans = this.otherData === false
+    this.willBodyScroll(true)
+    this.$parent.checkClient()
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Resolves the client information editor.
+     * @param {string} state - The returned state from the editor.
+     */
     resolve_client_info_editor (state) {
       switch (state) {
         case 'edit':
-          this.$parent.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.editingClientNotes = true
-          this.tempEditorStore = this.$parent.$parent.client_details.notes
+          this.tempEditorStore = this.clientDetails.notes
           break
         case 'save':
           this.editingClientNotes = false
-          this.$parent.$parent.update_client()
+          this.$parent.updateClient(this.clientDetails)
           break
         case 'cancel':
-          this.$parent.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.editingClientNotes = false
-          this.$parent.$parent.client_details.notes = this.tempEditorStore
+          this.clientDetails.notes = this.tempEditorStore
           break
       }
     }

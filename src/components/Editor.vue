@@ -1,181 +1,178 @@
-<style>
-/* Editor object */
-.editor_object {
+<style lang="scss">
+
+/* Editor objects */
+.editor_object_standard {
+  border: 3px solid var(--base);
+  border-radius: 10px;
+  background: var(--back);
+  transition: .6s border cubic-bezier(.165, .84, .44, 1);
+  h3 {
+    position: relative;
+    left: 2rem;
+    padding: .6rem;
+    width: fit-content;
+    background: var(--base);
+    color: var(--fore);
+    border-radius: 0 0 10px 10px
+  }
+  #wrapper--rich_editor {
+    background: var(--back);
+    margin: 2rem
+  }
+
+  /* State */
+  &.is-active {
+    opacity: .4
+  }
+}
+.editor_object_complex {
   display: grid;
   padding: 2rem;
-  border: 2px solid transparent;
+  background: var(--back);
+  border: 2px solid var(--base);
   border-radius: 10px;
-  background-color: var(--fore);
-  box-shadow: var(--low_shadow);
-  transition: .6s border cubic-bezier(.165, .84, .44, 1)
-}
-.editorActive {
-  /* stylelint-disable-next-line */
-  border: 2px solid var(--base_faint) !important
+  transition: .6s border cubic-bezier(.165, .84, .44, 1);
+
+  /* State */
+  &.is-active {
+    opacity: .4
+  }
 }
 
 /* Editor */
-div.ProseMirror {
-  outline: none
+@mixin todo-list {
+  ul[data-type='taskList'] {
+    list-style: none;
+    padding: 0;
+    li {
+      display: flex;
+      align-items: center;
+      label {
+        flex: 0 0 auto;
+        margin-right: .5rem
+      }
+    }
+  }
 }
-div#rich_editor > div[contenteditable],
-div#rich_show_content > :is(div, p) {
-  outline: none;
-  -moz-appearance: none;
-  -webkit-appearance: none
-}
-div#rich_show_content,
-.placeholder {
+@mixin editor-main {
   cursor: pointer;
   padding: 1rem;
-  border: 1px solid var(--base_faint);
+  border: 2px solid var(--base_faint);
   border-radius: 10px;
   margin-top: 1rem;
-  transition: .6s opacity cubic-bezier(.165, .84, .44, 1), .6s border cubic-bezier(.165, .84, .44, 1)
+  transition: .6s opacity cubic-bezier(.165, .84, .44, 1), .6s border cubic-bezier(.165, .84, .44, 1);
+  &:hover {
+    border: 2px solid var(--base_light);
+    opacity: var(--light_opacity)
+  }
 }
-div#rich_show_content:hover,
-.placeholder:hover {
-  border: 1px solid var(--base_light);
-  opacity: var(--light_opacity)
-}
-div#rich_editor > div[contenteditable] > :is(div, p),
-div#rich_show_content > :is(div, p) {
-  margin: .6rem 0
-}
-div#rich_editor > div[contenteditable] img,
-div#rich_show_content img {
-  cursor: pointer;
-  border-radius: 10px;
-  max-width: 80%;
-  margin: 1rem 0;
-  transition: .4s all cubic-bezier(.165, .84, .44, 1)
-}
-div#rich_editor > div[contenteditable] img:hover {
-  opacity: var(--light_opacity)
-}
-div#rich_editor > div[contenteditable] a,
-div#rich_show_content a {
-  color: var(--link)
-}
-:is(div#rich_editor, div#rich_show_content) iframe {
-  display: none
-}
+.placeholder {
+  @include editor-main;
 
-/* Menububble */
-.menububble {
-  position: absolute;
-  display: flex;
-  z-index: 20;
-  background: var(--base);
-  border-radius: 5px;
-  padding: .3rem;
-  margin-bottom: .5rem;
-  transform: translateX(-50%);
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity .2s, visibility .2s
+  outline: none
 }
-.menububble.is-active {
-  opacity: 1;
-  visibility: visible
-}
-.menububble__form {
-  display: flex;
-  align-items: center
-}
-.menububble__input {
-  font: inherit;
-  border: none;
-  background: transparent;
-  /* stylelint-disable-next-line */
-  color: var(--fore) !important
-}
-.menububble__button {
-  display: inline-flex;
-  background: transparent;
-  border: 0;
-  color: var(--fore);
-  padding: .2rem .5rem;
-  margin-right: .2rem;
-  border-radius: 3px;
-  cursor: pointer
-}
-.menububble__button svg {
-  height: 16px;
-  width: 16px;
-  margin-left: .4rem
-}
-.menububble__button svg path {
-  fill: var(--fore)
-}
-.menububble__button:last-child {
-  margin-right: 0
-}
-.menububble__button:hover {
-  background-color: rgba(var(--fore), .1)
-}
-.menububble__button.is-active {
-  background-color: rgba(var(--fore), .2)
-}
+div#rich_show_content {
+  @include todo-list;
+  @include editor-main;
 
-/* Todo List */
-.preview_html span.todo-checkbox {
-  margin-top: .5rem
+  display: grid;
+  grid-template-columns: 1fr 24px;
+  > div:first-child > :is(div, p) {
+    margin: .6rem 0;
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none
+  }
+  iframe {
+    display: none
+  }
+  img {
+    cursor: pointer;
+    border-radius: 10px;
+    max-width: 40%;
+    margin: 1rem 0;
+    transition: .4s all cubic-bezier(.165, .84, .44, 1)
+  }
+  a {
+    color: var(--link)
+  }
+  .ProseMirror {
+    outline: none
+  }
 }
-ul[data-type='todo_list'] {
-  padding-left: 0
+button.menu_button:focus {
+  box-shadow: none
 }
-li[data-type='todo_item'] {
-  display: flex;
-  flex-direction: row
+div#rich_editor {
+  @include todo-list;
+  div[contenteditable] {
+    outline: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    > :is(div, p) {
+      margin: .6rem 0
+    }
+    iframe {
+      display: none
+    }
+    img {
+      cursor: pointer;
+      border-radius: 10px;
+      max-width: 40%;
+      margin: 1rem 0;
+      transition: .4s all cubic-bezier(.165, .84, .44, 1);
+      &:hover {
+        opacity: var(--light_opacity)
+      }
+    }
+    a {
+      color: var(--link)
+    }
+  }
 }
-.todo-checkbox {
-  border: 2px solid var(--base);
-  height: .9rem;
-  width: .9rem;
-  box-sizing: border-box;
-  margin-right: 10px;
-  margin-top: .3rem;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: pointer;
-  border-radius: .2rem;
-  background-color: transparent;
-  transition: .4s background
-}
-.todo-content {
-  flex: 1
-}
-.todo-content > p:last-of-type {
-  margin-bottom: 0
-}
-.todo-content > ul[data-type='todo_list'] {
-  margin: .5rem 0
-}
-li[data-done='true'] > .todo-content > p {
-  text-decoration: line-through
-}
-li[data-done='true'] > .todo-checkbox {
-  background-color: var(--base)
-}
-li[data-done='false'] {
-  text-decoration: none
-}
-
-/* State */
-.is-active {
-  opacity: .4
+svg.edit_icon {
+  &.placeholder_icon {
+    float: right
+  }
+  path {
+    stroke: var(--base_light);
+    transition: var(--transition_standard)
+  }
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  div#rich_editor > div[contenteditable] img,
+  div#rich_show_content img {
+    max-width: 100%
+  }
+}
 @media (max-width: 576px) {
-  .editor_object {
-    padding: .8rem
+  .editor_object_standard {
+    h3 {
+      left: 1rem
+    }
+    #wrapper--rich_editor {
+      margin: 1rem
+    }
+  }
+  .editor_object_complex {
+    padding: 1rem
+  }
+}
+@media (max-width: 768px) {
+  div#rich_show_content :is(img, iframe) {
+    max-width: 100%
   }
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
+
+// -----------------------------
+// Menu and placeholder
+// -----------------------------
+
 /* Attr */
 [data-placeholder]:empty:before {
   content: attr(data-placeholder);
@@ -183,65 +180,95 @@ li[data-done='false'] {
   font-style: italic
 }
 
-/* Tools */
+/* Outer container of menu */
 .menu_bar_wrapper {
   z-index: 1;
   position: sticky;
   top: 0;
   padding-top: 1rem;
-  background-color: var(--fore)
-}
-#menu_bar {
-  background-color: var(--fore);
-  border: 1px solid var(--base_faint);
-  border-radius: 10px 10px 0 0;
-  padding: 0 1rem;
-  transition: var(--transition_standard)
-}
-#menu_bar button {
-  padding: 0;
-  margin: .8rem 1rem .6rem 0;
-  color: var(--base);
-  background-color: transparent
-}
-#menu_bar svg {
-  height: 20px;
-  width: 20px
+  background-color: var(--back);
+
+  /* Inner container of menu */
+  #menu_bar {
+    border: 2px solid var(--base_faint);
+    border-radius: 10px 10px 0 0;
+    padding: 0 1rem;
+    transition: var(--transition_standard);
+    &.editorFocused {
+      border: 2px solid var(--base)
+    }
+    button {
+      padding: 0;
+      margin: .8rem 1rem .6rem 0;
+      color: var(--base);
+      background-color: transparent
+    }
+    svg {
+      height: 20px;
+      width: 20px
+    }
+  }
 }
 
-/* Pop-ups */
-.template_menu, .image_menu {
-  position: sticky;
-  top: calc(1rem + 44.39px);
-  background-color: var(--fore);
-  z-index: 1;
-  border-left: 1px solid var(--base_faint);
-  border-right: 1px solid var(--base_faint);
-  border-bottom: 1px solid var(--base_faint);
-  padding: .8rem;
+// -----------------------------
+// Templates
+// -----------------------------
+.template_menu {
   display: grid;
   grid-gap: 1rem;
-  max-height: 250px;
-  overflow-y: auto
-}
-.template_menu > h2 {
-  margin-top: 1rem
-}
-.template_item {
-  width: fit-content
-}
-#templates_search_none {
-  display: none
+  #templates_search_none {
+    display: none
+  }
+  .close_icon {
+    display: flex;
+    justify-self: end
+  }
+  h3 {
+    margin-top: 1rem
+  }
+  .templates_container {
+    display: grid;
+    grid-gap: 1rem;
+    .template_item {
+      display: grid;
+      grid-template-columns: .5fr 1fr;
+      grid-gap: 2rem;
+      button {
+        width: fit-content
+      }
+      svg {
+        margin: auto 0 auto .6rem
+      }
+      .preview_html {
+        max-height: 400px;
+        font-size: .8rem;
+        padding: 1rem;
+        background-color: var(--fore);
+        border: 2px solid var(--base);
+        border-radius: 5px;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+          width: 3px
+        }
+      }
+    }
+  }
 }
 
-/* Editor */
+// -----------------------------
+// Editor
+// -----------------------------
 div#rich_editor {
   padding: 1rem;
   outline-width: 0;
-  border: 1px solid var(--base_faint);
+  border: 2px solid var(--base_faint);
   border-top: none;
   border-radius: 0 0 10px 10px;
-  transition: var(--transition_standard)
+  transition: var(--transition_standard);
+  &.editorFocused {
+    border: 2px solid var(--base);
+    border-top: none
+  }
 }
 .bottom_bar {
   display: grid;
@@ -251,232 +278,227 @@ div#rich_editor {
   z-index: 1
 }
 
-/* Caret In Editor */
-#menu_bar.editorFocused {
-  border: 1px solid var(--base)
-}
-div#rich_editor.editorFocused {
-  border: 1px solid var(--base);
-  border-top: none
-}
-
 /* Responsive */
-@media (max-width: 768px) {
-  div#rich_show_content img,
-  div#rich_show_content iframe {
-    max-width: 100%
+@media (max-width: 992px) {
+  .template_menu {
+    .templates_container {
+      grid-gap: 3rem;
+      .template_item {
+        display: flex;
+        flex-direction: column-reverse;
+        grid-gap: .6rem;
+        button {
+          width: 100%
+        }
+      }
+    }
   }
 }
 </style>
 
 <template>
   <div id="wrapper--rich_editor">
+    <div :class="{ opened_sections: showAddTemplate }" class="section_overlay" />
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+      <input-pop-up ref="input_pop_up" />
+    </transition>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <response-pop-up ref="response_pop_up" />
     </transition>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <global-overlay ref="overlay" />
     </transition>
-    <preview-modal
-      v-if="previewHTML !== null"
-      :desc="previewDesc"
-      :html="previewHTML"
-      :show-media="true"
-      :show-brackets="true"
-      :allow-select="true"
-      @close="previewDesc = null, previewHTML = null"
-    />
-    <div
-      v-if="!editState && !test_empty_html(htmlInjection)"
-      id="rich_show_content"
-      class="fadeIn"
-      @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
-      v-html="update_html(htmlInjection, true)"
-    />
-    <div v-else-if="editState" class="fadeIn">
-      <div class="menu_bar_wrapper">
-        <editor-menu-bar
-          v-slot="{ commands, isActive }"
-          :editor="editor"
+    <div v-if="showAddTemplate" class="tab_overlay_content fadeIn delay fill_mode_both small_border_radius">
+      <div class="template_menu">
+        <inline-svg
+          class="close_icon cursor"
+          :src="require('../assets/svg/close.svg')"
+          aria-label="Close"
+          @click="showAddTemplate = false, search = ''"
+        />
+        <input
+          v-if="dataForTemplates.length !== 0"
+          v-model="search"
+          type="search"
+          aria-label="Search templates"
+          rel="search"
+          placeholder="Search templates"
+          @input="isSearchEmpty()"
         >
-          <div>
-            <div id="menu_bar" :class="{ editorFocused: caretInEditor }">
-              <button
-                class="fadeIn"
-                :class="{ 'is-active': isActive.bold() }"
-                @click="commands.bold"
-              >
-                <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                :class="{ 'is-active': isActive.italic() }"
-                @click="commands.italic"
-              >
-                <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                :class="{ 'is-active': isActive.underline() }"
-                @click="commands.underline"
-              >
-                <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                :class="{ 'is-active': isActive.ordered_list() }"
-                @click="commands.ordered_list"
-              >
-                <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                :class="{ 'is-active': isActive.bullet_list() }"
-                @click="commands.bullet_list"
-              >
-                <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                :class="{ 'is-active': isActive.todo_list() }"
-                @click="commands.todo_list"
-              >
-                <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                @click="showAddImage = !showAddImage, showAddTemplate = false"
-              >
-                <inline-svg :src="require('../assets/svg/editor/image.svg')" />
-              </button>
-              <button
-                v-if="dataForTemplates !== undefined && dataForTemplates !== null"
-                class="fadeIn"
-                @click="showAddTemplate = !showAddTemplate, showAddImage = false, $parent.go_to_event(itemId, weekId)"
-              >
-                <inline-svg :src="require('../assets/svg/editor/template.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                @click="commands.undo"
-              >
-                <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
-              </button>
-              <button
-                class="fadeIn"
-                @click="commands.redo"
-              >
-                <inline-svg :src="require('../assets/svg/editor/redo.svg')" />
-              </button>
-            </div>
-            <!-- IMAGE -->
-            <div v-if="showAddImage" class="image_menu">
-              <input id="img_uploader" type="file" accept=".png, .jpeg, .jpg, .webp, .gif" @change="add_img(commands.image)">
-            </div>
-          </div>
-        </editor-menu-bar>
-        <!-- TEMPLATE -->
-        <div v-if="showAddTemplate" class="template_menu small_border_radius">
-          <input
-            v-if="dataForTemplates.length !== 0"
-            v-model="search"
-            type="search"
-            aria-label="Search templates"
-            rel="search"
-            placeholder="Search templates"
-            @input="isSearchEmpty()"
-          >
-          <h2 v-show="search === ''">
-            System templates
-          </h2>
-          <button
+        <h3 v-show="search === ''">
+          System templates
+        </h3>
+        <div class="templates_container">
+          <div
             v-for="(example, exampleIndex) in exampleTemplates"
             v-show="search === ''"
             :key="`example_${exampleIndex}`"
             class="template_item"
-            @click="previewDesc = example.name, previewHTML = example.html"
           >
-            {{ example.name }}
-          </button>
-          <h2>
-            Your templates
-          </h2>
-          <button
+            <button @click="editor.commands.insertContent(example.html), showAddTemplate = false">
+              {{ example.name }}
+            </button>
+            <div class="preview_html" v-html="example.html" />
+          </div>
+        </div>
+        <h3>
+          Your templates
+        </h3>
+        <div class="templates_container">
+          <div
             v-for="(item, index) in dataForTemplates"
             v-show="((!search) || ((item.name).toLowerCase()).startsWith(search.toLowerCase()))"
             :key="'template-' + index"
             class="template_item"
-            @click="previewDesc = item.name, previewHTML = item.template"
           >
-            {{ item.name }}
-          </button>
-          <p id="templates_search_none">
-            No templates found
-          </p><br>
-        </div>
-        <editor-menu-bubble
-          v-slot="{ commands, isActive, getMarkAttrs, menu }"
-          class="menububble fadeIn"
-          :editor="editor"
-          @hide="hideLinkMenu"
-        >
-          <div
-            class="menububble"
-            :class="{ 'is-active': menu.isActive }"
-            :style="`left: ${menu.left}px; bottom: ${menu.bottom - (isMobile ? 80 : 0)}px;`"
-          >
-            <form
-              v-if="linkMenuIsActive"
-              class="menububble__form"
-              @submit.prevent="setLinkUrl(commands.link, linkUrl)"
-            >
-              <input
-                ref="linkInput"
-                v-model="linkUrl"
-                class="menububble__input"
-                type="text"
-                placeholder="https://"
-                @keydown.esc="hideLinkMenu"
-              >
-              <button
-                class="menububble__button"
-                type="button"
-                @click="setLinkUrl(commands.link, null)"
-              >
-                <inline-svg :src="require('../assets/svg/editor/remove.svg')" />
-              </button>
-            </form>
-            <template v-else>
-              <button
-                class="menububble__button"
-                :class="{ 'is-active': isActive.link() }"
-                @click="showLinkMenu(getMarkAttrs('link'))"
-              >
-                <span>{{ isActive.link() ? 'Update Link' : 'Add Link' }}</span>
-                <inline-svg :src="require('../assets/svg/editor/link.svg')" />
-              </button>
-            </template>
+            <button @click="editor.commands.insertContent(item.template), showAddTemplate = false">
+              {{ item.name }}
+            </button>
+            <div class="preview_html" v-html="item.template" />
           </div>
-        </editor-menu-bubble>
+        </div>
+        <p id="templates_search_none">
+          No templates found
+        </p>
       </div>
-      <editor-content
-        id="rich_editor"
-        :editor="editor"
-        :class="{ editorFocused: caretInEditor }"
+    </div>
+    <div
+      v-if="!editState && !test_empty_html(value)"
+      id="rich_show_content"
+      class="fadeIn"
+      @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
+    >
+      <div v-html="updateHTML(value, true)" />
+      <inline-svg
+        :src="require('../assets/svg/editor/pencil.svg')"
+        class="edit_icon no_fill"
       />
     </div>
+    <transition v-else-if="editState" enter-active-class="fadeIn">
+      <div>
+        <div class="menu_bar_wrapper">
+          <div id="menu_bar" :class="{ editorFocused: caretInEditor }">
+            <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('bold') }"
+              title="Bold"
+              @click="editor.chain().focus().toggleBold().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/bold.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('italic') }"
+              title="Italic"
+              @click="editor.chain().focus().toggleItalic().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/italic.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('underline') }"
+              title="Underline"
+              @click="editor.chain().focus().toggleUnderline().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('ordered_list') }"
+              title="Ordered list"
+              @click="editor.chain().focus().toggleOrderedList().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ol.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('bullet_list') }"
+              title="Bullet list"
+              @click="editor.chain().focus().toggleBulletList().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/ul.svg')" />
+            </button>
+            <button
+              class="menu_button"
+              :class="{ 'is-active': editor.isActive('taskList') }"
+              title="Checklist"
+              @click="editor.chain().focus().toggleTaskList().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('horizontalRule') }"
+              title="Horizontal line"
+              @click="editor.chain().focus().setHorizontalRule().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/horizontal-rule.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              :class="{ 'is-active': editor.isActive('link') }"
+              title="Hyperlink"
+              @click="editor.isActive('link') ? editor.chain().focus().unsetLink().run() : setLinkUrl()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/link.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              title="Image"
+              @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
+            >
+              <inline-svg :src="require('../assets/svg/editor/image.svg')" />
+            </button>
+            <button
+              v-if="dataForTemplates !== undefined && dataForTemplates !== null"
+              class="fadeIn menu_button"
+              title="Template"
+              @click="showAddTemplate = !showAddTemplate, $parent.goToEvent(itemId, weekId)"
+            >
+              <inline-svg :src="require('../assets/svg/editor/template.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              title="Undo"
+              @click="editor.chain().focus().undo().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/undo.svg')" />
+            </button>
+            <button
+              class="fadeIn menu_button"
+              title="Redo"
+              @click="editor.chain().focus().redo().run()"
+            >
+              <inline-svg :src="require('../assets/svg/editor/redo.svg')" />
+            </button>
+          </div>
+        </div>
+        <editor-content
+          id="rich_editor"
+          :editor="editor"
+          :class="{ editorFocused: caretInEditor }"
+        />
+      </div>
+    </transition>
     <p
       v-else
       class="placeholder grey fadeIn"
       @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
     >
       {{ emptyPlaceholder }}
+      <inline-svg
+        :src="require('../assets/svg/editor/pencil.svg')"
+        class="edit_icon placeholder_icon no_fill"
+      />
     </p>
     <div v-if="editState" class="bottom_bar fadeIn">
-      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), will_body_scroll(true)">
+      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
         Save
       </button>
-      <button class="red_button" @click="editState = false , $emit('on-edit-change', 'cancel', itemId), will_body_scroll(true)">
+      <button
+        class="red_button"
+        @click="editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)"
+      >
         Cancel
       </button>
     </div>
@@ -485,22 +507,23 @@ div#rich_editor.editorFocused {
 
 <script>
 import Compressor from 'compressorjs'
-import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap'
-import { Bold, Italic, Underline, ListItem, BulletList, OrderedList, TodoItem, TodoList, Link, Image, History } from 'tiptap-extensions'
-const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ './PreviewModal')
+import { Editor, EditorContent } from '@tiptap/vue-2'
+import { defaultExtensions } from '@tiptap/starter-kit'
+import Undeline from '@tiptap/extension-underline'
+import Link from '@tiptap/extension-link'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
+import Image from '@tiptap/extension-image'
 
 export default {
   components: {
-    PreviewModal,
-    EditorContent,
-    EditorMenuBar,
-    EditorMenuBubble
+    EditorContent
   },
   props: {
     itemId: [Number, String],
     weekId: Number,
     editing: [Number, String],
-    htmlInjection: String,
+    value: String,
     emptyPlaceholder: String,
     dataForTemplates: Array,
     forceStop: Number
@@ -515,17 +538,9 @@ export default {
       caretInEditor: false,
       initialHTML: '',
 
-      // Preview
-      previewDesc: null,
-      previewHTML: null,
-
       // Link
       linkUrl: null,
       linkMenuIsActive: false,
-
-      // Image
-      showAddImage: false,
-      base64Img: null,
 
       // Template
       search: '',
@@ -540,45 +555,36 @@ export default {
   watch: {
     showAddTemplate () {
       if (this.showAddTemplate) {
-        this.will_body_scroll(false)
+        this.willBodyScroll(false)
       } else {
-        this.will_body_scroll(true)
+        this.willBodyScroll(true)
       }
     },
     editState () {
       if (this.editState) {
         this.isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
         this.editor = new Editor({
-          content: '',
+          content: this.value,
           extensions: [
-            new Bold(),
-            new Italic(),
-            new Underline(),
-            new ListItem(),
-            new BulletList(),
-            new OrderedList(),
-            new TodoItem({
-              nested: true
-            }),
-            new TodoList(),
-            new Link(),
-            new Image(),
-            new History()
-          ]
+            ...defaultExtensions(),
+            Undeline,
+            Link,
+            TaskList,
+            TaskItem,
+            Image
+          ],
+          onUpdate: () => {
+            this.$emit('input', this.editor.getHTML())
+          },
+          onFocus: () => {
+            this.caretInEditor = true
+            this.showAddTemplate = false
+            this.willBodyScroll(true)
+          },
+          onBlur: () => {
+            this.caretInEditor = false
+          }
         })
-        this.editor.on('update', () => { this.update_edited_notes() })
-        this.editor.on('focus', () => {
-          this.caretInEditor = true
-          this.showAddTemplate = false
-          this.showAddImage = false
-          this.will_body_scroll(true)
-          this.update_edited_notes()
-        })
-        this.editor.on('blur', () => {
-          this.caretInEditor = false
-          this.update_edited_notes()
-        })
-        this.editor.setContent(this.update_html(this.htmlInjection, false))
       } else {
         this.editor.destroy()
       }
@@ -591,42 +597,47 @@ export default {
   },
   methods: {
 
-    // Link
+    // -----------------------------
+    // General
+    // -----------------------------
 
-    showLinkMenu (attrs) {
-      this.linkUrl = attrs.href
-      this.linkMenuIsActive = true
-      this.$nextTick(() => {
-        this.$refs.linkInput.focus()
-      })
-    },
-    hideLinkMenu () {
-      this.linkUrl = null
-      this.linkMenuIsActive = false
-    },
-    setLinkUrl (command, url) {
-      command({ href: url })
-      this.hideLinkMenu()
+    /**
+     * Adds tracked data custom node.
+     */
+    addTrackData () {
+      this.editor.commands.insertContent('<div data-type="protocol-item"></div>')
     },
 
-    // IMG
+    /**
+     * Sets the link of the selected text.
+     */
+    async setLinkUrl () {
+      const SRC = await this.$refs.input_pop_up.show('link', 'Enter the URL link', 'Make sure to include the https://')
+      if (!SRC) {
+        return
+      }
+      this.editor.chain().focus().setLink({ href: SRC }).run()
+    },
 
-    add_img (command) {
-      const file = document.getElementById('img_uploader').files[0]
-      const reader = new FileReader()
-      reader.addEventListener('load', () => {
-        const src = reader.result
-        command({ src })
-        this.update_edited_notes()
-        this.showAddImage = false
+    /**
+     * Adds an image.
+     */
+    addImg () {
+      const FILE = document.getElementById('img_uploader').files[0]
+      const READER = new FileReader()
+      READER.addEventListener('load', () => {
+        this.$axios.post('/.netlify/functions/upload', { file: READER.result.toString() }).then((response) => {
+          this.editor.chain().focus().setImage({ src: response.data.url }).run()
+        })
       }, false)
-      if (file) {
-        if (file.size < 1000000) {
+
+      if (FILE) {
+        if (FILE.size < 1100000) {
           // eslint-disable-next-line
-          new Compressor(file, {
+          new Compressor(FILE, {
             quality: 0.6,
             success (result) {
-              reader.readAsDataURL(result)
+              READER.readAsDataURL(result)
             },
             error (err) {
               console.error(err.message)
@@ -639,8 +650,13 @@ export default {
       }
     },
 
+    // -----------------------------
     // Misc.
+    // -----------------------------
 
+    /**
+     * Checks if the template search is empty.
+     */
     isSearchEmpty () {
       let showNoneMsg = true
       this.dataForTemplates.forEach((template) => {
@@ -650,11 +666,14 @@ export default {
       })
       document.getElementById('templates_search_none').style.display = showNoneMsg && this.search !== '' ? 'block' : 'none'
     },
+
+    /**
+     * Tests injected html to see if it's empty.
+     */
     test_empty_html (text) {
       if (text !== null) {
-        const rmTags = text.replace(/<[^>]*>?/gm, '')
-        const rmSpace = rmTags.replace(/&nbsp;/g, '').replace(/ /g, '')
-        if (rmSpace === '') {
+        const REMOVE_TAGS_AND_SPACE = text.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, '').replace(/ /g, '')
+        if (REMOVE_TAGS_AND_SPACE === '') {
           return true
         } else {
           return false
@@ -662,9 +681,6 @@ export default {
       } else {
         return true
       }
-    },
-    update_edited_notes () {
-      this.$emit('update:htmlInjection', document.getElementById('rich_editor').querySelector('.ProseMirror').innerHTML.replace(/(<div>)([^<].*)(<\/div>)/gi, '<p>$2</p>'))
     }
   }
 }

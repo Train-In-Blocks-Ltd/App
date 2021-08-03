@@ -1,36 +1,45 @@
 <template>
-  <form class="form_grid add_plan" name="add_plan" @submit.prevent="create_plan(), $parent.isNewPlanOpen = false, will_body_scroll(true)">
+  <form
+    class="form_grid add_plan"
+    name="add_plan"
+    @submit.prevent="createPlan(), $parent.isNewPlanOpen = false, willBodyScroll(true)"
+  >
     <div class="bottom_margin">
-      <h2>
+      <h3>
         Create a new plan and use it for exercise, nutrition or anything else
-      </h2>
+      </h3>
       <p class="grey">
         The duration is the microcycle which can be of any length
       </p>
     </div>
     <input
       ref="name"
-      v-model="new_plan.name"
+      v-model="newPlan.name"
       class="small_border_radius width_300"
       type="text"
       placeholder="Name*"
       aria-label="Name"
       required
+      @input="checkForm()"
     >
     <input
-      v-model="new_plan.duration"
+      v-model="newPlan.duration"
       class="small_border_radius width_300"
       type="number"
       min="1"
       placeholder="Duration*"
       aria-label="Duration"
       required
+      @input="checkForm()"
     >
     <div class="form_button_bar">
-      <button type="submit">
+      <button
+        :disabled="disableCreatePlanButton"
+        type="submit"
+      >
         Save
       </button>
-      <button class="red_button" @click.prevent="$parent.response = '', $parent.isNewPlanOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.isNewPlanOpen = false, willBodyScroll(true)">
         Close
       </button>
     </div>
@@ -38,53 +47,63 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
-      new_plan: {
+      newPlan: {
         name: '',
         duration: ''
-      }
+      },
+      disableCreatePlanButton: true
     }
   },
+  computed: mapState([
+    'dontLeave',
+    'clientDetails',
+    'clients'
+  ]),
   mounted () {
     this.$refs.name.focus()
   },
   methods: {
-    async create_plan () {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    checkForm () {
+      this.disableCreatePlanButton = !(this.newPlan.name && this.newPlan.duration)
+    },
+
+    /**
+     * Creates a new plan.
+     */
+    async createPlan () {
       try {
-        this.$parent.$parent.$parent.dontLeave = true
-        await this.$axios.put('https://api.traininblocks.com/programmes',
-          {
-            name: this.new_plan.name,
-            client_id: this.$parent.$parent.$parent.client_details.client_id,
-            duration: this.new_plan.duration,
-            block_color: '',
-            ordered: this.$parent.$parent.$parent.client_details.plans === undefined || this.$parent.$parent.$parent.client_details.plans === false ? 0 : this.$parent.$parent.$parent.client_details.length
-          }
-        )
-        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.new_plan.name} created`, 'You\'re all set, get programming')
-        this.$parent.persistResponse = this.new_plan.name
-
-        // Set old plans to null so that they can be repopulated
-        let x
-        for (x in this.$parent.$parent.$parent.clients) {
-          if (this.$parent.$parent.$parent.clients[x].client_id === this.$route.params.client_id) {
-            this.$parent.$parent.$parent.clients[x].plans = null
-          }
-        }
-        // Get the new plans
-        const force = true
-        await this.$parent.$parent.get_client_details(force)
-
-        this.new_plan = {
+        this.$store.commit('setData', {
+          attr: 'loading',
+          data: true
+        })
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('createPlan', {
+          clientId: this.clientDetails.client_id,
+          name: this.newPlan.name,
+          duration: this.newPlan.duration
+        })
+        this.$ga.event('Plan', 'new')
+        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.newPlan.name} created`, 'You\'re all set, get programming')
+        this.newPlan = {
           name: '',
           duration: ''
         }
-        this.$ga.event('Plan', 'new')
-        this.$parent.$parent.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.$parent.$parent.resolve_error(e)
+        this.$parent.$parent.$parent.resolveError(e)
       }
     }
   }

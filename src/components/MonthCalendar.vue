@@ -1,116 +1,121 @@
-<style scoped>
-
-  /* Calendar Nav */
+<style lang="scss" scoped>
+#month_calendar {
+  border-radius: 10px;
+  border: 3px solid var(--base);
+  margin-top: 1rem
+}
+.calendar_header {
+  h3 {
+    position: relative;
+    top: 0;
+    left: 2rem;
+    padding: .6rem;
+    background: var(--base);
+    color: var(--fore);
+    width: fit-content;
+    border-radius: 0 0 10px 10px
+  }
   .calendar_header__bar {
     display: flex;
     justify-content: space-between;
-    margin: 1rem 0
+    margin: 2rem;
+    * {
+      transition: var(--transition_standard);
+      &:hover {
+        opacity: var(--light_opacity)
+      }
+    }
+    .next_month,
+    .prev_month {
+      height: 36px;
+      width: 36px;
+      &:active {
+        transform: scale(.8)
+      }
+    }
+    .today {
+      cursor: pointer;
+      margin: auto;
+      &.disabled:hover {
+        opacity: var(--light_opacity);
+        cursor: default
+      }
+    }
   }
-  .calendar_header__bar * {
-    transition: var(--transition_standard)
-  }
-  .calendar_header__bar *:hover {
-    opacity: var(--light_opacity)
-  }
-  .next_month {
-    cursor: pointer;
-    transform: rotate(-90deg)
-  }
-  .next_month:hover {
-    transform: rotate(-90deg) translateY(5px)
-  }
-  .next_month:active {
-    transform: rotate(-90deg) translateY(5px) scale(.9)
-  }
-  .prev_month {
-    cursor: pointer;
-    transform: rotate(90deg)
-  }
-  .prev_month:hover {
-    transform: rotate(90deg) translateY(-5px)
-  }
-  .prev_month:active {
-    transform: rotate(90deg) translateY(-5px) scale(.9)
-  }
-  .day_cell.is_today {
-    background-color: var(--calendar_highlight);
-    border-radius: 10px
-  }
-  .today {
-    cursor: pointer;
-    margin: auto
-  }
-  .disabled, .today.disabled:hover {
-    opacity: var(--light_opacity);
-    cursor: default
-  }
-
-  /* Month */
-  .month_container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: .6rem
-  }
+}
+.month_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: .6rem;
+  margin: 2rem;
   .days_label {
     text-align: center
   }
-
-  /* Day */
   .day_cell {
     text-align: right;
     min-height: 100px;
     background-color: var(--fore);
     border-radius: 10px;
     padding: .6rem;
-    transition: var(--transition_standard)
+    box-shadow: var(--low_shadow);
+    &.holderCell {
+      background-color: transparent;
+      box-shadow: none
+    }
+    &.is_today {
+      background-color: var(--calendar_highlight);
+      border-radius: 10px
+    }
+    .event {
+      overflow-wrap: anywhere;
+      border: 2px solid transparent;
+      border-radius: 3px;
+      padding: .1rem;
+      font-size: .7rem;
+      text-align: center;
+      margin: .4rem 0;
+      &.showBorder {
+        border: 2px solid var(--base)
+      }
+    }
   }
-  .day_cell:hover {
-    box-shadow: var(--low_shadow)
-  }
-  .holderCell {
-    background-color: transparent
-  }
-  .holderCell:hover {
-    box-shadow: none
-  }
+}
 
-  /* Event */
-  .event {
-    overflow-wrap: anywhere;
-    border: 2px solid transparent;
-    border-radius: 5px;
-    font-size: .7rem;
-    text-align: center;
-    margin: .4rem 0
+/* Responsive */
+@media (max-width: 576px) {
+  .calendar_header h3 {
+    left: 1rem
   }
-  .showBorder {
-    border: 2px solid var(--base)
+  .calendar_header__bar,
+  .month_container {
+    margin: 1rem
   }
+}
 </style>
 
 <template>
   <div id="month_calendar">
     <div class="calendar_header">
-      <h1>
+      <h3>
         {{ currentMonth }} {{ currentYear }}
-      </h1>
+      </h3>
       <div class="calendar_header__bar">
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="prev_month"
-          @click="monthDiff--, get_month()"
+          :src="require('../assets/svg/arrow-left.svg')"
+          class="prev_month cursor no_fill"
+          @click="monthDiff--, getMonth()"
         />
         <p
           :class="{ disabled: monthDiff === 1 }"
           class="today"
-          @click="monthDiff = 1, get_month()"
+          @click="monthDiff = 1, getMonth()"
         >
           Today
         </p>
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="next_month"
-          @click="monthDiff++, get_month()"
+          :src="require('../assets/svg/arrow-right.svg')"
+          class="next_month cursor no_fill"
+          @click="monthDiff++, getMonth()"
         />
       </div>
     </div>
@@ -151,7 +156,7 @@
           :style="{ backgroundColor: event.color, color: event.textColor }"
           :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
           class="event cursor fadeIn"
-          @click="$parent.go_to_event(event.session_id, event.week_id)"
+          @click="$parent.goToEvent(event.session_id, event.week_id)"
         >
           {{ event.title }}
         </p>
@@ -164,8 +169,7 @@
 export default {
   props: {
     events: Array,
-    forceUpdate: Number,
-    isTrainer: Boolean
+    forceUpdate: Number
   },
   data () {
     return {
@@ -176,49 +180,66 @@ export default {
     }
   },
   watch: {
+    events () {
+      this.getMonth()
+    },
     forceUpdate () {
-      this.get_month()
+      this.getMonth()
     }
   },
   mounted () {
-    this.get_month()
+    this.getMonth()
   },
   methods: {
-    get_month_number (month) {
-      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      return monthArr.indexOf(month) + 1
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Converts index to month.
+     * @param {integer} month - Month as an index.
+     * @returns The month as a string.
+     */
+    getMonthNumber (month) {
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      return MONTHS.indexOf(month) + 1
     },
-    get_month () {
-      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      const today = new Date()
-      const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + this.monthDiff, '0')
+
+    /**
+     * Initiates the calendar, adds interactibles, and populates it.
+     */
+    getMonth () {
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      const TODAY = new Date()
+      const LAST_DAY_OF_MONTH = new Date(TODAY.getFullYear(), TODAY.getMonth() + this.monthDiff, '0')
       this.month = []
-      this.currentMonth = monthArr[lastDayOfMonth.getMonth()]
-      this.currentYear = lastDayOfMonth.getFullYear()
-      const monthEnd = lastDayOfMonth.getDate()
+      this.currentMonth = MONTHS[LAST_DAY_OF_MONTH.getMonth()]
+      this.currentYear = LAST_DAY_OF_MONTH.getFullYear()
+      const MONTH_END = LAST_DAY_OF_MONTH.getDate()
       let date
-      for (date = 1; date <= monthEnd; date++) {
-        const weekDay = new Date(`${this.currentYear}-${this.get_month_number(this.currentMonth).toLocaleString('en-US', { minimumIntegerDigits: 2 })}-${date.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`).getDay()
-        if (date === 1 && weekDay !== 1) {
+      for (date = 1; date <= MONTH_END; date++) {
+        const WEEKDAY = new Date(`${this.currentYear}-${this.getMonthNumber(this.currentMonth).toLocaleString('en-US', { minimumIntegerDigits: 2 })}-${date.toLocaleString('en-US', { minimumIntegerDigits: 2 })}`).getDay()
+        if (date === 1 && WEEKDAY !== 1) {
           let holder
-          if (weekDay === 0) {
+          if (WEEKDAY === 0) {
             for (holder = 1; holder < 7; holder++) {
               this.month.push([[], ''])
             }
           } else {
-            for (holder = 1; holder < weekDay; holder++) {
+            for (holder = 1; holder < WEEKDAY; holder++) {
               this.month.push([[], ''])
             }
           }
         }
-        const datapack = []
+        const DATAPACKETS = []
         this.events.forEach((event) => {
-          const dateSplit = event.date.split('-')
-          if (parseInt(dateSplit[0]) === this.currentYear && parseInt(dateSplit[1] - 1) === lastDayOfMonth.getMonth() && parseInt(dateSplit[2]) === date) {
-            datapack.push(event)
+          const DATE_SPLIT = event.date.split('-')
+          if (parseInt(DATE_SPLIT[0]) === this.currentYear && parseInt(DATE_SPLIT[1] - 1) === LAST_DAY_OF_MONTH.getMonth() && parseInt(DATE_SPLIT[2]) === date) {
+            DATAPACKETS.push(event)
           }
         })
-        this.month.push([datapack, date, `${this.currentYear}-${String(this.get_month_number(this.currentMonth)).padStart(2, '0')}-${String(date).padStart(2, '0')}`])
+        this.month.push([DATAPACKETS, date, `${this.currentYear}-${String(this.getMonthNumber(this.currentMonth)).padStart(2, '0')}-${String(date).padStart(2, '0')}`])
       }
     }
   }

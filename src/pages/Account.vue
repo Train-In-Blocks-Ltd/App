@@ -1,52 +1,73 @@
-<style scoped>
-.details {
-  display: grid;
-  grid-gap: 1rem;
-  margin: 2rem 0
-}
-.theme {
+<style lang="scss" scoped>
+@mixin setting-section {
   display: grid;
   grid-gap: 1rem
 }
-.privacy {
-  display: grid
-}
-.policies:first-of-type {
-  margin-top: 2rem
-}
-.policies:last-of-type {
-  margin-bottom: 2rem
-}
-.policies {
-  width: fit-content;
-  text-decoration: none;
-  color: var(--base);
-  opacity: 1;
-  margin: .4rem 0;
-  transition: opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-}
-.policies:hover {
-  opacity: var(--light_opacity)
-}
-.policies:active {
-  transform: var(--active_state)
-}
 .details_container {
   display: grid;
-  grid-gap: 4rem;
-  align-items: center
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2rem;
+  margin-top: 2rem;
+  .details {
+    @include setting-section;
+
+    margin-bottom: 3rem;
+    .user-settings-button-bar {
+      display: flex;
+      > div:first-child {
+        margin-right: 1rem
+      }
+    }
+  }
+  .theme {
+    @include setting-section;
+
+    margin-bottom: 3rem
+  }
+  .referral {
+    @include setting-section;
+    button {
+      width: fit-content
+    }
+  }
+  .calendar {
+    @include setting-section;
+
+    margin-bottom: 3rem;
+    button {
+      width: fit-content
+    }
+    .guide_links {
+      display: grid;
+      grid-gap: .6rem;
+      margin: 1rem 0;
+      a {
+        display: inline;
+        font-weight: bold
+      }
+    }
+  }
+  .privacy {
+    @include setting-section;
+    .policy_links {
+      display: grid;
+      grid-gap: .6rem;
+      margin: 1rem 0;
+      a {
+        display: inline;
+        font-weight: bold
+      }
+    }
+  }
 }
 .form__options {
-  display: flex
-}
-.form__options label {
-  margin: auto 0
-}
-.text-reset {
-  font-size: .8rem
-}
-.allow-cookies {
-  align-self: center
+  display: flex;
+  label {
+    margin: auto 0
+  }
+  .allow-cookies {
+    align-self: center
+  }
 }
 .check {
   border-color: red;
@@ -60,6 +81,12 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .details_container {
+    grid-template-columns: 1fr;
+    grid-gap: 3rem
+  }
+}
 @media (max-width: 768px) {
   .policies:hover {
     opacity: 1
@@ -75,11 +102,24 @@
     grid-gap: 1rem
   }
 }
+@media (max-width: 425px) {
+  .details_container {
+    .details {
+      .user-settings-button-bar {
+        display: grid;
+        grid-gap: 1rem;
+        > div:first-child {
+          margin-right: 0
+        }
+      }
+    }
+  }
+}
 </style>
 
 <template>
   <div
-    v-if="$parent.claims"
+    v-if="claims"
     id="account"
     class="view_container"
   >
@@ -87,15 +127,15 @@
     <form
       v-if="showPasswordReset"
       class="form_grid tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="change_password()"
+      @submit.prevent="changePassword()"
     >
       <div>
-        <h1>
+        <h2>
           Stay safe
-        </h1>
-        <h2 class="grey">
-          Reset your password
         </h2>
+        <h3 class="grey">
+          Reset your password
+        </h3>
       </div>
       <input
         ref="pass"
@@ -103,13 +143,14 @@
         type="password"
         placeholder="Current password"
         aria-label="Current password"
-        class="input--forms small_border_radius"
+        class="input--forms width_300 small_border_radius"
         required
+        @input="checkForm()"
       >
       <div>
-        <h2>
+        <h3>
           Requirements
-        </h2>
+        </h3>
         <p class="grey">
           Number (0-9)
         </p>
@@ -125,26 +166,33 @@
         type="password"
         placeholder="New password"
         aria-label="New password"
-        class="input--forms small_border_radius"
+        class="input--forms width_300 small_border_radius"
         :class="{check: password.check}"
         required
-        @input="check_password"
+        @input="checkPassword(), checkForm()"
       >
       <input
         v-model="password.match"
         type="password"
         placeholder="Confirm new password"
         aria-label="Confirm new password"
-        class="input--forms small_border_radius"
+        class="input--forms width_300 small_border_radius"
         :class="{check: password.new !== password.match}"
         required
-        @input="check_password"
+        @input="checkPassword(), checkForm()"
       >
       <div class="reset_password_button_bar">
-        <button class="right_margin" type="submit" :disabled="password.check || password.new !== password.match">
+        <button
+          class="right_margin"
+          type="submit"
+          :disabled="disableChangePasswordButton || password.check || password.new !== password.match"
+        >
           Change your password
         </button>
-        <button class="red_button" @click.prevent="showPasswordReset = false, will_body_scroll(true)">
+        <button
+          class="red_button"
+          @click.prevent="showPasswordReset = false, willBodyScroll(true)"
+        >
           Close
         </button>
       </div>
@@ -155,78 +203,166 @@
     <h1>
       Your Account
     </h1>
-    <form v-if="$parent.claims" class="details_container">
-      <div class="details">
-        <p style="margin-bottom: 1rem">
-          <b>Email: </b>{{ $parent.claims.email }}
-        </p>
-        <div v-if="$parent.claims.user_type != 'Client' || $parent.claims.user_type == 'Admin'">
-          <button @click.prevent="manage_subscription()">
-            Manage Your Subscription
-          </button>
+    <div v-if="claims" class="details_container">
+      <div>
+        <div class="details">
+          <h3>General settings</h3>
+          <p style="margin-bottom: 1rem">
+            <b>Email: </b>{{ claims.email }}
+          </p>
+          <div class="user-settings-button-bar">
+            <div v-if="claims.user_type != 'Client' || claims.user_type == 'Admin'">
+              <button @click.prevent="manageSubscription()">
+                Manage Subscription
+              </button>
+            </div>
+            <div>
+              <button @click.prevent="showPasswordReset = true, willBodyScroll(false)">
+                Change Password
+              </button>
+            </div>
+          </div>
         </div>
-        <div>
-          <button @click.prevent="showPasswordReset = true, will_body_scroll(false)">
-            Change Your Password
-          </button>
-        </div>
-      </div>
-      <div class="theme">
-        <label for="theme" class="text--small">
-          <b>
-            Theme
-          </b>
-        </label>
-        <select
-          v-model="$parent.claims.theme"
-          name="theme"
-          class="width_300"
-          @change="$parent.darkmode($parent.claims.theme), $parent.save_claims()"
-        >
-          <option value="system">
-            System default
-          </option>
-          <option value="light">
-            Light
-          </option>
-          <option value="dark">
-            Dark
-          </option>
-        </select>
-      </div>
-      <div class="privacy">
-        <h2>
-          Your Privacy and Data
-        </h2>
-        <p>You can find more information about our policies below:</p>
-        <a class="policies" href="http://traininblocks.com/gdpr" target="_blank">GDPR Statement</a>
-        <a class="policies" href="https://traininblocks.com/privacy-policy" target="_blank">Privacy Policy</a>
-        <a class="policies" href="http://traininblocks.com/cookie-policy" target="_blank">Cookie Policy</a>
-        <a class="policies" href="http://traininblocks.com/terms-conditions" target="_blank">Terms and Conditions</a>
-        <div class="form__options">
-          <label for="cookies">
-            Allow Third Party Cookies:
-            <input v-model="$parent.claims.ga" class="allow-cookies" type="checkbox" @change="$parent.save_claims()">
+        <div class="theme">
+          <label for="theme" class="text--small">
+            <b>
+              Theme
+            </b>
           </label>
+          <select
+            v-model="claims.theme"
+            name="theme"
+            class="width_300"
+            @change="$parent.darkmode(claims.theme), $parent.saveClaims()"
+          >
+            <option value="system">
+              System default
+            </option>
+            <option value="light">
+              Light
+            </option>
+            <option value="dark">
+              Dark
+            </option>
+          </select>
+        </div>
+        <div class="referral">
+          <h3>
+            Referral Code
+          </h3>
+          <p>Generate a referral code to gift to your fellow trainers:</p>
+          <button
+            v-if="!coupon.generated"
+            @click.prevent="generateCoupon()"
+          >
+            Generate Coupon
+          </button>
+          <button
+            v-else
+            @click.prevent="copyCoupon()"
+            v-html="coupon.code"
+          />
         </div>
       </div>
-    </form><br><br>
+      <div>
+        <div class="calendar">
+          <label for="calendar" class="text--small">
+            <b>
+              Calendar
+            </b>
+          </label>
+          <div>
+            <div class="form__options">
+              <label>
+                Enable calendar link:
+                <input
+                  v-model="claims.calendar"
+                  class="claims-calendar"
+                  type="checkbox"
+                  @change="$parent.saveClaims()"
+                >
+              </label>
+            </div>
+            <p class="text--tiny">
+              Anyone with the link will be able to see all of your bookings
+            </p>
+          </div>
+          <div
+            v-if="claims.calendar"
+            class="guide_links"
+          >
+            <p
+              v-for="(guide, guideIndex) in calendarGuides"
+              :key="`cal_${guideIndex}`"
+            >
+              <a
+                :href="guide.link"
+                target="_blank"
+                rel="noreferrer"
+                class="a_link"
+              >
+                Add to {{ guide.name }} calendar
+              </a>
+            </p>
+          </div>
+          <button
+            v-if="claims.calendar"
+            @click.prevent="copyCalendarLink()"
+            v-html="calendarText"
+          />
+        </div>
+        <div class="privacy">
+          <h3>
+            Your Privacy and Data
+          </h3>
+          <p>You can find more information about our policies below:</p>
+          <div class="policy_links">
+            <p
+              v-for="(policy, policyIndex) in policies"
+              :key="`policy_${policyIndex}`"
+            >
+              <a
+                :href="policy.link"
+                target="_blank"
+                rel="noreferrer"
+                class="a_link"
+              >
+                <b>
+                  {{ policy.title }}
+                </b>
+              </a>
+            </p>
+          </div>
+          <div class="form__options">
+            <label>
+              Allow Third Party Cookies:
+              <input v-model="claims.ga" class="allow-cookies" type="checkbox" @change="$parent.saveClaims()">
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <br>
     <div class="version">
-      <inline-svg :src="require('../assets/svg/pegasus-icon.svg')" aria-label="Pegusus" />
+      <inline-svg :src="require('../assets/svg/andromeda-icon.svg')" aria-label="Andromeda" />
       <p class="text--tiny">
-        <b>{{ $parent.versionName }} {{ $parent.versionBuild }}</b>
+        <b>{{ versionName }} {{ versionBuild }}</b>
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import { passChangeEmail, passChangeEmailText } from '../components/email'
+import { mapState } from 'vuex'
 
 export default {
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -239,51 +375,98 @@ export default {
         match: null,
         check: null,
         error: null
-      }
+      },
+      disableChangePasswordButton: true,
+      calendarText: 'Get your calendar link',
+      calendarGuides: [
+        {
+          name: 'Google',
+          link: ''
+        },
+        {
+          name: 'Outlook',
+          link: 'https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c'
+        },
+        {
+          name: 'Apple',
+          link: 'https://support.apple.com/en-gb/guide/calendar/icl1022/mac'
+        }
+      ],
+      policies: [
+        {
+          title: 'Privacy and Data Policy',
+          link: 'http://traininblocks.com/legal/privacy-and-data-policy'
+        },
+        {
+          title: 'Cookies Policy',
+          link: 'http://traininblocks.com/legal/cookies-policy'
+        },
+        {
+          title: 'Terms of Use',
+          link: 'http://traininblocks.com/legal/terms-of-use'
+        }
+      ]
     }
   },
-  created () {
-    this.$parent.loading = true
-    this.$parent.setup()
-    this.will_body_scroll(true)
-    this.$parent.end_loading()
+  computed: mapState([
+    'dontLeave',
+    'claims',
+    'versionName',
+    'versionBuild',
+    'coupon'
+  ]),
+  async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
+    this.willBodyScroll(true)
+    await this.$parent.setup()
+    this.$store.dispatch('endLoading')
+  },
+  async mounted () {
+    if (!this.coupon.checked) {
+      await this.checkCoupon()
+    }
+    this.calendarGuides[0].link = `https://calendar.google.com/calendar/u/0/r?cid=${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // -----------------------------
+    // General
+    // -----------------------------
 
-    async manage_subscription () {
+    checkForm () {
+      this.disableChangePasswordButton = !(this.password.old && this.password.new && this.password.match && !this.password.check && !this.password.error)
+    },
+
+    /**
+     * Redirects the user to their Stripe management page.
+     */
+    async manageSubscription () {
       try {
-        this.$parent.dontLeave = true
-        const response = await this.$axios.post('/.netlify/functions/create-manage-link',
+        const RESPONSE = await this.$axios.post('/.netlify/functions/create-manage-link',
           {
-            id: this.$parent.claims.stripeId
+            id: this.claims.stripeId
           }
         )
-        window.location.href = response.data
+        window.location.href = RESPONSE.data
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     },
 
-    // PASSWORD
+    // -----------------------------
+    // Password
+    // -----------------------------
 
-    check_password () {
-      const self = this
-      function isUsername () {
-        const one = !self.password.new.includes(self.$parent.claims.email)
-        const two = self.password.new.split('').filter(function (e, i, a) {
-          // eslint-disable-next-line
-          return (self.$parent.claims.email.indexOf(e) !== -1)
-        }).length <= 6
-        if (one === true && two !== false) {
-          return true
-        } else {
-          return false
-        }
-      }
+    /**
+     * Validates the password.
+     */
+    checkPassword () {
+      const SELF = this
       function requirements () {
-        return isUsername() && self.password.new.match(/[0-9]+/) !== null && self.password.new.length >= 8 && self.password.old.length >= 1
+        return SELF.password.new.match(/[0-9]+/) !== null && SELF.password.new.length >= 8 && SELF.password.old.length >= 1
       }
       if (requirements() === false) {
         this.password.check = true
@@ -296,39 +479,138 @@ export default {
         this.password.error = ''
       }
     },
-    async change_password () {
+
+    /**
+     * Changes the password.
+     */
+    async changePassword () {
       try {
-        this.$parent.dontLeave = true
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
         this.password.error = ''
-        await this.$axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              oldPassword: this.password.old,
-              newPassword: this.password.new
-            },
-            url: `${this.$parent.claims.sub}/credentials/change_password`
-          }
-        )
-        this.password.old = null
-        this.password.new = null
-        await this.$axios.post('/.netlify/functions/send-email',
-          {
-            to: this.$parent.claims.email,
-            subject: 'Password Changed',
-            text: passChangeEmailText(),
-            html: passChangeEmail()
-          }
-        )
+        await this.$store.dispatch('changePassword', {
+          old: this.password.old,
+          new: this.password.new
+        })
         this.$parent.$refs.response_pop_up.show('Password changed', 'Remember to not share it and keep it safe')
-        this.$parent.end_loading()
         this.showPasswordReset = false
-        this.will_body_scroll(true)
+        this.willBodyScroll(true)
+        this.password = {
+          old: null,
+          new: null,
+          match: null,
+          check: null,
+          error: null
+        }
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
-        console.error(e)
-        this.$parent.end_loading()
       }
+    },
+
+    /**
+     * Generates the user's calendar link.
+     */
+    copyCalendarLink () {
+      const link = `${window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host}/.netlify/functions/calendar?email=${this.claims.email}`
+      const self = this
+      navigator.clipboard.writeText(link).then(function () {
+        self.calendarText = 'Copied!'
+        setTimeout(function () {
+          self.calendarText = 'Get your calendar link'
+        }, 2000)
+      }, function (err) {
+        self.calendarText = 'Could not copy text: ' + err
+      })
+    },
+
+    /*
+     * Checks if the user already has coupons activated.
+     */
+    async checkCoupon () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        const RESPONSE = await this.$axios.post('/.netlify/functions/check-coupon',
+          {
+            email: this.claims.email
+          }
+        )
+        if (RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')) && RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')).active) {
+          this.$store.commit('setDataDeep', {
+            attrParent: 'coupon',
+            attrChild: 'generated',
+            data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          })
+          this.$store.commit('setDataDeep', {
+            attrParent: 'coupon',
+            attrChild: 'code',
+            data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          })
+        }
+        this.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'checked',
+          data: true
+        })
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    },
+    async generateCoupon () {
+      try {
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$axios.post('/.netlify/functions/create-coupon',
+          {
+            email: this.claims.email
+          }
+        )
+        this.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'generated',
+          data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        })
+        this.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'code',
+          data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+        })
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    },
+    copyCoupon () {
+      const link = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+      const self = this
+      navigator.clipboard.writeText(link).then(function () {
+        self.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'code',
+          data: 'Copied!'
+        })
+        setTimeout(function () {
+          self.$store.commit('setDataDeep', {
+            attrParent: 'coupon',
+            attrChild: 'code',
+            data: self.claims.email.toUpperCase().replace(/[\W_]+/g, '')
+          })
+        }, 2000)
+      }, function (err) {
+        self.$store.commit('setDataDeep', {
+          attrParent: 'coupon',
+          attrChild: 'code',
+          data: 'Could not copy text: ' + err
+        })
+      })
     }
   }
 }

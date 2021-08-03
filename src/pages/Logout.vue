@@ -1,12 +1,12 @@
-<style scoped>
+<style lang="scss" scoped>
   .logout_message {
-    margin-top: 10vh
-  }
-  .logout_message__top {
-    display: flex
-  }
-  .logout_message__top svg {
-    margin-right: 2rem
+    margin-top: 10vh;
+    .logout_message__top {
+      display: flex;
+      svg {
+        margin-right: 2rem
+      }
+    }
   }
   @media (max-width: 768px) {
     .logout_message__top {
@@ -24,12 +24,12 @@
           <h1>
             You have been logged out successfully
           </h1><br>
-          <h2 class="grey">
+          <h3 class="grey">
             See you next time
-          </h2><br><br>
-          <h2>
+          </h3><br><br>
+          <h3>
             You will be redirected automatically
-          </h2>
+          </h3>
           <a href="/" class="grey">Click here if it takes too long</a>
         </div>
       </div>

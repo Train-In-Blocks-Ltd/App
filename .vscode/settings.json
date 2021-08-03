@@ -3,5 +3,16 @@
         "javascript",
         "javascriptreact",
         "vue"
+    ],
+    "typewriterAutoScroll.enable": true,
+    "cSpell.words": [
+        "HTMLs",
+        "datapoint",
+        "datetime",
+        "dont",
+        "helvetica",
+        "noreferrer",
+        "vuex",
+        "wallingford"
     ]
 }

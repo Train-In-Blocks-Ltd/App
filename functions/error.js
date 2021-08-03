@@ -1,18 +1,8 @@
-// This code sample uses the 'node-fetch' library:
-// https://www.npmjs.com/package/node-fetch
 const qs = require('querystring')
 const axios = require('axios')
 const beautify = require('json-beautify')
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json; charset=UTF-8',
-  'X-Frame-Options': 'DENY',
-  'Strict-Transport-Security': 'max-age=15552000; preload',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': 'default-src "self"'
-}
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
+const headers = require('./helpers/headers')
 function bodyData (msg, claims) {
   return `{
     "update": {},
@@ -60,56 +50,64 @@ function bodyData (msg, claims) {
 let response
 
 exports.handler = async function handler (event, context, callback) {
-  const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post('https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
-    qs.stringify({
-      token: accessToken[1],
-      token_type_hint: 'access_token'
-    }),
-    {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
+  if (event.headers.authorization) {
+    const accessToken = event.headers.authorization.split(' ')
+    response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
+      qs.stringify({
+        token: accessToken[1],
+        token_type_hint: 'access_token'
+      }),
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
-    }
-  )
-  if (event.httpMethod === 'OPTIONS') {
-    return callback(null, {
-      statusCode: 200,
-      headers,
-      body: ''
-    })
-  } else if (event.body && response.data.active === true) {
-    const data = JSON.parse(event.body)
-    try {
-      const atlassian = await axios.post('https://traininblocks.atlassian.net/rest/api/3/issue',
-        bodyData(data.msg, data.claims),
-        {
-          headers: {
-            Authorization: `Basic ${Buffer.from(
-              'joe.bailey@traininblocks.com:FE98Xa9rXzGV1w7Ut6YXD397'
-            ).toString('base64')}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
+    )
+    if (event.httpMethod === 'OPTIONS') {
       return callback(null, {
         statusCode: 200,
         headers,
-        body: JSON.stringify(atlassian.data)
+        body: ''
       })
-    } catch (e) {
+    } else if (event.body && response.data.active === true) {
+      const data = JSON.parse(event.body)
+      try {
+        const atlassian = await axios.post('https://traininblocks.atlassian.net/rest/api/3/issue',
+          bodyData(data.msg, data.claims),
+          {
+            headers: {
+              Authorization: `Basic ${Buffer.from(
+                `${CUSTOM_ENV.ATLASSIAN.USERNAME}:${CUSTOM_ENV.ATLASSIAN.PASSWORD}`
+              ).toString('base64')}`,
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            }
+          })
+        return callback(null, {
+          statusCode: 200,
+          headers,
+          body: JSON.stringify(atlassian.data)
+        })
+      } catch (e) {
+        return callback(null, {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify(e.response.data)
+        })
+      }
+    } else {
       return callback(null, {
-        statusCode: 500,
+        statusCode: 401,
         headers,
-        body: JSON.stringify(e.response.data)
+        body: '401 - Unauthorized'
       })
     }
   } else {
     return callback(null, {
       statusCode: 401,
       headers,
-      body: ''
+      body: '401 - Unauthorized'
     })
   }
 }

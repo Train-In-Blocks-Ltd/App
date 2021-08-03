@@ -1,70 +1,65 @@
-<style scoped>
-  /* Containers */
-  .template_options {
-    display: flex;
-    justify-content: space-between;
-    margin: 2rem 0
-  }
-  .template_container {
-    display: grid;
-    grid-gap: 4rem;
-    margin: 2rem 0
-  }
+<style lang="scss" scoped>
+.template_options {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0
+}
+.template_container {
+  display: grid;
+  grid-gap: 2rem;
+  margin: 2rem 0;
   .template_wrapper__header {
     display: flex;
-    justify-content: space-between
-  }
-  .header_options {
-    display: flex;
-    flex-direction: column;
-    align-items: center
-  }
-
-  /* Inputs */
-  .newTemplate {
-    color: #B80000
-  }
-
-  /* Icons */
-  .icon--expand {
-    cursor: pointer;
-    vertical-align: middle;
-    margin-top: .8rem;
-    transition: var(--transition_smooth)
-  }
-  .icon--expand.expanded {
-    transform: rotate(180deg)
-  }
-
-  @media (max-width: 768px) {
-    .multi-select {
-      padding: 2rem;
-      width: 100%;
-      background-color: var(--fore);
-      box-shadow: var(--high_shadow)
+    justify-content: space-between;
+    span.newTemplate {
+      color: var(--base_red)
     }
-    .multi-select a {
+    .header_options {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .icon--expand {
+        cursor: pointer;
+        vertical-align: middle;
+        margin-top: .8rem;
+        transition: var(--transition_smooth);
+        &.expanded {
+          transform: rotate(180deg)
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .multi-select {
+    padding: 2rem;
+    width: 100%;
+    background-color: var(--fore);
+    box-shadow: var(--high_shadow);
+    a {
       grid-template-columns: 1fr
     }
-    .multi-select svg {
+    svg {
       margin-left: auto
     }
-    input.template-name {
-      width: 60%
-    }
   }
-  @media (max-width: 576px) {
-    input.template-name {
-      width: 100%
-    }
+  .template_options .template_container .template_wrapper__header .template-name {
+    width: 60%
   }
+}
+@media (max-width: 576px) {
+  .template_options .template_container .template_wrapper__header .template-name {
+    width: 100%
+  }
+}
 </style>
 
 <template>
   <div id="templates" class="view_container">
     <multiselect
       :type="'template'"
-      :options="['Delete', 'Deselect']"
+      :options="multiselectOptions"
       :selected="selectedTemplates"
       @response="resolve_template_multiselect"
     />
@@ -77,26 +72,26 @@
       aria-label="Find a template"
     >
     <div class="template_options">
-      <button @click="new_template()">
+      <button @click="createTemplate()">
         New Template
       </button>
       <a
-        v-if="$parent.templates !== null && $parent.templates.length !== 0 && selectedTemplates.length < $parent.templates.length"
+        v-if="templates && selectedTemplates.length < templates.length"
         href="javascript:void(0)"
         class="a_link select_all"
-        @click="select_all()"
+        @click="selectAll()"
       >
         Select all
       </a>
     </div>
-    <div v-if="$parent.templates !== null && $parent.templates.length !== 0" class="template_container">
+    <skeleton v-if="loading" :type="'session'" />
+    <div v-else-if="templates" class="template_container fadeIn">
       <div
-        v-for="(template, index) in $parent.templates"
+        v-for="(template, index) in templates"
         v-show="((!search) || ((template.name).toLowerCase()).startsWith(search.toLowerCase()))"
         :id="'template-' + template.id"
         :key="index"
-        :class="{ editorActive: template.id === editTemplate }"
-        class="template_wrapper editor_object"
+        class="template_wrapper editor_object_complex fadeIn"
       >
         <div class="template_wrapper__header">
           <span
@@ -132,9 +127,9 @@
         </div>
         <rich-editor
           v-show="expandedTemplates.includes(template.id)"
+          v-model="template.template"
           :item-id="template.id"
           :editing="editTemplate"
-          :html-injection.sync="template.template"
           :empty-placeholder="'What do you plan for your clients frequently?'"
           :force-stop="forceStop"
           @on-edit-change="resolve_template_editor"
@@ -148,6 +143,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
 const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
@@ -159,8 +155,11 @@ export default {
     Multiselect
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -185,175 +184,226 @@ export default {
 
       // SELECTED AND EXPANDED
 
+      multiselectOptions: [
+        { name: 'Delete', svg: 'svg/bin.svg' },
+        { name: 'Deselect', svg: null }
+      ],
       selectedTemplates: [],
       expandedTemplates: []
     }
   },
-  created () {
-    this.$parent.loading = true
-    this.will_body_scroll(true)
-    this.$parent.setup()
-    this.$parent.end_loading()
-  },
-  async mounted () {
-    await this.$parent.get_templates()
-    this.check_for_new()
+  computed: mapState([
+    'loading',
+    'dontLeave',
+    'templates'
+  ]),
+  async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
+    this.willBodyScroll(true)
+    await this.$parent.setup()
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
-    // BACKGROUND
+    // -----------------------------
+    // Background
+    // -----------------------------
 
+    /**
+     * Resolves template funtions.
+     * @param {string} type - The associated template action taken.
+     */
     helper (type) {
       switch (type) {
         case 'new':
           this.$parent.$refs.response_pop_up.show('New template created', 'Edit and use it in a client\'s plan')
+          this.$ga.event('Template', 'new')
           break
         case 'update':
           this.$parent.$refs.response_pop_up.show('Updated template', 'Your changes have been saved')
+          this.$ga.event('Template', 'update')
           break
         case 'delete':
           this.$parent.$refs.response_pop_up.show(this.selectedTemplates.length > 1 ? 'Deleted templates' : 'Deleted template', 'Your changes have been saved')
+          this.$ga.event('Template', 'delete')
           break
       }
     },
+
+    /**
+     * Resolves the action taken from the multi-select.
+     * @param {string} res - The action taken.
+     */
     resolve_template_multiselect (res) {
       switch (res) {
         case 'Delete':
-          this.delete_multi_templates()
+          this.deleteMultiTemplates()
           break
         case 'Deselect':
-          this.deselect_all()
+          this.deselectAll()
           break
       }
     },
+
+    /**
+     * Resolves the editor state before taking the corresponding action.
+     * @param {string} state - The returned state of the editor.
+     * @param {integer} id - The id of the template.
+     */
     resolve_template_editor (state, id) {
-      const template = this.$parent.templates.find(template => template.id === id)
+      const TEMPLATE = this.templates.find(template => template.id === id)
       switch (state) {
         case 'edit':
-          this.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.isEditingTemplate = true
           this.editTemplate = id
           this.forceStop += 1
-          this.tempEditorStore = template.template
+          this.tempEditorStore = TEMPLATE.template
           break
         case 'save':
           this.isEditingTemplate = false
           this.editTemplate = null
-          this.update_template(id)
+          this.updateTemplate(id)
           break
         case 'cancel':
-          this.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.isEditingTemplate = false
           this.editTemplate = null
-          template.template = this.tempEditorStore
+          TEMPLATE.template = this.tempEditorStore
           break
       }
     },
-    check_for_new () {
+
+    /**
+     * Determines if new templates were create before expanding it.
+     */
+    checkForNew () {
       this.expandedTemplates = []
-      this.$parent.templates.forEach((template) => {
+      this.templates.forEach((template) => {
         if (template.template === null || template.template === '<p><br></p>') {
           this.expandedTemplates.push(template.id)
         }
       })
     },
 
-    // CHECKBOX
+    // -----------------------------
+    // Checkbox
+    // -----------------------------
 
-    change_select_checkbox (id) {
+    /**
+     * Changes the state of the custom checkbox component.
+     * @param {integer} id - The id of the template.
+     */
+    changeSelectCheckbox (id) {
       if (!this.selectedTemplates.includes(id)) {
         this.selectedTemplates.push(id)
       } else {
-        const idx = this.selectedTemplates.indexOf(id)
-        this.selectedTemplates.splice(idx, 1)
+        const TEMPLATE_INDEX = this.selectedTemplates.indexOf(id)
+        this.selectedTemplates.splice(TEMPLATE_INDEX, 1)
       }
     },
+
+    /**
+     * Expands the main body of the template.
+     * @param {integer} id - The id of the template.
+     */
     toggle_expanded_templates (id) {
       if (this.expandedTemplates.includes(id)) {
-        const index = this.expandedTemplates.indexOf(id)
-        if (index > -1) {
-          this.expandedTemplates.splice(index, 1)
+        const TEMPLATE_INDEX = this.expandedTemplates.indexOf(id)
+        if (TEMPLATE_INDEX > -1) {
+          this.expandedTemplates.splice(TEMPLATE_INDEX, 1)
         }
       } else {
         this.expandedTemplates.push(id)
       }
     },
-    select_all () {
-      this.$parent.templates.forEach((template) => {
+
+    /**
+     * Selects all templates.
+     */
+    selectAll () {
+      this.templates.forEach((template) => {
         if (!this.selectedTemplates.includes(template.id)) {
           this.selectedTemplates.push(template.id)
           document.getElementById(`sc-${template.id}`).checked = true
         }
       })
     },
-    deselect_all () {
-      this.$parent.templates.forEach((template) => {
+
+    /**
+     * Deselects all templates.
+     */
+    deselectAll () {
+      this.templates.forEach((template) => {
         document.getElementById(`sc-${template.id}`).checked = false
       })
       this.selectedTemplates = []
     },
-    async delete_multi_templates () {
+    async deleteMultiTemplates () {
       if (this.selectedTemplates.length !== 0) {
         if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete all the selected templates?', 'We will remove these templates from our database and it won\'t be recoverable.')) {
-          this.selectedTemplates.forEach((templateId) => {
-            this.delete_template(templateId)
-          })
-          this.helper('delete')
-          this.deselect_all()
+          try {
+            this.$store.commit('setData', {
+              attr: 'dontLeave',
+              data: true
+            })
+            await this.$store.dispatch('deleteTemplate', this.selectedTemplates)
+            this.$store.dispatch('endLoading')
+            this.helper('delete')
+            this.deselectAll()
+          } catch (e) {
+            this.$parent.resolveError(e)
+          }
         }
       }
     },
 
-    // DATABASE
+    // -----------------------------
+    // Database
+    // -----------------------------
 
-    async new_template () {
+    /**
+     * Creates a new template.
+     */
+    async createTemplate () {
       try {
-        this.$parent.dontLeave = true
-        await this.$axios.put('https://api.traininblocks.com/templates',
-          {
-            pt_id: this.$parent.claims.sub,
-            name: this.new_template_form.name,
-            template: this.new_template_form.template
-          }
-        )
-        await this.$parent.get_templates(true)
-        this.check_for_new()
-        this.new_template_form = {
-          name: 'Untitled',
-          note: ''
-        }
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('newTemplate')
+        this.checkForNew()
         this.helper('new')
-        this.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     },
-    async update_template (id) {
+
+    /**
+     * Updates a template.
+     * @param {integer} templateId - The id of the template.
+     */
+    async updateTemplate (templateId) {
       try {
-        this.$parent.dontLeave = true
-        const template = this.$parent.templates.find(template => template.id === id)
-        await this.$axios.post('https://api.traininblocks.com/templates',
-          {
-            name: template.name,
-            template: template.template,
-            id
-          }
-        )
-        await this.$parent.get_templates(true)
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('updateTemplate', templateId)
         this.helper('update')
-        this.$parent.end_loading()
+        this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-    },
-    async delete_template (id) {
-      try {
-        this.$parent.dontLeave = true
-        await this.$axios.delete(`https://api.traininblocks.com/templates/${id}`)
-        await this.$parent.get_templates(true)
-        this.$parent.end_loading()
-      } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
     }
   }

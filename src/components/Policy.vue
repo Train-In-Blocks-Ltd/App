@@ -1,45 +1,55 @@
-<style>
-#policy h1 {
-  /* stylelint-disable-next-line */
-  font-size: 1.6rem !important
-}
-#policy h2 {
-  /* stylelint-disable-next-line */
-  font-size: 1rem !important
-}
-#policy p, #policy b, #agree_statement b {
-  /* stylelint-disable-next-line */
-  font-size: .8rem !important;
-  margin: 1rem 0
-}
-#policy li {
-  font-size: .8rem;
-  list-style-type: lower-roman
-}
-#agree_statement {
-  margin: 2rem 0
-}
-.confirmation button {
-  margin-bottom: 2rem
-}
-.agree_name {
-  margin-right: 1rem
+<style lang="scss">
+#policy {
+  h1 {
+    /* stylelint-disable-next-line */
+    font-size: 1.6rem !important
+  }
+  h2 {
+    /* stylelint-disable-next-line */
+    font-size: 1rem !important
+  }
+  li {
+    font-size: .8rem;
+    list-style-type: lower-roman
+  }
+  p, b {
+    /* stylelint-disable-next-line */
+    font-size: .8rem !important;
+    margin: 1rem 0
+  }
+  #agree_statement {
+    margin: 2rem 0;
+    b {
+      /* stylelint-disable-next-line */
+      font-size: .8rem !important;
+      margin: 1rem 0
+    }
+  }
+  .confirmation {
+    .agree_name {
+      margin-right: 1rem
+    }
+    button {
+      margin-bottom: 2rem
+    }
+  }
 }
 
-/* Responsiveness */
 @media (max-width: 576px) {
-  input.agree_name {
-    margin-right: 0
-  }
-  .confirmation button {
-    width: 100%;
-    margin-top: 1rem
+  .confirmation {
+    .agree_name {
+      margin-right: 0
+    }
+    button {
+      width: 100%;
+      margin-top: 1rem
+    }
   }
 }
 </style>
 
 <template>
-  <form id="policy_agreement" @submit.prevent="agree_to_terms(), will_body_scroll(true), $parent.showEULA = false">
+  <form id="policy_agreement" @submit.prevent="agreeToTerms(), willBodyScroll(true)">
     <div id="policy" v-html="eula.html" />
     <p id="agree_statement">
       <b>
@@ -47,8 +57,15 @@
       </b>
     </p>
     <div class="confirmation">
-      <input v-model="name" class="width_300 small_border_radius agree_name" type="name" placeholder="Your full name" required>
-      <button :disabled="name === ''">
+      <input
+        v-model="name"
+        class="width_300 small_border_radius agree_name"
+        type="name"
+        placeholder="Your full name"
+        required
+        @input="disablePolicyAgreeButton = !name"
+      >
+      <button :disabled="name === '' || disablePolicyAgreeButton">
         Agree
       </button>
     </div>
@@ -62,8 +79,9 @@ export default {
   },
   data () {
     return {
-      name: '',
-      eula: null
+      name: null,
+      eula: null,
+      disablePolicyAgreeButton: true
     }
   },
   created () {
@@ -72,12 +90,28 @@ export default {
     } else {
       this.eula = require('./legal/eula.md')
     }
-    this.will_body_scroll(false)
+    this.willBodyScroll(false)
   },
   methods: {
-    agree_to_terms () {
-      this.$parent.claims.policy = [this.name, this.today(), this.$parent.policyVersion]
-      this.$parent.save_claims()
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Agree to EULA terms.
+     */
+    agreeToTerms () {
+      this.$store.commit('setDataDeep', {
+        attrParent: 'claims',
+        attrChild: 'policy',
+        data: [this.name, this.today(), this.$store.state.policyVersion]
+      })
+      this.$parent.saveClaims()
+      this.$store.commit('setData', {
+        attr: 'showEULA',
+        data: false
+      })
     }
   }
 }

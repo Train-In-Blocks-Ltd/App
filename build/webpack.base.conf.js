@@ -5,7 +5,6 @@ const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const {InjectManifest} = require('workbox-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -52,12 +51,24 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
+        test: /\.ts$/,
+        loader: 'ts-loader'
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         type: 'asset/resource'
       },
       {
         test: /\.md$/,
         loader: 'frontmatter-markdown-loader'
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   },
@@ -79,11 +90,6 @@ module.exports = {
           }
         }
       ]
-    }),
-    new InjectManifest({
-      swSrc: './src/traininblocks-sw.js',
-      swDest: 'traininblocks-sw.js',
-      exclude: [/\.map$/]
     })
   ]
 }

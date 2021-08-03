@@ -1,11 +1,9 @@
-<style scoped>
-  /* Add New Client */
+<style lang="scss" scoped>
   .add_client {
-    grid-gap: 1rem
-  }
-  .add_client label {
-    display: grid;
-    grid-gap: .5rem
+    label {
+      display: grid;
+      grid-gap: .5rem
+    }
   }
 </style>
 
@@ -14,37 +12,50 @@
     name="add_client"
     class="form_grid add_client"
     spellcheck="false"
-    @submit.prevent="save(), $parent.isNewClientOpen = false, will_body_scroll(true)"
+    @submit.prevent="createClient(), $parent.isNewClientOpen = false, willBodyScroll(true)"
   >
     <div class="bottom_margin">
-      <h2>
+      <h3>
         Add a new client and email them access
-      </h2>
+      </h3>
       <p class="grey">
         Make sure that you have the correct email address, you won't be able to change it after
       </p>
     </div>
     <input
       ref="name"
-      v-model="new_client.name"
+      v-model="newClient.name"
       class="small_border_radius width_300"
       type="text"
       autocomplete="name"
       placeholder="Name*"
       aria-label="Name"
       required
+      @input="checkForm()"
     >
     <input
-      v-model="new_client.email"
+      v-model="newClient.email"
       class="small_border_radius width_300"
       type="email"
       autocomplete="email"
       placeholder="Email*"
       aria-label="Email"
       required
+      @input="checkForm()"
     >
     <input
-      v-model="new_client.number"
+      v-model="newClient.confirm"
+      :style="{ borderColor: newClient.email !== newClient.confirm ? 'var(--base_red)' : ''}"
+      class="small_border_radius width_300"
+      type="email"
+      autocomplete="email"
+      placeholder="Confirm email*"
+      aria-label="Confirm email"
+      required
+      @input="checkForm()"
+    >
+    <input
+      v-model="newClient.number"
       class="small_border_radius width_300"
       type="tel"
       inputmode="tel"
@@ -52,12 +63,16 @@
       placeholder="Mobile"
       aria-label="Mobile"
       pattern="\d+"
+      @input="checkForm()"
     >
     <div class="form_button_bar">
-      <button type="submit">
+      <button
+        :disabled="disableCreateClientButton || newClient.email === '' || newClient.email !== newClient.confirm"
+        type="submit"
+      >
         Save
       </button>
-      <button class="red_button" @click.prevent="$parent.isNewClientOpen = false, will_body_scroll(true)">
+      <button class="red_button" @click.prevent="$parent.isNewClientOpen = false, willBodyScroll(true)">
         Close
       </button>
     </div>
@@ -65,52 +80,70 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
-      new_client: {
+      newClient: {
         name: '',
         email: '',
+        confirm: '',
         number: '',
         notes: ''
-      }
+      },
+      disableCreateClientButton: true
     }
   },
+  computed: mapState([
+    'claims'
+  ]),
   mounted () {
     this.$refs.name.focus()
   },
   methods: {
-    async save () {
-      if (this.new_client.email === this.$parent.$parent.claims.email) {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    checkForm () {
+      this.disableCreateClientButton = !(this.newClient.name && this.newClient.email && this.newClient.confirm)
+    },
+
+    /**
+     * Creates a new client.
+     */
+    createClient () {
+      if (this.newClient.email === this.claims.email) {
         this.$parent.$parent.$refs.response_pop_up.show('You cannot create a client with your own email address!', 'Please use a different one.', true, true)
         console.error('You cannot create a client with your own email address!')
       } else {
-        this.$parent.response = ''
         try {
-          this.$parent.$parent.dontLeave = true
-          await this.$axios.put('https://api.traininblocks.com/clients',
-            {
-              name: this.new_client.name,
-              pt_id: this.$parent.$parent.claims.sub,
-              email: this.new_client.email,
-              number: this.new_client.number,
-              notes: this.new_client.notes
-            }
-          )
-          this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.new_client.name}`, 'Well done on getting a new client')
-          this.$parent.persistResponse = this.new_client.name
-          await this.$parent.$parent.clients_f()
-          this.$parent.$parent.clients_to_vue()
-          this.new_client = {
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
+          this.$store.dispatch('createClient', {
+            name: this.newClient.name,
+            pt_id: this.claims.sub,
+            email: this.newClient.email,
+            number: this.newClient.number,
+            notes: this.newClient.notes
+          })
+          this.$parent.$parent.$refs.response_pop_up.show(`Added ${this.newClient.name}`, 'Well done on getting a new client')
+          this.$parent.persistResponse = this.newClient.name
+          this.newClient = {
             name: '',
             email: '',
+            confirm: '',
             number: '',
             notes: ''
           }
           this.$ga.event('Client', 'new')
-          this.$parent.$parent.end_loading()
+          this.$store.dispatch('endLoading')
         } catch (e) {
-          this.$parent.$parent.resolve_error(e)
+          this.$parent.$parent.resolveError(e)
         }
       }
     }

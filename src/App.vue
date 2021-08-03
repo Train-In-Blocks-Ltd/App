@@ -1,445 +1,438 @@
-<style>
-  /* Global */
-  * {
-    box-sizing: border-box
-  }
-  :root {
-    --transition_smooth: .4s all;
-    --transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
-    --low_shadow: 0 0 20px 10px #28282808;
-    --high_shadow: 0 0 20px 10px #28282816;
-    --back: #F9F9F9;
-    --fore: white;
-    --base: #282828;
-    --base_light: #585858;
-    --base_faint: #28282840;
-    --overlay_glass: #FFFFFFB3;
-    --calendar_highlight: #FFFFEE;
-    --skeleton_1: #F4F4F4;
-    --skeleton_2: #E4E4E4;
-    --link: blue;
-    --light_opacity: .6;
-    --active_state: scale(.95)
-  }
+<style lang="scss">
+/* Global */
+* {
+  box-sizing: border-box
+}
+:root {
+  --transition_smooth: .4s all;
+  --transition_standard: .6s all cubic-bezier(.165, .84, .44, 1);
+  --low_shadow: 0 0 20px 10px #28282808;
+  --high_shadow: 0 0 20px 10px #28282816;
+  --back: #F9F9F9;
+  --fore: white;
+  --base: #282828;
+  --base_light: #585858;
+  --base_faint: #28282840;
+  --base_red: rgb(184, 0, 0);
+  --base_green: green;
+  --overlay_glass: #FFFFFFB3;
+  --calendar_highlight: #FFFFEE;
+  --skeleton_1: #F4F4F4;
+  --skeleton_2: #E4E4E4;
+  --link: blue;
+  --light_opacity: .6;
+  --active_state: scale(.95)
+}
 
-  /* Animation */
-  .fadeIn {
-    animation: .6s fadeIn
+/* Animation */
+.fadeIn {
+  animation: .6s fadeIn
+}
+.fadeOut {
+  animation: .6s fadeOut
+}
+.fill_mode_both {
+  animation-fill-mode: both
+}
+.delay {
+  animation-delay: .6s
+}
+.delay_long {
+  animation-delay: 1.2s
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0
   }
-  .fadeOut {
-    animation: .6s fadeOut
+  to {
+    opacity: 1
   }
-  .fill_mode_both {
-    animation-fill-mode: both
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1
   }
-  .delay {
-    animation-delay: .6s
+  to {
+    opacity: 0
   }
-  .delay_long {
-    animation-delay: 1.2s
-  }
-  @keyframes fadeIn {
-    from {
-      opacity: 0
-    }
-    to {
-      opacity: 1
-    }
-  }
-  @keyframes fadeOut {
-    from {
-      opacity: 1
-    }
-    to {
-      opacity: 0
-    }
-  }
+}
 
-  /* Tab overlay */
+/* Tab overlay */
+.section_overlay {
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  transform: translateX(100%);
+  position: fixed;
+  top: 0;
+  right: 0;
+  background-color: var(--overlay_glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: var(--transition_standard);
+  &.opened_sections {
+    transform: none
+  }
+}
+@supports not (backdrop-filter: blur(10px)) {
   .section_overlay {
-    height: 100%;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 0;
-    background-color: var(--overlay_glass);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    transition: var(--transition_standard)
+    background-color: var(--fore)
   }
-  .section_overlay.opened_sections {
-    width: 100%;
-    z-index: 10
-  }
-  @supports not (backdrop-filter: blur(10px)) {
-    .section_overlay {
-      background-color: var(--fore)
-    }
-  }
+}
 
-  /* Document elements */
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    min-height: 100%;
-    display: grid;
-    font-size: 16px;
-    line-height: 1.42;
-    background-color: var(--back)
-  }
-  #app {
-    color: var(--base);
-    background-color: var(--back)
-  }
-  main {
-    margin-left: calc(38px + 2rem);
-    display: grid;
-    align-items: start
-  }
+/* Document elements */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  min-height: 100%;
+  display: grid;
+  font-size: 16px;
+  line-height: 1.42;
+  background-color: var(--back)
+}
+#app {
+  color: var(--base);
+  background-color: var(--back)
+}
+main {
+  margin-left: calc(38px + 2rem);
+  display: grid;
+  align-items: start
+}
 
-  /* System state */
-  .top_banner {
-    z-index: 11;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    text-align: center;
-    padding: .1rem;
-    background-color: var(--base)
-  }
-  .top_banner :is(a, p) {
+/* System state */
+.top_banner {
+  z-index: 14;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  text-align: center;
+  padding: .1rem;
+  background-color: var(--base);
+  :is(a, p) {
     display: block;
     color: var(--fore)
   }
-  .notAuth {
-    margin: 0
-  }
+}
+.notAuth {
+  margin: 0
+}
 
-  /* SVG colors */
-  svg path {
+/* SVG colors */
+svg {
+  path {
     fill: var(--base)
   }
-  svg.no_fill path {
+  &.no_fill path {
     fill: none;
     stroke: var(--base)
   }
+}
 
-  /* Containers */
-  .view_container {
-    background-color: var(--back);
-    padding: 2rem 10vw
-  }
-  .container--title {
-    display: flex;
-    margin: 2rem 0
-  }
-  .wrapper--calendar {
-    margin: 6rem 0;
-    user-select: none
-  }
-  .full_width_bar {
-    width: 100%
-  }
-  .tab_overlay_content {
+/* Other elements */
+hr {
+  margin: 1rem 0;
+  border-color: var(--base_light)
+}
+.close_icon {
+  padding: .2rem;
+  border: 2px solid var(--base);
+  border-radius: 3px;
+  &:not(.not_fixed) {
     position: fixed;
-    padding: 4rem 20vw 10rem calc(2rem + 38px + 20vw);
-    top: 0;
-    left: 0;
-    z-index: 11;
-    height: 100%;
-    width: 100%;
-    overflow-x: auto
+    top: 4rem;
+    right: 5vw
   }
-  .spacer {
-    height: 2rem
-  }
+}
 
-  /* Versioning */
-  .version {
-    display: flex
-  }
-  .version p {
+/* Containers */
+.view_container {
+  background-color: var(--back);
+  padding: 2rem 10vw
+}
+.wrapper--calendar {
+  margin: 6rem 0;
+  user-select: none
+}
+.tab_overlay_content {
+  position: fixed;
+  padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
+  top: 0;
+  left: 0;
+  z-index: 11;
+  height: 100%;
+  width: 100%;
+  overflow-x: auto
+}
+.spacer {
+  height: 2rem
+}
+
+/* Versioning */
+.version {
+  display: flex;
+  p {
     margin-left: .2rem;
     line-height: 1.65
   }
+}
 
-  /* Fonts */
-  h1, h2, p {
-    margin: 0
-  }
-  h1, .text--large {
-    /* stylelint-disable-next-line */
-    font-size: 2.6rem !important
-  }
-  h2, .text--small {
-    /* stylelint-disable-next-line */
-    font-size: 1.6rem !important
-  }
-  h3 {
-    /* stylelint-disable-next-line */
-    font-size: 1.6rem !important;
-    line-height: 1.2
-  }
-  i {
-    /* stylelint-disable-next-line */
-    color: var(--base) !important
-  }
-  .text--red {
-    /* stylelint-disable-next-line */
-    color: rgb(184, 0, 0) !important
-  }
-  .text--holder {
-    margin: 2rem 0 8rem 0
-  }
-  .text--name {
-    text-overflow: ellipsis;
-    overflow-wrap: anywhere
-  }
-  .text--tiny {
-    font-size: .8rem
-  }
+/* Fonts */
+h1, h2, h3, p {
+  margin: 0
+}
+h1, .text--large {
+  /* stylelint-disable-next-line */
+  font-size: 2.6rem !important
+}
+h2 {
+  /* stylelint-disable-next-line */
+  font-size: 2.6rem !important
+}
+h3, .text--small {
+  /* stylelint-disable-next-line */
+  font-size: 1.6rem !important
+}
+i {
+  /* stylelint-disable-next-line */
+  color: var(--base) !important
+}
+.text--red {
+  /* stylelint-disable-next-line */
+  color: var(--base_red) !important
+}
+.text--holder {
+  margin: 2rem 0 8rem 0
+}
+.text--name {
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere
+}
+.text--tiny {
+  font-size: .8rem
+}
 
-  /* Tailwinds */
-  .cursor {
-    cursor: pointer;
-    transition: var(--transition_standard)
-  }
-  .cursor:hover {
+/* Tailwinds */
+.cursor {
+  cursor: pointer;
+  transition: var(--transition_standard);
+  &:hover {
     opacity: var(--light_opacity)
   }
-  .allow_y_overflow {
-    overflow-y: auto
-  }
-  .flex {
-    display: flex
-  }
-  .recently_added {
-    border: 1px solid var(--base)
-  }
-  .no_margin {
-    margin: 0
-  }
-  .top_margin {
-    margin-top: 1rem
-  }
-  .bottom_margin {
-    margin-bottom: 1rem
-  }
-  .right_margin {
-    margin-right: 1rem
-  }
-  .grey {
-    color: var(--base_light)
-  }
-  .allow_text_overflow {
-    text-overflow: ellipsis
-  }
-  .disabled, .disabled:hover {
-    opacity: var(--light_opacity);
-    cursor: default
-  }
+}
+.allow_y_overflow {
+  overflow-y: auto
+}
+.flex {
+  display: flex
+}
+.recently_added {
+  border: 1px solid var(--base)
+}
+.no_margin {
+  margin: 0
+}
+.top_margin {
+  margin-top: 1rem
+}
+.bottom_margin {
+  margin-bottom: 1rem
+}
+.right_margin {
+  margin-right: 1rem
+}
+.grey {
+  color: var(--base_light)
+}
+.allow_text_overflow {
+  text-overflow: ellipsis
+}
+.disabled, .disabled:hover {
+  opacity: var(--light_opacity);
+  cursor: default
+}
 
-  /* Text buttons */
-  .a_link {
-    display: flex;
-    color: var(--base);
-    text-decoration: none;
-    transition: 1s all cubic-bezier(.165, .84, .44, 1)
+/* Text buttons */
+.a_link {
+  display: flex;
+  color: var(--base);
+  text-decoration: none;
+  transition: 1s all cubic-bezier(.165, .84, .44, 1);
+  &:hover {
+    opacity: var(--light_opacity)
   }
-  .a_link svg {
+  svg {
     height: 22px;
     width: 22px
   }
-  .a_link:hover {
-    opacity: var(--light_opacity)
-  }
+}
 
-  /* Box buttons */
-  button {
-    height: auto;
-    width: auto;
-    max-height: 35px;
-    user-select: none;
-    cursor: pointer;
-    border-radius: 5px;
-    opacity: 1;
-    text-transform: capitalize;
-    outline-width: 0;
-    border: none;
-    padding: .6rem 1.6rem;
-    font-size: .8rem;
-    color: var(--back);
-    background-color: var(--base);
-    transition: color .6s, background-color .6s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1)
-  }
-  button:hover:not(:disabled) {
+/* Box buttons */
+button {
+  height: fit-content;
+  width: auto;
+  user-select: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-transform: capitalize;
+  outline-width: 0;
+  border: none;
+  padding: .6rem 1.6rem;
+  font-size: .8rem;
+  font-weight: bold;
+  color: var(--back);
+  background-color: var(--base);
+  transition: color .4s, background-color .4s, opacity .2s, transform .1s cubic-bezier(.165, .84, .44, 1);
+  &:hover:not(:disabled) {
     opacity: var(--light_opacity)
   }
-  button:active:not(:disabled) {
+  &:active:not(:disabled) {
     transform: var(--active_state)
   }
-  button:focus {
+  &:focus {
     box-shadow: 0 0 0 4px var(--base_light)
   }
-  button:disabled,
-  button[disabled] {
+  &:disabled,
+  &[disabled] {
     cursor: not-allowed;
     opacity: var(--light_opacity)
   }
-  .green_button {
+  &.green_button {
     color: white;
     background-color: green
   }
-  .red_button {
+  &.red_button {
     color: white;
     background-color: #B80000
   }
+}
 
-  /* Editor wrapper */
-  .session_header {
-    height: fit-content
-  }
-  .session_header.client-side {
+/* Editor wrapper */
+.session_header {
+  height: fit-content;
+  &.client-side {
     height: 3.2rem
   }
+}
 
-  /* Inputs */
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]),
-  select,
-  textarea {
-    outline: none;
+/* Inputs */
+input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]),
+select,
+textarea {
+  outline: none;
+  width: 100%;
+  padding: .6rem;
+  resize: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  color: var(--base);
+  border: 2px solid var(--base_faint);
+  border-radius: 8px;
+  background-color: transparent;
+  box-shadow: none;
+  transition: var(--transition_standard);
+  &:not(select) {
     -moz-appearance: none;
-    -webkit-appearance: none;
-    width: 100%;
-    padding: .6rem;
-    resize: none;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 1rem;
-    color: var(--base);
-    border: 1px solid var(--base_faint);
-    border-radius: 8px;
-    background-color: transparent;
-    box-shadow: none;
-    transition: var(--transition_standard)
+    -webkit-appearance: none
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
-  select:not(:focus):hover,
-  textarea:not(:focus):hover {
+  &:not(:focus):hover {
     opacity: var(--light_opacity)
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
-    cursor: not-allowed;
-    opacity: var(--light_opacity)
+  &:focus {
+    border: 2px solid var(--base)
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):focus,
-  select:focus,
-  textarea:focus {
-    border: 1px solid var(--base)
-  }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).small_border_radius,
-  select.small_border_radius {
+  &.small_border_radius {
     border-radius: 5px
   }
-  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
-  select.width_300 {
-    width: 300px
-  }
-  input[type=color] {
-    margin: 0 .4rem;
-    background-color: transparent;
-    padding: 0 .14rem;
-    outline-width: 0;
-    cursor: pointer;
-    transition: var(--transition_standard)
-  }
-  option {
-    background-color: var(--fore)
-  }
-  .search {
-    width: 100%;
-    margin-bottom: 2rem
-  }
-  .input_section {
-    display: grid;
-    grid-gap: 1rem;
-    margin: 2rem 0
-  }
-  ::placeholder {
-    color: var(--base_light);
-    opacity: 1; /* Firefox */
-  }
+}
+input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):disabled {
+  cursor: not-allowed;
+  opacity: var(--light_opacity)
+}
+input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
+select.width_300,
+textarea.width_300 {
+  width: 300px
+}
+input[type=color] {
+  margin: 0 .4rem;
+  background-color: transparent;
+  padding: 0 .14rem;
+  outline-width: 0;
+  cursor: pointer;
+  transition: var(--transition_standard)
+}
+option {
+  background-color: var(--fore)
+}
+.search {
+  width: 100%;
+  margin-bottom: 2rem
+}
+.input_section {
+  display: grid;
+  grid-gap: 1rem;
+  margin: 2rem 0
+}
+::placeholder {
+  color: var(--base_light);
+  opacity: 1; /* Firefox */
+}
 
-  /* Forms */
-  .form_grid {
-    display: grid;
-    grid-auto-rows: max-content;
-    grid-gap: 2rem
-  }
-  .form_grid button {
+/* Forms */
+.form_grid {
+  display: grid;
+  grid-auto-rows: max-content;
+  grid-gap: 1rem;
+  button {
     margin-right: .6rem
   }
+}
 
-  /* Logo */
-  .logo {
-    margin-bottom: auto
-  }
-  .logo_link {
-    display: block;
-    width: 38px;
-    transition: 1s all cubic-bezier(.165, .84, .44, 1)
-  }
-  .logo_link:hover {
-    opacity: var(--light_opacity)
-  }
-  .logo_link:active {
-    transform: var(--active_state)
-  }
-
-  /* Tab options */
-  .tab_option {
-    user-select: none;
-    z-index: 2;
-    display: flex;
-    cursor: pointer;
-    position: fixed;
-    right: 0;
-    top: 3rem;
-    width: 3rem;
-    padding: .4rem 1rem .4rem .6rem;
-    border-radius: 3px 0 0 3px;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    transition: var(--transition_standard)
-  }
-  .icon_open_middle {
-    top: 5.4rem
-  }
-  .icon_open_bottom {
-    top: 7.8rem
-  }
-  .tab_option_small:hover {
-    width: 6rem
-  }
-  .tab_option_large:hover {
-    width: 8rem
-  }
-  .tab_option:hover {
-    justify-content: center;
-    text-align: center
-  }
-  .tab_option:hover svg,
-  .tab_option:hover .notify_badge {
+/* Tab options */
+.tab_option {
+  user-select: none;
+  z-index: 2;
+  display: flex;
+  cursor: pointer;
+  position: fixed;
+  right: 0;
+  top: 2rem;
+  height: 33px;
+  width: 8rem;
+  transform: translateX(5rem);
+  padding: .4rem 1rem .4rem .6rem;
+  border-radius: 3px 0 0 3px;
+  background-color: var(--fore);
+  box-shadow: var(--low_shadow);
+  transition: var(--transition_standard);
+  &:hover :is(svg, .notify_badge) {
     display: none
   }
-  .tab_option .text {
-    font-size: .8rem;
-    display: none;
-    white-space: nowrap;
-    transition: var(--transition_standard)
-  }
-  .tab_option:hover .text {
+  &:hover .text {
     display: block
+  }
+  &.icon_open_middle {
+    top: 4.4rem
+  }
+  &.icon_open_bottom {
+    top: 6.8rem
+  }
+  &.tab_option_small:hover {
+    padding-left: 1.6rem;
+    transform: translateX(2rem)
+  }
+  &.tab_option_large:hover {
+    padding-left: 1.8rem;
+    transform: none
+  }
+  svg {
+    height: 20px;
+    width: 20px;
+    &:hover {
+      display: none
+    }
   }
   .notify_badge {
     position: absolute;
@@ -447,149 +440,148 @@
     left: -10px;
     padding: 2px 5px;
     border-radius: 3px;
-    background: red;
-    color: white;
+    background: var(--base);
+    color: var(--fore);
     font-size: .6rem
   }
+  .text {
+    font-size: .8rem;
+    display: none;
+    white-space: nowrap;
+    transition: var(--transition_standard)
+  }
+}
 
-  /* Loading bar */
-  #nprogress .bar {
+/* Loading bar */
+#nprogress {
+  .bar {
     /* stylelint-disable-next-line */
     background-color: var(--base) !important
   }
-  #nprogress .peg {
+  .peg {
     /* stylelint-disable-next-line */
     box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important
   }
-  #nprogress .spinner-icon {
+  .spinner-icon {
     /* stylelint-disable-next-line */
     border-top-color: var(--base) !important;
     /* stylelint-disable-next-line */
     border-left-color: var(--base) !important
   }
+}
 
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px
-  }
-  ::-webkit-scrollbar-track {
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px
+}
+::-webkit-scrollbar-track {
+  background-color: var(--base_faint)
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--base);
+  &:hover {
     background-color: var(--base_faint)
   }
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--base)
+}
+
+/* Archive and Home */
+.clients_container {
+  display: grid;
+  grid-gap: 2rem;
+  margin-bottom: 2rem
+}
+.client_link_wrapper {
+  text-decoration: none
+}
+
+@media (min-width: 1440px) {
+  .view_container {
+    padding: 2rem 15vw
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--base_faint)
+}
+@media (max-width: 992px) {
+  /* States */
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
+  select:not(:focus):hover,
+  textarea:not(:focus):hover,
+  button:hover:not(:disabled) {
+    opacity: 1
   }
 
-  /* Archive and Home */
-  .clients_container {
-    display: grid;
-    grid-gap: 2rem;
-    margin-bottom: 2rem
-  }
-  .client_link_wrapper {
-    text-decoration: none
-  }
-
-  /* 992 touchscreens */
-  @media (max-width: 992px) {
-    /* States */
-    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]):not(:focus):hover,
-    select:not(:focus):hover,
-    textarea:not(:focus):hover,
-    button:hover:not(:disabled) {
-      opacity: 1
-    }
-
-    /* Tab options */
-    .tab_option_small:hover {
-      width: 3rem
-    }
-    .tab_option_large:hover {
-      width: 3rem
-    }
-    .tab_option:hover svg,
-    .tab_option:hover .notify_badge {
+  /* Tab options */
+  .tab_option {
+    &:hover :is(svg, .notify_badge) {
       display: block
     }
-    .tab_option:hover .text {
+    &:hover .text {
       display: none
     }
-  }
-  @media (max-width: 768px) {
-    /* Containers */
-    .center_wrapped {
-      width: 300px
-    }
-    .tab_overlay_content {
-      padding: 4rem 10vw 10rem 10vw
-    }
-
-    /* Container */
-    main {
-      margin: 0
-    }
-    .view_container {
-      padding: 2rem 5vw 5rem 5vw
+    &.tab_option_small:hover,
+    &.tab_option_large:hover {
+      opacity: var(--light_opacity);
+      padding-left: .6rem;
+      transform: translateX(5rem)
     }
   }
-
-  /* 576 Mobiles */
-  @media (max-width: 576px) {
-    /* Elements */
-    ::-webkit-scrollbar {
-      width: 0;
-      background-color: transparent
-    }
-    h1, .text--large {
-      font-size: 2rem
-    }
-    h2, .text--small {
-      font-size: 1.2rem
-    }
-    .button--state {
-      width: 100%
-    }
-    .center_wrapped {
-      max-width: 300px
-    }
-    .wrapper--calendar {
-      margin: 2rem 0
-    }
+}
+@media (max-width: 768px) {
+  main {
+    margin: 0
+  }
+  .view_container {
+    padding: 2rem 5vw 5rem 5vw
+  }
+  .tab_overlay_content {
+    padding: 4rem 10vw 10rem 10vw
+  }
+}
+@media (max-width: 576px) {
+  /* Elements */
+  ::-webkit-scrollbar {
+    width: 0;
+    background-color: transparent
+  }
+  h1, .text--large {
+    font-size: 2rem
+  }
+  h2, .text--small {
+    font-size: 1.2rem
+  }
+  .wrapper--calendar {
+    margin: 2rem 0
+  }
+  .form_grid {
     .form_button_bar {
       display: grid;
       grid-gap: 1rem;
-      margin-top: 2rem
-    }
-    .form_grid button {
-      width: 100%
-    }
-
-    /* Inputs */
-    input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
-    select.width_300 {
-      width: 100%
+      margin-top: 2rem;
+      button {
+        width: 100%
+      }
     }
   }
 
-  /* Reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    :root {
-      --transition_standard: none
-    }
-    * {
-      transition: none
-    }
-    .fadeIn, .fadeOut {
-      animation: none
-    }
+  /* Inputs */
+  input:not([type=checkbox]):not([type=radio]):not([type=color]):not([type=button]):not([type=submit]).width_300,
+  select.width_300,
+  textarea.width_300 {
+    width: 100%
   }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none
+  }
+  .fadeIn, .fadeOut {
+    animation: none
+  }
+}
 </style>
 
 <template>
-  <!-- Container with class authenticated and setting color css variables -->
   <div id="app" :class="{'authenticated': authenticated}">
     <div v-if="claims.email === 'demo@traininblocks.com' && authenticated" class="top_banner fadeIn">
       <a href="https://traininblocks.com/#pricing" target="_blank" class="a_link text--tiny">
@@ -607,13 +599,23 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <confirm-pop-up ref="confirm_pop_up" />
     </transition>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
+    <transition enter-active-class="fadeIn" leave-active-class="fadeOut ">
       <global-overlay ref="overlay" />
     </transition>
     <div v-if="showEULA" class="tab_overlay_content fadeIn delay fill_mode_both">
       <policy :type="claims.user_type" />
     </div>
-    <nav-bar :authenticated="authenticated" :claims="claims" />
+    <skeleton
+      v-if="(!authenticated || (loading && !instanceReady)) && $route.path !== '/login'"
+      :type="'nav'"
+      class="fadeIn"
+    />
+    <nav-bar
+      v-else-if="$route.path !== '/login'"
+      :authenticated="authenticated"
+      :claims="claims"
+      class="fadeIn"
+    />
     <div :class="{ opened_sections: showEULA }" class="section_overlay" />
     <main id="main" :class="{notAuth: !authenticated}">
       <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
@@ -624,97 +626,50 @@
 </template>
 
 <script>
-import { deleteEmail, deleteEmailText, feedbackEmail, feedbackEmailText } from './components/email'
-const NavBar = () => import(/* webpackChunkName: "components.navbar", webpackPrefetch: true  */ './components/NavBar')
-const Policy = () => import(/* webpackChunkName: "components.policy", webpackPrefetch: true  */ './components/Policy')
+import { mapState } from 'vuex'
+import NavBar from './components/NavBar'
+import Policy from './components/Policy'
 
 export default {
   components: {
     NavBar,
     Policy
   },
-  data () {
-    return {
-
-      // USER
-
-      isTrainer: false,
-      claims: {
-        user_type: 0
-      },
-      clientUser: {
-        plans: null
-      },
-
-      // CLIENT
-
-      clients: null,
-      noClients: false,
-      client_details: null,
-
-      // ARCHIVE
-
-      archive: {
-        clients: {},
-        no_archive: false
-      },
-
-      // PORTFOLIO
-
-      portfolio: {
-        business_name: '',
-        trainer_name: '',
-        notes: ''
-      },
-
-      // TEMPLATE
-
-      templates: null,
-
-      // SYSTEM
-
-      policyVersion: '1.1',
-      versionName: 'Pegasus',
-      versionBuild: '3.2.4',
-      newBuild: false,
-      showEULA: false,
-      loading: false,
-      dontLeave: false,
-      silent_loading: false,
-      authenticated: false,
-      pwa: {
-        deferredPrompt: null,
-        displayMode: 'browser tab',
-        canInstall: false,
-        installed: null
-      },
-      connected: true
-    }
-  },
+  computed: mapState([
+    'authenticated',
+    'clientUserLoaded',
+    'loading',
+    'claims',
+    'showEULA',
+    'clients',
+    'connected',
+    'instanceReady'
+  ]),
   watch: {
     $route (to, from) {
-      this.is_authenticated()
+      this.isAuthenticated()
     },
     async connected () {
       if (this.connected === true) {
-        await this.clients_f()
-        await this.archive_f()
-        this.setup()
+        await this.setup()
       }
     }
   },
-  async created () {
-    this.is_authenticated()
-    this.will_body_scroll(false)
-    this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
+  created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
+    this.isAuthenticated()
+    this.willBodyScroll(true)
   },
   async mounted () {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(
         function (registrations) {
           if (registrations.length !== 0) {
-            for (const registration of registrations) {
-              registration.unregister().then(function () {
+            for (const REGISTRATION of registrations) {
+              REGISTRATION.unregister().then(function () {
                 navigator.serviceWorker.register('/traininblocks-sw.js')
               })
             }
@@ -730,39 +685,55 @@ export default {
         e.returnValue = 'Your changes might not be saved, are you sure you want to leave?'
       }
     })
-    const self = this
+    const SELF = this
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault()
+
       // Stash the event so it can be triggered later.
-      self.pwa.deferredPrompt = e
+      SELF.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'deferredPrompt',
+        data: e
+      })
+
       // Update UI notify the user they can install the PWA
-      this.pwa.canInstall = true
+      SELF.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'canInstall',
+        data: true
+      })
     })
     if ('getInstalledRelatedApps' in navigator) {
-      const self = this
-      const relatedApps = await navigator.getInstalledRelatedApps()
-      if (relatedApps.length > 0) {
-        self.pwa.installed = true
+      const RELATED_APPS = await navigator.getInstalledRelatedApps()
+      if (RELATED_APPS.length > 0) {
+        this.$store.commit('setDataDeep', {
+          attrParent: 'pwa',
+          attrChild: 'installed',
+          data: true
+        })
       }
     }
     if (navigator.standalone) {
-      this.pwa.displayMode = 'standalone-ios'
+      this.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'displayMode',
+        data: 'standalone-ios'
+      })
     }
     if (window.matchMedia('(display-mode: standalone)').matches) {
-      this.pwa.displayMode = 'standalone'
-    }
-    if (this.claims.user_type === ('Trainer' || 'Admin')) {
-      this.isTrainer = true
+      this.$store.commit('setDataDeep', {
+        attrParent: 'pwa',
+        attrChild: 'displayMode',
+        data: 'standalone'
+      })
     }
     this.$axios.interceptors.request.use((config) => {
-      if (self.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
-        self.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
-        self.will_body_scroll(false)
-        self.loading = false
-        self.dontLeave = false
-        self.silent_loading = false
-        throw new self.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
+      if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
+        SELF.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
+        SELF.willBodyScroll(false)
+        SELF.$store.dispatch('endLoading')
+        throw new SELF.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
       }
       return config
     }, (error) => {
@@ -770,20 +741,17 @@ export default {
     })
   },
   methods: {
-    async helper (mode, gaItem, gaAction) {
-      switch (mode) {
-        case 'client_store':
-          await this.archive_f()
-          this.archive_to_vue()
-          await this.clients_f()
-          this.clients_to_vue()
-          this.$ga.event(gaItem, gaAction)
-          this.end_loading()
-          break
-      }
-    },
+
+    // -----------------------------
+    // System
+    // -----------------------------
+
+    /**
+     * Gives darkmode theme to the app.
+     * @param {string} mode - The mode to switch to.
+     */
     darkmode (mode) {
-      const matchedMedia = window.matchMedia('(prefers-color-scheme)') || false
+      const MATCHED_MEDIA = window.matchMedia('(prefers-color-scheme)') || false
       if (mode === 'dark') {
         document.documentElement.style.setProperty('--low_shadow', '0 0 2px 0 #FFFFFF60')
         document.documentElement.style.setProperty('--high_shadow', '0 0 2px 0 white')
@@ -797,7 +765,9 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#686868')
         document.documentElement.style.setProperty('--skeleton_2', '#484848')
         document.documentElement.style.setProperty('--link', 'white')
-      } else if (mode === 'system' && (matchedMedia === false ? false : matchedMedia.media !== 'not all')) {
+        document.documentElement.style.setProperty('--base_red', 'white')
+        document.documentElement.style.setProperty('--base_green', 'white')
+      } else if (mode === 'system' && (MATCHED_MEDIA === false ? false : MATCHED_MEDIA.media !== 'not all')) {
         this.darkmode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
           this.darkmode(e.matches ? 'dark' : 'light')
@@ -815,365 +785,189 @@ export default {
         document.documentElement.style.setProperty('--skeleton_1', '#F4F4F4')
         document.documentElement.style.setProperty('--skeleton_2', '#E4E4E4')
         document.documentElement.style.setProperty('--link', 'blue')
+        document.documentElement.style.setProperty('--base_red', 'rgb(184, 0, 0)')
+        document.documentElement.style.setProperty('--base_green', 'green')
       }
     },
 
-    // AUTH
-
-    async is_authenticated () {
-      this.authenticated = await this.$auth.isAuthenticated()
-    },
-    async setup () {
-      if (localStorage.getItem('claims')) {
-        this.claims = JSON.parse(localStorage.getItem('claims'))
-      } else {
-        this.claims = this.$auth.getUser()
-      }
-      if (this.claims) {
-        if (this.claims.ga === undefined || this.claims === undefined || this.claims === null) {
-          this.claims.ga = true
-        }
-        this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
-
-        if (this.claims.theme === undefined || this.claims === undefined || this.claims === null) {
-          this.claims.theme = 'system'
-        }
-        this.darkmode(this.claims.theme)
-        if ((this.claims.policy === undefined || this.claims.policy === []) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
-          this.will_body_scroll(false)
-          this.showEULA = true
-        } else if ((this.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.$route.path !== '/login') {
-          this.will_body_scroll(false)
-          this.showEULA = true
-        }
-      }
-      this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
-      await this.clients_to_vue()
-      this.connected = navigator.onLine
-      const self = this
-      window.addEventListener('offline', function (event) {
-        self.connected = false
-      })
-      window.addEventListener('online', function (event) {
-        self.connected = true
-      })
-    },
-    async save_claims () {
-      this.dontLeave = true
-      try {
-        await this.$axios.post('/.netlify/functions/okta',
-          {
-            type: 'POST',
-            body: {
-              profile: {
-                ga: this.claims.ga,
-                theme: this.claims.theme,
-                policy: this.claims.policy
-              }
-            },
-            url: `${this.claims.sub}`
-          }
-        )
-        localStorage.removeItem('claims')
-        this.dontLeave = false
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-
-    // SYSTEM STATE
-
-    async resolve_error (msg) {
+    /**
+     * Processes captured error and sends to Jira.
+     * @param {string} msg - The error text.
+     */
+    async resolveError (msg) {
       if (this.claims.user_type !== 'Admin') {
-        await this.$axios.post('/.netlify/functions/error',
-          {
-            msg,
-            claims: this.claims
-          }
-        )
+        await this.$axios.post('/.netlify/functions/error', {
+          msg,
+          claims: this.claims
+        })
       }
-      this.end_loading()
+      this.$store.dispatch('endLoading')
       this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
-      this.will_body_scroll(false)
-      console.error(msg)
-    },
-    end_loading () {
-      this.loading = false
-      this.dontLeave = false
-      this.silent_loading = false
+      this.willBodyScroll(false)
     },
 
-    // CLIENT
+    // -----------------------------
+    // Auth
+    // -----------------------------
 
-    async clients_to_vue () {
-      if (!localStorage.getItem('clients')) {
-        await this.clients_f()
-      }
-      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-        const textA = a.name.toUpperCase()
-        const textB = b.name.toUpperCase()
-        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+    /**
+     * Checks if the user is authenticated and sets the Vuex state accordingly.
+     */
+    async isAuthenticated () {
+      this.$store.commit('setData', {
+        attr: 'authenticated',
+        data: await this.$auth.isAuthenticated()
       })
-      /*
-      if (!this.noClients && this.isTrainer) {
-        for (const client of this.clients) {
-          const planResponse = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
-          client.plans = planResponse.data.length === 0 ? false : planResponse.data
-          if (client.plans !== false) {
-            for (const plan of client.plans) {
-              const sessionsResponse = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
-              plan.sessions = sessionsResponse.data.length === 0 ? false : sessionsResponse.data
-            }
+    },
+
+    /**
+     * Initiates all the crucial setup for the app.
+     * @param {boolean} force - Whether this process is forced.
+     */
+    async setup (force) {
+      force = force || false
+      if (!this.instanceReady || force) {
+        // Set claims
+        this.$store.commit('setData', {
+          attr: 'claims',
+          data: await this.$auth.getUser()
+        })
+        if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
+          this.$store.commit('setData', {
+            attr: 'isTrainer',
+            data: true
+          })
+        }
+        if (this.claims) {
+          if (!this.claims.ga || !this.claims) {
+            this.$store.commit('setData', {
+              attr: 'ga',
+              data: true
+            })
+          }
+          if (!this.claims.theme || !this.claims) {
+            this.$store.commit('setData', {
+              attr: 'theme',
+              data: 'system'
+            })
+          }
+
+          // Set analytics and theme
+          this.claims.ga !== false ? this.$ga.enable() : this.$ga.disable()
+          this.darkmode(this.claims.theme)
+
+          // Set EULA
+          if ((!this.claims.policy || this.$store.state.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.authenticated) {
+            this.willBodyScroll(false)
+            this.$store.commit('setData', {
+              attr: 'showEULA',
+              data: true
+            })
           }
         }
-      }
-      localStorage.setItem('clients', JSON.stringify(this.clients))
-      */
-      this.noClients = this.clients.length === 0
-    },
-    async clients_f () {
-      try {
-        const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}`)
-        this.noClients = response.data.length === 0
-        localStorage.setItem('clients', JSON.stringify(response.data))
-      } catch (e) {
-        this.noClients = false
-        this.resolve_error(e)
-      }
-    },
-    async client_delete (id) {
-      this.dontLeave = true
-      try {
-        await this.$axios.delete(`https://api.traininblocks.com/clients/${id}`)
-        this.helper('client_store', 'Client', 'delete')
-        this.archive.no_archive = this.archive.clients.length === 0
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
 
-    // CLIENT ARCHIVE
+        // Set auth header
+        this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
 
-    async update_client (clientNotesUpdate) {
-      this.silent_loading = true
-      this.dontLeave = true
-      try {
-        await this.$axios.post('https://api.traininblocks.com/clients',
-          {
-            id: this.client_details.client_id,
-            name: this.client_details.name,
-            email: this.client_details.email,
-            number: this.client_details.number,
-            notifications: this.client_details.notifications,
-            notes: clientNotesUpdate === undefined ? this.client_details.notes : clientNotesUpdate
+        // Set connection
+        this.$store.commit('setData', {
+          attr: 'connected',
+          data: navigator.onLine
+        })
+        const SELF = this
+        window.addEventListener('offline', function (event) {
+          SELF.$store.commit('setData', {
+            attr: 'connected',
+            data: false
+          })
+        })
+        window.addEventListener('online', function (event) {
+          SELF.$store.commit('setData', {
+            attr: 'connected',
+            data: true
+          })
+        })
+
+        // Check build
+        if (localStorage.getItem('versionBuild') !== this.$store.state.versionBuild) {
+          this.$store.commit('setData', {
+            attr: 'newBuild',
+            data: true
+          })
+        }
+
+        // Get data if not client
+        if (this.claims.user_type === 'Admin' || this.claims.user_type === 'Trainer') {
+          try {
+            await this.$store.dispatch('getHighLevelData')
+          } catch (e) {
+            this.resolveError(e)
           }
-        )
-        // Get the client information again as we have just updated the client
-        await this.clients_f()
-        await this.clients_to_vue()
-        this.$refs.response_pop_up.show('Client updated', 'All your changes have been saved')
-        this.end_loading()
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async archive_to_vue () {
-      if (!localStorage.getItem('archive')) {
-        await this.archive_f()
-      }
-      if (JSON.parse(localStorage.getItem('archive')).length === 0) {
-        this.archive.no_archive = true
-      } else {
-        this.archive.clients = JSON.parse(localStorage.getItem('archive')).sort((a, b) => {
-          const textA = a.name.toUpperCase()
-          const textB = b.name.toUpperCase()
-          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        }
+
+        // Stops setup from running more than once
+        this.$store.commit('setData', {
+          attr: 'instanceReady',
+          data: true
         })
       }
     },
-    async archive_f () {
+
+    /**
+     * Saves the user's claims to Okta.
+     */
+    async saveClaims () {
       try {
-        const response = await this.$axios.get(`https://api.traininblocks.com/clients/${this.claims.sub}/archive`)
-        this.archive.no_archive = response.data.length === 0
-        localStorage.setItem('archive', JSON.stringify(response.data))
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('saveClaims')
+        this.$store.dispatch('endLoading')
       } catch (e) {
-        this.archive.no_archive = false
-        this.error = e.toString()
+        this.resolveError(e)
       }
     },
-    async client_archive (id, index) {
-      if (await this.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
-        this.dontLeave = true
-        const client = this.clients.find(client => client.client_id === id)
-        const email = client.email
-        this.clients.splice(index, 1)
-        this.noClients = this.clients.length === 0
+
+    // -----------------------------
+    // Client-side
+    // -----------------------------
+
+    /**
+     * Gets all the data for setup on the client-side
+     */
+    async getClientSideData () {
+      if (!this.clientUserLoaded) {
         try {
-          this.response = await this.$axios.post(`https://api.traininblocks.com/clients/archive/${id}`).data
-          const result = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'GET',
-              url: `?filter=profile.email+eq+"${email}"&limit=1`
-            }
-          )
-          if (result.data.length >= 1) {
-            await this.$axios.post('/.netlify/functions/okta',
-              {
-                type: 'POST',
-                body: {},
-                url: `${result.data[0].id}/lifecycle/suspend`
-              }
-            )
-            await this.$axios.post('/.netlify/functions/send-email',
-              {
-                to: email,
-                subject: 'Account Deactivated',
-                text: deleteEmailText(),
-                html: deleteEmail()
-              }
-            )
-          }
-          this.helper('client_store', 'Client', 'archive')
-          this.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
-          this.end_loading()
-          this.$router.push('/')
+          await this.$store.dispatch('getClientSideInfo')
+          await this.$store.dispatch('getClientSidePlans')
+          this.$store.commit('setData', {
+            attr: 'clientUserLoaded',
+            data: true
+          })
         } catch (e) {
-          this.resolve_error(e)
+          this.resolveError(e)
         }
-      }
-    },
-    async client_unarchive (id) {
-      this.dontLeave = true
-      const client = this.archive.clients.find(client => client.client_id === id)
-      const arr = JSON.parse(localStorage.getItem('clients'))
-      arr.push(client)
-
-      localStorage.setItem('clients', JSON.stringify(arr))
-      this.clients = JSON.parse(localStorage.getItem('clients')).sort((a, b) => {
-        const textA = a.name.toUpperCase()
-        const textB = b.name.toUpperCase()
-        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
-      })
-      this.archive.no_archive = this.archive.clients.length === 0
-      try {
-        const response = await this.$axios.post(`https://api.traininblocks.com/clients/unarchive/${id}`)
-        this.response = response.data
-        this.helper('client_store', 'Client', 'unarchive')
-      } catch (e) {
-        this.resolve_error(e)
       }
     },
 
-    // GET METHODS
-
-    async get_templates (force) {
+    /**
+     * Updates a client-side session.
+     * @param {integer} planId - The id of the plan.
+     * @param {integer} sessionId - The id of the session to update.
+     */
+    async updateClientSideSession (planId, sessionId) {
       try {
-        if (!localStorage.getItem('templates') || force || this.claims.user_type === 'Admin') {
-          const response = await this.$axios.get(`https://api.traininblocks.com/templates/${this.claims.sub}`)
-          localStorage.setItem('templates', JSON.stringify(response.data))
-        }
-        this.templates = JSON.parse(localStorage.getItem('templates'))
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async get_portfolio (force) {
-      try {
-        if (!localStorage.getItem('portfolio') || force || this.claims.user_type === 'Admin') {
-          let response
-          if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
-            response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${this.claims.sub}`)
-            if (response.data.length === 0) {
-              this.create_portfolio()
-            } else {
-              localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
-            }
-          } else {
-            const client = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
-            if (client.data[0].pt_id) {
-              response = await this.$axios.get(`https://api.traininblocks.com/portfolio/${client.data[0].pt_id}`)
-              if (response.data.length !== 0) {
-                localStorage.setItem('portfolio', JSON.stringify(response.data[0]))
-              }
-            }
-          }
-        }
-        this.portfolio = JSON.parse(localStorage.getItem('portfolio'))
-        this.end_loading()
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async create_portfolio () {
-      this.dontLeave = true
-      try {
-        await this.$axios.put('https://api.traininblocks.com/portfolio',
-          {
-            pt_id: this.claims.sub,
-            trainer_name: '',
-            business_name: '',
-            notes: ''
-          }
-        )
-        await this.get_portfolio(true)
-        this.end_loading()
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async get_plans () {
-      try {
-        const plans = await this.$axios.get(`https://api.traininblocks.com/programmes/${this.claims.client_id_db}`)
-        this.clientUser.plans = plans.data
-        for (const i in this.clientUser.plans) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${this.clientUser.plans[i].id}`)
-          this.clientUser.plans[i].sessions = response.data
-        }
-      } catch (e) {
-        this.resolve_error(e)
-      }
-    },
-    async update_session (pid, sid, feedbackNotesUpdate) {
-      const plan = this.clientUser.plans.find(plan => plan.id === pid)
-      const session = plan.sessions.find(session => session.id === sid)
-      const sessionId = session.id
-      const sessionName = session.name
-      const sessionChecked = session.checked
-      const sessionFeedback = session.feedback
-      try {
-        await this.$axios.post('https://api.traininblocks.com/client-workouts',
-          {
-            id: sessionId,
-            name: sessionName,
-            checked: sessionChecked,
-            feedback: feedbackNotesUpdate === undefined ? sessionFeedback : feedbackNotesUpdate
-          }
-        )
+        await this.$store.dispatch('updateClientSideSession', {
+          planId,
+          sessionId
+        })
         this.$ga.event('Session', 'update')
-        const client = await this.$axios.get(`https://api.traininblocks.com/ptId/${this.claims.client_id_db}`)
-        if (client.data[0].notifications === 1) {
-          if (sessionFeedback !== null) {
-            const ptEmail = await this.$axios.post('/.netlify/functions/okta',
-              {
-                type: 'GET',
-                url: `?filter=id+eq+"${client.data[0].pt_id}"&limit=1`
-              }
-            )
-            await this.$axios.post('/.netlify/functions/send-email',
-              {
-                to: ptEmail.data[0].credentials.emails[0].value,
-                subject: this.claims.email + ' has submitted feedback for ' + sessionName,
-                text: feedbackEmailText(this.claims.client_id_db, pid),
-                html: feedbackEmail(this.claims.client_id_db, pid)
-              }
-            )
-          }
-        }
         this.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
+        this.$store.dispatch('endLoading')
       } catch (e) {
-        this.resolve_error(e)
+        this.resolveError(e)
       }
-      this.end_loading()
     }
   }
 }

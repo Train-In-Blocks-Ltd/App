@@ -1,30 +1,31 @@
-<style scoped>
+<style lang="scss" scoped>
+.close_icon {
+  margin-bottom: 2rem
+}
 textarea {
   margin-top: 2rem;
   resize: none
 }
-
-/* Toolkit */
 .session_toolkit--content {
-  margin: 2rem 0
-}
-.session_toolkit--content > div {
-  display: grid;
-  grid-gap: 1rem
-}
-.result {
-  margin-top: 2rem
-}
-
-@media (max-width: 576px) {
-  button.red_button {
-    width: 100%
+  margin: 2rem 0;
+  > div {
+    display: grid;
+    grid-gap: 1rem
+  }
+  .result {
+    margin-top: 2rem
   }
 }
 </style>
 
 <template>
   <div>
+    <inline-svg
+      class="close_icon cursor"
+      :src="require('../assets/svg/close.svg')"
+      aria-label="Close"
+      @click="$parent.showToolkit = false, willBodyScroll(true)"
+    />
     <select
       v-model="selectedTool"
       class="text--small session_toolkit--select"
@@ -55,17 +56,11 @@ textarea {
           :aria-label="input.label"
           @input="calculate(tool.id)"
         >
-        <h2 class="result">
+        <h3 class="result">
           {{ tool.metric }}: {{ result || '_____' }} <span v-html="tool.units" />
-        </h2>
+        </h3>
       </div>
     </div>
-    <button
-      class="red_button"
-      @click="$parent.showToolkit = false, will_body_scroll(true)"
-    >
-      Close
-    </button>
   </div>
 </template>
 
@@ -163,6 +158,15 @@ export default {
     }
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Calculates based on the calculator selected.
+     * @param {string} cal - The selected calculator.
+     */
     calculate (cal) {
       switch (cal) {
         case 'mhr_tanaka': {
@@ -174,41 +178,41 @@ export default {
           break
         }
         case 'hrr': {
-          const mhr = Number(document.getElementById('input_mhr_hrr').value)
-          const rhr = Number(document.getElementById('input_rhr_hrr').value)
-          this.result = mhr - rhr
+          const MAX_HR = Number(document.getElementById('input_mhr_hrr').value)
+          const RESTING_HR = Number(document.getElementById('input_rhr_hrr').value)
+          this.result = MAX_HR - RESTING_HR
           break
         }
         case 'hrtz': {
-          const int1 = Number(document.getElementById('input_intensity_1').value / 100)
-          const int2 = Number(document.getElementById('input_intensity_2').value / 100)
-          const mhr = Number(document.getElementById('input_mhr_hrtz').value)
-          const rhr = Number(document.getElementById('input_rhr_hrtz').value)
-          this.result = `${(int1 * (mhr - rhr) + rhr).toFixed(2)}–${(int2 * (mhr - rhr) + rhr).toFixed(2)}`
+          const INTENSITY_ZONE_1 = Number(document.getElementById('input_intensity_1').value / 100)
+          const INTENSITY_ZONE_2 = Number(document.getElementById('input_intensity_2').value / 100)
+          const MAX_HR = Number(document.getElementById('input_mhr_hrtz').value)
+          const RESTING_HR = Number(document.getElementById('input_rhr_hrtz').value)
+          this.result = `${(INTENSITY_ZONE_1 * (MAX_HR - RESTING_HR) + RESTING_HR).toFixed(2)}–${(INTENSITY_ZONE_2 * (MAX_HR - RESTING_HR) + RESTING_HR).toFixed(2)}`
           break
         }
         case 'bmi': {
-          const weight = Number(document.getElementById('input_weight').value)
-          const height = Number(document.getElementById('input_height').value)
-          this.result = (weight / (height * height)).toFixed(2)
+          const WEIGHT = Number(document.getElementById('input_weight').value)
+          const HEIGHT = Number(document.getElementById('input_height').value)
+          this.result = (WEIGHT / (HEIGHT * HEIGHT)).toFixed(2)
           break
         }
         case '3_skin_jackson_pollock_female': {
-          const age = Number(document.getElementById('input_age_f').value)
-          const site1 = Number(document.getElementById('input_site1_f').value)
-          const site2 = Number(document.getElementById('input_site2_f').value)
-          const site3 = Number(document.getElementById('input_site3_f').value)
-          const sum = site1 + site2 + site3
-          this.result = (1.0994921 - (0.0009929 * sum) + (0.0000023 * sum * sum) - (0.0001392 * age)).toFixed(2)
+          const AGE = Number(document.getElementById('input_age_f').value)
+          const SITE_1 = Number(document.getElementById('input_site1_f').value)
+          const SITE_2 = Number(document.getElementById('input_site2_f').value)
+          const SITE_3 = Number(document.getElementById('input_site3_f').value)
+          const SUM_OF_SITES = SITE_1 + SITE_2 + SITE_3
+          this.result = (1.0994921 - (0.0009929 * SUM_OF_SITES) + (0.0000023 * SUM_OF_SITES * SUM_OF_SITES) - (0.0001392 * AGE)).toFixed(2)
           break
         }
         case '3_skin_jackson_pollock_male': {
-          const age = Number(document.getElementById('input_age_m').value)
-          const site1 = Number(document.getElementById('input_site1_m').value)
-          const site2 = Number(document.getElementById('input_site2_m').value)
-          const site3 = Number(document.getElementById('input_site3_m').value)
-          const sum = site1 + site2 + site3
-          this.result = (1.10938 - (0.0008267 * sum) + (0.0000016 * sum * sum) - (0.0002574 * age)).toFixed(2)
+          const AGE = Number(document.getElementById('input_age_m').value)
+          const SITE_1 = Number(document.getElementById('input_site1_m').value)
+          const SITE_2 = Number(document.getElementById('input_site2_m').value)
+          const SITE_3 = Number(document.getElementById('input_site3_m').value)
+          const SUM_OF_SITES = SITE_1 + SITE_2 + SITE_3
+          this.result = (1.10938 - (0.0008267 * SUM_OF_SITES) + (0.0000016 * SUM_OF_SITES * SUM_OF_SITES) - (0.0002574 * AGE)).toFixed(2)
           break
         }
         case 'bf_siri': {
