@@ -52,7 +52,7 @@ export default {
     )
     setTimeout(
       function () {
-        window.location.href = 'https://dev.traininblocks.com/clientUser/'
+        self.router.push('clientUser')
       }, 5000
     )
   }
