@@ -11,7 +11,9 @@
         "datetime",
         "dont",
         "helvetica",
+        "mixins",
         "noreferrer",
+        "pkce",
         "vuex",
         "wallingford"
     ]

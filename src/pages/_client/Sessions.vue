@@ -710,10 +710,7 @@ export default {
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
+      this.$store.commit('SET_DONT_LEAVE', false)
       next()
     }
   },
@@ -827,10 +824,7 @@ export default {
     }
   },
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     this.$parent.sessions = true
     this.noSessions = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
@@ -915,10 +909,7 @@ export default {
     resolvePlanInfoEditor (state) {
       switch (state) {
         case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           this.editingPlanNotes = true
           this.tempEditorStore = this.plan.notes
           break
@@ -927,10 +918,7 @@ export default {
           this.updatePlan()
           break
         case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
+          this.$store.commit('SET_DONT_LEAVE', false)
           this.editingPlanNotes = false
           this.$store.commit('updatePlanAttr', {
             clientId: this.clientDetails.client_id,
@@ -951,10 +939,7 @@ export default {
       const SESSION = this.$store.getters.helper('match_session', this.$route.params.client_id, this.$route.params.id, id)
       switch (state) {
         case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           this.isEditingSession = true
           this.editSession = id
           this.forceStop += 1
@@ -962,10 +947,7 @@ export default {
           this.goToEvent(SESSION.id, SESSION.week_id)
           break
         case 'save':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           this.isEditingSession = false
           this.editSession = null
           this.updateSession(id)
@@ -973,10 +955,7 @@ export default {
           this.$store.dispatch('endLoading')
           break
         case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
+          this.$store.commit('SET_DONT_LEAVE', false)
           this.isEditingSession = false
           this.editSession = null
           SESSION.notes = this.tempEditorStore
@@ -992,14 +971,8 @@ export default {
      * Duplicates the selected sessions.
      */
     async duplicate () {
-      this.$store.commit('setData', {
-        attr: 'loading',
-        data: true
-      })
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_LOADING', true)
+      this.$store.commit('SET_DONT_LEAVE', true)
       const TO_DUPLICATE = []
       const CLIENT_ID = this.$route.params.client_id
       const PLAN_ID = this.$route.params.id
@@ -1051,10 +1024,7 @@ export default {
      * Shifts the selected sessions by specified days.
      */
     shiftAcross () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_DONT_LEAVE', true)
       this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           this.$store.commit('updateSessionAttr', {
@@ -1078,10 +1048,7 @@ export default {
      * Moves the selected sessions to specified week.
      */
     moveToWeek () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_DONT_LEAVE', true)
       this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
           this.$store.commit('updateSessionAttr', {
@@ -1111,10 +1078,7 @@ export default {
      * @param {integer} boolState - The state of the session, 1 - complete, 0 - incomplete.
      */
     async bulkCheck (boolState) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_DONT_LEAVE', true)
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${boolState === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
           this.plan.sessions.forEach((session) => {
@@ -1140,10 +1104,7 @@ export default {
      * Deletes all the selected sessions.
      */
     async bulkDelete () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_DONT_LEAVE', true)
       if (this.selectedSessions.length !== 0) {
         if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected sessions?', 'We will remove these sessions from our database and it won\'t be recoverable.')) {
           try {
@@ -1211,10 +1172,7 @@ export default {
      * Creates a new session.
      */
     async createNewSession () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_DONT_LEAVE', true)
       const NEW_SESSION_ID = await this.addSession({
         clientId: this.$route.params.client_id,
         planId: this.$route.params.id,
@@ -1417,10 +1375,7 @@ export default {
      */
     async duplicatePlan (clientId) {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('duplicatePlan', {
           clientId,
           planId: this.plan.id,
@@ -1444,10 +1399,7 @@ export default {
      */
     async updatePlan () {
       try {
-        this.$store.commit('setData', {
-          attr: 'loading',
-          data: true
-        })
+        this.$store.commit('SET_LOADING', true)
         await this.$store.dispatch('updatePlan', this.plan)
         this.$ga.event('Plan', 'update')
         this.$store.dispatch('endLoading')
@@ -1462,10 +1414,7 @@ export default {
     async deletePlan () {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           await this.$store.dispatch('deletePlan', {
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id

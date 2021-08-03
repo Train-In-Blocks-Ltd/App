@@ -656,10 +656,7 @@ export default {
     }
   },
   created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.isAuthenticated()
     this.willBodyScroll(true)
   },
@@ -691,42 +688,22 @@ export default {
       e.preventDefault()
 
       // Stash the event so it can be triggered later.
-      SELF.$store.commit('setDataDeep', {
-        attrParent: 'pwa',
-        attrChild: 'deferredPrompt',
-        data: e
-      })
+      SELF.$store.commit('SET_PWA_DEFERRED_PROMPT', e)
 
       // Update UI notify the user they can install the PWA
-      SELF.$store.commit('setDataDeep', {
-        attrParent: 'pwa',
-        attrChild: 'canInstall',
-        data: true
-      })
+      SELF.$store.commit('SET_PWA_CAN_INSTALL', true)
     })
     if ('getInstalledRelatedApps' in navigator) {
       const RELATED_APPS = await navigator.getInstalledRelatedApps()
       if (RELATED_APPS.length > 0) {
-        this.$store.commit('setDataDeep', {
-          attrParent: 'pwa',
-          attrChild: 'installed',
-          data: true
-        })
+        this.$store.commit('SET_PWA_INSTALLED', true)
       }
     }
     if (navigator.standalone) {
-      this.$store.commit('setDataDeep', {
-        attrParent: 'pwa',
-        attrChild: 'displayMode',
-        data: 'standalone-ios'
-      })
+      this.$store.commit('SET_PWA_DISPLAY_MODE', 'standalone-ios')
     }
     if (window.matchMedia('(display-mode: standalone)').matches) {
-      this.$store.commit('setDataDeep', {
-        attrParent: 'pwa',
-        attrChild: 'displayMode',
-        data: 'standalone'
-      })
+      this.$store.commit('SET_PWA_DISPLAY_MODE', 'standalone')
     }
     this.$axios.interceptors.request.use((config) => {
       if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
@@ -814,10 +791,7 @@ export default {
      * Checks if the user is authenticated and sets the Vuex state accordingly.
      */
     async isAuthenticated () {
-      this.$store.commit('setData', {
-        attr: 'authenticated',
-        data: await this.$auth.isAuthenticated()
-      })
+      this.$store.commit('SET_AUTHENTICATED', await this.$auth.isAuthenticated)
     },
 
     /**
@@ -828,28 +802,16 @@ export default {
       force = force || false
       if (!this.instanceReady || force) {
         // Set claims
-        this.$store.commit('setData', {
-          attr: 'claims',
-          data: await this.$auth.getUser()
-        })
+        this.$store.commit('SET_CLAIMS', await this.$auth.getUser())
         if (this.claims.user_type === 'Trainer' || this.claims.user_type === 'Admin') {
-          this.$store.commit('setData', {
-            attr: 'isTrainer',
-            data: true
-          })
+          this.$store.commit('SET_IS_TRAINER', true)
         }
         if (this.claims) {
           if (!this.claims.ga || !this.claims) {
-            this.$store.commit('setData', {
-              attr: 'ga',
-              data: true
-            })
+            this.$store.commit('SET_CLAIMS_GA', true)
           }
           if (!this.claims.theme || !this.claims) {
-            this.$store.commit('setData', {
-              attr: 'theme',
-              data: 'system'
-            })
+            this.$store.commit('SET_CLAIMS_THEME', 'system')
           }
 
           // Set analytics and theme
@@ -859,10 +821,7 @@ export default {
           // Set EULA
           if ((!this.claims.policy || this.$store.state.policyVersion !== this.claims.policy[2]) && this.claims.email !== 'demo@traininblocks.com' && this.authenticated) {
             this.willBodyScroll(false)
-            this.$store.commit('setData', {
-              attr: 'showEULA',
-              data: true
-            })
+            this.$store.commit('SET_SHOW_EULA', true)
           }
         }
 
@@ -870,30 +829,18 @@ export default {
         this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`
 
         // Set connection
-        this.$store.commit('setData', {
-          attr: 'connected',
-          data: navigator.onLine
-        })
+        this.$store.commit('SET_CONNECTED', navigator.onLine)
         const SELF = this
         window.addEventListener('offline', function (event) {
-          SELF.$store.commit('setData', {
-            attr: 'connected',
-            data: false
-          })
+          SELF.$store.commit('SET_CONNECTED', false)
         })
         window.addEventListener('online', function (event) {
-          SELF.$store.commit('setData', {
-            attr: 'connected',
-            data: true
-          })
+          SELF.$store.commit('SET_CONNECTED', true)
         })
 
         // Check build
         if (localStorage.getItem('versionBuild') !== this.$store.state.versionBuild) {
-          this.$store.commit('setData', {
-            attr: 'newBuild',
-            data: true
-          })
+          this.$store.commit('SET_NEW_BUILD', true)
         }
 
         // Get data if not client
@@ -906,10 +853,7 @@ export default {
         }
 
         // Stops setup from running more than once
-        this.$store.commit('setData', {
-          attr: 'instanceReady',
-          data: true
-        })
+        this.$store.commit('SET_INSTANCE_READY', true)
       }
     },
 
@@ -918,10 +862,7 @@ export default {
      */
     async saveClaims () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('saveClaims')
         this.$store.dispatch('endLoading')
       } catch (e) {
@@ -941,10 +882,7 @@ export default {
         try {
           await this.$store.dispatch('getClientSideInfo')
           await this.$store.dispatch('getClientSidePlans')
-          this.$store.commit('setData', {
-            attr: 'clientUserLoaded',
-            data: true
-          })
+          this.$store.commit('SET_CLIENT_USER_LOADED', true)
         } catch (e) {
           this.resolveError(e)
         }

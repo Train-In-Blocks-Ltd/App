@@ -90,10 +90,7 @@ export default {
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
+      this.$store.commit('SET_DONT_LEAVE', false)
       next()
     }
   },
@@ -112,10 +109,7 @@ export default {
     'hasCheckedStripeConnect'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
     await this.checkStripeConnect()
@@ -134,10 +128,7 @@ export default {
     resolve_portfolio_editor (state) {
       switch (state) {
         case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           this.editingPortfolio = true
           this.tempEditorStore = this.portfolio.notes
           break
@@ -146,16 +137,9 @@ export default {
           this.updatePortfolio(this.portfolio.notes)
           break
         case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
+          this.$store.commit('SET_DONT_LEAVE', false)
           this.editingPortfolio = false
-          this.$store.commit('setDataDeep', {
-            attrParent: 'portfolio',
-            attrChild: 'notes',
-            data: this.tempEditorStore
-          })
+          this.$store.commit('SET_PORTFOLIO_NOTES', this.tempEditorStore)
           break
       }
     },
@@ -169,14 +153,8 @@ export default {
      */
     async updatePortfolio () {
       try {
-        this.$store.commit('setData', {
-          attr: 'silentLoading',
-          data: true
-        })
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_SILENT_LOADING', true)
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('updatePortfolio')
         this.$ga.event('Portfolio', 'update')
         this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
@@ -195,10 +173,7 @@ export default {
      */
     async stripeConnect () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         const RESPONSE = await this.$axios.post('/.netlify/functions/create-connected-account', {
           email: this.claims.email,
           connectedAccountId: this.claims.connectedAccountId
@@ -216,14 +191,8 @@ export default {
         const RESPONSE_STRIPE = await this.$axios.post('/.netlify/functions/check-connected-account', {
           connectedAccountId: this.claims.connectedAccountId
         })
-        this.$store.commit('setData', {
-          attr: 'isStripeConnected',
-          data: RESPONSE_STRIPE.data
-        })
-        this.$store.commit('setData', {
-          attr: 'hasCheckedStripeConnect',
-          data: true
-        })
+        this.$store.commit('SET_IS_STRIPE_CONNECTED', RESPONSE_STRIPE.data)
+        this.$store.commit('SET_HAS_CHECKED_STRIPE_CONNECT', true)
       }
     }
   }

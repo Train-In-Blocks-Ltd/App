@@ -359,10 +359,7 @@ import { mapState } from 'vuex'
 export default {
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
+      this.$store.commit('SET_DONT_LEAVE', false)
       next()
     }
   },
@@ -416,10 +413,7 @@ export default {
     'coupon'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
@@ -485,10 +479,7 @@ export default {
      */
     async changePassword () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         this.password.error = ''
         await this.$store.dispatch('changePassword', {
           old: this.password.old,
@@ -531,32 +522,17 @@ export default {
      */
     async checkCoupon () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         const RESPONSE = await this.$axios.post('/.netlify/functions/check-coupon',
           {
             email: this.claims.email
           }
         )
         if (RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')) && RESPONSE.data.data.find(coupon => coupon.code === this.claims.email.toUpperCase().replace(/[\W_]+/g, '')).active) {
-          this.$store.commit('setDataDeep', {
-            attrParent: 'coupon',
-            attrChild: 'generated',
-            data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
-          })
-          this.$store.commit('setDataDeep', {
-            attrParent: 'coupon',
-            attrChild: 'code',
-            data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
-          })
+          this.$store.commit('SET_COUPON_GENERATED', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
+          this.$store.commit('SET_COUPON_CODE', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
         }
-        this.$store.commit('setDataDeep', {
-          attrParent: 'coupon',
-          attrChild: 'checked',
-          data: true
-        })
+        this.$store.commit('SET_COUPON_CHECKED', true)
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
@@ -564,25 +540,14 @@ export default {
     },
     async generateCoupon () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$axios.post('/.netlify/functions/create-coupon',
           {
             email: this.claims.email
           }
         )
-        this.$store.commit('setDataDeep', {
-          attrParent: 'coupon',
-          attrChild: 'generated',
-          data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
-        })
-        this.$store.commit('setDataDeep', {
-          attrParent: 'coupon',
-          attrChild: 'code',
-          data: this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
-        })
+        this.$store.commit('SET_COUPON_GENERATED', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
+        this.$store.commit('SET_COUPON_CODE', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
@@ -592,24 +557,12 @@ export default {
       const link = this.claims.email.toUpperCase().replace(/[\W_]+/g, '')
       const self = this
       navigator.clipboard.writeText(link).then(function () {
-        self.$store.commit('setDataDeep', {
-          attrParent: 'coupon',
-          attrChild: 'code',
-          data: 'Copied!'
-        })
+        self.$store.commit('SET_COUPON_CODE', 'Copied!')
         setTimeout(function () {
-          self.$store.commit('setDataDeep', {
-            attrParent: 'coupon',
-            attrChild: 'code',
-            data: self.claims.email.toUpperCase().replace(/[\W_]+/g, '')
-          })
+          self.$store.commit('SET_COUPON_CODE', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
         }, 2000)
       }, function (err) {
-        self.$store.commit('setDataDeep', {
-          attrParent: 'coupon',
-          attrChild: 'code',
-          data: 'Could not copy text: ' + err
-        })
+        self.$store.commit('SET_COUPON_CODE', 'Could not copy text: ' + err)
       })
     }
   }

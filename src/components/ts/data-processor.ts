@@ -129,7 +129,7 @@ export default class DataProcessor {
     this.ySampleSD = standardDeviation(this.scaledYDataset, this.ySampleMean)
 
     // Pearson's correlation
-    const SUM_OF_POINTS = []
+    const SUM_OF_POINTS: Array<number> = []
     for (let i = 0; i < this.scaledXDataset.length; i++) {
       SUM_OF_POINTS.push(((this.scaledXDataset[i] - this.xSampleMean) / this.xSampleSD) * ((this.scaledYDataset[i] - this.ySampleMean) / this.ySampleSD))
     }

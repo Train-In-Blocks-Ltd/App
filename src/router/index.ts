@@ -2,26 +2,26 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import OktaVue, { LoginCallback } from '@okta/okta-vue'
 import { OktaAuth } from '@okta/okta-auth-js'
-import { store } from '../store/store'
+import { store } from '../store'
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../config/prod.env') : require('../../config/dev.env')
 
-const LoginComponent = () => import(/* webpackChunkName: "login" */ '@/pages/Login')
-const ProfileComponent = () => import(/* webpackChunkName: "account" */ '@/pages/Account')
-const LogoutComponent = () => import(/* webpackChunkName: "logout" */ '@/pages/Logout')
-const NotFound = () => import(/* webpackChunkName: "notfound" */ '@/pages/NotFound')
-const ArchiveComponent = () => import(/* webpackChunkName: "archive" */ '@/pages/Archive')
-const TemplateComponent = () => import(/* webpackChunkName: "templates" */ '@/pages/Templates')
-const PortfolioComponent = () => import(/* webpackChunkName: "portfolio" */ '@/pages/Portfolio')
+const LoginComponent = () => import(/* webpackChunkName: "login" */ '@/pages/Login.vue')
+const ProfileComponent = () => import(/* webpackChunkName: "account" */ '@/pages/Account.vue')
+const LogoutComponent = () => import(/* webpackChunkName: "logout" */ '@/pages/Logout.vue')
+const NotFound = () => import(/* webpackChunkName: "notfound" */ '@/pages/NotFound.vue')
+const ArchiveComponent = () => import(/* webpackChunkName: "archive" */ '@/pages/Archive.vue')
+const TemplateComponent = () => import(/* webpackChunkName: "templates" */ '@/pages/Templates.vue')
+const PortfolioComponent = () => import(/* webpackChunkName: "portfolio" */ '@/pages/Portfolio.vue')
 
-const ClientComponent = () => import(/* webpackChunkName: "client.home" */ '@/pages/_client/Home')
-const ClientPlans = () => import(/* webpackChunkName: "client.plans" */ '@/pages/_client/Plans')
-const ClientSessions = () => import(/* webpackChunkName: "client.sessions" */ '@/pages/_client/Sessions')
+const ClientComponent = () => import(/* webpackChunkName: "client.home" */ '@/pages/_client/Home.vue')
+const ClientPlans = () => import(/* webpackChunkName: "client.plans" */ '@/pages/_client/Plans.vue')
+const ClientSessions = () => import(/* webpackChunkName: "client.sessions" */ '@/pages/_client/Sessions.vue')
 
-const ClientUserComponent = () => import(/* webpackChunkName: "client-user.home" */ '@/pages/_clientUser/Home')
-const ClientUserPlans = () => import(/* webpackChunkName: "client-user.plans" */ '@/pages/_clientUser/Plans')
-const ClientUserSuccess = () => import(/* webpackChunkName: "client-user.success" */ '@/pages/_clientUser/Success')
+const ClientUserComponent = () => import(/* webpackChunkName: "client-user.home" */ '@/pages/_clientUser/Home.vue')
+const ClientUserPlans = () => import(/* webpackChunkName: "client-user.plans" */ '@/pages/_clientUser/Plans.vue')
+const ClientUserSuccess = () => import(/* webpackChunkName: "client-user.success" */ '@/pages/_clientUser/Success.vue')
 
-const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home')
+const HomeComponent = () => import(/* webpackChunkName: "home" */ '@/pages/Home.vue')
 
 Vue.use(Router)
 const oktaAuth = new OktaAuth({
@@ -30,6 +30,7 @@ const oktaAuth = new OktaAuth({
   redirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host + '/implicit/callback' : 'https://' + window.location.host + '/implicit/callback',
   scopes: ['openid', 'profile', 'email'],
   pkce: true,
+  // @ts-ignore
   autoRenew: false,
   async onSessionExpired () {
     await Vue.prototype.$auth.logout({ postLogoutRedirectUri: window.location.host === 'localhost:8080' ? 'http://' + window.location.host : 'https://' + window.location.host })
@@ -154,11 +155,11 @@ const router = new Router({
   }
 })
 
-const onAuthRequired = async (to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth) && !(await Vue.prototype.$auth.isAuthenticated())) {
+const onAuthRequired = async (to: any, from: any, next: any) => {
+  if (to.matched.some((record: any) => record.meta.requiresAuth) && !(await Vue.prototype.$auth.isAuthenticated())) {
     // Navigate to custom login page
     next({ path: '/login' })
-  } else if (to.matched.some(record => record.path === '/login') || from.matched.some(record => record.path === '/login') || to.matched.some(record => record.path === '/implicit/callback') || from.matched.some(record => record.path === '/implicit/callback')) {
+  } else if (to.matched.some((record: any) => record.path === '/login') || from.matched.some((record: any) => record.path === '/login') || to.matched.some((record: any) => record.path === '/implicit/callback') || from.matched.some((record: any) => record.path === '/implicit/callback')) {
     next()
   } else {
     next()
@@ -166,12 +167,12 @@ const onAuthRequired = async (to, from, next) => {
   }
 }
 
-const userType = async (to, from, next) => {
+const userType = async (to: any, from: any, next: any) => {
   let result
   if (await Vue.prototype.$auth.isAuthenticated()) {
     Vue.prototype.$axios.defaults.headers.common.Authorization = `Bearer ${await Vue.prototype.$auth.getAccessToken()}`
     if (sessionStorage.getItem('claims')) {
-      result = JSON.parse(sessionStorage.getItem('claims'))
+      result = JSON.parse(sessionStorage.getItem('claims') ?? '')
     } else {
       const claims = await Vue.prototype.$auth.getUser()
       if (claims !== undefined && claims !== null) {
@@ -187,7 +188,7 @@ const userType = async (to, from, next) => {
     })
   }
   if (result) {
-    if (to.matched.some(record => record.meta.requiresTrainer)) {
+    if (to.matched.some((record: any) => record.meta.requiresTrainer)) {
       if (result.user_type === 'Admin') {
         next()
       } else if (result.user_type === 'Client') {
@@ -196,7 +197,7 @@ const userType = async (to, from, next) => {
       } else {
         next()
       }
-    } else if (to.matched.some(record => record.meta.requiresClient)) {
+    } else if (to.matched.some((record: any) => record.meta.requiresClient)) {
       if (result.user_type === 'Admin') {
         next()
       } else if (result.user_type === 'Trainer') {
@@ -205,7 +206,7 @@ const userType = async (to, from, next) => {
       } else {
         next()
       }
-    } else if (to.matched.some(record => record.meta.requiresNonDemo)) {
+    } else if (to.matched.some((record: any) => record.meta.requiresNonDemo)) {
       if (result.email === 'demo@traininblocks.com') {
         next({ path: '/' })
       } else {

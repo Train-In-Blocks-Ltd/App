@@ -316,10 +316,7 @@ export default {
      * Resets the app state.
      */
     async reset () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_DONT_LEAVE', true)
       this.error = null
       this.success = null
       try {

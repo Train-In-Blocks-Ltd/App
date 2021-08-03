@@ -169,22 +169,10 @@ export default {
       this.pwa.deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === 'accepted') {
           // Hide the app provided install promotion
-          this.$store.commit('setDataDeep', {
-            attrParent: 'pwa',
-            attrChild: 'canInstall',
-            data: false
-          })
-          this.$store.commit('setDataDeep', {
-            attrParent: 'pwa',
-            attrChild: 'displayMode',
-            data: 'standalone'
-          })
+          this.$store.commit('SET_PWA_CAN_INSTALL', false)
+          this.$store.commit('SET_PWA_DISPLAY_MODE', 'standalone')
         } else {
-          this.$store.commit('setDataDeep', {
-            attrParent: 'pwa',
-            attrChild: 'canInstall',
-            data: true
-          })
+          this.$store.commit('SET_PWA_CAN_INSTALL', true)
         }
       })
     }

@@ -577,10 +577,7 @@ export default {
      */
     async createProduct () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('createProduct', {
           pt_id: this.claims.sub,
           ...this.newProduct
@@ -604,10 +601,7 @@ export default {
      */
     async updateProduct (productId) {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('updateProduct', productId)
         this.productChanged = false
         this.$store.dispatch('endLoading')
@@ -622,10 +616,7 @@ export default {
     async deleteProducts () {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected products?', 'We will remove these products from our database and it won\'t be recoverable.')) {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           await this.$store.dispatch('deleteProduct', this.selectedProducts)
           this.deselectAll()
           this.$store.dispatch('endLoading')

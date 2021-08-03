@@ -23,10 +23,7 @@
 <script>
 export default {
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.getClientSideData()

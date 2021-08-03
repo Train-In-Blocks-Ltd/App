@@ -3,6 +3,26 @@
  * @author Train In Blocks Ltd.
  */
 
+import { Dictionary } from "vue-router/types/router"
+
+// -----------------------------
+// Interfaces
+// -----------------------------
+
+interface BuildData {
+  link?: string,
+  datetime?: string,
+  body?: string,
+  clientName?: string,
+  cId?: number,
+  pId?: number
+}
+
+interface Data {
+ title: string,
+ html: string
+}
+
 // -----------------------------
 // Builder and content
 // -----------------------------
@@ -18,7 +38,7 @@
  *  pId: ...
  * })
  */
-export function emailBuilder (type, data) {
+export function emailBuilder (type: string, data: object) {
   return {
     subject: titles[type],
     text: textEmail(type, data),
@@ -30,7 +50,7 @@ export function emailBuilder (type, data) {
 }
 
 /** A dictionary of all the email titles. */
-const titles = {
+const titles: Dictionary<string> = {
   'activate-account': 'Activate your account',
   'password-changed': 'Password changed',
   'weekly-breakdown': 'Here\'s a breakdown of what you did this week',
@@ -44,7 +64,7 @@ const titles = {
   'booking-accepted': 'Your trainer has accepted a booking'
 }
 
-const textEmail = (type, data) => {
+const textEmail = (type:string , data: object): string => {
   let processedText = bodyHtml(type, data).replace('<p>', '').replace('</p>', '\n').replace('</a>', '\n')
   if (processedText.includes('href')) {
     const regex = /<a.*?href="(.*?)".*?>/gi
@@ -75,10 +95,10 @@ The Train In Blocks Team`
 /**
  * Contains all the email HTMLs.
  * @param {string} type - The email body text to use.
- * @param {object} data - Additional specific details required to fill the email.
+ * @param {BuildData} data - Additional specific details required to fill the email.
  * @returns The filled HTML for the email.
  */
-const bodyHtml = (type, data) => {
+const bodyHtml = (type: string, data: BuildData): string => {
   switch (type) {
     case 'activate-account':
       return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.<br><a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a></p>`
@@ -93,15 +113,17 @@ const bodyHtml = (type, data) => {
     case 'client-feedback':
       return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a></p>`
     case 'booking-created':
-      return `<p>Your trainer has scheduled a booking on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
+      return `<p>Your trainer has scheduled a booking on ${data.datetime?.split(' ')[0]} at ${data.datetime?.split(' ')[1].substring(0, 5)}.</p>`
     case 'booking-requested':
-      return `<p>${data.clientName} has requested a booking on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
+      return `<p>${data.clientName} has requested a booking on ${data.datetime?.split(' ')[0]} at ${data.datetime?.split(' ')[1].substring(0, 5)}.</p>`
     case 'booking-request-cancelled':
-      return `<p>${data.clientName} has cancelled their request for a session on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
+      return `<p>${data.clientName} has cancelled their request for a session on ${data.datetime?.split(' ')[0]} at ${data.datetime?.split(' ')[1].substring(0, 5)}.</p>`
     case 'booking-rejected':
-      return `<p>The booking for ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been rejected by your trainer.</p>`
+      return `<p>The booking for ${data.datetime?.split(' ')[0]} at ${data.datetime?.split(' ')[1].substring(0, 5)} has been rejected by your trainer.</p>`
     case 'booking-accepted':
-      return `<p>The booking for ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been accepted by your trainer.</p>`
+      return `<p>The booking for ${data.datetime?.split(' ')[0]} at ${data.datetime?.split(' ')[1].substring(0, 5)} has been accepted by your trainer.</p>`
+    default:
+      return ''
   }
 }
 
@@ -115,7 +137,7 @@ const bodyHtml = (type, data) => {
  * @param {string} data.html - The email content in HTML.
  * @returns The built email.
  */
-function baseEmail (data) {
+function baseEmail (data: Data): string {
   return (
     `<!doctype html>
     <html xmlns='http://www.w3.org/1999/xhtml' xmlns:v='urn:schemas-microsoft-com:vml' xmlns:o='urn:schemas-microsoft-com:office:office'>

@@ -120,10 +120,7 @@ export default {
         console.error('You cannot create a client with your own email address!')
       } else {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           this.$store.dispatch('createClient', {
             name: this.newClient.name,
             pt_id: this.claims.sub,

@@ -102,16 +102,9 @@ export default {
      * Agree to EULA terms.
      */
     agreeToTerms () {
-      this.$store.commit('setDataDeep', {
-        attrParent: 'claims',
-        attrChild: 'policy',
-        data: [this.name, this.today(), this.$store.state.policyVersion]
-      })
+      this.$store.commit('SET_CLAIMS_POLICY', [this.name, this.today(), this.$store.state.policyVersion])
       this.$parent.saveClaims()
-      this.$store.commit('setData', {
-        attr: 'showEULA',
-        data: false
-      })
+      this.$store.commit('SET_SHOW_EULA', false)
     }
   }
 }

@@ -245,10 +245,7 @@ export default {
      * Initiates the changes and POST it to the database.
      */
     progressComplete () {
-      this.$store.commit('setData', {
-        attr: 'loading',
-        data: true
-      })
+      this.$store.commit('SET_LOADING', true)
       const PROGRESS_SESSIONS = []
       this.sessionsToProgress.forEach((sessionId) => {
         PROGRESS_SESSIONS.push(this.planData.sessions.find(session => session.id === sessionId))

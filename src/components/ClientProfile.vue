@@ -303,10 +303,7 @@ export default {
      */
     addImg () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         const FILE = document.getElementById('img_uploader').files[0]
         const READER = new FileReader()
         const self = this
@@ -348,14 +345,8 @@ export default {
      */
     updateClientDetails () {
       try {
-        this.$store.commit('setData', {
-          attr: 'silentLoading',
-          data: true
-        })
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_SILENT_LOADING', true)
+        this.$store.commit('SET_DONT_LEAVE', true)
         this.$store.dispatch('updateClientSideDetails', {
           id: this.claims.client_id_db,
           name: this.clientUser.name,
@@ -376,10 +367,7 @@ export default {
      */
     async createBooking () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('createBooking', {
           clientId: this.claims.client_id_db,
           datetime: this.bookingForm.date + ' ' + this.bookingForm.time,
@@ -407,10 +395,7 @@ export default {
     async cancelBooking (bookingId, datetime) {
       if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to cancel this booking?', 'We will not be able to recover this information.')) {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           await this.$store.dispatch('deleteBooking', {
             clientId: this.claims.client_id_db,
             bookingId,

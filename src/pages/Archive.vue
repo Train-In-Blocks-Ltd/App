@@ -88,10 +88,7 @@ export default {
     'archive'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
@@ -164,10 +161,7 @@ export default {
      */
     async deleteClients () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         if (this.selectedClients.length !== 0) {
           if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected clients?', 'We will remove their data(s) from our database and it won\'t be recoverable.')) {
             await this.$store.dispatch('clientDelete', this.selectedClients)
@@ -186,10 +180,7 @@ export default {
      */
     async unarchiveClients () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         if (this.selectedClients.length !== 0) {
           if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to unarchive all the selected clients?', 'Their datas will be recovered and available on the Home page.')) {
             await this.$store.dispatch('clientUnarchive', this.selectedClients)

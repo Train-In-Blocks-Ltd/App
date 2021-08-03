@@ -240,7 +240,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { emailBuilder } from '../../components/email'
+import { emailBuilder } from '../../components/ts/email'
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
@@ -273,18 +273,12 @@ export default {
     'clientDetails'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
     const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
     await this.$store.dispatch('getPlans', CLIENT.client_id)
-    this.$store.commit('setData', {
-      attr: 'clientDetails',
-      data: CLIENT
-    })
+    this.$store.commit('SET_CLIENT_DETAILS', CLIENT)
     this.$store.dispatch('endLoading')
   },
   methods: {
@@ -337,10 +331,7 @@ export default {
       }
     },
     async giveAccess () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+      this.$store.commit('SET_DONT_LEAVE', true)
       try {
         if (this.clientAlreadyMsg === 'Resend activation email') {
           const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
@@ -440,14 +431,8 @@ export default {
      */
     async updateClient () {
       try {
-        this.$store.commit('setData', {
-          attr: 'silentLoading',
-          data: true
-        })
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_SILENT_LOADING', true)
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('updateClient')
         this.$store.dispatch('endLoading')
       } catch (e) {
@@ -462,10 +447,7 @@ export default {
     async clientArchive (clientId) {
       if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           await this.$store.dispatch('clientArchive', clientId)
           this.$ga.event('Client', 'archive')
           this.$parent.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')

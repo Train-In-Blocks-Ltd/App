@@ -156,10 +156,7 @@ export default {
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
+      this.$store.commit('SET_DONT_LEAVE', false)
       next()
     }
   },
@@ -198,10 +195,7 @@ export default {
     'templates'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
@@ -257,10 +251,7 @@ export default {
       const TEMPLATE = this.templates.find(template => template.id === id)
       switch (state) {
         case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           this.isEditingTemplate = true
           this.editTemplate = id
           this.forceStop += 1
@@ -272,10 +263,7 @@ export default {
           this.updateTemplate(id)
           break
         case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
+          this.$store.commit('SET_DONT_LEAVE', false)
           this.isEditingTemplate = false
           this.editTemplate = null
           TEMPLATE.template = this.tempEditorStore
@@ -352,10 +340,7 @@ export default {
       if (this.selectedTemplates.length !== 0) {
         if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete all the selected templates?', 'We will remove these templates from our database and it won\'t be recoverable.')) {
           try {
-            this.$store.commit('setData', {
-              attr: 'dontLeave',
-              data: true
-            })
+            this.$store.commit('SET_DONT_LEAVE', true)
             await this.$store.dispatch('deleteTemplate', this.selectedTemplates)
             this.$store.dispatch('endLoading')
             this.helper('delete')
@@ -376,10 +361,7 @@ export default {
      */
     async createTemplate () {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('newTemplate')
         this.checkForNew()
         this.helper('new')
@@ -395,10 +377,7 @@ export default {
      */
     async updateTemplate (templateId) {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('updateTemplate', templateId)
         this.helper('update')
         this.$store.dispatch('endLoading')

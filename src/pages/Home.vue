@@ -162,14 +162,8 @@ export default {
     'pwa'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
-    this.$store.commit('setData', {
-      attr: 'clientDetails',
-      data: null
-    })
+    this.$store.commit('SET_LOADING', true)
+    this.$store.commit('SET_CLIENT_DETAILS', null)
     await this.$parent.setup()
     this.$store.dispatch('endLoading')
   }

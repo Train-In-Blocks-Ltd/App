@@ -290,10 +290,7 @@ export default {
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
+      this.$store.commit('SET_DONT_LEAVE', false)
       next()
     }
   },
@@ -328,10 +325,7 @@ export default {
     'pwa'
   ]),
   async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
+    this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.getClientSideData()
@@ -363,10 +357,7 @@ export default {
       })
       switch (state) {
         case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
+          this.$store.commit('SET_DONT_LEAVE', true)
           this.feedbackId = id
           this.forceStop += 1
           this.tempEditorStore = session.feedback
@@ -376,10 +367,7 @@ export default {
           this.$parent.updateClientSideSession(plan.id, session.id)
           break
         case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
+          this.$store.commit('SET_DONT_LEAVE', false)
           this.feedbackId = null
           session.feedback = this.tempEditorStore
           break
@@ -405,10 +393,7 @@ export default {
     },
     async checkout (productId) {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
+        this.$store.commit('SET_DONT_LEAVE', true)
         const RESPONSE = await this.$axios.post('/.netlify/functions/checkout', {
           productId,
           ptId: this.clientUser.pt_id,
