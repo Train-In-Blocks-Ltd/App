@@ -51,10 +51,6 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
-        test: /\.ts$/,
-        loader: 'ts-loader'
-      },
-      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         type: 'asset/resource'
       },
