@@ -26,7 +26,7 @@ export default {
       attrChild: 'number',
       data: payload.number
     })
-    dispatch('endLoading')
+    dispatch('END_LOADING')
   },
 
   /** Gets client-user's data for app session. */

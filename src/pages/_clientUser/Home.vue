@@ -329,7 +329,7 @@ export default {
     this.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.getClientSideData()
-    this.$store.dispatch('endLoading')
+    this.$store.dispatch('END_LOADING')
   },
   methods: {
 
@@ -389,7 +389,7 @@ export default {
       })
       this.check = !currentChecked ? 1 : 0
       this.$parent.updateClientSideSession(planId, sessionId)
-      this.$store.dispatch('endLoading')
+      this.$store.dispatch('END_LOADING')
     },
     async checkout (productId) {
       try {
@@ -401,7 +401,7 @@ export default {
         })
         const stripe = await loadStripe('pk_live_shgxQjmTIkJSJjVJpi8N1RQO00aJHHNIWX')
         stripe.redirectToCheckout({ sessionId: RESPONSE.data })
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.resolveError(e)
       }

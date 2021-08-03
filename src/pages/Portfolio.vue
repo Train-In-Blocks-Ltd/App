@@ -113,7 +113,7 @@ export default {
     this.willBodyScroll(true)
     await this.$parent.setup()
     await this.checkStripeConnect()
-    this.$store.dispatch('endLoading')
+    this.$store.dispatch('END_LOADING')
   },
   methods: {
 
@@ -158,7 +158,7 @@ export default {
         await this.$store.dispatch('updatePortfolio')
         this.$ga.event('Portfolio', 'update')
         this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.resolveError(e)
       }
@@ -181,7 +181,7 @@ export default {
         this.claims.connectedAccountId = RESPONSE.data.connectedAccountId
         await this.$store.dispatch('saveClaims')
         window.location.href = RESPONSE.data.url
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.resolveError(e)
       }

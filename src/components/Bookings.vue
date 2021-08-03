@@ -335,7 +335,7 @@ export default {
           notes: null
         }
         this.$parent.$parent.$parent.$refs.response_pop_up.show('Booking created', 'Your client will be notified of any upcoming bookings that were created.')
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.$parent.$parent.resolveError(e)
       }
@@ -354,7 +354,7 @@ export default {
             status: 'Scheduled'
           })
           this.$parent.$parent.$parent.$refs.response_pop_up.show('Booking request accepted', 'Your client will be notified of any upcoming bookings that were accepeted.')
-          this.$store.dispatch('endLoading')
+          this.$store.dispatch('END_LOADING')
         } catch (e) {
           this.$parent.$parent.$parent.resolveError(e)
         }
@@ -376,7 +376,7 @@ export default {
             isTrainer: true
           })
           this.$parent.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your client will be notified of any upcoming bookings that were cancelled.')
-          this.$store.dispatch('endLoading')
+          this.$store.dispatch('END_LOADING')
         } catch (e) {
           this.$parent.$parent.$parent.resolveError(e)
         }

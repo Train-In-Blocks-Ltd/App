@@ -279,7 +279,7 @@ export default {
     const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
     await this.$store.dispatch('getPlans', CLIENT.client_id)
     this.$store.commit('SET_CLIENT_DETAILS', CLIENT)
-    this.$store.dispatch('endLoading')
+    this.$store.dispatch('END_LOADING')
   },
   methods: {
 
@@ -419,7 +419,7 @@ export default {
       }
       await this.checkClient()
       this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox', true, true)
-      this.$store.dispatch('endLoading')
+      this.$store.dispatch('END_LOADING')
     },
 
     // -----------------------------
@@ -434,7 +434,7 @@ export default {
         this.$store.commit('SET_SILENT_LOADING', true)
         this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('updateClient')
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.resolveError(e)
       }
@@ -451,7 +451,7 @@ export default {
           await this.$store.dispatch('clientArchive', clientId)
           this.$ga.event('Client', 'archive')
           this.$parent.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
-          this.$store.dispatch('endLoading')
+          this.$store.dispatch('END_LOADING')
           this.$router.push('/')
         } catch (e) {
           this.$parent.resolveError(e)

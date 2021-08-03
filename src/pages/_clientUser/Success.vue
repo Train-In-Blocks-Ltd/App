@@ -27,7 +27,7 @@ export default {
     this.willBodyScroll(true)
     await this.$parent.setup()
     await this.$parent.getClientSideData()
-    this.$store.dispatch('endLoading')
+    this.$store.dispatch('END_LOADING')
   }
 }
 </script>

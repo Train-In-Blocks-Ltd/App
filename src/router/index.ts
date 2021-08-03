@@ -182,10 +182,7 @@ const userType = async (to: any, from: any, next: any) => {
       }
       sessionStorage.setItem('claims', JSON.stringify(result))
     }
-    store.commit('setData', {
-      attr: 'claims',
-      data: result
-    })
+    store.commit('SET_CLAIMS', result)
   }
   if (result) {
     if (to.matched.some((record: any) => record.meta.requiresTrainer)) {

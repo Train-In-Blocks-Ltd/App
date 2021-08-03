@@ -589,7 +589,7 @@ export default {
           currency: null,
           type: null
         }
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
@@ -604,7 +604,7 @@ export default {
         this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('updateProduct', productId)
         this.productChanged = false
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
@@ -619,7 +619,7 @@ export default {
           this.$store.commit('SET_DONT_LEAVE', true)
           await this.$store.dispatch('deleteProduct', this.selectedProducts)
           this.deselectAll()
-          this.$store.dispatch('endLoading')
+          this.$store.dispatch('END_LOADING')
         } catch (e) {
           this.$parent.$parent.resolveError(e)
         }

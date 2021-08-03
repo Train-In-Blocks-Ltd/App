@@ -198,7 +198,7 @@ export default {
     this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
-    this.$store.dispatch('endLoading')
+    this.$store.dispatch('END_LOADING')
   },
   methods: {
 
@@ -342,7 +342,7 @@ export default {
           try {
             this.$store.commit('SET_DONT_LEAVE', true)
             await this.$store.dispatch('deleteTemplate', this.selectedTemplates)
-            this.$store.dispatch('endLoading')
+            this.$store.dispatch('END_LOADING')
             this.helper('delete')
             this.deselectAll()
           } catch (e) {
@@ -365,7 +365,7 @@ export default {
         await this.$store.dispatch('newTemplate')
         this.checkForNew()
         this.helper('new')
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.resolveError(e)
       }
@@ -380,7 +380,7 @@ export default {
         this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('updateTemplate', templateId)
         this.helper('update')
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.resolveError(e)
       }

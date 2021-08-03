@@ -95,7 +95,7 @@ export default {
           name: '',
           duration: ''
         }
-        this.$store.dispatch('endLoading')
+        this.$store.dispatch('END_LOADING')
       } catch (e) {
         this.$parent.$parent.$parent.resolveError(e)
       }

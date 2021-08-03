@@ -36,7 +36,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.ts', '.vue', '.json'],
+    extensions: ['.js', '.vue', '.ts', '.tsx', '.md', '.png', '.jpeg', '.jpg', '.gif', '.svg', '.scss'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
@@ -49,10 +49,6 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueLoaderConfig
-      },
-      {
-        test: /\.ts$/,
-        loader: 'ts-loader'
       },
       {
         test: /\.tsx?$/,
