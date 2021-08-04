@@ -664,7 +664,7 @@ export default {
     this.willBodyScroll(true)
   },
   async mounted () {
-    if ('serviceWorker' in navigator) {
+    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(
         function (registrations) {
           if (registrations.length !== 0) {
