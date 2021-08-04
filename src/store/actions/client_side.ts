@@ -18,7 +18,7 @@ export default {
     commit('UPDATE_PROFILE_IMAGE_CLIENT_SIDE', payload.profile_image)
     commit('SET_CLIENT_USER_NAME  ', payload.name)
     commit('SET_CLIENT_USER_NUMBER', payload.number)
-    dispatch('END_LOADING')
+    dispatch('endLoading')
   },
 
   /** Gets client-user's data for app session. */

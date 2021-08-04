@@ -165,7 +165,7 @@ export default {
     this.$store.commit('SET_LOADING', true)
     this.$store.commit('SET_CLIENT_DETAILS', null)
     await this.$parent.setup()
-    this.$store.dispatch('END_LOADING')
+    this.$store.dispatch('endLoading')
   }
 }
 </script>

@@ -416,7 +416,7 @@ export default {
     this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
-    this.$store.dispatch('END_LOADING')
+    this.$store.dispatch('endLoading')
   },
   async mounted () {
     if (!this.coupon.checked) {
@@ -495,7 +495,7 @@ export default {
           check: null,
           error: null
         }
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.password.error = 'Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements'
       }
@@ -533,7 +533,7 @@ export default {
           this.$store.commit('SET_COUPON_CODE', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
         }
         this.$store.commit('SET_COUPON_CHECKED', true)
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }
@@ -548,7 +548,7 @@ export default {
         )
         this.$store.commit('SET_COUPON_GENERATED', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
         this.$store.commit('SET_COUPON_CODE', this.claims.email.toUpperCase().replace(/[\W_]+/g, ''))
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }

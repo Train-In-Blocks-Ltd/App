@@ -334,7 +334,7 @@ export default {
             document.getElementById('img_uploader').value = ''
           }
         }
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
@@ -381,7 +381,7 @@ export default {
           notes: null
         }
         this.$parent.$parent.$refs.response_pop_up.show('Booking requested', 'Your trainer will be notified')
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
@@ -403,7 +403,7 @@ export default {
             isTrainer: false
           })
           this.$parent.$parent.$refs.response_pop_up.show('Booking cancelled', 'Your trainer will be notified')
-          this.$store.dispatch('END_LOADING')
+          this.$store.dispatch('endLoading')
         } catch (e) {
           this.$parent.$parent.resolveError(e)
         }

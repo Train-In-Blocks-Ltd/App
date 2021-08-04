@@ -328,9 +328,9 @@ export default {
         this.open = false
         this.email = null
         this.success = 'An email has been sent successfully.'
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
         this.error = 'An error occurred. Are you sure your email is correct?'
         console.error(e)
       }

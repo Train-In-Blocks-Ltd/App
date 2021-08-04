@@ -709,7 +709,7 @@ export default {
       if (SELF.claims.email === 'demo@traininblocks.com' && config.method !== 'get') {
         SELF.$refs.response_pop_up.show('', 'You are using the demo account. Your changes cannot be saved.', true, true)
         SELF.willBodyScroll(false)
-        SELF.$store.dispatch('END_LOADING')
+        SELF.$store.dispatch('endLoading')
         throw new SELF.$axios.Cancel('You are using the demo account. Your changes won\'t be saved')
       }
       return config
@@ -778,7 +778,7 @@ export default {
           claims: this.claims
         })
       }
-      this.$store.dispatch('END_LOADING')
+      this.$store.dispatch('endLoading')
       this.$refs.response_pop_up.show('ERROR: this problem has been reported to our developers', msg.toString() !== 'Error: Network Error' ? msg.toString() : 'You may be offline. We\'ll try that request again once you\'ve reconnected', true, true)
       this.willBodyScroll(false)
     },
@@ -846,7 +846,7 @@ export default {
         // Get data if not client
         if (this.claims.user_type === 'Admin' || this.claims.user_type === 'Trainer') {
           try {
-            await this.$store.dispatch('GET_HIGH_LEVEL_DATA')
+            await this.$store.dispatch('getHighLevelData')
           } catch (e) {
             this.resolveError(e)
           }
@@ -864,7 +864,7 @@ export default {
       try {
         this.$store.commit('SET_DONT_LEAVE', true)
         await this.$store.dispatch('saveClaims')
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.resolveError(e)
       }
@@ -902,7 +902,7 @@ export default {
         })
         this.$ga.event('Session', 'update')
         this.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.resolveError(e)
       }

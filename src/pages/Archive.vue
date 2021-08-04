@@ -91,7 +91,7 @@ export default {
     this.$store.commit('SET_LOADING', true)
     this.willBodyScroll(true)
     await this.$parent.setup()
-    this.$store.dispatch('END_LOADING')
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
@@ -169,7 +169,7 @@ export default {
             this.deselectAll()
           }
         }
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }
@@ -188,7 +188,7 @@ export default {
             this.deselectAll()
           }
         }
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
       }

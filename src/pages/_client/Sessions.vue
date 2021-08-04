@@ -834,7 +834,7 @@ export default {
       this.adherence()
       this.updater()
     }
-    this.$store.dispatch('END_LOADING')
+    this.$store.dispatch('endLoading')
   },
   beforeDestroy () {
     this.willBodyScroll(true)
@@ -951,7 +951,7 @@ export default {
           this.editSession = null
           this.updateSession(id)
           this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
-          this.$store.dispatch('END_LOADING')
+          this.$store.dispatch('endLoading')
           break
         case 'cancel':
           this.$store.commit('SET_DONT_LEAVE', false)
@@ -994,7 +994,7 @@ export default {
       this.updater()
       this.$ga.event('Session', 'duplicate')
       this.$parent.$parent.$refs.response_pop_up.show(`${this.selectedSessions.length > 1 ? 'Sessions' : 'Session'} duplicated`, 'Get programming!')
-      this.$store.dispatch('END_LOADING')
+      this.$store.dispatch('endLoading')
     },
 
     /**
@@ -1039,7 +1039,7 @@ export default {
       this.shiftDays = 1
       this.deselectAll()
       this.$ga.event('Session', 'shift')
-      this.$store.dispatch('END_LOADING')
+      this.$store.dispatch('endLoading')
     },
 
     /**
@@ -1063,7 +1063,7 @@ export default {
       this.moveTarget = 1
       this.deselectAll()
       this.$ga.event('Session', 'move')
-      this.$store.dispatch('END_LOADING')
+      this.$store.dispatch('endLoading')
     },
 
     // -----------------------------
@@ -1093,7 +1093,7 @@ export default {
           this.deselectAll()
         }
       }
-      this.$store.dispatch('END_LOADING')
+      this.$store.dispatch('endLoading')
     },
 
     /**
@@ -1118,10 +1118,10 @@ export default {
           this.updater()
           this.$ga.event('Session', 'delete')
           this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
-          this.$store.dispatch('END_LOADING')
+          this.$store.dispatch('endLoading')
         }
       }
-      this.$store.dispatch('END_LOADING')
+      this.$store.dispatch('endLoading')
     },
 
     /**
@@ -1183,7 +1183,7 @@ export default {
       this.goToEvent(NEW_SESSION_ID, this.currentWeek)
       this.$ga.event('Session', 'new')
       this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
-      this.$store.dispatch('END_LOADING')
+      this.$store.dispatch('endLoading')
     },
 
     // -----------------------------
@@ -1382,7 +1382,7 @@ export default {
         })
         this.$ga.event('Plan', 'duplicate')
         this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
         this.$router.push({ path: `/client/${clientId}/` })
       } catch (e) {
         this.$parent.$parent.resolveError(e)
@@ -1397,7 +1397,7 @@ export default {
         this.$store.commit('SET_LOADING', true)
         await this.$store.dispatch('updatePlan', this.plan)
         this.$ga.event('Plan', 'update')
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
@@ -1416,7 +1416,7 @@ export default {
           })
           this.$ga.event('Session', 'delete')
           this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
-          this.$store.dispatch('END_LOADING')
+          this.$store.dispatch('endLoading')
           this.$router.push({ path: `/client/${this.clientDetails.client_id}/` })
         } catch (e) {
           this.$parent.$parent.resolveError(e)
@@ -1437,7 +1437,7 @@ export default {
         })
         this.adherence()
         this.$ga.event('Session', 'update')
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }
@@ -1456,7 +1456,7 @@ export default {
         })
         this.adherence()
         this.$ga.event('Session', 'update')
-        this.$store.dispatch('END_LOADING')
+        this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.$parent.resolveError(e)
       }

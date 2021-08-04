@@ -138,7 +138,7 @@ export default {
             notes: ''
           }
           this.$ga.event('Client', 'new')
-          this.$store.dispatch('END_LOADING')
+          this.$store.dispatch('endLoading')
         } catch (e) {
           this.$parent.$parent.resolveError(e)
         }
