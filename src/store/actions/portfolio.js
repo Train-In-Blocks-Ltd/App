@@ -1,11 +1,5 @@
 export default {
-  // -----------------------------
-  // Portfolio
-  // -----------------------------
-
-  /**
-   * Creates a portfolio.
-   */
+  /** Creates a portfolio. */
   async createPortfolio ({ dispatch, state }) {
     await this._vm.$axios.post('https://api.traininblocks.com/v2/portfolio', {
       pt_id: state.claims.sub,
@@ -23,9 +17,7 @@ export default {
     })
   },
 
-  /**
-   * Updates the portfolio.
-   */
+  /** Updates the portfolio. */
   async updatePortfolio ({ state }) {
     await this._vm.$axios.put(`https://api.traininblocks.com/v2/portfolio/${state.claims.sub}`, {
       ...state.portfolio

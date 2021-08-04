@@ -1,13 +1,12 @@
 import { emailBuilder } from '../../components/email'
 
 export default {
-  // -----------------------------
-  // Client-side
-  // -----------------------------
-
   /**
    * Updates client-user's details.
-   * @param {object} payload - { ...client_params }
+   * @param {number} payload.client_id - The id of the client.
+   * @param {string} payload.name - The name of the client.
+   * @param {string} payload.number - Optional, the mobile number of the client.
+   * @param {string} payload.profile_image - Optional, a profile image.
    */
   async updateClientSideDetails ({ dispatch, commit }, payload) {
     await this._vm.$axios.put('https://api.traininblocks.com/v2/clientUser/clients', {
@@ -27,9 +26,7 @@ export default {
     dispatch('endLoading')
   },
 
-  /**
-   * Gets client-user's data for app session.
-   */
+  /** Gets client-user's data for app session. */
   async getClientSideInfo ({ commit, state }) {
     const RESPONSE = await this._vm.$axios.get(`https://api.traininblocks.com/v2/clientUser/${state.claims.client_id_db}`)
     if (RESPONSE.data) {
@@ -81,9 +78,7 @@ export default {
     }
   },
 
-  /**
-   * Gets client-user's plan data for app session.
-   */
+  /** Gets client-user's plan data for app session. */
   async getClientSidePlans ({ commit, state }) {
     const RESPONSE = await this._vm.$axios.get(`https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`)
     commit('setDataDeep', {
@@ -114,7 +109,8 @@ export default {
 
   /**
    * Updates a client-user's session.
-   * @param {object} payload - { planId, sessionId }
+   * @param {number} payload.planId - The id of the plan.
+   * @param {number} payload.sessionId - The id of the session.
    */
   async updateClientSideSession ({ state }, payload) {
     const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))

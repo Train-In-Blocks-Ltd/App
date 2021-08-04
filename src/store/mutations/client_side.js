@@ -1,11 +1,12 @@
 export default {
-  // -----------------------------
-  // Client-user
-  // -----------------------------
-
   /**
    * Pushes a new booking to 'clientUser.bookings'.
-   * @param {object} payload - { ...booking_params }
+   * @param {number} payload.id - The id of the booking.
+   * @param {number} payload.client_id - The client id of the booking.
+   * @param {string} payload.datetime - The date and time of the booking.
+   * @param {string} payload.notes - The description or additional information that goes with the booking.
+   * @param {string} payload.status - The status of the booking.
+   * @param {boolean} payload.isClientSide - Is this to be added on the client or trainer side.
    */
   addNewBookingClientSide (state, payload) {
     delete payload.isClientSide
@@ -17,7 +18,7 @@ export default {
 
   /**
    * Removes a booking from 'clientUser.bookings'.
-   * @param {object} payload - { bookingId }
+   * @param {number} bookingId - The id of the booking
    */
   removeBookingClientSide (state, payload) {
     const BOOKING = state.clientUser.bookings.find(booking => booking.id === parseInt(payload.bookingId))
@@ -26,7 +27,8 @@ export default {
 
   /**
    * Updates the sessions of the plan.
-   * @param {object} payload - { sessions }
+   * @param {number} payload.planId - The id of the plan.
+   * @param {array} payload.sessions - The updated sessions of the plan.
    */
   setClientUserPlan (state, payload) {
     const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))
@@ -35,7 +37,7 @@ export default {
 
   /**
    * Loads the client-user profile image.
-   * @param {object} profileImage - The profile image.
+   * @param {string} profileImage - The profile image.
    */
   updateClientUserProfileImage (state, profileImage) {
     state.clientUser.profile_image = profileImage
@@ -43,7 +45,10 @@ export default {
 
   /**
    * Updates an attribute for a single session from the client-user.
-   * @param {object} payload - { planId, sessionId, attr, data }
+   * @param {number} payload.planId - The id of the plan.
+   * @param {number} payload.sessionId - The id of the session.
+   * @param {string} payload.attr - The state to change.
+   * @param {*} payload.data - The new data.
    */
   updateClientUserPlanSingleSession (state, payload) {
     const PLAN = state.clientUser.plans.find(plan => plan.id === parseInt(payload.planId))

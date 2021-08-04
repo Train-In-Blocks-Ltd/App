@@ -1,11 +1,13 @@
 export default {
-  // -----------------------------
-  // Plans
-  // -----------------------------
-
   /**
    * Adds a new plan to a client.
-   * @param {object} payload - { client_id, ...plan_params }
+   * @param {number} payload.id - The id of the plan.
+   * @param {number} payload.client_id - The id of the client that the plan belongs to.
+   * @param {string} payload.name - The name of the plan.
+   * @param {number} payload.duration - The duration of the plan in micro-cycles.
+   * @param {string} payload.notes - The plan notes.
+   * @param {string} payload.block_color - The colors of each micro-cycle of the plan.
+   * @param {array} payload.sessions - Optional, the array of sessions for the plan.
    */
   addNewPlan (state, payload) {
     const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
@@ -16,7 +18,13 @@ export default {
 
   /**
    * Updates an entire plan
-   * @param {object} payload - { client_id, ...plan_params }
+   * @param {number} payload.id - The id of the plan.
+   * @param {number} payload.client_id - The id of the client that the plan belongs to.
+   * @param {string} payload.name - The name of the plan.
+   * @param {number} payload.duration - The duration of the plan in micro-cycles.
+   * @param {string} payload.notes - The plan notes.
+   * @param {string} payload.block_color - The colors of each micro-cycle of the plan.
+   * @param {array} payload.sessions - Optional, the array of sessions for the plan.
    */
   updateEntirePlan (state, payload) {
     const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
@@ -29,7 +37,10 @@ export default {
 
   /**
    * Updates a single plan parameter.
-   * @param {object} payload - { clientId, planId, attr, data }
+   * @param {number} payload.clientId - The id of the client.
+   * @param {number} payload.planId - The id of the plan.
+   * @param {number} payload.attr - The state to change.
+   * @param {*} payload.data - The new data.
    */
   updatePlanAttr (state, payload) {
     const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
@@ -39,7 +50,8 @@ export default {
 
   /**
    * Removes a plan from a client.
-   * @param {object} payload - { clientId, planId }
+   * @param {number} payload.clientId - The id of the client.
+   * @param {number} payload.planId - The id of the plan.
    */
   removePlan (state, payload) {
     const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))

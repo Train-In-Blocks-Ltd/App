@@ -1,14 +1,13 @@
 import { emailBuilder } from '../../components/email'
 
 export default {
-  // -----------------------------
-  // Bookings
-  // -----------------------------
-
-  // payload => clientId, datetime, notes, status
   /**
    * Creates a new booking.
-   * @param {object} payload - { clientId, datetime, notes, status, isTrainer }
+   * @param {number} payload.client_id - The id of the client that the booking is assigned to.
+   * @param {string} payload.datetime - The date and time.
+   * @param {string} payload.notes - The details of the booking.
+   * @param {string} payload.status - The status of the booking.
+   * @param {boolean} payload.isTrainer - Whether the trainer or client requested it.
    */
   async createBooking ({ commit, state }, payload) {
     payload.client_id = payload.clientId
@@ -43,7 +42,9 @@ export default {
 
   /**
    * Updates a booking.
-   * @param {object} payload - { id (booking), status }
+   * @param {number} payload.id - The id of the booking.
+   * @param {number} payload.client_id - The id of the client that the booking belongs to.
+   * @param {string} payload.status - The new status of the booking.
    */
   async updateBooking ({ commit, state }, payload) {
     payload.client_id = payload.clientId
@@ -63,7 +64,10 @@ export default {
 
   /**
    * Deletes a booking.
-   * @param {object} payload - { isTrainer, bookingId, clientId, datetime }
+   * @param {number} payload.id - The id of the booking.
+   * @param {number} payload.client_id - The client of the client that the booking belongs to.
+   * @param {string} payload.datetime - The date and time.
+   * @param {boolean} payload.isTrainer - Whether the user is a trainer or client.
    */
   async deleteBooking ({ commit, state }, payload) {
     payload.client_id = payload.clientId

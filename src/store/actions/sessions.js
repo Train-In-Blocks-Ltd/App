@@ -1,11 +1,12 @@
 export default {
-  // -----------------------------
-  // Sessions
-  // -----------------------------
-
   /**
    * Creates a new session.
-   * @param {object} payload - { client_id, data: { programme_id, name, date, notes, week_id } }
+   * @param {number} payload.client_id - The id of the client that the session belongs to.
+   * @param {number} payload.data.programme_id - The id of the programme that the session belongs to.
+   * @param {string} payload.data.name - The name of the session.
+   * @param {string} payload.data.date - The date of the session.
+   * @param {string} payload.data.notes - The content of the session.
+   * @param {number} payload.data.week_id - The week/micro-cycle of the session.
    * @returns The new session's id.
    */
   async addSession ({ commit }, payload) {
@@ -27,7 +28,9 @@ export default {
 
   /**
    * Updates a session.
-   * @param {object} payload - { clientId, planId, sessionId }
+   * @param {number} payload.clientId - The id of the client.
+   * @param {number} payload.planId - The id of the plan.
+   * @param {number} payload.sessionId - The id of the session.
    */
   async updateSession ({ getters }, payload) {
     const SESSION = getters.helper('match_session', payload.clientId, payload.planId, payload.sessionId)
@@ -36,7 +39,9 @@ export default {
 
   /**
    * Update multiple sessions.
-   * @param {object} payload - { clientId, planId, sessionIds }
+   * @param {number} payload.clientId - The id of the client.
+   * @param {number} payload.planId - The id of the plan.
+   * @param {array} payload.sessionIds - The ids of the sessions.
    */
   async batchUpdateSession ({ getters }, payload) {
     const POST_DATA = []
@@ -50,7 +55,9 @@ export default {
 
   /**
    * Delete single/multiple session(s).
-   * @param {object} payload - { clientId, planId, sessionIds }
+   * @param {number} payload.clientId - The id of the client.
+   * @param {number} payload.planId - The id of the plan.
+   * @param {array} payload.sessionIds - The ids of the sessions.
    */
   async deleteSession ({ commit }, payload) {
     const DELETE_IDS = []

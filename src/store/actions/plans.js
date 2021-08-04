@@ -1,11 +1,7 @@
 export default {
-  // -----------------------------
-  // Plans
-  // -----------------------------
-
   /**
    * Get all the plans and sessions for a client.
-   * @param {integer} clientId - The id of the client.
+   * @param {number} clientId - The id of the client.
    */
   async getPlans ({ commit, state }, clientId) {
     const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
@@ -34,7 +30,9 @@ export default {
 
   /**
    * Creates a new plan.
-   * @param {object} payload - { clientId, name, duration }
+   * @param {number} payload.clientId - The id of the client that the plan belongs to.
+   * @param {string} payload.name - The name of the plan.
+   * @param {number} payload.duration - The duration of the plan.
    */
   async createPlan ({ commit }, payload) {
     const RESPONSE = await this._vm.$axios.post('https://api.traininblocks.com/v2/plans', {
@@ -56,7 +54,13 @@ export default {
 
   /**
    * Duplicates a plan.
-   * @param {object} payload - { clientId, planId, planName, planDuration, blockColor, planNotes, planSessions }
+   * @param {number} payload.clientId - The id of the client.
+   * @param {number} payload.planId - The id of the plan.
+   * @param {string} payload.planName - The name of the plan.
+   * @param {number} payload.planDuration - The duration of the plan.
+   * @param {string} payload.blockColor - The colors for the micro-cycles.
+   * @param {string} payload.planNotes - The plan notes.
+   * @param {array} payload.planSessions - The sessions.
    */
   async duplicatePlan ({ dispatch, commit }, payload) {
     const NEW_PLAN_RESPONSE = await this._vm.$axios.post('https://api.traininblocks.com/v2/plans', {
@@ -101,7 +105,12 @@ export default {
 
   /**
    * Updates a plan.
-   * @param {object} payload - { client_id, id (plan), name, duration, notes, block_color }
+   * @param {number} payload.client_id - The id of the client.
+   * @param {number} payload.id - The id of the plan.
+   * @param {string} payload.name - The name of the plan.
+   * @param {number} payload.duration - The duration of the plan.
+   * @param {string} payload.notes - The colors for the micro-cycles.
+   * @param {string} payload.block_color - The plan notes.
    */
   async updatePlan ({ commit }, payload) {
     await this._vm.$axios.put('https://api.traininblocks.com/v2/plans', {
@@ -112,7 +121,8 @@ export default {
 
   /**
    * Deletes a plan.
-   * @param {object} payload - { clientId, planId }
+   * @param {number} payload.clientId - The id of the client.
+   * @param {number} payload.planId - The id of the plan.
    */
   async deletePlan ({ commit }, payload) {
     await this._vm.$axios.delete(`https://api.traininblocks.com/v2/plans/${payload.planId}`)

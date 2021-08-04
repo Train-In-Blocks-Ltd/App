@@ -1,11 +1,8 @@
 export default {
-  // -----------------------------
-  // System
-  // -----------------------------
-
   /**
-   * Sets the first level of any object data.
-   * @param {object} payload - { attr, data }
+   * Sets the state on Vuex.
+   * @param {string} payload.attr - The key of the state to change.
+   * @param {*} payload.data - The new data.
    */
   setData (state, payload) {
     state[payload.attr] = payload.data
@@ -16,7 +13,9 @@ export default {
 
   /**
    * Sets the second level of any object data.
-   * @param {object} payload - { attrParent, attrChild, data }
+   * @param {string} payload.attrParent - The key of the first level state to change.
+   * @param {string} payload.attrChild - The key of the second level state to change.
+   * @param {*} payload.data - The new data.
    */
   setDataDeep (state, payload) {
     state[payload.attrParent][payload.attrChild] = payload.data
@@ -27,7 +26,15 @@ export default {
 
   /**
    * Pushes a new client to 'clients'.
-   * @param {object} payload - { ...client_params }
+   * @param {number} payload.pt_id - The id of the trainer pt the client belongs to.
+   * @param {number} payload.client_id - The id of the client.
+   * @param {string} payload.name - The name of the client.
+   * @param {string} payload.email - The email of the client.
+   * @param {string} payload.mobile - Optional, the mobile of the client.
+   * @param {string} payload.profile_image - Optional, a url to the picture of the client.
+   * @param {string} payload.notes - Information about the client.
+   * @param {number} payload.archive - Whether this client is archived.
+   * @param {number} payload.notification - Whether email notifications are enabled for this client.
    */
   addNewClient (state, payload) {
     state.clients.push({
@@ -37,7 +44,8 @@ export default {
 
   /**
    * Updates a client.
-   * @param {object} payload - { clientId, attr, data }
+   * @param {number} payload - The id of the client.
+   * @param {number} payload - The new data.
    */
   updateClient (state, payload) {
     const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
@@ -46,7 +54,15 @@ export default {
 
   /**
    * Pushes a client to 'archive' and splices them from 'clients'.
-   * @param {object} client - The client object.
+   * @param {number} client.pt_id - The id of the trainer pt the client belongs to.
+   * @param {number} client.client_id - The id of the client.
+   * @param {string} client.name - The name of the client.
+   * @param {string} client.email - The email of the client.
+   * @param {string} client.mobile - Optional, the mobile of the client.
+   * @param {string} client.profile_image - Optional, a url to the picture of the client.
+   * @param {string} client.notes - Information about the client.
+   * @param {number} client.archive - Whether this client is archived.
+   * @param {number} client.notification - Whether email notifications are enabled for this client.
    */
   archiveClient (state, client) {
     const IDX = state.clients.indexOf(client)
@@ -61,7 +77,7 @@ export default {
 
   /**
    * Pushes clients to 'clients' and splices them from 'archive'.
-   * @param {object} payload - { clientIds }
+   * @param {array} payload - An array of client ids to unarchive.
    */
   unarchiveClient (state, payload) {
     payload.forEach((clientId) => {
@@ -79,7 +95,7 @@ export default {
 
   /**
    * Removes clients from archive permanently.
-   * @param {object} payload - { clientIds }
+   * @param {array} payload - An array of client ids to delete.
    */
   removeClient (state, payload) {
     payload.forEach((clientId) => {

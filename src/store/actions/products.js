@@ -1,15 +1,12 @@
 export default {
-  // -----------------------------
-  // Products
-  // -----------------------------
-
   /**
    * Creates a new product.
    * @param {string} payload.pt_id - The pt's id.
    * @param {string} payload.name - The name of the product.
-   * @param {string} payload.desc - The description of the product.
+   * @param {string} payload.notes - The description of the product.
    * @param {string} payload.price - The price of the product.
    * @param {string} payload.type - The payment type of the product, either one-off or recurring.
+   * @param {string} payload.currency - The currency of the product.
    */
   async createProduct ({ commit }, payload) {
     const RESPONSE = await this._vm.$axios.post('https://api.traininblocks.com/v2/products', {
@@ -23,7 +20,7 @@ export default {
 
   /**
    * Updates a product.
-   * @param {integer} productId - The id of the product.
+   * @param {number} productId - The id of the product.
    */
   async updateProduct ({ state }, productId) {
     const POST_DATA = state.products.find(product => product.id === parseInt(productId))

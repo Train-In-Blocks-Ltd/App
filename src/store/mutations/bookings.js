@@ -1,11 +1,12 @@
 export default {
-  // -----------------------------
-  // Bookings
-  // -----------------------------
-
   /**
    * Pushes new booking to 'bookings'.
-   * @param {object} payload - { client_id, id (booking), date, time, notes, status, isClientSide }
+   * @param {number} payload.id - The id of the booking.
+   * @param {number} payload.client_id - The client id of the booking.
+   * @param {string} payload.datetime - The date and time of the booking.
+   * @param {string} payload.notes - The description or additional information that goes with the booking.
+   * @param {string} payload.status - The status of the booking.
+   * @param {boolean} payload.isClientSide - Is this to be added on the client or trainer side.
    */
   addNewBooking (state, payload) {
     delete payload.isClientSide
@@ -17,7 +18,8 @@ export default {
 
   /**
    * Updates a booking.
-   * @param {object} payload - { id (booking), status }
+   * @param {number} payload.id - The id of the booking.
+   * @param {string} payload.status - The status of the booking.
    */
   updateBooking (state, payload) {
     const BOOKING = state.bookings.find(booking => booking.id === parseInt(payload.id))
@@ -26,7 +28,7 @@ export default {
 
   /**
    * Removes a booking.
-   * @param {object} bookingId - The id of the booking.
+   * @param {number} bookingId - The id of the booking.
    */
   removeBooking (state, bookingId) {
     const BOOKING = state.bookings.find(booking => booking.id === parseInt(bookingId))

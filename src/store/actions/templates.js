@@ -1,11 +1,5 @@
 export default {
-  // -----------------------------
-  // Templates
-  // -----------------------------
-
-  /**
-   * Adds a new template.
-   */
+  /** Adds a new template. */
   async newTemplate ({ commit, state }) {
     const RESPONSE = await this._vm.$axios.post('https://api.traininblocks.com/v2/templates', {
       pt_id: state.claims.sub,
@@ -24,7 +18,7 @@ export default {
 
   /**
    * Updates a template.
-   * @param {integer} templateId - The id of the template.
+   * @param {number} templateId - The id of the template.
    */
   async updateTemplate ({ state }, templateId) {
     const TEMPLATE = state.templates.find(template => template.id === parseInt(templateId))

@@ -1,13 +1,10 @@
 import { emailBuilder } from '../../components/email'
 
 export default {
-  // -----------------------------
-  // Account
-  // -----------------------------
-
   /**
    * Changes the user's password.
-   * @param {object} payload - { old, new }
+   * @param {string} payload.old - The old password.
+   * @param {string} payload.new - The new password.
    */
   async changePassword ({ state }, payload) {
     await this._vm.$axios.post('/.netlify/functions/okta', {
@@ -24,9 +21,7 @@ export default {
     })
   },
 
-  /**
-   * Updates the user's claims on Okta.
-   */
+  /** Updates the user's claims on Okta. */
   async saveClaims ({ state }) {
     await this._vm.$axios.post('/.netlify/functions/okta', {
       type: 'POST',

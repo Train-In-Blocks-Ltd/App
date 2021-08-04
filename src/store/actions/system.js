@@ -1,11 +1,5 @@
 export default {
-  // -----------------------------
-  // System
-  // -----------------------------
-
-  /**
-   * Ends all loading.
-   */
+  /** Ends all loading. */
   endLoading ({ commit }) {
     commit('setData', {
       attr: 'loading',
@@ -21,9 +15,7 @@ export default {
     })
   },
 
-  /**
-   * Gets all the data for the trainer-user's session.
-   */
+  /** Gets all the data for the trainer-user's session. */
   async getHighLevelData ({ dispatch, commit, state }) {
     // Main data call
     const RESPONSE = await this._vm.$axios.get(`https://api.traininblocks.com/v2/${state.claims.sub}`)

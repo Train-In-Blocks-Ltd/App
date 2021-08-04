@@ -1,13 +1,13 @@
 import { emailBuilder } from '../../components/email'
 
 export default {
-  // -----------------------------
-  // Clients
-  // -----------------------------
-
   /**
    * Creates a new client.
-   * @param {object} payload - { pt_id, ..client_params }
+   * @param {string} payload.pt_id - The id of trainer that this client is assigned to.
+   * @param {string} payload.name - The name of the client.
+   * @param {string} payload.email - The email of the client.
+   * @param {string} payload.number - The mobile number of the client.
+   * @param {string} payload.notes - The client notes.
    */
   async createClient ({ commit }, payload) {
     const NEW_CLIENT = await this._vm.$axios.post('https://api.traininblocks.com/v2/clients', {
@@ -22,9 +22,7 @@ export default {
     })
   },
 
-  /**
-   * Updates a client.
-   */
+  /** Updates a client. */
   async updateClient ({ state }) {
     const CLIENT = state.clientDetails
     await this._vm.$axios.put('https://api.traininblocks.com/v2/clients', {
@@ -40,7 +38,7 @@ export default {
 
   /**
    * Archives a client
-   * @param {integer} clientId - The id of the client.
+   * @param {number} clientId - The id of the client.
    */
   async clientArchive ({ commit, state }, clientId) {
     const CLIENT = state.clients.find(client => client.client_id === parseInt(clientId))
