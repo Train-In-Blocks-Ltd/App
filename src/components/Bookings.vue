@@ -241,13 +241,13 @@
           >
         </div>
         <textarea
-          v-model="bookingForm.notes"
+          :value="bookingForm.notes"
           class="additional_notes small_border_radius"
           rows="5"
           placeholder="Additonal information"
           aria-label="Additional information"
           required
-          @input="checkForm()"
+          @input="bookingForm.notes = $event.target.value, checkForm()"
         />
         <button :disabled="disableCreateBookingButton">
           Create booking
