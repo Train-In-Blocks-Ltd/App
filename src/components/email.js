@@ -33,6 +33,7 @@ export function emailBuilder (type, data) {
 const titles = {
   'activate-account': 'Activate your account',
   'password-changed': 'Password changed',
+  'password-reset': 'Password reset',
   'weekly-breakdown': 'Here\'s a breakdown of what you did this week',
   'client-account-reactivated': 'Welcome back',
   'client-account-deactivated': 'Account deactivated',
@@ -84,6 +85,8 @@ const bodyHtml = (type, data) => {
       return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.<br><a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a></p>`
     case 'password-changed':
       return '<p>Your password has been changed. If you did not change your password please contact us immediately at hello@traininblocks.com.</p>'
+    case 'password-reset':
+      return `<p>We've received a request to reset your password. If you did not submit this request then please disregard this email. If you wish to reset your password, please click the link below.<br><a href="${data.link}" target="_blank" class="link-button">Reset Password</a></p>`
     case 'weekly-breakdown':
       return `<table>${data.body}</table>`
     case 'client-account-reactivated':
