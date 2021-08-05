@@ -139,13 +139,13 @@
       </div>
       <input
         ref="pass"
-        v-model="password.old"
+        :value="password.old"
         type="password"
         placeholder="Current password"
         aria-label="Current password"
         class="input--forms width_300 small_border_radius"
         required
-        @input="checkForm()"
+        @input="password.old = $event.target.value, checkForm()"
       >
       <div>
         <h3>

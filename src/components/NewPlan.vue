@@ -14,23 +14,23 @@
     </div>
     <input
       ref="name"
-      v-model="newPlan.name"
+      :value="newPlan.name"
       class="small_border_radius width_300"
       type="text"
       placeholder="Name*"
       aria-label="Name"
       required
-      @input="checkForm()"
+      @input="newPlan.name = $event.target.value, checkForm()"
     >
     <input
-      v-model="newPlan.duration"
+      :value="newPlan.duration"
       class="small_border_radius width_300"
       type="number"
       min="1"
       placeholder="Duration*"
       aria-label="Duration"
       required
-      @input="checkForm()"
+      @input="newPlan.duration = $event.target.value, checkForm()"
     >
     <div class="form_button_bar">
       <button

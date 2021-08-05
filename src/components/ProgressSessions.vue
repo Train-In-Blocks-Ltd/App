@@ -42,14 +42,14 @@
         <input
           id="range"
           ref="range"
-          v-model="progressInputs.target"
+          :value="progressInputs.target"
           class="width_300"
           name="range"
           type="number"
           :min="currentWeek + 1"
           :max="maxWeek"
           required
-          @input="checkForm()"
+          @input="progressInputs.target = $event.target.value, checkForm()"
         >
       </div>
       <div class="input_section">
@@ -57,13 +57,13 @@
           Days until next sessions:
         </label>
         <input
-          v-model="progressInputs.daysBetween"
+          :value="progressInputs.daysBetween"
           class="width_300"
           name="range"
           type="number"
           min="1"
           required
-          @input="checkForm()"
+          @input="progressInputs.daysBetween = $event.target.value, checkForm()"
         >
       </div>
       <button

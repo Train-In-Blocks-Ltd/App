@@ -223,6 +223,7 @@
           placeholder="Name*"
           aria-label="Name"
           required
+          @input="newProduct.name = $event.target.value, checkForm()"
         >
         <select
           v-model="newProduct.type"
@@ -272,6 +273,7 @@
             min="0"
             required
             @change="newProduct.price = makeDecimals(newProduct.price, 2)"
+            @input="newProduct.price = $event.target.value, checkForm()"
           >
         </div>
         <textarea
@@ -281,6 +283,7 @@
           placeholder="Description*"
           aria-label="Description"
           required
+          @input="newProduct.notes = $event.target.value, checkForm()"
         />
         <div class="form_button_bar">
           <button
@@ -360,7 +363,7 @@
       >
         <div class="header">
           <input
-            v-model="product.name"
+            :value="product.name"
             :disabled="silentLoading"
             type="text"
             class="text--small small_border_radius"
@@ -369,7 +372,7 @@
             required
             @change="productChanged = true"
             @blur="resolveIfProductChanged(product.id)"
-            @input="checkForm()"
+            @input="product.name = $event.target.value, checkForm()"
           >
           <checkbox
             :item-id="product.id"
@@ -419,7 +422,7 @@
               </option>
             </select>
             <input
-              v-model="product.price"
+              :value="product.price"
               :disabled="silentLoading"
               type="number"
               class="small_border_radius"
@@ -430,12 +433,12 @@
               required
               @change="product.price = makeDecimals(product.price, 2), productChanged = true"
               @blur="resolveIfProductChanged(product.id)"
-              @input="checkForm()"
+              @input="product.price = $event.target.value, checkForm()"
             >
           </div>
         </div>
         <textarea
-          v-model="product.notes"
+          :value="product.notes"
           :disabled="silentLoading"
           class="small_border_radius"
           rows="5"
@@ -444,7 +447,7 @@
           required
           @change="productChanged = true"
           @blur="resolveIfProductChanged(product.id)"
-          @input="checkForm()"
+          @input="product.notes = $event.target.value, checkForm()"
         />
       </form>
     </div>

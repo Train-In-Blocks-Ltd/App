@@ -294,14 +294,14 @@
         <input
           id="range"
           ref="range"
-          v-model="moveTarget"
+          :value="moveTarget"
           class="width_300"
           name="range"
           type="number"
           min="1"
           :max="maxWeek"
           required
-          @input="checkForm('move')"
+          @input="moveTarget = $event.target.value, checkForm('move')"
         >
       </div>
       <button
@@ -330,12 +330,12 @@
         <input
           id="range"
           ref="range"
-          v-model="shiftDays"
+          :value="shiftDays"
           class="width_300"
           name="range"
           type="number"
           required
-          @input="checkForm('shift')"
+          @input="shiftDays = $event.target.value, checkForm('shift')"
         >
       </div>
       <button
@@ -368,11 +368,11 @@
         Copy this plan to the same/different client
       </p><br>
       <select
-        v-model="duplicateClientID"
+        :value="duplicateClientID"
         name="duplicate_client"
         class="width_300"
         required
-        @change="checkForm('duplicate')"
+        @input="duplicateClientID = $event.target.value, checkForm('duplicate')"
       >
         <option :value="null">
           Select a client

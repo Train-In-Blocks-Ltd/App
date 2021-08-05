@@ -220,24 +220,24 @@
       <form class="request_booking_container" @submit.prevent="createBooking()">
         <div class="date_time_wrapper">
           <input
-            v-model="bookingForm.date"
+            :value="bookingForm.date"
             :min="today()"
             class="small_border_radius"
             type="date"
             placeholder="Date"
             aria-label="Date"
             required
-            @input="checkForm()"
+            @input="bookingForm.date = $event.target.value, checkForm()"
           >
           <input
-            v-model="bookingForm.time"
+            :value="bookingForm.time"
             :min="bookingForm.date === (today()) ? timeNow() : null"
             class="small_border_radius"
             type="time"
             placeholder="Time"
             aria-label="Time"
             required
-            @input="checkForm()"
+            @input="bookingForm.time = $event.target.value, checkForm()"
           >
         </div>
         <textarea

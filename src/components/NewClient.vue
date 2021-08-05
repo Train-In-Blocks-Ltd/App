@@ -24,27 +24,27 @@
     </div>
     <input
       ref="name"
-      v-model="newClient.name"
+      :value="newClient.name"
       class="small_border_radius width_300"
       type="text"
       autocomplete="name"
       placeholder="Name*"
       aria-label="Name"
       required
-      @input="checkForm()"
+      @input="newClient.name = $event.target.value, checkForm()"
     >
     <input
-      v-model="newClient.email"
+      :value="newClient.email"
       class="small_border_radius width_300"
       type="email"
       autocomplete="email"
       placeholder="Email*"
       aria-label="Email"
       required
-      @input="checkForm()"
+      @input="newClient.email = $event.target.value, checkForm()"
     >
     <input
-      v-model="newClient.confirm"
+      :value="newClient.confirm"
       :style="{ borderColor: newClient.email !== newClient.confirm ? 'var(--base_red)' : ''}"
       class="small_border_radius width_300"
       type="email"
@@ -52,10 +52,10 @@
       placeholder="Confirm email*"
       aria-label="Confirm email"
       required
-      @input="checkForm()"
+      @input="newClient.confirm = $event.target.value, checkForm()"
     >
     <input
-      v-model="newClient.number"
+      :value="newClient.number"
       class="small_border_radius width_300"
       type="tel"
       inputmode="tel"
@@ -63,7 +63,7 @@
       placeholder="Mobile"
       aria-label="Mobile"
       pattern="\d+"
-      @input="checkForm()"
+      @input="newClient.number = $event.target.value, checkForm()"
     >
     <div class="form_button_bar">
       <button

@@ -230,33 +230,33 @@
           </p>
           <form class="request_booking_container" @submit.prevent="createBooking()">
             <input
-              v-model="bookingForm.date"
+              :value="bookingForm.date"
               :min="today()"
               class="small_border_radius"
               type="date"
               placeholder="Date"
               aria-label="Date"
               required
-              @input="checkForm()"
+              @input="bookingForm.date = $event.target.value, checkForm()"
             >
             <input
-              v-model="bookingForm.time"
+              :value="bookingForm.time"
               :min="bookingForm.date === (today()) ? timeNow() : null"
               class="small_border_radius"
               type="time"
               placeholder="Time"
               aria-label="Time"
               required
-              @input="checkForm()"
+              @input="bookingForm.time = $event.target.value, checkForm()"
             >
             <textarea
-              v-model="bookingForm.notes"
+              :value="bookingForm.notes"
               class="additional_notes small_border_radius"
               rows="5"
               placeholder="Additonal information"
               aria-label="Additional information"
               required
-              @input="checkForm()"
+              @input="bookingForm.notes = $event.target.value, checkForm()"
             />
             <button :disabled="disableCreateBookingButton">
               Request a booking
