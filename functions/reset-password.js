@@ -1,4 +1,4 @@
-import { emailBuilder } from '../src/components/email'
+const emailBuilder = require('../src/components/email')
 
 const axios = require('axios')
 const smtpTransport = require('nodemailer-smtp-transport')
@@ -53,7 +53,7 @@ exports.handler = async function handler (event, context, callback) {
         const mailOptions = {
           from: 'Train In Blocks <hello@traininblocks.com>',
           to: data.email,
-          ...emailBuilder('password-reset', LINK)
+          ...emailBuilder('password-reset', { link: LINK })
         }
         await transporter.sendMail(mailOptions)
         return callback(null, {

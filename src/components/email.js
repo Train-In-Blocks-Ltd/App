@@ -18,7 +18,7 @@
  *  pId: ...
  * })
  */
-export function emailBuilder (type, data) {
+module.exports = function emailBuilder (type, data) {
   return {
     subject: titles[type],
     text: textEmail(type, data),

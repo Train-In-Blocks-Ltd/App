@@ -240,7 +240,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { emailBuilder } from '../../components/email'
+const emailBuilder = () => import(/* webpackChunkName: "components.emailBuilder", webpackPrefetch: true  */ '../../components/email')
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
