@@ -13,6 +13,7 @@
         "helvetica",
         "mixins",
         "noreferrer",
+        "prefetch",
         "vuex",
         "wallingford"
     ]

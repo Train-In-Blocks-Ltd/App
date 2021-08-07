@@ -1,4 +1,4 @@
-const emailBuilder = () => import(/* webpackChunkName: "components.emailBuilder", webpackPrefetch: true  */ '../../components/email')
+const emailBuilder = () => import(/* webpackChunkName: "components.emailBuilder", webpackPrefetch: true  */ '../../components/js/email')
 
 export default {
   /**

@@ -7,7 +7,8 @@
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js",
     "build:report": "cross-env NODE_ENV=production REPORT=true webpack --config build/webpack.prod.conf.js --progress",
     "debug": "netlify dev --inspect",
-    "lint": "eslint --ext .js,.vue src --fix"
+    "lint": "eslint --ext .js,.vue src --fix",
+    "test": "jest --watchAll --coverage"
   },
   "dependencies": {
     "@okta/okta-auth-js": "^4.7.2",

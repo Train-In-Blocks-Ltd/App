@@ -1,4 +1,4 @@
-const emailBuilder = require('../src/components/email')
+const emailBuilder = require('../src/components/js/email')
 
 const axios = require('axios')
 const smtpTransport = require('nodemailer-smtp-transport')
