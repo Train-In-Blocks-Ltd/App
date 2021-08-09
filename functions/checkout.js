@@ -74,7 +74,7 @@ exports.handler = async function handler (event, context, callback) {
                 quantity: 1
               }],
               payment_intent_data: {
-                application_fee_amount: Math.round(0.5 + product.price * 0.5),
+                application_fee_amount: Math.round(product.price * 0.05),
                 transfer_data: {
                   destination: Okta.data[0].profile.connectedAccountId
                 }
