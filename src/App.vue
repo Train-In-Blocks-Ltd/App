@@ -159,7 +159,7 @@ hr {
 }
 .tab_overlay_content {
   position: fixed;
-  padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
+  padding: 4rem 10vw 10rem calc((10vw + 2rem) - 38px);
   top: 0;
   left: 0;
   z-index: 11;
