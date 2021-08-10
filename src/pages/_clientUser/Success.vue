@@ -21,7 +21,7 @@
       If your browser does not automatically redirect you, please click here...
     </p>
     <router-link to="/clientUser" class="a_link">
-      <b>Back to the app</b>
+      <b>Back to Train In Blocks</b>
     </router-link>
   </div>
 </template>
