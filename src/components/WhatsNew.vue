@@ -21,7 +21,7 @@
 textarea {
   min-height: 6rem
 }
-@media (max-width: calc(400px + 400px + 4rem)) {
+@media (max-width: 736px) {
   .update_wrapper {
     grid-template-columns: 1fr
   }

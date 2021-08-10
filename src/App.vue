@@ -144,7 +144,10 @@ hr {
   &:not(.not_fixed) {
     position: fixed;
     top: 4rem;
-    right: 5vw
+    right: 5vw;
+    @media (max-width: 576px) {
+      right: 1vw
+    }
   }
 }
 
