@@ -1,8 +1,12 @@
 <style lang="scss" scoped>
 .update_wrapper {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   grid-gap: 4rem;
+  margin-bottom: 4rem;
   .update_item {
+    display: grid;
+    align-content: space-between;
     background-color: var(--fore);
     border: 3px solid var(--base);
     border-radius: 10px;
@@ -12,6 +16,14 @@
       border-radius: 10px;
       margin: 1rem 0
     }
+  }
+}
+textarea {
+  min-height: 6rem
+}
+@media (max-width: calc(400px + 400px + 4rem)) {
+  .update_wrapper {
+    grid-template-columns: 1fr
   }
 }
 
@@ -49,14 +61,26 @@
           :alt="item.title"
           loading="lazy"
         >
-        <h3>
-          {{ item.title }}
-        </h3>
-        <p class="grey">
-          {{ item.desc }}
-        </p>
+        <div>
+          <h3>
+            {{ item.title }}
+          </h3>
+          <p class="grey">
+            {{ item.desc }}
+          </p>
+        </div>
       </div>
     </div>
+    <h2>
+      Help us make something better
+    </h2>
+    <br>
+    <form @submit.prevent="newIdea()">
+      <textarea v-model="idea.idea_text" required placeholder="Your Idea" />
+      <button type="submit">
+        Submit
+      </button>
+    </form>
   </div>
 </template>
 
@@ -112,7 +136,10 @@ export default {
           desc: 'A lot of \'under-the-hood\' changes made which improved the speed and size of the app.',
           img: ''
         }
-      ]
+      ],
+      idea: {
+        idea_text: ''
+      }
     }
   },
   computed: mapState([
