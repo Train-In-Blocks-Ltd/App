@@ -21,7 +21,9 @@
   --skeleton_2: #E4E4E4;
   --link: blue;
   --light_opacity: .6;
-  --active_state: scale(.95)
+  --active_state: scale(.95);
+
+  height: -webkit-fill-available
 }
 
 /* Animation */
