@@ -224,7 +224,7 @@ const ics = function (uidDomain, prodId) {
   }
 }
 const axios = require('axios')
-const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('./helpers/prod.env') : require('./helpers/dev.env')
 const authHeader = CUSTOM_ENV.OKTA.AUTH_KEY
 const headers = require('././helpers/headers')
 

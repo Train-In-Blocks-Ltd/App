@@ -1,7 +1,7 @@
 const qs = require('querystring')
 const axios = require('axios')
 const beautify = require('json-beautify')
-const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('./helpers/prod.env') : require('./helpers/dev.env')
 const headers = require('./helpers/headers')
 function bodyData (msg, claims) {
   return `{

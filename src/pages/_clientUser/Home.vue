@@ -280,6 +280,7 @@ const RichEditor = () => import(/* webpackChunkName: "components.richeditor", we
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
 const ClientProfile = () => import(/* webpackChunkName: "components.clientProfile", webpackPrefetch: true  */ '../../components/ClientProfile')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
 export default {
   components: {
@@ -414,7 +415,7 @@ export default {
           ptId: this.clientUser.pt_id,
           email: this.claims.email
         })
-        const stripe = await loadStripe('pk_live_shgxQjmTIkJSJjVJpi8N1RQO00aJHHNIWX')
+        const stripe = await loadStripe(CUSTOM_ENV.STRIPE.PUBLIC_KEY)
         stripe.redirectToCheckout({ sessionId: RESPONSE.data })
         this.$store.dispatch('endLoading')
       } catch (e) {
