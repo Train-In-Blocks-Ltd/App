@@ -116,7 +116,10 @@ a {
     grid-gap: 1rem;
     margin-top: 4rem;
     .error {
-      color: red
+      color: var(--base_red)
+    }
+    .success {
+      color: var(--base_green)
     }
   }
   .cookies {
@@ -183,7 +186,7 @@ a {
     </form>
     <div class="other_options">
       <div>
-        <p v-if="success">
+        <p v-if="success" class="success">
           {{ success }}
         </p>
         <p v-if="error" class="error">

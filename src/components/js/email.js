@@ -126,54 +126,36 @@ function baseEmail (data) {
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <style type='text/css'>
-          body {
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 0;
-            padding: 10vh 10vw;
-            font-size: 16px;
-            line-height: 1.42;
-            background-color: #F9F9F9
-          }
-          #content {
-            margin: 2rem 0
-          }
           .link {
             text-decoration: none;
-            color: #282828;
+            color: #282828!important;
             font-size: 1rem;
+            margin-right: 1rem;
           }
           .link-button {
             display: block;
-            padding: 1rem;
+            padding: .6rem 1.6rem;
             margin: 2rem 0;
             width: fit-content;
-            color: white;
+            color: white!important;
             background-color: #282828;
             border-radius: 5px;
             text-decoration: none;
             transition: .6s all;
           }
-          .link-button:hover {
+          .link-button:hover, .link-button:focus {
             opacity: .6;
           }
-          #footer {
-            border-top: 2px solid #282828;
-            padding: 2rem 0;
-          }
-          #footer .content {
-            display: grid;
-            grid-gap: 1rem;
+          .link-button:focus {
+            box-shadow: 0 0 0 4px #585858;
+            outline: none
           }
           #footer p {
             font-size: .8rem;
           }
-          #footer .company-info {
-            display: flex;
-            justify-content: space-between;
-          }
         </style>
       </head>
-      <body>
+      <body style="font-family: Arial, Helvetica, sans-serif;margin: 0;padding: 10vh 10vw;font-size: 16px;line-height: 1.42">
         <div id="email">
           
           <!-- Header -->
@@ -188,7 +170,7 @@ function baseEmail (data) {
 
           <!-- Content -->
 
-          <table id="content" role="presentation" width="100%">
+          <table id="content" role="presentation" width="100%" style="margin: 2rem 0">
             <tr>
               <td>
                 <h1>${data.title}</h1>
@@ -202,22 +184,24 @@ function baseEmail (data) {
             </tr>
           </table>
 
-          <table id="footer" role="presentation" width="100%">
+          <table id="footer" role="presentation" width="100%" style="border-top: 2px solid #282828;padding: 2rem 0;">
             <tr>
               <td class="content">
-                <div>
-                  <a href="https://app.traininblocks.com" target="_blank" rel="noreferrer" class="link">App</a>
+                <p>
+                  <b>Wallingford</b> United Kingdom
+                </p>
+              </td>
+              <td align="center">
+                <p>
+                  <a href="https://app.traininblocks.com" target="_blank" rel="noreferrer" class="link">Login</a>
                   <a href="https://traininblocks.com" target="_blank" rel="noreferrer" class="link">Website</a>
                   <a href="https://www.instagram.com/traininblocks" target="_blank" rel="noreferrer" class="link">Instagram</a>
-                </div>
-                <div class="company-info">
-                  <p>
-                    <b>Wallingford</b> United Kingdom
-                  </p>
-                  <p>
-                    <b>Train In Blocks Ltd</b> 12515717
-                  </p>
-                </div>
+                </p>
+              </td>
+              <td>
+                <p>
+                  <b>Train In Blocks Ltd</b> 12515717
+                </p>
               </td>
             </tr>
           </table>
