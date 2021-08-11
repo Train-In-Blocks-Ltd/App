@@ -62,6 +62,9 @@
   &:last-of-type {
     padding-bottom: 0
   }
+  &.refresh {
+    display: none
+  }
   a {
     display: flex;
     text-decoration: none;
@@ -130,6 +133,9 @@
     width: 100%;
     margin: 0;
     padding: 0;
+    &.refresh {
+      display: block
+    }
     a {
       width: 100%;
       height: 3.8rem;
@@ -166,18 +172,27 @@
     <div
       v-for="(nav, navIndex) in navLinks"
       :key="`nav_${navIndex}`"
+      :class="{ refresh: nav.name === 'Refresh' }"
       class="nav_item"
     >
       <a
         v-if="nav.name === 'Log out'"
         :href="nav.link"
         :title="nav.name"
-        @click="logout()"
+        @click="logout"
       >
         <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
         <p class="nav_item__text">
           {{ nav.name }}
         </p>
+      </a>
+      <a
+        v-else-if="nav.name === 'Refresh'"
+        :href="nav.link"
+        :title="nav.name"
+        @click="hardRefresh"
+      >
+        <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
       </a>
       <router-link
         v-else-if="nav.forUser.includes(claims.user_type) && nav.internal && (nav.name === 'Account' ? claims.email !== 'demo@traininblocks.com' : true)"
@@ -221,33 +236,36 @@ export default {
         { name: 'Portfolio', link: '/portfolio', svg: 'portfolio.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Archive', link: '/archive', svg: 'archive.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Account', link: '/account', svg: 'account.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true },
+        { name: 'Refresh', link: 'javascript:void(0)', svg: 'refresh.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true },
         { name: 'Log out', link: 'javascript:void(0)', svg: 'logout.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true }
       ]
     }
   },
   methods: {
 
-    // -----------------------------
-    // Auth
-    // -----------------------------
+    hardRefresh () {
+      location.reload()
+    },
 
     /**
      * Logs out the user.
      */
     async logout () {
-      await this.$parent.$auth.signOut()
-      await this.$parent.isAuthenticated()
-      localStorage.clear()
-      sessionStorage.clear()
-      localStorage.setItem('versionBuild', this.$store.state.versionBuild)
-      const COOKIES = document.cookie.split(';')
-      for (let i = 0; i < COOKIES.length; i++) {
-        const COOKIE = COOKIES[i]
-        const EQ_POS = COOKIE.indexOf('=')
-        const NAME = EQ_POS > -1 ? COOKIE.substr(0, EQ_POS) : COOKIE
-        document.cookie = NAME + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to log out?', 'It\'s recommended to do so if you are using a public device.')) {
+        await this.$parent.$auth.signOut()
+        await this.$parent.isAuthenticated()
+        localStorage.clear()
+        sessionStorage.clear()
+        localStorage.setItem('versionBuild', this.$store.state.versionBuild)
+        const COOKIES = document.cookie.split(';')
+        for (let i = 0; i < COOKIES.length; i++) {
+          const COOKIE = COOKIES[i]
+          const EQ_POS = COOKIE.indexOf('=')
+          const NAME = EQ_POS > -1 ? COOKIE.substr(0, EQ_POS) : COOKIE
+          document.cookie = NAME + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        }
+        this.$ga.event('Auth', 'logout')
       }
-      this.$ga.event('Auth', 'logout')
     }
   }
 }
