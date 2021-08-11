@@ -155,7 +155,7 @@ function baseEmail (data) {
           }
         </style>
       </head>
-      <body style="font-family: Arial, Helvetica, sans-serif;margin: 0;padding: 10vh 10vw;font-size: 16px;line-height: 1.42">
+      <body style="font-family: Arial, Helvetica, sans-serif;margin: auto;padding: 50px 0 0;max-width: 800px;font-size: 16px;line-height: 1.42">
         <div id="email">
           
           <!-- Header -->

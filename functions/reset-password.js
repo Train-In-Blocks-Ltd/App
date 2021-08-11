@@ -1,9 +1,8 @@
-const emailBuilder = require('../src/components/js/email')
-
 const axios = require('axios')
 const smtpTransport = require('nodemailer-smtp-transport')
 const nodemailer = require('nodemailer')
-const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
+const emailBuilder = require('../src/components/js/email')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('./helpers/prod.env') : require('./helpers/dev.env')
 const headers = require('./helpers/headers')
 const transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',

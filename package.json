@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development REPORT=true webpack serve --config build/webpack.dev.conf.js",
+    "kill": "taskkill /F /IM node.exe",
+    "start": "netlify dev",
+    "webpack:start": "cross-env NODE_ENV=development webpack serve --config build/webpack.dev.conf.js",
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js",
     "build:report": "cross-env NODE_ENV=production REPORT=true webpack --config build/webpack.prod.conf.js --progress",
-    "debug": "netlify dev --inspect",
+    "debug": "netlify dev --inspect --debug",
     "lint": "eslint --ext .js,.vue src --fix",
     "test": "jest --watchAll --coverage"
   },
@@ -62,6 +64,7 @@
     "html-webpack-plugin": "^5.3.2",
     "jest": "^27.0.6",
     "mini-css-extract-plugin": "^2.1.0",
+    "netlify-cli": "^6.2.3",
     "node-notifier": "^10.0.0",
     "ora": "^5.4.1",
     "portfinder": "^1.0.28",

@@ -1,8 +1,8 @@
 const qs = require('querystring')
 const axios = require('axios')
-const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../config/prod.env') : require('../config/dev.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('./helpers/prod.env') : require('./helpers/dev.env')
 /* eslint-disable-next-line */
-const stripe = require('stripe')(CUSTOM_ENV.STRIPE)
+const stripe = require('stripe')(CUSTOM_ENV.STRIPE.SECRET_KEY)
 const headers = require('././helpers/headers')
 
 let response

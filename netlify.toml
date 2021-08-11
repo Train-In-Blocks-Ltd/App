@@ -5,6 +5,7 @@
 
 [dev]
   framework = "vue"
+  command = "yarn webpack:start"
   port = 8080
   targetPort = 8081
 
