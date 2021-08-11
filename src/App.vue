@@ -636,6 +636,13 @@ import NavBar from './components/NavBar'
 import Policy from './components/Policy'
 
 export default {
+  metaInfo  () {
+    return {
+      title: 'Home',
+      // all titles will be injected into this template
+      titleTemplate: '%s | Train In Blocks'
+    }
+  },
   components: {
     NavBar,
     Policy

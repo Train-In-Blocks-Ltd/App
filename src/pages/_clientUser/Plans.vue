@@ -249,6 +249,11 @@ const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", w
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
 export default {
+  metaInfo  () {
+    return {
+      title: 'Plans'
+    }
+  },
   components: {
     WeekCalendar,
     MonthCalendar,

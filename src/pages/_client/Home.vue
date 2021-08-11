@@ -245,6 +245,11 @@ const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackP
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
 export default {
+  metaInfo  () {
+    return {
+      title: this.clientDetails.name
+    }
+  },
   components: {
     Toolkit
   },

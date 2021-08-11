@@ -357,6 +357,11 @@
 import { mapState } from 'vuex'
 
 export default {
+  metaInfo  () {
+    return {
+      title: 'Account'
+    }
+  },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
       this.$store.commit('setData', {
