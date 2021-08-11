@@ -21,7 +21,9 @@
   --skeleton_2: #E4E4E4;
   --link: blue;
   --light_opacity: .6;
-  --active_state: scale(.95)
+  --active_state: scale(.95);
+
+  height: -webkit-fill-available
 }
 
 /* Animation */
@@ -142,7 +144,10 @@ hr {
   &:not(.not_fixed) {
     position: fixed;
     top: 4rem;
-    right: 5vw
+    right: 5vw;
+    @media (max-width: 576px) {
+      right: 1vw
+    }
   }
 }
 
@@ -157,7 +162,7 @@ hr {
 }
 .tab_overlay_content {
   position: fixed;
-  padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
+  padding: 4rem 10vw 10rem calc((10vw + 2rem) - 38px);
   top: 0;
   left: 0;
   z-index: 11;

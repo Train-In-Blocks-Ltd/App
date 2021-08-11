@@ -153,10 +153,10 @@ hr {
         v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
         :class="{ icon_open_bottom: portfolio && portfolio.notes !== '<p></p>' }"
         class="tab_option icon_open_middle tab_option_small"
-        aria-label="Install App"
+        aria-label="Install Train In Blocks"
         @click="isInstallOpen = true, willBodyScroll(false)"
       >
-        <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install App" />
+        <inline-svg :src="require('../../assets/svg/install-pwa.svg')" aria-label="Install Train In Blocks" />
         <p class="text">
           Install
         </p>

@@ -79,7 +79,7 @@
     />
     <div v-if="pwa.canInstall">
       <h2>
-        Save the app to your home screen
+        Add Train In Blocks to your home screen
       </h2>
       <p class="text--small grey">
         Access it quickly with a clearer interface
@@ -87,7 +87,7 @@
     </div>
     <div v-else-if="pwa.installed">
       <h2>
-        You have the app saved to your mobile already!
+        You have Train In Blocks installed already!
       </h2>
       <p class="text--small grey">
         Launch it or keep using it in the browser
@@ -95,7 +95,7 @@
     </div>
     <div v-else-if="!pwa.canInstall">
       <h2>
-        Save the app to your home screen
+        Add Train In Blocks to your home screen
       </h2>
       <p class="text--small grey">
         or continue using it in the browser
@@ -149,6 +149,7 @@
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   computed: mapState([
     'pwa'

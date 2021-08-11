@@ -7,7 +7,8 @@
     height: 140px;
     width: 140px;
     border-radius: 50%;
-    filter: grayscale(.8)
+    filter: grayscale(.8);
+    object-fit: cover
   }
   .img_icon {
     padding: 1.8rem;

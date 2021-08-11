@@ -113,6 +113,7 @@
   left: 0;
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  min-height: calc(100vh - env(safe-area-inset-bottom));
   width: calc(38px + 2rem);
   padding: 1rem;
   background-color: var(--skeleton_2);

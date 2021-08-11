@@ -213,7 +213,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import Checkbox from './Checkbox'
+const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
 
 export default {
   components: {
