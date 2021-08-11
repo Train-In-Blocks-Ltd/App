@@ -47,7 +47,7 @@
           v-show="((!search) || ((client.name).toLowerCase()).startsWith(search.toLowerCase())) && !loading"
           :id="'a' + client.client_id"
           :key="index"
-          class="client_link_wrapper fadeIn"
+          class="client_link_wrapper"
           :to="'/client/'+client.client_id+'/'"
         >
           <client-link

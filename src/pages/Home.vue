@@ -115,7 +115,7 @@
           :id="'a' + client.client_id"
           :key="index"
           :to="'/client/'+client.client_id+'/'"
-          class="client_link_wrapper fadeIn fill_mode_both delay"
+          class="client_link_wrapper"
         >
           <client-link
             :client="client"

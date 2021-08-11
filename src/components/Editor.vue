@@ -513,7 +513,7 @@ import Undeline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
-import Image from '@tiptap/extension-image'
+import LazyImage from './js/LazyImage'
 
 export default {
   components: {
@@ -571,7 +571,7 @@ export default {
             Link,
             TaskList,
             TaskItem,
-            Image
+            LazyImage
           ],
           onUpdate: () => {
             this.$emit('input', this.editor.getHTML())
@@ -627,7 +627,7 @@ export default {
       const READER = new FileReader()
       READER.addEventListener('load', () => {
         this.$axios.post('/.netlify/functions/upload', { file: READER.result.toString() }).then((response) => {
-          this.editor.chain().focus().setImage({ src: response.data.url }).run()
+          this.editor.chain().focus().setImage({ src: response.data.url, loading: 'lazy' }).run()
         })
       }, false)
 
