@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-.client_home_top_grid {
+.section--top {
   display: grid;
   grid-template-columns: .2fr 1fr;
   grid-gap: 1.6rem;
@@ -9,23 +9,23 @@
     filter: grayscale(.8);
     border-radius: 50%
   }
-  .profile_image_placeholder {
+  .image-placeholder {
     padding: 1.8rem;
     height: 140px;
     width: 140px;
     border: 4px solid var(--base);
     border-radius: 50%
   }
-  .client_info {
+  .client-info {
     display: grid;
     grid-gap: 1rem;
-    .client_info__options {
+    .options {
       display: flex;
       justify-content: space-between;
-      .client_email_bar {
+      .email-bar {
         display: flex;
         margin: auto 0;
-        .client_email {
+        .email {
           margin-left: .6rem
         }
       }
@@ -34,7 +34,7 @@
 }
 
 /* Floating Nav */
-.wrapper--floating_nav {
+.wrapper--floating-nav {
   background-color: var(--fore);
   width: 14rem;
   height: 100%;
@@ -49,7 +49,7 @@
   &.openFloatingNav {
     transform: none
   }
-  .floating_nav {
+  .floating-nav {
     display: grid;
     grid-gap: 2rem;
     text-align: right;
@@ -59,11 +59,7 @@
     .cursor {
       margin-left: auto
     }
-    .icon--options {
-      cursor: pointer;
-      margin-left: auto
-    }
-    .client--options {
+    .options {
       display: grid;
       grid-gap: 1rem;
       a {
@@ -77,7 +73,7 @@
 }
 
 @media (max-width: 992px) {
-  .wrapper--floating_nav .floating_nav {
+  .wrapper--floating-nav .floating-nav {
     a {
       grid-template-columns: 1fr;
       transition: var(--transition_standard);
@@ -94,25 +90,25 @@
   }
 }
 @media (max-width: 768px) {
-  .client_home_top_grid {
+  .section--top {
     grid-template-columns: 1fr;
-    .profile_image_placeholder,
+    .image-placeholder,
     img {
       width: 100px;
       height: 100px;
       margin: auto
     }
-    .client_info {
-      input.client_info--name {
+    .client-info {
+      input.client-info--name {
         font-size: 2rem
       }
     }
   }
 }
 @media (max-width: 576px) {
-  .client_home_top_grid .client_info .client_info__options {
+  .section--top .client-info .options {
     display: block;
-    .verify_button {
+    .verify-button {
       width: 100%;
       margin-top: 1rem
     }
@@ -136,10 +132,10 @@
     <div v-if="showToolkit" class="tab_overlay_content fadeIn delay fill_mode_both">
       <toolkit />
     </div>
-    <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
+    <div class="wrapper--floating-nav" :class="{ openFloatingNav: showOptions }">
       <div
         v-if="showOptions"
-        class="floating_nav fadeIn"
+        class="floating-nav fadeIn"
       >
         <inline-svg
           class="close_icon not_fixed cursor"
@@ -147,7 +143,7 @@
           aria-label="Close"
           @click="showOptions = false"
         />
-        <div class="client--options">
+        <div class="options">
           <a
             class="a_link"
             href="javascript:void(0)"
@@ -167,17 +163,17 @@
         </div>
       </div>
     </div>
-    <div class="client_home_top_grid">
+    <div class="section--top">
       <img v-if="clientDetails.profile_image" :src="clientDetails.profile_image" alt="Profile img">
       <inline-svg
         v-else
-        class="profile_image_placeholder"
+        class="image-placeholder"
         :src="require('../../assets/svg/profile-image.svg')"
       />
-      <div class="client_info">
+      <div class="client-info">
         <input
           v-model="clientDetails.name"
-          class="client_info--name text--large"
+          class="client-info--name text--large"
           type="text"
           aria-label="Client name"
           autocomplete="name"
@@ -199,16 +195,16 @@
           :disabled="silentLoading"
           @blur="updateClient()"
         >
-        <div v-if="!sessions" class="client_info__options">
-          <div class="client_email_bar">
+        <div v-if="!sessions" class="options">
+          <div class="email-bar">
             <inline-svg :src="require('../../assets/svg/email.svg')" />
-            <p class="client_email">
+            <p class="email">
               {{ clientDetails.email }}
             </p>
           </div>
           <button
             v-if="clientAlreadyMsg === 'Restricted'"
-            class="verify_button button"
+            class="verify-button button"
             :disabled="clientAlready"
             @click="giveAccess()"
           >
@@ -216,14 +212,14 @@
           </button>
           <button
             v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
-            class="verify_button fadeIn"
+            class="verify-button fadeIn"
             @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, updateClient()"
           >
             {{ clientDetails.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
           </button>
           <button
             v-else
-            class="verify_button button"
+            class="verify-button button"
             :disabled="clientAlready"
             @click="giveAccess()"
           >
@@ -247,7 +243,7 @@ const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../con
 export default {
   metaInfo  () {
     return {
-      title: this.clientDetails.name
+      title: this.loading ? 'Loading...' : this.clientDetails.name
     }
   },
   components: {
@@ -273,6 +269,7 @@ export default {
     }
   },
   computed: mapState([
+    'loading',
     'silentLoading',
     'clients',
     'clientDetails'
