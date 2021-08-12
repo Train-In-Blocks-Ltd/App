@@ -71,15 +71,22 @@ textarea {
         </div>
       </div>
     </div>
-    <h2>
+    <h3>
       Help us make something better
-    </h2>
+    </h3>
     <br>
-    <form @submit.prevent="newIdea()">
-      <textarea v-model="idea.idea_text" required placeholder="Your Idea" />
-      <button type="submit">
-        Submit
-      </button>
+    <form class="form_grid" @submit.prevent="newIdea()">
+      <textarea
+        v-model="idea.idea_text"
+        placeholder="Your Idea"
+        class="width_300"
+        required
+      />
+      <div class="form_button_bar">
+        <button type="submit">
+          Submit
+        </button>
+      </div>
     </form>
   </div>
 </template>
