@@ -28,6 +28,11 @@
 
 <script>
 export default {
+  metaInfo  () {
+    return {
+      title: 'Success'
+    }
+  },
   data () {
     return {
       timeout: 8

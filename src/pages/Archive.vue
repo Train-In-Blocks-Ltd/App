@@ -68,6 +68,11 @@ const ClientLink = () => import(/* webpackChunkName: "components.clientlink", we
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
 
 export default {
+  metaInfo  () {
+    return {
+      title: 'Archive'
+    }
+  },
   components: {
     ClientLink,
     Multiselect

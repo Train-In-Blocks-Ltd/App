@@ -149,6 +149,11 @@ const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpac
 const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
 
 export default {
+  metaInfo  () {
+    return {
+      title: 'Templates'
+    }
+  },
   components: {
     RichEditor,
     Checkbox,

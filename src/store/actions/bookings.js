@@ -24,7 +24,8 @@ export default {
         to: PT_EMAIL.data[0].credentials.emails[0].value,
         ...emailBuilder('booking-requested', {
           clientName: state.clientUser.name,
-          datetime: payload.datetime
+          datetime: payload.datetime,
+          link: `https://app.traininblocks.com/client/${payload.client_id}`
         })
       })
     } else {
@@ -81,7 +82,8 @@ export default {
         to: PT_EMAIL.data[0].credentials.emails[0].value,
         ...emailBuilder('booking-request-cancelled', {
           clientName: state.clientUser.name,
-          datetime: payload.datetime
+          datetime: payload.datetime,
+          link: `https://app.traininblocks.com/client/${payload.client_id}`
         })
       })
     } else if (new Date(state.bookings.find(booking => booking.id === payload.bookingId).datetime) > new Date()) {

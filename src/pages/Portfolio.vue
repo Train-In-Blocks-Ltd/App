@@ -84,6 +84,11 @@ const RichEditor = () => import(/* webpackChunkName: "components.richeditor", we
 const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '../components/Products')
 
 export default {
+  metaInfo  () {
+    return {
+      title: 'Portfolio'
+    }
+  },
   components: {
     RichEditor,
     Products

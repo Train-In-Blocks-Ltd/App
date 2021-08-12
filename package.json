@@ -16,7 +16,6 @@
     "@okta/okta-auth-js": "^4.7.2",
     "@okta/okta-signin-widget": "^5.4.3",
     "@okta/okta-vue": "^3.1.0",
-    "@stripe/stripe-js": "^1.16.0",
     "@tiptap/core": "^2.0.0-beta.86",
     "@tiptap/extension-image": "^2.0.0-beta.14",
     "@tiptap/extension-link": "^2.0.0-beta.18",
@@ -40,6 +39,7 @@
     "vue": "^2.6.14",
     "vue-analytics": "^5.22.1",
     "vue-inline-svg": "^2.0.0",
+    "vue-meta": "^2.4.0",
     "vue-router": "^3.5.2",
     "vuex": "^3.6.2"
   },

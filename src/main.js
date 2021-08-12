@@ -3,6 +3,7 @@ import VueAnalytics from 'vue-analytics'
 import axios from 'axios'
 import { loadProgressBar } from 'axios-progress-bar'
 import 'axios-progress-bar/dist/nprogress.css'
+import VueMeta from 'vue-meta'
 
 import { InlineSvgPlugin } from 'vue-inline-svg'
 import Skeleton from './components/Skeleton'
@@ -27,6 +28,7 @@ Vue.use(VueAnalytics, {
   disabled: true
 })
 Vue.use(InlineSvgPlugin)
+Vue.use(VueMeta)
 
 // Register component globally
 Vue.component('Skeleton', Skeleton)

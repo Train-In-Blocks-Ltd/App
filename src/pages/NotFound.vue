@@ -20,6 +20,11 @@
 
 <script>
 export default {
+  metaInfo  () {
+    return {
+      title: '404 Not Found'
+    }
+  },
   created () {
     this.willBodyScroll(true)
   }

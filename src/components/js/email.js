@@ -73,6 +73,22 @@ All the best,
 The Train In Blocks Team`
 }
 
+/*
+ * Date Functions
+*/
+const nth = function (d) {
+  if (d > 3 && d < 21) {
+    return 'th'
+  }
+  switch (d % 10) {
+    case 1: return 'st'
+    case 2: return 'nd'
+    case 3: return 'rd'
+    default: return 'th'
+  }
+}
+const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
 /**
  * Contains all the email HTMLs.
  * @param {string} type - The email body text to use.
@@ -82,29 +98,56 @@ The Train In Blocks Team`
 const bodyHtml = (type, data) => {
   switch (type) {
     case 'activate-account':
-      return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.<br><a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a></p>`
+      return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.
+        <br>
+        <a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a>
+      </p>`
     case 'password-changed':
-      return '<p>Your password has been changed. If you did not change your password please contact us immediately at hello@traininblocks.com.</p>'
+      return '<p>Your password has been changed. If you did not change your password please contact us immediately at <a href="mailto:hello@traininblocks.com">hello@traininblocks.com</a>.</p>'
     case 'password-reset':
-      return `<p>We've received a request to reset your password. If you did not submit this request then please disregard this email. If you wish to reset your password, please click the link below.<br><a href="${data.link}" target="_blank" class="link-button">Reset Password</a></p>`
+      return `<p>We've received a request to reset your password. If you did not submit this request then please disregard this email. If you wish to reset your password, please click the link below.
+        <br>
+        <a href="${data.link}" target="_blank" class="link-button">Reset Password</a>
+      </p>`
     case 'weekly-breakdown':
       return `<table>${data.body}</table>`
     case 'client-account-reactivated':
-      return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!<br><a href="${data.link}" target="_blank" class="link-button">Re-activate Your Account</a></p>`
+      return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!
+        <br>
+        <a href="${data.link}" target="_blank" class="link-button">Re-activate Your Account</a>
+      </p>`
     case 'client-account-deactivated':
       return '<p>Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.</p>'
     case 'client-feedback':
-      return `<p>Log in to find out what you client has said about the session. <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a></p>`
+      return `<p>Log in to find out what your client has said about the session.
+        <br>
+        <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a>
+      </p>`
     case 'booking-created':
-      return `<p>Your trainer has scheduled a booking on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
+      return `<p>Your trainer has scheduled a booking on the ${new Date(data.datetime).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${month[new Date(data.datetime).getMonth()]} at ${data.datetime.split(' ')[1].substring(0, 5)}.
+        <br>
+        <a href="https://app.traininblocks.com" target="_blank" class="link-button">View It Here</a>
+      </p>`
     case 'booking-requested':
-      return `<p>${data.clientName} has requested a booking on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
+      return `<p>${data.clientName} has requested a booking on the ${new Date(data.datetime).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${month[new Date(data.datetime).getMonth()]} at ${data.datetime.split(' ')[1].substring(0, 5)}.
+        <br>
+        <a href="${data.link}" target="_blank" class="link-button">Accept It Here</a>
+      </p>`
     case 'booking-request-cancelled':
-      return `<p>${data.clientName} has cancelled their request for a session on ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)}.</p>`
+      return `<p>${data.clientName} has cancelled their request for a session on the ${new Date(data.datetime).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${month[new Date(data.datetime).getMonth()]} at ${data.datetime.split(' ')[1].substring(0, 5)}.
+        <br>
+        <a href="${data.link}" target="_blank" class="link-button">Create A New One Now</a>
+      </p>`
     case 'booking-rejected':
-      return `<p>The booking for ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been rejected by your trainer.</p>`
+      return `<p>The booking for the ${new Date(data.datetime).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${month[new Date(data.datetime).getMonth()]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been rejected by your trainer.
+        <br>
+        <a href="https://app.traininblocks.com" target="_blank" class="link-button">Request A New Booking Now</a>
+      </p>`
     case 'booking-accepted':
-      return `<p>The booking for ${data.datetime.split(' ')[0]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been accepted by your trainer.</p>`
+      return `<p>The booking for the ${new Date(data.datetime).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${month[new Date(data.datetime).getMonth()]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been accepted by your trainer.
+        <br>
+        <a href="https://app.traininblocks.com" target="_blank" class="link-button">View Your Booking Here</a>
+      </p>`
   }
 }
 
@@ -141,7 +184,7 @@ function baseEmail (data) {
             background-color: #282828;
             border-radius: 5px;
             text-decoration: none;
-            transition: .6s all;
+            transition: opacity .6s!important;
           }
           .link-button:hover, .link-button:focus {
             opacity: .6;
