@@ -4,23 +4,23 @@ const frontEndEnv = require('../../config/prod.env')
 
 module.exports = merge(frontEndEnv, {
   OKTA: {
-    AUTH_KEY: 'SSWS 00r26hoJMP9lITIbqrR596dGTWAL0I8lFljhdxfaBV'
+    AUTH_KEY: 'SSWS 00Ox5xOD2PsdeFwPEkAu6Y3G2eC7cFUMJMraVGcrfR'
   },
   STRIPE: {
-    SECRET_KEY: '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'
+    SECRET_KEY: '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'
   },
   CLOUDINARY: {
     CLOUD_NAME: 'train-in-blocks',
-    API_KEY: '896869656247474',
-    API_SECRET: 'KLXFI8z7O2SmPD6gVlYMJ597aHQ'
+    API_KEY: '273846826416477',
+    API_SECRET: 'Y1LSsFRRygnydgqN0uxd-IdV9fw'
   },
   GOOGLE_WORKSPACE: {
     USERNAME: 'joe.bailey@traininblocks.com',
-    PASSWORD: 'fczhxioeejfvtpbi'
+    PASSWORD: 'enofaokosdxpjjqq'
   },
   ATLASSIAN: {
     USERNAME: 'joe.bailey@traininblocks.com',
-    PASSWORD: 'FE98Xa9rXzGV1w7Ut6YXD397'
+    PASSWORD: 'phIZi2OJdE6VKYwXgenwF29C'
   },
-  TIB_API: 'APIKEY TrainInBlocksCalendarNetlifyFunctionAbacus'
+  TIB_API: 'APIKEY MitsubishiLancerEvolution10CastleCombe'
 })
