@@ -346,6 +346,9 @@
           />
         </a>
       </div>
+      <button v-else @click="isNewProductOpen = true, willBodyScroll(false)">
+        New product
+      </button>
     </div>
     <skeleton
       v-if="loading || silentLoading"
