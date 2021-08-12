@@ -560,7 +560,6 @@ option {
     .form_button_bar {
       display: grid;
       grid-gap: 1rem;
-      margin-top: 2rem;
       button {
         width: 100%
       }
