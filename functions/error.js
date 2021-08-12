@@ -52,7 +52,7 @@ let response
 exports.handler = async function handler (event, context, callback) {
   if (event.headers.authorization) {
     const accessToken = event.headers.authorization.split(' ')
-    response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
+    response = await axios.post(`${CUSTOM_ENV.OKTA.ISSUER}/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
       qs.stringify({
         token: accessToken[1],
         token_type_hint: 'access_token'

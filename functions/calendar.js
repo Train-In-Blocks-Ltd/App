@@ -243,7 +243,7 @@ exports.handler = async function handler (event, context, callback) {
   } else if (event.queryStringParameters.email) {
     try {
       // Search okta for email
-      response = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=profile.email+eq+"${event.queryStringParameters.email}"&limit=1`,
+      response = await axios.get(`${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/?filter=profile.email+eq+"${event.queryStringParameters.email}"&limit=1`,
         {
           headers: {
             Accept: 'application/json',

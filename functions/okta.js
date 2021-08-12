@@ -8,7 +8,7 @@ let response
 exports.handler = async function handler (event, context, callback) {
   if (event.headers.authorization) {
     const accessToken = event.headers.authorization.split(' ')
-    response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
+    response = await axios.post(`${CUSTOM_ENV.OKTA.ISSUER}/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
       qs.stringify({
         token: accessToken[1],
         token_type_hint: 'access_token'
@@ -30,7 +30,7 @@ exports.handler = async function handler (event, context, callback) {
       const data = JSON.parse(event.body)
       if (data.type === 'POST') {
         try {
-          response = await axios.post('https://dev-183252.okta.com/api/v1/users/' + data.url, data.body,
+          response = await axios.post(`${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/${data.url}`, data.body,
             {
               headers: {
                 Accept: 'application/json',
@@ -60,7 +60,7 @@ exports.handler = async function handler (event, context, callback) {
         }
       } else if (data.type === 'GET') {
         try {
-          const response = await axios.get('https://dev-183252.okta.com/api/v1/users/' + data.url,
+          const response = await axios.get(`${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/${data.url}`,
             {
               headers: {
                 Accept: 'application/json',

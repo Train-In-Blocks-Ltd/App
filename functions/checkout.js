@@ -10,7 +10,7 @@ let response
 exports.handler = async function handler (event, context, callback) {
   if (event.headers.authorization) {
     const accessToken = event.headers.authorization.split(' ')
-    response = await axios.post(`https://dev-183252.okta.com/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
+    response = await axios.post(`${CUSTOM_ENV.OKTA.ISSUER}/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
       qs.stringify({
         token: accessToken[1],
         token_type_hint: 'access_token'
@@ -32,7 +32,7 @@ exports.handler = async function handler (event, context, callback) {
       try {
         if (JSON.parse(event.body).productId && JSON.parse(event.body).ptId && JSON.parse(event.body).email) {
           // Get Connected Account Id
-          const Okta = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=id+eq+"${JSON.parse(event.body).ptId}"&limit=1`,
+          const Okta = await axios.get(`${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/?filter=id+eq+"${JSON.parse(event.body).ptId}"&limit=1`,
             {
               headers: {
                 Accept: 'application/json',

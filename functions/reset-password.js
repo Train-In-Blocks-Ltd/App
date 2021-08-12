@@ -27,7 +27,7 @@ exports.handler = async function handler (event, context, callback) {
     const data = JSON.parse(event.body)
     if (data.email !== 'demo@traininblocks.com') {
       try {
-        const oktaOne = await axios.get(`https://dev-183252.okta.com/api/v1/users/?filter=profile.email+eq+"${data.email}"&limit=1`,
+        const oktaOne = await axios.get(`${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/?filter=profile.email+eq+"${data.email}"&limit=1`,
           {
             headers: {
               Accept: 'application/json',
@@ -37,7 +37,7 @@ exports.handler = async function handler (event, context, callback) {
           }
         )
         const id = oktaOne.data[0].id
-        const oktaTwo = await axios.post(`https://dev-183252.okta.com/api/v1/users/${id}/lifecycle/reset_password?sendEmail=false`,
+        const oktaTwo = await axios.post(`${CUSTOM_ENV.OKTA.ISSUER}/api/v1/users/${id}/lifecycle/reset_password?sendEmail=false`,
           {},
           {
             headers: {
