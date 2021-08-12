@@ -270,7 +270,7 @@
             placeholder="Price*"
             aria-label="Price"
             step="0.01"
-            min="0"
+            min="1"
             required
             @change="newProduct.price = makeDecimals(newProduct.price, 2)"
             @input="newProduct.price = $event.target.value, checkForm()"
@@ -371,8 +371,8 @@
             aria-label="Name"
             required
             @change="productChanged = true"
-            @blur="resolveIfProductChanged(product.id)"
-            @input="product.name = $event.target.value, checkForm()"
+            @blur="resolveIfProductChanged(product)"
+            @input="product.name = $event.target.value"
           >
           <checkbox
             :item-id="product.id"
@@ -429,11 +429,11 @@
               placeholder="Price"
               aria-label="Price"
               step="0.01"
-              min="0"
+              min="1"
               required
               @change="product.price = makeDecimals(product.price, 2), productChanged = true"
-              @blur="resolveIfProductChanged(product.id)"
-              @input="product.price = $event.target.value, checkForm()"
+              @blur="resolveIfProductChanged(product)"
+              @input="product.price = $event.target.value"
             >
           </div>
         </div>
@@ -446,8 +446,8 @@
           aria-label="Description"
           required
           @change="productChanged = true"
-          @blur="resolveIfProductChanged(product.id)"
-          @input="product.notes = $event.target.value, checkForm()"
+          @blur="resolveIfProductChanged(product)"
+          @input="product.notes = $event.target.value"
         />
       </form>
     </div>
@@ -530,9 +530,13 @@ export default {
      * Checks if any changes were made to the product before posting it to the database.
      * @param {integer} id - The id of the product.
      */
-    resolveIfProductChanged (id) {
+    resolveIfProductChanged (product) {
       if (this.productChanged) {
-        this.updateProduct(id)
+        if (String(product.price) > 1) {
+          this.updateProduct(product.id)
+        } else {
+          this.$parent.$parent.$refs.response_pop_up.show('Price must be larger than 1.', 'Please try again.', true, true)
+        }
       }
     },
 
