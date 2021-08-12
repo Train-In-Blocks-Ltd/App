@@ -502,7 +502,7 @@ option {
 
 @media (min-width: 1440px) {
   .view_container {
-    padding: 2rem 15vw
+    padding: 2rem 20vw
   }
 }
 @media (max-width: 992px) {

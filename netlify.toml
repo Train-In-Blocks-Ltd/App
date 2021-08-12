@@ -4,7 +4,7 @@
   functions = "functions"
 
 [dev]
-  framework = "vue"
+  framework = "#custom"
   command = "yarn webpack:start"
   port = 8080
   targetPort = 8081

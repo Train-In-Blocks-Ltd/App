@@ -95,38 +95,32 @@
       padding: 0;
 
       /* Week */
-      .container--week {
-        height: 100px;
+      .week {
+        display: grid;
+        grid-template-rows: 8px 64px;
         user-select: none;
-        .week {
-          display: grid;
-          grid-template-rows: 6px 90px;
-          cursor: pointer;
+        cursor: pointer;
+        width: 100%;
+        border: 2px solid var(--base_faint);
+        border-radius: 5px;
+        transition: var(--transition_standard);
+        &:hover {
+          opacity: var(--light_opacity)
+        }
+        &.weekActive {
+          border-color: var(--base);
           background-color: var(--fore);
-          min-width: 50px;
-          height: 74px;
-          width: 100%;
-          border-radius: 5px;
-          transition: var(--transition_standard);
           &:hover {
-            box-shadow: var(--low_shadow)
+            opacity: var(--light_opacity)
           }
-          &.weekActive {
-            border-bottom: 2px solid #EEEEEE;
-            box-shadow: var(--high_shadow);
-            background-color: var(--fore);
-            height: 94px;
-            &:hover {
-              box-shadow: var(--low_shadow)
-            }
-          }
-          .week__color {
-            width: 50px;
-            height: 6px
-          }
-          .week__number {
-            padding: 1rem 0
-          }
+        }
+        .week__color {
+          width: 100%;
+          height: 100%;
+          border-radius: 3px 3px 0 0
+        }
+        .week__number {
+          margin: auto
         }
       }
     }
@@ -536,14 +530,13 @@
                 <div
                   v-for="item in planDuration(plan.duration)"
                   :key="item"
-                  class="container--week"
+                  :class="{ weekActive: item === currentWeek }"
+                  class="week"
                   @click="changeWeek(item)"
                 >
-                  <div :class="{ weekActive: item === currentWeek }" class="week">
-                    <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] }" class="week__color" />
-                    <div class="week__number">
-                      {{ item }}
-                    </div>
+                  <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] ? weekColor.backgroundColor[item - 1] : 'var(--base_faint)' }" class="week__color" />
+                  <div class="week__number">
+                    {{ item }}
                   </div>
                 </div>
               </div>
