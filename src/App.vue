@@ -162,7 +162,7 @@ hr {
 }
 .tab_overlay_content {
   position: fixed;
-  padding: 4rem 10vw 10rem calc((10vw + 2rem) - 38px);
+  padding: 4rem  10vw;
   top: 0;
   left: 0;
   z-index: 11;
@@ -504,6 +504,9 @@ option {
 @media (min-width: 1440px) {
   .view_container {
     padding: 2rem 20vw
+  }
+  .tab_overlay_content {
+    padding: 4rem 20vw
   }
 }
 @media (max-width: 992px) {
