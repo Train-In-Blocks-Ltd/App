@@ -541,9 +541,6 @@ option {
   .view_container {
     padding: 2rem 5vw 5rem 5vw
   }
-  .tab_overlay_content {
-    padding: 4rem 10vw 10rem 10vw
-  }
 }
 @media (max-width: 576px) {
   /* Elements */
