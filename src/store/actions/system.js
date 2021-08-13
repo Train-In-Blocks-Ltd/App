@@ -59,11 +59,20 @@ export default {
     }
 
     // Sets bookings
+    const SORTED_BOOKINGS = RESPONSE.data[4].sort((a, b) => {
+      return new Date(a.datetime) - new Date(b.datetime)
+    })
+    if (state.claims.email === 'demo@traininblocks.com') {
+      const TODAY = new Date()
+      SORTED_BOOKINGS.forEach((booking) => {
+        const NEW_DATE = new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + 7)
+        const OLD_DATETIME = booking.datetime.split(' ')
+        booking.datetime = [`${NEW_DATE.getFullYear()}-${String(NEW_DATE.getMonth() + 1).padStart(2, '0')}-${String(NEW_DATE.getDate()).padStart(2, '0')}`, OLD_DATETIME[1]].join(' ')
+      })
+    }
     commit('setData', {
       attr: 'bookings',
-      data: RESPONSE.data[4].sort((a, b) => {
-        return new Date(a.datetime) - new Date(b.datetime)
-      })
+      data: SORTED_BOOKINGS
     })
 
     // Sets products

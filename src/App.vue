@@ -28,19 +28,19 @@
 
 /* Animation */
 .fadeIn {
-  animation: .6s fadeIn
+  animation: .4s fadeIn
 }
 .fadeOut {
-  animation: .6s fadeOut
+  animation: .4s fadeOut
 }
 .fill_mode_both {
   animation-fill-mode: both
 }
 .delay {
-  animation-delay: .6s
+  animation-delay: .4s
 }
 .delay_long {
-  animation-delay: 1.2s
+  animation-delay: .8s
 }
 @keyframes fadeIn {
   from {

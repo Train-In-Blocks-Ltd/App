@@ -336,7 +336,12 @@
         <button @click="isNewProductOpen = true, willBodyScroll(false)">
           New product
         </button>
-        <a :href="`https://dashboard.stripe.com/b/${claims.connectedAccountId}`" class="stripe-connect" target="_blank">
+        <a
+          v-if="claims.email !== 'demo@traininblocks.com'"
+          :href="`https://dashboard.stripe.com/b/${claims.connectedAccountId}`"
+          class="stripe-connect"
+          target="_blank"
+        >
           <span>
             Login to
           </span>

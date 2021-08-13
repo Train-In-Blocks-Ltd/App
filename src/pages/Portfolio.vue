@@ -223,7 +223,7 @@ export default {
         })
         this.$store.commit('setData', {
           attr: 'isStripeConnected',
-          data: RESPONSE_STRIPE.data
+          data: this.claims.email === 'demo@traininblocks.com' || RESPONSE_STRIPE.data
         })
         this.$store.commit('setData', {
           attr: 'hasCheckedStripeConnect',
