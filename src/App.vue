@@ -484,6 +484,7 @@ option {
   background-color: var(--base_faint)
 }
 ::-webkit-scrollbar-thumb {
+  border-radius: 3px;
   background-color: var(--base);
   &:hover {
     background-color: var(--base_faint)
