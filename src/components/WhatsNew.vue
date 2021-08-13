@@ -49,7 +49,7 @@ textarea {
       {{ versionName }} {{ versionBuild }}
     </h2>
     <p class="text--small grey">
-      Buffed editor, style, statistics, and predictions
+      Payments, booknigs, client profile, style, and more
     </p>
     <br><br>
     <div class="update_wrapper">
@@ -143,7 +143,7 @@ export default {
         {
           title: 'Offline support',
           desc: 'If you lose connection whilst managing your clients and programmes, Train In Blocks will now attempt to retry and give you access to some functions offline.',
-          img: ''
+          img: 'offline.png'
         },
         {
           title: 'Faster and smaller',
