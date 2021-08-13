@@ -42,7 +42,8 @@ const titles = {
   'booking-requested': 'Your client has requested a booking',
   'booking-request-cancelled': 'Your client has cancelled their request for a booking',
   'booking-rejected': 'Your trainer has rejected a booking',
-  'booking-accepted': 'Your trainer has accepted a booking'
+  'booking-accepted': 'Your trainer has accepted a booking',
+  'new-idea': 'Someone has just submitted a new idea'
 }
 
 const textEmail = (type, data) => {
@@ -147,6 +148,11 @@ const bodyHtml = (type, data) => {
       return `<p>The booking for the ${new Date(data.datetime).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${month[new Date(data.datetime).getMonth()]} at ${data.datetime.split(' ')[1].substring(0, 5)} has been accepted by your trainer.
         <br>
         <a href="https://app.traininblocks.com" target="_blank" class="link-button">View Your Booking Here</a>
+      </p>`
+    case 'new-idea':
+      return `<p>Good news, ${data.email} has submitted a new idea:
+        <br>
+        ${data.idea_text}
       </p>`
   }
 }
