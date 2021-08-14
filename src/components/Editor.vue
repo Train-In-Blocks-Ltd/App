@@ -624,7 +624,7 @@ export default {
      * @returns An array of all the found ids of cloudinary images.
      */
     imgFinder (html) {
-      const IMG_REGEX = /<img.*?src="(.*?)">/gi
+      const IMG_REGEX = /<img.*?src="(.*?)".*?>/gi
       const RETURN_ARR = []
       let finder
       while ((finder = IMG_REGEX.exec(html)) !== null) {
