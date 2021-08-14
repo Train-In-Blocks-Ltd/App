@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 -->
 # End-User License Agreement (EULA)
 
 The nature of this agreement is to set out the rules of using our products and services. You **MUST** agree and sign this agreement before using any of our products or services.
@@ -14,20 +15,20 @@ We do our best to provide the most relevant and best service for you. However, w
 
 These terms and conditions are governed by and construed in accordance with the laws of the United Kingdom and you irrevocably submit to the exclusive jurisdiction of its courts.
 
-## 4. Authorised Uses
+## 4. Authorized Uses
 
-You are authorised to:
+You are authorized to:
 
 - use the web application as intended by us;
 - and save the web application as a progressive web application (PWA) on supported devices.
 
-## 5. Unauthorised Uses
+## 5. Unauthorized Uses
 
 When using any of our products, services, or websites, you are not to:
 
-- share your account details with anyone as we only authorise use for **one customer per account**;
+- share your account details with anyone as we only authorize use for **one customer per account**;
 - copy, use, or distribute our source code with anyone;
-- decompile or reverse engineer any of our products or services;
+- de-compile or reverse engineer any of our products or services;
 - remove any copyright or other proprietary notations from the materials;
 - or tamper with our products or services in any way which includes but is not limited to: avoiding payment, changing aspects of our products or services, attempting to damage or harm others’ information, and attempting to cause damage to our service.
 

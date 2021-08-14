@@ -123,6 +123,13 @@
     id="account"
     class="view_container"
   >
+    <preview-modal
+      :desc="previewDesc"
+      :html="previewHTML"
+      :show-media="false"
+      :show-brackets="true"
+      @close="previewDesc = null, previewHTML = null"
+    />
     <div :class="{ opened_sections: showPasswordReset }" class="section_overlay" />
     <form
       v-if="showPasswordReset"
@@ -334,6 +341,15 @@
                 </b>
               </a>
             </p>
+            <p>
+              <a
+                href="javascript:void(0)"
+                class="a_link"
+                @click="openEULA"
+              >
+                EULA
+              </a>
+            </p>
           </div>
           <div class="form__options">
             <label>
@@ -357,12 +373,16 @@
 
 <script>
 import { mapState } from 'vuex'
+const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ '../components/PreviewModal')
 
 export default {
   metaInfo  () {
     return {
       title: 'Account'
     }
+  },
+  components: {
+    PreviewModal
   },
   async beforeRouteLeave (to, from, next) {
     if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
@@ -412,7 +432,9 @@ export default {
           title: 'Terms of Use',
           link: 'http://traininblocks.com/legal/terms-of-use'
         }
-      ]
+      ],
+      previewDesc: null,
+      previewHTML: null
     }
   },
   computed: mapState([
@@ -443,6 +465,13 @@ export default {
     // General
     // -----------------------------
 
+    openEULA () {
+      if (this.claims.user_type === 'Client') {
+        this.previewHTML = require('../components/legal/eula-client.md').html
+      } else {
+        this.previewHTML = require('../components/legal/eula.md').html
+      }
+    },
     checkForm () {
       this.disableChangePasswordButton = !(this.password.old && this.password.new && this.password.match && !this.password.check && !this.password.error)
     },

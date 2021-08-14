@@ -5,15 +5,26 @@
     &.noMedia :is(img, iframe) {
       display: none
     }
+    h1 {
+      /* stylelint-disable-next-line */
+      font-size: 1.6rem !important
+    }
+    h2 {
+      /* stylelint-disable-next-line */
+      font-size: 1rem !important
+    }
+    li {
+      font-size: .8rem;
+      list-style-type: lower-roman
+    }
+    p, b {
+      /* stylelint-disable-next-line */
+      font-size: .8rem !important;
+      margin: 1rem 0
+    }
     * {
       color: var(--base);
       transition: var(--transition_standard)
-    }
-    p {
-      margin: .6rem 0
-    }
-    :is(h1, h2) {
-      font-size: 1rem
     }
     :is(img, iframe) {
       max-width: 100%;

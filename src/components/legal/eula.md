@@ -67,5 +67,5 @@ We've integrated with Stripe to give you the ability to collect payments from yo
 - **<a href="https://traininblocks.com/legal/terms-of-use/" target="_blank">Terms of Use</a>:** this is a comprehensive document which explains the points outlined in this EULA.
 - **<a href="https://traininblocks.com/legal/cookies-policy/" target="_blank">Cookies Policy</a>:** when navigating through and using our websites and services, we will use cookies to improve your overall experience. Find out what they are and why we use them.
 - **<a href="https://stripe.com/en-gb/connect-account/legal" target="_blank">Stripe Connected Account Agreement</a>:** this document is a binding agreement between you and Stripe when signing up for a Stripe account and using Stripe Connect with us.
-- **<a href="https://stripe.com/en-gb/privacy" target="_blank">Stripe Privacy Policy</a>:**
-- **<a href="https://stripe.com/en-gb/ssa" target="_blank">Stripe Services Agreement</a>:**
+- **<a href="https://stripe.com/en-gb/privacy" target="_blank">Stripe Privacy Policy</a>:** this document outlines how Stripe will handle your data.
+- **<a href="https://stripe.com/en-gb/ssa" target="_blank">Stripe Services Agreement</a>:** this document is an agreement between you and Stripe for using their platform.
