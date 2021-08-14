@@ -21,6 +21,9 @@
 textarea {
   min-height: 6rem
 }
+.success {
+  color: var(--base_green)
+}
 @media (max-width: 736px) {
   .update_wrapper {
     grid-template-columns: 1fr
@@ -87,12 +90,16 @@ textarea {
           Submit
         </button>
       </div>
+      <p v-if="idea.submitted" class="success">
+        Thanks for your idea!
+      </p>
     </form>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+const emailBuilder = require('./js/email')
 
 export default {
   data () {
@@ -145,7 +152,8 @@ export default {
         }
       ],
       idea: {
-        idea_text: ''
+        idea_text: '',
+        submitted: false
       }
     }
   },
@@ -168,6 +176,20 @@ export default {
         attr: 'newBuild',
         data: false
       })
+    },
+    /**
+     * Sends us an email when a user submits a new idea
+     */
+    async newIdea () {
+      await this.$axios.post('/.netlify/functions/send-email', {
+        to: 'hello@traininblocks.com',
+        ...emailBuilder('new-idea', {
+          idea_text: this.idea.idea_text,
+          email: this.$parent.$parent.claims.email
+        })
+      })
+      this.idea.submitted = true
+      this.idea.idea_text = ''
     }
   }
 }

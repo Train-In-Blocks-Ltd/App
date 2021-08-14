@@ -42,7 +42,7 @@
         type="text"
         autocomplete="name"
         :disabled="silentLoading"
-        @blur="updatePortfolio(portfolio.notes)"
+        @blur="updatePortfolio()"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_large'" />
@@ -55,7 +55,7 @@
         type="text"
         autocomplete="name"
         :disabled="silentLoading"
-        @blur="updatePortfolio(portfolio.notes)"
+        @blur="updatePortfolio()"
         @input="editing_info = true"
       >
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
@@ -148,7 +148,7 @@ export default {
           break
         case 'save':
           this.editingPortfolio = false
-          this.updatePortfolio(this.portfolio.notes)
+          this.updatePortfolio()
           break
         case 'cancel':
           this.$store.commit('setData', {
@@ -182,6 +182,19 @@ export default {
           attr: 'dontLeave',
           data: true
         })
+        if (this.portfolio.notes !== this.tempEditorStore) {
+          const oldImages = this.tempEditorStore.match(/(?<=src\s*=\s*")(.+?)(?=")/g)
+          const newImages = this.portfolio.notes.match(/(?<=src\s*=\s*")(.+?)(?=")/g)
+          console.log(oldImages)
+          console.log(newImages)
+          if (oldImages) {
+            oldImages.forEach(async (image) => {
+              if (newImages === null || !newImages.includes(image)) {
+                await this.$axios.post('/.netlify/functions/delete-image', { file: image })
+              }
+            })
+          }
+        }
         await this.$store.dispatch('updatePortfolio')
         this.$ga.event('Portfolio', 'update')
         this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')

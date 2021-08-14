@@ -626,7 +626,7 @@ export default {
       const FILE = document.getElementById('img_uploader').files[0]
       const READER = new FileReader()
       READER.addEventListener('load', () => {
-        this.$axios.post('/.netlify/functions/upload', { file: READER.result.toString() }).then((response) => {
+        this.$axios.post('/.netlify/functions/upload-image', { file: READER.result.toString() }).then((response) => {
           this.editor.chain().focus().setImage({ src: response.data.url, loading: 'lazy' }).run()
         })
       }, false)

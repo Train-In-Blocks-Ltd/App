@@ -312,7 +312,10 @@ export default {
         const READER = new FileReader()
         const self = this
         READER.addEventListener('load', () => {
-          this.$axios.post('/.netlify/functions/upload', { file: READER.result.toString() }).then((response) => {
+          this.$axios.post('/.netlify/functions/upload-image', { file: READER.result.toString() }).then(async (response) => {
+            if (this.clientUser.profile_image) {
+              await this.$axios.post('/.netlify/functions/delete-image', { file: this.clientUser.profile_image })
+            }
             self.$store.dispatch('updateClientSideDetails', {
               id: this.claims.client_id_db,
               name: this.clientUser.name,
