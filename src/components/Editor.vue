@@ -594,8 +594,8 @@ export default {
         this.cloudinaryImages.startingWith = FOUND_IMGS
         this.cloudinaryImages.endingWith = FOUND_IMGS
       } else {
-        this.cloudinaryImages.endingWith.forEach(async (id) => {
-          if (!this.cloudinaryImages.startingWith.includes(id)) {
+        this.cloudinaryImages.startingWith.forEach(async (id) => {
+          if (!this.cloudinaryImages.endingWith.includes(id)) {
             await this.$axios.post('/.netlify/functions/delete-image', { file: id })
           }
         })
@@ -624,7 +624,7 @@ export default {
      * @returns An array of all the found ids of cloudinary images.
      */
     imgFinder (html) {
-      const IMG_REGEX = /<img.*?src="(.*?)".*?>/gi
+      const IMG_REGEX = /<img.*?src="(.*?)">/gi
       const RETURN_ARR = []
       let finder
       while ((finder = IMG_REGEX.exec(html)) !== null) {
