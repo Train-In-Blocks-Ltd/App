@@ -251,7 +251,7 @@
             Referral Code
           </h3>
           <p>
-            <b>Earn up to 20% off!</b> You can refer up to 4 fellow trainers where you'll receive a 5% discount for each.
+            <b>Earn up to 20% off!</b> You can refer up to 4 fellow trainers where you'll receive a 5% discount for each. They'll also recieve a promo too. It's a win-win!
           </p>
           <button
             v-if="!coupon.generated"
