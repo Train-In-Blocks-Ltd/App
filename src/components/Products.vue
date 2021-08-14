@@ -10,6 +10,13 @@
 #products {
   margin: 4rem 0;
   form {
+    .text--tiny.grey {
+      margin-top: .2rem;
+      a {
+        display: initial;
+        font-weight: bold
+      }
+    }
     .price {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -215,7 +222,7 @@
             Start collecting payments from your clients and get paid
           </p>
           <p class="text--tiny grey">
-            We will take an application fee of 5% for each transaction excluding the <a href="https://stripe.com/gb/pricing" target="_blank">Stripe processing fee</a>.
+            We will take an application fee of 5% for each transaction excluding the <a href="https://stripe.com/gb/pricing" target="_blank" class="a_link">Stripe processing fee</a>.
           </p>
         </div>
         <input
