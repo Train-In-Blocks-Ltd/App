@@ -214,6 +214,9 @@
           <p class="grey">
             Start collecting payments from your clients and get paid
           </p>
+          <p class="text--tiny grey">
+            We will take an application fee of 5% for each transaction excluding the <a href="https://stripe.com/gb/pricing" target="_blank">Stripe processing fee</a>.
+          </p>
         </div>
         <input
           v-model="newProduct.name"
