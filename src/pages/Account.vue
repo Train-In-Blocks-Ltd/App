@@ -250,7 +250,9 @@
           <h3>
             Referral Code
           </h3>
-          <p>Generate a referral code to gift to your fellow trainers:</p>
+          <p>
+            <b>Earn up to 20% off!</b> You can refer up to 4 fellow trainers where you'll receive a 5% discount for each.
+          </p>
           <button
             v-if="!coupon.generated"
             @click.prevent="generateCoupon()"
