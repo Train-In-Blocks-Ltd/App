@@ -49,7 +49,7 @@ textarea {
       {{ versionName }} {{ versionBuild }}
     </h2>
     <p class="text--small grey">
-      Payments, booknigs, client profile, style, and more
+      Payments, bookings, client profile, style, and more
     </p>
     <br><br>
     <div class="update_wrapper">
