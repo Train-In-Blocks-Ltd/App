@@ -492,7 +492,7 @@ div#rich_editor {
       />
     </p>
     <div v-if="editState" class="bottom_bar fadeIn">
-      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
+      <button @click="newImgs = [], editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
         Save
       </button>
       <button
@@ -532,7 +532,6 @@ export default {
     return {
 
       // Editor
-      isMobile: false,
       editor: null,
       editState: false,
       caretInEditor: false,
@@ -540,6 +539,7 @@ export default {
         startingWith: [],
         endingWith: []
       },
+      newImgs: [],
 
       // Link
       linkUrl: null,
@@ -565,7 +565,6 @@ export default {
     },
     editState () {
       if (this.editState) {
-        this.isMobile = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
         this.editor = new Editor({
           content: this.value,
           extensions: [
@@ -594,11 +593,15 @@ export default {
         this.cloudinaryImages.startingWith = FOUND_IMGS
         this.cloudinaryImages.endingWith = FOUND_IMGS
       } else {
-        this.cloudinaryImages.startingWith.forEach(async (id) => {
-          if (!this.cloudinaryImages.endingWith.includes(id)) {
-            await this.$axios.post('/.netlify/functions/delete-image', { file: id })
+        this.cloudinaryImages.startingWith.forEach(async (url) => {
+          if (!this.cloudinaryImages.endingWith.includes(url)) {
+            await this.$axios.post('/.netlify/functions/delete-image', { file: url })
           }
         })
+        this.newImgs.forEach(async (url) => {
+          await this.$axios.post('/.netlify/functions/delete-image', { file: url })
+        })
+        this.newImgs = []
         this.cloudinaryImages = {
           startingWith: [],
           endingWith: []
@@ -667,6 +670,7 @@ export default {
       READER.addEventListener('load', () => {
         this.$axios.post('/.netlify/functions/upload-image', { file: READER.result.toString() }).then((response) => {
           this.editor.chain().focus().setImage({ src: response.data.url, loading: 'lazy' }).run()
+          this.newImgs.push(response.data.url)
         })
       }, false)
 
