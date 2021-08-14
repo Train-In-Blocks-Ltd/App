@@ -536,7 +536,10 @@ export default {
       editor: null,
       editState: false,
       caretInEditor: false,
-      initialHTML: '',
+      cloudinaryImages: {
+        startingWith: [],
+        endingWith: []
+      },
 
       // Link
       linkUrl: null,
@@ -574,6 +577,7 @@ export default {
             LazyImage
           ],
           onUpdate: () => {
+            this.cloudinaryImages.endingWith = this.imgFinder(this.value)
             this.$emit('input', this.editor.getHTML())
           },
           onFocus: () => {
@@ -585,7 +589,20 @@ export default {
             this.caretInEditor = false
           }
         })
+
+        const FOUND_IMGS = this.imgFinder(this.value)
+        this.cloudinaryImages.startingWith = FOUND_IMGS
+        this.cloudinaryImages.endingWith = FOUND_IMGS
       } else {
+        this.cloudinaryImages.endingWith.forEach(async (id) => {
+          if (!this.cloudinaryImages.startingWith.includes(id)) {
+            await this.$axios.post('/.netlify/functions/delete-image', { file: id })
+          }
+        })
+        this.cloudinaryImages = {
+          startingWith: [],
+          endingWith: []
+        }
         this.editor.destroy()
       }
     },
@@ -600,6 +617,28 @@ export default {
     // -----------------------------
     // General
     // -----------------------------
+
+    /**
+     * Finds all the images in the html.
+     * @param {string} html - The html to search.
+     * @returns An array of all the found ids of cloudinary images.
+     */
+    imgFinder (html) {
+      const IMG_REGEX = /<img.*?src="(.*?)".*?>/gi
+      const RETURN_ARR = []
+      let finder
+      while ((finder = IMG_REGEX.exec(html)) !== null) {
+        if (finder.index === IMG_REGEX.lastIndex) {
+          IMG_REGEX.lastIndex++
+        }
+        finder.forEach((match, groupIndex) => {
+          if (groupIndex === 1) {
+            RETURN_ARR.push(match)
+          }
+        })
+      }
+      return RETURN_ARR
+    },
 
     /**
      * Adds tracked data custom node.
