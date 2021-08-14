@@ -4,7 +4,6 @@ const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('./helpers/pr
 /* eslint-disable-next-line */
 const stripe = require('stripe')(CUSTOM_ENV.STRIPE.SECRET_KEY)
 const headers = require('././helpers/headers')
-console.log(CUSTOM_ENV.STRIPE.SECRET_KEY)
 let response
 
 exports.handler = async function handler (event, context, callback) {
@@ -77,7 +76,8 @@ exports.handler = async function handler (event, context, callback) {
                 application_fee_amount: Math.round(product.price * 0.05),
                 transfer_data: {
                   destination: Okta.data[0].profile.connectedAccountId
-                }
+                },
+                receipt_email: JSON.parse(event.body).email
               },
               mode: 'payment',
               success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
@@ -107,6 +107,7 @@ exports.handler = async function handler (event, context, callback) {
                   destination: Okta.data[0].profile.connectedAccountId
                 }
               },
+              discounts: [{ coupon: process.env.NODE_ENV === 'production' ? '' : 'test' }],
               mode: 'subscription',
               success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
               cancel_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
