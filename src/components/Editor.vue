@@ -615,6 +615,7 @@ export default {
         this.cloudinaryImages.endingWith = FOUND_IMGS
       } else {
         this.editor.destroy()
+        this.editor = null
       }
     },
     forceStop () {
@@ -624,7 +625,9 @@ export default {
     }
   },
   beforeDestroy () {
-    this.editor.destroy()
+    if (this.editor) {
+      this.editor.destroy()
+    }
   },
   methods: {
 
