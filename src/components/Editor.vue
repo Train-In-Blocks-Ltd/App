@@ -532,6 +532,7 @@ export default {
     return {
 
       // Editor
+      initialValue: null,
       editor: null,
       editState: false,
       caretInEditor: false,
@@ -565,6 +566,7 @@ export default {
     },
     editState () {
       if (this.editState) {
+        this.initialValue = this.value
         this.editor = new Editor({
           content: this.value,
           extensions: [
@@ -601,6 +603,7 @@ export default {
         this.newImgs.forEach(async (url) => {
           await this.$axios.post('/.netlify/functions/delete-image', { file: url })
         })
+        this.initialValue = null
         this.newImgs = []
         this.cloudinaryImages = {
           startingWith: [],
@@ -634,9 +637,28 @@ export default {
         if (finder.index === IMG_REGEX.lastIndex) {
           IMG_REGEX.lastIndex++
         }
-        finder.forEach((match, groupIndex) => {
+        finder.forEach(async (match, groupIndex) => {
           if (groupIndex === 1) {
-            RETURN_ARR.push(match)
+            if (match.includes('base64')) {
+              await this.$axios.post('/.netlify/functions/upload-image', { file: match }).then((response) => {
+                RETURN_ARR.push(response.data.url)
+                this.newImgs.push(response.data.url)
+                this.initialValue = this.initialValue.replace(`${match}"`, `${response.data.url}" loading="lazy"`)
+                this.editor.commands.setContent(this.initialValue)
+                this.$emit('input', this.editor.getHTML())
+              })
+            } else {
+              RETURN_ARR.push(match)
+            }
+          } else if (match.includes('base64')) {
+            const WRAPPED_REGEX = /<p>(<img.*?">).*?<\/p>/gi
+            let wrappedFinder
+            while ((wrappedFinder = WRAPPED_REGEX.exec(this.initialValue)) !== null) {
+              if (wrappedFinder.index === WRAPPED_REGEX.lastIndex) {
+                WRAPPED_REGEX.lastIndex++
+              }
+              this.initialValue = this.initialValue.replace(wrappedFinder[0], wrappedFinder[1])
+            }
           }
         })
       }
