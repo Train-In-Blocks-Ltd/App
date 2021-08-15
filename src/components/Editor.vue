@@ -634,9 +634,15 @@ export default {
         if (finder.index === IMG_REGEX.lastIndex) {
           IMG_REGEX.lastIndex++
         }
-        finder.forEach((match, groupIndex) => {
+        finder.forEach(async (match, groupIndex) => {
           if (groupIndex === 1) {
-            RETURN_ARR.push(match)
+            if (match.includes('base64')) {
+              await this.$axios.post('/.netlify/functions/upload-image', { file: match }).then((response) => {
+                RETURN_ARR.push(response.data.url)
+              })
+            } else {
+              RETURN_ARR.push(match)
+            }
           }
         })
       }
