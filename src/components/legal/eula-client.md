@@ -9,7 +9,7 @@ All intellectual property and materials for Train In Blocks is registered with a
 
 ## 2. Disclaimers
 
-We do our best to provide the most relevant and best service for you. However, we are not responsible nor liable for any losses incurred by your business or for any dissatisfaction. We are merely a platform which supports your business and seeks to optimise its administrative capabilities.
+Train In Blocks Ltd will try to provide the most relevant and reliable service for you. However, Train In Blocks Ltd will not be responsible nor liable for any actions taken by your trainer that may result in dissatisfaction, fines, losses, injuries, and claims. We are merely a platform which supports your trainer and seeks to optimise their administrative capabilities.
 
 ## 3. Governing Law
 
