@@ -9,7 +9,7 @@ All intellectual property and materials for Train In Blocks is registered with a
 
 ## 2. Disclaimers
 
-We do our best to provide the most relevant and best service for you. However, we are not responsible nor liable for any losses incurred by your business or for any dissatisfaction. We are merely a platform which supports your business and seek to optimise its administrative capabilities.
+We do our best to provide the most relevant and best service for you. However, we are not responsible nor liable for any losses incurred by your business or for any dissatisfaction. We are merely a platform which supports your business and seeks to optimise its administrative capabilities.
 
 ## 3. Governing Law
 
@@ -20,6 +20,7 @@ These terms and conditions are governed by and construed in accordance with the 
 You are authorized to:
 
 - use the web application as intended by us;
+- create, update, get, manage, and delete data that is related to you;
 - and save the web application as a progressive web application (PWA) on supported devices.
 
 ## 5. Unauthorized Uses
@@ -34,7 +35,7 @@ When using any of our products, services, or websites, you are not to:
 
 ## 6. Right to Terminate the Agreement
 
-We hold the right to terminate your account and subscription if we find that you have breached our EULA.
+We hold the right to terminate your account if we find that you have breached our EULA.
 
 ## 7. Cancelling Your Account
 
@@ -42,6 +43,6 @@ You can cancel your account by reaching out to your personal trainer, coach, or 
 
 ## 8. Must Read Documents
 
-- **<a href="https://traininblocks.com/legal/privacy-and-data-policy/" target="_blank">Privacy and Data Policy<a>:** information on how we handle and control you data with steps to take if you wish to delete, rectify, or modify them.
+- **<a href="https://traininblocks.com/legal/privacy-and-data-policy/" target="_blank">Privacy and Data Policy<a>:** information on how we handle and control your data with steps to take if you wish to delete, rectify, or modify them.
 - **<a href="https://traininblocks.com/legal/terms-of-use/" target="_blank">Terms of Use</a>:** this is a comprehensive document which explains the points outlined in this EULA.
 - **<a href="https://traininblocks.com/legal/cookies-policy/" target="_blank">Cookies Policy</a>:** when navigating through and using our websites and services, we will use cookies to improve your overall experience. Find out what they are and why we use them.
