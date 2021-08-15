@@ -9,8 +9,7 @@
       height: 140px;
       width: 140px;
       border-radius: 50%;
-      filter: grayscale(.8);
-      object-fit: cover
+      filter: grayscale(.8)
     }
     .img_icon {
       margin: auto;
