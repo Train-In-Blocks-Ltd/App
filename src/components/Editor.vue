@@ -587,6 +587,7 @@ export default {
             this.willBodyScroll(true)
           },
           onBlur: () => {
+            this.cloudinaryImages.endingWith = this.imgFinder(this.value)
             this.caretInEditor = false
           }
         })
