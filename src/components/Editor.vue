@@ -492,12 +492,12 @@ div#rich_editor {
       />
     </p>
     <div v-if="editState" class="bottom_bar fadeIn">
-      <button @click="newImgs = [], editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
+      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
         Save
       </button>
       <button
         class="red_button"
-        @click="editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)"
+        @click="cancelledRemoveNewImgs(), cloudinaryImages.endingWith = cloudinaryImages.startingWith, editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)"
       >
         Cancel
       </button>
@@ -601,15 +601,12 @@ export default {
             await this.$axios.post('/.netlify/functions/delete-image', { file: url })
           }
         })
-        this.newImgs.forEach(async (url) => {
-          await this.$axios.post('/.netlify/functions/delete-image', { file: url })
-        })
         this.initialValue = null
-        this.newImgs = []
         this.cloudinaryImages = {
           startingWith: [],
           endingWith: []
         }
+        this.newImgs = []
         this.editor.destroy()
       }
     },
@@ -643,6 +640,8 @@ export default {
             if (match.includes('base64')) {
               await this.$axios.post('/.netlify/functions/upload-image', { file: match }).then((response) => {
                 RETURN_ARR.push(response.data.url)
+                this.cloudinaryImages.startingWith.push(response.data.url)
+                this.cloudinaryImages.endingWith.push(response.data.url)
                 this.newImgs.push(response.data.url)
                 this.initialValue = this.initialValue.replace(`${match}"`, `${response.data.url}" loading="lazy"`)
                 this.editor.commands.setContent(this.initialValue)
@@ -664,6 +663,14 @@ export default {
         })
       }
       return RETURN_ARR
+    },
+
+    cancelledRemoveNewImgs () {
+      if (this.newImgs) {
+        this.newImgs.forEach(async (url) => {
+          await this.$axios.post('/.netlify/functions/delete-image', { file: url })
+        })
+      }
     },
 
     /**
@@ -693,6 +700,8 @@ export default {
       READER.addEventListener('load', () => {
         this.$axios.post('/.netlify/functions/upload-image', { file: READER.result.toString() }).then((response) => {
           this.editor.chain().focus().setImage({ src: response.data.url, loading: 'lazy' }).run()
+          this.cloudinaryImages.startingWith.push(response.data.url)
+          this.cloudinaryImages.endingWith.push(response.data.url)
           this.newImgs.push(response.data.url)
         })
       }, false)
