@@ -49,7 +49,7 @@ textarea {
       {{ versionName }} {{ versionBuild }}
     </h2>
     <p class="text--small grey">
-      Payments, bookings, client profile, style, and more
+      Bookings, client profile, style, and more
     </p>
     <br><br>
     <div class="update_wrapper">
@@ -105,11 +105,13 @@ export default {
   data () {
     return {
       content: [
+        /*
         {
           title: 'Stripe payments',
           desc: 'Yes. You now have the ability to connect your Stripe account and take payments from your clients.',
           img: 'payments.png'
         },
+        */
         {
           title: 'Bookings',
           desc: 'On your client\'s profile page, you can now schedule bookings wherever or whenever they may be. Your client will also have the ability to request bookings; you will be able to accept or reject their request.',
