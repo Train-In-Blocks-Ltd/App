@@ -3,7 +3,9 @@
   display: grid;
   grid-template-columns: .2fr 1fr;
   grid-gap: 1.6rem;
-  img {
+  .image {
+    background-size: cover;
+    background-position: center;
     height: 140px;
     width: 140px;
     filter: grayscale(.8);
@@ -164,7 +166,11 @@
       </div>
     </div>
     <div class="section--top">
-      <img v-if="clientDetails.profile_image" :src="clientDetails.profile_image" alt="Profile img">
+      <div
+        v-if="clientDetails.profile_image"
+        :style="{ backgroundImage: `url(${clientDetails.profile_image})` }"
+        class="image"
+      />
       <inline-svg
         v-else
         class="image-placeholder"

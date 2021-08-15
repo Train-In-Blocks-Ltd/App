@@ -1,21 +1,25 @@
 <style lang="scss" scoped>
 .profile_container {
   .profile_image {
-    text-align: center
-  }
-  img {
-    height: 140px;
-    width: 140px;
-    border-radius: 50%;
-    filter: grayscale(.8);
-    object-fit: cover
-  }
-  .img_icon {
-    padding: 1.8rem;
-    height: 140px;
-    width: 140px;
-    border: 4px solid var(--base);
-    border-radius: 50%
+    text-align: center;
+    .image {
+      margin: auto;
+      background-size: cover;
+      background-position: center;
+      height: 140px;
+      width: 140px;
+      border-radius: 50%;
+      filter: grayscale(.8);
+      object-fit: cover
+    }
+    .img_icon {
+      margin: auto;
+      padding: 1.8rem;
+      height: 140px;
+      width: 140px;
+      border: 4px solid var(--base);
+      border-radius: 50%
+    }
   }
   .client_user_details {
     display: grid;
@@ -132,13 +136,12 @@
       />
       <skeleton v-if="loading" :type="'profile_image'" />
       <div v-else class="profile_image">
-        <img
+        <div
           v-if="clientUser.profile_image"
-          :src="clientUser.profile_image"
-          class="cursor"
-          alt="Profile img"
+          :style="{ backgroundImage: `url(${clientUser.profile_image})` }"
+          class="image cursor"
           @click="$refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
-        >
+        />
         <inline-svg
           v-else
           :src="require('../assets/svg/profile-image.svg')"

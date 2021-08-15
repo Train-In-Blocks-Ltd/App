@@ -52,7 +52,9 @@
       display: flex;
       justify-content: space-between
     }
-    img {
+    .image {
+      background-size: cover;
+      background-position: center;
       height: 80px;
       width: 80px;
       filter: grayscale(.8);
@@ -140,11 +142,11 @@
   <div class="client_link">
     <div class="client_information">
       <div>
-        <img
+        <div
           v-if="client.profile_image"
-          :src="client.profile_image"
-          alt="Profile img"
-        >
+          :style="{ backgroundImage: `url(${client.profile_image})` }"
+          class="image"
+        />
         <inline-svg
           v-else
           class="profile_image_placeholder"
