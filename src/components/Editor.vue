@@ -492,12 +492,12 @@ div#rich_editor {
       />
     </p>
     <div v-if="editState" class="bottom_bar fadeIn">
-      <button @click="editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
+      <button @click="saving = true, editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
         Save
       </button>
       <button
         class="red_button"
-        @click="cancelledRemoveNewImgs(), cloudinaryImages.endingWith = cloudinaryImages.startingWith, editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)"
+        @click="saving = false, editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)"
       >
         Cancel
       </button>
@@ -541,6 +541,7 @@ export default {
         endingWith: []
       },
       newImgs: [],
+      saving: false,
 
       // Link
       linkUrl: null,
@@ -589,6 +590,23 @@ export default {
           onBlur: () => {
             this.cloudinaryImages.endingWith = this.imgFinder(this.value)
             this.caretInEditor = false
+          },
+          onDestroy: async () => {
+            if (!this.saving) {
+              await this.cancelledRemoveNewImgs()
+              this.cloudinaryImages.endingWith = this.cloudinaryImages.startingWith
+            }
+            this.cloudinaryImages.startingWith.forEach(async (url) => {
+              if (!this.cloudinaryImages.endingWith.includes(url)) {
+                await this.$axios.post('/.netlify/functions/delete-image', { file: url })
+              }
+            })
+            this.initialValue = null
+            this.cloudinaryImages = {
+              startingWith: [],
+              endingWith: []
+            }
+            this.newImgs = []
           }
         })
 
@@ -596,17 +614,6 @@ export default {
         this.cloudinaryImages.startingWith = FOUND_IMGS
         this.cloudinaryImages.endingWith = FOUND_IMGS
       } else {
-        this.cloudinaryImages.startingWith.forEach(async (url) => {
-          if (!this.cloudinaryImages.endingWith.includes(url)) {
-            await this.$axios.post('/.netlify/functions/delete-image', { file: url })
-          }
-        })
-        this.initialValue = null
-        this.cloudinaryImages = {
-          startingWith: [],
-          endingWith: []
-        }
-        this.newImgs = []
         this.editor.destroy()
       }
     },
@@ -615,6 +622,9 @@ export default {
         this.editState = false
       }
     }
+  },
+  beforeDestroy () {
+    this.editor.destroy()
   },
   methods: {
 
