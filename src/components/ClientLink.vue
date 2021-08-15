@@ -141,8 +141,8 @@
     <div class="client_information">
       <div>
         <img
-          v-if="client.img"
-          :src="client.img"
+          v-if="client.profile_image"
+          :src="client.profile_image"
           alt="Profile img"
         >
         <inline-svg
