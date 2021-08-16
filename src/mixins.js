@@ -137,7 +137,11 @@ export default {
    */
   shortTime (datetime) {
     const TIME = new Date(datetime)
-    return `${TIME.getHours()}:${(TIME.getMinutes() < 10 ? '0' : '') + TIME.getMinutes()}`
+    let TIME_PREFIX = ''
+    if (TIME.getMinutes() < 10) {
+      TIME_PREFIX = 0
+    }
+    return `${TIME.getHours()}:${TIME_PREFIX}${TIME.getMinutes()}`
   },
 
   /**
