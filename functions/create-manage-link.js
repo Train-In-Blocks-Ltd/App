@@ -2,7 +2,7 @@ const qs = require('querystring')
 const axios = require('axios')
 const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('./helpers/prod.env') : require('./helpers/dev.env')
 /* eslint-disable-next-line */
-const stripe = require('stripe')(CUSTOM_ENV.STRIPE.SECRET_KEY)
+const stripe = require('stripe')(CUSTOM_ENV.STRIPE_SECRET_KEY)
 const headers = require('./helpers/headers')
 
 let response
@@ -30,14 +30,14 @@ exports.handler = async function handler (event, context, callback) {
       })
     } else if (event.body && response.data.active === true) {
       try {
-        const link = await stripe.billingPortal.sessions.create({
+        response = await stripe.billingPortal.sessions.create({
           customer: JSON.parse(event.body).id,
-          return_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/account' ? 'https://app.traininblocks.com/account' : 'https://dev.traininblocks.com/account'
+          return_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/account' ? 'https://app.traininblocks.com/account' : 'https://dev.traininblocks.com/account'
         })
         return callback(null, {
           statusCode: 200,
           headers,
-          body: link.url
+          body: response.url
         })
       } catch (e) {
         return callback(null, {
