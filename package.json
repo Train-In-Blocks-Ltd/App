@@ -95,7 +95,7 @@
   },
   "browserslist": [
     "> 1%",
-    "last 5 versions",
+    "last 20 versions",
     "not ie <= 11"
   ],
   "resolutions": {

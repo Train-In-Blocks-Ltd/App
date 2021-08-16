@@ -136,8 +136,14 @@ export default {
    * @returns Short-form datetime.
    */
   shortTime (datetime) {
+    console.log(datetime)
     const TIME = new Date(datetime)
-    return `${TIME.getHours()}:${(TIME.getMinutes() < 10 ? '0' : '') + TIME.getMinutes()}`
+    console.log(TIME)
+    let TIME_PREFIX = ''
+    if (TIME.getMinutes() < 10) {
+      TIME_PREFIX = 0
+    }
+    return `${TIME.getHours()}:${TIME_PREFIX}${TIME.getMinutes()}`
   },
 
   /**
