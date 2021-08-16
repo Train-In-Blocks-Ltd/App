@@ -33,7 +33,7 @@ exports.handler = async function handler (event, context, callback) {
       try {
         response = await stripe.billingPortal.sessions.create({
           customer: JSON.parse(event.body).id,
-          return_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/account' ? 'https://app.traininblocks.com/account' : 'https://dev.traininblocks.com/account'
+          return_url: event.multiValueHeaders && event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/account' ? 'https://app.traininblocks.com/account' : 'https://dev.traininblocks.com/account'
         })
         console.log(response)
         return callback(null, {
