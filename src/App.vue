@@ -274,6 +274,7 @@ i {
 /* Box buttons */
 button {
   height: fit-content;
+  height: -moz-fit-content;
   width: auto;
   user-select: none;
   cursor: pointer;
@@ -314,6 +315,7 @@ button {
 /* Editor wrapper */
 .session_header {
   height: fit-content;
+  height: -moz-fit-content;
   &.client-side {
     height: 3.2rem
   }

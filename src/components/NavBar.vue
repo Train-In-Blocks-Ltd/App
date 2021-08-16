@@ -80,6 +80,7 @@
     border: 0;
     opacity: 0;
     height: fit-content;
+    height: -moz-fit-content;
     margin: auto 0;
     transition: var(--transition_standard)
   }

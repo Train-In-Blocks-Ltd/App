@@ -27,6 +27,7 @@
     }
     a {
       width: fit-content;
+      width: -moz-fit-content;
       margin: auto;
       font-size: 1.4rem;
       > svg {

@@ -186,6 +186,7 @@ function baseEmail (data) {
             padding: .6rem 1.6rem;
             margin: 2rem 0;
             width: fit-content;
+            width: -moz-fit-content;
             color: white!important;
             background-color: #282828;
             border-radius: 5px;

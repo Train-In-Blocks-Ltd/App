@@ -69,6 +69,7 @@
 /* Plan Table */
 .plan_table {
   height: fit-content;
+  height: -moz-fit-content;
   margin-bottom: 2rem;
   .plan_table__header {
     display: grid;
@@ -243,7 +244,8 @@
     display: grid;
     grid-gap: 1rem;
     .a_link {
-      width: fit-content
+      width: fit-content;
+      width: -moz-fit-content
     }
   }
   .plan_grid {

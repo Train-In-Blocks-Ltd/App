@@ -11,6 +11,7 @@
     left: 2rem;
     padding: .6rem;
     width: fit-content;
+    width: -moz-fit-content;
     background: var(--base);
     color: var(--fore);
     border-radius: 0 0 10px 10px

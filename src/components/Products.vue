@@ -106,7 +106,9 @@
 .stripe-connect {
   display: flex;
   height: fit-content;
+  height: -moz-fit-content;
   width: fit-content;
+  width: -moz-fit-content;
   margin: auto 0;
   padding: .4rem .8rem;
   background: var(--base);
@@ -131,6 +133,7 @@
   }
   svg {
     height: fit-content;
+    height: -moz-fit-content;
     width: 46px
   }
 }
