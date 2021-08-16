@@ -136,6 +136,7 @@ export default {
    * @returns Short-form datetime.
    */
   shortTime (datetime) {
+    console.log(datetime)
     const TIME = new Date(datetime)
     console.log(TIME)
     let TIME_PREFIX = ''
