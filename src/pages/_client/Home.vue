@@ -95,9 +95,7 @@
   .section--top {
     grid-template-columns: 1fr;
     .image-placeholder,
-    img {
-      width: 100px;
-      height: 100px;
+    .image {
       margin: auto
     }
     .client-info {

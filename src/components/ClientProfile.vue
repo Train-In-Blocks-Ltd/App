@@ -107,6 +107,7 @@
 @media (max-width: 576px) {
   .profile_container {
     .bookings_container {
+      padding: 1rem;
       .bookings_sub_container {
         display: block;
         .request_booking_container {

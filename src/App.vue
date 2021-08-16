@@ -141,13 +141,11 @@ hr {
   padding: .2rem;
   border: 2px solid var(--base);
   border-radius: 3px;
+  background-color: var(--fore);
   &:not(.not_fixed) {
     position: fixed;
     top: 4rem;
-    right: 5vw;
-    @media (max-width: 576px) {
-      right: 1vw
-    }
+    right: 5vw
   }
 }
 
