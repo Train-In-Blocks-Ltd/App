@@ -137,6 +137,7 @@ export default {
    */
   shortTime (datetime) {
     const TIME = new Date(datetime)
+    console.log(TIME)
     let TIME_PREFIX = ''
     if (TIME.getMinutes() < 10) {
       TIME_PREFIX = 0
