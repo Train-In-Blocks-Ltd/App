@@ -1,6 +1,7 @@
 <style lang="scss">
 .show_html {
-  > :is(div, p) {
+  div,
+  p {
     margin: .6rem 0
   }
   img {

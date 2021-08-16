@@ -8,8 +8,10 @@
 #bin__lid,
 #calculate,
 #back,
-#copy :is(#top, #right),
-:is(#tick, #cross) #mark,
+#copy #top,
+#copy #right,
+#tick #mark,
+#cross #mark,
 #arrow_right,
 #arrow_left,
 #box_one,
@@ -47,10 +49,11 @@
 }
 
 /* Archive */
-:is(.nav_item, .a_link):hover #archive__t {
+.nav_item:hover #archive__t,
+.a_link:hover #archive__t {
   transform: translateY(-6px)
 }
-:is(.a_link):hover #bin__lid {
+.a_link:hover #bin__lid {
   transform: translateX(6px)
 }
 
@@ -92,18 +95,22 @@
 }
 
 /* Multiselect - tick and cross */
-.a_link :is(#tick, #cross) {
+.a_link #tick,
+.a_link #cross {
   transition: .2s transform cubic-bezier(.165, .84, .44, 1)
 }
-.a_link:hover :is(#tick, #cross) {
+.a_link:hover #tick,
+.a_link:hover #cross {
   transform: scale(.8);
   border-radius: 50%;
   background-color: var(--base)
 }
-.a_link:hover :is(#tick, #cross) #mark {
+.a_link:hover #tick #mark,
+.a_link:hover #cross #mark {
   fill: var(--fore)
 }
-.a_link:hover :is(#tick, #cross) #circle {
+.a_link:hover #tick #circle,
+.a_link:hover #cross #circle {
   fill: transparent
 }
 
@@ -150,7 +157,8 @@
 
 /* Active state */
 .nav_item a.router-link-exact-active #home__house,
-.nav_item a.router-link-exact-active :is(#portfolio_pen, #portfolio_case),
+.nav_item a.router-link-exact-active #portfolio_pen,
+.nav_item a.router-link-exact-active #portfolio_case,
 .nav_item a.router-link-exact-active #archive__t,
 .nav_item a.router-link-exact-active #account__cog {
   transform: none;
@@ -162,15 +170,18 @@
   /* None */
   .nav_item:hover #home__house,
   .nav_item:hover #template__t,
-  :is(.nav_item, .a_link):hover #archive__t,
+  .nav_item:hover #archive__t,
+  .a_link:hover #archive__t,
   .nav_item:hover #account__cog,
   .nav_item:hover #logout__arrow,
   .nav_item:hover #portfolio_pen,
   .nav_item:hover #portfolio_case,
   .a_link:hover #calculate,
   .a_link:hover #back,
-  .a_link:hover #copy :is(#top, #right),
-  :is(#tick, #cross) #mark {
+  .a_link:hover #copy #top,
+  .a_link:hover #copy #right,
+  #tick #mark,
+  #cross #mark {
     transform: none;
     animation: none
   }

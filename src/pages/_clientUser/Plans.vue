@@ -1,6 +1,7 @@
 <style lang="scss">
 .show_html {
-  > :is(div, p) {
+  > div,
+  > p {
     margin: .6rem 0
   }
   img {
@@ -60,7 +61,8 @@
   .show_sessions_counter {
     margin: auto
   }
-  :is(.show_sessions_left, .show_sessions_right) {
+  .show_sessions_left,
+  .show_sessions_right {
     height: 36px;
     width: 36px;
     &:not(.disabled):active {

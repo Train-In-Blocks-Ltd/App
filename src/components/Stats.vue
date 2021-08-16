@@ -62,7 +62,8 @@
       border: 3px solid var(--base);
       border-radius: 10px;
       table {
-        :is(th, td) {
+        th,
+        td {
           padding: .6rem 0
         }
         th {

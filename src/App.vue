@@ -112,7 +112,7 @@ main {
   text-align: center;
   padding: .1rem;
   background-color: var(--base);
-  :is(a, p) {
+  a, p {
     display: block;
     color: var(--fore)
   }
@@ -410,7 +410,8 @@ option {
   background-color: var(--fore);
   box-shadow: var(--low_shadow);
   transition: var(--transition_standard);
-  &:hover :is(svg, .notify_badge) {
+  &:hover svg,
+  &:hover .notify_badge {
     display: none
   }
   &:hover .text {
@@ -518,7 +519,8 @@ option {
 
   /* Tab options */
   .tab_option {
-    &:hover :is(svg, .notify_badge) {
+    &:hover svg,
+    &:hover .notify_badge {
       display: block
     }
     &:hover .text {

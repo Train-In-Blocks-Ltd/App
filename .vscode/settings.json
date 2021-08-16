@@ -13,6 +13,7 @@
         "helvetica",
         "markdownlint",
         "mixins",
+        "multiselect",
         "noreferrer",
         "prefetch",
         "vuex",

@@ -1,5 +1,7 @@
 <style lang="scss">
-    .stripe-connect svg :is(rect, path, polygon) {
+    .stripe-connect svg rect,
+    .stripe-connect svg path,
+    .stripe-connect svg polygon {
       /* stylelint-disable-next-line */
       fill: var(--fore) !important
     }

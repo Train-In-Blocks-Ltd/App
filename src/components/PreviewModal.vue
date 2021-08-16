@@ -2,7 +2,8 @@
 .preview_modal {
   .preview_html {
     margin: 1rem 0 2rem 0;
-    &.noMedia :is(img, iframe) {
+    &.noMedia img,
+    &.noMedia iframe {
       display: none
     }
     h1 {
@@ -26,7 +27,8 @@
       color: var(--base);
       transition: var(--transition_standard)
     }
-    :is(img, iframe) {
+    img,
+    iframe {
       max-width: 100%;
       border-radius: 10px;
       margin: 1rem 0

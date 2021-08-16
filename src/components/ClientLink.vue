@@ -12,7 +12,9 @@
     p {
       margin: .4rem 0
     }
-    :is(img, iframe, a),
+    img,
+    iframe,
+    a,
     > div > br:only-child {
       display: none
     }

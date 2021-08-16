@@ -77,7 +77,8 @@ div#rich_show_content {
 
   display: grid;
   grid-template-columns: 1fr 24px;
-  > div:first-child > :is(div, p) {
+  > div:first-child > div,
+  > div:first-child > p {
     margin: .6rem 0;
     outline: none;
     -moz-appearance: none;
@@ -109,7 +110,8 @@ div#rich_editor {
     outline: none;
     -moz-appearance: none;
     -webkit-appearance: none;
-    > :is(div, p) {
+    > div,
+    > p {
       margin: .6rem 0
     }
     iframe {
@@ -161,7 +163,8 @@ svg.edit_icon {
   }
 }
 @media (max-width: 768px) {
-  div#rich_show_content :is(img, iframe) {
+  div#rich_show_content img,
+  div#rich_show_content iframe {
     max-width: 100%
   }
 }
