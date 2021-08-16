@@ -136,7 +136,7 @@ export default {
    * @returns Short-form datetime.
    */
   shortTime (datetime) {
-    const TIME = new Date(datetime)
+    const TIME = new Date(datetime.replace('-', '/'))
     return `${TIME.getHours()}:${(TIME.getMinutes() < 10 ? '0' : '') + TIME.getMinutes()}`
   },
 
