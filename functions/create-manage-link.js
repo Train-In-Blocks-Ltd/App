@@ -29,17 +29,20 @@ exports.handler = async function handler (event, context, callback) {
         body: ''
       })
     } else if (event.body && response.data.active === true) {
+      console.log(true)
       try {
-        const link = await stripe.billingPortal.sessions.create({
+        response = await stripe.billingPortal.sessions.create({
           customer: JSON.parse(event.body).id,
           return_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/account' ? 'https://app.traininblocks.com/account' : 'https://dev.traininblocks.com/account'
         })
+        console.log(response)
         return callback(null, {
           statusCode: 200,
           headers,
-          body: link.url
+          body: response.url
         })
       } catch (e) {
+        console.log(e)
         return callback(null, {
           statusCode: 500,
           headers,
