@@ -80,8 +80,8 @@ exports.handler = async function handler (event, context, callback) {
                 receipt_email: JSON.parse(event.body).email
               },
               mode: 'payment',
-              success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
-              cancel_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
+              success_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
+              cancel_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
             })
           } else {
             session = await stripe.checkout.sessions.create({
@@ -109,8 +109,8 @@ exports.handler = async function handler (event, context, callback) {
               },
               discounts: [{ coupon: process.env.NODE_ENV === 'production' ? '' : 'test' }],
               mode: 'subscription',
-              success_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
-              cancel_url: event.multiValueHeaders.referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
+              success_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
+              cancel_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
             })
           }
           // Include url in response
