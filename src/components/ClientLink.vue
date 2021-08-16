@@ -190,7 +190,7 @@
       </div>
     </div>
     <p v-if="nextBooking.datetime">
-      <b>Next booking:</b> {{ nextBooking.datetime }}
+      <b>Next booking:</b> {{ day(nextBooking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ nextBooking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(nextBooking.datetime) }}
     </p>
     <p
       v-if="(client.notes === null || client.notes === '<p><br></p>' || client.notes === '') && !archive"
@@ -241,7 +241,7 @@ export default {
     const NEXT_BOOKING = this.bookings.filter(booking => booking.client_id === this.client.client_id && new Date(booking.datetime) > new Date())[0] || false
     if (NEXT_BOOKING) {
       const DATE_AND_TIME = NEXT_BOOKING.datetime.split(' ')
-      this.nextBooking.datetime = `${DATE_AND_TIME[0] === this.today() ? 'Today' : DATE_AND_TIME[0]} at ${DATE_AND_TIME[1]}`
+      this.nextBooking.datetime = `${DATE_AND_TIME[0] === this.today() ? 'Today' : DATE_AND_TIME[0]} ${DATE_AND_TIME[1]}`
       this.nextBooking.isToday = DATE_AND_TIME[0] === this.today()
     }
   }
