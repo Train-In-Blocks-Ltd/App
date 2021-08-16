@@ -87,9 +87,6 @@
   .okta-form-label {
     font-size: 1.5rem
   }
-  #okta-signin-username, #okta-signin-password {
-    font-size: .9rem
-  }
 }
 .auth-footer {
   display: none
