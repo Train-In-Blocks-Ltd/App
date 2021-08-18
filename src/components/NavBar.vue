@@ -159,6 +159,13 @@
     width: 12rem
   }
 }
+@media (max-height: 425px) {
+  #sidebar {
+    .logo {
+      display: none
+    }
+  }
+}
 </style>
 
 <template>
