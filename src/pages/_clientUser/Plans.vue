@@ -1,96 +1,133 @@
-<style>
-/* Show HTML */
-.show_html > :is(div, p) {
-  margin: .6rem 0
-}
-.show_html img {
-  border-radius: 10px;
-  max-width: 80%;
-  margin: 1rem 0
-}
-.show_html a {
-  color: var(--link)
+<style lang="scss">
+.show_html {
+  > div,
+  > p {
+    margin: .6rem 0
+  }
+  img {
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 1rem 0
+  }
+  a {
+    color: var(--link)
+  }
 }
 </style>
 
-<style scoped>
-  .plan_name {
-    margin-bottom: 4rem
-  }
-  .plan_notes, .wrapper--session {
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    border-radius: 10px;
-    padding: 2rem
-  }
-  .container--sessions {
-    margin: 4rem 0 2rem 0
-  }
+<style lang="scss" scoped>
+.plan_name {
+  margin-bottom: 4rem
+}
 
-  /* Navigate */
-  .show_sessions_nav {
-    display: flex;
-    margin: 2rem 0
+/* Editor object */
+.plan_notes {
+  border: 3px solid var(--base);
+  border-radius: 10px;
+  transition: .6s border cubic-bezier(.165, .84, .44, 1);
+  h3 {
+    position: relative;
+    left: 2rem;
+    padding: .6rem;
+    letter-spacing: 2px;
+    width: fit-content;
+    width: -moz-fit-content;
+    background: var(--base);
+    color: var(--fore);
+    border-radius: 0 0 10px 10px
   }
+  .show_html {
+    margin: 2rem
+  }
+}
+.container--sessions {
+  margin: 4rem 0 2rem 0;
+  &::-webkit-scrollbar {
+    height: 4px
+  }
+  .wrapper--session {
+    border: 3px solid var(--base);
+    border-radius: 10px;
+    padding: 2rem;
+    .complete_button {
+      margin-top: 2rem
+    }
+  }
+}
+
+/* Navigate */
+.show_sessions_nav {
+  display: flex;
+  margin: 2rem 0;
   .show_sessions_counter {
     margin: auto
   }
-  .show_sessions_left {
-    cursor: pointer;
-    transform: rotate(90deg)
-  }
+  .show_sessions_left,
   .show_sessions_right {
-    cursor: pointer;
-    transform: rotate(-90deg);
-    margin-left: 1rem
+    height: 36px;
+    width: 36px;
+    &:not(.disabled):active {
+      transform: scale(.8)
+    }
+    &.disabled, &.disabled:hover {
+      opacity: var(--light_opacity);
+      cursor: default
+    }
   }
-  .disabled, .disabled:hover {
-    opacity: var(--light_opacity);
-    cursor: default
+}
+hr {
+  margin: 2rem 0
+}
+.switch_cal {
+  margin-bottom: .4rem;
+  svg {
+    margin-right: .4rem
   }
-  hr {
-    margin: 2rem 0
-  }
+}
+
+@media (max-width: 992px) {
   .switch_cal {
-    margin-bottom: .4rem
+    display: none
   }
-
-  /* Scroll */
-  .container--sessions::-webkit-scrollbar {
-    height: 4px
-  }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    .switch_cal {
-      display: none
+}
+@media (max-width: 576px) {
+  .plan_notes {
+    h3 {
+      left: 1rem
     }
-    .plan_notes {
-      margin: 4rem 0
+    #wrapper--rich_editor {
+      margin: 1rem
     }
   }
-  @media (max-width: 576px) {
-    .wrapper--session, .plan_notes {
-      padding: .8rem
+  .container--sessions .wrapper--session {
+    padding: .8rem;
+    .complete_button {
+      width: 100%
     }
   }
+}
 </style>
 
 <template>
   <div id="client_side_plan" class="view_container">
-    <div v-for="(plan, index) in $parent.clientUser.plans" :key="index">
+    <div v-for="(plan, index) in clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id" class="client_plan">
-        <h1 class="plan_name">
+        <h2 class="plan_name">
           {{ plan.name }}
-        </h1>
+        </h2>
         <div class="plan_notes">
-          <div class="plan_notes__header">
-            <h2 class="bottom_margin">
-              Plan Notes
-            </h2>
-          </div>
-          <div v-if="plan.notes !== null && plan.notes !== '<p><br></p>' && plan.notes !== ''" class="show_html fadeIn" v-html="update_html(plan.notes, true)" />
-          <p v-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''" class="show_html grey">
+          <h3 class="bottom_margin">
+            Plan Notes
+          </h3>
+          <div
+            v-if="plan.notes && plan.notes !== '<p></p>'"
+            class="show_html fadeIn"
+            v-html="updateHTML(plan.notes, true)"
+          />
+          <p
+            v-else-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
+            class="show_html grey"
+          >
             No plan notes added...
           </p>
         </div>
@@ -118,33 +155,33 @@
             class="fadeIn"
           />
         </div>
-        <skeleton v-if="$parent.loading" :type="'session'" class="container--sessions" />
-        <div v-else-if="plan.sessions.length !== 0" class="container--sessions">
+        <skeleton v-if="loading" :type="'session'" class="container--sessions" />
+        <div v-else-if="plan.sessions" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
               v-show="showing_current_session !== 0"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_left"
+              :src="require('../../assets/svg/arrow-left.svg')"
+              class="show_sessions_left cursor no_fill"
               @click="showing_current_session--"
             />
             <inline-svg
               v-show="showing_current_session === 0"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_left disabled"
+              :src="require('../../assets/svg/arrow-left.svg')"
+              class="show_sessions_left disabled no_fill"
             />
-            <p class="show_sessions_counter">
+            <p class="show_sessions_counter text--small">
               {{ showing_current_session + 1 }}/{{ plan.sessions.length }}
             </p>
             <inline-svg
               v-show="showing_current_session !== parseInt(plan.sessions.length) - 1"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_right"
+              :src="require('../../assets/svg/arrow-right.svg')"
+              class="show_sessions_right cursor no_fill"
               @click="showing_current_session++"
             />
             <inline-svg
               v-show="showing_current_session === parseInt(plan.sessions.length) - 1"
-              :src="require('../../assets/svg/arrow.svg')"
-              class="show_sessions_right disabled"
+              :src="require('../../assets/svg/arrow-right.svg')"
+              class="show_sessions_right disabled no_fill"
             />
           </div>
           <div
@@ -152,56 +189,53 @@
             v-show="showing_current_session === indexed"
             :id="`session-${session.id}`"
             :key="indexed"
-            :class="{ editorActive: feedbackId === session.id }"
             class="wrapper--session"
           >
             <div :id="session.name" class="session_header client-side">
               <div>
                 <span class="text--name"><b>{{ session.name }}</b></span><br>
-                <span class="text--tiny">{{ $parent.day(session.date) }}</span>
+                <span class="text--tiny">{{ day(session.date) }}</span>
                 <span class="text--tiny">{{ session.date }}</span>
               </div>
             </div>
-            <div class="show_html fadeIn" v-html="update_html(session.notes, true)" />
-            <div class="bottom_bar">
-              <div :key="check" class="full_width_bar">
-                <button
-                  v-if="session.checked === 1 && !feedbackId"
-                  class="button--state green_button"
-                  @click="complete(plan.id, session.id)"
-                >
-                  Completed
-                </button>
-                <button
-                  v-if="session.checked === 0 && !feedbackId"
-                  class="button--state red_button"
-                  @click="complete(plan.id, session.id)"
-                >
-                  Click to complete
-                </button>
-              </div>
+            <div class="show_html fadeIn" v-html="updateHTML(session.notes, true)" />
+            <div :key="check">
+              <button
+                v-if="session.checked === 1 && !feedbackId"
+                class="complete_button green_button"
+                @click="complete(plan.id, session.id, session.checked)"
+              >
+                Completed
+              </button>
+              <button
+                v-if="session.checked === 0 && !feedbackId"
+                class="complete_button red_button"
+                @click="complete(plan.id, session.id, session.checked)"
+              >
+                Click to complete
+              </button>
             </div>
             <div v-if="session.checked === 1">
               <hr>
-              <h2>
+              <h3>
                 Feedback
-              </h2>
+              </h3>
               <rich-editor
+                v-model="session.feedback"
                 :item-id="session.id"
                 :editing="feedbackId"
-                :html-injection.sync="session.feedback"
                 :empty-placeholder="'What would you like to share with your trainer?'"
                 :force-stop="forceStop"
-                @on-edit-change="resolve_feedback_editor"
+                @on-edit-change="resolveFeedbackEditor"
               />
             </div>
           </div>
         </div>
         <div v-else>
-          <h2>
+          <h3>
             No sessions yet
-          </h2>
-          <p class="grey">
+          </h3>
+          <p class="grey text--small">
             Please contact your trainer or coach for more details
           </p>
           <div class="spacer" />
@@ -212,19 +246,28 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/WeekCalendar')
 const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
 const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
 
 export default {
+  metaInfo  () {
+    return {
+      title: 'Plans'
+    }
+  },
   components: {
     WeekCalendar,
     MonthCalendar,
     RichEditor
   },
   async beforeRouteLeave (to, from, next) {
-    if (this.$parent.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$parent.dontLeave = false
+    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: false
+      })
       next()
     }
   },
@@ -249,78 +292,115 @@ export default {
       forceUpdate: 0
     }
   },
-  async mounted () {
-    this.$parent.loading = true
-    this.will_body_scroll(true)
+  computed: mapState([
+    'clientUserLoaded',
+    'loading',
+    'dontLeave',
+    'clientUser'
+  ]),
+  async created () {
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
+    this.willBodyScroll(true)
     await this.$parent.setup()
-    await this.$parent.get_plans()
-    await this.sort_sessions(this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id)))
-    await this.scan()
-    this.$parent.end_loading()
+    await this.$parent.getClientSideData()
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
-    // BACKGROUND AND MISC.
+    // -----------------------------
+    // General
+    // -----------------------------
 
-    resolve_feedback_editor (state, id) {
+    /**
+     * Resolves the state of the feedback editor.
+     * @param {string} state - The returned state of the editor.
+     * @param {integer} id - The id of the session.
+     */
+    resolveFeedbackEditor (state, id) {
       let plan
       let session
-      this.$parent.clientUser.plans.forEach((planItem) => {
-        planItem.sessions.forEach((sessionItem) => {
-          if (sessionItem.id === id) {
-            plan = planItem
-            session = sessionItem
-          }
-        })
+      this.clientUser.plans.forEach((planItem) => {
+        if (planItem.sessions) {
+          planItem.sessions.forEach((sessionItem) => {
+            if (sessionItem.id === id) {
+              plan = planItem
+              session = sessionItem
+            }
+          })
+        }
       })
       switch (state) {
         case 'edit':
-          this.$parent.dontLeave = true
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
+          })
           this.feedbackId = id
           this.forceStop += 1
           this.tempEditorStore = session.feedback
           break
         case 'save':
           this.feedbackId = null
-          this.$parent.update_session(plan.id, session.id)
+          this.$parent.updateClientSideSession(plan.id, session.id)
           break
         case 'cancel':
-          this.$parent.dontLeave = false
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: false
+          })
           this.feedbackId = null
           session.feedback = this.tempEditorStore
           break
       }
     },
-    go_to_event (id) {
-      const idx = this.sessionDates.findIndex(session => session.session_id === id)
-      this.showing_current_session = idx
+
+    /**
+     * Scrolls towards the target session.
+     * @param {integer} id - The id of the session.
+     */
+    goToEvent (id) {
+      const SESSION_INDEX = this.sessionDates.findIndex(session => session.session_id === id)
+      this.showing_current_session = SESSION_INDEX
       setTimeout(() => {
         document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
       }, 100)
     },
-    complete (planId, sessionId) {
-      const plan = this.$parent.clientUser.plans.find(plan => plan.id === planId)
-      const session = plan.sessions.find(session => session.id === sessionId)
-      if (session.checked === 0) {
-        session.checked = 1
-        this.check = 1
-      } else {
-        session.checked = 0
-        this.check = 0
-      }
-      this.$parent.update_session(planId, sessionId)
+
+    /**
+     * Toggles the complete state of the session.
+     * @param {integer} planId - The id of the plan.
+     * @param {integer} sessionId - The id of the session.
+     * @param {integer} currentChecked - The new state of the session.
+     */
+    complete (planId, sessionId, currentChecked) {
+      this.$store.commit('updateClientUserPlanSingleSession', {
+        planId,
+        sessionId,
+        attr: 'checked',
+        data: !currentChecked ? 1 : 0
+      })
+      this.check = !currentChecked ? 1 : 0
+      this.$parent.updateClientSideSession(planId, sessionId)
+      this.$store.dispatch('endLoading')
     },
+
+    /**
+     * Scans the sessions and updates the page.
+     */
     scan () {
       this.sessionDates.length = 0
-      const plan = this.$parent.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
-      const weekColor = plan.block_color.replace('[', '').replace(']', '').split(',')
-      if (plan.sessions !== null) {
-        plan.sessions.forEach((session) => {
+      const PLAN = this.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
+      const WEEK_COLOR = PLAN.block_color.replace('[', '').replace(']', '').split(',')
+      if (PLAN.sessions !== null) {
+        PLAN.sessions.forEach((session) => {
           this.sessionDates.push({
             title: session.name,
             date: session.date,
-            color: weekColor[session.week_id - 1],
-            textColor: this.accessible_colors(weekColor[session.week_id - 1]),
+            color: WEEK_COLOR[session.week_id - 1],
+            textColor: this.accessible_colors(WEEK_COLOR[session.week_id - 1]),
             week_id: session.week_id,
             session_id: session.id
           })

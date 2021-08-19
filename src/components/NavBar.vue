@@ -1,5 +1,36 @@
-<style scoped>
-@import '../assets/styles/icon-anim';
+<style lang="scss">
+@import '../assets/styles/icon-anim.scss';
+.logo {
+  margin-bottom: auto;
+  .logo_link {
+    display: block;
+    width: 38px;
+    transition: 1s all cubic-bezier(.165, .84, .44, 1);
+    &:hover {
+      opacity: var(--light_opacity)
+    }
+    &:active {
+      transform: var(--active_state)
+    }
+  }
+}
+.nav_item {
+  a.router-link-exact-active {
+    svg {
+      background: var(--base);
+      path {
+        fill: var(--fore)
+      }
+    }
+  }
+  &:hover a.router-link-exact-active svg {
+    transition: none;
+    transform: none
+  }
+}
+</style>
+
+<style lang="scss" scoped>
 
 /* Nav bar */
 #sidebar {
@@ -19,86 +50,108 @@
   cursor: pointer;
   font-size: 1rem;
   margin: .8rem 0;
-  transition: var(--transition_standard)
+  transition: var(--transition_standard);
+  &:empty {
+    display: none
+  }
+  &:hover {
+    a {
+      opacity: 1
+    }
+  }
+  &:last-of-type {
+    padding-bottom: 0
+  }
+  &.refresh {
+    display: none
+  }
+  a {
+    display: flex;
+    text-decoration: none;
+    opacity: var(--light_opacity);
+    transition: var(--transition_standard)
+  }
+  .nav_item__text {
+    white-space: nowrap;
+    user-select: none;
+    color: var(--base);
+    text-decoration: none;
+    position: relative;
+    border: 0;
+    opacity: 0;
+    height: fit-content;
+    height: -moz-fit-content;
+    margin: auto 0;
+    transition: var(--transition_standard)
+  }
+  .nav_item__icon {
+    margin: 0 .4rem 0 0;
+    vertical-align: bottom;
+    padding: .2rem;
+    border-radius: 5px;
+    height: 1.8rem;
+    width: 1.8rem;
+    transition: var(--transition_standard)
+  }
 }
-.nav_item:empty {
-  display: none
-}
-.nav_item:hover,
 #sidebar:hover .nav_item__text,
 .nav_item a.router-link-exact-active {
   opacity: 1
-}
-.nav_item:last-of-type {
-  padding-bottom: 0
-}
-.nav_item a {
-  display: flex;
-  text-decoration: none;
-  opacity: var(--light_opacity)
-}
-.nav_item__text {
-  white-space: nowrap;
-  user-select: none;
-  color: var(--base);
-  text-decoration: none;
-  position: relative;
-  border: 0;
-  opacity: 0;
-  transition: var(--transition_standard)
-}
-.nav_item__icon {
-  margin: 0 .4rem 0 0;
-  height: 1.4rem;
-  vertical-align: bottom;
-  transition: var(--transition_standard)
 }
 
 /* Responsive */
 @media (min-width: 769px) {
   #sidebar {
     top: 0;
-    height: 100vh;
-    min-height: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    min-height: calc(100vh - env(safe-area-inset-bottom));
     width: calc(38px + 2rem);
-    border-radius: 0
-  }
-  #sidebar:hover {
-    width: 12rem
-  }
-  #sidebar:hover main {
-    margin-left: 12rem
+    border-radius: 0;
+    &:hover {
+      width: 12rem;
+      main {
+        margin-left: 12rem
+      }
+    }
   }
 }
 @media (max-width: 768px) {
-  .logo {
-    display: none
-  }
   #sidebar {
     bottom: 0;
     width: 100vw;
     flex-direction: row;
     padding: 0;
     justify-content: space-between;
-    border-right: none
-  }
-  #sidebar:hover .nav_item__text {
-    display: none
+    border-right: none;
+    &:hover .nav_item__text {
+      display: none
+    }
+    .logo {
+      display: none
+    }
   }
   .nav_item {
     width: 100%;
     margin: 0;
-    padding: 0
-  }
-  .nav_item a {
-    width: 100%;
-    height: 4rem
-  }
-  .nav_item__text {
-    display: none
-  }
-  .nav_item__icon {
-    margin: .8rem auto
+    padding: 0;
+    &.refresh {
+      display: block
+    }
+    a {
+      width: 100%;
+      height: 3.8rem;
+      &.router-link-exact-active {
+        background-color: var(--base);
+        border-radius: 10px 10px 0 0
+      }
+    }
+    .nav_item__text {
+      display: none
+    }
+    .nav_item__icon {
+      margin: .8rem auto
+    }
   }
 }
 @media (prefers-reduced-motion: reduce) and (min-width: 769px) {
@@ -106,10 +159,17 @@
     width: 12rem
   }
 }
+@media (max-height: 425px) {
+  #sidebar {
+    .logo {
+      display: none
+    }
+  }
+}
 </style>
 
 <template>
-  <nav v-if="authenticated && claims" id="sidebar">
+  <nav id="sidebar">
     <div class="logo">
       <router-link v-if="claims.user_type === 'Trainer' || claims.user_type == 'Admin'" to="/" class="logo_link" title="Home">
         <inline-svg :src="require('../assets/svg/logo-icon.svg')" class="logo_svg fadeIn" aria-label="Home" />
@@ -121,18 +181,27 @@
     <div
       v-for="(nav, navIndex) in navLinks"
       :key="`nav_${navIndex}`"
+      :class="{ refresh: nav.name === 'Refresh' }"
       class="nav_item"
     >
       <a
         v-if="nav.name === 'Log out'"
         :href="nav.link"
         :title="nav.name"
-        @click="logout()"
+        @click="logout"
       >
         <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
         <p class="nav_item__text">
           {{ nav.name }}
         </p>
+      </a>
+      <a
+        v-else-if="nav.name === 'Refresh'"
+        :href="nav.link"
+        :title="nav.name"
+        @click="hardRefresh"
+      >
+        <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
       </a>
       <router-link
         v-else-if="nav.forUser.includes(claims.user_type) && nav.internal && (nav.name === 'Account' ? claims.email !== 'demo@traininblocks.com' : true)"
@@ -149,6 +218,7 @@
         :href="nav.link"
         :title="nav.name"
         target="_blank"
+        rel="noreferrer"
       >
         <inline-svg :src="require(`../assets/svg/${nav.svg}`)" class="nav_item__icon fadeIn" :aria-label="nav.name" />
         <p class="nav_item__text">
@@ -162,7 +232,6 @@
 <script>
 export default {
   props: {
-    authenticated: Boolean,
     claims: Object
   },
   data () {
@@ -175,27 +244,37 @@ export default {
         { name: 'Templates', link: '/templates', svg: 'templates.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Portfolio', link: '/portfolio', svg: 'portfolio.svg', forUser: ['Admin', 'Trainer'], internal: true },
         { name: 'Archive', link: '/archive', svg: 'archive.svg', forUser: ['Admin', 'Trainer'], internal: true },
-        { name: 'Account', link: '/account', svg: 'account.svg', forUser: ['Admin', 'Trainer'], internal: true },
+        { name: 'Account', link: '/account', svg: 'account.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true },
+        { name: 'Refresh', link: 'javascript:void(0)', svg: 'refresh.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true },
         { name: 'Log out', link: 'javascript:void(0)', svg: 'logout.svg', forUser: ['Admin', 'Trainer', 'Client'], internal: true }
       ]
     }
   },
   methods: {
 
-    // Auth
+    hardRefresh () {
+      location.reload()
+    },
+
+    /**
+     * Logs out the user.
+     */
     async logout () {
-      await this.$parent.$auth.signOut()
-      await this.$parent.is_authenticated()
-      localStorage.clear()
-      localStorage.setItem('versionBuild', this.versionBuild)
-      const cookies = document.cookie.split(';')
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i]
-        const eqPos = cookie.indexOf('=')
-        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie
-        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure you want to log out?', 'It\'s recommended to do so if you are using a public device.')) {
+        await this.$parent.$auth.signOut()
+        await this.$parent.isAuthenticated()
+        localStorage.clear()
+        sessionStorage.clear()
+        localStorage.setItem('versionBuild', this.$store.state.versionBuild)
+        const COOKIES = document.cookie.split(';')
+        for (let i = 0; i < COOKIES.length; i++) {
+          const COOKIE = COOKIES[i]
+          const EQ_POS = COOKIE.indexOf('=')
+          const NAME = EQ_POS > -1 ? COOKIE.substr(0, EQ_POS) : COOKIE
+          document.cookie = NAME + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        }
+        this.$ga.event('Auth', 'logout')
       }
-      this.$ga.event('Auth', 'logout')
     }
   }
 }

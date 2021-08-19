@@ -1,149 +1,161 @@
-<style>
-  /* Client Info */
-  .client_info {
+<style lang="scss" scoped>
+.section--top {
+  display: grid;
+  grid-template-columns: .2fr 1fr;
+  grid-gap: 1.6rem;
+  .image {
+    background-size: cover;
+    background-position: center;
+    height: 140px;
+    width: 140px;
+    filter: grayscale(.8);
+    border-radius: 50%
+  }
+  .image-placeholder {
+    padding: 1.8rem;
+    height: 140px;
+    width: 140px;
+    border: 4px solid var(--base);
+    border-radius: 50%
+  }
+  .client-info {
     display: grid;
-    grid-gap: 1rem
+    grid-gap: 1rem;
+    .options {
+      display: flex;
+      justify-content: space-between;
+      .email-bar {
+        display: flex;
+        margin: auto 0;
+        .email {
+          margin-left: .6rem
+        }
+      }
+    }
   }
-  .client_email_bar {
-    display: flex;
-    margin: auto 0
-  }
-  .client_email {
-    margin-left: .6rem
-  }
-  .client_info__more_details {
-    display: grid;
-    grid-gap: .6rem
-  }
-  .client_info__options {
-    display: flex;
-    justify-content: space-between
-  }
+}
 
-  /* Floating Nav */
-  .wrapper--floating_nav {
-    background-color: var(--fore);
-    width: 0;
-    height: 100%;
-    position: fixed;
-    right: 0;
-    top: 0;
-    padding: 0;
-    z-index: 4;
-    box-shadow: var(--low_shadow);
-    transition: var(--transition_standard)
+/* Floating Nav */
+.wrapper--floating-nav {
+  background-color: var(--fore);
+  width: 14rem;
+  height: 100%;
+  transform: translateX(100%);
+  position: fixed;
+  right: 0;
+  top: 0;
+  padding: 2rem;
+  z-index: 4;
+  box-shadow: var(--low_shadow);
+  transition: var(--transition_standard);
+  &.openFloatingNav {
+    transform: none
   }
-  .wrapper--floating_nav.openFloatingNav {
-    width: 14rem;
-    padding: 2rem
-  }
-  .floating_nav {
+  .floating-nav {
     display: grid;
     grid-gap: 2rem;
-    text-align: right
+    text-align: right;
+    a {
+      text-align: right
+    }
+    .cursor {
+      margin-left: auto
+    }
+    .options {
+      display: grid;
+      grid-gap: 1rem;
+      a {
+        margin-left: auto;
+        svg {
+          margin-left: .4rem
+        }
+      }
+    }
   }
-  .floating_nav a {
-    text-align: right
-  }
-  .icon--options {
-    cursor: pointer;
-    margin-left: auto
-  }
-  .client--options {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .client--options a {
-    margin-left: auto
-  }
-  .client--options a svg {
-    margin-left: .4rem
-  }
+}
 
-  /* Client Notes */
-  .client_notes--header {
-    color: var(--base);
-    padding: .6rem .8rem
-  }
-
-  /* Responsiveness */
-  @media (max-width: 992px) {
-    .floating_nav a {
+@media (max-width: 992px) {
+  .wrapper--floating-nav .floating-nav {
+    a {
       grid-template-columns: 1fr;
-      transition: var(--transition_standard)
+      transition: var(--transition_standard);
+      &:active {
+        transform: var(--active_state)
+      }
+      &:before {
+        content: none
+      }
     }
-    .floating_nav a:active {
-      transform: var(--active_state)
-    }
-    div.floating_nav a:before {
-      content: none
-    }
-    .floating_nav .text--hideable {
+    .text--hideable {
       display: none
     }
   }
-  @media (max-width: 768px) {
-    #client .client_info input.client_info--name {
-      font-size: 2rem
+}
+@media (max-width: 768px) {
+  .section--top {
+    grid-template-columns: 1fr;
+    .image-placeholder,
+    .image {
+      margin: auto
     }
-    .client_info {
-      width: 90vw
+    .client-info {
+      input.client-info--name {
+        font-size: 2rem
+      }
     }
   }
-  @media (max-width: 576px) {
-    .client_info__options {
-      display: grid;
-      grid-gap: 1rem;
+}
+@media (max-width: 576px) {
+  .section--top .client-info .options {
+    display: block;
+    .verify-button {
+      width: 100%;
       margin-top: 1rem
     }
   }
+}
 </style>
 
 <template>
   <div
-    v-if="$parent.client_details"
+    v-if="clientDetails"
     id="client"
     class="view_container"
   >
     <div :class="{ opened_sections: showToolkit }" class="section_overlay" />
+    <div v-if="!showOptions" class="tab_option tab_option_small" aria-label="Menu" @click="showOptions = true">
+      <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options" />
+      <p class="text">
+        Options
+      </p>
+    </div>
     <div v-if="showToolkit" class="tab_overlay_content fadeIn delay fill_mode_both">
       <toolkit />
     </div>
-    <div class="wrapper--floating_nav" :class="{ openFloatingNav: showOptions }">
-      <div v-if="keepLoaded" class="floating_nav fadeIn">
-        <div v-if="!showOptions" class="tab_option tab_option_small" aria-label="Menu" @click="showOptions = true">
-          <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options" />
-          <p class="text">
-            Options
-          </p>
-        </div>
+    <div class="wrapper--floating-nav" :class="{ openFloatingNav: showOptions }">
+      <div
+        v-if="showOptions"
+        class="floating-nav fadeIn"
+      >
         <inline-svg
-          v-if="showOptions"
-          class="icon--options fadeIn delay fill_mode_both"
+          class="close_icon not_fixed cursor"
           :src="require('../../assets/svg/close.svg')"
           aria-label="Close"
           @click="showOptions = false"
         />
-        <div
-          v-for="(clients, index) in $parent.clients"
-          v-show="clients.client_id == $route.params.client_id && showOptions"
-          :key="clients.client_id"
-          class="client--options fadeIn delay fill_mode_both"
-        >
+        <div class="options">
           <a
-            v-if="clients.client_id == $route.params.client_id && showOptions"
             class="a_link"
             href="javascript:void(0)"
-            @click="showToolkit = true, will_body_scroll(false), showOptions = false"
+            @click="showToolkit = true, willBodyScroll(false), showOptions = false"
           >
             Toolkit
             <inline-svg :src="require('../../assets/svg/calculate.svg')" />
           </a>
           <a
-            v-if="clients.client_id == $route.params.client_id && showOptions"
             class="a_link"
             href="javascript:void(0)"
-            @click="showOptions = false, $parent.client_archive(clients.client_id, index)"
+            @click="clientArchive($route.params.client_id), showOptions = false"
           >
             Archive Client
             <inline-svg :src="require('../../assets/svg/archive.svg')" />
@@ -151,79 +163,93 @@
         </div>
       </div>
     </div>
-    <div v-if="!sessions" class="top_grid">
-      <!-- Update the client details -->
-      <div class="client_info">
+    <div class="section--top">
+      <div
+        v-if="clientDetails.profile_image"
+        :style="{ backgroundImage: `url(${clientDetails.profile_image})` }"
+        class="image"
+      />
+      <inline-svg
+        v-else
+        class="image-placeholder"
+        :src="require('../../assets/svg/profile-image.svg')"
+      />
+      <div class="client-info">
         <input
-          v-model="$parent.client_details.name"
-          class="client_info--name text--large"
+          v-model="clientDetails.name"
+          class="client-info--name text--large"
           type="text"
           aria-label="Client name"
           autocomplete="name"
-          :disabled="$parent.silent_loading"
-          @blur="$parent.update_client()"
+          :disabled="silentLoading"
+          @blur="updateClient()"
         >
-        <div class="client_info__more_details">
-          <input
-            id="phone"
-            v-model="$parent.client_details.number"
-            class="input--forms allow_text_overflow"
-            placeholder="Mobile"
-            aria-label="Mobile"
-            type="tel"
-            inputmode="tel"
-            autocomplete="tel"
-            minlength="9"
-            maxlength="14"
-            pattern="\d+"
-            :disabled="$parent.silent_loading"
-            @blur="$parent.update_client()"
-          >
-          <div class="client_info__options">
-            <div class="client_email_bar">
-              <inline-svg :src="require('../../assets/svg/email.svg')" />
-              <p class="client_email">
-                {{ $parent.client_details.email }}
-              </p>
-            </div>
-            <button
-              v-if="clientAlreadyMsg === 'Restricted'"
-              class="button--verify button"
-              :disabled="clientAlready"
-              @click="create_client()"
-            >
-              {{ clientAlreadyMsg }}
-            </button>
-            <button
-              v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
-              class="button--verify fadeIn"
-              @click="$parent.client_details.notifications = $parent.client_details.notifications === 1 ? 0 : 1, $parent.update_client()"
-            >
-              {{ $parent.client_details.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
-            </button>
-            <button
-              v-else
-              class="button--verify button"
-              :disabled="clientAlready"
-              @click="create_client()"
-            >
-              {{ clientAlreadyMsg }}
-            </button>
+        <input
+          id="phone"
+          v-model="clientDetails.number"
+          class="input--forms allow_text_overflow"
+          placeholder="Mobile"
+          aria-label="Mobile"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          minlength="9"
+          maxlength="14"
+          pattern="\d+"
+          :disabled="silentLoading"
+          @blur="updateClient()"
+        >
+        <div v-if="!sessions" class="options">
+          <div class="email-bar">
+            <inline-svg :src="require('../../assets/svg/email.svg')" />
+            <p class="email">
+              {{ clientDetails.email }}
+            </p>
           </div>
+          <button
+            v-if="clientAlreadyMsg === 'Restricted'"
+            class="verify-button button"
+            :disabled="clientAlready"
+            @click="giveAccess()"
+          >
+            {{ clientAlreadyMsg }}
+          </button>
+          <button
+            v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
+            class="verify-button fadeIn"
+            @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, updateClient()"
+          >
+            {{ clientDetails.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
+          </button>
+          <button
+            v-else
+            class="verify-button button"
+            :disabled="clientAlready"
+            @click="giveAccess()"
+          >
+            {{ clientAlreadyMsg }}
+          </button>
         </div>
       </div>
     </div>
     <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
-      <router-view :key="$route.fullPath" :other-data="$parent.client_details.plans" />
+      <router-view :key="$route.fullPath" />
     </transition>
   </div>
 </template>
 
 <script>
-import { email, emailText, resetEmail, resetEmailText } from '../../components/email'
+import { mapState } from 'vuex'
+const emailBuilder = require('../../components/js/email')
 const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
 export default {
+  metaInfo  () {
+    return {
+      title: this.loading ? 'Loading...' : this.clientDetails.name
+    }
+  },
   components: {
     Toolkit
   },
@@ -232,7 +258,6 @@ export default {
 
       // BACKGROUND
 
-      keepLoaded: false,
       showOptions: false,
       showToolkit: false,
 
@@ -247,58 +272,59 @@ export default {
       clientSuspend: null
     }
   },
+  computed: mapState([
+    'loading',
+    'silentLoading',
+    'clients',
+    'clientDetails'
+  ]),
   async created () {
-    this.loading = true
-    this.will_body_scroll(true)
+    this.$store.commit('setData', {
+      attr: 'loading',
+      data: true
+    })
+    this.willBodyScroll(true)
     await this.$parent.setup()
-    await this.get_client_details()
-    this.__init__()
-    this.keepLoaded = true
-    this.$parent.end_loading()
-  },
-  beforeDestroy () {
-    this.keepLoaded = false
-    this.$parent.client_details = null
+    const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
+    await this.$store.dispatch('getPlans', CLIENT.client_id)
+    this.$store.commit('setData', {
+      attr: 'clientDetails',
+      data: CLIENT
+    })
+    this.$store.dispatch('endLoading')
   },
   methods: {
 
-    // BACKGROUND
-
-    __init__ () {
-      let x
-      for (x in this.$parent.clients) {
-        // If client matches client in route
-        if (this.$parent.clients[x].client_id === this.$route.params.client_id) {
-          // Set client_details variable with client details
-          this.$parent.client_details = this.$parent.clients[x]
-        }
-      }
-    },
-
+    // -----------------------------
     // OKTA CLIENT
+    // -----------------------------
 
-    async check_client () {
+    /**
+     * Checks if the client already exists on Okta.
+     */
+    async checkClient () {
       if (this.$parent.claims.email !== 'demo@traininblocks.com') {
         this.clientAlreadyMsg = 'Loading...'
         try {
-          const result = await this.$axios.post('/.netlify/functions/okta',
+          const RESULT = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
-              url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
+              url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`
             }
           )
-          if (result.data.length > 0) {
-            switch (result.data[0].status) {
-              case 'ACTIVE' || 'RECOVERY':
+          if (RESULT.data.length > 0) {
+            switch (RESULT.data[0].status) {
+              case 'ACTIVE':
                 this.clientAlready = true
                 this.clientAlreadyMsg = 'User activated'
                 break
               case 'PROVISIONED':
+              case 'RECOVERY':
                 this.clientAlready = false
                 this.clientAlreadyMsg = 'Resend activation email'
                 break
               case 'SUSPENDED':
-                this.clientSuspend = result.data[0].id
+                this.clientSuspend = RESULT.data[0].id
                 this.clientAlready = false
                 this.clientAlreadyMsg = 'Give Access'
                 break
@@ -310,35 +336,38 @@ export default {
         } catch (e) {
           this.clientAlready = true
           this.clientAlreadyMsg = 'Error'
-          this.$parent.resolve_error(e)
+          this.$parent.resolveError(e)
         }
       } else {
         this.clientAlreadyMsg = 'Restricted'
       }
     },
-    async create_client () {
-      this.$parent.dontLeave = true
+    async giveAccess () {
+      this.$store.commit('setData', {
+        attr: 'dontLeave',
+        data: true
+      })
       try {
         if (this.clientAlreadyMsg === 'Resend activation email') {
-          const oktaOne = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'GET',
-              url: `?filter=profile.email+eq+"${this.$parent.client_details.email}"&limit=1`
+              url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`
             }
           )
-          const oktaTwo = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_TWO = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {},
-              url: `${oktaOne.data[0].id}/lifecycle/reactivate?sendEmail=false`
+              url: `${OKTA_ONE.data[0].id}/lifecycle/reactivate?sendEmail=false`
             }
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
-              to: this.$parent.client_details.email,
-              subject: 'Welcome to Train In Blocks',
-              text: emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              to: this.clientDetails.email,
+              ...emailBuilder('activate-account', {
+                link: OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
+              })
             }
           )
         } else if (this.clientSuspend) {
@@ -349,7 +378,7 @@ export default {
               url: `${this.clientSuspend}/lifecycle/unsuspend`
             }
           )
-          const password = await this.$axios.post('/.netlify/functions/okta',
+          const PASSWORD = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {},
@@ -358,23 +387,23 @@ export default {
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
-              to: this.$parent.client_details.email,
-              subject: 'Welcome Back to Train In Blocks',
-              text: resetEmailText(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: resetEmail(password.data.resetPasswordUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              to: this.clientDetails.email,
+              ...emailBuilder('client-account-reactivated', {
+                link: PASSWORD.data.resetPasswordUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
+              })
             }
           )
         } else {
-          const oktaOne = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {
                 profile: {
-                  firstName: this.$parent.client_details.email,
-                  email: this.$parent.client_details.email,
-                  login: this.$parent.client_details.email,
+                  firstName: this.clientDetails.email,
+                  email: this.clientDetails.email,
+                  login: this.clientDetails.email,
                   ga: true,
-                  client_id_db: this.$parent.client_details.client_id,
+                  client_id_db: this.clientDetails.client_id,
                   user_type: 'Client'
                 },
                 groupIds: [
@@ -384,64 +413,73 @@ export default {
               url: '?activate=false'
             }
           )
-          const oktaTwo = await this.$axios.post('/.netlify/functions/okta',
+          const OKTA_TWO = await this.$axios.post('/.netlify/functions/okta',
             {
               type: 'POST',
               body: {},
-              url: `${oktaOne.data.id}/lifecycle/activate?sendEmail=false`
+              url: `${OKTA_ONE.data.id}/lifecycle/activate?sendEmail=false`
             }
           )
           await this.$axios.post('/.netlify/functions/send-email',
             {
-              to: this.$parent.client_details.email,
-              subject: 'Welcome to Train In Blocks',
-              text: emailText(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com')),
-              html: email(oktaTwo.data.activationUrl.replace(process.env.ISSUER, 'https://auth.traininblocks.com'))
+              to: this.clientDetails.email,
+              ...emailBuilder('activate-account', {
+                link: OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
+              })
             }
           )
         }
       } catch (e) {
-        this.$parent.resolve_error(e)
+        this.$parent.resolveError(e)
       }
-      await this.check_client()
-      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox and spam mail', true)
-      this.$parent.end_loading()
+      await this.checkClient()
+      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox', true, true)
+      this.$store.dispatch('endLoading')
     },
 
-    // DATABASE
+    // -----------------------------
+    // Database
+    // -----------------------------
 
-    async get_client_details (force) {
-      this.$parent.loading = true
+    /**
+     * Updates the client.
+     */
+    async updateClient () {
       try {
-        const client = this.$parent.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-        this.$parent.client_details = client
-        if (client.plans === undefined || !client.plans || force) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/programmes/${client.client_id}`)
-          client.plans = response.data.length === 0 ? false : response.data
-          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-        }
-        if (client.plans !== false) {
-          this.$parent.client_details.plans.forEach((plan) => {
-            this.get_sessions(plan.id)
+        this.$store.commit('setData', {
+          attr: 'silentLoading',
+          data: true
+        })
+        this.$store.commit('setData', {
+          attr: 'dontLeave',
+          data: true
+        })
+        await this.$store.dispatch('updateClient')
+        this.$store.dispatch('endLoading')
+      } catch (e) {
+        this.$parent.resolveError(e)
+      }
+    },
+
+    /**
+     * Archives the client.
+     * @param {integer} clientId - The id of the client.
+     */
+    async clientArchive (clientId) {
+      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
+        try {
+          this.$store.commit('setData', {
+            attr: 'dontLeave',
+            data: true
           })
+          await this.$store.dispatch('clientArchive', clientId)
+          this.$ga.event('Client', 'archive')
+          this.$parent.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
+          this.$store.dispatch('endLoading')
+          this.$router.push('/')
+        } catch (e) {
+          this.$parent.resolveError(e)
         }
-        this.$parent.end_loading()
-      } catch (e) {
-        this.$parent.resolve_error(e)
-      }
-    },
-    async get_sessions (planId, force) {
-      force = force || false
-      try {
-        const plan = this.$parent.client_details.plans.find(plan => plan.id === planId)
-        if (plan.sessions === undefined || force) {
-          const response = await this.$axios.get(`https://api.traininblocks.com/workouts/${plan.id}`)
-          plan.sessions = response.data.length === 0 ? false : response.data
-          localStorage.setItem('clients', JSON.stringify(this.$parent.clients))
-        }
-        this.$parent.end_loading()
-      } catch (e) {
-        console.log(e)
       }
     }
   }

@@ -1,10 +1,4 @@
-<style>
-svg#response_close path {
-  fill: var(--back)
-}
-</style>
-
-<style scoped>
+<style lang="scss" scoped>
 .response_pop_up {
   position: fixed;
   top: 1rem;
@@ -15,23 +9,26 @@ svg#response_close path {
   box-shadow: var(--low_shadow);
   border-radius: 5px;
   padding: 1rem;
-  z-index: 1000
-}
-.response_pop_up svg {
-  cursor: pointer;
-  height: 1.2rem;
-  width: 1.2rem;
-  position: fixed;
-  padding: .2rem;
-  right: -.5rem;
-  top: -.5rem;
-  background-color: var(--base);
-  border: 1px solid var(--fore);
-  border-radius: 50%;
-  transition: var(--transition_standard)
-}
-.response_pop_up svg:hover {
-  opacity: var(--light_opacity)
+  z-index: 1000;
+  svg {
+    cursor: pointer;
+    height: 1.2rem;
+    width: 1.2rem;
+    position: fixed;
+    padding: .2rem;
+    right: -.5rem;
+    top: -.5rem;
+    background-color: var(--base);
+    border: 1px solid var(--fore);
+    border-radius: 50%;
+    transition: var(--transition_standard);
+    &:hover {
+      opacity: var(--light_opacity)
+    }
+  }
+  .close_button {
+    margin-top: .6rem
+  }
 }
 
 @supports not (backdrop-filter: blur(10px)) {
@@ -56,11 +53,6 @@ svg#response_close path {
 
 <template>
   <div v-if="reveal" class="response_pop_up">
-    <inline-svg
-      id="response_close"
-      :src="require('../assets/svg/close.svg')"
-      @click="header = null, desc = null, persist = false, reveal = false"
-    />
     <p>
       <b>
         {{ header }}
@@ -69,6 +61,13 @@ svg#response_close path {
     <p>
       {{ desc }}
     </p>
+    <button
+      v-if="persist"
+      class="close_button"
+      @click="header = null, desc = null, persist = false, reveal = false"
+    >
+      Okay
+    </button>
   </div>
 </template>
 
@@ -101,6 +100,18 @@ export default {
     }
   },
   methods: {
+
+    // -----------------------------
+    // General
+    // -----------------------------
+
+    /**
+     * Shows the response alert.
+     * @param {string} header - The title of the alert.
+     * @param {string} desc - The description of the alert.
+     * @param {boolean} persist - Whether the alert will persist until the user closes it.
+     * @param {boolean} cover - Whether the alert will also have a dark overlay to prevent user actions on other elements.
+     */
     show (header, desc, persist, cover) {
       this.header = header
       this.desc = desc

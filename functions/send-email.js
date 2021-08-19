@@ -1,79 +1,78 @@
 const qs = require('querystring')
 const axios = require('axios')
 const smtpTransport = require('nodemailer-smtp-transport')
-const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Content-Type': 'application/json; charset=UTF-8',
-  'X-Frame-Options': 'DENY',
-  'Strict-Transport-Security': 'max-age=15552000; preload',
-  'X-Content-Type-Options': 'nosniff',
-  'Referrer-Policy': 'no-referrer',
-  'Content-Security-Policy': 'default-src "self"'
-}
-// setup nodemailer
 const nodemailer = require('nodemailer')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('./helpers/prod.env') : require('./helpers/dev.env')
+const headers = require('./helpers/headers')
 const transporter = nodemailer.createTransport(smtpTransport({
   service: 'gmail',
   host: 'smtp-relay.gmail.com',
   secure: true,
   auth: {
-    user: 'joe.bailey@traininblocks.com',
-    pass: 'fczhxioeejfvtpbi'
+    user: CUSTOM_ENV.GOOGLE_WORKSPACE.USERNAME,
+    pass: CUSTOM_ENV.GOOGLE_WORKSPACE.PASSWORD
   }
 }))
 
 let response
 
 exports.handler = async function handler (event, context, callback) {
-  const accessToken = event.headers.authorization.split(' ')
-  response = await axios.post('https://auth.traininblocks.com/oauth2/default/v1/introspect?client_id=0oa3xeljtDMSTwJ3h4x6',
-    qs.stringify({
-      token: accessToken[1],
-      token_type_hint: 'access_token'
-    }),
-    {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
+  if (event.headers.authorization) {
+    const accessToken = event.headers.authorization.split(' ')
+    response = await axios.post(`${CUSTOM_ENV.OKTA.ISSUER}/oauth2/default/v1/introspect?client_id=${CUSTOM_ENV.OKTA.CLIENT_ID}`,
+      qs.stringify({
+        token: accessToken[1],
+        token_type_hint: 'access_token'
+      }),
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
       }
-    }
-  )
-  if (event.httpMethod === 'OPTIONS') {
-    return callback(null, {
-      statusCode: 200,
-      headers,
-      body: ''
-    })
-  } else if (event.body && response.data.active === true) {
-    try {
-      const data = JSON.parse(event.body)
-      // options
-      const mailOptions = {
-        from: 'Train In Blocks <hello@traininblocks.com>',
-        to: data.to, // from req.body.to
-        subject: data.subject, // from req.body.subject
-        text: data.text,
-        html: data.html // from req.body.message
-      }
-      await transporter.sendMail(mailOptions)
+    )
+    if (event.httpMethod === 'OPTIONS') {
       return callback(null, {
         statusCode: 200,
         headers,
-        body: 'Email sent successfully'
+        body: ''
       })
-    } catch (e) {
+    } else if (event.body && response.data.active === true) {
+      try {
+        const data = JSON.parse(event.body)
+        // options
+        const mailOptions = {
+          from: 'Train In Blocks <hello@traininblocks.com>',
+          to: data.to, // from req.body.to
+          subject: data.subject, // from req.body.subject
+          text: data.text,
+          html: data.html // from req.body.message
+        }
+        await transporter.sendMail(mailOptions)
+        return callback(null, {
+          statusCode: 200,
+          headers,
+          body: 'Email sent successfully'
+        })
+      } catch (e) {
+        return callback(null, {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify(e, response)
+        })
+      }
+    } else {
       return callback(null, {
-        statusCode: 500,
+        statusCode: 401,
         headers,
-        body: JSON.stringify(e, response)
+        body: '401 - Unauthorized'
       })
     }
   } else {
     return callback(null, {
       statusCode: 401,
       headers,
-      body: ''
+      body: '401 - Unauthorized'
     })
   }
 }

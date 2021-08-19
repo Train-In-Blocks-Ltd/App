@@ -1,142 +1,138 @@
-<style>
-/* Todo List */
-.preview_html span.todo-checkbox {
-  margin-top: .5rem
-}
-ul[data-type='todo_list'] {
-  padding-left: 0
-}
-li[data-type='todo_item'] {
-  display: flex;
-  flex-direction: row
-}
-.todo-checkbox {
-  border: 2px solid var(--base);
-  height: .9rem;
-  width: .9rem;
-  box-sizing: border-box;
-  margin-right: 10px;
-  margin-top: .3rem;
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: pointer;
-  border-radius: .2rem;
-  background-color: transparent;
-  transition: .4s background
-}
-.todo-content {
-  flex: 1
-}
-.todo-content > p:last-of-type {
-  margin-bottom: 0
-}
-.todo-content > ul[data-type='todo_list'] {
-  margin: .5rem 0
-}
-li[data-done='true'] > .todo-content > p {
-  text-decoration: line-through
-}
-li[data-done='true'] > .todo-checkbox {
-  background-color: var(--base)
-}
-li[data-done='false'] {
-  text-decoration: none
-}
+<style lang="scss">
 
 /* Preview HTML */
-.client_link .preview_html {
-  font-size: .8rem;
-  margin-top: .4rem
-}
-.client_link .preview_html * {
-  color: var(--base);
-  transition: var(--transition_standard)
-}
-.client_link .preview_html p {
-  margin: .4rem 0
-}
-.client_link .preview_html :is(h1, h2) {
-  font-size: 1rem
-}
-.client_link .preview_html :is(img, iframe, a),
-.client_link .preview_html > div > br:only-child {
-  display: none
+.client_link {
+  .preview_html {
+    font-size: .8rem;
+    margin-top: .4rem;
+    * {
+      color: var(--base);
+      transition: var(--transition_standard)
+    }
+    p {
+      margin: .4rem 0
+    }
+    img,
+    iframe,
+    a,
+    > div > br:only-child {
+      display: none
+    }
+  }
 }
 </style>
 
-<style scoped>
-
-/* Other */
-.select_checkbox {
-  margin-bottom: .4rem
-}
+<style lang="scss" scoped>
 
 /* Client Link */
 .client_link {
   display: grid;
   padding: 2rem;
   grid-gap: 1rem;
-  font-weight: 400;
   color: var(--base);
   text-decoration: none;
-  box-shadow: var(--low_shadow);
-  background-color: var(--fore);
+  border: 3px solid var(--base);
   border-radius: 10px;
-  transition: var(--transition_standard)
-}
-.client_link:hover {
-  box-shadow: var(--high_shadow)
-}
-.client_link svg {
-  width: 20px;
-  fill: var(--base);
-  transition: var(--transition_standard)
-}
-
-/* Client link details */
-.client_link__details {
-  display: grid;
-  grid-template-columns: 20px 1fr;
-  grid-gap: 1rem
-}
-.client_link__details p,
-.name {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  margin: auto 0;
-  color: var(--base);
-  transition: var(--transition_standard)
-}
-.client_link.archived .name {
-  color: var(--base)
-}
-.client_link__options {
-  display: flex;
-  align-items: center
-}
-
-@media (min-width: 769px) {
-  .client_link__options {
-    flex-direction: column
+  transition: var(--transition_standard);
+  &:hover {
+    box-shadow: var(--high_shadow)
   }
-  .client_link.archived {
+  &.archived {
     display: flex;
-    justify-content: space-between
+    justify-content: space-between;
+    .name {
+      color: var(--base)
+    }
+  }
+
+  /* Client info top section */
+  .client_information {
+    display: grid;
+    grid-template-columns: .1fr 1fr;
+    grid-gap: 1rem;
+    > div:first-child {
+      display: flex;
+      justify-content: space-between
+    }
+    .image {
+      background-size: cover;
+      background-position: center;
+      height: 80px;
+      width: 80px;
+      filter: grayscale(.8);
+      border-radius: 50%
+    }
+    .profile_image_placeholder {
+      padding: .8rem;
+      height: 80px;
+      width: 80px;
+      border-radius: 50%;
+      border: 3px solid var(--base)
+    }
+    .today-tag {
+      float: right;
+      height: fit-content;
+      height: -moz-fit-content;
+      width: fit-content;
+      width: -moz-fit-content;
+      padding: .2rem 1rem;
+      border-radius: 3px;
+      color: var(--fore);
+      font-weight: bold;
+      background: var(--base_green);
+      &.small-screen {
+        display: none
+      }
+    }
+
+    /* Client link details */
+    .client_link__details {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      grid-gap: 1rem;
+      p, .name {
+        margin: auto 0;
+        color: var(--base);
+        transition: var(--transition_standard)
+      }
+      svg {
+        width: 20px;
+        fill: var(--base);
+        transition: var(--transition_standard)
+      }
+    }
+  }
+
+  /* Selection */
+  .select_checkbox {
+    margin-bottom: .4rem
   }
 }
+
 @media (max-width: 768px) {
-  .client_link:hover svg {
-    fill: var(--base)
-  }
-  .client_link__options a,
-  .select_checkbox {
-    margin: 0 1rem 0 0
-  }
-  .client_link:hover {
-    box-shadow: var(--low_shadow)
-  }
-  .client_link:active {
-    transform: var(--active_state)
+  .client_link {
+    &:hover {
+      box-shadow: var(--low_shadow);
+      svg {
+        fill: var(--base)
+      }
+    }
+    &:active {
+      transform: var(--active_state)
+    }
+    .client_information {
+      grid-template-columns: 1fr;
+      .profile_image_placeholder,
+      img {
+        margin: auto auto auto 0
+      }
+      .today-tag {
+        display: none;
+        &.small-screen {
+          display: block
+        }
+      }
+    }
   }
 }
 @media (max-width: 576px) {
@@ -148,49 +144,109 @@ li[data-done='false'] {
 
 <template>
   <div class="client_link">
-    <div>
-      <h2 class="name">
-        {{ name }}
-      </h2>
-      <div v-if="email !== ''" class="client_link__details">
-        <inline-svg :src="require('../assets/svg/email.svg')" />
-        <p>{{ email }}</p>
+    <div class="client_information">
+      <div>
+        <div
+          v-if="client.profile_image"
+          :style="{ backgroundImage: `url(${client.profile_image})` }"
+          class="image"
+        />
+        <inline-svg
+          v-else
+          class="profile_image_placeholder"
+          :src="require('../assets/svg/profile-image.svg')"
+        />
+        <p
+          v-if="nextBooking.isToday"
+          class="today-tag small-screen text--tiny"
+        >
+          Today
+        </p>
       </div>
-      <div v-if="number !== ''" class="client_link__details">
-        <inline-svg :src="require('../assets/svg/mobile.svg')" />
-        <p>{{ number }}</p>
+      <div>
+        <p
+          v-if="nextBooking.isToday"
+          class="today-tag text--tiny"
+        >
+          Today
+        </p>
+        <h3 class="name">
+          {{ client.name }}
+        </h3>
+        <div
+          v-if="client.email"
+          class="client_link__details"
+        >
+          <inline-svg :src="require('../assets/svg/email.svg')" />
+          <p>
+            {{ client.email }}
+          </p>
+        </div>
+        <div
+          v-if="client.number"
+          class="client_link__details"
+        >
+          <inline-svg :src="require('../assets/svg/mobile.svg')" />
+          <p>
+            {{ client.number }}
+          </p>
+        </div>
       </div>
     </div>
-    <p v-if="(notes === null || notes === '<p><br></p>' || notes === '') && !archive" class="grey">
+    <p v-if="nextBooking.datetime">
+      <b>Next booking:</b> {{ day(nextBooking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]).toUpperCase() }} {{ nextBooking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0] }} at {{ shortTime(nextBooking.datetime) }}
+    </p>
+    <p
+      v-if="(client.notes === null || client.notes === '<p><br></p>' || client.notes === '') && !archive"
+      class="grey"
+    >
       What client information do you currently have? Head over to this page and edit it.
     </p>
-    <div v-if="notes !== null && notes !== '<p><br></p>' && notes !== '' && !archive" class="preview_html" v-html="update_html(notes, true)" />
-    <div v-if="archive" class="client_link__options">
-      <checkbox :item-id="clientId" :type="'v2'" class="select_checkbox" aria-label="Select this client" />
-      <a href="javascript:void(0)" title="Unarchive" @click="$parent.unarchive_single(clientId)">
-        <inline-svg :src="require('../assets/svg/archive.svg')" class="archive_icon" aria-label="Unarchive" />
-      </a>
-      <a href="javascript:void(0)" title="Delete" @click="soloDelete(clientId)">
-        <inline-svg :src="require('../assets/svg/bin.svg')" class="archive_icon" aria-label="Delete" />
-      </a>
-    </div>
+    <div
+      v-else-if="!archive"
+      class="preview_html"
+      v-html="updateHTML(client.notes, true)"
+    />
+    <checkbox
+      v-if="archive"
+      :item-id="client.client_id"
+      :type="'v2'"
+      class="select_checkbox"
+      aria-label="Select this client"
+    />
   </div>
 </template>
 
 <script>
-
-import Checkbox from './Checkbox'
+import { mapState } from 'vuex'
+const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
 
 export default {
   components: {
     Checkbox
   },
-  props: ['name', 'email', 'number', 'notes', 'archive', 'clientId', 'clientIndex'],
-  methods: {
-    async soloDelete (id) {
-      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete this client?', 'We will remove their data from our database and it won\'t be recoverable.')) {
-        this.$parent.$parent.client_delete(id)
+  props: {
+    client: Object,
+    clientIndex: Number,
+    archive: Boolean
+  },
+  data () {
+    return {
+      nextBooking: {
+        datetime: false,
+        isToday: false
       }
+    }
+  },
+  computed: mapState([
+    'bookings'
+  ]),
+  created () {
+    const NEXT_BOOKING = this.bookings.filter(booking => booking.client_id === this.client.client_id && new Date(booking.datetime) > new Date())[0] || false
+    if (NEXT_BOOKING) {
+      const DATE_AND_TIME = NEXT_BOOKING.datetime.split(' ')
+      this.nextBooking.datetime = `${DATE_AND_TIME[0] === this.today() ? 'Today' : DATE_AND_TIME[0]} ${DATE_AND_TIME[1]}`
+      this.nextBooking.isToday = DATE_AND_TIME[0] === this.today()
     }
   }
 }

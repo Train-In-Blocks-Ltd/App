@@ -1,141 +1,157 @@
-<style scoped>
-
-  /* Containers */
+<style lang="scss" scoped>
+#calendar_view {
+  border-radius: 10px;
+  border: 3px solid var(--base);
+  margin-top: 1rem;
   .calendar_header {
     display: flex;
     justify-content: space-between;
-    flex-direction: column
-  }
-  .calendar_header__bar {
-    display: flex;
-    justify-content: space-between;
-    margin: 1rem 0
+    flex-direction: column;
+    h3 {
+      position: relative;
+      top: 0;
+      left: 2rem;
+      padding: .6rem;
+      background: var(--base);
+      color: var(--fore);
+      width: fit-content;
+      width: -moz-fit-content;
+      border-radius: 0 0 10px 10px
+    }
+    .calendar_header__bar {
+      display: flex;
+      justify-content: space-between;
+      margin: 2rem;
+      * {
+        transition: var(--transition_standard);
+        &:hover {
+          opacity: var(--light_opacity)
+        }
+      }
+      .next_week,
+      .prev_week {
+        height: 36px;
+        width: 36px;
+        &:active {
+          transform: scale(.8)
+        }
+      }
+      .today {
+        cursor: pointer;
+        margin: auto;
+        &.disabled,
+        &.disabled:hover {
+          opacity: var(--light_opacity);
+          cursor: default
+        }
+      }
+    }
   }
   .week_container {
     display: grid;
     grid-gap: 2rem;
-    margin: 2rem 0;
-    background-color: var(--fore);
-    border-radius: 10px
+    margin: 1rem;
+    border-radius: 10px;
+    .day_container {
+      display: grid;
+      grid-template-columns: .1fr 1fr;
+      grid-gap: 4rem;
+      padding: 1rem;
+      &.is_today {
+        background-color: var(--calendar_highlight);
+        box-shadow: var(--low_shadow);
+        border-radius: 10px
+      }
+      .day_header {
+        display: flex;
+        justify-content: space-between;
+        .text--small {
+          margin-left: .4rem
+        }
+      }
+      .day_events {
+        display: grid;
+        grid-gap: 1rem;
+        .day_events__event {
+          padding: .6rem 1rem;
+          border-radius: 8px;
+          border: 3px solid transparent;
+          overflow-wrap: anywhere;
+          &.showBorder {
+            border: 3px solid var(--base)
+          }
+        }
+      }
+    }
   }
-  .day_container {
-    display: grid;
-    grid-template-columns: .1fr 1fr;
-    grid-gap: 4rem;
-    padding: 2rem
-  }
-  .is_today {
-    background-color: var(--calendar_highlight);
-    box-shadow: var(--low_shadow);
-    border-radius: 10px
-  }
-  .day_events {
-    display: grid;
-    grid-gap: 1rem
-  }
-  .day_events__event {
-    padding: .6rem 1rem;
-    border-radius: 8px;
-    border: 3px solid transparent;
-    overflow-wrap: anywhere
-  }
-  .showBorder {
-    border: 3px solid var(--base)
-  }
+}
 
-  /* Header bar */
-  .calendar_header__bar * {
-    transition: var(--transition_standard)
-  }
-  .calendar_header__bar *:hover {
-    opacity: var(--light_opacity)
-  }
-  .next_week {
-    cursor: pointer;
-    transform: rotate(-90deg)
-  }
-  .next_week:hover {
-    transform: rotate(-90deg) translateY(5px)
-  }
-  .next_week:active {
-    transform: rotate(-90deg) translateY(5px) scale(.9)
-  }
-  .prev_week {
-    cursor: pointer;
-    transform: rotate(90deg)
-  }
-  .prev_week:hover {
-    transform: rotate(90deg) translateY(-5px)
-  }
-  .prev_week:active {
-    transform: rotate(90deg) translateY(-5px) scale(.9)
-  }
-  .today {
-    cursor: pointer;
-    margin: auto
-  }
-  .disabled, .today.disabled:hover {
-    opacity: var(--light_opacity);
-    cursor: default
-  }
-
-  /* Day */
-  .day_header {
-    display: flex;
-    justify-content: space-between
-  }
-  .day_header .text--small {
-    margin-left: .4rem
-  }
-
-  /* Responsive */
-  @media (max-width: 992px) {
-    .calendar_header__bar *:hover {
+@media (max-width: 992px) {
+  #calendar_view .calendar_header .calendar_header__bar {
+    *:hover {
       opacity: 1
     }
-    .next_week:hover {
-      transform: rotate(-90deg) translateY(0)
+    .next_week {
+      &:hover {
+        transform: rotate(-90deg) translateY(0)
+      }
+      &:active {
+        transform: rotate(-90deg) translateY(0) scale(.9)
+      }
     }
-    .next_week:active {
-      transform: rotate(-90deg) translateY(0) scale(.9)
-    }
-    .prev_week:hover {
-      transform: rotate(90deg) translateY(0)
-    }
-    .prev_week:active {
-      transform: rotate(90deg) translateY(0) scale(.9)
+    .prev_week {
+      &:hover {
+        transform: rotate(90deg) translateY(0)
+      }
+      &:active {
+        transform: rotate(90deg) translateY(0) scale(.9)
+      }
     }
   }
-  @media (max-width: 576px) {
-    .day_container {
-      padding: 1rem
+}
+@media (max-width: 576px) {
+  #calendar_view {
+    .calendar_header {
+      h3 {
+        left: 1rem
+      }
+      .calendar_header__bar {
+        margin: 1rem
+      }
+    }
+    .week_container {
+      margin: 1rem;
+      .day_container {
+        padding: 1rem
+      }
     }
   }
+}
 </style>
 
 <template>
   <div id="calendar_view">
     <div class="calendar_header">
-      <h1>
+      <h3>
         {{ get_month(thisWeek[0].date_split[1]) }} {{ thisWeek[0].date_split[0] }}
-      </h1>
+      </h3>
       <div class="calendar_header__bar">
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="prev_week"
-          @click="weekDiff--, get_week()"
+          :src="require('../assets/svg/arrow-left.svg')"
+          class="prev_week cursor no_fill"
+          @click="weekDiff--, getWeek()"
         />
         <p
           :class="{ disabled: weekDiff === 0 }"
           class="today"
-          @click="weekDiff = 0, get_week()"
+          @click="weekDiff = 0, getWeek()"
         >
           Today
         </p>
         <inline-svg
-          :src="require('../assets/svg/arrow.svg')"
-          class="next_week"
-          @click="weekDiff++, get_week()"
+          :src="require('../assets/svg/arrow-right.svg')"
+          class="next_week cursor no_fill"
+          @click="weekDiff++, getWeek()"
         />
       </div>
     </div>
@@ -147,9 +163,9 @@
         class="day_container"
       >
         <div class="day_header">
-          <h2>
+          <h3>
             {{ get_day(index) }}
-          </h2>
+          </h3>
           <p class="text--small grey">
             {{ day.date_split[2] }}
           </p>
@@ -166,7 +182,7 @@
             :style="{ backgroundColor: event.color }"
             :class="{ showBorder: event.color === undefined || event.color === '' || event.color === '#FFFFFF' }"
             class="day_events__event cursor fadeIn"
-            @click="$parent.go_to_event(event.session_id, event.week_id)"
+            @click="$parent.goToEvent(event.session_id, event.week_id)"
           >
             <p :style="{ color: event.textColor }">
               {{ event.title }}
@@ -183,8 +199,7 @@
 export default {
   props: {
     events: Array,
-    forceUpdate: Number,
-    isTrainer: Boolean
+    forceUpdate: Number
   },
   data () {
     return {
@@ -194,18 +209,26 @@ export default {
     }
   },
   watch: {
+    events () {
+      this.getWeek()
+    },
     forceUpdate () {
-      this.get_week()
+      this.getWeek()
     }
   },
   created () {
-    this.get_week()
+    this.getWeek()
   },
   methods: {
 
-    // EVENTS
+    // -----------------------------
+    // Events
+    // -----------------------------
 
-    append_events () {
+    /**
+     * Adds the event to the correct day of the week.
+     */
+    appendEvents () {
       this.thisWeek.forEach((day) => {
         this.events.forEach((event) => {
           if (day.date === event.date) {
@@ -215,51 +238,75 @@ export default {
       })
     },
 
-    // WEEK
+    // -----------------------------
+    // Week
+    // -----------------------------
 
+    /**
+     * Determines the day based on the date provided.
+     * @param {date} date - The date provided.
+     * @returns The day of the week.
+     */
     get_day (date) {
-      const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-      return days[date]
+      const DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+      return DAYS[date]
     },
-    get_week () {
+
+    /**
+     * Generates the current week.
+     */
+    getWeek () {
       this.thisWeek = []
-      const d = new Date()
-      const day = d.getDay()
-      const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-      const weekStart = new Date(d.setDate(diff + 7 * this.weekDiff))
-      const year = String(weekStart.getFullYear())
-      const month = String(weekStart.getMonth() + 1).padStart(2, '0')
-      const date = String(weekStart.getDate()).padStart(2, '0')
-      const currentMonday = {
-        date: `${year}-${month}-${date}`,
-        date_split: [year, month, date],
+      const DATE_CLASS = new Date()
+      const DAY = DATE_CLASS.getDay()
+      const DAYS_DIFFERENCE = DATE_CLASS.getDate() - DAY + (DAY === 0 ? -6 : 1)
+      const WEEK_START = new Date(DATE_CLASS.setDate(DAYS_DIFFERENCE + 7 * this.weekDiff))
+      const YEAR = String(WEEK_START.getFullYear())
+      const MONTH = String(WEEK_START.getMonth() + 1).padStart(2, '0')
+      const DATE = String(WEEK_START.getDate()).padStart(2, '0')
+      const CURRENT_MONDAY = {
+        date: `${YEAR}-${MONTH}-${DATE}`,
+        date_split: [YEAR, MONTH, DATE],
         events: []
       }
-      this.currentWeekStart = currentMonday
-      this.thisWeek.push(currentMonday)
+      this.currentWeekStart = CURRENT_MONDAY
+      this.thisWeek.push(CURRENT_MONDAY)
       for (let i = 1; i < 7; i++) {
         this.thisWeek.push({
-          date: this.add_days(this.thisWeek[0].date, i),
-          date_split: this.add_days(this.thisWeek[0].date, i).split('-'),
+          date: this.addDays(this.thisWeek[0].date, i),
+          date_split: this.addDays(this.thisWeek[0].date, i).split('-'),
           events: []
         })
       }
       setTimeout(() => {
-        this.append_events()
+        this.appendEvents()
       }, 100)
     },
-    add_days (date, days) {
-      const d = new Date(date)
-      d.setDate(d.getDate() + days)
-      const year = d.getFullYear()
-      const month = String(d.getMonth() + 1).padStart(2, '0')
-      const dayDate = String(d.getDate()).padStart(2, '0')
-      return `${year}-${month}-${dayDate}`
+
+    /**
+     * Adds specified days to the date provided.
+     * @param {date} date - The date provided.
+     * @param {integer} days - The days to add.
+     * @returns The new date.
+     */
+    addDays (date, days) {
+      const DATE_CLASS = new Date(date)
+      DATE_CLASS.setDate(DATE_CLASS.getDate() + days)
+      const YEAR = DATE_CLASS.getFullYear()
+      const MONTH = String(DATE_CLASS.getMonth() + 1).padStart(2, '0')
+      const DATE = String(DATE_CLASS.getDate()).padStart(2, '0')
+      return `${YEAR}-${MONTH}-${DATE}`
     },
+
+    /**
+     * Determines the month based on the month index provided.
+     * @param {integer} month - The month index provided.
+     * @returns The month as a string.
+     */
     get_month (month) {
-      const monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       month = parseInt(month) - 1
-      return monthArr[month]
+      return MONTHS[month]
     }
   }
 }

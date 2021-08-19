@@ -1,56 +1,48 @@
-<style>
-/* Preview HTML */
-.preview_modal .preview_html {
-  font-size: .8rem;
-  margin-top: .4rem
-}
-.preview_modal .preview_html * {
-  color: var(--base);
-  transition: var(--transition_standard)
-}
-.preview_modal .preview_html p {
-  margin: .4rem 0
-}
-.preview_modal .preview_html :is(h1, h2) {
-  font-size: 1rem
-}
-.preview_modal .preview_html :is(img, iframe) {
-  max-width: 100%;
-  border-radius: 10px;
-  margin: 1rem 0
-}
-.noMedia :is(img, iframe) {
-  display: none
+<style lang="scss">
+.preview_modal {
+  .preview_html {
+    margin: 1rem 0 2rem 0;
+    &.noMedia img,
+    &.noMedia iframe {
+      display: none
+    }
+    h1 {
+      /* stylelint-disable-next-line */
+      font-size: 1.6rem !important
+    }
+    h2 {
+      /* stylelint-disable-next-line */
+      font-size: 1rem !important
+    }
+    li {
+      font-size: .8rem;
+      list-style-type: lower-roman
+    }
+    p, b {
+      /* stylelint-disable-next-line */
+      font-size: .8rem !important;
+      margin: 1rem 0
+    }
+    * {
+      color: var(--base);
+      transition: var(--transition_standard)
+    }
+    img,
+    iframe {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 1rem 0
+    }
+  }
 }
 </style>
 
-<style scoped>
-/* Other */
-h2.title {
-  margin-bottom: 2rem
-}
-button.red_button {
-  margin: 2rem 0
-}
-.copy_msg {
-  margin-bottom: 1rem
-}
-.allow_select {
-  cursor: pointer;
-  user-select: all;
-  padding: 1rem;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  transition: var(--transition_standard)
-}
-.allow_select:hover:not(.selected) {
-  border: 1px solid var(--base_faint)
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  button.red_button {
-    width: 100%
+<style lang="scss" scoped>
+.title_container {
+  display: flex;
+  justify-content: space-between;
+  h3.title {
+    margin-bottom: 2rem
   }
 }
 </style>
@@ -59,25 +51,24 @@ button.red_button {
   <div class="preview_modal">
     <div :class="{ opened_sections: html !== '' && html !== null }" class="section_overlay" />
     <div v-if="html !== '' && html !== null" class="tab_overlay_content fadeIn delay fill_mode_both">
-      <h2 class="title">
-        {{ desc }}
-      </h2>
-      <p v-if="allowSelect" class="copy_msg">
-        Select, copy, and paste it into your sessions
-      </p>
+      <div class="title_container">
+        <h3 class="title">
+          {{ desc }}
+        </h3>
+        <inline-svg
+          class="close_icon cursor"
+          :src="require('../assets/svg/close.svg')"
+          aria-label="Close"
+          @click="$emit('close'), willBodyScroll(true)"
+        />
+      </div>
       <div
         class="preview_html"
-        :class="{ noMedia: !showMedia, allow_select: allowSelect, selected: focused }"
+        :class="{ noMedia: !showMedia }"
         @click="focused = true"
         @mouseleave="focused = false"
-        v-html="update_html(html, !showBrackets)"
+        v-html="updateHTML(html, !showBrackets)"
       />
-      <button
-        class="red_button"
-        @click="$emit('close'), will_body_scroll(true)"
-      >
-        Close
-      </button>
     </div>
   </div>
 </template>
@@ -89,13 +80,7 @@ export default {
     type: String,
     html: String,
     showMedia: Boolean,
-    showBrackets: Boolean,
-    allowSelect: Boolean
-  },
-  data () {
-    return {
-      focused: false
-    }
+    showBrackets: Boolean
   }
 }
 </script>

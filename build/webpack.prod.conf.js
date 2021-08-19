@@ -1,13 +1,13 @@
 'use strict'
 const utils = require('./utils')
 const config = require('../config')
-const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('mini-css-extract-plugin')
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
+const {InjectManifest} = require('workbox-webpack-plugin')
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -27,13 +27,22 @@ const webpackConfig = merge(baseWebpackConfig, {
     maxEntrypointSize: 2500000,
     maxAssetSize: 1500000
   },
+  stats: {
+    errorDetails: true
+  },
   optimization: {
     minimize: false,
+    minimizer: [
+      // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+      // `...`,
+      new CssMinimizerPlugin(),
+    ],
     runtimeChunk: 'single',
     splitChunks: {
       chunks: 'all',
-      maxInitialRequests: Infinity,
-      minSize: 0,
+      maxInitialRequests: 30,
+      minChunks: 2,
+      minSize: 50000,
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/](?!@okta[\\/]okta-vue)(.*?)[\\/]/,
@@ -53,20 +62,9 @@ const webpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    // http://vuejs.github.io/vue-loader/en/workflow/production.html
-    new webpack.DefinePlugin({	
-      'process.env': require('../config/prod.env')	
-    }),
     // extract css into its own file
     new ExtractTextPlugin({
       filename: utils.assetsPath('css/[name].css')
-    }),
-    // Compress extracted CSS. We are using this plugin so that possible
-    // duplicated CSS from different components can be deduped.
-    new OptimizeCSSPlugin({
-      cssProcessorOptions: config.build.productionSourceMap
-      ? { safe: true, map: { inline: false } }
-      : { safe: true }
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
@@ -83,10 +81,16 @@ const webpackConfig = merge(baseWebpackConfig, {
         if (/\.css$/.test(entry)) return 'style'
         return 'script'
       }
+    }),
+    new InjectManifest({
+      swSrc: './src/traininblocks-sw.js',
+      swDest: 'traininblocks-sw.js',
+      exclude: [/\.map$/]
     })
   ]
 })
 if (process.env.REPORT) {
+  process.traceDeprecation = true
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
