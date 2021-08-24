@@ -61,6 +61,7 @@ exports.handler = async function handler (event, context, callback) {
             session = await stripe.checkout.sessions.create({
               payment_method_types: ['card'],
               customer_email: JSON.parse(event.body).email,
+              allow_promotion_codes: true,
               line_items: [{
                 price_data: {
                   currency: product.currency,
@@ -74,7 +75,6 @@ exports.handler = async function handler (event, context, callback) {
               }],
               payment_intent_data: {
                 application_fee_amount: Math.round(product.price * 0.05)
-                receipt_email: JSON.parse(event.body).email
               },
               mode: 'payment',
               success_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
@@ -86,6 +86,7 @@ exports.handler = async function handler (event, context, callback) {
             session = await stripe.checkout.sessions.create({
               payment_method_types: ['card'],
               customer_email: JSON.parse(event.body).email,
+              allow_promotion_codes: true,
               line_items: [{
                 price_data: {
                   currency: product.currency,
@@ -103,7 +104,6 @@ exports.handler = async function handler (event, context, callback) {
               subscription_data: {
                 application_fee_percent: 0.05
               },
-              discounts: [{ coupon: process.env.NODE_ENV === 'production' ? '' : 'test' }],
               mode: 'subscription',
               success_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
               cancel_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
@@ -115,7 +115,10 @@ exports.handler = async function handler (event, context, callback) {
           return callback(null, {
             statusCode: 200,
             headers,
-            body: session.id
+            body: JSON.stringify({
+              sessionId: session.id,
+              connectedAccountId: Okta.data[0].profile.connectedAccountId
+            })
           })
         } else {
           return callback(null, {

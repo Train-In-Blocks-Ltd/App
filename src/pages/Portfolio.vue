@@ -123,7 +123,7 @@ export default {
     })
     this.willBodyScroll(true)
     await this.$parent.setup()
-    // await this.checkStripeConnect()
+    await this.checkStripeConnect()
     this.$store.dispatch('endLoading')
   },
   methods: {

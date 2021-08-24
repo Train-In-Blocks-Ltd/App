@@ -417,8 +417,10 @@ export default {
           email: this.claims.email
         })
         // eslint-disable-next-line no-undef
-        const stripe = await Stripe(CUSTOM_ENV.STRIPE_PUBLIC_KEY)
-        stripe.redirectToCheckout({ sessionId: RESPONSE.data })
+        const stripe = await Stripe(CUSTOM_ENV.STRIPE_PUBLIC_KEY, {
+          stripeAccount: await RESPONSE.data.connectedAccountId
+        })
+        stripe.redirectToCheckout({ sessionId: await RESPONSE.data.sessionId })
         this.$store.dispatch('endLoading')
       } catch (e) {
         this.$parent.resolveError(e)
