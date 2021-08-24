@@ -189,7 +189,7 @@ export default {
       } catch (e) {
         this.$parent.resolveError(e)
       }
-    }
+    },
 
     // -----------------------------
     // Stripe connect
