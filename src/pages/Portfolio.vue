@@ -195,7 +195,6 @@ export default {
     // Stripe connect
     // -----------------------------
 
-    /*
     async stripeConnect () {
       try {
         this.$store.commit('setData', {
@@ -229,7 +228,6 @@ export default {
         })
       }
     }
-    */
   }
 }
 </script>

@@ -239,7 +239,6 @@ hr {
           No plans yet, please contact your trainer or coach for more information
         </p>
       </div>
-      <!--
       <div class="products_section">
         <h2>
           Services
@@ -271,7 +270,6 @@ hr {
           </div>
         </div>
       </div>
-      -->
     </div>
   </div>
 </template>
@@ -282,7 +280,7 @@ const RichEditor = () => import(/* webpackChunkName: "components.richeditor", we
 const InstallApp = () => import(/* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ '../../components/InstallPWA')
 const Periodise = () => import(/* webpackChunkName: "components.periodise", webpackPrefetch: true  */ '../../components/Periodise')
 const ClientProfile = () => import(/* webpackChunkName: "components.clientProfile", webpackPrefetch: true  */ '../../components/ClientProfile')
-// const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
+const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
 export default {
   components: {
@@ -407,7 +405,6 @@ export default {
       this.$store.dispatch('endLoading')
     }
 
-    /*
     async checkout (productId) {
       try {
         this.$store.commit('setData', {
@@ -427,7 +424,6 @@ export default {
         this.$parent.resolveError(e)
       }
     }
-    */
   }
 }
 </script>
