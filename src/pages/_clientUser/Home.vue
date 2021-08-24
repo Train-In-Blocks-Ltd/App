@@ -403,7 +403,7 @@ export default {
       this.check = !currentChecked ? 1 : 0
       this.$parent.updateClientSideSession(planId, sessionId)
       this.$store.dispatch('endLoading')
-    }
+    },
 
     async checkout (productId) {
       try {

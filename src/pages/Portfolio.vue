@@ -90,7 +90,7 @@ export default {
     }
   },
   components: {
-    RichEditor
+    RichEditor,
     Products
   },
   async beforeRouteLeave (to, from, next) {
