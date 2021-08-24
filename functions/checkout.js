@@ -73,15 +73,14 @@ exports.handler = async function handler (event, context, callback) {
                 quantity: 1
               }],
               payment_intent_data: {
-                application_fee_amount: Math.round(product.price * 0.05),
-                transfer_data: {
-                  destination: Okta.data[0].profile.connectedAccountId
-                },
+                application_fee_amount: Math.round(product.price * 0.05)
                 receipt_email: JSON.parse(event.body).email
               },
               mode: 'payment',
               success_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
               cancel_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
+            }, {
+              stripeAccount: Okta.data[0].profile.connectedAccountId
             })
           } else {
             session = await stripe.checkout.sessions.create({
@@ -102,15 +101,14 @@ exports.handler = async function handler (event, context, callback) {
                 quantity: 1
               }],
               subscription_data: {
-                application_fee_percent: 0.05,
-                transfer_data: {
-                  destination: Okta.data[0].profile.connectedAccountId
-                }
+                application_fee_percent: 0.05
               },
               discounts: [{ coupon: process.env.NODE_ENV === 'production' ? '' : 'test' }],
               mode: 'subscription',
               success_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser',
               cancel_url: event.multiValueHeaders.Referer && event.multiValueHeaders.Referer[0] === 'https://app.traininblocks.com/clientUser' ? 'https://app.traininblocks.com/clientUser' : 'https://dev.traininblocks.com/clientUser'
+            }, {
+              stripeAccount: Okta.data[0].profile.connectedAccountId
             })
           }
           // Include url in response
