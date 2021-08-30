@@ -31,6 +31,7 @@ module.exports = function emailBuilder (type, data) {
 
 /** A dictionary of all the email titles. */
 const titles = {
+  'get-user-feedback': 'Let us know how we are doing',
   'activate-account': 'Activate your account',
   'password-changed': 'Password changed',
   'password-reset': 'Password reset',
@@ -98,6 +99,11 @@ const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', '
  */
 const bodyHtml = (type, data) => {
   switch (type) {
+    case 'get-user-feedback':
+      return `<p>We’d love to hear about your experience so far using the app.<br>Please take the time to complete this quick 2-minute survey. In return, we will be able to focus on features that you want to see implemented or improved.
+        <br>
+        <a href="${data.link}" target="_blank" class="link-button">Give feedback</a>
+      </p>`
     case 'activate-account':
       return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.
         <br>
