@@ -5,6 +5,10 @@ import { loadProgressBar } from 'axios-progress-bar'
 import 'axios-progress-bar/dist/nprogress.css'
 import VueMeta from 'vue-meta'
 
+// Sentry
+import * as Sentry from '@sentry/vue'
+import { Integrations } from '@sentry/tracing'
+
 import { InlineSvgPlugin } from 'vue-inline-svg'
 import Skeleton from './components/Skeleton'
 import ResponsePopUp from './components/ResponsePopUp'
@@ -41,6 +45,18 @@ Vue.config.productionTip = false
 
 Vue.mixin({
   methods: mixins
+})
+
+Sentry.init({
+  Vue,
+  dsn: 'https://461ec8a4d98d465a98a8232b319e2c19@o990064.ingest.sentry.io/5954859',
+  integrations: [
+    new Integrations.BrowserTracing({
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      tracingOrigins: ['localhost', 'app.traininblocks.com', /^\//]
+    })
+  ],
+  tracesSampleRate: 1.0
 })
 
 /* eslint-disable no-new */
