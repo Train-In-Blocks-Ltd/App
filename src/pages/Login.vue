@@ -61,6 +61,9 @@
   font-size: .75rem;
   text-align: left
 }
+.o-form-input-name-username {
+  width: 100%
+}
 .o-form-input-name-remember {
   text-align: left;
   font-size: .9rem
