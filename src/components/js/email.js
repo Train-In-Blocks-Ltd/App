@@ -31,6 +31,8 @@ module.exports = function emailBuilder (type, data) {
 
 /** A dictionary of all the email titles. */
 const titles = {
+  'client-purchase': 'Successful payment',
+  'trainer-purchase': 'Nice one, you\'ve made a sale',
   'get-user-feedback': 'Let us know how we are doing',
   'activate-account': 'Activate your account',
   'password-changed': 'Password changed',
@@ -99,6 +101,10 @@ const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', '
  */
 const bodyHtml = (type, data) => {
   switch (type) {
+    case 'client-purchase':
+      return `<p>You have successfully paid for ${data.productName}. Your trainer has been notified about this purchase</p>`
+    case 'trainer-purchase':
+      return `<p>Your client ${data.clientName} has successfully paid for ${data.productName}. Stripe will now process this payment and you will receive the payout within a few days.</p>`
     case 'get-user-feedback':
       return `<p>We’d love to hear about your experience so far using the app.<br>Please take the time to complete this quick 2-minute survey. In return, we will be able to focus on features that you want to see implemented or improved.
         <br>
