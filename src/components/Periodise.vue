@@ -7,9 +7,6 @@
   margin-bottom: 4rem;
   .plan {
     display: grid;
-    border: 3px solid var(--base);
-    border-radius: 10px;
-    transition: var(--transition_standard);
     .plan_header {
       display: grid;
       grid-gap: 1rem;
@@ -68,12 +65,8 @@
   }
 }
 @media (max-width: 576px) {
-  .periodise {
-    .plan {
-      .plan_header {
-        padding: 1rem;
-      }
-    }
+  .periodise .plan .plan_header {
+    padding: 1rem;
   }
 }
 </style>
@@ -88,10 +81,11 @@
       @close="(planDesc = null), (planHTML = null)"
     />
     <div class="periodise">
-      <div
+      <card-wrapper
         v-for="(plan, planIndex) in plans"
         :key="`plan_${planIndex}`"
         class="plan fadeIn"
+        noHover
       >
         <div class="plan_header">
           <h3>
@@ -134,12 +128,16 @@
             class="microcycle"
           />
         </div>
-      </div>
+      </card-wrapper>
     </div>
   </div>
 </template>
 
 <script>
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "./generic/CardWrapper"
+  );
 const PreviewModal = () =>
   import(
     /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "./PreviewModal"
@@ -147,6 +145,7 @@ const PreviewModal = () =>
 
 export default {
   components: {
+    CardWrapper,
     PreviewModal,
   },
   props: {
