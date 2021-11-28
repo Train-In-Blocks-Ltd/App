@@ -22,9 +22,6 @@
 
 /* Editor object */
 .plan_notes {
-  border: 3px solid var(--base);
-  border-radius: 10px;
-  transition: 0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
   h3 {
     position: relative;
     left: 2rem;
@@ -46,8 +43,6 @@
     height: 4px;
   }
   .wrapper--session {
-    border: 3px solid var(--base);
-    border-radius: 10px;
     padding: 2rem;
     .complete_button {
       margin-top: 2rem;
@@ -116,7 +111,7 @@ hr {
         <h2 class="plan_name">
           {{ plan.name }}
         </h2>
-        <div class="plan_notes">
+        <card-wrapper class="plan_notes" noHover>
           <h3 class="bottom_margin">Plan Notes</h3>
           <div
             v-if="plan.notes && plan.notes !== '<p></p>'"
@@ -133,7 +128,7 @@ hr {
           >
             No plan notes added...
           </p>
-        </div>
+        </card-wrapper>
         <div class="wrapper--calendar">
           <a
             class="a_link switch_cal"
@@ -195,12 +190,13 @@ hr {
               class="show_sessions_right disabled no_fill"
             />
           </div>
-          <div
+          <card-wrapper
             v-for="(session, indexed) in plan.sessions"
             v-show="showing_current_session === indexed"
             :id="`session-${session.id}`"
             :key="indexed"
             class="wrapper--session"
+            noHover
           >
             <div :id="session.name" class="session_header client-side">
               <div>
@@ -243,7 +239,7 @@ hr {
                 @on-edit-change="resolveFeedbackEditor"
               />
             </div>
-          </div>
+          </card-wrapper>
         </div>
         <div v-else>
           <h3>No sessions yet</h3>
@@ -259,6 +255,7 @@ hr {
 
 <script>
 import { mapState } from "vuex";
+
 const WeekCalendar = () =>
   import(
     /* webpackChunkName: "components.calendar", webpackPreload: true  */ "../../components/WeekCalendar"
@@ -269,7 +266,11 @@ const MonthCalendar = () =>
   );
 const RichEditor = () =>
   import(
-    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
+    /* webpackChunkName: "components.richEditor", webpackPreload: true  */ "../../components/Editor"
+  );
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@components/generic/CardWrapper"
   );
 
 export default {
@@ -282,6 +283,7 @@ export default {
     WeekCalendar,
     MonthCalendar,
     RichEditor,
+    CardWrapper,
   },
   async beforeRouteLeave(to, from, next) {
     if (
