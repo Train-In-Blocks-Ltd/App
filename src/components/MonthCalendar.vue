@@ -42,6 +42,7 @@
     }
   }
 }
+
 .month_container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -261,7 +262,7 @@ export default {
             }
           }
         }
-        const DATAPACKETS = [];
+        const DATA_PACKETS = [];
         this.events.forEach((event) => {
           const DATE_SPLIT = event.date.split("-");
           if (
@@ -269,11 +270,11 @@ export default {
             parseInt(DATE_SPLIT[1] - 1) === LAST_DAY_OF_MONTH.getMonth() &&
             parseInt(DATE_SPLIT[2]) === date
           ) {
-            DATAPACKETS.push(event);
+            DATA_PACKETS.push(event);
           }
         });
         this.month.push([
-          DATAPACKETS,
+          DATA_PACKETS,
           date,
           `${this.currentYear}-${String(
             this.getMonthNumber(this.currentMonth)
