@@ -257,11 +257,8 @@ hr {
           information
         </p>
       </div>
-      <!--
       <div class="products_section">
-        <h2>
-          Services
-        </h2>
+        <h2>Services</h2>
         <skeleton v-if="loading" :type="'product'" />
         <div v-else class="products">
           <div
@@ -273,23 +270,19 @@ hr {
               <h3>
                 {{ product.name }}
               </h3>
-              <button @click.prevent="checkout(product.id)">
-                Purchase
-              </button>
+              <button @click.prevent="checkout(product.id)">Purchase</button>
             </div>
             <p>
-              <b class="type">{{ product.type }}</b> payment of <b>{{ `${product.price} ${product.currency}` }}</b>
+              <b class="type">{{ product.type }}</b> payment of
+              <b>{{ `${product.price} ${product.currency}` }}</b>
             </p>
             <p>
               {{ product.notes }}
             </p>
-            <button @click.prevent="checkout(product.id)">
-              Purchase
-            </button>
+            <button @click.prevent="checkout(product.id)">Purchase</button>
           </div>
         </div>
       </div>
-      -->
     </div>
   </div>
 </template>
@@ -442,27 +435,30 @@ export default {
       this.$store.dispatch("endLoading");
     },
 
-    /*
-    async checkout (productId) {
+    async checkout(productId) {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        const RESPONSE = await this.$axios.post('/.netlify/functions/checkout', {
-          productId,
-          ptId: this.clientUser.pt_id,
-          email: this.claims.email
-        })
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        const RESPONSE = await this.$axios.post(
+          "/.netlify/functions/checkout",
+          {
+            productId,
+            ptId: this.clientUser.pt_id,
+            email: this.claims.email,
+          }
+        );
         // eslint-disable-next-line no-undef
-        const stripe = await Stripe(CUSTOM_ENV.STRIPE_PUBLIC_KEY)
-        stripe.redirectToCheckout({ sessionId: RESPONSE.data })
-        this.$store.dispatch('endLoading')
+        const stripe = await Stripe(CUSTOM_ENV.STRIPE_PUBLIC_KEY, {
+          stripeAccount: await RESPONSE.data.connectedAccountId,
+        });
+        stripe.redirectToCheckout({ sessionId: await RESPONSE.data.sessionId });
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.resolveError(e)
+        this.$parent.resolveError(e);
       }
-    }
-    */
+    },
   },
 };
 </script>

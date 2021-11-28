@@ -69,7 +69,7 @@
       />
     </div>
     <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
-    <!-- <products /> -->
+    <products />
   </div>
 </template>
 
@@ -202,41 +202,47 @@ export default {
     // Stripe connect
     // -----------------------------
 
-    /*
-    async stripeConnect () {
+    async stripeConnect() {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        const RESPONSE = await this.$axios.post('/.netlify/functions/create-connected-account', {
-          email: this.claims.email,
-          connectedAccountId: this.claims.connectedAccountId
-        })
-        this.claims.connectedAccountId = RESPONSE.data.connectedAccountId
-        await this.$store.dispatch('saveClaims')
-        window.location.href = RESPONSE.data.url
-        this.$store.dispatch('endLoading')
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        const RESPONSE = await this.$axios.post(
+          "/.netlify/functions/create-connected-account",
+          {
+            email: this.claims.email,
+            connectedAccountId: this.claims.connectedAccountId,
+          }
+        );
+        this.claims.connectedAccountId = RESPONSE.data.connectedAccountId;
+        await this.$store.dispatch("saveClaims");
+        window.location.href = RESPONSE.data.url;
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.resolveError(e)
+        this.$parent.resolveError(e);
       }
     },
-    async checkStripeConnect () {
+    async checkStripeConnect() {
       if (!this.hasCheckedStripeConnect) {
-        const RESPONSE_STRIPE = await this.$axios.post('/.netlify/functions/check-connected-account', {
-          connectedAccountId: this.claims.connectedAccountId
-        })
-        this.$store.commit('setData', {
-          attr: 'isStripeConnected',
-          data: this.claims.email === 'demo@traininblocks.com' || RESPONSE_STRIPE.data
-        })
-        this.$store.commit('setData', {
-          attr: 'hasCheckedStripeConnect',
-          data: true
-        })
+        const RESPONSE_STRIPE = await this.$axios.post(
+          "/.netlify/functions/check-connected-account",
+          {
+            connectedAccountId: this.claims.connectedAccountId,
+          }
+        );
+        this.$store.commit("setData", {
+          attr: "isStripeConnected",
+          data:
+            this.claims.email === "demo@traininblocks.com" ||
+            RESPONSE_STRIPE.data,
+        });
+        this.$store.commit("setData", {
+          attr: "hasCheckedStripeConnect",
+          data: true,
+        });
       }
-    }
-    */
+    },
   },
 };
 </script>
