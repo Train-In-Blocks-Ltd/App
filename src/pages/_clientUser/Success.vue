@@ -4,7 +4,7 @@
   grid-gap: 2rem;
   .a_link {
     width: fit-content;
-    width: -moz-fit-content
+    width: -moz-fit-content;
   }
 }
 </style>
@@ -15,9 +15,7 @@
     <p class="text--small grey">
       Your payment was made successfully, your trainer will be notified.
     </p>
-    <p class="grey">
-      Redirecting in {{ timeout }}
-    </p>
+    <p class="grey">Redirecting in {{ timeout }}</p>
     <p class="grey">
       If your browser does not automatically redirect you, please click here...
     </p>
@@ -29,38 +27,34 @@
 
 <script>
 export default {
-  metaInfo  () {
+  metaInfo() {
     return {
-      title: 'Success'
-    }
+      title: "Success",
+    };
   },
-  data () {
+  data() {
     return {
-      timeout: 8
-    }
+      timeout: 8,
+    };
   },
-  async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
-    this.willBodyScroll(true)
-    await this.$parent.setup()
-    await this.$parent.getClientSideData()
-    this.$store.dispatch('endLoading')
+  async created() {
+    this.$store.commit("setData", {
+      attr: "loading",
+      data: true,
+    });
+    this.willBodyScroll(true);
+    await this.$parent.setup();
+    await this.$parent.getClientSideData();
+    this.$store.dispatch("endLoading");
   },
-  mounted () {
-    const self = this
-    setInterval(
-      function () {
-        self.timeout = self.timeout - 1
-      }, 1000
-    )
-    setTimeout(
-      function () {
-        self.$router.push('/clientUser')
-      }, 8000
-    )
-  }
-}
+  mounted() {
+    const self = this;
+    setInterval(function () {
+      self.timeout = self.timeout - 1;
+    }, 1000);
+    setTimeout(function () {
+      self.$router.push("/clientUser");
+    }, 8000);
+  },
+};
 </script>

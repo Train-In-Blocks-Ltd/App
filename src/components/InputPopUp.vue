@@ -12,45 +12,45 @@
   padding: 1rem;
   z-index: 1000;
   input {
-    margin-top: 1rem
+    margin-top: 1rem;
   }
   svg {
     cursor: pointer;
     height: 1.2rem;
     width: 1.2rem;
     position: fixed;
-    padding: .2rem;
-    right: -.5rem;
-    top: -.5rem;
+    padding: 0.2rem;
+    right: -0.5rem;
+    top: -0.5rem;
     background-color: var(--base);
     border: 1px solid var(--fore);
     border-radius: 50%;
     transition: var(--transition_standard);
     &:hover {
-      opacity: var(--light_opacity)
+      opacity: var(--light_opacity);
     }
   }
   .input_button_bar {
-    margin-top: 1rem
+    margin-top: 1rem;
   }
 }
 
 @supports not (backdrop-filter: blur(10px)) {
   .input_pop_up {
-    background-color: var(--fore)
+    background-color: var(--fore);
   }
 }
 @media (max-width: 992px) {
   .input_pop_up svg:hover {
     fill: black;
     background-color: var(--fore);
-    border-color: var(--base)
+    border-color: var(--base);
   }
 }
 @media (max-width: 768px) {
   .input_pop_up {
     width: 80%;
-    left: .4rem
+    left: 0.4rem;
   }
 }
 </style>
@@ -59,7 +59,7 @@
   <form
     v-if="reveal"
     class="input_pop_up"
-    @submit.prevent="resolvePromise(urlLink), reveal = false"
+    @submit.prevent="resolvePromise(urlLink), (reveal = false)"
   >
     <p>
       <b>
@@ -76,19 +76,20 @@
       placeholder="Link URL"
       aria-label="Link URL"
       required
-    >
+    />
     <input
       v-else-if="inputType === 'image'"
       id="img_uploader"
       type="file"
       accept=".png, .jpeg, .jpg, .webp, .gif"
-      @change="$parent.addImg(), reveal = false"
-    >
+      @change="$parent.addImg(), (reveal = false)"
+    />
     <div class="input_button_bar">
-      <button v-if="inputType !== 'image'">
-        Submit
-      </button>
-      <button class="red_button" @click="resolvePromise(false), reveal = false">
+      <button v-if="inputType !== 'image'">Submit</button>
+      <button
+        class="red_button"
+        @click="resolvePromise(false), (reveal = false)"
+      >
         Cancel
       </button>
     </div>
@@ -97,27 +98,26 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       header: null,
       desc: null,
       reveal: false,
       resolvePromise: undefined,
       urlLink: null,
-      inputType: null
-    }
+      inputType: null,
+    };
   },
   watch: {
-    reveal () {
-      this.$parent.$refs.overlay.show = this.reveal
+    reveal() {
+      this.$parent.$refs.overlay.show = this.reveal;
       if (!this.reveal) {
-        this.header = null
-        this.desc = null
+        this.header = null;
+        this.desc = null;
       }
-    }
+    },
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
@@ -129,16 +129,16 @@ export default {
      * @param {string} desc - The description of the alert.
      * @returns A promise to resolve the state of the alert.
      */
-    show (inputType, header, desc) {
-      this.inputType = inputType
-      this.reveal = true
-      this.header = header
-      this.desc = desc
-      this.urlLink = null
+    show(inputType, header, desc) {
+      this.inputType = inputType;
+      this.reveal = true;
+      this.header = header;
+      this.desc = desc;
+      this.urlLink = null;
       return new Promise((resolve) => {
-        this.resolvePromise = resolve
-      })
-    }
-  }
-}
+        this.resolvePromise = resolve;
+      });
+    },
+  },
+};
 </script>

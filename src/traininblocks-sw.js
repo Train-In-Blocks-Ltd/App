@@ -1,78 +1,74 @@
-import { BackgroundSyncPlugin } from 'workbox-background-sync'
-import { registerRoute } from 'workbox-routing'
-import { NetworkOnly, NetworkFirst } from 'workbox-strategies'
-import * as googleAnalytics from 'workbox-google-analytics'
-import { precacheAndRoute } from 'workbox-precaching'
+import { BackgroundSyncPlugin } from "workbox-background-sync";
+import { registerRoute } from "workbox-routing";
+import { NetworkOnly, NetworkFirst } from "workbox-strategies";
+import * as googleAnalytics from "workbox-google-analytics";
+import { precacheAndRoute } from "workbox-precaching";
 
-const CACHE = 'pwabuilder-precache'
+const CACHE = "pwabuilder-precache";
 
-const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)/]
+const networkFirstPaths = [/([\s\S]+)api.traininblocks.co([\s\S]+)/];
 
-const networkOnlyPaths = [/([\s\S]+).okta.com([\s\S]+)|([\s\S]+)app.traininblocks.com\/implicit([\s\S]+)/]
+const networkOnlyPaths = [
+  /([\s\S]+).okta.com([\s\S]+)|([\s\S]+)app.traininblocks.com\/implicit([\s\S]+)/,
+];
 
-const bgSyncPlugin = new BackgroundSyncPlugin('TrainInBlocks', {
-  maxRetentionTime: 24 * 60 // Retry for max of 24 Hours (specified in minutes)
-})
+const bgSyncPlugin = new BackgroundSyncPlugin("TrainInBlocks", {
+  maxRetentionTime: 24 * 60, // Retry for max of 24 Hours (specified in minutes)
+});
 
 networkFirstPaths.forEach((path) => {
   registerRoute(
     new RegExp(path),
     new NetworkFirst({
       cacheName: CACHE,
-      plugins: [
-        bgSyncPlugin
-      ]
+      plugins: [bgSyncPlugin],
     }),
-    'POST'
-  )
+    "POST"
+  );
   registerRoute(
     new RegExp(path),
     new NetworkFirst({
       cacheName: CACHE,
-      plugins: [
-        bgSyncPlugin
-      ]
+      plugins: [bgSyncPlugin],
     }),
-    'GET'
-  )
+    "GET"
+  );
   registerRoute(
     new RegExp(path),
     new NetworkFirst({
       cacheName: CACHE,
-      plugins: [
-        bgSyncPlugin
-      ]
+      plugins: [bgSyncPlugin],
     }),
-    'PUT'
-  )
-})
+    "PUT"
+  );
+});
 
 networkOnlyPaths.forEach((path) => {
   registerRoute(
     new RegExp(path),
     new NetworkOnly({
-      cacheName: CACHE
+      cacheName: CACHE,
     })
-  )
-})
+  );
+});
 
 registerRoute(
   /\/*/,
   new NetworkFirst({
-    cacheName: CACHE
+    cacheName: CACHE,
   })
-)
+);
 
 // Use with precache injection
-precacheAndRoute(self.__WB_MANIFEST)
+precacheAndRoute(self.__WB_MANIFEST);
 
-googleAnalytics.initialize()
+googleAnalytics.initialize();
 
-self.addEventListener('install', function (event) {
-  self.skipWaiting()
-})
+self.addEventListener("install", function (event) {
+  self.skipWaiting();
+});
 
-self.addEventListener('activate', () => {
+self.addEventListener("activate", () => {
   /* eslint-disable-next-line */
-  clients.claim()
-})
+  clients.claim();
+});

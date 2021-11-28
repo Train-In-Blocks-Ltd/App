@@ -15,38 +15,38 @@
     height: 1.2rem;
     width: 1.2rem;
     position: fixed;
-    padding: .2rem;
-    right: -.5rem;
-    top: -.5rem;
+    padding: 0.2rem;
+    right: -0.5rem;
+    top: -0.5rem;
     background-color: var(--base);
     border: 1px solid var(--fore);
     border-radius: 50%;
     transition: var(--transition_standard);
     &:hover {
-      opacity: var(--light_opacity)
+      opacity: var(--light_opacity);
     }
   }
   .close_button {
-    margin-top: .6rem
+    margin-top: 0.6rem;
   }
 }
 
 @supports not (backdrop-filter: blur(10px)) {
   .response_pop_up {
-    background-color: var(--fore)
+    background-color: var(--fore);
   }
 }
 @media (max-width: 992px) {
   .response_pop_up svg:hover {
     fill: black;
     background-color: var(--fore);
-    border-color: var(--base)
+    border-color: var(--base);
   }
 }
 @media (max-width: 768px) {
   .response_pop_up {
     max-width: 300px;
-    left: .4rem
+    left: 0.4rem;
   }
 }
 </style>
@@ -64,7 +64,9 @@
     <button
       v-if="persist"
       class="close_button"
-      @click="header = null, desc = null, persist = false, reveal = false"
+      @click="
+        (header = null), (desc = null), (persist = false), (reveal = false)
+      "
     >
       Okay
     </button>
@@ -73,34 +75,33 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       reveal: false,
       header: null,
       desc: null,
       persist: false,
-      cover: false
-    }
+      cover: false,
+    };
   },
   watch: {
-    reveal () {
+    reveal() {
       if (this.cover) {
-        this.$parent.$refs.overlay.show = this.reveal
+        this.$parent.$refs.overlay.show = this.reveal;
       }
       if (!this.persist) {
         if (!this.reveal) {
-          this.header = null
-          this.desc = null
-          this.persist = false
+          this.header = null;
+          this.desc = null;
+          this.persist = false;
         }
         setTimeout(() => {
-          this.reveal = false
-        }, 3000)
+          this.reveal = false;
+        }, 3000);
       }
-    }
+    },
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
@@ -112,13 +113,13 @@ export default {
      * @param {boolean} persist - Whether the alert will persist until the user closes it.
      * @param {boolean} cover - Whether the alert will also have a dark overlay to prevent user actions on other elements.
      */
-    show (header, desc, persist, cover) {
-      this.header = header
-      this.desc = desc
-      this.persist = persist || false
-      this.cover = cover || false
-      this.reveal = true
-    }
-  }
-}
+    show(header, desc, persist, cover) {
+      this.header = header;
+      this.desc = desc;
+      this.persist = persist || false;
+      this.cover = cover || false;
+      this.reveal = true;
+    },
+  },
+};
 </script>

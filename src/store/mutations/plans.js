@@ -9,11 +9,13 @@ export default {
    * @param {string} payload.block_color - The colors of each micro-cycle of the plan.
    * @param {array} payload.sessions - Optional, the array of sessions for the plan.
    */
-  addNewPlan (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
+  addNewPlan(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.client_id)
+    );
     CLIENT.plans.push({
-      ...payload
-    })
+      ...payload,
+    });
   },
 
   /**
@@ -26,11 +28,13 @@ export default {
    * @param {string} payload.block_color - The colors of each micro-cycle of the plan.
    * @param {array} payload.sessions - Optional, the array of sessions for the plan.
    */
-  updateEntirePlan (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
+  updateEntirePlan(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.client_id)
+    );
     for (let plan of CLIENT.plans) {
       if (plan.id === payload.id) {
-        plan = payload
+        plan = payload;
       }
     }
   },
@@ -42,10 +46,14 @@ export default {
    * @param {number} payload.attr - The state to change.
    * @param {*} payload.data - The new data.
    */
-  updatePlanAttr (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-    const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-    PLAN[payload.attr] = payload.data
+  updatePlanAttr(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.clientId)
+    );
+    const PLAN = CLIENT.plans.find(
+      (plan) => plan.id === parseInt(payload.planId)
+    );
+    PLAN[payload.attr] = payload.data;
   },
 
   /**
@@ -53,9 +61,13 @@ export default {
    * @param {number} payload.clientId - The id of the client.
    * @param {number} payload.planId - The id of the plan.
    */
-  removePlan (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-    const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-    CLIENT.plans.splice(CLIENT.plans.indexOf(PLAN), 1)
-  }
-}
+  removePlan(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.clientId)
+    );
+    const PLAN = CLIENT.plans.find(
+      (plan) => plan.id === parseInt(payload.planId)
+    );
+    CLIENT.plans.splice(CLIENT.plans.indexOf(PLAN), 1);
+  },
+};

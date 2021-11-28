@@ -1,29 +1,28 @@
 <style lang="scss">
-
 /* Editor objects */
 .editor_object_standard {
   border: 3px solid var(--base);
   border-radius: 10px;
   background: var(--back);
-  transition: .6s border cubic-bezier(.165, .84, .44, 1);
+  transition: 0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
   h3 {
     position: relative;
     left: 2rem;
-    padding: .6rem;
+    padding: 0.6rem;
     width: fit-content;
     width: -moz-fit-content;
     background: var(--base);
     color: var(--fore);
-    border-radius: 0 0 10px 10px
+    border-radius: 0 0 10px 10px;
   }
   #wrapper--rich_editor {
     background: var(--back);
-    margin: 2rem
+    margin: 2rem;
   }
 
   /* State */
   &.is-active {
-    opacity: .4
+    opacity: 0.4;
   }
 }
 .editor_object_complex {
@@ -32,17 +31,17 @@
   background: var(--back);
   border: 2px solid var(--base);
   border-radius: 10px;
-  transition: .6s border cubic-bezier(.165, .84, .44, 1);
+  transition: 0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
 
   /* State */
   &.is-active {
-    opacity: .4
+    opacity: 0.4;
   }
 }
 
 /* Editor */
 @mixin todo-list {
-  ul[data-type='taskList'] {
+  ul[data-type="taskList"] {
     list-style: none;
     padding: 0;
     li {
@@ -50,7 +49,7 @@
       align-items: center;
       label {
         flex: 0 0 auto;
-        margin-right: .5rem
+        margin-right: 0.5rem;
       }
     }
   }
@@ -61,16 +60,17 @@
   border: 2px solid var(--base_faint);
   border-radius: 10px;
   margin-top: 1rem;
-  transition: .6s opacity cubic-bezier(.165, .84, .44, 1), .6s border cubic-bezier(.165, .84, .44, 1);
+  transition: 0.6s opacity cubic-bezier(0.165, 0.84, 0.44, 1),
+    0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
   &:hover {
     border: 2px solid var(--base_light);
-    opacity: var(--light_opacity)
+    opacity: var(--light_opacity);
   }
 }
 .placeholder {
   @include editor-main;
 
-  outline: none
+  outline: none;
 }
 div#rich_show_content {
   @include todo-list;
@@ -80,30 +80,30 @@ div#rich_show_content {
   grid-template-columns: 1fr 24px;
   > div:first-child > div,
   > div:first-child > p {
-    margin: .6rem 0;
+    margin: 0.6rem 0;
     outline: none;
     -moz-appearance: none;
-    -webkit-appearance: none
+    -webkit-appearance: none;
   }
   iframe {
-    display: none
+    display: none;
   }
   img {
     cursor: pointer;
     border-radius: 10px;
     max-width: 40%;
     margin: 1rem 0;
-    transition: .4s all cubic-bezier(.165, .84, .44, 1)
+    transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   a {
-    color: var(--link)
+    color: var(--link);
   }
   .ProseMirror {
-    outline: none
+    outline: none;
   }
 }
 button.menu_button:focus {
-  box-shadow: none
+  box-shadow: none;
 }
 div#rich_editor {
   @include todo-list;
@@ -113,33 +113,33 @@ div#rich_editor {
     -webkit-appearance: none;
     > div,
     > p {
-      margin: .6rem 0
+      margin: 0.6rem 0;
     }
     iframe {
-      display: none
+      display: none;
     }
     img {
       cursor: pointer;
       border-radius: 10px;
       max-width: 40%;
       margin: 1rem 0;
-      transition: .4s all cubic-bezier(.165, .84, .44, 1);
+      transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
       &:hover {
-        opacity: var(--light_opacity)
+        opacity: var(--light_opacity);
       }
     }
     a {
-      color: var(--link)
+      color: var(--link);
     }
   }
 }
 svg.edit_icon {
   &.placeholder_icon {
-    float: right
+    float: right;
   }
   path {
     stroke: var(--base_light);
-    transition: var(--transition_standard)
+    transition: var(--transition_standard);
   }
 }
 
@@ -147,32 +147,31 @@ svg.edit_icon {
 @media (max-width: 768px) {
   div#rich_editor > div[contenteditable] img,
   div#rich_show_content img {
-    max-width: 100%
+    max-width: 100%;
   }
 }
 @media (max-width: 576px) {
   .editor_object_standard {
     h3 {
-      left: 1rem
+      left: 1rem;
     }
     #wrapper--rich_editor {
-      margin: 1rem
+      margin: 1rem;
     }
   }
   .editor_object_complex {
-    padding: 1rem
+    padding: 1rem;
   }
 }
 @media (max-width: 768px) {
   div#rich_show_content img,
   div#rich_show_content iframe {
-    max-width: 100%
+    max-width: 100%;
   }
 }
 </style>
 
 <style lang="scss" scoped>
-
 // -----------------------------
 // Menu and placeholder
 // -----------------------------
@@ -181,7 +180,7 @@ svg.edit_icon {
 [data-placeholder]:empty:before {
   content: attr(data-placeholder);
   color: #888888;
-  font-style: italic
+  font-style: italic;
 }
 
 /* Outer container of menu */
@@ -199,17 +198,17 @@ svg.edit_icon {
     padding: 0 1rem;
     transition: var(--transition_standard);
     &.editorFocused {
-      border: 2px solid var(--base)
+      border: 2px solid var(--base);
     }
     button {
       padding: 0;
-      margin: .8rem 1rem .6rem 0;
+      margin: 0.8rem 1rem 0.6rem 0;
       color: var(--base);
-      background-color: transparent
+      background-color: transparent;
     }
     svg {
       height: 20px;
-      width: 20px
+      width: 20px;
     }
   }
 }
@@ -221,38 +220,38 @@ svg.edit_icon {
   display: grid;
   grid-gap: 1rem;
   #templates_search_none {
-    display: none
+    display: none;
   }
   .close_icon {
     display: flex;
-    justify-self: end
+    justify-self: end;
   }
   h3 {
-    margin-top: 1rem
+    margin-top: 1rem;
   }
   .templates_container {
     display: grid;
     grid-gap: 1rem;
     .template_item {
       display: grid;
-      grid-template-columns: .5fr 1fr;
+      grid-template-columns: 0.5fr 1fr;
       grid-gap: 2rem;
       button {
-        width: fit-content
+        width: fit-content;
       }
       svg {
-        margin: auto 0 auto .6rem
+        margin: auto 0 auto 0.6rem;
       }
       .preview_html {
         max-height: 400px;
-        font-size: .8rem;
+        font-size: 0.8rem;
         padding: 1rem;
         background-color: var(--fore);
         border: 2px solid var(--base);
         border-radius: 5px;
         overflow-y: auto;
         &::-webkit-scrollbar {
-          width: 3px
+          width: 3px;
         }
       }
     }
@@ -271,15 +270,15 @@ div#rich_editor {
   transition: var(--transition_standard);
   &.editorFocused {
     border: 2px solid var(--base);
-    border-top: none
+    border-top: none;
   }
 }
 .bottom_bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: .6rem;
+  grid-gap: 0.6rem;
   margin-top: 1rem;
-  z-index: 1
+  z-index: 1;
 }
 
 /* Responsive */
@@ -290,9 +289,9 @@ div#rich_editor {
       .template_item {
         display: flex;
         flex-direction: column-reverse;
-        grid-gap: .6rem;
+        grid-gap: 0.6rem;
         button {
-          width: 100%
+          width: 100%;
         }
       }
     }
@@ -302,7 +301,10 @@ div#rich_editor {
 
 <template>
   <div id="wrapper--rich_editor">
-    <div :class="{ opened_sections: showAddTemplate }" class="section_overlay" />
+    <div
+      :class="{ opened_sections: showAddTemplate }"
+      class="section_overlay"
+    />
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <input-pop-up ref="input_pop_up" />
     </transition>
@@ -312,13 +314,16 @@ div#rich_editor {
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <global-overlay ref="overlay" />
     </transition>
-    <div v-if="showAddTemplate" class="tab_overlay_content fadeIn delay fill_mode_both small_border_radius">
+    <div
+      v-if="showAddTemplate"
+      class="tab_overlay_content fadeIn delay fill_mode_both small_border_radius"
+    >
       <div class="template_menu">
         <inline-svg
           class="close_icon cursor"
           :src="require('../assets/svg/close.svg')"
           aria-label="Close"
-          @click="showAddTemplate = false, search = ''"
+          @click="(showAddTemplate = false), (search = '')"
         />
         <input
           v-if="dataForTemplates.length !== 0"
@@ -328,10 +333,8 @@ div#rich_editor {
           rel="search"
           placeholder="Search templates"
           @input="isSearchEmpty()"
-        >
-        <h3 v-show="search === ''">
-          System templates
-        </h3>
+        />
+        <h3 v-show="search === ''">System templates</h3>
         <div class="templates_container">
           <div
             v-for="(example, exampleIndex) in exampleTemplates"
@@ -339,38 +342,47 @@ div#rich_editor {
             :key="`example_${exampleIndex}`"
             class="template_item"
           >
-            <button @click="editor.commands.insertContent(example.html), showAddTemplate = false">
+            <button
+              @click="
+                editor.commands.insertContent(example.html),
+                  (showAddTemplate = false)
+              "
+            >
               {{ example.name }}
             </button>
             <div class="preview_html" v-html="example.html" />
           </div>
         </div>
-        <h3>
-          Your templates
-        </h3>
+        <h3>Your templates</h3>
         <div class="templates_container">
           <div
             v-for="(item, index) in dataForTemplates"
-            v-show="((!search) || ((item.name).toLowerCase()).startsWith(search.toLowerCase()))"
+            v-show="
+              !search ||
+              item.name.toLowerCase().startsWith(search.toLowerCase())
+            "
             :key="'template-' + index"
             class="template_item"
           >
-            <button @click="editor.commands.insertContent(item.template), showAddTemplate = false">
+            <button
+              @click="
+                editor.commands.insertContent(item.template),
+                  (showAddTemplate = false)
+              "
+            >
               {{ item.name }}
             </button>
             <div class="preview_html" v-html="item.template" />
           </div>
         </div>
-        <p id="templates_search_none">
-          No templates found
-        </p>
+        <p id="templates_search_none">No templates found</p>
       </div>
     </div>
     <div
       v-if="!editState && !test_empty_html(value)"
       id="rich_show_content"
       class="fadeIn"
-      @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
+      @click="(editState = true), $emit('on-edit-change', 'edit', itemId)"
     >
       <div v-html="updateHTML(value, true)" />
       <inline-svg
@@ -404,7 +416,9 @@ div#rich_editor {
               title="Underline"
               @click="editor.chain().focus().toggleUnderline().run()"
             >
-              <inline-svg :src="require('../assets/svg/editor/underline.svg')" />
+              <inline-svg
+                :src="require('../assets/svg/editor/underline.svg')"
+              />
             </button>
             <button
               class="fadeIn menu_button"
@@ -428,7 +442,9 @@ div#rich_editor {
               title="Checklist"
               @click="editor.chain().focus().toggleTaskList().run()"
             >
-              <inline-svg :src="require('../assets/svg/editor/checklist.svg')" />
+              <inline-svg
+                :src="require('../assets/svg/editor/checklist.svg')"
+              />
             </button>
             <button
               class="fadeIn menu_button"
@@ -436,20 +452,33 @@ div#rich_editor {
               title="Horizontal line"
               @click="editor.chain().focus().setHorizontalRule().run()"
             >
-              <inline-svg :src="require('../assets/svg/editor/horizontal-rule.svg')" />
+              <inline-svg
+                :src="require('../assets/svg/editor/horizontal-rule.svg')"
+              />
             </button>
             <button
               class="fadeIn menu_button"
               :class="{ 'is-active': editor.isActive('link') }"
               title="Hyperlink"
-              @click="editor.isActive('link') ? editor.chain().focus().unsetLink().run() : setLinkUrl()"
+              @click="
+                editor.isActive('link')
+                  ? editor.chain().focus().unsetLink().run()
+                  : setLinkUrl()
+              "
             >
               <inline-svg :src="require('../assets/svg/editor/link.svg')" />
             </button>
             <button
               class="fadeIn menu_button"
               title="Image"
-              @click="showAddTemplate = false, $refs.input_pop_up.show('image', 'Select your image to upload', 'Make sure that it\'s less than 1MB')"
+              @click="
+                (showAddTemplate = false),
+                  $refs.input_pop_up.show(
+                    'image',
+                    'Select your image to upload',
+                    'Make sure that it\'s less than 1MB'
+                  )
+              "
             >
               <inline-svg :src="require('../assets/svg/editor/image.svg')" />
             </button>
@@ -457,7 +486,10 @@ div#rich_editor {
               v-if="dataForTemplates !== undefined && dataForTemplates !== null"
               class="fadeIn menu_button"
               title="Template"
-              @click="showAddTemplate = !showAddTemplate, $parent.goToEvent(itemId, weekId)"
+              @click="
+                (showAddTemplate = !showAddTemplate),
+                  $parent.goToEvent(itemId, weekId)
+              "
             >
               <inline-svg :src="require('../assets/svg/editor/template.svg')" />
             </button>
@@ -487,7 +519,7 @@ div#rich_editor {
     <p
       v-else
       class="placeholder grey fadeIn"
-      @click="editState = true, $emit('on-edit-change', 'edit', itemId)"
+      @click="(editState = true), $emit('on-edit-change', 'edit', itemId)"
     >
       {{ emptyPlaceholder }}
       <inline-svg
@@ -496,12 +528,24 @@ div#rich_editor {
       />
     </p>
     <div v-if="editState" class="bottom_bar fadeIn">
-      <button @click="saving = true, editState = false , $emit('on-edit-change', 'save', itemId), willBodyScroll(true)">
+      <button
+        @click="
+          (saving = true),
+            (editState = false),
+            $emit('on-edit-change', 'save', itemId),
+            willBodyScroll(true)
+        "
+      >
         Save
       </button>
       <button
         class="red_button"
-        @click="saving = false, editState = false , $emit('on-edit-change', 'cancel', itemId), willBodyScroll(true)"
+        @click="
+          (saving = false),
+            (editState = false),
+            $emit('on-edit-change', 'cancel', itemId),
+            willBodyScroll(true)
+        "
       >
         Cancel
       </button>
@@ -510,18 +554,18 @@ div#rich_editor {
 </template>
 
 <script>
-import Compressor from 'compressorjs'
-import { Editor, EditorContent } from '@tiptap/vue-2'
-import { defaultExtensions } from '@tiptap/starter-kit'
-import Undeline from '@tiptap/extension-underline'
-import Link from '@tiptap/extension-link'
-import TaskList from '@tiptap/extension-task-list'
-import TaskItem from '@tiptap/extension-task-item'
-import LazyImage from './js/LazyImage'
+import Compressor from "compressorjs";
+import { Editor, EditorContent } from "@tiptap/vue-2";
+import { defaultExtensions } from "@tiptap/starter-kit";
+import Undeline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
+import TaskList from "@tiptap/extension-task-list";
+import TaskItem from "@tiptap/extension-task-item";
+import LazyImage from "./js/LazyImage";
 
 export default {
   components: {
-    EditorContent
+    EditorContent,
   },
   props: {
     itemId: [Number, String],
@@ -530,11 +574,10 @@ export default {
     value: String,
     emptyPlaceholder: String,
     dataForTemplates: Array,
-    forceStop: Number
+    forceStop: Number,
   },
-  data () {
+  data() {
     return {
-
       // Editor
       initialValue: null,
       editor: null,
@@ -542,7 +585,7 @@ export default {
       caretInEditor: false,
       cloudinaryImages: {
         startingWith: [],
-        endingWith: []
+        endingWith: [],
       },
       newImgs: [],
       saving: false,
@@ -552,26 +595,35 @@ export default {
       linkMenuIsActive: false,
 
       // Template
-      search: '',
+      search: "",
       showAddTemplate: false,
       exampleTemplates: [
-        { name: 'Track with sets, reps, and load', html: '<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>' },
-        { name: 'Track with sets, reps', html: '<div>[ EXERCISE: SETS x REPS ]</div>' },
-        { name: 'Track with other measurements', html: '<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>' }
-      ]
-    }
+        {
+          name: "Track with sets, reps, and load",
+          html: "<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>",
+        },
+        {
+          name: "Track with sets, reps",
+          html: "<div>[ EXERCISE: SETS x REPS ]</div>",
+        },
+        {
+          name: "Track with other measurements",
+          html: "<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>",
+        },
+      ],
+    };
   },
   watch: {
-    showAddTemplate () {
+    showAddTemplate() {
       if (this.showAddTemplate) {
-        this.willBodyScroll(false)
+        this.willBodyScroll(false);
       } else {
-        this.willBodyScroll(true)
+        this.willBodyScroll(true);
       }
     },
-    editState () {
+    editState() {
       if (this.editState) {
-        this.initialValue = this.value
+        this.initialValue = this.value;
         this.editor = new Editor({
           content: this.value,
           extensions: [
@@ -580,61 +632,63 @@ export default {
             Link,
             TaskList,
             TaskItem,
-            LazyImage
+            LazyImage,
           ],
           onUpdate: () => {
-            this.cloudinaryImages.endingWith = this.imgFinder(this.value)
-            this.$emit('input', this.editor.getHTML())
+            this.cloudinaryImages.endingWith = this.imgFinder(this.value);
+            this.$emit("input", this.editor.getHTML());
           },
           onFocus: () => {
-            this.caretInEditor = true
-            this.showAddTemplate = false
-            this.willBodyScroll(true)
+            this.caretInEditor = true;
+            this.showAddTemplate = false;
+            this.willBodyScroll(true);
           },
           onBlur: () => {
-            this.cloudinaryImages.endingWith = this.imgFinder(this.value)
-            this.caretInEditor = false
+            this.cloudinaryImages.endingWith = this.imgFinder(this.value);
+            this.caretInEditor = false;
           },
           onDestroy: async () => {
             if (!this.saving) {
-              await this.cancelledRemoveNewImgs()
-              this.cloudinaryImages.endingWith = this.cloudinaryImages.startingWith
+              await this.cancelledRemoveNewImgs();
+              this.cloudinaryImages.endingWith =
+                this.cloudinaryImages.startingWith;
             }
             this.cloudinaryImages.startingWith.forEach(async (url) => {
               if (!this.cloudinaryImages.endingWith.includes(url)) {
-                await this.$axios.post('/.netlify/functions/delete-image', { file: url })
+                await this.$axios.post("/.netlify/functions/delete-image", {
+                  file: url,
+                });
               }
-            })
-            this.initialValue = null
+            });
+            this.initialValue = null;
             this.cloudinaryImages = {
               startingWith: [],
-              endingWith: []
-            }
-            this.newImgs = []
-          }
-        })
+              endingWith: [],
+            };
+            this.newImgs = [];
+          },
+        });
 
-        const FOUND_IMGS = this.imgFinder(this.value)
-        this.cloudinaryImages.startingWith = FOUND_IMGS
-        this.cloudinaryImages.endingWith = FOUND_IMGS
+        const FOUND_IMGS = this.imgFinder(this.value);
+        this.cloudinaryImages.startingWith = FOUND_IMGS;
+        this.cloudinaryImages.endingWith = FOUND_IMGS;
       } else {
-        this.editor.destroy()
-        this.editor = null
+        this.editor.destroy();
+        this.editor = null;
       }
     },
-    forceStop () {
+    forceStop() {
       if (this.editing !== this.itemId) {
-        this.editState = false
+        this.editState = false;
       }
-    }
+    },
   },
-  beforeDestroy () {
+  beforeDestroy() {
     if (this.editor) {
-      this.editor.destroy()
+      this.editor.destroy();
     }
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
@@ -644,100 +698,135 @@ export default {
      * @param {string} html - The html to search.
      * @returns An array of all the found ids of cloudinary images.
      */
-    imgFinder (html) {
-      const IMG_REGEX = /<img.*?src="(.*?)".*?>/gi
-      const RETURN_ARR = []
-      let finder
+    imgFinder(html) {
+      const IMG_REGEX = /<img.*?src="(.*?)".*?>/gi;
+      const RETURN_ARR = [];
+      let finder;
       while ((finder = IMG_REGEX.exec(html)) !== null) {
         if (finder.index === IMG_REGEX.lastIndex) {
-          IMG_REGEX.lastIndex++
+          IMG_REGEX.lastIndex++;
         }
         finder.forEach(async (match, groupIndex) => {
           if (groupIndex === 1) {
-            if (match.includes('base64')) {
-              await this.$axios.post('/.netlify/functions/upload-image', { file: match }).then((response) => {
-                RETURN_ARR.push(response.data.url)
-                this.cloudinaryImages.startingWith.push(response.data.url)
-                this.cloudinaryImages.endingWith.push(response.data.url)
-                this.newImgs.push(response.data.url)
-                this.initialValue = this.initialValue.replace(`${match}"`, `${response.data.url}" loading="lazy"`)
-                this.editor.commands.setContent(this.initialValue)
-                this.$emit('input', this.editor.getHTML())
-              })
+            if (match.includes("base64")) {
+              await this.$axios
+                .post("/.netlify/functions/upload-image", { file: match })
+                .then((response) => {
+                  RETURN_ARR.push(response.data.url);
+                  this.cloudinaryImages.startingWith.push(response.data.url);
+                  this.cloudinaryImages.endingWith.push(response.data.url);
+                  this.newImgs.push(response.data.url);
+                  this.initialValue = this.initialValue.replace(
+                    `${match}"`,
+                    `${response.data.url}" loading="lazy"`
+                  );
+                  this.editor.commands.setContent(this.initialValue);
+                  this.$emit("input", this.editor.getHTML());
+                });
             } else {
-              RETURN_ARR.push(match)
+              RETURN_ARR.push(match);
             }
-          } else if (match.includes('base64')) {
-            const WRAPPED_REGEX = /<p>(<img.*?">).*?<\/p>/gi
-            let wrappedFinder
-            while ((wrappedFinder = WRAPPED_REGEX.exec(this.initialValue)) !== null) {
+          } else if (match.includes("base64")) {
+            const WRAPPED_REGEX = /<p>(<img.*?">).*?<\/p>/gi;
+            let wrappedFinder;
+            while (
+              (wrappedFinder = WRAPPED_REGEX.exec(this.initialValue)) !== null
+            ) {
               if (wrappedFinder.index === WRAPPED_REGEX.lastIndex) {
-                WRAPPED_REGEX.lastIndex++
+                WRAPPED_REGEX.lastIndex++;
               }
-              this.initialValue = this.initialValue.replace(wrappedFinder[0], wrappedFinder[1])
+              this.initialValue = this.initialValue.replace(
+                wrappedFinder[0],
+                wrappedFinder[1]
+              );
             }
           }
-        })
+        });
       }
-      return RETURN_ARR
+      return RETURN_ARR;
     },
 
-    cancelledRemoveNewImgs () {
+    cancelledRemoveNewImgs() {
       if (this.newImgs) {
         this.newImgs.forEach(async (url) => {
-          await this.$axios.post('/.netlify/functions/delete-image', { file: url })
-        })
+          await this.$axios.post("/.netlify/functions/delete-image", {
+            file: url,
+          });
+        });
       }
     },
 
     /**
      * Adds tracked data custom node.
      */
-    addTrackData () {
-      this.editor.commands.insertContent('<div data-type="protocol-item"></div>')
+    addTrackData() {
+      this.editor.commands.insertContent(
+        '<div data-type="protocol-item"></div>'
+      );
     },
 
     /**
      * Sets the link of the selected text.
      */
-    async setLinkUrl () {
-      const SRC = await this.$refs.input_pop_up.show('link', 'Enter the URL link', 'Make sure to include the https://')
+    async setLinkUrl() {
+      const SRC = await this.$refs.input_pop_up.show(
+        "link",
+        "Enter the URL link",
+        "Make sure to include the https://"
+      );
       if (!SRC) {
-        return
+        return;
       }
-      this.editor.chain().focus().setLink({ href: SRC }).run()
+      this.editor.chain().focus().setLink({ href: SRC }).run();
     },
 
     /**
      * Adds an image.
      */
-    addImg () {
-      const FILE = document.getElementById('img_uploader').files[0]
-      const READER = new FileReader()
-      READER.addEventListener('load', () => {
-        this.$axios.post('/.netlify/functions/upload-image', { file: READER.result.toString() }).then((response) => {
-          this.editor.chain().focus().setImage({ src: response.data.url, loading: 'lazy' }).run()
-          this.cloudinaryImages.startingWith.push(response.data.url)
-          this.cloudinaryImages.endingWith.push(response.data.url)
-          this.newImgs.push(response.data.url)
-        })
-      }, false)
+    addImg() {
+      const FILE = document.getElementById("img_uploader").files[0];
+      const READER = new FileReader();
+      READER.addEventListener(
+        "load",
+        () => {
+          this.$axios
+            .post("/.netlify/functions/upload-image", {
+              file: READER.result.toString(),
+            })
+            .then((response) => {
+              this.editor
+                .chain()
+                .focus()
+                .setImage({ src: response.data.url, loading: "lazy" })
+                .run();
+              this.cloudinaryImages.startingWith.push(response.data.url);
+              this.cloudinaryImages.endingWith.push(response.data.url);
+              this.newImgs.push(response.data.url);
+            });
+        },
+        false
+      );
 
       if (FILE) {
         if (FILE.size < 1100000) {
           // eslint-disable-next-line
           new Compressor(FILE, {
             quality: 0.6,
-            success (result) {
-              READER.readAsDataURL(result)
+            success(result) {
+              READER.readAsDataURL(result);
             },
-            error (err) {
-              console.error(err.message)
-            }
-          })
+            error(err) {
+              console.error(err.message);
+            },
+          });
         } else {
-          this.$refs.response_pop_up.show('File size is too big', 'Please compress it to 1MB or lower', true, true)
-          document.getElementById('img_uploader').value = ''
+          this.$refs.response_pop_up.show(
+            "File size is too big",
+            "Please compress it to 1MB or lower",
+            true,
+            true
+          );
+          document.getElementById("img_uploader").value = "";
         }
       }
     },
@@ -749,31 +838,38 @@ export default {
     /**
      * Checks if the template search is empty.
      */
-    isSearchEmpty () {
-      let showNoneMsg = true
+    isSearchEmpty() {
+      let showNoneMsg = true;
       this.dataForTemplates.forEach((template) => {
-        if (((template.name).toLowerCase()).startsWith(this.search.toLowerCase()) && this.search !== '') {
-          showNoneMsg = false
+        if (
+          template.name.toLowerCase().startsWith(this.search.toLowerCase()) &&
+          this.search !== ""
+        ) {
+          showNoneMsg = false;
         }
-      })
-      document.getElementById('templates_search_none').style.display = showNoneMsg && this.search !== '' ? 'block' : 'none'
+      });
+      document.getElementById("templates_search_none").style.display =
+        showNoneMsg && this.search !== "" ? "block" : "none";
     },
 
     /**
      * Tests injected html to see if it's empty.
      */
-    test_empty_html (text) {
+    test_empty_html(text) {
       if (text !== null) {
-        const REMOVE_TAGS_AND_SPACE = text.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, '').replace(/ /g, '')
-        if (REMOVE_TAGS_AND_SPACE === '') {
-          return true
+        const REMOVE_TAGS_AND_SPACE = text
+          .replace(/<[^>]*>?/gm, "")
+          .replace(/&nbsp;/g, "")
+          .replace(/ /g, "");
+        if (REMOVE_TAGS_AND_SPACE === "") {
+          return true;
         } else {
-          return false
+          return false;
         }
       } else {
-        return true
+        return true;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

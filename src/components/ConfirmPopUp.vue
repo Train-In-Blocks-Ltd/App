@@ -11,19 +11,19 @@
   padding: 1rem;
   z-index: 1000;
   .confirm_button_bar {
-    margin-top: 1rem
+    margin-top: 1rem;
   }
 }
 
 @supports not (backdrop-filter: blur(10px)) {
   .confirm_pop_up {
-    background-color: var(--fore)
+    background-color: var(--fore);
   }
 }
 @media (max-width: 768px) {
   .confirm_pop_up {
     max-width: 300px;
-    left: .4rem
+    left: 0.4rem;
   }
 }
 </style>
@@ -39,10 +39,11 @@
       {{ desc }}
     </p>
     <div class="confirm_button_bar">
-      <button @click="resolvePromise(true), reveal = false">
-        Confirm
-      </button>
-      <button class="red_button" @click="resolvePromise(false), reveal = false">
+      <button @click="resolvePromise(true), (reveal = false)">Confirm</button>
+      <button
+        class="red_button"
+        @click="resolvePromise(false), (reveal = false)"
+      >
         Cancel
       </button>
     </div>
@@ -51,25 +52,24 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       header: null,
       desc: null,
       reveal: false,
-      resolvePromise: undefined
-    }
+      resolvePromise: undefined,
+    };
   },
   watch: {
-    reveal () {
-      this.$parent.$refs.overlay.show = this.reveal
+    reveal() {
+      this.$parent.$refs.overlay.show = this.reveal;
       if (!this.reveal) {
-        this.header = null
-        this.desc = null
+        this.header = null;
+        this.desc = null;
       }
-    }
+    },
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
@@ -80,14 +80,14 @@ export default {
      * @param {string} desc - The description of the alert.
      * @returns A promise to resolve the state of the alert.
      */
-    show (header, desc) {
-      this.reveal = true
-      this.header = header
-      this.desc = desc
+    show(header, desc) {
+      this.reveal = true;
+      this.header = header;
+      this.desc = desc;
       return new Promise((resolve) => {
-        this.resolvePromise = resolve
-      })
-    }
-  }
-}
+        this.resolvePromise = resolve;
+      });
+    },
+  },
+};
 </script>

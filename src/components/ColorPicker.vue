@@ -9,7 +9,7 @@
     margin-right: 1rem;
     transition: var(--transition_standard);
     &:hover {
-      opacity: var(--light_opacity)
+      opacity: var(--light_opacity);
     }
   }
 }
@@ -20,7 +20,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 1rem;
     .color {
-      width: 100%
+      width: 100%;
     }
   }
 }
@@ -41,25 +41,25 @@
 <script>
 export default {
   props: {
-    injectedColor: String
+    injectedColor: String,
   },
-  data () {
+  data() {
     return {
       selectedColor: null,
       colorPalette: [
-        { color: '#EB4034' },
-        { color: '#EB9634' },
-        { color: '#34EB6B' },
-        { color: '#346BEB' },
-        { color: '#303030' }
-      ]
-    }
+        { color: "#EB4034" },
+        { color: "#EB9634" },
+        { color: "#34EB6B" },
+        { color: "#346BEB" },
+        { color: "#303030" },
+      ],
+    };
   },
   watch: {
-    selectedColor () {
-      this.$emit('update:injectedColor', this.selectedColor)
-      this.$parent.updateSessionColor()
-    }
-  }
-}
+    selectedColor() {
+      this.$emit("update:injectedColor", this.selectedColor);
+      this.$parent.updateSessionColor();
+    },
+  },
+};
 </script>

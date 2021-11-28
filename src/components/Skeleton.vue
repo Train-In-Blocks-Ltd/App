@@ -1,57 +1,68 @@
 <style lang="scss" scoped>
 .large_margin {
-  margin: 4rem 0
+  margin: 4rem 0;
 }
 .small_margin {
-  margin: 2rem 0
+  margin: 2rem 0;
 }
 .large_padding {
-  padding: 2rem
+  padding: 2rem;
 }
 .small_padding {
-  padding: 1rem
+  padding: 1rem;
 }
 .mini_padding {
-  padding: .6rem
+  padding: 0.6rem;
 }
-.plans_layout > div, .rect {
+.plans_layout > div,
+.rect {
   display: grid;
   grid-gap: 2rem;
   width: 100%;
   background-color: var(--skeleton_2);
   border-radius: 10px;
-  animation: fade .6s linear infinite alternate-reverse
+  animation: fade 0.6s linear infinite alternate-reverse;
 }
-.rect__title, .rect__content, .rect__box, .rect__large_text, .rect__small_text {
-  background: linear-gradient(90deg, var(--skeleton_1) 8%, var(--skeleton_2) 18%, var(--skeleton_1) 33%);
+.rect__title,
+.rect__content,
+.rect__box,
+.rect__large_text,
+.rect__small_text {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton_1) 8%,
+    var(--skeleton_2) 18%,
+    var(--skeleton_1) 33%
+  );
   border-radius: 10px;
-  animation: shimmer 5s linear infinite forwards
+  animation: shimmer 5s linear infinite forwards;
 }
 .rect__large_text {
   height: 2.6rem;
-  width: 80%
+  width: 80%;
 }
 .rect__small_text {
-  height: 1.6rem
+  height: 1.6rem;
 }
 .width_60 {
-  width: 60%
+  width: 60%;
 }
-.rect__title, .rect__content {
-  height: 1rem
+.rect__title,
+.rect__content {
+  height: 1rem;
 }
 .rect__title {
-  width: 20%
+  width: 20%;
 }
 .rect__content.one {
-  width: 50%
+  width: 50%;
 }
 .rect__content.two {
-  width: 40%
+  width: 40%;
 }
 .rect__box {
   height: 6rem;
-  width: 60%
+  width: 60%;
 }
 .circle {
   height: 140px;
@@ -59,31 +70,31 @@
   border-radius: 50%;
   margin: 0 auto;
   background-color: var(--skeleton_2);
-  animation: fade .6s linear infinite alternate-reverse
+  animation: fade 0.6s linear infinite alternate-reverse;
 }
 
 @keyframes fade {
   from {
-    opacity: var(--light_opacity)
+    opacity: var(--light_opacity);
   }
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
 @keyframes shimmer {
   from {
-    background-position: 0 0
+    background-position: 0 0;
   }
   to {
-    background-position: 100rem 0
+    background-position: 100rem 0;
   }
 }
 @keyframes shimmerVertical {
   from {
-    background-position: 0 0
+    background-position: 0 0;
   }
   to {
-    background-position: 0 100rem
+    background-position: 0 100rem;
   }
 }
 
@@ -93,16 +104,16 @@
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1rem;
   &.largeScreen:not(.keepSmall) {
-    grid-template-columns: repeat(3, 1fr)
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 @media (max-width: 992px) {
   .plans_layout {
     margin-top: 2rem;
-    grid-template-columns: 1fr
+    grid-template-columns: 1fr;
   }
   .plans_layout > div {
-    margin: 0
+    margin: 0;
   }
 }
 
@@ -117,14 +128,14 @@
   width: calc(38px + 2rem);
   padding: 1rem;
   background-color: var(--skeleton_2);
-  animation: fade .6s linear infinite alternate-reverse
+  animation: fade 0.6s linear infinite alternate-reverse;
 }
 @media (max-width: 768px) {
   .sidebar {
     top: unset;
     bottom: 0;
     height: 60.8px;
-    width: 100vw
+    width: 100vw;
   }
 }
 </style>
@@ -140,7 +151,10 @@
     </div>
     <div
       v-if="type === 'plan' || type === 'product'"
-      :class="{ largeScreen: screenSize >= 1440, keepSmall: type === 'product'}"
+      :class="{
+        largeScreen: screenSize >= 1440,
+        keepSmall: type === 'product',
+      }"
       class="plans_layout"
     >
       <div class="large_padding small_margin">
@@ -196,12 +210,12 @@
 <script>
 export default {
   props: {
-    type: String
+    type: String,
   },
-  data () {
+  data() {
     return {
-      screenSize: window.innerWidth
-    }
-  }
-}
+      screenSize: window.innerWidth,
+    };
+  },
+};
 </script>

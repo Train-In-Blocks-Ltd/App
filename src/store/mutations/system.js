@@ -4,10 +4,10 @@ export default {
    * @param {string} payload.attr - The key of the state to change.
    * @param {*} payload.data - The new data.
    */
-  setData (state, payload) {
-    state[payload.attr] = payload.data
-    if (payload.attr === 'clients') {
-      state.noClients = state.clients.length === 0
+  setData(state, payload) {
+    state[payload.attr] = payload.data;
+    if (payload.attr === "clients") {
+      state.noClients = state.clients.length === 0;
     }
   },
 
@@ -17,10 +17,10 @@ export default {
    * @param {string} payload.attrChild - The key of the second level state to change.
    * @param {*} payload.data - The new data.
    */
-  setDataDeep (state, payload) {
-    state[payload.attrParent][payload.attrChild] = payload.data
-    if (payload.attrParent === 'archive') {
-      state.archive.noArchive = state.archive.clients.length === 0
+  setDataDeep(state, payload) {
+    state[payload.attrParent][payload.attrChild] = payload.data;
+    if (payload.attrParent === "archive") {
+      state.archive.noArchive = state.archive.clients.length === 0;
     }
   },
 
@@ -36,10 +36,10 @@ export default {
    * @param {number} payload.archive - Whether this client is archived.
    * @param {number} payload.notification - Whether email notifications are enabled for this client.
    */
-  addNewClient (state, payload) {
+  addNewClient(state, payload) {
     state.clients.push({
-      ...payload
-    })
+      ...payload,
+    });
   },
 
   /**
@@ -47,9 +47,11 @@ export default {
    * @param {number} payload - The id of the client.
    * @param {number} payload - The new data.
    */
-  updateClient (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-    CLIENT[payload.attr] = payload.data
+  updateClient(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.clientId)
+    );
+    CLIENT[payload.attr] = payload.data;
   },
 
   /**
@@ -64,43 +66,47 @@ export default {
    * @param {number} client.archive - Whether this client is archived.
    * @param {number} client.notification - Whether email notifications are enabled for this client.
    */
-  archiveClient (state, client) {
-    const IDX = state.clients.indexOf(client)
-    state.clients.splice(IDX, 1)
-    state.archive.clients.push(client)
+  archiveClient(state, client) {
+    const IDX = state.clients.indexOf(client);
+    state.clients.splice(IDX, 1);
+    state.archive.clients.push(client);
     state.archive.clients.sort((a, b) => {
-      const NAME_A = a.name.toUpperCase()
-      const NAME_B = b.name.toUpperCase()
-      return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
-    })
+      const NAME_A = a.name.toUpperCase();
+      const NAME_B = b.name.toUpperCase();
+      return NAME_A < NAME_B ? -1 : NAME_A > NAME_B ? 1 : 0;
+    });
   },
 
   /**
    * Pushes clients to 'clients' and splices them from 'archive'.
    * @param {array} payload - An array of client ids to unarchive.
    */
-  unarchiveClient (state, payload) {
+  unarchiveClient(state, payload) {
     payload.forEach((clientId) => {
-      const CLIENT = state.archive.clients.find(client => client.client_id === clientId)
-      const IDX = state.archive.clients.indexOf(CLIENT)
-      state.archive.clients.splice(IDX, 1)
-      state.clients.push(CLIENT)
+      const CLIENT = state.archive.clients.find(
+        (client) => client.client_id === clientId
+      );
+      const IDX = state.archive.clients.indexOf(CLIENT);
+      state.archive.clients.splice(IDX, 1);
+      state.clients.push(CLIENT);
       state.clients.sort((a, b) => {
-        const NAME_A = a.name.toUpperCase()
-        const NAME_B = b.name.toUpperCase()
-        return (NAME_A < NAME_B) ? -1 : (NAME_A > NAME_B) ? 1 : 0
-      })
-    })
+        const NAME_A = a.name.toUpperCase();
+        const NAME_B = b.name.toUpperCase();
+        return NAME_A < NAME_B ? -1 : NAME_A > NAME_B ? 1 : 0;
+      });
+    });
   },
 
   /**
    * Removes clients from archive permanently.
    * @param {array} payload - An array of client ids to delete.
    */
-  removeClient (state, payload) {
+  removeClient(state, payload) {
     payload.forEach((clientId) => {
-      const CLIENT = state.archive.clients.find(client => client.client_id === parseInt(clientId))
-      state.archive.clients.splice(state.archive.clients.indexOf(CLIENT), 1)
-    })
-  }
-}
+      const CLIENT = state.archive.clients.find(
+        (client) => client.client_id === parseInt(clientId)
+      );
+      state.archive.clients.splice(state.archive.clients.indexOf(CLIENT), 1);
+    });
+  },
+};

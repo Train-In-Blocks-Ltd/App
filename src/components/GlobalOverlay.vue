@@ -8,7 +8,7 @@
   min-height: 100vh;
   min-height: -webkit-fill-available;
   min-height: calc(100vh - env(safe-area-inset-bottom));
-  background-color: #00000080
+  background-color: #00000080;
 }
 </style>
 
@@ -18,15 +18,15 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      show: false
-    }
+      show: false,
+    };
   },
   watch: {
-    show () {
-      this.willBodyScroll(!this.show)
-    }
-  }
-}
+    show() {
+      this.willBodyScroll(!this.show);
+    },
+  },
+};
 </script>

@@ -1,11 +1,10 @@
 <style lang="scss">
-    .stripe-connect svg rect,
-    .stripe-connect svg path,
-    .stripe-connect svg polygon {
-      /* stylelint-disable-next-line */
-      fill: var(--fore) !important
-    }
-
+.stripe-connect svg rect,
+.stripe-connect svg path,
+.stripe-connect svg polygon {
+  /* stylelint-disable-next-line */
+  fill: var(--fore) !important;
+}
 </style>
 
 <style lang="scss" scoped>
@@ -13,27 +12,27 @@
   margin: 4rem 0;
   form {
     .text--tiny.grey {
-      margin-top: .2rem;
+      margin-top: 0.2rem;
       a {
         display: initial;
-        font-weight: bold
+        font-weight: bold;
       }
     }
     .price {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       &.create-product {
-        width: 300px
+        width: 300px;
       }
       > select {
         border-radius: 5px 0 0 5px;
         border-right: none;
         &:focus + input {
-          border-left: 2px solid var(--base)
+          border-left: 2px solid var(--base);
         }
       }
       > input {
-        border-radius: 0 5px 5px 0
+        border-radius: 0 5px 5px 0;
       }
     }
   }
@@ -43,17 +42,17 @@
     margin-top: 4rem;
     margin-bottom: 2rem;
     > div:last-child {
-      display: flex
+      display: flex;
     }
     button {
       margin: auto 0;
       &:only-child {
-        margin-left: 1rem
+        margin-left: 1rem;
       }
     }
     .stripe_skeleton {
       margin: auto 0;
-      width: 160px
+      width: 160px;
     }
   }
   .products_container {
@@ -69,15 +68,15 @@
       transition: var(--transition_standard);
       > .header {
         display: grid;
-        grid-template-columns: 1fr .1fr;
+        grid-template-columns: 1fr 0.1fr;
         grid-gap: 1rem;
         > h2 {
           white-space: nowrap;
           text-overflow: ellipsis;
-          overflow: hidden
+          overflow: hidden;
         }
         > div {
-          margin-left: auto
+          margin-left: auto;
         }
       }
       > .product_pricing {
@@ -90,11 +89,11 @@
             border-radius: 5px 0 0 5px;
             border-right: none;
             &:focus + input {
-              border-left: 2px solid var(--base)
+              border-left: 2px solid var(--base);
             }
           }
           > input {
-            border-radius: 0 5px 5px 0
+            border-radius: 0 5px 5px 0;
           }
         }
       }
@@ -110,7 +109,7 @@
   width: fit-content;
   width: -moz-fit-content;
   margin: auto 0;
-  padding: .4rem .8rem;
+  padding: 0.4rem 0.8rem;
   background: var(--base);
   text-decoration: none;
   border-radius: 5px;
@@ -123,31 +122,31 @@
   -webkit-font-smoothing: antialiased;
   transition: var(--transition_standard);
   &:hover {
-    opacity: .6
+    opacity: 0.6;
   }
   span {
     color: var(--fore);
-    font-size: .8rem;
+    font-size: 0.8rem;
     font-weight: bold;
-    margin: auto 0
+    margin: auto 0;
   }
   svg {
     height: fit-content;
     height: -moz-fit-content;
-    width: 46px
+    width: 46px;
   }
 }
 .options {
-  gap: 1rem
+  gap: 1rem;
 }
 .select_all {
-  margin: auto
+  margin: auto;
 }
 
 @media (max-width: 992px) {
   #products {
     .products_container {
-      grid-template-columns: 1fr
+      grid-template-columns: 1fr;
     }
   }
 }
@@ -160,7 +159,7 @@
       .options {
         justify-content: space-between;
         a:first-child {
-          margin: auto auto auto 0
+          margin: auto auto auto 0;
         }
       }
     }
@@ -173,13 +172,13 @@
         &.create-product,
         > select,
         > input {
-          width: 100%
+          width: 100%;
         }
       }
     }
     .products_container {
       .product {
-        padding: 1rem
+        padding: 1rem;
       }
     }
   }
@@ -189,11 +188,11 @@
   #products {
     .option_bar {
       .stripe_skeleton {
-        width: 100px
+        width: 100px;
       }
       .stripe-connect {
         span {
-          display: none
+          display: none;
         }
       }
     }
@@ -217,17 +216,24 @@
         name="add_product"
         class="form_grid add_product"
         spellcheck="false"
-        @submit.prevent="createProduct(), isNewProductOpen = false, willBodyScroll(true)"
+        @submit.prevent="
+          createProduct(), (isNewProductOpen = false), willBodyScroll(true)
+        "
       >
         <div class="bottom_margin">
-          <h3>
-            Add a new product
-          </h3>
+          <h3>Add a new product</h3>
           <p class="grey">
             Start collecting payments from your clients and get paid
           </p>
           <p class="text--tiny grey">
-            We will take an application fee of 5% for each transaction excluding the <a href="https://stripe.com/gb/pricing" target="_blank" class="a_link">Stripe processing fee</a>.
+            We will take an application fee of 5% for each transaction excluding
+            the
+            <a
+              href="https://stripe.com/gb/pricing"
+              target="_blank"
+              class="a_link"
+              >Stripe processing fee</a
+            >.
           </p>
         </div>
         <input
@@ -238,8 +244,8 @@
           placeholder="Name*"
           aria-label="Name"
           required
-          @input="newProduct.name = $event.target.value, checkForm()"
-        >
+          @input="(newProduct.name = $event.target.value), checkForm()"
+        />
         <select
           v-model="newProduct.type"
           class="small_border_radius width_300"
@@ -247,18 +253,10 @@
           aria-label="Type"
           required
         >
-          <option :value="null">
-            Type*
-          </option>
-          <option value="one-off">
-            One-off
-          </option>
-          <option value="monthly">
-            Monthly
-          </option>
-          <option value="yearly">
-            Yearly
-          </option>
+          <option :value="null">Type*</option>
+          <option value="one-off">One-off</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
         </select>
         <div class="price create-product">
           <select
@@ -268,9 +266,7 @@
             aria-label="Currency"
             required
           >
-            <option :value="null">
-              Currency*
-            </option>
+            <option :value="null">Currency*</option>
             <option
               v-for="(currency, currencyIndex) in currencies"
               :key="`currency_add_product_${currencyIndex}`"
@@ -288,8 +284,8 @@
             min="1"
             required
             @change="newProduct.price = makeDecimals(newProduct.price, 2)"
-            @input="newProduct.price = $event.target.value, checkForm()"
-          >
+            @input="(newProduct.price = $event.target.value), checkForm()"
+          />
         </div>
         <textarea
           v-model="newProduct.notes"
@@ -298,26 +294,27 @@
           placeholder="Description*"
           aria-label="Description"
           required
-          @input="newProduct.notes = $event.target.value, checkForm()"
+          @input="(newProduct.notes = $event.target.value), checkForm()"
         />
         <div class="form_button_bar">
-          <button
-            :disabled="disableCreateProductButton"
-            type="submit"
-          >
+          <button :disabled="disableCreateProductButton" type="submit">
             Save
           </button>
-          <button class="red_button" @click.prevent="isNewProductOpen = false, willBodyScroll(true)">
+          <button
+            class="red_button"
+            @click.prevent="(isNewProductOpen = false), willBodyScroll(true)"
+          >
             Close
           </button>
         </div>
       </form>
     </div>
-    <div :class="{opened_sections: isNewProductOpen }" class="section_overlay" />
+    <div
+      :class="{ opened_sections: isNewProductOpen }"
+      class="section_overlay"
+    />
     <div :class="{ connected: isStripeConnected }" class="option_bar">
-      <h2>
-        Products
-      </h2>
+      <h2>Products</h2>
       <skeleton
         v-if="loading || silentLoading"
         :type="'button'"
@@ -329,16 +326,18 @@
         class="stripe-connect"
         @click="isStripeConnectedConnect()"
       >
-        <span>
-          Connect with
-        </span>
+        <span> Connect with </span>
         <inline-svg
           :src="require('../assets/svg/stripe.svg')"
           aria-label="Connect with stripe"
         />
       </a>
       <div
-        v-else-if="products !== null && products.length !== 0 && selectedProducts.length < products.length"
+        v-else-if="
+          products !== null &&
+          products.length !== 0 &&
+          selectedProducts.length < products.length
+        "
         class="options fadeIn"
       >
         <a
@@ -348,7 +347,7 @@
         >
           Select all
         </a>
-        <button @click="isNewProductOpen = true, willBodyScroll(false)">
+        <button @click="(isNewProductOpen = true), willBodyScroll(false)">
           New product
         </button>
         <a
@@ -357,16 +356,14 @@
           class="stripe-connect"
           target="_blank"
         >
-          <span>
-            Login to
-          </span>
+          <span> Login to </span>
           <inline-svg
             :src="require('../assets/svg/stripe.svg')"
             aria-label="Login to stripe"
           />
         </a>
       </div>
-      <button v-else @click="isNewProductOpen = true, willBodyScroll(false)">
+      <button v-else @click="(isNewProductOpen = true), willBodyScroll(false)">
         New product
       </button>
     </div>
@@ -396,7 +393,7 @@
             @change="productChanged = true"
             @blur="resolveIfProductChanged(product)"
             @input="product.name = $event.target.value"
-          >
+          />
           <checkbox
             :item-id="product.id"
             :type="'v1'"
@@ -412,18 +409,10 @@
             aria-label="Type"
             @change="updateProduct(product.id)"
           >
-            <option :value="null">
-              Type
-            </option>
-            <option value="one-off">
-              One-off
-            </option>
-            <option value="monthly">
-              Monthly
-            </option>
-            <option value="yearly">
-              Yearly
-            </option>
+            <option :value="null">Type</option>
+            <option value="one-off">One-off</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
           </select>
           <div class="price">
             <select
@@ -433,9 +422,7 @@
               placeholder="Currency"
               aria-label="Currency"
             >
-              <option :value="null">
-                Currency
-              </option>
+              <option :value="null">Currency</option>
               <option
                 v-for="(currency, currencyIndex) in currencies"
                 :key="`currency_${currencyIndex}`"
@@ -454,10 +441,13 @@
               step="0.01"
               min="1"
               required
-              @change="product.price = makeDecimals(product.price, 2), productChanged = true"
+              @change="
+                (product.price = makeDecimals(product.price, 2)),
+                  (productChanged = true)
+              "
               @blur="resolveIfProductChanged(product)"
               @input="product.price = $event.target.value"
-            >
+            />
           </div>
         </div>
         <textarea
@@ -484,50 +474,61 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
-const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPreload: true  */ '../components/Multiselect')
+import { mapState } from "vuex";
+const Checkbox = () =>
+  import(
+    /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "../components/Checkbox"
+  );
+const Multiselect = () =>
+  import(
+    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "../components/Multiselect"
+  );
 
 export default {
   components: {
     Checkbox,
-    Multiselect
+    Multiselect,
   },
-  data () {
+  data() {
     return {
       isNewProductOpen: false,
       newProduct: {
         name: null,
         notes: null,
-        price: 0.00,
+        price: 0.0,
         currency: null,
-        type: null
+        type: null,
       },
       disableCreateProductButton: true,
       productChanged: false,
       selectedProducts: [],
       multiselectOptions: [
-        { name: 'Delete', svg: 'svg/bin.svg' },
-        { name: 'Deselect', svg: null }
+        { name: "Delete", svg: "svg/bin.svg" },
+        { name: "Deselect", svg: null },
       ],
-      currencies: ['GBP', 'USD', 'JPY', 'AUD', 'CAD']
-    }
+      currencies: ["GBP", "USD", "JPY", "AUD", "CAD"],
+    };
   },
   computed: mapState([
-    'loading',
-    'silentLoading',
-    'products',
-    'claims',
-    'isStripeConnected'
+    "loading",
+    "silentLoading",
+    "products",
+    "claims",
+    "isStripeConnected",
   ]),
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
 
-    checkForm () {
-      this.disableCreateProductButton = !(this.newProduct.name && this.newProduct.notes && this.newProduct.price && this.newProduct.currency && this.newProduct.type)
+    checkForm() {
+      this.disableCreateProductButton = !(
+        this.newProduct.name &&
+        this.newProduct.notes &&
+        this.newProduct.price &&
+        this.newProduct.currency &&
+        this.newProduct.type
+      );
     },
 
     // -----------------------------
@@ -538,14 +539,14 @@ export default {
      * Resolves the action taken from the product multi-select.
      * @param {string} res - The action taken.
      */
-    resolveProductsMultiselect (res) {
+    resolveProductsMultiselect(res) {
       switch (res) {
-        case 'Delete':
-          this.deleteProducts()
-          break
-        case 'Deselect':
-          this.deselectAll()
-          break
+        case "Delete":
+          this.deleteProducts();
+          break;
+        case "Deselect":
+          this.deselectAll();
+          break;
       }
     },
 
@@ -553,12 +554,17 @@ export default {
      * Checks if any changes were made to the product before posting it to the database.
      * @param {integer} id - The id of the product.
      */
-    resolveIfProductChanged (product) {
+    resolveIfProductChanged(product) {
       if (this.productChanged) {
         if (String(product.price) > 1) {
-          this.updateProduct(product.id)
+          this.updateProduct(product.id);
         } else {
-          this.$parent.$parent.$refs.response_pop_up.show('Price must be larger than 1.', 'Please try again.', true, true)
+          this.$parent.$parent.$refs.response_pop_up.show(
+            "Price must be larger than 1.",
+            "Please try again.",
+            true,
+            true
+          );
         }
       }
     },
@@ -567,35 +573,35 @@ export default {
      * Toggles the state of the custom checkbox component.
      * @param {integer} id - The id of the product.
      */
-    changeSelectCheckbox (id) {
+    changeSelectCheckbox(id) {
       if (!this.selectedProducts.includes(id)) {
-        this.selectedProducts.push(id)
+        this.selectedProducts.push(id);
       } else {
-        const PRODUCT_INDEX = this.selectedProducts.indexOf(id)
-        this.selectedProducts.splice(PRODUCT_INDEX, 1)
+        const PRODUCT_INDEX = this.selectedProducts.indexOf(id);
+        this.selectedProducts.splice(PRODUCT_INDEX, 1);
       }
     },
 
     /**
      * Selects all the products.
      */
-    selectAll () {
+    selectAll() {
       this.products.forEach((product) => {
         if (!this.selectedProducts.includes(product.id)) {
-          this.selectedProducts.push(product.id)
-          document.getElementById(`sc-${product.id}`).checked = true
+          this.selectedProducts.push(product.id);
+          document.getElementById(`sc-${product.id}`).checked = true;
         }
-      })
+      });
     },
 
     /**
      * Deselects all the products.
      */
-    deselectAll () {
+    deselectAll() {
       this.products.forEach((product) => {
-        document.getElementById(`sc-${product.id}`).checked = false
-      })
-      this.selectedProducts = []
+        document.getElementById(`sc-${product.id}`).checked = false;
+      });
+      this.selectedProducts = [];
     },
 
     // -----------------------------
@@ -605,26 +611,26 @@ export default {
     /**
      * Creates a new product.
      */
-    async createProduct () {
+    async createProduct() {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('createProduct', {
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        await this.$store.dispatch("createProduct", {
           pt_id: this.claims.sub,
-          ...this.newProduct
-        })
+          ...this.newProduct,
+        });
         this.newProduct = {
           name: null,
           notes: null,
-          price: 0.00,
+          price: 0.0,
           currency: null,
-          type: null
-        }
-        this.$store.dispatch('endLoading')
+          type: null,
+        };
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e);
       }
     },
 
@@ -632,38 +638,43 @@ export default {
      * Updates a product.
      * @param {integer} productId - The id of the product.
      */
-    async updateProduct (productId) {
+    async updateProduct(productId) {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('updateProduct', productId)
-        this.productChanged = false
-        this.$store.dispatch('endLoading')
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        await this.$store.dispatch("updateProduct", productId);
+        this.productChanged = false;
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e);
       }
     },
 
     /**
      * Deletes the selected products.
      */
-    async deleteProducts () {
-      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected products?', 'We will remove these products from our database and it won\'t be recoverable.')) {
+    async deleteProducts() {
+      if (
+        await this.$parent.$parent.$refs.confirm_pop_up.show(
+          "Are you sure that you want to delete all the selected products?",
+          "We will remove these products from our database and it won't be recoverable."
+        )
+      ) {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          await this.$store.dispatch('deleteProduct', this.selectedProducts)
-          this.deselectAll()
-          this.$store.dispatch('endLoading')
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          await this.$store.dispatch("deleteProduct", this.selectedProducts);
+          this.deselectAll();
+          this.$store.dispatch("endLoading");
         } catch (e) {
-          this.$parent.$parent.resolveError(e)
+          this.$parent.$parent.resolveError(e);
         }
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

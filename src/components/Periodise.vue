@@ -17,7 +17,7 @@
       h3 {
         white-space: nowrap;
         text-overflow: ellipsis;
-        overflow: hidden
+        overflow: hidden;
       }
       .plan_header__options {
         display: flex;
@@ -25,7 +25,7 @@
         .plan_a_links {
           display: flex;
           a {
-            margin-right: 1rem
+            margin-right: 1rem;
           }
         }
       }
@@ -41,15 +41,15 @@
         width: 100%;
         height: 10px;
         &:first-child {
-          border-radius: 0 0 0 5px
+          border-radius: 0 0 0 5px;
         }
         &:last-child {
-          border-radius: 0 0 5px 0
+          border-radius: 0 0 5px 0;
         }
         &.noColor {
           border-top: 1px solid var(--base_faint);
           &:not(.noColor:last-child) {
-            border-right: 1px solid var(--base_faint)
+            border-right: 1px solid var(--base_faint);
           }
         }
       }
@@ -59,19 +59,19 @@
 
 @media (min-width: 1440px) {
   .periodise {
-    grid-template-columns: repeat(3, 1fr)
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 @media (max-width: 992px) {
   .periodise {
-    grid-template-columns: 1fr
+    grid-template-columns: 1fr;
   }
 }
 @media (max-width: 576px) {
   .periodise {
     .plan {
       .plan_header {
-        padding: 1rem
+        padding: 1rem;
       }
     }
   }
@@ -85,7 +85,7 @@
       :html="planHTML"
       :show-media="true"
       :show-brackets="false"
-      @close="planDesc = null, planHTML = null"
+      @close="(planDesc = null), (planHTML = null)"
     />
     <div class="periodise">
       <div
@@ -100,17 +100,23 @@
           <div class="plan_header__options">
             <div class="plan_a_links">
               <router-link
-                :to="isTrainer ? `plan/${plan.id}` : `/clientUser/plan/${plan.id}`"
+                :to="
+                  isTrainer ? `plan/${plan.id}` : `/clientUser/plan/${plan.id}`
+                "
                 href="javascript:void(0)"
                 class="a_link"
               >
-                {{ isTrainer ? 'Edit' : 'View' }}
+                {{ isTrainer ? "Edit" : "View" }}
               </router-link>
               <a
                 v-if="plan.notes && plan.notes !== '<p></p>'"
                 href="javascript:void(0)"
                 class="a_link"
-                @click="planDesc = plan.name, planHTML = plan.notes, willBodyScroll(false)"
+                @click="
+                  (planDesc = plan.name),
+                    (planHTML = plan.notes),
+                    willBodyScroll(false)
+                "
               >
                 Notes
               </a>
@@ -121,7 +127,9 @@
           <div
             v-for="(micro, microIndex) in plan.duration"
             :key="`plan_${planIndex}_micro_${microIndex}`"
-            :style="{ backgroundColor: plan.block_color.split(',')[microIndex] }"
+            :style="{
+              backgroundColor: plan.block_color.split(',')[microIndex],
+            }"
             :class="{ noColor: plan.block_color === '' }"
             class="microcycle"
           />
@@ -132,21 +140,24 @@
 </template>
 
 <script>
-const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ './PreviewModal')
+const PreviewModal = () =>
+  import(
+    /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "./PreviewModal"
+  );
 
 export default {
   components: {
-    PreviewModal
+    PreviewModal,
   },
   props: {
     plans: Array,
-    isTrainer: Boolean
+    isTrainer: Boolean,
   },
-  data () {
+  data() {
     return {
       planDesc: null,
-      planHTML: null
-    }
-  }
-}
+      planHTML: null,
+    };
+  },
+};
 </script>

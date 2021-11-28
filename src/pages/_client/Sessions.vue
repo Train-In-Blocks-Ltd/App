@@ -1,5 +1,4 @@
 <style lang="scss" scoped>
-
 /* Other */
 .dark_overlay {
   z-index: 1;
@@ -10,7 +9,7 @@
   min-height: 100vh;
   min-height: -webkit-fill-available;
   min-height: calc(100vh - env(safe-area-inset-bottom));
-  background-color: #00000060
+  background-color: #00000060;
 }
 
 /* Plan Info */
@@ -22,23 +21,23 @@
     user-select: none;
     border: 1px solid var(--base_faint);
     border-radius: 3px;
-    transition: .4s all cubic-bezier(.165, .84, .44, 1);
+    transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
     #progress-bar {
       border-radius: 3px;
-      padding: .3rem 1rem;
+      padding: 0.3rem 1rem;
       background-color: #00800020;
-      transition: 1s all cubic-bezier(.165, .84, .44, 1);
+      transition: 1s all cubic-bezier(0.165, 0.84, 0.44, 1);
       &.fullBar {
-        background-color: #49AB59;
+        background-color: #49ab59;
         p {
-          color: white
+          color: white;
         }
       }
       &.noSessions {
-        background-color: #8B000020
+        background-color: #8b000020;
       }
       p {
-        white-space: nowrap
+        white-space: nowrap;
       }
     }
   }
@@ -49,21 +48,21 @@
     a {
       margin-right: 1rem;
       svg {
-        margin-right: .4rem
+        margin-right: 0.4rem;
       }
     }
   }
 }
 .switch_cal {
-  margin-bottom: .4rem;
+  margin-bottom: 0.4rem;
   svg {
-    margin-right: .4rem
+    margin-right: 0.4rem;
   }
 }
 
 /* Plan Grid */
 #plan_notes {
-  margin: 4rem 0
+  margin: 4rem 0;
 }
 
 /* Plan Table */
@@ -76,12 +75,12 @@
     margin: 0 0 4rem 0;
     grid-gap: 1rem;
     h3 {
-      margin: 0
+      margin: 0;
     }
     #duration {
       width: 6rem;
       font-size: 1rem;
-      margin-left: 1rem
+      margin-left: 1rem;
     }
   }
   .plan_table--container {
@@ -90,7 +89,7 @@
     text-align: center;
     .plan_table--container--plan_duration_container {
       display: grid;
-      grid-gap: 1rem .4rem;
+      grid-gap: 1rem 0.4rem;
       grid-template-columns: repeat(auto-fill, 50px);
       border: none;
       padding: 0;
@@ -106,22 +105,22 @@
         border-radius: 5px;
         transition: var(--transition_standard);
         &:hover {
-          opacity: var(--light_opacity)
+          opacity: var(--light_opacity);
         }
         &.weekActive {
           border-color: var(--base);
           background-color: var(--fore);
           &:hover {
-            opacity: var(--light_opacity)
+            opacity: var(--light_opacity);
           }
         }
         .week__color {
           width: 100%;
           height: 100%;
-          border-radius: 3px 3px 0 0
+          border-radius: 3px 3px 0 0;
         }
         .week__number {
-          margin: auto
+          margin: auto;
         }
       }
     }
@@ -146,11 +145,11 @@
         cursor: pointer;
         transition: var(--transition_standard);
         &:hover {
-          opacity: var(--light_opacity)
+          opacity: var(--light_opacity);
         }
         &.noColor {
           /* stylelint-disable-next-line */
-          background-color: var(--fore) !important
+          background-color: var(--fore) !important;
         }
       }
 
@@ -159,12 +158,13 @@
         fill: var(--base);
         margin-left: 1rem;
         cursor: pointer;
-        transition: opacity 1s, transform .1s cubic-bezier(.075, .82, .165, 1);
+        transition: opacity 1s,
+          transform 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
         &:hover {
-          opacity: var(--light_opacity)
+          opacity: var(--light_opacity);
         }
         &:active {
-          transform: var(--active_state)
+          transform: var(--active_state);
         }
       }
     }
@@ -175,8 +175,8 @@
   justify-content: flex-end;
   margin-bottom: 2rem;
   a {
-    font-size: .8rem;
-    margin-left: 1rem
+    font-size: 0.8rem;
+    margin-left: 1rem;
   }
 }
 .container--sessions {
@@ -186,12 +186,12 @@
     display: flex;
     justify-content: space-between;
     .session-name {
-      margin-bottom: .4rem
+      margin-bottom: 0.4rem;
     }
     .session-date {
-      margin-bottom: .4rem;
+      margin-bottom: 0.4rem;
       width: fit-content;
-      font-size: .8rem
+      font-size: 0.8rem;
     }
     .header_options {
       display: flex;
@@ -201,24 +201,25 @@
         display: flex;
         .feedback_button {
           margin-right: 1rem;
-          padding: .4rem 1rem;
-          border-radius: 3px
+          padding: 0.4rem 1rem;
+          border-radius: 3px;
         }
       }
       .icon--expand {
         cursor: pointer;
-        margin: .8rem 0 0 auto;
+        margin: 0.8rem 0 0 auto;
         transition: var(--transition_smooth);
         &.expanded {
-          transform: rotate(180deg)
+          transform: rotate(180deg);
         }
       }
     }
-    .newSession, .incomplete {
-      color: var(--base_red)
+    .newSession,
+    .incomplete {
+      color: var(--base_red);
     }
     .completed {
-      color: var(--base_green)
+      color: var(--base_green);
     }
   }
 }
@@ -226,15 +227,15 @@
 /* Responsive */
 @media (max-width: 992px) {
   .switch_cal {
-    display: none
+    display: none;
   }
 }
 @media (max-width: 768px) {
   .client_plan_top_grid {
-    margin-top: 1rem
+    margin-top: 1rem;
   }
   .container--sessions .session_header .session-name {
-    width: 60%
+    width: 60%;
   }
 }
 
@@ -245,44 +246,47 @@
     grid-gap: 1rem;
     .a_link {
       width: fit-content;
-      width: -moz-fit-content
+      width: -moz-fit-content;
     }
   }
   .plan_grid {
     display: block;
     .calendar {
-      margin: 4rem 0
+      margin: 4rem 0;
     }
   }
   .wrapper-plan {
-    margin: 4rem 0
+    margin: 4rem 0;
   }
 
   /* Session */
   .session--header {
-    display: block
+    display: block;
   }
   .container--sessions .session_header .session-name {
-    width: 100%
+    width: 100%;
   }
   .button--new-session {
     width: 100%;
-    margin: 2rem 0
+    margin: 2rem 0;
   }
 }
 </style>
 
 <template>
   <div id="plan">
-    <div :class="{ opened_sections: showMove || showShift || showProgress || showDuplicate }" class="section_overlay" />
+    <div
+      :class="{
+        opened_sections: showMove || showShift || showProgress || showDuplicate,
+      }"
+      class="section_overlay"
+    />
     <form
       v-if="showMove"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="moveToWeek(), showMove = false, willBodyScroll(true)"
+      @submit.prevent="moveToWeek(), (showMove = false), willBodyScroll(true)"
     >
-      <h3>
-        Move to a different microcycle
-      </h3>
+      <h3>Move to a different microcycle</h3>
       <p class="grey">
         This will change the colour code assigned to the sessions
       </p>
@@ -298,27 +302,23 @@
           min="1"
           :max="maxWeek"
           required
-          @input="moveTarget = $event.target.value, checkForm('move')"
-        >
+          @input="(moveTarget = $event.target.value), checkForm('move')"
+        />
       </div>
+      <button :disabled="disableMoveButton" type="submit">Move</button>
       <button
-        :disabled="disableMoveButton"
-        type="submit"
+        class="red_button"
+        @click.prevent="(showMove = false), willBodyScroll(true)"
       >
-        Move
-      </button>
-      <button class="red_button" @click.prevent="showMove = false, willBodyScroll(true)">
         Cancel
       </button>
     </form>
     <form
       v-if="showShift"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="shiftAcross(), showShift = false, willBodyScroll(true)"
+      @submit.prevent="shiftAcross(), (showShift = false), willBodyScroll(true)"
     >
-      <h3>
-        Shift the dates of the sessions
-      </h3>
+      <h3>Shift the dates of the sessions</h3>
       <p class="grey">
         This will move the dates ahead or behind by the specified amount
       </p>
@@ -332,22 +332,29 @@
           name="range"
           type="number"
           required
-          @input="shiftDays = $event.target.value, checkForm('shift')"
-        >
+          @input="(shiftDays = $event.target.value), checkForm('shift')"
+        />
       </div>
+      <button :disabled="disableShiftButton" type="submit">Shift</button>
       <button
-        :disabled="disableShiftButton"
-        type="submit"
+        class="red_button"
+        @click.prevent="(showShift = false), willBodyScroll(true)"
       >
-        Shift
-      </button>
-      <button class="red_button" @click.prevent="showShift = false, willBodyScroll(true)">
         Cancel
       </button>
     </form>
-    <div v-if="showProgress" class="tab_overlay_content fadeIn delay fill_mode_both">
+    <div
+      v-if="showProgress"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+    >
       <progress-sessions
-        :plan-data="$store.getters.helper('match_plan', $route.params.client_id, $route.params.id)"
+        :plan-data="
+          $store.getters.helper(
+            'match_plan',
+            $route.params.client_id,
+            $route.params.id
+          )
+        "
         :sessions-to-progress="selectedSessions"
         :current-week="currentWeek"
         :max-week="maxWeek"
@@ -356,39 +363,40 @@
     <form
       v-if="showDuplicate"
       class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="duplicatePlan(duplicateClientID), showDuplicate = false, willBodyScroll(true)"
+      @submit.prevent="
+        duplicatePlan(duplicateClientID),
+          (showDuplicate = false),
+          willBodyScroll(true)
+      "
     >
-      <h3>
-        Create a similar plan
-      </h3>
-      <p class="grey">
-        Copy this plan to the same/different client
-      </p><br>
+      <h3>Create a similar plan</h3>
+      <p class="grey">Copy this plan to the same/different client</p>
+      <br />
       <select
         :value="duplicateClientID"
         name="duplicate_client"
         class="width_300"
         required
-        @input="duplicateClientID = $event.target.value, checkForm('duplicate')"
+        @input="
+          (duplicateClientID = $event.target.value), checkForm('duplicate')
+        "
       >
-        <option :value="null">
-          Select a client
-        </option>
+        <option :value="null">Select a client</option>
         <option
           v-for="(client, index) in clients"
           :key="`client_${index}`"
           :value="client.client_id"
         >
           {{ client.name }}
-        </option>
-      </select><br><br>
-      <button
-        :disabled="disableDuplicatePlanButton"
-        type="submit"
-      >
+        </option></select
+      ><br /><br />
+      <button :disabled="disableDuplicatePlanButton" type="submit">
         Duplicate
       </button>
-      <button class="red_button" @click.prevent="showDuplicate = false, willBodyScroll(true)">
+      <button
+        class="red_button"
+        @click.prevent="(showDuplicate = false), willBodyScroll(true)"
+      >
         Cancel
       </button>
     </form>
@@ -396,12 +404,10 @@
       v-if="!loading && !isStatsOpen && !$parent.showOptions && !noSessions"
       class="tab_option icon_open_middle tab_option_small fadeIn"
       aria-label="Statistics"
-      @click="isStatsOpen = true, willBodyScroll(false)"
+      @click="(isStatsOpen = true), willBodyScroll(false)"
     >
       <inline-svg :src="require('../../assets/svg/stats.svg')" />
-      <p class="text">
-        Statistics
-      </p>
+      <p class="text">Statistics</p>
     </div>
     <multiselect
       :type="'session'"
@@ -414,7 +420,7 @@
       :html="previewHTML"
       :show-media="true"
       :show-brackets="true"
-      @close="previewDesc = null, previewHTML = null"
+      @close="(previewDesc = null), (previewHTML = null)"
     />
     <div v-show="editSession !== null" class="dark_overlay fadeIn" />
     <div>
@@ -427,15 +433,19 @@
           name="name"
           :disabled="silentLoading"
           @blur="updatePlan()"
-        >
+        />
         <div class="wrapper--progress-bar">
-          <div id="progress-bar" :class="{ fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0, noSessions: noSessions }">
+          <div
+            id="progress-bar"
+            :class="{
+              fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0,
+              noSessions: noSessions,
+            }"
+          >
             <p v-if="!noSessions" class="grey">
               Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
             </p>
-            <p v-if="noSessions" class="grey">
-              No sessions created yet
-            </p>
+            <p v-if="noSessions" class="grey">No sessions created yet</p>
           </div>
         </div>
         <div class="plan_options">
@@ -444,13 +454,16 @@
             class="a_link"
             href="javascript:void(0)"
           >
-            <inline-svg id="back" :src="require('../../assets/svg/arrow-left.svg')" />
+            <inline-svg
+              id="back"
+              :src="require('../../assets/svg/arrow-left.svg')"
+            />
             Back to profile
           </router-link>
           <a
             class="a_link"
             href="javascript:void(0)"
-            @click="showDuplicate = true, willBodyScroll(false)"
+            @click="(showDuplicate = true), willBodyScroll(false)"
           >
             <inline-svg :src="require('../../assets/svg/copy.svg')" />
             Duplicate plan
@@ -467,13 +480,8 @@
       </div>
       <div class="plan_grid">
         <div class="calendar">
-          <div
-            id="plan_notes"
-            class="editor_object_standard"
-          >
-            <h3>
-              Plan Notes
-            </h3>
+          <div id="plan_notes" class="editor_object_standard">
+            <h3>Plan Notes</h3>
             <rich-editor
               v-model="plan.notes"
               :item-id="'plan_notes'"
@@ -490,7 +498,7 @@
               @click="showMonthlyCal = !showMonthlyCal"
             >
               <inline-svg :src="require('../../assets/svg/calendar.svg')" />
-              Switch to {{ !showMonthlyCal ? 'month' : 'week' }} view
+              Switch to {{ !showMonthlyCal ? "month" : "week" }} view
             </a>
             <week-calendar
               v-if="!showMonthlyCal"
@@ -511,9 +519,7 @@
         <div class="wrapper-plan">
           <div class="plan_table">
             <div class="plan_table__header">
-              <h3>
-                Microcycles
-              </h3>
+              <h3>Microcycles</h3>
               <div class="wrapper-duration">
                 <label for="duration">Duration: </label>
                 <input
@@ -523,8 +529,8 @@
                   name="duration"
                   inputmode="decimal"
                   min="1"
-                  @change="updatePlan(), maxWeek = plan.duration"
-                >
+                  @change="updatePlan(), (maxWeek = plan.duration)"
+                />
               </div>
             </div>
             <div class="plan_table--container">
@@ -536,21 +542,35 @@
                   class="week"
                   @click="changeWeek(item)"
                 >
-                  <div :style="{ backgroundColor: weekColor.backgroundColor[item - 1] ? weekColor.backgroundColor[item - 1] : 'var(--base_faint)' }" class="week__color" />
+                  <div
+                    :style="{
+                      backgroundColor: weekColor.backgroundColor[item - 1]
+                        ? weekColor.backgroundColor[item - 1]
+                        : 'var(--base_faint)',
+                    }"
+                    class="week__color"
+                  />
                   <div class="week__number">
                     {{ item }}
                   </div>
                 </div>
               </div>
             </div>
-          </div> <!-- plan_table -->
+          </div>
+          <!-- plan_table -->
           <div class="sessions">
             <div class="session--header">
               <div class="session--header__left">
                 <div class="session--header__left__top">
                   <div
-                    :style="{ backgroundColor: weekColor.backgroundColor[currentWeek - 1] }"
-                    :class="{ noColor: weekColor.backgroundColor[currentWeek - 1] === 'null' }"
+                    :style="{
+                      backgroundColor:
+                        weekColor.backgroundColor[currentWeek - 1],
+                    }"
+                    :class="{
+                      noColor:
+                        weekColor.backgroundColor[currentWeek - 1] === 'null',
+                    }"
                     class="change_week_color"
                     @click="editingWeekColor = !editingWeekColor"
                   />
@@ -558,10 +578,21 @@
                     id="info"
                     :src="require('../../assets/svg/info.svg')"
                     title="Info"
-                    @click="previewDesc = 'How to track exercises to visualise in the Statistics tab', previewHTML = '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>', willBodyScroll(false)"
+                    @click="
+                      (previewDesc =
+                        'How to track exercises to visualise in the Statistics tab'),
+                        (previewHTML =
+                          '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>'),
+                        willBodyScroll(false)
+                    "
                   />
                 </div>
-                <color-picker v-if="editingWeekColor" :injected-color.sync="weekColor.backgroundColor[currentWeek - 1]" />
+                <color-picker
+                  v-if="editingWeekColor"
+                  :injected-color.sync="
+                    weekColor.backgroundColor[currentWeek - 1]
+                  "
+                />
               </div>
               <div>
                 <button class="button--new-session" @click="createNewSession()">
@@ -573,7 +604,11 @@
             <div v-else-if="!noSessions && !weekIsEmpty">
               <div v-if="plan.sessions" class="container--sessions_header">
                 <a
-                  v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                  v-if="
+                    !noSessions &&
+                    selectedSessions.length < plan.sessions.length &&
+                    !weekIsEmpty
+                  "
                   href="javascript:void(0)"
                   class="a_link"
                   @click="selectAll('week')"
@@ -581,7 +616,11 @@
                   Select this microcycle
                 </a>
                 <a
-                  v-if="!noSessions && selectedSessions.length < plan.sessions.length && !weekIsEmpty"
+                  v-if="
+                    !noSessions &&
+                    selectedSessions.length < plan.sessions.length &&
+                    !weekIsEmpty
+                  "
                   href="javascript:void(0)"
                   class="a_link"
                   @click="selectAll('all')"
@@ -589,12 +628,19 @@
                   Select all
                 </a>
                 <a
-                  v-if="plan.sessions !== false && !isEditingSession && !weekIsEmpty"
+                  v-if="
+                    plan.sessions !== false && !isEditingSession && !weekIsEmpty
+                  "
                   href="javascript:void(0)"
                   class="a_link"
-                  @click="expandAll(expandedSessions.length !== 0 ? 'Collapse' : 'Expand')"
+                  @click="
+                    expandAll(
+                      expandedSessions.length !== 0 ? 'Collapse' : 'Expand'
+                    )
+                  "
                 >
-                  {{ expandedSessions.length !== 0 ? 'Collapse' : 'Expand' }} all
+                  {{ expandedSessions.length !== 0 ? "Collapse" : "Expand" }}
+                  all
                 </a>
               </div>
               <!-- New session -->
@@ -610,10 +656,36 @@
                 >
                   <div class="session_header">
                     <div class="right_margin">
-                      <span v-if="session.id !== editSession" class="text--name" :class="{newSession: session.name == 'Untitled' && !isEditingSession}"><b>{{ session.name }}</b></span><br v-if="session.id !== editSession">
-                      <span v-if="session.id !== editSession" class="text--tiny">{{ day(session.date) }}</span>
-                      <span v-if="session.id !== editSession" class="text--tiny">{{ session.date }}</span><br v-if="session.id !== editSession">
-                      <span v-if="session.id !== editSession" :class="{incomplete: session.checked === 0, completed: session.checked === 1}" class="text--tiny">{{ session.checked === 0 ? 'Incomplete' : 'Complete' }}</span>
+                      <span
+                        v-if="session.id !== editSession"
+                        class="text--name"
+                        :class="{
+                          newSession:
+                            session.name == 'Untitled' && !isEditingSession,
+                        }"
+                        ><b>{{ session.name }}</b></span
+                      ><br v-if="session.id !== editSession" />
+                      <span
+                        v-if="session.id !== editSession"
+                        class="text--tiny"
+                        >{{ day(session.date) }}</span
+                      >
+                      <span
+                        v-if="session.id !== editSession"
+                        class="text--tiny"
+                        >{{ session.date }}</span
+                      ><br v-if="session.id !== editSession" />
+                      <span
+                        v-if="session.id !== editSession"
+                        :class="{
+                          incomplete: session.checked === 0,
+                          completed: session.checked === 1,
+                        }"
+                        class="text--tiny"
+                        >{{
+                          session.checked === 0 ? "Incomplete" : "Complete"
+                        }}</span
+                      >
                       <input
                         v-if="session.id === editSession"
                         v-model="session.name"
@@ -621,21 +693,27 @@
                         type="text"
                         name="session-name"
                         pattern="[^\/]"
-                      >
+                      />
                       <input
                         v-if="session.id === editSession"
                         v-model="session.date"
                         class="session-date small_border_radius"
                         type="date"
                         name="session-date"
-                      >
+                      />
                     </div>
                     <div class="header_options">
                       <div class="slot_1">
                         <button
-                          v-if="session.feedback !== '' && session.feedback !== null"
+                          v-if="
+                            session.feedback !== '' && session.feedback !== null
+                          "
                           class="feedback_button"
-                          @click="previewHTML = session.feedback, previewDesc = `${session.name} on ${session.date}`, willBodyScroll(false)"
+                          @click="
+                            (previewHTML = session.feedback),
+                              (previewDesc = `${session.name} on ${session.date}`),
+                              willBodyScroll(false)
+                          "
                         >
                           Feedback
                         </button>
@@ -649,7 +727,9 @@
                         v-show="!isEditingSession"
                         id="expand"
                         class="icon--expand"
-                        :class="{ expanded: expandedSessions.includes(session.id) }"
+                        :class="{
+                          expanded: expandedSessions.includes(session.id),
+                        }"
                         :src="require('../../assets/svg/expand.svg')"
                         title="Info"
                         @click="toggleExpandedSessions(session.id)"
@@ -673,24 +753,53 @@
             <p v-else class="text--holder text--small grey">
               No sessions created yet
             </p>
-          </div><!-- sessions -->
+          </div>
+          <!-- sessions -->
         </div>
         <statistics :plan="plan" :show="isStatsOpen" />
-      </div> <!-- plan_grid -->
+      </div>
+      <!-- plan_grid -->
     </div>
   </div>
 </template>
 
 <script>
-const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true */ '../../components/Checkbox')
-const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/WeekCalendar')
-const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
-const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true */ '../../components/Editor')
-const ColorPicker = () => import(/* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ '../../components/ColorPicker')
-const Multiselect = () => import(/* webpackChunkName: "components.multiselect", webpackPrefetch: true */ '../../components/Multiselect')
-const PreviewModal = () => import(/* webpackChunkName: "components.previewModal", webpackPrefetch: true */ '../../components/PreviewModal')
-const Statistics = () => import(/* webpackChunkName: "components.statistics", webpackPrefetch: true */ '../../components/Stats')
-const ProgressSessions = () => import(/* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ '../../components/ProgressSessions')
+const Checkbox = () =>
+  import(
+    /* webpackChunkName: "components.checkbox", webpackPreload: true */ "../../components/Checkbox"
+  );
+const WeekCalendar = () =>
+  import(
+    /* webpackChunkName: "components.calendar", webpackPreload: true */ "../../components/WeekCalendar"
+  );
+const MonthCalendar = () =>
+  import(
+    /* webpackChunkName: "components.calendar", webpackPreload: true */ "../../components/MonthCalendar"
+  );
+const RichEditor = () =>
+  import(
+    /* webpackChunkName: "components.richeditor", webpackPreload: true */ "../../components/Editor"
+  );
+const ColorPicker = () =>
+  import(
+    /* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ "../../components/ColorPicker"
+  );
+const Multiselect = () =>
+  import(
+    /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "../../components/Multiselect"
+  );
+const PreviewModal = () =>
+  import(
+    /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "../../components/PreviewModal"
+  );
+const Statistics = () =>
+  import(
+    /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "../../components/Stats"
+  );
+const ProgressSessions = () =>
+  import(
+    /* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ "../../components/ProgressSessions"
+  );
 
 export default {
   components: {
@@ -702,20 +811,26 @@ export default {
     Multiselect,
     PreviewModal,
     Statistics,
-    ProgressSessions
+    ProgressSessions,
   },
-  async beforeRouteLeave (to, from, next) {
-    if (this.dontLeave ? await this.$parent.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
-      next()
+  async beforeRouteLeave(to, from, next) {
+    if (
+      this.dontLeave
+        ? await this.$parent.$parent.$refs.confirm_pop_up.show(
+            "Your changes might not be saved",
+            "Are you sure you want to leave?"
+          )
+        : true
+    ) {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: false,
+      });
+      next();
     }
   },
-  data () {
+  data() {
     return {
-
       // EDIT
 
       forceStop: 0,
@@ -736,15 +851,15 @@ export default {
       expandedSessions: [],
       force: true,
       multiselectOption: [
-        { name: 'Complete', svg: 'svg/tick.svg' },
-        { name: 'Incomplete', svg: 'svg/cross.svg' },
-        { name: 'Progress', svg: 'svg/arrow-right.svg' },
-        { name: 'Duplicate', svg: 'svg/copy.svg' },
-        { name: 'Move', svg: 'svg/move.svg' },
-        { name: 'Shift', svg: 'svg/shift.svg' },
-        { name: 'Print', svg: 'svg/print.svg' },
-        { name: 'Delete', svg: 'svg/bin.svg' },
-        { name: 'Deselect', svg: null }
+        { name: "Complete", svg: "svg/tick.svg" },
+        { name: "Incomplete", svg: "svg/cross.svg" },
+        { name: "Progress", svg: "svg/arrow-right.svg" },
+        { name: "Duplicate", svg: "svg/copy.svg" },
+        { name: "Move", svg: "svg/move.svg" },
+        { name: "Shift", svg: "svg/shift.svg" },
+        { name: "Print", svg: "svg/print.svg" },
+        { name: "Delete", svg: "svg/bin.svg" },
+        { name: "Deselect", svg: null },
       ],
 
       // WEEK
@@ -753,7 +868,7 @@ export default {
       weekIsEmpty: true,
       editingWeekColor: false,
       weekColor: {
-        backgroundColor: ''
+        backgroundColor: "",
       },
 
       // ADHERANCE
@@ -791,73 +906,81 @@ export default {
 
       allowMoreWeeks: false,
       currentWeek: 1,
-      maxWeek: 2
-    }
+      maxWeek: 2,
+    };
   },
   computed: {
-    loading () {
-      return this.$store.state.loading
+    loading() {
+      return this.$store.state.loading;
     },
-    silentLoading () {
-      return this.$store.state.silentLoading
+    silentLoading() {
+      return this.$store.state.silentLoading;
     },
-    dontLeave () {
-      return this.$store.state.dontLeave
+    dontLeave() {
+      return this.$store.state.dontLeave;
     },
-    plan () {
-      return this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id)
+    plan() {
+      return this.$store.getters.helper(
+        "match_plan",
+        this.$route.params.client_id,
+        this.$route.params.id
+      );
     },
-    clients () {
-      return this.$store.state.clients
+    clients() {
+      return this.$store.state.clients;
     },
-    templates () {
-      return this.$store.state.templates
+    templates() {
+      return this.$store.state.templates;
     },
-    clientDetails () {
-      return this.$store.state.clientDetails
-    }
+    clientDetails() {
+      return this.$store.state.clientDetails;
+    },
   },
   watch: {
-    editingWeekColor () {
-      this.updater()
-    }
+    editingWeekColor() {
+      this.updater();
+    },
   },
-  async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
-    this.willBodyScroll(true)
-    this.$parent.sessions = true
-    this.noSessions = await this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions === false
+  async created() {
+    this.$store.commit("setData", {
+      attr: "loading",
+      data: true,
+    });
+    this.willBodyScroll(true);
+    this.$parent.sessions = true;
+    this.noSessions =
+      (await this.$store.getters.helper(
+        "match_plan",
+        this.$route.params.client_id,
+        this.$route.params.id
+      ).sessions) === false;
   },
-  mounted () {
+  mounted() {
     if (!this.noSessions) {
-      this.adherence()
-      this.updater()
+      this.adherence();
+      this.updater();
     }
-    this.$store.dispatch('endLoading')
+    this.$store.dispatch("endLoading");
   },
-  beforeDestroy () {
-    this.willBodyScroll(true)
+  beforeDestroy() {
+    this.willBodyScroll(true);
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
 
-    checkForm (type) {
+    checkForm(type) {
       switch (type) {
-        case 'move':
-          this.disableMoveButton = !this.moveTarget
-          break
-        case 'shift':
-          this.disableShiftButton = !this.shiftDays
-          break
-        case 'duplicate':
-          this.disableDuplicatePlanButton = !this.duplicateClientID
-          break
+        case "move":
+          this.disableMoveButton = !this.moveTarget;
+          break;
+        case "shift":
+          this.disableShiftButton = !this.shiftDays;
+          break;
+        case "duplicate":
+          this.disableDuplicatePlanButton = !this.duplicateClientID;
+          break;
       }
     },
 
@@ -865,42 +988,42 @@ export default {
      * Resolves the actions taken from the session multi-select.
      * @param {string} res - The action taken from the multi-select.
      */
-    resolve_session_multiselect (res) {
+    resolve_session_multiselect(res) {
       switch (res) {
-        case 'Complete':
-          this.bulkCheck(1)
-          break
-        case 'Incomplete':
-          this.bulkCheck(0)
-          break
-        case 'Progress':
-          this.showProgress = true
-          this.willBodyScroll(false)
-          break
-        case 'Duplicate':
-          this.duplicate()
-          this.deselectAll()
-          break
-        case 'Move':
-          this.showMove = true
-          this.willBodyScroll(false)
-          this.updater()
-          break
-        case 'Shift':
-          this.showShift = true
-          this.willBodyScroll(false)
-          this.updater()
-          break
-        case 'Print':
-          this.print()
-          break
-        case 'Delete':
-          this.bulkDelete()
-          this.updater()
-          break
-        case 'Deselect':
-          this.deselectAll()
-          break
+        case "Complete":
+          this.bulkCheck(1);
+          break;
+        case "Incomplete":
+          this.bulkCheck(0);
+          break;
+        case "Progress":
+          this.showProgress = true;
+          this.willBodyScroll(false);
+          break;
+        case "Duplicate":
+          this.duplicate();
+          this.deselectAll();
+          break;
+        case "Move":
+          this.showMove = true;
+          this.willBodyScroll(false);
+          this.updater();
+          break;
+        case "Shift":
+          this.showShift = true;
+          this.willBodyScroll(false);
+          this.updater();
+          break;
+        case "Print":
+          this.print();
+          break;
+        case "Delete":
+          this.bulkDelete();
+          this.updater();
+          break;
+        case "Deselect":
+          this.deselectAll();
+          break;
       }
     },
 
@@ -908,33 +1031,33 @@ export default {
      * Resolves the state of the plan notes editor.
      * @param {string} state - The returned state of the editor.
      */
-    resolvePlanInfoEditor (state) {
+    resolvePlanInfoEditor(state) {
       switch (state) {
-        case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          this.editingPlanNotes = true
-          this.tempEditorStore = this.plan.notes
-          break
-        case 'save':
-          this.editingPlanNotes = false
-          this.updatePlan()
-          break
-        case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
-          this.editingPlanNotes = false
-          this.$store.commit('updatePlanAttr', {
+        case "edit":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          this.editingPlanNotes = true;
+          this.tempEditorStore = this.plan.notes;
+          break;
+        case "save":
+          this.editingPlanNotes = false;
+          this.updatePlan();
+          break;
+        case "cancel":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: false,
+          });
+          this.editingPlanNotes = false;
+          this.$store.commit("updatePlanAttr", {
             clientId: this.clientDetails.client_id,
             planId: this.plan.id,
-            attr: 'notes',
-            data: this.tempEditorStore
-          })
-          break
+            attr: "notes",
+            data: this.tempEditorStore,
+          });
+          break;
       }
     },
 
@@ -943,40 +1066,48 @@ export default {
      * @param {string} state - The returned state of the editor.
      * @param {integer} id - The id of the session.
      */
-    resolveSessionEditor (state, id) {
-      const SESSION = this.$store.getters.helper('match_session', this.$route.params.client_id, this.$route.params.id, id)
+    resolveSessionEditor(state, id) {
+      const SESSION = this.$store.getters.helper(
+        "match_session",
+        this.$route.params.client_id,
+        this.$route.params.id,
+        id
+      );
       switch (state) {
-        case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          this.isEditingSession = true
-          this.editSession = id
-          this.forceStop += 1
-          this.tempEditorStore = SESSION.notes
-          this.goToEvent(SESSION.id, SESSION.week_id)
-          break
-        case 'save':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          this.isEditingSession = false
-          this.editSession = null
-          this.updateSession(id)
-          this.$parent.$parent.$refs.response_pop_up.show('Session updated', 'Your changes have been saved')
-          this.$store.dispatch('endLoading')
-          break
-        case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
-          this.isEditingSession = false
-          this.editSession = null
-          SESSION.notes = this.tempEditorStore
-          break
+        case "edit":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          this.isEditingSession = true;
+          this.editSession = id;
+          this.forceStop += 1;
+          this.tempEditorStore = SESSION.notes;
+          this.goToEvent(SESSION.id, SESSION.week_id);
+          break;
+        case "save":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          this.isEditingSession = false;
+          this.editSession = null;
+          this.updateSession(id);
+          this.$parent.$parent.$refs.response_pop_up.show(
+            "Session updated",
+            "Your changes have been saved"
+          );
+          this.$store.dispatch("endLoading");
+          break;
+        case "cancel":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: false,
+          });
+          this.isEditingSession = false;
+          this.editSession = null;
+          SESSION.notes = this.tempEditorStore;
+          break;
       }
     },
 
@@ -987,22 +1118,26 @@ export default {
     /**
      * Duplicates the selected sessions.
      */
-    async duplicate () {
-      this.$store.commit('setData', {
-        attr: 'loading',
-        data: true
-      })
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
-      const TO_DUPLICATE = []
-      const CLIENT_ID = this.$route.params.client_id
-      const PLAN_ID = this.$route.params.id
-      const SESSIONS = this.$store.getters.helper('match_plan', CLIENT_ID, PLAN_ID).sessions
+    async duplicate() {
+      this.$store.commit("setData", {
+        attr: "loading",
+        data: true,
+      });
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: true,
+      });
+      const TO_DUPLICATE = [];
+      const CLIENT_ID = this.$route.params.client_id;
+      const PLAN_ID = this.$route.params.id;
+      const SESSIONS = this.$store.getters.helper(
+        "match_plan",
+        CLIENT_ID,
+        PLAN_ID
+      ).sessions;
       this.selectedSessions.forEach((sessionId) => {
-        TO_DUPLICATE.push(SESSIONS.find(session => session.id === sessionId))
-      })
+        TO_DUPLICATE.push(SESSIONS.find((session) => session.id === sessionId));
+      });
       for (const SESSION of TO_DUPLICATE) {
         await this.addSession({
           clientId: CLIENT_ID,
@@ -1010,92 +1145,111 @@ export default {
           sessionName: `Copy of ${SESSION.name}`,
           sessionDate: SESSION.date,
           sessionNotes: SESSION.notes,
-          sessionWeek: SESSION.week_id
-        })
+          sessionWeek: SESSION.week_id,
+        });
       }
-      this.adherence()
-      this.checkForWeekSessions()
-      this.updater()
-      this.$ga.event('Session', 'duplicate')
-      this.$parent.$parent.$refs.response_pop_up.show(`${this.selectedSessions.length > 1 ? 'Sessions' : 'Session'} duplicated`, 'Get programming!')
-      this.$store.dispatch('endLoading')
+      this.adherence();
+      this.checkForWeekSessions();
+      this.updater();
+      this.$ga.event("Session", "duplicate");
+      this.$parent.$parent.$refs.response_pop_up.show(
+        `${
+          this.selectedSessions.length > 1 ? "Sessions" : "Session"
+        } duplicated`,
+        "Get programming!"
+      );
+      this.$store.dispatch("endLoading");
     },
 
     /**
      * Opens a new tab with the print preview of all the selected sessions.
      */
-    print () {
-      const NOTES_ARR = []
+    print() {
+      const NOTES_ARR = [];
       this.plan.sessions.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
-      })
+        return new Date(a.date) - new Date(b.date);
+      });
       this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          NOTES_ARR.push(`<div class="session"><h2>${session.name}</h2><h3>${session.date}</h3><br>${this.updateHTML(session.notes, true)}</div>`)
+          NOTES_ARR.push(
+            `<div class="session"><h2>${session.name}</h2><h3>${
+              session.date
+            }</h3><br>${this.updateHTML(session.notes, true)}</div>`
+          );
         }
-      })
-      const NEW_WINDOW = window.open()
-      const HTML = NOTES_ARR.join('')
-      NEW_WINDOW.document.write(`<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}@media print {.close_link {display: none}}</style><div><a class="close_link" href="javascript:void(0)" onclick="window.close()">Close print/export preview</a>${HTML}</div>`)
-      NEW_WINDOW.stop()
-      NEW_WINDOW.print()
-      this.$ga.event('Plan', 'print')
-      this.deselectAll()
+      });
+      const NEW_WINDOW = window.open();
+      const HTML = NOTES_ARR.join("");
+      NEW_WINDOW.document.write(
+        `<style>body>div{font-family: Arial, Helvetica, sans-serif;padding: 5% 10%}.session{padding: 36px 0}.session:not(:last-child){border-bottom: 1px solid #282828}@media print {.close_link {display: none}}</style><div><a class="close_link" href="javascript:void(0)" onclick="window.close()">Close print/export preview</a>${HTML}</div>`
+      );
+      NEW_WINDOW.stop();
+      NEW_WINDOW.print();
+      this.$ga.event("Plan", "print");
+      this.deselectAll();
     },
 
     /**
      * Shifts the selected sessions by specified days.
      */
-    shiftAcross () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    shiftAcross() {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: true,
+      });
       this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit('updateSessionAttr', {
+          this.$store.commit("updateSessionAttr", {
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
             sessionId: session.id,
-            attr: 'date',
-            data: this.addDays(session.date, parseInt(this.shiftDays))
-          })
+            attr: "date",
+            data: this.addDays(session.date, parseInt(this.shiftDays)),
+          });
         }
-      })
-      this.batchUpdateSession(this.selectedSessions)
-      this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Shifted sessions' : 'Shifted session', 'Your changes have been saved')
-      this.shiftDays = 1
-      this.deselectAll()
-      this.$ga.event('Session', 'shift')
-      this.$store.dispatch('endLoading')
+      });
+      this.batchUpdateSession(this.selectedSessions);
+      this.$parent.$parent.$refs.response_pop_up.show(
+        this.selectedSessions.length > 1
+          ? "Shifted sessions"
+          : "Shifted session",
+        "Your changes have been saved"
+      );
+      this.shiftDays = 1;
+      this.deselectAll();
+      this.$ga.event("Session", "shift");
+      this.$store.dispatch("endLoading");
     },
 
     /**
      * Moves the selected sessions to specified week.
      */
-    moveToWeek () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    moveToWeek() {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: true,
+      });
       this.plan.sessions.forEach((session) => {
         if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit('updateSessionAttr', {
+          this.$store.commit("updateSessionAttr", {
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
             sessionId: session.id,
-            attr: 'week_id',
-            data: this.moveTarget
-          })
+            attr: "week_id",
+            data: this.moveTarget,
+          });
         }
-      })
-      this.batchUpdateSession(this.selectedSessions)
-      this.currentWeek = parseInt(this.moveTarget)
-      this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Moved sessions' : 'Moved session', 'Your changes have been saved')
-      this.moveTarget = 1
-      this.deselectAll()
-      this.$ga.event('Session', 'move')
-      this.$store.dispatch('endLoading')
+      });
+      this.batchUpdateSession(this.selectedSessions);
+      this.currentWeek = parseInt(this.moveTarget);
+      this.$parent.$parent.$refs.response_pop_up.show(
+        this.selectedSessions.length > 1 ? "Moved sessions" : "Moved session",
+        "Your changes have been saved"
+      );
+      this.moveTarget = 1;
+      this.deselectAll();
+      this.$ga.event("Session", "move");
+      this.$store.dispatch("endLoading");
     },
 
     // -----------------------------
@@ -1106,126 +1260,151 @@ export default {
      * Toggles the complete/incomplete state of the selected sessions.
      * @param {integer} boolState - The state of the session, 1 - complete, 0 - incomplete.
      */
-    async bulkCheck (boolState) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    async bulkCheck(boolState) {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: true,
+      });
       if (this.selectedSessions.length !== 0) {
-        if (await this.$parent.$parent.$refs.confirm_pop_up.show(`Are you sure that you want to ${boolState === 1 ? 'complete' : 'incomplete'} all the selected sessions?`, 'You can update this later if anything changes.')) {
+        if (
+          await this.$parent.$parent.$refs.confirm_pop_up.show(
+            `Are you sure that you want to ${
+              boolState === 1 ? "complete" : "incomplete"
+            } all the selected sessions?`,
+            "You can update this later if anything changes."
+          )
+        ) {
           this.plan.sessions.forEach((session) => {
             if (this.selectedSessions.includes(session.id)) {
-              this.$store.commit('updateSessionAttr', {
+              this.$store.commit("updateSessionAttr", {
                 clientId: this.$route.params.client_id,
                 planId: this.$route.params.id,
                 sessionId: session.id,
-                attr: 'checked',
-                data: boolState
-              })
+                attr: "checked",
+                data: boolState,
+              });
             }
-          })
-          this.batchUpdateSession(this.selectedSessions)
-          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions updated' : 'Session updated', 'Your changes have been saved')
-          this.deselectAll()
+          });
+          this.batchUpdateSession(this.selectedSessions);
+          this.$parent.$parent.$refs.response_pop_up.show(
+            this.selectedSessions.length > 1
+              ? "Sessions updated"
+              : "Session updated",
+            "Your changes have been saved"
+          );
+          this.deselectAll();
         }
       }
-      this.$store.dispatch('endLoading')
+      this.$store.dispatch("endLoading");
     },
 
     /**
      * Deletes all the selected sessions.
      */
-    async bulkDelete () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    async bulkDelete() {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: true,
+      });
       if (this.selectedSessions.length !== 0) {
-        if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure that you want to delete all the selected sessions?', 'We will remove these sessions from our database and it won\'t be recoverable.')) {
+        if (
+          await this.$parent.$parent.$refs.confirm_pop_up.show(
+            "Are you sure that you want to delete all the selected sessions?",
+            "We will remove these sessions from our database and it won't be recoverable."
+          )
+        ) {
           try {
-            await this.$store.dispatch('deleteSession', {
+            await this.$store.dispatch("deleteSession", {
               clientId: this.$route.params.client_id,
               planId: this.$route.params.id,
-              sessionIds: this.selectedSessions
-            })
+              sessionIds: this.selectedSessions,
+            });
           } catch (e) {
-            this.$parent.$parent.resolveError(e)
+            this.$parent.$parent.resolveError(e);
           }
-          this.checkForWeekSessions()
-          this.deselectAll()
-          this.expandAll('Collapse')
-          this.updater()
-          this.$ga.event('Session', 'delete')
-          this.$parent.$parent.$refs.response_pop_up.show(this.selectedSessions.length > 1 ? 'Sessions deleted' : 'Session deleted', 'Your changes have been saved')
-          this.$store.dispatch('endLoading')
+          this.checkForWeekSessions();
+          this.deselectAll();
+          this.expandAll("Collapse");
+          this.updater();
+          this.$ga.event("Session", "delete");
+          this.$parent.$parent.$refs.response_pop_up.show(
+            this.selectedSessions.length > 1
+              ? "Sessions deleted"
+              : "Session deleted",
+            "Your changes have been saved"
+          );
+          this.$store.dispatch("endLoading");
         }
       }
-      this.$store.dispatch('endLoading')
+      this.$store.dispatch("endLoading");
     },
 
     /**
      * Selects all the sessions in the plan or week.
      * @param {string} mode - To select all session or all sessions in the current week ('all' or 'week').
      */
-    selectAll (mode) {
+    selectAll(mode) {
       this.plan.sessions.forEach((session) => {
         if (!this.selectedSessions.includes(session.id)) {
-          if (mode === 'all') {
-            document.getElementById(`sc-${session.id}`).checked = true
-            this.selectedSessions.push(session.id)
-          } else if (mode === 'week' && session.week_id === this.currentWeek) {
-            document.getElementById(`sc-${session.id}`).checked = true
-            this.selectedSessions.push(session.id)
+          if (mode === "all") {
+            document.getElementById(`sc-${session.id}`).checked = true;
+            this.selectedSessions.push(session.id);
+          } else if (mode === "week" && session.week_id === this.currentWeek) {
+            document.getElementById(`sc-${session.id}`).checked = true;
+            this.selectedSessions.push(session.id);
           }
         }
-      })
+      });
     },
 
     /**
      * Deselects all the sessions.
      */
-    deselectAll () {
+    deselectAll() {
       this.selectedSessions.forEach((id) => {
-        document.getElementById(`sc-${id}`).checked = false
-      })
-      this.selectedSessions = []
+        document.getElementById(`sc-${id}`).checked = false;
+      });
+      this.selectedSessions = [];
     },
 
     /**
      * Toggles the state of the custom checkbox component.
      */
-    changeSelectCheckbox (id) {
+    changeSelectCheckbox(id) {
       if (!this.selectedSessions.includes(id)) {
-        this.selectedSessions.push(id)
+        this.selectedSessions.push(id);
       } else {
-        const IDX = this.selectedSessions.indexOf(id)
-        this.selectedSessions.splice(IDX, 1)
+        const IDX = this.selectedSessions.indexOf(id);
+        this.selectedSessions.splice(IDX, 1);
       }
     },
 
     /**
      * Creates a new session.
      */
-    async createNewSession () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    async createNewSession() {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: true,
+      });
       const NEW_SESSION_ID = await this.addSession({
         clientId: this.$route.params.client_id,
         planId: this.$route.params.id,
-        sessionName: 'Untitled',
+        sessionName: "Untitled",
         sessionDate: this.today(),
-        sessionNotes: '',
-        sessionWeek: this.currentWeek
-      })
-      this.adherence()
-      this.checkForWeekSessions()
-      this.updater()
-      this.goToEvent(NEW_SESSION_ID, this.currentWeek)
-      this.$ga.event('Session', 'new')
-      this.$parent.$parent.$refs.response_pop_up.show('New session added', 'Get programming!')
-      this.$store.dispatch('endLoading')
+        sessionNotes: "",
+        sessionWeek: this.currentWeek,
+      });
+      this.adherence();
+      this.checkForWeekSessions();
+      this.updater();
+      this.goToEvent(NEW_SESSION_ID, this.currentWeek);
+      this.$ga.event("Session", "new");
+      this.$parent.$parent.$refs.response_pop_up.show(
+        "New session added",
+        "Get programming!"
+      );
+      this.$store.dispatch("endLoading");
     },
 
     // -----------------------------
@@ -1237,69 +1416,78 @@ export default {
      * @param {integer} id - The id of the session.
      * @param {integer} week - The week containing the session.
      */
-    goToEvent (id, week) {
-      this.expandAll('Expand')
-      this.currentWeek = week
+    goToEvent(id, week) {
+      this.expandAll("Expand");
+      this.currentWeek = week;
       setTimeout(() => {
-        document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
-      }, 100)
+        document
+          .getElementById(`session-${id}`)
+          .scrollIntoView({ behavior: "smooth" });
+      }, 100);
     },
 
     /**
      * Checks if the current week has sessions.
      */
-    checkForWeekSessions () {
-      let arr = 0
-      const SESSIONS = this.$store.getters.helper('match_plan', this.$route.params.client_id, this.$route.params.id).sessions
-      this.noSessions = SESSIONS === false
+    checkForWeekSessions() {
+      let arr = 0;
+      const SESSIONS = this.$store.getters.helper(
+        "match_plan",
+        this.$route.params.client_id,
+        this.$route.params.id
+      ).sessions;
+      this.noSessions = SESSIONS === false;
       if (SESSIONS && !this.noSessions) {
         SESSIONS.forEach((session) => {
           if (session.week_id === this.currentWeek) {
-            arr += 1
-            this.weekSessions.push(session.id)
+            arr += 1;
+            this.weekSessions.push(session.id);
           }
-        })
+        });
       }
-      this.weekIsEmpty = arr === 0
+      this.weekIsEmpty = arr === 0;
     },
 
     /**
      * Expands the main body of the targetted session.
      * @param {integer} id - The id of the session.
      */
-    toggleExpandedSessions (id) {
+    toggleExpandedSessions(id) {
       if (this.expandedSessions.includes(id)) {
-        const INDEX = this.expandedSessions.indexOf(id)
+        const INDEX = this.expandedSessions.indexOf(id);
         if (INDEX > -1) {
-          this.expandedSessions.splice(INDEX, 1)
+          this.expandedSessions.splice(INDEX, 1);
         }
       } else {
-        this.expandedSessions.push(id)
+        this.expandedSessions.push(id);
       }
     },
 
     /**
      * Updates the week color.
      */
-    updateSessionColor () {
-      this.$store.commit('updatePlanAttr', {
+    updateSessionColor() {
+      this.$store.commit("updatePlanAttr", {
         clientId: this.clientDetails.client_id,
         planId: this.plan.id,
-        attr: 'block_color',
-        data: JSON.stringify(this.weekColor.backgroundColor).replace(/"/g, '').replace(/[[\]]/g, '').replace(/\//g, '')
-      })
-      this.editingWeekColor = false
-      this.updatePlan()
+        attr: "block_color",
+        data: JSON.stringify(this.weekColor.backgroundColor)
+          .replace(/"/g, "")
+          .replace(/[[\]]/g, "")
+          .replace(/\//g, ""),
+      });
+      this.editingWeekColor = false;
+      this.updatePlan();
     },
 
     /**
      * Switch to a different week.
      * @param {integer} - The id of the week.
      */
-    changeWeek (weekID) {
-      this.currentWeek = weekID
-      this.moveTarget = weekID
-      this.checkForWeekSessions()
+    changeWeek(weekID) {
+      this.currentWeek = weekID;
+      this.moveTarget = weekID;
+      this.checkForWeekSessions();
     },
 
     // -----------------------------
@@ -1311,13 +1499,13 @@ export default {
      * @param {integer} duration - The length of the plan.
      * @returns The duration array.
      */
-    planDuration (duration) {
-      const ARR = []
-      let i
+    planDuration(duration) {
+      const ARR = [];
+      let i;
       for (i = 1; i < parseInt(duration, 10) + 1; i++) {
-        ARR.push(i)
+        ARR.push(i);
       }
-      return ARR
+      return ARR;
     },
 
     // -----------------------------
@@ -1329,50 +1517,56 @@ export default {
      * @param {array} data - The sessions array to be sorted.
      * @returns The sorted sessions array.
      */
-    sessionsSorter (data) {
+    sessionsSorter(data) {
       data = data.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
-      })
-      return data
+        return new Date(a.date) - new Date(b.date);
+      });
+      return data;
     },
 
     /**
      * Updates the state of the plan page to show the correct data.
      */
-    updater () {
-      this.sessionDates = []
-      this.weekColor.backgroundColor = this.plan.block_color.replace('[', '').replace(']', '').split(',')
+    updater() {
+      this.sessionDates = [];
+      this.weekColor.backgroundColor = this.plan.block_color
+        .replace("[", "")
+        .replace("]", "")
+        .split(",");
       if (this.plan.sessions) {
         for (const SESSION of this.plan.sessions) {
           this.sessionDates.push({
             title: SESSION.name,
             date: SESSION.date,
             color: this.weekColor.backgroundColor[SESSION.week_id - 1],
-            textColor: this.accessible_colors(this.weekColor.backgroundColor[SESSION.week_id - 1]),
+            textColor: this.accessible_colors(
+              this.weekColor.backgroundColor[SESSION.week_id - 1]
+            ),
             week_id: SESSION.week_id,
-            session_id: SESSION.id
-          })
+            session_id: SESSION.id,
+          });
         }
       }
-      this.maxWeek = parseInt(this.plan.duration)
+      this.maxWeek = parseInt(this.plan.duration);
     },
 
     /**
      * Determines and visualises the ratio of completed and incompleted sessions.
      */
-    adherence () {
-      this.sessionsDone = 0
-      this.sessionsTotal = 0
+    adherence() {
+      this.sessionsDone = 0;
+      this.sessionsTotal = 0;
       if (this.plan.sessions) {
         for (const SESSION of this.plan.sessions) {
-          this.sessionsTotal += 1
+          this.sessionsTotal += 1;
           if (SESSION.checked === 1) {
-            this.sessionsDone++
+            this.sessionsDone++;
           }
         }
-        const PROGRESS_BAR = document.getElementById('progress-bar')
+        const PROGRESS_BAR = document.getElementById("progress-bar");
         if (PROGRESS_BAR) {
-          PROGRESS_BAR.style.width = this.sessionsDone / this.sessionsTotal * 100 + '%'
+          PROGRESS_BAR.style.width =
+            (this.sessionsDone / this.sessionsTotal) * 100 + "%";
         }
       }
     },
@@ -1381,25 +1575,25 @@ export default {
      * Expand or unexpand all sessions.
      * @param {string} toExpand - Whether to expand or unexpand.
      */
-    expandAll (toExpand) {
+    expandAll(toExpand) {
       try {
         if (Array.isArray(this.plan.sessions)) {
           if (this.plan.sessions.length !== 0) {
             this.plan.sessions.forEach((session) => {
-              if (toExpand === 'Expand') {
-                this.expandedSessions.push(session.id)
+              if (toExpand === "Expand") {
+                this.expandedSessions.push(session.id);
               } else {
-                let x = 0
-                const Y = this.expandedSessions.length
+                let x = 0;
+                const Y = this.expandedSessions.length;
                 for (; x < Y; x++) {
-                  this.expandedSessions.pop()
+                  this.expandedSessions.pop();
                 }
               }
-            })
+            });
           }
         }
       } catch (e) {
-        console.error(e)
+        console.error(e);
       }
     },
 
@@ -1411,67 +1605,80 @@ export default {
      * Duplicates the plan to select client.
      * @param {integer} clientId - The client to copy the plan to.
      */
-    async duplicatePlan (clientId) {
+    async duplicatePlan(clientId) {
       try {
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('duplicatePlan', {
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        await this.$store.dispatch("duplicatePlan", {
           clientId,
           planId: this.plan.id,
           planName: this.plan.name,
           planDuration: this.plan.duration,
           blockColor: this.plan.block_color,
           planNotes: this.plan.notes,
-          planSessions: this.plan.sessions
-        })
-        this.$ga.event('Plan', 'duplicate')
-        this.$parent.$parent.$refs.response_pop_up.show('Plan duplicated', 'Access it on your client\'s profile')
-        this.$store.dispatch('endLoading')
-        this.$router.push({ path: `/client/${clientId}/` })
+          planSessions: this.plan.sessions,
+        });
+        this.$ga.event("Plan", "duplicate");
+        this.$parent.$parent.$refs.response_pop_up.show(
+          "Plan duplicated",
+          "Access it on your client's profile"
+        );
+        this.$store.dispatch("endLoading");
+        this.$router.push({ path: `/client/${clientId}/` });
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e);
       }
     },
 
     /**
      * Updates the details of the plan.
      */
-    async updatePlan () {
+    async updatePlan() {
       try {
-        this.$store.commit('setData', {
-          attr: 'loading',
-          data: true
-        })
-        await this.$store.dispatch('updatePlan', this.plan)
-        this.$ga.event('Plan', 'update')
-        this.$store.dispatch('endLoading')
+        this.$store.commit("setData", {
+          attr: "loading",
+          data: true,
+        });
+        await this.$store.dispatch("updatePlan", this.plan);
+        this.$ga.event("Plan", "update");
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e);
       }
     },
 
     /**
      * Deletes the plan.
      */
-    async deletePlan () {
-      if (await this.$parent.$parent.$refs.confirm_pop_up.show('Are you sure you want to delete this plan?', 'We will remove this plan from our database and it won\'t be recoverable.')) {
+    async deletePlan() {
+      if (
+        await this.$parent.$parent.$refs.confirm_pop_up.show(
+          "Are you sure you want to delete this plan?",
+          "We will remove this plan from our database and it won't be recoverable."
+        )
+      ) {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          await this.$store.dispatch('deletePlan', {
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          await this.$store.dispatch("deletePlan", {
             clientId: this.$route.params.client_id,
-            planId: this.$route.params.id
-          })
-          this.$ga.event('Session', 'delete')
-          this.$parent.$parent.$refs.response_pop_up.show('Plan deleted', 'Your changes have been saved')
-          this.$store.dispatch('endLoading')
-          this.$router.push({ path: `/client/${this.clientDetails.client_id}/` })
+            planId: this.$route.params.id,
+          });
+          this.$ga.event("Session", "delete");
+          this.$parent.$parent.$refs.response_pop_up.show(
+            "Plan deleted",
+            "Your changes have been saved"
+          );
+          this.$store.dispatch("endLoading");
+          this.$router.push({
+            path: `/client/${this.clientDetails.client_id}/`,
+          });
         } catch (e) {
-          this.$parent.$parent.resolveError(e)
+          this.$parent.$parent.resolveError(e);
         }
       }
     },
@@ -1480,18 +1687,18 @@ export default {
      * Updates the selected sessions.
      * @param {array} sessionIds - The ids of the sessions.
      */
-    async batchUpdateSession (sessionIds) {
+    async batchUpdateSession(sessionIds) {
       try {
-        await this.$store.dispatch('batchUpdateSession', {
+        await this.$store.dispatch("batchUpdateSession", {
           clientId: this.$route.params.client_id,
           planId: this.$route.params.id,
-          sessionIds
-        })
-        this.adherence()
-        this.$ga.event('Session', 'update')
-        this.$store.dispatch('endLoading')
+          sessionIds,
+        });
+        this.adherence();
+        this.$ga.event("Session", "update");
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e);
       }
     },
 
@@ -1499,18 +1706,18 @@ export default {
      * Updates a single session.
      * @param {integer} sessionId - The id of the session.
      */
-    async updateSession (sessionId) {
+    async updateSession(sessionId) {
       try {
-        await this.$store.dispatch('updateSession', {
+        await this.$store.dispatch("updateSession", {
           clientId: this.$route.params.client_id,
           planId: this.$route.params.id,
-          sessionId
-        })
-        this.adherence()
-        this.$ga.event('Session', 'update')
-        this.$store.dispatch('endLoading')
+          sessionId,
+        });
+        this.adherence();
+        this.$ga.event("Session", "update");
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e);
       }
     },
 
@@ -1519,23 +1726,23 @@ export default {
      * @param {object} data - Pre-existing session data.
      * @returns The id of the new session.
      */
-    async addSession (data) {
+    async addSession(data) {
       try {
-        const NEW_SESSION_ID = await this.$store.dispatch('addSession', {
+        const NEW_SESSION_ID = await this.$store.dispatch("addSession", {
           client_id: parseInt(data.clientId),
           data: {
             programme_id: parseInt(data.planId),
             name: data.sessionName,
             date: data.sessionDate,
             notes: data.sessionNotes,
-            week_id: data.sessionWeek
-          }
-        })
-        return NEW_SESSION_ID
+            week_id: data.sessionWeek,
+          },
+        });
+        return NEW_SESSION_ID;
       } catch (e) {
-        this.$parent.$parent.resolveError(e)
+        this.$parent.$parent.resolveError(e);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
