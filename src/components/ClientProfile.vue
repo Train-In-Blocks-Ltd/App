@@ -46,9 +46,6 @@
   /* Booking outer container */
   .bookings_container {
     padding: 2rem;
-    background-color: var(--fore);
-    border: 3px solid var(--base);
-    border-radius: 10px;
     margin: 2rem 0;
 
     /* Booking inner container */
@@ -196,7 +193,12 @@
         :type="'client'"
         class="bookings_container_skeleton"
       />
-      <div v-else class="bookings_container">
+      <card-wrapper
+        v-else
+        class="bookings_container"
+        background-color="var(--fore)"
+        no-hover
+      >
         <h3>Upcoming</h3>
         <div class="bookings_sub_container">
           <div v-if="clientUser.bookings.length !== 0" class="bookings_wrapper">
@@ -285,7 +287,7 @@
             </button>
           </form>
         </div>
-      </div>
+      </card-wrapper>
     </div>
   </div>
 </template>
@@ -293,8 +295,15 @@
 <script>
 import Compressor from "compressorjs";
 import { mapState } from "vuex";
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+  );
 
 export default {
+  components: {
+    CardWrapper,
+  },
   data() {
     return {
       bookingForm: {

@@ -204,7 +204,7 @@
 import { mapState } from "vuex";
 const CardWrapper = () =>
   import(
-    /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "./generic/CardWrapper"
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
   );
 const Checkbox = () =>
   import(

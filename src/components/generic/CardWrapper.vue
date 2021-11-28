@@ -27,6 +27,7 @@
 <template>
   <div
     :class="['card_wrapper', { animated: !noTransition, has_hover: !noHover }]"
+    :style="{ backgroundColor }"
   >
     <slot />
   </div>
@@ -37,6 +38,7 @@ export default {
   props: {
     noTransition: Boolean,
     noHover: Boolean,
+    backgroundColor: String,
   },
 };
 </script>
