@@ -17,13 +17,13 @@ export default {
   props: {
     class: String
   },
-  data () {
+  data() {
     return {
       nextBooking: {
         datetime: false,
         isToday: false
       }
-    }
+    };
   }
-}
+};
 </script>
