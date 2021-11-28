@@ -23,6 +23,14 @@
   --light_opacity: 0.6;
   --active_state: scale(0.95);
 
+  // Responsiveness
+  --2xl: 1538px;
+  --xl: 1280px;
+  --lg: 1024px;
+  --md: 768px;
+  --sm: 640px;
+  --xs: 360px;
+
   height: -webkit-fill-available;
 }
 

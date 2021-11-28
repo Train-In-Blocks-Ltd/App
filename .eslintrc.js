@@ -1,15 +1,15 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
+    es2021: true
   },
   extends: ["plugin:vue/essential"],
   parserOptions: {
     ecmaVersion: 12,
-    sourceType: "module",
+    sourceType: "module"
   },
   plugins: ["vue"],
   rules: {
-    "vue/multi-word-component-names": "off",
-  },
+    "vue/multi-word-component-names": "off"
+  }
 };
