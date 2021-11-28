@@ -1,7 +1,5 @@
 <style lang="scss" scoped>
-#month_calendar {
-  border-radius: 10px;
-  border: 3px solid var(--base);
+.month_calendar {
   margin-top: 1rem;
 }
 .calendar_header {
@@ -95,7 +93,7 @@
 </style>
 
 <template>
-  <div id="month_calendar">
+  <card-wrapper class="month_calendar" noHover>
     <div class="calendar_header">
       <h3>{{ currentMonth }} {{ currentYear }}</h3>
       <div class="calendar_header__bar">
@@ -152,11 +150,17 @@
         </p>
       </div>
     </div>
-  </div>
+  </card-wrapper>
 </template>
 
 <script>
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+  );
+
 export default {
+  components: { CardWrapper },
   props: {
     events: Array,
     forceUpdate: Number,

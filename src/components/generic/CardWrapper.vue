@@ -7,14 +7,16 @@
   &.animated {
     transition: var(--transition_standard);
   }
-  &.has_hover:hover {
+  &.has_hover:hover,
+  &.has_shadow {
     box-shadow: var(--high_shadow);
   }
 }
 
 @media (max-width: var(--md)) {
   .client_wrapper {
-    &.has_hover:hover {
+    &.has_hover:hover,
+    &.has_shadow {
       box-shadow: var(--low_shadow);
     }
     &:active {
@@ -26,7 +28,10 @@
 
 <template>
   <div
-    :class="['card_wrapper', { animated: !noTransition, has_hover: !noHover }]"
+    :class="[
+      'card_wrapper',
+      { animated: !noTransition, has_hover: !noHover, has_shadow: hasShadow },
+    ]"
     :style="{ backgroundColor }"
   >
     <slot />
@@ -39,6 +44,7 @@ export default {
     noTransition: Boolean,
     noHover: Boolean,
     backgroundColor: String,
+    hasShadow: Boolean,
   },
 };
 </script>
