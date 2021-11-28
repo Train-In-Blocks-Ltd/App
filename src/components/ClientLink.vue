@@ -21,7 +21,7 @@
 
 <style lang="scss" scoped>
 /* Client Link */
-.container {
+.client_link {
   display: grid;
   padding: 2rem;
   grid-gap: 1rem;
@@ -140,7 +140,7 @@
 </style>
 
 <template>
-  <card-wrapper class="container">
+  <card-wrapper class="client_link">
     <div class="client_information">
       <div>
         <div
