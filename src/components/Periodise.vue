@@ -84,7 +84,7 @@
       <card-wrapper
         v-for="(plan, planIndex) in plans"
         :key="`plan_${planIndex}`"
-        class="plan fadeIn"
+        class="plan"
         noHover
       >
         <div class="plan_header">
