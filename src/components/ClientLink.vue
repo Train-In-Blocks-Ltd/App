@@ -1,7 +1,6 @@
 <style lang="scss">
 
 /* Preview HTML */
-.client_link {
   .preview_html {
     font-size: .8rem;
     margin-top: .4rem;
@@ -19,13 +18,12 @@
       display: none
     }
   }
-}
 </style>
 
 <style lang="scss" scoped>
 
 /* Client Link */
-.client_link {
+.container {
   display: grid;
   padding: 2rem;
   grid-gap: 1rem;
@@ -143,7 +141,7 @@
 </style>
 
 <template>
-  <div class="client_link">
+  <card-wrapper class="container">
     <div class="client_information">
       <div>
         <div
@@ -214,15 +212,17 @@
       class="select_checkbox"
       aria-label="Select this client"
     />
-  </div>
+  </card-wrapper>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ '../components/Checkbox')
+const CardWrapper = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ './generic/CardWrapper')
+const Checkbox = () => import(/* webpackChunkName: "components.checkbox", webpackPreload: true  */ './Checkbox')
 
 export default {
   components: {
+    CardWrapper,
     Checkbox
   },
   props: {
