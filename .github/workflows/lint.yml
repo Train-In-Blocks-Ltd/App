@@ -1,4 +1,4 @@
-name: Lint Files on Commit
+name: Linter
 
 on: [push]
 
