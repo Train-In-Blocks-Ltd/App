@@ -1,11 +1,10 @@
 export default {
-
   // Auth
 
   authenticated: false,
   isTrainer: false,
   claims: {
-    user_type: 0
+    user_type: 0,
   },
 
   // System
@@ -17,9 +16,9 @@ export default {
   noClients: true,
   pwa: {
     deferredPrompt: null,
-    displayMode: 'browser tab',
+    displayMode: "browser tab",
     canInstall: false,
-    installed: null
+    installed: null,
   },
   connected: true,
   clientUserLoaded: false,
@@ -36,15 +35,15 @@ export default {
     profile_image: null,
     sessionsToday: [],
     bookings: [],
-    products: []
+    products: [],
   },
 
   // Portfolio
 
   portfolio: {
-    business_name: '',
-    trainer_name: '',
-    notes: ''
+    business_name: "",
+    trainer_name: "",
+    notes: "",
   },
 
   // Products
@@ -60,14 +59,14 @@ export default {
 
   archive: {
     clients: {},
-    noArchive: true
+    noArchive: true,
   },
 
   // Versioning
 
-  policyVersion: '1.1',
-  versionName: 'Andromeda',
-  versionBuild: '4.0',
+  policyVersion: "1.1",
+  versionName: "Andromeda",
+  versionBuild: "4.0",
   newBuild: false,
   showEULA: false,
 
@@ -75,6 +74,6 @@ export default {
   coupon: {
     checked: false,
     generated: false,
-    code: null
-  }
-}
+    code: null,
+  },
+};

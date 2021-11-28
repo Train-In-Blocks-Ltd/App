@@ -7,7 +7,7 @@
 </style>
 
 <template>
-  <div class="container">
+  <div :class="`container ${cls}`">
     <slot />
   </div>
 </template>
@@ -15,15 +15,15 @@
 <script>
 export default {
   props: {
-    class: String
+    cls: String,
   },
   data() {
     return {
       nextBooking: {
         datetime: false,
-        isToday: false
-      }
+        isToday: false,
+      },
     };
-  }
+  },
 };
 </script>

@@ -11,16 +11,20 @@ export default {
    * @param {string} payload.feedback - The client feedback of the session.
    * @param {number} payload.week_id - The week/micro-cycle that the session belongs to.
    */
-  addNewSession (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.client_id))
-    const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.programme_id))
-    delete payload.client_id
+  addNewSession(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.client_id)
+    );
+    const PLAN = CLIENT.plans.find(
+      (plan) => plan.id === parseInt(payload.programme_id)
+    );
+    delete payload.client_id;
     if (!PLAN.sessions) {
-      PLAN.sessions = []
+      PLAN.sessions = [];
     }
     PLAN.sessions.push({
-      ...payload
-    })
+      ...payload,
+    });
   },
 
   /**
@@ -29,10 +33,14 @@ export default {
    * @param {number} payload.planId - The id of the plan.
    * @param {array} payload.data - The updated array of sessions.
    */
-  updateAllSessions (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-    const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-    PLAN.sessions = payload.data
+  updateAllSessions(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.clientId)
+    );
+    const PLAN = CLIENT.plans.find(
+      (plan) => plan.id === parseInt(payload.planId)
+    );
+    PLAN.sessions = payload.data;
   },
 
   /**
@@ -43,11 +51,17 @@ export default {
    * @param {string} payload.attr - The key of the data to change.
    * @param {*} payload.data - The new data.
    */
-  updateSessionAttr (state, payload) {
-    const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-    const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-    const SESSION = PLAN.sessions.find(session => session.id === parseInt(payload.sessionId))
-    SESSION[payload.attr] = payload.data
+  updateSessionAttr(state, payload) {
+    const CLIENT = state.clients.find(
+      (client) => client.client_id === parseInt(payload.clientId)
+    );
+    const PLAN = CLIENT.plans.find(
+      (plan) => plan.id === parseInt(payload.planId)
+    );
+    const SESSION = PLAN.sessions.find(
+      (session) => session.id === parseInt(payload.sessionId)
+    );
+    SESSION[payload.attr] = payload.data;
   },
 
   /**
@@ -56,12 +70,16 @@ export default {
    * @param {number} payload.planId - The id of the plan.
    * @param {array} payload.sessionIds - An array of all session ids to delete.
    */
-  removeSession (state, payload) {
+  removeSession(state, payload) {
     payload.sessionIds.forEach((sessionId) => {
-      const CLIENT = state.clients.find(client => client.client_id === parseInt(payload.clientId))
-      const PLAN = CLIENT.plans.find(plan => plan.id === parseInt(payload.planId))
-      const SESSION = PLAN.sessions.find(session => session.id === sessionId)
-      PLAN.sessions.splice(PLAN.sessions.indexOf(SESSION), 1)
-    })
-  }
-}
+      const CLIENT = state.clients.find(
+        (client) => client.client_id === parseInt(payload.clientId)
+      );
+      const PLAN = CLIENT.plans.find(
+        (plan) => plan.id === parseInt(payload.planId)
+      );
+      const SESSION = PLAN.sessions.find((session) => session.id === sessionId);
+      PLAN.sessions.splice(PLAN.sessions.indexOf(SESSION), 1);
+    });
+  },
+};

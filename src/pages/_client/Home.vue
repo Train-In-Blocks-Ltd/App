@@ -1,22 +1,22 @@
 <style lang="scss" scoped>
 .section--top {
   display: grid;
-  grid-template-columns: .2fr 1fr;
+  grid-template-columns: 0.2fr 1fr;
   grid-gap: 1.6rem;
   .image {
     background-size: cover;
     background-position: center;
     height: 140px;
     width: 140px;
-    filter: grayscale(.8);
-    border-radius: 50%
+    filter: grayscale(0.8);
+    border-radius: 50%;
   }
   .image-placeholder {
     padding: 1.8rem;
     height: 140px;
     width: 140px;
     border: 4px solid var(--base);
-    border-radius: 50%
+    border-radius: 50%;
   }
   .client-info {
     display: grid;
@@ -28,7 +28,7 @@
         display: flex;
         margin: auto 0;
         .email {
-          margin-left: .6rem
+          margin-left: 0.6rem;
         }
       }
     }
@@ -49,17 +49,17 @@
   box-shadow: var(--low_shadow);
   transition: var(--transition_standard);
   &.openFloatingNav {
-    transform: none
+    transform: none;
   }
   .floating-nav {
     display: grid;
     grid-gap: 2rem;
     text-align: right;
     a {
-      text-align: right
+      text-align: right;
     }
     .cursor {
-      margin-left: auto
+      margin-left: auto;
     }
     .options {
       display: grid;
@@ -67,7 +67,7 @@
       a {
         margin-left: auto;
         svg {
-          margin-left: .4rem
+          margin-left: 0.4rem;
         }
       }
     }
@@ -80,14 +80,14 @@
       grid-template-columns: 1fr;
       transition: var(--transition_standard);
       &:active {
-        transform: var(--active_state)
+        transform: var(--active_state);
       }
       &:before {
-        content: none
+        content: none;
       }
     }
     .text--hideable {
-      display: none
+      display: none;
     }
   }
 }
@@ -96,11 +96,11 @@
     grid-template-columns: 1fr;
     .image-placeholder,
     .image {
-      margin: auto
+      margin: auto;
     }
     .client-info {
       input.client-info--name {
-        font-size: 2rem
+        font-size: 2rem;
       }
     }
   }
@@ -110,33 +110,38 @@
     display: block;
     .verify-button {
       width: 100%;
-      margin-top: 1rem
+      margin-top: 1rem;
     }
   }
 }
 </style>
 
 <template>
-  <div
-    v-if="clientDetails"
-    id="client"
-    class="view_container"
-  >
+  <div v-if="clientDetails" id="client" class="view_container">
     <div :class="{ opened_sections: showToolkit }" class="section_overlay" />
-    <div v-if="!showOptions" class="tab_option tab_option_small" aria-label="Menu" @click="showOptions = true">
-      <inline-svg :src="require('../../assets/svg/options.svg')" aria-label="Options" />
-      <p class="text">
-        Options
-      </p>
+    <div
+      v-if="!showOptions"
+      class="tab_option tab_option_small"
+      aria-label="Menu"
+      @click="showOptions = true"
+    >
+      <inline-svg
+        :src="require('../../assets/svg/options.svg')"
+        aria-label="Options"
+      />
+      <p class="text">Options</p>
     </div>
-    <div v-if="showToolkit" class="tab_overlay_content fadeIn delay fill_mode_both">
+    <div
+      v-if="showToolkit"
+      class="tab_overlay_content fadeIn delay fill_mode_both"
+    >
       <toolkit />
     </div>
-    <div class="wrapper--floating-nav" :class="{ openFloatingNav: showOptions }">
-      <div
-        v-if="showOptions"
-        class="floating-nav fadeIn"
-      >
+    <div
+      class="wrapper--floating-nav"
+      :class="{ openFloatingNav: showOptions }"
+    >
+      <div v-if="showOptions" class="floating-nav fadeIn">
         <inline-svg
           class="close_icon not_fixed cursor"
           :src="require('../../assets/svg/close.svg')"
@@ -147,7 +152,9 @@
           <a
             class="a_link"
             href="javascript:void(0)"
-            @click="showToolkit = true, willBodyScroll(false), showOptions = false"
+            @click="
+              (showToolkit = true), willBodyScroll(false), (showOptions = false)
+            "
           >
             Toolkit
             <inline-svg :src="require('../../assets/svg/calculate.svg')" />
@@ -155,7 +162,9 @@
           <a
             class="a_link"
             href="javascript:void(0)"
-            @click="clientArchive($route.params.client_id), showOptions = false"
+            @click="
+              clientArchive($route.params.client_id), (showOptions = false)
+            "
           >
             Archive Client
             <inline-svg :src="require('../../assets/svg/archive.svg')" />
@@ -183,7 +192,7 @@
           autocomplete="name"
           :disabled="silentLoading"
           @blur="updateClient()"
-        >
+        />
         <input
           id="phone"
           v-model="clientDetails.number"
@@ -198,7 +207,7 @@
           pattern="\d+"
           :disabled="silentLoading"
           @blur="updateClient()"
-        >
+        />
         <div v-if="!sessions" class="options">
           <div class="email-bar">
             <inline-svg :src="require('../../assets/svg/email.svg')" />
@@ -215,11 +224,20 @@
             {{ clientAlreadyMsg }}
           </button>
           <button
-            v-else-if="clientAlready && clientAlreadyMsg !== 'Loading...' && clientAlreadyMsg !== 'Error'"
+            v-else-if="
+              clientAlready &&
+              clientAlreadyMsg !== 'Loading...' &&
+              clientAlreadyMsg !== 'Error'
+            "
             class="verify-button fadeIn"
-            @click="clientDetails.notifications = clientDetails.notifications === 1 ? 0 : 1, updateClient()"
+            @click="
+              (clientDetails.notifications =
+                clientDetails.notifications === 1 ? 0 : 1),
+                updateClient()
+            "
           >
-            {{ clientDetails.notifications === 1 ? 'Disable' : 'Enable' }} email notifications
+            {{ clientDetails.notifications === 1 ? "Disable" : "Enable" }} email
+            notifications
           </button>
           <button
             v-else
@@ -232,30 +250,38 @@
         </div>
       </div>
     </div>
-    <transition enter-active-class="fadeIn fill_mode_both delay" leave-active-class="fadeOut fill_mode_both">
+    <transition
+      enter-active-class="fadeIn fill_mode_both delay"
+      leave-active-class="fadeOut fill_mode_both"
+    >
       <router-view :key="$route.fullPath" />
     </transition>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-const emailBuilder = require('../../components/js/email')
-const Toolkit = () => import(/* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ '../../components/Toolkit')
-const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
+import { mapState } from "vuex";
+const emailBuilder = require("../../components/js/email");
+const Toolkit = () =>
+  import(
+    /* webpackChunkName: "components.toolkit", webpackPrefetch: true  */ "../../components/Toolkit"
+  );
+const CUSTOM_ENV =
+  process.env.NODE_ENV === "production"
+    ? require("../../../config/prod.env")
+    : require("../../../config/dev.env");
 
 export default {
-  metaInfo  () {
+  metaInfo() {
     return {
-      title: this.loading ? 'Loading...' : this.clientDetails.name
-    }
+      title: this.loading ? "Loading..." : this.clientDetails.name,
+    };
   },
   components: {
-    Toolkit
+    Toolkit,
   },
-  data () {
+  data() {
     return {
-
       // BACKGROUND
 
       showOptions: false,
@@ -267,34 +293,30 @@ export default {
 
       // CLIENT STATUS
 
-      clientAlreadyMsg: 'Loading...',
+      clientAlreadyMsg: "Loading...",
       clientAlready: true,
-      clientSuspend: null
-    }
+      clientSuspend: null,
+    };
   },
-  computed: mapState([
-    'loading',
-    'silentLoading',
-    'clients',
-    'clientDetails'
-  ]),
-  async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
-    this.willBodyScroll(true)
-    await this.$parent.setup()
-    const CLIENT = this.clients.find(client => client.client_id === parseInt(this.$route.params.client_id))
-    await this.$store.dispatch('getPlans', CLIENT.client_id)
-    this.$store.commit('setData', {
-      attr: 'clientDetails',
-      data: CLIENT
-    })
-    this.$store.dispatch('endLoading')
+  computed: mapState(["loading", "silentLoading", "clients", "clientDetails"]),
+  async created() {
+    this.$store.commit("setData", {
+      attr: "loading",
+      data: true,
+    });
+    this.willBodyScroll(true);
+    await this.$parent.setup();
+    const CLIENT = this.clients.find(
+      (client) => client.client_id === parseInt(this.$route.params.client_id)
+    );
+    await this.$store.dispatch("getPlans", CLIENT.client_id);
+    this.$store.commit("setData", {
+      attr: "clientDetails",
+      data: CLIENT,
+    });
+    this.$store.dispatch("endLoading");
   },
   methods: {
-
     // -----------------------------
     // OKTA CLIENT
     // -----------------------------
@@ -302,139 +324,131 @@ export default {
     /**
      * Checks if the client already exists on Okta.
      */
-    async checkClient () {
-      if (this.$parent.claims.email !== 'demo@traininblocks.com') {
-        this.clientAlreadyMsg = 'Loading...'
+    async checkClient() {
+      if (this.$parent.claims.email !== "demo@traininblocks.com") {
+        this.clientAlreadyMsg = "Loading...";
         try {
-          const RESULT = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'GET',
-              url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`
-            }
-          )
+          const RESULT = await this.$axios.post("/.netlify/functions/okta", {
+            type: "GET",
+            url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`,
+          });
           if (RESULT.data.length > 0) {
             switch (RESULT.data[0].status) {
-              case 'ACTIVE':
-                this.clientAlready = true
-                this.clientAlreadyMsg = 'User activated'
-                break
-              case 'PROVISIONED':
-              case 'RECOVERY':
-                this.clientAlready = false
-                this.clientAlreadyMsg = 'Resend activation email'
-                break
-              case 'SUSPENDED':
-                this.clientSuspend = RESULT.data[0].id
-                this.clientAlready = false
-                this.clientAlreadyMsg = 'Give Access'
-                break
+              case "ACTIVE":
+                this.clientAlready = true;
+                this.clientAlreadyMsg = "User activated";
+                break;
+              case "PROVISIONED":
+              case "RECOVERY":
+                this.clientAlready = false;
+                this.clientAlreadyMsg = "Resend activation email";
+                break;
+              case "SUSPENDED":
+                this.clientSuspend = RESULT.data[0].id;
+                this.clientAlready = false;
+                this.clientAlreadyMsg = "Give Access";
+                break;
             }
           } else {
-            this.clientAlready = false
-            this.clientAlreadyMsg = 'Give Access'
+            this.clientAlready = false;
+            this.clientAlreadyMsg = "Give Access";
           }
         } catch (e) {
-          this.clientAlready = true
-          this.clientAlreadyMsg = 'Error'
-          this.$parent.resolveError(e)
+          this.clientAlready = true;
+          this.clientAlreadyMsg = "Error";
+          this.$parent.resolveError(e);
         }
       } else {
-        this.clientAlreadyMsg = 'Restricted'
+        this.clientAlreadyMsg = "Restricted";
       }
     },
-    async giveAccess () {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: true
-      })
+    async giveAccess() {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: true,
+      });
       try {
-        if (this.clientAlreadyMsg === 'Resend activation email') {
-          const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'GET',
-              url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`
-            }
-          )
-          const OKTA_TWO = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {},
-              url: `${OKTA_ONE.data[0].id}/lifecycle/reactivate?sendEmail=false`
-            }
-          )
-          await this.$axios.post('/.netlify/functions/send-email',
-            {
-              to: this.clientDetails.email,
-              ...emailBuilder('activate-account', {
-                link: OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
-              })
-            }
-          )
+        if (this.clientAlreadyMsg === "Resend activation email") {
+          const OKTA_ONE = await this.$axios.post("/.netlify/functions/okta", {
+            type: "GET",
+            url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`,
+          });
+          const OKTA_TWO = await this.$axios.post("/.netlify/functions/okta", {
+            type: "POST",
+            body: {},
+            url: `${OKTA_ONE.data[0].id}/lifecycle/reactivate?sendEmail=false`,
+          });
+          await this.$axios.post("/.netlify/functions/send-email", {
+            to: this.clientDetails.email,
+            ...emailBuilder("activate-account", {
+              link: OKTA_TWO.data.activationUrl.replace(
+                CUSTOM_ENV.OKTA.ISSUER,
+                "https://auth.traininblocks.com"
+              ),
+            }),
+          });
         } else if (this.clientSuspend) {
-          await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {},
-              url: `${this.clientSuspend}/lifecycle/unsuspend`
-            }
-          )
-          const PASSWORD = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {},
-              url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`
-            }
-          )
-          await this.$axios.post('/.netlify/functions/send-email',
-            {
-              to: this.clientDetails.email,
-              ...emailBuilder('client-account-reactivated', {
-                link: PASSWORD.data.resetPasswordUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
-              })
-            }
-          )
+          await this.$axios.post("/.netlify/functions/okta", {
+            type: "POST",
+            body: {},
+            url: `${this.clientSuspend}/lifecycle/unsuspend`,
+          });
+          const PASSWORD = await this.$axios.post("/.netlify/functions/okta", {
+            type: "POST",
+            body: {},
+            url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`,
+          });
+          await this.$axios.post("/.netlify/functions/send-email", {
+            to: this.clientDetails.email,
+            ...emailBuilder("client-account-reactivated", {
+              link: PASSWORD.data.resetPasswordUrl.replace(
+                CUSTOM_ENV.OKTA.ISSUER,
+                "https://auth.traininblocks.com"
+              ),
+            }),
+          });
         } else {
-          const OKTA_ONE = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {
-                profile: {
-                  firstName: this.clientDetails.email,
-                  email: this.clientDetails.email,
-                  login: this.clientDetails.email,
-                  ga: true,
-                  client_id_db: this.clientDetails.client_id,
-                  user_type: 'Client'
-                },
-                groupIds: [
-                  '00gf929legrtSjxOe4x6'
-                ]
+          const OKTA_ONE = await this.$axios.post("/.netlify/functions/okta", {
+            type: "POST",
+            body: {
+              profile: {
+                firstName: this.clientDetails.email,
+                email: this.clientDetails.email,
+                login: this.clientDetails.email,
+                ga: true,
+                client_id_db: this.clientDetails.client_id,
+                user_type: "Client",
               },
-              url: '?activate=false'
-            }
-          )
-          const OKTA_TWO = await this.$axios.post('/.netlify/functions/okta',
-            {
-              type: 'POST',
-              body: {},
-              url: `${OKTA_ONE.data.id}/lifecycle/activate?sendEmail=false`
-            }
-          )
-          await this.$axios.post('/.netlify/functions/send-email',
-            {
-              to: this.clientDetails.email,
-              ...emailBuilder('activate-account', {
-                link: OKTA_TWO.data.activationUrl.replace(CUSTOM_ENV.OKTA.ISSUER, 'https://auth.traininblocks.com')
-              })
-            }
-          )
+              groupIds: ["00gf929legrtSjxOe4x6"],
+            },
+            url: "?activate=false",
+          });
+          const OKTA_TWO = await this.$axios.post("/.netlify/functions/okta", {
+            type: "POST",
+            body: {},
+            url: `${OKTA_ONE.data.id}/lifecycle/activate?sendEmail=false`,
+          });
+          await this.$axios.post("/.netlify/functions/send-email", {
+            to: this.clientDetails.email,
+            ...emailBuilder("activate-account", {
+              link: OKTA_TWO.data.activationUrl.replace(
+                CUSTOM_ENV.OKTA.ISSUER,
+                "https://auth.traininblocks.com"
+              ),
+            }),
+          });
         }
       } catch (e) {
-        this.$parent.resolveError(e)
+        this.$parent.resolveError(e);
       }
-      await this.checkClient()
-      this.$parent.$refs.response_pop_up.show('An activation email was sent to your client', 'Please ask them to check their inbox', true, true)
-      this.$store.dispatch('endLoading')
+      await this.checkClient();
+      this.$parent.$refs.response_pop_up.show(
+        "An activation email was sent to your client",
+        "Please ask them to check their inbox",
+        true,
+        true
+      );
+      this.$store.dispatch("endLoading");
     },
 
     // -----------------------------
@@ -444,20 +458,20 @@ export default {
     /**
      * Updates the client.
      */
-    async updateClient () {
+    async updateClient() {
       try {
-        this.$store.commit('setData', {
-          attr: 'silentLoading',
-          data: true
-        })
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('updateClient')
-        this.$store.dispatch('endLoading')
+        this.$store.commit("setData", {
+          attr: "silentLoading",
+          data: true,
+        });
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        await this.$store.dispatch("updateClient");
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.resolveError(e)
+        this.$parent.resolveError(e);
       }
     },
 
@@ -465,23 +479,31 @@ export default {
      * Archives the client.
      * @param {integer} clientId - The id of the client.
      */
-    async clientArchive (clientId) {
-      if (await this.$parent.$refs.confirm_pop_up.show('Are you sure that you want to archive/hide this client?', 'Their data will be stored, but it will be removed if deleted from the Archive.')) {
+    async clientArchive(clientId) {
+      if (
+        await this.$parent.$refs.confirm_pop_up.show(
+          "Are you sure that you want to archive/hide this client?",
+          "Their data will be stored, but it will be removed if deleted from the Archive."
+        )
+      ) {
         try {
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          await this.$store.dispatch('clientArchive', clientId)
-          this.$ga.event('Client', 'archive')
-          this.$parent.$refs.response_pop_up.show('Client archived', 'Their data will be kept safe on the archive page')
-          this.$store.dispatch('endLoading')
-          this.$router.push('/')
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          await this.$store.dispatch("clientArchive", clientId);
+          this.$ga.event("Client", "archive");
+          this.$parent.$refs.response_pop_up.show(
+            "Client archived",
+            "Their data will be kept safe on the archive page"
+          );
+          this.$store.dispatch("endLoading");
+          this.$router.push("/");
         } catch (e) {
-          this.$parent.resolveError(e)
+          this.$parent.resolveError(e);
         }
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

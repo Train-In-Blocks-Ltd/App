@@ -2,55 +2,55 @@
 .show_html {
   > div,
   > p {
-    margin: .6rem 0
+    margin: 0.6rem 0;
   }
   img {
     border-radius: 10px;
     max-width: 80%;
-    margin: 1rem 0
+    margin: 1rem 0;
   }
   a {
-    color: var(--link)
+    color: var(--link);
   }
 }
 </style>
 
 <style lang="scss" scoped>
 .plan_name {
-  margin-bottom: 4rem
+  margin-bottom: 4rem;
 }
 
 /* Editor object */
 .plan_notes {
   border: 3px solid var(--base);
   border-radius: 10px;
-  transition: .6s border cubic-bezier(.165, .84, .44, 1);
+  transition: 0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
   h3 {
     position: relative;
     left: 2rem;
-    padding: .6rem;
+    padding: 0.6rem;
     letter-spacing: 2px;
     width: fit-content;
     width: -moz-fit-content;
     background: var(--base);
     color: var(--fore);
-    border-radius: 0 0 10px 10px
+    border-radius: 0 0 10px 10px;
   }
   .show_html {
-    margin: 2rem
+    margin: 2rem;
   }
 }
 .container--sessions {
   margin: 4rem 0 2rem 0;
   &::-webkit-scrollbar {
-    height: 4px
+    height: 4px;
   }
   .wrapper--session {
     border: 3px solid var(--base);
     border-radius: 10px;
     padding: 2rem;
     .complete_button {
-      margin-top: 2rem
+      margin-top: 2rem;
     }
   }
 }
@@ -60,49 +60,50 @@
   display: flex;
   margin: 2rem 0;
   .show_sessions_counter {
-    margin: auto
+    margin: auto;
   }
   .show_sessions_left,
   .show_sessions_right {
     height: 36px;
     width: 36px;
     &:not(.disabled):active {
-      transform: scale(.8)
+      transform: scale(0.8);
     }
-    &.disabled, &.disabled:hover {
+    &.disabled,
+    &.disabled:hover {
       opacity: var(--light_opacity);
-      cursor: default
+      cursor: default;
     }
   }
 }
 hr {
-  margin: 2rem 0
+  margin: 2rem 0;
 }
 .switch_cal {
-  margin-bottom: .4rem;
+  margin-bottom: 0.4rem;
   svg {
-    margin-right: .4rem
+    margin-right: 0.4rem;
   }
 }
 
 @media (max-width: 992px) {
   .switch_cal {
-    display: none
+    display: none;
   }
 }
 @media (max-width: 576px) {
   .plan_notes {
     h3 {
-      left: 1rem
+      left: 1rem;
     }
     #wrapper--rich_editor {
-      margin: 1rem
+      margin: 1rem;
     }
   }
   .container--sessions .wrapper--session {
-    padding: .8rem;
+    padding: 0.8rem;
     .complete_button {
-      width: 100%
+      width: 100%;
     }
   }
 }
@@ -116,16 +117,18 @@ hr {
           {{ plan.name }}
         </h2>
         <div class="plan_notes">
-          <h3 class="bottom_margin">
-            Plan Notes
-          </h3>
+          <h3 class="bottom_margin">Plan Notes</h3>
           <div
             v-if="plan.notes && plan.notes !== '<p></p>'"
             class="show_html fadeIn"
             v-html="updateHTML(plan.notes, true)"
           />
           <p
-            v-else-if="plan.notes === null || plan.notes === '<p><br></p>' || plan.notes === ''"
+            v-else-if="
+              plan.notes === null ||
+              plan.notes === '<p><br></p>' ||
+              plan.notes === ''
+            "
             class="show_html grey"
           >
             No plan notes added...
@@ -138,7 +141,7 @@ hr {
             @click="showMonthlyCal = !showMonthlyCal"
           >
             <inline-svg :src="require('../../assets/svg/calendar.svg')" />
-            Switch to {{ !showMonthlyCal ? 'month' : 'week' }} view
+            Switch to {{ !showMonthlyCal ? "month" : "week" }} view
           </a>
           <week-calendar
             v-if="!showMonthlyCal"
@@ -155,7 +158,11 @@ hr {
             class="fadeIn"
           />
         </div>
-        <skeleton v-if="loading" :type="'session'" class="container--sessions" />
+        <skeleton
+          v-if="loading"
+          :type="'session'"
+          class="container--sessions"
+        />
         <div v-else-if="plan.sessions" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
@@ -173,13 +180,17 @@ hr {
               {{ showing_current_session + 1 }}/{{ plan.sessions.length }}
             </p>
             <inline-svg
-              v-show="showing_current_session !== parseInt(plan.sessions.length) - 1"
+              v-show="
+                showing_current_session !== parseInt(plan.sessions.length) - 1
+              "
               :src="require('../../assets/svg/arrow-right.svg')"
               class="show_sessions_right cursor no_fill"
               @click="showing_current_session++"
             />
             <inline-svg
-              v-show="showing_current_session === parseInt(plan.sessions.length) - 1"
+              v-show="
+                showing_current_session === parseInt(plan.sessions.length) - 1
+              "
               :src="require('../../assets/svg/arrow-right.svg')"
               class="show_sessions_right disabled no_fill"
             />
@@ -193,12 +204,17 @@ hr {
           >
             <div :id="session.name" class="session_header client-side">
               <div>
-                <span class="text--name"><b>{{ session.name }}</b></span><br>
+                <span class="text--name"
+                  ><b>{{ session.name }}</b></span
+                ><br />
                 <span class="text--tiny">{{ day(session.date) }}</span>
                 <span class="text--tiny">{{ session.date }}</span>
               </div>
             </div>
-            <div class="show_html fadeIn" v-html="updateHTML(session.notes, true)" />
+            <div
+              class="show_html fadeIn"
+              v-html="updateHTML(session.notes, true)"
+            />
             <div :key="check">
               <button
                 v-if="session.checked === 1 && !feedbackId"
@@ -216,10 +232,8 @@ hr {
               </button>
             </div>
             <div v-if="session.checked === 1">
-              <hr>
-              <h3>
-                Feedback
-              </h3>
+              <hr />
+              <h3>Feedback</h3>
               <rich-editor
                 v-model="session.feedback"
                 :item-id="session.id"
@@ -232,9 +246,7 @@ hr {
           </div>
         </div>
         <div v-else>
-          <h3>
-            No sessions yet
-          </h3>
+          <h3>No sessions yet</h3>
           <p class="grey text--small">
             Please contact your trainer or coach for more details
           </p>
@@ -246,34 +258,49 @@ hr {
 </template>
 
 <script>
-import { mapState } from 'vuex'
-const WeekCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true  */ '../../components/WeekCalendar')
-const MonthCalendar = () => import(/* webpackChunkName: "components.calendar", webpackPreload: true */ '../../components/MonthCalendar')
-const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../../components/Editor')
+import { mapState } from "vuex";
+const WeekCalendar = () =>
+  import(
+    /* webpackChunkName: "components.calendar", webpackPreload: true  */ "../../components/WeekCalendar"
+  );
+const MonthCalendar = () =>
+  import(
+    /* webpackChunkName: "components.calendar", webpackPreload: true */ "../../components/MonthCalendar"
+  );
+const RichEditor = () =>
+  import(
+    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
+  );
 
 export default {
-  metaInfo  () {
+  metaInfo() {
     return {
-      title: 'Plans'
-    }
+      title: "Plans",
+    };
   },
   components: {
     WeekCalendar,
     MonthCalendar,
-    RichEditor
+    RichEditor,
   },
-  async beforeRouteLeave (to, from, next) {
-    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
-      next()
+  async beforeRouteLeave(to, from, next) {
+    if (
+      this.dontLeave
+        ? await this.$parent.$refs.confirm_pop_up.show(
+            "Your changes might not be saved",
+            "Are you sure you want to leave?"
+          )
+        : true
+    ) {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: false,
+      });
+      next();
     }
   },
-  data () {
+  data() {
     return {
-
       // SYSTEM
 
       check: null,
@@ -289,27 +316,26 @@ export default {
 
       showMonthlyCal: false,
       sessionDates: [],
-      forceUpdate: 0
-    }
+      forceUpdate: 0,
+    };
   },
   computed: mapState([
-    'clientUserLoaded',
-    'loading',
-    'dontLeave',
-    'clientUser'
+    "clientUserLoaded",
+    "loading",
+    "dontLeave",
+    "clientUser",
   ]),
-  async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
-    this.willBodyScroll(true)
-    await this.$parent.setup()
-    await this.$parent.getClientSideData()
-    this.$store.dispatch('endLoading')
+  async created() {
+    this.$store.commit("setData", {
+      attr: "loading",
+      data: true,
+    });
+    this.willBodyScroll(true);
+    await this.$parent.setup();
+    await this.$parent.getClientSideData();
+    this.$store.dispatch("endLoading");
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
@@ -319,41 +345,41 @@ export default {
      * @param {string} state - The returned state of the editor.
      * @param {integer} id - The id of the session.
      */
-    resolveFeedbackEditor (state, id) {
-      let plan
-      let session
+    resolveFeedbackEditor(state, id) {
+      let plan;
+      let session;
       this.clientUser.plans.forEach((planItem) => {
         if (planItem.sessions) {
           planItem.sessions.forEach((sessionItem) => {
             if (sessionItem.id === id) {
-              plan = planItem
-              session = sessionItem
+              plan = planItem;
+              session = sessionItem;
             }
-          })
+          });
         }
-      })
+      });
       switch (state) {
-        case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          this.feedbackId = id
-          this.forceStop += 1
-          this.tempEditorStore = session.feedback
-          break
-        case 'save':
-          this.feedbackId = null
-          this.$parent.updateClientSideSession(plan.id, session.id)
-          break
-        case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
-          this.feedbackId = null
-          session.feedback = this.tempEditorStore
-          break
+        case "edit":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          this.feedbackId = id;
+          this.forceStop += 1;
+          this.tempEditorStore = session.feedback;
+          break;
+        case "save":
+          this.feedbackId = null;
+          this.$parent.updateClientSideSession(plan.id, session.id);
+          break;
+        case "cancel":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: false,
+          });
+          this.feedbackId = null;
+          session.feedback = this.tempEditorStore;
+          break;
       }
     },
 
@@ -361,12 +387,16 @@ export default {
      * Scrolls towards the target session.
      * @param {integer} id - The id of the session.
      */
-    goToEvent (id) {
-      const SESSION_INDEX = this.sessionDates.findIndex(session => session.session_id === id)
-      this.showing_current_session = SESSION_INDEX
+    goToEvent(id) {
+      const SESSION_INDEX = this.sessionDates.findIndex(
+        (session) => session.session_id === id
+      );
+      this.showing_current_session = SESSION_INDEX;
       setTimeout(() => {
-        document.getElementById(`session-${id}`).scrollIntoView({ behavior: 'smooth' })
-      }, 100)
+        document
+          .getElementById(`session-${id}`)
+          .scrollIntoView({ behavior: "smooth" });
+      }, 100);
     },
 
     /**
@@ -375,25 +405,30 @@ export default {
      * @param {integer} sessionId - The id of the session.
      * @param {integer} currentChecked - The new state of the session.
      */
-    complete (planId, sessionId, currentChecked) {
-      this.$store.commit('updateClientUserPlanSingleSession', {
+    complete(planId, sessionId, currentChecked) {
+      this.$store.commit("updateClientUserPlanSingleSession", {
         planId,
         sessionId,
-        attr: 'checked',
-        data: !currentChecked ? 1 : 0
-      })
-      this.check = !currentChecked ? 1 : 0
-      this.$parent.updateClientSideSession(planId, sessionId)
-      this.$store.dispatch('endLoading')
+        attr: "checked",
+        data: !currentChecked ? 1 : 0,
+      });
+      this.check = !currentChecked ? 1 : 0;
+      this.$parent.updateClientSideSession(planId, sessionId);
+      this.$store.dispatch("endLoading");
     },
 
     /**
      * Scans the sessions and updates the page.
      */
-    scan () {
-      this.sessionDates.length = 0
-      const PLAN = this.clientUser.plans.find(plan => plan.id === parseInt(this.$route.params.id))
-      const WEEK_COLOR = PLAN.block_color.replace('[', '').replace(']', '').split(',')
+    scan() {
+      this.sessionDates.length = 0;
+      const PLAN = this.clientUser.plans.find(
+        (plan) => plan.id === parseInt(this.$route.params.id)
+      );
+      const WEEK_COLOR = PLAN.block_color
+        .replace("[", "")
+        .replace("]", "")
+        .split(",");
       if (PLAN.sessions !== null) {
         PLAN.sessions.forEach((session) => {
           this.sessionDates.push({
@@ -402,12 +437,12 @@ export default {
             color: WEEK_COLOR[session.week_id - 1],
             textColor: this.accessible_colors(WEEK_COLOR[session.week_id - 1]),
             week_id: session.week_id,
-            session_id: session.id
-          })
-        })
+            session_id: session.id,
+          });
+        });
       }
-      this.forceUpdate += 1
-    }
-  }
-}
+      this.forceUpdate += 1;
+    },
+  },
+};
 </script>

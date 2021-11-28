@@ -2,7 +2,9 @@
   <form
     class="form_grid add_plan"
     name="add_plan"
-    @submit.prevent="createPlan(), $parent.isNewPlanOpen = false, willBodyScroll(true)"
+    @submit.prevent="
+      createPlan(), ($parent.isNewPlanOpen = false), willBodyScroll(true)
+    "
   >
     <div class="bottom_margin">
       <h3>
@@ -20,8 +22,8 @@
       placeholder="Name*"
       aria-label="Name"
       required
-      @input="newPlan.name = $event.target.value, checkForm()"
-    >
+      @input="(newPlan.name = $event.target.value), checkForm()"
+    />
     <input
       :value="newPlan.duration"
       class="small_border_radius width_300"
@@ -30,16 +32,14 @@
       placeholder="Duration*"
       aria-label="Duration"
       required
-      @input="newPlan.duration = $event.target.value, checkForm()"
-    >
+      @input="(newPlan.duration = $event.target.value), checkForm()"
+    />
     <div class="form_button_bar">
+      <button :disabled="disableCreatePlanButton" type="submit">Save</button>
       <button
-        :disabled="disableCreatePlanButton"
-        type="submit"
+        class="red_button"
+        @click.prevent="($parent.isNewPlanOpen = false), willBodyScroll(true)"
       >
-        Save
-      </button>
-      <button class="red_button" @click.prevent="$parent.isNewPlanOpen = false, willBodyScroll(true)">
         Close
       </button>
     </div>
@@ -47,65 +47,65 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  data () {
+  data() {
     return {
       newPlan: {
-        name: '',
-        duration: ''
+        name: "",
+        duration: "",
       },
-      disableCreatePlanButton: true
-    }
+      disableCreatePlanButton: true,
+    };
   },
-  computed: mapState([
-    'dontLeave',
-    'clientDetails',
-    'clients'
-  ]),
-  mounted () {
-    this.$refs.name.focus()
+  computed: mapState(["dontLeave", "clientDetails", "clients"]),
+  mounted() {
+    this.$refs.name.focus();
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
 
-    checkForm () {
-      this.disableCreatePlanButton = !(this.newPlan.name && this.newPlan.duration)
+    checkForm() {
+      this.disableCreatePlanButton = !(
+        this.newPlan.name && this.newPlan.duration
+      );
     },
 
     /**
      * Creates a new plan.
      */
-    async createPlan () {
+    async createPlan() {
       try {
-        this.$store.commit('setData', {
-          attr: 'loading',
-          data: true
-        })
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('createPlan', {
+        this.$store.commit("setData", {
+          attr: "loading",
+          data: true,
+        });
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        await this.$store.dispatch("createPlan", {
           clientId: this.clientDetails.client_id,
           name: this.newPlan.name,
-          duration: this.newPlan.duration
-        })
-        this.$ga.event('Plan', 'new')
-        this.$parent.$parent.$parent.$refs.response_pop_up.show(`${this.newPlan.name} created`, 'You\'re all set, get programming')
+          duration: this.newPlan.duration,
+        });
+        this.$ga.event("Plan", "new");
+        this.$parent.$parent.$parent.$refs.response_pop_up.show(
+          `${this.newPlan.name} created`,
+          "You're all set, get programming"
+        );
         this.newPlan = {
-          name: '',
-          duration: ''
-        }
-        this.$store.dispatch('endLoading')
+          name: "",
+          duration: "",
+        };
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.$parent.$parent.resolveError(e)
+        this.$parent.$parent.$parent.resolveError(e);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

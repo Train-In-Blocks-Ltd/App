@@ -3,9 +3,9 @@ export default {
    * Toggles body scroll.
    * @param {boolean} state
    */
-  willBodyScroll (state) {
-    const BODY = document.getElementsByTagName('body')[0]
-    state ? BODY.style.overflow = 'auto' : BODY.style.overflow = 'hidden'
+  willBodyScroll(state) {
+    const BODY = document.getElementsByTagName("body")[0];
+    state ? (BODY.style.overflow = "auto") : (BODY.style.overflow = "hidden");
   },
 
   /**
@@ -15,52 +15,55 @@ export default {
    * @param {date} sessionDate - The date of the session.
    * @returns Data packets of exercises
    */
-  pull_protocols (sessionName, text, sessionDate) {
-    const REGEX_EXTRACT_EXERCISES = /\[\s*(.*?)\s*:\s*(.*?)\]/gi
-    const REGEX_EXTRACT_EXERCISES_NEW = /<div data-type="protocol-item">\s*(.*?)\s*:\s*(.*?)<\/div>/gi
-    const RETURN_PACKETS = []
-    let finderNew
+  pull_protocols(sessionName, text, sessionDate) {
+    const REGEX_EXTRACT_EXERCISES = /\[\s*(.*?)\s*:\s*(.*?)\]/gi;
+    const REGEX_EXTRACT_EXERCISES_NEW =
+      /<div data-type="protocol-item">\s*(.*?)\s*:\s*(.*?)<\/div>/gi;
+    const RETURN_PACKETS = [];
+    let finderNew;
     while ((finderNew = REGEX_EXTRACT_EXERCISES_NEW.exec(text)) !== null) {
       if (finderNew.index === REGEX_EXTRACT_EXERCISES_NEW.lastIndex) {
-        REGEX_EXTRACT_EXERCISES_NEW.lastIndex++
+        REGEX_EXTRACT_EXERCISES_NEW.lastIndex++;
       }
       const PACKET_BUILDER = {
         sessionName,
         sessionDate,
         exerciseName: null,
-        exerciseProtocol: null
-      }
+        exerciseProtocol: null,
+      };
       finderNew.forEach((match, groupIndex) => {
         if (groupIndex === 1) {
-          PACKET_BUILDER.exerciseName = match.replace(/<[^>]*>?/gmi, '')
+          PACKET_BUILDER.exerciseName = match.replace(/<[^>]*>?/gim, "");
         } else if (groupIndex === 2) {
-          PACKET_BUILDER.exerciseProtocol = match.replace(/<[^>]*>?/gmi, '')
+          PACKET_BUILDER.exerciseProtocol = match.replace(/<[^>]*>?/gim, "");
         }
-      })
-      RETURN_PACKETS.push(PACKET_BUILDER)
+      });
+      RETURN_PACKETS.push(PACKET_BUILDER);
     }
-    let finderOld
-    const HTML_REMOVED_TAGS = text.replace(/<[^>]*>?/gmi, '')
-    while ((finderOld = REGEX_EXTRACT_EXERCISES.exec(HTML_REMOVED_TAGS)) !== null) {
+    let finderOld;
+    const HTML_REMOVED_TAGS = text.replace(/<[^>]*>?/gim, "");
+    while (
+      (finderOld = REGEX_EXTRACT_EXERCISES.exec(HTML_REMOVED_TAGS)) !== null
+    ) {
       if (finderOld.index === REGEX_EXTRACT_EXERCISES.lastIndex) {
-        REGEX_EXTRACT_EXERCISES.lastIndex++
+        REGEX_EXTRACT_EXERCISES.lastIndex++;
       }
       const PACKET_BUILDER = {
         sessionName,
         sessionDate,
         exerciseName: null,
-        exerciseProtocol: null
-      }
+        exerciseProtocol: null,
+      };
       finderOld.forEach((match, groupIndex) => {
         if (groupIndex === 1) {
-          PACKET_BUILDER.exerciseName = match
+          PACKET_BUILDER.exerciseName = match;
         } else if (groupIndex === 2) {
-          PACKET_BUILDER.exerciseProtocol = match
+          PACKET_BUILDER.exerciseProtocol = match;
         }
-      })
-      RETURN_PACKETS.push(PACKET_BUILDER)
+      });
+      RETURN_PACKETS.push(PACKET_BUILDER);
     }
-    return RETURN_PACKETS
+    return RETURN_PACKETS;
   },
 
   /**
@@ -69,55 +72,60 @@ export default {
    * @param {boolean} rmBrackets - To show the square brackets or not in the processed returned HTML.
    * @returns The processed html ready to view or injected into a editor.
    */
-  updateHTML (html, rmBrackets) {
+  updateHTML(html, rmBrackets) {
     if (html === null) {
-      return html
+      return html;
     }
-    const REGEX_IFRAME = /<iframe[^>]+src="([^"]+)"><\/iframe>/gi
-    let m
-    const TO_UPDATE_ARRAY = []
+    const REGEX_IFRAME = /<iframe[^>]+src="([^"]+)"><\/iframe>/gi;
+    let m;
+    const TO_UPDATE_ARRAY = [];
     // Finds all iframes
     while ((m = REGEX_IFRAME.exec(html)) !== null) {
       if (m.index === REGEX_IFRAME.lastIndex) {
-        REGEX_IFRAME.lastIndex++
+        REGEX_IFRAME.lastIndex++;
       }
-      const MATCH_EXTRACT_COLLECTOR = []
+      const MATCH_EXTRACT_COLLECTOR = [];
       m.forEach((match, groupIndex) => {
         if (groupIndex === 1) {
-          MATCH_EXTRACT_COLLECTOR.push(match)
-          TO_UPDATE_ARRAY.push(MATCH_EXTRACT_COLLECTOR)
+          MATCH_EXTRACT_COLLECTOR.push(match);
+          TO_UPDATE_ARRAY.push(MATCH_EXTRACT_COLLECTOR);
         } else {
-          MATCH_EXTRACT_COLLECTOR.push(match)
+          MATCH_EXTRACT_COLLECTOR.push(match);
         }
-      })
+      });
     }
     // Removes iframes
     TO_UPDATE_ARRAY.forEach((item) => {
-      html = html.replace(item[0], `<a href="${item[1]}" rel="noopener noreferrer nofollow">Watch video</a>`)
-    })
-    html = rmBrackets ? html.replace(/[[\]]/g, '') : html
-    return html.replace('onclick="resize(this)"', '').replace(/contenteditable="true"/gi, '')
+      html = html.replace(
+        item[0],
+        `<a href="${item[1]}" rel="noopener noreferrer nofollow">Watch video</a>`
+      );
+    });
+    html = rmBrackets ? html.replace(/[[\]]/g, "") : html;
+    return html
+      .replace('onclick="resize(this)"', "")
+      .replace(/contenteditable="true"/gi, "");
   },
 
   /**
    * @returns Today's date in YYY-MM-DD.
    */
-  today () {
-    const DATE = new Date()
-    const YEAR = DATE.getFullYear()
-    const MONTH = String(DATE.getMonth() + 1).padStart(2, '0')
-    const DAY = String(DATE.getDate()).padStart(2, '0')
-    return `${YEAR}-${MONTH}-${DAY}`
+  today() {
+    const DATE = new Date();
+    const YEAR = DATE.getFullYear();
+    const MONTH = String(DATE.getMonth() + 1).padStart(2, "0");
+    const DAY = String(DATE.getDate()).padStart(2, "0");
+    return `${YEAR}-${MONTH}-${DAY}`;
   },
 
   /**
    * @returns The current time in HH:MM.
    */
-  timeNow () {
-    const DATE = new Date()
-    const HOUR = String(DATE.getHours()).padStart(2, '0')
-    const MIN = String(DATE.getMinutes()).padStart(2, '0')
-    return `${HOUR}:${MIN}`
+  timeNow() {
+    const DATE = new Date();
+    const HOUR = String(DATE.getHours()).padStart(2, "0");
+    const MIN = String(DATE.getMinutes()).padStart(2, "0");
+    return `${HOUR}:${MIN}`;
   },
 
   /**
@@ -125,9 +133,9 @@ export default {
    * @param {date} date - The day of the week
    * @returns The day of the week.
    */
-  day (date) {
-    const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-    return WEEKDAY[new Date(date).getDay()]
+  day(date) {
+    const WEEKDAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return WEEKDAY[new Date(date).getDay()];
   },
 
   /**
@@ -135,9 +143,11 @@ export default {
    * @param {datetime} datetime - The input datetime.
    * @returns Short-form datetime.
    */
-  shortTime (datetime) {
-    const TIME = new Date(datetime.replace(/-/g, '/'))
-    return `${TIME.getHours()}:${(TIME.getMinutes() < 10 ? '0' : '') + TIME.getMinutes()}`
+  shortTime(datetime) {
+    const TIME = new Date(datetime.replace(/-/g, "/"));
+    return `${TIME.getHours()}:${
+      (TIME.getMinutes() < 10 ? "0" : "") + TIME.getMinutes()
+    }`;
   },
 
   /**
@@ -146,13 +156,13 @@ export default {
    * @param {integer} days - The number of days to add to date.
    * @returns The processed date.
    */
-  addDays (date, days) {
-    const DATE = new Date(date)
-    DATE.setDate(DATE.getDate() + days)
-    const YEAR = DATE.getFullYear()
-    const MONTH = DATE.getMonth() + 1
-    const DAY = DATE.getDate()
-    return `${YEAR}-${MONTH}-${DAY}`
+  addDays(date, days) {
+    const DATE = new Date(date);
+    DATE.setDate(DATE.getDate() + days);
+    const YEAR = DATE.getFullYear();
+    const MONTH = DATE.getMonth() + 1;
+    const DAY = DATE.getDate();
+    return `${YEAR}-${MONTH}-${DAY}`;
   },
 
   /**
@@ -160,13 +170,13 @@ export default {
    * @param {object} plan - The plan of which sessions would be sorted.
    * @returns The plan with sorted sessions by date.
    */
-  sort_sessions (plan) {
+  sort_sessions(plan) {
     if (plan.sessions) {
       plan.sessions.sort((a, b) => {
-        return Number(new Date(a.date)) - Number(new Date(b.date))
-      })
+        return Number(new Date(a.date)) - Number(new Date(b.date));
+      });
     }
-    return plan
+    return plan;
   },
 
   /**
@@ -174,12 +184,12 @@ export default {
    * @param {string} string - The text to receive proper casing.
    * @returns The proper-cased text.
    */
-  proper_case (string) {
-    const SENTENCE = string.toLowerCase().split(' ')
+  proper_case(string) {
+    const SENTENCE = string.toLowerCase().split(" ");
     for (let i = 0; i < SENTENCE.length; i++) {
-      SENTENCE[i] = SENTENCE[i][0].toUpperCase() + SENTENCE[i].slice(1)
+      SENTENCE[i] = SENTENCE[i][0].toUpperCase() + SENTENCE[i].slice(1);
     }
-    return SENTENCE.join(' ')
+    return SENTENCE.join(" ");
   },
 
   /**
@@ -187,14 +197,15 @@ export default {
    * @param {string} hex - The current colour.
    * @returns The appropriate text colour.
    */
-  accessible_colors (hex) {
+  accessible_colors(hex) {
     if (hex !== undefined) {
-      hex = hex.replace('#', '')
-      const RED = parseInt(hex.substring(0, 2), 16)
-      const GREEN = parseInt(hex.substring(2, 4), 16)
-      const BLUE = parseInt(hex.substring(4, 6), 16)
-      const RESULT = ((((RED * 299) + (GREEN * 587) + (BLUE * 114)) / 1000) - 128) * -1000
-      return `rgb(${RESULT}, ${RESULT}, ${RESULT})`
+      hex = hex.replace("#", "");
+      const RED = parseInt(hex.substring(0, 2), 16);
+      const GREEN = parseInt(hex.substring(2, 4), 16);
+      const BLUE = parseInt(hex.substring(4, 6), 16);
+      const RESULT =
+        ((RED * 299 + GREEN * 587 + BLUE * 114) / 1000 - 128) * -1000;
+      return `rgb(${RESULT}, ${RESULT}, ${RESULT})`;
     }
   },
 
@@ -203,14 +214,14 @@ export default {
    * @param {string} status - The status of the booking.
    * @returns The colour of the text.
    */
-  statusColor (status) {
+  statusColor(status) {
     switch (status) {
-      case 'Pending' || 'Past':
-        return 'var(--base_light)'
-      case 'Scheduled':
-        return 'var(--base_green)'
-      case 'Cancelled' || 'Declined':
-        return 'var(--base_red)'
+      case "Pending" || "Past":
+        return "var(--base_light)";
+      case "Scheduled":
+        return "var(--base_green)";
+      case "Cancelled" || "Declined":
+        return "var(--base_red)";
     }
   },
 
@@ -219,8 +230,8 @@ export default {
    * @param {object} booking- The booking.
    * @returns A boolean of if the booking is in the past.
    */
-  isInThePast (booking) {
-    return new Date(booking.datetime) < new Date()
+  isInThePast(booking) {
+    return new Date(booking.datetime) < new Date();
   },
 
   /**
@@ -229,7 +240,7 @@ export default {
    * @param {integer} dp - The number of decimal places.
    * @returns The data with specified decimal places.
    */
-  makeDecimals (data, dp) {
-    return parseFloat(data).toFixed(dp)
-  }
-}
+  makeDecimals(data, dp) {
+    return parseFloat(data).toFixed(dp);
+  },
+};

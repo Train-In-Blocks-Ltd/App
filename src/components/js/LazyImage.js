@@ -1,76 +1,77 @@
-import {
-  Node,
-  nodeInputRule,
-  mergeAttributes
-} from '@tiptap/core'
+import { Node, nodeInputRule, mergeAttributes } from "@tiptap/core";
 
-const inputRegex = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/
+const inputRegex = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
 
 export default Node.create({
-  name: 'image',
+  name: "image",
 
   defaultOptions: {
     inline: false,
-    HTMLAttributes: {}
+    HTMLAttributes: {},
   },
 
-  inline () {
-    return this.options.inline
+  inline() {
+    return this.options.inline;
   },
 
-  group () {
-    return this.options.inline ? 'inline' : 'block'
+  group() {
+    return this.options.inline ? "inline" : "block";
   },
 
   draggable: true,
 
-  addAttributes () {
+  addAttributes() {
     return {
       src: {
-        default: null
+        default: null,
       },
       alt: {
-        default: null
+        default: null,
       },
       title: {
-        default: null
+        default: null,
       },
       loading: {
-        default: 'lazy'
-      }
-    }
+        default: "lazy",
+      },
+    };
   },
 
-  parseHTML () {
+  parseHTML() {
     return [
       {
-        tag: 'img[src]'
-      }
-    ]
+        tag: "img[src]",
+      },
+    ];
   },
 
-  renderHTML ({ HTMLAttributes }) {
-    return ['img', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)]
+  renderHTML({ HTMLAttributes }) {
+    return [
+      "img",
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+    ];
   },
 
-  addCommands () {
+  addCommands() {
     return {
-      setImage: options => ({ commands }) => {
-        return commands.insertContent({
-          type: this.name,
-          attrs: options
-        })
-      }
-    }
+      setImage:
+        (options) =>
+        ({ commands }) => {
+          return commands.insertContent({
+            type: this.name,
+            attrs: options,
+          });
+        },
+    };
   },
 
-  addInputRules () {
+  addInputRules() {
     return [
       nodeInputRule(inputRegex, this.type, (match) => {
-        const [, alt, src, title, loading] = match
+        const [, alt, src, title, loading] = match;
 
-        return { src, alt, title, loading }
-      })
-    ]
-  }
-})
+        return { src, alt, title, loading };
+      }),
+    ];
+  },
+});

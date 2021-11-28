@@ -4,29 +4,29 @@
     width: 100%;
     background-color: initial;
     border: 1px solid var(--base_faint);
-    padding: .6rem 1rem;
+    padding: 0.6rem 1rem;
     border-radius: 8px;
-    transition: .4s all cubic-bezier(.165, .84, .44, 1);
+    transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
     &:hover {
-      opacity: var(--light_opacity)
+      opacity: var(--light_opacity);
     }
     &:focus {
       opacity: 1;
       border: 1px solid var(--base);
-      padding: .6rem 1.4rem
+      padding: 0.6rem 1.4rem;
     }
   }
   .trainer_info__business {
     max-width: 100%;
-    margin-bottom: 1rem
+    margin-bottom: 1rem;
   }
   .business_name_skeleton {
-    margin-top: 1rem
+    margin-top: 1rem;
   }
 }
 .portfolio_editor,
 .portfolio_editor_skeleton {
-  margin: 4rem 0
+  margin: 4rem 0;
 }
 </style>
 
@@ -44,7 +44,7 @@
         :disabled="silentLoading"
         @blur="updatePortfolio()"
         @input="editing_info = true"
-      >
+      />
       <skeleton v-else :type="'input_large'" />
       <input
         v-if="!loading"
@@ -57,16 +57,11 @@
         :disabled="silentLoading"
         @blur="updatePortfolio()"
         @input="editing_info = true"
-      >
+      />
       <skeleton v-else :type="'input_small'" class="business_name_skeleton" />
     </div>
-    <div
-      v-if="!loading"
-      class="editor_object_standard portfolio_editor"
-    >
-      <h3>
-        Portfolio
-      </h3>
+    <div v-if="!loading" class="editor_object_standard portfolio_editor">
+      <h3>Portfolio</h3>
       <rich-editor
         v-model="portfolio.notes"
         :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
@@ -79,55 +74,64 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-const RichEditor = () => import(/* webpackChunkName: "components.richeditor", webpackPreload: true  */ '../components/Editor')
+import { mapState } from "vuex";
+const RichEditor = () =>
+  import(
+    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../components/Editor"
+  );
 // const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '../components/Products')
 
 export default {
-  metaInfo  () {
+  metaInfo() {
     return {
-      title: 'Portfolio'
-    }
+      title: "Portfolio",
+    };
   },
   components: {
-    RichEditor
+    RichEditor,
     // Products
   },
-  async beforeRouteLeave (to, from, next) {
-    if (this.dontLeave ? await this.$parent.$refs.confirm_pop_up.show('Your changes might not be saved', 'Are you sure you want to leave?') : true) {
-      this.$store.commit('setData', {
-        attr: 'dontLeave',
-        data: false
-      })
-      next()
+  async beforeRouteLeave(to, from, next) {
+    if (
+      this.dontLeave
+        ? await this.$parent.$refs.confirm_pop_up.show(
+            "Your changes might not be saved",
+            "Are you sure you want to leave?"
+          )
+        : true
+    ) {
+      this.$store.commit("setData", {
+        attr: "dontLeave",
+        data: false,
+      });
+      next();
     }
   },
-  data () {
+  data() {
     return {
       editingPortfolio: false,
-      tempEditorStore: null
-    }
+      tempEditorStore: null,
+    };
   },
   computed: mapState([
-    'claims',
-    'loading',
-    'silentLoading',
-    'dontLeave',
-    'portfolio',
-    'hasCheckedStripeConnect'
+    "claims",
+    "loading",
+    "silentLoading",
+    "dontLeave",
+    "portfolio",
+    "hasCheckedStripeConnect",
   ]),
-  async created () {
-    this.$store.commit('setData', {
-      attr: 'loading',
-      data: true
-    })
-    this.willBodyScroll(true)
-    await this.$parent.setup()
+  async created() {
+    this.$store.commit("setData", {
+      attr: "loading",
+      data: true,
+    });
+    this.willBodyScroll(true);
+    await this.$parent.setup();
     // await this.checkStripeConnect()
-    this.$store.dispatch('endLoading')
+    this.$store.dispatch("endLoading");
   },
   methods: {
-
     // -----------------------------
     // General
     // -----------------------------
@@ -136,32 +140,32 @@ export default {
      * Resolves the state of the portfolio editor.
      * @param {string} state - The returned state of the editor.
      */
-    resolve_portfolio_editor (state) {
+    resolve_portfolio_editor(state) {
       switch (state) {
-        case 'edit':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: true
-          })
-          this.editingPortfolio = true
-          this.tempEditorStore = this.portfolio.notes
-          break
-        case 'save':
-          this.editingPortfolio = false
-          this.updatePortfolio()
-          break
-        case 'cancel':
-          this.$store.commit('setData', {
-            attr: 'dontLeave',
-            data: false
-          })
-          this.editingPortfolio = false
-          this.$store.commit('setDataDeep', {
-            attrParent: 'portfolio',
-            attrChild: 'notes',
-            data: this.tempEditorStore
-          })
-          break
+        case "edit":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: true,
+          });
+          this.editingPortfolio = true;
+          this.tempEditorStore = this.portfolio.notes;
+          break;
+        case "save":
+          this.editingPortfolio = false;
+          this.updatePortfolio();
+          break;
+        case "cancel":
+          this.$store.commit("setData", {
+            attr: "dontLeave",
+            data: false,
+          });
+          this.editingPortfolio = false;
+          this.$store.commit("setDataDeep", {
+            attrParent: "portfolio",
+            attrChild: "notes",
+            data: this.tempEditorStore,
+          });
+          break;
       }
     },
 
@@ -172,24 +176,27 @@ export default {
     /**
      * Updates the portfolio.
      */
-    async updatePortfolio () {
+    async updatePortfolio() {
       try {
-        this.$store.commit('setData', {
-          attr: 'silentLoading',
-          data: true
-        })
-        this.$store.commit('setData', {
-          attr: 'dontLeave',
-          data: true
-        })
-        await this.$store.dispatch('updatePortfolio')
-        this.$ga.event('Portfolio', 'update')
-        this.$parent.$refs.response_pop_up.show('Portfolio updated', 'Your clients can access this information')
-        this.$store.dispatch('endLoading')
+        this.$store.commit("setData", {
+          attr: "silentLoading",
+          data: true,
+        });
+        this.$store.commit("setData", {
+          attr: "dontLeave",
+          data: true,
+        });
+        await this.$store.dispatch("updatePortfolio");
+        this.$ga.event("Portfolio", "update");
+        this.$parent.$refs.response_pop_up.show(
+          "Portfolio updated",
+          "Your clients can access this information"
+        );
+        this.$store.dispatch("endLoading");
       } catch (e) {
-        this.$parent.resolveError(e)
+        this.$parent.resolveError(e);
       }
-    }
+    },
 
     // -----------------------------
     // Stripe connect
@@ -230,6 +237,6 @@ export default {
       }
     }
     */
-  }
-}
+  },
+};
 </script>
