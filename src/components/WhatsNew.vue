@@ -7,9 +7,6 @@
   .update_item {
     display: grid;
     align-content: space-between;
-    background-color: var(--fore);
-    border: 3px solid var(--base);
-    border-radius: 10px;
     padding: 2rem;
     img {
       width: 100%;
@@ -51,10 +48,12 @@ textarea {
     <p class="text--small grey">Bookings, client profile, style, and more</p>
     <br /><br />
     <div class="update_wrapper">
-      <div
+      <card-wrapper
         v-for="(item, index) in content"
         :key="`item_${index}`"
         class="update_item"
+        backgroundColor="var(--fore)"
+        noHover
       >
         <img
           v-if="item.img"
@@ -70,7 +69,7 @@ textarea {
             {{ item.desc }}
           </p>
         </div>
-      </div>
+      </card-wrapper>
     </div>
     <h3>Help us make something better</h3>
     <br />
@@ -93,7 +92,15 @@ textarea {
 import { mapState } from "vuex";
 const emailBuilder = require("./js/email");
 
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+  );
+
 export default {
+  components: {
+    CardWrapper,
+  },
   data() {
     return {
       content: [
