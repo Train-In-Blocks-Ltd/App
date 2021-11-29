@@ -11778,6 +11778,13 @@
   "resolved" "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.1.6.tgz"
   "version" "1.1.6"
 
+"link-module-alias@^1.2.0":
+  "integrity" "sha512-ahPjXepbSVKbahTB6LxR//VHm8HPfI+QQygCH+E82spBY4HR5VPJTvlhKBc9F7muVxnS6C1rRfoPOXAbWO/fyw=="
+  "resolved" "http://registry.chelsea-apps.com:4873/link-module-alias/-/link-module-alias-1.2.0.tgz"
+  "version" "1.2.0"
+  dependencies:
+    "chalk" "^2.4.1"
+
 "linkify-it@^3.0.1":
   "integrity" "sha512-gDBO4aHNZS6coiZCKVhSNh43F9ioIL4JwRjLZPkoLIY4yZFwg264Y5lu2x6rb1Js42Gh6Yqm2f6L2AJcnkzinQ=="
   "resolved" "http://registry.chelsea-apps.com:4873/linkify-it/-/linkify-it-3.0.2.tgz"

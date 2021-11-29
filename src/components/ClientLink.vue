@@ -25,14 +25,7 @@
   display: grid;
   padding: 2rem;
   grid-gap: 1rem;
-  color: var(--base);
   text-decoration: none;
-  border: 3px solid var(--base);
-  border-radius: 10px;
-  transition: var(--transition_standard);
-  &:hover {
-    box-shadow: var(--high_shadow);
-  }
   &.archived {
     display: flex;
     justify-content: space-between;
@@ -109,13 +102,9 @@
 @media (max-width: 768px) {
   .client_link {
     &:hover {
-      box-shadow: var(--low_shadow);
       svg {
         fill: var(--base);
       }
-    }
-    &:active {
-      transform: var(--active_state);
     }
     .client_information {
       grid-template-columns: 1fr;
@@ -215,7 +204,7 @@
 import { mapState } from "vuex";
 const CardWrapper = () =>
   import(
-    /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "./generic/CardWrapper"
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
   );
 const Checkbox = () =>
   import(

@@ -1,7 +1,5 @@
 <style lang="scss" scoped>
-#month_calendar {
-  border-radius: 10px;
-  border: 3px solid var(--base);
+.month_calendar {
   margin-top: 1rem;
 }
 .calendar_header {
@@ -44,6 +42,7 @@
     }
   }
 }
+
 .month_container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -95,7 +94,7 @@
 </style>
 
 <template>
-  <div id="month_calendar">
+  <card-wrapper class="month_calendar" noHover>
     <div class="calendar_header">
       <h3>{{ currentMonth }} {{ currentYear }}</h3>
       <div class="calendar_header__bar">
@@ -152,11 +151,17 @@
         </p>
       </div>
     </div>
-  </div>
+  </card-wrapper>
 </template>
 
 <script>
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+  );
+
 export default {
+  components: { CardWrapper },
   props: {
     events: Array,
     forceUpdate: Number,
@@ -257,7 +262,7 @@ export default {
             }
           }
         }
-        const DATAPACKETS = [];
+        const DATA_PACKETS = [];
         this.events.forEach((event) => {
           const DATE_SPLIT = event.date.split("-");
           if (
@@ -265,11 +270,11 @@ export default {
             parseInt(DATE_SPLIT[1] - 1) === LAST_DAY_OF_MONTH.getMonth() &&
             parseInt(DATE_SPLIT[2]) === date
           ) {
-            DATAPACKETS.push(event);
+            DATA_PACKETS.push(event);
           }
         });
         this.month.push([
-          DATAPACKETS,
+          DATA_PACKETS,
           date,
           `${this.currentYear}-${String(
             this.getMonthNumber(this.currentMonth)

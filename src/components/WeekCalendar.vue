@@ -1,7 +1,5 @@
 <style lang="scss" scoped>
-#calendar_view {
-  border-radius: 10px;
-  border: 3px solid var(--base);
+.calendar_view {
   margin-top: 1rem;
   .calendar_header {
     display: flex;
@@ -87,7 +85,7 @@
 }
 
 @media (max-width: 992px) {
-  #calendar_view .calendar_header .calendar_header__bar {
+  .calendar_view .calendar_header .calendar_header__bar {
     *:hover {
       opacity: 1;
     }
@@ -110,7 +108,7 @@
   }
 }
 @media (max-width: 576px) {
-  #calendar_view {
+  .calendar_view {
     .calendar_header {
       h3 {
         left: 1rem;
@@ -130,7 +128,7 @@
 </style>
 
 <template>
-  <div id="calendar_view">
+  <card-wrapper class="calendar_view" noHover>
     <div class="calendar_header">
       <h3>
         {{ get_month(thisWeek[0].date_split[1]) }}
@@ -195,11 +193,19 @@
         </div>
       </div>
     </div>
-  </div>
+  </card-wrapper>
 </template>
 
 <script>
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+  );
+
 export default {
+  components: {
+    CardWrapper,
+  },
   props: {
     events: Array,
     forceUpdate: Number,

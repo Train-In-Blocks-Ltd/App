@@ -1,9 +1,6 @@
 <style lang="scss" scoped>
-#simple_chart {
+.simple_chart {
   padding: 1rem;
-  background-color: var(--fore);
-  border: 3px solid var(--base);
-  border-radius: 10px;
   margin: 2rem 0;
   .content_wrapper {
     display: grid;
@@ -80,7 +77,7 @@
 </style>
 
 <template>
-  <div id="simple_chart">
+  <card-wrapper class="simple_chart" backgroundColor="var(--fore)" noHover>
     <div class="content_wrapper">
       <div class="selected_bar">
         <h3>
@@ -190,11 +187,19 @@
         </div>
       </div>
     </div>
-  </div>
+  </card-wrapper>
 </template>
 
 <script>
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "./generic/CardWrapper"
+  );
+
 export default {
+  components: {
+    CardWrapper,
+  },
   props: {
     dataPoints: Array,
     labels: Array,

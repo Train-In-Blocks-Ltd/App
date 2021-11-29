@@ -19,9 +19,6 @@
       display: flex;
       .data-select {
         padding: 1rem;
-        background-color: var(--fore);
-        border: 3px solid var(--base);
-        border-radius: 10px;
         margin-right: 4rem;
         .data-select__options {
           display: grid;
@@ -41,9 +38,6 @@
         grid-template-columns: 1fr 1fr;
         grid-gap: 1rem;
         padding: 1rem;
-        background-color: var(--fore);
-        border: 3px solid var(--base);
-        border-radius: 10px;
         width: 100%;
         .data-desc__value {
           margin: 0.4rem 0 2rem 0;
@@ -57,10 +51,7 @@
       display: grid;
       grid-gap: 1rem;
       margin-top: 4rem;
-      background-color: var(--fore);
       padding: 1rem;
-      border: 3px solid var(--base);
-      border-radius: 10px;
       table {
         th,
         td {
@@ -79,9 +70,6 @@
     /* Placeholder on empty */
     .graph_placeholder {
       padding: 1rem;
-      border: 3px solid var(--base);
-      border-radius: 10px;
-      background-color: var(--fore);
       margin-top: 2rem;
     }
   }
@@ -121,7 +109,11 @@
       </div>
       <div class="container--content">
         <div class="data-options">
-          <div class="data-select">
+          <card-wrapper
+            class="data-select"
+            backgroundColor="var(--fore)"
+            noHover
+          >
             <div class="data-select__options">
               <label for="measure"> Measurement </label>
               <select
@@ -184,10 +176,12 @@
                 <option value="scatter">Scatter</option>
               </select>
             </div>
-          </div>
-          <div
+          </card-wrapper>
+          <card-wrapper
             v-if="showDataTypeSelector && dataToVisualise.length !== 0"
             class="data-desc"
+            backgroundColor="var(--fore)"
+            noHover
           >
             <div
               v-for="(desc, descIndex) in descData"
@@ -201,9 +195,14 @@
                 {{ desc[1] }}
               </p>
             </div>
-          </div>
+          </card-wrapper>
         </div>
-        <div v-show="protocolErrors.length !== 0" class="protocol_error">
+        <card-wrapper
+          v-show="protocolErrors.length !== 0"
+          class="protocol_error"
+          backgroundColor="var(--fore)"
+          noHover
+        >
           <p class="text--red">
             ERROR: Please check that the following exercises and measurements
             are using the correct format.
@@ -226,7 +225,7 @@
               <td>{{ error.protocol }}</td>
             </tr>
           </table>
-        </div>
+        </card-wrapper>
         <simple-chart
           v-if="dataToVisualise.length !== 0"
           :data-points="dataToVisualise"
@@ -239,13 +238,18 @@
           aria-label="Graph"
           class="fadeIn"
         />
-        <div v-else class="graph_placeholder">
+        <card-wrapper
+          v-else
+          class="graph_placeholder"
+          backgroundColor="var(--fore)"
+          noHover
+        >
           <h3>No data to plot on the graph</h3>
           <p class="grey">
             Make sure that you've used the correct format and have chosen a
             selection above
           </p>
-        </div>
+        </card-wrapper>
       </div>
     </div>
   </div>
@@ -254,12 +258,17 @@
 <script>
 const SimpleChart = () =>
   import(
-    /* webpackChunkName: "components.simplechart", webpackPrefetch: true */ "./SimpleChart"
+    /* webpackChunkName: "components.simpleChart", webpackPrefetch: true */ "./SimpleChart"
+  );
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "./generic/CardWrapper"
   );
 
 export default {
   components: {
     SimpleChart,
+    CardWrapper,
   },
   props: {
     plan: Object,
