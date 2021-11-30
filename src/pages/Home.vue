@@ -112,9 +112,16 @@
             class="search"
             aria-label="Find a client"
           />
-          <button @click="(isNewClientOpen = true), willBodyScroll(false)">
+          <default-button
+            :on-click="
+              () => {
+                isNewClientOpen = true;
+                willBodyScroll(false);
+              }
+            "
+          >
             New Client
-          </button>
+          </default-button>
         </div>
       </div>
       <div class="clients_container">
@@ -167,6 +174,10 @@ const Txt = () =>
   import(
     /* webpackChunkName: "components.text", webpackPrefetch: true  */ "@components/elements/Txt"
   );
+const DefaultButton = () =>
+  import(
+    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@components/elements/DefaultButton"
+  );
 
 export default {
   components: {
@@ -175,6 +186,7 @@ export default {
     WhatsNew,
     InstallApp,
     Txt,
+    DefaultButton,
   },
   data() {
     return {

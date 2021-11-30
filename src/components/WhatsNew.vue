@@ -52,7 +52,7 @@ textarea {
         v-for="(item, index) in content"
         :key="`item_${index}`"
         class="update_item"
-        backgroundColor="var(--fore)"
+        :style="{ backgroundColor: 'var(--fore)' }"
         noHover
       >
         <img
