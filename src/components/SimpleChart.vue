@@ -77,7 +77,11 @@
 </style>
 
 <template>
-  <card-wrapper class="simple_chart" backgroundColor="var(--fore)" noHover>
+  <card-wrapper
+    class="simple_chart"
+    :style="{ backgroundColor: 'var(--fore)' }"
+    noHover
+  >
     <div class="content_wrapper">
       <div class="selected_bar">
         <h3>

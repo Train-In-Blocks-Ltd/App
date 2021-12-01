@@ -32,7 +32,6 @@
       'card_wrapper',
       { animated: !noTransition, has_hover: !noHover, has_shadow: hasShadow },
     ]"
-    :style="{ backgroundColor }"
   >
     <slot />
   </div>
@@ -43,7 +42,6 @@ export default {
   props: {
     noTransition: Boolean,
     noHover: Boolean,
-    backgroundColor: String,
     hasShadow: Boolean,
   },
 };

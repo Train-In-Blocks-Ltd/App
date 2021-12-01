@@ -102,7 +102,7 @@
     </div>
     <div v-else-if="!noClients" class="home--container">
       <div class="header">
-        <h2>Clients</h2>
+        <txt type="title">Clients</txt>
         <div>
           <input
             v-model="search"
@@ -112,9 +112,16 @@
             class="search"
             aria-label="Find a client"
           />
-          <button @click="(isNewClientOpen = true), willBodyScroll(false)">
+          <default-button
+            :on-click="
+              () => {
+                isNewClientOpen = true;
+                willBodyScroll(false);
+              }
+            "
+          >
             New Client
-          </button>
+          </default-button>
         </div>
       </div>
       <div class="clients_container">
@@ -149,19 +156,27 @@
 import { mapState } from "vuex";
 const ClientLink = () =>
   import(
-    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "../components/ClientLink"
+    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@components/ClientLink"
   );
 const NewClient = () =>
   import(
-    /* webpackChunkName: "components.newclient", webpackPrefetch: true  */ "../components/NewClient"
+    /* webpackChunkName: "components.newclient", webpackPrefetch: true  */ "@components/NewClient"
   );
 const WhatsNew = () =>
   import(
-    /* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ "../components/WhatsNew"
+    /* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ "@components/WhatsNew"
   );
 const InstallApp = () =>
   import(
-    /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "../components/InstallPWA"
+    /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "@components/InstallPWA"
+  );
+const Txt = () =>
+  import(
+    /* webpackChunkName: "components.text", webpackPrefetch: true  */ "@components/elements/Txt"
+  );
+const DefaultButton = () =>
+  import(
+    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@components/elements/DefaultButton"
   );
 
 export default {
@@ -170,6 +185,8 @@ export default {
     NewClient,
     WhatsNew,
     InstallApp,
+    Txt,
+    DefaultButton,
   },
   data() {
     return {

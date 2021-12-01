@@ -80,20 +80,32 @@
       >
         Save
       </button>
-      <button
-        class="red_button"
-        @click.prevent="($parent.isNewClientOpen = false), willBodyScroll(true)"
+      <default-button
+        theme="red"
+        :on-click-prevent="
+          () => {
+            $parent.isNewClientOpen = false;
+            willBodyScroll(true);
+          }
+        "
       >
         Close
-      </button>
+      </default-button>
     </div>
   </form>
 </template>
 
 <script>
 import { mapState } from "vuex";
+const DefaultButton = () =>
+  import(
+    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@components/elements/DefaultButton"
+  );
 
 export default {
+  components: {
+    DefaultButton,
+  },
   data() {
     return {
       newClient: {

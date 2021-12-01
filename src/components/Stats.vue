@@ -111,7 +111,7 @@
         <div class="data-options">
           <card-wrapper
             class="data-select"
-            backgroundColor="var(--fore)"
+            :style="{ backgroundColor: 'var(--fore)' }"
             noHover
           >
             <div class="data-select__options">
@@ -180,7 +180,7 @@
           <card-wrapper
             v-if="showDataTypeSelector && dataToVisualise.length !== 0"
             class="data-desc"
-            backgroundColor="var(--fore)"
+            :style="{ backgroundColor: 'var(--fore)' }"
             noHover
           >
             <div
@@ -200,7 +200,7 @@
         <card-wrapper
           v-show="protocolErrors.length !== 0"
           class="protocol_error"
-          backgroundColor="var(--fore)"
+          :style="{ backgroundColor: 'var(--fore)' }"
           noHover
         >
           <p class="text--red">
@@ -241,7 +241,7 @@
         <card-wrapper
           v-else
           class="graph_placeholder"
-          backgroundColor="var(--fore)"
+          :style="{ backgroundColor: 'var(--fore)' }"
           noHover
         >
           <h3>No data to plot on the graph</h3>
