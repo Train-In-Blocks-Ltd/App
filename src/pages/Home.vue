@@ -9,7 +9,6 @@
     > div:last-child {
       display: flex;
       justify-content: flex-end;
-      align-items: center;
       button {
         margin: auto 0 auto .6rem
       }
@@ -91,12 +90,11 @@
       <skeleton :type="'input_large'" class="skeleton_margin" />
       <skeleton :type="'client'" />
     </div>
-    <div v-if="!loading" class="home--container">
+    <div v-else-if="!noClients" class="home--container">
       <div class="header">
         <h2>Clients</h2>
         <div>
           <input
-            v-if="!noClients"
             v-model="search"
             type="search"
             rel="search"
@@ -104,9 +102,6 @@
             class="search"
             aria-label="Find a client"
           >
-          <p v-else class="text--small grey">
-            No clients added yet.
-          </p>
           <button @click="isNewClientOpen = true, willBodyScroll(false)">
             New Client
           </button>
@@ -130,6 +125,9 @@
         </router-link>
       </div>
     </div>
+    <p v-else class="text--holder text--small grey">
+      No clients added yet, use the button on the top-right of your screen.
+    </p>
   </div>
 </template>
 
