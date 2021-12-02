@@ -119,12 +119,12 @@ hr {
             aria-label="Close"
             @click="(isPortfolioOpen = false), willBodyScroll(true)"
           />
-          <h2>
+          <txt type="subtitle">
             {{ portfolio.business_name }}
-          </h2>
-          <h3 class="grey">
+          </txt>
+          <txt type="large-body" class="grey">
             {{ portfolio.trainer_name }}
-          </h3>
+          </txt>
           <skeleton v-if="loading" :type="'session'" />
           <div
             v-else
@@ -289,6 +289,7 @@ hr {
 
 <script>
 import { mapState } from "vuex";
+import Txt from "../../components/elements/Txt.vue";
 const RichEditor = () =>
   import(
     /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
@@ -313,6 +314,7 @@ export default {
     InstallApp,
     Periodise,
     ClientProfile,
+    Txt,
   },
   async beforeRouteLeave(to, from, next) {
     if (

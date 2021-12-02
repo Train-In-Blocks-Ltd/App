@@ -3,6 +3,10 @@
 .subtitle {
   font-size: 2.6rem;
 }
+.large_body {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
 .body {
   font-size: 1rem;
 }
@@ -19,6 +23,9 @@
     <h2 class="subtitle" v-else-if="type === 'subtitle'">
       <slot />
     </h2>
+    <h3 class="large_body" v-else-if="type === 'large-body'">
+      <slot />
+    </h3>
     <p class="tiny" v-else-if="type === 'tiny'">
       <slot />
     </p>
