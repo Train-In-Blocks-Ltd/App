@@ -133,7 +133,7 @@
               id="expand"
               class="icon--expand"
               :class="{ expanded: expandedTemplates.includes(template.id) }"
-              :src="require('../assets/svg/expand.svg')"
+              :src="require('@/assets/svg/expand.svg')"
               title="Info"
               @click="toggle_expanded_templates(template.id)"
             />

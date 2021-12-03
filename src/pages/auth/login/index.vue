@@ -158,7 +158,7 @@ a {
   <div v-if="!authenticated" id="login">
     <splash v-if="!splashed" />
     <inline-svg
-      :src="require('../assets/svg/full-logo.svg')"
+      :src="require('@/assets/svg/full-logo.svg')"
       class="auth-org-logo"
     />
     <div>
@@ -211,7 +211,7 @@ a {
     </p>
     <div class="version">
       <inline-svg
-        :src="require('../assets/svg/andromeda-icon.svg')"
+        :src="require('@/assets/svg/andromeda-icon.svg')"
         aria-label="Andromeda"
       />
       <p class="text--tiny">
@@ -223,11 +223,11 @@ a {
 
 <script>
 import { mapState } from "vuex";
-import Splash from "../components/Splash";
+import Splash from "@/components/Splash";
 const CUSTOM_ENV =
   process.env.NODE_ENV === "production"
-    ? require("../../config/prod.env")
-    : require("../../config/dev.env");
+    ? require("../../../../config/prod.env")
+    : require("../../../../config/dev.env");
 
 export default {
   components: {
