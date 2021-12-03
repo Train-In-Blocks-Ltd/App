@@ -23,6 +23,8 @@ const PortfolioComponent = () =>
   import(/* webpackChunkName: "portfolio" */ "@/pages/main/portfolio");
 const ArchiveComponent = () =>
   import(/* webpackChunkName: "archive" */ "@/pages/main/archive");
+const ProfileComponent = () =>
+  import(/* webpackChunkName: "account" */ "@/pages/main/account");
 const ClientComponent = () =>
   import(/* webpackChunkName: "client.home" */ "@/pages/_client/Home");
 const ClientPlans = () =>
