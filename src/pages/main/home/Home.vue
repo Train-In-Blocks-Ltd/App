@@ -72,7 +72,7 @@
       @click="(isWhatsNewOpen = true), willBodyScroll(false)"
     >
       <inline-svg
-        :src="require('../assets/svg/whats-new.svg')"
+        :src="require('@/assets/svg/whats-new.svg')"
         aria-label="What's New"
       />
       <p class="text">What's New</p>
@@ -85,7 +85,7 @@
       @click="(isInstallOpen = true), willBodyScroll(false)"
     >
       <inline-svg
-        :src="require('../assets/svg/install-pwa.svg')"
+        :src="require('@/assets/svg/install-pwa.svg')"
         aria-label="Install Train In Blocks"
       />
       <p class="text">Install</p>
@@ -155,31 +155,31 @@
 import { mapState } from "vuex";
 const ClientLink = () =>
   import(
-    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@components/ClientLink"
+    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@/components/ClientLink"
   );
 const NewClient = () =>
   import(
-    /* webpackChunkName: "components.newclient", webpackPrefetch: true  */ "@components/NewClient"
+    /* webpackChunkName: "components.newclient", webpackPrefetch: true  */ "@/components/NewClient"
   );
 const WhatsNew = () =>
   import(
-    /* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ "@components/WhatsNew"
+    /* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ "@/components/WhatsNew"
   );
 const InstallApp = () =>
   import(
-    /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "@components/InstallPWA"
+    /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "@/components/InstallPWA"
   );
 const Txt = () =>
   import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@components/elements/Txt"
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
   );
 const TxtInput = () =>
   import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@components/elements/TxtInput"
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
   );
 const DefaultButton = () =>
   import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@components/elements/DefaultButton"
+    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
   );
 
 export default {

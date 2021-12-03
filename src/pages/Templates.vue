@@ -158,19 +158,19 @@
 import { mapState } from "vuex";
 const RichEditor = () =>
   import(
-    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@components/Editor"
+    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
   );
 const Checkbox = () =>
   import(
-    /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@components/Checkbox"
+    /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/Checkbox"
   );
 const Multiselect = () =>
   import(
-    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@components/Multiselect"
+    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
   );
 const TxtInput = () =>
   import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@components/elements/TxtInput"
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
   );
 
 export default {

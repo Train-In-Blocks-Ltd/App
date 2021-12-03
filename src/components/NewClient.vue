@@ -99,7 +99,7 @@
 import { mapState } from "vuex";
 const DefaultButton = () =>
   import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@components/elements/DefaultButton"
+    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
   );
 
 export default {

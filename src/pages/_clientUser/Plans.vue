@@ -270,7 +270,7 @@ const RichEditor = () =>
   );
 const CardWrapper = () =>
   import(
-    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@components/generic/CardWrapper"
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
   );
 
 export default {

@@ -72,15 +72,15 @@
 import { mapState } from "vuex";
 const ClientLink = () =>
   import(
-    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@components/ClientLink"
+    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@/components/ClientLink"
   );
 const Multiselect = () =>
   import(
-    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@components/Multiselect"
+    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
   );
 const TxtInput = () =>
   import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@components/elements/TxtInput"
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
   );
 
 export default {

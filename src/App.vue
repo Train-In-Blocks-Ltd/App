@@ -671,7 +671,7 @@ import { mapState } from "vuex";
 
 const NavBar = () =>
   import(
-    /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@components/extensive/NavBar/index"
+    /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar/index"
   );
 import Policy from "./components/Policy";
 

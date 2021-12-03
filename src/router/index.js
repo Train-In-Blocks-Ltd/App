@@ -42,7 +42,7 @@ const ClientUserSuccess = () =>
   );
 
 const HomeComponent = () =>
-  import(/* webpackChunkName: "home" */ "@/pages/Home");
+  import(/* webpackChunkName: "home" */ "@/pages/main/home/Home");
 
 Vue.use(Router);
 const oktaAuth = new OktaAuth({
