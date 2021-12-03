@@ -104,12 +104,11 @@
       <div class="header">
         <txt type="title">Clients</txt>
         <div>
-          <input
+          <txt-input
             v-model="search"
             type="search"
             rel="search"
             placeholder="Find a client"
-            class="search"
             aria-label="Find a client"
           />
           <default-button
@@ -172,7 +171,11 @@ const InstallApp = () =>
   );
 const Txt = () =>
   import(
-    /* webpackChunkName: "components.text", webpackPrefetch: true  */ "@components/elements/Txt"
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@components/elements/Txt"
+  );
+const TxtInput = () =>
+  import(
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@components/elements/TxtInput"
   );
 const DefaultButton = () =>
   import(
@@ -186,6 +189,7 @@ export default {
     WhatsNew,
     InstallApp,
     Txt,
+    TxtInput,
     DefaultButton,
   },
   data() {

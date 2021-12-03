@@ -338,6 +338,9 @@ button {
 }
 
 /* Inputs */
+.form_button_bar {
+  display: flex;
+}
 input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="button"]):not([type="submit"]),
 select,
 textarea {
@@ -386,10 +389,6 @@ input[type="color"] {
 }
 option {
   background-color: var(--fore);
-}
-.search {
-  width: 100%;
-  margin-bottom: 2rem;
 }
 .input_section {
   display: grid;
