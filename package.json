@@ -125,6 +125,7 @@
     ]
   },
   "_moduleAliases": {
-    "@components": "src/components"
+    "@components": "src/components",
+    "@assets": "src/assets"
   }
 }

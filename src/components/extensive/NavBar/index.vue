@@ -1,5 +1,6 @@
 <style lang="scss">
-@import "../assets/styles/icon-anim.scss";
+@import "../../../assets/styles/icon-anim.scss";
+
 .logo {
   margin-bottom: auto;
   .logo_link {
@@ -68,28 +69,6 @@
     display: flex;
     text-decoration: none;
     opacity: var(--light_opacity);
-    transition: var(--transition_standard);
-  }
-  .nav_item__text {
-    white-space: nowrap;
-    user-select: none;
-    color: var(--base);
-    text-decoration: none;
-    position: relative;
-    border: 0;
-    opacity: 0;
-    height: fit-content;
-    height: -moz-fit-content;
-    margin: auto 0;
-    transition: var(--transition_standard);
-  }
-  .nav_item__icon {
-    margin: 0 0.4rem 0 0;
-    vertical-align: bottom;
-    padding: 0.2rem;
-    border-radius: 5px;
-    height: 1.8rem;
-    width: 1.8rem;
     transition: var(--transition_standard);
   }
 }
@@ -177,7 +156,7 @@
         title="Home"
       >
         <inline-svg
-          :src="require('../assets/svg/logo-icon.svg')"
+          :src="require('../../../assets/svg/logo-icon.svg')"
           class="logo_svg fadeIn"
           aria-label="Home"
         />
@@ -189,91 +168,40 @@
         title="Home"
       >
         <inline-svg
-          :src="require('../assets/svg/logo-icon.svg')"
+          :src="require('../../../assets/svg/logo-icon.svg')"
           class="logo_svg fadeIn"
           aria-label="Home"
         />
       </router-link>
     </div>
-    <!-- .logo -->
+    <!-- logo -->
     <div
       v-for="(nav, navIndex) in navLinks"
       :key="`nav_${navIndex}`"
       :class="{ refresh: nav.name === 'Refresh' }"
       class="nav_item"
     >
-      <a
-        v-if="nav.name === 'Log out'"
-        :href="nav.link"
-        :title="nav.name"
-        @click="logout"
-      >
-        <inline-svg
-          :src="require(`../assets/svg/${nav.svg}`)"
-          class="nav_item__icon fadeIn"
-          :aria-label="nav.name"
-        />
-        <p class="nav_item__text">
-          {{ nav.name }}
-        </p>
-      </a>
-      <a
-        v-else-if="nav.name === 'Refresh'"
-        :href="nav.link"
-        :title="nav.name"
-        @click="hardRefresh"
-      >
-        <inline-svg
-          :src="require(`../assets/svg/${nav.svg}`)"
-          class="nav_item__icon fadeIn"
-          :aria-label="nav.name"
-        />
-      </a>
-      <router-link
-        v-else-if="
-          nav.forUser.includes(claims.user_type) &&
-          nav.internal &&
-          (nav.name === 'Account'
-            ? claims.email !== 'demo@traininblocks.com'
-            : true)
-        "
-        :to="nav.link"
-        :title="nav.name"
-      >
-        <inline-svg
-          :src="require(`../assets/svg/${nav.svg}`)"
-          class="nav_item__icon fadeIn"
-          :aria-label="nav.name"
-        />
-        <p class="nav_item__text">
-          {{ nav.name }}
-        </p>
-      </router-link>
-      <a
-        v-else-if="
-          nav.forUser.includes(claims.user_type) && nav.name !== 'Account'
-        "
-        :href="nav.link"
-        :title="nav.name"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <inline-svg
-          :src="require(`../assets/svg/${nav.svg}`)"
-          class="nav_item__icon fadeIn"
-          :aria-label="nav.name"
-        />
-        <p class="nav_item__text">
-          {{ nav.name }}
-        </p>
-      </a>
+      <nav-link
+        :internal="nav.internal"
+        :name="nav.name"
+        :link="nav.link"
+        :svg="nav.svg"
+      />
     </div>
   </nav>
   <!-- #sidebar -->
 </template>
 
 <script>
+const NavLink = () =>
+  import(
+    /* webpackChunkName: "components.navLink", webpackPreload: true  */ "./components/NavLink.vue"
+  );
+
 export default {
+  components: {
+    NavLink,
+  },
   props: {
     claims: Object,
   },
@@ -283,70 +211,70 @@ export default {
         {
           name: "Home",
           link: "/",
-          svg: "home.svg",
+          svg: "home",
           forUser: ["Admin", "Trainer"],
           internal: true,
         },
         {
           name: "Home",
           link: "/clientUser",
-          svg: "home.svg",
+          svg: "home",
           forUser: ["Client"],
           internal: true,
         },
         {
           name: "Client",
           link: "/clientUser",
-          svg: "home.svg",
+          svg: "home",
           forUser: ["Admin"],
           internal: true,
         },
         {
           name: "Help",
           link: "https://traininblocks.com/help/",
-          svg: "help-desk.svg",
+          svg: "help-desk",
           forUser: ["Admin", "Trainer"],
           internal: false,
         },
         {
           name: "Templates",
           link: "/templates",
-          svg: "templates.svg",
+          svg: "templates",
           forUser: ["Admin", "Trainer"],
           internal: true,
         },
         {
           name: "Portfolio",
           link: "/portfolio",
-          svg: "portfolio.svg",
+          svg: "portfolio",
           forUser: ["Admin", "Trainer"],
           internal: true,
         },
         {
           name: "Archive",
           link: "/archive",
-          svg: "archive.svg",
+          svg: "archive",
           forUser: ["Admin", "Trainer"],
           internal: true,
         },
         {
           name: "Account",
           link: "/account",
-          svg: "account.svg",
+          svg: "account",
           forUser: ["Admin", "Trainer", "Client"],
           internal: true,
         },
         {
           name: "Refresh",
           link: "javascript:void(0)",
-          svg: "refresh.svg",
+          svg: "refresh",
           forUser: ["Admin", "Trainer", "Client"],
           internal: true,
         },
         {
           name: "Log out",
           link: "javascript:void(0)",
-          svg: "logout.svg",
+          svg: "logout",
           forUser: ["Admin", "Trainer", "Client"],
           internal: true,
         },
