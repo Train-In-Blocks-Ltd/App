@@ -2,23 +2,6 @@
 .home--container {
   display: grid;
   margin-bottom: 2rem;
-  .header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-    > div:last-child {
-      display: flex;
-      justify-content: flex-end;
-      button {
-        margin: auto 0 auto 0.6rem;
-      }
-      input.search {
-        /* stylelint-disable-next-line */
-        width: 50% !important;
-        margin: auto 0;
-      }
-    }
-  }
 }
 .skeleton_margin {
   margin-bottom: 2rem;
@@ -30,17 +13,6 @@
 @media (max-width: 768px) {
   .home--container {
     width: 100%;
-    .header {
-      display: grid;
-      grid-gap: 1rem;
-      justify-content: unset;
-      > div:last-child {
-        justify-content: space-between;
-        button {
-          margin-left: 0;
-        }
-      }
-    }
   }
 }
 </style>
@@ -101,35 +73,7 @@
       <skeleton :type="'client'" />
     </div>
     <div v-else-if="!noClients" class="home--container">
-      <div class="header">
-        <txt type="title">Clients</txt>
-        <div>
-          <txt-input
-            type="search"
-            rel="search"
-            placeholder="Find a client"
-            aria-label="Find a client"
-            :value="search"
-            @output="
-              (data) =>
-                $store.commit('setData', {
-                  attr: 'search',
-                  data,
-                })
-            "
-          />
-          <default-button
-            :on-click="
-              () => {
-                isNewClientOpen = true;
-                willBodyScroll(false);
-              }
-            "
-          >
-            New Client
-          </default-button>
-        </div>
-      </div>
+      <home-header />
       <clients-list />
     </div>
     <p v-else class="text--holder text--small grey">
@@ -143,6 +87,10 @@ import { mapState } from "vuex";
 const Wrapper = () =>
   import(
     /* webpackChunkName: "components.wrapper", webpackPreload: true  */ "@/components/generic/Wrapper"
+  );
+const HomeHeader = () =>
+  import(
+    /* webpackChunkName: "components.homeHeader", webpackPreload: true  */ "./components/HomeHeader"
   );
 const ClientsList = () =>
   import(
@@ -160,18 +108,6 @@ const InstallApp = () =>
   import(
     /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "@/components/InstallPWA"
   );
-const Txt = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
-  );
-const TxtInput = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
-  );
-const DefaultButton = () =>
-  import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
-  );
 
 export default {
   components: {
@@ -179,10 +115,8 @@ export default {
     NewClient,
     WhatsNew,
     InstallApp,
-    Txt,
-    TxtInput,
-    DefaultButton,
     ClientsList,
+    HomeHeader,
   },
   data() {
     return {
@@ -193,25 +127,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([
-      "newBuild",
-      "clients",
-      "noClients",
-      "loading",
-      "pwa",
-      "search",
-    ]),
-    search: {
-      get() {
-        return this.$store.state.search;
-      },
-      set(value) {
-        this.$store.commit("setData", {
-          attr: "search",
-          data: value,
-        });
-      },
-    },
+    ...mapState(["newBuild", "clients", "noClients", "loading", "pwa"]),
   },
   async created() {
     this.$store.commit("setData", {

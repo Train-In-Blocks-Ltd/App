@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-.container {
+.txt_input {
   height: fit-content;
   height: -moz-fit-content;
   width: auto;
@@ -37,7 +37,7 @@
 </style>
 
 <template>
-  <div class="container">
+  <div class="txt_input">
     <label v-if="label" :for="name" :class="labelClass">
       {{ label }}
     </label>
