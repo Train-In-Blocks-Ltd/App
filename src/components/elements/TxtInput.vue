@@ -51,8 +51,7 @@
       :placeholder="placeholder"
       :aria-label="ariaLabel"
       :pattern="pattern"
-      v-model="inputValue"
-      @input="onInput"
+      @input="handleInput"
     />
     <txt v-if="error" :class="errorClass">{{ error }}</txt>
   </div>
@@ -86,14 +85,10 @@ export default {
     vModel: String,
     onInput: Function,
   },
-  computed: {
-    inputValue: {
-      get() {
-        return this.value;
-      },
-      set(val) {
-        this.$emit("input", val);
-      },
+  methods: {
+    handleInput(e) {
+      this.$emit("output", e.target.value);
+      if (this.onInput) this.onInput();
     },
   },
 };

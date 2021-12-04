@@ -46,7 +46,7 @@
 </style>
 
 <template>
-  <div id="home" class="view_container">
+  <wrapper id="home">
     <div
       v-if="isNewClientOpen"
       class="tab_overlay_content fadeIn delay fill_mode_both"
@@ -105,11 +105,18 @@
         <txt type="title">Clients</txt>
         <div>
           <txt-input
-            v-model="search"
             type="search"
             rel="search"
             placeholder="Find a client"
             aria-label="Find a client"
+            :value="search"
+            @output="
+              (data) =>
+                $store.commit('setData', {
+                  attr: 'search',
+                  data,
+                })
+            "
           />
           <default-button
             :on-click="
@@ -123,39 +130,23 @@
           </default-button>
         </div>
       </div>
-      <div class="clients_container">
-        <!-- Perform case insensitive search -->
-        <router-link
-          v-for="(client, index) in clients"
-          v-show="
-            (!search ||
-              client.name.toLowerCase().startsWith(search.toLowerCase())) &&
-            !loading
-          "
-          :id="'a' + client.client_id"
-          :key="index"
-          :to="'/client/' + client.client_id + '/'"
-          class="client_link_wrapper"
-        >
-          <client-link
-            :client="client"
-            :archive="false"
-            :class="{ recently_added: persistResponse === client.name }"
-          />
-        </router-link>
-      </div>
+      <clients-list />
     </div>
     <p v-else class="text--holder text--small grey">
       No clients added yet, use the button on the top-right of your screen.
     </p>
-  </div>
+  </wrapper>
 </template>
 
 <script>
 import { mapState } from "vuex";
-const ClientLink = () =>
+const Wrapper = () =>
   import(
-    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@/components/ClientLink"
+    /* webpackChunkName: "components.wrapper", webpackPreload: true  */ "@/components/generic/Wrapper"
+  );
+const ClientsList = () =>
+  import(
+    /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "@/components/generic/ClientsList"
   );
 const NewClient = () =>
   import(
@@ -184,13 +175,14 @@ const DefaultButton = () =>
 
 export default {
   components: {
-    ClientLink,
+    Wrapper,
     NewClient,
     WhatsNew,
     InstallApp,
     Txt,
     TxtInput,
     DefaultButton,
+    ClientsList,
   },
   data() {
     return {
@@ -198,10 +190,29 @@ export default {
       isNewClientOpen: false,
       isInstallOpen: false,
       isWhatsNewOpen: false,
-      search: "",
     };
   },
-  computed: mapState(["newBuild", "clients", "noClients", "loading", "pwa"]),
+  computed: {
+    ...mapState([
+      "newBuild",
+      "clients",
+      "noClients",
+      "loading",
+      "pwa",
+      "search",
+    ]),
+    search: {
+      get() {
+        return this.$store.state.search;
+      },
+      set(value) {
+        this.$store.commit("setData", {
+          attr: "search",
+          data: value,
+        });
+      },
+    },
+  },
   async created() {
     this.$store.commit("setData", {
       attr: "loading",

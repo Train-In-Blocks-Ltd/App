@@ -9,6 +9,7 @@ export default {
 
   // System
 
+  search: "",
   instanceReady: false,
   loading: false,
   silentLoading: false,
