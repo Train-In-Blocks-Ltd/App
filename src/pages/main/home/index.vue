@@ -121,13 +121,19 @@ export default {
   data() {
     return {
       persistResponse: "",
-      isNewClientOpen: false,
       isInstallOpen: false,
       isWhatsNewOpen: false,
     };
   },
   computed: {
-    ...mapState(["newBuild", "clients", "noClients", "loading", "pwa"]),
+    ...mapState([
+      "newBuild",
+      "clients",
+      "noClients",
+      "loading",
+      "pwa",
+      "isNewClientOpen",
+    ]),
   },
   async created() {
     this.$store.commit("setData", {

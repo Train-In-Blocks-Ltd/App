@@ -92,6 +92,17 @@ export default {
         });
       },
     },
+    isNewClientOpen: {
+      get() {
+        return this.$store.state.isNewClientOpen;
+      },
+      set(value) {
+        this.$store.commit("setData", {
+          attr: "isNewClientOpen",
+          data: value,
+        });
+      },
+    },
   },
 };
 </script>
