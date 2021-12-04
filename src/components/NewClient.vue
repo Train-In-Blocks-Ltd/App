@@ -13,7 +13,14 @@
     class="form_grid add_client"
     spellcheck="false"
     @submit.prevent="
-      createClient(), ($parent.isNewClientOpen = false), willBodyScroll(true)
+      () => {
+        createClient();
+        $store.commit('setData', {
+          attr: 'isNewClientOpen',
+          data: false,
+        });
+        willBodyScroll(true);
+      }
     "
   >
     <div class="bottom_margin">
@@ -84,7 +91,10 @@
         theme="red"
         :on-click-prevent="
           () => {
-            $parent.isNewClientOpen = false;
+            $store.commit('setData', {
+              attr: 'isNewClientOpen',
+              data: false,
+            });
             willBodyScroll(true);
           }
         "
@@ -99,7 +109,7 @@
 import { mapState } from "vuex";
 const DefaultButton = () =>
   import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@components/elements/DefaultButton"
+    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
   );
 
 export default {

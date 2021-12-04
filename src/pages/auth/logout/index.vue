@@ -19,7 +19,7 @@
   <div id="logout" class="view_container">
     <div class="logout_message">
       <div class="logout_message__top">
-        <inline-svg :src="require('../assets/svg/logout_success.svg')" />
+        <inline-svg :src="require('@/assets/svg/logout_success.svg')" />
         <div>
           <h1>You have been logged out successfully</h1>
           <br />

@@ -338,6 +338,9 @@ button {
 }
 
 /* Inputs */
+.form_button_bar {
+  display: flex;
+}
 input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="button"]):not([type="submit"]),
 select,
 textarea {
@@ -386,10 +389,6 @@ input[type="color"] {
 }
 option {
   background-color: var(--fore);
-}
-.search {
-  width: 100%;
-  margin-bottom: 2rem;
 }
 .input_section {
   display: grid;
@@ -669,7 +668,11 @@ option {
 
 <script>
 import { mapState } from "vuex";
-import NavBar from "./components/NavBar";
+
+const NavBar = () =>
+  import(
+    /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar/index"
+  );
 import Policy from "./components/Policy";
 
 export default {

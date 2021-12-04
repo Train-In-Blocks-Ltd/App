@@ -9,6 +9,8 @@ export default {
 
   // System
 
+  search: "",
+  isNewClientOpen: false,
   instanceReady: false,
   loading: false,
   silentLoading: false,

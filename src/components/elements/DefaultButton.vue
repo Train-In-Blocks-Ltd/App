@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-.container {
+.default_button {
   height: fit-content;
   height: -moz-fit-content;
   width: auto;
@@ -47,7 +47,7 @@
 </style>
 
 <template>
-  <div class="container">
+  <div class="default_button">
     <button
       v-if="onClickPrevent"
       :class="theme"
