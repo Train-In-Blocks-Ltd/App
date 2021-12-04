@@ -69,7 +69,7 @@
       />
     </div>
     <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
-    <products />
+    <!-- <products /> -->
   </div>
 </template>
 

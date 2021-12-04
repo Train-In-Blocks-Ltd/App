@@ -15,26 +15,11 @@
     }
   }
 }
-.nav_item {
-  a.router-link-exact-active {
-    svg {
-      background: var(--base);
-      path {
-        fill: var(--fore);
-      }
-    }
-  }
-  &:hover a.router-link-exact-active svg {
-    transition: none;
-    transform: none;
-  }
-}
 </style>
 
 <style lang="scss" scoped>
 /* Nav bar */
 #sidebar {
-  z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -42,103 +27,24 @@
   position: fixed;
   background-color: var(--fore);
   box-shadow: var(--low_shadow);
-  border-radius: 10px 10px 0 0;
-  transition: width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-.nav_item {
-  display: flex;
-  cursor: pointer;
-  font-size: 1rem;
-  margin: 0.8rem 0;
-  transition: var(--transition_standard);
-  &:empty {
-    display: none;
-  }
-  &:hover {
-    a {
-      opacity: 1;
-    }
-  }
-  &:last-of-type {
-    padding-bottom: 0;
-  }
-  &.refresh {
-    display: none;
-  }
-  a {
-    display: flex;
-    text-decoration: none;
-    opacity: var(--light_opacity);
-    transition: var(--transition_standard);
-  }
-}
-#sidebar:hover .nav_item__text,
-.nav_item a.router-link-exact-active {
-  opacity: 1;
+  border-radius: 0 10px 10px 0;
+  z-index: 10;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: calc(100vh - env(safe-area-inset-bottom));
 }
 
-/* Responsive */
-@media (min-width: 769px) {
-  #sidebar {
-    top: 0;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    min-height: calc(100vh - env(safe-area-inset-bottom));
-    width: calc(38px + 2rem);
-    border-radius: 0;
-    &:hover {
-      width: 12rem;
-      main {
-        margin-left: 12rem;
-      }
-    }
-  }
-}
 @media (max-width: 768px) {
   #sidebar {
     bottom: 0;
     width: 100vw;
+    min-height: fit-content;
+    min-height: -moz-fit-content;
     flex-direction: row;
     padding: 0;
     justify-content: space-between;
     border-right: none;
-    &:hover .nav_item__text {
-      display: none;
-    }
-    .logo {
-      display: none;
-    }
-  }
-  .nav_item {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    &.refresh {
-      display: block;
-    }
-    a {
-      width: 100%;
-      height: 3.8rem;
-      &.router-link-exact-active {
-        background-color: var(--base);
-        border-radius: 10px 10px 0 0;
-      }
-    }
-    .nav_item__text {
-      display: none;
-    }
-    .nav_item__icon {
-      margin: 0.8rem auto;
-    }
-  }
-}
-@media (prefers-reduced-motion: reduce) and (min-width: 769px) {
-  #sidebar {
-    width: 12rem;
-  }
-}
-@media (max-height: 425px) {
-  #sidebar {
+    border-radius: 10px 10px 0 0;
     .logo {
       display: none;
     }
@@ -175,19 +81,16 @@
       </router-link>
     </div>
     <!-- logo -->
-    <div
+    <nav-link
       v-for="(nav, navIndex) in navLinks"
-      :key="`nav_${navIndex}`"
-      :class="{ refresh: nav.name === 'Refresh' }"
-      class="nav_item"
-    >
-      <nav-link
-        :internal="nav.internal"
-        :name="nav.name"
-        :link="nav.link"
-        :svg="nav.svg"
-      />
-    </div>
+      :key="`nav_link_${navIndex}`"
+      :internal="nav.internal"
+      :name="nav.name"
+      :link="nav.link"
+      :svg="nav.svg"
+      :forUser="nav.forUser"
+      :on-click="nav.onClick"
+    />
   </nav>
   <!-- #sidebar -->
 </template>
@@ -219,14 +122,7 @@ export default {
           name: "Home",
           link: "/clientUser",
           svg: "home",
-          forUser: ["Client"],
-          internal: true,
-        },
-        {
-          name: "Client",
-          link: "/clientUser",
-          svg: "home",
-          forUser: ["Admin"],
+          forUser: ["Admin", "Client"],
           internal: true,
         },
         {
@@ -269,14 +165,16 @@ export default {
           link: "javascript:void(0)",
           svg: "refresh",
           forUser: ["Admin", "Trainer", "Client"],
-          internal: true,
+          internal: false,
+          onClick: this.hardRefresh,
         },
         {
           name: "Log out",
           link: "javascript:void(0)",
           svg: "logout",
           forUser: ["Admin", "Trainer", "Client"],
-          internal: true,
+          internal: false,
+          onClick: this.logout,
         },
       ],
     };
