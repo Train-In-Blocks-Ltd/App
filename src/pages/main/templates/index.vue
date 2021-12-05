@@ -251,26 +251,27 @@ export default {
     helper(type) {
       switch (type) {
         case "new":
-          this.$parent.$refs.response_pop_up.show(
-            "New template created",
-            "Edit and use it in a client's plan"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "New template created",
+            description: "Edit and use it in a client's plan",
+          });
           this.$ga.event("Template", "new");
           break;
         case "update":
-          this.$parent.$refs.response_pop_up.show(
-            "Updated template",
-            "Your changes have been saved"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Updated template",
+            description: "Your changes have been saved",
+          });
           this.$ga.event("Template", "update");
           break;
         case "delete":
-          this.$parent.$refs.response_pop_up.show(
-            this.selectedTemplates.length > 1
-              ? "Deleted templates"
-              : "Deleted template",
-            "Your changes have been saved"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title:
+              this.selectedTemplates.length > 1
+                ? "Deleted templates"
+                : "Deleted template",
+            description: "Your changes have been saved",
+          });
           this.$ga.event("Template", "delete");
           break;
       }

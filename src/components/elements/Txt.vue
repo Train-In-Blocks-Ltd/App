@@ -24,10 +24,14 @@ h3 {
   <h3 v-else-if="type === 'subtitle'">
     <slot />
   </h3>
-  <p class="tiny" v-else-if="type === 'tiny'">
+  <p
+    class="tiny"
+    :style="{ fontWeight: bold ? 'bold' : 'normal' }"
+    v-else-if="type === 'tiny'"
+  >
     <slot />
   </p>
-  <p class="body" v-else>
+  <p v-else class="body" :style="{ fontWeight: bold ? 'bold' : 'normal' }">
     <slot />
   </p>
 </template>
@@ -37,6 +41,7 @@ export default {
   props: {
     type: String,
     isMain: Boolean,
+    bold: Boolean,
   },
 };
 </script>

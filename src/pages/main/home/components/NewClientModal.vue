@@ -110,12 +110,12 @@ export default {
 
     createClient() {
       if (this.newClient.email === this.claims.email) {
-        this.$parent.$parent.$refs.response_pop_up.show(
-          "You cannot create a client with your own email address!",
-          "Please use a different one.",
-          true,
-          true
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "You cannot create a client with your own email address!",
+          description: "Please use a different one.",
+          persist: true,
+          backdrop: true,
+        });
         console.error(
           "You cannot create a client with your own email address!"
         );
@@ -132,10 +132,10 @@ export default {
             number: this.newClient.number,
             notes: this.newClient.notes,
           });
-          this.$parent.$parent.$refs.response_pop_up.show(
-            `Added ${this.newClient.name}`,
-            "Well done on getting a new client"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: `Added ${this.newClient.name}`,
+            description: "Well done on getting a new client",
+          });
           this.$parent.persistResponse = this.newClient.name;
           this.newClient = {
             name: "",

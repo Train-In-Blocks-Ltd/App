@@ -309,9 +309,6 @@ div#rich_editor {
       <input-pop-up ref="input_pop_up" />
     </transition>
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up ref="response_pop_up" />
-    </transition>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <global-overlay ref="overlay" />
     </transition>
     <div
@@ -820,12 +817,12 @@ export default {
             },
           });
         } else {
-          this.$refs.response_pop_up.show(
-            "File size is too big",
-            "Please compress it to 1MB or lower",
-            true,
-            true
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "File size is too big",
+            description: "Please compress it to 1MB or lower",
+            persist: true,
+            backdrop: true,
+          });
           document.getElementById("img_uploader").value = "";
         }
       }

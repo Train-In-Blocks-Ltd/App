@@ -28,10 +28,10 @@
   background-color: var(--fore);
   box-shadow: var(--low_shadow);
   border-radius: 0 10px 10px 0;
-  z-index: 10;
   min-height: 100vh;
   min-height: -webkit-fill-available;
   min-height: calc(100vh - env(safe-area-inset-bottom));
+  z-index: 10;
 }
 
 @media (max-width: 768px) {

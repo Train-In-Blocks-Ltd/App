@@ -627,9 +627,7 @@ option {
         Offline mode: we will sync your data when you reconnect
       </p>
     </div>
-    <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-      <response-pop-up ref="response_pop_up" />
-    </transition>
+    <response-pop-up />
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <confirm-pop-up ref="confirm_pop_up" />
     </transition>
@@ -679,6 +677,10 @@ const NavBar = () =>
 const Modal = () =>
   import(
     /* webpackChunkName: "components.modal", webpackPreload: true  */ "@/components/extensive/Modal"
+  );
+const ResponsePopUp = () =>
+  import(
+    /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "@/components/extensive/ResponsePopUp"
   );
 
 export default {
@@ -792,12 +794,12 @@ export default {
           SELF.claims.email === "demo@traininblocks.com" &&
           config.method !== "get"
         ) {
-          SELF.$refs.response_pop_up.show(
-            "",
-            "You are using the demo account. Your changes cannot be saved.",
-            true,
-            true
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            description:
+              "You are using the demo account. Your changes cannot be saved.",
+            persist: true,
+            backdrop: true,
+          });
           SELF.willBodyScroll(false);
           SELF.$store.dispatch("endLoading");
           throw new SELF.$axios.Cancel(
@@ -907,14 +909,15 @@ export default {
         });
       }
       this.$store.dispatch("endLoading");
-      this.$refs.response_pop_up.show(
-        "ERROR: this problem has been reported to our developers",
-        msg.toString() !== "Error: Network Error"
-          ? msg.toString()
-          : "You may be offline. We'll try that request again once you've reconnected",
-        true,
-        true
-      );
+      this.$store.dispatch("openResponsePopUp", {
+        title: "ERROR: this problem has been reported to our developers",
+        description:
+          msg.toString() !== "Error: Network Error"
+            ? msg.toString()
+            : "You may be offline. We'll try that request again once you've reconnected",
+        persist: true,
+        backdrop: true,
+      });
       this.willBodyScroll(false);
     },
 
@@ -1089,10 +1092,10 @@ export default {
           sessionId,
         });
         this.$ga.event("Session", "update");
-        this.$refs.response_pop_up.show(
-          "Session updated",
-          "Your changes have been saved"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Session updated",
+          description: "Your changes haver been saved",
+        });
         this.$store.dispatch("endLoading");
       } catch (e) {
         this.resolveError(e);

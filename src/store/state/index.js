@@ -7,11 +7,20 @@ export default {
     user_type: 0,
   },
 
-  // System
-
+  // Modal
   modalSize: null,
   modalOpen: false,
   modalContent: null,
+
+  // Response pop-up
+  responseOpen: false,
+  responseTitle: null,
+  responseDescription: null,
+  responsePersist: false,
+  responseBackdrop: false,
+
+  // System
+
   search: "",
   instanceReady: false,
   loading: false,

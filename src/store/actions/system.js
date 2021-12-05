@@ -53,6 +53,63 @@ export default {
     });
   },
 
+  /**
+   * Opens the response pop-up
+   * @param {string} payload.title - The title of the pop-up.
+   * @param {string} payload.description - The body text of the pop-up.
+   * @param {boolean} payload.persist - Whether it will disappear automatically after some time.
+   * @param {boolean} payload.backdrop - Whether it will have a dark backdrop.
+   */
+  openResponsePopUp({ commit }, payload) {
+    commit("setData", {
+      attr: "responseOpen",
+      data: true,
+    });
+    if (payload.title)
+      commit("setData", {
+        attr: "responseTitle",
+        data: payload.title,
+      });
+    if (payload.description)
+      commit("setData", {
+        attr: "responseDescription",
+        data: payload.description,
+      });
+    if (payload.persist)
+      commit("setData", {
+        attr: "responsePersist",
+        data: payload.persist,
+      });
+    if (payload.backdrop)
+      commit("setData", {
+        attr: "responseBackdrop",
+        data: payload.backdrop,
+      });
+  },
+
+  closeResponsePopUp({ commit }) {
+    commit("setData", {
+      attr: "responseOpen",
+      data: false,
+    });
+    commit("setData", {
+      attr: "responseTitle",
+      data: null,
+    });
+    commit("setData", {
+      attr: "responseDescription",
+      data: null,
+    });
+    commit("setData", {
+      attr: "responsePersist",
+      data: false,
+    });
+    commit("setData", {
+      attr: "responseBackdrop",
+      data: false,
+    });
+  },
+
   /** Gets all the data for the trainer-user's session. */
   async getHighLevelData({ dispatch, commit, state }) {
     // Main data call
