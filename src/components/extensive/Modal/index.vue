@@ -5,12 +5,19 @@
   width: 100%;
   .modal {
     position: fixed;
-    top: 10rem;
+    top: 4rem;
     padding: 2rem;
     border-radius: var(--rounded);
     background-color: var(--fore);
     z-index: 100;
-    width: 600px;
+    max-height: 80%;
+    overflow-y: auto;
+    &.sm {
+      width: 60%;
+    }
+    &.lg {
+      width: 90%;
+    }
     .header {
       margin-bottom: 1.6rem;
     }
@@ -20,16 +27,24 @@
 @media (max-width: 768px) {
   .modal_wrapper .modal {
     top: 0;
-    width: 100%;
-    height: 100%;
+    max-height: 100%;
     border-radius: 0;
+    &.sm,
+    &.lg {
+      width: 100%;
+    }
   }
 }
 </style>
 
 <template>
   <div v-if="modalOpen" class="modal_wrapper">
-    <card-wrapper class="modal" noHover noBorder>
+    <card-wrapper
+      class="modal"
+      :class="{ lg: modalSize === 'lg', sm: modalSize === 'sm' }"
+      noHover
+      noBorder
+    >
       <secondary-header :title="title()" class="header">
         <template v-slot:right>
           <icon-button
@@ -90,12 +105,20 @@ export default {
     NewClientModal,
     WhatsNewModal,
   },
-  computed: mapState(["modalOpen", "modalContent"]),
+  computed: mapState([
+    "modalSize",
+    "modalOpen",
+    "modalContent",
+    "versionBuild",
+    "versionName",
+  ]),
   methods: {
     title() {
       switch (this.modalContent) {
         case "new-client":
           return "New Client";
+        case "whats-new":
+          return `${this.versionName} ${this.versionBuild}`;
         default:
           return "";
       }

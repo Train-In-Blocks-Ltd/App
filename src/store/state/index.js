@@ -9,6 +9,7 @@ export default {
 
   // System
 
+  modalSize: null,
   modalOpen: false,
   modalContent: null,
   search: "",

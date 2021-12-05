@@ -50,7 +50,7 @@
       <default-button
         :on-click="
           () => {
-            $store.dispatch('openModal', 'new-client');
+            $store.dispatch('openModal', { name: 'new-client' });
             willBodyScroll(false);
           }
         "
@@ -62,8 +62,8 @@
         svg="bookmark"
         :on-click="
           () => {
-            $store.dispatch('closeModal');
-            willBodyScroll(true);
+            $store.dispatch('openModal', { name: 'whats-new', size: 'lg' });
+            willBodyScroll(false);
           }
         "
         :icon-size="28"

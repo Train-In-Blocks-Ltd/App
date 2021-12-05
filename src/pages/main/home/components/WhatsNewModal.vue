@@ -35,18 +35,7 @@ textarea {
 </style>
 
 <template>
-  <div class="bottom_margin">
-    <inline-svg
-      class="close_icon cursor"
-      :src="require('@/assets/svg/close.svg')"
-      aria-label="Close"
-      @click="
-        ($parent.isWhatsNewOpen = false), willBodyScroll(true), updateVersion()
-      "
-    />
-    <h2>{{ versionName }} {{ versionBuild }}</h2>
-    <p class="text--small grey">Bookings, client profile, style, and more</p>
-    <br /><br />
+  <div>
     <div class="update_wrapper">
       <card-wrapper
         v-for="(item, index) in content"

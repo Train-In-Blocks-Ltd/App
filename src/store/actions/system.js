@@ -17,16 +17,21 @@ export default {
 
   /**
    * Opens a global modal
-   * @param {string} payload - The name of the modal.
+   * @param {string} payload.name - The name of the modal.
+   * @param {string} payload.size - The size of the modal.
    */
   openModal({ commit }, payload) {
+    commit("setData", {
+      attr: "modalSize",
+      data: payload.size ?? "sm",
+    });
     commit("setData", {
       attr: "modalOpen",
       data: true,
     });
     commit("setData", {
       attr: "modalContent",
-      data: payload,
+      data: payload.name,
     });
   },
 
@@ -34,6 +39,10 @@ export default {
    * Closes and resets the global modal.
    */
   closeModal({ commit }) {
+    commit("setData", {
+      attr: "modalSize",
+      data: null,
+    });
     commit("setData", {
       attr: "modalOpen",
       data: false,

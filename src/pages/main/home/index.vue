@@ -26,21 +26,8 @@
       <install-app />
     </div>
     <div
-      v-if="!isWhatsNewOpen"
-      class="tab_option tab_option_large"
-      aria-label="What's New"
-      @click="(isWhatsNewOpen = true), willBodyScroll(false)"
-    >
-      <inline-svg
-        :src="require('@/assets/svg/whats-new.svg')"
-        aria-label="What's New"
-      />
-      <p class="text">What's New</p>
-      <span v-if="newBuild" class="notify_badge">New</span>
-    </div>
-    <div
       v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
-      class="tab_option icon_open_middle tab_option_small"
+      class="tab_option tab_option_small"
       aria-label="Install Train In Blocks"
       @click="(isInstallOpen = true), willBodyScroll(false)"
     >
