@@ -18,7 +18,7 @@
     &.lg {
       width: 90%;
     }
-    .header {
+    .secondary_header {
       margin-bottom: 1.6rem;
     }
   }
@@ -45,7 +45,7 @@
       noHover
       noBorder
     >
-      <secondary-header :title="title()" class="header">
+      <secondary-header :title="title()">
         <template v-slot:right>
           <icon-button
             svg="close"
@@ -61,6 +61,7 @@
       </secondary-header>
       <new-client-modal v-if="modalContent === 'new-client'" />
       <whats-new-modal v-else-if="modalContent === 'whats-new'" />
+      <install-modal v-else-if="modalContent === 'install-pwa'" />
     </card-wrapper>
     <backdrop :on-click="handleBackdropClick" />
   </div>
@@ -96,6 +97,10 @@ const WhatsNewModal = () =>
   import(
     /* webpackChunkName: "components.whatsNewModal", webpackPrefetch: true  */ "@/pages/main/home/components/WhatsNewModal"
   );
+const InstallModal = () =>
+  import(
+    /* webpackChunkName: "components.installModal", webpackPrefetch: true  */ "@/pages/main/home/components/InstallModal"
+  );
 
 export default {
   components: {
@@ -105,6 +110,7 @@ export default {
     IconButton,
     NewClientModal,
     WhatsNewModal,
+    InstallModal,
   },
   computed: mapState([
     "modalSize",
@@ -123,6 +129,8 @@ export default {
           return "New Client";
         case "whats-new":
           return `${this.versionName} ${this.versionBuild}`;
+        case "install-pwa":
+          return "Save the app to your phone";
         default:
           return "";
       }

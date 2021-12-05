@@ -36,7 +36,7 @@ button {
     background-color: green;
   }
   &.red {
-    background-color: #8b0000;
+    background-color: #b80000;
   }
 }
 </style>

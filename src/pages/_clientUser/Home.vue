@@ -98,7 +98,7 @@ hr {
     <div v-if="portfolio">
       <div
         :class="{
-          opened_sections: isPortfolioOpen || isInstallOpen || isProfileOpen,
+          opened_sections: isPortfolioOpen || isProfileOpen,
         }"
         class="section_overlay"
       />
@@ -134,12 +134,6 @@ hr {
         </div>
       </div>
       <div
-        v-if="isInstallOpen"
-        class="tab_overlay_content fadeIn delay fill_mode_both"
-      >
-        <install-app />
-      </div>
-      <div
         v-if="!isProfileOpen"
         aria-label="Profile"
         class="tab_option tab_option_small"
@@ -162,21 +156,6 @@ hr {
           aria-label="Information"
         />
         <p class="text">Information</p>
-      </div>
-      <div
-        v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
-        :class="{
-          icon_open_bottom: portfolio && portfolio.notes !== '<p></p>',
-        }"
-        class="tab_option icon_open_middle tab_option_small"
-        aria-label="Install Train In Blocks"
-        @click="(isInstallOpen = true), willBodyScroll(false)"
-      >
-        <inline-svg
-          :src="require('../../assets/svg/install-pwa.svg')"
-          aria-label="Install Train In Blocks"
-        />
-        <p class="text">Install</p>
       </div>
     </div>
     <div id="client_home">
@@ -293,10 +272,6 @@ const RichEditor = () =>
   import(
     /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
   );
-const InstallApp = () =>
-  import(
-    /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "../../components/InstallPWA"
-  );
 const Periodise = () =>
   import(
     /* webpackChunkName: "components.periodise", webpackPrefetch: true  */ "../../components/Periodise"
@@ -310,7 +285,6 @@ const ClientProfile = () =>
 export default {
   components: {
     RichEditor,
-    InstallApp,
     Periodise,
     ClientProfile,
   },
@@ -335,7 +309,6 @@ export default {
       // TAB
 
       isPortfolioOpen: false,
-      isInstallOpen: false,
       isProfileOpen: false,
 
       // EDIT
@@ -357,7 +330,6 @@ export default {
     "clientUser",
     "claims",
     "portfolio",
-    "pwa",
   ]),
   async created() {
     this.$store.commit("setData", {

@@ -12,26 +12,28 @@ h3 {
 .tiny {
   font-size: 0.8rem;
 }
+.grey {
+  color: var(--base_light);
+}
+.bold {
+  font-weight: bold;
+}
 </style>
 
 <template>
-  <h1 v-if="type === 'title' && isMain">
+  <h1 v-if="type === 'title' && isMain" :class="{ grey }">
     <slot />
   </h1>
-  <h2 v-else-if="type === 'title'">
+  <h2 v-else-if="type === 'title'" :class="{ grey }">
     <slot />
   </h2>
-  <h3 v-else-if="type === 'subtitle'">
+  <h3 v-else-if="type === 'subtitle'" :class="{ grey }">
     <slot />
   </h3>
-  <p
-    class="tiny"
-    :style="{ fontWeight: bold ? 'bold' : 'normal' }"
-    v-else-if="type === 'tiny'"
-  >
+  <p v-else-if="type === 'tiny'" class="tiny" :class="{ grey, bold }">
     <slot />
   </p>
-  <p v-else class="body" :style="{ fontWeight: bold ? 'bold' : 'normal' }">
+  <p v-else class="body" :class="{ grey, bold }">
     <slot />
   </p>
 </template>
@@ -42,6 +44,7 @@ export default {
     type: String,
     isMain: Boolean,
     bold: Boolean,
+    grey: Boolean,
   },
 };
 </script>

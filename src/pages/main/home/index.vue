@@ -19,30 +19,6 @@
 
 <template>
   <wrapper id="home">
-    <div
-      v-if="isInstallOpen"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-    >
-      <install-app />
-    </div>
-    <div
-      v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
-      class="tab_option tab_option_small"
-      aria-label="Install Train In Blocks"
-      @click="(isInstallOpen = true), willBodyScroll(false)"
-    >
-      <inline-svg
-        :src="require('@/assets/svg/install-pwa.svg')"
-        aria-label="Install Train In Blocks"
-      />
-      <p class="text">Install</p>
-    </div>
-    <div
-      :class="{
-        opened_sections: isInstallOpen || isWhatsNewOpen,
-      }"
-      class="section_overlay"
-    />
     <div v-if="loading">
       <skeleton :type="'input_large'" class="skeleton_margin" />
       <skeleton :type="'client'" />
@@ -71,34 +47,20 @@ const ClientsList = () =>
   import(
     /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "@/components/generic/ClientsList"
   );
-const InstallApp = () =>
-  import(
-    /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "@/components/InstallPWA"
-  );
 
 export default {
   components: {
     Wrapper,
-    InstallApp,
     ClientsList,
     HomeHeader,
   },
   data() {
     return {
       persistResponse: "",
-      isInstallOpen: false,
-      isWhatsNewOpen: false,
     };
   },
   computed: {
-    ...mapState([
-      "newBuild",
-      "clients",
-      "noClients",
-      "loading",
-      "pwa",
-      "modalOpen",
-    ]),
+    ...mapState(["noClients", "loading", "modalOpen"]),
   },
   async created() {
     this.$store.commit("setData", {

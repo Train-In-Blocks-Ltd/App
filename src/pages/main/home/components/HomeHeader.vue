@@ -7,7 +7,8 @@
     display: flex;
     align-items: center;
     .search,
-    .new_client_button {
+    .new_client_button,
+    .whats_new_button {
       margin-right: 0.6rem;
     }
   }
@@ -67,6 +68,22 @@
           }
         "
         :icon-size="28"
+        class="whats_new_button"
+        svg-class="no_fill"
+      />
+      <icon-button
+        v-if="pwa.displayMode === 'browser tab'"
+        svg="download"
+        :on-click="
+          () => {
+            $store.dispatch('openModal', {
+              name: 'install-pwa',
+              size: 'lg',
+            });
+            willBodyScroll(false);
+          }
+        "
+        :icon-size="28"
         svg-class="no_fill"
       />
     </div>
@@ -74,6 +91,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 const Txt = () =>
   import(
     /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
@@ -99,6 +118,7 @@ export default {
     IconButton,
   },
   computed: {
+    ...mapState(["pwa"]),
     search: {
       get() {
         return this.$store.state.search;

@@ -610,6 +610,7 @@ option {
 <template>
   <div id="app" :class="{ authenticated: authenticated }">
     <modal />
+    <response-pop-up />
     <div
       v-if="claims.email === 'demo@traininblocks.com' && authenticated"
       class="top_banner fadeIn"
@@ -627,7 +628,6 @@ option {
         Offline mode: we will sync your data when you reconnect
       </p>
     </div>
-    <response-pop-up />
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
       <confirm-pop-up ref="confirm_pop_up" />
     </transition>
