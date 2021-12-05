@@ -695,6 +695,7 @@ export default {
     NavBar,
     Policy,
     Modal,
+    ResponsePopUp,
   },
   computed: mapState([
     "authenticated",
