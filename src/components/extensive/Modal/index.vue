@@ -9,7 +9,6 @@
     padding: 2rem;
     border-radius: var(--rounded);
     background-color: var(--fore);
-    box-shadow: var(--high_shadow);
     z-index: 100;
     width: 600px;
     .header {
@@ -17,21 +16,35 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .modal_wrapper .modal {
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+}
 </style>
 
 <template>
   <div v-if="modalOpen" class="modal_wrapper">
-    <div class="modal">
+    <card-wrapper class="modal" noHover noBorder>
       <secondary-header :title="title()" class="header">
         <template v-slot:right>
           <icon-button
             svg="close"
-            :on-click="() => $store.dispatch('closeModal')"
+            :on-click="
+              () => {
+                $store.dispatch('closeModal');
+                willBodyScroll(true);
+              }
+            "
           />
         </template>
       </secondary-header>
       <new-client-modal v-if="modalContent === 'new-client'" />
-    </div>
+    </card-wrapper>
     <backdrop />
   </div>
 </template>
@@ -39,6 +52,10 @@
 <script>
 import { mapState } from "vuex";
 
+const CardWrapper = () =>
+  import(
+    /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true  */ "@/components/generic/CardWrapper"
+  );
 const Backdrop = () =>
   import(
     /* webpackChunkName: "components.backdrop", webpackPrefetch: true  */ "@/components/generic/Backdrop"
@@ -61,6 +78,7 @@ const NewClientModal = () =>
 
 export default {
   components: {
+    CardWrapper,
     Backdrop,
     SecondaryHeader,
     IconButton,

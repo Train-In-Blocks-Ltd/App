@@ -1,12 +1,3 @@
-<style lang="scss" scoped>
-.add_client {
-  label {
-    display: grid;
-    grid-gap: 0.5rem;
-  }
-}
-</style>
-
 <template>
   <form
     name="add_client"
