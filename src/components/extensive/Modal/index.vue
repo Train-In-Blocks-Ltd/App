@@ -55,13 +55,14 @@
                 willBodyScroll(true);
               }
             "
+            :icon-size="24"
           />
         </template>
       </secondary-header>
       <new-client-modal v-if="modalContent === 'new-client'" />
       <whats-new-modal v-else-if="modalContent === 'whats-new'" />
     </card-wrapper>
-    <backdrop />
+    <backdrop :on-click="handleBackdropClick" />
   </div>
 </template>
 
@@ -113,6 +114,9 @@ export default {
     "versionName",
   ]),
   methods: {
+    handleBackdropClick() {
+      this.$store.dispatch("closeModal");
+    },
     title() {
       switch (this.modalContent) {
         case "new-client":

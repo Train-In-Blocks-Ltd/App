@@ -13,5 +13,20 @@
 </style>
 
 <template>
-  <div class="backdrop" />
+  <div
+    class="backdrop"
+    @click="
+      () => {
+        if (onClick) onClick();
+      }
+    "
+  />
 </template>
+
+<script>
+export default {
+  props: {
+    onClick: Function,
+  },
+};
+</script>
