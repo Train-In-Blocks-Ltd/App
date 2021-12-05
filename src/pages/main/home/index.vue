@@ -19,55 +19,6 @@
 
 <template>
   <wrapper id="home">
-    <div
-      v-if="isNewClientOpen"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-    >
-      <new-client />
-    </div>
-    <div
-      v-if="isWhatsNewOpen"
-      class="tab_overlay_content allow_y_overflow fadeIn delay fill_mode_both"
-    >
-      <whats-new />
-    </div>
-    <div
-      v-if="isInstallOpen"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-    >
-      <install-app />
-    </div>
-    <div
-      v-if="!isWhatsNewOpen"
-      class="tab_option tab_option_large"
-      aria-label="What's New"
-      @click="(isWhatsNewOpen = true), willBodyScroll(false)"
-    >
-      <inline-svg
-        :src="require('@/assets/svg/whats-new.svg')"
-        aria-label="What's New"
-      />
-      <p class="text">What's New</p>
-      <span v-if="newBuild" class="notify_badge">New</span>
-    </div>
-    <div
-      v-if="!isInstallOpen && pwa.displayMode === 'browser tab'"
-      class="tab_option icon_open_middle tab_option_small"
-      aria-label="Install Train In Blocks"
-      @click="(isInstallOpen = true), willBodyScroll(false)"
-    >
-      <inline-svg
-        :src="require('@/assets/svg/install-pwa.svg')"
-        aria-label="Install Train In Blocks"
-      />
-      <p class="text">Install</p>
-    </div>
-    <div
-      :class="{
-        opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen,
-      }"
-      class="section_overlay"
-    />
     <div v-if="loading">
       <skeleton :type="'input_large'" class="skeleton_margin" />
       <skeleton :type="'client'" />
@@ -96,44 +47,20 @@ const ClientsList = () =>
   import(
     /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "@/components/generic/ClientsList"
   );
-const NewClient = () =>
-  import(
-    /* webpackChunkName: "components.newclient", webpackPrefetch: true  */ "@/components/NewClient"
-  );
-const WhatsNew = () =>
-  import(
-    /* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ "@/components/WhatsNew"
-  );
-const InstallApp = () =>
-  import(
-    /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "@/components/InstallPWA"
-  );
 
 export default {
   components: {
     Wrapper,
-    NewClient,
-    WhatsNew,
-    InstallApp,
     ClientsList,
     HomeHeader,
   },
   data() {
     return {
       persistResponse: "",
-      isInstallOpen: false,
-      isWhatsNewOpen: false,
     };
   },
   computed: {
-    ...mapState([
-      "newBuild",
-      "clients",
-      "noClients",
-      "loading",
-      "pwa",
-      "isNewClientOpen",
-    ]),
+    ...mapState(["noClients", "loading", "modalOpen"]),
   },
   async created() {
     this.$store.commit("setData", {

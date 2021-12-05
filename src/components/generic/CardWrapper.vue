@@ -1,9 +1,11 @@
 <style lang="scss" scoped>
 .card_wrapper {
   color: var(--base);
-  border: 3px solid var(--base);
   border-radius: 10px;
   background: var(--back);
+  &.has_border {
+    border: 3px solid var(--base);
+  }
   &.animated {
     transition: var(--transition_standard);
   }
@@ -30,7 +32,12 @@
   <div
     :class="[
       'card_wrapper',
-      { animated: !noTransition, has_hover: !noHover, has_shadow: hasShadow },
+      {
+        animated: !noTransition,
+        has_hover: !noHover,
+        has_shadow: hasShadow,
+        has_border: !noBorder,
+      },
     ]"
   >
     <slot />
@@ -42,6 +49,7 @@ export default {
   props: {
     noTransition: Boolean,
     noHover: Boolean,
+    noBorder: Boolean,
     hasShadow: Boolean,
   },
 };

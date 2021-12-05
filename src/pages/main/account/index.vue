@@ -531,10 +531,10 @@ export default {
           old: this.password.old,
           new: this.password.new,
         });
-        this.$parent.$refs.response_pop_up.show(
-          "Password changed",
-          "Remember to not share it and keep it safe"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Password changed",
+          description: "Remember to not share it and keep it safe",
+        });
         this.showPasswordReset = false;
         this.willBodyScroll(true);
         this.password = {

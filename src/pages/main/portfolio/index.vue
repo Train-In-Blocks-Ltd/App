@@ -188,10 +188,10 @@ export default {
         });
         await this.$store.dispatch("updatePortfolio");
         this.$ga.event("Portfolio", "update");
-        this.$parent.$refs.response_pop_up.show(
-          "Portfolio updated",
-          "Your clients can access this information"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Portfolio updated",
+          description: "Your clients can access this information",
+        });
         this.$store.dispatch("endLoading");
       } catch (e) {
         this.$parent.resolveError(e);

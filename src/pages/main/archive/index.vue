@@ -194,12 +194,13 @@ export default {
             )
           ) {
             await this.$store.dispatch("clientDelete", this.selectedClients);
-            this.$parent.$refs.response_pop_up.show(
-              this.selectedClients.length > 1
-                ? "Clients deleted"
-                : "Client Delete",
-              "All their data has been removed"
-            );
+            this.$store.dispatch("openResponsePopUp", {
+              title:
+                this.selectedClients.length > 1
+                  ? "Clients deleted"
+                  : "Client Delete",
+              description: "All their data has been removed",
+            });
             this.deselectAll();
           }
         }
@@ -226,12 +227,13 @@ export default {
             )
           ) {
             await this.$store.dispatch("clientUnarchive", this.selectedClients);
-            this.$parent.$refs.response_pop_up.show(
-              this.selectedClients.length > 1
-                ? "Unarchived clients"
-                : "Unarchived client",
-              "All their data has been recovered"
-            );
+            this.$store.dispatch("openResponsePopUp", {
+              title:
+                this.selectedClients.length > 1
+                  ? "Unarchived clients"
+                  : "Unarchived client",
+              description: "All their data has been recovered",
+            });
             this.deselectAll();
           }
         }

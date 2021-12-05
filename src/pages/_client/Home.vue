@@ -442,12 +442,12 @@ export default {
         this.$parent.resolveError(e);
       }
       await this.checkClient();
-      this.$parent.$refs.response_pop_up.show(
-        "An activation email was sent to your client",
-        "Please ask them to check their inbox",
-        true,
-        true
-      );
+      this.$store.dispatch("openResponsePopUp", {
+        title: "An activation email was sent to your client",
+        description: "Please ask them to check their inbox",
+        persist: true,
+        backdrop: true,
+      });
       this.$store.dispatch("endLoading");
     },
 
@@ -493,10 +493,10 @@ export default {
           });
           await this.$store.dispatch("clientArchive", clientId);
           this.$ga.event("Client", "archive");
-          this.$parent.$refs.response_pop_up.show(
-            "Client archived",
-            "Their data will be kept safe on the archive page"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Client archived",
+            description: "Their data will be kept safe on the archive page",
+          });
           this.$store.dispatch("endLoading");
           this.$router.push("/");
         } catch (e) {

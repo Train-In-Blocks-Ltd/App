@@ -35,18 +35,7 @@ textarea {
 </style>
 
 <template>
-  <div class="bottom_margin">
-    <inline-svg
-      class="close_icon cursor"
-      :src="require('../assets/svg/close.svg')"
-      aria-label="Close"
-      @click="
-        ($parent.isWhatsNewOpen = false), willBodyScroll(true), updateVersion()
-      "
-    />
-    <h2>{{ versionName }} {{ versionBuild }}</h2>
-    <p class="text--small grey">Bookings, client profile, style, and more</p>
-    <br /><br />
+  <div>
     <div class="update_wrapper">
       <card-wrapper
         v-for="(item, index) in content"
@@ -57,7 +46,7 @@ textarea {
       >
         <img
           v-if="item.img"
-          :src="require(`../assets/whats-new/${item.img}`)"
+          :src="require(`@/assets/whats-new/${item.img}`)"
           :alt="item.title"
           loading="lazy"
         />
@@ -90,11 +79,11 @@ textarea {
 
 <script>
 import { mapState } from "vuex";
-const emailBuilder = require("./js/email");
+const emailBuilder = require("@/components/js/email");
 
 const CardWrapper = () =>
   import(
-    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+    /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
   );
 
 export default {
@@ -160,10 +149,6 @@ export default {
   },
   computed: mapState(["versionName", "versionBuild"]),
   methods: {
-    // -----------------------------
-    // General
-    // -----------------------------
-
     /**
      * Updates the version stored in local storage.
      */
@@ -174,6 +159,7 @@ export default {
         data: false,
       });
     },
+
     /**
      * Sends us an email when a user submits a new idea
      */

@@ -1,12 +1,3 @@
-<style lang="scss" scoped>
-.add_client {
-  label {
-    display: grid;
-    grid-gap: 0.5rem;
-  }
-}
-</style>
-
 <template>
   <form
     name="add_client"
@@ -15,98 +6,76 @@
     @submit.prevent="
       () => {
         createClient();
-        $store.commit('setData', {
-          attr: 'isNewClientOpen',
-          data: false,
-        });
+        $store.dispatch('closeModal');
         willBodyScroll(true);
       }
     "
   >
-    <div class="bottom_margin">
-      <h3>Add a new client and email them access</h3>
-      <p class="grey">
-        Make sure that you have the correct email address, you won't be able to
-        change it after
-      </p>
-    </div>
-    <input
-      ref="name"
-      :value="newClient.name"
-      class="small_border_radius width_300"
+    <txt-input
       type="text"
       autocomplete="name"
       placeholder="Name*"
       aria-label="Name"
+      :value="newClient.name"
+      :on-input="checkForm()"
+      @output="(data) => (newClient.name = data)"
+      focusFirst
       required
-      @input="(newClient.name = $event.target.value), checkForm()"
     />
-    <input
-      :value="newClient.email"
-      class="small_border_radius width_300"
-      type="email"
+    <txt-input
+      type="text"
       autocomplete="email"
       placeholder="Email*"
       aria-label="Email"
+      :value="newClient.email"
+      :on-input="checkForm()"
+      @output="(data) => (newClient.email = data)"
       required
-      @input="(newClient.email = $event.target.value), checkForm()"
     />
-    <input
-      :value="newClient.confirm"
-      :style="{
-        borderColor:
-          newClient.email !== newClient.confirm ? 'var(--base_red)' : '',
-      }"
-      class="small_border_radius width_300"
-      type="email"
+    <txt-input
+      type="text"
       autocomplete="email"
       placeholder="Confirm email*"
       aria-label="Confirm email"
+      :value="newClient.confirm"
+      :error="
+        newClient.email !== newClient.confirm ? 'Email does\'t match' : ''
+      "
+      :on-input="checkForm()"
+      @output="(data) => (newClient.confirm = data)"
       required
-      @input="(newClient.confirm = $event.target.value), checkForm()"
     />
-    <input
-      :value="newClient.number"
-      class="small_border_radius width_300"
+    <txt-input
       type="tel"
       inputmode="tel"
       autocomplete="tel"
       placeholder="Mobile"
       aria-label="Mobile"
       pattern="\d+"
-      @input="(newClient.number = $event.target.value), checkForm()"
+      :value="newClient.number"
+      :on-input="checkForm()"
+      @output="(data) => (newClient.number = data)"
     />
-    <div class="form_button_bar">
-      <button
-        :disabled="
-          disableCreateClientButton ||
-          newClient.email === '' ||
-          newClient.email !== newClient.confirm
-        "
-        type="submit"
-      >
-        Save
-      </button>
-      <default-button
-        theme="red"
-        :on-click-prevent="
-          () => {
-            $store.commit('setData', {
-              attr: 'isNewClientOpen',
-              data: false,
-            });
-            willBodyScroll(true);
-          }
-        "
-      >
-        Close
-      </default-button>
-    </div>
+    <default-button
+      :is-disabled="
+        disableCreateClientButton ||
+        newClient.email === '' ||
+        newClient.email !== newClient.confirm
+      "
+      type="submit"
+    >
+      Save
+    </default-button>
   </form>
 </template>
 
 <script>
 import { mapState } from "vuex";
+
+const TxtInput = () =>
+  import(
+    /* webpackChunkName: "components.txtInput", webpackPrefetch: true  */ "@/components/elements/TxtInput"
+  );
 const DefaultButton = () =>
   import(
     /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
@@ -114,6 +83,7 @@ const DefaultButton = () =>
 
 export default {
   components: {
+    TxtInput,
     DefaultButton,
   },
   data() {
@@ -129,14 +99,7 @@ export default {
     };
   },
   computed: mapState(["claims"]),
-  mounted() {
-    this.$refs.name.focus();
-  },
   methods: {
-    // -----------------------------
-    // General
-    // -----------------------------
-
     checkForm() {
       this.disableCreateClientButton = !(
         this.newClient.name &&
@@ -145,17 +108,14 @@ export default {
       );
     },
 
-    /**
-     * Creates a new client.
-     */
     createClient() {
       if (this.newClient.email === this.claims.email) {
-        this.$parent.$parent.$refs.response_pop_up.show(
-          "You cannot create a client with your own email address!",
-          "Please use a different one.",
-          true,
-          true
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "You cannot create a client with your own email address!",
+          description: "Please use a different one.",
+          persist: true,
+          backdrop: true,
+        });
         console.error(
           "You cannot create a client with your own email address!"
         );
@@ -172,10 +132,10 @@ export default {
             number: this.newClient.number,
             notes: this.newClient.notes,
           });
-          this.$parent.$parent.$refs.response_pop_up.show(
-            `Added ${this.newClient.name}`,
-            "Well done on getting a new client"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: `Added ${this.newClient.name}`,
+            description: "Well done on getting a new client",
+          });
           this.$parent.persistResponse = this.newClient.name;
           this.newClient = {
             name: "",

@@ -372,10 +372,11 @@ export default {
           time: this.timeNow(),
           notes: null,
         };
-        this.$parent.$parent.$parent.$refs.response_pop_up.show(
-          "Booking created",
-          "Your client will be notified of any upcoming bookings that were created."
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Booking created",
+          description:
+            "Your client will be notified of any upcoming bookings that were created.",
+        });
         this.$store.dispatch("endLoading");
       } catch (e) {
         this.$parent.$parent.$parent.resolveError(e);
@@ -402,10 +403,11 @@ export default {
             id,
             status: "Scheduled",
           });
-          this.$parent.$parent.$parent.$refs.response_pop_up.show(
-            "Booking request accepted",
-            "Your client will be notified of any upcoming bookings that were accepeted."
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Booking request accepted",
+            description:
+              "Your client will be notified of any upcoming bookings that were accepeted.",
+          });
           this.$store.dispatch("endLoading");
         } catch (e) {
           this.$parent.$parent.$parent.resolveError(e);
@@ -435,10 +437,11 @@ export default {
             bookingId,
             isTrainer: true,
           });
-          this.$parent.$parent.$parent.$refs.response_pop_up.show(
-            "Booking cancelled",
-            "Your client will be notified of any upcoming bookings that were cancelled."
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Booking cancelled",
+            description:
+              "Your client will be notified of any upcoming bookings that were cancelled.",
+          });
           this.$store.dispatch("endLoading");
         } catch (e) {
           this.$parent.$parent.$parent.resolveError(e);

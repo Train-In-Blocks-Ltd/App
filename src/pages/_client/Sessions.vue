@@ -1093,10 +1093,10 @@ export default {
           this.isEditingSession = false;
           this.editSession = null;
           this.updateSession(id);
-          this.$parent.$parent.$refs.response_pop_up.show(
-            "Session updated",
-            "Your changes have been saved"
-          );
+          this.$store("openResponsePopUp", {
+            title: "Session updated",
+            description: "Your changes have been saved",
+          });
           this.$store.dispatch("endLoading");
           break;
         case "cancel":
@@ -1152,12 +1152,12 @@ export default {
       this.checkForWeekSessions();
       this.updater();
       this.$ga.event("Session", "duplicate");
-      this.$parent.$parent.$refs.response_pop_up.show(
-        `${
+      this.$store.dispatch("openResponsePopUp", {
+        title: `${
           this.selectedSessions.length > 1 ? "Sessions" : "Session"
         } duplicated`,
-        "Get programming!"
-      );
+        description: "Get programming!",
+      });
       this.$store.dispatch("endLoading");
     },
 
@@ -1209,12 +1209,13 @@ export default {
         }
       });
       this.batchUpdateSession(this.selectedSessions);
-      this.$parent.$parent.$refs.response_pop_up.show(
-        this.selectedSessions.length > 1
-          ? "Shifted sessions"
-          : "Shifted session",
-        "Your changes have been saved"
-      );
+      this.$store.dispatch("openResponsePopUp", {
+        title:
+          this.selectedSessions.length > 1
+            ? "Shifted sessions"
+            : "Shifted session",
+        description: "Your changes have been saved",
+      });
       this.shiftDays = 1;
       this.deselectAll();
       this.$ga.event("Session", "shift");
@@ -1242,10 +1243,11 @@ export default {
       });
       this.batchUpdateSession(this.selectedSessions);
       this.currentWeek = parseInt(this.moveTarget);
-      this.$parent.$parent.$refs.response_pop_up.show(
-        this.selectedSessions.length > 1 ? "Moved sessions" : "Moved session",
-        "Your changes have been saved"
-      );
+      this.$store.dispatch("openResponsePopUp", {
+        title:
+          this.selectedSessions.length > 1 ? "Moved sessions" : "Moved session",
+        description: "Your changes have been saved",
+      });
       this.moveTarget = 1;
       this.deselectAll();
       this.$ga.event("Session", "move");
@@ -1286,12 +1288,13 @@ export default {
             }
           });
           this.batchUpdateSession(this.selectedSessions);
-          this.$parent.$parent.$refs.response_pop_up.show(
-            this.selectedSessions.length > 1
-              ? "Sessions updated"
-              : "Session updated",
-            "Your changes have been saved"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title:
+              this.selectedSessions.length > 1
+                ? "Sessions updated"
+                : "Session updated",
+            description: "Your changes have been saved",
+          });
           this.deselectAll();
         }
       }
@@ -1327,12 +1330,13 @@ export default {
           this.expandAll("Collapse");
           this.updater();
           this.$ga.event("Session", "delete");
-          this.$parent.$parent.$refs.response_pop_up.show(
-            this.selectedSessions.length > 1
-              ? "Sessions deleted"
-              : "Session deleted",
-            "Your changes have been saved"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title:
+              this.selectedSessions.length > 1
+                ? "Sessions deleted"
+                : "Session deleted",
+            description: "Your changes have been saved",
+          });
           this.$store.dispatch("endLoading");
         }
       }
@@ -1400,10 +1404,10 @@ export default {
       this.updater();
       this.goToEvent(NEW_SESSION_ID, this.currentWeek);
       this.$ga.event("Session", "new");
-      this.$parent.$parent.$refs.response_pop_up.show(
-        "New session added",
-        "Get programming!"
-      );
+      this.$store.dispatch("openResponsePopUp", {
+        title: "New session added",
+        description: "Get programming!",
+      });
       this.$store.dispatch("endLoading");
     },
 
@@ -1621,10 +1625,10 @@ export default {
           planSessions: this.plan.sessions,
         });
         this.$ga.event("Plan", "duplicate");
-        this.$parent.$parent.$refs.response_pop_up.show(
-          "Plan duplicated",
-          "Access it on your client's profile"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Plan duplicated",
+          description: "Access it on your client's profile",
+        });
         this.$store.dispatch("endLoading");
         this.$router.push({ path: `/client/${clientId}/` });
       } catch (e) {
@@ -1669,10 +1673,10 @@ export default {
             planId: this.$route.params.id,
           });
           this.$ga.event("Session", "delete");
-          this.$parent.$parent.$refs.response_pop_up.show(
-            "Plan deleted",
-            "Your changes have been saved"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Plan deleted",
+            description: "Your changes have been saved",
+          });
           this.$store.dispatch("endLoading");
           this.$router.push({
             path: `/client/${this.clientDetails.client_id}/`,

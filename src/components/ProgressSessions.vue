@@ -294,10 +294,11 @@ export default {
       this.progressInputs.daysBetween = 7;
       this.$parent.deselectAll();
       this.$ga.event("Session", "progress");
-      this.$parent.$parent.$parent.$refs.response_pop_up.show(
-        "Sessions have been progressed",
-        "Please go through them to make sure that you're happy with it"
-      );
+      this.$store.dispatch("openResponsePopUp", {
+        title: "Sessions have been progressed",
+        description:
+          "Please go through them to make sure that you're happy with it",
+      });
       this.$store.dispatch("endLoading");
     },
   },

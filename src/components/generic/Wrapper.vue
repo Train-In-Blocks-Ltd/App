@@ -1,5 +1,6 @@
 <style lang="scss" scoped>
 .wrapper {
+  position: relative;
   background-color: var(--back);
   padding: 2rem 10vw;
 }

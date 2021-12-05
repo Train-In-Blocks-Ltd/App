@@ -3,10 +3,12 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
-  > div:last-child {
+  > .right {
     display: flex;
-    justify-content: flex-end;
-    .search {
+    align-items: center;
+    .search,
+    .new_client_button,
+    .whats_new_button {
       margin-right: 0.6rem;
     }
   }
@@ -29,8 +31,8 @@
 
 <template>
   <div class="header">
-    <txt type="title">Clients</txt>
-    <div>
+    <txt type="title" isMain>Clients</txt>
+    <div class="right">
       <txt-input
         type="search"
         rel="search"
@@ -49,18 +51,48 @@
       <default-button
         :on-click="
           () => {
-            isNewClientOpen = true;
+            $store.dispatch('openModal', { name: 'new-client' });
             willBodyScroll(false);
           }
         "
+        class="new_client_button"
       >
         New Client
       </default-button>
+      <icon-button
+        svg="bookmark"
+        :on-click="
+          () => {
+            $store.dispatch('openModal', { name: 'whats-new', size: 'lg' });
+            willBodyScroll(false);
+          }
+        "
+        :icon-size="28"
+        class="whats_new_button"
+        svg-class="no_fill"
+      />
+      <icon-button
+        v-if="pwa.displayMode === 'browser tab'"
+        svg="download"
+        :on-click="
+          () => {
+            $store.dispatch('openModal', {
+              name: 'install-pwa',
+              size: 'lg',
+            });
+            willBodyScroll(false);
+          }
+        "
+        :icon-size="28"
+        svg-class="no_fill"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 const Txt = () =>
   import(
     /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
@@ -73,14 +105,20 @@ const DefaultButton = () =>
   import(
     /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
   );
+const IconButton = () =>
+  import(
+    /* webpackChunkName: "components.iconButton", webpackPrefetch: true  */ "@/components/elements/IconButton"
+  );
 
 export default {
   components: {
     Txt,
     TxtInput,
     DefaultButton,
+    IconButton,
   },
   computed: {
+    ...mapState(["pwa"]),
     search: {
       get() {
         return this.$store.state.search;
@@ -88,17 +126,6 @@ export default {
       set(value) {
         this.$store.commit("setData", {
           attr: "search",
-          data: value,
-        });
-      },
-    },
-    isNewClientOpen: {
-      get() {
-        return this.$store.state.isNewClientOpen;
-      },
-      set(value) {
-        this.$store.commit("setData", {
-          attr: "isNewClientOpen",
           data: value,
         });
       },
