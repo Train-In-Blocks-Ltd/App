@@ -20,12 +20,6 @@
 <template>
   <wrapper id="home">
     <div
-      v-if="isNewClientOpen"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-    >
-      <new-client />
-    </div>
-    <div
       v-if="isWhatsNewOpen"
       class="tab_overlay_content allow_y_overflow fadeIn delay fill_mode_both"
     >
@@ -64,7 +58,7 @@
     </div>
     <div
       :class="{
-        opened_sections: isNewClientOpen || isInstallOpen || isWhatsNewOpen,
+        opened_sections: isInstallOpen || isWhatsNewOpen,
       }"
       class="section_overlay"
     />
@@ -96,10 +90,6 @@ const ClientsList = () =>
   import(
     /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "@/components/generic/ClientsList"
   );
-const NewClient = () =>
-  import(
-    /* webpackChunkName: "components.newclient", webpackPrefetch: true  */ "@/components/NewClient"
-  );
 const WhatsNew = () =>
   import(
     /* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ "@/components/WhatsNew"
@@ -112,7 +102,6 @@ const InstallApp = () =>
 export default {
   components: {
     Wrapper,
-    NewClient,
     WhatsNew,
     InstallApp,
     ClientsList,
@@ -132,7 +121,7 @@ export default {
       "noClients",
       "loading",
       "pwa",
-      "isNewClientOpen",
+      "modalOpen",
     ]),
   },
   async created() {

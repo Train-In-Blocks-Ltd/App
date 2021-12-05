@@ -15,21 +15,11 @@
     @submit.prevent="
       () => {
         createClient();
-        $store.commit('setData', {
-          attr: 'isNewClientOpen',
-          data: false,
-        });
+        $store.dispatch('closeModal');
         willBodyScroll(true);
       }
     "
   >
-    <div class="bottom_margin">
-      <h3>Add a new client and email them access</h3>
-      <p class="grey">
-        Make sure that you have the correct email address, you won't be able to
-        change it after
-      </p>
-    </div>
     <input
       ref="name"
       :value="newClient.name"
@@ -77,8 +67,8 @@
       @input="(newClient.number = $event.target.value), checkForm()"
     />
     <div class="form_button_bar">
-      <button
-        :disabled="
+      <default-button
+        :is-disabled="
           disableCreateClientButton ||
           newClient.email === '' ||
           newClient.email !== newClient.confirm
@@ -86,20 +76,6 @@
         type="submit"
       >
         Save
-      </button>
-      <default-button
-        theme="red"
-        :on-click-prevent="
-          () => {
-            $store.commit('setData', {
-              attr: 'isNewClientOpen',
-              data: false,
-            });
-            willBodyScroll(true);
-          }
-        "
-      >
-        Close
       </default-button>
     </div>
   </form>
@@ -107,6 +83,7 @@
 
 <script>
 import { mapState } from "vuex";
+
 const DefaultButton = () =>
   import(
     /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
@@ -133,10 +110,6 @@ export default {
     this.$refs.name.focus();
   },
   methods: {
-    // -----------------------------
-    // General
-    // -----------------------------
-
     checkForm() {
       this.disableCreateClientButton = !(
         this.newClient.name &&
@@ -145,9 +118,6 @@ export default {
       );
     },
 
-    /**
-     * Creates a new client.
-     */
     createClient() {
       if (this.newClient.email === this.claims.email) {
         this.$parent.$parent.$refs.response_pop_up.show(

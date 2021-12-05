@@ -9,8 +9,9 @@ export default {
 
   // System
 
+  modalOpen: false,
+  modalContent: null,
   search: "",
-  isNewClientOpen: false,
   instanceReady: false,
   loading: false,
   silentLoading: false,

@@ -29,7 +29,7 @@
 
 <template>
   <div class="header">
-    <txt type="title">Clients</txt>
+    <txt type="title" isMain>Clients</txt>
     <div>
       <txt-input
         type="search"
@@ -49,7 +49,7 @@
       <default-button
         :on-click="
           () => {
-            isNewClientOpen = true;
+            $store.dispatch('openModal', 'new-client');
             willBodyScroll(false);
           }
         "
@@ -88,17 +88,6 @@ export default {
       set(value) {
         this.$store.commit("setData", {
           attr: "search",
-          data: value,
-        });
-      },
-    },
-    isNewClientOpen: {
-      get() {
-        return this.$store.state.isNewClientOpen;
-      },
-      set(value) {
-        this.$store.commit("setData", {
-          attr: "isNewClientOpen",
           data: value,
         });
       },

@@ -1,7 +1,10 @@
 <style lang="scss" scoped>
-.title,
-.subtitle {
+h1,
+h2 {
   font-size: 2.6rem;
+}
+h3 {
+  font-size: 1.6rem;
 }
 .body {
   font-size: 1rem;
@@ -12,26 +15,28 @@
 </style>
 
 <template>
-  <div>
-    <h1 class="title" v-if="type === 'title'">
-      <slot />
-    </h1>
-    <h2 class="subtitle" v-else-if="type === 'subtitle'">
-      <slot />
-    </h2>
-    <p class="tiny" v-else-if="type === 'tiny'">
-      <slot />
-    </p>
-    <p class="body" v-else>
-      <slot />
-    </p>
-  </div>
+  <h1 v-if="type === 'title' && isMain">
+    <slot />
+  </h1>
+  <h2 v-else-if="type === 'title'">
+    <slot />
+  </h2>
+  <h3 v-else-if="type === 'subtitle'">
+    <slot />
+  </h3>
+  <p class="tiny" v-else-if="type === 'tiny'">
+    <slot />
+  </p>
+  <p class="body" v-else>
+    <slot />
+  </p>
 </template>
 
 <script>
 export default {
   props: {
     type: String,
+    isMain: Boolean,
   },
 };
 </script>

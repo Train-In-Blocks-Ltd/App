@@ -15,6 +15,35 @@ export default {
     });
   },
 
+  /**
+   * Opens a global modal
+   * @param {string} payload - The name of the modal.
+   */
+  openModal({ commit }, payload) {
+    commit("setData", {
+      attr: "modalOpen",
+      data: true,
+    });
+    commit("setData", {
+      attr: "modalContent",
+      data: payload,
+    });
+  },
+
+  /**
+   * Closes and resets the global modal.
+   */
+  closeModal({ commit }) {
+    commit("setData", {
+      attr: "modalOpen",
+      data: false,
+    });
+    commit("setData", {
+      attr: "modalContent",
+      data: null,
+    });
+  },
+
   /** Gets all the data for the trainer-user's session. */
   async getHighLevelData({ dispatch, commit, state }) {
     // Main data call

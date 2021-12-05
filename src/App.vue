@@ -22,6 +22,7 @@
   --link: blue;
   --light_opacity: 0.6;
   --active_state: scale(0.95);
+  --rounded: 10px;
 
   // Responsiveness
   --2xl: 1538px;
@@ -608,6 +609,7 @@ option {
 
 <template>
   <div id="app" :class="{ authenticated: authenticated }">
+    <modal />
     <div
       v-if="claims.email === 'demo@traininblocks.com' && authenticated"
       class="top_banner fadeIn"
@@ -668,12 +670,16 @@ option {
 
 <script>
 import { mapState } from "vuex";
+import Policy from "./components/Policy";
 
 const NavBar = () =>
   import(
-    /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar/index"
+    /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar"
   );
-import Policy from "./components/Policy";
+const Modal = () =>
+  import(
+    /* webpackChunkName: "components.modal", webpackPreload: true  */ "@/components/extensive/Modal"
+  );
 
 export default {
   metaInfo() {
@@ -686,6 +692,7 @@ export default {
   components: {
     NavBar,
     Policy,
+    Modal,
   },
   computed: mapState([
     "authenticated",
