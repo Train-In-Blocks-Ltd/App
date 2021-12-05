@@ -3,10 +3,11 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
-  > div:last-child {
+  > .right {
     display: flex;
-    justify-content: flex-end;
-    .search {
+    align-items: center;
+    .search,
+    .new_client_button {
       margin-right: 0.6rem;
     }
   }
@@ -30,7 +31,7 @@
 <template>
   <div class="header">
     <txt type="title" isMain>Clients</txt>
-    <div>
+    <div class="right">
       <txt-input
         type="search"
         rel="search"
@@ -53,9 +54,21 @@
             willBodyScroll(false);
           }
         "
+        class="new_client_button"
       >
         New Client
       </default-button>
+      <icon-button
+        svg="bookmark"
+        :on-click="
+          () => {
+            $store.dispatch('closeModal');
+            willBodyScroll(true);
+          }
+        "
+        :icon-size="28"
+        svg-class="no_fill"
+      />
     </div>
   </div>
 </template>
@@ -73,12 +86,17 @@ const DefaultButton = () =>
   import(
     /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
   );
+const IconButton = () =>
+  import(
+    /* webpackChunkName: "components.iconButton", webpackPrefetch: true  */ "@/components/elements/IconButton"
+  );
 
 export default {
   components: {
     Txt,
     TxtInput,
     DefaultButton,
+    IconButton,
   },
   computed: {
     search: {

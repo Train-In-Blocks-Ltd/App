@@ -20,12 +20,6 @@
 <template>
   <wrapper id="home">
     <div
-      v-if="isWhatsNewOpen"
-      class="tab_overlay_content allow_y_overflow fadeIn delay fill_mode_both"
-    >
-      <whats-new />
-    </div>
-    <div
       v-if="isInstallOpen"
       class="tab_overlay_content fadeIn delay fill_mode_both"
     >
@@ -90,10 +84,6 @@ const ClientsList = () =>
   import(
     /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "@/components/generic/ClientsList"
   );
-const WhatsNew = () =>
-  import(
-    /* webpackChunkName: "components.whatsnew", webpackPrefetch: true  */ "@/components/WhatsNew"
-  );
 const InstallApp = () =>
   import(
     /* webpackChunkName: "components.installpwa", webpackPrefetch: true  */ "@/components/InstallPWA"
@@ -102,7 +92,6 @@ const InstallApp = () =>
 export default {
   components: {
     Wrapper,
-    WhatsNew,
     InstallApp,
     ClientsList,
     HomeHeader,

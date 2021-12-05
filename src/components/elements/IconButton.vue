@@ -1,13 +1,11 @@
 <style lang="scss" scoped>
 .icon_button {
+  display: flex;
+  align-items: center;
   cursor: pointer;
   transition: var(--transition_standard);
   &:hover {
     opacity: 0.6;
-  }
-  svg {
-    height: 24px;
-    width: 24px;
   }
 }
 </style>
@@ -21,7 +19,11 @@
       }
     "
   >
-    <inline-svg :src="require(`@/assets/svg/${svg}.svg`)" />
+    <inline-svg
+      :class="svgClass"
+      :style="{ height: `${iconSize}px`, width: `${iconSize}px` }"
+      :src="require(`@/assets/svg/${svg}.svg`)"
+    />
   </div>
 </template>
 
@@ -29,6 +31,8 @@
 export default {
   props: {
     svg: String,
+    svgClass: String,
+    iconSize: Number,
     onClick: Function,
   },
 };

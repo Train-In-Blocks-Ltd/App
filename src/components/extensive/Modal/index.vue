@@ -44,6 +44,7 @@
         </template>
       </secondary-header>
       <new-client-modal v-if="modalContent === 'new-client'" />
+      <whats-new-modal v-else-if="modalContent === 'whats-new'" />
     </card-wrapper>
     <backdrop />
   </div>
@@ -75,6 +76,10 @@ const NewClientModal = () =>
   import(
     /* webpackChunkName: "components.newClientModal", webpackPrefetch: true  */ "@/pages/main/home/components/NewClientModal"
   );
+const WhatsNewModal = () =>
+  import(
+    /* webpackChunkName: "components.whatsNewModal", webpackPrefetch: true  */ "@/pages/main/home/components/WhatsNewModal"
+  );
 
 export default {
   components: {
@@ -83,6 +88,7 @@ export default {
     SecondaryHeader,
     IconButton,
     NewClientModal,
+    WhatsNewModal,
   },
   computed: mapState(["modalOpen", "modalContent"]),
   methods: {
