@@ -33,6 +33,10 @@
       border-radius: 5px;
     }
   }
+  .error {
+    color: var(--base_red);
+    margin-top: 0.4rem;
+  }
 }
 </style>
 
@@ -51,9 +55,12 @@
       :placeholder="placeholder"
       :aria-label="ariaLabel"
       :pattern="pattern"
+      :required="required"
       @input="handleInput"
     />
-    <txt v-if="error" :class="errorClass">{{ error }}</txt>
+    <txt v-if="error" type="tiny" class="error" :class="errorClass">{{
+      error
+    }}</txt>
   </div>
 </template>
 
@@ -68,6 +75,7 @@ export default {
     Txt,
   },
   props: {
+    inputRef: String,
     name: String,
     label: String,
     error: String,
@@ -82,8 +90,12 @@ export default {
     placeholder: String,
     ariaLabel: String,
     pattern: String,
-    vModel: String,
     onInput: Function,
+    required: Boolean,
+    focusFirst: Boolean,
+  },
+  mounted() {
+    if (this.focusFirst) this.$el.children[0].focus();
   },
   methods: {
     handleInput(e) {
