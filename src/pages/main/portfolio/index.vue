@@ -69,7 +69,7 @@
       />
     </div>
     <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
-    <products />
+    <!-- <products /> -->
   </div>
 </template>
 
@@ -77,9 +77,9 @@
 import { mapState } from "vuex";
 const RichEditor = () =>
   import(
-    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../components/Editor"
+    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
   );
-// const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '../components/Products')
+// const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '@/components/Products')
 
 export default {
   metaInfo() {
@@ -188,10 +188,10 @@ export default {
         });
         await this.$store.dispatch("updatePortfolio");
         this.$ga.event("Portfolio", "update");
-        this.$parent.$refs.response_pop_up.show(
-          "Portfolio updated",
-          "Your clients can access this information"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Portfolio updated",
+          description: "Your clients can access this information",
+        });
         this.$store.dispatch("endLoading");
       } catch (e) {
         this.$parent.resolveError(e);

@@ -7,11 +7,10 @@ import VueMeta from "vue-meta";
 
 import { InlineSvgPlugin } from "vue-inline-svg";
 
-import Skeleton from "@components/Skeleton";
-import ResponsePopUp from "@components/ResponsePopUp";
-import ConfirmPopUp from "@components/ConfirmPopUp";
-import InputPopUp from "@components/InputPopUp";
-import GlobalOverlay from "@components/GlobalOverlay";
+import Skeleton from "@/components/Skeleton";
+import ConfirmPopUp from "@/components/ConfirmPopUp";
+import InputPopUp from "@/components/InputPopUp";
+import GlobalOverlay from "@/components/GlobalOverlay";
 
 import App from "./App";
 import router from "./router";
@@ -34,7 +33,6 @@ Vue.use(VueMeta);
 
 // Register component globally
 Vue.component("Skeleton", Skeleton);
-Vue.component("ResponsePopUp", ResponsePopUp);
 Vue.component("ConfirmPopUp", ConfirmPopUp);
 Vue.component("InputPopUp", InputPopUp);
 Vue.component("GlobalOverlay", GlobalOverlay);

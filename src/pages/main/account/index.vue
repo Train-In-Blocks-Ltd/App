@@ -338,7 +338,7 @@
     <br />
     <div class="version">
       <inline-svg
-        :src="require('../assets/svg/andromeda-icon.svg')"
+        :src="require('@/assets/svg/andromeda-icon.svg')"
         aria-label="Andromeda"
       />
       <p class="text--tiny">
@@ -352,7 +352,7 @@
 import { mapState } from "vuex";
 const PreviewModal = () =>
   import(
-    /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "../components/PreviewModal"
+    /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/PreviewModal"
   );
 
 export default {
@@ -457,9 +457,9 @@ export default {
 
     openEULA() {
       if (this.claims.user_type === "Client") {
-        this.previewHTML = require("../components/legal/eula-client.md").html;
+        this.previewHTML = require("@/components/legal/eula-client.md").html;
       } else {
-        this.previewHTML = require("../components/legal/eula.md").html;
+        this.previewHTML = require("@/components/legal/eula.md").html;
       }
     },
     checkForm() {
@@ -531,10 +531,10 @@ export default {
           old: this.password.old,
           new: this.password.new,
         });
-        this.$parent.$refs.response_pop_up.show(
-          "Password changed",
-          "Remember to not share it and keep it safe"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Password changed",
+          description: "Remember to not share it and keep it safe",
+        });
         this.showPasswordReset = false;
         this.willBodyScroll(true);
         this.password = {

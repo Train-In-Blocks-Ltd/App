@@ -69,13 +69,14 @@
       :selected="selectedTemplates"
       @response="resolve_template_multiselect"
     />
-    <input
+    <txt-input
       v-model="search"
       type="search"
       rel="search"
       placeholder="Find a template"
-      class="text--small search"
       aria-label="Find a template"
+      inputClass="text--small"
+      style="margin-bottom: 2rem"
     />
     <div class="template_options">
       <button @click="createTemplate()">New Template</button>
@@ -132,7 +133,7 @@
               id="expand"
               class="icon--expand"
               :class="{ expanded: expandedTemplates.includes(template.id) }"
-              :src="require('../assets/svg/expand.svg')"
+              :src="require('@/assets/svg/expand.svg')"
               title="Info"
               @click="toggle_expanded_templates(template.id)"
             />
@@ -157,15 +158,19 @@
 import { mapState } from "vuex";
 const RichEditor = () =>
   import(
-    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../components/Editor"
+    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
   );
 const Checkbox = () =>
   import(
-    /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "../components/Checkbox"
+    /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/Checkbox"
   );
 const Multiselect = () =>
   import(
-    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "../components/Multiselect"
+    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
+  );
+const TxtInput = () =>
+  import(
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
   );
 
 export default {
@@ -178,6 +183,7 @@ export default {
     RichEditor,
     Checkbox,
     Multiselect,
+    TxtInput,
   },
   async beforeRouteLeave(to, from, next) {
     if (
@@ -245,26 +251,27 @@ export default {
     helper(type) {
       switch (type) {
         case "new":
-          this.$parent.$refs.response_pop_up.show(
-            "New template created",
-            "Edit and use it in a client's plan"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "New template created",
+            description: "Edit and use it in a client's plan",
+          });
           this.$ga.event("Template", "new");
           break;
         case "update":
-          this.$parent.$refs.response_pop_up.show(
-            "Updated template",
-            "Your changes have been saved"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Updated template",
+            description: "Your changes have been saved",
+          });
           this.$ga.event("Template", "update");
           break;
         case "delete":
-          this.$parent.$refs.response_pop_up.show(
-            this.selectedTemplates.length > 1
-              ? "Deleted templates"
-              : "Deleted template",
-            "Your changes have been saved"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title:
+              this.selectedTemplates.length > 1
+                ? "Deleted templates"
+                : "Deleted template",
+            description: "Your changes have been saved",
+          });
           this.$ga.event("Template", "delete");
           break;
       }

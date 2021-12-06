@@ -8,21 +8,23 @@ const CUSTOM_ENV =
     ? require("../../config/prod.env")
     : require("../../config/dev.env");
 
+// Auth
 const LoginComponent = () =>
-  import(/* webpackChunkName: "login" */ "@/pages/Login");
-const ProfileComponent = () =>
-  import(/* webpackChunkName: "account" */ "@/pages/Account");
+  import(/* webpackChunkName: "login" */ "@/pages/auth/login");
 const LogoutComponent = () =>
-  import(/* webpackChunkName: "logout" */ "@/pages/Logout");
-const NotFound = () =>
-  import(/* webpackChunkName: "notfound" */ "@/pages/NotFound");
-const ArchiveComponent = () =>
-  import(/* webpackChunkName: "archive" */ "@/pages/Archive");
-const TemplateComponent = () =>
-  import(/* webpackChunkName: "templates" */ "@/pages/Templates");
-const PortfolioComponent = () =>
-  import(/* webpackChunkName: "portfolio" */ "@/pages/Portfolio");
+  import(/* webpackChunkName: "logout" */ "@/pages/auth/logout");
 
+// Main
+const HomeComponent = () =>
+  import(/* webpackChunkName: "home" */ "@/pages/main/home");
+const TemplateComponent = () =>
+  import(/* webpackChunkName: "templates" */ "@/pages/main/templates");
+const PortfolioComponent = () =>
+  import(/* webpackChunkName: "portfolio" */ "@/pages/main/portfolio");
+const ArchiveComponent = () =>
+  import(/* webpackChunkName: "archive" */ "@/pages/main/archive");
+const ProfileComponent = () =>
+  import(/* webpackChunkName: "account" */ "@/pages/main/account");
 const ClientComponent = () =>
   import(/* webpackChunkName: "client.home" */ "@/pages/_client/Home");
 const ClientPlans = () =>
@@ -40,9 +42,8 @@ const ClientUserSuccess = () =>
   import(
     /* webpackChunkName: "client-user.success" */ "@/pages/_clientUser/Success"
   );
-
-const HomeComponent = () =>
-  import(/* webpackChunkName: "home" */ "@/pages/Home");
+const NotFound = () =>
+  import(/* webpackChunkName: "notfound" */ "@/pages/NotFound");
 
 Vue.use(Router);
 const oktaAuth = new OktaAuth({

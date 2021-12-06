@@ -38,15 +38,6 @@
 @media (max-width: 768px) {
   .instructions {
     .img_container {
-      img {
-        width: 50%;
-      }
-    }
-  }
-}
-@media (max-width: 576px) {
-  .instructions {
-    .img_container {
       display: grid;
       grid-gap: 2rem;
       margin: 4rem 0;
@@ -70,36 +61,29 @@
 
 <template>
   <div>
-    <inline-svg
-      v-if="!pwa.canInstall && !pwa.installed"
-      class="close_icon cursor"
-      :src="require('../assets/svg/close.svg')"
-      aria-label="Close"
-      @click="($parent.isInstallOpen = false), willBodyScroll(true)"
-    />
     <div v-if="pwa.canInstall">
-      <h2>Add Train In Blocks to your home screen</h2>
-      <p class="text--small grey">Access it quickly with a clearer interface</p>
+      <txt bold>Add Train In Blocks to your home screen</txt>
+      <txt grey>Access it quickly with a clearer interface</txt>
     </div>
     <div v-else-if="pwa.installed">
-      <h2>You have Train In Blocks installed already!</h2>
-      <p class="text--small grey">Launch it or keep using it in the browser</p>
+      <txt bold>You have Train In Blocks installed already!</txt>
+      <txt grey>Launch it or keep using it in the browser</txt>
     </div>
     <div v-else-if="!pwa.canInstall">
-      <h2>Add Train In Blocks to your home screen</h2>
-      <p class="text--small grey">or continue using it in the browser</p>
+      <txt bold>Add Train In Blocks to your home screen</txt>
+      <txt grey>or continue using it in the browser</txt>
       <div class="instructions">
-        <p><b>For Safari</b></p>
-        <p>1. Open the <i>Share</i> menu at the bottom of the screen</p>
-        <p>2. Select <i>Add to Home Screen</i></p>
+        <txt bold>For Safari</txt>
+        <txt>1. Open the <i>Share</i> menu at the bottom of the screen</txt>
+        <txt>2. Select <i>Add to Home Screen</i></txt>
         <div class="img_container">
           <img
-            :src="require('../assets/install/1.jpg')"
+            :src="require('@/assets/install/1.jpg')"
             alt="Open share menu"
             loading="lazy"
           />
           <img
-            :src="require('../assets/install/2.jpg')"
+            :src="require('@/assets/install/2.jpg')"
             alt="Add to home screen"
             loading="lazy"
           />
@@ -107,48 +91,47 @@
       </div>
     </div>
     <div class="install_bottom_bar">
-      <button
-        v-if="pwa.canInstall"
-        @click="
-          installPWA(), ($parent.isInstallOpen = false), willBodyScroll(true)
-        "
-      >
+      <default-button v-if="pwa.canInstall" :on-click="handleInstall">
         Install
-      </button>
+      </default-button>
       <a
         v-else-if="!pwa.canInstall && pwa.installed"
         href="https://app.traininblocks.com"
         target="_blank"
       >
-        <button>Launch</button>
+        <default-button>Launch</default-button>
       </a>
-      <button
+      <default-button
         v-if="pwa.canInstall || pwa.installed"
-        class="red_button"
-        @click="($parent.isInstallOpen = false), willBodyScroll(true)"
+        theme="red"
+        :on-click="handleClose"
       >
         Close
-      </button>
+      </default-button>
     </div>
-    <br />
-    <br />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 
+const Txt = () =>
+  import(
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
+  );
+const DefaultButton = () =>
+  import(
+    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
+  );
+
 export default {
+  components: {
+    Txt,
+    DefaultButton,
+  },
   computed: mapState(["pwa"]),
   methods: {
-    // -----------------------------
-    // General
-    // -----------------------------
-
-    /**
-     * Shows the install PWA prompt.
-     */
-    installPWA() {
+    handleInstall() {
       // Show the install prompt
       this.pwa.deferredPrompt.prompt();
       // Wait for the user to respond to the prompt
@@ -173,7 +156,13 @@ export default {
           });
         }
       });
+      this.$store.dispatch("closeModal");
+      this.willBodyScroll(true);
     },
+  },
+  handleClose() {
+    $store.dispatch("closeModal");
+    willBodyScroll(true);
   },
 };
 </script>

@@ -93,10 +93,10 @@ export default {
           duration: this.newPlan.duration,
         });
         this.$ga.event("Plan", "new");
-        this.$parent.$parent.$parent.$refs.response_pop_up.show(
-          `${this.newPlan.name} created`,
-          "You're all set, get programming"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: `${this.newPlan.name} created`,
+          description: "You're all set, get programming",
+        });
         this.newPlan = {
           name: "",
           duration: "",

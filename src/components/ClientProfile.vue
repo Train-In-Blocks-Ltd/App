@@ -375,12 +375,12 @@ export default {
               },
             });
           } else {
-            this.$parent.$parent.$refs.response_pop_up.show(
-              "File size is too big",
-              "Please compress it to 1MB or lower",
-              true,
-              true
-            );
+            this.$store.dispatch("openResponsePopUp", {
+              title: "File size is too big",
+              description: "Please compress it to 1MB or lower",
+              persist: true,
+              backdrop: true,
+            });
             document.getElementById("img_uploader").value = "";
           }
         }
@@ -439,10 +439,10 @@ export default {
           time: this.timeNow(),
           notes: null,
         };
-        this.$parent.$parent.$refs.response_pop_up.show(
-          "Booking requested",
-          "Your trainer will be notified"
-        );
+        this.$store.dispatch("openResponsePopUp", {
+          title: "Booking requested",
+          description: "Your trainer will be notified",
+        });
         this.$store.dispatch("endLoading");
       } catch (e) {
         this.$parent.$parent.resolveError(e);
@@ -472,10 +472,10 @@ export default {
             datetime,
             isTrainer: false,
           });
-          this.$parent.$parent.$refs.response_pop_up.show(
-            "Booking cancelled",
-            "Your trainer will be notified"
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Booking cancelled",
+            description: "Your trainer will be notified",
+          });
           this.$store.dispatch("endLoading");
         } catch (e) {
           this.$parent.$parent.resolveError(e);

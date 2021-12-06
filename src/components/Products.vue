@@ -559,12 +559,12 @@ export default {
         if (String(product.price) > 1) {
           this.updateProduct(product.id);
         } else {
-          this.$parent.$parent.$refs.response_pop_up.show(
-            "Price must be larger than 1.",
-            "Please try again.",
-            true,
-            true
-          );
+          this.$store.dispatch("openResponsePopUp", {
+            title: "Price must be larger than 1.",
+            description: "Please try again.",
+            persist: true,
+            backdrop: true,
+          });
         }
       }
     },

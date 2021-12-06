@@ -32,14 +32,15 @@
       No clients are archived
     </p>
     <div v-else>
-      <input
+      <txt-input
         v-model="search"
         type="search"
-        aria-label="search by name"
         rel="search"
         placeholder="Name"
-        class="search text--small"
+        aria-label="Search by name"
         autocomplete="name"
+        inputClass="text--small"
+        style="margin-bottom: 2rem"
       />
       <div class="clients_container">
         <skeleton v-if="loading" :type="'archived'" />
@@ -71,11 +72,15 @@
 import { mapState } from "vuex";
 const ClientLink = () =>
   import(
-    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "../components/ClientLink"
+    /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@/components/ClientLink"
   );
 const Multiselect = () =>
   import(
-    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "../components/Multiselect"
+    /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
+  );
+const TxtInput = () =>
+  import(
+    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
   );
 
 export default {
@@ -87,6 +92,7 @@ export default {
   components: {
     ClientLink,
     Multiselect,
+    TxtInput,
   },
   data() {
     return {
@@ -188,12 +194,13 @@ export default {
             )
           ) {
             await this.$store.dispatch("clientDelete", this.selectedClients);
-            this.$parent.$refs.response_pop_up.show(
-              this.selectedClients.length > 1
-                ? "Clients deleted"
-                : "Client Delete",
-              "All their data has been removed"
-            );
+            this.$store.dispatch("openResponsePopUp", {
+              title:
+                this.selectedClients.length > 1
+                  ? "Clients deleted"
+                  : "Client Delete",
+              description: "All their data has been removed",
+            });
             this.deselectAll();
           }
         }
@@ -220,12 +227,13 @@ export default {
             )
           ) {
             await this.$store.dispatch("clientUnarchive", this.selectedClients);
-            this.$parent.$refs.response_pop_up.show(
-              this.selectedClients.length > 1
-                ? "Unarchived clients"
-                : "Unarchived client",
-              "All their data has been recovered"
-            );
+            this.$store.dispatch("openResponsePopUp", {
+              title:
+                this.selectedClients.length > 1
+                  ? "Unarchived clients"
+                  : "Unarchived client",
+              description: "All their data has been recovered",
+            });
             this.deselectAll();
           }
         }
