@@ -119,10 +119,10 @@ hr {
             aria-label="Close"
             @click="(isPortfolioOpen = false), willBodyScroll(true)"
           />
-          <txt type="subtitle">
+          <txt type="title">
             {{ portfolio.business_name }}
           </txt>
-          <txt type="large-body" class="grey">
+          <txt type="subtitle" grey>
             {{ portfolio.trainer_name }}
           </txt>
           <skeleton v-if="loading" :type="'session'" />
