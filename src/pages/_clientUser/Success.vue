@@ -49,14 +49,14 @@ export default {
     await this.$parent.getClientSideData();
     this.$store.dispatch("endLoading");
   },
-  // mounted() {
-  //   const self = this;
-  //   setInterval(function () {
-  //     self.timeout = self.timeout - 1;
-  //   }, 1000);
-  //   setTimeout(function () {
-  //     self.$router.push("/clientUser");
-  //   }, 8000);
-  // },
+  mounted() {
+    const self = this;
+    setInterval(function () {
+      self.timeout = self.timeout - 1;
+    }, 1000);
+    setTimeout(function () {
+      self.$router.push("/clientUser");
+    }, 8000);
+  },
 };
 </script>

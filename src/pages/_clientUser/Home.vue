@@ -143,7 +143,7 @@ hr {
           :src="require('../../assets/svg/client-profile.svg')"
           aria-label="Profile"
         />
-        <txt type="body" class="text">Profile</txt>
+        <txt type="body">Profile</txt>
       </div>
       <div
         v-if="!isPortfolioOpen && portfolio && portfolio.notes !== '<p></p>'"
@@ -155,7 +155,7 @@ hr {
           :src="require('../../assets/svg/info.svg')"
           aria-label="Information"
         />
-        <txt type="body" class="text">Information</txt>
+        <txt type="body">Information</txt>
       </div>
     </div>
     <div id="client_home">
@@ -218,7 +218,7 @@ hr {
             </div>
           </div>
         </div>
-        <txt type="body" v-else class="text--holder text--small grey">
+        <txt type="large-body" v-else class="text--holder" grey>
           Nothing planned for today
         </txt>
       </div>
@@ -231,7 +231,7 @@ hr {
           :is-trainer="false"
           :plans.sync="clientUser.plans"
         />
-        <txt type="body" v-else class="text--holder text--small grey">
+        <txt type="large-body" v-else class="text--holder" grey>
           No plans yet, please contact your trainer or coach for more
           information
         </txt>

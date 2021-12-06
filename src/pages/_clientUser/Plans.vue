@@ -158,7 +158,7 @@ hr {
           :type="'session'"
           class="container--sessions"
         />
-        <div v-else-if="!plan.sessions" class="container--sessions">
+        <div v-else-if="plan.sessions" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
               v-show="showing_current_session !== 0"
