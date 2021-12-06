@@ -158,7 +158,7 @@ hr {
           :type="'session'"
           class="container--sessions"
         />
-        <div v-else-if="plan.sessions" class="container--sessions">
+        <div v-else-if="!plan.sessions" class="container--sessions">
           <div class="show_sessions_nav">
             <inline-svg
               v-show="showing_current_session !== 0"
@@ -171,7 +171,7 @@ hr {
               :src="require('../../assets/svg/arrow-left.svg')"
               class="show_sessions_left disabled no_fill"
             />
-            <txt class="show_sessions_counter text--small">
+            <txt type="subtitle" class="show_sessions_counter">
               {{ showing_current_session + 1 }}/{{ plan.sessions.length }}
             </txt>
             <inline-svg
@@ -243,7 +243,7 @@ hr {
         </div>
         <div v-else>
           <txt type="subtitle">No sessions yet</txt>
-          <txt class="grey text--small">
+          <txt type="large-body" grey>
             Please contact your trainer or coach for more details
           </txt>
           <div class="spacer" />

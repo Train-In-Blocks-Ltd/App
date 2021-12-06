@@ -155,7 +155,7 @@ hr {
           :src="require('../../assets/svg/info.svg')"
           aria-label="Information"
         />
-        <txt tpye="body" class="text">Information</txt>
+        <txt type="body" class="text">Information</txt>
       </div>
     </div>
     <div id="client_home">

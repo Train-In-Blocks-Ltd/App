@@ -12,11 +12,11 @@
 <template>
   <div id="success" class="view_container">
     <txt type="title" isMain>All done...</txt>
-    <txt class="text--small grey">
+    <txt type="large-body" grey>
       Your payment was made successfully, your trainer will be notified.
     </txt>
-    <txt class="grey">Redirecting in {{ timeout }}</txt>
-    <txt class="grey">
+    <txt grey>Redirecting in {{ timeout }}</txt>
+    <txt grey>
       If your browser does not automatically redirect you, please click here...
     </txt>
     <router-link to="/clientUser" class="a_link">
@@ -49,14 +49,14 @@ export default {
     await this.$parent.getClientSideData();
     this.$store.dispatch("endLoading");
   },
-  mounted() {
-    const self = this;
-    setInterval(function () {
-      self.timeout = self.timeout - 1;
-    }, 1000);
-    setTimeout(function () {
-      self.$router.push("/clientUser");
-    }, 8000);
-  },
+  // mounted() {
+  //   const self = this;
+  //   setInterval(function () {
+  //     self.timeout = self.timeout - 1;
+  //   }, 1000);
+  //   setTimeout(function () {
+  //     self.$router.push("/clientUser");
+  //   }, 8000);
+  // },
 };
 </script>
