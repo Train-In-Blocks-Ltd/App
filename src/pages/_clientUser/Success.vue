@@ -11,14 +11,14 @@
 
 <template>
   <div id="success" class="view_container">
-    <h1>All done...</h1>
-    <p class="text--small grey">
+    <txt type="title" isMain>All done...</txt>
+    <txt type="large-body" grey>
       Your payment was made successfully, your trainer will be notified.
-    </p>
-    <p class="grey">Redirecting in {{ timeout }}</p>
-    <p class="grey">
+    </txt>
+    <txt grey>Redirecting in {{ timeout }}</txt>
+    <txt grey>
       If your browser does not automatically redirect you, please click here...
-    </p>
+    </txt>
     <router-link to="/clientUser" class="a_link">
       <b>Back to Train In Blocks</b>
     </router-link>
@@ -26,7 +26,9 @@
 </template>
 
 <script>
+import Txt from "../../components/elements/Txt.vue";
 export default {
+  components: { Txt },
   metaInfo() {
     return {
       title: "Success",

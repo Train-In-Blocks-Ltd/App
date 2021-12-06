@@ -3,7 +3,8 @@ h1,
 h2 {
   font-size: 2.6rem;
 }
-h3 {
+h3,
+.large_body {
   font-size: 1.6rem;
 }
 .body {
@@ -31,6 +32,13 @@ h3 {
     <slot />
   </h3>
   <p v-else-if="type === 'tiny'" class="tiny" :class="{ grey, bold }">
+    <slot />
+  </p>
+  <p
+    v-else-if="type === 'large-body'"
+    class="large_body"
+    :class="{ grey, bold }"
+  >
     <slot />
   </p>
   <p v-else class="body" :class="{ grey, bold }">

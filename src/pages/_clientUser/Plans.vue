@@ -108,17 +108,17 @@ hr {
   <div id="client_side_plan" class="view_container">
     <div v-for="(plan, index) in clientUser.plans" :key="index">
       <div v-if="plan.id == $route.params.id" class="client_plan">
-        <h2 class="plan_name">
+        <txt type="title" class="plan_name">
           {{ plan.name }}
-        </h2>
+        </txt>
         <card-wrapper class="plan_notes" noHover>
-          <h3 class="bottom_margin">Plan Notes</h3>
+          <txt type="subtitle" class="bottom_margin">Plan Notes</txt>
           <div
             v-if="plan.notes && plan.notes !== '<p></p>'"
             class="show_html fadeIn"
             v-html="updateHTML(plan.notes, true)"
           />
-          <p
+          <txt
             v-else-if="
               plan.notes === null ||
               plan.notes === '<p><br></p>' ||
@@ -127,7 +127,7 @@ hr {
             class="show_html grey"
           >
             No plan notes added...
-          </p>
+          </txt>
         </card-wrapper>
         <div class="wrapper--calendar">
           <a
@@ -171,9 +171,9 @@ hr {
               :src="require('../../assets/svg/arrow-left.svg')"
               class="show_sessions_left disabled no_fill"
             />
-            <p class="show_sessions_counter text--small">
+            <txt type="subtitle" class="show_sessions_counter">
               {{ showing_current_session + 1 }}/{{ plan.sessions.length }}
-            </p>
+            </txt>
             <inline-svg
               v-show="
                 showing_current_session !== parseInt(plan.sessions.length) - 1
@@ -229,7 +229,7 @@ hr {
             </div>
             <div v-if="session.checked === 1">
               <hr />
-              <h3>Feedback</h3>
+              <txt type="subtitle">Feedback</txt>
               <rich-editor
                 v-model="session.feedback"
                 :item-id="session.id"
@@ -242,10 +242,10 @@ hr {
           </card-wrapper>
         </div>
         <div v-else>
-          <h3>No sessions yet</h3>
-          <p class="grey text--small">
+          <txt type="subtitle">No sessions yet</txt>
+          <txt type="large-body" grey>
             Please contact your trainer or coach for more details
-          </p>
+          </txt>
           <div class="spacer" />
         </div>
       </div>
@@ -255,6 +255,7 @@ hr {
 
 <script>
 import { mapState } from "vuex";
+import Txt from "../../components/elements/Txt.vue";
 
 const WeekCalendar = () =>
   import(
@@ -284,6 +285,7 @@ export default {
     MonthCalendar,
     RichEditor,
     CardWrapper,
+    Txt,
   },
   async beforeRouteLeave(to, from, next) {
     if (

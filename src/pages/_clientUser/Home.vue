@@ -119,12 +119,12 @@ hr {
             aria-label="Close"
             @click="(isPortfolioOpen = false), willBodyScroll(true)"
           />
-          <h2>
+          <txt type="title">
             {{ portfolio.business_name }}
-          </h2>
-          <h3 class="grey">
+          </txt>
+          <txt type="subtitle" grey>
             {{ portfolio.trainer_name }}
-          </h3>
+          </txt>
           <skeleton v-if="loading" :type="'session'" />
           <div
             v-else
@@ -143,7 +143,7 @@ hr {
           :src="require('../../assets/svg/client-profile.svg')"
           aria-label="Profile"
         />
-        <p class="text">Profile</p>
+        <txt type="body">Profile</txt>
       </div>
       <div
         v-if="!isPortfolioOpen && portfolio && portfolio.notes !== '<p></p>'"
@@ -155,13 +155,13 @@ hr {
           :src="require('../../assets/svg/info.svg')"
           aria-label="Information"
         />
-        <p class="text">Information</p>
+        <txt type="body">Information</txt>
       </div>
     </div>
     <div id="client_home">
       <div class="client_home__today">
         <div class="client_home__today__header">
-          <h2>Today</h2>
+          <txt type="title">Today</txt>
         </div>
         <skeleton v-if="loading" :type="'session'" />
         <div v-else-if="clientUser.sessionsToday" class="container--sessions">
@@ -206,7 +206,7 @@ hr {
             </div>
             <div v-if="session.checked === 1">
               <hr />
-              <h3>Feedback</h3>
+              <txt type="subtitle">Feedback</txt>
               <rich-editor
                 v-model="session.feedback"
                 :item-id="session.id"
@@ -218,26 +218,26 @@ hr {
             </div>
           </div>
         </div>
-        <p v-else class="text--holder text--small grey">
+        <txt type="large-body" v-else class="text--holder" grey>
           Nothing planned for today
-        </p>
+        </txt>
       </div>
       <div class="spacer" />
       <div class="client_home__plans">
-        <h2>Plans</h2>
+        <txt type="title">Plans</txt>
         <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
         <periodise
           v-else-if="clientUser.plans"
           :is-trainer="false"
           :plans.sync="clientUser.plans"
         />
-        <p v-else class="text--holder text--small grey">
+        <txt type="large-body" v-else class="text--holder" grey>
           No plans yet, please contact your trainer or coach for more
           information
-        </p>
+        </txt>
       </div>
       <div class="products_section">
-        <h2>Services</h2>
+        <txt type="title">Services</txt>
         <skeleton v-if="loading" :type="'product'" />
         <div v-else class="products">
           <div
@@ -246,18 +246,18 @@ hr {
             class="product fadeIn"
           >
             <div class="header">
-              <h3>
+              <txt type="subtitle">
                 {{ product.name }}
-              </h3>
+              </txt>
               <button @click.prevent="checkout(product.id)">Purchase</button>
             </div>
-            <p>
+            <txt type="body">
               <b class="type">{{ product.type }}</b> payment of
               <b>{{ `${product.price} ${product.currency}` }}</b>
-            </p>
-            <p>
+            </txt>
+            <txt type="body">
               {{ product.notes }}
-            </p>
+            </txt>
             <button @click.prevent="checkout(product.id)">Purchase</button>
           </div>
         </div>
@@ -268,6 +268,7 @@ hr {
 
 <script>
 import { mapState } from "vuex";
+import Txt from "../../components/elements/Txt.vue";
 const RichEditor = () =>
   import(
     /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
@@ -287,6 +288,7 @@ export default {
     RichEditor,
     Periodise,
     ClientProfile,
+    Txt,
   },
   async beforeRouteLeave(to, from, next) {
     if (

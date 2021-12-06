@@ -1689,9 +1689,9 @@
     "moize" "^6.0.0"
     "path-exists" "^4.0.0"
 
-"@netlify/local-functions-proxy-darwin-arm64@1.1.0":
-  "integrity" "sha512-EOSEA/mt6IyXqou//vOo17vnQwwBKPu8wO+bZZQNb+NNgyjzYl/8wpZE0CvoYHPsEU2h0hk1xeqwaYBMihunKg=="
-  "resolved" "https://registry.npmjs.org/@netlify/local-functions-proxy-darwin-arm64/-/local-functions-proxy-darwin-arm64-1.1.0.tgz"
+"@netlify/local-functions-proxy-win32-x64@1.1.0":
+  "integrity" "sha512-8a5rRjDNovZYBEaAPfN1VSwGNG/ExZanrjo7HnuTgphO6i64StqrKNtNW9/h75IgH+WP+8ZmC6Y0lI0BKq/U5A=="
+  "resolved" "https://registry.npmjs.org/@netlify/local-functions-proxy-win32-x64/-/local-functions-proxy-win32-x64-1.1.0.tgz"
   "version" "1.1.0"
 
 "@netlify/local-functions-proxy@^1.1.0":
@@ -1746,9 +1746,9 @@
   "resolved" "https://registry.npmjs.org/@netlify/plugins-list/-/plugins-list-3.3.0.tgz"
   "version" "3.3.0"
 
-"@netlify/routing-local-proxy-darwin-arm64@^0.31.0":
-  "integrity" "sha512-nKBxaLuWRJQO+Tcrv4T2BNq4xi4DDb3VpdSY/X8Ke/rm4YTBagbjQj64eJ/yzFj3QMw/PJzEbiZ7A3gbzq3xQw=="
-  "resolved" "https://registry.npmjs.org/@netlify/routing-local-proxy-darwin-arm64/-/routing-local-proxy-darwin-arm64-0.31.0.tgz"
+"@netlify/routing-local-proxy-win32-x64@^0.31.0":
+  "integrity" "sha512-BF66RNC1C5bKjsYifOqi/LptkPtKZar/SrCoFRaIZrGaMkSs53g2CLFZN5f7t8926SF+rYWU8szQ1T7EAr+DUA=="
+  "resolved" "https://registry.npmjs.org/@netlify/routing-local-proxy-win32-x64/-/routing-local-proxy-win32-x64-0.31.0.tgz"
   "version" "0.31.0"
 
 "@netlify/routing-local-proxy@^0.31.0":
@@ -4409,13 +4409,6 @@
   "integrity" "sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA=="
   "resolved" "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
   "version" "2.2.0"
-
-"bindings@^1.5.0":
-  "integrity" "sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ=="
-  "resolved" "http://registry.chelsea-apps.com:4873/bindings/-/bindings-1.5.0.tgz"
-  "version" "1.5.0"
-  dependencies:
-    "file-uri-to-path" "1.0.0"
 
 "bl@^1.0.0":
   "integrity" "sha512-pvcNpa0UU69UT341rO6AYy4FVAIkUHuZXRIWbq+zHnsVcRzDDjIAhGuuYoi0d//cwIwtt4pkpKycWEfjdV+vww=="
@@ -8892,19 +8885,6 @@
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
 
-"fsevents@*", "fsevents@^2.3.2", "fsevents@~2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
-
-"fsevents@^1.2.7":
-  "integrity" "sha512-oWb1Z6mkHIskLzEJ/XWX0srkpkTQ7vaopMQkyaEIoq0fmtFVxOthb8cCxeT+p3ynTdkk/RZwbgG4brR5BeWECw=="
-  "resolved" "http://registry.chelsea-apps.com:4873/fsevents/-/fsevents-1.2.13.tgz"
-  "version" "1.2.13"
-  dependencies:
-    "bindings" "^1.5.0"
-    "nan" "^2.12.1"
-
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
   "resolved" "https://registry.npmjs.org/function-bind/-/function-bind-1.1.1.tgz"
@@ -12913,11 +12893,6 @@
     "any-promise" "^1.0.0"
     "object-assign" "^4.0.1"
     "thenify-all" "^1.0.0"
-
-"nan@^2.12.1":
-  "integrity" "sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ=="
-  "resolved" "http://registry.chelsea-apps.com:4873/nan/-/nan-2.14.2.tgz"
-  "version" "2.14.2"
 
 "nanoid@^3.1.23":
   "integrity" "sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw=="
