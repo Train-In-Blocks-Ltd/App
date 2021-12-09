@@ -45,7 +45,6 @@
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--base_faint);
   height: fit-content;
-  height: -moz-fit-content;
   &.past {
     opacity: var(--light_opacity)
   }
@@ -53,9 +52,7 @@
     content: 'New request';
     display: flex;
     height: fit-content;
-    height: -moz-fit-content;
     width: fit-content;
-    width: -moz-fit-content;
     padding: .2rem .6rem;
     margin-left: auto;
     background-color: var(--base);

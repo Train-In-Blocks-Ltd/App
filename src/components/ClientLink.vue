@@ -72,9 +72,7 @@
     .today-tag {
       float: right;
       height: fit-content;
-      height: -moz-fit-content;
       width: fit-content;
-      width: -moz-fit-content;
       padding: .2rem 1rem;
       border-radius: 3px;
       color: var(--fore);
