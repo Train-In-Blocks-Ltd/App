@@ -8,55 +8,18 @@ const ExtractTextPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
 const {InjectManifest} = require('workbox-webpack-plugin')
-const isProduction = process.env.NODE_ENV === 'production'
-const sourceMapEnabled = isProduction
-  ? config.build.productionSourceMap
-  : config.dev.cssSourceMap
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   module: {
     rules: [
       {
-        test: /\.scss$/,
-        use: [
-          ExtractTextPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          },
-          'sass-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          }
-        ]
-      },
-      {
-        test: /\.css$/,
-        use: [
-          ExtractTextPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          }
-        ]
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: file => (
+          /node_modules/.test(file) &&
+          !/\.vue\.js/.test(file)
+        )
       }
     ]
   },

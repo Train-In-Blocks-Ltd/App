@@ -5,6 +5,7 @@ const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ExtractTextPlugin = require('mini-css-extract-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 const sourceMapEnabled = isProduction
   ? config.build.productionSourceMap
@@ -63,44 +64,12 @@ module.exports = {
         loader: 'frontmatter-markdown-loader'
       },
       {
-        test: /\.scss$/,
+        test: /\.(css|scss)$/,
         use: [
-          'vue-style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          },
+          isProduction ? ExtractTextPlugin.loader : 'vue-style-loader',
+          'css-loader',
           'sass-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          }
-        ]
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'vue-style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              esModule: false,
-              sourceMap: sourceMapEnabled
-            }
-          }
+          'postcss-loader'
         ]
       }
     ]
