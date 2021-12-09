@@ -6,6 +6,22 @@ const sourceMapEnabled = isProduction
   : config.dev.cssSourceMap
 
 module.exports = {
+  loaders: [
+    {
+      loader: 'css-loader',
+      options: {
+        esModule: false,
+        sourceMap: sourceMapEnabled
+      }
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        esModule: false,
+        sourceMap: sourceMapEnabled
+      }
+    }
+  ],
   cssSourceMap: sourceMapEnabled,
   cacheBusting: config.dev.cacheBusting,
   transformToRequire: {

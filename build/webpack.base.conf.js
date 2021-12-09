@@ -5,6 +5,10 @@ const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const isProduction = process.env.NODE_ENV === 'production'
+const sourceMapEnabled = isProduction
+  ? config.build.productionSourceMap
+  : config.dev.cssSourceMap
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -62,17 +66,41 @@ module.exports = {
         test: /\.scss$/,
         use: [
           'vue-style-loader',
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              esModule: false,
+              sourceMap: sourceMapEnabled
+            }
+          },
           'sass-loader',
-          'postcss-loader'
+          {
+            loader: 'postcss-loader',
+            options: {
+              esModule: false,
+              sourceMap: sourceMapEnabled
+            }
+          }
         ]
       },
       {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          'css-loader',
-          'postcss-loader'
+          {
+            loader: 'css-loader',
+            options: {
+              esModule: false,
+              sourceMap: sourceMapEnabled
+            }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              esModule: false,
+              sourceMap: sourceMapEnabled
+            }
+          }
         ]
       }
     ]
