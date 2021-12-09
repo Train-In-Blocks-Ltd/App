@@ -11,7 +11,6 @@
     left: 2rem;
     padding: .6rem;
     width: fit-content;
-    width: -moz-fit-content;
     background: var(--base);
     color: var(--fore);
     border-radius: 0 0 10px 10px
@@ -82,8 +81,7 @@ div#rich_show_content {
   > div:first-child > p {
     margin: .6rem 0;
     outline: none;
-    -moz-appearance: none;
-    -webkit-appearance: none
+    appearance: none
   }
   iframe {
     display: none
@@ -109,8 +107,7 @@ div#rich_editor {
   @include todo-list;
   div[contenteditable] {
     outline: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
+    appearance: none;
     > div,
     > p {
       margin: .6rem 0

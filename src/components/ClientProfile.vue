@@ -85,7 +85,6 @@
   border-bottom: 1px solid var(--base_faint);
   padding-bottom: 1rem;
   height: fit-content;
-  height: -moz-fit-content;
   &.past {
     opacity: var(--light_opacity)
   }

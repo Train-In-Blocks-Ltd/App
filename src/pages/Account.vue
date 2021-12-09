@@ -27,8 +27,7 @@
   .referral {
     @include setting-section;
     button {
-      width: fit-content;
-      width: -moz-fit-content
+      width: fit-content
     }
   }
   .calendar {
@@ -36,8 +35,7 @@
 
     margin-bottom: 3rem;
     button {
-      width: fit-content;
-      width: -moz-fit-content
+      width: fit-content
     }
     .guide_links {
       display: grid;

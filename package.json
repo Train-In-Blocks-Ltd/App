@@ -94,9 +94,7 @@
     "npm": ">= 7.0.0"
   },
   "browserslist": [
-    "> 1%",
-    "last 20 versions",
-    "not ie <= 11"
+    "last 20 versions and not ie <= 11 and > 1%"
   ],
   "resolutions": {
     "prosemirror-model": "1.14.3"

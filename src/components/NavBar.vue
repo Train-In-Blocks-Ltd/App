@@ -80,7 +80,6 @@
     border: 0;
     opacity: 0;
     height: fit-content;
-    height: -moz-fit-content;
     margin: auto 0;
     transition: var(--transition_standard)
   }
@@ -104,7 +103,7 @@
   #sidebar {
     top: 0;
     min-height: 100vh;
-    min-height: -webkit-fill-available;
+    min-height: stretch;
     min-height: calc(100vh - env(safe-area-inset-bottom));
     width: calc(38px + 2rem);
     border-radius: 0;

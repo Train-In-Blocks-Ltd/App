@@ -6,8 +6,7 @@
     margin-left: 0;
     #okta-signin-submit {
       outline: none;
-      -moz-appearance: none;
-      -webkit-appearance: none;
+      appearance: none;
       position: absolute;
       user-select: none;
       cursor: pointer;

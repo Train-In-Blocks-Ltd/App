@@ -8,7 +8,7 @@
   left: 0;
   width: 100vw;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
+  min-height: stretch;
   min-height: calc(100vh - env(safe-area-inset-bottom));
   background-color: #00000060
 }
@@ -69,7 +69,6 @@
 /* Plan Table */
 .plan_table {
   height: fit-content;
-  height: -moz-fit-content;
   margin-bottom: 2rem;
   .plan_table__header {
     display: grid;
@@ -244,8 +243,7 @@
     display: grid;
     grid-gap: 1rem;
     .a_link {
-      width: fit-content;
-      width: -moz-fit-content
+      width: fit-content
     }
   }
   .plan_grid {

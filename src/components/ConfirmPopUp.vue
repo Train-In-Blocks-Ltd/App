@@ -4,7 +4,6 @@
   top: 1rem;
   left: calc(38px + 3rem);
   background-color: var(--overlay_glass);
-  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: var(--low_shadow);
   border-radius: 5px;
