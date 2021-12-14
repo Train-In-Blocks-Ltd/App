@@ -105,20 +105,13 @@
 .stripe-connect {
   display: flex;
   height: fit-content;
-  height: -moz-fit-content;
   width: fit-content;
-  width: -moz-fit-content;
   margin: auto 0;
   padding: 0.4rem 0.8rem;
   background: var(--base);
   text-decoration: none;
   border-radius: 5px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
   -webkit-font-smoothing: antialiased;
   transition: var(--transition_standard);
   &:hover {
@@ -132,7 +125,6 @@
   }
   svg {
     height: fit-content;
-    height: -moz-fit-content;
     width: 46px;
   }
 }

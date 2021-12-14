@@ -12,11 +12,16 @@ const {InjectManifest} = require('workbox-webpack-plugin')
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   module: {
-    rules: utils.styleLoaders({
-      sourceMap: config.build.productionSourceMap,
-      extract: true,
-      usePostCSS: true
-    })
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: file => (
+          /node_modules/.test(file) &&
+          !/\.vue\.js/.test(file)
+        )
+      }
+    ]
   },
   output: {
     path: config.build.assetsRoot,

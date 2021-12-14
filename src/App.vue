@@ -32,7 +32,8 @@
   --sm: 640px;
   --xs: 360px;
 
-  height: -webkit-fill-available;
+  height: stretch;
+  height: calc(100vh - env(safe-area-inset-bottom));
 }
 
 /* Animation */
@@ -78,7 +79,6 @@
   top: 0;
   right: 0;
   background-color: var(--overlay_glass);
-  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   transition: var(--transition_standard);
   &.opened_sections {
@@ -290,7 +290,6 @@ i {
 /* Box buttons */
 button {
   height: fit-content;
-  height: -moz-fit-content;
   width: auto;
   user-select: none;
   cursor: pointer;
@@ -332,7 +331,6 @@ button {
 /* Editor wrapper */
 .session_header {
   height: fit-content;
-  height: -moz-fit-content;
   &.client-side {
     height: 3.2rem;
   }
@@ -360,6 +358,7 @@ textarea {
   &:not(select) {
     -moz-appearance: none;
     -webkit-appearance: none;
+    appearance: none;
   }
   &:not(:focus):hover {
     opacity: var(--light_opacity);

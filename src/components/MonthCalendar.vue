@@ -11,7 +11,6 @@
     background: var(--base);
     color: var(--fore);
     width: fit-content;
-    width: -moz-fit-content;
     border-radius: 0 0 10px 10px;
   }
   .calendar_header__bar {

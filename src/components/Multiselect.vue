@@ -5,7 +5,6 @@
   top: 0;
   right: 0;
   background-color: var(--overlay_glass);
-  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: var(--low_shadow);
   width: 100%;
@@ -27,7 +26,6 @@
     }
     a {
       width: fit-content;
-      width: -moz-fit-content;
       margin: auto;
       font-size: 1.4rem;
       > svg {

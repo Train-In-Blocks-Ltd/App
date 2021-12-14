@@ -4,7 +4,6 @@
   grid-gap: 2rem;
   .a_link {
     width: fit-content;
-    width: -moz-fit-content;
   }
 }
 </style>
