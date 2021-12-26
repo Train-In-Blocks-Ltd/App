@@ -87,8 +87,8 @@ export default {
     onInput: Function,
     required: Boolean,
     focusFirst: Boolean,
-    min: String,
-    max: String,
+    min: [String, Number],
+    max: [String, Number],
   },
   mounted() {
     if (this.focusFirst) this.$el.children[0].focus();

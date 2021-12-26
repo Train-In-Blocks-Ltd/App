@@ -89,4 +89,7 @@ export default {
     generated: false,
     code: null,
   },
+
+  // Session
+  selectedSessions: [],
 };

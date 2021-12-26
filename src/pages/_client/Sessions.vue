@@ -275,42 +275,10 @@
   <div id="plan">
     <div
       :class="{
-        opened_sections: showMove || showShift || showProgress || showDuplicate,
+        opened_sections: showShift || showProgress || showDuplicate,
       }"
       class="section_overlay"
     />
-    <form
-      v-if="showMove"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="moveToWeek(), (showMove = false), willBodyScroll(true)"
-    >
-      <h3>Move to a different microcycle</h3>
-      <p class="grey">
-        This will change the colour code assigned to the sessions
-      </p>
-      <div class="input_section">
-        <label for="range">Move to:</label>
-        <input
-          id="range"
-          ref="range"
-          :value="moveTarget"
-          class="width_300"
-          name="range"
-          type="number"
-          min="1"
-          :max="maxWeek"
-          required
-          @input="(moveTarget = $event.target.value), checkForm('move')"
-        />
-      </div>
-      <button :disabled="disableMoveButton" type="submit">Move</button>
-      <button
-        class="red_button"
-        @click.prevent="(showMove = false), willBodyScroll(true)"
-      >
-        Cancel
-      </button>
-    </form>
     <form
       v-if="showShift"
       class="tab_overlay_content fadeIn delay fill_mode_both"
@@ -876,19 +844,15 @@ export default {
 
       // Modals
 
-      showMove: false,
       showShift: false,
       showProgress: false,
       showDuplicate: false,
-      disableMoveButton: false,
       disableShiftButton: false,
       disableDuplicatePlanButton: true,
 
       // MANIPULATION
-      moveTarget: 1,
       shiftDays: 1,
       duplicateClientID: null,
-      selectedSessions: [],
 
       // STATS
 
@@ -933,6 +897,9 @@ export default {
     clientDetails() {
       return this.$store.state.clientDetails;
     },
+    selectedSessions() {
+      return this.$store.state.selectedSessions;
+    },
   },
   watch: {
     editingWeekColor() {
@@ -970,9 +937,6 @@ export default {
 
     checkForm(type) {
       switch (type) {
-        case "move":
-          this.disableMoveButton = !this.moveTarget;
-          break;
         case "shift":
           this.disableShiftButton = !this.shiftDays;
           break;
@@ -1003,7 +967,9 @@ export default {
           this.deselectAll();
           break;
         case "Move":
-          this.showMove = true;
+          this.$store.dispatch("openModal", {
+            name: "move",
+          });
           this.willBodyScroll(false);
           this.updater();
           break;
@@ -1220,38 +1186,6 @@ export default {
       this.$store.dispatch("endLoading");
     },
 
-    /**
-     * Moves the selected sessions to specified week.
-     */
-    moveToWeek() {
-      this.$store.commit("setData", {
-        attr: "dontLeave",
-        data: true,
-      });
-      this.plan.sessions.forEach((session) => {
-        if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit("updateSessionAttr", {
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
-            sessionId: session.id,
-            attr: "week_id",
-            data: this.moveTarget,
-          });
-        }
-      });
-      this.batchUpdateSession(this.selectedSessions);
-      this.currentWeek = parseInt(this.moveTarget);
-      this.$store.dispatch("openResponsePopUp", {
-        title:
-          this.selectedSessions.length > 1 ? "Moved sessions" : "Moved session",
-        description: "Your changes have been saved",
-      });
-      this.moveTarget = 1;
-      this.deselectAll();
-      this.$ga.event("Session", "move");
-      this.$store.dispatch("endLoading");
-    },
-
     // -----------------------------
     // Checkbox and multi-select
     // -----------------------------
@@ -1366,19 +1300,19 @@ export default {
       this.selectedSessions.forEach((id) => {
         document.getElementById(`sc-${id}`).checked = false;
       });
-      this.selectedSessions = [];
+      this.$store.dispatch("deselectAllSessions");
     },
 
     /**
      * Toggles the state of the custom checkbox component.
      */
     changeSelectCheckbox(id) {
-      if (!this.selectedSessions.includes(id)) {
-        this.selectedSessions.push(id);
-      } else {
-        const IDX = this.selectedSessions.indexOf(id);
-        this.selectedSessions.splice(IDX, 1);
-      }
+      this.$store.dispatch(
+        this.$store.state.selectedSessions.includes(id)
+          ? "removeSelectedSession"
+          : "addSelectedSession",
+        id
+      );
     },
 
     /**
@@ -1488,7 +1422,6 @@ export default {
      */
     changeWeek(weekID) {
       this.currentWeek = weekID;
-      this.moveTarget = weekID;
       this.checkForWeekSessions();
     },
 

@@ -95,4 +95,35 @@ export default {
       sessionIds: payload.sessionIds,
     });
   },
+
+  /**
+   * Adds a session id to the selected array.
+   */
+  addSelectedSession({ state, commit }, id) {
+    commit("setData", {
+      attr: "selectedSessions",
+      data: [...state.selectedSessions, id],
+    });
+  },
+
+  /**
+   * Removes a session id to the selected array.
+   */
+  removeSelectedSession({ state, commit }, id) {
+    commit("setData", {
+      attr: "selectedSessions",
+      data: state.selectedSessions.filter((sessionId) => sessionId !== id),
+    });
+    console.log(state.selectedSessions);
+  },
+
+  /**
+   * Deselects all the sessions.
+   */
+  deselectAllSessions({ commit }) {
+    commit("setData", {
+      attr: "selectedSessions",
+      data: [],
+    });
+  },
 };

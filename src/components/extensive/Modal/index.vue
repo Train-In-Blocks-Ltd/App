@@ -64,6 +64,7 @@
       <install-modal v-else-if="modalContent === 'install-pwa'" />
       <toolkit-modal v-else-if="modalContent === 'toolkit'" />
       <new-plan-modal v-else-if="modalContent === 'new-plan'" />
+      <move-modal v-else-if="modalContent === 'move'" />
     </card-wrapper>
     <backdrop :on-click="handleBackdropClick" />
   </div>
@@ -107,6 +108,10 @@ const NewPlanModal = () =>
   import(
     /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/NewPlanModal"
   );
+const MoveModal = () =>
+  import(
+    /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/_client/components/MoveModal"
+  );
 
 export default {
   components: {
@@ -118,6 +123,7 @@ export default {
     InstallModal,
     ToolkitModal,
     NewPlanModal,
+    MoveModal,
   },
   computed: mapState([
     "modalSize",
@@ -142,6 +148,8 @@ export default {
           return "Toolkit";
         case "new-plan":
           return "New Plan";
+        case "move":
+          return "Move to a different week";
         default:
           return "";
       }
