@@ -22,13 +22,6 @@
 
 <template>
   <div>
-    <div
-      v-if="isNewPlanOpen"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-    >
-      <new-plan />
-    </div>
-    <div :class="{ opened_sections: isNewPlanOpen }" class="section_overlay" />
     <div id="client_notes" class="editor_object_standard">
       <h3>Client Information</h3>
       <rich-editor
@@ -70,10 +63,6 @@
 <script>
 import { mapState } from "vuex";
 
-const NewPlan = () =>
-  import(
-    /* webpackChunkName: "components.newplan", webpackPrefetch: true  */ "@/components/NewPlan"
-  );
 const RichEditor = () =>
   import(
     /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
@@ -89,7 +78,6 @@ const Bookings = () =>
 
 export default {
   components: {
-    NewPlan,
     RichEditor,
     Periodise,
     Bookings,
@@ -117,9 +105,6 @@ export default {
       tempEditorStore: null,
       editingClientNotes: false,
 
-      // PLAN CREATION
-
-      isNewPlanOpen: false,
       response: "",
       persistResponse: "",
     };
