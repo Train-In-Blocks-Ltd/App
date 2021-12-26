@@ -93,20 +93,12 @@ import { mapState } from "vuex";
 
 const emailBuilder = require("@/components/js/email");
 
-const IconButton = () =>
-  import(
-    /* webpackChunkName: "components.iconButton", webpackPrefetch: true  */ "@/components/elements/IconButton"
-  );
-
 const CUSTOM_ENV =
   process.env.NODE_ENV === "production"
     ? require("@/../config/prod.env")
     : require("@/../config/dev.env");
 
 export default {
-  components: {
-    IconButton,
-  },
   data() {
     return {
       clientAlreadyMsg: "Loading...",

@@ -84,10 +84,6 @@ const SecondaryHeader = () =>
   import(
     /* webpackChunkName: "components.secondaryHeader", webpackPrefetch: true  */ "../SecondaryHeader"
   );
-const IconButton = () =>
-  import(
-    /* webpackChunkName: "components.iconButton", webpackPrefetch: true  */ "@/components/elements/IconButton"
-  );
 
 // Modals
 
@@ -117,7 +113,6 @@ export default {
     CardWrapper,
     Backdrop,
     SecondaryHeader,
-    IconButton,
     NewClientModal,
     WhatsNewModal,
     InstallModal,

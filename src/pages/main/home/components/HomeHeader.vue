@@ -93,30 +93,7 @@
 <script>
 import { mapState } from "vuex";
 
-const Txt = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
-  );
-const TxtInput = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
-  );
-const DefaultButton = () =>
-  import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
-  );
-const IconButton = () =>
-  import(
-    /* webpackChunkName: "components.iconButton", webpackPrefetch: true  */ "@/components/elements/IconButton"
-  );
-
 export default {
-  components: {
-    Txt,
-    TxtInput,
-    DefaultButton,
-    IconButton,
-  },
   computed: {
     ...mapState(["pwa"]),
     search: {

@@ -48,9 +48,6 @@ export default {
     };
   },
   computed: mapState(["dontLeave", "clientDetails", "clients"]),
-  mounted() {
-    this.$refs.name.focus();
-  },
   methods: {
     handleSubmit() {
       this.createPlan();

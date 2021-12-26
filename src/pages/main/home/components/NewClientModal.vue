@@ -71,20 +71,7 @@
 <script>
 import { mapState } from "vuex";
 
-const TxtInput = () =>
-  import(
-    /* webpackChunkName: "components.txtInput", webpackPrefetch: true  */ "@/components/elements/TxtInput"
-  );
-const DefaultButton = () =>
-  import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
-  );
-
 export default {
-  components: {
-    TxtInput,
-    DefaultButton,
-  },
   data() {
     return {
       newClient: {
