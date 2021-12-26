@@ -1,7 +1,4 @@
 <style lang="scss" scoped>
-.close_icon {
-  margin-bottom: 2rem;
-}
 textarea {
   margin-top: 2rem;
   resize: none;
@@ -20,12 +17,6 @@ textarea {
 
 <template>
   <div>
-    <inline-svg
-      class="close_icon cursor"
-      :src="require('../assets/svg/close.svg')"
-      aria-label="Close"
-      @click="($parent.showToolkit = false), willBodyScroll(true)"
-    />
     <select
       v-model="selectedTool"
       class="text--small session_toolkit--select"

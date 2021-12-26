@@ -62,6 +62,7 @@
       <new-client-modal v-if="modalContent === 'new-client'" />
       <whats-new-modal v-else-if="modalContent === 'whats-new'" />
       <install-modal v-else-if="modalContent === 'install-pwa'" />
+      <toolkit-modal v-else-if="modalContent === 'toolkit'" />
     </card-wrapper>
     <backdrop :on-click="handleBackdropClick" />
   </div>
@@ -101,6 +102,10 @@ const InstallModal = () =>
   import(
     /* webpackChunkName: "components.installModal", webpackPrefetch: true  */ "@/pages/main/home/components/InstallModal"
   );
+const ToolkitModal = () =>
+  import(
+    /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "@/pages/main/home/client/components/ToolkitModal"
+  );
 
 export default {
   components: {
@@ -111,6 +116,7 @@ export default {
     NewClientModal,
     WhatsNewModal,
     InstallModal,
+    ToolkitModal,
   },
   computed: mapState([
     "modalSize",
