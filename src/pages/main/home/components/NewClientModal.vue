@@ -1,7 +1,6 @@
 <template>
   <form
     name="add_client"
-    class="form_grid add_client"
     spellcheck="false"
     @submit.prevent="
       () => {

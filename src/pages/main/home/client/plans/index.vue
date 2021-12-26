@@ -41,9 +41,18 @@
     <div class="plans_section">
       <div class="header">
         <h2>Plans</h2>
-        <button @click="(isNewPlanOpen = true), willBodyScroll(false)">
+        <default-button
+          :on-click="
+            () => {
+              $store.dispatch('openModal', {
+                name: 'new-plan',
+              });
+              willBodyScroll(false);
+            }
+          "
+        >
           New Plan
-        </button>
+        </default-button>
       </div>
       <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
       <periodise
@@ -60,6 +69,7 @@
 
 <script>
 import { mapState } from "vuex";
+
 const NewPlan = () =>
   import(
     /* webpackChunkName: "components.newplan", webpackPrefetch: true  */ "@/components/NewPlan"

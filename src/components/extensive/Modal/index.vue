@@ -63,6 +63,7 @@
       <whats-new-modal v-else-if="modalContent === 'whats-new'" />
       <install-modal v-else-if="modalContent === 'install-pwa'" />
       <toolkit-modal v-else-if="modalContent === 'toolkit'" />
+      <new-plan-modal v-else-if="modalContent === 'new-plan'" />
     </card-wrapper>
     <backdrop :on-click="handleBackdropClick" />
   </div>
@@ -106,6 +107,10 @@ const ToolkitModal = () =>
   import(
     /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "@/pages/main/home/client/components/ToolkitModal"
   );
+const NewPlanModal = () =>
+  import(
+    /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/NewPlanModal"
+  );
 
 export default {
   components: {
@@ -117,6 +122,7 @@ export default {
     WhatsNewModal,
     InstallModal,
     ToolkitModal,
+    NewPlanModal,
   },
   computed: mapState([
     "modalSize",
@@ -137,6 +143,10 @@ export default {
           return `${this.versionName} ${this.versionBuild}`;
         case "install-pwa":
           return "Save the app to your phone";
+        case "toolkit":
+          return "Toolkit";
+        case "new-plan":
+          return "New Plan";
         default:
           return "";
       }

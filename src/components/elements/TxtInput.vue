@@ -56,6 +56,8 @@
       :aria-label="ariaLabel"
       :pattern="pattern"
       :required="required"
+      :min="min"
+      :max="max"
       @input="handleInput"
     />
     <txt v-if="error" type="tiny" class="error" :class="errorClass">{{
@@ -93,6 +95,8 @@ export default {
     onInput: Function,
     required: Boolean,
     focusFirst: Boolean,
+    min: String,
+    max: String,
   },
   mounted() {
     if (this.focusFirst) this.$el.children[0].focus();
