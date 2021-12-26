@@ -21,7 +21,7 @@ const ClientDetailHeader = () =>
   );
 const ClientHomeHeaderButtons = () =>
   import(
-    /* webpackChunkName: "components.clientHomeHeaderButtons", webpackPrefetch: true  */ "../main/home/client/components/ClientHomeHeaderButtons"
+    /* webpackChunkName: "components.clientHomeHeaderButtons", webpackPrefetch: true  */ "./components/ClientHomeHeaderButtons"
   );
 
 export default {

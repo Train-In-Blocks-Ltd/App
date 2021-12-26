@@ -26,7 +26,7 @@ const ArchiveComponent = () =>
 const ProfileComponent = () =>
   import(/* webpackChunkName: "account" */ "@/pages/main/account");
 const ClientComponent = () =>
-  import(/* webpackChunkName: "client.home" */ "@/pages/_client/Home");
+  import(/* webpackChunkName: "client.home" */ "@/pages/main/home/client");
 const ClientPlans = () =>
   import(/* webpackChunkName: "client.plans" */ "@/pages/_client/Plans");
 const ClientSessions = () =>
