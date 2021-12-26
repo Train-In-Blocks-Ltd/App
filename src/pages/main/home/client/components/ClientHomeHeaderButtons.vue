@@ -32,7 +32,7 @@
         svg="archive"
         :on-click="
           () => {
-            archiveClient($route.params.client_id);
+            clientArchive($route.params.client_id);
           }
         "
         :icon-size="28"
@@ -262,7 +262,7 @@ export default {
      */
     async clientArchive(clientId) {
       if (
-        await this.$parent.$refs.confirm_pop_up.show(
+        await this.$parent.$parent.$parent.$refs.confirm_pop_up.show(
           "Are you sure that you want to archive/hide this client?",
           "Their data will be stored, but it will be removed if deleted from the Archive."
         )
