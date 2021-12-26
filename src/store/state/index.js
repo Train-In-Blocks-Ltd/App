@@ -91,5 +91,6 @@ export default {
   },
 
   // Session
+  currentWeek: 1,
   selectedSessions: [],
 };

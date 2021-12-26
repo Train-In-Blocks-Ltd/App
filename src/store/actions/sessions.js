@@ -126,4 +126,14 @@ export default {
       data: [],
     });
   },
+
+  /**
+   * Changes the current week on the sessions page.
+   */
+  changeWeek({ commit }, week) {
+    commit("setData", {
+      attr: "currentWeek",
+      data: week,
+    });
+  },
 };

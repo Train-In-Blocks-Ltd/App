@@ -1,39 +1,37 @@
-<style lang="scss" scoped>
-form {
-  display: grid;
-  grid-gap: 1rem;
-}
-</style>
-
 <template>
   <form
     @submit.prevent="
       () => {
-        moveToWeek();
+        shiftAcross();
         willBodyScroll(true);
       }
     "
   >
-    <txt grey>This will change the colour code assigned to the sessions</txt>
+    <h3>Shift the dates of the sessions</h3>
+    <p class="grey">
+      This will move the dates ahead or behind by the specified amount
+    </p>
     <txt-input
       type="number"
       name="range"
-      aria-label="Move to"
-      :value="moveTarget"
+      aria-label="Shift days"
+      :value="shiftDays"
       :on-input="
         () => {
-          disableMoveButton = !moveTarget;
+          disableMoveButton = !shiftDays;
         }
       "
-      min="1"
-      :max="maxWeek"
-      @output="(data) => (moveTarget = data)"
+      @output="(data) => (shiftDays = data)"
       focusFirst
       required
     />
-    <default-button :is-disabled="disableMoveButton" type="submit"
-      >Move</default-button
+    <button :disabled="disableShiftButton" type="submit">Shift</button>
+    <button
+      class="red_button"
+      @click.prevent="(showShift = false), willBodyScroll(true)"
     >
+      Cancel
+    </button>
   </form>
 </template>
 
@@ -41,9 +39,8 @@ form {
 export default {
   data() {
     return {
-      disableMoveButton: false,
-      moveTarget: 1,
-      maxWeek: 1,
+      disableShiftButton: false,
+      shiftDays: 1,
     };
   },
   computed: {
@@ -58,14 +55,11 @@ export default {
       return this.$store.state.selectedSessions;
     },
   },
-  created() {
-    this.maxWeek = parseInt(this.plan.duration);
-  },
   methods: {
     /**
-     * Moves the selected sessions to specified week.
+     * Shifts the selected sessions by specified days.
      */
-    async moveToWeek() {
+    async shiftAcross() {
       this.$store.commit("setData", {
         attr: "dontLeave",
         data: true,
@@ -76,8 +70,8 @@ export default {
             clientId: this.$route.params.client_id,
             planId: this.$route.params.id,
             sessionId: session.id,
-            attr: "week_id",
-            data: this.moveTarget,
+            attr: "date",
+            data: this.addDays(session.date, parseInt(this.shiftDays)),
           });
         }
       });
@@ -89,16 +83,12 @@ export default {
         sessionIds: this.selectedSessions,
       });
 
-      this.$store.commit("setData", {
-        attr: "currentWeek",
-        data: parseInt(this.moveTarget),
-      });
+      // Generates response
       this.$store.dispatch("openResponsePopUp", {
-        title:
-          this.selectedSessions.length > 1 ? "Moved sessions" : "Moved session",
+        title: `Shifted session ${this.selectedSessions.length > 1 ? "s" : ""}`,
         description: "Your changes have been saved",
       });
-      this.moveTarget = 1;
+      this.shiftDays = 1;
 
       // Deselects all sessions
       this.selectedSessions.forEach((id) => {
@@ -106,7 +96,7 @@ export default {
       });
       this.$store.dispatch("deselectAllSessions");
 
-      this.$ga.event("Session", "move");
+      this.$ga.event("Session", "shift");
       this.$store.dispatch("endLoading");
     },
   },

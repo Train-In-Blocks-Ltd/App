@@ -279,36 +279,6 @@
       }"
       class="section_overlay"
     />
-    <form
-      v-if="showShift"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="shiftAcross(), (showShift = false), willBodyScroll(true)"
-    >
-      <h3>Shift the dates of the sessions</h3>
-      <p class="grey">
-        This will move the dates ahead or behind by the specified amount
-      </p>
-      <div class="input_section">
-        <label for="range">Shift session dates by: </label>
-        <input
-          id="range"
-          ref="range"
-          :value="shiftDays"
-          class="width_300"
-          name="range"
-          type="number"
-          required
-          @input="(shiftDays = $event.target.value), checkForm('shift')"
-        />
-      </div>
-      <button :disabled="disableShiftButton" type="submit">Shift</button>
-      <button
-        class="red_button"
-        @click.prevent="(showShift = false), willBodyScroll(true)"
-      >
-        Cancel
-      </button>
-    </form>
     <div
       v-if="showProgress"
       class="tab_overlay_content fadeIn delay fill_mode_both"
@@ -851,7 +821,6 @@ export default {
       disableDuplicatePlanButton: true,
 
       // MANIPULATION
-      shiftDays: 1,
       duplicateClientID: null,
 
       // STATS
@@ -867,7 +836,6 @@ export default {
       // MICROCYCLE
 
       allowMoreWeeks: false,
-      currentWeek: 1,
       maxWeek: 2,
     };
   },
@@ -899,6 +867,9 @@ export default {
     },
     selectedSessions() {
       return this.$store.state.selectedSessions;
+    },
+    currentWeek() {
+      return this.$store.state.currentWeek;
     },
   },
   watch: {
@@ -937,9 +908,6 @@ export default {
 
     checkForm(type) {
       switch (type) {
-        case "shift":
-          this.disableShiftButton = !this.shiftDays;
-          break;
         case "duplicate":
           this.disableDuplicatePlanButton = !this.duplicateClientID;
           break;
@@ -1153,39 +1121,6 @@ export default {
       this.deselectAll();
     },
 
-    /**
-     * Shifts the selected sessions by specified days.
-     */
-    shiftAcross() {
-      this.$store.commit("setData", {
-        attr: "dontLeave",
-        data: true,
-      });
-      this.plan.sessions.forEach((session) => {
-        if (this.selectedSessions.includes(session.id)) {
-          this.$store.commit("updateSessionAttr", {
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
-            sessionId: session.id,
-            attr: "date",
-            data: this.addDays(session.date, parseInt(this.shiftDays)),
-          });
-        }
-      });
-      this.batchUpdateSession(this.selectedSessions);
-      this.$store.dispatch("openResponsePopUp", {
-        title:
-          this.selectedSessions.length > 1
-            ? "Shifted sessions"
-            : "Shifted session",
-        description: "Your changes have been saved",
-      });
-      this.shiftDays = 1;
-      this.deselectAll();
-      this.$ga.event("Session", "shift");
-      this.$store.dispatch("endLoading");
-    },
-
     // -----------------------------
     // Checkbox and multi-select
     // -----------------------------
@@ -1354,7 +1289,10 @@ export default {
      */
     goToEvent(id, week) {
       this.expandAll("Expand");
-      this.currentWeek = week;
+      this.$store.commit("setData", {
+        attr: "currentWeek",
+        data: week,
+      });
       setTimeout(() => {
         document
           .getElementById(`session-${id}`)
@@ -1421,7 +1359,7 @@ export default {
      * @param {integer} - The id of the week.
      */
     changeWeek(weekID) {
-      this.currentWeek = weekID;
+      this.$store.dispatch("changeWeek", weekID);
       this.checkForWeekSessions();
     },
 
