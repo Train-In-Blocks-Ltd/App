@@ -28,7 +28,9 @@ const ProfileComponent = () =>
 const ClientComponent = () =>
   import(/* webpackChunkName: "client.home" */ "@/pages/main/home/client");
 const ClientPlans = () =>
-  import(/* webpackChunkName: "client.plans" */ "@/pages/_client/Plans");
+  import(
+    /* webpackChunkName: "client.plans" */ "@/pages/main/home/client/plans"
+  );
 const ClientSessions = () =>
   import(/* webpackChunkName: "client.sessions" */ "@/pages/_client/Sessions");
 

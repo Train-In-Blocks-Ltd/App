@@ -62,19 +62,19 @@
 import { mapState } from "vuex";
 const NewPlan = () =>
   import(
-    /* webpackChunkName: "components.newplan", webpackPrefetch: true  */ "../../components/NewPlan"
+    /* webpackChunkName: "components.newplan", webpackPrefetch: true  */ "@/components/NewPlan"
   );
 const RichEditor = () =>
   import(
-    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
+    /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
   );
 const Periodise = () =>
   import(
-    /* webpackChunkName: "components.periodise", webpackPreload: true  */ "../../components/Periodise"
+    /* webpackChunkName: "components.periodise", webpackPreload: true  */ "@/components/Periodise"
   );
 const Bookings = () =>
   import(
-    /* webpackChunkName: "components.bookings", webpackPreload: true  */ "../../components/Bookings"
+    /* webpackChunkName: "components.bookings", webpackPreload: true  */ "@/components/Bookings"
   );
 
 export default {
