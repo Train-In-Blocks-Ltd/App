@@ -100,13 +100,8 @@ export default {
   },
   data() {
     return {
-      // EDIT
-
       tempEditorStore: null,
       editingClientNotes: false,
-
-      response: "",
-      persistResponse: "",
     };
   },
   computed: mapState(["loading", "dontLeave", "clients", "clientDetails"]),
@@ -114,10 +109,6 @@ export default {
     this.willBodyScroll(true);
   },
   methods: {
-    // -----------------------------
-    // General
-    // -----------------------------
-
     /**
      * Resolves the client information editor.
      * @param {string} state - The returned state from the editor.
