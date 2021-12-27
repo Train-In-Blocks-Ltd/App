@@ -275,7 +275,7 @@
   <div id="plan">
     <div
       :class="{
-        opened_sections: showShift || showProgress || showDuplicate,
+        opened_sections: showProgress || showDuplicate,
       }"
       class="section_overlay"
     />
@@ -814,10 +814,8 @@ export default {
 
       // Modals
 
-      showShift: false,
       showProgress: false,
       showDuplicate: false,
-      disableShiftButton: false,
       disableDuplicatePlanButton: true,
 
       // MANIPULATION
@@ -902,10 +900,6 @@ export default {
     this.willBodyScroll(true);
   },
   methods: {
-    // -----------------------------
-    // General
-    // -----------------------------
-
     checkForm(type) {
       switch (type) {
         case "duplicate":
@@ -942,7 +936,9 @@ export default {
           this.updater();
           break;
         case "Shift":
-          this.showShift = true;
+          this.$store.dispatch("openModal", {
+            name: "shift",
+          });
           this.willBodyScroll(false);
           this.updater();
           break;

@@ -1,3 +1,10 @@
+<style lang="scss" scoped>
+form {
+  display: grid;
+  grid-gap: 1rem;
+}
+</style>
+
 <template>
   <form
     @submit.prevent="
@@ -7,10 +14,9 @@
       }
     "
   >
-    <h3>Shift the dates of the sessions</h3>
-    <p class="grey">
-      This will move the dates ahead or behind by the specified amount
-    </p>
+    <txt grey
+      >This moves the session forward or back by the specified days.</txt
+    >
     <txt-input
       type="number"
       name="range"
@@ -25,13 +31,9 @@
       focusFirst
       required
     />
-    <button :disabled="disableShiftButton" type="submit">Shift</button>
-    <button
-      class="red_button"
-      @click.prevent="(showShift = false), willBodyScroll(true)"
+    <default-button :is-disabled="disableShiftButton" type="submit"
+      >Shift</default-button
     >
-      Cancel
-    </button>
   </form>
 </template>
 
@@ -95,6 +97,7 @@ export default {
         document.getElementById(`sc-${id}`).checked = false;
       });
       this.$store.dispatch("deselectAllSessions");
+      this.$store.dispatch("closeModal");
 
       this.$ga.event("Session", "shift");
       this.$store.dispatch("endLoading");

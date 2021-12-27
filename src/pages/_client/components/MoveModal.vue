@@ -105,6 +105,7 @@ export default {
         document.getElementById(`sc-${id}`).checked = false;
       });
       this.$store.dispatch("deselectAllSessions");
+      this.$store.dispatch("closeModal");
 
       this.$ga.event("Session", "move");
       this.$store.dispatch("endLoading");
