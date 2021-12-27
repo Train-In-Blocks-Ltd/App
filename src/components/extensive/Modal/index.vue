@@ -66,6 +66,7 @@
       <new-plan-modal v-else-if="modalContent === 'new-plan'" />
       <move-modal v-else-if="modalContent === 'move'" />
       <shift-modal v-else-if="modalContent === 'shift'" />
+      <duplicate-plan-modal v-else-if="modalContent === 'duplicate-plan'" />
     </card-wrapper>
     <backdrop :on-click="handleBackdropClick" />
   </div>
@@ -117,6 +118,10 @@ const ShiftModal = () =>
   import(
     /* webpackChunkName: "components.shiftModal", webpackPrefetch: true  */ "@/pages/_client/components/ShiftModal"
   );
+const DuplicatePlanModal = () =>
+  import(
+    /* webpackChunkName: "components.duplicatePlanModal", webpackPrefetch: true  */ "@/pages/_client/components/DuplicatePlanModal"
+  );
 
 export default {
   components: {
@@ -130,6 +135,7 @@ export default {
     NewPlanModal,
     MoveModal,
     ShiftModal,
+    DuplicatePlanModal,
   },
   computed: mapState([
     "modalSize",
@@ -158,6 +164,8 @@ export default {
           return "Move to a different week";
         case "shift":
           return "Shift the dates";
+        case "duplicate-plan":
+          return "Duplicate plan";
         default:
           return "";
       }

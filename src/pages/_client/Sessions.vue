@@ -275,7 +275,7 @@
   <div id="plan">
     <div
       :class="{
-        opened_sections: showProgress || showDuplicate,
+        opened_sections: showProgress,
       }"
       class="section_overlay"
     />
@@ -296,46 +296,6 @@
         :max-week="maxWeek"
       />
     </div>
-    <form
-      v-if="showDuplicate"
-      class="tab_overlay_content fadeIn delay fill_mode_both"
-      @submit.prevent="
-        duplicatePlan(duplicateClientID),
-          (showDuplicate = false),
-          willBodyScroll(true)
-      "
-    >
-      <h3>Create a similar plan</h3>
-      <p class="grey">Copy this plan to the same/different client</p>
-      <br />
-      <select
-        :value="duplicateClientID"
-        name="duplicate_client"
-        class="width_300"
-        required
-        @input="
-          (duplicateClientID = $event.target.value), checkForm('duplicate')
-        "
-      >
-        <option :value="null">Select a client</option>
-        <option
-          v-for="(client, index) in clients"
-          :key="`client_${index}`"
-          :value="client.client_id"
-        >
-          {{ client.name }}
-        </option></select
-      ><br /><br />
-      <button :disabled="disableDuplicatePlanButton" type="submit">
-        Duplicate
-      </button>
-      <button
-        class="red_button"
-        @click.prevent="(showDuplicate = false), willBodyScroll(true)"
-      >
-        Cancel
-      </button>
-    </form>
     <div
       v-if="!loading && !isStatsOpen && !$parent.showOptions && !noSessions"
       class="tab_option icon_open_middle tab_option_small fadeIn"
@@ -392,16 +352,16 @@
           >
             <inline-svg
               id="back"
-              :src="require('../../assets/svg/arrow-left.svg')"
+              :src="require('@/assets/svg/arrow-left.svg')"
             />
             Back to profile
           </router-link>
           <a
             class="a_link"
             href="javascript:void(0)"
-            @click="(showDuplicate = true), willBodyScroll(false)"
+            @click="handleDuplicatePlan"
           >
-            <inline-svg :src="require('../../assets/svg/copy.svg')" />
+            <inline-svg :src="require('@/assets/svg/copy.svg')" />
             Duplicate plan
           </a>
           <a
@@ -409,7 +369,7 @@
             href="javascript:void(0)"
             @click="deletePlan()"
           >
-            <inline-svg :src="require('../../assets/svg/bin.svg')" />
+            <inline-svg :src="require('@/assets/svg/bin.svg')" />
             Delete plan
           </a>
         </div>
@@ -815,11 +775,8 @@ export default {
       // Modals
 
       showProgress: false,
-      showDuplicate: false,
-      disableDuplicatePlanButton: true,
 
       // MANIPULATION
-      duplicateClientID: null,
 
       // STATS
 
@@ -900,12 +857,11 @@ export default {
     this.willBodyScroll(true);
   },
   methods: {
-    checkForm(type) {
-      switch (type) {
-        case "duplicate":
-          this.disableDuplicatePlanButton = !this.duplicateClientID;
-          break;
-      }
+    handleDuplicatePlan() {
+      this.$store.dispatch("openModal", {
+        name: "duplicate-plan",
+      });
+      willBodyScroll(false);
     },
 
     /**
@@ -1469,37 +1425,6 @@ export default {
     // -----------------------------
     // Database
     // -----------------------------
-
-    /**
-     * Duplicates the plan to select client.
-     * @param {integer} clientId - The client to copy the plan to.
-     */
-    async duplicatePlan(clientId) {
-      try {
-        this.$store.commit("setData", {
-          attr: "dontLeave",
-          data: true,
-        });
-        await this.$store.dispatch("duplicatePlan", {
-          clientId,
-          planId: this.plan.id,
-          planName: this.plan.name,
-          planDuration: this.plan.duration,
-          blockColor: this.plan.block_color,
-          planNotes: this.plan.notes,
-          planSessions: this.plan.sessions,
-        });
-        this.$ga.event("Plan", "duplicate");
-        this.$store.dispatch("openResponsePopUp", {
-          title: "Plan duplicated",
-          description: "Access it on your client's profile",
-        });
-        this.$store.dispatch("endLoading");
-        this.$router.push({ path: `/client/${clientId}/` });
-      } catch (e) {
-        this.$parent.$parent.resolveError(e);
-      }
-    },
 
     /**
      * Updates the details of the plan.
