@@ -12,23 +12,6 @@
   background-color: #00000060;
 }
 
-/* Plan Info */
-.client_plan_top_grid {
-  display: grid;
-  grid-gap: 1rem;
-  margin-top: 2rem;
-
-  /* Plan Options */
-  .plan_options {
-    display: flex;
-    a {
-      margin-right: 1rem;
-      svg {
-        margin-right: 0.4rem;
-      }
-    }
-  }
-}
 .switch_cal {
   margin-bottom: 0.4rem;
   svg {
@@ -58,47 +41,12 @@
       margin-left: 1rem;
     }
   }
-  .plan_table--container {
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    .plan_table--container--plan_duration_container {
-      display: grid;
-      grid-gap: 1rem 0.4rem;
-      grid-template-columns: repeat(auto-fill, 50px);
-      border: none;
-      padding: 0;
-
-      /* Week */
-      .week {
-        display: grid;
-        grid-template-rows: 8px 64px;
-        user-select: none;
-        cursor: pointer;
-        width: 100%;
-        border: 2px solid var(--base_faint);
-        border-radius: 5px;
-        transition: var(--transition_standard);
-        &:hover {
-          opacity: var(--light_opacity);
-        }
-        &.weekActive {
-          border-color: var(--base);
-          background-color: var(--fore);
-          &:hover {
-            opacity: var(--light_opacity);
-          }
-        }
-        .week__color {
-          width: 100%;
-          height: 100%;
-          border-radius: 3px 3px 0 0;
-        }
-        .week__number {
-          margin: auto;
-        }
-      }
-    }
+  .week-button-container {
+    display: grid;
+    grid-gap: 1rem 0.4rem;
+    grid-template-columns: repeat(auto-fill, 50px);
+    border: none;
+    padding: 0;
   }
 }
 
@@ -352,28 +300,20 @@
                 />
               </div>
             </div>
-            <div class="plan_table--container">
-              <div class="plan_table--container--plan_duration_container">
-                <div
-                  v-for="item in planDuration(plan.duration)"
-                  :key="item"
-                  :class="{ weekActive: item === currentWeek }"
-                  class="week"
-                  @click="changeWeek(item)"
-                >
-                  <div
-                    :style="{
-                      backgroundColor: weekColor.backgroundColor[item - 1]
-                        ? weekColor.backgroundColor[item - 1]
-                        : 'var(--base_faint)',
-                    }"
-                    class="week__color"
-                  />
-                  <div class="week__number">
-                    {{ item }}
-                  </div>
-                </div>
-              </div>
+
+            <!-- Week buttons -->
+            <div class="week-button-container">
+              <week-button
+                v-for="item in planDuration(plan.duration)"
+                :class="{ active: currentWeek === item }"
+                :key="item"
+                :week-color="
+                  weekColor.backgroundColor[item - 1]
+                    ? weekColor.backgroundColor[item - 1]
+                    : 'var(--base_faint)'
+                "
+                :number="item"
+              />
             </div>
           </div>
           <!-- plan_table -->
@@ -588,6 +528,10 @@ const PlanHeader = () =>
   import(
     /* webpackChunkName: "components.planHeader", webpackPreload: true */ "./components/PlanHeader"
   );
+const WeekButton = () =>
+  import(
+    /* webpackChunkName: "components.weekButton", webpackPrefetch: true */ "./components/WeekButton"
+  );
 const Checkbox = () =>
   import(
     /* webpackChunkName: "components.checkbox", webpackPreload: true */ "../../components/Checkbox"
@@ -628,6 +572,7 @@ const ProgressSessions = () =>
 export default {
   components: {
     PlanHeader,
+    WeekButton,
     Checkbox,
     WeekCalendar,
     MonthCalendar,
@@ -1182,15 +1127,6 @@ export default {
       });
       this.editingWeekColor = false;
       this.updatePlan();
-    },
-
-    /**
-     * Switch to a different week.
-     * @param {integer} - The id of the week.
-     */
-    changeWeek(weekID) {
-      this.$store.dispatch("changeWeek", weekID);
-      this.checkForWeekSessions();
     },
 
     // -----------------------------
