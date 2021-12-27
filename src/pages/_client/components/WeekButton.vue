@@ -45,10 +45,11 @@
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   props: {
     weekColor: String,
-    number: [String, Number],
+    number: Number,
   },
   computed: mapState(["currentWeek"]),
   methods: {

@@ -33,19 +33,17 @@
       :key="'color_' + index"
       :style="{ backgroundColor: paint.color }"
       class="color"
-      @click="selectedColor = paint.color"
+      @click="changeWeekColor(paint.color)"
     />
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  props: {
-    injectedColor: String,
-  },
   data() {
     return {
-      selectedColor: null,
       colorPalette: [
         { color: "#EB4034" },
         { color: "#EB9634" },
@@ -55,10 +53,11 @@ export default {
       ],
     };
   },
-  watch: {
-    selectedColor() {
-      this.$emit("update:injectedColor", this.selectedColor);
-      this.$parent.updateSessionColor();
+  computed: mapState(["currentWeek", "weekColor"]),
+  methods: {
+    changeWeekColor(color) {
+      this.$store.dispatch("setPlanColor", color);
+      this.$parent.editingWeekColor = false;
     },
   },
 };

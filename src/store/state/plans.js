@@ -1,5 +1,4 @@
 export default {
   plan: null,
-  sessionsDone: 0,
-  sessionsTotal: 0,
+  weekColors: null,
 };

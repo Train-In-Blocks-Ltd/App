@@ -76,13 +76,6 @@ export default {
    */
   setCurrentPlan(state, plan) {
     state.plan = plan;
-  },
-
-  /**
-   * Updates the adherence bar on the plan.
-   */
-  updateAdherence(state, payload) {
-    state.sessionsDone = payload.done;
-    state.sessionsTotal = payload.total;
+    state.weekColor = plan.block_color.split(",");
   },
 };

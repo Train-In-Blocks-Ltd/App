@@ -132,7 +132,7 @@ export default {
     commit("updateEntirePlan", payload);
   },
 
-  async updatePlanLocal({ state, commit }, payload) {
+  updatePlanLocal({ state, commit }, payload) {
     const POST_DATA = {
       client_id: payload.client_id ?? state.plan.client_id,
       id: payload.id ?? state.plan.id,
@@ -172,7 +172,6 @@ export default {
 
   /**
    * Sets the current plan to the context.
-   * @param {*} payload
    */
   setCurrentPlan({ state, commit }, plan_id) {
     const PLAN = state.clientDetails.plans.filter(
@@ -182,25 +181,22 @@ export default {
   },
 
   /**
-   * Determines and visualises the ratio of completed and incompleted sessions.
+   * Updates the block color.
    */
-  calculateAdherence({ state, commit }) {
-    commit("updateAdherence", {
-      done: 0,
-      total: 0,
+  async setPlanColor({ state, dispatch }, newColor) {
+    let newWeekColor = state.weekColor;
+    newWeekColor[state.currentWeek - 1] = newColor;
+    dispatch("updatePlanLocal", {
+      block_color: newWeekColor,
     });
-    if (this.plan.sessions) {
-      for (const SESSION of this.plan.sessions) {
-        this.sessionsTotal += 1;
-        if (SESSION.checked === 1) {
-          this.sessionsDone++;
-        }
-      }
-      const PROGRESS_BAR = document.getElementById("progress-bar");
-      if (PROGRESS_BAR) {
-        PROGRESS_BAR.style.width =
-          (this.sessionsDone / this.sessionsTotal) * 100 + "%";
-      }
-    }
+    const { client_id, id, name, duration, notes } = state.plan;
+    await this._vm.$axios.put("https://api.traininblocks.com/v2/plans", {
+      client_id,
+      id,
+      name,
+      duration,
+      notes,
+      block_color: newWeekColor.join(","),
+    });
   },
 };

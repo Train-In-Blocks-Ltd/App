@@ -50,49 +50,6 @@
   }
 }
 
-/* Sessions */
-.session--header {
-  display: flex;
-  justify-content: space-between;
-  .session--header__left {
-    display: grid;
-    grid-gap: 1rem;
-    min-height: 80px;
-    .session--header__left__top {
-      display: flex;
-      .change_week_color {
-        height: 2rem;
-        width: 4rem;
-        border: 2px solid var(--base);
-        border-radius: 5px;
-        cursor: pointer;
-        transition: var(--transition_standard);
-        &:hover {
-          opacity: var(--light_opacity);
-        }
-        &.noColor {
-          /* stylelint-disable-next-line */
-          background-color: var(--fore) !important;
-        }
-      }
-
-      /* Info */
-      #info {
-        fill: var(--base);
-        margin-left: 1rem;
-        cursor: pointer;
-        transition: opacity 1s,
-          transform 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
-        &:hover {
-          opacity: var(--light_opacity);
-        }
-        &:active {
-          transform: var(--active_state);
-        }
-      }
-    }
-  }
-}
 .container--sessions_header {
   display: flex;
   justify-content: flex-end;
@@ -308,8 +265,8 @@
                 :class="{ active: currentWeek === item }"
                 :key="item"
                 :week-color="
-                  weekColor.backgroundColor[item - 1]
-                    ? weekColor.backgroundColor[item - 1]
+                  weekColor[item - 1]
+                    ? weekColor[item - 1]
                     : 'var(--base_faint)'
                 "
                 :number="item"
@@ -318,47 +275,7 @@
           </div>
           <!-- plan_table -->
           <div class="sessions">
-            <div class="session--header">
-              <div class="session--header__left">
-                <div class="session--header__left__top">
-                  <div
-                    :style="{
-                      backgroundColor:
-                        weekColor.backgroundColor[currentWeek - 1],
-                    }"
-                    :class="{
-                      noColor:
-                        weekColor.backgroundColor[currentWeek - 1] === 'null',
-                    }"
-                    class="change_week_color"
-                    @click="editingWeekColor = !editingWeekColor"
-                  />
-                  <inline-svg
-                    id="info"
-                    :src="require('../../assets/svg/info.svg')"
-                    title="Info"
-                    @click="
-                      (previewDesc =
-                        'How to track exercises to visualise in the Statistics tab'),
-                        (previewHTML =
-                          '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>'),
-                        willBodyScroll(false)
-                    "
-                  />
-                </div>
-                <color-picker
-                  v-if="editingWeekColor"
-                  :injected-color.sync="
-                    weekColor.backgroundColor[currentWeek - 1]
-                  "
-                />
-              </div>
-              <div>
-                <button class="button--new-session" @click="createNewSession()">
-                  New session
-                </button>
-              </div>
-            </div>
+            <plan-control-bar />
             <skeleton v-if="loading" :type="'session'" />
             <div v-else-if="!noSessions && !weekIsEmpty">
               <div v-if="plan.sessions" class="container--sessions_header">
@@ -532,6 +449,10 @@ const WeekButton = () =>
   import(
     /* webpackChunkName: "components.weekButton", webpackPrefetch: true */ "./components/WeekButton"
   );
+const PlanControlBar = () =>
+  import(
+    /* webpackChunkName: "components.planControlBar", webpackPrefetch: true */ "./components/PlanControlBar"
+  );
 const Checkbox = () =>
   import(
     /* webpackChunkName: "components.checkbox", webpackPreload: true */ "../../components/Checkbox"
@@ -547,10 +468,6 @@ const MonthCalendar = () =>
 const RichEditor = () =>
   import(
     /* webpackChunkName: "components.richeditor", webpackPreload: true */ "../../components/Editor"
-  );
-const ColorPicker = () =>
-  import(
-    /* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ "../../components/ColorPicker"
   );
 const Multiselect = () =>
   import(
@@ -577,11 +494,11 @@ export default {
     WeekCalendar,
     MonthCalendar,
     RichEditor,
-    ColorPicker,
     Multiselect,
     PreviewModal,
     Statistics,
     ProgressSessions,
+    PlanControlBar,
   },
   async beforeRouteLeave(to, from, next) {
     if (
@@ -636,10 +553,6 @@ export default {
 
       weekSessions: [],
       weekIsEmpty: true,
-      editingWeekColor: false,
-      weekColor: {
-        backgroundColor: "",
-      },
 
       // Modals
 
@@ -673,19 +586,15 @@ export default {
     "clientDetails",
     "selectedSessions",
     "currentWeek",
+    "weekColor",
   ]),
-  watch: {
-    editingWeekColor() {
-      this.updater();
-    },
-  },
-  async created() {
+  created() {
     this.$store.commit("setData", {
       attr: "loading",
       data: true,
     });
     this.willBodyScroll(true);
-    await this.$store.dispatch("setCurrentPlan", this.$route.params.id);
+    this.$store.dispatch("setCurrentPlan", this.$route.params.id);
     this.$store.dispatch("endLoading");
   },
   methods: {
@@ -820,10 +729,6 @@ export default {
       }
     },
 
-    // -----------------------------
-    // Modals and tabs
-    // -----------------------------
-
     /**
      * Duplicates the selected sessions.
      */
@@ -896,10 +801,6 @@ export default {
       this.$ga.event("Plan", "print");
       this.deselectAll();
     },
-
-    // -----------------------------
-    // Checkbox and multi-select
-    // -----------------------------
 
     /**
      * Toggles the complete/incomplete state of the selected sessions.
@@ -1027,37 +928,6 @@ export default {
     },
 
     /**
-     * Creates a new session.
-     */
-    async createNewSession() {
-      this.$store.commit("setData", {
-        attr: "dontLeave",
-        data: true,
-      });
-      const NEW_SESSION_ID = await this.addSession({
-        clientId: this.$route.params.client_id,
-        planId: this.$route.params.id,
-        sessionName: "Untitled",
-        sessionDate: this.today(),
-        sessionNotes: "",
-        sessionWeek: this.currentWeek,
-      });
-      this.checkForWeekSessions();
-      this.updater();
-      this.goToEvent(NEW_SESSION_ID, this.currentWeek);
-      this.$ga.event("Session", "new");
-      this.$store.dispatch("openResponsePopUp", {
-        title: "New session added",
-        description: "Get programming!",
-      });
-      this.$store.dispatch("endLoading");
-    },
-
-    // -----------------------------
-    // Misc
-    // -----------------------------
-
-    /**
      * Scrolls to session.
      * @param {integer} id - The id of the session.
      * @param {integer} week - The week containing the session.
@@ -1113,27 +983,6 @@ export default {
     },
 
     /**
-     * Updates the week color.
-     */
-    updateSessionColor() {
-      this.$store.commit("updatePlanAttr", {
-        clientId: this.clientDetails.client_id,
-        planId: this.plan.id,
-        attr: "block_color",
-        data: JSON.stringify(this.weekColor.backgroundColor)
-          .replace(/"/g, "")
-          .replace(/[[\]]/g, "")
-          .replace(/\//g, ""),
-      });
-      this.editingWeekColor = false;
-      this.updatePlan();
-    },
-
-    // -----------------------------
-    // Datetime
-    // -----------------------------
-
-    /**
      * Returns the duration of the plan as an array to be iterated.
      * @param {integer} duration - The length of the plan.
      * @returns The duration array.
@@ -1146,10 +995,6 @@ export default {
       }
       return ARR;
     },
-
-    // -----------------------------
-    // Background
-    // -----------------------------
 
     /**
      * Sorts the session.
@@ -1168,18 +1013,14 @@ export default {
      */
     updater() {
       this.sessionDates = [];
-      this.weekColor.backgroundColor = this.plan.block_color
-        .replace("[", "")
-        .replace("]", "")
-        .split(",");
       if (this.plan.sessions) {
         for (const SESSION of this.plan.sessions) {
           this.sessionDates.push({
             title: SESSION.name,
             date: SESSION.date,
-            color: this.weekColor.backgroundColor[SESSION.week_id - 1],
+            color: this.weekColor[SESSION.week_id - 1],
             textColor: this.accessible_colors(
-              this.weekColor.backgroundColor[SESSION.week_id - 1]
+              this.weekColor[SESSION.week_id - 1]
             ),
             week_id: SESSION.week_id,
             session_id: SESSION.id,
@@ -1214,10 +1055,6 @@ export default {
         console.error(e);
       }
     },
-
-    // -----------------------------
-    // Database
-    // -----------------------------
 
     /**
      * Updates the details of the plan.
