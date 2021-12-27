@@ -17,30 +17,6 @@
   display: grid;
   grid-gap: 1rem;
   margin-top: 2rem;
-  .wrapper--progress-bar {
-    user-select: none;
-    border: 1px solid var(--base_faint);
-    border-radius: 3px;
-    transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
-    #progress-bar {
-      border-radius: 3px;
-      padding: 0.3rem 1rem;
-      background-color: #00800020;
-      transition: 1s all cubic-bezier(0.165, 0.84, 0.44, 1);
-      &.fullBar {
-        background-color: #49ab59;
-        p {
-          color: white;
-        }
-      }
-      &.noSessions {
-        background-color: #8b000020;
-      }
-      p {
-        white-space: nowrap;
-      }
-    }
-  }
 
   /* Plan Options */
   .plan_options {
@@ -320,60 +296,7 @@
     />
     <div v-show="editSession !== null" class="dark_overlay fadeIn" />
     <div>
-      <div class="client_plan_top_grid">
-        <input
-          v-model="plan.name"
-          class="allow_text_overflow"
-          aria-label="Plan name"
-          type="text"
-          name="name"
-          :disabled="silentLoading"
-          @blur="updatePlan()"
-        />
-        <div class="wrapper--progress-bar">
-          <div
-            id="progress-bar"
-            :class="{
-              fullBar: sessionsDone === sessionsTotal && sessionsTotal !== 0,
-              noSessions: noSessions,
-            }"
-          >
-            <p v-if="!noSessions" class="grey">
-              Completed {{ sessionsDone }} of {{ sessionsTotal }} sessions
-            </p>
-            <p v-if="noSessions" class="grey">No sessions created yet</p>
-          </div>
-        </div>
-        <div class="plan_options">
-          <router-link
-            :to="`/client/${$route.params.client_id}/`"
-            class="a_link"
-            href="javascript:void(0)"
-          >
-            <inline-svg
-              id="back"
-              :src="require('@/assets/svg/arrow-left.svg')"
-            />
-            Back to profile
-          </router-link>
-          <a
-            class="a_link"
-            href="javascript:void(0)"
-            @click="handleDuplicatePlan"
-          >
-            <inline-svg :src="require('@/assets/svg/copy.svg')" />
-            Duplicate plan
-          </a>
-          <a
-            class="a_link text--red"
-            href="javascript:void(0)"
-            @click="deletePlan()"
-          >
-            <inline-svg :src="require('@/assets/svg/bin.svg')" />
-            Delete plan
-          </a>
-        </div>
-      </div>
+      <plan-header />
       <div class="plan_grid">
         <div class="calendar">
           <div id="plan_notes" class="editor_object_standard">
@@ -660,6 +583,11 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+const PlanHeader = () =>
+  import(
+    /* webpackChunkName: "components.planHeader", webpackPreload: true */ "./components/PlanHeader"
+  );
 const Checkbox = () =>
   import(
     /* webpackChunkName: "components.checkbox", webpackPreload: true */ "../../components/Checkbox"
@@ -699,6 +627,7 @@ const ProgressSessions = () =>
 
 export default {
   components: {
+    PlanHeader,
     Checkbox,
     WeekCalendar,
     MonthCalendar,
@@ -767,11 +696,6 @@ export default {
         backgroundColor: "",
       },
 
-      // ADHERANCE
-
-      sessionsDone: 0,
-      sessionsTotal: 0,
-
       // Modals
 
       showProgress: false,
@@ -794,39 +718,17 @@ export default {
       maxWeek: 2,
     };
   },
-  computed: {
-    loading() {
-      return this.$store.state.loading;
-    },
-    silentLoading() {
-      return this.$store.state.silentLoading;
-    },
-    dontLeave() {
-      return this.$store.state.dontLeave;
-    },
-    plan() {
-      return this.$store.getters.helper(
-        "match_plan",
-        this.$route.params.client_id,
-        this.$route.params.id
-      );
-    },
-    clients() {
-      return this.$store.state.clients;
-    },
-    templates() {
-      return this.$store.state.templates;
-    },
-    clientDetails() {
-      return this.$store.state.clientDetails;
-    },
-    selectedSessions() {
-      return this.$store.state.selectedSessions;
-    },
-    currentWeek() {
-      return this.$store.state.currentWeek;
-    },
-  },
+  computed: mapState([
+    "loading",
+    "silentLoading",
+    "dontLeave",
+    "plan",
+    "clients",
+    "templates",
+    "clientDetails",
+    "selectedSessions",
+    "currentWeek",
+  ]),
   watch: {
     editingWeekColor() {
       this.updater();
@@ -838,32 +740,10 @@ export default {
       data: true,
     });
     this.willBodyScroll(true);
-    this.$parent.sessions = true;
-    this.noSessions =
-      (await this.$store.getters.helper(
-        "match_plan",
-        this.$route.params.client_id,
-        this.$route.params.id
-      ).sessions) === false;
-  },
-  mounted() {
-    if (!this.noSessions) {
-      this.adherence();
-      this.updater();
-    }
+    await this.$store.dispatch("setCurrentPlan", this.$route.params.id);
     this.$store.dispatch("endLoading");
   },
-  beforeDestroy() {
-    this.willBodyScroll(true);
-  },
   methods: {
-    handleDuplicatePlan() {
-      this.$store.dispatch("openModal", {
-        name: "duplicate-plan",
-      });
-      willBodyScroll(false);
-    },
-
     /**
      * Resolves the actions taken from the session multi-select.
      * @param {string} res - The action taken from the multi-select.
@@ -1032,7 +912,6 @@ export default {
           sessionWeek: SESSION.week_id,
         });
       }
-      this.adherence();
       this.checkForWeekSessions();
       this.updater();
       this.$ga.event("Session", "duplicate");
@@ -1218,7 +1097,6 @@ export default {
         sessionNotes: "",
         sessionWeek: this.currentWeek,
       });
-      this.adherence();
       this.checkForWeekSessions();
       this.updater();
       this.goToEvent(NEW_SESSION_ID, this.currentWeek);
@@ -1376,27 +1254,6 @@ export default {
     },
 
     /**
-     * Determines and visualises the ratio of completed and incompleted sessions.
-     */
-    adherence() {
-      this.sessionsDone = 0;
-      this.sessionsTotal = 0;
-      if (this.plan.sessions) {
-        for (const SESSION of this.plan.sessions) {
-          this.sessionsTotal += 1;
-          if (SESSION.checked === 1) {
-            this.sessionsDone++;
-          }
-        }
-        const PROGRESS_BAR = document.getElementById("progress-bar");
-        if (PROGRESS_BAR) {
-          PROGRESS_BAR.style.width =
-            (this.sessionsDone / this.sessionsTotal) * 100 + "%";
-        }
-      }
-    },
-
-    /**
      * Expand or unexpand all sessions.
      * @param {string} toExpand - Whether to expand or unexpand.
      */
@@ -1444,40 +1301,6 @@ export default {
     },
 
     /**
-     * Deletes the plan.
-     */
-    async deletePlan() {
-      if (
-        await this.$parent.$parent.$refs.confirm_pop_up.show(
-          "Are you sure you want to delete this plan?",
-          "We will remove this plan from our database and it won't be recoverable."
-        )
-      ) {
-        try {
-          this.$store.commit("setData", {
-            attr: "dontLeave",
-            data: true,
-          });
-          await this.$store.dispatch("deletePlan", {
-            clientId: this.$route.params.client_id,
-            planId: this.$route.params.id,
-          });
-          this.$ga.event("Session", "delete");
-          this.$store.dispatch("openResponsePopUp", {
-            title: "Plan deleted",
-            description: "Your changes have been saved",
-          });
-          this.$store.dispatch("endLoading");
-          this.$router.push({
-            path: `/client/${this.clientDetails.client_id}/`,
-          });
-        } catch (e) {
-          this.$parent.$parent.resolveError(e);
-        }
-      }
-    },
-
-    /**
      * Updates the selected sessions.
      * @param {array} sessionIds - The ids of the sessions.
      */
@@ -1488,7 +1311,6 @@ export default {
           planId: this.$route.params.id,
           sessionIds,
         });
-        this.adherence();
         this.$ga.event("Session", "update");
         this.$store.dispatch("endLoading");
       } catch (e) {
@@ -1507,7 +1329,6 @@ export default {
           planId: this.$route.params.id,
           sessionId,
         });
-        this.adherence();
         this.$ga.event("Session", "update");
         this.$store.dispatch("endLoading");
       } catch (e) {

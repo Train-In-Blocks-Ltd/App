@@ -132,6 +132,29 @@ export default {
     commit("updateEntirePlan", payload);
   },
 
+  async updatePlanLocal({ state, commit }, payload) {
+    const POST_DATA = {
+      client_id: payload.client_id ?? state.plan.client_id,
+      id: payload.id ?? state.plan.id,
+      name: payload.name ?? state.plan.name,
+      duration: payload.duration ?? state.plan.duration,
+      notes: payload.notes ?? state.plan.notes,
+      block_color: payload.block_color ?? state.plan.block_color,
+    };
+    commit("updateEntirePlan", POST_DATA);
+  },
+
+  async updatePlanApi({ state }) {
+    await this._vm.$axios.put("https://api.traininblocks.com/v2/plans", {
+      client_id: state.plan.client_id,
+      id: state.plan.id,
+      name: state.plan.name,
+      duration: state.plan.duration,
+      notes: state.plan.notes,
+      block_color: state.plan.block_color,
+    });
+  },
+
   /**
    * Deletes a plan.
    * @param {number} payload.clientId - The id of the client.
@@ -145,5 +168,39 @@ export default {
       clientId: payload.clientId,
       planId: payload.planId,
     });
+  },
+
+  /**
+   * Sets the current plan to the context.
+   * @param {*} payload
+   */
+  setCurrentPlan({ state, commit }, plan_id) {
+    const PLAN = state.clientDetails.plans.filter(
+      (plan) => plan.id === parseInt(plan_id)
+    )[0];
+    commit("setCurrentPlan", PLAN);
+  },
+
+  /**
+   * Determines and visualises the ratio of completed and incompleted sessions.
+   */
+  calculateAdherence({ state, commit }) {
+    commit("updateAdherence", {
+      done: 0,
+      total: 0,
+    });
+    if (this.plan.sessions) {
+      for (const SESSION of this.plan.sessions) {
+        this.sessionsTotal += 1;
+        if (SESSION.checked === 1) {
+          this.sessionsDone++;
+        }
+      }
+      const PROGRESS_BAR = document.getElementById("progress-bar");
+      if (PROGRESS_BAR) {
+        PROGRESS_BAR.style.width =
+          (this.sessionsDone / this.sessionsTotal) * 100 + "%";
+      }
+    }
   },
 };

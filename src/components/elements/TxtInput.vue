@@ -58,7 +58,13 @@
       :required="required"
       :min="min"
       :max="max"
+      :disabled="isDisabled"
       @input="handleInput"
+      @blur="
+        () => {
+          if (onBlur) onBlur();
+        }
+      "
     />
     <txt v-if="error" type="tiny" class="error" :class="errorClass">{{
       error
@@ -85,10 +91,12 @@ export default {
     ariaLabel: String,
     pattern: String,
     onInput: Function,
+    onBlur: Function,
     required: Boolean,
     focusFirst: Boolean,
     min: [String, Number],
     max: [String, Number],
+    isDisabled: Boolean,
   },
   mounted() {
     if (this.focusFirst) this.$el.children[0].focus();

@@ -70,4 +70,19 @@ export default {
     );
     CLIENT.plans.splice(CLIENT.plans.indexOf(PLAN), 1);
   },
+
+  /**
+   * Sets the current plan.
+   */
+  setCurrentPlan(state, plan) {
+    state.plan = plan;
+  },
+
+  /**
+   * Updates the adherence bar on the plan.
+   */
+  updateAdherence(state, payload) {
+    state.sessionsDone = payload.done;
+    state.sessionsTotal = payload.total;
+  },
 };
