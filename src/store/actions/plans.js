@@ -178,6 +178,14 @@ export default {
       (plan) => plan.id === parseInt(plan_id)
     )[0];
     commit("setCurrentPlan", PLAN);
+
+    const currentWeekSessions = PLAN.sessions.filter(
+      (session) => session.week_id === state.currentWeek
+    );
+    commit("setData", {
+      attr: "weekIsEmpty",
+      data: currentWeekSessions.length === 0,
+    });
   },
 
   /**

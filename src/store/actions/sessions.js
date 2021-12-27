@@ -114,7 +114,28 @@ export default {
       attr: "selectedSessions",
       data: state.selectedSessions.filter((sessionId) => sessionId !== id),
     });
-    console.log(state.selectedSessions);
+  },
+
+  /**
+   * Selects all the sessions.
+   */
+  selectAllSessions({ state, commit }) {
+    commit("setData", {
+      attr: "selectedSessions",
+      data: state.plan.sessions.map((session) => session.id),
+    });
+  },
+
+  /**
+   * Selects all the sessions from current week.
+   */
+  selectAllSessionsFromWeek({ state, commit }) {
+    commit("setData", {
+      attr: "selectedSessions",
+      data: state.plan.sessions
+        .filter((session) => session.week_id === session.id)
+        .map((session) => session.id),
+    });
   },
 
   /**
@@ -130,10 +151,57 @@ export default {
   /**
    * Changes the current week on the sessions page.
    */
-  changeWeek({ commit }, week) {
+  changeWeek({ state, commit }, week) {
     commit("setData", {
       attr: "currentWeek",
       data: week,
+    });
+    const currentWeekSessions = state.plan.sessions.filter(
+      (session) => session.week_id === week
+    );
+    commit("setData", {
+      attr: "weekIsEmpty",
+      data: currentWeekSessions.length === 0,
+    });
+  },
+
+  /**
+   * Adds a session id to the expanded array.
+   */
+  addExpandedSession({ state, commit }, id) {
+    commit("setData", {
+      attr: "expandedSessions",
+      data: [...state.expandedSessions, id],
+    });
+  },
+
+  /**
+   * Removes a session id to the selected array.
+   */
+  removeExpandedSession({ state, commit }, id) {
+    commit("setData", {
+      attr: "expandedSessions",
+      data: state.expandedSessions.filter((sessionId) => sessionId !== id),
+    });
+  },
+
+  /**
+   * Deselects all the sessions.
+   */
+  collapseAllSessions({ commit }) {
+    commit("setData", {
+      attr: "expandedSessions",
+      data: [],
+    });
+  },
+
+  /**
+   * Changes the edit state of the session
+   */
+  toggleEditingSession({ commit }, editState) {
+    commit("setData", {
+      attr: "isEditingSession",
+      data: editState,
     });
   },
 };

@@ -278,47 +278,7 @@
             <plan-control-bar />
             <skeleton v-if="loading" :type="'session'" />
             <div v-else-if="!noSessions && !weekIsEmpty">
-              <div v-if="plan.sessions" class="container--sessions_header">
-                <a
-                  v-if="
-                    !noSessions &&
-                    selectedSessions.length < plan.sessions.length &&
-                    !weekIsEmpty
-                  "
-                  href="javascript:void(0)"
-                  class="a_link"
-                  @click="selectAll('week')"
-                >
-                  Select this microcycle
-                </a>
-                <a
-                  v-if="
-                    !noSessions &&
-                    selectedSessions.length < plan.sessions.length &&
-                    !weekIsEmpty
-                  "
-                  href="javascript:void(0)"
-                  class="a_link"
-                  @click="selectAll('all')"
-                >
-                  Select all
-                </a>
-                <a
-                  v-if="
-                    plan.sessions !== false && !isEditingSession && !weekIsEmpty
-                  "
-                  href="javascript:void(0)"
-                  class="a_link"
-                  @click="
-                    expandAll(
-                      expandedSessions.length !== 0 ? 'Collapse' : 'Expand'
-                    )
-                  "
-                >
-                  {{ expandedSessions.length !== 0 ? "Collapse" : "Expand" }}
-                  all
-                </a>
-              </div>
+              <session-control-bar />
               <!-- New session -->
               <div v-if="!noSessions && !loading" class="container--sessions">
                 <!-- Loop through sessions -->
@@ -453,37 +413,41 @@ const PlanControlBar = () =>
   import(
     /* webpackChunkName: "components.planControlBar", webpackPrefetch: true */ "./components/PlanControlBar"
   );
+const SessionControlBar = () =>
+  import(
+    /* webpackChunkName: "components.sessionControlBar", webpackPrefetch: true */ "./components/SessionControlBar"
+  );
 const Checkbox = () =>
   import(
-    /* webpackChunkName: "components.checkbox", webpackPreload: true */ "../../components/Checkbox"
+    /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/Checkbox"
   );
 const WeekCalendar = () =>
   import(
-    /* webpackChunkName: "components.calendar", webpackPreload: true */ "../../components/WeekCalendar"
+    /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/WeekCalendar"
   );
 const MonthCalendar = () =>
   import(
-    /* webpackChunkName: "components.calendar", webpackPreload: true */ "../../components/MonthCalendar"
+    /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/MonthCalendar"
   );
 const RichEditor = () =>
   import(
-    /* webpackChunkName: "components.richeditor", webpackPreload: true */ "../../components/Editor"
+    /* webpackChunkName: "components.richeditor", webpackPreload: true */ "@/components/Editor"
   );
 const Multiselect = () =>
   import(
-    /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "../../components/Multiselect"
+    /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/Multiselect"
   );
 const PreviewModal = () =>
   import(
-    /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "../../components/PreviewModal"
+    /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/PreviewModal"
   );
 const Statistics = () =>
   import(
-    /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "../../components/Stats"
+    /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "@/components/Stats"
   );
 const ProgressSessions = () =>
   import(
-    /* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ "../../components/ProgressSessions"
+    /* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ "@/components/ProgressSessions"
   );
 
 export default {
@@ -499,6 +463,7 @@ export default {
     Statistics,
     ProgressSessions,
     PlanControlBar,
+    SessionControlBar,
   },
   async beforeRouteLeave(to, from, next) {
     if (
@@ -523,7 +488,6 @@ export default {
       forceStop: 0,
       tempEditorStore: null,
       editingPlanNotes: false,
-      isEditingSession: false,
       editSession: null,
 
       // Feedback
@@ -535,7 +499,6 @@ export default {
       // SYSTEM
 
       noSessions: false,
-      expandedSessions: [],
       force: true,
       multiselectOption: [
         { name: "Complete", svg: "svg/tick.svg" },
@@ -552,7 +515,6 @@ export default {
       // WEEK
 
       weekSessions: [],
-      weekIsEmpty: true,
 
       // Modals
 
@@ -587,6 +549,9 @@ export default {
     "selectedSessions",
     "currentWeek",
     "weekColor",
+    "expandedSessions",
+    "isEditingSession",
+    "weekIsEmpty",
   ]),
   created() {
     this.$store.commit("setData", {
@@ -697,7 +662,7 @@ export default {
             attr: "dontLeave",
             data: true,
           });
-          this.isEditingSession = true;
+          this.$store.dispatch("toggleEditingSession", true);
           this.editSession = id;
           this.forceStop += 1;
           this.tempEditorStore = SESSION.notes;
@@ -708,7 +673,7 @@ export default {
             attr: "dontLeave",
             data: true,
           });
-          this.isEditingSession = false;
+          this.$store.dispatch("toggleEditingSession", false);
           this.editSession = null;
           this.updateSession(id);
           this.$store("openResponsePopUp", {
@@ -722,7 +687,7 @@ export default {
             attr: "dontLeave",
             data: false,
           });
-          this.isEditingSession = false;
+          this.$store.dispatch("toggleEditingSession", false);
           this.editSession = null;
           SESSION.notes = this.tempEditorStore;
           break;
@@ -888,24 +853,6 @@ export default {
     },
 
     /**
-     * Selects all the sessions in the plan or week.
-     * @param {string} mode - To select all session or all sessions in the current week ('all' or 'week').
-     */
-    selectAll(mode) {
-      this.plan.sessions.forEach((session) => {
-        if (!this.selectedSessions.includes(session.id)) {
-          if (mode === "all") {
-            document.getElementById(`sc-${session.id}`).checked = true;
-            this.selectedSessions.push(session.id);
-          } else if (mode === "week" && session.week_id === this.currentWeek) {
-            document.getElementById(`sc-${session.id}`).checked = true;
-            this.selectedSessions.push(session.id);
-          }
-        }
-      });
-    },
-
-    /**
      * Deselects all the sessions.
      */
     deselectAll() {
@@ -964,7 +911,6 @@ export default {
           }
         });
       }
-      this.weekIsEmpty = arr === 0;
     },
 
     /**
@@ -973,12 +919,9 @@ export default {
      */
     toggleExpandedSessions(id) {
       if (this.expandedSessions.includes(id)) {
-        const INDEX = this.expandedSessions.indexOf(id);
-        if (INDEX > -1) {
-          this.expandedSessions.splice(INDEX, 1);
-        }
+        this.$store.dispatch("removeExpandedSession", id);
       } else {
-        this.expandedSessions.push(id);
+        this.$store.dispatch("addExpandedSession", id);
       }
     },
 
