@@ -77,10 +77,6 @@
 <script>
 import { mapState } from "vuex";
 
-const DefaultButton = () =>
-  import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
-  );
 const Backdrop = () =>
   import(
     /* webpackChunkName: "components.backdrop", webpackPrefetch: true  */ "@/components/generic/Backdrop"
@@ -88,7 +84,6 @@ const Backdrop = () =>
 
 export default {
   components: {
-    DefaultButton,
     Backdrop,
   },
   watch: {

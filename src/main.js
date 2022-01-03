@@ -13,6 +13,7 @@ import InputPopUp from "@/components/InputPopUp";
 import GlobalOverlay from "@/components/GlobalOverlay";
 import Txt from "@/components/elements/Txt";
 import TxtInput from "@/components/elements/TxtInput";
+import DefaultButton from "@/components/elements/DefaultButton";
 
 import App from "./App";
 import router from "./router";
@@ -40,6 +41,7 @@ Vue.component("InputPopUp", InputPopUp);
 Vue.component("GlobalOverlay", GlobalOverlay);
 Vue.component("Txt", Txt);
 Vue.component("TxtInput", TxtInput);
+Vue.component("DefaultButton", DefaultButton);
 
 Vue.config.productionTip = false;
 

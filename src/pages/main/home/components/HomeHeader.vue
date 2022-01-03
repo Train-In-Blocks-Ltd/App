@@ -93,10 +93,6 @@
 <script>
 import { mapState } from "vuex";
 
-const DefaultButton = () =>
-  import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
-  );
 const IconButton = () =>
   import(
     /* webpackChunkName: "components.iconButton", webpackPrefetch: true  */ "@/components/elements/IconButton"
@@ -104,7 +100,6 @@ const IconButton = () =>
 
 export default {
   components: {
-    DefaultButton,
     IconButton,
   },
   computed: {
