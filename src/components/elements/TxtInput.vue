@@ -65,15 +65,7 @@
 </template>
 
 <script>
-const Txt = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "./Txt"
-  );
-
 export default {
-  components: {
-    Txt,
-  },
   props: {
     inputRef: String,
     name: String,
