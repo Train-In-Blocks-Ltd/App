@@ -93,15 +93,7 @@
 <script>
 import { mapState } from "vuex";
 
-const IconButton = () =>
-  import(
-    /* webpackChunkName: "components.iconButton", webpackPrefetch: true  */ "@/components/elements/IconButton"
-  );
-
 export default {
-  components: {
-    IconButton,
-  },
   computed: {
     ...mapState(["pwa"]),
     search: {
