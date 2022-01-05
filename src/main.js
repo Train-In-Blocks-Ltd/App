@@ -15,6 +15,7 @@ import Txt from "@/components/elements/Txt";
 import TxtInput from "@/components/elements/TxtInput";
 import DefaultButton from "@/components/elements/DefaultButton";
 import IconButton from "@/components/elements/IconButton";
+import Wrapper from "@/components/generic/Wrapper";
 
 import App from "./App";
 import router from "./router";
@@ -44,6 +45,7 @@ Vue.component("Txt", Txt);
 Vue.component("TxtInput", TxtInput);
 Vue.component("DefaultButton", DefaultButton);
 Vue.component("IconButton", IconButton);
+Vue.component("Wrapper", Wrapper);
 
 Vue.config.productionTip = false;
 

@@ -1,34 +1,39 @@
 <style lang="scss" scoped>
 .logout_message {
   margin-top: 10vh;
-  .logout_message__top {
+  .top {
     display: flex;
     svg {
       margin-right: 2rem;
     }
+    .text-container {
+      .large_body {
+        margin-top: 1rem;
+        margin-bottom: 0.4rem;
+      }
+    }
   }
 }
 @media (max-width: 768px) {
-  .logout_message__top {
+  .logout_message .top {
     display: grid;
     grid-gap: 2rem;
   }
 }
 </style>
 <template>
-  <div id="logout" class="view_container">
+  <wrapper id="logout">
     <div class="logout_message">
-      <div class="logout_message__top">
+      <div class="top">
         <inline-svg :src="require('@/assets/svg/logout_success.svg')" />
-        <div>
-          <h1>You have been logged out successfully</h1>
-          <br />
-          <h3 class="grey">See you next time</h3>
-          <br /><br />
-          <h3>You will be redirected automatically</h3>
-          <a href="/" class="grey">Click here if it takes too long</a>
+        <div class="text-container">
+          <txt type="title" is-main>You have been logged out successfully</txt>
+          <txt type="large-body" bold>You will be redirected automatically</txt>
+          <a href="/" class="grey">
+            <txt>Click here if it takes too long</txt>
+          </a>
         </div>
       </div>
     </div>
-  </div>
+  </wrapper>
 </template>
