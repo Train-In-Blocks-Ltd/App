@@ -33,6 +33,9 @@
       border-radius: 5px;
     }
   }
+  .info {
+    margin-top: 0.4rem;
+  }
   .error {
     color: var(--base_red);
     margin-top: 0.4rem;
@@ -58,6 +61,9 @@
       :required="required"
       @input="handleInput"
     />
+    <txt v-if="info" type="tiny" class="info" :class="infoClass">{{
+      info
+    }}</txt>
     <txt v-if="error" type="tiny" class="error" :class="errorClass">{{
       error
     }}</txt>
@@ -71,6 +77,7 @@ export default {
     name: String,
     label: String,
     error: String,
+    info: String,
     value: String,
     inputClass: String,
     labelClass: String,

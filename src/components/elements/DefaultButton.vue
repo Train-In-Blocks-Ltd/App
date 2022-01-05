@@ -51,6 +51,7 @@ button {
       }
     "
     :disabled="isDisabled"
+    :type="type"
   >
     <slot />
   </button>
@@ -63,6 +64,7 @@ button {
       }
     "
     :disabled="isDisabled"
+    :type="type"
   >
     <slot />
   </button>
@@ -75,6 +77,7 @@ export default {
     onClick: Function,
     onClickPrevent: Function,
     isDisabled: Boolean,
+    type: String,
   },
 };
 </script>
