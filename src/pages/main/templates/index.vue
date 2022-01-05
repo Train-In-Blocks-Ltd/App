@@ -168,10 +168,6 @@ const Multiselect = () =>
   import(
     /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
   );
-const TxtInput = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/TxtInput"
-  );
 
 export default {
   metaInfo() {
@@ -183,7 +179,6 @@ export default {
     RichEditor,
     Checkbox,
     Multiselect,
-    TxtInput,
   },
   async beforeRouteLeave(to, from, next) {
     if (

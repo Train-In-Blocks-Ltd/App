@@ -115,20 +115,7 @@
 <script>
 import { mapState } from "vuex";
 
-const Txt = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
-  );
-const DefaultButton = () =>
-  import(
-    /* webpackChunkName: "components.defaultButton", webpackPrefetch: true  */ "@/components/elements/DefaultButton"
-  );
-
 export default {
-  components: {
-    Txt,
-    DefaultButton,
-  },
   computed: mapState(["pwa"]),
   methods: {
     handleInstall() {

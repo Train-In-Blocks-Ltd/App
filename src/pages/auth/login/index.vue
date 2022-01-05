@@ -113,26 +113,29 @@ a {
   margin: auto;
   padding: 6rem 4rem;
   width: 550px;
-  .other_options {
+  .demo-details {
+    display: flex;
+    width: fit-content;
+  }
+  .other-options {
     display: grid;
     grid-gap: 1rem;
     margin-top: 4rem;
-    .error {
-      color: var(--base_red);
-    }
-    .success {
-      color: var(--base_green);
+    .inline-link {
+      display: flex;
+      > a {
+        margin-left: 0.4rem;
+      }
     }
   }
   .cookies {
-    font-size: 0.75rem;
     margin: 2rem 0;
   }
   .recovery {
-    margin-top: 4rem;
+    margin-top: 6rem;
     margin-bottom: 1rem;
-    .recover_password {
-      margin: 0.8rem 0;
+    > .txt_input {
+      margin-bottom: 1rem;
     }
   }
 }
@@ -161,62 +164,60 @@ a {
       :src="require('@/assets/svg/full-logo.svg')"
       class="auth-org-logo"
     />
-    <div>
-      <a href="javascript:void(0)" @click="showDemo = !showDemo">
-        <b>{{ showDemo ? "Hide" : "Show demo account details" }} </b>
-      </a>
-    </div>
+    <a
+      class="demo-details"
+      href="javascript:void(0)"
+      @click="showDemo = !showDemo"
+    >
+      <txt bold>
+        {{ showDemo ? "Hide" : "Show demo account details" }}
+      </txt>
+    </a>
     <div v-if="showDemo" class="demo_details">
       <div class="info">demo@traininblocks.com</div>
       <div class="info">testingaccount123</div>
     </div>
     <div id="okta-signin-container" />
     <form v-if="open" class="recovery" @submit.prevent="reset">
-      <label>
-        <p>Email:</p>
-        <input
-          v-model="email"
-          type="email"
-          class="recover_password small_border_radius"
-          autofocus
-        />
-      </label>
-      <button type="submit">Send recovery email</button>
+      <txt-input
+        label="Email:"
+        :value="email"
+        :info="success"
+        :error="error"
+        type="email"
+        @output="(data) => (email = data)"
+        focus-first
+      />
+      <default-button type="submit">Send recovery email</default-button>
     </form>
-    <div class="other_options">
-      <div>
-        <p v-if="success" class="success">
-          {{ success }}
-        </p>
-        <p v-if="error" class="error">
-          {{ error }}
-        </p>
-      </div>
-      <p>
+    <div class="other-options">
+      <txt class="inline-link">
         Need an account?
-        <a href="https://traininblocks.com/#pricing"> Sign up here </a>
-      </p>
-      <p v-if="!open">
+        <a href="https://traininblocks.com/#pricing">
+          <txt>Sign up here</txt>
+        </a>
+      </txt>
+      <txt v-if="!open" class="inline-link">
         Forgot your password?
-        <a href="javascript:(0)" @click="open = !open"> Reset it here </a>
-      </p>
+        <a href="javascript:(0)" @click="open = !open">
+          <txt>Reset it here</txt>
+        </a>
+      </txt>
     </div>
-    <p class="cookies">
+    <txt type="tiny" class="cookies">
       By logging in and using this application you agree that essential
       first-party cookies will be placed on your computer. Non-essential third
       party cookies may also be placed but can be opted out of from your account
       page. For more information please read our
       <a href="https://traininblocks.com/legal/cookies-policy/">Cookie Policy</a
       >.
-    </p>
+    </txt>
     <div class="version">
       <inline-svg
         :src="require('@/assets/svg/andromeda-icon.svg')"
         aria-label="Andromeda"
       />
-      <p class="text--tiny">
-        <b>{{ versionName }} {{ versionBuild }}</b>
-      </p>
+      <txt type="tiny" bold> {{ versionName }} {{ versionBuild }} </txt>
     </div>
   </div>
 </template>
@@ -320,10 +321,6 @@ export default {
     }
   },
   methods: {
-    // -----------------------------
-    // General
-    // -----------------------------
-
     /**
      * Resets the app state.
      */
@@ -339,9 +336,11 @@ export default {
           await this.$axios.post("/.netlify/functions/reset-password", {
             email: this.email,
           });
-          this.open = false;
-          this.email = null;
           this.success = "An email has been sent successfully.";
+          setTimeout(() => {
+            this.open = false;
+            this.email = null;
+          }, 3000);
           this.$store.dispatch("endLoading");
         } catch (e) {
           this.$store.dispatch("endLoading");

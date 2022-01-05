@@ -16,17 +16,9 @@
 </template>
 
 <script>
-const Txt = () =>
-  import(
-    /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "@/components/elements/Txt"
-  );
-
 export default {
   props: {
     title: String,
-  },
-  components: {
-    Txt,
   },
 };
 </script>
