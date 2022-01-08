@@ -182,15 +182,6 @@ hr {
   height: 2rem;
 }
 
-/* Versioning */
-.version {
-  display: flex;
-  p {
-    margin-left: 0.2rem;
-    line-height: 1.65;
-  }
-}
-
 /* Fonts */
 h1,
 h2,

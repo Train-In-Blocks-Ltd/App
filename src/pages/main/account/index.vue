@@ -336,15 +336,7 @@
     </div>
     <br />
     <br />
-    <div class="version">
-      <inline-svg
-        :src="require('@/assets/svg/andromeda-icon.svg')"
-        aria-label="Andromeda"
-      />
-      <p class="text--tiny">
-        <b>{{ versionName }} {{ versionBuild }}</b>
-      </p>
-    </div>
+    <version-label />
   </div>
 </template>
 
@@ -353,6 +345,10 @@ import { mapState } from "vuex";
 const PreviewModal = () =>
   import(
     /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/PreviewModal"
+  );
+const VersionLabel = () =>
+  import(
+    /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
   );
 
 export default {
@@ -363,6 +359,7 @@ export default {
   },
   components: {
     PreviewModal,
+    VersionLabel,
   },
   async beforeRouteLeave(to, from, next) {
     if (

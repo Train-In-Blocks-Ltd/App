@@ -131,13 +131,6 @@ a {
   .cookies {
     margin: 2rem 0;
   }
-  .recovery {
-    margin-top: 6rem;
-    margin-bottom: 1rem;
-    > .txt_input {
-      margin-bottom: 1rem;
-    }
-  }
 }
 
 @media (max-width: 576px) {
@@ -178,18 +171,7 @@ a {
       <div class="info">testingaccount123</div>
     </div>
     <div id="okta-signin-container" />
-    <form v-if="open" class="recovery" @submit.prevent="reset">
-      <txt-input
-        label="Email:"
-        :value="email"
-        :info="success"
-        :error="error"
-        type="email"
-        @output="(data) => (email = data)"
-        focus-first
-      />
-      <default-button type="submit">Send recovery email</default-button>
-    </form>
+    <reset-password v-if="open" />
     <div class="other-options">
       <txt class="inline-link">
         Need an account?
@@ -212,19 +194,23 @@ a {
       <a href="https://traininblocks.com/legal/cookies-policy/">Cookie Policy</a
       >.
     </txt>
-    <div class="version">
-      <inline-svg
-        :src="require('@/assets/svg/andromeda-icon.svg')"
-        aria-label="Andromeda"
-      />
-      <txt type="tiny" bold> {{ versionName }} {{ versionBuild }} </txt>
-    </div>
+    <version-label />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Splash from "@/components/Splash";
+
+const ResetPassword = () =>
+  import(
+    /* webpackChunkName: "components.resetPassword", webpackPreload: true  */ "./components/ResetPassword"
+  );
+const VersionLabel = () =>
+  import(
+    /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
+  );
+
 const CUSTOM_ENV =
   process.env.NODE_ENV === "production"
     ? require("../../../../config/prod.env")
@@ -233,16 +219,15 @@ const CUSTOM_ENV =
 export default {
   components: {
     Splash,
+    ResetPassword,
+    VersionLabel,
   },
   data() {
     return {
       showDemo: false,
       splashed: false,
       open: false,
-      email: null,
       id: null,
-      error: null,
-      success: null,
     };
   },
   computed: mapState(["authenticated", "versionName", "versionBuild"]),
@@ -319,39 +304,6 @@ export default {
     if (this.$ga && !this.authenticated) {
       this.$ga.event("Auth", "login");
     }
-  },
-  methods: {
-    /**
-     * Resets the app state.
-     */
-    async reset() {
-      this.$store.commit("setData", {
-        attr: "dontLeave",
-        data: true,
-      });
-      this.error = null;
-      this.success = null;
-      if (this.email !== "demo@traininblocks.com") {
-        try {
-          await this.$axios.post("/.netlify/functions/reset-password", {
-            email: this.email,
-          });
-          this.success = "An email has been sent successfully.";
-          setTimeout(() => {
-            this.open = false;
-            this.email = null;
-          }, 3000);
-          this.$store.dispatch("endLoading");
-        } catch (e) {
-          this.$store.dispatch("endLoading");
-          this.error = "An error occurred. Are you sure your email is correct?";
-          console.error(e);
-        }
-      } else {
-        this.$store.dispatch("endLoading");
-        this.error = "You cannot reset the password for the demo account";
-      }
-    },
   },
 };
 </script>

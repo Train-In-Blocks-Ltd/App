@@ -81,6 +81,7 @@ export default {
     value: String,
     inputClass: String,
     labelClass: String,
+    infoClass: String,
     errorClass: String,
     type: String,
     rel: String,
