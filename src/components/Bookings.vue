@@ -114,11 +114,9 @@
         @click="(showAllBookings = false), willBodyScroll(true)"
       />
       <h2>All bookings</h2>
-      <div class="container">
+      <div class="container" v-if="getClientBookings(bookings).length !== 0">
         <div
-          v-for="(booking, bookingIndex) in bookings.filter(
-            (booking) => booking.client_id === clientId
-          )"
+          v-for="(booking, bookingIndex) in getClientBookings(bookings)"
           :key="`all_bookings_${bookingIndex}`"
           :class="{
             request: booking.status === 'Pending' && !isInThePast(booking),
@@ -179,6 +177,7 @@
           </div>
         </div>
       </div>
+      <txt v-else type="large-body" grey>No bookings yet</txt>
     </div>
     <h2>Bookings</h2>
     <skeleton
@@ -318,6 +317,9 @@ export default {
     // General
     // -----------------------------
 
+    getClientBookings(bookings) {
+      return bookings.filter((booking) => booking.client_id === this.clientId);
+    },
     checkForm() {
       this.disableCreateBookingButton = !(
         this.bookingForm.date &&
