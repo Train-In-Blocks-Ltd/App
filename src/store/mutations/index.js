@@ -8,11 +8,11 @@ import clientSide from "./client_side";
 const { merge } = require("webpack-merge");
 
 export default merge(
-  system,
-  templates,
-  products,
-  plans,
-  sessions,
-  bookings,
-  clientSide
+    system,
+    templates,
+    products,
+    plans,
+    sessions,
+    bookings,
+    clientSide
 );

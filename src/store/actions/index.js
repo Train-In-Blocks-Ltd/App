@@ -11,14 +11,14 @@ import clientSide from "./client_side";
 const { merge } = require("webpack-merge");
 
 export default merge(
-  system,
-  clients,
-  templates,
-  portfolio,
-  products,
-  account,
-  plans,
-  sessions,
-  bookings,
-  clientSide
+    system,
+    clients,
+    templates,
+    portfolio,
+    products,
+    account,
+    plans,
+    sessions,
+    bookings,
+    clientSide
 );

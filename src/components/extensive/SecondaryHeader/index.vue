@@ -1,24 +1,24 @@
 <style lang="scss" scoped>
 .secondary_header .top {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 </style>
 
 <template>
-  <div class="secondary_header">
-    <div class="top">
-      <txt type="subtitle">{{ title }}</txt>
-      <slot name="right" />
+    <div class="secondary_header">
+        <div class="top">
+            <txt type="subtitle">{{ title }}</txt>
+            <slot name="right" />
+        </div>
+        <slot name="under" />
     </div>
-    <slot name="under" />
-  </div>
 </template>
 
 <script>
 export default {
-  props: {
-    title: String,
-  },
+    props: {
+        title: String,
+    },
 };
 </script>
