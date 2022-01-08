@@ -26,12 +26,12 @@ loadProgressBar();
 Vue.prototype.$axios = axios;
 
 Vue.use(VueAnalytics, {
-  id: "UA-167770206-2",
-  router,
-  debug: {
-    sendHitTask: process.env.NODE_ENV === "production",
-  },
-  disabled: true,
+    id: "UA-167770206-2",
+    router,
+    debug: {
+        sendHitTask: process.env.NODE_ENV === "production",
+    },
+    disabled: true,
 });
 Vue.use(InlineSvgPlugin);
 Vue.use(VueMeta);
@@ -50,14 +50,14 @@ Vue.component("Wrapper", Wrapper);
 Vue.config.productionTip = false;
 
 Vue.mixin({
-  methods: mixins,
+    methods: mixins,
 });
 
 /* eslint-disable no-new */
 new Vue({
-  el: "#app",
-  router,
-  store,
-  components: { App },
-  template: "<App/>",
+    el: "#app",
+    router,
+    store,
+    components: { App },
+    template: "<App/>",
 });

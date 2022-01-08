@@ -3,75 +3,75 @@ import { Node, nodeInputRule, mergeAttributes } from "@tiptap/core";
 const inputRegex = /!\[(.+|:?)]\((\S+)(?:(?:\s+)["'](\S+)["'])?\)/;
 
 export default Node.create({
-  name: "image",
+    name: "image",
 
-  defaultOptions: {
-    inline: false,
-    HTMLAttributes: {},
-  },
+    defaultOptions: {
+        inline: false,
+        HTMLAttributes: {},
+    },
 
-  inline() {
-    return this.options.inline;
-  },
+    inline() {
+        return this.options.inline;
+    },
 
-  group() {
-    return this.options.inline ? "inline" : "block";
-  },
+    group() {
+        return this.options.inline ? "inline" : "block";
+    },
 
-  draggable: true,
+    draggable: true,
 
-  addAttributes() {
-    return {
-      src: {
-        default: null,
-      },
-      alt: {
-        default: null,
-      },
-      title: {
-        default: null,
-      },
-      loading: {
-        default: "lazy",
-      },
-    };
-  },
+    addAttributes() {
+        return {
+            src: {
+                default: null,
+            },
+            alt: {
+                default: null,
+            },
+            title: {
+                default: null,
+            },
+            loading: {
+                default: "lazy",
+            },
+        };
+    },
 
-  parseHTML() {
-    return [
-      {
-        tag: "img[src]",
-      },
-    ];
-  },
+    parseHTML() {
+        return [
+            {
+                tag: "img[src]",
+            },
+        ];
+    },
 
-  renderHTML({ HTMLAttributes }) {
-    return [
-      "img",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-    ];
-  },
+    renderHTML({ HTMLAttributes }) {
+        return [
+            "img",
+            mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+        ];
+    },
 
-  addCommands() {
-    return {
-      setImage:
-        (options) =>
-        ({ commands }) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: options,
-          });
-        },
-    };
-  },
+    addCommands() {
+        return {
+            setImage:
+                (options) =>
+                    ({ commands }) => {
+                        return commands.insertContent({
+                            type: this.name,
+                            attrs: options,
+                        });
+                    },
+        };
+    },
 
-  addInputRules() {
-    return [
-      nodeInputRule(inputRegex, this.type, (match) => {
-        const [, alt, src, title, loading] = match;
+    addInputRules() {
+        return [
+            nodeInputRule(inputRegex, this.type, (match) => {
+                const [, alt, src, title, loading] = match;
 
-        return { src, alt, title, loading };
-      }),
-    ];
-  },
+                return { src, alt, title, loading };
+            }),
+        ];
+    },
 });
