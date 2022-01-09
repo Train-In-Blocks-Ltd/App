@@ -1,62 +1,13 @@
-<style lang="scss">
-.link {
-    opacity: var(--light_opacity);
-    &.router-link-exact-active {
-        opacity: 1;
-        svg {
-            background: var(--base);
-            path {
-                fill: var(--fore);
-            }
-        }
-    }
-    &.router-link-exact-active:hover svg {
-        transition: none;
-        transform: none;
-    }
-}
-</style>
-
 <style lang="scss" scoped>
-.link {
-    display: flex;
-    height: fit-content;
-    height: -moz-fit-content;
-    text-decoration: none;
-    cursor: pointer;
-    margin: 0.6rem auto;
-    transition: var(--transition_standard);
-    &:hover {
-        opacity: 1;
-    }
-    &.refresh {
-        display: none;
-    }
-    .icon {
-        vertical-align: bottom;
-        padding: 0.2rem;
-        border-radius: 5px;
-        height: 1.8rem;
-        width: 1.8rem;
-        transition: var(--transition_standard);
-    }
+.router-link-exact-active {
+    opacity: 1;
+    transform: translateX(5px);
 }
 
 @media (max-width: 768px) {
-    .link {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        &.refresh {
-            display: flex;
-        }
-        &.router-link-exact-active {
-            background-color: var(--base);
-            border-radius: 10px 10px 0 0;
-        }
-        .icon {
-            margin: 0.8rem auto;
-        }
+    .router-link-exact-active {
+        opacity: 1;
+        transform: translateY(-5px);
     }
 }
 </style>
@@ -66,34 +17,35 @@
         v-if="internal && forUser.includes(claims.user_type)"
         :to="link"
         :title="name"
-        class="link"
+        :class="{ 'md:hidden': name === 'Refresh' }"
+        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all p-3 md:p-0"
     >
-        <inline-svg
-            :src="require(`@/assets/svg/${svg}.svg`)"
-            class="icon fadeIn"
-            :aria-label="name"
-        />
+        <icon :svg="svg" :icon-size="24" />
     </router-link>
     <a
         v-else
         :href="link"
         :title="name"
         @click="onClick()"
-        :class="{ refresh: name === 'Refresh' }"
-        class="link"
+        :class="{ 'md:hidden': name === 'Refresh' }"
+        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all p-3 md:p-0"
     >
-        <inline-svg
-            :src="require(`@/assets/svg/${svg}.svg`)"
-            class="icon fadeIn"
-            :aria-label="name"
-        />
+        <icon :svg="svg" :icon-size="24" />
     </a>
 </template>
 
 <script>
 import { mapState } from "vuex";
 
+const Icon = () =>
+    import(
+        /* webpackChunkName: "components.icon", webpackPreload: true  */ "@/components/elements/Icon"
+    );
+
 export default {
+    components: {
+        Icon,
+    },
     props: {
         internal: Boolean,
         name: String,
