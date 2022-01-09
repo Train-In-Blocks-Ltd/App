@@ -21,6 +21,7 @@ import App from "./App";
 import router from "./router";
 import { store } from "./store/store";
 import mixins from "./mixins";
+import "./assets/tailwind.css";
 loadProgressBar();
 
 Vue.prototype.$axios = axios;
