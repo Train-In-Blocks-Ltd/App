@@ -131,17 +131,6 @@ main {
     margin: 0;
 }
 
-/* SVG colors */
-svg {
-    path {
-        fill: var(--base);
-    }
-    &.no_fill path {
-        fill: none;
-        stroke: var(--base);
-    }
-}
-
 /* Other elements */
 hr {
     margin: 1rem 0;

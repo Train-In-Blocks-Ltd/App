@@ -1,68 +1,5 @@
-<style lang="scss" scoped>
-.template_options {
-    display: flex;
-    justify-content: space-between;
-    margin: 2rem 0;
-}
-.template_container {
-    display: grid;
-    grid-gap: 2rem;
-    margin: 2rem 0;
-    .template_wrapper__header {
-        display: flex;
-        justify-content: space-between;
-        span.newTemplate {
-            color: var(--base_red);
-        }
-        .header_options {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            .icon--expand {
-                cursor: pointer;
-                vertical-align: middle;
-                margin-top: 0.8rem;
-                transition: var(--transition_smooth);
-                &.expanded {
-                    transform: rotate(180deg);
-                }
-            }
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    .multi-select {
-        padding: 2rem;
-        width: 100%;
-        background-color: var(--fore);
-        box-shadow: var(--high_shadow);
-        a {
-            grid-template-columns: 1fr;
-        }
-        svg {
-            margin-left: auto;
-        }
-    }
-    .template_options
-        .template_container
-        .template_wrapper__header
-        .template-name {
-        width: 60%;
-    }
-}
-@media (max-width: 576px) {
-    .template_options
-        .template_container
-        .template_wrapper__header
-        .template-name {
-        width: 100%;
-    }
-}
-</style>
-
 <template>
-    <div id="templates" class="view_container">
+    <wrapper id="templates">
         <multiselect
             :type="'template'"
             :options="multiselectOptions"
@@ -75,23 +12,27 @@
             rel="search"
             placeholder="Find a template"
             aria-label="Find a template"
-            inputClass="text--small"
+            inputClass="text-2xl"
             style="margin-bottom: 2rem"
         />
-        <div class="template_options">
-            <button @click="createTemplate()">New Template</button>
+        <div class="flex justify-end items-center my-8">
             <a
                 v-if="templates && selectedTemplates.length < templates.length"
                 href="javascript:void(0)"
-                class="a_link select_all"
                 @click="selectAll()"
             >
-                Select all
+                <txt>Select all</txt>
             </a>
+            <icon-button
+                svg="plus-square"
+                :on-click="() => createTemplate()"
+                :icon-size="28"
+                class="ml-4"
+            />
         </div>
         <skeleton v-if="loading" :type="'session'" />
-        <div v-else-if="templates" class="template_container fadeIn">
-            <div
+        <div v-else-if="templates" class="grid gap-8 my-8">
+            <card-wrapper
                 v-for="(template, index) in templates"
                 v-show="
                     !search ||
@@ -99,49 +40,47 @@
                 "
                 :id="'template-' + template.id"
                 :key="index"
-                class="template_wrapper editor_object_complex fadeIn"
+                class="p-4 md:p-8"
             >
-                <div class="template_wrapper__header">
-                    <span
+                <div class="flex justify-between">
+                    <txt
                         v-if="template.id !== editTemplate"
-                        class="text--name"
                         :class="{
-                            newTemplate:
+                            'text-red-700':
                                 template.name == 'Untitled' &&
                                 !isEditingTemplate,
                         }"
+                        bold
                     >
-                        <b>
-                            {{ template.name }}
-                        </b>
-                    </span>
-                    <br v-if="template.id !== editTemplate" />
-                    <input
+                        {{ template.name }}
+                    </txt>
+                    <txt-input
                         v-if="template.id === editTemplate"
-                        v-model="template.name"
                         class="template-name small_border_radius right_margin"
                         type="text"
                         name="template-name"
                         pattern="[^\/]"
-                    /><br />
-                    <div class="header_options">
+                        :value="template.name"
+                        @output="(data) => (template.name = data)"
+                    />
+                    <div class="flex flex-col items-center">
                         <checkbox
                             :item-id="template.id"
                             :type="'v1'"
                             aria-label="Select this template"
                         />
-                        <inline-svg
+                        <icon-button
                             v-show="!isEditingTemplate"
-                            id="expand"
-                            class="icon--expand"
-                            :class="{
-                                expanded: expandedTemplates.includes(
-                                    template.id
-                                ),
-                            }"
-                            :src="require('@/assets/svg/expand.svg')"
-                            title="Info"
-                            @click="toggle_expanded_templates(template.id)"
+                            :svg="
+                                expandedTemplates.includes(template.id)
+                                    ? 'corner-right-up'
+                                    : 'corner-right-down'
+                            "
+                            :on-click="
+                                () => toggle_expanded_templates(template.id)
+                            "
+                            :icon-size="20"
+                            class="mt-2"
                         />
                     </div>
                 </div>
@@ -154,10 +93,10 @@
                     :force-stop="forceStop"
                     @on-edit-change="resolve_template_editor"
                 />
-            </div>
+            </card-wrapper>
         </div>
         <p v-else class="grey text--small">No templates yet :(</p>
-    </div>
+    </wrapper>
 </template>
 
 <script>
@@ -174,6 +113,10 @@ const Multiselect = () =>
     import(
         /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
     );
+const CardWrapper = () =>
+    import(
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+    );
 
 export default {
     metaInfo() {
@@ -185,6 +128,7 @@ export default {
         RichEditor,
         Checkbox,
         Multiselect,
+        CardWrapper,
     },
 
     async beforeRouteLeave(to, from, next) {
