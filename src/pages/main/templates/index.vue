@@ -15,12 +15,11 @@
             inputClass="text-2xl"
             style="margin-bottom: 2rem"
         />
-        <div class="flex justify-end items-center my-8">
-            <a
-                v-if="templates && selectedTemplates.length < templates.length"
-                href="javascript:void(0)"
-                @click="selectAll()"
-            >
+        <div
+            v-if="templates && selectedTemplates.length < templates.length"
+            class="flex justify-end items-center my-8"
+        >
+            <a href="javascript:void(0)" @click="selectAll()">
                 <txt>Select all</txt>
             </a>
             <icon-button
@@ -95,7 +94,7 @@
                 />
             </card-wrapper>
         </div>
-        <p v-else class="grey text--small">No templates yet :(</p>
+        <txt v-else type="large-body" grey>No templates yet :(</txt>
     </wrapper>
 </template>
 
