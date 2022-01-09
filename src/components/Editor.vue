@@ -578,27 +578,31 @@ div#rich_editor {
             />
         </p>
         <div v-if="editState" class="bottom_bar fadeIn">
-            <button
-                @click="
-                    (saving = true),
-                        (editState = false),
-                        $emit('on-edit-change', 'save', itemId),
-                        willBodyScroll(true)
+            <default-button
+                :on-click-prevent="
+                    () => {
+                        saving = true;
+                        editState = false;
+                        $emit('on-edit-change', 'save', itemId);
+                        willBodyScroll(true);
+                    }
                 "
             >
                 Save
-            </button>
-            <button
-                class="red_button"
-                @click="
-                    (saving = false),
-                        (editState = false),
-                        $emit('on-edit-change', 'cancel', itemId),
-                        willBodyScroll(true)
+            </default-button>
+            <default-button
+                theme="red"
+                :on-click-prevent="
+                    () => {
+                        saving = false;
+                        editState = false;
+                        $emit('on-edit-change', 'cancel', itemId);
+                        willBodyScroll(true);
+                    }
                 "
             >
                 Cancel
-            </button>
+            </default-button>
         </div>
     </div>
 </template>
