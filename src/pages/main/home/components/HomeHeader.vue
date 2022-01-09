@@ -49,11 +49,8 @@
                 "
             />
             <default-button
-                :on-click="
-                    () => {
-                        $store.dispatch('openModal', { name: 'new-client' });
-                        willBodyScroll(false);
-                    }
+                :on-click-prevent="
+                    () => $store.dispatch('openModal', { name: 'new-client' })
                 "
                 class="new_client_button"
             >
