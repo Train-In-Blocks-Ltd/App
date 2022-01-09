@@ -1,13 +1,5 @@
-<style lang="scss" scoped>
-.clients_list {
-    display: grid;
-    grid-gap: 2rem;
-    margin-bottom: 2rem;
-}
-</style>
-
 <template>
-    <div class="clients_list">
+    <div class="grid gap-8 mb-8">
         <!-- Perform case insensitive search -->
         <router-link
             v-for="(client, index) in clients"
@@ -21,7 +13,7 @@
             :id="'a' + client.client_id"
             :key="index"
             :to="'/client/' + client.client_id + '/'"
-            class="client_link_wrapper"
+            class="no-underline"
         >
             <client-link
                 :client="client"

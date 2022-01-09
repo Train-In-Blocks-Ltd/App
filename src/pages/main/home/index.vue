@@ -8,10 +8,10 @@
             <home-header />
             <clients-list />
         </div>
-        <p v-else class="text--holder text--small grey">
+        <txt v-else type="large-body" class="mt-8 mb-16" grey>
             No clients added yet, use the button on the top-right of your
             screen.
-        </p>
+        </txt>
     </wrapper>
 </template>
 
@@ -24,7 +24,7 @@ const HomeHeader = () =>
     );
 const ClientsList = () =>
     import(
-        /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "@/components/generic/ClientsList"
+        /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "./components/ClientsList"
     );
 
 export default {
