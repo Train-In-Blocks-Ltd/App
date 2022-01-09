@@ -1,14 +1,6 @@
 <style lang="scss" scoped>
 .router-link-exact-active {
     opacity: 1;
-    transform: translateX(5px);
-}
-
-@media (max-width: 768px) {
-    .router-link-exact-active {
-        opacity: 1;
-        transform: translateY(-5px);
-    }
 }
 </style>
 
