@@ -1,37 +1,24 @@
 <style lang="scss" scoped>
-.check {
-    cursor: pointer;
+.check svg {
     position: relative;
-    margin: auto;
-    width: 1rem;
-    height: 1rem;
-    -webkit-tap-highlight-color: transparent;
+    z-index: 1;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: var(--base);
+    stroke-width: 1.5;
     transform: translate3d(0, 0, 0);
-    svg {
-        position: relative;
-        z-index: 1;
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke: var(--base_faint);
-        stroke-width: 1.5;
-        transform: translate3d(0, 0, 0);
-        transition: all 0.2s ease;
-        path {
-            stroke-dasharray: 60;
-            stroke-dashoffset: 0;
-        }
-        polyline {
-            stroke-dasharray: 22;
-            stroke-dashoffset: 66;
-        }
+    transition: all 0.2s ease;
+    path {
+        stroke-dasharray: 60;
+        stroke-dashoffset: 0;
     }
-    &:hover {
-        svg {
-            stroke: var(--base);
-        }
+    polyline {
+        stroke-dasharray: 22;
+        stroke-dashoffset: 66;
     }
 }
+
 .checked_box:checked + .check svg {
     stroke: var(--base);
     path {
@@ -66,8 +53,16 @@
             style="display: none"
             @change="$parent.$parent.changeSelectCheckbox(itemId)"
         />
-        <label :for="`sc-${itemId}`" class="check">
-            <svg width="18px" height="18px" viewBox="0 0 18 18" class="no_fill">
+        <label
+            :for="`sc-${itemId}`"
+            class="check cursor-pointer relative m-auto w-4 h-4"
+        >
+            <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 18 18"
+                class="hover:opacity-60"
+            >
                 <path
                     d="M1,9 L1,3.5 C1,2 2,1 3.5,1 L14.5,1 C16,1 17,2 17,3.5 L17,14.5 C17,16 16,17 14.5,17 L3.5,17 C2,17 1,16 1,14.5 L1,9 Z"
                 />
