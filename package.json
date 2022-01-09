@@ -44,7 +44,6 @@
     "vue-inline-svg": "^2.0.0",
     "vue-meta": "^2.4.0",
     "vue-router": "^3.5.2",
-    "vue-ts-loader": "^0.0.3",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
