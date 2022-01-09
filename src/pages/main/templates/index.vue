@@ -185,46 +185,9 @@ export default {
         this.$store.dispatch("endLoading");
     },
     methods: {
-        // -----------------------------
-        // Background
-        // -----------------------------
-
-        /**
-         * Resolves template funtions.
-         * @param {string} type - The associated template action taken.
-         */
-        helper(type) {
-            switch (type) {
-                case "new":
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "New template created",
-                        description: "Edit and use it in a client's plan",
-                    });
-                    this.$ga.event("Template", "new");
-                    break;
-                case "update":
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "Updated template",
-                        description: "Your changes have been saved",
-                    });
-                    this.$ga.event("Template", "update");
-                    break;
-                case "delete":
-                    this.$store.dispatch("openResponsePopUp", {
-                        title:
-                            this.selectedTemplates.length > 1
-                                ? "Deleted templates"
-                                : "Deleted template",
-                        description: "Your changes have been saved",
-                    });
-                    this.$ga.event("Template", "delete");
-                    break;
-            }
-        },
-
         /**
          * Resolves the action taken from the multi-select.
-         * @param {string} res - The action taken.
+         * @param res - The action taken.
          */
         resolve_template_multiselect(res) {
             switch (res) {
@@ -239,8 +202,8 @@ export default {
 
         /**
          * Resolves the editor state before taking the corresponding action.
-         * @param {string} state - The returned state of the editor.
-         * @param {integer} id - The id of the template.
+         * @param state - The returned state of the editor.
+         * @param id - The id of the template.
          */
         resolve_template_editor(state, id) {
             const TEMPLATE = this.templates.find(
@@ -288,10 +251,6 @@ export default {
                 }
             });
         },
-
-        // -----------------------------
-        // Checkbox
-        // -----------------------------
 
         /**
          * Changes the state of the custom checkbox component.
@@ -360,7 +319,14 @@ export default {
                             this.selectedTemplates
                         );
                         this.$store.dispatch("endLoading");
-                        this.helper("delete");
+                        this.$store.dispatch("openResponsePopUp", {
+                            title:
+                                this.selectedTemplates.length > 1
+                                    ? "Deleted templates"
+                                    : "Deleted template",
+                            description: "Your changes have been saved",
+                        });
+                        this.$ga.event("Template", "delete");
                         this.deselectAll();
                     } catch (e) {
                         this.$parent.resolveError(e);
@@ -368,10 +334,6 @@ export default {
                 }
             }
         },
-
-        // -----------------------------
-        // Database
-        // -----------------------------
 
         /**
          * Creates a new template.
@@ -384,7 +346,11 @@ export default {
                 });
                 await this.$store.dispatch("newTemplate");
                 this.checkForNew();
-                this.helper("new");
+                this.$store.dispatch("openResponsePopUp", {
+                    title: "New template created",
+                    description: "Edit and use it in a client's plan",
+                });
+                this.$ga.event("Template", "new");
                 this.$store.dispatch("endLoading");
             } catch (e) {
                 this.$parent.resolveError(e);
@@ -402,7 +368,11 @@ export default {
                     data: true,
                 });
                 await this.$store.dispatch("updateTemplate", templateId);
-                this.helper("update");
+                this.$store.dispatch("openResponsePopUp", {
+                    title: "Updated template",
+                    description: "Your changes have been saved",
+                });
+                this.$ga.event("Template", "update");
                 this.$store.dispatch("endLoading");
             } catch (e) {
                 this.$parent.resolveError(e);

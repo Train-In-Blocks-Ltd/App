@@ -69,7 +69,7 @@
                     Okay
                 </default-button>
             </div>
-            <backdrop />
+            <backdrop v-if="responseBackdrop" />
         </div>
     </transition>
 </template>
