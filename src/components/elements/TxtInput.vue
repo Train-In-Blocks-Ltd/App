@@ -1,54 +1,10 @@
-<style lang="scss" scoped>
-.txt_input {
-    height: fit-content;
-    height: -moz-fit-content;
-    width: auto;
-    user-select: none;
-    cursor: pointer;
-    align-self: center;
-    input {
-        outline: none;
-        width: 100%;
-        padding: 0.6rem;
-        resize: none;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 1rem;
-        color: var(--base);
-        border: 2px solid var(--base_faint);
-        border-radius: 8px;
-        background-color: transparent;
-        box-shadow: none;
-        transition: var(--transition_standard);
-        &:not(select) {
-            -moz-appearance: none;
-            -webkit-appearance: none;
-        }
-        &:not(:focus):hover {
-            opacity: var(--light_opacity);
-        }
-        &:focus {
-            border: 2px solid var(--base);
-        }
-        &.small_border_radius {
-            border-radius: 5px;
-        }
-    }
-    .info {
-        margin-top: 0.4rem;
-    }
-    .error {
-        color: var(--base_red);
-        margin-top: 0.4rem;
-    }
-}
-</style>
-
 <template>
-    <div class="txt_input">
+    <div class="h-fit w-auto cursor-pointer self-center">
         <label v-if="label" :for="name" :class="labelClass">
             {{ label }}
         </label>
         <input
+            :id="inputId"
             :name="name"
             :value="value"
             :class="inputClass"
@@ -59,25 +15,39 @@
             :aria-label="ariaLabel"
             :pattern="pattern"
             :required="required"
+            class="w-full px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-200 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
             @input="handleInput"
         />
-        <txt v-if="info" type="tiny" class="info" :class="infoClass">{{
+        <txt v-if="info" type="tiny" class="mt-1" :class="infoClass">{{
             info
         }}</txt>
-        <txt v-if="error" type="tiny" class="error" :class="errorClass">{{
-            error
-        }}</txt>
+        <txt
+            v-if="error"
+            type="tiny"
+            class="text-red mt-1"
+            :class="errorClass"
+            >{{ error }}</txt
+        >
     </div>
 </template>
 
 <script>
+const Txt = () =>
+    import(
+        /* webpackChunkName: "components.txt", webpackPrefetch: true  */ "./Txt"
+    );
+
 export default {
+    components: {
+        Txt,
+    },
     props: {
-        inputRef: String,
         name: String,
+        inputId: String,
+        inputRef: String,
         label: String,
-        error: String,
         info: String,
+        error: String,
         value: String,
         inputClass: String,
         labelClass: String,
