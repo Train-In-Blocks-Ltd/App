@@ -15,7 +15,7 @@
 </style>
 
 <template>
-    <card-wrapper class="grid p-4 md:p-8 gap-4">
+    <card-wrapper class="grid p-4 md:p-8 gap-4" :no-hover="archive">
         <div class="flex">
             <div
                 v-if="client.profile_image"
@@ -46,6 +46,11 @@
                     </txt>
                 </div>
             </div>
+            <checkbox
+                v-if="archive"
+                :item-id="client.client_id"
+                class="ml-auto"
+            />
         </div>
         <div v-if="nextBooking.datetime">
             <txt bold> Next booking: </txt>
@@ -76,7 +81,6 @@
             class="preview_html"
             v-html="updateHTML(client.notes, true)"
         />
-        <checkbox v-if="archive" :item-id="client.client_id" class="mb-2" />
     </card-wrapper>
 </template>
 

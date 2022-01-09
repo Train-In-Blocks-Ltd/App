@@ -1,10 +1,3 @@
-<style lang="scss">
-.top_bar {
-    display: flex;
-    justify-content: space-between;
-}
-</style>
-
 <template>
     <div id="archive" class="view_container">
         <multiselect
@@ -13,8 +6,8 @@
             :selected="selectedIds"
             @response="resolveArchiveMultiselect"
         />
-        <div class="top_bar">
-            <h1>Archive</h1>
+        <div class="flex justify-between mb-4">
+            <txt type="title" is-main>Archive</txt>
             <a
                 v-if="
                     archive.clients.length !== 0 &&
@@ -32,13 +25,12 @@
                     }
                 "
             >
-                Select all
+                <txt>Select all</txt>
             </a>
         </div>
-        <br />
-        <p v-if="archive.clients.length === 0" class="text--small grey">
+        <txt v-if="archive.clients.length === 0" type="large-body" grey>
             No clients are archived
-        </p>
+        </txt>
         <div v-else>
             <txt-input
                 v-model="search"
