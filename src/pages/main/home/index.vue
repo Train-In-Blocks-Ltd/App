@@ -1,29 +1,10 @@
-<style lang="scss">
-.home--container {
-    display: grid;
-    margin-bottom: 2rem;
-}
-.skeleton_margin {
-    margin-bottom: 2rem;
-    &.shorter {
-        width: 40%;
-    }
-}
-
-@media (max-width: 768px) {
-    .home--container {
-        width: 100%;
-    }
-}
-</style>
-
 <template>
     <wrapper id="home">
         <div v-if="loading">
-            <skeleton :type="'input_large'" class="skeleton_margin" />
+            <skeleton :type="'input_large'" class="mb-8" />
             <skeleton :type="'client'" />
         </div>
-        <div v-else-if="!noClients" class="home--container">
+        <div v-else-if="!noClients" class="grid mb-8">
             <home-header />
             <clients-list />
         </div>
@@ -36,10 +17,7 @@
 
 <script>
 import { mapState } from "vuex";
-const Wrapper = () =>
-    import(
-        /* webpackChunkName: "components.wrapper", webpackPreload: true  */ "@/components/generic/Wrapper"
-    );
+
 const HomeHeader = () =>
     import(
         /* webpackChunkName: "components.homeHeader", webpackPreload: true  */ "./components/HomeHeader"
@@ -51,7 +29,6 @@ const ClientsList = () =>
 
 export default {
     components: {
-        Wrapper,
         ClientsList,
         HomeHeader,
     },

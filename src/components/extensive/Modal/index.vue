@@ -48,7 +48,7 @@
             <secondary-header :title="title()">
                 <template v-slot:right>
                     <icon-button
-                        svg="close"
+                        svg="x"
                         :on-click="() => $store.dispatch('closeModal')"
                         :icon-size="24"
                     />
