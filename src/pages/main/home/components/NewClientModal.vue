@@ -7,7 +7,6 @@
             () => {
                 createClient();
                 $store.dispatch('closeModal');
-                willBodyScroll(true);
             }
         "
     >

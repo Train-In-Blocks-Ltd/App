@@ -271,8 +271,8 @@ export default {
                                 (match) => {
                                     return n === exericseIdx
                                         ? `${exercise.exerciseName}: ${
-                                            exercise.progression[loc - 1]
-                                        }`
+                                              exercise.progression[loc - 1]
+                                          }`
                                         : match;
                                 }
                             );

@@ -49,12 +49,7 @@
                 <template v-slot:right>
                     <icon-button
                         svg="close"
-                        :on-click="
-                            () => {
-                                $store.dispatch('closeModal');
-                                willBodyScroll(true);
-                            }
-                        "
+                        :on-click="() => $store.dispatch('closeModal')"
                         :icon-size="24"
                     />
                 </template>
@@ -114,20 +109,26 @@ export default {
         "versionBuild",
         "versionName",
     ]),
+    watch: {
+        modalContent(val) {
+            if (val) document.body.style.overflow = "hidden";
+            else document.body.style.overflow = "auto";
+        },
+    },
     methods: {
         handleBackdropClick() {
             this.$store.dispatch("closeModal");
         },
         title() {
             switch (this.modalContent) {
-            case "new-client":
-                return "New Client";
-            case "whats-new":
-                return `${this.versionName} ${this.versionBuild}`;
-            case "install-pwa":
-                return "Save the app to your phone";
-            default:
-                return "";
+                case "new-client":
+                    return "New Client";
+                case "whats-new":
+                    return `${this.versionName} ${this.versionBuild}`;
+                case "install-pwa":
+                    return "Save the app to your phone";
+                default:
+                    return "";
             }
         },
     },

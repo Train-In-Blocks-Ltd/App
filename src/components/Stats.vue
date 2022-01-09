@@ -389,16 +389,16 @@ export default {
                  */
                 get calculate() {
                     switch (this.returnDataType) {
-                    case "Sets":
-                        return this.getSets(true);
-                    case "Reps":
-                        return this.getReps();
-                    case "Load":
-                        return this.getLoad();
-                    case "Volume":
-                        return this.getReps() * this.getLoad();
-                    case "Other":
-                        return this.getOtherMeasure();
+                        case "Sets":
+                            return this.getSets(true);
+                        case "Reps":
+                            return this.getReps();
+                        case "Load":
+                            return this.getLoad();
+                        case "Volume":
+                            return this.getReps() * this.getLoad();
+                        case "Other":
+                            return this.getOtherMeasure();
                     }
                 }
 
@@ -426,15 +426,15 @@ export default {
                                             ? parseFloat(setsMatch)
                                             : this.parent.largestValue <
                                               parseFloat(setsMatch)
-                                                ? parseFloat(setsMatch)
-                                                : this.parent.largestValue;
+                                            ? parseFloat(setsMatch)
+                                            : this.parent.largestValue;
                                     this.parent.smallestValue =
                                         this.parent.smallestValue === null
                                             ? parseFloat(setsMatch)
                                             : this.parent.smallestValue >
                                               parseFloat(setsMatch)
-                                                ? parseFloat(setsMatch)
-                                                : this.parent.smallestValue;
+                                            ? parseFloat(setsMatch)
+                                            : this.parent.smallestValue;
                                 }
                             }
                         });
@@ -473,15 +473,15 @@ export default {
                                         this.parent.largestValue === null
                                             ? LARGEST
                                             : this.parent.largestValue < LARGEST
-                                                ? LARGEST
-                                                : this.parent.largestValue;
+                                            ? LARGEST
+                                            : this.parent.largestValue;
                                     this.parent.smallestValue =
                                         this.parent.smallestValue === null
                                             ? SMALLEST
                                             : this.parent.smallestValue >
                                               SMALLEST
-                                                ? SMALLEST
-                                                : this.parent.smallestValue;
+                                            ? SMALLEST
+                                            : this.parent.smallestValue;
                                 } else {
                                     returnValue =
                                         parseFloat(repsMatch) * NUM_OF_SETS;
@@ -490,15 +490,15 @@ export default {
                                             ? parseFloat(repsMatch)
                                             : this.parent.largestValue <
                                               parseFloat(repsMatch)
-                                                ? parseFloat(repsMatch)
-                                                : this.parent.largestValue;
+                                            ? parseFloat(repsMatch)
+                                            : this.parent.largestValue;
                                     this.parent.smallestValue =
                                         this.parent.smallestValue === null
                                             ? parseFloat(repsMatch)
                                             : this.parent.smallestValue >
                                               parseFloat(repsMatch)
-                                                ? parseFloat(repsMatch)
-                                                : this.parent.smallestValue;
+                                            ? parseFloat(repsMatch)
+                                            : this.parent.smallestValue;
                                 }
                             }
                         });
@@ -536,15 +536,15 @@ export default {
                                         this.parent.largestValue === null
                                             ? LARGEST
                                             : this.parent.largestValue < LARGEST
-                                                ? LARGEST
-                                                : this.parent.largestValue;
+                                            ? LARGEST
+                                            : this.parent.largestValue;
                                     this.parent.smallestValue =
                                         this.parent.smallestValue === null
                                             ? SMALLEST
                                             : this.parent.smallestValue >
                                               SMALLEST
-                                                ? SMALLEST
-                                                : this.parent.smallestValue;
+                                            ? SMALLEST
+                                            : this.parent.smallestValue;
                                 } else {
                                     returnValue =
                                         parseFloat(loadMatch) * NUM_OF_SETS;
@@ -553,15 +553,15 @@ export default {
                                             ? parseFloat(loadMatch)
                                             : this.parent.largestValue <
                                               parseFloat(loadMatch)
-                                                ? parseFloat(loadMatch)
-                                                : this.parent.largestValue;
+                                            ? parseFloat(loadMatch)
+                                            : this.parent.largestValue;
                                     this.parent.smallestValue =
                                         this.parent.smallestValue === null
                                             ? parseFloat(loadMatch)
                                             : this.parent.smallestValue >
                                               parseFloat(loadMatch)
-                                                ? parseFloat(loadMatch)
-                                                : this.parent.smallestValue;
+                                            ? parseFloat(loadMatch)
+                                            : this.parent.smallestValue;
                                 }
                             }
                         });

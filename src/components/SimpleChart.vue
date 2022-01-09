@@ -300,20 +300,20 @@ export default {
 
                 get create() {
                     switch (this.outputType) {
-                    case "line":
-                        this.relativeToDate = false;
-                        this.makePoints(false);
-                        return {
-                            processedPoints: this.processedPoints,
-                            processedPaths: this.makePaths(),
-                        };
-                    case "scatter":
-                        this.relativeToDate = true;
-                        this.makePoints(false);
-                        return {
-                            processedPoints: this.makePoints(true),
-                            processedPaths: this.regression(),
-                        };
+                        case "line":
+                            this.relativeToDate = false;
+                            this.makePoints(false);
+                            return {
+                                processedPoints: this.processedPoints,
+                                processedPaths: this.makePaths(),
+                            };
+                        case "scatter":
+                            this.relativeToDate = true;
+                            this.makePoints(false);
+                            return {
+                                processedPoints: this.makePoints(true),
+                                processedPaths: this.regression(),
+                            };
                     }
                 }
 

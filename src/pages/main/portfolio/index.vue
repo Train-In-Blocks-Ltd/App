@@ -99,9 +99,9 @@ export default {
         if (
             this.dontLeave
                 ? await this.$parent.$refs.confirm_pop_up.show(
-                    "Your changes might not be saved",
-                    "Are you sure you want to leave?"
-                )
+                      "Your changes might not be saved",
+                      "Are you sure you want to leave?"
+                  )
                 : true
         ) {
             this.$store.commit("setData", {
@@ -146,30 +146,30 @@ export default {
          */
         resolve_portfolio_editor(state) {
             switch (state) {
-            case "edit":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.editingPortfolio = true;
-                this.tempEditorStore = this.portfolio.notes;
-                break;
-            case "save":
-                this.editingPortfolio = false;
-                this.updatePortfolio();
-                break;
-            case "cancel":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: false,
-                });
-                this.editingPortfolio = false;
-                this.$store.commit("setDataDeep", {
-                    attrParent: "portfolio",
-                    attrChild: "notes",
-                    data: this.tempEditorStore,
-                });
-                break;
+                case "edit":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: true,
+                    });
+                    this.editingPortfolio = true;
+                    this.tempEditorStore = this.portfolio.notes;
+                    break;
+                case "save":
+                    this.editingPortfolio = false;
+                    this.updatePortfolio();
+                    break;
+                case "cancel":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: false,
+                    });
+                    this.editingPortfolio = false;
+                    this.$store.commit("setDataDeep", {
+                        attrParent: "portfolio",
+                        attrChild: "notes",
+                        data: this.tempEditorStore,
+                    });
+                    break;
             }
         },
 

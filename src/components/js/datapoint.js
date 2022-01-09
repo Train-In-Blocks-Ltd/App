@@ -17,16 +17,16 @@ class DataPoint {
      */
     get calculate() {
         switch (this.returnDataType) {
-        case "sets":
-            return this.getSets();
-        case "reps":
-            return this.getReps();
-        case "load":
-            return this.getLoad();
-        case "volume":
-            return this.getReps() * this.getLoad();
-        case "other":
-            return this.getOtherMeasure();
+            case "sets":
+                return this.getSets();
+            case "reps":
+                return this.getReps();
+            case "load":
+                return this.getLoad();
+            case "volume":
+                return this.getReps() * this.getLoad();
+            case "other":
+                return this.getOtherMeasure();
         }
     }
 
@@ -73,14 +73,14 @@ class DataPoint {
                             this.parent.largestValue === null
                                 ? LARGEST
                                 : this.parent.largestValue < LARGEST
-                                    ? LARGEST
-                                    : this.parent.largestValue;
+                                ? LARGEST
+                                : this.parent.largestValue;
                         this.parent.smallestValue =
                             this.parent.smallestValue === null
                                 ? SMALLEST
                                 : this.parent.smallestValue > SMALLEST
-                                    ? SMALLEST
-                                    : this.parent.smallestValue;
+                                ? SMALLEST
+                                : this.parent.smallestValue;
                     } else {
                         returnValue = parseFloat(repsMatch) * NUM_OF_SETS;
                         this.parent.largestValue =
@@ -88,15 +88,15 @@ class DataPoint {
                                 ? parseFloat(repsMatch)
                                 : this.parent.largestValue <
                                   parseFloat(repsMatch)
-                                    ? parseFloat(repsMatch)
-                                    : this.parent.largestValue;
+                                ? parseFloat(repsMatch)
+                                : this.parent.largestValue;
                         this.parent.smallestValue =
                             this.parent.smallestValue === null
                                 ? parseFloat(repsMatch)
                                 : this.parent.smallestValue >
                                   parseFloat(repsMatch)
-                                    ? parseFloat(repsMatch)
-                                    : this.parent.smallestValue;
+                                ? parseFloat(repsMatch)
+                                : this.parent.smallestValue;
                     }
                 }
             });
@@ -127,14 +127,14 @@ class DataPoint {
                             this.parent.largestValue === null
                                 ? LARGEST
                                 : this.parent.largestValue < LARGEST
-                                    ? LARGEST
-                                    : this.parent.largestValue;
+                                ? LARGEST
+                                : this.parent.largestValue;
                         this.parent.smallestValue =
                             this.parent.smallestValue === null
                                 ? SMALLEST
                                 : this.parent.smallestValue > SMALLEST
-                                    ? SMALLEST
-                                    : this.parent.smallestValue;
+                                ? SMALLEST
+                                : this.parent.smallestValue;
                     } else {
                         returnValue = parseFloat(loadMatch) * NUM_OF_SETS;
                         this.parent.largestValue =
@@ -142,15 +142,15 @@ class DataPoint {
                                 ? parseFloat(loadMatch)
                                 : this.parent.largestValue <
                                   parseFloat(loadMatch)
-                                    ? parseFloat(loadMatch)
-                                    : this.parent.largestValue;
+                                ? parseFloat(loadMatch)
+                                : this.parent.largestValue;
                         this.parent.smallestValue =
                             this.parent.smallestValue === null
                                 ? parseFloat(loadMatch)
                                 : this.parent.smallestValue >
                                   parseFloat(loadMatch)
-                                    ? parseFloat(loadMatch)
-                                    : this.parent.smallestValue;
+                                ? parseFloat(loadMatch)
+                                : this.parent.smallestValue;
                     }
                 }
             });

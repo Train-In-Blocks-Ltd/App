@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "kill": "taskkill /F /IM node.exe",
-    "start": "netlify dev",
-    "webpack:start": "cross-env NODE_ENV=development webpack serve --config build/webpack.dev.conf.js",
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js",
+    "lint": "eslint --ext .js,.vue src --fix",
     "build:report": "cross-env NODE_ENV=production REPORT=true webpack --config build/webpack.prod.conf.js --progress",
     "debug": "netlify dev --inspect --debug",
     "format": "prettier --write \"*.{vue,ts,tsx,js,jsx}\" \"src/**/*.{vue,ts,tsx,js,jsx}\"",
-    "lint": "eslint --ext .js,.vue src --fix",
+    "kill": "taskkill /F /IM node.exe",
+    "prepare": "husky install",
+    "start": "netlify dev",
     "test": "jest --watchAll --coverage",
-    "prepare": "husky install"
+    "webpack:start": "cross-env NODE_ENV=development webpack serve --config build/webpack.dev.conf.js"
   },
   "dependencies": {
     "@okta/okta-auth-js": "^4.7.2",
@@ -38,6 +38,7 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "querystring": "^0.2.0",
     "stripe": "^8.165.0",
+    "ts-loader": "^9.2.6",
     "vue": "^2.6.14",
     "vue-analytics": "^5.22.1",
     "vue-inline-svg": "^2.0.0",
@@ -50,7 +51,9 @@
     "@babel/eslint-parser": "^7.14.7",
     "@nuxtjs/eslint-config": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
+    "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "^4.5.13",
+    "@vue/eslint-config-typescript": "^10.0.0",
     "@vue/preload-webpack-plugin": "^2.0.0",
     "autoprefixer": "9.8.6",
     "babel-loader": "8.2.2",
@@ -89,6 +92,7 @@
     "shelljs": "^0.8.4",
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^20.0.0",
+    "typescript": "~4.1.5",
     "vue-loader": "^15.9.6",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.14",
@@ -99,15 +103,12 @@
     "webpack-merge": "^5.7.3",
     "workbox-webpack-plugin": "^6.1.5"
   },
-  "engines": {
-    "node": ">= 10.0.0",
-    "npm": ">= 7.0.0"
-  },
   "browserslist": [
     "last 20 versions and not ie <= 11 and > 0.2% and not dead and not op_mini all"
   ],
-  "resolutions": {
-    "prosemirror-model": "1.14.3"
+  "engines": {
+    "node": ">= 10.0.0",
+    "npm": ">= 7.0.0"
   },
   "husky": {
     "hooks": {
@@ -119,5 +120,8 @@
       "npm run format",
       "npm run lint"
     ]
+  },
+  "resolutions": {
+    "prosemirror-model": "1.14.3"
   }
 }

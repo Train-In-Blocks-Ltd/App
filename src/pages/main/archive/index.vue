@@ -123,15 +123,15 @@ export default {
          */
         resolveArchiveMultiselect(res) {
             switch (res) {
-            case "Unarchive":
-                this.unarchiveClients();
-                break;
-            case "Delete":
-                this.deleteClients();
-                break;
-            case "Deselect":
-                this.deselectAll();
-                break;
+                case "Unarchive":
+                    this.unarchiveClients();
+                    break;
+                case "Delete":
+                    this.deleteClients();
+                    break;
+                case "Deselect":
+                    this.deselectAll();
+                    break;
             }
         },
 

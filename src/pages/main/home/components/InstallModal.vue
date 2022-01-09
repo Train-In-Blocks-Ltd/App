@@ -115,44 +115,46 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapState } from "vuex";
 
-export default {
+export default Vue.extend({
     computed: mapState(["pwa"]),
     methods: {
         handleInstall() {
             // Show the install prompt
             this.pwa.deferredPrompt.prompt();
+
             // Wait for the user to respond to the prompt
-            this.pwa.deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === "accepted") {
-                    // Hide the app provided install promotion
-                    this.$store.commit("setDataDeep", {
-                        attrParent: "pwa",
-                        attrChild: "canInstall",
-                        data: false,
-                    });
-                    this.$store.commit("setDataDeep", {
-                        attrParent: "pwa",
-                        attrChild: "displayMode",
-                        data: "standalone",
-                    });
-                } else {
-                    this.$store.commit("setDataDeep", {
-                        attrParent: "pwa",
-                        attrChild: "canInstall",
-                        data: true,
-                    });
+            this.pwa.deferredPrompt.userChoice.then(
+                (choiceResult: { outcome: string }) => {
+                    if (choiceResult.outcome === "accepted") {
+                        // Hide the app provided install promotion
+                        this.$store.commit("setDataDeep", {
+                            attrParent: "pwa",
+                            attrChild: "canInstall",
+                            data: false,
+                        });
+                        this.$store.commit("setDataDeep", {
+                            attrParent: "pwa",
+                            attrChild: "displayMode",
+                            data: "standalone",
+                        });
+                    } else {
+                        this.$store.commit("setDataDeep", {
+                            attrParent: "pwa",
+                            attrChild: "canInstall",
+                            data: true,
+                        });
+                    }
                 }
-            });
+            );
             this.$store.dispatch("closeModal");
-            this.willBodyScroll(true);
+        },
+        handleClose() {
+            this.$store.dispatch("closeModal");
         },
     },
-    handleClose() {
-        $store.dispatch("closeModal");
-        willBodyScroll(true);
-    },
-};
+});
 </script>

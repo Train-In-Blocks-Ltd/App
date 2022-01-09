@@ -927,9 +927,9 @@ export default {
         if (
             this.dontLeave
                 ? await this.$parent.$parent.$refs.confirm_pop_up.show(
-                    "Your changes might not be saved",
-                    "Are you sure you want to leave?"
-                )
+                      "Your changes might not be saved",
+                      "Are you sure you want to leave?"
+                  )
                 : true
         ) {
             this.$store.commit("setData", {
@@ -1082,15 +1082,15 @@ export default {
 
         checkForm(type) {
             switch (type) {
-            case "move":
-                this.disableMoveButton = !this.moveTarget;
-                break;
-            case "shift":
-                this.disableShiftButton = !this.shiftDays;
-                break;
-            case "duplicate":
-                this.disableDuplicatePlanButton = !this.duplicateClientID;
-                break;
+                case "move":
+                    this.disableMoveButton = !this.moveTarget;
+                    break;
+                case "shift":
+                    this.disableShiftButton = !this.shiftDays;
+                    break;
+                case "duplicate":
+                    this.disableDuplicatePlanButton = !this.duplicateClientID;
+                    break;
             }
         },
 
@@ -1100,40 +1100,40 @@ export default {
          */
         resolve_session_multiselect(res) {
             switch (res) {
-            case "Complete":
-                this.bulkCheck(1);
-                break;
-            case "Incomplete":
-                this.bulkCheck(0);
-                break;
-            case "Progress":
-                this.showProgress = true;
-                this.willBodyScroll(false);
-                break;
-            case "Duplicate":
-                this.duplicate();
-                this.deselectAll();
-                break;
-            case "Move":
-                this.showMove = true;
-                this.willBodyScroll(false);
-                this.updater();
-                break;
-            case "Shift":
-                this.showShift = true;
-                this.willBodyScroll(false);
-                this.updater();
-                break;
-            case "Print":
-                this.print();
-                break;
-            case "Delete":
-                this.bulkDelete();
-                this.updater();
-                break;
-            case "Deselect":
-                this.deselectAll();
-                break;
+                case "Complete":
+                    this.bulkCheck(1);
+                    break;
+                case "Incomplete":
+                    this.bulkCheck(0);
+                    break;
+                case "Progress":
+                    this.showProgress = true;
+                    this.willBodyScroll(false);
+                    break;
+                case "Duplicate":
+                    this.duplicate();
+                    this.deselectAll();
+                    break;
+                case "Move":
+                    this.showMove = true;
+                    this.willBodyScroll(false);
+                    this.updater();
+                    break;
+                case "Shift":
+                    this.showShift = true;
+                    this.willBodyScroll(false);
+                    this.updater();
+                    break;
+                case "Print":
+                    this.print();
+                    break;
+                case "Delete":
+                    this.bulkDelete();
+                    this.updater();
+                    break;
+                case "Deselect":
+                    this.deselectAll();
+                    break;
             }
         },
 
@@ -1143,31 +1143,31 @@ export default {
          */
         resolvePlanInfoEditor(state) {
             switch (state) {
-            case "edit":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.editingPlanNotes = true;
-                this.tempEditorStore = this.plan.notes;
-                break;
-            case "save":
-                this.editingPlanNotes = false;
-                this.updatePlan();
-                break;
-            case "cancel":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: false,
-                });
-                this.editingPlanNotes = false;
-                this.$store.commit("updatePlanAttr", {
-                    clientId: this.clientDetails.client_id,
-                    planId: this.plan.id,
-                    attr: "notes",
-                    data: this.tempEditorStore,
-                });
-                break;
+                case "edit":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: true,
+                    });
+                    this.editingPlanNotes = true;
+                    this.tempEditorStore = this.plan.notes;
+                    break;
+                case "save":
+                    this.editingPlanNotes = false;
+                    this.updatePlan();
+                    break;
+                case "cancel":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: false,
+                    });
+                    this.editingPlanNotes = false;
+                    this.$store.commit("updatePlanAttr", {
+                        clientId: this.clientDetails.client_id,
+                        planId: this.plan.id,
+                        attr: "notes",
+                        data: this.tempEditorStore,
+                    });
+                    break;
             }
         },
 
@@ -1184,40 +1184,40 @@ export default {
                 id
             );
             switch (state) {
-            case "edit":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.isEditingSession = true;
-                this.editSession = id;
-                this.forceStop += 1;
-                this.tempEditorStore = SESSION.notes;
-                this.goToEvent(SESSION.id, SESSION.week_id);
-                break;
-            case "save":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.isEditingSession = false;
-                this.editSession = null;
-                this.updateSession(id);
-                this.$store("openResponsePopUp", {
-                    title: "Session updated",
-                    description: "Your changes have been saved",
-                });
-                this.$store.dispatch("endLoading");
-                break;
-            case "cancel":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: false,
-                });
-                this.isEditingSession = false;
-                this.editSession = null;
-                SESSION.notes = this.tempEditorStore;
-                break;
+                case "edit":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: true,
+                    });
+                    this.isEditingSession = true;
+                    this.editSession = id;
+                    this.forceStop += 1;
+                    this.tempEditorStore = SESSION.notes;
+                    this.goToEvent(SESSION.id, SESSION.week_id);
+                    break;
+                case "save":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: true,
+                    });
+                    this.isEditingSession = false;
+                    this.editSession = null;
+                    this.updateSession(id);
+                    this.$store("openResponsePopUp", {
+                        title: "Session updated",
+                        description: "Your changes have been saved",
+                    });
+                    this.$store.dispatch("endLoading");
+                    break;
+                case "cancel":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: false,
+                    });
+                    this.isEditingSession = false;
+                    this.editSession = null;
+                    SESSION.notes = this.tempEditorStore;
+                    break;
             }
         },
 

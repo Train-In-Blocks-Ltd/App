@@ -361,21 +361,21 @@ export default {
                     );
                     if (RESULT.data.length > 0) {
                         switch (RESULT.data[0].status) {
-                        case "ACTIVE":
-                            this.clientAlready = true;
-                            this.clientAlreadyMsg = "User activated";
-                            break;
-                        case "PROVISIONED":
-                        case "RECOVERY":
-                            this.clientAlready = false;
-                            this.clientAlreadyMsg =
+                            case "ACTIVE":
+                                this.clientAlready = true;
+                                this.clientAlreadyMsg = "User activated";
+                                break;
+                            case "PROVISIONED":
+                            case "RECOVERY":
+                                this.clientAlready = false;
+                                this.clientAlreadyMsg =
                                     "Resend activation email";
-                            break;
-                        case "SUSPENDED":
-                            this.clientSuspend = RESULT.data[0].id;
-                            this.clientAlready = false;
-                            this.clientAlreadyMsg = "Give Access";
-                            break;
+                                break;
+                            case "SUSPENDED":
+                                this.clientSuspend = RESULT.data[0].id;
+                                this.clientAlready = false;
+                                this.clientAlreadyMsg = "Give Access";
+                                break;
                         }
                     } else {
                         this.clientAlready = false;

@@ -322,9 +322,9 @@ export default {
         if (
             this.dontLeave
                 ? await this.$parent.$refs.confirm_pop_up.show(
-                    "Your changes might not be saved",
-                    "Are you sure you want to leave?"
-                )
+                      "Your changes might not be saved",
+                      "Are you sure you want to leave?"
+                  )
                 : true
         ) {
             this.$store.commit("setData", {
@@ -395,27 +395,27 @@ export default {
                 }
             });
             switch (state) {
-            case "edit":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.feedbackId = id;
-                this.forceStop += 1;
-                this.tempEditorStore = session.feedback;
-                break;
-            case "save":
-                this.feedbackId = null;
-                this.$parent.updateClientSideSession(plan.id, session.id);
-                break;
-            case "cancel":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: false,
-                });
-                this.feedbackId = null;
-                session.feedback = this.tempEditorStore;
-                break;
+                case "edit":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: true,
+                    });
+                    this.feedbackId = id;
+                    this.forceStop += 1;
+                    this.tempEditorStore = session.feedback;
+                    break;
+                case "save":
+                    this.feedbackId = null;
+                    this.$parent.updateClientSideSession(plan.id, session.id);
+                    break;
+                case "cancel":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: false,
+                    });
+                    this.feedbackId = null;
+                    session.feedback = this.tempEditorStore;
+                    break;
             }
         },
 
