@@ -198,9 +198,7 @@
         <checkbox
             v-if="archive"
             :item-id="client.client_id"
-            :type="'v2'"
             class="select_checkbox"
-            aria-label="Select this client"
         />
     </card-wrapper>
 </template>

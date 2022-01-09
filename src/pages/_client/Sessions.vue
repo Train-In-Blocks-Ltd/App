@@ -362,7 +362,7 @@
                         $route.params.id
                     )
                 "
-                :sessions-to-progress="selectedSessions"
+                :sessions-to-progress="selectedIds"
                 :current-week="currentWeek"
                 :max-week="maxWeek"
             />
@@ -422,7 +422,7 @@
         <multiselect
             :type="'session'"
             :options="multiselectOption"
-            :selected="selectedSessions"
+            :selected="selectedIds"
             @response="resolve_session_multiselect"
         />
         <preview-modal
@@ -653,7 +653,7 @@
                                 <a
                                     v-if="
                                         !noSessions &&
-                                        selectedSessions.length <
+                                        selectedIds.length <
                                             plan.sessions.length &&
                                         !weekIsEmpty
                                     "
@@ -666,7 +666,7 @@
                                 <a
                                     v-if="
                                         !noSessions &&
-                                        selectedSessions.length <
+                                        selectedIds.length <
                                             plan.sessions.length &&
                                         !weekIsEmpty
                                     "
@@ -816,8 +816,6 @@
                                                 </button>
                                                 <checkbox
                                                     :item-id="session.id"
-                                                    :type="'v1'"
-                                                    aria-label="Select this session"
                                                 />
                                             </div>
                                             <inline-svg
@@ -1000,7 +998,6 @@ export default {
             moveTarget: 1,
             shiftDays: 1,
             duplicateClientID: null,
-            selectedSessions: [],
 
             // STATS
 
@@ -1020,6 +1017,9 @@ export default {
         };
     },
     computed: {
+        selectedIds() {
+            return this.$store.state.selectedIds;
+        },
         loading() {
             return this.$store.state.loading;
         },
@@ -1112,7 +1112,10 @@ export default {
                     break;
                 case "Duplicate":
                     this.duplicate();
-                    this.deselectAll();
+                    this.$store.commit("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                     break;
                 case "Move":
                     this.showMove = true;
@@ -1132,7 +1135,10 @@ export default {
                     this.updater();
                     break;
                 case "Deselect":
-                    this.deselectAll();
+                    this.$store.commit("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                     break;
             }
         },
@@ -1245,7 +1251,7 @@ export default {
                 CLIENT_ID,
                 PLAN_ID
             ).sessions;
-            this.selectedSessions.forEach((sessionId) => {
+            this.selectedIds.forEach((sessionId) => {
                 TO_DUPLICATE.push(
                     SESSIONS.find((session) => session.id === sessionId)
                 );
@@ -1266,7 +1272,7 @@ export default {
             this.$ga.event("Session", "duplicate");
             this.$store.dispatch("openResponsePopUp", {
                 title: `${
-                    this.selectedSessions.length > 1 ? "Sessions" : "Session"
+                    this.selectedIds.length > 1 ? "Sessions" : "Session"
                 } duplicated`,
                 description: "Get programming!",
             });
@@ -1282,7 +1288,7 @@ export default {
                 return new Date(a.date) - new Date(b.date);
             });
             this.plan.sessions.forEach((session) => {
-                if (this.selectedSessions.includes(session.id)) {
+                if (this.selectedIds.includes(session.id)) {
                     NOTES_ARR.push(
                         `<div class="session"><h2>${session.name}</h2><h3>${
                             session.date
@@ -1298,7 +1304,10 @@ export default {
             NEW_WINDOW.stop();
             NEW_WINDOW.print();
             this.$ga.event("Plan", "print");
-            this.deselectAll();
+            this.$store.commit("setData", {
+                attr: "selectedIds",
+                data: [],
+            });
         },
 
         /**
@@ -1310,7 +1319,7 @@ export default {
                 data: true,
             });
             this.plan.sessions.forEach((session) => {
-                if (this.selectedSessions.includes(session.id)) {
+                if (this.selectedIds.includes(session.id)) {
                     this.$store.commit("updateSessionAttr", {
                         clientId: this.$route.params.client_id,
                         planId: this.$route.params.id,
@@ -1323,16 +1332,19 @@ export default {
                     });
                 }
             });
-            this.batchUpdateSession(this.selectedSessions);
+            this.batchUpdateSession(this.selectedIds);
             this.$store.dispatch("openResponsePopUp", {
                 title:
-                    this.selectedSessions.length > 1
+                    this.selectedIds.length > 1
                         ? "Shifted sessions"
                         : "Shifted session",
                 description: "Your changes have been saved",
             });
             this.shiftDays = 1;
-            this.deselectAll();
+            this.$store.commit("setData", {
+                attr: "selectedIds",
+                data: [],
+            });
             this.$ga.event("Session", "shift");
             this.$store.dispatch("endLoading");
         },
@@ -1346,7 +1358,7 @@ export default {
                 data: true,
             });
             this.plan.sessions.forEach((session) => {
-                if (this.selectedSessions.includes(session.id)) {
+                if (this.selectedIds.includes(session.id)) {
                     this.$store.commit("updateSessionAttr", {
                         clientId: this.$route.params.client_id,
                         planId: this.$route.params.id,
@@ -1356,17 +1368,20 @@ export default {
                     });
                 }
             });
-            this.batchUpdateSession(this.selectedSessions);
+            this.batchUpdateSession(this.selectedIds);
             this.currentWeek = parseInt(this.moveTarget);
             this.$store.dispatch("openResponsePopUp", {
                 title:
-                    this.selectedSessions.length > 1
+                    this.selectedIds.length > 1
                         ? "Moved sessions"
                         : "Moved session",
                 description: "Your changes have been saved",
             });
             this.moveTarget = 1;
-            this.deselectAll();
+            this.$store.commit("setData", {
+                attr: "selectedIds",
+                data: [],
+            });
             this.$ga.event("Session", "move");
             this.$store.dispatch("endLoading");
         },
@@ -1384,7 +1399,7 @@ export default {
                 attr: "dontLeave",
                 data: true,
             });
-            if (this.selectedSessions.length !== 0) {
+            if (this.selectedIds.length !== 0) {
                 if (
                     await this.$parent.$parent.$refs.confirm_pop_up.show(
                         `Are you sure that you want to ${
@@ -1394,7 +1409,7 @@ export default {
                     )
                 ) {
                     this.plan.sessions.forEach((session) => {
-                        if (this.selectedSessions.includes(session.id)) {
+                        if (this.selectedIds.includes(session.id)) {
                             this.$store.commit("updateSessionAttr", {
                                 clientId: this.$route.params.client_id,
                                 planId: this.$route.params.id,
@@ -1404,15 +1419,18 @@ export default {
                             });
                         }
                     });
-                    this.batchUpdateSession(this.selectedSessions);
+                    this.batchUpdateSession(this.selectedIds);
                     this.$store.dispatch("openResponsePopUp", {
                         title:
-                            this.selectedSessions.length > 1
+                            this.selectedIds.length > 1
                                 ? "Sessions updated"
                                 : "Session updated",
                         description: "Your changes have been saved",
                     });
-                    this.deselectAll();
+                    this.$store.commit("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                 }
             }
             this.$store.dispatch("endLoading");
@@ -1426,7 +1444,7 @@ export default {
                 attr: "dontLeave",
                 data: true,
             });
-            if (this.selectedSessions.length !== 0) {
+            if (this.selectedIds.length !== 0) {
                 if (
                     await this.$parent.$parent.$refs.confirm_pop_up.show(
                         "Are you sure that you want to delete all the selected sessions?",
@@ -1437,19 +1455,22 @@ export default {
                         await this.$store.dispatch("deleteSession", {
                             clientId: this.$route.params.client_id,
                             planId: this.$route.params.id,
-                            sessionIds: this.selectedSessions,
+                            sessionIds: this.selectedIds,
                         });
                     } catch (e) {
                         this.$parent.$parent.resolveError(e);
                     }
                     this.checkForWeekSessions();
-                    this.deselectAll();
+                    this.$store.commit("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                     this.expandAll("Collapse");
                     this.updater();
                     this.$ga.event("Session", "delete");
                     this.$store.dispatch("openResponsePopUp", {
                         title:
-                            this.selectedSessions.length > 1
+                            this.selectedIds.length > 1
                                 ? "Sessions deleted"
                                 : "Session deleted",
                         description: "Your changes have been saved",
@@ -1462,49 +1483,19 @@ export default {
 
         /**
          * Selects all the sessions in the plan or week.
-         * @param {string} mode - To select all session or all sessions in the current week ('all' or 'week').
+         * @param mode - To select all session or all sessions in the current week ('all' or 'week').
          */
         selectAll(mode) {
-            this.plan.sessions.forEach((session) => {
-                if (!this.selectedSessions.includes(session.id)) {
-                    if (mode === "all") {
-                        document.getElementById(
-                            `sc-${session.id}`
-                        ).checked = true;
-                        this.selectedSessions.push(session.id);
-                    } else if (
-                        mode === "week" &&
-                        session.week_id === this.currentWeek
-                    ) {
-                        document.getElementById(
-                            `sc-${session.id}`
-                        ).checked = true;
-                        this.selectedSessions.push(session.id);
-                    }
-                }
+            this.$store.commit("setData", {
+                attr: "selectedIds",
+                data: this.plan.sessions
+                    .filter((session) =>
+                        mode === "all"
+                            ? true
+                            : session.week_id === this.currentWeek
+                    )
+                    .map((session) => session.id),
             });
-        },
-
-        /**
-         * Deselects all the sessions.
-         */
-        deselectAll() {
-            this.selectedSessions.forEach((id) => {
-                document.getElementById(`sc-${id}`).checked = false;
-            });
-            this.selectedSessions = [];
-        },
-
-        /**
-         * Toggles the state of the custom checkbox component.
-         */
-        changeSelectCheckbox(id) {
-            if (!this.selectedSessions.includes(id)) {
-                this.selectedSessions.push(id);
-            } else {
-                const IDX = this.selectedSessions.indexOf(id);
-                this.selectedSessions.splice(IDX, 1);
-            }
         },
 
         /**

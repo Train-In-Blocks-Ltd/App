@@ -36,25 +36,15 @@
 <template>
     <div>
         <input
-            v-if="type === 'v1'"
-            :id="`sc-${itemId}`"
-            :name="`sc-${itemId}`"
+            :id="`checkbox-${itemId}`"
+            :name="`checkbox-${itemId}`"
             class="checked_box"
             type="checkbox"
             style="display: none"
-            @change="$parent.changeSelectCheckbox(itemId)"
-        />
-        <input
-            v-else-if="type === 'v2'"
-            :id="`sc-${itemId}`"
-            :name="`sc-${itemId}`"
-            class="checked_box"
-            type="checkbox"
-            style="display: none"
-            @change="$parent.$parent.changeSelectCheckbox(itemId)"
+            @change="$store.dispatch('toggleCheckbox', itemId)"
         />
         <label
-            :for="`sc-${itemId}`"
+            :for="`checkbox-${itemId}`"
             class="check cursor-pointer relative m-auto w-4 h-4"
         >
             <svg
@@ -73,10 +63,17 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
     props: {
         itemId: [Number, Boolean],
-        type: String,
+    },
+    computed: mapState(["selectedIds"]),
+    watch: {
+        selectedIds(val) {
+            document.getElementById(`checkbox-${this.itemId}`).checked =
+                val.includes(this.itemId);
+        },
     },
 };
 </script>

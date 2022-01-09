@@ -3,7 +3,7 @@
         <multiselect
             :type="'template'"
             :options="multiselectOptions"
-            :selected="selectedTemplates"
+            :selected="selectedIds"
             @response="resolve_template_multiselect"
         />
         <txt-input
@@ -16,10 +16,20 @@
             style="margin-bottom: 2rem"
         />
         <div
-            v-if="templates && selectedTemplates.length < templates.length"
+            v-if="templates && selectedIds.length < templates.length"
             class="flex justify-end items-center my-8"
         >
-            <a href="javascript:void(0)" @click="selectAll()">
+            <a
+                href="javascript:void(0)"
+                @click="
+                    () => {
+                        $store.commit('setData', {
+                            attr: 'selectedIds',
+                            data: templates.map((template) => template.id),
+                        });
+                    }
+                "
+            >
                 <txt>Select all</txt>
             </a>
             <icon-button
@@ -63,11 +73,7 @@
                         @output="(data) => (template.name = data)"
                     />
                     <div class="flex flex-col items-center">
-                        <checkbox
-                            :item-id="template.id"
-                            :type="'v1'"
-                            aria-label="Select this template"
-                        />
+                        <checkbox :item-id="template.id" />
                         <icon-button
                             v-show="!isEditingTemplate"
                             :svg="
@@ -170,11 +176,10 @@ export default {
                 { name: "Delete", svg: "svg/bin.svg" },
                 { name: "Deselect", svg: null },
             ],
-            selectedTemplates: [],
             expandedTemplates: [],
         };
     },
-    computed: mapState(["loading", "dontLeave", "templates"]),
+    computed: mapState(["loading", "dontLeave", "templates", "selectedIds"]),
     async created() {
         this.$store.commit("setData", {
             attr: "loading",
@@ -195,7 +200,10 @@ export default {
                     this.deleteMultiTemplates();
                     break;
                 case "Deselect":
-                    this.deselectAll();
+                    this.$store.commit("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                     break;
             }
         },
@@ -253,19 +261,6 @@ export default {
         },
 
         /**
-         * Changes the state of the custom checkbox component.
-         * @param {integer} id - The id of the template.
-         */
-        changeSelectCheckbox(id) {
-            if (!this.selectedTemplates.includes(id)) {
-                this.selectedTemplates.push(id);
-            } else {
-                const TEMPLATE_INDEX = this.selectedTemplates.indexOf(id);
-                this.selectedTemplates.splice(TEMPLATE_INDEX, 1);
-            }
-        },
-
-        /**
          * Expands the main body of the template.
          * @param {integer} id - The id of the template.
          */
@@ -280,29 +275,8 @@ export default {
             }
         },
 
-        /**
-         * Selects all templates.
-         */
-        selectAll() {
-            this.templates.forEach((template) => {
-                if (!this.selectedTemplates.includes(template.id)) {
-                    this.selectedTemplates.push(template.id);
-                    document.getElementById(`sc-${template.id}`).checked = true;
-                }
-            });
-        },
-
-        /**
-         * Deselects all templates.
-         */
-        deselectAll() {
-            this.templates.forEach((template) => {
-                document.getElementById(`sc-${template.id}`).checked = false;
-            });
-            this.selectedTemplates = [];
-        },
         async deleteMultiTemplates() {
-            if (this.selectedTemplates.length !== 0) {
+            if (this.selectedIds.length !== 0) {
                 if (
                     await this.$parent.$refs.confirm_pop_up.show(
                         "Are you sure you want to delete all the selected templates?",
@@ -316,18 +290,21 @@ export default {
                         });
                         await this.$store.dispatch(
                             "deleteTemplate",
-                            this.selectedTemplates
+                            this.selectedIds
                         );
                         this.$store.dispatch("endLoading");
                         this.$store.dispatch("openResponsePopUp", {
                             title:
-                                this.selectedTemplates.length > 1
+                                this.selectedIds.length > 1
                                     ? "Deleted templates"
                                     : "Deleted template",
                             description: "Your changes have been saved",
                         });
                         this.$ga.event("Template", "delete");
-                        this.deselectAll();
+                        this.$store.commit("setData", {
+                            attr: "selectedIds",
+                            data: [],
+                        });
                     } catch (e) {
                         this.$parent.resolveError(e);
                     }

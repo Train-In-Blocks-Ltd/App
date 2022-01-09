@@ -190,4 +190,13 @@ export default {
             data: RESPONSE.data[5],
         });
     },
+
+    toggleCheckbox({ state, commit }, id) {
+        commit("setData", {
+            attr: "selectedIds",
+            data: !state.selectedIds.includes(id)
+                ? [...state.selectedIds, id]
+                : state.selectedIds.filter((selectedId) => selectedId !== id),
+        });
+    },
 };

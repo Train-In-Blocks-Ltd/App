@@ -19,6 +19,9 @@ export default {
     responsePersist: false,
     responseBackdrop: false,
 
+    // Selection
+    selectedIds: [],
+
     // System
 
     search: "",

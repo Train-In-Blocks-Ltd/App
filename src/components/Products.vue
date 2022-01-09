@@ -197,7 +197,7 @@
         <multiselect
             :type="'product'"
             :options="multiselectOptions"
-            :selected="selectedProducts"
+            :selected="selectedIds"
             @response="resolveProductsMultiselect"
         />
         <div
@@ -344,14 +344,21 @@
                 v-else-if="
                     products !== null &&
                     products.length !== 0 &&
-                    selectedProducts.length < products.length
+                    selectedIds.length < products.length
                 "
                 class="options fadeIn"
             >
                 <a
                     href="javascript:void(0)"
                     class="a_link select_all"
-                    @click="selectAll()"
+                    @click="
+                        () => {
+                            $store.commit('setData', {
+                                attr: 'selectedIds',
+                                data: products.map((product) => product.id),
+                            });
+                        }
+                    "
                 >
                     Select all
                 </a>
@@ -407,11 +414,7 @@
                         @blur="resolveIfProductChanged(product)"
                         @input="product.name = $event.target.value"
                     />
-                    <checkbox
-                        :item-id="product.id"
-                        :type="'v1'"
-                        aria-label="Select this product"
-                    />
+                    <checkbox :item-id="product.id" />
                 </div>
                 <div class="product_pricing">
                     <select
@@ -492,6 +495,7 @@
 
 <script>
 import { mapState } from "vuex";
+
 const Checkbox = () =>
     import(
         /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "../components/Checkbox"
@@ -518,7 +522,6 @@ export default {
             },
             disableCreateProductButton: true,
             productChanged: false,
-            selectedProducts: [],
             multiselectOptions: [
                 { name: "Delete", svg: "svg/bin.svg" },
                 { name: "Deselect", svg: null },
@@ -532,6 +535,7 @@ export default {
         "products",
         "claims",
         "isStripeConnected",
+        "selectedIds",
     ]),
     methods: {
         // -----------------------------
@@ -548,10 +552,6 @@ export default {
             );
         },
 
-        // -----------------------------
-        // Checkbox
-        // -----------------------------
-
         /**
          * Resolves the action taken from the product multi-select.
          * @param {string} res - The action taken.
@@ -562,7 +562,10 @@ export default {
                     this.deleteProducts();
                     break;
                 case "Deselect":
-                    this.deselectAll();
+                    this.$store.dispatch("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                     break;
             }
         },
@@ -585,45 +588,6 @@ export default {
                 }
             }
         },
-
-        /**
-         * Toggles the state of the custom checkbox component.
-         * @param {integer} id - The id of the product.
-         */
-        changeSelectCheckbox(id) {
-            if (!this.selectedProducts.includes(id)) {
-                this.selectedProducts.push(id);
-            } else {
-                const PRODUCT_INDEX = this.selectedProducts.indexOf(id);
-                this.selectedProducts.splice(PRODUCT_INDEX, 1);
-            }
-        },
-
-        /**
-         * Selects all the products.
-         */
-        selectAll() {
-            this.products.forEach((product) => {
-                if (!this.selectedProducts.includes(product.id)) {
-                    this.selectedProducts.push(product.id);
-                    document.getElementById(`sc-${product.id}`).checked = true;
-                }
-            });
-        },
-
-        /**
-         * Deselects all the products.
-         */
-        deselectAll() {
-            this.products.forEach((product) => {
-                document.getElementById(`sc-${product.id}`).checked = false;
-            });
-            this.selectedProducts = [];
-        },
-
-        // -----------------------------
-        // Database
-        // -----------------------------
 
         /**
          * Creates a new product.
@@ -686,9 +650,12 @@ export default {
                     });
                     await this.$store.dispatch(
                         "deleteProduct",
-                        this.selectedProducts
+                        this.selectedIds
                     );
-                    this.deselectAll();
+                    this.$store.dispatch("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                     this.$store.dispatch("endLoading");
                 } catch (e) {
                     this.$parent.$parent.resolveError(e);
