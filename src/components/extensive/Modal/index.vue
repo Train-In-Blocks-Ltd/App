@@ -57,6 +57,9 @@
             <new-client-modal v-if="modalContent === 'new-client'" />
             <whats-new-modal v-else-if="modalContent === 'whats-new'" />
             <install-modal v-else-if="modalContent === 'install-pwa'" />
+            <reset-password-modal
+                v-else-if="modalContent === 'reset-password'"
+            />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -92,6 +95,10 @@ const InstallModal = () =>
     import(
         /* webpackChunkName: "components.installModal", webpackPrefetch: true  */ "@/pages/main/home/components/InstallModal"
     );
+const ResetPasswordModal = () =>
+    import(
+        /* webpackChunkName: "components.resetPasswordModal", webpackPrefetch: true  */ "@/pages/main/account/components/ResetPasswordModal"
+    );
 
 export default {
     components: {
@@ -101,6 +108,7 @@ export default {
         NewClientModal,
         WhatsNewModal,
         InstallModal,
+        ResetPasswordModal,
     },
     computed: mapState([
         "modalSize",
@@ -127,6 +135,8 @@ export default {
                     return `${this.versionName} ${this.versionBuild}`;
                 case "install-pwa":
                     return "Save the app to your phone";
+                case "reset-password":
+                    return "Reset password";
                 default:
                     return "";
             }

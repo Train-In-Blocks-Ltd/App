@@ -7,80 +7,6 @@
             :show-brackets="true"
             @close="(previewDesc = null), (previewHTML = null)"
         />
-        <div
-            :class="{ opened_sections: showPasswordReset }"
-            class="section_overlay"
-        />
-        <form
-            v-if="showPasswordReset"
-            class="form_grid tab_overlay_content fadeIn delay fill_mode_both"
-            @submit.prevent="changePassword()"
-        >
-            <div>
-                <h2>Stay safe</h2>
-                <h3 class="grey">Reset your password</h3>
-            </div>
-            <input
-                ref="pass"
-                :value="password.old"
-                type="password"
-                placeholder="Current password"
-                aria-label="Current password"
-                class="input--forms width_300 small_border_radius"
-                required
-                @input="(password.old = $event.target.value), checkForm()"
-            />
-            <div>
-                <h3>Requirements</h3>
-                <p class="grey">Number (0-9)</p>
-                <p class="grey">At least 8 characters</p>
-                <p class="grey">Can't contain your username</p>
-            </div>
-            <input
-                v-model="password.new"
-                type="password"
-                placeholder="New password"
-                aria-label="New password"
-                class="input--forms width_300 small_border_radius"
-                :class="{ check: password.check }"
-                required
-                @input="checkPassword(), checkForm()"
-            />
-            <input
-                v-model="password.match"
-                type="password"
-                placeholder="Confirm new password"
-                aria-label="Confirm new password"
-                class="input--forms width_300 small_border_radius"
-                :class="{ check: password.new !== password.match }"
-                required
-                @input="checkPassword(), checkForm()"
-            />
-            <div class="reset_password_button_bar">
-                <button
-                    class="right_margin"
-                    type="submit"
-                    :disabled="
-                        disableChangePasswordButton ||
-                        password.check ||
-                        password.new !== password.match
-                    "
-                >
-                    Change your password
-                </button>
-                <button
-                    class="red_button"
-                    @click.prevent="
-                        (showPasswordReset = false), willBodyScroll(true)
-                    "
-                >
-                    Close
-                </button>
-            </div>
-            <p v-if="password.error" class="error">
-                {{ password.error }}
-            </p>
-        </form>
         <txt type="title" is-main>Your Account</txt>
         <div v-if="claims" class="grid md:grid-cols-2 gap-16 mt-8">
             <div>
@@ -97,7 +23,12 @@
                         Manage Subscription
                     </default-button>
                     <default-button
-                        :on-click-prevent="() => (showPasswordReset = true)"
+                        :on-click="
+                            () =>
+                                $store.dispatch('openModal', {
+                                    name: 'reset-password',
+                                })
+                        "
                     >
                         Change Password
                     </default-button>
@@ -251,15 +182,6 @@ export default {
     },
     data() {
         return {
-            showPasswordReset: false,
-            password: {
-                old: null,
-                new: null,
-                match: null,
-                check: null,
-                error: null,
-            },
-            disableChangePasswordButton: true,
             calendarText: "Get your calendar link",
             calendarGuides: [
                 {
@@ -328,15 +250,6 @@ export default {
                 this.previewHTML = require("@/components/legal/eula.md").html;
             }
         },
-        checkForm() {
-            this.disableChangePasswordButton = !(
-                this.password.old &&
-                this.password.new &&
-                this.password.match &&
-                !this.password.check &&
-                !this.password.error
-            );
-        },
 
         /**
          * Redirects the user to their Stripe management page.
@@ -352,64 +265,6 @@ export default {
                 window.location.href = RESPONSE.data;
             } catch (e) {
                 this.$parent.resolveError(e);
-            }
-        },
-
-        /**
-         * Validates the password.
-         */
-        checkPassword() {
-            const SELF = this;
-            function requirements() {
-                return (
-                    SELF.password.new.match(/[0-9]+/) !== null &&
-                    SELF.password.new.length >= 8 &&
-                    SELF.password.old.length >= 1
-                );
-            }
-            if (requirements() === false) {
-                this.password.check = true;
-                this.password.error = "Please check the requirements";
-            } else if (this.password.new !== this.password.match) {
-                this.password.check = true;
-                this.password.error = "New password does not match";
-            } else {
-                this.password.check = false;
-                this.password.error = "";
-            }
-        },
-
-        /**
-         * Changes the password.
-         */
-        async changePassword() {
-            try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.password.error = "";
-                await this.$store.dispatch("changePassword", {
-                    old: this.password.old,
-                    new: this.password.new,
-                });
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Password changed",
-                    description: "Remember to not share it and keep it safe",
-                });
-                this.showPasswordReset = false;
-                this.willBodyScroll(true);
-                this.password = {
-                    old: null,
-                    new: null,
-                    match: null,
-                    check: null,
-                    error: null,
-                };
-                this.$store.dispatch("endLoading");
-            } catch (e) {
-                this.password.error =
-                    "Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements";
             }
         },
 

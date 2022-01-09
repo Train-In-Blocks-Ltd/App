@@ -24,7 +24,7 @@
         <txt
             v-if="error"
             type="tiny"
-            class="text-red mt-1"
+            class="text-red-700 mt-1"
             :class="errorClass"
             >{{ error }}</txt
         >
