@@ -1,126 +1,5 @@
-<style lang="scss" scoped>
-@mixin setting-section {
-    display: grid;
-    grid-gap: 1rem;
-}
-.details_container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2rem;
-    margin-top: 2rem;
-    .details {
-        @include setting-section;
-
-        margin-bottom: 3rem;
-        .user-settings-button-bar {
-            display: flex;
-            > div:first-child {
-                margin-right: 1rem;
-            }
-        }
-    }
-    .theme {
-        @include setting-section;
-
-        margin-bottom: 3rem;
-    }
-    .referral {
-        @include setting-section;
-        button {
-            width: fit-content;
-            width: -moz-fit-content;
-        }
-    }
-    .calendar {
-        @include setting-section;
-
-        margin-bottom: 3rem;
-        button {
-            width: fit-content;
-            width: -moz-fit-content;
-        }
-        .guide_links {
-            display: grid;
-            grid-gap: 0.6rem;
-            margin: 1rem 0;
-            a {
-                display: inline;
-                font-weight: bold;
-            }
-        }
-    }
-    .privacy {
-        @include setting-section;
-        .policy_links {
-            display: grid;
-            grid-gap: 0.6rem;
-            margin: 1rem 0;
-            a {
-                display: inline;
-                font-weight: bold;
-            }
-        }
-    }
-}
-.form__options {
-    display: flex;
-    label {
-        margin: auto 0;
-    }
-    .allow-cookies {
-        align-self: center;
-    }
-}
-.check {
-    border-color: red;
-    outline-color: red;
-}
-.error {
-    color: red;
-}
-.reset_password_button_bar {
-    display: flex;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .details_container {
-        grid-template-columns: 1fr;
-        grid-gap: 3rem;
-    }
-}
-@media (max-width: 768px) {
-    .policies:hover {
-        opacity: 1;
-    }
-}
-@media (max-width: 576px) {
-    .reset_password_button_bar,
-    .details_container button {
-        width: 100%;
-    }
-    .reset_password_button_bar {
-        display: grid;
-        grid-gap: 1rem;
-    }
-}
-@media (max-width: 425px) {
-    .details_container {
-        .details {
-            .user-settings-button-bar {
-                display: grid;
-                grid-gap: 1rem;
-                > div:first-child {
-                    margin-right: 0;
-                }
-            }
-        }
-    }
-}
-</style>
-
 <template>
-    <div v-if="claims" id="account" class="view_container">
+    <wrapper v-if="claims" id="account">
         <preview-modal
             :desc="previewDesc"
             :html="previewHTML"
@@ -202,45 +81,34 @@
                 {{ password.error }}
             </p>
         </form>
-        <h1>Your Account</h1>
-        <div v-if="claims" class="details_container">
+        <txt type="title" is-main>Your Account</txt>
+        <div v-if="claims" class="grid md:grid-cols-2 gap-16 mt-8">
             <div>
-                <div class="details">
-                    <h3>General settings</h3>
-                    <p style="margin-bottom: 1rem">
-                        <b>Email: </b>{{ claims.email }}
-                    </p>
-                    <div class="user-settings-button-bar">
-                        <div
-                            v-if="
-                                claims.user_type != 'Client' ||
-                                claims.user_type == 'Admin'
-                            "
-                        >
-                            <button @click.prevent="manageSubscription()">
-                                Manage Subscription
-                            </button>
-                        </div>
-                        <div>
-                            <button
-                                @click.prevent="
-                                    (showPasswordReset = true),
-                                        willBodyScroll(false)
-                                "
-                            >
-                                Change Password
-                            </button>
-                        </div>
-                    </div>
+                <div class="grid gap-4 mb-12">
+                    <txt type="large-body" bold>General settings</txt>
+                    <txt class="mb-4"><b>Email: </b>{{ claims.email }}</txt>
+                    <default-button
+                        v-if="
+                            claims.user_type != 'Client' ||
+                            claims.user_type == 'Admin'
+                        "
+                        :on-click-prevent="() => manageSubscription()"
+                    >
+                        Manage Subscription
+                    </default-button>
+                    <default-button
+                        :on-click-prevent="() => (showPasswordReset = true)"
+                    >
+                        Change Password
+                    </default-button>
                 </div>
-                <div class="theme">
-                    <label for="theme" class="text--small">
-                        <b> Theme </b>
+                <div class="grid gap-4 mb-12">
+                    <label for="theme">
+                        <txt type="large-body" bold>Theme</txt>
                     </label>
                     <select
                         v-model="claims.theme"
                         name="theme"
-                        class="width_300"
                         @change="
                             $parent.darkmode(claims.theme), $parent.saveClaims()
                         "
@@ -250,119 +118,98 @@
                         <option value="dark">Dark</option>
                     </select>
                 </div>
-                <div class="referral">
-                    <h3>Referral Code</h3>
-                    <p>
+                <div class="grid gap-4">
+                    <txt type="large-body" bold>Referral Code</txt>
+                    <txt>
                         <b>Earn up to 15% off!</b> You'll receive a 5% discount
                         for each referral you make, up to a maximum of 15% off.
                         Each person you refer will also receive 20% off their
                         first month too. It's a win-win!
-                    </p>
-                    <button
+                    </txt>
+                    <default-button
                         v-if="!coupon.generated"
-                        @click.prevent="generateCoupon()"
+                        :on-click-prevent="() => generateCoupon()"
                     >
                         Generate Coupon
-                    </button>
-                    <button
+                    </default-button>
+                    <default-button
                         v-else
-                        @click.prevent="copyCoupon()"
+                        :on-click-prevent="() => copyCoupon()"
                         v-html="coupon.code"
                     />
                 </div>
             </div>
             <div>
-                <div class="calendar">
-                    <label for="calendar" class="text--small">
-                        <b> Calendar </b>
+                <div class="grid gap-4 mb-12">
+                    <txt type="large-body" bold>Calendar</txt>
+                    <label>
+                        Enable calendar link:
+                        <input
+                            v-model="claims.calendar"
+                            class="claims-calendar"
+                            type="checkbox"
+                            @change="$parent.saveClaims()"
+                        />
                     </label>
-                    <div>
-                        <div class="form__options">
-                            <label>
-                                Enable calendar link:
-                                <input
-                                    v-model="claims.calendar"
-                                    class="claims-calendar"
-                                    type="checkbox"
-                                    @change="$parent.saveClaims()"
-                                />
-                            </label>
-                        </div>
-                        <p class="text--tiny">
-                            Anyone with the link will be able to see all of your
-                            bookings
-                        </p>
-                    </div>
-                    <div v-if="claims.calendar" class="guide_links">
-                        <p
+                    <txt type="tiny">
+                        Anyone with the link will be able to see all of your
+                        bookings
+                    </txt>
+                    <div v-if="claims.calendar" class="grid gap-2 my-4">
+                        <a
                             v-for="(guide, guideIndex) in calendarGuides"
                             :key="`cal_${guideIndex}`"
+                            :href="guide.link"
+                            target="_blank"
+                            rel="noreferrer"
+                            class=""
                         >
-                            <a
-                                :href="guide.link"
-                                target="_blank"
-                                rel="noreferrer"
-                                class="a_link"
-                            >
-                                Add to {{ guide.name }} calendar
-                            </a>
-                        </p>
+                            <txt bold>Add to {{ guide.name }} calendar</txt>
+                        </a>
                     </div>
-                    <button
+                    <default-button
                         v-if="claims.calendar"
-                        @click.prevent="copyCalendarLink()"
+                        :on-click-prevent="() => copyCalendarLink()"
                         v-html="calendarText"
                     />
                 </div>
-                <div class="privacy">
-                    <h3>Your Privacy and Data</h3>
-                    <p>
+                <div class="grid gap-4">
+                    <txt type="large-body" bold>Your Privacy and Data</txt>
+                    <txt>
                         You can find more information about our policies below:
-                    </p>
-                    <div class="policy_links">
-                        <p
+                    </txt>
+                    <div class="grid gap-2 my-4">
+                        <a
                             v-for="(policy, policyIndex) in policies"
                             :key="`policy_${policyIndex}`"
+                            :href="policy.link"
+                            target="_blank"
+                            rel="noreferrer"
                         >
-                            <a
-                                :href="policy.link"
-                                target="_blank"
-                                rel="noreferrer"
-                                class="a_link"
-                            >
-                                <b>
-                                    {{ policy.title }}
-                                </b>
-                            </a>
-                        </p>
-                        <p>
-                            <a
-                                href="javascript:void(0)"
-                                class="a_link"
-                                @click="openEULA"
-                            >
-                                EULA
-                            </a>
-                        </p>
+                            <txt bold>
+                                {{ policy.title }}
+                            </txt>
+                        </a>
+                        <a href="javascript:void(0)" @click="openEULA">
+                            <txt bold>EULA</txt>
+                        </a>
                     </div>
-                    <div class="form__options">
-                        <label>
-                            Allow Third Party Cookies:
-                            <input
-                                v-model="claims.ga"
-                                class="allow-cookies"
-                                type="checkbox"
-                                @change="$parent.saveClaims()"
-                            />
-                        </label>
-                    </div>
+                    <label class="flex items-center">
+                        Allow Third Party Cookies:
+                        <input
+                            v-model="claims.ga"
+                            type="checkbox"
+                            @change="$parent.saveClaims()"
+                            class="ml-4"
+                        />
+                    </label>
                 </div>
             </div>
         </div>
         <br />
         <br />
         <version-label />
-    </div>
+    </wrapper>
 </template>
 
 <script>
@@ -473,10 +320,6 @@ export default {
         }/.netlify/functions/calendar?email=${this.claims.email}`;
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         openEULA() {
             if (this.claims.user_type === "Client") {
                 this.previewHTML =
@@ -511,10 +354,6 @@ export default {
                 this.$parent.resolveError(e);
             }
         },
-
-        // -----------------------------
-        // Password
-        // -----------------------------
 
         /**
          * Validates the password.
