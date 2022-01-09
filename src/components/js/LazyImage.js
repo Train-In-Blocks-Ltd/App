@@ -56,12 +56,12 @@ export default Node.create({
         return {
             setImage:
                 (options) =>
-                    ({ commands }) => {
-                        return commands.insertContent({
-                            type: this.name,
-                            attrs: options,
-                        });
-                    },
+                ({ commands }) => {
+                    return commands.insertContent({
+                        type: this.name,
+                        attrs: options,
+                    });
+                },
         };
     },
 

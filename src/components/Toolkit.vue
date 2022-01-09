@@ -220,122 +220,122 @@ export default {
          */
         calculate(cal) {
             switch (cal) {
-            case "mhr_tanaka": {
-                this.result =
+                case "mhr_tanaka": {
+                    this.result =
                         220 -
                         Number(
                             document.getElementById("input_age_tanaka").value
                         );
-                break;
-            }
-            case "mhr_gelish": {
-                this.result = (
-                    220 -
+                    break;
+                }
+                case "mhr_gelish": {
+                    this.result = (
+                        220 -
                         0.7 *
                             Number(
                                 document.getElementById("input_age_gelish")
                                     .value
                             )
-                ).toFixed(2);
-                break;
-            }
-            case "hrr": {
-                const MAX_HR = Number(
-                    document.getElementById("input_mhr_hrr").value
-                );
-                const RESTING_HR = Number(
-                    document.getElementById("input_rhr_hrr").value
-                );
-                this.result = MAX_HR - RESTING_HR;
-                break;
-            }
-            case "hrtz": {
-                const INTENSITY_ZONE_1 = Number(
-                    document.getElementById("input_intensity_1").value / 100
-                );
-                const INTENSITY_ZONE_2 = Number(
-                    document.getElementById("input_intensity_2").value / 100
-                );
-                const MAX_HR = Number(
-                    document.getElementById("input_mhr_hrtz").value
-                );
-                const RESTING_HR = Number(
-                    document.getElementById("input_rhr_hrtz").value
-                );
-                this.result = `${(
-                    INTENSITY_ZONE_1 * (MAX_HR - RESTING_HR) +
+                    ).toFixed(2);
+                    break;
+                }
+                case "hrr": {
+                    const MAX_HR = Number(
+                        document.getElementById("input_mhr_hrr").value
+                    );
+                    const RESTING_HR = Number(
+                        document.getElementById("input_rhr_hrr").value
+                    );
+                    this.result = MAX_HR - RESTING_HR;
+                    break;
+                }
+                case "hrtz": {
+                    const INTENSITY_ZONE_1 = Number(
+                        document.getElementById("input_intensity_1").value / 100
+                    );
+                    const INTENSITY_ZONE_2 = Number(
+                        document.getElementById("input_intensity_2").value / 100
+                    );
+                    const MAX_HR = Number(
+                        document.getElementById("input_mhr_hrtz").value
+                    );
+                    const RESTING_HR = Number(
+                        document.getElementById("input_rhr_hrtz").value
+                    );
+                    this.result = `${(
+                        INTENSITY_ZONE_1 * (MAX_HR - RESTING_HR) +
                         RESTING_HR
-                ).toFixed(2)}–${(
-                    INTENSITY_ZONE_2 * (MAX_HR - RESTING_HR) +
+                    ).toFixed(2)}–${(
+                        INTENSITY_ZONE_2 * (MAX_HR - RESTING_HR) +
                         RESTING_HR
-                ).toFixed(2)}`;
-                break;
-            }
-            case "bmi": {
-                const WEIGHT = Number(
-                    document.getElementById("input_weight").value
-                );
-                const HEIGHT = Number(
-                    document.getElementById("input_height").value
-                );
-                this.result = (WEIGHT / (HEIGHT * HEIGHT)).toFixed(2);
-                break;
-            }
-            case "3_skin_jackson_pollock_female": {
-                const AGE = Number(
-                    document.getElementById("input_age_f").value
-                );
-                const SITE_1 = Number(
-                    document.getElementById("input_site1_f").value
-                );
-                const SITE_2 = Number(
-                    document.getElementById("input_site2_f").value
-                );
-                const SITE_3 = Number(
-                    document.getElementById("input_site3_f").value
-                );
-                const SUM_OF_SITES = SITE_1 + SITE_2 + SITE_3;
-                this.result = (
-                    1.0994921 -
+                    ).toFixed(2)}`;
+                    break;
+                }
+                case "bmi": {
+                    const WEIGHT = Number(
+                        document.getElementById("input_weight").value
+                    );
+                    const HEIGHT = Number(
+                        document.getElementById("input_height").value
+                    );
+                    this.result = (WEIGHT / (HEIGHT * HEIGHT)).toFixed(2);
+                    break;
+                }
+                case "3_skin_jackson_pollock_female": {
+                    const AGE = Number(
+                        document.getElementById("input_age_f").value
+                    );
+                    const SITE_1 = Number(
+                        document.getElementById("input_site1_f").value
+                    );
+                    const SITE_2 = Number(
+                        document.getElementById("input_site2_f").value
+                    );
+                    const SITE_3 = Number(
+                        document.getElementById("input_site3_f").value
+                    );
+                    const SUM_OF_SITES = SITE_1 + SITE_2 + SITE_3;
+                    this.result = (
+                        1.0994921 -
                         0.0009929 * SUM_OF_SITES +
                         0.0000023 * SUM_OF_SITES * SUM_OF_SITES -
                         0.0001392 * AGE
-                ).toFixed(2);
-                break;
-            }
-            case "3_skin_jackson_pollock_male": {
-                const AGE = Number(
-                    document.getElementById("input_age_m").value
-                );
-                const SITE_1 = Number(
-                    document.getElementById("input_site1_m").value
-                );
-                const SITE_2 = Number(
-                    document.getElementById("input_site2_m").value
-                );
-                const SITE_3 = Number(
-                    document.getElementById("input_site3_m").value
-                );
-                const SUM_OF_SITES = SITE_1 + SITE_2 + SITE_3;
-                this.result = (
-                    1.10938 -
+                    ).toFixed(2);
+                    break;
+                }
+                case "3_skin_jackson_pollock_male": {
+                    const AGE = Number(
+                        document.getElementById("input_age_m").value
+                    );
+                    const SITE_1 = Number(
+                        document.getElementById("input_site1_m").value
+                    );
+                    const SITE_2 = Number(
+                        document.getElementById("input_site2_m").value
+                    );
+                    const SITE_3 = Number(
+                        document.getElementById("input_site3_m").value
+                    );
+                    const SUM_OF_SITES = SITE_1 + SITE_2 + SITE_3;
+                    this.result = (
+                        1.10938 -
                         0.0008267 * SUM_OF_SITES +
                         0.0000016 * SUM_OF_SITES * SUM_OF_SITES -
                         0.0002574 * AGE
-                ).toFixed(2);
-                break;
-            }
-            case "bf_siri": {
-                this.result = (
-                    495 /
+                    ).toFixed(2);
+                    break;
+                }
+                case "bf_siri": {
+                    this.result = (
+                        495 /
                             Number(
                                 document.getElementById("input_body_density")
                                     .value
                             ) -
                         450
-                ).toFixed(2);
-                break;
-            }
+                    ).toFixed(2);
+                    break;
+                }
             }
         },
     },

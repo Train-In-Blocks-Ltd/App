@@ -86,14 +86,14 @@ const nth = function (d) {
         return "th";
     }
     switch (d % 10) {
-    case 1:
-        return "st";
-    case 2:
-        return "nd";
-    case 3:
-        return "rd";
-    default:
-        return "th";
+        case 1:
+            return "st";
+        case 2:
+            return "nd";
+        case 3:
+            return "rd";
+        default:
+            return "th";
     }
 };
 const month = [
@@ -119,91 +119,91 @@ const month = [
  */
 const bodyHtml = (type, data) => {
     switch (type) {
-    case "activate-account":
-        return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.
+        case "activate-account":
+            return `<p>Welcome to Train In Blocks. Your trainer has given you access to view your sessions, submit feedback, pay for services, and to make bookings.
         <br>
         <a href="${data.link}" target="_blank" class="link-button">Activate Your Account</a>
       </p>`;
-    case "password-changed":
-        return '<p>Your password has been changed. If you did not change your password please contact us immediately at <a href="mailto:hello@traininblocks.com">hello@traininblocks.com</a>.</p>';
-    case "password-reset":
-        return `<p>We've received a request to reset your password. If you did not submit this request then please disregard this email. If you wish to reset your password, please click the link below.
+        case "password-changed":
+            return '<p>Your password has been changed. If you did not change your password please contact us immediately at <a href="mailto:hello@traininblocks.com">hello@traininblocks.com</a>.</p>';
+        case "password-reset":
+            return `<p>We've received a request to reset your password. If you did not submit this request then please disregard this email. If you wish to reset your password, please click the link below.
         <br>
         <a href="${data.link}" target="_blank" class="link-button">Reset Password</a>
       </p>`;
-    case "weekly-breakdown":
-        return `<table>${data.body}</table>`;
-    case "client-account-reactivated":
-        return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!
+        case "weekly-breakdown":
+            return `<table>${data.body}</table>`;
+        case "client-account-reactivated":
+            return `<p>Your trainer has re-activated your account.<br>You just need to click the link below to get started!
         <br>
         <a href="${data.link}" target="_blank" class="link-button">Re-activate Your Account</a>
       </p>`;
-    case "client-account-deactivated":
-        return "<p>Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.</p>";
-    case "client-feedback":
-        return `<p>Log in to find out what your client has said about the session.
+        case "client-account-deactivated":
+            return "<p>Your account and information was removed by your trainer. If this was a mistake, please contact your trainer and let them know.</p>";
+        case "client-feedback":
+            return `<p>Log in to find out what your client has said about the session.
         <br>
         <a href="https://app.traininblocks.com/client/${data.cId}/plan/${data.pId}" target="_blank" class="link-button">See feedback</a>
       </p>`;
-    case "booking-created":
-        return `<p>Your trainer has scheduled a booking on the ${new Date(
-            data.datetime
-        ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-            month[new Date(data.datetime).getMonth()]
-        } at ${data.datetime.split(" ")[1].substring(0, 5)}.
+        case "booking-created":
+            return `<p>Your trainer has scheduled a booking on the ${new Date(
+                data.datetime
+            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
+                month[new Date(data.datetime).getMonth()]
+            } at ${data.datetime.split(" ")[1].substring(0, 5)}.
         <br>
         <a href="https://app.traininblocks.com" target="_blank" class="link-button">View It Here</a>
       </p>`;
-    case "booking-requested":
-        return `<p>${
-            data.clientName
-        } has requested a booking on the ${new Date(
-            data.datetime
-        ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-            month[new Date(data.datetime).getMonth()]
-        } at ${data.datetime.split(" ")[1].substring(0, 5)}.
+        case "booking-requested":
+            return `<p>${
+                data.clientName
+            } has requested a booking on the ${new Date(
+                data.datetime
+            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
+                month[new Date(data.datetime).getMonth()]
+            } at ${data.datetime.split(" ")[1].substring(0, 5)}.
         <br>
         <a href="${
-    data.link
-}" target="_blank" class="link-button">Accept It Here</a>
+            data.link
+        }" target="_blank" class="link-button">Accept It Here</a>
       </p>`;
-    case "booking-request-cancelled":
-        return `<p>${
-            data.clientName
-        } has cancelled their request for a session on the ${new Date(
-            data.datetime
-        ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-            month[new Date(data.datetime).getMonth()]
-        } at ${data.datetime.split(" ")[1].substring(0, 5)}.
+        case "booking-request-cancelled":
+            return `<p>${
+                data.clientName
+            } has cancelled their request for a session on the ${new Date(
+                data.datetime
+            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
+                month[new Date(data.datetime).getMonth()]
+            } at ${data.datetime.split(" ")[1].substring(0, 5)}.
         <br>
         <a href="${
-    data.link
-}" target="_blank" class="link-button">Create A New One Now</a>
+            data.link
+        }" target="_blank" class="link-button">Create A New One Now</a>
       </p>`;
-    case "booking-rejected":
-        return `<p>The booking for the ${new Date(
-            data.datetime
-        ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-            month[new Date(data.datetime).getMonth()]
-        } at ${data.datetime
-            .split(" ")[1]
-            .substring(0, 5)} has been rejected by your trainer.
+        case "booking-rejected":
+            return `<p>The booking for the ${new Date(
+                data.datetime
+            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
+                month[new Date(data.datetime).getMonth()]
+            } at ${data.datetime
+                .split(" ")[1]
+                .substring(0, 5)} has been rejected by your trainer.
         <br>
         <a href="https://app.traininblocks.com" target="_blank" class="link-button">Request A New Booking Now</a>
       </p>`;
-    case "booking-accepted":
-        return `<p>The booking for the ${new Date(
-            data.datetime
-        ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
-            month[new Date(data.datetime).getMonth()]
-        } at ${data.datetime
-            .split(" ")[1]
-            .substring(0, 5)} has been accepted by your trainer.
+        case "booking-accepted":
+            return `<p>The booking for the ${new Date(
+                data.datetime
+            ).getDay()}<sup>${nth(new Date(data.datetime).getDay())}</sup> of ${
+                month[new Date(data.datetime).getMonth()]
+            } at ${data.datetime
+                .split(" ")[1]
+                .substring(0, 5)} has been accepted by your trainer.
         <br>
         <a href="https://app.traininblocks.com" target="_blank" class="link-button">View Your Booking Here</a>
       </p>`;
-    case "new-idea":
-        return `<p>Good news, ${data.email} has submitted a new idea:
+        case "new-idea":
+            return `<p>Good news, ${data.email} has submitted a new idea:
         <br>
         ${data.idea_text}
       </p>`;

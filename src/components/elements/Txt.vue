@@ -46,13 +46,15 @@ h3,
     </p>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     props: {
         type: String,
         isMain: Boolean,
         bold: Boolean,
         grey: Boolean,
     },
-};
+});
 </script>

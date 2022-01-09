@@ -3,7 +3,7 @@ module.exports = {
         browser: true,
         es2021: true,
     },
-    extends: ["plugin:vue/essential"],
+    extends: ["plugin:vue/essential", "@vue/eslint-config-typescript"],
     parserOptions: {
         ecmaVersion: 12,
         sourceType: "module",
@@ -11,6 +11,5 @@ module.exports = {
     plugins: ["vue"],
     rules: {
         "vue/multi-word-component-names": "off",
-        indent: ["error", 4],
     },
 };

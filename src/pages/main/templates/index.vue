@@ -186,13 +186,14 @@ export default {
         Checkbox,
         Multiselect,
     },
+
     async beforeRouteLeave(to, from, next) {
         if (
             this.dontLeave
                 ? await this.$parent.$refs.confirm_pop_up.show(
-                    "Your changes might not be saved",
-                    "Are you sure you want to leave?"
-                )
+                      "Your changes might not be saved",
+                      "Are you sure you want to leave?"
+                  )
                 : true
         ) {
             this.$store.commit("setData", {
@@ -251,30 +252,30 @@ export default {
          */
         helper(type) {
             switch (type) {
-            case "new":
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "New template created",
-                    description: "Edit and use it in a client's plan",
-                });
-                this.$ga.event("Template", "new");
-                break;
-            case "update":
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Updated template",
-                    description: "Your changes have been saved",
-                });
-                this.$ga.event("Template", "update");
-                break;
-            case "delete":
-                this.$store.dispatch("openResponsePopUp", {
-                    title:
+                case "new":
+                    this.$store.dispatch("openResponsePopUp", {
+                        title: "New template created",
+                        description: "Edit and use it in a client's plan",
+                    });
+                    this.$ga.event("Template", "new");
+                    break;
+                case "update":
+                    this.$store.dispatch("openResponsePopUp", {
+                        title: "Updated template",
+                        description: "Your changes have been saved",
+                    });
+                    this.$ga.event("Template", "update");
+                    break;
+                case "delete":
+                    this.$store.dispatch("openResponsePopUp", {
+                        title:
                             this.selectedTemplates.length > 1
                                 ? "Deleted templates"
                                 : "Deleted template",
-                    description: "Your changes have been saved",
-                });
-                this.$ga.event("Template", "delete");
-                break;
+                        description: "Your changes have been saved",
+                    });
+                    this.$ga.event("Template", "delete");
+                    break;
             }
         },
 
@@ -284,12 +285,12 @@ export default {
          */
         resolve_template_multiselect(res) {
             switch (res) {
-            case "Delete":
-                this.deleteMultiTemplates();
-                break;
-            case "Deselect":
-                this.deselectAll();
-                break;
+                case "Delete":
+                    this.deleteMultiTemplates();
+                    break;
+                case "Deselect":
+                    this.deselectAll();
+                    break;
             }
         },
 
@@ -303,30 +304,30 @@ export default {
                 (template) => template.id === id
             );
             switch (state) {
-            case "edit":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.isEditingTemplate = true;
-                this.editTemplate = id;
-                this.forceStop += 1;
-                this.tempEditorStore = TEMPLATE.template;
-                break;
-            case "save":
-                this.isEditingTemplate = false;
-                this.editTemplate = null;
-                this.updateTemplate(id);
-                break;
-            case "cancel":
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: false,
-                });
-                this.isEditingTemplate = false;
-                this.editTemplate = null;
-                TEMPLATE.template = this.tempEditorStore;
-                break;
+                case "edit":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: true,
+                    });
+                    this.isEditingTemplate = true;
+                    this.editTemplate = id;
+                    this.forceStop += 1;
+                    this.tempEditorStore = TEMPLATE.template;
+                    break;
+                case "save":
+                    this.isEditingTemplate = false;
+                    this.editTemplate = null;
+                    this.updateTemplate(id);
+                    break;
+                case "cancel":
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: false,
+                    });
+                    this.isEditingTemplate = false;
+                    this.editTemplate = null;
+                    TEMPLATE.template = this.tempEditorStore;
+                    break;
             }
         },
 

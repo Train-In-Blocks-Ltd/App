@@ -225,12 +225,12 @@ export default {
      */
     statusColor(status) {
         switch (status) {
-        case "Pending" || "Past":
-            return "var(--base_light)";
-        case "Scheduled":
-            return "var(--base_green)";
-        case "Cancelled" || "Declined":
-            return "var(--base_red)";
+            case "Pending" || "Past":
+                return "var(--base_light)";
+            case "Scheduled":
+                return "var(--base_green)";
+            case "Cancelled" || "Declined":
+                return "var(--base_red)";
         }
     },
 

@@ -558,12 +558,12 @@ export default {
          */
         resolveProductsMultiselect(res) {
             switch (res) {
-            case "Delete":
-                this.deleteProducts();
-                break;
-            case "Deselect":
-                this.deselectAll();
-                break;
+                case "Delete":
+                    this.deleteProducts();
+                    break;
+                case "Deselect":
+                    this.deselectAll();
+                    break;
             }
         },
 

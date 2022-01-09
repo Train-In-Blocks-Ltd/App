@@ -71,6 +71,11 @@ module.exports = {
           'sass-loader',
           'postcss-loader'
         ]
+      },
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader',
+        options: { appendTsSuffixTo: [/\.vue$/] }
       }
     ]
   },
