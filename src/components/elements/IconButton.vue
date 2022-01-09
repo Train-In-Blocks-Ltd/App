@@ -1,18 +1,6 @@
-<style lang="scss" scoped>
-.icon_button {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: var(--transition_standard);
-    &:hover {
-        opacity: 0.6;
-    }
-}
-</style>
-
 <template>
     <div
-        class="icon_button"
+        class="flex items-center cursor-pointer hover:opacity-60 transition-opacity"
         @click="
             () => {
                 if (onClick) onClick();
