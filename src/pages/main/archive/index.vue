@@ -1,5 +1,5 @@
 <template>
-    <div id="archive" class="view_container">
+    <wrapper id="archive">
         <multiselect
             :type="'client'"
             :options="multiselectOptions"
@@ -33,7 +33,7 @@
         </txt>
         <div v-else>
             <txt-input
-                v-model="search"
+                :value="search"
                 type="search"
                 rel="search"
                 placeholder="Name"
@@ -41,33 +41,26 @@
                 autocomplete="name"
                 inputClass="text--small"
                 style="margin-bottom: 2rem"
+                @output="(data) => (search = data)"
             />
-            <div class="clients_container">
-                <skeleton v-if="loading" :type="'archived'" />
-                <div
-                    v-for="(client, index) in archive.clients"
-                    v-show="
-                        (!search ||
-                            client.name
-                                .toLowerCase()
-                                .startsWith(search.toLowerCase())) &&
-                        !loading
-                    "
-                    :id="'a' + client.client_id"
-                    :key="index"
-                    class="client_link_wrapper"
-                    :to="'/client/' + client.client_id + '/'"
-                >
-                    <client-link
-                        class="client_link archived"
-                        :client="client"
-                        :client-index="index"
-                        :archive="true"
-                    />
-                </div>
-            </div>
+            <skeleton v-if="loading" :type="'archived'" />
+            <client-link
+                v-for="(client, index) in archive.clients"
+                v-show="
+                    (!search ||
+                        client.name
+                            .toLowerCase()
+                            .startsWith(search.toLowerCase())) &&
+                    !loading
+                "
+                :key="index"
+                :client="client"
+                :client-index="index"
+                :archive="true"
+                class="mb-6"
+            />
         </div>
-    </div>
+    </wrapper>
 </template>
 
 <script>
@@ -185,7 +178,7 @@ export default {
                     if (
                         await this.$parent.$refs.confirm_pop_up.show(
                             "Are you sure that you want to unarchive all the selected clients?",
-                            "Their datas will be recovered and available on the Home page."
+                            "Their data will be recovered and available on the Home page."
                         )
                     ) {
                         await this.$store.dispatch(
