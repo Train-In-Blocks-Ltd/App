@@ -316,10 +316,6 @@ button {
     }
 }
 
-/* Inputs */
-.form_button_bar {
-    display: flex;
-}
 input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="button"]):not([type="submit"]),
 select,
 textarea {
@@ -378,16 +374,6 @@ option {
 ::placeholder {
     color: var(--base_light);
     opacity: 1; /* Firefox */
-}
-
-/* Forms */
-.form_grid {
-    display: grid;
-    grid-auto-rows: max-content;
-    grid-gap: 1rem;
-    button {
-        margin-right: 0.6rem;
-    }
 }
 
 /* Tab options */
@@ -555,15 +541,6 @@ option {
     }
     .wrapper--calendar {
         margin: 2rem 0;
-    }
-    .form_grid {
-        .form_button_bar {
-            display: grid;
-            grid-gap: 1rem;
-            button {
-                width: 100%;
-            }
-        }
     }
 
     /* Inputs */

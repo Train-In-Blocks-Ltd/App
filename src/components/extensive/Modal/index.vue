@@ -50,7 +50,7 @@
                     <icon-button
                         svg="x"
                         :on-click="() => $store.dispatch('closeModal')"
-                        :icon-size="24"
+                        :icon-size="32"
                     />
                 </template>
             </secondary-header>
