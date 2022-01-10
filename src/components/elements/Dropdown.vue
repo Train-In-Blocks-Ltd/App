@@ -3,21 +3,25 @@
         <label v-if="label" :for="name" :class="labelClass">
             {{ label }}
         </label>
-        <input
+        <select
             :id="inputId"
             :name="name"
             :value="value"
             :class="inputClass"
-            :type="type"
-            :inputmode="inputmode"
-            :autocomplete="autocomplete"
             :placeholder="placeholder"
             :aria-label="ariaLabel"
-            :pattern="pattern"
             :required="required"
+            @change="handleChange"
             class="w-full px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-200 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
-            @input="handleInput"
-        />
+        >
+            <option
+                v-for="(item, index) in items"
+                :key="`option-${index}`"
+                :value="item.value"
+            >
+                <txt>{{ item.label }}</txt>
+            </option>
+        </select>
         <txt v-if="info" type="tiny" class="mt-1" :class="infoClass">{{
             info
         }}</txt>
@@ -55,12 +59,13 @@ export default {
         onInput: Function,
         required: Boolean,
         focusFirst: Boolean,
+        items: Array,
     },
     mounted() {
         if (this.focusFirst) this.$el.children[0].focus();
     },
     methods: {
-        handleInput(e) {
+        handleChange(e) {
             this.$emit("output", e.target.value);
             if (this.onInput) this.onInput();
         },

@@ -37,17 +37,21 @@
                     <label for="theme">
                         <txt type="large-body" bold>Theme</txt>
                     </label>
-                    <select
-                        v-model="claims.theme"
-                        name="theme"
-                        @change="
-                            $parent.darkmode(claims.theme), $parent.saveClaims()
+                    <dropdown
+                        :value="claims.theme"
+                        :items="dropdownItems"
+                        @output="
+                            (data) => {
+                                $store.commit('setDataDeep', {
+                                    attrParent: 'claims',
+                                    attrChild: 'theme',
+                                    data,
+                                });
+                                $parent.darkmode(data);
+                                $parent.saveClaims();
+                            }
                         "
-                    >
-                        <option value="system">System default</option>
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                    </select>
+                    />
                 </div>
                 <div class="grid gap-4">
                     <txt type="large-body" bold>Referral Code</txt>
@@ -182,6 +186,20 @@ export default {
     },
     data() {
         return {
+            dropdownItems: [
+                {
+                    label: "System Default",
+                    value: "system",
+                },
+                {
+                    label: "Light",
+                    value: "light",
+                },
+                {
+                    label: "Dark",
+                    value: "dark",
+                },
+            ],
             calendarText: "Get your calendar link",
             calendarGuides: [
                 {
