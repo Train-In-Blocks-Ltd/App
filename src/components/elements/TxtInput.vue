@@ -17,6 +17,11 @@
             :required="required"
             class="w-full px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-200 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
             @input="handleInput"
+            @blur="
+                () => {
+                    if (onBlur) onBlur();
+                }
+            "
         />
         <txt v-if="info" type="tiny" class="mt-1" :class="infoClass">{{
             info
@@ -53,6 +58,7 @@ export default {
         ariaLabel: String,
         pattern: String,
         onInput: Function,
+        onBlur: Function,
         required: Boolean,
         focusFirst: Boolean,
     },

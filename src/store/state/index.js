@@ -38,6 +38,9 @@ export default {
     },
     connected: true,
     clientUserLoaded: false,
+    confirmPromise: undefined,
+    confirmTitle: undefined,
+    confirmText: undefined,
 
     // Bookings
     bookings: [],

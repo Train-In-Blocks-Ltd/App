@@ -25,9 +25,6 @@
         margin: 2rem 0;
     }
 }
-.client_portfolio__notes {
-    margin: 2rem 0;
-}
 hr {
     margin: 2rem 0;
 }
@@ -94,78 +91,36 @@ hr {
 </style>
 
 <template>
-    <div id="home" class="view_container">
-        <div v-if="portfolio">
-            <div
-                :class="{
-                    opened_sections: isPortfolioOpen || isProfileOpen,
-                }"
-                class="section_overlay"
-            />
-            <div
-                v-if="isProfileOpen"
-                class="tab_overlay_content fadeIn delay fill_mode_both"
-            >
-                <client-profile />
-            </div>
-            <div
-                v-if="isPortfolioOpen"
-                class="tab_overlay_content fadeIn delay fill_mode_both"
-            >
-                <div class="client_home__portfolio">
-                    <inline-svg
-                        class="close_icon cursor"
-                        :src="require('../../assets/svg/close.svg')"
-                        aria-label="Close"
-                        @click="(isPortfolioOpen = false), willBodyScroll(true)"
-                    />
-                    <txt type="title">
-                        {{ portfolio.business_name }}
-                    </txt>
-                    <txt type="subtitle" grey>
-                        {{ portfolio.trainer_name }}
-                    </txt>
-                    <skeleton v-if="loading" :type="'session'" />
-                    <div
-                        v-else
-                        class="client_portfolio__notes"
-                        v-html="updateHTML(portfolio.notes, true)"
-                    />
-                </div>
-            </div>
-            <div
-                v-if="!isProfileOpen"
-                aria-label="Profile"
-                class="tab_option tab_option_small"
-                @click="(isProfileOpen = true), willBodyScroll(false)"
-            >
-                <inline-svg
-                    :src="require('../../assets/svg/client-profile.svg')"
-                    aria-label="Profile"
-                />
-                <txt type="body">Profile</txt>
-            </div>
-            <div
-                v-if="
-                    !isPortfolioOpen &&
-                    portfolio &&
-                    portfolio.notes !== '<p></p>'
-                "
-                aria-label="Information"
-                class="tab_option tab_option_large icon_open_middle"
-                @click="(isPortfolioOpen = true), willBodyScroll(false)"
-            >
-                <inline-svg
-                    :src="require('../../assets/svg/info.svg')"
-                    aria-label="Information"
-                />
-                <txt type="body">Information</txt>
-            </div>
-        </div>
+    <wrapper id="home">
         <div id="client_home">
             <div class="client_home__today">
-                <div class="client_home__today__header">
+                <div class="flex justify-between">
                     <txt type="title">Today</txt>
+                    <div class="flex">
+                        <icon-button
+                            svg="info"
+                            :icon-size="32"
+                            class="mr-4"
+                            :on-click="
+                                () => {
+                                    $store.dispatch('openModal', {
+                                        name: 'portfolio',
+                                    });
+                                }
+                            "
+                        />
+                        <icon-button
+                            svg="user"
+                            :icon-size="32"
+                            :on-click="
+                                () => {
+                                    $store.dispatch('openModal', {
+                                        name: 'client-user-profile',
+                                    });
+                                }
+                            "
+                        />
+                    </div>
                 </div>
                 <skeleton v-if="loading" :type="'session'" />
                 <div
@@ -291,12 +246,12 @@ hr {
                 </div>
             </div>
         </div>
-    </div>
+    </wrapper>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import Txt from "../../components/elements/Txt.vue";
+
 const RichEditor = () =>
     import(
         /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
@@ -305,18 +260,12 @@ const Periodise = () =>
     import(
         /* webpackChunkName: "components.periodise", webpackPrefetch: true  */ "../../components/Periodise"
     );
-const ClientProfile = () =>
-    import(
-        /* webpackChunkName: "components.clientProfile", webpackPrefetch: true  */ "../../components/ClientProfile"
-    );
 // const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
 export default {
     components: {
         RichEditor,
         Periodise,
-        ClientProfile,
-        Txt,
     },
     async beforeRouteLeave(to, from, next) {
         if (
@@ -336,11 +285,6 @@ export default {
     },
     data() {
         return {
-            // TAB
-
-            isPortfolioOpen: false,
-            isProfileOpen: false,
-
             // EDIT
 
             forceStop: 0,
@@ -359,7 +303,6 @@ export default {
         "dontLeave",
         "clientUser",
         "claims",
-        "portfolio",
     ]),
     async created() {
         this.$store.commit("setData", {
@@ -372,10 +315,6 @@ export default {
         this.$store.dispatch("endLoading");
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Resolves the state of the feeback editor.
          * @param {string} state - The returned state of the editor.

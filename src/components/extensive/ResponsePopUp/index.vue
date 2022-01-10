@@ -64,12 +64,12 @@
                 <default-button
                     v-if="responsePersist"
                     class="close_button"
-                    @click="() => $store.dispatch('closeResponsePopUp')"
+                    :on-click="() => $store.dispatch('closeResponsePopUp')"
                 >
                     Okay
                 </default-button>
             </div>
-            <backdrop v-if="responseBackdrop" />
+            <backdrop v-if="responseBackdrop" class="z-50" />
         </div>
     </transition>
 </template>
@@ -88,7 +88,7 @@ export default {
     },
     watch: {
         responseOpen() {
-            if (!this.persist) {
+            if (!this.responsePersist) {
                 setTimeout(() => {
                     this.$store.dispatch("closeResponsePopUp");
                 }, 3000);

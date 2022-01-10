@@ -71,10 +71,6 @@ export default {
         },
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Shows the confirmation alert.
          * @param {string} header - The title of the alert.

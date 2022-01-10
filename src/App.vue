@@ -567,6 +567,7 @@ option {
     <div id="app" :class="{ authenticated: authenticated }">
         <modal />
         <response-pop-up />
+        <confirm-pop-up />
         <div
             v-if="claims.email === 'demo@traininblocks.com' && authenticated"
             class="top_banner fadeIn"
@@ -584,12 +585,6 @@ option {
                 Offline mode: we will sync your data when you reconnect
             </p>
         </div>
-        <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-            <confirm-pop-up ref="confirm_pop_up" />
-        </transition>
-        <transition enter-active-class="fadeIn" leave-active-class="fadeOut ">
-            <global-overlay ref="overlay" />
-        </transition>
         <div
             v-if="showEULA"
             class="tab_overlay_content fadeIn delay fill_mode_both"
@@ -638,6 +633,10 @@ const ResponsePopUp = () =>
     import(
         /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "@/components/extensive/ResponsePopUp"
     );
+const ConfirmPopUp = () =>
+    import(
+        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "@/components/extensive/ConfirmPopUp"
+    );
 
 export default {
     metaInfo() {
@@ -652,6 +651,7 @@ export default {
         Policy,
         Modal,
         ResponsePopUp,
+        ConfirmPopUp,
     },
     computed: mapState([
         "authenticated",

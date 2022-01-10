@@ -110,6 +110,40 @@ export default {
         });
     },
 
+    async openConfirmPopUp({ commit }, payload) {
+        return new Promise((resolve) => {
+            commit("setData", {
+                attr: "confirmPromise",
+                data: resolve,
+            });
+            if (payload.title)
+                commit("setData", {
+                    attr: "confirmTitle",
+                    data: payload.title,
+                });
+            if (payload.text)
+                commit("setData", {
+                    attr: "confirmText",
+                    data: payload.text,
+                });
+        });
+    },
+
+    closeConfirmPopUp({ commit }) {
+        commit("setData", {
+            attr: "confirmPromise",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "confirmTitle",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "confirmText",
+            data: undefined,
+        });
+    },
+
     /** Gets all the data for the trainer-user's session. */
     async getHighLevelData({ dispatch, commit, state }) {
         // Main data call
@@ -197,6 +231,29 @@ export default {
             data: !state.selectedIds.includes(id)
                 ? [...state.selectedIds, id]
                 : state.selectedIds.filter((selectedId) => selectedId !== id),
+        });
+    },
+
+    /**
+     * Processes captured error and sends to Jira.
+     * @param msg - The error text.
+     */
+    async resolveError({ state, dispatch }, msg) {
+        if (state.claims.user_type !== "Admin") {
+            await this._vm.$axios.post("/.netlify/functions/error", {
+                msg,
+                claims: state.claims,
+            });
+        }
+        dispatch("endLoading");
+        dispatch("openResponsePopUp", {
+            title: "ERROR: this problem has been reported to our developers",
+            description:
+                msg.toString() !== "Error: Network Error"
+                    ? msg.toString()
+                    : "You may be offline. We'll try that request again once you've reconnected",
+            persist: true,
+            backdrop: true,
         });
     },
 };

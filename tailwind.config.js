@@ -14,6 +14,9 @@ module.exports = {
                     800: "#282828",
                 },
             },
+            maxHeight: {
+                "4/5": "80%",
+            },
         },
     },
     plugins: [],

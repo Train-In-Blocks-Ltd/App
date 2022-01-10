@@ -1,47 +1,11 @@
-<style lang="scss" scoped>
-.modal_wrapper {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    .modal {
-        position: fixed;
-        top: 4rem;
-        padding: 2rem;
-        border-radius: var(--rounded);
-        background-color: var(--fore);
-        z-index: 100;
-        max-height: 80%;
-        overflow-y: auto;
-        &.sm {
-            width: 60%;
-        }
-        &.lg {
-            width: 90%;
-        }
-        .secondary_header {
-            margin-bottom: 1.6rem;
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    .modal_wrapper .modal {
-        top: 0;
-        max-height: 100%;
-        border-radius: 0;
-        &.sm,
-        &.lg {
-            width: 100%;
-        }
-    }
-}
-</style>
-
 <template>
-    <div v-if="modalOpen" class="modal_wrapper">
+    <div v-if="modalOpen" class="flex justify-center w-full">
         <card-wrapper
-            class="modal"
-            :class="{ lg: modalSize === 'lg', sm: modalSize === 'sm' }"
+            class="fixed md:top-16 p-8 md:rounded-lg bg-white z-40 max-h-screen md:max-h-4/5 overflow-y-auto"
+            :class="{
+                'w-full md:w-10/12': modalSize === 'lg',
+                'w-full md:w-3/5': modalSize === 'sm',
+            }"
             noHover
             noBorder
         >
@@ -59,6 +23,10 @@
             <install-modal v-else-if="modalContent === 'install-pwa'" />
             <reset-password-modal
                 v-else-if="modalContent === 'reset-password'"
+            />
+            <portfolio-modal v-else-if="modalContent === 'portfolio'" />
+            <client-user-profile-modal
+                v-else-if="modalContent === 'client-user-profile'"
             />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
@@ -99,6 +67,14 @@ const ResetPasswordModal = () =>
     import(
         /* webpackChunkName: "components.resetPasswordModal", webpackPrefetch: true  */ "@/pages/main/account/components/ResetPasswordModal"
     );
+const PortfolioModal = () =>
+    import(
+        /* webpackChunkName: "components.portfolioModal", webpackPrefetch: true  */ "@/pages/_clientUser/components/PortfolioModal"
+    );
+const ClientUserProfileModal = () =>
+    import(
+        /* webpackChunkName: "components.clientUserProfileModal", webpackPrefetch: true  */ "@/pages/_clientUser/components/ClientUserProfileModal"
+    );
 
 export default {
     components: {
@@ -109,6 +85,8 @@ export default {
         WhatsNewModal,
         InstallModal,
         ResetPasswordModal,
+        PortfolioModal,
+        ClientUserProfileModal,
     },
     computed: mapState([
         "modalSize",
@@ -116,6 +94,7 @@ export default {
         "modalContent",
         "versionBuild",
         "versionName",
+        "portfolio",
     ]),
     watch: {
         modalContent(val) {
@@ -137,6 +116,8 @@ export default {
                     return "Save the app to your phone";
                 case "reset-password":
                     return "Reset password";
+                case "portfolio":
+                    return `${this.portfolio.business_name} with ${this.portfolio.trainer_name}`;
                 default:
                     return "";
             }
