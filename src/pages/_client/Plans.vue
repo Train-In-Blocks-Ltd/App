@@ -48,12 +48,20 @@
                     New Plan
                 </button>
             </div>
+
+            <!-- Plans section -->
             <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-            <periodise
+            <div
                 v-else-if="clientDetails.plans.length !== 0"
-                :is-trainer="true"
-                :plans.sync="clientDetails.plans"
-            />
+                class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            >
+                <plan-card
+                    v-for="(plan, index) in clientDetails.plans"
+                    :key="`plan-${index}`"
+                    :plan="plan"
+                    :link="`/plan/${plan.id}`"
+                />
+            </div>
             <p v-else class="text--holder text--small grey">
                 No plans yet, use the button on the top-right of your screen
             </p>
@@ -71,21 +79,21 @@ const RichEditor = () =>
     import(
         /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
     );
-const Periodise = () =>
-    import(
-        /* webpackChunkName: "components.periodise", webpackPreload: true  */ "../../components/Periodise"
-    );
 const Bookings = () =>
     import(
         /* webpackChunkName: "components.bookings", webpackPreload: true  */ "../../components/Bookings"
+    );
+const PlanCard = () =>
+    import(
+        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "@/components/generic/PlanCard"
     );
 
 export default {
     components: {
         NewPlan,
         RichEditor,
-        Periodise,
         Bookings,
+        PlanCard,
     },
     async beforeRouteLeave(to, from, next) {
         if (

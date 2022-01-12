@@ -207,7 +207,7 @@ hr {
                 <skeleton v-if="loading" :type="'plan'" />
                 <div
                     v-else-if="clientUser.plans"
-                    class="grid grid-cols-3 gap-4"
+                    class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
                 >
                     <plan-card
                         v-for="(plan, index) in clientUser.plans"
