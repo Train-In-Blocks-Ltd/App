@@ -17,16 +17,16 @@
             <!-- Plans header -->
             <div class="flex justify-between items-center mb-8">
                 <txt type="title">Plans</txt>
-                <default-button
+                <icon-button
+                    svg="file-plus"
                     :on-click="
                         () =>
                             $store.dispatch('openModal', {
                                 name: 'new-plan',
                             })
                     "
-                >
-                    New Plan
-                </default-button>
+                    :icon-size="28"
+                />
             </div>
 
             <!-- Plans grid -->

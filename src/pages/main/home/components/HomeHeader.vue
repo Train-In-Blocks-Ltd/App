@@ -8,7 +8,6 @@
                     () => $store.dispatch('openModal', { name: 'new-client' })
                 "
                 :icon-size="28"
-                svg-class="no_fill"
             />
             <icon-button
                 svg="bookmark"
@@ -21,7 +20,6 @@
                 "
                 :icon-size="28"
                 class="ml-4"
-                svg-class="no_fill"
             />
             <icon-button
                 v-if="pwa.displayMode === 'browser tab'"
@@ -35,7 +33,6 @@
                 "
                 :icon-size="28"
                 class="ml-4"
-                svg-class="no_fill"
             />
             <txt-input
                 type="search"

@@ -29,6 +29,7 @@
                 v-else-if="modalContent === 'client-user-profile'"
             />
             <preview-modal v-else-if="modalContent === 'preview'" />
+            <new-plan-modal v-else-if="modalContent === 'new-plan'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -80,6 +81,10 @@ const PreviewModal = () =>
     import(
         /* webpackChunkName: "components.previewModal", webpackPrefetch: true  */ "./components/PreviewModal"
     );
+const NewPlanModal = () =>
+    import(
+        /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/_client/components/NewPlanModal"
+    );
 
 export default {
     components: {
@@ -93,6 +98,7 @@ export default {
         PortfolioModal,
         ClientUserProfileModal,
         PreviewModal,
+        NewPlanModal,
     },
     computed: mapState([
         "modalSize",
@@ -126,6 +132,8 @@ export default {
                     return `${this.portfolio.business_name} with ${this.portfolio.trainer_name}`;
                 case "preview":
                     return "Preview";
+                case "new-plan":
+                    return "New Plan";
                 default:
                     return "";
             }

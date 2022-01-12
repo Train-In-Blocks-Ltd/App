@@ -1,53 +1,46 @@
 <template>
     <form
-        class="form_grid add_plan"
         name="add_plan"
+        class="grid gap-4 mt-8"
         @submit.prevent="
-            createPlan(), ($parent.isNewPlanOpen = false), willBodyScroll(true)
+            () => {
+                createPlan();
+                $parent.isNewPlanOpen = false;
+            }
         "
     >
-        <div class="bottom_margin">
-            <h3>
-                Create a new plan and use it for exercise, nutrition or anything
-                else
-            </h3>
-            <p class="grey">
-                The duration is the microcycle which can be of any length
-            </p>
-        </div>
-        <input
+        <txt-input
             ref="name"
             :value="newPlan.name"
-            class="small_border_radius width_300"
             type="text"
             placeholder="Name*"
             aria-label="Name"
+            @output="
+                (data) => {
+                    newPlan.name = data;
+                    checkForm();
+                }
+            "
+            focus-first
             required
-            @input="(newPlan.name = $event.target.value), checkForm()"
         />
-        <input
+        <txt-input
             :value="newPlan.duration"
-            class="small_border_radius width_300"
             type="number"
             min="1"
             placeholder="Duration*"
             aria-label="Duration"
+            @output="
+                (data) => {
+                    newPlan.duration = data;
+                    checkForm();
+                }
+            "
             required
-            @input="(newPlan.duration = $event.target.value), checkForm()"
         />
-        <div class="form_button_bar">
-            <button :disabled="disableCreatePlanButton" type="submit">
-                Save
-            </button>
-            <button
-                class="red_button"
-                @click.prevent="
-                    ($parent.isNewPlanOpen = false), willBodyScroll(true)
-                "
-            >
-                Close
-            </button>
-        </div>
+        <default-button :is-disabled="disableCreatePlanButton" type="submit">
+            Save
+        </default-button>
     </form>
 </template>
 
