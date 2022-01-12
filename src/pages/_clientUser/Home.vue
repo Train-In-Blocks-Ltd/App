@@ -203,13 +203,19 @@ hr {
             </div>
             <div class="spacer" />
             <div class="client_home__plans">
-                <txt type="title">Plans</txt>
-                <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
-                <periodise
+                <txt type="title" class="mb-8">Plans</txt>
+                <skeleton v-if="loading" :type="'plan'" />
+                <div
                     v-else-if="clientUser.plans"
-                    :is-trainer="false"
-                    :plans.sync="clientUser.plans"
-                />
+                    class="grid grid-cols-3 gap-4"
+                >
+                    <plan-card
+                        v-for="(plan, index) in clientUser.plans"
+                        :key="`plan-${index}`"
+                        :plan="plan"
+                        :link="`/clientUser/plan/${plan.id}`"
+                    />
+                </div>
                 <txt type="large-body" v-else class="text--holder" grey>
                     No plans yet, please contact your trainer or coach for more
                     information
@@ -254,18 +260,19 @@ import { mapState } from "vuex";
 
 const RichEditor = () =>
     import(
-        /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
+        /* webpackChunkName: "components.richEditor", webpackPreload: true  */ "../../components/Editor"
     );
-const Periodise = () =>
+const PlanCard = () =>
     import(
-        /* webpackChunkName: "components.periodise", webpackPrefetch: true  */ "../../components/Periodise"
+        /* webpackChunkName: "components.planCard", webpackPreload: true  */ "@/components/generic/PlanCard"
     );
+
 // const CUSTOM_ENV = process.env.NODE_ENV === 'production' ? require('../../../config/prod.env') : require('../../../config/dev.env')
 
 export default {
     components: {
         RichEditor,
-        Periodise,
+        PlanCard,
     },
     async beforeRouteLeave(to, from, next) {
         if (

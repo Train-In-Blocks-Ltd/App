@@ -28,6 +28,7 @@
             <client-user-profile-modal
                 v-else-if="modalContent === 'client-user-profile'"
             />
+            <preview-modal v-else-if="modalContent === 'preview'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -75,6 +76,10 @@ const ClientUserProfileModal = () =>
     import(
         /* webpackChunkName: "components.clientUserProfileModal", webpackPrefetch: true  */ "@/pages/_clientUser/components/ClientUserProfileModal"
     );
+const PreviewModal = () =>
+    import(
+        /* webpackChunkName: "components.previewModal", webpackPrefetch: true  */ "./components/PreviewModal"
+    );
 
 export default {
     components: {
@@ -87,6 +92,7 @@ export default {
         ResetPasswordModal,
         PortfolioModal,
         ClientUserProfileModal,
+        PreviewModal,
     },
     computed: mapState([
         "modalSize",
@@ -118,6 +124,8 @@ export default {
                     return "Reset password";
                 case "portfolio":
                     return `${this.portfolio.business_name} with ${this.portfolio.trainer_name}`;
+                case "preview":
+                    return "Preview";
                 default:
                     return "";
             }

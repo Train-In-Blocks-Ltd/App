@@ -73,13 +73,6 @@
 
 <template>
     <div>
-        <preview-modal
-            :desc="planDesc"
-            :html="planHTML"
-            :show-media="true"
-            :show-brackets="false"
-            @close="(planDesc = null), (planHTML = null)"
-        />
         <div class="periodise">
             <card-wrapper
                 v-for="(plan, planIndex) in plans"
@@ -141,15 +134,10 @@ const CardWrapper = () =>
     import(
         /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "./generic/CardWrapper"
     );
-const PreviewModal = () =>
-    import(
-        /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "./PreviewModal"
-    );
 
 export default {
     components: {
         CardWrapper,
-        PreviewModal,
     },
     props: {
         plans: Array,

@@ -41,6 +41,7 @@ export default {
     confirmPromise: undefined,
     confirmTitle: undefined,
     confirmText: undefined,
+    previewHTML: undefined,
 
     // Bookings
     bookings: [],

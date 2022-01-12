@@ -151,7 +151,7 @@
 import { mapState } from "vuex";
 const PreviewModal = () =>
     import(
-        /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/PreviewModal"
+        /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/extensive/Modal/components/PreviewModal"
     );
 const VersionLabel = () =>
     import(
