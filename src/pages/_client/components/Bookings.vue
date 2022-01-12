@@ -109,7 +109,7 @@
         >
             <inline-svg
                 class="close_icon cursor"
-                :src="require('../assets/svg/close.svg')"
+                :src="require('@/assets/svg/close.svg')"
                 aria-label="Close"
                 @click="(showAllBookings = false), willBodyScroll(true)"
             />
@@ -201,7 +201,7 @@
             </div>
             <txt v-else type="large-body" grey>No bookings yet</txt>
         </div>
-        <h2>Bookings</h2>
+        <txt type="title" class="mb-8">Bookings</txt>
         <skeleton
             v-if="loading"
             :type="'bookings'"

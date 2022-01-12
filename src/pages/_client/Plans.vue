@@ -16,7 +16,7 @@
         <div>
             <!-- Plans header -->
             <div class="flex justify-between items-center mb-8">
-                <txt type="title" bold>Plans</txt>
+                <txt type="title">Plans</txt>
                 <default-button
                     :on-click="
                         () =>
@@ -58,7 +58,7 @@ const RichEditor = () =>
     );
 const Bookings = () =>
     import(
-        /* webpackChunkName: "components.bookings", webpackPreload: true  */ "../../components/Bookings"
+        /* webpackChunkName: "components.bookings", webpackPreload: true  */ "./components/Bookings"
     );
 const PlanCard = () =>
     import(
