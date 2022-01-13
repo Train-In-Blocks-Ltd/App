@@ -282,7 +282,7 @@ export default {
                 );
                 window.location.href = RESPONSE.data;
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -362,7 +362,7 @@ export default {
                 });
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
         async generateCoupon() {
@@ -390,7 +390,7 @@ export default {
                 });
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
         copyCoupon() {

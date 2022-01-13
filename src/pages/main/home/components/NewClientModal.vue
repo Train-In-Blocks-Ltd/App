@@ -135,7 +135,7 @@ export default {
                     this.$ga.event("Client", "new");
                     this.$store.dispatch("endLoading");
                 } catch (e) {
-                    this.$parent.$parent.resolveError(e);
+                    this.$store.dispatch("resolveError", e);
                 }
             }
         },

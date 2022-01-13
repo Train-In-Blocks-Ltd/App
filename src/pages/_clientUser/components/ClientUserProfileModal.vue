@@ -167,7 +167,7 @@ export default {
                 }
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -191,7 +191,7 @@ export default {
                     profile_image: this.clientUser.profile_image,
                 });
             } catch (e) {
-                this.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
     },

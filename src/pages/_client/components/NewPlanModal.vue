@@ -101,7 +101,7 @@ export default {
                 };
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
     },

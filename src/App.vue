@@ -1036,7 +1036,7 @@ export default {
                     try {
                         await this.$store.dispatch("getHighLevelData");
                     } catch (e) {
-                        this.resolveError(e);
+                        this.$store.dispatch("resolveError", e);
                     }
                 }
 
@@ -1060,7 +1060,7 @@ export default {
                 await this.$store.dispatch("saveClaims");
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -1081,7 +1081,7 @@ export default {
                         data: true,
                     });
                 } catch (e) {
-                    this.resolveError(e);
+                    this.$store.dispatch("resolveError", e);
                 }
             }
         },
@@ -1104,7 +1104,7 @@ export default {
                 });
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
     },

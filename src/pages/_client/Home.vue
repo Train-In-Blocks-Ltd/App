@@ -384,7 +384,7 @@ export default {
                 } catch (e) {
                     this.clientAlready = true;
                     this.clientAlreadyMsg = "Error";
-                    this.$parent.resolveError(e);
+                    this.$store.dispatch("resolveError", e);
                 }
             } else {
                 this.clientAlreadyMsg = "Restricted";
@@ -482,7 +482,7 @@ export default {
                     });
                 }
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
             await this.checkClient();
             this.$store.dispatch("openResponsePopUp", {
@@ -514,7 +514,7 @@ export default {
                 await this.$store.dispatch("updateClient");
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -544,7 +544,7 @@ export default {
                     this.$store.dispatch("endLoading");
                     this.$router.push("/");
                 } catch (e) {
-                    this.$parent.resolveError(e);
+                    this.$store.dispatch("resolveError", e);
                 }
             }
         },

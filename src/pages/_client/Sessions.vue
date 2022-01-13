@@ -1458,7 +1458,7 @@ export default {
                             sessionIds: this.selectedIds,
                         });
                     } catch (e) {
-                        this.$parent.$parent.resolveError(e);
+                        this.$store.dispatch("resolveError", e);
                     }
                     this.checkForWeekSessions();
                     this.$store.commit("setData", {
@@ -1749,7 +1749,7 @@ export default {
                 this.$store.dispatch("endLoading");
                 this.$router.push({ path: `/client/${clientId}/` });
             } catch (e) {
-                this.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -1766,7 +1766,7 @@ export default {
                 this.$ga.event("Plan", "update");
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -1799,7 +1799,7 @@ export default {
                         path: `/client/${this.clientDetails.client_id}/`,
                     });
                 } catch (e) {
-                    this.$parent.$parent.resolveError(e);
+                    this.$store.dispatch("resolveError", e);
                 }
             }
         },
@@ -1819,7 +1819,7 @@ export default {
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -1838,7 +1838,7 @@ export default {
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -1864,7 +1864,7 @@ export default {
                 );
                 return NEW_SESSION_ID;
             } catch (e) {
-                this.$parent.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
     },

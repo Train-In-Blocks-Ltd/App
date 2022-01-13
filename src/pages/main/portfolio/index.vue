@@ -198,7 +198,7 @@ export default {
                 });
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -225,7 +225,7 @@ export default {
                 window.location.href = RESPONSE.data.url;
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
         async checkStripeConnect() {

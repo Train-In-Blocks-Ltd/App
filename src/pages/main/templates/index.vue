@@ -306,7 +306,7 @@ export default {
                             data: [],
                         });
                     } catch (e) {
-                        this.$parent.resolveError(e);
+                        this.$store.dispatch("resolveError", e);
                     }
                 }
             }
@@ -330,7 +330,7 @@ export default {
                 this.$ga.event("Template", "new");
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -352,7 +352,7 @@ export default {
                 this.$ga.event("Template", "update");
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
     },
