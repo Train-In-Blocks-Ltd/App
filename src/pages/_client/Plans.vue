@@ -10,7 +10,7 @@
         </editor-wrapper>
 
         <!-- Bookings -->
-        <bookings :client-id="clientDetails.client_id" />
+        <bookings class="mb-16" />
 
         <!-- Plans section -->
         <div>
@@ -40,9 +40,10 @@
                     :key="`plan-${index}`"
                     :plan="plan"
                     :link="`/plan/${plan.id}`"
+                    is-trainer
                 />
             </div>
-            <txt v-else type="large-body" bold grey>
+            <txt v-else type="large-body" grey>
                 No plans yet, use the button on the top-right of your screen
             </txt>
         </div>

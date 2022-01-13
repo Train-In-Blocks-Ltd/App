@@ -22,6 +22,8 @@ export default {
     components: {
         CardWrapper,
     },
-    props: ["title"],
+    props: {
+        title: String,
+    },
 };
 </script>

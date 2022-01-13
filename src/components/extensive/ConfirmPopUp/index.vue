@@ -13,6 +13,7 @@
                         $store.dispatch('closeConfirmPopUp');
                     }
                 "
+                class="mr-2"
             >
                 Confirm
             </default-button>

@@ -17,10 +17,7 @@
         <txt type="tiny" class="my-2">
             {{ booking.notes }}
         </txt>
-        <div
-            v-if="!isInThePast(booking) || booking.status !== 'Scheduled'"
-            class="flex justify-between"
-        >
+        <div class="flex justify-between">
             <txt
                 :class="
                     getStatusColor(
@@ -32,12 +29,33 @@
                 {{ isInThePast(booking) ? "Past" : booking.status }}
             </txt>
             <a
-                v-if="!isInThePast(booking)"
+                v-if="!isInThePast(booking) && !isTrainer"
                 href="javascript:void(0)"
                 @click="cancelBooking(booking.id, booking.datetime)"
             >
                 <txt class="text-red-700" bold>Cancel</txt>
             </a>
+            <div v-else>
+                <a
+                    v-if="booking.status === 'Pending' && !isInThePast(booking)"
+                    href="javascript:void(0)"
+                    aria-label="Accept booking"
+                    @click="acceptBookingRequest(booking.id)"
+                >
+                    <txt>Accept</txt>
+                </a>
+                <a href="javascript:void(0)" @click="cancelBooking">
+                    <txt class="text-red-700">
+                        {{
+                            isInThePast(booking)
+                                ? "Delete"
+                                : booking.status === "Pending"
+                                ? "Reject"
+                                : "Cancel"
+                        }}
+                    </txt>
+                </a>
+            </div>
         </div>
     </card-wrapper>
 </template>
@@ -51,7 +69,10 @@ const CardWrapper = () =>
     );
 
 export default {
-    props: ["booking"],
+    props: {
+        booking: Object,
+        isTrainer: Boolean,
+    },
     components: {
         CardWrapper,
     },
@@ -59,8 +80,6 @@ export default {
     methods: {
         /**
          * Determines the colour of the text for booking statuses.
-         * @param status - The status of the booking.
-         * @returns The colour of the text.
          */
         getStatusColor(status) {
             switch (status) {
@@ -74,11 +93,9 @@ export default {
         },
 
         /**
-         * Cancels a booking.
-         * @param bookingId - The id of the booking.
-         * @param datetime - The id of the booking.
+         * Accepts a booking request made by the client-user.
          */
-        async cancelBooking(bookingId, datetime) {
+        async acceptBookingRequest() {
             if (
                 await this.$store.dispatch("openConfirmPopUp", {
                     title: "Are you sure you want to cancel this booking?",
@@ -90,11 +107,44 @@ export default {
                         attr: "dontLeave",
                         data: true,
                     });
+                    await this.$store.dispatch("updateBooking", {
+                        id: this.booking.id,
+                        status: "Scheduled",
+                    });
+                    this.$store.dispatch("openResponsePopUp", {
+                        title: "Booking request accepted",
+                        description:
+                            "Your client will be notified of any upcoming bookings that were accepeted.",
+                    });
+                    this.$store.dispatch("endLoading");
+                } catch (e) {
+                    this.$parent.$parent.$parent.resolveError(e);
+                }
+            }
+        },
+
+        /**
+         * Cancels a booking.
+         */
+        async cancelBooking() {
+            if (
+                await this.$store.dispatch("openConfirmPopUp", {
+                    title: "Are you sure you want to accept this booking?",
+                    text: "It will appear as scheduled on your client's profile.",
+                })
+            ) {
+                try {
+                    this.$store.commit("setData", {
+                        attr: "dontLeave",
+                        data: true,
+                    });
                     await this.$store.dispatch("deleteBooking", {
-                        clientId: this.claims.client_id_db,
-                        bookingId,
-                        datetime,
-                        isTrainer: false,
+                        clientId: this.isTrainer
+                            ? this.$route.params.client_id
+                            : this.claims.client_id_db,
+                        bookingId: this.booking.id,
+                        datetime: this.booking.datetime,
+                        isTrainer: this.isTrainer,
                     });
                     this.$store.dispatch("openResponsePopUp", {
                         title: "Booking cancelled",

@@ -5,7 +5,7 @@
         </txt>
         <div class="flex">
             <router-link :to="link" href="javascript:void(0)" class="mr-3">
-                {{ trainer ? "Edit" : "View" }}
+                {{ isTrainer ? "Edit" : "View" }}
             </router-link>
             <a
                 v-if="plan.notes && plan.notes !== '<p></p>'"
@@ -38,6 +38,10 @@ export default {
     components: {
         CardWrapper,
     },
-    props: ["plan", "link", "trainer"],
+    props: {
+        plan: Object,
+        link: String,
+        isTrainer: Boolean,
+    },
 };
 </script>

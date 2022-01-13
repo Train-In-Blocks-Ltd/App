@@ -1,110 +1,5 @@
-<style lang="scss" scoped>
-.profile_container {
-    .profile_image {
-        text-align: center;
-        .image {
-            margin: auto;
-            background-size: cover;
-            background-position: center;
-            height: 140px;
-            width: 140px;
-            border-radius: 50%;
-            filter: grayscale(0.8);
-        }
-        .img_icon {
-            margin: auto;
-            padding: 1.8rem;
-            height: 140px;
-            width: 140px;
-            border: 4px solid var(--base);
-            border-radius: 50%;
-        }
-    }
-    .client_user_details {
-        display: grid;
-        grid-gap: 1rem;
-        margin-top: 2rem;
-        margin-bottom: 4rem;
-        > input {
-            margin: auto;
-        }
-    }
-
-    /* Booking outer container */
-    .bookings_container {
-        padding: 2rem;
-        margin: 2rem 0;
-
-        /* Booking inner container */
-        .bookings_sub_container {
-            display: grid;
-            grid-template-columns: 1fr 0.9fr;
-            grid-gap: 1.6rem;
-            margin-top: 1rem;
-
-            /* Container for creating bookings */
-            .request_booking_container {
-                display: flex;
-                flex-direction: column;
-                *:not(:last-child) {
-                    margin-bottom: 1rem;
-                }
-            }
-
-            /* Container for booking events */
-            .bookings_wrapper {
-                &::-webkit-scrollbar {
-                    width: 6px;
-                }
-            }
-        }
-    }
-}
-
-/* Booking event */
-.booking {
-    display: grid;
-    grid-gap: 1rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--base_faint);
-    padding-bottom: 1rem;
-    height: fit-content;
-    &.past {
-        opacity: var(--light_opacity);
-    }
-    .details {
-        display: grid;
-        grid-gap: 0.6rem;
-    }
-    .status {
-        display: flex;
-        justify-content: space-between;
-        > p:first-child {
-            font-weight: bold;
-        }
-        > a {
-            color: var(--base_red);
-        }
-    }
-}
-
-@media (max-width: 576px) {
-    .profile_container {
-        .bookings_container {
-            padding: 1rem;
-            .bookings_sub_container {
-                display: block;
-                .request_booking_container {
-                    margin-top: 2rem;
-                }
-            }
-        }
-    }
-}
-</style>
-
 <template>
-    <div class="profile_container">
+    <div>
         <div class="flex flex-col items-center justify-center">
             <div
                 v-if="clientUser.profile_image"
@@ -161,72 +56,21 @@
         </div>
         <div>
             <txt type="large-body" class="mb-4 mt-8" bold>Upcoming</txt>
-            <div class="flex flex-col xl:flex-row">
-                <div
-                    v-if="clientUser.bookings.length !== 0"
-                    class="mb-4 xl:mt-0 xl:w-1/2 xl:mr-8"
-                >
+            <div class="grid xl:grid-cols-2 gap-4">
+                <div v-if="upcoming().length !== 0">
                     <booking
-                        v-for="(booking, bookingIndex) in clientUser.bookings"
-                        :key="`bookings_${bookingIndex}`"
+                        v-for="(booking, index) in upcoming()"
+                        :key="`bookings_${index}`"
                         :booking="booking"
+                        :class="{
+                            'mb-4': index !== clientUser.bookings.length - 1,
+                        }"
                     />
                 </div>
-                <txt v-else grey>No bookings yet</txt>
-                <form
-                    class="xl:w-1/2 grid gap-4"
-                    @submit.prevent="createBooking()"
+                <txt v-else type="large-body" class="mb-8 xl:mb-0" grey
+                    >No upcoming bookings yet</txt
                 >
-                    <txt-input
-                        :value="bookingForm.date"
-                        :min="today()"
-                        type="date"
-                        placeholder="Date"
-                        aria-label="Date"
-                        @output="
-                            (data) => {
-                                bookingForm.date = data;
-                                checkForm();
-                            }
-                        "
-                        required
-                    />
-                    <txt-input
-                        :value="bookingForm.time"
-                        :min="bookingForm.date === today() ? timeNow() : null"
-                        class="small_border_radius"
-                        type="time"
-                        placeholder="Time"
-                        aria-label="Time"
-                        @output="
-                            (data) => {
-                                bookingForm.time = data;
-                                checkForm();
-                            }
-                        "
-                        required
-                    />
-                    <txt-area
-                        :value="bookingForm.notes"
-                        class="additional_notes small_border_radius"
-                        rows="5"
-                        placeholder="Additional information"
-                        aria-label="Additional information"
-                        @output="
-                            (data) => {
-                                bookingForm.notes = data;
-                                checkForm();
-                            }
-                        "
-                        required
-                    />
-                    <default-button
-                        type="submit"
-                        :is-disabled="disableCreateBookingButton"
-                    >
-                        Request a booking
-                    </default-button>
-                </form>
+                <booking-form />
             </div>
         </div>
     </div>
@@ -238,30 +82,23 @@ import { mapState } from "vuex";
 
 const Booking = () =>
     import(
-        /* webpackChunkName: "components.booking", webpackPreload: true  */ "@/pages/_clientUser/components/Booking"
+        /* webpackChunkName: "components.booking", webpackPreload: true  */ "@/components/generic/Booking"
+    );
+const BookingForm = () =>
+    import(
+        /* webpackChunkName: "components.bookingForm", webpackPreload: true  */ "@/components/generic/BookingForm"
     );
 
 export default {
     components: {
         Booking,
+        BookingForm,
     },
-    data() {
-        return {
-            bookingForm: {
-                date: this.today(),
-                time: this.timeNow(),
-                notes: null,
-            },
-            disableCreateBookingButton: true,
-        };
-    },
-    computed: mapState(["loading", "silentLoading", "claims", "clientUser"]),
+    computed: mapState(["silentLoading", "claims", "clientUser"]),
     methods: {
-        checkForm() {
-            this.disableCreateBookingButton = !(
-                this.bookingForm.date &&
-                this.bookingForm.time &&
-                this.bookingForm.notes
+        upcoming() {
+            return this.clientUser.bookings.filter(
+                (booking) => new Date(booking.datetime) > new Date()
             );
         },
 
@@ -353,38 +190,6 @@ export default {
                     number: this.clientUser.number,
                     profile_image: this.clientUser.profile_image,
                 });
-            } catch (e) {
-                this.$parent.$parent.resolveError(e);
-            }
-        },
-
-        /**
-         * Opens a new booking request.
-         */
-        async createBooking() {
-            try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                await this.$store.dispatch("createBooking", {
-                    clientId: this.claims.client_id_db,
-                    datetime:
-                        this.bookingForm.date + " " + this.bookingForm.time,
-                    notes: this.bookingForm.notes,
-                    status: "Pending",
-                    isTrainer: false,
-                });
-                this.bookingForm = {
-                    date: this.today(),
-                    time: this.timeNow(),
-                    notes: null,
-                };
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Booking requested",
-                    description: "Your trainer will be notified",
-                });
-                this.$store.dispatch("endLoading");
             } catch (e) {
                 this.$parent.$parent.resolveError(e);
             }
