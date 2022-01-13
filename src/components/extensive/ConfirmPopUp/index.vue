@@ -1,7 +1,7 @@
 <template>
     <div
         v-if="!!confirmPromise"
-        class="fixed top-0 left-0 z-50 bg-white shadow-lg rounded-lg ml-8 mt-8 p-4 w-1/3"
+        class="fixed top-0 left-0 z-50 bg-white shadow-lg rounded-lg ml-8 mt-8 p-4 max-w-xl"
     >
         <txt bold>{{ confirmTitle }}</txt>
         <txt>{{ confirmText }}</txt>

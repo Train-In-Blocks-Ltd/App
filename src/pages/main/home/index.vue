@@ -37,9 +37,7 @@ export default {
             persistResponse: "",
         };
     },
-    computed: {
-        ...mapState(["noClients", "loading", "modalOpen"]),
-    },
+    computed: mapState(["noClients", "loading", "modalOpen"]),
     async created() {
         this.$store.commit("setData", {
             attr: "loading",

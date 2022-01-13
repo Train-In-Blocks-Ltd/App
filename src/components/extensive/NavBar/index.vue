@@ -192,10 +192,10 @@ export default {
          */
         async logout() {
             if (
-                await this.$parent.$refs.confirm_pop_up.show(
-                    "Are you sure you want to log out?",
-                    "It's recommended to do so if you are using a public device."
-                )
+                await this.$store.dispatch("openConfirmPopUp", {
+                    title: "Are you sure you want to log out?",
+                    text: "It's recommended to do so if you are using a public device.",
+                })
             ) {
                 await this.$parent.$auth.signOut();
                 await this.$parent.isAuthenticated();

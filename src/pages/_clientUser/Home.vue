@@ -221,7 +221,7 @@ hr {
                     information
                 </txt>
             </div>
-            <div class="products_section">
+            <!-- <div class="products_section">
                 <txt type="title">Services</txt>
                 <skeleton v-if="loading" :type="'product'" />
                 <div v-else class="products">
@@ -250,7 +250,7 @@ hr {
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </wrapper>
 </template>

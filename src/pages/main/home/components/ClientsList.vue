@@ -13,13 +13,8 @@
             :id="'a' + client.client_id"
             :key="index"
             :to="'/client/' + client.client_id + '/'"
-            class="no-underline"
         >
-            <client-link
-                :client="client"
-                :archive="false"
-                :class="{ recently_added: persistResponse === client.name }"
-            />
+            <client-link :client="client" />
         </router-link>
     </div>
 </template>
@@ -29,12 +24,13 @@ import { mapState } from "vuex";
 
 const ClientLink = () =>
     import(
-        /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@/components/ClientLink"
+        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/ClientLink"
     );
+
 export default {
     components: {
         ClientLink,
     },
-    computed: mapState(["clients", "search", "loading", "persistResponse"]),
+    computed: mapState(["clients", "search", "loading"]),
 };
 </script>

@@ -16,6 +16,7 @@
 
 <template>
     <card-wrapper class="grid p-4 md:p-8 gap-4" :no-hover="archive">
+        <!-- Top section -->
         <div class="flex">
             <div
                 v-if="client.profile_image"
@@ -52,8 +53,10 @@
                 class="ml-auto"
             />
         </div>
-        <div v-if="nextBooking.datetime">
-            <txt bold> Next booking: </txt>
+
+        <!-- Next booking section -->
+        <div v-if="nextBooking" class="flex items-center">
+            <txt class="mr-2" bold> Next booking: </txt>
             <txt>
                 {{
                     day(
@@ -64,20 +67,14 @@
                 {{ shortTime(nextBooking.datetime) }}
             </txt>
         </div>
-        <txt
-            v-if="
-                (client.notes === null ||
-                    client.notes === '<p><br></p>' ||
-                    client.notes === '') &&
-                !archive
-            "
-            grey
-        >
+
+        <!-- Notes preview -->
+        <txt v-if="!archive && !client.notes.replace(/<[^>]*>?/gm, '')" grey>
             What client information do you currently have? Head over to this
             page and edit it.
         </txt>
         <div
-            v-else-if="!archive"
+            v-else
             class="preview_html"
             v-html="updateHTML(client.notes, true)"
         />
@@ -113,26 +110,16 @@ export default {
     },
     data() {
         return {
-            nextBooking: {
-                datetime: false,
-                isToday: false,
-            },
+            nextBooking: undefined,
         };
     },
     computed: mapState(["bookings"]),
     created() {
-        const NEXT_BOOKING =
-            this.bookings.filter(
-                (booking) =>
-                    booking.client_id === this.client.client_id &&
-                    new Date(booking.datetime) > new Date()
-            )[0] || false;
-        if (NEXT_BOOKING) {
-            const DATE_AND_TIME = NEXT_BOOKING.datetime.split(" ");
-            this.nextBooking.datetime = `${
-                DATE_AND_TIME[0] === this.today() ? "Today" : DATE_AND_TIME[0]
-            } ${DATE_AND_TIME[1]}`;
-            this.nextBooking.isToday = DATE_AND_TIME[0] === this.today();
+        if (this.bookings) {
+            const clientBookings = this.bookings.filter(
+                (booking) => booking.client_id === this.client.client_id
+            );
+            if (clientBookings) this.nextBooking = clientBookings[0];
         }
     },
 };
