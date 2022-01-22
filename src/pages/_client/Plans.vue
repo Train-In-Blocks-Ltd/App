@@ -39,7 +39,7 @@
                     v-for="(plan, index) in clientDetails.plans"
                     :key="`plan-${index}`"
                     :plan="plan"
-                    :link="`/plan/${plan.id}`"
+                    :link="`plan/${plan.id}`"
                     is-trainer
                 />
             </div>
