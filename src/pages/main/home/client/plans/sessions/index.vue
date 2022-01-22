@@ -1,27 +1,9 @@
 <style lang="scss" scoped>
-/* Other */
-.dark_overlay {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    min-height: 100vh;
-    min-height: stretch;
-    min-height: calc(100vh - env(safe-area-inset-bottom));
-    background-color: #00000060;
-}
-
 .switch_cal {
     margin-bottom: 0.4rem;
     svg {
         margin-right: 0.4rem;
     }
-}
-
-/* Plan Grid */
-#plan_notes {
-    margin: 4rem 0;
 }
 
 /* Plan Table */
@@ -234,7 +216,7 @@
     <div id="plan">
         <div
             :class="{
-                opened_sections: showProgress || showDuplicate,
+                opened_sections: showProgress,
             }"
             class="section_overlay"
         />
@@ -271,7 +253,6 @@
             :options="multiselectOption"
             @response="resolve_session_multiselect"
         />
-        <div v-show="editSession !== null" class="dark_overlay fadeIn" />
         <div class="mt-16">
             <!-- Plan controls -->
             <div class="grid w-full md:w-2/3 m-auto">
@@ -791,7 +772,6 @@ export default {
             // Modals
 
             showProgress: false,
-            showDuplicate: false,
             disableDuplicatePlanButton: true,
 
             // STATS
