@@ -276,31 +276,75 @@
                             />
                         </div>
                     </div>
-                    <!-- plan_table -->
-                    <div class="sessions">
-                        <div class="session--header">
-                            <div class="session--header__left">
-                                <div class="session--header__left__top">
-                                    <div
-                                        :style="{
-                                            backgroundColor:
-                                                weekColor[currentWeek - 1],
-                                        }"
-                                        :class="{
-                                            noColor:
-                                                weekColor[currentWeek - 1] ===
-                                                'null',
-                                        }"
-                                        class="change_week_color"
-                                        @click="
-                                            editingWeekColor = !editingWeekColor
+
+                    <!-- Sessions section -->
+                    <div class="mt-12">
+                        <!-- Options -->
+                        <skeleton v-if="loading" :type="'session'" />
+                        <div v-else-if="!noSessions && !weekIsEmpty">
+                            <div
+                                v-if="plan.sessions"
+                                class="flex items-center justify-between mb-4"
+                            >
+                                <!-- Left side -->
+                                <div class="flex items-center">
+                                    <a
+                                        v-if="
+                                            !noSessions &&
+                                            selectedIds.length <
+                                                plan.sessions.length &&
+                                            !weekIsEmpty
                                         "
-                                    />
-                                    <inline-svg
-                                        id="info"
-                                        :src="require('@/assets/svg/info.svg')"
-                                        title="Info"
+                                        href="javascript:void(0)"
+                                        class="mr-4 text-sm"
+                                        @click="selectAll('week')"
+                                    >
+                                        Select this microcycle
+                                    </a>
+                                    <a
+                                        v-if="
+                                            !noSessions &&
+                                            selectedIds.length <
+                                                plan.sessions.length &&
+                                            !weekIsEmpty
+                                        "
+                                        href="javascript:void(0)"
+                                        class="mr-4 text-sm"
+                                        @click="selectAll('all')"
+                                    >
+                                        Select all
+                                    </a>
+                                    <a
+                                        v-if="
+                                            plan.sessions !== false &&
+                                            !isEditingSession &&
+                                            !weekIsEmpty
+                                        "
+                                        href="javascript:void(0)"
+                                        class="mr-4 text-sm"
                                         @click="
+                                            expandAll(
+                                                expandedSessions.length !== 0
+                                                    ? 'Collapse'
+                                                    : 'Expand'
+                                            )
+                                        "
+                                    >
+                                        {{
+                                            expandedSessions.length !== 0
+                                                ? "Collapse"
+                                                : "Expand"
+                                        }}
+                                        all
+                                    </a>
+                                </div>
+
+                                <!-- Right side  -->
+                                <div class="flex items-center">
+                                    <color-picker :current-week="currentWeek" />
+                                    <icon-button
+                                        svg="info"
+                                        :on-click="
                                             () => {
                                                 $store.commit('setData', {
                                                     attr: 'previewHTML',
@@ -311,79 +355,15 @@
                                                 });
                                             }
                                         "
+                                        :icon-size="28"
+                                        class="mr-4"
+                                    />
+                                    <icon-button
+                                        svg="plus"
+                                        :on-click="() => createNewSession()"
+                                        :icon-size="28"
                                     />
                                 </div>
-                                <color-picker
-                                    v-if="editingWeekColor"
-                                    :injected-color.sync="
-                                        weekColor[currentWeek - 1]
-                                    "
-                                />
-                            </div>
-                            <div>
-                                <button
-                                    class="button--new-session"
-                                    @click="createNewSession()"
-                                >
-                                    New session
-                                </button>
-                            </div>
-                        </div>
-                        <skeleton v-if="loading" :type="'session'" />
-                        <div v-else-if="!noSessions && !weekIsEmpty">
-                            <div
-                                v-if="plan.sessions"
-                                class="container--sessions_header"
-                            >
-                                <a
-                                    v-if="
-                                        !noSessions &&
-                                        selectedIds.length <
-                                            plan.sessions.length &&
-                                        !weekIsEmpty
-                                    "
-                                    href="javascript:void(0)"
-                                    class="a_link"
-                                    @click="selectAll('week')"
-                                >
-                                    Select this microcycle
-                                </a>
-                                <a
-                                    v-if="
-                                        !noSessions &&
-                                        selectedIds.length <
-                                            plan.sessions.length &&
-                                        !weekIsEmpty
-                                    "
-                                    href="javascript:void(0)"
-                                    class="a_link"
-                                    @click="selectAll('all')"
-                                >
-                                    Select all
-                                </a>
-                                <a
-                                    v-if="
-                                        plan.sessions !== false &&
-                                        !isEditingSession &&
-                                        !weekIsEmpty
-                                    "
-                                    href="javascript:void(0)"
-                                    class="a_link"
-                                    @click="
-                                        expandAll(
-                                            expandedSessions.length !== 0
-                                                ? 'Collapse'
-                                                : 'Expand'
-                                        )
-                                    "
-                                >
-                                    {{
-                                        expandedSessions.length !== 0
-                                            ? "Collapse"
-                                            : "Expand"
-                                    }}
-                                    all
-                                </a>
                             </div>
                             <!-- New session -->
                             <div
@@ -687,7 +667,6 @@ export default {
 
             weekSessions: [],
             weekIsEmpty: true,
-            editingWeekColor: false,
 
             // Modals
 
@@ -734,11 +713,6 @@ export default {
             "templates",
             "clientDetails",
         ]),
-    },
-    watch: {
-        editingWeekColor() {
-            this.updater();
-        },
     },
     async created() {
         this.$store.commit("setData", {
@@ -1167,23 +1141,6 @@ export default {
             } else {
                 this.expandedSessions.push(id);
             }
-        },
-
-        /**
-         * Updates the week color.
-         */
-        updateSessionColor() {
-            this.$store.commit("updatePlanAttr", {
-                clientId: this.clientDetails.client_id,
-                planId: this.plan.id,
-                attr: "block_color",
-                data: JSON.stringify(this.weekColor)
-                    .replace(/"/g, "")
-                    .replace(/[[\]]/g, "")
-                    .replace(/\//g, ""),
-            });
-            this.editingWeekColor = false;
-            this.updatePlan();
         },
 
         /**
