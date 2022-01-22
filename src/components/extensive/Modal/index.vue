@@ -39,6 +39,7 @@
             <duplicate-plan-modal
                 v-else-if="modalContent === 'duplicate-plan'"
             />
+            <move-modal v-else-if="modalContent === 'move'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -106,6 +107,10 @@ const DuplicatePlanModal = () =>
     import(
         /* webpackChunkName: "components.duplicatePlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/DuplicatePlanModal"
     );
+const MoveModal = () =>
+    import(
+        /* webpackChunkName: "components.moveModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/MoveModal"
+    );
 
 export default {
     components: {
@@ -123,6 +128,7 @@ export default {
         AllBookingModal,
         ToolkitModal,
         DuplicatePlanModal,
+        MoveModal,
     },
     computed: mapState([
         "modalSize",
@@ -166,6 +172,8 @@ export default {
                     return "Toolkit";
                 case "duplicate-plan":
                     return "Duplicate plan";
+                case "move":
+                    return "Move sessions";
                 default:
                     return "";
             }

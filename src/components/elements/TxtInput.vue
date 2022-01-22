@@ -15,6 +15,8 @@
             :aria-label="ariaLabel"
             :pattern="pattern"
             :required="required"
+            :min="min"
+            :max="max"
             :minlength="minLength"
             :maxlength="maxLength"
             class="w-full px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-200 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
@@ -47,7 +49,7 @@ export default {
         label: String,
         info: String,
         error: String,
-        value: String,
+        value: [String, Number],
         inputClass: String,
         labelClass: String,
         infoClass: String,
@@ -63,8 +65,10 @@ export default {
         onBlur: Function,
         required: Boolean,
         focusFirst: Boolean,
-        minLength: Number,
-        maxLength: Number,
+        min: [String, Number],
+        max: [String, Number],
+        minLength: [String, Number],
+        maxLength: [String, Number],
     },
     mounted() {
         if (this.focusFirst) this.$el.children[0].focus();
