@@ -138,7 +138,7 @@ export default {
                 {
                     name: "Templates",
                     link: "/templates",
-                    svg: "align-left",
+                    svg: "file-text",
                     forUser: ["Admin", "Trainer"],
                     internal: true,
                 },
