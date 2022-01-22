@@ -859,11 +859,6 @@ export default {
                 backgroundColor: "",
             },
 
-            // ADHERANCE
-
-            sessionsDone: 0,
-            sessionsTotal: 0,
-
             // Modals
 
             showMove: false,
@@ -946,7 +941,6 @@ export default {
     },
     mounted() {
         if (!this.noSessions) {
-            this.adherence();
             this.updater();
         }
         this.$store.dispatch("endLoading");
@@ -1134,7 +1128,6 @@ export default {
                     sessionWeek: SESSION.week_id,
                 });
             }
-            this.adherence();
             this.checkForWeekSessions();
             this.updater();
             this.$ga.event("Session", "duplicate");
@@ -1382,7 +1375,6 @@ export default {
                 sessionNotes: "",
                 sessionWeek: this.currentWeek,
             });
-            this.adherence();
             this.checkForWeekSessions();
             this.updater();
             this.goToEvent(NEW_SESSION_ID, this.currentWeek);
@@ -1540,27 +1532,6 @@ export default {
         },
 
         /**
-         * Determines and visualises the ratio of completed and incompleted sessions.
-         */
-        adherence() {
-            this.sessionsDone = 0;
-            this.sessionsTotal = 0;
-            if (this.plan.sessions) {
-                for (const SESSION of this.plan.sessions) {
-                    this.sessionsTotal += 1;
-                    if (SESSION.checked === 1) {
-                        this.sessionsDone++;
-                    }
-                }
-                const PROGRESS_BAR = document.getElementById("progress-bar");
-                if (PROGRESS_BAR) {
-                    PROGRESS_BAR.style.width =
-                        (this.sessionsDone / this.sessionsTotal) * 100 + "%";
-                }
-            }
-        },
-
-        /**
          * Expand or unexpand all sessions.
          * @param {string} toExpand - Whether to expand or unexpand.
          */
@@ -1614,7 +1585,6 @@ export default {
                     planId: this.$route.params.id,
                     sessionIds,
                 });
-                this.adherence();
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("endLoading");
             } catch (e) {
@@ -1633,7 +1603,6 @@ export default {
                     planId: this.$route.params.id,
                     sessionId,
                 });
-                this.adherence();
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("endLoading");
             } catch (e) {
