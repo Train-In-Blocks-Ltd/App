@@ -96,4 +96,7 @@ export default {
         generated: false,
         code: null,
     },
+
+    // Sessions
+    currentWeek: 1,
 };

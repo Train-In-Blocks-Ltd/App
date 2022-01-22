@@ -6,67 +6,6 @@
     }
 }
 
-/* Plan Table */
-.plan_table {
-    height: fit-content;
-    margin-bottom: 2rem;
-    .plan_table__header {
-        display: grid;
-        margin: 0 0 4rem 0;
-        grid-gap: 1rem;
-        h3 {
-            margin: 0;
-        }
-        #duration {
-            width: 6rem;
-            font-size: 1rem;
-            margin-left: 1rem;
-        }
-    }
-    .plan_table--container {
-        display: inline-block;
-        width: 100%;
-        text-align: center;
-        .plan_table--container--plan_duration_container {
-            display: grid;
-            grid-gap: 1rem 0.4rem;
-            grid-template-columns: repeat(auto-fill, 50px);
-            border: none;
-            padding: 0;
-
-            /* Week */
-            .week {
-                display: grid;
-                grid-template-rows: 8px 64px;
-                user-select: none;
-                cursor: pointer;
-                width: 100%;
-                border: 2px solid var(--base_faint);
-                border-radius: 5px;
-                transition: var(--transition_standard);
-                &:hover {
-                    opacity: var(--light_opacity);
-                }
-                &.weekActive {
-                    border-color: var(--base);
-                    background-color: var(--fore);
-                    &:hover {
-                        opacity: var(--light_opacity);
-                    }
-                }
-                .week__color {
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 3px 3px 0 0;
-                }
-                .week__number {
-                    margin: auto;
-                }
-            }
-        }
-    }
-}
-
 /* Sessions */
 .session--header {
     display: flex;
@@ -188,15 +127,6 @@
             width: fit-content;
         }
     }
-    .plan_grid {
-        display: block;
-        .calendar {
-            margin: 4rem 0;
-        }
-    }
-    .wrapper-plan {
-        margin: 4rem 0;
-    }
 
     /* Session */
     .session--header {
@@ -269,94 +199,81 @@
                 <plan-progress-bar class="my-4" :sessions="plan.sessions" />
                 <plan-options />
             </div>
+
             <div class="plan_grid">
-                <div class="calendar">
-                    <editor-wrapper title="Plan Notes" class="my-16">
-                        <rich-editor
-                            v-model="plan.notes"
-                            :item-id="'plan_notes'"
-                            :editing="editSession"
-                            :empty-placeholder="'What do you want to achieve in this plan?'"
-                            :force-stop="forceStop"
-                            @on-edit-change="resolvePlanInfoEditor"
-                        />
-                    </editor-wrapper>
-                    <div class="wrapper--calendar">
-                        <a
-                            class="a_link switch_cal"
-                            href="javascript:void(0)"
-                            @click="showMonthlyCal = !showMonthlyCal"
-                        >
-                            <inline-svg
-                                :src="require('@/assets/svg/calendar.svg')"
-                            />
-                            Switch to
-                            {{ !showMonthlyCal ? "month" : "week" }} view
-                        </a>
-                        <week-calendar
-                            v-if="!showMonthlyCal"
-                            :events="sessionDates"
-                            :force-update="forceUpdate"
-                            :is-trainer="true"
-                            class="fadeIn"
-                        />
-                        <month-calendar
-                            v-else
-                            :events="sessionDates"
-                            :force-update="forceUpdate"
-                            :is-trainer="true"
-                            class="fadeIn"
-                        />
-                    </div>
+                <!-- Plan notes -->
+                <editor-wrapper title="Plan Notes" class="my-16">
+                    <rich-editor
+                        v-model="plan.notes"
+                        :item-id="'plan_notes'"
+                        :editing="editSession"
+                        :empty-placeholder="'What do you want to achieve in this plan?'"
+                        :force-stop="forceStop"
+                        @on-edit-change="resolvePlanInfoEditor"
+                    />
+                </editor-wrapper>
+
+                <!-- Calendar -->
+                <div>
+                    <!-- Type toggle -->
+                    <a
+                        class="flex items-center"
+                        href="javascript:void(0)"
+                        @click="showMonthlyCal = !showMonthlyCal"
+                    >
+                        <icon svg="calendar" :icon-size="20" class="mr-2" />
+                        Switch to
+                        {{ !showMonthlyCal ? "month" : "week" }} view
+                    </a>
+
+                    <!-- Calendars -->
+                    <week-calendar
+                        v-if="!showMonthlyCal"
+                        :events="sessionDates"
+                        :force-update="forceUpdate"
+                        :is-trainer="true"
+                        class="fadeIn"
+                    />
+                    <month-calendar
+                        v-else
+                        :events="sessionDates"
+                        :force-update="forceUpdate"
+                        :is-trainer="true"
+                        class="fadeIn"
+                    />
                 </div>
-                <div class="wrapper-plan">
+
+                <!-- Microcycle table -->
+                <div class="my-16">
                     <div class="plan_table">
-                        <div class="plan_table__header">
-                            <h3>Microcycles</h3>
-                            <div class="wrapper-duration">
-                                <label for="duration">Duration: </label>
-                                <input
-                                    id="duration"
-                                    v-model="plan.duration"
-                                    type="number"
-                                    name="duration"
-                                    inputmode="decimal"
-                                    min="1"
-                                    @change="
-                                        updatePlan(), (maxWeek = plan.duration)
-                                    "
-                                />
-                            </div>
-                        </div>
-                        <div class="plan_table--container">
-                            <div
-                                class="plan_table--container--plan_duration_container"
-                            >
-                                <div
-                                    v-for="item in planDuration(plan.duration)"
-                                    :key="item"
-                                    :class="{
-                                        weekActive: item === currentWeek,
-                                    }"
-                                    class="week"
-                                    @click="changeWeek(item)"
-                                >
-                                    <div
-                                        :style="{
-                                            backgroundColor: weekColor
-                                                .backgroundColor[item - 1]
-                                                ? weekColor.backgroundColor[
-                                                      item - 1
-                                                  ]
-                                                : 'var(--base_faint)',
-                                        }"
-                                        class="week__color"
-                                    />
-                                    <div class="week__number">
-                                        {{ item }}
-                                    </div>
-                                </div>
-                            </div>
+                        <txt type="large-body" bold>Microcycles</txt>
+
+                        <!-- Duration -->
+                        <txt-input
+                            type="number"
+                            name="duration"
+                            min="1"
+                            label="Duration:"
+                            class="w-1/3 lg:w-1/4 my-4"
+                            inputmode="decimal"
+                            :value="plan.duration"
+                            :on-blur="() => updatePlan()"
+                            @output="(data) => (plan.duration = data)"
+                        />
+
+                        <!-- Week table -->
+                        <div class="flex mb-4">
+                            <week
+                                v-for="weekNumber in planDuration(
+                                    plan.duration
+                                )"
+                                :class="{
+                                    'mr-2': weekNumber !== plan.duration,
+                                }"
+                                :key="weekNumber"
+                                :week-number="weekNumber"
+                                :current-week="currentWeek"
+                            />
                         </div>
                     </div>
                     <!-- plan_table -->
@@ -367,15 +284,12 @@
                                     <div
                                         :style="{
                                             backgroundColor:
-                                                weekColor.backgroundColor[
-                                                    currentWeek - 1
-                                                ],
+                                                weekColor[currentWeek - 1],
                                         }"
                                         :class="{
                                             noColor:
-                                                weekColor.backgroundColor[
-                                                    currentWeek - 1
-                                                ] === 'null',
+                                                weekColor[currentWeek - 1] ===
+                                                'null',
                                         }"
                                         class="change_week_color"
                                         @click="
@@ -402,9 +316,7 @@
                                 <color-picker
                                     v-if="editingWeekColor"
                                     :injected-color.sync="
-                                        weekColor.backgroundColor[
-                                            currentWeek - 1
-                                        ]
+                                        weekColor[currentWeek - 1]
                                     "
                                 />
                             </div>
@@ -654,6 +566,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 const Checkbox = () =>
     import(
         /* webpackChunkName: "components.checkbox", webpackPreload: true */ "@/components/Checkbox"
@@ -668,11 +581,11 @@ const MonthCalendar = () =>
     );
 const RichEditor = () =>
     import(
-        /* webpackChunkName: "components.richeditor", webpackPreload: true */ "@/components/Editor"
+        /* webpackChunkName: "components.richEditor", webpackPreload: true */ "@/components/Editor"
     );
 const ColorPicker = () =>
     import(
-        /* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ "@/components/ColorPicker"
+        /* webpackChunkName: "components.colorPicker", webpackPrefetch: true */ "@/components/ColorPicker"
     );
 const Multiselect = () =>
     import(
@@ -698,6 +611,14 @@ const EditorWrapper = () =>
     import(
         /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
     );
+const Icon = () =>
+    import(
+        /* webpackChunkName: "components.icon", webpackPreload: true  */ "@/components/elements/Icon"
+    );
+const Week = () =>
+    import(
+        /* webpackChunkName: "components.week", webpackPreload: true  */ "./components/Week"
+    );
 
 export default {
     components: {
@@ -712,6 +633,8 @@ export default {
         PlanOptions,
         PlanProgressBar,
         EditorWrapper,
+        Icon,
+        Week,
     },
     async beforeRouteLeave(to, from, next) {
         if (
@@ -765,9 +688,6 @@ export default {
             weekSessions: [],
             weekIsEmpty: true,
             editingWeekColor: false,
-            weekColor: {
-                backgroundColor: "",
-            },
 
             // Modals
 
@@ -787,23 +707,10 @@ export default {
             // MICROCYCLE
 
             allowMoreWeeks: false,
-            currentWeek: 1,
             maxWeek: 2,
         };
     },
     computed: {
-        selectedIds() {
-            return this.$store.state.selectedIds;
-        },
-        loading() {
-            return this.$store.state.loading;
-        },
-        silentLoading() {
-            return this.$store.state.silentLoading;
-        },
-        dontLeave() {
-            return this.$store.state.dontLeave;
-        },
         plan() {
             return this.$store.getters.helper(
                 "match_plan",
@@ -811,15 +718,22 @@ export default {
                 this.$route.params.id
             );
         },
-        clients() {
-            return this.$store.state.clients;
+        weekColor() {
+            return this.plan.block_color
+                .replace("[", "")
+                .replace("]", "")
+                .split(",");
         },
-        templates() {
-            return this.$store.state.templates;
-        },
-        clientDetails() {
-            return this.$store.state.clientDetails;
-        },
+        ...mapState([
+            "currentWeek",
+            "selectedIds",
+            "loading",
+            "silentLoading",
+            "dontLeave",
+            "clients",
+            "templates",
+            "clientDetails",
+        ]),
     },
     watch: {
         editingWeekColor() {
@@ -1207,7 +1121,10 @@ export default {
          */
         goToEvent(id, week) {
             this.expandAll("Expand");
-            this.currentWeek = week;
+            this.commit("setData", {
+                attr: "currentWeek",
+                data: week,
+            });
             setTimeout(() => {
                 document
                     .getElementById(`session-${id}`)
@@ -1260,7 +1177,7 @@ export default {
                 clientId: this.clientDetails.client_id,
                 planId: this.plan.id,
                 attr: "block_color",
-                data: JSON.stringify(this.weekColor.backgroundColor)
+                data: JSON.stringify(this.weekColor)
                     .replace(/"/g, "")
                     .replace(/[[\]]/g, "")
                     .replace(/\//g, ""),
@@ -1274,14 +1191,13 @@ export default {
          * @param {integer} - The id of the week.
          */
         changeWeek(weekID) {
-            this.currentWeek = weekID;
+            this.commit("setData", {
+                attr: "currentWeek",
+                data: week,
+            });
             this.moveTarget = weekID;
             this.checkForWeekSessions();
         },
-
-        // -----------------------------
-        // Datetime
-        // -----------------------------
 
         /**
          * Returns the duration of the plan as an array to be iterated.
@@ -1296,10 +1212,6 @@ export default {
             }
             return ARR;
         },
-
-        // -----------------------------
-        // Background
-        // -----------------------------
 
         /**
          * Sorts the session.
@@ -1318,20 +1230,14 @@ export default {
          */
         updater() {
             this.sessionDates = [];
-            this.weekColor.backgroundColor = this.plan.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
             if (this.plan.sessions) {
                 for (const SESSION of this.plan.sessions) {
                     this.sessionDates.push({
                         title: SESSION.name,
                         date: SESSION.date,
-                        color: this.weekColor.backgroundColor[
-                            SESSION.week_id - 1
-                        ],
+                        color: this.weekColor[SESSION.week_id - 1],
                         textColor: this.accessible_colors(
-                            this.weekColor.backgroundColor[SESSION.week_id - 1]
+                            this.weekColor[SESSION.week_id - 1]
                         ),
                         week_id: SESSION.week_id,
                         session_id: SESSION.id,

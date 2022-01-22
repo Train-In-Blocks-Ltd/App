@@ -95,4 +95,14 @@ export default {
             sessionIds: payload.sessionIds,
         });
     },
+
+    /**
+     * Changes the week of the plan view.
+     */
+    changeWeek({ commit }, weekID) {
+        commit("setData", {
+            attr: "currentWeek",
+            data: weekID,
+        });
+    },
 };
