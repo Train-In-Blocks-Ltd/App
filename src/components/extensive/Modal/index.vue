@@ -40,6 +40,7 @@
                 v-else-if="modalContent === 'duplicate-plan'"
             />
             <move-modal v-else-if="modalContent === 'move'" />
+            <shift-modal v-else-if="modalContent === 'shift'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -111,6 +112,10 @@ const MoveModal = () =>
     import(
         /* webpackChunkName: "components.moveModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/MoveModal"
     );
+const ShiftModal = () =>
+    import(
+        /* webpackChunkName: "components.shiftModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ShiftModal"
+    );
 
 export default {
     components: {
@@ -129,6 +134,7 @@ export default {
         ToolkitModal,
         DuplicatePlanModal,
         MoveModal,
+        ShiftModal,
     },
     computed: mapState([
         "modalSize",
@@ -174,6 +180,8 @@ export default {
                     return "Duplicate plan";
                 case "move":
                     return "Move sessions";
+                case "shift":
+                    return "Shift sessions";
                 default:
                     return "";
             }

@@ -1,22 +1,20 @@
 <template>
-    <form class="grid gap-4 mt-4" @submit.prevent="moveToWeek()">
+    <form class="grid gap-4 mt-4" @submit.prevent="shiftAcross()">
         <txt grey>
-            This will change the colour code assigned to the sessions.
+            This will move the dates ahead or behind by the specified amount
         </txt>
         <txt-input
             id="range"
             ref="range"
             name="range"
             type="number"
-            min="1"
-            label="Move to:"
-            :value="moveTarget"
-            :max="plan.duration"
-            @output="(data) => (moveTarget = data)"
+            label="Shift session dates by:"
+            :value="shiftDays"
+            @output="(data) => (shiftDays = data)"
             required
         />
-        <default-button :disabled="!moveTarget" type="submit"
-            >Move</default-button
+        <default-button :disabled="!shiftDays" type="submit"
+            >Shift</default-button
         >
     </form>
 </template>
@@ -27,7 +25,7 @@ import { mapState } from "vuex";
 export default {
     data() {
         return {
-            moveTarget: 1,
+            shiftDays: 1,
         };
     },
     computed: {
@@ -42,9 +40,9 @@ export default {
     },
     methods: {
         /**
-         * Moves the selected sessions to specified week.
+         * Shifts the selected sessions by specified days.
          */
-        async moveToWeek() {
+        async shiftAcross() {
             this.$store.commit("setData", {
                 attr: "dontLeave",
                 data: true,
@@ -55,8 +53,11 @@ export default {
                         clientId: this.$route.params.client_id,
                         planId: this.$route.params.id,
                         sessionId: session.id,
-                        attr: "week_id",
-                        data: this.moveTarget,
+                        attr: "date",
+                        data: this.addDays(
+                            session.date,
+                            parseInt(this.shiftDays)
+                        ),
                     });
                 }
             });
@@ -69,16 +70,16 @@ export default {
             this.$store.dispatch("openResponsePopUp", {
                 title:
                     this.selectedIds.length > 1
-                        ? "Moved sessions"
-                        : "Moved session",
+                        ? "Shifted sessions"
+                        : "Shifted session",
                 description: "Your changes have been saved",
             });
-            this.moveTarget = 1;
+            this.shiftDays = 1;
             this.$store.commit("setData", {
                 attr: "selectedIds",
                 data: [],
             });
-            this.$ga.event("Session", "move");
+            this.$ga.event("Session", "shift");
             this.$store.dispatch("endLoading");
         },
     },

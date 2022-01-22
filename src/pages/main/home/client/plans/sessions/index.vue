@@ -234,44 +234,10 @@
     <div id="plan">
         <div
             :class="{
-                opened_sections: showShift || showProgress || showDuplicate,
+                opened_sections: showProgress || showDuplicate,
             }"
             class="section_overlay"
         />
-        <form
-            v-if="showShift"
-            class="tab_overlay_content fadeIn delay fill_mode_both"
-            @submit.prevent="
-                shiftAcross(), (showShift = false), willBodyScroll(true)
-            "
-        >
-            <h3>Shift the dates of the sessions</h3>
-            <p class="grey">
-                This will move the dates ahead or behind by the specified amount
-            </p>
-            <div class="input_section">
-                <label for="range">Shift session dates by: </label>
-                <input
-                    id="range"
-                    ref="range"
-                    :value="shiftDays"
-                    class="width_300"
-                    name="range"
-                    type="number"
-                    required
-                    @input="
-                        (shiftDays = $event.target.value), checkForm('shift')
-                    "
-                />
-            </div>
-            <button :disabled="disableShiftButton" type="submit">Shift</button>
-            <button
-                class="red_button"
-                @click.prevent="(showShift = false), willBodyScroll(true)"
-            >
-                Cancel
-            </button>
-        </form>
         <div
             v-if="showProgress"
             class="tab_overlay_content fadeIn delay fill_mode_both"
@@ -824,14 +790,9 @@ export default {
 
             // Modals
 
-            showShift: false,
             showProgress: false,
             showDuplicate: false,
-            disableShiftButton: false,
             disableDuplicatePlanButton: true,
-
-            // MANIPULATION
-            shiftDays: 1,
 
             // STATS
 
@@ -909,14 +870,6 @@ export default {
         this.willBodyScroll(true);
     },
     methods: {
-        checkForm(type) {
-            switch (type) {
-                case "shift":
-                    this.disableShiftButton = !this.shiftDays;
-                    break;
-            }
-        },
-
         /**
          * Resolves the actions taken from the session multi-select.
          * @param {string} res - The action taken from the multi-select.
@@ -946,9 +899,9 @@ export default {
                     });
                     break;
                 case "Shift":
-                    this.showShift = true;
-                    this.willBodyScroll(false);
-                    this.updater();
+                    this.$store.dispatch("openModal", {
+                        name: "shift",
+                    });
                     break;
                 case "Print":
                     this.print();
@@ -1126,45 +1079,6 @@ export default {
                 attr: "selectedIds",
                 data: [],
             });
-        },
-
-        /**
-         * Shifts the selected sessions by specified days.
-         */
-        shiftAcross() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
-            });
-            this.plan.sessions.forEach((session) => {
-                if (this.selectedIds.includes(session.id)) {
-                    this.$store.commit("updateSessionAttr", {
-                        clientId: this.$route.params.client_id,
-                        planId: this.$route.params.id,
-                        sessionId: session.id,
-                        attr: "date",
-                        data: this.addDays(
-                            session.date,
-                            parseInt(this.shiftDays)
-                        ),
-                    });
-                }
-            });
-            this.batchUpdateSession(this.selectedIds);
-            this.$store.dispatch("openResponsePopUp", {
-                title:
-                    this.selectedIds.length > 1
-                        ? "Shifted sessions"
-                        : "Shifted session",
-                description: "Your changes have been saved",
-            });
-            this.shiftDays = 1;
-            this.$store.commit("setData", {
-                attr: "selectedIds",
-                data: [],
-            });
-            this.$ga.event("Session", "shift");
-            this.$store.dispatch("endLoading");
         },
 
         /**
