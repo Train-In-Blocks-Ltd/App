@@ -1,6 +1,9 @@
 <template>
     <wrapper v-if="clientDetails" id="client">
+        <!-- Client header -->
         <client-header />
+
+        <!-- Session view container -->
         <transition
             enter-active-class="fadeIn fill_mode_both delay"
             leave-active-class="fadeOut fill_mode_both"
@@ -34,12 +37,7 @@ export default {
             sessions: false,
         };
     },
-    computed: mapState([
-        "loading",
-        "silentLoading",
-        "clients",
-        "clientDetails",
-    ]),
+    computed: mapState(["loading", "clients", "clientDetails"]),
     async created() {
         this.$store.commit("setData", {
             attr: "loading",
