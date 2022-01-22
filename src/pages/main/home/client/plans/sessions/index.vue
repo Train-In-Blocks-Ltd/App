@@ -340,7 +340,6 @@
         <multiselect
             :type="'session'"
             :options="multiselectOption"
-            :selected="selectedIds"
             @response="resolve_session_multiselect"
         />
         <div v-show="editSession !== null" class="dark_overlay fadeIn" />
@@ -840,14 +839,14 @@ export default {
             expandedSessions: [],
             force: true,
             multiselectOption: [
-                { name: "Complete", svg: "svg/tick.svg" },
-                { name: "Incomplete", svg: "svg/cross.svg" },
-                { name: "Progress", svg: "svg/arrow-right.svg" },
-                { name: "Duplicate", svg: "svg/copy.svg" },
-                { name: "Move", svg: "svg/move.svg" },
-                { name: "Shift", svg: "svg/shift.svg" },
-                { name: "Print", svg: "svg/print.svg" },
-                { name: "Delete", svg: "svg/bin.svg" },
+                { name: "Complete", svg: "check-circle" },
+                { name: "Incomplete", svg: "x-circle" },
+                { name: "Progress", svg: "arrow-right" },
+                { name: "Duplicate", svg: "copy" },
+                { name: "Move", svg: "move" },
+                { name: "Shift", svg: "corner-down-right" },
+                { name: "Print", svg: "printer" },
+                { name: "Delete", svg: "trash" },
                 { name: "Deselect", svg: null },
             ],
 

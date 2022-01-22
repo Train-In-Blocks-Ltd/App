@@ -3,7 +3,6 @@
         <multiselect
             :type="'template'"
             :options="multiselectOptions"
-            :selected="selectedIds"
             @response="resolve_template_multiselect"
         />
         <txt-input
@@ -50,6 +49,7 @@
                 :id="'template-' + template.id"
                 :key="index"
                 class="p-4 md:p-8"
+                no-hover
             >
                 <div class="flex justify-between">
                     <txt
@@ -173,7 +173,7 @@ export default {
             // SELECTED AND EXPANDED
 
             multiselectOptions: [
-                { name: "Delete", svg: "svg/bin.svg" },
+                { name: "Delete", svg: "trash" },
                 { name: "Deselect", svg: null },
             ],
             expandedTemplates: [],

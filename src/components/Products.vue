@@ -197,7 +197,6 @@
         <multiselect
             :type="'product'"
             :options="multiselectOptions"
-            :selected="selectedIds"
             @response="resolveProductsMultiselect"
         />
         <div

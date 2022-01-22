@@ -3,7 +3,6 @@
         <multiselect
             :type="'client'"
             :options="multiselectOptions"
-            :selected="selectedIds"
             @response="resolveArchiveMultiselect"
         />
         <div class="flex justify-between mb-4">
@@ -88,8 +87,8 @@ export default {
         return {
             search: "",
             multiselectOptions: [
-                { name: "Unarchive", svg: "svg/archive.svg" },
-                { name: "Delete", svg: "svg/bin.svg" },
+                { name: "Unarchive", svg: "archive" },
+                { name: "Delete", svg: "trash" },
                 { name: "Deselect", svg: null },
             ],
         };
