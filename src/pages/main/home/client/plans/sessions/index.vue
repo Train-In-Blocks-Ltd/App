@@ -403,8 +403,7 @@
             </div>
             <div class="plan_grid">
                 <div class="calendar">
-                    <div id="plan_notes" class="editor_object_standard">
-                        <h3>Plan Notes</h3>
+                    <editor-wrapper title="Plan Notes" class="my-16">
                         <rich-editor
                             v-model="plan.notes"
                             :item-id="'plan_notes'"
@@ -413,7 +412,7 @@
                             :force-stop="forceStop"
                             @on-edit-change="resolvePlanInfoEditor"
                         />
-                    </div>
+                    </editor-wrapper>
                     <div class="wrapper--calendar">
                         <a
                             class="a_link switch_cal"
@@ -827,6 +826,10 @@ const PlanProgressBar = () =>
     import(
         /* webpackChunkName: "components.planProgressBar", webpackPrefetch: true */ "./components/PlanProgressBar"
     );
+const EditorWrapper = () =>
+    import(
+        /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
+    );
 
 export default {
     components: {
@@ -840,6 +843,7 @@ export default {
         ProgressSessions,
         PlanOptions,
         PlanProgressBar,
+        EditorWrapper,
     },
     async beforeRouteLeave(to, from, next) {
         if (
