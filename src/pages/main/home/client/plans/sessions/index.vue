@@ -41,17 +41,6 @@
             }
         }
     }
-
-    /* Plan Options */
-    .plan_options {
-        display: flex;
-        a {
-            margin-right: 1rem;
-            svg {
-                margin-right: 0.4rem;
-            }
-        }
-    }
 }
 .switch_cal {
     margin-bottom: 0.4rem;
@@ -433,6 +422,7 @@
             @close="(previewDesc = null), (previewHTML = null)"
         />
         <div v-show="editSession !== null" class="dark_overlay fadeIn" />
+        <!-- Plan controls -->
         <div>
             <div class="client_plan_top_grid">
                 <input
@@ -464,36 +454,7 @@
                     </div>
                 </div>
 
-                <!-- Plan options -->
-                <div class="plan_options">
-                    <router-link
-                        :to="`/client/${$route.params.client_id}/`"
-                        class="a_link"
-                        href="javascript:void(0)"
-                    >
-                        <inline-svg
-                            id="back"
-                            :src="require('@/assets/svg/arrow-left.svg')"
-                        />
-                        Back to profile
-                    </router-link>
-                    <a
-                        class="a_link"
-                        href="javascript:void(0)"
-                        @click="(showDuplicate = true), willBodyScroll(false)"
-                    >
-                        <inline-svg :src="require('@/assets/svg/copy.svg')" />
-                        Duplicate plan
-                    </a>
-                    <a
-                        class="a_link text--red"
-                        href="javascript:void(0)"
-                        @click="deletePlan()"
-                    >
-                        <inline-svg :src="require('@/assets/svg/bin.svg')" />
-                        Delete plan
-                    </a>
-                </div>
+                <plan-options />
             </div>
             <div class="plan_grid">
                 <div class="calendar">
@@ -904,6 +865,10 @@ const ProgressSessions = () =>
     import(
         /* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ "@/components/ProgressSessions"
     );
+const PlanOptions = () =>
+    import(
+        /* webpackChunkName: "components.planOptions", webpackPrefetch: true */ "./components/PlanOptions"
+    );
 
 export default {
     components: {
@@ -916,6 +881,7 @@ export default {
         PreviewModal,
         Statistics,
         ProgressSessions,
+        PlanOptions,
     },
     async beforeRouteLeave(to, from, next) {
         if (
@@ -1763,40 +1729,6 @@ export default {
                 this.$store.dispatch("endLoading");
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
-            }
-        },
-
-        /**
-         * Deletes the plan.
-         */
-        async deletePlan() {
-            if (
-                await this.$parent.$parent.$refs.confirm_pop_up.show(
-                    "Are you sure you want to delete this plan?",
-                    "We will remove this plan from our database and it won't be recoverable."
-                )
-            ) {
-                try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
-                    });
-                    await this.$store.dispatch("deletePlan", {
-                        clientId: this.$route.params.client_id,
-                        planId: this.$route.params.id,
-                    });
-                    this.$ga.event("Session", "delete");
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "Plan deleted",
-                        description: "Your changes have been saved",
-                    });
-                    this.$store.dispatch("endLoading");
-                    this.$router.push({
-                        path: `/client/${this.clientDetails.client_id}/`,
-                    });
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
             }
         },
 
