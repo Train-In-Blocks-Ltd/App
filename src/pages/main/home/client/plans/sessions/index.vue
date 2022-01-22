@@ -12,36 +12,6 @@
     background-color: #00000060;
 }
 
-/* Plan Info */
-.client_plan_top_grid {
-    display: grid;
-    grid-gap: 1rem;
-    margin-top: 2rem;
-    .wrapper--progress-bar {
-        user-select: none;
-        border: 1px solid var(--base_faint);
-        border-radius: 3px;
-        transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
-        #progress-bar {
-            border-radius: 3px;
-            padding: 0.3rem 1rem;
-            background-color: #00800020;
-            transition: 1s all cubic-bezier(0.165, 0.84, 0.44, 1);
-            &.fullBar {
-                background-color: #49ab59;
-                p {
-                    color: white;
-                }
-            }
-            &.noSessions {
-                background-color: #8b000020;
-            }
-            p {
-                white-space: nowrap;
-            }
-        }
-    }
-}
 .switch_cal {
     margin-bottom: 0.4rem;
     svg {
@@ -414,46 +384,21 @@
             :selected="selectedIds"
             @response="resolve_session_multiselect"
         />
-        <preview-modal
-            :desc="previewDesc"
-            :html="previewHTML"
-            :show-media="true"
-            :show-brackets="true"
-            @close="(previewDesc = null), (previewHTML = null)"
-        />
         <div v-show="editSession !== null" class="dark_overlay fadeIn" />
-        <!-- Plan controls -->
-        <div>
-            <div class="client_plan_top_grid">
-                <input
-                    v-model="plan.name"
-                    class="allow_text_overflow"
+        <div class="mt-16">
+            <!-- Plan controls -->
+            <div class="grid w-full md:w-2/3 m-auto">
+                <txt-input
                     aria-label="Plan name"
                     type="text"
                     name="name"
-                    :disabled="silentLoading"
-                    @blur="updatePlan()"
+                    :value="plan.name"
+                    :is-disabled="silentLoading"
+                    :on-blur="() => updatePlan()"
+                    @output="(data) => (plan.name = data)"
                 />
-                <div class="wrapper--progress-bar">
-                    <div
-                        id="progress-bar"
-                        :class="{
-                            fullBar:
-                                sessionsDone === sessionsTotal &&
-                                sessionsTotal !== 0,
-                            noSessions: noSessions,
-                        }"
-                    >
-                        <p v-if="!noSessions" class="grey">
-                            Completed {{ sessionsDone }} of
-                            {{ sessionsTotal }} sessions
-                        </p>
-                        <p v-if="noSessions" class="grey">
-                            No sessions created yet
-                        </p>
-                    </div>
-                </div>
 
+                <plan-progress-bar class="my-4" :sessions="plan.sessions" />
                 <plan-options />
             </div>
             <div class="plan_grid">
@@ -575,11 +520,15 @@
                                         :src="require('@/assets/svg/info.svg')"
                                         title="Info"
                                         @click="
-                                            (previewDesc =
-                                                'How to track exercises to visualise in the Statistics tab'),
-                                                (previewHTML =
-                                                    '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>'),
-                                                willBodyScroll(false)
+                                            () => {
+                                                $store.commit('setData', {
+                                                    attr: 'previewHTML',
+                                                    data: '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>',
+                                                });
+                                                $store.dispatch('openModal', {
+                                                    name: 'info',
+                                                });
+                                            }
                                         "
                                     />
                                 </div>
@@ -761,12 +710,21 @@
                                                     "
                                                     class="feedback_button"
                                                     @click="
-                                                        (previewHTML =
-                                                            session.feedback),
-                                                            (previewDesc = `${session.name} on ${session.date}`),
-                                                            willBodyScroll(
-                                                                false
-                                                            )
+                                                        () => {
+                                                            $store.commit(
+                                                                'setData',
+                                                                {
+                                                                    attr: 'previewHTML',
+                                                                    data: session.feedback,
+                                                                }
+                                                            );
+                                                            $store.dispatch(
+                                                                'openModal',
+                                                                {
+                                                                    name: 'preview',
+                                                                }
+                                                            );
+                                                        }
                                                     "
                                                 >
                                                     Feedback
@@ -853,10 +811,6 @@ const Multiselect = () =>
     import(
         /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/Multiselect"
     );
-const PreviewModal = () =>
-    import(
-        /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/extensive/Modal/components/PreviewModal"
-    );
 const Statistics = () =>
     import(
         /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "@/components/Stats"
@@ -869,6 +823,10 @@ const PlanOptions = () =>
     import(
         /* webpackChunkName: "components.planOptions", webpackPrefetch: true */ "./components/PlanOptions"
     );
+const PlanProgressBar = () =>
+    import(
+        /* webpackChunkName: "components.planProgressBar", webpackPrefetch: true */ "./components/PlanProgressBar"
+    );
 
 export default {
     components: {
@@ -878,10 +836,10 @@ export default {
         RichEditor,
         ColorPicker,
         Multiselect,
-        PreviewModal,
         Statistics,
         ProgressSessions,
         PlanOptions,
+        PlanProgressBar,
     },
     async beforeRouteLeave(to, from, next) {
         if (
@@ -912,8 +870,6 @@ export default {
             // Feedback
 
             showFeedback: false,
-            previewHTML: null,
-            previewDesc: null,
 
             // SYSTEM
 
@@ -1038,10 +994,6 @@ export default {
         this.willBodyScroll(true);
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         checkForm(type) {
             switch (type) {
                 case "move":

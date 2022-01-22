@@ -28,7 +28,11 @@
             <client-user-profile-modal
                 v-else-if="modalContent === 'client-user-profile'"
             />
-            <preview-modal v-else-if="modalContent === 'preview'" />
+            <preview-modal
+                v-else-if="
+                    modalContent === 'preview' || modalContent === 'info'
+                "
+            />
             <new-plan-modal v-else-if="modalContent === 'new-plan'" />
             <all-booking-modal v-else-if="modalContent === 'bookings'" />
             <toolkit-modal v-else-if="modalContent === 'toolkit'" />
@@ -144,6 +148,8 @@ export default {
                     return `${this.portfolio.business_name} with ${this.portfolio.trainer_name}`;
                 case "preview":
                     return "Preview";
+                case "info":
+                    return "Information";
                 case "new-plan":
                     return "New Plan";
                 case "bookings":
