@@ -9,7 +9,12 @@
         <icon-button
             class="mr-4"
             svg="copy"
-            :on-click="() => null"
+            :on-click="
+                () =>
+                    $store.dispatch('openModal', {
+                        name: 'duplicate-plan',
+                    })
+            "
             :icon-size="32"
         />
         <icon-button

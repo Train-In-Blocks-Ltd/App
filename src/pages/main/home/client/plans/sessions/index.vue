@@ -326,47 +326,6 @@
                 :max-week="maxWeek"
             />
         </div>
-        <form
-            v-if="showDuplicate"
-            class="tab_overlay_content fadeIn delay fill_mode_both"
-            @submit.prevent="
-                duplicatePlan(duplicateClientID),
-                    (showDuplicate = false),
-                    willBodyScroll(true)
-            "
-        >
-            <h3>Create a similar plan</h3>
-            <p class="grey">Copy this plan to the same/different client</p>
-            <br />
-            <select
-                :value="duplicateClientID"
-                name="duplicate_client"
-                class="width_300"
-                required
-                @input="
-                    (duplicateClientID = $event.target.value),
-                        checkForm('duplicate')
-                "
-            >
-                <option :value="null">Select a client</option>
-                <option
-                    v-for="(client, index) in clients"
-                    :key="`client_${index}`"
-                    :value="client.client_id"
-                >
-                    {{ client.name }}
-                </option></select
-            ><br /><br />
-            <button :disabled="disableDuplicatePlanButton" type="submit">
-                Duplicate
-            </button>
-            <button
-                class="red_button"
-                @click.prevent="(showDuplicate = false), willBodyScroll(true)"
-            >
-                Cancel
-            </button>
-        </form>
         <div
             v-if="
                 !loading && !isStatsOpen && !$parent.showOptions && !noSessions
@@ -919,7 +878,6 @@ export default {
             // MANIPULATION
             moveTarget: 1,
             shiftDays: 1,
-            duplicateClientID: null,
 
             // STATS
 
@@ -1005,9 +963,6 @@ export default {
                     break;
                 case "shift":
                     this.disableShiftButton = !this.shiftDays;
-                    break;
-                case "duplicate":
-                    this.disableDuplicatePlanButton = !this.duplicateClientID;
                     break;
             }
         },
@@ -1144,10 +1099,6 @@ export default {
                     break;
             }
         },
-
-        // -----------------------------
-        // Modals and tabs
-        // -----------------------------
 
         /**
          * Duplicates the selected sessions.
@@ -1633,41 +1584,6 @@ export default {
                 }
             } catch (e) {
                 console.error(e);
-            }
-        },
-
-        // -----------------------------
-        // Database
-        // -----------------------------
-
-        /**
-         * Duplicates the plan to select client.
-         * @param {integer} clientId - The client to copy the plan to.
-         */
-        async duplicatePlan(clientId) {
-            try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                await this.$store.dispatch("duplicatePlan", {
-                    clientId,
-                    planId: this.plan.id,
-                    planName: this.plan.name,
-                    planDuration: this.plan.duration,
-                    blockColor: this.plan.block_color,
-                    planNotes: this.plan.notes,
-                    planSessions: this.plan.sessions,
-                });
-                this.$ga.event("Plan", "duplicate");
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Plan duplicated",
-                    description: "Access it on your client's profile",
-                });
-                this.$store.dispatch("endLoading");
-                this.$router.push({ path: `/client/${clientId}/` });
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
             }
         },
 

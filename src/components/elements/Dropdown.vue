@@ -66,8 +66,8 @@ export default {
     },
     methods: {
         handleChange(e) {
-            this.$emit("output", e.target.value);
             if (this.onInput) this.onInput();
+            this.$emit("output", e.target.value);
         },
     },
 };
