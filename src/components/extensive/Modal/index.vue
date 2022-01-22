@@ -85,15 +85,15 @@ const PreviewModal = () =>
     );
 const NewPlanModal = () =>
     import(
-        /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/_client/components/NewPlanModal"
+        /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/NewPlanModal"
     );
 const AllBookingModal = () =>
     import(
-        /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/_client/components/AllBookingsModal"
+        /* webpackChunkName: "components.allBookingModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/AllBookingsModal"
     );
 const ToolkitModal = () =>
     import(
-        /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "@/pages/_client/components/ToolkitModal"
+        /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "@/pages/main/home/client/components/ToolkitModal"
     );
 
 export default {

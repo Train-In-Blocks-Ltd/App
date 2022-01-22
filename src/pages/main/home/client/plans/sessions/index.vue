@@ -416,7 +416,7 @@
             aria-label="Statistics"
             @click="(isStatsOpen = true), willBodyScroll(false)"
         >
-            <inline-svg :src="require('../../assets/svg/stats.svg')" />
+            <inline-svg :src="require('@/assets/svg/stats.svg')" />
             <p class="text">Statistics</p>
         </div>
         <multiselect
@@ -463,6 +463,8 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- Plan options -->
                 <div class="plan_options">
                     <router-link
                         :to="`/client/${$route.params.client_id}/`"
@@ -471,7 +473,7 @@
                     >
                         <inline-svg
                             id="back"
-                            :src="require('../../assets/svg/arrow-left.svg')"
+                            :src="require('@/assets/svg/arrow-left.svg')"
                         />
                         Back to profile
                     </router-link>
@@ -480,9 +482,7 @@
                         href="javascript:void(0)"
                         @click="(showDuplicate = true), willBodyScroll(false)"
                     >
-                        <inline-svg
-                            :src="require('../../assets/svg/copy.svg')"
-                        />
+                        <inline-svg :src="require('@/assets/svg/copy.svg')" />
                         Duplicate plan
                     </a>
                     <a
@@ -490,9 +490,7 @@
                         href="javascript:void(0)"
                         @click="deletePlan()"
                     >
-                        <inline-svg
-                            :src="require('../../assets/svg/bin.svg')"
-                        />
+                        <inline-svg :src="require('@/assets/svg/bin.svg')" />
                         Delete plan
                     </a>
                 </div>
@@ -517,7 +515,7 @@
                             @click="showMonthlyCal = !showMonthlyCal"
                         >
                             <inline-svg
-                                :src="require('../../assets/svg/calendar.svg')"
+                                :src="require('@/assets/svg/calendar.svg')"
                             />
                             Switch to
                             {{ !showMonthlyCal ? "month" : "week" }} view
@@ -613,9 +611,7 @@
                                     />
                                     <inline-svg
                                         id="info"
-                                        :src="
-                                            require('../../assets/svg/info.svg')
-                                        "
+                                        :src="require('@/assets/svg/info.svg')"
                                         title="Info"
                                         @click="
                                             (previewDesc =
@@ -829,7 +825,7 @@
                                                         ),
                                                 }"
                                                 :src="
-                                                    require('../../assets/svg/expand.svg')
+                                                    require('@/assets/svg/expand.svg')
                                                 "
                                                 title="Info"
                                                 @click="
@@ -874,27 +870,27 @@
 <script>
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true */ "../../components/Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true */ "@/components/Checkbox"
     );
 const WeekCalendar = () =>
     import(
-        /* webpackChunkName: "components.calendar", webpackPreload: true */ "../../components/WeekCalendar"
+        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/WeekCalendar"
     );
 const MonthCalendar = () =>
     import(
-        /* webpackChunkName: "components.calendar", webpackPreload: true */ "../../components/MonthCalendar"
+        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/MonthCalendar"
     );
 const RichEditor = () =>
     import(
-        /* webpackChunkName: "components.richeditor", webpackPreload: true */ "../../components/Editor"
+        /* webpackChunkName: "components.richeditor", webpackPreload: true */ "@/components/Editor"
     );
 const ColorPicker = () =>
     import(
-        /* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ "../../components/ColorPicker"
+        /* webpackChunkName: "components.colorpicker", webpackPrefetch: true */ "@/components/ColorPicker"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "../../components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/Multiselect"
     );
 const PreviewModal = () =>
     import(
@@ -902,11 +898,11 @@ const PreviewModal = () =>
     );
 const Statistics = () =>
     import(
-        /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "../../components/Stats"
+        /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "@/components/Stats"
     );
 const ProgressSessions = () =>
     import(
-        /* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ "../../components/ProgressSessions"
+        /* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ "@/components/ProgressSessions"
     );
 
 export default {

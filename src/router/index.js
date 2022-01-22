@@ -26,12 +26,14 @@ const ArchiveComponent = () =>
 const ProfileComponent = () =>
     import(/* webpackChunkName: "account" */ "@/pages/main/account");
 const ClientComponent = () =>
-    import(/* webpackChunkName: "client.home" */ "@/pages/_client/Home");
+    import(/* webpackChunkName: "clientHome" */ "@/pages/main/home/client");
 const ClientPlans = () =>
-    import(/* webpackChunkName: "client.plans" */ "@/pages/_client/Plans");
+    import(
+        /* webpackChunkName: "clientPlans" */ "@/pages/main/home/client/plans"
+    );
 const ClientSessions = () =>
     import(
-        /* webpackChunkName: "client.sessions" */ "@/pages/_client/Sessions"
+        /* webpackChunkName: "clientSessions" */ "@/pages/main/home/client/plans/sessions"
     );
 
 const ClientUserComponent = () =>

@@ -102,8 +102,8 @@ import { mapState } from "vuex";
 const emailBuilder = require("@/components/js/email");
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("../../../../config/prod.env")
-        : require("../../../../config/dev.env");
+        ? require("@/../config/prod.env")
+        : require("@/../config/dev.env");
 
 const Icon = () =>
     import(

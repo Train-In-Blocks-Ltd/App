@@ -55,7 +55,7 @@ import { mapState } from "vuex";
 
 const RichEditor = () =>
     import(
-        /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "../../components/Editor"
+        /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
     );
 const Bookings = () =>
     import(
