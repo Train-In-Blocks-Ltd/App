@@ -31,6 +31,7 @@
             <preview-modal v-else-if="modalContent === 'preview'" />
             <new-plan-modal v-else-if="modalContent === 'new-plan'" />
             <all-booking-modal v-else-if="modalContent === 'bookings'" />
+            <toolkit-modal v-else-if="modalContent === 'toolkit'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -90,6 +91,10 @@ const AllBookingModal = () =>
     import(
         /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/_client/components/AllBookingsModal"
     );
+const ToolkitModal = () =>
+    import(
+        /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "@/pages/_client/components/ToolkitModal"
+    );
 
 export default {
     components: {
@@ -105,6 +110,7 @@ export default {
         PreviewModal,
         NewPlanModal,
         AllBookingModal,
+        ToolkitModal,
     },
     computed: mapState([
         "modalSize",
@@ -142,6 +148,8 @@ export default {
                     return "New Plan";
                 case "bookings":
                     return "All bookings";
+                case "toolkit":
+                    return "Toolkit";
                 default:
                     return "";
             }

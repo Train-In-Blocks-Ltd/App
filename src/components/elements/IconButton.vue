@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex items-center cursor-pointer hover:opacity-60 transition-opacity"
+        class="flex w-max items-center cursor-pointer hover:opacity-60 transition-opacity"
         @click="
             () => {
                 if (onClick) onClick();

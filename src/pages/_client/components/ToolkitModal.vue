@@ -1,69 +1,36 @@
-<style lang="scss" scoped>
-.close_icon {
-    margin-bottom: 2rem;
-}
-textarea {
-    margin-top: 2rem;
-    resize: none;
-}
-.session_toolkit--content {
-    margin: 2rem 0;
-    > div {
-        display: grid;
-        grid-gap: 1rem;
-    }
-    .result {
-        margin-top: 2rem;
-    }
-}
-</style>
-
 <template>
-    <div>
-        <inline-svg
-            class="close_icon cursor"
-            :src="require('../assets/svg/close.svg')"
-            aria-label="Close"
-            @click="($parent.showToolkit = false), willBodyScroll(true)"
+    <div class="mt-8">
+        <dropdown
+            class="mb-4"
+            :value="selectedTool"
+            :items="dropdownItems"
+            @output="(data) => (selectedTool = data)"
         />
-        <select
-            v-model="selectedTool"
-            class="text--small session_toolkit--select"
-            @change="result = null"
-        >
-            <option
-                v-for="(toolSelect, toolSelectIndex) in calculators"
-                :key="`tool_select_${toolSelectIndex}`"
-            >
-                {{ toolSelect.name }}
-            </option>
-        </select>
-        <textarea
-            rows="3"
+        <txt-area
+            :rows="3"
             placeholder="Use this if you need to make quick notes"
         />
-        <div class="session_toolkit--content">
-            <div
-                v-for="(tool, toolIndex) in calculators"
-                v-show="selectedTool === tool.name"
-                :key="`tool_${toolIndex}`"
-            >
-                <p><b>Data:</b></p>
-                <input
-                    v-for="(input, inputIndex) in tool.inputs"
-                    :id="`input_${input.id}`"
-                    :key="`tool_${inputIndex}`"
-                    v-model="input.value"
-                    type="number"
-                    :placeholder="input.label"
-                    :aria-label="input.label"
-                    @input="calculate(tool.id)"
-                />
-                <h3 class="result">
-                    {{ tool.metric }}: {{ result || "_____" }}
-                    <span v-html="tool.units" />
-                </h3>
-            </div>
+        <div
+            v-for="(tool, toolIndex) in calculators"
+            v-show="selectedTool === tool.name"
+            :key="`tool_${toolIndex}`"
+        >
+            <txt class="mt-8 mb-2" bold>Data:</txt>
+            <txt-input
+                v-for="(input, inputIndex) in tool.inputs"
+                type="number"
+                :value="input.value"
+                :input-id="`input_${input.id}`"
+                :key="`tool_${inputIndex}`"
+                :placeholder="input.label"
+                :aria-label="input.label"
+                :on-input="() => calculate(tool.id)"
+                @output="(data) => (input.value = data)"
+            />
+            <txt type="large-body" class="mt-8" bold>
+                {{ tool.metric }}: {{ result || "_____" }}
+                <span v-html="tool.units" />
+            </txt>
         </div>
     </div>
 </template>
@@ -74,6 +41,40 @@ export default {
         return {
             selectedTool: "Maximal heart rate (Tanaka)",
             result: null,
+            dropdownItems: [
+                {
+                    label: "Maximal heart rate (Tanaka)",
+                    value: "Maximal heart rate (Tanaka)",
+                },
+                {
+                    label: "Maximal heart rate (Gelish)",
+                    value: "Maximal heart rate (Gelish)",
+                },
+                {
+                    label: "Heart rate reserve (Tanaka)",
+                    value: "Heart rate reserve (Tanaka)",
+                },
+                {
+                    label: "Heart rate training zone (Karvonen)",
+                    value: "Heart rate training zone (Karvonen)",
+                },
+                {
+                    label: "Body mass index",
+                    value: "Body mass index",
+                },
+                {
+                    label: "3-site skinfold (Female; Jackson and Pollock)",
+                    value: "3-site skinfold (Female; Jackson and Pollock)",
+                },
+                {
+                    label: "3-site skinfold (Male; Jackson and Pollock)",
+                    value: "3-site skinfold (Male; Jackson and Pollock)",
+                },
+                {
+                    label: "Percentage body fat (Siri)",
+                    value: "Percentage body fat (Siri)",
+                },
+            ],
             calculators: [
                 {
                     id: "mhr_tanaka",
@@ -210,15 +211,11 @@ export default {
         };
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Calculates based on the calculator selected.
-         * @param {string} cal - The selected calculator.
          */
         calculate(cal) {
+            console.log(cal);
             switch (cal) {
                 case "mhr_tanaka": {
                     this.result =

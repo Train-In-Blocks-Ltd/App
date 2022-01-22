@@ -15,6 +15,8 @@
             :aria-label="ariaLabel"
             :pattern="pattern"
             :required="required"
+            :minlength="minLength"
+            :maxlength="maxLength"
             class="w-full px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-200 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
             @input="handleInput"
             @blur="
@@ -61,14 +63,16 @@ export default {
         onBlur: Function,
         required: Boolean,
         focusFirst: Boolean,
+        minLength: Number,
+        maxLength: Number,
     },
     mounted() {
         if (this.focusFirst) this.$el.children[0].focus();
     },
     methods: {
         handleInput(e) {
-            this.$emit("output", e.target.value);
             if (this.onInput) this.onInput();
+            this.$emit("output", e.target.value);
         },
     },
 };

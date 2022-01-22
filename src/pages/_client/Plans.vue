@@ -102,7 +102,6 @@ export default {
     computed: mapState(["loading", "dontLeave", "clients", "clientDetails"]),
     created() {
         this.willBodyScroll(true);
-        this.$parent.checkClient();
     },
     methods: {
         /**
