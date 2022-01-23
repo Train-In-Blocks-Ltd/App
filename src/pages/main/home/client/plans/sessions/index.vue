@@ -3,7 +3,7 @@
         <multiselect
             type="session"
             :options="multiselectOption"
-            @response="resolve_session_multiselect"
+            @response="handleMultiselectResponse"
         />
         <div class="mt-16">
             <!-- Plan controls -->
@@ -30,7 +30,7 @@
                     :editing="editSession"
                     :empty-placeholder="'What do you want to achieve in this plan?'"
                     :force-stop="forceStop"
-                    @on-edit-change="resolvePlanInfoEditor"
+                    @on-edit-change="handlePlanNotesChange"
                 />
             </editor-wrapper>
 
@@ -315,7 +315,7 @@
                                     :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                                     :data-for-templates="templates"
                                     :force-stop="forceStop"
-                                    @on-edit-change="resolveSessionEditor"
+                                    @on-edit-change="handleSessionNotesChange"
                                 />
                             </card-wrapper>
                         </div>
@@ -513,14 +513,11 @@ export default {
         }
         this.$store.dispatch("endLoading");
     },
-    beforeDestroy() {
-        this.willBodyScroll(true);
-    },
     methods: {
         /**
          * Resolves the actions taken from the session multi-select.
          */
-        resolve_session_multiselect(res) {
+        handleMultiselectResponse(res) {
             switch (res) {
                 case "Complete":
                     this.useUpdateCheckedMutation(1);
@@ -569,7 +566,7 @@ export default {
         /**
          * Resolves the state of the plan notes editor.
          */
-        resolvePlanInfoEditor(state) {
+        handlePlanNotesChange(state) {
             switch (state) {
                 case "edit":
                     this.$store.commit("setData", {
@@ -602,7 +599,7 @@ export default {
         /**
          * Resolves the state of the session editor.
          */
-        resolveSessionEditor(state, id) {
+        handleSessionNotesChange(state, id) {
             const SESSION = this.$store.getters.helper(
                 "match_session",
                 this.$route.params.client_id,
