@@ -22,329 +22,310 @@
                 <plan-options />
             </div>
 
+            <!-- Plan notes -->
+            <editor-wrapper title="Plan Notes" class="my-16">
+                <rich-editor
+                    v-model="plan.notes"
+                    :item-id="'plan_notes'"
+                    :editing="editSession"
+                    :empty-placeholder="'What do you want to achieve in this plan?'"
+                    :force-stop="forceStop"
+                    @on-edit-change="resolvePlanInfoEditor"
+                />
+            </editor-wrapper>
+
+            <!-- Calendar -->
             <div>
-                <!-- Plan notes -->
-                <editor-wrapper title="Plan Notes" class="my-16">
-                    <rich-editor
-                        v-model="plan.notes"
-                        :item-id="'plan_notes'"
-                        :editing="editSession"
-                        :empty-placeholder="'What do you want to achieve in this plan?'"
-                        :force-stop="forceStop"
-                        @on-edit-change="resolvePlanInfoEditor"
-                    />
-                </editor-wrapper>
+                <!-- Type toggle -->
+                <a
+                    class="flex items-center"
+                    href="javascript:void(0)"
+                    @click="showMonthlyCal = !showMonthlyCal"
+                >
+                    <icon svg="calendar" :icon-size="20" class="mr-2" />
+                    Switch to
+                    {{ !showMonthlyCal ? "month" : "week" }} view
+                </a>
 
-                <!-- Calendar -->
+                <!-- Calendars -->
+                <week-calendar
+                    v-if="!showMonthlyCal"
+                    :events="sessionDates"
+                    :force-update="forceUpdate"
+                    :is-trainer="true"
+                />
+                <month-calendar
+                    v-else
+                    :events="sessionDates"
+                    :force-update="forceUpdate"
+                    :is-trainer="true"
+                />
+            </div>
+
+            <!-- Microcycle table -->
+            <div class="my-16">
                 <div>
-                    <!-- Type toggle -->
-                    <a
-                        class="flex items-center"
-                        href="javascript:void(0)"
-                        @click="showMonthlyCal = !showMonthlyCal"
-                    >
-                        <icon svg="calendar" :icon-size="20" class="mr-2" />
-                        Switch to
-                        {{ !showMonthlyCal ? "month" : "week" }} view
-                    </a>
+                    <txt type="large-body" bold>Microcycles</txt>
 
-                    <!-- Calendars -->
-                    <week-calendar
-                        v-if="!showMonthlyCal"
-                        :events="sessionDates"
-                        :force-update="forceUpdate"
-                        :is-trainer="true"
+                    <!-- Duration -->
+                    <txt-input
+                        type="number"
+                        name="duration"
+                        min="1"
+                        label="Duration:"
+                        class="w-1/3 lg:w-1/4 my-4"
+                        inputmode="decimal"
+                        :value="plan.duration"
+                        :on-blur="() => updatePlan()"
+                        @output="(data) => (plan.duration = data)"
                     />
-                    <month-calendar
-                        v-else
-                        :events="sessionDates"
-                        :force-update="forceUpdate"
-                        :is-trainer="true"
-                    />
+
+                    <!-- Week table -->
+                    <div class="flex mb-4">
+                        <week
+                            v-for="weekNumber in planDuration(plan.duration)"
+                            :class="{
+                                'mr-2': weekNumber !== plan.duration,
+                            }"
+                            :key="weekNumber"
+                            :week-number="weekNumber"
+                            :current-week="currentWeek"
+                        />
+                    </div>
                 </div>
 
-                <!-- Microcycle table -->
-                <div class="my-16">
-                    <div>
-                        <txt type="large-body" bold>Microcycles</txt>
-
-                        <!-- Duration -->
-                        <txt-input
-                            type="number"
-                            name="duration"
-                            min="1"
-                            label="Duration:"
-                            class="w-1/3 lg:w-1/4 my-4"
-                            inputmode="decimal"
-                            :value="plan.duration"
-                            :on-blur="() => updatePlan()"
-                            @output="(data) => (plan.duration = data)"
-                        />
-
-                        <!-- Week table -->
-                        <div class="flex mb-4">
-                            <week
-                                v-for="weekNumber in planDuration(
-                                    plan.duration
-                                )"
-                                :class="{
-                                    'mr-2': weekNumber !== plan.duration,
-                                }"
-                                :key="weekNumber"
-                                :week-number="weekNumber"
-                                :current-week="currentWeek"
-                            />
-                        </div>
-                    </div>
-
-                    <!-- Sessions section -->
-                    <div class="mt-12">
-                        <!-- Options -->
-                        <skeleton v-if="loading" :type="'session'" />
-                        <div v-else-if="!noSessions && !weekIsEmpty">
-                            <div
-                                v-if="plan.sessions"
-                                class="flex items-center justify-between mb-4"
-                            >
-                                <!-- Left side -->
-                                <div class="flex items-center">
-                                    <a
-                                        v-if="
-                                            !noSessions &&
-                                            selectedIds.length <
-                                                plan.sessions.length &&
-                                            !weekIsEmpty
-                                        "
-                                        href="javascript:void(0)"
-                                        class="mr-4 text-sm"
-                                        @click="selectAll('week')"
-                                    >
-                                        Select this microcycle
-                                    </a>
-                                    <a
-                                        v-if="
-                                            !noSessions &&
-                                            selectedIds.length <
-                                                plan.sessions.length &&
-                                            !weekIsEmpty
-                                        "
-                                        href="javascript:void(0)"
-                                        class="mr-4 text-sm"
-                                        @click="selectAll('all')"
-                                    >
-                                        Select all
-                                    </a>
-                                    <a
-                                        v-if="
-                                            plan.sessions !== false &&
-                                            !isEditingSession &&
-                                            !weekIsEmpty
-                                        "
-                                        href="javascript:void(0)"
-                                        class="mr-4 text-sm"
-                                        @click="
-                                            expandAll(
-                                                expandedSessions.length !== 0
-                                                    ? 'Collapse'
-                                                    : 'Expand'
-                                            )
-                                        "
-                                    >
-                                        {{
+                <!-- Sessions section -->
+                <div class="mt-12">
+                    <!-- Options -->
+                    <skeleton v-if="loading" :type="'session'" />
+                    <div v-else-if="!noSessions && !weekIsEmpty">
+                        <div
+                            v-if="plan.sessions"
+                            class="flex items-center justify-between mb-4"
+                        >
+                            <!-- Left side -->
+                            <div class="flex items-center">
+                                <a
+                                    v-if="
+                                        !noSessions &&
+                                        selectedIds.length <
+                                            plan.sessions.length &&
+                                        !weekIsEmpty
+                                    "
+                                    href="javascript:void(0)"
+                                    class="mr-4 text-sm"
+                                    @click="selectAll('week')"
+                                >
+                                    Select this microcycle
+                                </a>
+                                <a
+                                    v-if="
+                                        !noSessions &&
+                                        selectedIds.length <
+                                            plan.sessions.length &&
+                                        !weekIsEmpty
+                                    "
+                                    href="javascript:void(0)"
+                                    class="mr-4 text-sm"
+                                    @click="selectAll('all')"
+                                >
+                                    Select all
+                                </a>
+                                <a
+                                    v-if="
+                                        plan.sessions !== false &&
+                                        !isEditingSession &&
+                                        !weekIsEmpty
+                                    "
+                                    href="javascript:void(0)"
+                                    class="mr-4 text-sm"
+                                    @click="
+                                        expandAll(
                                             expandedSessions.length !== 0
-                                                ? "Collapse"
-                                                : "Expand"
-                                        }}
-                                        all
-                                    </a>
-                                </div>
-
-                                <!-- Right side  -->
-                                <div class="flex items-center">
-                                    <color-picker :current-week="currentWeek" />
-                                    <icon-button
-                                        svg="info"
-                                        :on-click="
-                                            () => {
-                                                $store.commit('setData', {
-                                                    attr: 'previewHTML',
-                                                    data: '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>',
-                                                });
-                                                $store.dispatch('openModal', {
-                                                    name: 'info',
-                                                });
-                                            }
-                                        "
-                                        :icon-size="28"
-                                        class="mr-4"
-                                    />
-                                    <icon-button
-                                        svg="plus"
-                                        :on-click="() => createNewSession()"
-                                        :icon-size="28"
-                                    />
-                                </div>
+                                                ? 'Collapse'
+                                                : 'Expand'
+                                        )
+                                    "
+                                >
+                                    {{
+                                        expandedSessions.length !== 0
+                                            ? "Collapse"
+                                            : "Expand"
+                                    }}
+                                    all
+                                </a>
                             </div>
 
-                            <!-- Sessions list -->
-                            <div
-                                v-if="!noSessions && !loading"
-                                class="grid gap-8"
+                            <!-- Right side  -->
+                            <div class="flex items-center">
+                                <color-picker :current-week="currentWeek" />
+                                <icon-button
+                                    svg="info"
+                                    :on-click="
+                                        () => {
+                                            $store.commit('setData', {
+                                                attr: 'previewHTML',
+                                                data: '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>',
+                                            });
+                                            $store.dispatch('openModal', {
+                                                name: 'info',
+                                            });
+                                        }
+                                    "
+                                    :icon-size="28"
+                                    class="mr-4"
+                                />
+                                <icon-button
+                                    svg="plus"
+                                    :on-click="() => createNewSession()"
+                                    :icon-size="28"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Sessions list -->
+                        <div v-if="!noSessions && !loading" class="grid gap-8">
+                            <!-- Session -->
+                            <card-wrapper
+                                v-for="(
+                                    session, sessionIndex
+                                ) in sessionsSorter(plan.sessions)"
+                                v-show="session.week_id === currentWeek"
+                                :id="'session-' + session.id"
+                                :key="`session-${sessionIndex}`"
+                                class="p-4 sm:p-8"
+                                no-hover
                             >
-                                <!-- Session -->
-                                <card-wrapper
-                                    v-for="(
-                                        session, sessionIndex
-                                    ) in sessionsSorter(plan.sessions)"
-                                    v-show="session.week_id === currentWeek"
-                                    :id="'session-' + session.id"
-                                    :key="`session-${sessionIndex}`"
-                                    class="p-4 sm:p-8"
-                                    no-hover
-                                >
-                                    <div class="flex justify-between">
-                                        <!-- Preview state header -->
-                                        <div v-if="session.id !== editSession">
-                                            <txt
-                                                :class="{
-                                                    'text-red-700':
-                                                        session.name ==
-                                                        'Untitled',
-                                                }"
-                                                bold
-                                                >{{ session.name }}</txt
-                                            >
-                                            <txt type="tiny"
-                                                >{{ day(session.date) }}
-                                                {{ session.date }}</txt
-                                            >
-                                            <txt
-                                                type="tiny"
-                                                :class="
-                                                    session.checked === 1
-                                                        ? 'text-green-700'
-                                                        : 'text-red-700'
-                                                "
-                                                >{{
-                                                    session.checked === 0
-                                                        ? "Incomplete"
-                                                        : "Complete"
-                                                }}</txt
-                                            >
-                                        </div>
-
-                                        <!-- Edit state header -->
-                                        <div
-                                            v-else
-                                            class="grid gap-2 w-full max-w-sm mr-4"
+                                <div class="flex justify-between">
+                                    <!-- Preview state header -->
+                                    <div v-if="session.id !== editSession">
+                                        <txt
+                                            :class="{
+                                                'text-red-700':
+                                                    session.name == 'Untitled',
+                                            }"
+                                            bold
+                                            >{{ session.name }}</txt
                                         >
-                                            <txt-input
-                                                name="session-name"
-                                                type="text"
-                                                pattern="[^\/]"
-                                                class="w-full"
-                                                :value="session.name"
-                                                @output="
-                                                    (data) =>
-                                                        (session.name = data)
-                                                "
-                                            />
-                                            <txt-input
-                                                type="date"
-                                                name="session-date"
-                                                :value="session.date"
-                                                @output="
-                                                    (data) =>
-                                                        (session.date = data)
-                                                "
-                                            />
-                                        </div>
-
-                                        <div class="flex">
-                                            <!-- Feedback button -->
-                                            <a
-                                                v-if="
-                                                    session.feedback !== '' &&
-                                                    session.feedback !== null
-                                                "
-                                                class="mr-4 hover:opacity-60 transition-opacity cursor-pointer"
-                                                @click="
-                                                    () => {
-                                                        $store.commit(
-                                                            'setData',
-                                                            {
-                                                                attr: 'previewHTML',
-                                                                data: session.feedback,
-                                                            }
-                                                        );
-                                                        $store.dispatch(
-                                                            'openModal',
-                                                            {
-                                                                name: 'preview',
-                                                            }
-                                                        );
-                                                    }
-                                                "
-                                                ><txt type="tiny" bold
-                                                    >Feedback</txt
-                                                ></a
-                                            >
-
-                                            <!-- Checkbox and expand -->
-                                            <div
-                                                class="flex flex-col items-center"
-                                            >
-                                                <checkbox
-                                                    :item-id="session.id"
-                                                />
-                                                <icon-button
-                                                    v-if="!isEditingSession"
-                                                    svg="chevron-down"
-                                                    class="ml-auto mt-2 transform transition-transform"
-                                                    :class="{
-                                                        'rotate-180':
-                                                            expandedSessions.includes(
-                                                                session.id
-                                                            ),
-                                                    }"
-                                                    :icon-size="28"
-                                                    :on-click="
-                                                        () =>
-                                                            toggleExpandedSessions(
-                                                                session.id
-                                                            )
-                                                    "
-                                                />
-                                            </div>
-                                        </div>
+                                        <txt type="tiny"
+                                            >{{ day(session.date) }}
+                                            {{ session.date }}</txt
+                                        >
+                                        <txt
+                                            type="tiny"
+                                            :class="
+                                                session.checked === 1
+                                                    ? 'text-green-700'
+                                                    : 'text-red-700'
+                                            "
+                                            >{{
+                                                session.checked === 0
+                                                    ? "Incomplete"
+                                                    : "Complete"
+                                            }}</txt
+                                        >
                                     </div>
 
-                                    <!-- Editor -->
-                                    <rich-editor
-                                        v-show="
-                                            expandedSessions.includes(
-                                                session.id
-                                            )
-                                        "
-                                        v-model="session.notes"
-                                        :item-id="session.id"
-                                        :week-id="currentWeek"
-                                        :editing="editSession"
-                                        :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
-                                        :data-for-templates="templates"
-                                        :force-stop="forceStop"
-                                        @on-edit-change="resolveSessionEditor"
-                                    />
-                                </card-wrapper>
-                            </div>
+                                    <!-- Edit state header -->
+                                    <div
+                                        v-else
+                                        class="grid gap-2 w-full max-w-sm mr-4"
+                                    >
+                                        <txt-input
+                                            name="session-name"
+                                            type="text"
+                                            pattern="[^\/]"
+                                            class="w-full"
+                                            :value="session.name"
+                                            @output="
+                                                (data) => (session.name = data)
+                                            "
+                                        />
+                                        <txt-input
+                                            type="date"
+                                            name="session-date"
+                                            :value="session.date"
+                                            @output="
+                                                (data) => (session.date = data)
+                                            "
+                                        />
+                                    </div>
+
+                                    <div class="flex">
+                                        <!-- Feedback button -->
+                                        <a
+                                            v-if="
+                                                session.feedback !== '' &&
+                                                session.feedback !== null
+                                            "
+                                            class="mr-4 hover:opacity-60 transition-opacity cursor-pointer"
+                                            @click="
+                                                () => {
+                                                    $store.commit('setData', {
+                                                        attr: 'previewHTML',
+                                                        data: session.feedback,
+                                                    });
+                                                    $store.dispatch(
+                                                        'openModal',
+                                                        {
+                                                            name: 'preview',
+                                                        }
+                                                    );
+                                                }
+                                            "
+                                            ><txt type="tiny" bold
+                                                >Feedback</txt
+                                            ></a
+                                        >
+
+                                        <!-- Checkbox and expand -->
+                                        <div class="flex flex-col items-center">
+                                            <checkbox :item-id="session.id" />
+                                            <icon-button
+                                                v-if="!isEditingSession"
+                                                svg="chevron-down"
+                                                class="ml-auto mt-2 transform transition-transform"
+                                                :class="{
+                                                    'rotate-180':
+                                                        expandedSessions.includes(
+                                                            session.id
+                                                        ),
+                                                }"
+                                                :icon-size="28"
+                                                :on-click="
+                                                    () =>
+                                                        toggleExpandedSessions(
+                                                            session.id
+                                                        )
+                                                "
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Editor -->
+                                <rich-editor
+                                    v-show="
+                                        expandedSessions.includes(session.id)
+                                    "
+                                    v-model="session.notes"
+                                    :item-id="session.id"
+                                    :week-id="currentWeek"
+                                    :editing="editSession"
+                                    :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
+                                    :data-for-templates="templates"
+                                    :force-stop="forceStop"
+                                    @on-edit-change="resolveSessionEditor"
+                                />
+                            </card-wrapper>
                         </div>
-                        <txt v-else type="large-body" grey>
-                            No sessions created yet
-                        </txt>
                     </div>
+                    <txt v-else type="large-body" grey>
+                        No sessions created yet
+                    </txt>
                 </div>
-                <statistics :plan="plan" :show="isStatsOpen" />
             </div>
+            <statistics :plan="plan" :show="isStatsOpen" />
         </div>
     </div>
 </template>
@@ -538,15 +519,14 @@ export default {
     methods: {
         /**
          * Resolves the actions taken from the session multi-select.
-         * @param {string} res - The action taken from the multi-select.
          */
         resolve_session_multiselect(res) {
             switch (res) {
                 case "Complete":
-                    this.bulkCheck(1);
+                    this.useUpdateCheckedMutation(1);
                     break;
                 case "Incomplete":
-                    this.bulkCheck(0);
+                    this.useUpdateCheckedMutation(0);
                     break;
                 case "Progress":
                     this.$store.dispatch("openModal", {
@@ -588,7 +568,6 @@ export default {
 
         /**
          * Resolves the state of the plan notes editor.
-         * @param {string} state - The returned state of the editor.
          */
         resolvePlanInfoEditor(state) {
             switch (state) {
@@ -622,8 +601,6 @@ export default {
 
         /**
          * Resolves the state of the session editor.
-         * @param {string} state - The returned state of the editor.
-         * @param {integer} id - The id of the session.
          */
         resolveSessionEditor(state, id) {
             const SESSION = this.$store.getters.helper(
@@ -750,21 +727,20 @@ export default {
 
         /**
          * Toggles the complete/incomplete state of the selected sessions.
-         * @param {integer} boolState - The state of the session, 1 - complete, 0 - incomplete.
          */
-        async bulkCheck(boolState) {
+        async useUpdateCheckedMutation(boolState) {
             this.$store.commit("setData", {
                 attr: "dontLeave",
                 data: true,
             });
             if (this.selectedIds.length !== 0) {
                 if (
-                    await this.$parent.$parent.$refs.confirm_pop_up.show(
-                        `Are you sure that you want to ${
+                    await this.$store.dispatch("openConfirmPopUp", {
+                        title: `Are you sure that you want to ${
                             boolState === 1 ? "complete" : "incomplete"
                         } all the selected sessions?`,
-                        "You can update this later if anything changes."
-                    )
+                        text: "You can update this later if anything changes.",
+                    })
                 ) {
                     this.plan.sessions.forEach((session) => {
                         if (this.selectedIds.includes(session.id)) {
