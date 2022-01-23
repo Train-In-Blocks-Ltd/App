@@ -136,10 +136,10 @@ export default {
                 });
                 if (this.selectedIds.length !== 0) {
                     if (
-                        await this.$parent.$refs.confirm_pop_up.show(
-                            "Are you sure that you want to delete all the selected clients?",
-                            "We will remove their data(s) from our database and it won't be recoverable."
-                        )
+                        await this.$store.dispatch("openConfirmPopUp", {
+                            title: "Are you sure that you want to delete all the selected clients?",
+                            text: "We will remove their data(s) from our database and it won't be recoverable.",
+                        })
                     ) {
                         await this.$store.dispatch(
                             "clientDelete",
@@ -175,10 +175,10 @@ export default {
                 });
                 if (this.selectedIds.length !== 0) {
                     if (
-                        await this.$parent.$refs.confirm_pop_up.show(
-                            "Are you sure that you want to unarchive all the selected clients?",
-                            "Their data will be recovered and available on the Home page."
-                        )
+                        await this.$store.dispatch("openConfirmPopUp", {
+                            title: "Are you sure that you want to unarchive all the selected clients?",
+                            text: "Their data will be recovered and available on the Home page.",
+                        })
                     ) {
                         await this.$store.dispatch(
                             "clientUnarchive",

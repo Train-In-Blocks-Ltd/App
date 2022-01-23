@@ -80,10 +80,10 @@ export default {
     async beforeRouteLeave(to, from, next) {
         if (
             this.dontLeave
-                ? await this.$parent.$parent.$refs.confirm_pop_up.show(
-                      "Your changes might not be saved",
-                      "Are you sure you want to leave?"
-                  )
+                ? await this.$store.dispatch("openConfirmPopUp", {
+                      title: "Your changes might not be saved",
+                      text: "Are you sure you want to leave?",
+                  })
                 : true
         ) {
             this.$store.commit("setData", {

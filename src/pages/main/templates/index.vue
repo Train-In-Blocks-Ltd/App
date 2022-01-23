@@ -139,10 +139,10 @@ export default {
     async beforeRouteLeave(to, from, next) {
         if (
             this.dontLeave
-                ? await this.$parent.$refs.confirm_pop_up.show(
-                      "Your changes might not be saved",
-                      "Are you sure you want to leave?"
-                  )
+                ? await this.$store.dispatch("openConfirmPopUp", {
+                      title: "Your changes might not be saved",
+                      text: "Are you sure you want to leave?",
+                  })
                 : true
         ) {
             this.$store.commit("setData", {
@@ -278,10 +278,10 @@ export default {
         async deleteMultiTemplates() {
             if (this.selectedIds.length !== 0) {
                 if (
-                    await this.$parent.$refs.confirm_pop_up.show(
-                        "Are you sure you want to delete all the selected templates?",
-                        "We will remove these templates from our database and it won't be recoverable."
-                    )
+                    await this.$store.dispatch("openConfirmPopUp", {
+                        title: "Are you sure you want to delete all the selected templates?",
+                        text: "We will remove these templates from our database and it won't be recoverable.",
+                    })
                 ) {
                     try {
                         this.$store.commit("setData", {
