@@ -44,6 +44,7 @@
             <move-modal v-else-if="modalContent === 'move'" />
             <shift-modal v-else-if="modalContent === 'shift'" />
             <progress-modal v-else-if="modalContent === 'progress'" />
+            <statistics-modal v-else-if="modalContent === 'statistics'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -123,6 +124,10 @@ const ProgressModal = () =>
     import(
         /* webpackChunkName: "components.progressModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ProgressModal"
     );
+const StatisticsModal = () =>
+    import(
+        /* webpackChunkName: "components.statisticsModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/StatisticsModal"
+    );
 
 export default {
     components: {
@@ -143,6 +148,7 @@ export default {
         MoveModal,
         ShiftModal,
         ProgressModal,
+        StatisticsModal,
     },
     computed: mapState([
         "modalSize",
@@ -192,6 +198,8 @@ export default {
                     return "Shift sessions";
                 case "progress":
                     return "Progress sessions";
+                case "statistics":
+                    return "Statistics";
                 default:
                     return "";
             }

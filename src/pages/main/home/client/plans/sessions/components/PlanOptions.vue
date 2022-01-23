@@ -20,7 +20,12 @@
         <icon-button
             class="mr-4"
             svg="pie-chart"
-            :on-click="() => deletePlan()"
+            :on-click="
+                () =>
+                    $store.dispatch('openModal', {
+                        name: 'statistics',
+                    })
+            "
             :icon-size="32"
         />
         <icon-button

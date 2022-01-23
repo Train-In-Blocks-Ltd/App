@@ -325,7 +325,6 @@
                     </txt>
                 </div>
             </div>
-            <statistics :plan="plan" :show="isStatsOpen" />
         </div>
     </div>
 </template>
@@ -355,10 +354,6 @@ const ColorPicker = () =>
 const Multiselect = () =>
     import(
         /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/Multiselect"
-    );
-const Statistics = () =>
-    import(
-        /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "@/components/Stats"
     );
 const PlanOptions = () =>
     import(
@@ -393,7 +388,6 @@ export default {
         RichEditor,
         ColorPicker,
         Multiselect,
-        Statistics,
         PlanOptions,
         PlanProgressBar,
         EditorWrapper,
@@ -450,11 +444,6 @@ export default {
             // WEEK
 
             weekSessions: [],
-            weekIsEmpty: true,
-
-            // STATS
-
-            isStatsOpen: false,
 
             // CALENDAR
 
@@ -480,6 +469,13 @@ export default {
                 .replace("[", "")
                 .replace("]", "")
                 .split(",");
+        },
+        weekIsEmpty() {
+            return (
+                this.plan.sessions?.filter(
+                    (session) => session.week_id === this.currentWeek
+                ).length === 0
+            );
         },
         ...mapState([
             "currentWeek",
@@ -887,7 +883,6 @@ export default {
                     }
                 });
             }
-            this.weekIsEmpty = arr === 0;
         },
 
         /**

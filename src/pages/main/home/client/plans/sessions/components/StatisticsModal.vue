@@ -1,268 +1,100 @@
-<style lang="scss" scoped>
-.visualise {
-    position: fixed;
-    padding: 4rem 10vw 10rem calc(2rem + 38px + 10vw);
-    top: 0;
-    left: 0;
-    z-index: 12;
-    height: 100%;
-    width: 100%;
-    overflow-y: auto;
-    .stats_top_section {
-        display: flex;
-        justify-content: space-between;
-    }
-    .container--content {
-        display: flex;
-        flex-direction: column;
-        .data-options {
-            display: flex;
-            .data-select {
-                padding: 1rem;
-                margin-right: 4rem;
-                .data-select__options {
-                    display: grid;
-                    &:not(:last-child) {
-                        margin-bottom: 1rem;
-                    }
-                    label {
-                        font-weight: bold;
-                    }
-                    select {
-                        margin: 0.6rem 0;
-                    }
-                }
-            }
-            .data-desc {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-gap: 1rem;
-                padding: 1rem;
-                width: 100%;
-                .data-desc__value {
-                    margin: 0.4rem 0 2rem 0;
-                    font-size: 2.4rem;
-                }
-            }
-        }
-
-        /* Protocol error table */
-        .protocol_error {
-            display: grid;
-            grid-gap: 1rem;
-            margin-top: 4rem;
-            padding: 1rem;
-            table {
-                th,
-                td {
-                    padding: 0.6rem 0;
-                }
-                th {
-                    text-align: left;
-                    border-bottom: 1px solid var(--base_red);
-                }
-                td {
-                    overflow-wrap: anywhere;
-                }
-            }
-        }
-
-        /* Placeholder on empty */
-        .graph_placeholder {
-            padding: 1rem;
-            margin-top: 2rem;
-        }
-    }
-}
-
-@media (max-width: 992px) {
-    .visualise .container--content .data-options {
-        display: grid;
-        grid-gap: 4rem;
-        .data-select {
-            margin-right: 0;
-            .data-select__options {
-                display: grid;
-            }
-        }
-    }
-}
-@media (max-width: 768px) {
-    .visualise {
-        padding: 2rem 5vw 4rem 5vw;
-    }
-}
-</style>
-
 <template>
-    <div id="statistics">
-        <div :class="{ opened_sections: show }" class="section_overlay" />
-        <div v-if="show" class="visualise fadeIn delay fill_mode_both">
-            <div class="stats_top_section">
-                <h2 class="bottom_margin">Statistics</h2>
-                <inline-svg
-                    class="close_icon cursor"
-                    :src="require('../assets/svg/close.svg')"
-                    aria-label="Close"
-                    @click="($parent.isStatsOpen = false), willBodyScroll(true)"
-                />
-            </div>
-            <div class="container--content">
-                <div class="data-options">
-                    <card-wrapper
-                        class="data-select"
-                        :style="{ backgroundColor: 'var(--fore)' }"
-                        noHover
-                    >
-                        <div class="data-select__options">
-                            <label for="measure"> Measurement </label>
-                            <select
-                                v-model="selectedDataName"
-                                class="small_border_radius width_300"
-                                name="measure"
-                                @change="scan()"
-                            >
-                                <option value="Plan Overview" selected>
-                                    Plan Overview
-                                </option>
-                                <option
-                                    v-for="(
-                                        optionName, optionIndex
-                                    ) in optionsForDataName"
-                                    :key="`data_option_${optionIndex}`"
-                                    :value="optionName"
-                                >
-                                    {{ optionName }}
-                                </option>
-                            </select>
-                        </div>
-                        <div
-                            v-if="showDataTypeSelector"
-                            class="data-select__options"
-                        >
-                            <label for="measure-type"> Data type </label>
-                            <select
-                                id="data_type_selector"
-                                v-model="selectedDataType"
-                                class="small_border_radius width_300"
-                                name="measure-type"
-                                @change="scan()"
-                            >
-                                <option value="Sets" selected>Sets</option>
-                                <option value="Reps">Reps</option>
-                                <option
-                                    v-if="
-                                        selectedDataName === 'Plan Overview' ||
-                                        showLoadsVolumeOptions
-                                    "
-                                    value="Load"
-                                >
-                                    Load
-                                </option>
-                                <option
-                                    v-if="
-                                        selectedDataName === 'Plan Overview' ||
-                                        showLoadsVolumeOptions
-                                    "
-                                    value="Volume"
-                                >
-                                    Volume
-                                </option>
-                            </select>
-                        </div>
-                        <div class="data-select__options">
-                            <label for="chart-type"> Chart type </label>
-                            <select
-                                id="data_type_selector"
-                                v-model="selectedChartType"
-                                class="small_border_radius width_300"
-                                name="chart-type"
-                                @change="scan()"
-                            >
-                                <option value="line" selected>Line</option>
-                                <option value="scatter">Scatter</option>
-                            </select>
-                        </div>
-                    </card-wrapper>
-                    <card-wrapper
-                        v-if="
-                            showDataTypeSelector && dataToVisualise.length !== 0
-                        "
-                        class="data-desc"
-                        :style="{ backgroundColor: 'var(--fore)' }"
-                        noHover
-                    >
-                        <div
-                            v-for="(desc, descIndex) in descData"
-                            :key="`desc_option_${descIndex}`"
-                            class="container--data-desc"
-                        >
-                            <p class="data-desc__desc">
-                                <b>{{ desc[0] }}</b>
-                            </p>
-                            <p class="data-desc__value">
-                                {{ desc[1] }}
-                            </p>
-                        </div>
-                    </card-wrapper>
+    <div class="mt-4">
+        <!-- Statistics options -->
+        <div>
+            <dropdown
+                label="Measurement"
+                class="mb-2"
+                :value="selectedDataName"
+                :items="measurementDropdownItems"
+                @output="(data) => (selectedDataName = data)"
+            />
+            <dropdown
+                v-if="showDataTypeSelector"
+                label="Data type"
+                class="mb-2"
+                :value="selectedDataType"
+                :items="dataTypeDropdownItems"
+                @output="(data) => (selectedDataType = data)"
+            />
+            <dropdown
+                label="Chart type"
+                class="mb-4"
+                :value="selectedChartType"
+                :items="chartTypeDropdownItems"
+                @output="(data) => (selectedChartType = data)"
+            />
+            <div
+                v-if="showDataTypeSelector && dataToVisualise.length !== 0"
+                :style="{ backgroundColor: 'var(--fore)' }"
+                noHover
+            >
+                <div
+                    v-for="(desc, descIndex) in descData"
+                    :key="`desc-option-${descIndex}`"
+                >
+                    <txt bold>
+                        {{ desc[0] }}
+                    </txt>
+                    <txt>
+                        {{ desc[1] }}
+                    </txt>
                 </div>
-                <card-wrapper
-                    v-show="protocolErrors.length !== 0"
-                    class="protocol_error"
-                    :style="{ backgroundColor: 'var(--fore)' }"
-                    noHover
-                >
-                    <p class="text--red">
-                        ERROR: Please check that the following exercises and
-                        measurements are using the correct format.
-                    </p>
-                    <table>
-                        <tr class="text--red">
-                            <th>Session</th>
-                            <th>Date</th>
-                            <th>Exercise</th>
-                            <th>Protocol</th>
-                        </tr>
-                        <tr
-                            v-for="(error, errorIndex) in protocolErrors"
-                            :key="`protocol_error_${errorIndex}`"
-                            class="text--red"
-                        >
-                            <td>{{ error.sessionName }}</td>
-                            <td>{{ error.sessionDate }}</td>
-                            <td>{{ error.exerciseName }}</td>
-                            <td>{{ error.protocol }}</td>
-                        </tr>
-                    </table>
-                </card-wrapper>
-                <simple-chart
-                    v-if="dataToVisualise.length !== 0"
-                    :data-points="dataToVisualise"
-                    :labels="labelsToVisualise"
-                    :dates="dateDaysToVisualise"
-                    :chart-type="selectedChartType"
-                    :reset="resetGraph"
-                    :data-type="{
-                        name: selectedDataName,
-                        type: selectedDataType,
-                    }"
-                    :show-data-type="showDataTypeSelector"
-                    aria-label="Graph"
-                    class="fadeIn"
-                />
-                <card-wrapper
-                    v-else
-                    class="graph_placeholder"
-                    :style="{ backgroundColor: 'var(--fore)' }"
-                    noHover
-                >
-                    <h3>No data to plot on the graph</h3>
-                    <p class="grey">
-                        Make sure that you've used the correct format and have
-                        chosen a selection above
-                    </p>
-                </card-wrapper>
             </div>
+        </div>
+
+        <!-- Table preview -->
+        <div
+            v-show="protocolErrors.length !== 0"
+            :style="{ backgroundColor: 'var(--fore)' }"
+            noHover
+        >
+            <txt>
+                ERROR: Please check that the following exercises and
+                measurements are using the correct format.
+            </txt>
+            <table>
+                <tr>
+                    <th>Session</th>
+                    <th>Date</th>
+                    <th>Exercise</th>
+                    <th>Protocol</th>
+                </tr>
+                <tr
+                    v-for="(error, errorIndex) in protocolErrors"
+                    :key="`protocol-error-${errorIndex}`"
+                >
+                    <td>{{ error.sessionName }}</td>
+                    <td>{{ error.sessionDate }}</td>
+                    <td>{{ error.exerciseName }}</td>
+                    <td>{{ error.protocol }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Chart -->
+        <simple-chart
+            v-if="dataToVisualise.length !== 0"
+            :data-points="dataToVisualise"
+            :labels="labelsToVisualise"
+            :dates="dateDaysToVisualise"
+            :chart-type="selectedChartType"
+            :reset="resetGraph"
+            :data-type="{
+                name: selectedDataName,
+                type: selectedDataType,
+            }"
+            :show-data-type="showDataTypeSelector"
+            aria-label="Graph"
+        />
+
+        <!-- Placeholder -->
+        <div v-else>
+            <txt type="large-body" bold>No data to plot on the graph</txt>
+            <txt>
+                Make sure that you've used the correct format and have chosen a
+                selection above
+            </txt>
         </div>
     </div>
 </template>
@@ -270,21 +102,12 @@
 <script>
 const SimpleChart = () =>
     import(
-        /* webpackChunkName: "components.simpleChart", webpackPrefetch: true */ "./SimpleChart"
-    );
-const CardWrapper = () =>
-    import(
-        /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "./generic/CardWrapper"
+        /* webpackChunkName: "components.simpleChart", webpackPrefetch: true */ "@/components/SimpleChart"
     );
 
 export default {
     components: {
         SimpleChart,
-        CardWrapper,
-    },
-    props: {
-        plan: Object,
-        show: Boolean,
     },
     data() {
         return {
@@ -293,7 +116,12 @@ export default {
             smallestValue: null,
             showLoadsVolumeOptions: false,
             selectedDataName: "Plan Overview",
-            optionsForDataName: new Set(),
+            optionsForDataName: [
+                {
+                    label: "Plan Overview",
+                    value: "Plan Overview",
+                },
+            ],
             selectedDataType: "Sets",
             showDataTypeSelector: true,
             selectedChartType: "line",
@@ -302,63 +130,93 @@ export default {
             labelsToVisualise: [],
             planOverviewDates: [],
             dateDaysToVisualise: [],
-            sessionDataPackets: [],
             protocolErrors: [],
+
+            chartTypeDropdownItems: [
+                {
+                    label: "Line",
+                    value: "line",
+                },
+                {
+                    label: "Scatter",
+                    value: "scatter",
+                },
+            ],
         };
     },
-    watch: {
+    computed: {
         plan() {
-            this.scan();
+            return this.$store.getters.helper(
+                "match_plan",
+                this.$route.params.client_id,
+                this.$route.params.id
+            );
         },
-    },
-    created() {
-        this.scan();
+        dataTypeDropdownItems() {
+            const extraItems =
+                this.selectedDataName === "Plan Overview" ||
+                this.showLoadsVolumeOptions
+                    ? [
+                          {
+                              label: "Load",
+                              value: "Load",
+                          },
+                          {
+                              label: "Volume",
+                              value: "Volume",
+                          },
+                      ]
+                    : [];
+
+            return [
+                {
+                    label: "Sets",
+                    value: "Sets",
+                },
+                {
+                    label: "Reps",
+                    value: "Reps",
+                },
+                ...extraItems,
+            ];
+        },
+        sessionDataPackets() {
+            if (!this.plan.sessions) return [];
+            return this.sort_sessions(this.plan)
+                .sessions.filter((session) => !!session.notes)
+                .map((session) =>
+                    this.pull_protocols(
+                        session.name,
+                        session.notes,
+                        session.date
+                    )
+                );
+        },
+        measurementDropdownItems() {
+            if (!this.sessionDataPackets)
+                return [
+                    {
+                        label: "Plan Overview",
+                        value: "Plan Overview",
+                    },
+                ];
+            const options = [];
+            this.sessionDataPackets.forEach((session) =>
+                options.push(
+                    ...session.map((packet) =>
+                        this.proper_case(packet.exerciseName)
+                    )
+                )
+            );
+            return ["Plan Overview", ...new Set(options)].map((option) => {
+                return {
+                    label: option,
+                    value: option,
+                };
+            });
+        },
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
-        /**
-         * Scans the sessions and updates the stats.
-         */
-        scan() {
-            this.sessionDataPackets = [];
-            if (this.plan.sessions && !this.noSessions) {
-                this.sort_sessions(this.plan).sessions.forEach((object) => {
-                    if (object.notes !== null) {
-                        this.sessionDataPackets.push(
-                            this.pull_protocols(
-                                object.name,
-                                object.notes,
-                                object.date
-                            )
-                        );
-                    }
-                });
-
-                // Appends the options to the select
-                if (this.sessionDataPackets !== null) {
-                    this.optionsForDataName = new Set();
-                    for (const SESSION of this.sessionDataPackets) {
-                        for (const DATA_PACKET of SESSION) {
-                            const CASED_ITEM = this.proper_case(
-                                DATA_PACKET.exerciseName
-                            );
-                            this.optionsForDataName.add(
-                                DATA_PACKET.exerciseProtocol.includes("at")
-                                    ? CASED_ITEM
-                                    : DATA_PACKET.exerciseName
-                            );
-                        }
-                    }
-                    this.selection();
-                }
-            }
-            this.forceUpdate += 1;
-            this.$parent.checkForWeekSessions();
-        },
-
         /**
          * Calculates and generates data on selected a new option.
          */
@@ -379,7 +237,7 @@ export default {
                     this.returnDataType = returnDataType;
                     this.regexSetsReps = /(\d*)x((\d*\/*)*)/gi;
                     this.regexLoad = /at\s*((\d\.*\/*)*)\s*\w*/gi;
-                    this.regeGetNumber = /[0-9.]+/gi;
+                    this.regexGetNumber = /[0-9.]+/gi;
                 }
 
                 /**
@@ -413,9 +271,8 @@ export default {
                         (finder = this.regexSetsReps.exec(this.protocol)) !==
                         null
                     ) {
-                        if (finder.index === this.regexSetsReps.lastIndex) {
+                        if (finder.index === this.regexSetsReps.lastIndex)
                             this.regexSetsReps.lastIndex++;
-                        }
                         finder.forEach((setsMatch, setsIndex) => {
                             if (setsIndex === 1) {
                                 returnValue = parseFloat(setsMatch);
@@ -576,14 +433,14 @@ export default {
                     let returnValue;
                     let numberFinder;
                     while (
-                        (numberFinder = this.regeGetNumber.exec(
+                        (numberFinder = this.regexGetNumber.exec(
                             this.protocol
                         )) !== null
                     ) {
                         if (
-                            numberFinder.index === this.regeGetNumber.lastIndex
+                            numberFinder.index === this.regexGetNumber.lastIndex
                         ) {
-                            this.regeGetNumber.lastIndex++;
+                            this.regexGetNumber.lastIndex++;
                         }
                         numberFinder.forEach((numberMatch) => {
                             returnValue = parseFloat(numberMatch);
