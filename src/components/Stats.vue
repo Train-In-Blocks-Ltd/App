@@ -324,7 +324,6 @@ export default {
          */
         scan() {
             this.sessionDataPackets = [];
-            this.maxWeek = parseInt(this.plan.duration);
             if (this.plan.sessions && !this.noSessions) {
                 this.sort_sessions(this.plan).sessions.forEach((object) => {
                     if (object.notes !== null) {

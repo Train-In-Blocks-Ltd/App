@@ -1,10 +1,12 @@
 <template>
     <div v-if="modalOpen" class="flex justify-center w-full">
         <card-wrapper
-            class="fixed md:top-16 p-8 md:rounded-lg bg-white z-40 max-h-screen md:max-h-4/5 overflow-y-auto"
+            class="fixed md:top-16 p-8 md:rounded-lg bg-white z-40 overflow-y-auto"
             :class="{
-                'w-full md:w-10/12': modalSize === 'lg',
-                'w-full md:w-3/5': modalSize === 'sm',
+                'w-full max-h-screen': modalSize === 'full',
+                'w-full md:w-10/12 max-h-screen md:max-h-4/5':
+                    modalSize === 'lg',
+                'w-full md:w-3/5 max-h-screen md:max-h-4/5': modalSize === 'sm',
             }"
             noHover
             noBorder
@@ -41,6 +43,7 @@
             />
             <move-modal v-else-if="modalContent === 'move'" />
             <shift-modal v-else-if="modalContent === 'shift'" />
+            <progress-modal v-else-if="modalContent === 'progress'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -116,6 +119,10 @@ const ShiftModal = () =>
     import(
         /* webpackChunkName: "components.shiftModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ShiftModal"
     );
+const ProgressModal = () =>
+    import(
+        /* webpackChunkName: "components.progressModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ProgressModal"
+    );
 
 export default {
     components: {
@@ -135,6 +142,7 @@ export default {
         DuplicatePlanModal,
         MoveModal,
         ShiftModal,
+        ProgressModal,
     },
     computed: mapState([
         "modalSize",
@@ -182,6 +190,8 @@ export default {
                     return "Move sessions";
                 case "shift":
                     return "Shift sessions";
+                case "progress":
+                    return "Progress sessions";
                 default:
                     return "";
             }

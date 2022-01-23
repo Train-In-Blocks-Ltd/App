@@ -31,7 +31,6 @@ export default {
         };
     },
     computed: {
-        ...mapState(["selectedIds"]),
         plan() {
             return this.$store.getters.helper(
                 "match_plan",
@@ -39,6 +38,7 @@ export default {
                 this.$route.params.id
             );
         },
+        ...mapState(["selectedIds"]),
     },
     methods: {
         /**

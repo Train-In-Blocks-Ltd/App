@@ -1,41 +1,7 @@
 <template>
     <div id="plan">
-        <div
-            :class="{
-                opened_sections: showProgress,
-            }"
-            class="section_overlay"
-        />
-        <div
-            v-if="showProgress"
-            class="tab_overlay_content fadeIn delay fill_mode_both"
-        >
-            <progress-sessions
-                :plan-data="
-                    $store.getters.helper(
-                        'match_plan',
-                        $route.params.client_id,
-                        $route.params.id
-                    )
-                "
-                :sessions-to-progress="selectedIds"
-                :current-week="currentWeek"
-                :max-week="maxWeek"
-            />
-        </div>
-        <div
-            v-if="
-                !loading && !isStatsOpen && !$parent.showOptions && !noSessions
-            "
-            class="tab_option icon_open_middle tab_option_small fadeIn"
-            aria-label="Statistics"
-            @click="(isStatsOpen = true), willBodyScroll(false)"
-        >
-            <inline-svg :src="require('@/assets/svg/stats.svg')" />
-            <p class="text">Statistics</p>
-        </div>
         <multiselect
-            :type="'session'"
+            type="session"
             :options="multiselectOption"
             @response="resolve_session_multiselect"
         />
@@ -280,7 +246,7 @@
                                                 :value="session.name"
                                                 @output="
                                                     (data) =>
-                                                        (session.date = data)
+                                                        (session.name = data)
                                                 "
                                             />
                                             <txt-input
@@ -413,10 +379,6 @@ const Statistics = () =>
     import(
         /* webpackChunkName: "components.statistics", webpackPrefetch: true */ "@/components/Stats"
     );
-const ProgressSessions = () =>
-    import(
-        /* webpackChunkName: "components.progressSessions", webpackPrefetch: true */ "@/components/ProgressSessions"
-    );
 const PlanOptions = () =>
     import(
         /* webpackChunkName: "components.planOptions", webpackPrefetch: true */ "./components/PlanOptions"
@@ -451,7 +413,6 @@ export default {
         ColorPicker,
         Multiselect,
         Statistics,
-        ProgressSessions,
         PlanOptions,
         PlanProgressBar,
         EditorWrapper,
@@ -511,11 +472,6 @@ export default {
             weekSessions: [],
             weekIsEmpty: true,
 
-            // Modals
-
-            showProgress: false,
-            disableDuplicatePlanButton: true,
-
             // STATS
 
             isStatsOpen: false,
@@ -529,7 +485,6 @@ export default {
             // MICROCYCLE
 
             allowMoreWeeks: false,
-            maxWeek: 2,
         };
     },
     computed: {
@@ -594,8 +549,9 @@ export default {
                     this.bulkCheck(0);
                     break;
                 case "Progress":
-                    this.showProgress = true;
-                    this.willBodyScroll(false);
+                    this.$store.dispatch("openModal", {
+                        name: "progress",
+                    });
                     break;
                 case "Duplicate":
                     this.duplicate();
@@ -696,7 +652,7 @@ export default {
                     this.isEditingSession = false;
                     this.editSession = null;
                     this.updateSession(id);
-                    this.$store("openResponsePopUp", {
+                    this.$store.dispatch("openResponsePopUp", {
                         title: "Session updated",
                         description: "Your changes have been saved",
                     });
@@ -1044,7 +1000,6 @@ export default {
                     });
                 }
             }
-            this.maxWeek = parseInt(this.plan.duration);
         },
 
         /**
