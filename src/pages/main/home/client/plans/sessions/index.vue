@@ -98,16 +98,13 @@
                 <div class="mt-12">
                     <!-- Options -->
                     <skeleton v-if="loading" :type="'session'" />
-                    <div v-else-if="!noSessions && !weekIsEmpty">
-                        <div
-                            v-if="plan.sessions"
-                            class="flex items-center justify-between mb-4"
-                        >
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
                             <!-- Left side -->
                             <div class="flex items-center">
                                 <a
                                     v-if="
-                                        !noSessions &&
+                                        plan.sessions &&
                                         selectedIds.length <
                                             plan.sessions.length &&
                                         !weekIsEmpty
@@ -120,10 +117,9 @@
                                 </a>
                                 <a
                                     v-if="
-                                        !noSessions &&
+                                        plan.sessions &&
                                         selectedIds.length <
-                                            plan.sessions.length &&
-                                        !weekIsEmpty
+                                            plan.sessions.length
                                     "
                                     href="javascript:void(0)"
                                     class="mr-4 text-sm"
@@ -132,11 +128,7 @@
                                     Select all
                                 </a>
                                 <a
-                                    v-if="
-                                        plan.sessions !== false &&
-                                        !isEditingSession &&
-                                        !weekIsEmpty
-                                    "
+                                    v-if="plan.sessions && !isEditingSession"
                                     href="javascript:void(0)"
                                     class="mr-4 text-sm"
                                     @click="
@@ -184,7 +176,10 @@
                         </div>
 
                         <!-- Sessions list -->
-                        <div v-if="!noSessions && !loading" class="grid gap-8">
+                        <div
+                            v-if="!noSessions && !weekIsEmpty && !loading"
+                            class="grid gap-8"
+                        >
                             <!-- Session -->
                             <card-wrapper
                                 v-for="(
@@ -319,10 +314,10 @@
                                 />
                             </card-wrapper>
                         </div>
+                        <txt v-else type="large-body" grey>
+                            No sessions in this microcycle yet
+                        </txt>
                     </div>
-                    <txt v-else type="large-body" grey>
-                        No sessions created yet
-                    </txt>
                 </div>
             </div>
         </div>
