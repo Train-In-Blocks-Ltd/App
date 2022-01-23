@@ -14,7 +14,7 @@
                     name="name"
                     :value="plan.name"
                     :is-disabled="silentLoading"
-                    :on-blur="() => updatePlan()"
+                    :on-blur="() => useUpdatePlanMutation()"
                     @output="(data) => (plan.name = data)"
                 />
 
@@ -76,7 +76,7 @@
                         class="w-1/3 lg:w-1/4 my-4"
                         inputmode="decimal"
                         :value="plan.duration"
-                        :on-blur="() => updatePlan()"
+                        :on-blur="() => useUpdatePlanMutation()"
                         @output="(data) => (plan.duration = data)"
                     />
 
@@ -140,7 +140,7 @@
                                     href="javascript:void(0)"
                                     class="mr-4 text-sm"
                                     @click="
-                                        expandAll(
+                                        toggleExpandAll(
                                             expandedSessions.length !== 0
                                                 ? 'Collapse'
                                                 : 'Expand'
@@ -423,7 +423,6 @@ export default {
 
             forceStop: 0,
             tempEditorStore: null,
-            editingPlanNotes: false,
             isEditingSession: false,
             editSession: null,
 
@@ -573,19 +572,16 @@ export default {
                         attr: "dontLeave",
                         data: true,
                     });
-                    this.editingPlanNotes = true;
                     this.tempEditorStore = this.plan.notes;
                     break;
                 case "save":
-                    this.editingPlanNotes = false;
-                    this.updatePlan();
+                    this.useUpdatePlanMutation();
                     break;
                 case "cancel":
                     this.$store.commit("setData", {
                         attr: "dontLeave",
                         data: false,
                     });
-                    this.editingPlanNotes = false;
                     this.$store.commit("updatePlanAttr", {
                         clientId: this.clientDetails.client_id,
                         planId: this.plan.id,
@@ -625,7 +621,7 @@ export default {
                     });
                     this.isEditingSession = false;
                     this.editSession = null;
-                    this.updateSession(id);
+                    this.useUpdateSessionMutation(id);
                     this.$store.dispatch("openResponsePopUp", {
                         title: "Session updated",
                         description: "Your changes have been saved",
@@ -670,7 +666,7 @@ export default {
                 );
             });
             for (const SESSION of TO_DUPLICATE) {
-                await this.addSession({
+                await this.useCreateSessionMutation({
                     clientId: CLIENT_ID,
                     planId: PLAN_ID,
                     sessionName: `Copy of ${SESSION.name}`,
@@ -750,7 +746,7 @@ export default {
                             });
                         }
                     });
-                    this.batchUpdateSession(this.selectedIds);
+                    this.useUpdateSessionsMutation(this.selectedIds);
                     this.$store.dispatch("openResponsePopUp", {
                         title:
                             this.selectedIds.length > 1
@@ -796,7 +792,7 @@ export default {
                         attr: "selectedIds",
                         data: [],
                     });
-                    this.expandAll("Collapse");
+                    this.toggleExpandAll("Collapse");
                     this.updater();
                     this.$ga.event("Session", "delete");
                     this.$store.dispatch("openResponsePopUp", {
@@ -837,7 +833,7 @@ export default {
                 attr: "dontLeave",
                 data: true,
             });
-            const NEW_SESSION_ID = await this.addSession({
+            const NEW_SESSION_ID = await this.useCreateSessionMutation({
                 clientId: this.$route.params.client_id,
                 planId: this.$route.params.id,
                 sessionName: "Untitled",
@@ -856,17 +852,11 @@ export default {
             this.$store.dispatch("endLoading");
         },
 
-        // -----------------------------
-        // Misc
-        // -----------------------------
-
         /**
          * Scrolls to session.
-         * @param {integer} id - The id of the session.
-         * @param {integer} week - The week containing the session.
          */
         goToEvent(id, week) {
-            this.expandAll("Expand");
+            this.toggleExpandAll("Expand");
             this.$store.commit("setData", {
                 attr: "currentWeek",
                 data: week,
@@ -902,7 +892,6 @@ export default {
 
         /**
          * Expands the main body of the targetted session.
-         * @param {integer} id - The id of the session.
          */
         toggleExpandedSessions(id) {
             if (this.expandedSessions.includes(id)) {
@@ -917,7 +906,6 @@ export default {
 
         /**
          * Switch to a different week.
-         * @param {integer} - The id of the week.
          */
         changeWeek(weekID) {
             this.$store.commit("setData", {
@@ -930,8 +918,6 @@ export default {
 
         /**
          * Returns the duration of the plan as an array to be iterated.
-         * @param {integer} duration - The length of the plan.
-         * @returns The duration array.
          */
         planDuration(duration) {
             const ARR = [];
@@ -944,8 +930,6 @@ export default {
 
         /**
          * Sorts the session.
-         * @param {array} data - The sessions array to be sorted.
-         * @returns The sorted sessions array.
          */
         sessionsSorter(data) {
             data = data.sort((a, b) => {
@@ -976,10 +960,9 @@ export default {
         },
 
         /**
-         * Expand or unexpand all sessions.
-         * @param {string} toExpand - Whether to expand or unexpand.
+         * Expand or de-expand all sessions.
          */
-        expandAll(toExpand) {
+        toggleExpandAll(toExpand) {
             try {
                 if (Array.isArray(this.plan.sessions)) {
                     if (this.plan.sessions.length !== 0) {
@@ -1004,7 +987,7 @@ export default {
         /**
          * Updates the details of the plan.
          */
-        async updatePlan() {
+        async useUpdatePlanMutation() {
             try {
                 this.$store.commit("setData", {
                     attr: "loading",
@@ -1020,9 +1003,8 @@ export default {
 
         /**
          * Updates the selected sessions.
-         * @param {array} sessionIds - The ids of the sessions.
          */
-        async batchUpdateSession(sessionIds) {
+        async useUpdateSessionsMutation(sessionIds) {
             try {
                 await this.$store.dispatch("batchUpdateSession", {
                     clientId: this.$route.params.client_id,
@@ -1038,9 +1020,8 @@ export default {
 
         /**
          * Updates a single session.
-         * @param {integer} sessionId - The id of the session.
          */
-        async updateSession(sessionId) {
+        async useUpdateSessionMutation(sessionId) {
             try {
                 await this.$store.dispatch("updateSession", {
                     clientId: this.$route.params.client_id,
@@ -1056,10 +1037,8 @@ export default {
 
         /**
          * Creates a new session with our without existing data.
-         * @param {object} data - Pre-existing session data.
-         * @returns The id of the new session.
          */
-        async addSession(data) {
+        async useCreateSessionMutation(data) {
             try {
                 const NEW_SESSION_ID = await this.$store.dispatch(
                     "addSession",
