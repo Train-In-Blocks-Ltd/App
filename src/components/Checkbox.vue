@@ -71,8 +71,10 @@ export default {
     computed: mapState(["selectedIds"]),
     watch: {
         selectedIds(val) {
-            document.getElementById(`checkbox-${this.itemId}`).checked =
-                val.includes(this.itemId);
+            const checkboxEl = document.getElementById(
+                `checkbox-${this.itemId}`
+            );
+            if (checkboxEl) checkboxEl.checked = val.includes(this.itemId);
         },
     },
 };

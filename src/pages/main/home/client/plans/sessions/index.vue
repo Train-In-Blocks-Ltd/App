@@ -574,7 +574,7 @@ export default {
                     this.print();
                     break;
                 case "Delete":
-                    this.bulkDelete();
+                    this.useDeleteSessionMutation();
                     this.updater();
                     break;
                 case "Deselect":
@@ -797,17 +797,17 @@ export default {
         /**
          * Deletes all the selected sessions.
          */
-        async bulkDelete() {
+        async useDeleteSessionMutation() {
             this.$store.commit("setData", {
                 attr: "dontLeave",
                 data: true,
             });
             if (this.selectedIds.length !== 0) {
                 if (
-                    await this.$parent.$parent.$refs.confirm_pop_up.show(
-                        "Are you sure that you want to delete all the selected sessions?",
-                        "We will remove these sessions from our database and it won't be recoverable."
-                    )
+                    await this.$store.dispatch("openConfirmPopUp", {
+                        title: "Are you sure that you want to delete all the selected sessions?",
+                        text: "We will remove these sessions from our database and it won't be recoverable.",
+                    })
                 ) {
                     try {
                         await this.$store.dispatch("deleteSession", {
