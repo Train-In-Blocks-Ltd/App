@@ -567,6 +567,7 @@ option {
     <div id="app" :class="{ authenticated: authenticated }">
         <modal />
         <response-pop-up />
+        <confirm-pop-up />
         <div
             v-if="claims.email === 'demo@traininblocks.com' && authenticated"
             class="top_banner fadeIn"
@@ -632,6 +633,10 @@ const ResponsePopUp = () =>
     import(
         /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "@/components/extensive/ResponsePopUp"
     );
+const ConfirmPopUp = () =>
+    import(
+        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "@/components/extensive/ConfirmPopUp"
+    );
 
 export default {
     metaInfo() {
@@ -646,6 +651,7 @@ export default {
         Policy,
         Modal,
         ResponsePopUp,
+        ConfirmPopUp,
     },
     computed: mapState([
         "authenticated",

@@ -18,6 +18,12 @@
             :icon-size="32"
         />
         <icon-button
+            class="mr-4"
+            svg="pie-chart"
+            :on-click="() => deletePlan()"
+            :icon-size="32"
+        />
+        <icon-button
             svg="trash"
             :on-click="() => deletePlan()"
             :icon-size="32"
