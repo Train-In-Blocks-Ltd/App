@@ -579,7 +579,7 @@ div#rich_editor {
         </p>
         <div v-if="editState" class="bottom_bar fadeIn">
             <default-button
-                :on-click-prevent="
+                :on-click="
                     () => {
                         saving = true;
                         editState = false;
@@ -592,7 +592,7 @@ div#rich_editor {
             </default-button>
             <default-button
                 theme="red"
-                :on-click-prevent="
+                :on-click="
                     () => {
                         saving = false;
                         editState = false;

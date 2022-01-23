@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col cursor-pointer border-2 border-gray-800 rounded w-12"
+        class="flex flex-col cursor-pointer border-2 border-gray-800 rounded w-12 select-none"
         :class="weekNumber === currentWeek ? 'opacity-100' : 'opacity-60'"
         @click="$store.dispatch('changeWeek', weekNumber)"
     >
