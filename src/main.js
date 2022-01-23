@@ -22,7 +22,7 @@ import Wrapper from "@/components/generic/Wrapper";
 
 import App from "./App";
 import router from "./router";
-import { store } from "./store/store";
+import { store } from "./store";
 import mixins from "./mixins";
 import "./assets/tailwind.css";
 loadProgressBar();

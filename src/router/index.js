@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import OktaVue, { LoginCallback } from "@okta/okta-vue";
 import { OktaAuth } from "@okta/okta-auth-js";
-import { store } from "../store/store";
+import { store } from "../store";
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
         ? require("../../config/prod.env")
