@@ -92,16 +92,11 @@ const Checkbox = () =>
     import(
         /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "./Checkbox"
     );
-const Icon = () =>
-    import(
-        /* webpackChunkName: "components.icon", webpackPreload: true  */ "./elements/Icon"
-    );
 
 export default {
     components: {
         CardWrapper,
         Checkbox,
-        Icon,
     },
     props: {
         client: Object,

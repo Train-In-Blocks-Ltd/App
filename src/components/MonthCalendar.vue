@@ -1,159 +1,101 @@
-<style lang="scss" scoped>
-.month_calendar {
-    margin-top: 1rem;
-}
-.calendar_header {
-    h3 {
-        position: relative;
-        top: 0;
-        left: 2rem;
-        padding: 0.6rem;
-        background: var(--base);
-        color: var(--fore);
-        width: fit-content;
-        border-radius: 0 0 10px 10px;
-    }
-    .calendar_header__bar {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem;
-        * {
-            transition: var(--transition_standard);
-            &:hover {
-                opacity: var(--light_opacity);
-            }
-        }
-        .next_month,
-        .prev_month {
-            height: 36px;
-            width: 36px;
-            &:active {
-                transform: scale(0.8);
-            }
-        }
-        .today {
-            cursor: pointer;
-            margin: auto;
-            &.disabled:hover {
-                opacity: var(--light_opacity);
-                cursor: default;
-            }
-        }
-    }
-}
-
-.month_container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: 0.6rem;
-    margin: 2rem;
-    .days_label {
-        text-align: center;
-    }
-    .day_cell {
-        text-align: right;
-        min-height: 100px;
-        background-color: var(--fore);
-        border-radius: 10px;
-        padding: 0.6rem;
-        box-shadow: var(--low_shadow);
-        &.holderCell {
-            background-color: transparent;
-            box-shadow: none;
-        }
-        &.is_today {
-            background-color: var(--calendar_highlight);
-            border-radius: 10px;
-        }
-        .event {
-            overflow-wrap: anywhere;
-            border: 2px solid transparent;
-            border-radius: 3px;
-            padding: 0.1rem;
-            font-size: 0.7rem;
-            text-align: center;
-            margin: 0.4rem 0;
-            &.showBorder {
-                border: 2px solid var(--base);
-            }
-        }
-    }
-}
-
-/* Responsive */
-@media (max-width: 576px) {
-    .calendar_header h3 {
-        left: 1rem;
-    }
-    .calendar_header__bar,
-    .month_container {
-        margin: 1rem;
-    }
-}
-</style>
-
 <template>
-    <card-wrapper class="month_calendar" noHover>
-        <div class="calendar_header">
-            <h3>{{ currentMonth }} {{ currentYear }}</h3>
-            <div class="calendar_header__bar">
-                <inline-svg
-                    :src="require('../assets/svg/arrow-left.svg')"
-                    class="prev_month cursor no_fill"
-                    @click="monthDiff--, getMonth()"
-                />
-                <p
-                    :class="{ disabled: monthDiff === 1 }"
-                    class="today"
-                    @click="(monthDiff = 1), getMonth()"
-                >
-                    Today
-                </p>
-                <inline-svg
-                    :src="require('../assets/svg/arrow-right.svg')"
-                    class="next_month cursor no_fill"
-                    @click="monthDiff++, getMonth()"
-                />
-            </div>
+    <card-wrapper class="p-4 sm:p-8" no-hover>
+        <txt type="subtitle">{{ currentMonth }} {{ currentYear }}</txt>
+
+        <!-- Calendar controls -->
+        <div class="flex items-center justify-between my-8">
+            <icon-button
+                svg="arrow-left"
+                :icon-size="32"
+                :on-click="
+                    () => {
+                        monthDiff--;
+                        getMonth();
+                    }
+                "
+            />
+            <a
+                href="javascript:void(0)"
+                :class="{ 'opacity-60 cursor-default': monthDiff === 1 }"
+                @click="
+                    () => {
+                        monthDiff = 1;
+                        getMonth();
+                    }
+                "
+            >
+                Today
+            </a>
+            <icon-button
+                svg="arrow-right"
+                :icon-size="32"
+                :on-click="
+                    () => {
+                        monthDiff++;
+                        getMonth();
+                    }
+                "
+            />
         </div>
-        <div class="month_container">
-            <p class="days_label grey">Mon</p>
-            <p class="days_label grey">Tue</p>
-            <p class="days_label grey">Wed</p>
-            <p class="days_label grey">Thu</p>
-            <p class="days_label grey">Fri</p>
-            <p class="days_label grey">Sat</p>
-            <p class="days_label grey">Sun</p>
+
+        <!-- Calendar content -->
+        <div class="grid grid-cols-7 gap-2">
+            <!-- Days -->
+            <txt
+                v-for="weekDay in [
+                    'Mon',
+                    'Tue',
+                    'Wed',
+                    'Thu',
+                    'Fri',
+                    'Sat',
+                    'Sun',
+                ]"
+                :key="weekDay"
+                class="text-center"
+                >{{ weekDay }}</txt
+            >
+
+            <!-- Date grid -->
             <div
                 v-for="(day, index) in month"
                 :key="`day_${index}`"
                 :class="{
-                    holderCell: day[1] === '',
-                    is_today: today() === day[2],
+                    'bg-transparent shadow-none': day[1] === '',
+                    'bg-yellow-100': today() === day[2],
                 }"
-                class="day_cell"
+                class="min-h-28 p-2 rounded-lg shadow-lg text-right"
             >
-                <p class="grey">
+                <!-- Day label -->
+                <txt grey>
                     {{ day[1] }}
-                </p>
-                <p
+                </txt>
+
+                <!-- Event -->
+                <a
                     v-for="event in day[0]"
-                    :key="`event_${event.session_id}`"
-                    :style="{
-                        backgroundColor: event.color,
-                        color: event.textColor,
-                    }"
-                    :class="{
-                        showBorder:
-                            event.color === undefined ||
-                            event.color === '' ||
-                            event.color === '#FFFFFF',
-                    }"
-                    class="event cursor fadeIn"
+                    href="javascript:void(0)"
+                    :key="`event-${event.session_id}`"
                     @click="$parent.goToEvent(event.session_id, event.week_id)"
                 >
-                    {{ event.title }}
-                </p>
+                    <txt
+                        type="tiny"
+                        class="mt-1 border-2 text-center rounded hover:opacity-60 transition-opacity"
+                        :style="{
+                            backgroundColor: event.color,
+                            color: event.textColor,
+                        }"
+                        :class="
+                            event.color === undefined ||
+                            event.color === '' ||
+                            event.color === '#FFFFFF'
+                                ? 'border-gray-800'
+                                : 'border-transparent'
+                        "
+                    >
+                        {{ event.title }}
+                    </txt>
+                </a>
             </div>
         </div>
     </card-wrapper>
@@ -166,7 +108,9 @@ const CardWrapper = () =>
     );
 
 export default {
-    components: { CardWrapper },
+    components: {
+        CardWrapper,
+    },
     props: {
         events: Array,
         forceUpdate: Number,
@@ -191,14 +135,8 @@ export default {
         this.getMonth();
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Converts index to month.
-         * @param {integer} month - Month as an index.
-         * @returns The month as a string.
          */
         getMonthNumber(month) {
             const MONTHS = [
@@ -219,7 +157,7 @@ export default {
         },
 
         /**
-         * Initiates the calendar, adds interactibles, and populates it.
+         * Initiates the calendar and populates it.
          */
         getMonth() {
             const MONTHS = [

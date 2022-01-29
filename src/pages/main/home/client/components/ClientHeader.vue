@@ -105,15 +105,7 @@ const CUSTOM_ENV =
         ? require("@/../config/prod.env")
         : require("@/../config/dev.env");
 
-const Icon = () =>
-    import(
-        /* webpackChunkName: "components.icon", webpackPreload: true  */ "@/components/elements/Icon"
-    );
-
 export default {
-    components: {
-        Icon,
-    },
     data() {
         return {
             clientAlreadyMsg: "Loading...",

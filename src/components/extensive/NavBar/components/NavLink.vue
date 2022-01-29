@@ -29,15 +29,7 @@
 <script>
 import { mapState } from "vuex";
 
-const Icon = () =>
-    import(
-        /* webpackChunkName: "components.icon", webpackPreload: true  */ "@/components/elements/Icon"
-    );
-
 export default {
-    components: {
-        Icon,
-    },
     props: {
         internal: Boolean,
         name: String,

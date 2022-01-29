@@ -4,6 +4,9 @@ module.exports = {
     darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {
+            minHeight: {
+                28: "112px",
+            },
             borderWidth: {
                 3: "3px",
             },

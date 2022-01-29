@@ -38,7 +38,7 @@
             <div>
                 <!-- Type toggle -->
                 <a
-                    class="flex items-center"
+                    class="hidden sm:flex items-center mb-4"
                     href="javascript:void(0)"
                     @click="showMonthlyCal = !showMonthlyCal"
                 >
@@ -362,10 +362,6 @@ const EditorWrapper = () =>
     import(
         /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
     );
-const Icon = () =>
-    import(
-        /* webpackChunkName: "components.icon", webpackPreload: true  */ "@/components/elements/Icon"
-    );
 const Week = () =>
     import(
         /* webpackChunkName: "components.week", webpackPreload: true  */ "./components/Week"
@@ -386,7 +382,6 @@ export default {
         PlanOptions,
         PlanProgressBar,
         EditorWrapper,
-        Icon,
         Week,
         CardWrapper,
     },

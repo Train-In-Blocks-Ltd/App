@@ -40,15 +40,7 @@
 </template>
 
 <script>
-const Icon = () =>
-    import(
-        /* webpackChunkName: "components.icon", webpackPreload: true  */ "@/components/elements/Icon"
-    );
-
 export default {
-    components: {
-        Icon,
-    },
     props: {
         type: String,
         options: Array,
