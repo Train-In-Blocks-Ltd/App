@@ -36,7 +36,23 @@
     height: calc(100vh - env(safe-area-inset-bottom));
 }
 
-/* Animation */
+// Client user
+.show_html {
+    > div,
+    > p {
+        margin: 0.6rem 0;
+    }
+    img {
+        border-radius: 10px;
+        max-width: 80%;
+        margin: 1rem 0;
+    }
+    a {
+        color: var(--link);
+    }
+}
+
+// Animation
 .fadeIn {
     animation: 0.4s fadeIn;
 }

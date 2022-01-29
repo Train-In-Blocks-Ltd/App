@@ -1,20 +1,3 @@
-<style lang="scss">
-.show_html {
-    > div,
-    > p {
-        margin: 0.6rem 0;
-    }
-    img {
-        border-radius: 10px;
-        max-width: 80%;
-        margin: 1rem 0;
-    }
-    a {
-        color: var(--link);
-    }
-}
-</style>
-
 <template>
     <wrapper id="client-plan">
         <!-- Plan name -->
