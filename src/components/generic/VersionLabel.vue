@@ -1,20 +1,12 @@
-<style lang="scss" scoped>
-.version {
-    display: flex;
-    p {
-        margin-left: 0.2rem;
-        line-height: 1.65;
-    }
-}
-</style>
-
 <template>
-    <div class="version">
+    <div class="flex items-center">
         <inline-svg
             :src="require(`@/assets/svg/${versionName.toLowerCase()}.svg`)"
             :aria-label="versionName"
         />
-        <txt type="tiny" bold> {{ versionName }} {{ versionBuild }} </txt>
+        <txt type="tiny" class="ml-2" bold>
+            {{ versionName }} {{ versionBuild }}
+        </txt>
     </div>
 </template>
 
