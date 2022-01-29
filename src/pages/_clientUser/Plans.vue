@@ -123,7 +123,7 @@
 
                 <!-- Feedback section -->
                 <div v-if="session.checked === 1">
-                    <hr class="mt-8 mb-6" />
+                    <divider class="mt-8 mb-6" />
                     <txt type="subtitle">Feedback</txt>
                     <rich-editor
                         v-model="session.feedback"

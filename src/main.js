@@ -17,6 +17,7 @@ import Dropdown from "@/components/elements/Dropdown";
 import DefaultButton from "@/components/elements/DefaultButton";
 import IconButton from "@/components/elements/IconButton";
 import LinkButton from "@/components/elements/LinkButton";
+import Divider from "@/components/elements/Divider";
 import Wrapper from "@/components/generic/Wrapper";
 
 import App from "./App";
@@ -50,6 +51,7 @@ Vue.component("Dropdown", Dropdown);
 Vue.component("DefaultButton", DefaultButton);
 Vue.component("IconButton", IconButton);
 Vue.component("LinkButton", LinkButton);
+Vue.component("Divider", Divider);
 Vue.component("Wrapper", Wrapper);
 
 Vue.config.productionTip = false;

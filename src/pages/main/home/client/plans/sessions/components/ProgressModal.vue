@@ -71,7 +71,7 @@
                             ) in session.sessionExercises"
                             :key="`exercise-${sessionIndex}-${exerciseIndex}`"
                         >
-                            <hr class="mb-4" />
+                            <divider class="mb-4" />
                             <txt bold>Metric: {{ exercise.exerciseName }}</txt>
                             <txt class="mt-2"
                                 >Week {{ currentWeek }}:
@@ -97,11 +97,12 @@
                                 "
                                 required
                             />
-                            <hr
+                            <divider
                                 v-if="
                                     exerciseIndex !==
                                     session.sessionExercises.length - 1
                                 "
+                                class="my-4"
                             />
                         </div>
                     </div>

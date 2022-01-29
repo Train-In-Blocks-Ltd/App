@@ -96,12 +96,6 @@ body {
     background-color: var(--back);
 }
 
-/* Other elements */
-hr {
-    margin: 1rem 0;
-    border-color: var(--base_light);
-}
-
 /* Loading bar */
 #nprogress {
     .bar {
