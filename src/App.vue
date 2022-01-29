@@ -105,26 +105,6 @@ main {
     align-items: start;
 }
 
-/* System state */
-.top_banner {
-    z-index: 14;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    text-align: center;
-    padding: 0.1rem;
-    background-color: var(--base);
-    a,
-    p {
-        display: block;
-        color: var(--fore);
-    }
-}
-.notAuth {
-    margin: 0;
-}
-
 /* Other elements */
 hr {
     margin: 1rem 0;
@@ -366,23 +346,7 @@ button {
         <modal />
         <response-pop-up />
         <confirm-pop-up />
-        <div
-            v-if="claims.email === 'demo@traininblocks.com' && authenticated"
-            class="top_banner fadeIn"
-        >
-            <a
-                href="https://traininblocks.com/#pricing"
-                target="_blank"
-                class="a_link text--tiny"
-            >
-                Demo account: click here to sign up
-            </a>
-        </div>
-        <div v-else-if="!connected" class="top_banner fadeIn">
-            <p class="text--tiny">
-                Offline mode: we will sync your data when you reconnect
-            </p>
-        </div>
+        <top-banner />
         <div
             v-if="showEULA"
             class="tab_overlay_content fadeIn delay fill_mode_both"
@@ -404,7 +368,7 @@ button {
             class="fadeIn"
         />
         <div :class="{ opened_sections: showEULA }" class="section_overlay" />
-        <main id="main" :class="{ notAuth: !authenticated }">
+        <main id="main" :class="{ 'm-0': !authenticated }">
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
                 leave-active-class="fadeOut fill_mode_both"
@@ -435,6 +399,10 @@ const ConfirmPopUp = () =>
     import(
         /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "@/components/extensive/ConfirmPopUp"
     );
+const TopBanner = () =>
+    import(
+        /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "@/components/generic/TopBanner"
+    );
 
 export default {
     metaInfo() {
@@ -450,6 +418,7 @@ export default {
         Modal,
         ResponsePopUp,
         ConfirmPopUp,
+        TopBanner,
     },
     computed: mapState([
         "authenticated",
