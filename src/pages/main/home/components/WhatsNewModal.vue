@@ -1,11 +1,10 @@
 <template>
     <div>
-        <div class="grid md:grid-cols-2 gap-8 mb-8">
+        <div class="grid md:grid-cols-2 gap-8 my-8">
             <card-wrapper
                 v-for="(item, index) in content"
                 :key="`item_${index}`"
                 class="p-8 flex flex-col justify-between"
-                :style="{ backgroundColor: 'var(--fore)' }"
                 noHover
             >
                 <img
