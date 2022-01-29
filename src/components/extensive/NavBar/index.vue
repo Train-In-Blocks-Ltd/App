@@ -1,78 +1,20 @@
-<style lang="scss">
-.logo {
-    margin-bottom: auto;
-    .logo_link {
-        display: block;
-        width: 38px;
-        transition: 1s all cubic-bezier(0.165, 0.84, 0.44, 1);
-        &:hover {
-            opacity: var(--light_opacity);
-        }
-        &:active {
-            transform: var(--active_state);
-        }
-    }
-}
-</style>
-
-<style lang="scss" scoped>
-/* Nav bar */
-#sidebar {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem 1rem;
-    position: fixed;
-    background-color: var(--fore);
-    box-shadow: var(--low_shadow);
-    border-radius: 0 10px 10px 0;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    min-height: calc(100vh - env(safe-area-inset-bottom));
-    z-index: 10;
-}
-
-@media (max-width: 768px) {
-    #sidebar {
-        bottom: 0;
-        width: 100vw;
-        min-height: fit-content;
-        min-height: -moz-fit-content;
-        flex-direction: row;
-        padding: 0;
-        justify-content: space-between;
-        border-right: none;
-        border-radius: 10px 10px 0 0;
-        .logo {
-            display: none;
-        }
-    }
-}
-</style>
-
 <template>
-    <nav id="sidebar">
-        <div class="logo">
+    <nav
+        class="fixed bottom-0 md:top-0 left-0 flex md:flex-col items-center justify-evenly md:justify-end w-full md:w-24 h-16 md:h-full py-6 rounded-r-xl z-10 shadow-lg bg-white"
+    >
+        <!-- Logo -->
+        <div
+            class="hidden md:block mb-auto hover:opacity-60 transition-opacity"
+        >
             <router-link
-                v-if="
+                title="Home"
+                class="w-24"
+                :to="
                     claims.user_type === 'Trainer' ||
-                    claims.user_type == 'Admin'
+                    claims.user_type === 'Admin'
+                        ? '/'
+                        : '/clientUser'
                 "
-                to="/"
-                class="logo_link"
-                title="Home"
-            >
-                <inline-svg
-                    :src="require('../../../assets/svg/logo-icon.svg')"
-                    class="logo_svg fadeIn"
-                    aria-label="Home"
-                />
-            </router-link>
-            <router-link
-                v-if="claims.user_type === 'Client'"
-                to="/clientUser"
-                class="logo_link"
-                title="Home"
             >
                 <inline-svg
                     :src="require('../../../assets/svg/logo-icon.svg')"
@@ -81,7 +23,8 @@
                 />
             </router-link>
         </div>
-        <!-- logo -->
+
+        <!-- Nav links -->
         <nav-link
             v-for="(nav, navIndex) in navLinks"
             :key="`nav_link_${navIndex}`"
@@ -93,10 +36,11 @@
             :on-click="nav.onClick"
         />
     </nav>
-    <!-- #sidebar -->
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 const NavLink = () =>
     import(
         /* webpackChunkName: "components.navLink", webpackPreload: true  */ "./components/NavLink.vue"
@@ -106,9 +50,7 @@ export default {
     components: {
         NavLink,
     },
-    props: {
-        claims: Object,
-    },
+    computed: mapState(["claims"]),
     data() {
         return {
             navLinks: [
