@@ -1,43 +1,4 @@
 <style lang="scss">
-/* Editor objects */
-.editor_object_standard {
-    border: 3px solid var(--base);
-    border-radius: 10px;
-    background: var(--back);
-    transition: 0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
-    h3 {
-        position: relative;
-        left: 2rem;
-        padding: 0.6rem;
-        width: fit-content;
-        background: var(--base);
-        color: var(--fore);
-        border-radius: 0 0 10px 10px;
-    }
-    #wrapper--rich_editor {
-        background: var(--back);
-        margin: 2rem;
-    }
-
-    /* State */
-    &.is-active {
-        opacity: 0.4;
-    }
-}
-.editor_object_complex {
-    display: grid;
-    padding: 2rem;
-    background: var(--back);
-    border: 2px solid var(--base);
-    border-radius: 10px;
-    transition: 0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
-
-    /* State */
-    &.is-active {
-        opacity: 0.4;
-    }
-}
-
 /* Editor */
 @mixin todo-list {
     ul[data-type="taskList"] {
@@ -145,19 +106,6 @@ svg.edit_icon {
     div#rich_editor > div[contenteditable] img,
     div#rich_show_content img {
         max-width: 100%;
-    }
-}
-@media (max-width: 576px) {
-    .editor_object_standard {
-        h3 {
-            left: 1rem;
-        }
-        #wrapper--rich_editor {
-            margin: 1rem;
-        }
-    }
-    .editor_object_complex {
-        padding: 1rem;
     }
 }
 @media (max-width: 768px) {
