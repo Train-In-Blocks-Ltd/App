@@ -1,6 +1,4 @@
 <style lang="scss">
-@import "../../../assets/styles/icon-anim.scss";
-
 .logo {
     margin-bottom: auto;
     .logo_link {
