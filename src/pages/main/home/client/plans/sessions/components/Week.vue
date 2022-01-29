@@ -8,8 +8,9 @@
             :style="{
                 backgroundColor: weekColor[weekNumber - 1]
                     ? weekColor[weekNumber - 1]
-                    : 'var(--base_faint)',
+                    : '',
             }"
+            :class="{ 'bg-gray-800 opacity-40': !weekColor[weekNumber - 1] }"
             class="w-full h-2 rounded-t-sm"
         />
         <div class="flex flex-col items-center justify-center h-16">
