@@ -2,28 +2,49 @@
     <div class="mt-4">
         <!-- Statistics options -->
         <div>
+            <!-- Measurement dropdown -->
             <dropdown
                 label="Measurement"
                 class="mb-2"
                 :value="selectedDataName"
                 :items="measurementDropdownItems"
-                @output="(data) => (selectedDataName = data)"
+                @output="
+                    (data) => {
+                        selectedDataName = data;
+                        handleSelectionChange();
+                    }
+                "
             />
+
+            <!-- Data type dropdown -->
             <dropdown
                 v-if="showDataTypeSelector"
                 label="Data type"
                 class="mb-2"
                 :value="selectedDataType"
                 :items="dataTypeDropdownItems"
-                @output="(data) => (selectedDataType = data)"
+                @output="
+                    (data) => {
+                        selectedDataType = data;
+                        handleSelectionChange();
+                    }
+                "
             />
+
+            <!-- Chart type dropdown -->
             <dropdown
                 label="Chart type"
                 class="mb-4"
                 :value="selectedChartType"
                 :items="chartTypeDropdownItems"
-                @output="(data) => (selectedChartType = data)"
+                @output="
+                    (data) => {
+                        selectedChartType = data;
+                        handleSelectionChange();
+                    }
+                "
             />
+
             <div
                 v-if="showDataTypeSelector && dataToVisualise.length !== 0"
                 :style="{ backgroundColor: 'var(--fore)' }"
@@ -220,10 +241,9 @@ export default {
         /**
          * Calculates and generates data on selected a new option.
          */
-        selection() {
-            /**
-             * Creates a data point
-             */
+        handleSelectionChange() {
+            this.showDataTypeSelector = true;
+            this.showLoadsVolumeOptions = true;
             class DataPoint {
                 constructor(parent, dataPacket, returnDataType) {
                     this.parent = parent;
