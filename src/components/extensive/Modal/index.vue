@@ -26,7 +26,6 @@
             <reset-password-modal
                 v-else-if="modalContent === 'reset-password'"
             />
-            <portfolio-modal v-else-if="modalContent === 'portfolio'" />
             <client-user-profile-modal
                 v-else-if="modalContent === 'client-user-profile'"
             />
@@ -84,10 +83,6 @@ const ResetPasswordModal = () =>
     import(
         /* webpackChunkName: "components.resetPasswordModal", webpackPrefetch: true  */ "@/pages/main/account/components/ResetPasswordModal"
     );
-const PortfolioModal = () =>
-    import(
-        /* webpackChunkName: "components.portfolioModal", webpackPrefetch: true  */ "@/pages/_clientUser/components/PortfolioModal"
-    );
 const ClientUserProfileModal = () =>
     import(
         /* webpackChunkName: "components.clientUserProfileModal", webpackPrefetch: true  */ "@/pages/_clientUser/components/ClientUserProfileModal"
@@ -138,7 +133,6 @@ export default {
         WhatsNewModal,
         InstallModal,
         ResetPasswordModal,
-        PortfolioModal,
         ClientUserProfileModal,
         PreviewModal,
         NewPlanModal,
@@ -156,7 +150,6 @@ export default {
         "modalContent",
         "versionBuild",
         "versionName",
-        "portfolio",
     ]),
     watch: {
         modalContent(val) {
@@ -178,8 +171,6 @@ export default {
                     return "Save the app to your phone";
                 case "reset-password":
                     return "Reset password";
-                case "portfolio":
-                    return `${this.portfolio.business_name} with ${this.portfolio.trainer_name}`;
                 case "preview":
                     return "Preview";
                 case "info":

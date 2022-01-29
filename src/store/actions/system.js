@@ -40,6 +40,10 @@ export default {
      */
     closeModal({ commit }) {
         commit("setData", {
+            attr: "previewHTML",
+            data: undefined,
+        });
+        commit("setData", {
             attr: "modalSize",
             data: null,
         });

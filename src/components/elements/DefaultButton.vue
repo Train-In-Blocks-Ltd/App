@@ -1,7 +1,10 @@
 <template>
     <button
         v-if="prevent"
-        :class="theme === 'red' && 'bg-red-700'"
+        :class="{
+            'bg-red-700': theme === 'red',
+            'bg-green-700': theme === 'green',
+        }"
         :disabled="isDisabled"
         class="select-none cursor-pointer self-center rounded border-none px-6 py-3 font-bold text-white dark:text-gray-800 bg-gray-800 dark:bg-white transition-all hover:opacity-60 active:scale-95 disabled:opacity-60 disabled:cursor-default"
         @click.prevent="
@@ -14,7 +17,10 @@
     </button>
     <button
         v-else
-        :class="theme === 'red' && 'bg-red-700'"
+        :class="{
+            'bg-red-700': theme === 'red',
+            'bg-green-700': theme === 'green',
+        }"
         :disabled="isDisabled"
         class="select-none cursor-pointer self-center rounded border-none px-6 py-3 font-bold text-white dark:text-gray-800 bg-gray-800 dark:bg-white transition-all hover:opacity-60 active:scale-95 disabled:opacity-60 disabled:cursor-default"
         @click="
