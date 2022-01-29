@@ -4,6 +4,7 @@
             {{ label }}
         </label>
         <input
+            class="w-full px-2 py-3 font-sans outline-none bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-200 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
             :id="inputId"
             :name="name"
             :value="value"
@@ -19,7 +20,6 @@
             :max="max"
             :minlength="minLength"
             :maxlength="maxLength"
-            class="w-full px-2 py-3 font-sans outline-none text-base bg-transparent text-gray-800 dark:text-white border-2 border-gray-400 dark:border-gray-200 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all"
             @input="handleInput"
             @blur="
                 () => {
