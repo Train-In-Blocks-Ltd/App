@@ -95,15 +95,6 @@ body {
     line-height: 1.42;
     background-color: var(--back);
 }
-#app {
-    color: var(--base);
-    background-color: var(--back);
-}
-main {
-    margin-left: calc(38px + 2rem);
-    display: grid;
-    align-items: start;
-}
 
 /* Other elements */
 hr {
@@ -145,11 +136,6 @@ hr {
     }
 }
 
-@media (max-width: 768px) {
-    main {
-        margin: 0;
-    }
-}
 @media (max-width: 576px) {
     /* Elements */
     ::-webkit-scrollbar {
@@ -171,7 +157,7 @@ hr {
 </style>
 
 <template>
-    <div id="app" :class="{ authenticated: authenticated }">
+    <div id="app" class="bg-gray-100" :class="{ authenticated: authenticated }">
         <modal />
         <response-pop-up />
         <confirm-pop-up />
@@ -192,7 +178,7 @@ hr {
         />
         <nav-bar v-else-if="$route.path !== '/login'" class="fadeIn" />
         <div :class="{ opened_sections: showEULA }" class="section_overlay" />
-        <main id="main" :class="{ 'm-0': !authenticated }">
+        <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
                 leave-active-class="fadeOut fill_mode_both"
