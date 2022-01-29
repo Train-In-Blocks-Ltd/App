@@ -114,9 +114,7 @@
         </div>
 
         <!-- Placeholder -->
-        <txt type="large-body" v-else class="text--holder" grey>
-            Nothing planned for today
-        </txt>
+        <txt v-else type="large-body" grey> Nothing planned for today </txt>
 
         <!-- Plans section -->
         <div class="mt-16">
@@ -133,7 +131,7 @@
                     :link="`/clientUser/plan/${plan.id}`"
                 />
             </div>
-            <txt type="large-body" v-else class="text--holder" grey>
+            <txt v-else type="large-body" grey>
                 No plans yet, please contact your trainer or coach for more
                 information
             </txt>

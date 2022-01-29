@@ -1,9 +1,10 @@
 <template>
     <div
-        class="flex w-max items-center cursor-pointer hover:opacity-60 transition-opacity"
+        class="flex w-max items-center hover:opacity-60 transition-opacity"
+        :class="disabled ? 'opacity-60' : 'cursor-pointer'"
         @click="
             () => {
-                if (onClick) onClick();
+                if (onClick && !disabled) onClick();
             }
         "
     >
@@ -22,6 +23,7 @@ export default {
         svgClass: String,
         iconSize: Number,
         onClick: Function,
+        disabled: Boolean,
     },
 };
 </script>
