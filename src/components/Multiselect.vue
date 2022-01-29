@@ -24,8 +24,8 @@
                     :style="{
                         color:
                             option.name === 'Delete'
-                                ? 'var(--base_red)'
-                                : 'var(--base)',
+                                ? 'text-red-800'
+                                : 'text-gray-800',
                     }"
                     @click="$emit('response', option.name)"
                 >

@@ -219,22 +219,6 @@ export default {
     },
 
     /**
-     * Determines the colour of the text for booking statuses.
-     * @param {string} status - The status of the booking.
-     * @returns The colour of the text.
-     */
-    statusColor(status) {
-        switch (status) {
-            case "Pending" || "Past":
-                return "var(--base_light)";
-            case "Scheduled":
-                return "var(--base_green)";
-            case "Cancelled" || "Declined":
-                return "var(--base_red)";
-        }
-    },
-
-    /**
      * Checks if the booking is in the past.
      * @param {object} booking- The booking.
      * @returns A boolean of if the booking is in the past.

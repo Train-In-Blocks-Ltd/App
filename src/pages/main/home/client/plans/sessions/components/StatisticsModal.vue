@@ -47,7 +47,7 @@
 
             <div
                 v-if="showDataTypeSelector && dataToVisualise.length !== 0"
-                :style="{ backgroundColor: 'var(--fore)' }"
+                class="bg-white"
                 noHover
             >
                 <div
@@ -65,11 +65,7 @@
         </div>
 
         <!-- Table preview -->
-        <div
-            v-show="protocolErrors.length !== 0"
-            :style="{ backgroundColor: 'var(--fore)' }"
-            noHover
-        >
+        <div v-show="protocolErrors.length !== 0" class="bg-white" noHover>
             <txt>
                 ERROR: Please check that the following exercises and
                 measurements are using the correct format.
