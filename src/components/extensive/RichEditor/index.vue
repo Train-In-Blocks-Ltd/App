@@ -83,21 +83,27 @@ div#rich_show_content {
         <div v-else-if="editState">
             <tool-bar
                 :toolbar-class="
-                    caretInEditor ? 'border-gray-800' : 'border-gray-200'
+                    caretInEditor
+                        ? 'border-gray-800 dark:border-white'
+                        : 'border-gray-200 dark:border-white'
                 "
             />
             <editor-content
                 id="rich_editor"
                 class="border-2 border-t-0 rounded-b-lg p-4 transition-all"
                 :editor="editor"
-                :class="caretInEditor ? 'border-gray-800' : 'border-gray-200'"
+                :class="
+                    caretInEditor
+                        ? 'border-gray-800 dark:border-white'
+                        : 'border-gray-200 dark:border-white'
+                "
             />
         </div>
 
         <!-- Empty Placeholder -->
         <div
             v-else
-            class="flex justify-between relative p-4 border-2 border-gray-200 rounded-lg transition-opacity"
+            class="flex justify-between relative p-4 border-2 border-gray-200 dark:border-white rounded-lg transition-opacity"
             :class="
                 !!editor
                     ? 'cursor-not-allowed opacity-60'

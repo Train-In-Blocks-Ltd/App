@@ -3,7 +3,7 @@
         <div class="flex">
             <txt
                 type="large-body"
-                class="text-white bg-gray-800 p-3 rounded-b-lg"
+                class="text-white bg-gray-800 dark:text-gray-800 dark:bg-white p-3 rounded-b-lg"
                 bold
                 >{{ title }}</txt
             >

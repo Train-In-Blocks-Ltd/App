@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white z-10 sticky top-0 pt-4">
+    <div class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
         <upload-pop-up />
         <txt-input-pop-up />
         <div
