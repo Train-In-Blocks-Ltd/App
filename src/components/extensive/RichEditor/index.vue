@@ -1,6 +1,20 @@
 <style lang="scss">
-/* Editor */
-@mixin todo-list {
+div#rich_editor div[contenteditable],
+div#rich_show_content {
+    outline: none;
+    appearance: none;
+    > div,
+    > p {
+        margin: 0.6rem 0;
+    }
+    iframe {
+        display: none;
+    }
+    img {
+        border-radius: 10px;
+        max-width: 40%;
+        margin: 1rem 0;
+    }
     ul[data-type="taskList"] {
         list-style: none;
         padding: 0;
@@ -13,68 +27,8 @@
             }
         }
     }
-}
-@mixin editor-main {
-    cursor: pointer;
-    padding: 1rem;
-    border: 2px solid var(--base_faint);
-    border-radius: 10px;
-    margin-top: 1rem;
-    transition: 0.6s opacity cubic-bezier(0.165, 0.84, 0.44, 1),
-        0.6s border cubic-bezier(0.165, 0.84, 0.44, 1);
-    &:hover {
-        border: 2px solid var(--base_light);
-        opacity: var(--light_opacity);
-    }
-}
-.placeholder {
-    @include editor-main;
-
-    outline: none;
-}
-div#rich_show_content {
-    iframe {
-        display: none;
-    }
-    img {
-        cursor: pointer;
-        border-radius: 10px;
-        max-width: 40%;
-        margin: 1rem 0;
-        transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    a {
-        color: var(--link);
-    }
     .ProseMirror {
         outline: none;
-    }
-}
-div#rich_editor {
-    @include todo-list;
-    div[contenteditable] {
-        outline: none;
-        appearance: none;
-        > div,
-        > p {
-            margin: 0.6rem 0;
-        }
-        iframe {
-            display: none;
-        }
-        img {
-            cursor: pointer;
-            border-radius: 10px;
-            max-width: 40%;
-            margin: 1rem 0;
-            transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
-            &:hover {
-                opacity: var(--light_opacity);
-            }
-        }
-        a {
-            color: var(--link);
-        }
     }
 }
 
@@ -94,7 +48,6 @@ div#rich_editor {
 </style>
 
 <style lang="scss" scoped>
-/* Attr */
 [data-placeholder]:empty:before {
     content: attr(data-placeholder);
     color: #888888;

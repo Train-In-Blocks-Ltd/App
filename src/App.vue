@@ -47,9 +47,6 @@
         max-width: 80%;
         margin: 1rem 0;
     }
-    a {
-        color: var(--link);
-    }
 }
 
 // Animation
