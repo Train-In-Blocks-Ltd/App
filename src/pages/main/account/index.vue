@@ -1,14 +1,7 @@
 <template>
     <wrapper v-if="claims" id="account">
-        <preview-modal
-            :desc="previewDesc"
-            :html="previewHTML"
-            :show-media="false"
-            :show-brackets="true"
-            @close="(previewDesc = null), (previewHTML = null)"
-        />
         <txt type="title" is-main>Your Account</txt>
-        <div v-if="claims" class="grid md:grid-cols-2 gap-16 mt-8">
+        <div v-if="claims" class="grid md:grid-cols-2 gap-16 my-8">
             <div>
                 <div class="grid gap-4 mb-12">
                     <txt type="large-body" bold>General settings</txt>
@@ -141,18 +134,13 @@
                 </div>
             </div>
         </div>
-        <br />
-        <br />
         <version-label />
     </wrapper>
 </template>
 
 <script>
 import { mapState } from "vuex";
-const PreviewModal = () =>
-    import(
-        /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/extensive/Modal/components/PreviewModal"
-    );
+
 const VersionLabel = () =>
     import(
         /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
@@ -165,7 +153,6 @@ export default {
         };
     },
     components: {
-        PreviewModal,
         VersionLabel,
     },
     async beforeRouteLeave(to, from, next) {
@@ -229,8 +216,6 @@ export default {
                     link: "http://traininblocks.com/legal/terms-of-use",
                 },
             ],
-            previewDesc: null,
-            previewHTML: null,
         };
     },
     computed: mapState([
@@ -261,12 +246,19 @@ export default {
     },
     methods: {
         openEULA() {
-            if (this.claims.user_type === "Client") {
-                this.previewHTML =
-                    require("@/components/legal/eula-client.md").html;
-            } else {
-                this.previewHTML = require("@/components/legal/eula.md").html;
-            }
+            if (this.claims.user_type === "Client")
+                this.$store.commit("setData", {
+                    attr: "previewHTML",
+                    data: require("@/components/legal/eula-client.md").html,
+                });
+            else
+                this.$store.commit("setData", {
+                    attr: "previewHTML",
+                    data: require("@/components/legal/eula.md").html,
+                });
+            this.$store.dispatch("openModal", {
+                name: "preview",
+            });
         },
 
         /**
