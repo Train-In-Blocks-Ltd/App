@@ -1,7 +1,5 @@
 <template>
-    <card-wrapper class="p-4 sm:p-8" no-hover>
-        <txt type="subtitle">{{ currentMonth }} {{ currentYear }}</txt>
-
+    <label-wrapper :title="`${currentMonth} ${currentYear}`" no-hover>
         <!-- Calendar controls -->
         <div class="flex items-center justify-between my-8">
             <icon-button
@@ -98,18 +96,18 @@
                 </a>
             </div>
         </div>
-    </card-wrapper>
+    </label-wrapper>
 </template>
 
 <script>
-const CardWrapper = () =>
+const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "./generic/LabelWrapper"
     );
 
 export default {
     components: {
-        CardWrapper,
+        LabelWrapper,
     },
     props: {
         events: Array,

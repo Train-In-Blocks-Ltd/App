@@ -6,7 +6,7 @@
         </txt>
 
         <!-- Plan notes -->
-        <editor-wrapper title="Plan notes" class="my-16">
+        <label-wrapper title="Plan notes" class="my-16">
             <div
                 v-if="plan.notes && plan.notes !== '<p></p>'"
                 class="show_html fadeIn mt-8"
@@ -24,7 +24,7 @@
             >
                 No plan notes added...
             </txt>
-        </editor-wrapper>
+        </label-wrapper>
 
         <!-- Calendar section -->
         <div class="mb-16">
@@ -158,9 +158,9 @@ const MonthCalendar = () =>
     import(
         /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "../../components/MonthCalendar"
     );
-const EditorWrapper = () =>
+const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 const CardWrapper = () =>
     import(
@@ -177,7 +177,7 @@ export default {
         WeekCalendar,
         MonthCalendar,
         CardWrapper,
-        EditorWrapper,
+        LabelWrapper,
     },
     async beforeRouteLeave(to, from, next) {
         if (

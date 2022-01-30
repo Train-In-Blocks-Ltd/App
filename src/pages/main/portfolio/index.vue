@@ -35,13 +35,13 @@
 
         <!-- Portfolio content -->
         <skeleton v-if="loading" :type="'session'" />
-        <editor-wrapper v-else title="Portfolio">
+        <label-wrapper v-else title="Portfolio">
             <rich-editor
                 v-model="portfolio.notes"
                 :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
                 @on-edit-change="resolve_portfolio_editor"
             />
-        </editor-wrapper>
+        </label-wrapper>
 
         <!-- <products /> -->
     </wrapper>
@@ -50,9 +50,9 @@
 <script>
 import { mapState } from "vuex";
 
-const EditorWrapper = () =>
+const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 // const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '@/components/Products')
 
@@ -63,7 +63,7 @@ export default {
         };
     },
     components: {
-        EditorWrapper,
+        LabelWrapper,
         // Products
     },
     async beforeRouteLeave(to, from, next) {

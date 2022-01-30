@@ -23,7 +23,7 @@
             </div>
 
             <!-- Plan notes -->
-            <editor-wrapper title="Plan Notes" class="my-16">
+            <label-wrapper title="Plan Notes" class="my-16">
                 <rich-editor
                     v-model="plan.notes"
                     :item-id="'plan_notes'"
@@ -32,7 +32,7 @@
                     :force-stop="forceStop"
                     @on-edit-change="handlePlanNotesChange"
                 />
-            </editor-wrapper>
+            </label-wrapper>
 
             <!-- Calendar -->
             <div>
@@ -354,9 +354,9 @@ const PlanProgressBar = () =>
     import(
         /* webpackChunkName: "components.planProgressBar", webpackPrefetch: true */ "./components/PlanProgressBar"
     );
-const EditorWrapper = () =>
+const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 const Week = () =>
     import(
@@ -376,7 +376,7 @@ export default {
         Multiselect,
         PlanOptions,
         PlanProgressBar,
-        EditorWrapper,
+        LabelWrapper,
         Week,
         CardWrapper,
     },

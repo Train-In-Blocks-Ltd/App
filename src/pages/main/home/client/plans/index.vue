@@ -1,13 +1,13 @@
 <template>
     <div>
         <!-- Client notes -->
-        <editor-wrapper title="Client Information" class="my-16">
+        <label-wrapper title="Client Information" class="my-16">
             <rich-editor
                 v-model="clientDetails.notes"
                 :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
                 @on-edit-change="resolve_client_info_editor"
             />
-        </editor-wrapper>
+        </label-wrapper>
 
         <!-- Bookings -->
         <bookings class="mb-16" />
@@ -61,16 +61,16 @@ const PlanCard = () =>
     import(
         /* webpackChunkName: "components.planCard", webpackPreload: true  */ "@/components/generic/PlanCard"
     );
-const EditorWrapper = () =>
+const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 
 export default {
     components: {
         Bookings,
         PlanCard,
-        EditorWrapper,
+        LabelWrapper,
     },
     async beforeRouteLeave(to, from, next) {
         if (
