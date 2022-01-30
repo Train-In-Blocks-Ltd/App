@@ -1,211 +1,104 @@
-<style lang="scss" scoped>
-.calendar_view {
-    margin-top: 1rem;
-    .calendar_header {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        h3 {
-            position: relative;
-            top: 0;
-            left: 2rem;
-            padding: 0.6rem;
-            background: var(--base);
-            color: var(--fore);
-            width: fit-content;
-            border-radius: 0 0 10px 10px;
-        }
-        .calendar_header__bar {
-            display: flex;
-            justify-content: space-between;
-            margin: 2rem;
-            * {
-                transition: var(--transition_standard);
-                &:hover {
-                    opacity: var(--light_opacity);
-                }
-            }
-            .next_week,
-            .prev_week {
-                height: 36px;
-                width: 36px;
-                &:active {
-                    transform: scale(0.8);
-                }
-            }
-            .today {
-                cursor: pointer;
-                margin: auto;
-                &.disabled,
-                &.disabled:hover {
-                    opacity: var(--light_opacity);
-                    cursor: default;
-                }
-            }
-        }
-    }
-    .week_container {
-        display: grid;
-        grid-gap: 2rem;
-        margin: 1rem;
-        border-radius: 10px;
-        .day_container {
-            display: grid;
-            grid-template-columns: 0.1fr 1fr;
-            grid-gap: 4rem;
-            padding: 1rem;
-            &.is_today {
-                background-color: var(--calendar_highlight);
-                box-shadow: var(--low_shadow);
-                border-radius: 10px;
-            }
-            .day_header {
-                display: flex;
-                justify-content: space-between;
-                .text--small {
-                    margin-left: 0.4rem;
-                }
-            }
-            .day_events {
-                display: grid;
-                grid-gap: 1rem;
-                .day_events__event {
-                    padding: 0.6rem 1rem;
-                    border-radius: 8px;
-                    border: 3px solid transparent;
-                    overflow-wrap: anywhere;
-                    &.showBorder {
-                        border: 3px solid var(--base);
-                    }
-                }
-            }
-        }
-    }
-}
-
-@media (max-width: 992px) {
-    .calendar_view .calendar_header .calendar_header__bar {
-        *:hover {
-            opacity: 1;
-        }
-        .next_week {
-            &:hover {
-                transform: rotate(-90deg) translateY(0);
-            }
-            &:active {
-                transform: rotate(-90deg) translateY(0) scale(0.9);
-            }
-        }
-        .prev_week {
-            &:hover {
-                transform: rotate(90deg) translateY(0);
-            }
-            &:active {
-                transform: rotate(90deg) translateY(0) scale(0.9);
-            }
-        }
-    }
-}
-@media (max-width: 576px) {
-    .calendar_view {
-        .calendar_header {
-            h3 {
-                left: 1rem;
-            }
-            .calendar_header__bar {
-                margin: 1rem;
-            }
-        }
-        .week_container {
-            margin: 1rem;
-            .day_container {
-                padding: 1rem;
-            }
-        }
-    }
-}
-</style>
-
 <template>
-    <card-wrapper class="calendar_view" noHover>
-        <div class="calendar_header">
-            <h3>
-                {{ get_month(thisWeek[0].date_split[1]) }}
-                {{ thisWeek[0].date_split[0] }}
-            </h3>
-            <div class="calendar_header__bar">
-                <inline-svg
-                    :src="require('../assets/svg/arrow-left.svg')"
-                    class="prev_week cursor no_fill"
-                    @click="weekDiff--, getWeek()"
-                />
-                <p
-                    :class="{ disabled: weekDiff === 0 }"
-                    class="today"
-                    @click="(weekDiff = 0), getWeek()"
-                >
-                    Today
-                </p>
-                <inline-svg
-                    :src="require('../assets/svg/arrow-right.svg')"
-                    class="next_week cursor no_fill"
-                    @click="weekDiff++, getWeek()"
-                />
-            </div>
+    <label-wrapper
+        :title="`${get_month(thisWeek[0].date_split[1])} ${
+            thisWeek[0].date_split[0]
+        }`"
+        no-hover
+    >
+        <!-- Calendar controls -->
+        <div class="flex items-center justify-between my-8">
+            <icon-button
+                svg="arrow-left"
+                :icon-size="32"
+                :on-click="
+                    () => {
+                        weekDiff--;
+                        getWeek();
+                    }
+                "
+            />
+            <a
+                href="javascript:void(0)"
+                :class="{ 'opacity-60 cursor-default': weekDiff === 0 }"
+                @click="
+                    () => {
+                        weekDiff = 0;
+                        getWeek();
+                    }
+                "
+            >
+                Today
+            </a>
+            <icon-button
+                svg="arrow-right"
+                :icon-size="32"
+                :on-click="
+                    () => {
+                        weekDiff++;
+                        getWeek();
+                    }
+                "
+            />
         </div>
-        <div class="week_container">
+
+        <!-- Calendar content -->
+        <div class="grid gap-8">
             <div
                 v-for="(day, index) in thisWeek"
                 :key="'day-' + index"
                 :class="{ is_today: day.date === today() }"
-                class="day_container"
+                class="flex items-start"
             >
-                <div class="day_header">
-                    <h3>
+                <!-- Date -->
+                <div class="flex items-center w-1/3 md:w-1/6 mr-4">
+                    <txt type="large-body" class="mr-4" bold>
                         {{ get_day(index) }}
-                    </h3>
-                    <p class="text--small grey">
+                    </txt>
+                    <txt type="large-body" grey>
                         {{ day.date_split[2] }}
-                    </p>
+                    </txt>
                 </div>
-                <div class="day_events">
-                    <div v-if="day.events.length === 0">
-                        <p class="grey">Rest day</p>
-                    </div>
+
+                <!-- Events section -->
+                <div class="grid gap-2 w-full">
+                    <txt v-if="day.events.length === 0" grey>Rest day</txt>
+
+                    <!-- Event -->
                     <div
                         v-for="(event, indexed) in day.events"
+                        class="flex justify-center items-center cursor-pointer border-2 py-2 rounded hover:opacity-60 transition-opacity"
                         :key="'event-' + indexed"
                         :style="{ backgroundColor: event.color }"
-                        :class="{
-                            showBorder:
-                                event.color === undefined ||
-                                event.color === '' ||
-                                event.color === '#FFFFFF',
-                        }"
-                        class="day_events__event cursor fadeIn"
+                        :class="
+                            event.color === undefined ||
+                            event.color === '' ||
+                            event.color === '#FFFFFF'
+                                ? 'border-gray-800'
+                                : 'border-transparent'
+                        "
                         @click="
                             $parent.goToEvent(event.session_id, event.week_id)
                         "
                     >
-                        <p :style="{ color: event.textColor }">
+                        <txt :style="{ color: event.textColor }">
                             {{ event.title }}
-                        </p>
+                        </txt>
                     </div>
                 </div>
             </div>
         </div>
-    </card-wrapper>
+    </label-wrapper>
 </template>
 
 <script>
-const CardWrapper = () =>
+const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./generic/CardWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "./generic/LabelWrapper"
     );
 
 export default {
     components: {
-        CardWrapper,
+        LabelWrapper,
     },
     props: {
         events: Array,
