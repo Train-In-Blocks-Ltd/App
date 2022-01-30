@@ -50,9 +50,6 @@ div#rich_show_content {
         outline: none;
     }
 }
-button.menu_button:focus {
-    box-shadow: none;
-}
 div#rich_editor {
     @include todo-list;
     div[contenteditable] {
@@ -80,15 +77,6 @@ div#rich_editor {
         }
     }
 }
-svg.edit_icon {
-    &.placeholder_icon {
-        float: right;
-    }
-    path {
-        stroke: var(--base_light);
-        transition: var(--transition_standard);
-    }
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -106,139 +94,21 @@ svg.edit_icon {
 </style>
 
 <style lang="scss" scoped>
-// -----------------------------
-// Menu and placeholder
-// -----------------------------
-
 /* Attr */
 [data-placeholder]:empty:before {
     content: attr(data-placeholder);
     color: #888888;
     font-style: italic;
 }
-
-/* Outer container of menu */
-.menu_bar_wrapper {
-    z-index: 1;
-    position: sticky;
-    top: 0;
-    padding-top: 1rem;
-
-    /* Inner container of menu */
-    #menu_bar {
-        border: 2px solid var(--base_faint);
-        border-radius: 10px 10px 0 0;
-        padding: 0 1rem;
-        transition: var(--transition_standard);
-        &.editorFocused {
-            border: 2px solid var(--base);
-        }
-        button {
-            padding: 0;
-            margin: 0.8rem 1rem 0.6rem 0;
-            color: var(--base);
-            background-color: transparent;
-        }
-        svg {
-            height: 20px;
-            width: 20px;
-        }
-    }
-}
-
-// -----------------------------
-// Templates
-// -----------------------------
-.template_menu {
-    display: grid;
-    grid-gap: 1rem;
-    #templates_search_none {
-        display: none;
-    }
-    h3 {
-        margin-top: 1rem;
-    }
-    .templates_container {
-        display: grid;
-        grid-gap: 1rem;
-        .template_item {
-            display: grid;
-            grid-template-columns: 0.5fr 1fr;
-            grid-gap: 2rem;
-            button {
-                width: fit-content;
-            }
-            svg {
-                margin: auto 0 auto 0.6rem;
-            }
-            .preview_html {
-                max-height: 400px;
-                font-size: 0.8rem;
-                padding: 1rem;
-                background-color: var(--fore);
-                border: 2px solid var(--base);
-                border-radius: 5px;
-                overflow-y: auto;
-                &::-webkit-scrollbar {
-                    width: 3px;
-                }
-            }
-        }
-    }
-}
-
-// -----------------------------
-// Editor
-// -----------------------------
-div#rich_editor {
-    padding: 1rem;
-    outline-width: 0;
-    border: 2px solid var(--base_faint);
-    border-top: none;
-    border-radius: 0 0 10px 10px;
-    transition: var(--transition_standard);
-    &.editorFocused {
-        border: 2px solid var(--base);
-        border-top: none;
-    }
-}
-.bottom_bar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 0.6rem;
-    margin-top: 1rem;
-    z-index: 1;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-    .template_menu {
-        .templates_container {
-            grid-gap: 3rem;
-            .template_item {
-                display: flex;
-                flex-direction: column-reverse;
-                grid-gap: 0.6rem;
-                button {
-                    width: 100%;
-                }
-            }
-        }
-    }
-}
 </style>
 
 <template>
-    <div>
-        <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-            <input-pop-up ref="input_pop_up" />
-        </transition>
-
+    <div class="mt-4">
         <!-- Preview -->
         <div
             v-if="!editState && !test_empty_html(value)"
             id="rich_show_content"
-            class="flex justify-between relative p-4 border-2 border-gray-800 rounded-lg transition-opacity"
+            class="flex justify-between relative p-4 border-2 border-gray-200 rounded-lg transition-opacity"
             :class="
                 !!editor
                     ? 'cursor-not-allowed opacity-60'
@@ -256,19 +126,25 @@ div#rich_editor {
             <icon svg="edit-2" :icon-size="24" class="absolute top-2 right-2" />
         </div>
 
+        <!-- Editor -->
         <div v-else-if="editState">
-            <tool-bar :class="{ 'border-gray-800': caretInEditor }" />
+            <tool-bar
+                :toolbar-class="
+                    caretInEditor ? 'border-gray-800' : 'border-gray-200'
+                "
+            />
             <editor-content
                 id="rich_editor"
+                class="border-2 border-t-0 rounded-b-lg p-4 transition-all"
                 :editor="editor"
-                :class="{ editorFocused: caretInEditor }"
+                :class="caretInEditor ? 'border-gray-800' : 'border-gray-200'"
             />
         </div>
 
         <!-- Empty Placeholder -->
         <div
             v-else
-            class="flex justify-between relative p-4 border-2 border-gray-800 rounded-lg transition-opacity"
+            class="flex justify-between relative p-4 border-2 border-gray-200 rounded-lg transition-opacity"
             :class="
                 !!editor
                     ? 'cursor-not-allowed opacity-60'
@@ -289,7 +165,7 @@ div#rich_editor {
         </div>
 
         <!-- Button options for editing -->
-        <div v-if="editState" class="bottom_bar fadeIn">
+        <div v-if="editState" class="grid grid-cols-2 gap-4 mt-4">
             <default-button
                 :on-click="
                     () => {
@@ -320,7 +196,6 @@ div#rich_editor {
 </template>
 
 <script>
-import Compressor from "compressorjs";
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import { defaultExtensions } from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -355,19 +230,10 @@ export default {
             initialValue: null,
             editState: false,
             caretInEditor: false,
-            cloudinaryImages: {
-                startingWith: [],
-                endingWith: [],
-            },
-            newImgs: [],
             saving: false,
-
-            // Link
-            linkUrl: null,
-            linkMenuIsActive: false,
         };
     },
-    computed: mapState(["editor"]),
+    computed: mapState(["editor", "cloudinaryImages", "newImgs"]),
     watch: {
         editState() {
             if (this.editState) {
@@ -383,9 +249,11 @@ export default {
                         LazyImage,
                     ],
                     onUpdate: () => {
-                        this.cloudinaryImages.endingWith = this.imgFinder(
-                            this.value
-                        );
+                        this.$store.commit("setDataDeep", {
+                            attrParent: "cloudinaryImages",
+                            attrChild: "endingWith",
+                            data: this.imgFinder(this.value),
+                        });
                         this.$emit("input", this.editor.getHTML());
                     },
                     onFocus: () => {
@@ -394,16 +262,21 @@ export default {
                         this.willBodyScroll(true);
                     },
                     onBlur: () => {
-                        this.cloudinaryImages.endingWith = this.imgFinder(
-                            this.value
-                        );
+                        this.$store.commit("setDataDeep", {
+                            attrParent: "cloudinaryImages",
+                            attrChild: "endingWith",
+                            data: this.imgFinder(this.value),
+                        });
                         this.caretInEditor = false;
                     },
                     onDestroy: async () => {
                         if (!this.saving) {
                             await this.cancelledRemoveNewImgs();
-                            this.cloudinaryImages.endingWith =
-                                this.cloudinaryImages.startingWith;
+                            this.$store.commit("setDataDeep", {
+                                attrParent: "cloudinaryImages",
+                                attrChild: "endingWith",
+                                data: this.cloudinaryImages.startingWith,
+                            });
                         }
                         this.cloudinaryImages.startingWith.forEach(
                             async (url) => {
@@ -422,11 +295,17 @@ export default {
                             }
                         );
                         this.initialValue = null;
-                        this.cloudinaryImages = {
-                            startingWith: [],
-                            endingWith: [],
-                        };
-                        this.newImgs = [];
+                        this.$store.commit("setData", {
+                            attr: "cloudinaryImages",
+                            data: {
+                                startingWith: [],
+                                endingWith: [],
+                            },
+                        });
+                        this.$store.commit("setData", {
+                            attr: "newImgs",
+                            data: [],
+                        });
                     },
                 });
 
@@ -436,8 +315,13 @@ export default {
                 });
 
                 const FOUND_IMGS = this.imgFinder(this.value);
-                this.cloudinaryImages.startingWith = FOUND_IMGS;
-                this.cloudinaryImages.endingWith = FOUND_IMGS;
+                this.$store.commit("setData", {
+                    attr: "cloudinaryImages",
+                    data: {
+                        startingWith: FOUND_IMGS,
+                        endingWith: FOUND_IMGS,
+                    },
+                });
             } else {
                 this.editor.destroy();
                 this.$store.commit("setData", {
@@ -458,14 +342,8 @@ export default {
         }
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Finds all the images in the html.
-         * @param {string} html - The html to search.
-         * @returns An array of all the found ids of cloudinary images.
          */
         imgFinder(html) {
             const IMG_REGEX = /<img.*?src="(.*?)".*?>/gi;
@@ -484,13 +362,28 @@ export default {
                                 })
                                 .then((response) => {
                                     RETURN_ARR.push(response.data.url);
-                                    this.cloudinaryImages.startingWith.push(
-                                        response.data.url
-                                    );
-                                    this.cloudinaryImages.endingWith.push(
-                                        response.data.url
-                                    );
-                                    this.newImgs.push(response.data.url);
+                                    this.$store.commit("setData", {
+                                        attr: "cloudinaryImages",
+                                        data: {
+                                            startingWith: [
+                                                ...this.cloudinaryImages
+                                                    .startingWith,
+                                                response.data.url,
+                                            ],
+                                            endingWith: [
+                                                ...this.cloudinaryImages
+                                                    .endingWith,
+                                                response.data.url,
+                                            ],
+                                        },
+                                    });
+                                    this.$store.commit("setData", {
+                                        attr: "newImgs",
+                                        data: [
+                                            ...this.newImgs,
+                                            response.data.url,
+                                        ],
+                                    });
                                     this.initialValue =
                                         this.initialValue.replace(
                                             `${match}"`,
@@ -528,6 +421,9 @@ export default {
             return RETURN_ARR;
         },
 
+        /**
+         * Removes images uploaded on cancel
+         */
         cancelledRemoveNewImgs() {
             if (this.newImgs) {
                 this.newImgs.forEach(async (url) => {
@@ -535,88 +431,6 @@ export default {
                         file: url,
                     });
                 });
-            }
-        },
-
-        /**
-         * Adds tracked data custom node.
-         */
-        addTrackData() {
-            this.editor.commands.insertContent(
-                '<div data-type="protocol-item"></div>'
-            );
-        },
-
-        /**
-         * Sets the link of the selected text.
-         */
-        async setLinkUrl() {
-            const SRC = await this.$refs.input_pop_up.show(
-                "link",
-                "Enter the URL link",
-                "Make sure to include the https://"
-            );
-            if (!SRC) {
-                return;
-            }
-            this.editor.chain().focus().setLink({ href: SRC }).run();
-        },
-
-        /**
-         * Adds an image.
-         */
-        addImg() {
-            const FILE = document.getElementById("img_uploader").files[0];
-            const READER = new FileReader();
-            READER.addEventListener(
-                "load",
-                () => {
-                    this.$axios
-                        .post("/.netlify/functions/upload-image", {
-                            file: READER.result.toString(),
-                        })
-                        .then((response) => {
-                            this.editor
-                                .chain()
-                                .focus()
-                                .setImage({
-                                    src: response.data.url,
-                                    loading: "lazy",
-                                })
-                                .run();
-                            this.cloudinaryImages.startingWith.push(
-                                response.data.url
-                            );
-                            this.cloudinaryImages.endingWith.push(
-                                response.data.url
-                            );
-                            this.newImgs.push(response.data.url);
-                        });
-                },
-                false
-            );
-
-            if (FILE) {
-                if (FILE.size < 1100000) {
-                    // eslint-disable-next-line
-                    new Compressor(FILE, {
-                        quality: 0.6,
-                        success(result) {
-                            READER.readAsDataURL(result);
-                        },
-                        error(err) {
-                            console.error(err.message);
-                        },
-                    });
-                } else {
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "File size is too big",
-                        description: "Please compress it to 1MB or lower",
-                        persist: true,
-                        backdrop: true,
-                    });
-                    document.getElementById("img_uploader").value = "";
-                }
             }
         },
 

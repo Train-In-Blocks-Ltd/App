@@ -84,7 +84,7 @@ export default {
         getStatusColor(status) {
             switch (status) {
                 case "Pending" || "Past":
-                    return "text-gray-200";
+                    return "text-gray-400";
                 case "Scheduled":
                     return "text-green-700";
                 case "Cancelled" || "Declined":

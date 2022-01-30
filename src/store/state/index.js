@@ -100,4 +100,9 @@ export default {
     // Sessions
     currentWeek: 1,
     editor: undefined,
+    cloudinaryImages: {
+        startingWith: [],
+        endingWith: [],
+    },
+    newImgs: [],
 };

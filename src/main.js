@@ -8,7 +8,6 @@ import VueMeta from "vue-meta";
 import { InlineSvgPlugin } from "vue-inline-svg";
 
 import Skeleton from "@/components/Skeleton";
-import InputPopUp from "@/components/InputPopUp";
 import GlobalOverlay from "@/components/GlobalOverlay";
 import Txt from "@/components/elements/Txt";
 import TxtInput from "@/components/elements/TxtInput";
@@ -44,7 +43,6 @@ Vue.use(VueMeta);
 
 // Register component globally
 Vue.component("Skeleton", Skeleton);
-Vue.component("InputPopUp", InputPopUp);
 Vue.component("GlobalOverlay", GlobalOverlay);
 Vue.component("Txt", Txt);
 Vue.component("TxtInput", TxtInput);
