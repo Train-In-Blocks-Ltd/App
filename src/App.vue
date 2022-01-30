@@ -129,7 +129,11 @@ body {
 </style>
 
 <template>
-    <div id="app" class="bg-gray-100" :class="{ authenticated: authenticated }">
+    <div
+        id="app"
+        class="bg-gray-100 dark:bg-gray-800"
+        :class="{ authenticated: authenticated }"
+    >
         <modal />
         <response-pop-up />
         <confirm-pop-up />
@@ -336,7 +340,7 @@ export default {
             const MATCHED_MEDIA =
                 window.matchMedia("(prefers-color-scheme)") || false;
             if (mode === "dark") {
-                document.documentElement.setAttribute("class", "dark");
+                document.documentElement.classList.add("dark");
                 document.documentElement.style.setProperty("--fore", "#383838");
                 document.documentElement.style.setProperty("--base", "white");
                 document.documentElement.style.setProperty(
@@ -368,7 +372,7 @@ export default {
                         this.darkmode(e.matches ? "dark" : "light");
                     });
             } else {
-                document.documentElement.removeAttribute("class", "dark");
+                document.documentElement.classList.remove("dark");
                 document.documentElement.style.setProperty("--fore", "white");
                 document.documentElement.style.setProperty("--base", "#282828");
                 document.documentElement.style.setProperty(

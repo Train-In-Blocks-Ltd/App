@@ -2,21 +2,21 @@
     <h1
         v-if="type === 'title' && isMain"
         :class="{ 'text-gray-600 dark:text-gray-300': grey }"
-        class="text-4xl font-bold"
+        class="text-4xl dark:text-white font-bold"
     >
         <slot />
     </h1>
     <h2
         v-else-if="type === 'title'"
         :class="{ 'text-gray-600 dark:text-gray-300': grey }"
-        class="text-4xl font-bold"
+        class="text-4xl dark:text-white font-bold"
     >
         <slot />
     </h2>
     <h3
         v-else-if="type === 'subtitle'"
         :class="{ 'text-gray-600 dark:text-gray-300': grey }"
-        class="text-3xl font-bold"
+        class="text-3xl dark:text-white font-bold"
     >
         <slot />
     </h3>

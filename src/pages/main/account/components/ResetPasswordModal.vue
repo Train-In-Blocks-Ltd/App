@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="changePassword()">
+    <form @submit.prevent="changePassword()" class="mt-4">
         <txt-input
             ref="pass"
             :value="password.old"
