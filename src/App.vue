@@ -4,33 +4,14 @@
     box-sizing: border-box;
 }
 :root {
-    --transition_smooth: 0.4s all;
     --transition_standard: 0.6s all cubic-bezier(0.165, 0.84, 0.44, 1);
-    --low_shadow: 0 0 20px 10px #28282808;
-    --high_shadow: 0 0 20px 10px #28282816;
-    --back: #f9f9f9;
     --fore: white;
     --base: #282828;
     --base_light: #585858;
     --base_faint: #28282840;
-    --base_red: rgb(184, 0, 0);
-    --base_green: green;
-    --overlay_glass: #ffffffb3;
-    --calendar_highlight: #ffffee;
     --skeleton_1: #f4f4f4;
     --skeleton_2: #e4e4e4;
-    --link: blue;
     --light_opacity: 0.6;
-    --active_state: scale(0.95);
-    --rounded: 10px;
-
-    // Responsiveness
-    --2xl: 1538px;
-    --xl: 1280px;
-    --lg: 1024px;
-    --md: 768px;
-    --sm: 640px;
-    --xs: 360px;
 
     height: stretch;
     height: calc(100vh - env(safe-area-inset-bottom));
@@ -348,44 +329,18 @@ export default {
         );
     },
     methods: {
-        // -----------------------------
-        // System
-        // -----------------------------
-
         /**
          * Gives darkmode theme to the app.
-         * @param {string} mode - The mode to switch to.
          */
         darkmode(mode) {
             const MATCHED_MEDIA =
                 window.matchMedia("(prefers-color-scheme)") || false;
             if (mode === "dark") {
-                document.documentElement.style.setProperty(
-                    "--low_shadow",
-                    "0 0 2px 0 #FFFFFF60"
-                );
-                document.documentElement.style.setProperty(
-                    "--high_shadow",
-                    "0 0 2px 0 white"
-                );
-                document.documentElement.style.setProperty("--back", "#282828");
                 document.documentElement.style.setProperty("--fore", "#383838");
                 document.documentElement.style.setProperty("--base", "white");
                 document.documentElement.style.setProperty(
-                    "--base_light",
-                    "#FFFFFF94"
-                );
-                document.documentElement.style.setProperty(
                     "--base_faint",
                     "#FFFFFF40"
-                );
-                document.documentElement.style.setProperty(
-                    "--overlay_glass",
-                    "#282828B3"
-                );
-                document.documentElement.style.setProperty(
-                    "--calendar_highlight",
-                    "#686868"
                 );
                 document.documentElement.style.setProperty(
                     "--skeleton_1",
@@ -394,15 +349,6 @@ export default {
                 document.documentElement.style.setProperty(
                     "--skeleton_2",
                     "#484848"
-                );
-                document.documentElement.style.setProperty("--link", "white");
-                document.documentElement.style.setProperty(
-                    "--base_red",
-                    "white"
-                );
-                document.documentElement.style.setProperty(
-                    "--base_green",
-                    "white"
                 );
             } else if (
                 mode === "system" &&
@@ -421,32 +367,11 @@ export default {
                         this.darkmode(e.matches ? "dark" : "light");
                     });
             } else {
-                document.documentElement.style.setProperty(
-                    "--low_shadow",
-                    "0 0 20px 10px #28282808"
-                );
-                document.documentElement.style.setProperty(
-                    "--high_shadow",
-                    "0 0 20px 10px #28282816"
-                );
-                document.documentElement.style.setProperty("--back", "#F9F9F9");
                 document.documentElement.style.setProperty("--fore", "white");
                 document.documentElement.style.setProperty("--base", "#282828");
                 document.documentElement.style.setProperty(
-                    "--base_light",
-                    "#585858"
-                );
-                document.documentElement.style.setProperty(
                     "--base_faint",
                     "#28282840"
-                );
-                document.documentElement.style.setProperty(
-                    "--overlay_glass",
-                    "#FFFFFFB3"
-                );
-                document.documentElement.style.setProperty(
-                    "--calendar_highlight",
-                    "#FFFFEE"
                 );
                 document.documentElement.style.setProperty(
                     "--skeleton_1",
@@ -455,15 +380,6 @@ export default {
                 document.documentElement.style.setProperty(
                     "--skeleton_2",
                     "#E4E4E4"
-                );
-                document.documentElement.style.setProperty("--link", "blue");
-                document.documentElement.style.setProperty(
-                    "--base_red",
-                    "rgb(184, 0, 0)"
-                );
-                document.documentElement.style.setProperty(
-                    "--base_green",
-                    "green"
                 );
             }
         },

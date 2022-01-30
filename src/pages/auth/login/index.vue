@@ -25,9 +25,6 @@
             &:hover {
                 opacity: var(--light_opacity);
             }
-            &:active {
-                transform: var(--active_state);
-            }
             &:focus {
                 box-shadow: 0 0 0 4px rgba(76, 91, 106, 0.5);
             }
