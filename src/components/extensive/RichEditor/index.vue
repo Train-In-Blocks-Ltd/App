@@ -33,17 +33,6 @@
     outline: none;
 }
 div#rich_show_content {
-    @include todo-list;
-    @include editor-main;
-
-    display: grid;
-    grid-template-columns: 1fr 24px;
-    > div:first-child > div,
-    > div:first-child > p {
-        margin: 0.6rem 0;
-        outline: none;
-        appearance: none;
-    }
     iframe {
         display: none;
     }
@@ -249,157 +238,26 @@ div#rich_editor {
         <div
             v-if="!editState && !test_empty_html(value)"
             id="rich_show_content"
-            class="fadeIn"
-            @click="(editState = true), $emit('on-edit-change', 'edit', itemId)"
+            class="flex justify-between relative p-4 border-2 border-gray-800 rounded-lg transition-opacity"
+            :class="
+                !!editor
+                    ? 'cursor-not-allowed opacity-60'
+                    : 'cursor-pointer hover:opacity-60'
+            "
+            @click="
+                () => {
+                    if (editor) return;
+                    editState = true;
+                    $emit('on-edit-change', 'edit', itemId);
+                }
+            "
         >
-            <div v-html="updateHTML(value, true)" />
-            <icon svg="edit-2" :icon-size="28" />
+            <div v-html="updateHTML(value, true)" class="mr-4" />
+            <icon svg="edit-2" :icon-size="24" class="absolute top-2 right-2" />
         </div>
 
         <div v-else-if="editState">
-            <!-- Toolbar -->
-            <div class="flex" :class="{ editorFocused: caretInEditor }">
-                <!-- Bold -->
-                <icon-button
-                    svg="bold"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{ 'opacity-60': editor.isActive('bold') }"
-                    :on-click="() => editor.chain().focus().toggleBold().run()"
-                />
-
-                <!-- Italic -->
-                <icon-button
-                    svg="italic"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{ 'opacity-60': editor.isActive('italic') }"
-                    :on-click="
-                        () => editor.chain().focus().toggleItalic().run()
-                    "
-                />
-
-                <!-- Underline -->
-                <icon-button
-                    svg="underline"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{ 'opacity-60': editor.isActive('underline') }"
-                    :on-click="
-                        () => editor.chain().focus().toggleUnderline().run()
-                    "
-                />
-
-                <!-- Ordered list -->
-                <icon-button
-                    svg="ol"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{
-                        'opacity-60': editor.isActive('ordered_list'),
-                    }"
-                    :on-click="
-                        () => editor.chain().focus().toggleOrderedList().run()
-                    "
-                />
-
-                <!-- Bullet list -->
-                <icon-button
-                    svg="ul"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{
-                        'opacity-60': editor.isActive('bullet_list'),
-                    }"
-                    :on-click="
-                        () => editor.chain().focus().toggleBulletList().run()
-                    "
-                />
-
-                <!-- Check list -->
-                <icon-button
-                    svg="check-square"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{
-                        'opacity-60': editor.isActive('taskList'),
-                    }"
-                    :on-click="
-                        () => editor.chain().focus().toggleTaskList().run()
-                    "
-                />
-
-                <!-- Divider -->
-                <icon-button
-                    svg="horizontal-rule"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{
-                        'opacity-60': editor.isActive('horizontalRule'),
-                    }"
-                    :on-click="
-                        () => editor.chain().focus().setHorizontalRule().run()
-                    "
-                />
-
-                <!-- Link -->
-                <icon-button
-                    svg="link"
-                    class="mr-2"
-                    :icon-size="22"
-                    :class="{
-                        'opacity-60': editor.isActive('link'),
-                    }"
-                    :on-click="
-                        () =>
-                            editor.isActive('link')
-                                ? editor.chain().focus().unsetLink().run()
-                                : setLinkUrl()
-                    "
-                />
-
-                <!-- Image -->
-                <icon-button
-                    svg="image"
-                    class="mr-2"
-                    :icon-size="22"
-                    :on-click="() => null"
-                />
-
-                <!-- Templates -->
-                <icon-button
-                    v-if="templates"
-                    svg="file-text"
-                    class="mr-2"
-                    :icon-size="22"
-                    :on-click="
-                        () => {
-                            $store.commit('setData', {
-                                attr: 'editor',
-                                data: editor,
-                            });
-                            $store.dispatch('openModal', {
-                                name: 'templates',
-                            });
-                        }
-                    "
-                />
-
-                <!-- Undo -->
-                <icon-button
-                    svg="rotate-ccw"
-                    class="mr-2"
-                    :icon-size="22"
-                    :on-click="() => editor.chain().focus().undo().run()"
-                />
-
-                <!-- Redo -->
-                <icon-button
-                    svg="rotate-cw"
-                    :icon-size="22"
-                    :on-click="() => editor.chain().focus().redo().run()"
-                />
-            </div>
+            <tool-bar :class="{ 'border-gray-800': caretInEditor }" />
             <editor-content
                 id="rich_editor"
                 :editor="editor"
@@ -407,15 +265,28 @@ div#rich_editor {
             />
         </div>
 
-        <!-- Placeholder -->
-        <p
+        <!-- Empty Placeholder -->
+        <div
             v-else
-            class="placeholder grey fadeIn"
-            @click="(editState = true), $emit('on-edit-change', 'edit', itemId)"
+            class="flex justify-between relative p-4 border-2 border-gray-800 rounded-lg transition-opacity"
+            :class="
+                !!editor
+                    ? 'cursor-not-allowed opacity-60'
+                    : 'cursor-pointer hover:opacity-60'
+            "
+            @click="
+                () => {
+                    if (editor) return;
+                    editState = true;
+                    $emit('on-edit-change', 'edit', itemId);
+                }
+            "
         >
-            {{ emptyPlaceholder }}
-            <icon svg="edit-2" :icon-size="28" />
-        </p>
+            <txt class="mr-4">
+                {{ emptyPlaceholder }}
+            </txt>
+            <icon svg="edit-2" :icon-size="24" class="absolute top-2 right-2" />
+        </div>
 
         <!-- Button options for editing -->
         <div v-if="editState" class="bottom_bar fadeIn">
@@ -457,10 +328,17 @@ import Link from "@tiptap/extension-link";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import LazyImage from "../../js/LazyImage";
+import { mapState } from "vuex";
+
+const ToolBar = () =>
+    import(
+        /* webpackChunkName: "components.toolBar", webpackPreload: true  */ "./components/ToolBar"
+    );
 
 export default {
     components: {
         EditorContent,
+        ToolBar,
     },
     props: {
         itemId: [Number, String],
@@ -475,7 +353,6 @@ export default {
         return {
             // Editor
             initialValue: null,
-            editor: null,
             editState: false,
             caretInEditor: false,
             cloudinaryImages: {
@@ -490,18 +367,12 @@ export default {
             linkMenuIsActive: false,
         };
     },
+    computed: mapState(["editor"]),
     watch: {
-        showAddTemplate() {
-            if (this.showAddTemplate) {
-                this.willBodyScroll(false);
-            } else {
-                this.willBodyScroll(true);
-            }
-        },
         editState() {
             if (this.editState) {
                 this.initialValue = this.value;
-                this.editor = new Editor({
+                const editor = new Editor({
                     content: this.value,
                     extensions: [
                         ...defaultExtensions(),
@@ -559,12 +430,20 @@ export default {
                     },
                 });
 
+                this.$store.commit("setData", {
+                    attr: "editor",
+                    data: editor,
+                });
+
                 const FOUND_IMGS = this.imgFinder(this.value);
                 this.cloudinaryImages.startingWith = FOUND_IMGS;
                 this.cloudinaryImages.endingWith = FOUND_IMGS;
             } else {
                 this.editor.destroy();
-                this.editor = null;
+                this.$store.commit("setData", {
+                    attr: "editor",
+                    data: undefined,
+                });
             }
         },
         forceStop() {

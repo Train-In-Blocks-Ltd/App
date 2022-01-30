@@ -40,10 +40,6 @@ export default {
      */
     closeModal({ commit }) {
         commit("setData", {
-            attr: "editor",
-            data: undefined,
-        });
-        commit("setData", {
             attr: "previewHTML",
             data: undefined,
         });
