@@ -31,19 +31,9 @@
                         <txt type="large-body" bold>Theme</txt>
                     </label>
                     <dropdown
-                        :value="claims.theme"
+                        :value="darkmodeTheme"
                         :items="dropdownItems"
-                        @output="
-                            (data) => {
-                                $store.commit('setDataDeep', {
-                                    attrParent: 'claims',
-                                    attrChild: 'theme',
-                                    data,
-                                });
-                                $parent.darkmode(data);
-                                $parent.saveClaims();
-                            }
-                        "
+                        @output="(data) => handleThemeSelect(data)"
                     />
                 </div>
                 <div class="grid gap-4">
@@ -218,13 +208,20 @@ export default {
             ],
         };
     },
-    computed: mapState([
-        "dontLeave",
-        "claims",
-        "versionName",
-        "versionBuild",
-        "coupon",
-    ]),
+    computed: {
+        ...mapState([
+            "dontLeave",
+            "claims",
+            "versionName",
+            "versionBuild",
+            "coupon",
+        ]),
+        darkmodeTheme() {
+            const theme = localStorage.getItem("darkmode");
+            if (theme) return theme;
+            return "system";
+        },
+    },
     async created() {
         this.$store.commit("setData", {
             attr: "loading",
@@ -245,6 +242,17 @@ export default {
         }/.netlify/functions/calendar?email=${this.claims.email}`;
     },
     methods: {
+        /**
+         * Stores theme in local storage.
+         */
+        handleThemeSelect(theme) {
+            localStorage.setItem("darkmode", theme);
+            this.$parent.darkmode(theme);
+        },
+
+        /**
+         * Opens EULA modal respective to user type.
+         */
         openEULA() {
             if (this.claims.user_type === "Client")
                 this.$store.commit("setData", {

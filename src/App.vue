@@ -467,7 +467,9 @@ export default {
                     this.claims.ga !== false
                         ? this.$ga.enable()
                         : this.$ga.disable();
-                    this.darkmode(this.claims.theme);
+
+                    if (localStorage.getItem("darkmode"))
+                        this.darkmode(localStorage.getItem("darkmode"));
 
                     // Set EULA
                     if (
