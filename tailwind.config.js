@@ -1,7 +1,6 @@
 module.exports = {
     darkMode: "class",
     purge: ["./public/**/*.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
-    darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {
             minHeight: {
@@ -15,6 +14,7 @@ module.exports = {
                     100: "#F9F9F9",
                     200: "#28282840",
                     400: "#686868",
+                    600: "#484848",
                     800: "#282828",
                 },
             },

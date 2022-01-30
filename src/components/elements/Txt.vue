@@ -22,21 +22,21 @@
     </h3>
     <p
         v-else-if="type === 'tiny'"
-        class="text-sm"
+        class="text-sm dark:text-white"
         :class="{ 'text-gray-600 dark:text-gray-300': grey, 'font-bold': bold }"
     >
         <slot />
     </p>
     <p
         v-else-if="type === 'large-body'"
-        class="text-2xl"
+        class="text-2xl dark:text-white"
         :class="{ 'text-gray-600 dark:text-gray-300': grey, 'font-bold': bold }"
     >
         <slot />
     </p>
     <p
         v-else
-        class="body"
+        class="dark:text-white"
         :class="{ 'text-gray-600 dark:text-gray-300': grey, 'font-bold': bold }"
     >
         <slot />
