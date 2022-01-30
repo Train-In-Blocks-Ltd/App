@@ -38,13 +38,25 @@ export default {
     },
     connected: true,
     clientUserLoaded: false,
+    previewHTML: undefined,
+
+    // Confirm pop up
     confirmPromise: undefined,
     confirmTitle: undefined,
     confirmText: undefined,
-    previewHTML: undefined,
+
+    // Upload pop up
     uploadPromise: undefined,
     uploadTitle: undefined,
     uploadText: undefined,
+
+    // Txt input pop up
+    txtInputPromise: undefined,
+    txtInputTitle: undefined,
+    txtInputText: undefined,
+    txtInputLabel: undefined,
+    txtInputValue: undefined,
+    txtInputPlaceholder: undefined,
 
     // Bookings
     bookings: [],

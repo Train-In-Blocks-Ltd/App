@@ -1,6 +1,7 @@
 <template>
     <div class="bg-white z-10 sticky top-0 pt-4">
         <upload-pop-up />
+        <txt-input-pop-up />
         <div
             class="flex px-4 py-3 border-2 rounded-t-lg transition-all"
             :class="toolbarClass"
@@ -91,10 +92,17 @@
                     'opacity-60': editor.isActive('link'),
                 }"
                 :on-click="
-                    () =>
-                        editor.isActive('link')
-                            ? editor.chain().focus().unsetLink().run()
-                            : setLinkUrl()
+                    () => {
+                        if (editor.isActive('link'))
+                            return editor.chain().focus().unsetLink().run();
+
+                        $store.dispatch('openTxtInputPopUp', {
+                            title: 'Enter URL link',
+                            text: 'Make sure to include the https://',
+                            label: 'Link',
+                            placeholder: 'Link',
+                        });
+                    }
                 "
             />
 
@@ -158,10 +166,15 @@ const UploadPopUp = () =>
     import(
         /* webpackChunkName: "components.uploadPopUp", webpackPrefetch: true  */ "@/components/generic/UploadPopUp"
     );
+const TxtInputPopUp = () =>
+    import(
+        /* webpackChunkName: "components.txtInputPopUp", webpackPrefetch: true  */ "@/components/generic/TxtInputPopUp"
+    );
 
 export default {
     components: {
         UploadPopUp,
+        TxtInputPopUp,
     },
     props: {
         toolbarClass: String,
@@ -171,22 +184,14 @@ export default {
         /**
          * Sets the link of the selected text.
          */
-        async setLinkUrl() {
-            const SRC = await this.$refs.input_pop_up.show(
-                "link",
-                "Enter the URL link",
-                "Make sure to include the https://"
-            );
-            if (!SRC) {
-                return;
-            }
-            this.editor.chain().focus().setLink({ href: SRC }).run();
+        handleReturnInput(link) {
+            this.editor.chain().focus().setLink({ href: link }).run();
         },
 
         /**
          * Adds an image.
          */
-        addImg() {
+        handleImageSelect() {
             const FILE = document.getElementById("img-uploader").files[0];
             const READER = new FileReader();
             READER.addEventListener(

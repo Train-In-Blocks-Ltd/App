@@ -11,7 +11,7 @@
                 accept=".png, .jpeg, .jpg, .webp, .gif"
                 @change="
                     () => {
-                        $parent.addImg();
+                        $parent.handleImageSelect();
                         $store.dispatch('closeUploadPopUp');
                     }
                 "

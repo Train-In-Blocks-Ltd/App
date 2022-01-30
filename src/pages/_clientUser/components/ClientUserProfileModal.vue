@@ -113,7 +113,7 @@ export default {
         /**
          * Adds a user profile image.
          */
-        addImg() {
+        handleImageSelect() {
             try {
                 this.$store.commit("setData", {
                     attr: "dontLeave",

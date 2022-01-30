@@ -181,6 +181,63 @@ export default {
             data: undefined,
         });
     },
+
+    async openTxtInputPopUp({ commit }, payload) {
+        return new Promise((resolve) => {
+            commit("setData", {
+                attr: "txtInputPromise",
+                data: resolve,
+            });
+            if (payload.title)
+                commit("setData", {
+                    attr: "txtInputTitle",
+                    data: payload.title,
+                });
+            if (payload.text)
+                commit("setData", {
+                    attr: "txtInputText",
+                    data: payload.text,
+                });
+            if (payload.label)
+                commit("setData", {
+                    attr: "txtInputLabel",
+                    data: payload.label,
+                });
+            if (payload.placeholder)
+                commit("setData", {
+                    attr: "txtInputPlaceholder",
+                    data: payload.placeholder,
+                });
+        });
+    },
+
+    closeTxtInputPopUp({ commit }) {
+        commit("setData", {
+            attr: "txtInputPromise",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputTitle",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputText",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputLabel",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputValue",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputPlaceholder",
+            data: undefined,
+        });
+    },
+
     /** Gets all the data for the trainer-user's session. */
     async getHighLevelData({ dispatch, commit, state }) {
         // Main data call

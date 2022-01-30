@@ -81,7 +81,7 @@
             id="img-uploader"
             type="file"
             accept=".png, .jpeg, .jpg, .webp, .gif"
-            @change="$parent.addImg(), (reveal = false)"
+            @change="$parent.handleImageSelect(), (reveal = false)"
         />
         <div class="input_button_bar">
             <button v-if="inputType !== 'image'">Submit</button>
