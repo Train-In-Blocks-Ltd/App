@@ -42,6 +42,9 @@ export default {
     confirmTitle: undefined,
     confirmText: undefined,
     previewHTML: undefined,
+    uploadPromise: undefined,
+    uploadTitle: undefined,
+    uploadText: undefined,
 
     // Bookings
     bookings: [],

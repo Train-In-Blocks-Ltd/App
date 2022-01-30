@@ -148,6 +148,39 @@ export default {
         });
     },
 
+    async openUploadPopUp({ commit }, payload) {
+        return new Promise((resolve) => {
+            commit("setData", {
+                attr: "uploadPromise",
+                data: resolve,
+            });
+            if (payload.title)
+                commit("setData", {
+                    attr: "uploadTitle",
+                    data: payload.title,
+                });
+            if (payload.text)
+                commit("setData", {
+                    attr: "uploadText",
+                    data: payload.text,
+                });
+        });
+    },
+
+    closeUploadPopUp({ commit }) {
+        commit("setData", {
+            attr: "uploadPromise",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "uploadTitle",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "uploadText",
+            data: undefined,
+        });
+    },
     /** Gets all the data for the trainer-user's session. */
     async getHighLevelData({ dispatch, commit, state }) {
         // Main data call

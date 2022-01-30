@@ -30,7 +30,7 @@
                 </default-button>
             </div>
         </div>
-        <backdrop />
+        <backdrop :on-click="() => handleBackdropClick()" />
     </div>
 </template>
 
@@ -49,7 +49,8 @@ export default {
     computed: mapState(["confirmPromise", "confirmTitle", "confirmText"]),
     methods: {
         handleBackdropClick() {
-            this.$store.dispatch("closeModal");
+            this.confirmPromise(false);
+            this.$store.dispatch("closeConfirmPopUp");
         },
     },
 };

@@ -1,5 +1,6 @@
 <template>
     <div class="bg-white z-10 sticky top-0 pt-4">
+        <upload-pop-up />
         <div
             class="flex px-4 py-3 border-2 rounded-t-lg transition-all"
             :class="toolbarClass"
@@ -102,7 +103,14 @@
                 svg="image"
                 class="mr-3"
                 :icon-size="22"
-                :on-click="() => null"
+                :on-click="
+                    () => {
+                        $store.dispatch('openUploadPopUp', {
+                            title: 'Upload image',
+                            text: 'Please make sure that it\'s less than 1MB.',
+                        });
+                    }
+                "
             />
 
             <!-- Templates -->
@@ -146,7 +154,15 @@
 import { mapState } from "vuex";
 import Compressor from "compressorjs";
 
+const UploadPopUp = () =>
+    import(
+        /* webpackChunkName: "components.uploadPopUp", webpackPrefetch: true  */ "@/components/generic/UploadPopUp"
+    );
+
 export default {
+    components: {
+        UploadPopUp,
+    },
     props: {
         toolbarClass: String,
     },
@@ -171,7 +187,7 @@ export default {
          * Adds an image.
          */
         addImg() {
-            const FILE = document.getElementById("img_uploader").files[0];
+            const FILE = document.getElementById("img-uploader").files[0];
             const READER = new FileReader();
             READER.addEventListener(
                 "load",
@@ -230,7 +246,7 @@ export default {
                         persist: true,
                         backdrop: true,
                     });
-                    document.getElementById("img_uploader").value = "";
+                    document.getElementById("img-uploader").value = "";
                 }
             }
         },

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <upload-pop-up />
         <div class="flex flex-col items-center justify-center">
             <div
                 v-if="clientUser.profile_image"
@@ -7,25 +8,27 @@
                     backgroundImage: `url(${clientUser.profile_image})`,
                 }"
                 style="filter: grayscale(0.8)"
-                class="h-32 w-32 bg-cover bg-center rounded-full mb-8"
+                class="h-32 w-32 bg-cover bg-center rounded-full mb-8 cursor-pointer hover:opacity-60 transition-opacity"
                 @click="
-                    $refs.input_pop_up.show(
-                        'image',
-                        'Select your image to upload',
-                        'Make sure that it\'s less than 1MB'
-                    )
+                    () => {
+                        $store.dispatch('openUploadPopUp', {
+                            title: 'Upload image',
+                            text: 'Please make sure that it\'s less than 1MB.',
+                        });
+                    }
                 "
             />
             <inline-svg
                 v-else
                 :src="require('@/assets/svg/profile-image.svg')"
-                class="h-32 w-32 bg-cover bg-center rounded-full mb-8 border-3 border-gray-800"
+                class="h-32 w-32 bg-cover bg-center rounded-full mb-8 border-3 border-gray-800 cursor-pointer hover:opacity-60 transition-opacity"
                 @click="
-                    $refs.input_pop_up.show(
-                        'image',
-                        'Select your image to upload',
-                        'Make sure that it\'s less than 1MB'
-                    )
+                    () => {
+                        $store.dispatch('openUploadPopUp', {
+                            title: 'Upload image',
+                            text: 'Please make sure that it\'s less than 1MB.',
+                        });
+                    }
                 "
             />
             <txt-input
@@ -88,11 +91,16 @@ const BookingForm = () =>
     import(
         /* webpackChunkName: "components.bookingForm", webpackPreload: true  */ "@/components/generic/BookingForm"
     );
+const UploadPopUp = () =>
+    import(
+        /* webpackChunkName: "components.uploadPopUp", webpackPrefetch: true  */ "@/components/generic/UploadPopUp"
+    );
 
 export default {
     components: {
         Booking,
         BookingForm,
+        UploadPopUp,
     },
     computed: mapState(["silentLoading", "claims", "clientUser"]),
     methods: {
@@ -111,7 +119,7 @@ export default {
                     attr: "dontLeave",
                     data: true,
                 });
-                const FILE = document.getElementById("img_uploader").files[0];
+                const FILE = document.getElementById("img-uploader").files[0];
                 const READER = new FileReader();
                 const self = this;
                 READER.addEventListener(
@@ -162,7 +170,7 @@ export default {
                             persist: true,
                             backdrop: true,
                         });
-                        document.getElementById("img_uploader").value = "";
+                        document.getElementById("img-uploader").value = "";
                     }
                 }
                 this.$store.dispatch("endLoading");

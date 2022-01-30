@@ -78,7 +78,7 @@
         />
         <input
             v-else-if="inputType === 'image'"
-            id="img_uploader"
+            id="img-uploader"
             type="file"
             accept=".png, .jpeg, .jpg, .webp, .gif"
             @change="$parent.addImg(), (reveal = false)"
