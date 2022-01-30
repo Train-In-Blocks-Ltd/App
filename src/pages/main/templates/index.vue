@@ -106,10 +106,7 @@
 
 <script>
 import { mapState } from "vuex";
-const RichEditor = () =>
-    import(
-        /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
-    );
+
 const Checkbox = () =>
     import(
         /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/Checkbox"
@@ -130,7 +127,6 @@ export default {
         };
     },
     components: {
-        RichEditor,
         Checkbox,
         Multiselect,
         CardWrapper,

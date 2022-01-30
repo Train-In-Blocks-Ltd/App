@@ -53,10 +53,6 @@
 <script>
 import { mapState } from "vuex";
 
-const RichEditor = () =>
-    import(
-        /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
-    );
 const Bookings = () =>
     import(
         /* webpackChunkName: "components.bookings", webpackPreload: true  */ "./components/Bookings"
@@ -72,7 +68,6 @@ const EditorWrapper = () =>
 
 export default {
     components: {
-        RichEditor,
         Bookings,
         PlanCard,
         EditorWrapper,

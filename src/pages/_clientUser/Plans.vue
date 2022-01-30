@@ -162,10 +162,6 @@ const EditorWrapper = () =>
     import(
         /* webpackChunkName: "components.editorWrapper", webpackPreload: true  */ "@/components/generic/EditorWrapper"
     );
-const RichEditor = () =>
-    import(
-        /* webpackChunkName: "components.richEditor", webpackPreload: true  */ "../../components/Editor"
-    );
 const CardWrapper = () =>
     import(
         /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
@@ -180,7 +176,6 @@ export default {
     components: {
         WeekCalendar,
         MonthCalendar,
-        RichEditor,
         CardWrapper,
         EditorWrapper,
     },

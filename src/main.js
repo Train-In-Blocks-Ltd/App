@@ -19,6 +19,7 @@ import Icon from "@/components/elements/Icon";
 import IconButton from "@/components/elements/IconButton";
 import LinkButton from "@/components/elements/LinkButton";
 import Divider from "@/components/elements/Divider";
+import RichEditor from "@/components/extensive/RichEditor";
 import Wrapper from "@/components/generic/Wrapper";
 
 import App from "./App";
@@ -54,6 +55,7 @@ Vue.component("Icon", Icon);
 Vue.component("IconButton", IconButton);
 Vue.component("LinkButton", LinkButton);
 Vue.component("Divider", Divider);
+Vue.component("RichEditor", RichEditor);
 Vue.component("Wrapper", Wrapper);
 
 Vue.config.productionTip = false;

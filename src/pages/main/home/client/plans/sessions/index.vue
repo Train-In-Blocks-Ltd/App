@@ -308,9 +308,9 @@
                                     :week-id="currentWeek"
                                     :editing="editSession"
                                     :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
-                                    :data-for-templates="templates"
                                     :force-stop="forceStop"
                                     @on-edit-change="handleSessionNotesChange"
+                                    templates
                                 />
                             </card-wrapper>
                         </div>
@@ -337,10 +337,6 @@ const WeekCalendar = () =>
 const MonthCalendar = () =>
     import(
         /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/MonthCalendar"
-    );
-const RichEditor = () =>
-    import(
-        /* webpackChunkName: "components.richEditor", webpackPreload: true */ "@/components/Editor"
     );
 const ColorPicker = () =>
     import(
@@ -376,7 +372,6 @@ export default {
         Checkbox,
         WeekCalendar,
         MonthCalendar,
-        RichEditor,
         ColorPicker,
         Multiselect,
         PlanOptions,

@@ -134,7 +134,6 @@ svg.edit_icon {
     position: sticky;
     top: 0;
     padding-top: 1rem;
-    background-color: var(--back);
 
     /* Inner container of menu */
     #menu_bar {
@@ -166,10 +165,6 @@ svg.edit_icon {
     grid-gap: 1rem;
     #templates_search_none {
         display: none;
-    }
-    .close_icon {
-        display: flex;
-        justify-self: end;
     }
     h3 {
         margin-top: 1rem;
@@ -245,83 +240,12 @@ div#rich_editor {
 </style>
 
 <template>
-    <div id="wrapper--rich_editor">
-        <div
-            :class="{ opened_sections: showAddTemplate }"
-            class="section_overlay"
-        />
+    <div>
         <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
             <input-pop-up ref="input_pop_up" />
         </transition>
-        <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
-            <global-overlay ref="overlay" />
-        </transition>
-        <div
-            v-if="showAddTemplate"
-            class="tab_overlay_content fadeIn delay fill_mode_both small_border_radius"
-        >
-            <div class="template_menu">
-                <inline-svg
-                    class="close_icon cursor"
-                    :src="require('../assets/svg/close.svg')"
-                    aria-label="Close"
-                    @click="(showAddTemplate = false), (search = '')"
-                />
-                <input
-                    v-if="dataForTemplates.length !== 0"
-                    v-model="search"
-                    type="search"
-                    aria-label="Search templates"
-                    rel="search"
-                    placeholder="Search templates"
-                    @input="isSearchEmpty()"
-                />
-                <h3 v-show="search === ''">System templates</h3>
-                <div class="templates_container">
-                    <div
-                        v-for="(example, exampleIndex) in exampleTemplates"
-                        v-show="search === ''"
-                        :key="`example_${exampleIndex}`"
-                        class="template_item"
-                    >
-                        <button
-                            @click="
-                                editor.commands.insertContent(example.html),
-                                    (showAddTemplate = false)
-                            "
-                        >
-                            {{ example.name }}
-                        </button>
-                        <div class="preview_html" v-html="example.html" />
-                    </div>
-                </div>
-                <h3>Your templates</h3>
-                <div class="templates_container">
-                    <div
-                        v-for="(item, index) in dataForTemplates"
-                        v-show="
-                            !search ||
-                            item.name
-                                .toLowerCase()
-                                .startsWith(search.toLowerCase())
-                        "
-                        :key="'template-' + index"
-                        class="template_item"
-                    >
-                        <button
-                            @click="
-                                editor.commands.insertContent(item.template),
-                                    (showAddTemplate = false)
-                            "
-                        >
-                            {{ item.name }}
-                        </button>
-                        <div class="preview_html" v-html="item.template" />
-                    </div>
-                </div>
-                <p id="templates_search_none">No templates found</p>
-            </div>
-        </div>
+
+        <!-- Preview -->
         <div
             v-if="!editState && !test_empty_html(value)"
             id="rich_show_content"
@@ -329,202 +253,171 @@ div#rich_editor {
             @click="(editState = true), $emit('on-edit-change', 'edit', itemId)"
         >
             <div v-html="updateHTML(value, true)" />
-            <inline-svg
-                :src="require('../assets/svg/editor/pencil.svg')"
-                class="edit_icon no_fill"
-            />
+            <icon svg="edit-2" :icon-size="28" />
         </div>
-        <transition v-else-if="editState" enter-active-class="fadeIn">
-            <div>
-                <div class="menu_bar_wrapper">
-                    <div
-                        id="menu_bar"
-                        :class="{ editorFocused: caretInEditor }"
-                    >
-                        <button
-                            class="fadeIn menu_button"
-                            :class="{ 'is-active': editor.isActive('bold') }"
-                            title="Bold"
-                            @click="editor.chain().focus().toggleBold().run()"
-                        >
-                            <inline-svg
-                                :src="require('../assets/svg/editor/bold.svg')"
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            :class="{ 'is-active': editor.isActive('italic') }"
-                            title="Italic"
-                            @click="editor.chain().focus().toggleItalic().run()"
-                        >
-                            <inline-svg
-                                :src="
-                                    require('../assets/svg/editor/italic.svg')
-                                "
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            :class="{
-                                'is-active': editor.isActive('underline'),
-                            }"
-                            title="Underline"
-                            @click="
-                                editor.chain().focus().toggleUnderline().run()
-                            "
-                        >
-                            <inline-svg
-                                :src="
-                                    require('../assets/svg/editor/underline.svg')
-                                "
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            :class="{
-                                'is-active': editor.isActive('ordered_list'),
-                            }"
-                            title="Ordered list"
-                            @click="
-                                editor.chain().focus().toggleOrderedList().run()
-                            "
-                        >
-                            <inline-svg
-                                :src="require('../assets/svg/editor/ol.svg')"
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            :class="{
-                                'is-active': editor.isActive('bullet_list'),
-                            }"
-                            title="Bullet list"
-                            @click="
-                                editor.chain().focus().toggleBulletList().run()
-                            "
-                        >
-                            <inline-svg
-                                :src="require('../assets/svg/editor/ul.svg')"
-                            />
-                        </button>
-                        <button
-                            class="menu_button"
-                            :class="{
-                                'is-active': editor.isActive('taskList'),
-                            }"
-                            title="Checklist"
-                            @click="
-                                editor.chain().focus().toggleTaskList().run()
-                            "
-                        >
-                            <inline-svg
-                                :src="
-                                    require('../assets/svg/editor/checklist.svg')
-                                "
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            :class="{
-                                'is-active': editor.isActive('horizontalRule'),
-                            }"
-                            title="Horizontal line"
-                            @click="
-                                editor.chain().focus().setHorizontalRule().run()
-                            "
-                        >
-                            <inline-svg
-                                :src="
-                                    require('../assets/svg/editor/horizontal-rule.svg')
-                                "
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            :class="{ 'is-active': editor.isActive('link') }"
-                            title="Hyperlink"
-                            @click="
-                                editor.isActive('link')
-                                    ? editor.chain().focus().unsetLink().run()
-                                    : setLinkUrl()
-                            "
-                        >
-                            <inline-svg
-                                :src="require('../assets/svg/editor/link.svg')"
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            title="Image"
-                            @click="
-                                (showAddTemplate = false),
-                                    $refs.input_pop_up.show(
-                                        'image',
-                                        'Select your image to upload',
-                                        'Make sure that it\'s less than 1MB'
-                                    )
-                            "
-                        >
-                            <inline-svg
-                                :src="require('../assets/svg/editor/image.svg')"
-                            />
-                        </button>
-                        <button
-                            v-if="
-                                dataForTemplates !== undefined &&
-                                dataForTemplates !== null
-                            "
-                            class="fadeIn menu_button"
-                            title="Template"
-                            @click="
-                                (showAddTemplate = !showAddTemplate),
-                                    $parent.goToEvent(itemId, weekId)
-                            "
-                        >
-                            <inline-svg
-                                :src="
-                                    require('../assets/svg/editor/template.svg')
-                                "
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            title="Undo"
-                            @click="editor.chain().focus().undo().run()"
-                        >
-                            <inline-svg
-                                :src="require('../assets/svg/editor/undo.svg')"
-                            />
-                        </button>
-                        <button
-                            class="fadeIn menu_button"
-                            title="Redo"
-                            @click="editor.chain().focus().redo().run()"
-                        >
-                            <inline-svg
-                                :src="require('../assets/svg/editor/redo.svg')"
-                            />
-                        </button>
-                    </div>
-                </div>
-                <editor-content
-                    id="rich_editor"
-                    :editor="editor"
-                    :class="{ editorFocused: caretInEditor }"
+
+        <div v-else-if="editState">
+            <!-- Toolbar -->
+            <div class="flex" :class="{ editorFocused: caretInEditor }">
+                <!-- Bold -->
+                <icon-button
+                    svg="bold"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{ 'opacity-60': editor.isActive('bold') }"
+                    :on-click="() => editor.chain().focus().toggleBold().run()"
+                />
+
+                <!-- Italic -->
+                <icon-button
+                    svg="italic"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{ 'opacity-60': editor.isActive('italic') }"
+                    :on-click="
+                        () => editor.chain().focus().toggleItalic().run()
+                    "
+                />
+
+                <!-- Underline -->
+                <icon-button
+                    svg="underline"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{ 'opacity-60': editor.isActive('underline') }"
+                    :on-click="
+                        () => editor.chain().focus().toggleUnderline().run()
+                    "
+                />
+
+                <!-- Ordered list -->
+                <icon-button
+                    svg="ol"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{
+                        'opacity-60': editor.isActive('ordered_list'),
+                    }"
+                    :on-click="
+                        () => editor.chain().focus().toggleOrderedList().run()
+                    "
+                />
+
+                <!-- Bullet list -->
+                <icon-button
+                    svg="ul"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{
+                        'opacity-60': editor.isActive('bullet_list'),
+                    }"
+                    :on-click="
+                        () => editor.chain().focus().toggleBulletList().run()
+                    "
+                />
+
+                <!-- Check list -->
+                <icon-button
+                    svg="check-square"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{
+                        'opacity-60': editor.isActive('taskList'),
+                    }"
+                    :on-click="
+                        () => editor.chain().focus().toggleTaskList().run()
+                    "
+                />
+
+                <!-- Divider -->
+                <icon-button
+                    svg="horizontal-rule"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{
+                        'opacity-60': editor.isActive('horizontalRule'),
+                    }"
+                    :on-click="
+                        () => editor.chain().focus().setHorizontalRule().run()
+                    "
+                />
+
+                <!-- Link -->
+                <icon-button
+                    svg="link"
+                    class="mr-2"
+                    :icon-size="22"
+                    :class="{
+                        'opacity-60': editor.isActive('link'),
+                    }"
+                    :on-click="
+                        () =>
+                            editor.isActive('link')
+                                ? editor.chain().focus().unsetLink().run()
+                                : setLinkUrl()
+                    "
+                />
+
+                <!-- Image -->
+                <icon-button
+                    svg="image"
+                    class="mr-2"
+                    :icon-size="22"
+                    :on-click="() => null"
+                />
+
+                <!-- Templates -->
+                <icon-button
+                    v-if="templates"
+                    svg="file-text"
+                    class="mr-2"
+                    :icon-size="22"
+                    :on-click="
+                        () => {
+                            $store.commit('setData', {
+                                attr: 'editor',
+                                data: editor,
+                            });
+                            $store.dispatch('openModal', {
+                                name: 'templates',
+                            });
+                        }
+                    "
+                />
+
+                <!-- Undo -->
+                <icon-button
+                    svg="rotate-ccw"
+                    class="mr-2"
+                    :icon-size="22"
+                    :on-click="() => editor.chain().focus().undo().run()"
+                />
+
+                <!-- Redo -->
+                <icon-button
+                    svg="rotate-cw"
+                    :icon-size="22"
+                    :on-click="() => editor.chain().focus().redo().run()"
                 />
             </div>
-        </transition>
+            <editor-content
+                id="rich_editor"
+                :editor="editor"
+                :class="{ editorFocused: caretInEditor }"
+            />
+        </div>
+
+        <!-- Placeholder -->
         <p
             v-else
             class="placeholder grey fadeIn"
             @click="(editState = true), $emit('on-edit-change', 'edit', itemId)"
         >
             {{ emptyPlaceholder }}
-            <inline-svg
-                :src="require('../assets/svg/editor/pencil.svg')"
-                class="edit_icon placeholder_icon no_fill"
-            />
+            <icon svg="edit-2" :icon-size="28" />
         </p>
+
+        <!-- Button options for editing -->
         <div v-if="editState" class="bottom_bar fadeIn">
             <default-button
                 :on-click="
@@ -559,11 +452,11 @@ div#rich_editor {
 import Compressor from "compressorjs";
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import { defaultExtensions } from "@tiptap/starter-kit";
-import Undeline from "@tiptap/extension-underline";
+import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
-import LazyImage from "./js/LazyImage";
+import LazyImage from "../../js/LazyImage";
 
 export default {
     components: {
@@ -575,8 +468,8 @@ export default {
         editing: [Number, String],
         value: String,
         emptyPlaceholder: String,
-        dataForTemplates: Array,
         forceStop: Number,
+        templates: Boolean,
     },
     data() {
         return {
@@ -595,24 +488,6 @@ export default {
             // Link
             linkUrl: null,
             linkMenuIsActive: false,
-
-            // Template
-            search: "",
-            showAddTemplate: false,
-            exampleTemplates: [
-                {
-                    name: "Track with sets, reps, and load",
-                    html: "<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>",
-                },
-                {
-                    name: "Track with sets, reps",
-                    html: "<div>[ EXERCISE: SETS x REPS ]</div>",
-                },
-                {
-                    name: "Track with other measurements",
-                    html: "<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>",
-                },
-            ],
         };
     },
     watch: {
@@ -630,7 +505,7 @@ export default {
                     content: this.value,
                     extensions: [
                         ...defaultExtensions(),
-                        Undeline,
+                        Underline,
                         Link,
                         TaskList,
                         TaskItem,
@@ -864,29 +739,6 @@ export default {
                     document.getElementById("img_uploader").value = "";
                 }
             }
-        },
-
-        // -----------------------------
-        // Misc.
-        // -----------------------------
-
-        /**
-         * Checks if the template search is empty.
-         */
-        isSearchEmpty() {
-            let showNoneMsg = true;
-            this.dataForTemplates.forEach((template) => {
-                if (
-                    template.name
-                        .toLowerCase()
-                        .startsWith(this.search.toLowerCase()) &&
-                    this.search !== ""
-                ) {
-                    showNoneMsg = false;
-                }
-            });
-            document.getElementById("templates_search_none").style.display =
-                showNoneMsg && this.search !== "" ? "block" : "none";
         },
 
         /**

@@ -44,6 +44,7 @@
             <shift-modal v-else-if="modalContent === 'shift'" />
             <progress-modal v-else-if="modalContent === 'progress'" />
             <statistics-modal v-else-if="modalContent === 'statistics'" />
+            <templates-modal v-else-if="modalContent === 'templates'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -123,6 +124,10 @@ const StatisticsModal = () =>
     import(
         /* webpackChunkName: "components.statisticsModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/StatisticsModal"
     );
+const TemplatesModal = () =>
+    import(
+        /* webpackChunkName: "components.templatesModal", webpackPrefetch: true  */ "@/components/extensive/RichEditor/components/TemplatesModal"
+    );
 
 export default {
     components: {
@@ -143,6 +148,7 @@ export default {
         ShiftModal,
         ProgressModal,
         StatisticsModal,
+        TemplatesModal,
     },
     computed: mapState([
         "modalSize",
@@ -191,6 +197,8 @@ export default {
                     return "Progress sessions";
                 case "statistics":
                     return "Statistics";
+                case "templates":
+                    return "Templates";
                 default:
                     return "";
             }

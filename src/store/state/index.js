@@ -99,4 +99,5 @@ export default {
 
     // Sessions
     currentWeek: 1,
+    editor: undefined,
 };

@@ -157,10 +157,6 @@
 <script>
 import { mapState } from "vuex";
 
-const RichEditor = () =>
-    import(
-        /* webpackChunkName: "components.richEditor", webpackPreload: true  */ "../../components/Editor"
-    );
 const PlanCard = () =>
     import(
         /* webpackChunkName: "components.planCard", webpackPreload: true  */ "@/components/generic/PlanCard"
@@ -174,7 +170,6 @@ const CardWrapper = () =>
 
 export default {
     components: {
-        RichEditor,
         PlanCard,
         CardWrapper,
     },
