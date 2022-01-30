@@ -28,7 +28,7 @@
                 v-else
                 svg="user"
                 :icon-size="80"
-                class="p-4 border-3 border-gray-800 rounded-full mr-4"
+                class="p-4 border-3 border-gray-800 dark:border-white rounded-full mr-4"
             />
             <div>
                 <txt type="large-body" bold>

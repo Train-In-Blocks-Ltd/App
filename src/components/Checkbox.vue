@@ -1,11 +1,4 @@
 <style lang="scss" scoped>
-.stroke {
-    stroke: #282828;
-}
-.stroke-dark {
-    stroke: #ffffff;
-}
-
 .check svg {
     position: relative;
     z-index: 1;
@@ -50,7 +43,7 @@
         />
         <label
             :for="`checkbox-${itemId}`"
-            class="check stroke cursor-pointer relative m-auto w-4 h-4"
+            class="check stroke-current cursor-pointer relative m-auto w-4 h-4"
         >
             <svg
                 width="18px"

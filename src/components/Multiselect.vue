@@ -2,7 +2,7 @@
     <transition enter-active-class="fadeIn" leave-active-class="fadeOut">
         <div
             v-if="selected.length !== 0"
-            class="fixed top-0 left-0 z-10 bg-white shadow-lg w-full p-8 md:p-12"
+            class="fixed top-0 left-0 z-10 bg-white dark:bg-gray-800 shadow-lg w-full p-8 md:p-12"
         >
             <txt type="large-body" class="text-center mb-8" bold
                 >Selected {{ selected.length }}

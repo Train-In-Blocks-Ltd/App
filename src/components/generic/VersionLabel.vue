@@ -1,9 +1,6 @@
 <template>
     <div class="flex items-center">
-        <inline-svg
-            :src="require(`@/assets/svg/${versionName.toLowerCase()}.svg`)"
-            :aria-label="versionName"
-        />
+        <icon :svg="versionName.toLowerCase()" :icon-size="20" />
         <txt type="tiny" class="ml-2" bold>
             {{ versionName }} {{ versionBuild }}
         </txt>
