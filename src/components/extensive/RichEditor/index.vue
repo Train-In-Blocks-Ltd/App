@@ -61,7 +61,7 @@ div#rich_show_content {
         <div
             v-if="!editState && !test_empty_html(value)"
             id="rich_show_content"
-            class="flex justify-between relative p-4 border-2 border-gray-200 rounded-lg transition-opacity"
+            class="flex justify-between relative p-4 border-2 border-gray-200: dark:border-white rounded-lg transition-opacity"
             :class="
                 !!editor
                     ? 'cursor-not-allowed opacity-60'

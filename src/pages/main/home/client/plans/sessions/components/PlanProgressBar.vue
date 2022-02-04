@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-full select-none border-2 border-gray-400 transition-all rounded-lg relative py-2 px-4"
+        class="w-full select-none border-2 border-gray-200: dark:border-white transition-all rounded-lg relative py-2 px-4"
     >
         <txt v-if="!sessions" grey>No sessions created yet</txt>
         <txt v-else grey>

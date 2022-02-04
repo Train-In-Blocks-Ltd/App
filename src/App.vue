@@ -71,7 +71,6 @@ body {
     display: grid;
     font-size: 16px;
     line-height: 1.42;
-    background-color: var(--back);
 }
 
 /* Loading bar */

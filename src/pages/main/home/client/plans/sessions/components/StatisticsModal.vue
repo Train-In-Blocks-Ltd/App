@@ -47,7 +47,7 @@
 
             <div
                 v-if="showDataTypeSelector && dataToVisualise.length !== 0"
-                class="bg-white"
+                class="bg-white dark:bg-gray-800"
                 noHover
             >
                 <div
@@ -65,7 +65,11 @@
         </div>
 
         <!-- Table preview -->
-        <div v-show="protocolErrors.length !== 0" class="bg-white" noHover>
+        <div
+            v-show="protocolErrors.length !== 0"
+            class="bg-white dark:bg-gray-800"
+            noHover
+        >
             <txt>
                 ERROR: Please check that the following exercises and
                 measurements are using the correct format.
