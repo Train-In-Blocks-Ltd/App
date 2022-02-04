@@ -2,7 +2,6 @@
 
 Repo for the Train In Blocks App.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/15bb0c86-8028-4fac-88a2-87c773801c9a/deploy-status)](https://app.netlify.com/sites/train-in-blocks/deploys)
 [![Linter](https://github.com/Train-In-Blocks-Ltd/App/actions/workflows/lint.yml/badge.svg)](https://github.com/Train-In-Blocks-Ltd/App/actions/workflows/lint.yml)
 
 **Production**
