@@ -1,20 +1,6 @@
-<style lang="scss" scoped>
-.backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    min-height: calc(100vh - env(safe-area-inset-bottom));
-    background-color: #00000080;
-    z-index: 90;
-}
-</style>
-
 <template>
     <div
-        class="backdrop"
+        class="fixed top-0 left-0 w-screen min-h-screen bg-black opacity-40 z-30"
         @click="
             () => {
                 if (onClick) onClick();

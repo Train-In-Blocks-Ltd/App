@@ -19,6 +19,9 @@ export default {
     responsePersist: false,
     responseBackdrop: false,
 
+    // Selection
+    selectedIds: [],
+
     // System
 
     search: "",
@@ -35,6 +38,25 @@ export default {
     },
     connected: true,
     clientUserLoaded: false,
+    previewHTML: undefined,
+
+    // Confirm pop up
+    confirmPromise: undefined,
+    confirmTitle: undefined,
+    confirmText: undefined,
+
+    // Upload pop up
+    uploadPromise: undefined,
+    uploadTitle: undefined,
+    uploadText: undefined,
+
+    // Txt input pop up
+    txtInputPromise: undefined,
+    txtInputTitle: undefined,
+    txtInputText: undefined,
+    txtInputLabel: undefined,
+    txtInputValue: undefined,
+    txtInputPlaceholder: undefined,
 
     // Bookings
     bookings: [],
@@ -89,4 +111,13 @@ export default {
         generated: false,
         code: null,
     },
+
+    // Sessions
+    currentWeek: 1,
+    editor: undefined,
+    cloudinaryImages: {
+        startingWith: [],
+        endingWith: [],
+    },
+    newImgs: [],
 };

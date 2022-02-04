@@ -1,7 +1,7 @@
 <template>
     <form
         name="add_client"
-        class="form_grid add_client"
+        class="grid gap-4 mt-8"
         spellcheck="false"
         @submit.prevent="
             () => {
@@ -135,7 +135,7 @@ export default {
                     this.$ga.event("Client", "new");
                     this.$store.dispatch("endLoading");
                 } catch (e) {
-                    this.$parent.$parent.resolveError(e);
+                    this.$store.dispatch("resolveError", e);
                 }
             }
         },

@@ -1,39 +1,38 @@
-<style lang="scss">
-.top_bar {
-    display: flex;
-    justify-content: space-between;
-}
-</style>
-
 <template>
-    <div id="archive" class="view_container">
+    <wrapper id="archive">
         <multiselect
             :type="'client'"
             :options="multiselectOptions"
-            :selected="selectedClients"
             @response="resolveArchiveMultiselect"
         />
-        <div class="top_bar">
-            <h1>Archive</h1>
+        <div class="flex justify-between mb-4">
+            <txt type="title" is-main>Archive</txt>
             <a
                 v-if="
                     archive.clients.length !== 0 &&
-                    selectedClients.length < archive.clients.length
+                    selectedIds.length < archive.clients.length
                 "
                 href="javascript:void(0)"
-                class="a_link"
-                @click="selectAll()"
+                @click="
+                    () => {
+                        $store.commit('setData', {
+                            attr: 'selectedIds',
+                            data: archive.clients.map(
+                                (client) => client.client_id
+                            ),
+                        });
+                    }
+                "
             >
-                Select all
+                <txt>Select all</txt>
             </a>
         </div>
-        <br />
-        <p v-if="archive.clients.length === 0" class="text--small grey">
+        <txt v-if="archive.clients.length === 0" type="large-body" grey>
             No clients are archived
-        </p>
+        </txt>
         <div v-else>
             <txt-input
-                v-model="search"
+                :value="search"
                 type="search"
                 rel="search"
                 placeholder="Name"
@@ -41,33 +40,26 @@
                 autocomplete="name"
                 inputClass="text--small"
                 style="margin-bottom: 2rem"
+                @output="(data) => (search = data)"
             />
-            <div class="clients_container">
-                <skeleton v-if="loading" :type="'archived'" />
-                <div
-                    v-for="(client, index) in archive.clients"
-                    v-show="
-                        (!search ||
-                            client.name
-                                .toLowerCase()
-                                .startsWith(search.toLowerCase())) &&
-                        !loading
-                    "
-                    :id="'a' + client.client_id"
-                    :key="index"
-                    class="client_link_wrapper"
-                    :to="'/client/' + client.client_id + '/'"
-                >
-                    <client-link
-                        class="client_link archived"
-                        :client="client"
-                        :client-index="index"
-                        :archive="true"
-                    />
-                </div>
-            </div>
+            <skeleton v-if="loading" :type="'archived'" />
+            <client-link
+                v-for="(client, index) in archive.clients"
+                v-show="
+                    (!search ||
+                        client.name
+                            .toLowerCase()
+                            .startsWith(search.toLowerCase())) &&
+                    !loading
+                "
+                :key="index"
+                :client="client"
+                :client-index="index"
+                :archive="true"
+                class="mb-6"
+            />
         </div>
-    </div>
+    </wrapper>
 </template>
 
 <script>
@@ -94,15 +86,14 @@ export default {
     data() {
         return {
             search: "",
-            selectedClients: [],
             multiselectOptions: [
-                { name: "Unarchive", svg: "svg/archive.svg" },
-                { name: "Delete", svg: "svg/bin.svg" },
+                { name: "Unarchive", svg: "archive" },
+                { name: "Delete", svg: "trash" },
                 { name: "Deselect", svg: null },
             ],
         };
     },
-    computed: mapState(["loading", "archive"]),
+    computed: mapState(["loading", "archive", "selectedIds"]),
     async created() {
         this.$store.commit("setData", {
             attr: "loading",
@@ -113,10 +104,6 @@ export default {
         this.$store.dispatch("endLoading");
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Resolves the archive multi-select.
          * @param {string} res - The action selected from the multi-select.
@@ -130,53 +117,13 @@ export default {
                     this.deleteClients();
                     break;
                 case "Deselect":
-                    this.deselectAll();
+                    this.$store.commit("setData", {
+                        attr: "selectedIds",
+                        data: [],
+                    });
                     break;
             }
         },
-
-        /**
-         * Changes the state of the client link checkbox.
-         * @param {integer} id - The id of the client.
-         */
-        changeSelectCheckbox(id) {
-            if (!this.selectedClients.includes(id)) {
-                this.selectedClients.push(id);
-            } else {
-                const CLIENT_INDEX = this.selectedClients.indexOf(id);
-                this.selectedClients.splice(CLIENT_INDEX, 1);
-            }
-        },
-
-        /**
-         * Selects all the clients.
-         */
-        selectAll() {
-            this.archive.clients.forEach((client) => {
-                if (!this.selectedClients.includes(client.client_id)) {
-                    this.selectedClients.push(client.client_id);
-                    document.getElementById(
-                        `sc-${client.client_id}`
-                    ).checked = true;
-                }
-            });
-        },
-
-        /**
-         * Deselects all the clients.
-         */
-        deselectAll() {
-            this.archive.clients.forEach((client) => {
-                document.getElementById(
-                    `sc-${client.client_id}`
-                ).checked = false;
-            });
-            this.selectedClients = [];
-        },
-
-        // -----------------------------
-        // Database
-        // -----------------------------
 
         /**
          * Deletes trhe selected clients.
@@ -187,30 +134,33 @@ export default {
                     attr: "dontLeave",
                     data: true,
                 });
-                if (this.selectedClients.length !== 0) {
+                if (this.selectedIds.length !== 0) {
                     if (
-                        await this.$parent.$refs.confirm_pop_up.show(
-                            "Are you sure that you want to delete all the selected clients?",
-                            "We will remove their data(s) from our database and it won't be recoverable."
-                        )
+                        await this.$store.dispatch("openConfirmPopUp", {
+                            title: "Are you sure that you want to delete all the selected clients?",
+                            text: "We will remove their data(s) from our database and it won't be recoverable.",
+                        })
                     ) {
                         await this.$store.dispatch(
                             "clientDelete",
-                            this.selectedClients
+                            this.selectedIds
                         );
                         this.$store.dispatch("openResponsePopUp", {
                             title:
-                                this.selectedClients.length > 1
+                                this.selectedIds.length > 1
                                     ? "Clients deleted"
                                     : "Client Delete",
                             description: "All their data has been removed",
                         });
-                        this.deselectAll();
+                        this.$store.commit("setData", {
+                            attr: "selectedIds",
+                            data: [],
+                        });
                     }
                 }
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -223,30 +173,33 @@ export default {
                     attr: "dontLeave",
                     data: true,
                 });
-                if (this.selectedClients.length !== 0) {
+                if (this.selectedIds.length !== 0) {
                     if (
-                        await this.$parent.$refs.confirm_pop_up.show(
-                            "Are you sure that you want to unarchive all the selected clients?",
-                            "Their datas will be recovered and available on the Home page."
-                        )
+                        await this.$store.dispatch("openConfirmPopUp", {
+                            title: "Are you sure that you want to unarchive all the selected clients?",
+                            text: "Their data will be recovered and available on the Home page.",
+                        })
                     ) {
                         await this.$store.dispatch(
                             "clientUnarchive",
-                            this.selectedClients
+                            this.selectedIds
                         );
                         this.$store.dispatch("openResponsePopUp", {
                             title:
-                                this.selectedClients.length > 1
+                                this.selectedIds.length > 1
                                     ? "Unarchived clients"
                                     : "Unarchived client",
                             description: "All their data has been recovered",
                         });
-                        this.deselectAll();
+                        this.$store.commit("setData", {
+                            attr: "selectedIds",
+                            data: [],
+                        });
                     }
                 }
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
     },

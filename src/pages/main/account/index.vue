@@ -1,376 +1,136 @@
-<style lang="scss" scoped>
-@mixin setting-section {
-    display: grid;
-    grid-gap: 1rem;
-}
-.details_container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2rem;
-    margin-top: 2rem;
-    .details {
-        @include setting-section;
-
-        margin-bottom: 3rem;
-        .user-settings-button-bar {
-            display: flex;
-            > div:first-child {
-                margin-right: 1rem;
-            }
-        }
-    }
-    .theme {
-        @include setting-section;
-
-        margin-bottom: 3rem;
-    }
-    .referral {
-        @include setting-section;
-        button {
-            width: fit-content;
-            width: -moz-fit-content;
-        }
-    }
-    .calendar {
-        @include setting-section;
-
-        margin-bottom: 3rem;
-        button {
-            width: fit-content;
-            width: -moz-fit-content;
-        }
-        .guide_links {
-            display: grid;
-            grid-gap: 0.6rem;
-            margin: 1rem 0;
-            a {
-                display: inline;
-                font-weight: bold;
-            }
-        }
-    }
-    .privacy {
-        @include setting-section;
-        .policy_links {
-            display: grid;
-            grid-gap: 0.6rem;
-            margin: 1rem 0;
-            a {
-                display: inline;
-                font-weight: bold;
-            }
-        }
-    }
-}
-.form__options {
-    display: flex;
-    label {
-        margin: auto 0;
-    }
-    .allow-cookies {
-        align-self: center;
-    }
-}
-.check {
-    border-color: red;
-    outline-color: red;
-}
-.error {
-    color: red;
-}
-.reset_password_button_bar {
-    display: flex;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .details_container {
-        grid-template-columns: 1fr;
-        grid-gap: 3rem;
-    }
-}
-@media (max-width: 768px) {
-    .policies:hover {
-        opacity: 1;
-    }
-}
-@media (max-width: 576px) {
-    .reset_password_button_bar,
-    .details_container button {
-        width: 100%;
-    }
-    .reset_password_button_bar {
-        display: grid;
-        grid-gap: 1rem;
-    }
-}
-@media (max-width: 425px) {
-    .details_container {
-        .details {
-            .user-settings-button-bar {
-                display: grid;
-                grid-gap: 1rem;
-                > div:first-child {
-                    margin-right: 0;
-                }
-            }
-        }
-    }
-}
-</style>
-
 <template>
-    <div v-if="claims" id="account" class="view_container">
-        <preview-modal
-            :desc="previewDesc"
-            :html="previewHTML"
-            :show-media="false"
-            :show-brackets="true"
-            @close="(previewDesc = null), (previewHTML = null)"
-        />
-        <div
-            :class="{ opened_sections: showPasswordReset }"
-            class="section_overlay"
-        />
-        <form
-            v-if="showPasswordReset"
-            class="form_grid tab_overlay_content fadeIn delay fill_mode_both"
-            @submit.prevent="changePassword()"
-        >
+    <wrapper v-if="claims" id="account">
+        <txt type="title" is-main>Your Account</txt>
+        <div v-if="claims" class="grid md:grid-cols-2 gap-16 my-8">
             <div>
-                <h2>Stay safe</h2>
-                <h3 class="grey">Reset your password</h3>
-            </div>
-            <input
-                ref="pass"
-                :value="password.old"
-                type="password"
-                placeholder="Current password"
-                aria-label="Current password"
-                class="input--forms width_300 small_border_radius"
-                required
-                @input="(password.old = $event.target.value), checkForm()"
-            />
-            <div>
-                <h3>Requirements</h3>
-                <p class="grey">Number (0-9)</p>
-                <p class="grey">At least 8 characters</p>
-                <p class="grey">Can't contain your username</p>
-            </div>
-            <input
-                v-model="password.new"
-                type="password"
-                placeholder="New password"
-                aria-label="New password"
-                class="input--forms width_300 small_border_radius"
-                :class="{ check: password.check }"
-                required
-                @input="checkPassword(), checkForm()"
-            />
-            <input
-                v-model="password.match"
-                type="password"
-                placeholder="Confirm new password"
-                aria-label="Confirm new password"
-                class="input--forms width_300 small_border_radius"
-                :class="{ check: password.new !== password.match }"
-                required
-                @input="checkPassword(), checkForm()"
-            />
-            <div class="reset_password_button_bar">
-                <button
-                    class="right_margin"
-                    type="submit"
-                    :disabled="
-                        disableChangePasswordButton ||
-                        password.check ||
-                        password.new !== password.match
-                    "
-                >
-                    Change your password
-                </button>
-                <button
-                    class="red_button"
-                    @click.prevent="
-                        (showPasswordReset = false), willBodyScroll(true)
-                    "
-                >
-                    Close
-                </button>
-            </div>
-            <p v-if="password.error" class="error">
-                {{ password.error }}
-            </p>
-        </form>
-        <h1>Your Account</h1>
-        <div v-if="claims" class="details_container">
-            <div>
-                <div class="details">
-                    <h3>General settings</h3>
-                    <p style="margin-bottom: 1rem">
-                        <b>Email: </b>{{ claims.email }}
-                    </p>
-                    <div class="user-settings-button-bar">
-                        <div
-                            v-if="
-                                claims.user_type != 'Client' ||
-                                claims.user_type == 'Admin'
-                            "
-                        >
-                            <button @click.prevent="manageSubscription()">
-                                Manage Subscription
-                            </button>
-                        </div>
-                        <div>
-                            <button
-                                @click.prevent="
-                                    (showPasswordReset = true),
-                                        willBodyScroll(false)
-                                "
-                            >
-                                Change Password
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="theme">
-                    <label for="theme" class="text--small">
-                        <b> Theme </b>
-                    </label>
-                    <select
-                        v-model="claims.theme"
-                        name="theme"
-                        class="width_300"
-                        @change="
-                            $parent.darkmode(claims.theme), $parent.saveClaims()
+                <div class="grid gap-4 mb-12">
+                    <txt type="large-body" bold>General settings</txt>
+                    <txt class="mb-4"><b>Email: </b>{{ claims.email }}</txt>
+                    <default-button
+                        v-if="
+                            claims.user_type != 'Client' ||
+                            claims.user_type == 'Admin'
+                        "
+                        :on-click-prevent="() => manageSubscription()"
+                    >
+                        Manage Subscription
+                    </default-button>
+                    <default-button
+                        :on-click="
+                            () =>
+                                $store.dispatch('openModal', {
+                                    name: 'reset-password',
+                                })
                         "
                     >
-                        <option value="system">System default</option>
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                    </select>
+                        Change Password
+                    </default-button>
                 </div>
-                <div class="referral">
-                    <h3>Referral Code</h3>
-                    <p>
+                <div class="grid gap-4 mb-12">
+                    <label for="theme">
+                        <txt type="large-body" bold>Theme</txt>
+                    </label>
+                    <dropdown
+                        :value="darkmodeTheme"
+                        :items="dropdownItems"
+                        @output="(data) => handleThemeSelect(data)"
+                    />
+                </div>
+                <div class="grid gap-4">
+                    <txt type="large-body" bold>Referral Code</txt>
+                    <txt>
                         <b>Earn up to 15% off!</b> You'll receive a 5% discount
                         for each referral you make, up to a maximum of 15% off.
                         Each person you refer will also receive 20% off their
                         first month too. It's a win-win!
-                    </p>
-                    <button
+                    </txt>
+                    <default-button
                         v-if="!coupon.generated"
-                        @click.prevent="generateCoupon()"
+                        :on-click-prevent="() => generateCoupon()"
                     >
                         Generate Coupon
-                    </button>
-                    <button
+                    </default-button>
+                    <default-button
                         v-else
-                        @click.prevent="copyCoupon()"
+                        :on-click-prevent="() => copyCoupon()"
                         v-html="coupon.code"
                     />
                 </div>
             </div>
             <div>
-                <div class="calendar">
-                    <label for="calendar" class="text--small">
-                        <b> Calendar </b>
+                <div class="grid gap-4 mb-12">
+                    <txt type="large-body" bold>Calendar</txt>
+                    <label>
+                        Enable calendar link:
+                        <input
+                            v-model="claims.calendar"
+                            class="claims-calendar"
+                            type="checkbox"
+                            @change="$parent.saveClaims()"
+                        />
                     </label>
-                    <div>
-                        <div class="form__options">
-                            <label>
-                                Enable calendar link:
-                                <input
-                                    v-model="claims.calendar"
-                                    class="claims-calendar"
-                                    type="checkbox"
-                                    @change="$parent.saveClaims()"
-                                />
-                            </label>
-                        </div>
-                        <p class="text--tiny">
-                            Anyone with the link will be able to see all of your
-                            bookings
-                        </p>
-                    </div>
-                    <div v-if="claims.calendar" class="guide_links">
-                        <p
+                    <txt type="tiny">
+                        Anyone with the link will be able to see all of your
+                        bookings
+                    </txt>
+                    <div v-if="claims.calendar" class="grid gap-2 my-4">
+                        <a
                             v-for="(guide, guideIndex) in calendarGuides"
                             :key="`cal_${guideIndex}`"
+                            :href="guide.link"
+                            target="_blank"
+                            rel="noreferrer"
+                            class=""
                         >
-                            <a
-                                :href="guide.link"
-                                target="_blank"
-                                rel="noreferrer"
-                                class="a_link"
-                            >
-                                Add to {{ guide.name }} calendar
-                            </a>
-                        </p>
+                            <txt bold>Add to {{ guide.name }} calendar</txt>
+                        </a>
                     </div>
-                    <button
+                    <default-button
                         v-if="claims.calendar"
-                        @click.prevent="copyCalendarLink()"
+                        :on-click-prevent="() => copyCalendarLink()"
                         v-html="calendarText"
                     />
                 </div>
-                <div class="privacy">
-                    <h3>Your Privacy and Data</h3>
-                    <p>
+                <div class="grid gap-4">
+                    <txt type="large-body" bold>Your Privacy and Data</txt>
+                    <txt>
                         You can find more information about our policies below:
-                    </p>
-                    <div class="policy_links">
-                        <p
+                    </txt>
+                    <div class="grid gap-2 my-4">
+                        <a
                             v-for="(policy, policyIndex) in policies"
                             :key="`policy_${policyIndex}`"
+                            :href="policy.link"
+                            target="_blank"
+                            rel="noreferrer"
                         >
-                            <a
-                                :href="policy.link"
-                                target="_blank"
-                                rel="noreferrer"
-                                class="a_link"
-                            >
-                                <b>
-                                    {{ policy.title }}
-                                </b>
-                            </a>
-                        </p>
-                        <p>
-                            <a
-                                href="javascript:void(0)"
-                                class="a_link"
-                                @click="openEULA"
-                            >
-                                EULA
-                            </a>
-                        </p>
+                            <txt bold>
+                                {{ policy.title }}
+                            </txt>
+                        </a>
+                        <a href="javascript:void(0)" @click="openEULA">
+                            <txt bold>EULA</txt>
+                        </a>
                     </div>
-                    <div class="form__options">
-                        <label>
-                            Allow Third Party Cookies:
-                            <input
-                                v-model="claims.ga"
-                                class="allow-cookies"
-                                type="checkbox"
-                                @change="$parent.saveClaims()"
-                            />
-                        </label>
-                    </div>
+                    <label class="flex items-center">
+                        Allow Third Party Cookies:
+                        <input
+                            v-model="claims.ga"
+                            type="checkbox"
+                            @change="$parent.saveClaims()"
+                            class="ml-4"
+                        />
+                    </label>
                 </div>
             </div>
         </div>
-        <br />
-        <br />
         <version-label />
-    </div>
+    </wrapper>
 </template>
 
 <script>
 import { mapState } from "vuex";
-const PreviewModal = () =>
-    import(
-        /* webpackChunkName: "components.previewModal", webpackPrefetch: true */ "@/components/PreviewModal"
-    );
+
 const VersionLabel = () =>
     import(
         /* webpackChunkName: "components.versionLabel", webpackPreload: true  */ "@/components/generic/VersionLabel"
@@ -383,16 +143,15 @@ export default {
         };
     },
     components: {
-        PreviewModal,
         VersionLabel,
     },
     async beforeRouteLeave(to, from, next) {
         if (
             this.dontLeave
-                ? await this.$parent.$refs.confirm_pop_up.show(
-                      "Your changes might not be saved",
-                      "Are you sure you want to leave?"
-                  )
+                ? await this.$store.dispatch("openConfirmPopUp", {
+                      title: "Your changes might not be saved",
+                      text: "Are you sure you want to leave?",
+                  })
                 : true
         ) {
             this.$store.commit("setData", {
@@ -404,15 +163,20 @@ export default {
     },
     data() {
         return {
-            showPasswordReset: false,
-            password: {
-                old: null,
-                new: null,
-                match: null,
-                check: null,
-                error: null,
-            },
-            disableChangePasswordButton: true,
+            dropdownItems: [
+                {
+                    label: "System Default",
+                    value: "system",
+                },
+                {
+                    label: "Light",
+                    value: "light",
+                },
+                {
+                    label: "Dark",
+                    value: "dark",
+                },
+            ],
             calendarText: "Get your calendar link",
             calendarGuides: [
                 {
@@ -442,17 +206,22 @@ export default {
                     link: "http://traininblocks.com/legal/terms-of-use",
                 },
             ],
-            previewDesc: null,
-            previewHTML: null,
         };
     },
-    computed: mapState([
-        "dontLeave",
-        "claims",
-        "versionName",
-        "versionBuild",
-        "coupon",
-    ]),
+    computed: {
+        ...mapState([
+            "dontLeave",
+            "claims",
+            "versionName",
+            "versionBuild",
+            "coupon",
+        ]),
+        darkmodeTheme() {
+            const theme = localStorage.getItem("darkmode");
+            if (theme) return theme;
+            return "system";
+        },
+    },
     async created() {
         this.$store.commit("setData", {
             attr: "loading",
@@ -473,26 +242,31 @@ export default {
         }/.netlify/functions/calendar?email=${this.claims.email}`;
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
-        openEULA() {
-            if (this.claims.user_type === "Client") {
-                this.previewHTML =
-                    require("@/components/legal/eula-client.md").html;
-            } else {
-                this.previewHTML = require("@/components/legal/eula.md").html;
-            }
+        /**
+         * Stores theme in local storage.
+         */
+        handleThemeSelect(theme) {
+            localStorage.setItem("darkmode", theme);
+            this.$parent.darkmode(theme);
         },
-        checkForm() {
-            this.disableChangePasswordButton = !(
-                this.password.old &&
-                this.password.new &&
-                this.password.match &&
-                !this.password.check &&
-                !this.password.error
-            );
+
+        /**
+         * Opens EULA modal respective to user type.
+         */
+        openEULA() {
+            if (this.claims.user_type === "Client")
+                this.$store.commit("setData", {
+                    attr: "previewHTML",
+                    data: require("@/components/legal/eula-client.md").html,
+                });
+            else
+                this.$store.commit("setData", {
+                    attr: "previewHTML",
+                    data: require("@/components/legal/eula.md").html,
+                });
+            this.$store.dispatch("openModal", {
+                name: "preview",
+            });
         },
 
         /**
@@ -508,69 +282,7 @@ export default {
                 );
                 window.location.href = RESPONSE.data;
             } catch (e) {
-                this.$parent.resolveError(e);
-            }
-        },
-
-        // -----------------------------
-        // Password
-        // -----------------------------
-
-        /**
-         * Validates the password.
-         */
-        checkPassword() {
-            const SELF = this;
-            function requirements() {
-                return (
-                    SELF.password.new.match(/[0-9]+/) !== null &&
-                    SELF.password.new.length >= 8 &&
-                    SELF.password.old.length >= 1
-                );
-            }
-            if (requirements() === false) {
-                this.password.check = true;
-                this.password.error = "Please check the requirements";
-            } else if (this.password.new !== this.password.match) {
-                this.password.check = true;
-                this.password.error = "New password does not match";
-            } else {
-                this.password.check = false;
-                this.password.error = "";
-            }
-        },
-
-        /**
-         * Changes the password.
-         */
-        async changePassword() {
-            try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
-                });
-                this.password.error = "";
-                await this.$store.dispatch("changePassword", {
-                    old: this.password.old,
-                    new: this.password.new,
-                });
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Password changed",
-                    description: "Remember to not share it and keep it safe",
-                });
-                this.showPasswordReset = false;
-                this.willBodyScroll(true);
-                this.password = {
-                    old: null,
-                    new: null,
-                    match: null,
-                    check: null,
-                    error: null,
-                };
-                this.$store.dispatch("endLoading");
-            } catch (e) {
-                this.password.error =
-                    "Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements";
+                this.$store.dispatch("resolveError", e);
             }
         },
 
@@ -650,7 +362,7 @@ export default {
                 });
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
         async generateCoupon() {
@@ -678,7 +390,7 @@ export default {
                 });
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
         copyCoupon() {

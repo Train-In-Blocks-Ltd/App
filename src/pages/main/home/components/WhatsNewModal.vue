@@ -1,47 +1,10 @@
-<style lang="scss" scoped>
-.update_wrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    grid-gap: 4rem;
-    margin-bottom: 4rem;
-    .update_item {
-        display: grid;
-        align-content: space-between;
-        padding: 2rem;
-        img {
-            width: 100%;
-            border-radius: 10px;
-            margin: 1rem 0;
-        }
-    }
-}
-textarea {
-    min-height: 6rem;
-}
-.success {
-    color: var(--base_green);
-}
-@media (max-width: 736px) {
-    .update_wrapper {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 576px) {
-    .update_item {
-        padding: 0.8rem;
-    }
-}
-</style>
-
 <template>
     <div>
-        <div class="update_wrapper">
+        <div class="grid md:grid-cols-2 gap-8 my-8">
             <card-wrapper
                 v-for="(item, index) in content"
                 :key="`item_${index}`"
-                class="update_item"
-                :style="{ backgroundColor: 'var(--fore)' }"
+                class="p-8 flex flex-col justify-between"
                 noHover
             >
                 <img
@@ -49,30 +12,30 @@ textarea {
                     :src="require(`@/assets/whats-new/${item.img}`)"
                     :alt="item.title"
                     loading="lazy"
+                    class="rounded-lg my-4"
                 />
                 <div>
-                    <h3>
+                    <txt type="large-body" bold>
                         {{ item.title }}
-                    </h3>
-                    <p class="grey">
+                    </txt>
+                    <txt grey>
                         {{ item.desc }}
-                    </p>
+                    </txt>
                 </div>
             </card-wrapper>
         </div>
-        <h3>Help us make something better</h3>
-        <br />
-        <form class="form_grid" @submit.prevent="newIdea()">
-            <textarea
-                v-model="idea.idea_text"
+        <txt type="large-body" class="mb-4" bold
+            >Help us make something better</txt
+        >
+        <form class="grid gap-4 md:w-1/2" @submit.prevent="newIdea">
+            <txt-area
+                :info="idea.submitted"
+                :value="idea.idea_text"
                 placeholder="Your Idea"
-                class="width_300"
+                @output="(data) => (idea.idea_text = data)"
                 required
             />
-            <div class="form_button_bar">
-                <button type="submit">Submit</button>
-            </div>
-            <p v-if="idea.submitted" class="success">Thanks for your idea!</p>
+            <default-button type="submit">Submit</default-button>
         </form>
     </div>
 </template>
@@ -143,7 +106,7 @@ export default {
             ],
             idea: {
                 idea_text: "",
-                submitted: false,
+                submitted: "",
             },
         };
     },
@@ -168,11 +131,14 @@ export default {
                 to: "hello@traininblocks.com",
                 ...emailBuilder("new-idea", {
                     idea_text: this.idea.idea_text,
-                    email: this.$parent.$parent.claims.email,
+                    email: this.$store.state.claims.email,
                 }),
             });
-            this.idea.submitted = true;
+            this.idea.submitted = "Thanks for your great idea!";
             this.idea.idea_text = "";
+            setTimeout(() => {
+                this.idea.submitted = "";
+            }, 3000);
         },
     },
 };

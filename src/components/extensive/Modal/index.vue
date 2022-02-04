@@ -1,62 +1,50 @@
-<style lang="scss" scoped>
-.modal_wrapper {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    .modal {
-        position: fixed;
-        top: 4rem;
-        padding: 2rem;
-        border-radius: var(--rounded);
-        background-color: var(--fore);
-        z-index: 100;
-        max-height: 80%;
-        overflow-y: auto;
-        &.sm {
-            width: 60%;
-        }
-        &.lg {
-            width: 90%;
-        }
-        .secondary_header {
-            margin-bottom: 1.6rem;
-        }
-    }
-}
-
-@media (max-width: 768px) {
-    .modal_wrapper .modal {
-        top: 0;
-        max-height: 100%;
-        border-radius: 0;
-        &.sm,
-        &.lg {
-            width: 100%;
-        }
-    }
-}
-</style>
-
 <template>
-    <div v-if="modalOpen" class="modal_wrapper">
+    <div v-if="modalOpen" class="flex justify-center w-full">
         <card-wrapper
-            class="modal"
-            :class="{ lg: modalSize === 'lg', sm: modalSize === 'sm' }"
+            class="fixed md:top-16 p-8 md:rounded-lg z-40 overflow-y-auto"
+            :class="{
+                'w-full max-h-screen': modalSize === 'full',
+                'w-full md:w-10/12 max-h-screen md:max-h-4/5':
+                    modalSize === 'lg',
+                'w-full md:w-3/5 max-h-screen md:max-h-4/5': modalSize === 'sm',
+            }"
             noHover
             noBorder
         >
             <secondary-header :title="title()">
                 <template v-slot:right>
                     <icon-button
-                        svg="close"
+                        svg="x"
                         :on-click="() => $store.dispatch('closeModal')"
-                        :icon-size="24"
+                        :icon-size="32"
                     />
                 </template>
             </secondary-header>
             <new-client-modal v-if="modalContent === 'new-client'" />
             <whats-new-modal v-else-if="modalContent === 'whats-new'" />
             <install-modal v-else-if="modalContent === 'install-pwa'" />
+            <reset-password-modal
+                v-else-if="modalContent === 'reset-password'"
+            />
+            <client-user-profile-modal
+                v-else-if="modalContent === 'client-user-profile'"
+            />
+            <preview-modal
+                v-else-if="
+                    modalContent === 'preview' || modalContent === 'info'
+                "
+            />
+            <new-plan-modal v-else-if="modalContent === 'new-plan'" />
+            <all-booking-modal v-else-if="modalContent === 'bookings'" />
+            <toolkit-modal v-else-if="modalContent === 'toolkit'" />
+            <duplicate-plan-modal
+                v-else-if="modalContent === 'duplicate-plan'"
+            />
+            <move-modal v-else-if="modalContent === 'move'" />
+            <shift-modal v-else-if="modalContent === 'shift'" />
+            <progress-modal v-else-if="modalContent === 'progress'" />
+            <statistics-modal v-else-if="modalContent === 'statistics'" />
+            <templates-modal v-else-if="modalContent === 'templates'" />
         </card-wrapper>
         <backdrop :on-click="handleBackdropClick" />
     </div>
@@ -92,6 +80,54 @@ const InstallModal = () =>
     import(
         /* webpackChunkName: "components.installModal", webpackPrefetch: true  */ "@/pages/main/home/components/InstallModal"
     );
+const ResetPasswordModal = () =>
+    import(
+        /* webpackChunkName: "components.resetPasswordModal", webpackPrefetch: true  */ "@/pages/main/account/components/ResetPasswordModal"
+    );
+const ClientUserProfileModal = () =>
+    import(
+        /* webpackChunkName: "components.clientUserProfileModal", webpackPrefetch: true  */ "@/pages/_clientUser/components/ClientUserProfileModal"
+    );
+const PreviewModal = () =>
+    import(
+        /* webpackChunkName: "components.previewModal", webpackPrefetch: true  */ "./components/PreviewModal"
+    );
+const NewPlanModal = () =>
+    import(
+        /* webpackChunkName: "components.newPlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/NewPlanModal"
+    );
+const AllBookingModal = () =>
+    import(
+        /* webpackChunkName: "components.allBookingModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/components/AllBookingsModal"
+    );
+const ToolkitModal = () =>
+    import(
+        /* webpackChunkName: "components.toolkitModal", webpackPrefetch: true  */ "@/pages/main/home/client/components/ToolkitModal"
+    );
+const DuplicatePlanModal = () =>
+    import(
+        /* webpackChunkName: "components.duplicatePlanModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/DuplicatePlanModal"
+    );
+const MoveModal = () =>
+    import(
+        /* webpackChunkName: "components.moveModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/MoveModal"
+    );
+const ShiftModal = () =>
+    import(
+        /* webpackChunkName: "components.shiftModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ShiftModal"
+    );
+const ProgressModal = () =>
+    import(
+        /* webpackChunkName: "components.progressModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/ProgressModal"
+    );
+const StatisticsModal = () =>
+    import(
+        /* webpackChunkName: "components.statisticsModal", webpackPrefetch: true  */ "@/pages/main/home/client/plans/sessions/components/StatisticsModal"
+    );
+const TemplatesModal = () =>
+    import(
+        /* webpackChunkName: "components.templatesModal", webpackPrefetch: true  */ "@/components/extensive/RichEditor/components/TemplatesModal"
+    );
 
 export default {
     components: {
@@ -101,6 +137,18 @@ export default {
         NewClientModal,
         WhatsNewModal,
         InstallModal,
+        ResetPasswordModal,
+        ClientUserProfileModal,
+        PreviewModal,
+        NewPlanModal,
+        AllBookingModal,
+        ToolkitModal,
+        DuplicatePlanModal,
+        MoveModal,
+        ShiftModal,
+        ProgressModal,
+        StatisticsModal,
+        TemplatesModal,
     },
     computed: mapState([
         "modalSize",
@@ -127,6 +175,30 @@ export default {
                     return `${this.versionName} ${this.versionBuild}`;
                 case "install-pwa":
                     return "Save the app to your phone";
+                case "reset-password":
+                    return "Reset password";
+                case "preview":
+                    return "Preview";
+                case "info":
+                    return "Information";
+                case "new-plan":
+                    return "New Plan";
+                case "bookings":
+                    return "All bookings";
+                case "toolkit":
+                    return "Toolkit";
+                case "duplicate-plan":
+                    return "Duplicate plan";
+                case "move":
+                    return "Move sessions";
+                case "shift":
+                    return "Shift sessions";
+                case "progress":
+                    return "Progress sessions";
+                case "statistics":
+                    return "Statistics";
+                case "templates":
+                    return "Templates";
                 default:
                     return "";
             }

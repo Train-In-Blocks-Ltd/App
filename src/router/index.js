@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import OktaVue, { LoginCallback } from "@okta/okta-vue";
 import { OktaAuth } from "@okta/okta-auth-js";
-import { store } from "../store/store";
+import { store } from "../store";
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
         ? require("../../config/prod.env")
@@ -26,12 +26,14 @@ const ArchiveComponent = () =>
 const ProfileComponent = () =>
     import(/* webpackChunkName: "account" */ "@/pages/main/account");
 const ClientComponent = () =>
-    import(/* webpackChunkName: "client.home" */ "@/pages/_client/Home");
+    import(/* webpackChunkName: "clientHome" */ "@/pages/main/home/client");
 const ClientPlans = () =>
-    import(/* webpackChunkName: "client.plans" */ "@/pages/_client/Plans");
+    import(
+        /* webpackChunkName: "clientPlans" */ "@/pages/main/home/client/plans"
+    );
 const ClientSessions = () =>
     import(
-        /* webpackChunkName: "client.sessions" */ "@/pages/_client/Sessions"
+        /* webpackChunkName: "clientSessions" */ "@/pages/main/home/client/plans/sessions"
     );
 
 const ClientUserComponent = () =>

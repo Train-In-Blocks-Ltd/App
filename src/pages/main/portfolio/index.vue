@@ -1,87 +1,58 @@
-<style lang="scss" scoped>
-.trainer_info {
-    input {
-        width: 100%;
-        background-color: initial;
-        border: 1px solid var(--base_faint);
-        padding: 0.6rem 1rem;
-        border-radius: 8px;
-        transition: 0.4s all cubic-bezier(0.165, 0.84, 0.44, 1);
-        &:hover {
-            opacity: var(--light_opacity);
-        }
-        &:focus {
-            opacity: 1;
-            border: 1px solid var(--base);
-            padding: 0.6rem 1.4rem;
-        }
-    }
-    .trainer_info__business {
-        max-width: 100%;
-        margin-bottom: 1rem;
-    }
-    .business_name_skeleton {
-        margin-top: 1rem;
-    }
-}
-.portfolio_editor,
-.portfolio_editor_skeleton {
-    margin: 4rem 0;
-}
-</style>
-
 <template>
-    <div id="portfolio" class="view_container">
-        <div class="trainer_info">
-            <input
-                v-if="!loading"
-                v-model="portfolio.business_name"
-                class="trainer_info__business text--large"
-                placeholder="Business name"
-                aria-label="Business name"
-                type="text"
-                autocomplete="name"
-                :disabled="silentLoading"
-                @blur="updatePortfolio()"
-                @input="editing_info = true"
-            />
-            <skeleton v-else :type="'input_large'" />
-            <input
-                v-if="!loading"
-                v-model="portfolio.trainer_name"
-                class="input--forms allow_text_overflow"
-                placeholder="Trainer Name"
-                aria-label="Trainer Name"
-                type="text"
-                autocomplete="name"
-                :disabled="silentLoading"
-                @blur="updatePortfolio()"
-                @input="editing_info = true"
-            />
-            <skeleton
-                v-else
-                :type="'input_small'"
-                class="business_name_skeleton"
-            />
-        </div>
-        <div v-if="!loading" class="editor_object_standard portfolio_editor">
-            <h3>Portfolio</h3>
+    <wrapper id="portfolio">
+        <!-- Business name -->
+        <skeleton v-if="loading" :type="'input_large'" />
+        <txt-input
+            v-else
+            placeholder="Business name"
+            aria-label="Business name"
+            type="text"
+            autocomplete="name"
+            class="mb-4"
+            input-class="text-4xl"
+            :value="portfolio.business_name"
+            :disabled="silentLoading"
+            :on-blur="() => updatePortfolio()"
+            :on-input="() => (editing_info = true)"
+            @output="(data) => (portfolio.business_name = data)"
+        />
+
+        <!-- Trainer name -->
+        <skeleton v-if="loading" :type="'input_small'" />
+        <txt-input
+            v-else
+            placeholder="Trainer Name"
+            aria-label="Trainer Name"
+            type="text"
+            autocomplete="name"
+            class="mb-16"
+            :value="portfolio.trainer_name"
+            :disabled="silentLoading"
+            :on-blur="() => updatePortfolio()"
+            :on-input="() => (editing_info = true)"
+            @output="(data) => (portfolio.trainer_name = data)"
+        />
+
+        <!-- Portfolio content -->
+        <skeleton v-if="loading" :type="'session'" />
+        <label-wrapper v-else title="Portfolio">
             <rich-editor
                 v-model="portfolio.notes"
                 :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
                 @on-edit-change="resolve_portfolio_editor"
             />
-        </div>
-        <skeleton v-else :type="'session'" class="portfolio_editor_skeleton" />
+        </label-wrapper>
+
         <!-- <products /> -->
-    </div>
+    </wrapper>
 </template>
 
 <script>
 import { mapState } from "vuex";
-const RichEditor = () =>
+
+const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.richeditor", webpackPreload: true  */ "@/components/Editor"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 // const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '@/components/Products')
 
@@ -92,16 +63,16 @@ export default {
         };
     },
     components: {
-        RichEditor,
+        LabelWrapper,
         // Products
     },
     async beforeRouteLeave(to, from, next) {
         if (
             this.dontLeave
-                ? await this.$parent.$refs.confirm_pop_up.show(
-                      "Your changes might not be saved",
-                      "Are you sure you want to leave?"
-                  )
+                ? await this.$store.dispatch("openConfirmPopUp", {
+                      title: "Your changes might not be saved",
+                      text: "Are you sure you want to leave?",
+                  })
                 : true
         ) {
             this.$store.commit("setData", {
@@ -136,10 +107,6 @@ export default {
         this.$store.dispatch("endLoading");
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Resolves the state of the portfolio editor.
          * @param {string} state - The returned state of the editor.
@@ -173,10 +140,6 @@ export default {
             }
         },
 
-        // -----------------------------
-        // Database
-        // -----------------------------
-
         /**
          * Updates the portfolio.
          */
@@ -198,13 +161,9 @@ export default {
                 });
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
-
-        // -----------------------------
-        // Stripe connect
-        // -----------------------------
 
         async stripeConnect() {
             try {
@@ -225,7 +184,7 @@ export default {
                 window.location.href = RESPONSE.data.url;
                 this.$store.dispatch("endLoading");
             } catch (e) {
-                this.$parent.resolveError(e);
+                this.$store.dispatch("resolveError", e);
             }
         },
         async checkStripeConnect() {

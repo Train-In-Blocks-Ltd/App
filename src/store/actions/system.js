@@ -40,6 +40,10 @@ export default {
      */
     closeModal({ commit }) {
         commit("setData", {
+            attr: "previewHTML",
+            data: undefined,
+        });
+        commit("setData", {
             attr: "modalSize",
             data: null,
         });
@@ -107,6 +111,130 @@ export default {
         commit("setData", {
             attr: "responseBackdrop",
             data: false,
+        });
+    },
+
+    async openConfirmPopUp({ commit }, payload) {
+        return new Promise((resolve) => {
+            commit("setData", {
+                attr: "confirmPromise",
+                data: resolve,
+            });
+            if (payload.title)
+                commit("setData", {
+                    attr: "confirmTitle",
+                    data: payload.title,
+                });
+            if (payload.text)
+                commit("setData", {
+                    attr: "confirmText",
+                    data: payload.text,
+                });
+        });
+    },
+
+    closeConfirmPopUp({ commit }) {
+        commit("setData", {
+            attr: "confirmPromise",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "confirmTitle",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "confirmText",
+            data: undefined,
+        });
+    },
+
+    async openUploadPopUp({ commit }, payload) {
+        return new Promise((resolve) => {
+            commit("setData", {
+                attr: "uploadPromise",
+                data: resolve,
+            });
+            if (payload.title)
+                commit("setData", {
+                    attr: "uploadTitle",
+                    data: payload.title,
+                });
+            if (payload.text)
+                commit("setData", {
+                    attr: "uploadText",
+                    data: payload.text,
+                });
+        });
+    },
+
+    closeUploadPopUp({ commit }) {
+        commit("setData", {
+            attr: "uploadPromise",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "uploadTitle",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "uploadText",
+            data: undefined,
+        });
+    },
+
+    async openTxtInputPopUp({ commit }, payload) {
+        return new Promise((resolve) => {
+            commit("setData", {
+                attr: "txtInputPromise",
+                data: resolve,
+            });
+            if (payload.title)
+                commit("setData", {
+                    attr: "txtInputTitle",
+                    data: payload.title,
+                });
+            if (payload.text)
+                commit("setData", {
+                    attr: "txtInputText",
+                    data: payload.text,
+                });
+            if (payload.label)
+                commit("setData", {
+                    attr: "txtInputLabel",
+                    data: payload.label,
+                });
+            if (payload.placeholder)
+                commit("setData", {
+                    attr: "txtInputPlaceholder",
+                    data: payload.placeholder,
+                });
+        });
+    },
+
+    closeTxtInputPopUp({ commit }) {
+        commit("setData", {
+            attr: "txtInputPromise",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputTitle",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputText",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputLabel",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputValue",
+            data: undefined,
+        });
+        commit("setData", {
+            attr: "txtInputPlaceholder",
+            data: undefined,
         });
     },
 
@@ -188,6 +316,38 @@ export default {
         commit("setData", {
             attr: "products",
             data: RESPONSE.data[5],
+        });
+    },
+
+    toggleCheckbox({ state, commit }, id) {
+        commit("setData", {
+            attr: "selectedIds",
+            data: !state.selectedIds.includes(id)
+                ? [...state.selectedIds, id]
+                : state.selectedIds.filter((selectedId) => selectedId !== id),
+        });
+    },
+
+    /**
+     * Processes captured error and sends to Jira.
+     * @param msg - The error text.
+     */
+    async resolveError({ state, dispatch }, msg) {
+        if (state.claims.user_type !== "Admin") {
+            await this._vm.$axios.post("/.netlify/functions/error", {
+                msg,
+                claims: state.claims,
+            });
+        }
+        dispatch("endLoading");
+        dispatch("openResponsePopUp", {
+            title: "ERROR: this problem has been reported to our developers",
+            description:
+                msg.toString() !== "Error: Network Error"
+                    ? msg.toString()
+                    : "You may be offline. We'll try that request again once you've reconnected",
+            persist: true,
+            backdrop: true,
         });
     },
 };

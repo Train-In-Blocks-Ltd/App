@@ -1,83 +1,57 @@
-<style lang="scss" scoped>
-button {
-    user-select: none;
-    cursor: pointer;
-    align-self: center;
-    border-radius: 5px;
-    text-transform: capitalize;
-    outline-width: 0;
-    border: none;
-    padding: 0.6rem 1.6rem;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: var(--back);
-    background-color: var(--base);
-    transition: color 0.4s, background-color 0.4s, opacity 0.2s,
-        transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
-    &:hover:not(:disabled) {
-        opacity: var(--light_opacity);
-    }
-    &:active:not(:disabled) {
-        transform: var(--active_state);
-    }
-    &:focus {
-        box-shadow: 0 0 0 4px var(--base_light);
-    }
-    &:disabled,
-    &[disabled] {
-        cursor: not-allowed;
-        opacity: var(--light_opacity);
-    }
-    &.green,
-    &.red {
-        color: white;
-    }
-    &.green {
-        background-color: green;
-    }
-    &.red {
-        background-color: #b80000;
-    }
-}
-</style>
-
 <template>
     <button
-        v-if="onClickPrevent"
-        :class="theme"
+        v-if="prevent"
+        :class="{
+            'bg-red-700': theme === 'red',
+            'bg-green-700': theme === 'green',
+        }"
+        :disabled="isDisabled"
+        class="select-none cursor-pointer self-center rounded border-none px-6 py-3 font-bold text-white dark:text-gray-800 bg-gray-800 dark:bg-white transition-all hover:opacity-60 active:scale-95 disabled:opacity-60 disabled:cursor-default"
         @click.prevent="
             () => {
                 if (onClickPrevent) onClickPrevent();
             }
         "
-        :disabled="isDisabled"
-        :type="type"
     >
         <slot />
     </button>
     <button
         v-else
-        :class="theme"
+        :class="{
+            'bg-red-700': theme === 'red',
+            'bg-green-700': theme === 'green',
+        }"
+        :disabled="isDisabled"
+        class="select-none cursor-pointer self-center rounded border-none px-6 py-3 font-bold text-white dark:text-gray-800 bg-gray-800 dark:bg-white transition-all hover:opacity-60 active:scale-95 disabled:opacity-60 disabled:cursor-default"
         @click="
             () => {
                 if (onClick) onClick();
             }
         "
-        :disabled="isDisabled"
-        :type="type"
     >
         <slot />
     </button>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
     props: {
-        theme: String,
-        onClick: Function,
-        onClickPrevent: Function,
+        theme: {
+            type: String,
+            default: "normal",
+        },
+        onClick: {
+            type: [Function, Promise],
+            default: () => {},
+        },
+        onClickPrevent: {
+            type: [Function, Promise],
+            default: () => {},
+        },
         isDisabled: Boolean,
-        type: String,
+        prevent: Boolean,
     },
-};
+});
 </script>

@@ -1,28 +1,17 @@
-<style lang="scss" scoped>
-.icon_button {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: var(--transition_standard);
-    &:hover {
-        opacity: 0.6;
-    }
-}
-</style>
-
 <template>
     <div
-        class="icon_button"
+        class="flex w-max items-center hover:opacity-60 transition-opacity"
+        :class="disabled ? 'opacity-60' : 'cursor-pointer'"
         @click="
             () => {
-                if (onClick) onClick();
+                if (onClick && !disabled) onClick();
             }
         "
     >
         <inline-svg
             :class="svgClass"
             :style="{ height: `${iconSize}px`, width: `${iconSize}px` }"
-            :src="require(`@/assets/svg/${svg}.svg`)"
+            :src="require(`@/assets/icons/${svg}.svg`)"
         />
     </div>
 </template>
@@ -34,6 +23,7 @@ export default {
         svgClass: String,
         iconSize: Number,
         onClick: Function,
+        disabled: Boolean,
     },
 };
 </script>
