@@ -1,198 +1,97 @@
 <style lang="scss">
-#okta-signin-container {
-    position: relative;
-    #okta-sign-in {
-        outline: none;
-        margin-left: 0;
-        #okta-signin-submit {
-            outline: none;
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            position: absolute;
-            user-select: none;
-            cursor: pointer;
-            border-radius: 5px;
-            opacity: 1;
-            text-transform: capitalize;
-            border: none;
-            padding: 0.6rem 1.6rem;
-            font-size: 0.8rem;
-            color: white;
-            background-color: var(--base);
-            margin: 0.6rem 0;
-            transition: opacity 0.2s,
-                transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
-            &:hover {
-                opacity: var(--light_opacity);
-            }
-            &:focus {
-                box-shadow: 0 0 0 4px rgba(76, 91, 106, 0.5);
-            }
-        }
-    }
-}
-.o-form-button-bar {
-    margin-top: 1.25rem;
+#okta-signin-submit {
+    @apply select-none cursor-pointer self-center rounded border-none px-6 py-3 font-bold text-white dark:text-gray-800 bg-gray-800 dark:bg-white transition-all hover:opacity-60;
 }
 .okta-form-title {
-    display: none;
+    @apply hidden;
 }
 .auth-org-logo {
-    margin: 2rem 0;
-}
-.auth-org-logo.logo > path {
-    fill: var(--base);
-}
-.okta-form-label {
-    text-align: left;
+    @apply my-8;
 }
 #okta-signin-username,
 #okta-signin-password {
-    margin: 0.8rem 0;
-    font-size: 1rem;
-    border-radius: 5px;
+    @apply w-full px-2 py-3 font-sans outline-none bg-transparent text-gray-800 dark:text-white border-2 border-gray-200 dark:border-gray-400 rounded-lg hover:border-gray-800 focus:border-gray-800 dark:hover:border-white dark:focus:border-white transition-all;
 }
 .okta-form-input-error {
-    width: 100%;
-    color: #eb5757;
-    margin-top: 0.4rem;
-    margin-bottom: 1.4rem;
-    font-size: 0.75rem;
-    text-align: left;
+    @apply my-4 text-sm text-red-700;
+}
+.o-form-label {
+    @apply mb-1;
 }
 .o-form-input-name-username {
-    width: 100%;
+    @apply w-full;
 }
 .o-form-input-name-remember {
-    text-align: left;
-    font-size: 0.9rem;
+    @apply text-sm;
 }
 .o-form-fieldset-container {
-    display: grid;
-    grid-gap: 1.5rem;
-    margin: 2rem 0;
+    @apply grid gap-6 my-8;
 }
 .custom-checkbox {
     label {
-        padding-left: 4px;
+        @apply pl-2;
     }
     &:after {
         content: "Please remember to manually logout if this is a shared computer.";
-        display: block;
-        margin-top: 0.5rem;
-        font-size: 0.75rem;
-        padding-left: calc(4px + 13px + 4px + 3px);
-    }
-}
-
-@media (max-width: 576px) {
-    .okta-form-label {
-        font-size: 1.5rem;
+        @apply block mt-1 text-sm;
     }
 }
 .auth-footer {
-    display: none;
-}
-</style>
-
-<style lang="scss" scoped>
-a {
-    font-weight: bold;
-    text-decoration: none;
-    color: var(--base);
-    transition: var(--transition_standard);
-    &:hover {
-        opacity: var(--light_opacity);
-    }
-}
-#login {
-    text-align: left;
-    margin: auto;
-    padding: 6rem 4rem;
-    width: 550px;
-    .demo-details {
-        display: flex;
-        width: fit-content;
-    }
-    .other-options {
-        display: grid;
-        grid-gap: 1rem;
-        margin-top: 4rem;
-        .inline-link {
-            display: flex;
-            > a {
-                margin-left: 0.4rem;
-            }
-        }
-    }
-    .cookies {
-        margin: 2rem 0;
-    }
-}
-
-@media (max-width: 576px) {
-    a:hover {
-        opacity: 1;
-    }
-    #login {
-        width: 100%;
-        padding: 1.6rem;
-        height: 100%;
-        overflow-y: auto;
-    }
-    .cookies {
-        margin-left: 0;
-        margin-right: 0;
-    }
+    @apply hidden;
 }
 </style>
 
 <template>
-    <div v-if="!authenticated" id="login">
+    <div
+        v-if="!authenticated"
+        class="px-4 sm:px-8 md:px-0 lg:flex lg:items-center"
+    >
         <splash v-if="!splashed" />
-        <inline-svg
-            :src="require('@/assets/svg/full-logo.svg')"
-            class="auth-org-logo"
-        />
-        <a
-            class="demo-details"
-            href="javascript:void(0)"
-            @click="showDemo = !showDemo"
-        >
-            <txt bold>
-                {{ showDemo ? "Hide" : "Show demo account details" }}
-            </txt>
-        </a>
-        <div v-if="showDemo" class="demo_details">
-            <div class="info">demo@traininblocks.com</div>
-            <div class="info">testingaccount123</div>
+        <div class="w-full lg:w-1/2 md:pr-24 lg:pr-0 mr-16">
+            <icon svg="full-logo" :icon-size="150" />
+            <a
+                class="demo-details"
+                href="javascript:void(0)"
+                @click="showDemo = !showDemo"
+            >
+                <txt bold>
+                    {{ showDemo ? "Hide" : "Show demo account details" }}
+                </txt>
+            </a>
+            <div v-if="showDemo" class="demo_details">
+                <div class="info">demo@traininblocks.com</div>
+                <div class="info">testingaccount123</div>
+            </div>
+            <div id="okta-signin-container" />
         </div>
-        <div id="okta-signin-container" />
-        <reset-password v-if="open" />
-        <div class="other-options">
-            <txt class="inline-link">
-                Need an account?
-                <a href="https://traininblocks.com/#pricing">
-                    <txt>Sign up here</txt>
-                </a>
+        <div class="w-full lg:w-1/2 pr-24">
+            <div class="grid gap-4 mt-8">
+                <txt class="flex items-center">
+                    Need an account?
+                    <a href="https://traininblocks.com/#pricing" class="ml-4">
+                        <txt bold>Sign up here</txt>
+                    </a>
+                </txt>
+                <reset-password v-if="open" />
+                <txt v-if="!open" class="flex items-center">
+                    Forgot your password?
+                    <a href="javascript:(0)" @click="open = !open" class="ml-4">
+                        <txt bold>Reset it here</txt>
+                    </a>
+                </txt>
+            </div>
+            <txt type="tiny" class="my-8">
+                By logging in and using this application you agree that
+                essential first-party cookies will be placed on your computer.
+                Non-essential third party cookies may also be placed but can be
+                opted out of from your account page. For more information please
+                read our
+                <a href="https://traininblocks.com/legal/cookies-policy/"
+                    >Cookie Policy</a
+                >.
             </txt>
-            <txt v-if="!open" class="inline-link">
-                Forgot your password?
-                <a href="javascript:(0)" @click="open = !open">
-                    <txt>Reset it here</txt>
-                </a>
-            </txt>
+            <version-label />
         </div>
-        <txt type="tiny" class="cookies">
-            By logging in and using this application you agree that essential
-            first-party cookies will be placed on your computer. Non-essential
-            third party cookies may also be placed but can be opted out of from
-            your account page. For more information please read our
-            <a href="https://traininblocks.com/legal/cookies-policy/"
-                >Cookie Policy</a
-            >.
-        </txt>
-        <version-label />
     </div>
 </template>
 

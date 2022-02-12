@@ -1,17 +1,7 @@
-<style lang="scss" scoped>
-.recovery {
-    margin-top: 6rem;
-    margin-bottom: 1rem;
-    > .txt_input {
-        margin-bottom: 1rem;
-    }
-}
-</style>
-
 <template>
-    <form class="recovery" @submit.prevent="reset">
+    <form class="grid gap-4" @submit.prevent="reset">
         <txt-input
-            label="Email:"
+            label="Email"
             :value="email"
             :info="success"
             :error="error"
