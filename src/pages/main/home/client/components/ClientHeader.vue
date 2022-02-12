@@ -10,7 +10,7 @@
             v-else
             svg="user"
             :icon-size="144"
-            class="m-auto p-8 border-3 border-gray-800 rounded-full"
+            class="m-auto p-8 border-3 border-gray-800 dark:border-white rounded-full"
         />
         <txt-input
             type="text"
