@@ -45,16 +45,18 @@
                 "
             />
 
+            <!-- Descriptive data -->
             <div
                 v-if="showDataTypeSelector && dataToVisualise.length !== 0"
                 class="bg-white dark:bg-gray-800"
-                noHover
+                no-hover
             >
                 <div
                     v-for="(desc, descIndex) in descData"
                     :key="`desc-option-${descIndex}`"
+                    class="flex"
                 >
-                    <txt bold>
+                    <txt class="mr-4" bold>
                         {{ desc[0] }}
                     </txt>
                     <txt>
@@ -583,23 +585,23 @@ export default {
                 const MIN = Math.min(...this.dataToVisualise);
                 this.descData = [
                     [
-                        `Total ${this.selectedDataType.toLowerCase()} from all sessions`,
+                        `Total ${this.selectedDataType.toLowerCase()} from all sessions:`,
                         SUM,
                     ],
                     [
-                        `Average ${this.selectedDataType.toLowerCase()} across all sessions`,
+                        `Average ${this.selectedDataType.toLowerCase()} across all sessions:`,
                         (SUM / this.dataToVisualise.length).toFixed(1),
                     ],
                     [
-                        `Most total amount of ${this.selectedDataType.toLowerCase()} from a session`,
+                        `Most total amount of ${this.selectedDataType.toLowerCase()} from a session:`,
                         MAX,
                     ],
                     [
-                        `Least total amount of ${this.selectedDataType.toLowerCase()} from a session`,
+                        `Least total amount of ${this.selectedDataType.toLowerCase()} from a session:`,
                         MIN,
                     ],
                     [
-                        `% change in ${this.selectedDataType.toLowerCase()} from the lowest to the largest`,
+                        `% change in ${this.selectedDataType.toLowerCase()} from the lowest to the largest:`,
                         ((MAX / MIN - 1) * 100).toFixed(1),
                     ],
                 ];
