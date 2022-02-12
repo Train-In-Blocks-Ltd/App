@@ -11,6 +11,7 @@ export default {
     modalSize: null,
     modalOpen: false,
     modalContent: null,
+    modalPersist: false,
 
     // Response pop-up
     responseOpen: false,
@@ -103,7 +104,6 @@ export default {
     versionName: "Andromeda",
     versionBuild: "4.0",
     newBuild: false,
-    showEULA: false,
 
     // Coupons
     coupon: {

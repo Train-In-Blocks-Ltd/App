@@ -19,6 +19,7 @@ export default {
      * Opens a global modal
      * @param {string} payload.name - The name of the modal.
      * @param {string} payload.size - The size of the modal.
+     * @param {boolean} payload.persist - Stops the modal being closed.
      */
     openModal({ commit }, payload) {
         commit("setData", {
@@ -32,6 +33,10 @@ export default {
         commit("setData", {
             attr: "modalContent",
             data: payload.name,
+        });
+        commit("setData", {
+            attr: "modalPersist",
+            data: payload.persist,
         });
     },
 
@@ -54,6 +59,10 @@ export default {
         commit("setData", {
             attr: "modalContent",
             data: null,
+        });
+        commit("setData", {
+            attr: "modalPersist",
+            data: false,
         });
     },
 

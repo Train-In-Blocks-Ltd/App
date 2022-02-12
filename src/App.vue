@@ -137,12 +137,6 @@ body {
         <response-pop-up />
         <confirm-pop-up />
         <top-banner />
-        <div
-            v-if="showEULA"
-            class="tab_overlay_content fadeIn delay fill_mode_both"
-        >
-            <policy :type="claims.user_type" />
-        </div>
         <skeleton
             v-if="
                 (!authenticated || (loading && !instanceReady)) &&
@@ -152,7 +146,6 @@ body {
             class="fadeIn"
         />
         <nav-bar v-else-if="$route.path !== '/login'" class="fadeIn" />
-        <div :class="{ opened_sections: showEULA }" class="section_overlay" />
         <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
@@ -166,7 +159,6 @@ body {
 
 <script>
 import { mapState } from "vuex";
-import Policy from "./components/Policy";
 
 const NavBar = () =>
     import(
@@ -199,7 +191,6 @@ export default {
     },
     components: {
         NavBar,
-        Policy,
         Modal,
         ResponsePopUp,
         ConfirmPopUp,
@@ -210,7 +201,6 @@ export default {
         "clientUserLoaded",
         "loading",
         "claims",
-        "showEULA",
         "clients",
         "connected",
         "instanceReady",
@@ -479,9 +469,9 @@ export default {
                         this.authenticated
                     ) {
                         this.willBodyScroll(false);
-                        this.$store.commit("setData", {
-                            attr: "showEULA",
-                            data: true,
+                        this.$store.dispatch("openModal", {
+                            name: "eula",
+                            persist: true,
                         });
                     }
                 }

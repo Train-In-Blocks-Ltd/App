@@ -14,6 +14,7 @@
             <secondary-header :title="title()">
                 <template v-slot:right>
                     <icon-button
+                        v-if="!modalPersist"
                         svg="x"
                         :on-click="() => $store.dispatch('closeModal')"
                         :icon-size="32"
@@ -45,8 +46,15 @@
             <progress-modal v-else-if="modalContent === 'progress'" />
             <statistics-modal v-else-if="modalContent === 'statistics'" />
             <templates-modal v-else-if="modalContent === 'templates'" />
+            <policy-modal v-else-if="modalContent === 'eula'" />
         </card-wrapper>
-        <backdrop :on-click="handleBackdropClick" />
+        <backdrop
+            :on-click="
+                () => {
+                    if (!modalPersist) handleBackdropClick();
+                }
+            "
+        />
     </div>
 </template>
 
@@ -128,6 +136,10 @@ const TemplatesModal = () =>
     import(
         /* webpackChunkName: "components.templatesModal", webpackPrefetch: true  */ "@/components/extensive/RichEditor/components/TemplatesModal"
     );
+const PolicyModal = () =>
+    import(
+        /* webpackChunkName: "components.policyModal", webpackPrefetch: true  */ "@/components/extensive/Modal/components/PolicyModal"
+    );
 
 export default {
     components: {
@@ -149,11 +161,13 @@ export default {
         ProgressModal,
         StatisticsModal,
         TemplatesModal,
+        PolicyModal,
     },
     computed: mapState([
         "modalSize",
         "modalOpen",
         "modalContent",
+        "modalPersist",
         "versionBuild",
         "versionName",
     ]),
@@ -199,6 +213,8 @@ export default {
                     return "Statistics";
                 case "templates":
                     return "Templates";
+                case "eula":
+                    return "End-User License Agreement (EULA)";
                 default:
                     return "";
             }
