@@ -99,15 +99,7 @@ body {
         <response-pop-up />
         <confirm-pop-up />
         <top-banner />
-        <skeleton
-            v-if="
-                (!authenticated || (loading && !instanceReady)) &&
-                $route.path !== '/login'
-            "
-            :type="'nav'"
-            class="fadeIn"
-        />
-        <nav-bar v-else-if="$route.path !== '/login'" class="fadeIn" />
+        <nav-bar v-if="$route.path !== '/login'" class="fadeIn" />
         <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
