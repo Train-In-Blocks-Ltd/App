@@ -58,9 +58,6 @@ export default {
         };
     },
     computed: mapState(["dontLeave", "clientDetails", "clients"]),
-    mounted() {
-        this.$refs.name.focus();
-    },
     methods: {
         // -----------------------------
         // General

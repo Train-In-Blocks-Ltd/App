@@ -113,7 +113,10 @@ export default {
             clientSuspend: null,
         };
     },
-    computed: mapState(["clientDetails", "silentLoading"]),
+    mounted() {
+        this.checkClient();
+    },
+    computed: mapState(["clientDetails", "silentLoading", "claims"]),
     methods: {
         /**
          * Updates the client.
@@ -246,7 +249,7 @@ export default {
          * Checks if the client already exists on Okta.
          */
         async checkClient() {
-            if (this.$parent.claims.email !== "demo@traininblocks.com") {
+            if (this.claims.email !== "demo@traininblocks.com") {
                 this.clientAlreadyMsg = "Loading...";
                 try {
                     const RESULT = await this.$axios.post(
