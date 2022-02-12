@@ -76,42 +76,17 @@ body {
 /* Loading bar */
 #nprogress {
     .bar {
-        /* stylelint-disable-next-line */
-        background-color: var(--base) !important;
+        background-color: currentColor;
     }
     .peg {
         /* stylelint-disable-next-line */
-        box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important;
+        box-shadow: 0 0 10px currentColor, 0 0 5px currentColor !important;
     }
     .spinner-icon {
         /* stylelint-disable-next-line */
-        border-top-color: var(--base) !important;
+        border-top-color: currentColor !important;
         /* stylelint-disable-next-line */
-        border-left-color: var(--base) !important;
-    }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-::-webkit-scrollbar-track {
-    background-color: var(--base_faint);
-}
-::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: var(--base);
-    &:hover {
-        background-color: var(--base_faint);
-    }
-}
-
-@media (max-width: 576px) {
-    /* Elements */
-    ::-webkit-scrollbar {
-        width: 0;
-        background-color: transparent;
+        border-left-color: currentColor !important;
     }
 }
 
@@ -128,11 +103,7 @@ body {
 </style>
 
 <template>
-    <div
-        id="app"
-        class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white"
-        :class="{ authenticated: authenticated }"
-    >
+    <div id="app" :class="{ authenticated: authenticated }">
         <modal />
         <response-pop-up />
         <confirm-pop-up />
@@ -224,6 +195,12 @@ export default {
         this.willBodyScroll(true);
     },
     async mounted() {
+        // Sets the body to have dark mode.
+        document.body.setAttribute(
+            "class",
+            "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white"
+        );
+
         if (
             process.env.NODE_ENV === "production" &&
             "serviceWorker" in navigator
