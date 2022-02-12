@@ -296,23 +296,8 @@ export default {
         darkmode(mode) {
             const MATCHED_MEDIA =
                 window.matchMedia("(prefers-color-scheme)") || false;
-            if (mode === "dark") {
-                document.documentElement.classList.add("dark");
-                document.documentElement.style.setProperty("--fore", "#383838");
-                document.documentElement.style.setProperty("--base", "white");
-                document.documentElement.style.setProperty(
-                    "--base_faint",
-                    "#FFFFFF40"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_1",
-                    "#686868"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_2",
-                    "#484848"
-                );
-            } else if (
+            if (mode === "dark") document.documentElement.classList.add("dark");
+            else if (
                 mode === "system" &&
                 (MATCHED_MEDIA === false
                     ? false
@@ -328,23 +313,7 @@ export default {
                     .addListener((e) => {
                         this.darkmode(e.matches ? "dark" : "light");
                     });
-            } else {
-                document.documentElement.classList.remove("dark");
-                document.documentElement.style.setProperty("--fore", "white");
-                document.documentElement.style.setProperty("--base", "#282828");
-                document.documentElement.style.setProperty(
-                    "--base_faint",
-                    "#28282840"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_1",
-                    "#F4F4F4"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_2",
-                    "#E4E4E4"
-                );
-            }
+            } else document.documentElement.classList.remove("dark");
         },
 
         /**
