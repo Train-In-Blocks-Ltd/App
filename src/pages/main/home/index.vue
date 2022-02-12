@@ -1,14 +1,15 @@
 <template>
     <wrapper id="home">
-        <div v-if="loading">
-            <skeleton :type="'input_large'" class="mb-8" />
-            <skeleton :type="'client'" />
-        </div>
-        <div v-else-if="!noClients" class="grid mb-8">
+        <div class="grid mb-8">
             <home-header />
             <clients-list />
         </div>
-        <txt v-else type="large-body" class="mt-8 mb-16" grey>
+        <txt
+            v-if="noClients && !loading"
+            type="large-body"
+            class="mt-8 mb-16"
+            grey
+        >
             No clients added yet, use the button on the top-right of your
             screen.
         </txt>

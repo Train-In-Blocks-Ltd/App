@@ -3,3 +3,16 @@
 @tailwind components;
 
 @tailwind utilities;
+
+/* stylelint-disable */
+@layer components {
+    .skeleton-item-lg {
+        @apply rounded-lg h-12 bg-gray-400;
+    }
+    .skeleton-item {
+        @apply rounded-lg h-5 bg-gray-400;
+    }
+    .skeleton-box {
+        @apply grid gap-8 w-full rounded-lg bg-gray-600;
+    }
+}

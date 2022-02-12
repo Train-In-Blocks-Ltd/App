@@ -1,5 +1,8 @@
 <template>
-    <div class="grid gap-4 lg:flex justify-between mb-8">
+    <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-8">
+        <div class="skeleton-item-lg" />
+    </div>
+    <div v-else class="grid gap-4 lg:flex justify-between mb-8">
         <txt type="title" isMain>Clients</txt>
         <div class="flex items-center">
             <icon-button
@@ -58,7 +61,7 @@ import { mapState } from "vuex";
 
 export default {
     computed: {
-        ...mapState(["pwa"]),
+        ...mapState(["pwa", "loading"]),
         search: {
             get() {
                 return this.$store.state.search;

@@ -1,5 +1,10 @@
 <template>
-    <div class="grid gap-8 mb-8">
+    <div v-if="loading" class="skeleton-box animate-pulse p-4 sm:p-8">
+        <div class="skeleton-item-lg" />
+        <div class="skeleton-item" />
+        <div class="skeleton-item" />
+    </div>
+    <div v-else class="grid gap-8 mb-8">
         <!-- Perform case insensitive search -->
         <router-link
             v-for="(client, index) in clients"
