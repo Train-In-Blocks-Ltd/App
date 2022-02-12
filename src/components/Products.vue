@@ -334,10 +334,7 @@
                 @click="isStripeConnectedConnect()"
             >
                 <span> Connect with </span>
-                <inline-svg
-                    :src="require('../assets/svg/stripe.svg')"
-                    aria-label="Connect with stripe"
-                />
+                <icon svg="stripe" :icon-size="32" />
             </a>
             <div
                 v-else-if="

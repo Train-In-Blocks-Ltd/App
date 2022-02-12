@@ -16,11 +16,7 @@
                         : '/clientUser'
                 "
             >
-                <inline-svg
-                    :src="require('../../../assets/svg/logo-icon.svg')"
-                    class="logo_svg fadeIn"
-                    aria-label="Home"
-                />
+                <icon svg="logo-icon" :icon-size="36" />
             </router-link>
         </div>
 
