@@ -32,6 +32,7 @@
             svg="trash"
             :on-click="() => deletePlan()"
             :icon-size="32"
+            class="text-red-700"
         />
     </div>
 </template>
