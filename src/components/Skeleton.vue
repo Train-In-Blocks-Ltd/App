@@ -19,7 +19,7 @@
     display: grid;
     grid-gap: 2rem;
     width: 100%;
-    background-color: var(--skeleton_2);
+    background-color: #e4e4e4;
     border-radius: 10px;
     animation: fade 0.6s linear infinite alternate-reverse;
 }
@@ -28,12 +28,7 @@
 .rect__box,
 .rect__large_text,
 .rect__small_text {
-    background: linear-gradient(
-        90deg,
-        var(--skeleton_1) 8%,
-        var(--skeleton_2) 18%,
-        var(--skeleton_1) 33%
-    );
+    background: linear-gradient(90deg, #f4f4f4 8%, #e4e4e4 18%, #f4f4f4 33%);
     border-radius: 10px;
     animation: shimmer 5s linear infinite forwards;
 }
@@ -69,13 +64,13 @@
     width: 140px;
     border-radius: 50%;
     margin: 0 auto;
-    background-color: var(--skeleton_2);
+    background-color: #e4e4e4;
     animation: fade 0.6s linear infinite alternate-reverse;
 }
 
 @keyframes fade {
     from {
-        opacity: var(--light_opacity);
+        opacity: var(0.6);
     }
     to {
         opacity: 1;
@@ -127,7 +122,7 @@
     min-height: calc(100vh - env(safe-area-inset-bottom));
     width: calc(38px + 2rem);
     padding: 1rem;
-    background-color: var(--skeleton_2);
+    background-color: #e4e4e4;
     animation: fade 0.6s linear infinite alternate-reverse;
 }
 @media (max-width: 768px) {

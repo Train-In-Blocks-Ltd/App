@@ -4,15 +4,6 @@
     box-sizing: border-box;
 }
 :root {
-    --transition_standard: 0.6s all cubic-bezier(0.165, 0.84, 0.44, 1);
-    --fore: white;
-    --base: #282828;
-    --base_light: #585858;
-    --base_faint: #28282840;
-    --skeleton_1: #f4f4f4;
-    --skeleton_2: #e4e4e4;
-    --light_opacity: 0.6;
-
     height: stretch;
     height: calc(100vh - env(safe-area-inset-bottom));
 }
