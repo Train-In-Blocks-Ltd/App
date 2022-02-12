@@ -103,7 +103,7 @@ export default {
          * Resolves the client information editor.
          * @param {string} state - The returned state from the editor.
          */
-        resolve_client_info_editor(state) {
+        async resolve_client_info_editor(state) {
             switch (state) {
                 case "edit":
                     this.$store.commit("setData", {
@@ -115,7 +115,20 @@ export default {
                     break;
                 case "save":
                     this.editingClientNotes = false;
-                    this.$parent.updateClient(this.clientDetails);
+                    try {
+                        this.$store.commit("setData", {
+                            attr: "silentLoading",
+                            data: true,
+                        });
+                        this.$store.commit("setData", {
+                            attr: "dontLeave",
+                            data: true,
+                        });
+                        await this.$store.dispatch("updateClient");
+                        this.$store.dispatch("endLoading");
+                    } catch (e) {
+                        this.$store.dispatch("resolveError", e);
+                    }
                     break;
                 case "cancel":
                     this.$store.commit("setData", {
