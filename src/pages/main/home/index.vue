@@ -2,17 +2,12 @@
     <wrapper id="home">
         <div class="grid mb-8">
             <home-header />
-            <clients-list />
+            <clients-list v-if="clients.length > 0 && !loading" />
+            <txt v-else type="large-body" grey>
+                No clients added yet, use the button on the top-right of your
+                screen.
+            </txt>
         </div>
-        <txt
-            v-if="noClients && !loading"
-            type="large-body"
-            class="mt-8 mb-16"
-            grey
-        >
-            No clients added yet, use the button on the top-right of your
-            screen.
-        </txt>
     </wrapper>
 </template>
 
@@ -38,7 +33,7 @@ export default {
             persistResponse: "",
         };
     },
-    computed: mapState(["noClients", "loading", "modalOpen"]),
+    computed: mapState(["clients", "loading", "modalOpen"]),
     async created() {
         this.$store.commit("setData", {
             attr: "loading",
