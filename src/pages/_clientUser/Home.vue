@@ -103,10 +103,7 @@
         <div class="mt-16">
             <txt type="title" class="mb-8">Plans</txt>
             <skeleton v-if="loading" :type="'plan'" />
-            <div
-                v-else-if="clientUser.plans"
-                class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
-            >
+            <div v-else-if="clientUser.plans" class="grid sm:grid-cols-2 gap-4">
                 <plan-card
                     v-for="(plan, index) in clientUser.plans"
                     :key="`plan-${index}`"
@@ -119,38 +116,6 @@
                 information
             </txt>
         </div>
-
-        <!-- Products section -->
-        <!-- <div class="products_section">
-                <txt type="title">Services</txt>
-                <skeleton v-if="loading" :type="'product'" />
-                <div v-else class="products">
-                    <div
-                        v-for="(product, productIndex) in clientUser.products"
-                        :key="`product_${productIndex}`"
-                        class="product"
-                    >
-                        <div class="header">
-                            <txt type="subtitle">
-                                {{ product.name }}
-                            </txt>
-                            <button @click.prevent="checkout(product.id)">
-                                Purchase
-                            </button>
-                        </div>
-                        <txt type="body">
-                            <b class="type">{{ product.type }}</b> payment of
-                            <b>{{ `${product.price} ${product.currency}` }}</b>
-                        </txt>
-                        <txt type="body">
-                            {{ product.notes }}
-                        </txt>
-                        <button @click.prevent="checkout(product.id)">
-                            Purchase
-                        </button>
-                    </div>
-                </div>
-            </div> -->
     </wrapper>
 </template>
 
