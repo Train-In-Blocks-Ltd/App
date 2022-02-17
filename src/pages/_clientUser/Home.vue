@@ -35,7 +35,13 @@
         </div>
 
         <!-- Sessions section -->
-        <skeleton v-if="loading" :type="'session'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mt-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <div v-else-if="clientUser.sessionsToday" class="grid gap-8 mt-8">
             <!-- Session -->
             <card-wrapper
@@ -102,7 +108,16 @@
         <!-- Plans section -->
         <div class="mt-16">
             <txt type="title" class="mb-8">Plans</txt>
-            <skeleton v-if="loading" :type="'plan'" />
+            <div v-if="loading" class="grid sm:grid-cols-2 gap-4">
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+            </div>
             <div v-else-if="clientUser.plans" class="grid sm:grid-cols-2 gap-4">
                 <plan-card
                     v-for="(plan, index) in clientUser.plans"
