@@ -4,7 +4,7 @@
             :style="{
                 backgroundColor: weekColor[currentWeek - 1],
             }"
-            class="h-8 w-16 rounded border-2 border-gray-800 hover:opacity-60 transition-opacity mr-4 cursor-pointer"
+            class="h-8 w-16 rounded border-2 border-gray-800: dark:border-white hover:opacity-60 transition-opacity mr-4 cursor-pointer"
             @click="editingWeekColor = !editingWeekColor"
         />
         <div v-if="editingWeekColor" class="absolute top-8 left-0 z-10">
