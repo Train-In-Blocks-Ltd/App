@@ -30,7 +30,7 @@
             </div>
 
             <!-- Plans grid -->
-            <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
+            <skeleton v-if="loading" :type="'plan'" />
             <div
                 v-else-if="clientDetails.plans.length !== 0"
                 class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"

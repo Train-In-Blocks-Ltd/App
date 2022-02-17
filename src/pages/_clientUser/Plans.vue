@@ -9,7 +9,7 @@
         <label-wrapper title="Plan notes" class="my-16">
             <div
                 v-if="plan.notes && plan.notes !== '<p></p>'"
-                class="show_html fadeIn mt-8"
+                class="show_html mt-8"
                 v-html="updateHTML(plan.notes, true)"
             />
             <txt
@@ -41,14 +41,12 @@
                 :events="sessionDates"
                 :force-update="forceUpdate"
                 :is-trainer="false"
-                class="fadeIn"
             />
             <month-calendar
                 v-else
                 :events="sessionDates"
                 :force-update="forceUpdate"
                 :is-trainer="false"
-                class="fadeIn"
             />
         </div>
 

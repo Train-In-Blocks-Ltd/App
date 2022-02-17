@@ -128,7 +128,7 @@
                     <div
                         v-for="(product, productIndex) in clientUser.products"
                         :key="`product_${productIndex}`"
-                        class="product fadeIn"
+                        class="product"
                     >
                         <div class="header">
                             <txt type="subtitle">

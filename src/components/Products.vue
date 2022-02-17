@@ -201,7 +201,7 @@
         />
         <div
             v-if="isNewProductOpen"
-            class="tab_overlay_content fadeIn delay fill_mode_both"
+            class="tab_overlay_content delay fill_mode_both"
         >
             <form
                 name="add_product"
@@ -342,7 +342,7 @@
                     products.length !== 0 &&
                     selectedIds.length < products.length
                 "
-                class="options fadeIn"
+                class="options"
             >
                 <a
                     href="javascript:void(0)"
@@ -383,11 +383,7 @@
                 New product
             </button>
         </div>
-        <skeleton
-            v-if="loading || silentLoading"
-            :type="'product'"
-            class="fadeIn"
-        />
+        <skeleton v-if="loading || silentLoading" :type="'product'" />
         <div
             v-else-if="products.length !== 0 && isStripeConnected"
             class="products_container"
@@ -395,7 +391,7 @@
             <form
                 v-for="(product, productIndex) in products"
                 :key="`product_${productIndex}`"
-                class="product fadeIn"
+                class="product"
             >
                 <div class="header">
                     <input
