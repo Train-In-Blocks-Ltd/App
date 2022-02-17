@@ -322,13 +322,8 @@
         />
         <div :class="{ connected: isStripeConnected }" class="option_bar">
             <h2>Products</h2>
-            <skeleton
-                v-if="loading || silentLoading"
-                :type="'button'"
-                class="stripe_skeleton"
-            />
             <a
-                v-else-if="!isStripeConnected"
+                v-if="!isStripeConnected"
                 href="javascript:void(0)"
                 class="stripe-connect"
                 @click="isStripeConnectedConnect()"
@@ -383,9 +378,8 @@
                 New product
             </button>
         </div>
-        <skeleton v-if="loading || silentLoading" :type="'product'" />
         <div
-            v-else-if="products.length !== 0 && isStripeConnected"
+            v-if="products.length !== 0 && isStripeConnected"
             class="products_container"
         >
             <form
