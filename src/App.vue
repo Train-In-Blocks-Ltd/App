@@ -8,6 +8,19 @@
     height: calc(100vh - env(safe-area-inset-bottom));
 }
 
+ol {
+    li {
+        list-style: decimal;
+        margin-left: 1rem;
+    }
+}
+ul {
+    li {
+        list-style: disc;
+        margin-left: 1rem;
+    }
+}
+
 // Client user
 .show_html {
     > div,
