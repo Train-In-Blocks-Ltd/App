@@ -119,11 +119,11 @@ import { mapState } from "vuex";
 
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/generic/Checkbox"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/generic/Multiselect"
     );
 const CardWrapper = () =>
     import(

@@ -97,8 +97,11 @@
 
 <script>
 import { mapState } from "vuex";
-import Splash from "@/components/Splash";
 
+const Splash = () =>
+    import(
+        /* webpackChunkName: "components.splash", webpackPreload: true  */ "@/components/generic/Splash"
+    );
 const ResetPassword = () =>
     import(
         /* webpackChunkName: "components.resetPassword", webpackPreload: true  */ "./components/ResetPassword"

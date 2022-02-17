@@ -337,23 +337,23 @@
 import { mapState } from "vuex";
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true */ "@/components/Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true */ "@/components/generic/Checkbox"
     );
 const WeekCalendar = () =>
     import(
-        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/WeekCalendar"
+        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/generic/WeekCalendar"
     );
 const MonthCalendar = () =>
     import(
-        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/MonthCalendar"
+        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/generic/MonthCalendar"
     );
 const ColorPicker = () =>
     import(
-        /* webpackChunkName: "components.colorPicker", webpackPrefetch: true */ "@/components/ColorPicker"
+        /* webpackChunkName: "components.colorPicker", webpackPrefetch: true */ "@/components/generic/ColorPicker"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/generic/Multiselect"
     );
 const PlanOptions = () =>
     import(

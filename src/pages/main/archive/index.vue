@@ -76,11 +76,11 @@
 import { mapState } from "vuex";
 const ClientLink = () =>
     import(
-        /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@/components/ClientLink"
+        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/generic/ClientLink"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/generic/Multiselect"
     );
 
 export default {

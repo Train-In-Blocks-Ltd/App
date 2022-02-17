@@ -156,11 +156,11 @@ import { mapState } from "vuex";
 
 const WeekCalendar = () =>
     import(
-        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "../../components/WeekCalendar"
+        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "@/components/generic/WeekCalendar"
     );
 const MonthCalendar = () =>
     import(
-        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "../../components/MonthCalendar"
+        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "@/components/generic/MonthCalendar"
     );
 const LabelWrapper = () =>
     import(

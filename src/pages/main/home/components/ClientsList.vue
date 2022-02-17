@@ -29,7 +29,7 @@ import { mapState } from "vuex";
 
 const ClientLink = () =>
     import(
-        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/ClientLink"
+        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/generic/ClientLink"
     );
 
 export default {

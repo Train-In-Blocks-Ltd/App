@@ -125,7 +125,7 @@
 <script>
 const SimpleChart = () =>
     import(
-        /* webpackChunkName: "components.simpleChart", webpackPrefetch: true */ "@/components/SimpleChart"
+        /* webpackChunkName: "components.simpleChart", webpackPrefetch: true */ "@/components/generic/SimpleChart"
     );
 
 export default {

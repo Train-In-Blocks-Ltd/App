@@ -158,7 +158,7 @@
 <script>
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "./generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "@/components/generic/CardWrapper"
     );
 
 export default {

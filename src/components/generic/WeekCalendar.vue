@@ -93,7 +93,7 @@
 <script>
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "./generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 
 export default {
@@ -123,10 +123,6 @@ export default {
         this.getWeek();
     },
     methods: {
-        // -----------------------------
-        // Events
-        // -----------------------------
-
         /**
          * Adds the event to the correct day of the week.
          */
@@ -139,10 +135,6 @@ export default {
                 });
             });
         },
-
-        // -----------------------------
-        // Week
-        // -----------------------------
 
         /**
          * Determines the day based on the date provided.
