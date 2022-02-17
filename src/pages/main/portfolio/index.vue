@@ -1,7 +1,9 @@
 <template>
     <wrapper id="portfolio">
         <!-- Business name -->
-        <skeleton v-if="loading" :type="'input_large'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-4">
+            <div class="skeleton-item-lg" />
+        </div>
         <txt-input
             v-else
             placeholder="Business name"
@@ -18,7 +20,9 @@
         />
 
         <!-- Trainer name -->
-        <skeleton v-if="loading" :type="'input_small'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-16">
+            <div class="skeleton-item" />
+        </div>
         <txt-input
             v-else
             placeholder="Trainer Name"

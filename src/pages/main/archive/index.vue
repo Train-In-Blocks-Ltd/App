@@ -27,7 +27,18 @@
                 <txt>Select all</txt>
             </a>
         </div>
-        <txt v-if="archive.clients.length === 0" type="large-body" grey>
+
+        <div v-if="loading">
+            <div class="skeleton-box animate-pulse p-4 mb-8">
+                <div class="skeleton-item" />
+            </div>
+            <div class="skeleton-box animate-pulse p-4">
+                <div class="skeleton-item-lg w-3/4" />
+                <div class="skeleton-item w-1/3" />
+                <div class="skeleton-item w-2/3" />
+            </div>
+        </div>
+        <txt v-else-if="archive.clients.length === 0" type="large-body" grey>
             No clients are archived
         </txt>
         <div v-else>
@@ -39,10 +50,9 @@
                 aria-label="Search by name"
                 autocomplete="name"
                 inputClass="text--small"
-                style="margin-bottom: 2rem"
+                class="mb-8"
                 @output="(data) => (search = data)"
             />
-            <skeleton v-if="loading" :type="'archived'" />
             <client-link
                 v-for="(client, index) in archive.clients"
                 v-show="

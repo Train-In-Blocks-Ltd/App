@@ -30,7 +30,16 @@
             </div>
 
             <!-- Plans grid -->
-            <skeleton v-if="loading" :type="'plan'" />
+            <div v-if="loading" class="grid sm:grid-cols-2 gap-4">
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+            </div>
             <div
                 v-else-if="clientDetails.plans.length !== 0"
                 class="grid sm:grid-cols-2 gap-4"
