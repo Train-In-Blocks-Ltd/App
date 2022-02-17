@@ -97,8 +97,17 @@
                 <!-- Sessions section -->
                 <div class="mt-12">
                     <!-- Options -->
-                    <skeleton v-if="loading" :type="'session'" />
-                    <div>
+                    <div
+                        v-if="loading"
+                        class="skeleton-box animate-pulse p-4 mb-8"
+                    >
+                        <div class="skeleton-item w-1/3" />
+                        <div class="skeleton-item w-2/3" />
+                        <div class="skeleton-item w-5/12" />
+                        <div class="skeleton-item w-1/2" />
+                        <div class="skeleton-item w-1/4" />
+                    </div>
+                    <div v-else>
                         <div class="flex items-center justify-between mb-4">
                             <!-- Left side -->
                             <div class="flex items-center">

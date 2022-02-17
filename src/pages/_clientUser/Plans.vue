@@ -29,7 +29,7 @@
         <!-- Calendar section -->
         <div class="mb-16">
             <a
-                class="flex items-center"
+                class="flex items-center mb-4"
                 href="javascript:void(0)"
                 @click="showMonthlyCal = !showMonthlyCal"
             >
@@ -51,7 +51,13 @@
         </div>
 
         <!-- Sessions section -->
-        <skeleton v-if="loading" :type="'session'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <div v-else-if="plan.sessions">
             <!-- Navigation controls -->
             <div class="flex items-center justify-between mb-8">

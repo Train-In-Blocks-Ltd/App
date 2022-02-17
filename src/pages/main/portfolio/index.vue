@@ -34,7 +34,13 @@
         />
 
         <!-- Portfolio content -->
-        <skeleton v-if="loading" :type="'session'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <label-wrapper v-else title="Portfolio">
             <rich-editor
                 v-model="portfolio.notes"

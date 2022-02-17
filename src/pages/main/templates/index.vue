@@ -5,6 +5,8 @@
             :options="multiselectOptions"
             @response="resolve_template_multiselect"
         />
+
+        <!-- Top section -->
         <txt-input
             v-model="search"
             type="search"
@@ -38,7 +40,15 @@
                 class="ml-4"
             />
         </div>
-        <skeleton v-if="loading" :type="'session'" />
+
+        <!-- Templates list -->
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 my-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <div v-else-if="templates" class="grid gap-8 my-8">
             <card-wrapper
                 v-for="(template, index) in templates"
