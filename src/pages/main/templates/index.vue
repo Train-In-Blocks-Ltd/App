@@ -191,7 +191,7 @@ export default {
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -293,7 +293,7 @@ export default {
                             "deleteTemplate",
                             this.selectedIds
                         );
-                        this.$store.dispatch("endLoading");
+                        this.$store.dispatch("setLoading", false);
                         this.$store.dispatch("openResponsePopUp", {
                             title:
                                 this.selectedIds.length > 1
@@ -328,7 +328,7 @@ export default {
                     description: "Edit and use it in a client's plan",
                 });
                 this.$ga.event("Template", "new");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -349,7 +349,7 @@ export default {
                     description: "Your changes have been saved",
                 });
                 this.$ga.event("Template", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

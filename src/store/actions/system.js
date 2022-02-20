@@ -15,22 +15,6 @@ export default {
         });
     },
 
-    /** Ends all loading. */
-    endLoading({ commit }) {
-        commit("setData", {
-            attr: "loading",
-            data: false,
-        });
-        commit("setData", {
-            attr: "silentLoading",
-            data: false,
-        });
-        commit("setData", {
-            attr: "dontLeave",
-            data: false,
-        });
-    },
-
     /** Opens a global modal. */
     openModal({ commit }, { name, size, persist }) {
         commit("setData", {
@@ -344,7 +328,7 @@ export default {
                 claims: state.claims,
             });
         }
-        dispatch("endLoading");
+        dispatch("setLoading", false);
         dispatch("openResponsePopUp", {
             title: "ERROR: this problem has been reported to our developers",
             description:

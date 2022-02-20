@@ -128,7 +128,7 @@ export default {
                     dontLeave: true,
                 });
                 await this.$store.dispatch("updateClient");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -237,7 +237,7 @@ export default {
                 persist: true,
                 backdrop: true,
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         /**
@@ -307,7 +307,7 @@ export default {
                         description:
                             "Their data will be kept safe on the archive page",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                     this.$router.push("/");
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);

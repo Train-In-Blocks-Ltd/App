@@ -63,7 +63,7 @@ export default {
                         title: "Plan deleted",
                         description: "Your changes have been saved",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                     this.$router.push({
                         path: `/client/${this.clientDetails.client_id}/`,
                     });

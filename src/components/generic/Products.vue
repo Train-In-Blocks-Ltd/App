@@ -590,7 +590,7 @@ export default {
                     currency: null,
                     type: null,
                 };
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -607,7 +607,7 @@ export default {
                 });
                 await this.$store.dispatch("updateProduct", productId);
                 this.productChanged = false;
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -635,7 +635,7 @@ export default {
                         attr: "selectedIds",
                         data: [],
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }

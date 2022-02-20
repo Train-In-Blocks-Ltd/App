@@ -115,7 +115,7 @@ export default {
                         description:
                             "Your client will be notified of any upcoming bookings that were accepted.",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }
@@ -148,7 +148,7 @@ export default {
                         title: "Booking cancelled",
                         description: "Your trainer will be notified",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }

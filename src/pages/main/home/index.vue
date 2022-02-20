@@ -43,7 +43,7 @@ export default {
             data: null,
         });
         await this.$parent.setup();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
 };
 </script>

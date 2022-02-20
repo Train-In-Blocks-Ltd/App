@@ -321,7 +321,7 @@ export default {
                 description:
                     "Please go through them to make sure that you're happy with it",
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
     },
 };

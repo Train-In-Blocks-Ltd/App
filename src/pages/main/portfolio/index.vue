@@ -112,7 +112,7 @@ export default {
         this.willBodyScroll(true);
         await this.$parent.setup();
         // await this.checkStripeConnect()
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -161,7 +161,7 @@ export default {
                     title: "Portfolio updated",
                     description: "Your clients can access this information",
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -183,7 +183,7 @@ export default {
                     RESPONSE.data.connectedAccountId;
                 await this.$store.dispatch("saveClaims");
                 window.location.href = RESPONSE.data.url;
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

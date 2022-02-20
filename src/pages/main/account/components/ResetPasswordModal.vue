@@ -142,7 +142,7 @@ export default {
                     check: null,
                     error: null,
                 };
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.password.error =
                     "Something went wrong. Please make sure that your password is correct and the new password fulfils the requirements";

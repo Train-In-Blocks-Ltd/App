@@ -173,7 +173,7 @@ export default {
                         document.getElementById("img-uploader").value = "";
                     }
                 }
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

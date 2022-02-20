@@ -42,15 +42,15 @@ export default {
                         this.open = false;
                         this.email = null;
                     }, 3000);
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 } catch (e) {
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                     this.error =
                         "An error occurred. Are you sure your email is correct?";
                     console.error(e);
                 }
             } else {
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
                 this.error =
                     "You cannot reset the password for the demo account";
             }

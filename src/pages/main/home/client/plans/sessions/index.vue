@@ -498,7 +498,7 @@ export default {
         if (!this.noSessions) {
             this.updater();
         }
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -610,7 +610,7 @@ export default {
                         title: "Session updated",
                         description: "Your changes have been saved",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                     break;
                 case "cancel":
                     this.$store.dispatch("setLoading", {
@@ -663,7 +663,7 @@ export default {
                 } duplicated`,
                 description: "Get programming!",
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         /**
@@ -738,7 +738,7 @@ export default {
                     });
                 }
             }
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         /**
@@ -779,10 +779,10 @@ export default {
                                 : "Session deleted",
                         description: "Your changes have been saved",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 }
             }
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         /**
@@ -825,7 +825,7 @@ export default {
                 title: "New session added",
                 description: "Get programming!",
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         /**
@@ -969,7 +969,7 @@ export default {
                 });
                 await this.$store.dispatch("updatePlan", this.plan);
                 this.$ga.event("Plan", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -986,7 +986,7 @@ export default {
                     sessionIds,
                 });
                 this.$ga.event("Session", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -1003,7 +1003,7 @@ export default {
                     sessionId,
                 });
                 this.$ga.event("Session", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

@@ -53,8 +53,7 @@ export default {
             attr: "clientDetails",
             data: CLIENT,
         });
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
-    methods: {},
 };
 </script>

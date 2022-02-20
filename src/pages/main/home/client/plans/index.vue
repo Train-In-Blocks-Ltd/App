@@ -128,7 +128,7 @@ export default {
                             dontLeave: true,
                         });
                         await this.$store.dispatch("updateClient");
-                        this.$store.dispatch("endLoading");
+                        this.$store.dispatch("setLoading", false);
                     } catch (e) {
                         this.$store.dispatch("resolveError", e);
                     }

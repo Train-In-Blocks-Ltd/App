@@ -227,7 +227,7 @@ export default {
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     async mounted() {
         if (!this.coupon.checked) {
@@ -357,7 +357,7 @@ export default {
                     attrChild: "checked",
                     data: true,
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -384,7 +384,7 @@ export default {
                         .toUpperCase()
                         .replace(/[\W_]+/g, ""),
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

@@ -103,7 +103,7 @@ export default {
                         ? "Your client will be notified of any upcoming bookings that were created."
                         : "Your trainer will be notified of your request.",
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

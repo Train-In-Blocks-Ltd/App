@@ -62,7 +62,7 @@ export default {
                     description: "Access it on your client's profile",
                 });
                 this.$store.dispatch("closeModal");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
                 this.$router.push({ path: `/client/${this.duplicateId}/` });
             } catch (e) {
                 this.$store.dispatch("resolveError", e);

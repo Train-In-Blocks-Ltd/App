@@ -79,7 +79,7 @@ export default {
                 data: [],
             });
             this.$ga.event("Session", "shift");
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
     },
 };

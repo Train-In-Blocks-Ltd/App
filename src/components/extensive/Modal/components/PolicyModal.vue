@@ -84,7 +84,7 @@ export default {
                     dontLeave: true,
                 });
                 await this.$store.dispatch("saveClaims");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
                 this.$store.dispatch("closeModal");
             } catch (e) {
                 this.$store.dispatch("resolveError", e);

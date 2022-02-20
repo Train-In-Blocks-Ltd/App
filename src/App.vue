@@ -281,7 +281,7 @@ export default {
                         backdrop: true,
                     });
                     SELF.willBodyScroll(false);
-                    SELF.$store.dispatch("endLoading");
+                    SELF.$store.dispatch("setLoading", false);
                     throw new SELF.$axios.Cancel(
                         "You are using the demo account. Your changes won't be saved"
                     );
@@ -451,7 +451,7 @@ export default {
                     dontLeave: true,
                 });
                 await this.$store.dispatch("saveClaims");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -491,7 +491,7 @@ export default {
                     title: "Session updated",
                     description: "Your changes haver been saved",
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

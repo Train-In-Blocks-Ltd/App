@@ -196,7 +196,7 @@ export default {
         this.willBodyScroll(true);
         await this.$parent.setup();
         await this.$parent.getClientSideData();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -249,7 +249,7 @@ export default {
                 data: !currentChecked ? 1 : 0,
             });
             this.$parent.updateClientSideSession(planId, sessionId);
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         async checkout(productId) {
@@ -272,7 +272,7 @@ export default {
                 stripe.redirectToCheckout({
                     sessionId: await RESPONSE.data.sessionId,
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

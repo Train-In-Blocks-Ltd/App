@@ -88,7 +88,7 @@ export default {
                     name: "",
                     duration: "",
                 };
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
