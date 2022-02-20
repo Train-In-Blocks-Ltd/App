@@ -4,7 +4,7 @@
             (!authenticated || (loading && !instanceReady)) &&
             $route.path !== '/login'
         "
-        class="fixed bottom-0 md:top-0 left-0 flex md:flex-col items-center justify-evenly md:justify-end w-full md:w-24 h-16 md:h-full py-6 rounded-r-xl z-10 shadow-lg bg-gray-600 animate-pulse"
+        class="fixed bottom-0 md:top-0 left-0 flex md:flex-col items-center justify-evenly md:justify-end w-full md:w-24 h-16 md:h-full py-6 rounded-r-xl z-10 shadow-lg bg-skeleton-light-back dark:bg-skeleton-dark-back animate-pulse"
     >
         <div class="hidden md:block skeleton-item h-10 w-10 mb-auto" />
         <div class="skeleton-item h-8 w-8 mt-6" />

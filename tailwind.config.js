@@ -17,6 +17,12 @@ module.exports = {
                     600: "#484848",
                     800: "#282828",
                 },
+                skeleton: {
+                    "light-fore": "#F2F2F2",
+                    "light-back": "#E4E4E4",
+                    "dark-fore": "#686868",
+                    "dark-back": "#484848",
+                },
             },
             maxHeight: {
                 "4/5": "80%",
