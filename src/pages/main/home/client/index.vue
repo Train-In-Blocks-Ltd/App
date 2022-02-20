@@ -49,7 +49,7 @@ export default {
                 client.client_id === parseInt(this.$route.params.client_id)
         );
         await this.$store.dispatch("getPlans", CLIENT.client_id);
-        this.$store.commit("setData", {
+        this.$store.commit("SET_DATA", {
             attr: "clientDetails",
             data: CLIENT,
         });

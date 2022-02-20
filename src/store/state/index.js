@@ -31,7 +31,6 @@ export default {
     // System
     search: "",
     instanceReady: false,
-    noClients: true,
     pwa: {
         deferredPrompt: null,
         displayMode: "browser tab",
@@ -92,7 +91,6 @@ export default {
     // Archive
     archive: {
         clients: {},
-        noArchive: true,
     },
 
     // Versioning

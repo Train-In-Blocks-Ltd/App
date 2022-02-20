@@ -253,12 +253,12 @@ export default {
          */
         openEULA() {
             if (this.claims.user_type === "Client")
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "previewHTML",
                     data: require("@/components/legal/eula-client.md").html,
                 });
             else
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "previewHTML",
                     data: require("@/components/legal/eula.md").html,
                 });
@@ -337,14 +337,14 @@ export default {
                                 .replace(/[\W_]+/g, "")
                     ).active
                 ) {
-                    this.$store.commit("setDataDeep", {
+                    this.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "generated",
                         data: this.claims.email
                             .toUpperCase()
                             .replace(/[\W_]+/g, ""),
                     });
-                    this.$store.commit("setDataDeep", {
+                    this.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "code",
                         data: this.claims.email
@@ -352,7 +352,7 @@ export default {
                             .replace(/[\W_]+/g, ""),
                     });
                 }
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "coupon",
                     attrChild: "checked",
                     data: true,
@@ -370,14 +370,14 @@ export default {
                 await this.$axios.post("/.netlify/functions/create-coupon", {
                     email: this.claims.email,
                 });
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "coupon",
                     attrChild: "generated",
                     data: this.claims.email
                         .toUpperCase()
                         .replace(/[\W_]+/g, ""),
                 });
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "coupon",
                     attrChild: "code",
                     data: this.claims.email
@@ -394,13 +394,13 @@ export default {
             const self = this;
             navigator.clipboard.writeText(link).then(
                 function () {
-                    self.$store.commit("setDataDeep", {
+                    self.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "code",
                         data: "Copied!",
                     });
                     setTimeout(function () {
-                        self.$store.commit("setDataDeep", {
+                        self.$store.commit("SET_DATA_DEEP", {
                             attrParent: "coupon",
                             attrChild: "code",
                             data: self.claims.email
@@ -410,7 +410,7 @@ export default {
                     }, 2000);
                 },
                 function (err) {
-                    self.$store.commit("setDataDeep", {
+                    self.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "code",
                         data: "Could not copy text: " + err,

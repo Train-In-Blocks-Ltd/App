@@ -50,7 +50,7 @@
                 :value="search"
                 @output="
                     (data) =>
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'search',
                             data,
                         })
@@ -71,7 +71,7 @@ export default {
                 return this.$store.state.search;
             },
             set(value) {
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "search",
                     data: value,
                 });

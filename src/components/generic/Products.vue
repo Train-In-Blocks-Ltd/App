@@ -344,7 +344,7 @@
                     class="a_link select_all"
                     @click="
                         () => {
-                            $store.commit('setData', {
+                            $store.commit('SET_DATA', {
                                 attr: 'selectedIds',
                                 data: products.map((product) => product.id),
                             });
@@ -544,7 +544,7 @@ export default {
                     this.deleteProducts();
                     break;
                 case "Deselect":
-                    this.$store.dispatch("setData", {
+                    this.$store.dispatch("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -631,7 +631,7 @@ export default {
                         "deleteProduct",
                         this.selectedIds
                     );
-                    this.$store.dispatch("setData", {
+                    this.$store.dispatch("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });

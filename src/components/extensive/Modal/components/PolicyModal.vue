@@ -70,7 +70,7 @@ export default {
          * Agree to EULA terms.
          */
         async agreeToTerms() {
-            this.$store.commit("setDataDeep", {
+            this.$store.commit("SET_DATA_DEEP", {
                 attrParent: "claims",
                 attrChild: "policy",
                 data: [

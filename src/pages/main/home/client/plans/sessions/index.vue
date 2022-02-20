@@ -168,7 +168,7 @@
                                     svg="info"
                                     :on-click="
                                         () => {
-                                            $store.commit('setData', {
+                                            $store.commit('SET_DATA', {
                                                 attr: 'previewHTML',
                                                 data: '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>',
                                             });
@@ -269,7 +269,7 @@
                                             class="mr-4 hover:opacity-60 transition-opacity cursor-pointer"
                                             @click="
                                                 () => {
-                                                    $store.commit('setData', {
+                                                    $store.commit('SET_DATA', {
                                                         attr: 'previewHTML',
                                                         data: session.feedback,
                                                     });
@@ -527,7 +527,7 @@ export default {
                     break;
                 case "Duplicate":
                     this.duplicate();
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -550,7 +550,7 @@ export default {
                     this.updater();
                     break;
                 case "Deselect":
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -699,7 +699,7 @@ export default {
             NEW_WINDOW.stop();
             NEW_WINDOW.print();
             this.$ga.event("Plan", "print");
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: [],
             });
@@ -740,7 +740,7 @@ export default {
                                 : "Session updated",
                         description: "Your changes have been saved",
                     });
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -773,7 +773,7 @@ export default {
                         this.$store.dispatch("resolveError", e);
                     }
                     this.checkForWeekSessions();
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -798,7 +798,7 @@ export default {
          * @param mode - To select all session or all sessions in the current week ('all' or 'week').
          */
         selectAll(mode) {
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: this.plan.sessions
                     .filter((session) =>
@@ -841,7 +841,7 @@ export default {
          */
         goToEvent(id, week) {
             this.toggleExpandAll("Expand");
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "currentWeek",
                 data: week,
             });
@@ -891,7 +891,7 @@ export default {
          * Switch to a different week.
          */
         changeWeek(weekID) {
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "currentWeek",
                 data: week,
             });

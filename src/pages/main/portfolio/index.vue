@@ -137,7 +137,7 @@ export default {
                         dontLeave: false,
                     });
                     this.editingPortfolio = false;
-                    this.$store.commit("setDataDeep", {
+                    this.$store.commit("SET_DATA_DEEP", {
                         attrParent: "portfolio",
                         attrChild: "notes",
                         data: this.tempEditorStore,
@@ -196,13 +196,13 @@ export default {
                         connectedAccountId: this.claims.connectedAccountId,
                     }
                 );
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "isStripeConnected",
                     data:
                         this.claims.email === "demo@traininblocks.com" ||
                         RESPONSE_STRIPE.data,
                 });
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "hasCheckedStripeConnect",
                     data: true,
                 });

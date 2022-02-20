@@ -12,7 +12,7 @@
                 href="javascript:void(0)"
                 @click="
                     () => {
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'previewHTML',
                             data: plan.notes,
                         });

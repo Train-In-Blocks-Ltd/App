@@ -16,12 +16,12 @@ export default {
             }
         );
         commit("updateClientUserProfileImage", payload.profile_image);
-        commit("setDataDeep", {
+        commit("SET_DATA_DEEP", {
             attrParent: "clientUser",
             attrChild: "name",
             data: payload.name,
         });
-        commit("setDataDeep", {
+        commit("SET_DATA_DEEP", {
             attrParent: "clientUser",
             attrChild: "number",
             data: payload.number,
@@ -36,37 +36,37 @@ export default {
         );
         if (RESPONSE.data) {
             // Sets user details
-            commit("setDataDeep", {
+            commit("SET_DATA_DEEP", {
                 attrParent: "clientUser",
                 attrChild: "name",
                 data: RESPONSE.data[0][0].name,
             });
-            commit("setDataDeep", {
+            commit("SET_DATA_DEEP", {
                 attrParent: "clientUser",
                 attrChild: "number",
                 data: RESPONSE.data[0][0].number,
             });
-            commit("setDataDeep", {
+            commit("SET_DATA_DEEP", {
                 attrParent: "clientUser",
                 attrChild: "pt_id",
                 data: RESPONSE.data[0][0].pt_id,
             });
 
             // Sets portfolio
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "portfolio",
                 data: RESPONSE.data[1][0],
             });
 
             // Sets profile image
-            commit("setDataDeep", {
+            commit("SET_DATA_DEEP", {
                 attrParent: "clientUser",
                 attrChild: "profile_image",
                 data: RESPONSE.data[2][0].profile_image,
             });
 
             // Sets bookings
-            commit("setDataDeep", {
+            commit("SET_DATA_DEEP", {
                 attrParent: "clientUser",
                 attrChild: "bookings",
                 data: RESPONSE.data[3].sort((a, b) => {
@@ -75,7 +75,7 @@ export default {
             });
 
             // Sets products
-            commit("setDataDeep", {
+            commit("SET_DATA_DEEP", {
                 attrParent: "clientUser",
                 attrChild: "products",
                 data: RESPONSE.data[4],
@@ -88,7 +88,7 @@ export default {
         const RESPONSE = await this._vm.$axios.get(
             `https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`
         );
-        commit("setDataDeep", {
+        commit("SET_DATA_DEEP", {
             attrParent: "clientUser",
             attrChild: "plans",
             data: RESPONSE.data[0],
@@ -102,7 +102,7 @@ export default {
         const TODAYS_SESSIONS_DATA = RESPONSE.data[1].filter(
             (session) => session.date === TODAYS_DATE
         );
-        commit("setDataDeep", {
+        commit("SET_DATA_DEEP", {
             attrParent: "clientUser",
             attrChild: "sessionsToday",
             data:

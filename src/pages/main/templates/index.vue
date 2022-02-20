@@ -24,7 +24,7 @@
                 href="javascript:void(0)"
                 @click="
                     () => {
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'selectedIds',
                             data: templates.map((template) => template.id),
                         });
@@ -204,7 +204,7 @@ export default {
                     this.deleteMultiTemplates();
                     break;
                 case "Deselect":
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -302,7 +302,7 @@ export default {
                             description: "Your changes have been saved",
                         });
                         this.$ga.event("Template", "delete");
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "selectedIds",
                             data: [],
                         });

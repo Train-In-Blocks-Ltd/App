@@ -74,7 +74,7 @@ export default {
                 description: "Your changes have been saved",
             });
             this.shiftDays = 1;
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: [],
             });

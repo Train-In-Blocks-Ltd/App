@@ -15,7 +15,7 @@
                 href="javascript:void(0)"
                 @click="
                     () => {
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'selectedIds',
                             data: archive.clients.map(
                                 (client) => client.client_id
@@ -126,7 +126,7 @@ export default {
                     this.deleteClients();
                     break;
                 case "Deselect":
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -160,7 +160,7 @@ export default {
                                     : "Client Delete",
                             description: "All their data has been removed",
                         });
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "selectedIds",
                             data: [],
                         });
@@ -198,7 +198,7 @@ export default {
                                     : "Unarchived client",
                             description: "All their data has been recovered",
                         });
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "selectedIds",
                             data: [],
                         });

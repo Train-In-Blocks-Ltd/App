@@ -10,7 +10,7 @@
                     class="mr-4"
                     :on-click="
                         () => {
-                            $store.commit('setData', {
+                            $store.commit('SET_DATA', {
                                 attr: 'previewHTML',
                                 data: portfolio.notes,
                             });

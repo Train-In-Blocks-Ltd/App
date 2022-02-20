@@ -305,11 +305,11 @@ export default {
                 });
             }
             this.$store.dispatch("closeModal");
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "currentWeek",
                 data: this.progressInputs.target,
             });
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: [],
             });

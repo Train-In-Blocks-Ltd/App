@@ -4,19 +4,19 @@ export default {
         { commit },
         { loading, silentLoading, dontLeave, disableButtons }
     ) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "loading",
             data: !!loading,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "silentLoading",
             data: !!silentLoading,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "dontLeave",
             data: !!dontLeave,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "disableButtons",
             data: !!disableButtons,
         });
@@ -24,19 +24,19 @@ export default {
 
     /** Opens a global modal. */
     openModal({ commit }, { name, size, persist }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalContent",
             data: name,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalSize",
             data: size ?? "sm",
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalPersist",
             data: persist,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalOpen",
             data: true,
         });
@@ -44,23 +44,23 @@ export default {
 
     /** Closes and resets the global modal. */
     closeModal({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "previewHTML",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalSize",
             data: null,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalOpen",
             data: false,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalContent",
             data: null,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalPersist",
             data: false,
         });
@@ -68,23 +68,23 @@ export default {
 
     /** Opens the response pop-up. */
     openResponsePopUp({ commit }, { title, description, persist, backdrop }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseOpen",
             data: true,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseTitle",
             data: title,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseDescription",
             data: description,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responsePersist",
             data: persist,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseBackdrop",
             data: backdrop,
         });
@@ -92,23 +92,23 @@ export default {
 
     /** Closes the response pop-up. */
     closeResponsePopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseOpen",
             data: false,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseTitle",
             data: null,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseDescription",
             data: null,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responsePersist",
             data: false,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseBackdrop",
             data: false,
         });
@@ -117,15 +117,15 @@ export default {
     /** Opens the confirm pop-up. */
     async openConfirmPopUp({ commit }, { title, text }) {
         return new Promise((resolve) => {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "confirmPromise",
                 data: resolve,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "confirmTitle",
                 data: title,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "confirmText",
                 data: text,
             });
@@ -134,15 +134,15 @@ export default {
 
     /** Closes the confirm pop-up. */
     closeConfirmPopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "confirmPromise",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "confirmTitle",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "confirmText",
             data: undefined,
         });
@@ -151,15 +151,15 @@ export default {
     /** Opens the upload pop-up */
     async openUploadPopUp({ commit }, { title, text }) {
         return new Promise((resolve) => {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "uploadPromise",
                 data: resolve,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "uploadTitle",
                 data: title,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "uploadText",
                 data: text,
             });
@@ -168,15 +168,15 @@ export default {
 
     /** Closes the upload pop-up */
     closeUploadPopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "uploadPromise",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "uploadTitle",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "uploadText",
             data: undefined,
         });
@@ -185,23 +185,23 @@ export default {
     /** Opens the text input pop-up */
     async openTxtInputPopUp({ commit }, { title, text, label, placeholder }) {
         return new Promise((resolve) => {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "txtInputPromise",
                 data: resolve,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "txtInputTitle",
                 data: title,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "txtInputText",
                 data: text,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "txtInputLabel",
                 data: label,
             });
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "txtInputPlaceholder",
                 data: placeholder,
             });
@@ -210,27 +210,27 @@ export default {
 
     /** Closes the text input pop-up */
     closeTxtInputPopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputPromise",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputTitle",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputText",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputLabel",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputValue",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputPlaceholder",
             data: undefined,
         });
@@ -249,7 +249,7 @@ export default {
             const NAME_B = b.name.toUpperCase();
             return NAME_A < NAME_B ? -1 : NAME_A > NAME_B ? 1 : 0;
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "clients",
             data: SORTED_CLIENTS,
         });
@@ -260,14 +260,14 @@ export default {
             const NAME_B = b.name.toUpperCase();
             return NAME_A < NAME_B ? -1 : NAME_A > NAME_B ? 1 : 0;
         });
-        commit("setDataDeep", {
+        commit("SET_DATA_DEEP", {
             attrParent: "archive",
             attrChild: "clients",
             data: SORTED_ARCHIVE_CLIENTS,
         });
 
         // Sets templates and portfolio
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "templates",
             data: RESPONSE.data[2],
         });
@@ -275,7 +275,7 @@ export default {
         if (RESPONSE.data[3].length === 0) {
             await dispatch("createPortfolio");
         } else {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "portfolio",
                 data: { ...RESPONSE.data[3][0] },
             });
@@ -305,13 +305,13 @@ export default {
                 ].join(" ");
             });
         }
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "bookings",
             data: SORTED_BOOKINGS,
         });
 
         // Sets products
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "products",
             data: RESPONSE.data[5],
         });
@@ -319,7 +319,7 @@ export default {
 
     /** Changes the state of the selected checkbox. */
     toggleCheckbox({ state, commit }, id) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "selectedIds",
             data: !state.selectedIds.includes(id)
                 ? [...state.selectedIds, id]

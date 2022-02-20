@@ -231,14 +231,14 @@ export default {
             e.preventDefault();
 
             // Stash the event so it can be triggered later.
-            SELF.$store.commit("setDataDeep", {
+            SELF.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "deferredPrompt",
                 data: e,
             });
 
             // Update UI notify the user they can install the PWA
-            SELF.$store.commit("setDataDeep", {
+            SELF.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "canInstall",
                 data: true,
@@ -247,7 +247,7 @@ export default {
         if ("getInstalledRelatedApps" in navigator) {
             const RELATED_APPS = await navigator.getInstalledRelatedApps();
             if (RELATED_APPS.length > 0) {
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "pwa",
                     attrChild: "installed",
                     data: true,
@@ -255,14 +255,14 @@ export default {
             }
         }
         if (navigator.standalone) {
-            this.$store.commit("setDataDeep", {
+            this.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "displayMode",
                 data: "standalone-ios",
             });
         }
         if (window.matchMedia("(display-mode: standalone)").matches) {
-            this.$store.commit("setDataDeep", {
+            this.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "displayMode",
                 data: "standalone",
@@ -324,7 +324,7 @@ export default {
          * Checks if the user is authenticated and sets the Vuex state accordingly.
          */
         async isAuthenticated() {
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "authenticated",
                 data: await this.$auth.isAuthenticated(),
             });
@@ -338,7 +338,7 @@ export default {
             force = force || false;
             if (!this.instanceReady || force) {
                 // Set claims
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "claims",
                     data: await this.$auth.getUser(),
                 });
@@ -346,20 +346,20 @@ export default {
                     this.claims.user_type === "Trainer" ||
                     this.claims.user_type === "Admin"
                 ) {
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "isTrainer",
                         data: true,
                     });
                 }
                 if (this.claims) {
                     if (!this.claims.ga || !this.claims) {
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "ga",
                             data: true,
                         });
                     }
                     if (!this.claims.theme || !this.claims) {
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "theme",
                             data: "system",
                         });
@@ -393,19 +393,19 @@ export default {
                 this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
                 // Set connection
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "connected",
                     data: navigator.onLine,
                 });
                 const SELF = this;
                 window.addEventListener("offline", function (event) {
-                    SELF.$store.commit("setData", {
+                    SELF.$store.commit("SET_DATA", {
                         attr: "connected",
                         data: false,
                     });
                 });
                 window.addEventListener("online", function (event) {
-                    SELF.$store.commit("setData", {
+                    SELF.$store.commit("SET_DATA", {
                         attr: "connected",
                         data: true,
                     });
@@ -416,7 +416,7 @@ export default {
                     localStorage.getItem("versionBuild") !==
                     this.$store.state.versionBuild
                 ) {
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "newBuild",
                         data: true,
                     });
@@ -435,7 +435,7 @@ export default {
                 }
 
                 // Stops setup from running more than once
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "instanceReady",
                     data: true,
                 });
@@ -465,7 +465,7 @@ export default {
                 try {
                     await this.$store.dispatch("getClientSideInfo");
                     await this.$store.dispatch("getClientSidePlans");
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "clientUserLoaded",
                         data: true,
                     });

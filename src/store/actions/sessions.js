@@ -100,7 +100,7 @@ export default {
      * Changes the week of the plan view.
      */
     changeWeek({ commit }, weekID) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "currentWeek",
             data: weekID,
         });

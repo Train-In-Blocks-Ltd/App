@@ -38,7 +38,7 @@ export default {
         this.$store.dispatch("setLoading", {
             loading: true,
         });
-        this.$store.commit("setData", {
+        this.$store.commit("SET_DATA", {
             attr: "clientDetails",
             data: null,
         });
