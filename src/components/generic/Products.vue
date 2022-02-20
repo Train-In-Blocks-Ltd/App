@@ -576,9 +576,8 @@ export default {
          */
         async createProduct() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("createProduct", {
                     pt_id: this.claims.sub,
@@ -603,9 +602,8 @@ export default {
          */
         async updateProduct(productId) {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("updateProduct", productId);
                 this.productChanged = false;

@@ -107,9 +107,8 @@ export default {
         "hasCheckedStripeConnect",
     ]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
@@ -155,13 +154,9 @@ export default {
          */
         async updatePortfolio() {
             try {
-                this.$store.commit("setData", {
-                    attr: "silentLoading",
-                    data: true,
-                });
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    silentLoading: true,
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("updatePortfolio");
                 this.$ga.event("Portfolio", "update");
@@ -177,9 +172,8 @@ export default {
 
         async stripeConnect() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 const RESPONSE = await this.$axios.post(
                     "/.netlify/functions/create-connected-account",

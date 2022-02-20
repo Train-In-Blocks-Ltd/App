@@ -73,9 +73,8 @@ export default {
          */
         async createBooking() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("createBooking", {
                     clientId: this.isTrainer

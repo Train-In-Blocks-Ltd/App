@@ -223,9 +223,8 @@ export default {
         },
     },
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
@@ -314,9 +313,8 @@ export default {
          */
         async checkCoupon() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 const RESPONSE = await this.$axios.post(
                     "/.netlify/functions/check-coupon",
@@ -367,9 +365,8 @@ export default {
         },
         async generateCoupon() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$axios.post("/.netlify/functions/create-coupon", {
                     email: this.claims.email,

@@ -483,9 +483,8 @@ export default {
         ]),
     },
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         this.$parent.sessions = true;
@@ -634,13 +633,9 @@ export default {
          * Duplicates the selected sessions.
          */
         async duplicate() {
-            this.$store.commit("setData", {
-                attr: "loading",
-                data: true,
-            });
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                loading: true,
+                dontLeave: true,
             });
             const TO_DUPLICATE = [];
             const CLIENT_ID = this.$route.params.client_id;
@@ -978,9 +973,8 @@ export default {
          */
         async useUpdatePlanMutation() {
             try {
-                this.$store.commit("setData", {
-                    attr: "loading",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    loading: true,
                 });
                 await this.$store.dispatch("updatePlan", this.plan);
                 this.$ga.event("Plan", "update");

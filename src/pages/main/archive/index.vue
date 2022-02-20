@@ -105,9 +105,8 @@ export default {
     },
     computed: mapState(["loading", "archive", "selectedIds"]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
@@ -140,9 +139,8 @@ export default {
          */
         async deleteClients() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 if (this.selectedIds.length !== 0) {
                     if (
@@ -179,9 +177,8 @@ export default {
          */
         async unarchiveClients() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 if (this.selectedIds.length !== 0) {
                     if (

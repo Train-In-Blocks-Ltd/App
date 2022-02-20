@@ -70,13 +70,9 @@ export default {
          */
         async createPlan() {
             try {
-                this.$store.commit("setData", {
-                    attr: "loading",
-                    data: true,
-                });
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    loading: true,
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("createPlan", {
                     clientId: this.clientDetails.client_id,

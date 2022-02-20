@@ -35,9 +35,8 @@ export default {
     },
     computed: mapState(["clients", "loading", "modalOpen"]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.$store.commit("setData", {
             attr: "clientDetails",

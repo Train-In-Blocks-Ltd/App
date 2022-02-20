@@ -125,13 +125,9 @@ export default {
                 case "save":
                     this.editingClientNotes = false;
                     try {
-                        this.$store.commit("setData", {
-                            attr: "silentLoading",
-                            data: true,
-                        });
-                        this.$store.commit("setData", {
-                            attr: "dontLeave",
-                            data: true,
+                        this.$store.dispatch("setLoading", {
+                            silentLoading: true,
+                            dontLeave: true,
                         });
                         await this.$store.dispatch("updateClient");
                         this.$store.dispatch("endLoading");

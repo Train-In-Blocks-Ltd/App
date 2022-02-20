@@ -116,9 +116,8 @@ export default {
          */
         handleImageSelect() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 const FILE = document.getElementById("img-uploader").files[0];
                 const READER = new FileReader();
@@ -185,13 +184,9 @@ export default {
          */
         updateClientDetails() {
             try {
-                this.$store.commit("setData", {
-                    attr: "silentLoading",
-                    data: true,
-                });
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    silentLoading: true,
+                    dontLeave: true,
                 });
                 this.$store.dispatch("updateClientSideDetails", {
                     id: this.claims.client_id_db,

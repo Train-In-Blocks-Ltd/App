@@ -187,9 +187,8 @@ export default {
     },
     computed: mapState(["loading", "dontLeave", "templates", "selectedIds"]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
@@ -323,9 +322,8 @@ export default {
          */
         async createTemplate() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("newTemplate");
                 this.checkForNew();
@@ -346,9 +344,8 @@ export default {
          */
         async updateTemplate(templateId) {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("updateTemplate", templateId);
                 this.$store.dispatch("openResponsePopUp", {

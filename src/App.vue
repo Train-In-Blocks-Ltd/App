@@ -183,9 +183,8 @@ export default {
         },
     },
     created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.isAuthenticated();
         this.willBodyScroll(true);
@@ -448,9 +447,8 @@ export default {
          */
         async saveClaims() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("saveClaims");
                 this.$store.dispatch("endLoading");
