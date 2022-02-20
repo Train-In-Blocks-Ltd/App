@@ -1,6 +1,6 @@
 <template>
-    <form class="grid gap-4" @submit.prevent="createBooking()">
-        <div class="grid grid-cols-2 gap-2">
+    <form @submit.prevent="createBooking()">
+        <div class="grid grid-cols-2 gap-2 mb-4">
             <txt-input
                 :value="bookingForm.date"
                 :min="today()"
@@ -35,6 +35,7 @@
             rows="5"
             placeholder="Additional information"
             aria-label="Additional information"
+            class="mb-4"
             @output="
                 (data) => {
                     bookingForm.notes = data;
@@ -43,7 +44,11 @@
             "
             required
         />
-        <default-button type="submit" :is-disabled="disableCreateBookingButton">
+        <default-button
+            type="submit"
+            class="w-full"
+            :is-disabled="disableCreateBookingButton"
+        >
             Create booking
         </default-button>
     </form>

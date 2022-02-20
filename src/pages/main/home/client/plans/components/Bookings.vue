@@ -53,6 +53,7 @@
                     v-for="(booking, bookingIndex) in upcoming().slice(0, 3)"
                     :key="`bookings_${bookingIndex}`"
                     :booking="booking"
+                    class="mb-4"
                     is-trainer
                 />
             </div>
