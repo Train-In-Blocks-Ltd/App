@@ -18,8 +18,12 @@
                     @output="(data) => (plan.name = data)"
                 />
 
-                <plan-progress-bar class="my-4" :sessions="plan.sessions" />
-                <plan-options />
+                <plan-progress-bar
+                    v-if="hasSessions"
+                    class="mt-4"
+                    :sessions="plan.sessions"
+                />
+                <plan-options class="mt-4" />
             </div>
 
             <!-- Plan notes -->
@@ -113,7 +117,7 @@
                             <div class="flex items-center">
                                 <a
                                     v-if="
-                                        plan.sessions &&
+                                        hasSessions &&
                                         selectedIds.length <
                                             plan.sessions.length &&
                                         !weekIsEmpty
@@ -126,7 +130,7 @@
                                 </a>
                                 <a
                                     v-if="
-                                        plan.sessions &&
+                                        hasSessions &&
                                         selectedIds.length <
                                             plan.sessions.length
                                     "
@@ -137,7 +141,7 @@
                                     Select all
                                 </a>
                                 <a
-                                    v-if="plan.sessions && !isEditingSession"
+                                    v-if="hasSessions && !isEditingSession"
                                     href="javascript:void(0)"
                                     class="mr-4 text-sm"
                                     @click="
@@ -450,6 +454,9 @@ export default {
         };
     },
     computed: {
+        hasSessions() {
+            return this.plan.sessions && this.plan.sessions.length > 0;
+        },
         plan() {
             return this.$store.getters.helper(
                 "match_plan",
