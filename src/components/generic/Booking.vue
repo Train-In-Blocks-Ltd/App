@@ -98,8 +98,8 @@ export default {
         async acceptBookingRequest() {
             if (
                 await this.$store.dispatch("openConfirmPopUp", {
-                    title: "Are you sure you want to cancel this booking?",
-                    text: "Your trainer will be notified.",
+                    title: "Are you sure you want to accept this booking?",
+                    text: "It will appear as scheduled on your client's profile.",
                 })
             ) {
                 try {
@@ -114,7 +114,7 @@ export default {
                     this.$store.dispatch("openResponsePopUp", {
                         title: "Booking request accepted",
                         description:
-                            "Your client will be notified of any upcoming bookings that were accepeted.",
+                            "Your client will be notified of any upcoming bookings that were accepted.",
                     });
                     this.$store.dispatch("endLoading");
                 } catch (e) {
@@ -129,8 +129,8 @@ export default {
         async cancelBooking() {
             if (
                 await this.$store.dispatch("openConfirmPopUp", {
-                    title: "Are you sure you want to accept this booking?",
-                    text: "It will appear as scheduled on your client's profile.",
+                    title: "Are you sure you want to cancel this booking?",
+                    text: "Your trainer will be notified.",
                 })
             ) {
                 try {
