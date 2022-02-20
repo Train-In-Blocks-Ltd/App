@@ -107,7 +107,7 @@ export default {
                         dontLeave: true,
                     });
                     await this.$store.dispatch("updateBooking", {
-                        id: this.booking.id,
+                        bookingId: this.booking.id,
                         status: "Scheduled",
                     });
                     this.$store.dispatch("openResponsePopUp", {

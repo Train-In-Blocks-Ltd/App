@@ -1,24 +1,23 @@
 const emailBuilder = require("../../components/js/email");
 
 export default {
-    /**
-     * Creates a new booking.
-     * @param {number} payload.client_id - The id of the client that the booking is assigned to.
-     * @param {string} payload.datetime - The date and time.
-     * @param {string} payload.notes - The details of the booking.
-     * @param {string} payload.status - The status of the booking.
-     * @param {boolean} payload.isTrainer - Whether the trainer or client requested it.
-     */
-    async createBooking({ commit, state }, payload) {
-        payload.client_id = payload.clientId;
+    /** Creates a new booking. */
+    async createBooking(
+        { commit, state },
+        { clientId, datetime, notes, status, isTrainer }
+    ) {
         const RESPONSE = await this._vm.$axios.post(
             "https://api.traininblocks.com/v2/bookings",
             {
-                ...payload,
+                client_id: clientId,
+                datetime,
+                notes,
+                status,
+                isTrainer,
             }
         );
-        payload.id = RESPONSE.data[0]["LAST_INSERT_ID()"];
-        if (!payload.isTrainer) {
+
+        if (!isTrainer) {
             const PT_EMAIL = await this._vm.$axios.post(
                 "/.netlify/functions/okta",
                 {
@@ -30,66 +29,63 @@ export default {
                 to: PT_EMAIL.data[0].credentials.emails[0].value,
                 ...emailBuilder("booking-requested", {
                     clientName: state.clientUser.name,
-                    datetime: payload.datetime,
-                    link: `https://app.traininblocks.com/client/${payload.client_id}`,
+                    datetime: datetime,
+                    link: `https://app.traininblocks.com/client/${clientId}`,
                 }),
             });
         } else {
             await this._vm.$axios.post("/.netlify/functions/send-email", {
                 to: state.clients.find(
-                    (client) => client.client_id === payload.clientId
+                    (client) => client.client_id === parseInt(clientId)
                 ).email,
                 ...emailBuilder("booking-created", {
-                    datetime: payload.datetime,
+                    datetime: datetime,
                 }),
             });
         }
-        commit(
-            payload.isTrainer ? "addNewBooking" : "addNewBookingClientSide",
-            {
-                ...payload,
-            }
-        );
+        commit(isTrainer ? "addNewBooking" : "addNewBookingClientSide", {
+            id: RESPONSE.data[0]["LAST_INSERT_ID()"],
+            client_id: clientId,
+            datetime,
+            notes,
+            status,
+            isTrainer,
+        });
     },
 
-    /**
-     * Updates a booking.
-     * @param {number} payload.id - The id of the booking.
-     * @param {number} payload.client_id - The id of the client that the booking belongs to.
-     * @param {string} payload.status - The new status of the booking.
-     */
-    async updateBooking({ commit, state }, payload) {
-        payload.client_id = payload.clientId;
+    /** Updates a booking. */
+    async updateBooking({ commit, state }, { bookingId, clientId, status }) {
         await this._vm.$axios.put("https://api.traininblocks.com/v2/bookings", {
-            ...payload,
+            id: bookingId,
+            client_id: clientId,
+            status,
         });
         await this._vm.$axios.post("/.netlify/functions/send-email", {
-            to: state.clients.find((client) => client.id === payload.clientId)
-                .email,
+            to: state.clients.find(
+                (client) => client.client_id === parseInt(clientId)
+            ).email,
             ...emailBuilder("booking-accepted", {
                 datetime: state.bookings.find(
-                    (booking) => booking.id === payload.id
+                    (booking) => booking.id === bookingId
                 ).datetime,
             }),
         });
         commit("updateBooking", {
-            ...payload,
+            id: bookingId,
+            client_id: clientId,
+            status,
         });
     },
 
-    /**
-     * Deletes a booking.
-     * @param {number} payload.id - The id of the booking.
-     * @param {number} payload.client_id - The client of the client that the booking belongs to.
-     * @param {string} payload.datetime - The date and time.
-     * @param {boolean} payload.isTrainer - Whether the user is a trainer or client.
-     */
-    async deleteBooking({ commit, state }, payload) {
-        payload.client_id = payload.clientId;
+    /** Deletes a booking. */
+    async deleteBooking(
+        { commit, state },
+        { clientId, bookingId, datetime, isTrainer }
+    ) {
         await this._vm.$axios.delete(
-            `https://api.traininblocks.com/v2/bookings/${payload.bookingId}`
+            `https://api.traininblocks.com/v2/bookings/${bookingId}`
         );
-        if (!payload.isTrainer) {
+        if (!isTrainer) {
             const PT_EMAIL = await this._vm.$axios.post(
                 "/.netlify/functions/okta",
                 {
@@ -101,31 +97,28 @@ export default {
                 to: PT_EMAIL.data[0].credentials.emails[0].value,
                 ...emailBuilder("booking-request-cancelled", {
                     clientName: state.clientUser.name,
-                    datetime: payload.datetime,
-                    link: `https://app.traininblocks.com/client/${payload.client_id}`,
+                    datetime: datetime,
+                    link: `https://app.traininblocks.com/client/${clientId}`,
                 }),
             });
         } else if (
             new Date(
                 state.bookings.find(
-                    (booking) => booking.id === payload.bookingId
+                    (booking) => booking.id === bookingId
                 ).datetime
             ) > new Date()
         ) {
             await this._vm.$axios.post("/.netlify/functions/send-email", {
                 to: state.clients.find(
-                    (client) => client.client_id === payload.clientId
+                    (client) => client.client_id === parseInt(clientId)
                 ).email,
                 ...emailBuilder("booking-rejected", {
                     datetime: state.bookings.find(
-                        (booking) => booking.id === payload.bookingId
+                        (booking) => booking.id === bookingId
                     ).datetime,
                 }),
             });
         }
-        commit(
-            `removeBooking${payload.isTrainer ? "" : "ClientSide"}`,
-            payload.bookingId
-        );
+        commit(`removeBooking${isTrainer ? "" : "ClientSide"}`, bookingId);
     },
 };
