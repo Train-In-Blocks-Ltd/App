@@ -74,9 +74,7 @@ export default {
         ...mapState(["clientDetails"]),
     },
     methods: {
-        /**
-         * Updates the week color.
-         */
+        /** Updates the week color. */
         async useUpdateWeekColorMutation() {
             this.$store.commit("updatePlanAttr", {
                 clientId: this.clientDetails.client_id,
