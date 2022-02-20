@@ -24,9 +24,8 @@ export default {
     },
     methods: {
         async reset() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             this.error = null;
             this.success = null;

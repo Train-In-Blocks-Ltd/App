@@ -43,9 +43,8 @@ export default {
          * Shifts the selected sessions by specified days.
          */
         async shiftAcross() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             this.plan.sessions.forEach((session) => {
                 if (this.selectedIds.includes(session.id)) {

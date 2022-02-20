@@ -90,9 +90,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -115,9 +114,8 @@ export default {
         async resolve_client_info_editor(state) {
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.editingClientNotes = true;
                     this.tempEditorStore = this.clientDetails.notes;
@@ -136,9 +134,8 @@ export default {
                     }
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.editingClientNotes = false;
                     this.clientDetails.notes = this.tempEditorStore;

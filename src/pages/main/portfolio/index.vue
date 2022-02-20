@@ -85,9 +85,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -123,9 +122,8 @@ export default {
         resolve_portfolio_editor(state) {
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.editingPortfolio = true;
                     this.tempEditorStore = this.portfolio.notes;
@@ -135,9 +133,8 @@ export default {
                     this.updatePortfolio();
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.editingPortfolio = false;
                     this.$store.commit("setDataDeep", {

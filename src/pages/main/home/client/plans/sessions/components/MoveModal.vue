@@ -45,9 +45,8 @@ export default {
          * Moves the selected sessions to specified week.
          */
         async moveToWeek() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             this.plan.sessions.forEach((session) => {
                 if (this.selectedIds.includes(session.id)) {

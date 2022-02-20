@@ -138,9 +138,8 @@ export default {
          * Gives access to the client user.
          */
         async giveAccess() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             try {
                 if (this.clientAlreadyMsg === "Resend activation email") {
@@ -298,9 +297,8 @@ export default {
                 })
             ) {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     await this.$store.dispatch("clientArchive", clientId);
                     this.$ga.event("Client", "archive");

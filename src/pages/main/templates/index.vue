@@ -151,9 +151,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -224,9 +223,8 @@ export default {
             );
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.isEditingTemplate = true;
                     this.editTemplate = id;
@@ -239,9 +237,8 @@ export default {
                     this.updateTemplate(id);
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.isEditingTemplate = false;
                     this.editTemplate = null;
@@ -289,9 +286,8 @@ export default {
                     })
                 ) {
                     try {
-                        this.$store.commit("setData", {
-                            attr: "dontLeave",
-                            data: true,
+                        this.$store.dispatch("setLoading", {
+                            dontLeave: true,
                         });
                         await this.$store.dispatch(
                             "deleteTemplate",

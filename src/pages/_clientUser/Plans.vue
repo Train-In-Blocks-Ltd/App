@@ -192,9 +192,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -254,9 +253,8 @@ export default {
             });
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.feedbackId = id;
                     this.forceStop += 1;
@@ -267,9 +265,8 @@ export default {
                     this.$parent.updateClientSideSession(plan.id, session.id);
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.feedbackId = null;
                     session.feedback = this.tempEditorStore;

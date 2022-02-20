@@ -103,9 +103,8 @@ export default {
                 })
             ) {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     await this.$store.dispatch("updateBooking", {
                         id: this.booking.id,
@@ -134,9 +133,8 @@ export default {
                 })
             ) {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     await this.$store.dispatch("deleteBooking", {
                         clientId: this.isTrainer

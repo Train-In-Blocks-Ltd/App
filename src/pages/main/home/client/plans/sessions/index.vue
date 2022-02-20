@@ -398,9 +398,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -557,9 +556,8 @@ export default {
         handlePlanNotesChange(state) {
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.tempEditorStore = this.plan.notes;
                     break;
@@ -567,9 +565,8 @@ export default {
                     this.useUpdatePlanMutation();
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.$store.commit("updatePlanAttr", {
                         clientId: this.clientDetails.client_id,
@@ -593,9 +590,8 @@ export default {
             );
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.isEditingSession = true;
                     this.editSession = id;
@@ -604,9 +600,8 @@ export default {
                     this.goToEvent(SESSION.id, SESSION.week_id);
                     break;
                 case "save":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.isEditingSession = false;
                     this.editSession = null;
@@ -618,9 +613,8 @@ export default {
                     this.$store.dispatch("endLoading");
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.isEditingSession = false;
                     this.editSession = null;
@@ -707,9 +701,8 @@ export default {
          * Toggles the complete/incomplete state of the selected sessions.
          */
         async useUpdateCheckedMutation(boolState) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             if (this.selectedIds.length !== 0) {
                 if (
@@ -752,9 +745,8 @@ export default {
          * Deletes all the selected sessions.
          */
         async useDeleteSessionMutation() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             if (this.selectedIds.length !== 0) {
                 if (
@@ -814,9 +806,8 @@ export default {
          * Creates a new session.
          */
         async createNewSession() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             const NEW_SESSION_ID = await this.useCreateSessionMutation({
                 clientId: this.$route.params.client_id,

@@ -109,9 +109,8 @@ export default {
                 );
             } else {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.$store.dispatch("createClient", {
                         name: this.newClient.name,
