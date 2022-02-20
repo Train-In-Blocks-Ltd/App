@@ -203,10 +203,6 @@ export default {
         this.processAndPlot();
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Generates a prediction based on the day.
          * @param {integer} day - The day specified by the user.

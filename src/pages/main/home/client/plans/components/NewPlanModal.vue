@@ -59,10 +59,6 @@ export default {
     },
     computed: mapState(["dontLeave", "clientDetails", "clients"]),
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         checkForm() {
             this.disableCreatePlanButton = !(
                 this.newPlan.name && this.newPlan.duration

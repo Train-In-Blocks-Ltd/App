@@ -459,10 +459,6 @@ export default {
             }
         },
 
-        // -----------------------------
-        // Client-side
-        // -----------------------------
-
         /**
          * Gets all the data for setup on the client-side
          */
