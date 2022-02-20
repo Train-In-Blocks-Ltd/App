@@ -4,9 +4,12 @@
             class="fixed md:top-16 p-8 md:rounded-lg z-40 overflow-y-auto"
             :class="{
                 'w-full max-h-screen': modalSize === 'full',
-                'w-full md:w-10/12 max-h-screen md:max-h-4/5':
+                'w-full md:w-10/12 max-h-screen md:max-h-4/5 h-screen md:h-auto':
                     modalSize === 'lg',
-                'w-full md:w-3/5 max-h-screen md:max-h-4/5': modalSize === 'sm',
+                'w-full md:w-3/5 max-h-screen md:max-h-4/5 h-screen md:h-auto':
+                    modalSize === 'sm',
+                'w-full md:w-3/4 lg:w-2/5 max-h-screen md:max-h-4/5 h-screen md:h-auto':
+                    modalSize === 'xs',
             }"
             noHover
             noBorder

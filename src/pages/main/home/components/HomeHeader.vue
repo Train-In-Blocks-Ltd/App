@@ -8,7 +8,11 @@
             <icon-button
                 svg="user-plus"
                 :on-click="
-                    () => $store.dispatch('openModal', { name: 'new-client' })
+                    () =>
+                        $store.dispatch('openModal', {
+                            name: 'new-client',
+                            size: 'xs',
+                        })
                 "
                 :icon-size="28"
             />

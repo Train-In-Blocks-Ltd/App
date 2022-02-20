@@ -23,6 +23,7 @@
                         () =>
                             $store.dispatch('openModal', {
                                 name: 'new-plan',
+                                size: 'xs',
                             })
                     "
                     :icon-size="28"
