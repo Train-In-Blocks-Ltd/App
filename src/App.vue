@@ -322,34 +322,6 @@ export default {
         },
 
         /**
-         * Processes captured error and sends to Jira.
-         * @param {string} msg - The error text.
-         */
-        async resolveError(msg) {
-            if (this.claims.user_type !== "Admin") {
-                await this.$axios.post("/.netlify/functions/error", {
-                    msg,
-                    claims: this.claims,
-                });
-            }
-            this.$store.dispatch("endLoading");
-            this.$store.dispatch("openResponsePopUp", {
-                title: "ERROR: this problem has been reported to our developers",
-                description:
-                    msg.toString() !== "Error: Network Error"
-                        ? msg.toString()
-                        : "You may be offline. We'll try that request again once you've reconnected",
-                persist: true,
-                backdrop: true,
-            });
-            this.willBodyScroll(false);
-        },
-
-        // -----------------------------
-        // Auth
-        // -----------------------------
-
-        /**
          * Checks if the user is authenticated and sets the Vuex state accordingly.
          */
         async isAuthenticated() {

@@ -84,13 +84,17 @@ export default {
     computed: mapState(["bookings", "loading"]),
     methods: {
         upcoming() {
-            return this.bookings
-                .filter((booking) => new Date(booking.datetime) > new Date())
-                .filter(
-                    (booking) =>
-                        booking.client_id ===
-                        parseInt(this.$route.params.client_id)
-                );
+            return (
+                this.bookings
+                    .filter(
+                        (booking) => new Date(booking.datetime) > new Date()
+                    )
+                    .filter(
+                        (booking) =>
+                            booking.client_id ===
+                            parseInt(this.$route.params.client_id)
+                    ) ?? []
+            );
         },
     },
 };
