@@ -33,16 +33,17 @@
                 href="javascript:void(0)"
                 @click="cancelBooking(booking.id, booking.datetime)"
             >
-                <txt class="text-red-700" bold>Cancel</txt>
+                <txt class="text-red-700">Cancel</txt>
             </a>
-            <div v-else>
+            <div class="flex" v-else>
                 <a
                     v-if="booking.status === 'Pending' && !isInThePast(booking)"
                     href="javascript:void(0)"
                     aria-label="Accept booking"
+                    class="mr-2"
                     @click="acceptBookingRequest(booking.id)"
                 >
-                    <txt>Accept</txt>
+                    <txt class="text-green-700">Accept</txt>
                 </a>
                 <a href="javascript:void(0)" @click="cancelBooking">
                     <txt class="text-red-700">
@@ -104,6 +105,9 @@ export default {
                     });
                     await this.$store.dispatch("updateBooking", {
                         bookingId: this.booking.id,
+                        clientId: this.isTrainer
+                            ? this.$route.params.client_id
+                            : this.claims.client_id_db,
                         status: "Scheduled",
                     });
                     this.$store.dispatch("openResponsePopUp", {

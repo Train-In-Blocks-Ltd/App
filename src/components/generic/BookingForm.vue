@@ -68,7 +68,7 @@ export default {
                 });
                 await this.$store.dispatch("createBooking", {
                     clientId: this.isTrainer
-                        ? parseInt(this.$route.params.client_id)
+                        ? this.$route.params.client_id
                         : this.claims.client_id_db,
                     datetime:
                         this.bookingForm.date + " " + this.bookingForm.time,
