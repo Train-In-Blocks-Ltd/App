@@ -190,7 +190,7 @@
 
                         <!-- Sessions list -->
                         <div
-                            v-if="!noSessions && !weekIsEmpty && !loading"
+                            v-if="hasSessions && !weekIsEmpty && !loading"
                             class="grid gap-8"
                         >
                             <!-- Session -->
@@ -424,7 +424,6 @@ export default {
 
             // SYSTEM
 
-            noSessions: false,
             expandedSessions: [],
             force: true,
             multiselectOption: [
@@ -496,17 +495,8 @@ export default {
         });
         this.willBodyScroll(true);
         this.$parent.sessions = true;
-        this.noSessions =
-            (await this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            ).sessions) === false;
     },
     mounted() {
-        if (!this.noSessions) {
-            this.updater();
-        }
         this.$store.dispatch("setLoading", false);
     },
     methods: {
@@ -548,7 +538,6 @@ export default {
                     break;
                 case "Delete":
                     this.useDeleteSessionMutation();
-                    this.updater();
                     break;
                 case "Deselect":
                     this.$store.commit("SET_DATA", {
@@ -663,8 +652,6 @@ export default {
                     sessionWeek: SESSION.week_id,
                 });
             }
-            this.checkForWeekSessions();
-            this.updater();
             this.$ga.event("Session", "duplicate");
             this.$store.dispatch("openResponsePopUp", {
                 title: `${
@@ -773,13 +760,11 @@ export default {
                     } catch (e) {
                         this.$store.dispatch("resolveError", e);
                     }
-                    this.checkForWeekSessions();
                     this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
                     this.toggleExpandAll("Collapse");
-                    this.updater();
                     this.$ga.event("Session", "delete");
                     this.$store.dispatch("openResponsePopUp", {
                         title:
@@ -826,8 +811,6 @@ export default {
                 sessionNotes: "",
                 sessionWeek: this.currentWeek,
             });
-            this.checkForWeekSessions();
-            this.updater();
             this.goToEvent(NEW_SESSION_ID, this.currentWeek);
             this.$ga.event("Session", "new");
             this.$store.dispatch("openResponsePopUp", {
@@ -854,27 +837,6 @@ export default {
         },
 
         /**
-         * Checks if the current week has sessions.
-         */
-        checkForWeekSessions() {
-            let arr = 0;
-            const SESSIONS = this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            ).sessions;
-            this.noSessions = SESSIONS === false;
-            if (SESSIONS && !this.noSessions) {
-                SESSIONS.forEach((session) => {
-                    if (session.week_id === this.currentWeek) {
-                        arr += 1;
-                        this.weekSessions.push(session.id);
-                    }
-                });
-            }
-        },
-
-        /**
          * Expands the main body of the targetted session.
          */
         toggleExpandedSessions(id) {
@@ -897,7 +859,6 @@ export default {
                 data: week,
             });
             this.moveTarget = weekID;
-            this.checkForWeekSessions();
         },
 
         /**
@@ -920,27 +881,6 @@ export default {
                 return new Date(a.date) - new Date(b.date);
             });
             return data;
-        },
-
-        /**
-         * Updates the state of the plan page to show the correct data.
-         */
-        updater() {
-            this.sessionDates = [];
-            if (this.plan.sessions) {
-                for (const SESSION of this.plan.sessions) {
-                    this.sessionDates.push({
-                        title: SESSION.name,
-                        date: SESSION.date,
-                        color: this.weekColor[SESSION.week_id - 1],
-                        textColor: this.accessible_colors(
-                            this.weekColor[SESSION.week_id - 1]
-                        ),
-                        week_id: SESSION.week_id,
-                        session_id: SESSION.id,
-                    });
-                }
-            }
         },
 
         /**
