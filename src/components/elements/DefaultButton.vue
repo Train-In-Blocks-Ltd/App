@@ -2,7 +2,9 @@
     <button
         v-if="prevent"
         :class="[
-            isDisabled ? 'cursor-default opacity-60' : 'cursor-pointer',
+            isDisabled || disableButtons
+                ? 'cursor-not-allowed opacity-60'
+                : 'cursor-pointer',
             {
                 'bg-red-700': theme === 'red',
                 'bg-green-700': theme === 'green',
@@ -11,7 +13,7 @@
                 ),
             },
         ]"
-        :disabled="isDisabled"
+        :disabled="isDisabled || disableButtons"
         class="select-none cursor-pointer self-center rounded border-none px-6 py-3 font-bold text-white bg-gray-800 transition-all hover:opacity-60"
         @click.prevent="
             () => {
@@ -24,7 +26,9 @@
     <button
         v-else
         :class="[
-            isDisabled ? 'cursor-default opacity-60' : 'cursor-pointer',
+            isDisabled || disableButtons
+                ? 'cursor-not-allowed opacity-60'
+                : 'cursor-pointer',
             {
                 'bg-red-700': theme === 'red',
                 'bg-green-700': theme === 'green',
@@ -33,7 +37,7 @@
                 ),
             },
         ]"
-        :disabled="isDisabled"
+        :disabled="isDisabled || disableButtons"
         class="select-none self-center rounded border-none px-6 py-3 font-bold text-white bg-gray-800 transition-all hover:opacity-60"
         @click="
             () => {
@@ -47,6 +51,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapState } from "vuex";
 
 export default Vue.extend({
     props: {
@@ -65,5 +70,6 @@ export default Vue.extend({
         isDisabled: Boolean,
         prevent: Boolean,
     },
+    computed: mapState(["disableButtons"]),
 });
 </script>

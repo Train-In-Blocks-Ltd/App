@@ -7,12 +7,7 @@
                 type="date"
                 placeholder="Date"
                 aria-label="Date"
-                @output="
-                    (data) => {
-                        bookingForm.date = data;
-                        checkForm();
-                    }
-                "
+                @output="(data) => (bookingForm.date = data)"
                 required
             />
             <txt-input
@@ -21,12 +16,7 @@
                 type="time"
                 placeholder="Time"
                 aria-label="Time"
-                @output="
-                    (data) => {
-                        bookingForm.time = data;
-                        checkForm();
-                    }
-                "
+                @output="(data) => (bookingForm.time = data)"
                 required
             />
         </div>
@@ -36,18 +26,15 @@
             placeholder="Additional information"
             aria-label="Additional information"
             class="mb-4"
-            @output="
-                (data) => {
-                    bookingForm.notes = data;
-                    checkForm();
-                }
-            "
+            @output="(data) => (bookingForm.notes = data)"
             required
         />
         <default-button
             type="submit"
             class="w-full"
-            :is-disabled="disableCreateBookingButton"
+            :is-disabled="
+                !(bookingForm.date && bookingForm.time && bookingForm.notes)
+            "
         >
             Create booking
         </default-button>
@@ -68,18 +55,16 @@ export default {
                 time: this.timeNow(),
                 notes: null,
             },
-            disableCreateBookingButton: true,
         };
     },
     computed: mapState(["claims"]),
     methods: {
-        /**
-         * Creates a new booking.
-         */
+        /** Creates a new booking. */
         async createBooking() {
             try {
                 this.$store.dispatch("setLoading", {
                     dontLeave: true,
+                    disableButtons: true,
                 });
                 await this.$store.dispatch("createBooking", {
                     clientId: this.isTrainer
@@ -96,7 +81,6 @@ export default {
                     time: this.timeNow(),
                     notes: null,
                 };
-                this.disableCreateBookingButton = true;
                 this.$store.dispatch("openResponsePopUp", {
                     title: "Booking created",
                     description: this.isTrainer
@@ -107,17 +91,6 @@ export default {
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
-        },
-
-        /**
-         * Checks and validates form.
-         */
-        checkForm() {
-            this.disableCreateBookingButton = !(
-                this.bookingForm.date &&
-                this.bookingForm.time &&
-                this.bookingForm.notes
-            );
         },
     },
 };

@@ -78,9 +78,7 @@ export default {
     },
     computed: mapState(["claims"]),
     methods: {
-        /**
-         * Determines the colour of the text for booking statuses.
-         */
+        /** Determines the colour of the text for booking statuses. */
         getStatusColor(status) {
             switch (status) {
                 case "Pending" || "Past":
@@ -92,9 +90,7 @@ export default {
             }
         },
 
-        /**
-         * Accepts a booking request made by the client-user.
-         */
+        /** Accepts a booking request made by the client-user. */
         async acceptBookingRequest() {
             if (
                 await this.$store.dispatch("openConfirmPopUp", {
@@ -122,9 +118,7 @@ export default {
             }
         },
 
-        /**
-         * Cancels a booking.
-         */
+        /** Cancels a booking. */
         async cancelBooking() {
             if (
                 await this.$store.dispatch("openConfirmPopUp", {

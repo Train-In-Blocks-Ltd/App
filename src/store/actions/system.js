@@ -1,6 +1,9 @@
 export default {
     /** Sets loading states */
-    setLoading({ commit }, { loading, silentLoading, dontLeave }) {
+    setLoading(
+        { commit },
+        { loading, silentLoading, dontLeave, disableButtons }
+    ) {
         commit("setData", {
             attr: "loading",
             data: !!loading,
@@ -12,6 +15,10 @@ export default {
         commit("setData", {
             attr: "dontLeave",
             data: !!dontLeave,
+        });
+        commit("setData", {
+            attr: "disableButtons",
+            data: !!disableButtons,
         });
     },
 
