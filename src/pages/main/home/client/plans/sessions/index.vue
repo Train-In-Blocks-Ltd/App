@@ -472,8 +472,9 @@ export default {
                 .split(",");
         },
         weekIsEmpty() {
+            if (!this.plan.sessions) return [];
             return (
-                this.plan.sessions?.filter(
+                this.plan.sessions.filter(
                     (session) => session.week_id === this.currentWeek
                 ).length === 0
             );
