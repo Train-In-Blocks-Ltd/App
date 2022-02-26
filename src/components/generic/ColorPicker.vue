@@ -14,12 +14,7 @@
                     :key="'color_' + index"
                     :style="{ backgroundColor: paint.color }"
                     class="h-8 w-16 rounded cursor-pointer hover:opacity-60 transition-opacity mt-2"
-                    @click="
-                        () => {
-                            weekColor[currentWeek - 1] = paint.color;
-                            useUpdateWeekColorMutation();
-                        }
-                    "
+                    @click="handleSelect(paint.color)"
                 />
             </div>
         </div>
@@ -31,8 +26,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 const Backdrop = () =>
     import(
         /* webpackChunkName: "components.backdrop", webpackPreload: true */ "@/components/generic/Backdrop"
@@ -40,6 +33,8 @@ const Backdrop = () =>
 
 export default {
     props: {
+        plan: Object,
+        weekColor: Array,
         currentWeek: Number,
     },
     components: {
@@ -57,40 +52,10 @@ export default {
             ],
         };
     },
-    computed: {
-        plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
-        },
-        weekColor() {
-            return this.plan.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
-        },
-        ...mapState(["clientDetails"]),
-    },
     methods: {
-        /** Updates the week color. */
-        async useUpdateWeekColorMutation() {
-            this.$store.commit("updatePlanAttr", {
-                clientId: this.clientDetails.client_id,
-                planId: this.plan.id,
-                attr: "block_color",
-                data: JSON.stringify(this.weekColor)
-                    .replace(/"/g, "")
-                    .replace(/[[\]]/g, "")
-                    .replace(/\//g, ""),
-            });
+        handleSelect(color) {
+            this.$emit("output", color);
             this.editingWeekColor = false;
-            try {
-                await this.$store.dispatch("updatePlan", this.plan);
-            } catch {
-                this.$store.dispatch("resolveError", e);
-            }
         },
     },
 };

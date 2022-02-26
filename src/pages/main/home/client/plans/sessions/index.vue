@@ -93,7 +93,9 @@
                             }"
                             :key="weekNumber"
                             :week-number="weekNumber"
+                            :week-color="weekColor"
                             :current-week="currentWeek"
+                            :plan="plan"
                         />
                     </div>
                 </div>
@@ -163,7 +165,17 @@
 
                             <!-- Right side  -->
                             <div class="flex items-center">
-                                <color-picker :current-week="currentWeek" />
+                                <color-picker
+                                    :plan="plan"
+                                    :week-color="weekColor"
+                                    :current-week="currentWeek"
+                                    @output="
+                                        (data) => {
+                                            weekColor[currentWeek - 1] = data;
+                                            useUpdateWeekColorMutation();
+                                        }
+                                    "
+                                />
                                 <icon-button
                                     svg="info"
                                     :on-click="
@@ -441,6 +453,7 @@ export default {
             // WEEK
 
             weekSessions: [],
+            weekColor: [],
 
             // CALENDAR
 
@@ -464,12 +477,6 @@ export default {
                 this.$route.params.id
             );
         },
-        weekColor() {
-            return this.plan.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
-        },
         weekIsEmpty() {
             if (!this.plan.sessions) return [];
             return (
@@ -489,15 +496,11 @@ export default {
             "clientDetails",
         ]),
     },
-    async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
-        this.willBodyScroll(true);
-        this.$parent.sessions = true;
-    },
-    mounted() {
-        this.$store.dispatch("setLoading", false);
+    created() {
+        this.weekColor = this.plan.block_color
+            .replace("[", "")
+            .replace("]", "")
+            .split(",");
     },
     methods: {
         /**
@@ -978,6 +981,25 @@ export default {
                 );
                 return NEW_SESSION_ID;
             } catch (e) {
+                this.$store.dispatch("resolveError", e);
+            }
+        },
+
+        /** Updates the week color. */
+        async useUpdateWeekColorMutation() {
+            this.$store.dispatch("updatePlanAttr", {
+                clientId: this.clientDetails.client_id,
+                planId: this.plan.id,
+                attr: "block_color",
+                data: JSON.stringify(this.weekColor)
+                    .replace(/"/g, "")
+                    .replace(/[[\]]/g, "")
+                    .replace(/\//g, ""),
+            });
+            this.editingWeekColor = false;
+            try {
+                await this.$store.dispatch("updatePlan", this.plan);
+            } catch {
                 this.$store.dispatch("resolveError", e);
             }
         },
