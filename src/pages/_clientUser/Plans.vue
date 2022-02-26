@@ -83,7 +83,7 @@
 
             <!-- Session -->
             <card-wrapper
-                v-for="(session, indexed) in plan.sessions"
+                v-for="(session, indexed) in sessions"
                 v-show="showing_current_session === indexed"
                 :id="`session-${session.id}`"
                 :key="indexed"
@@ -220,9 +220,10 @@ export default {
     computed: {
         ...mapState(["clientUserLoaded", "loading", "dontLeave", "clientUser"]),
         plan() {
-            return this.$store.state.clientUser.plans.find(
-                (plan) => plan.id === parseInt(this.$route.params.id)
-            );
+            return this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            });
         },
     },
     async created() {

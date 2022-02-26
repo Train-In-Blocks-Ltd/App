@@ -35,34 +35,17 @@ export default {
      * @param {number} payload.sessionId - The id of the session.
      */
     async updateSession({ getters }, payload) {
-        const SESSION = getters.helper(
-            "match_session",
-            payload.clientId,
-            payload.planId,
-            payload.sessionId
-        );
+        const SESSION = getters.getSession(payload);
         await this._vm.$axios.put("https://api.traininblocks.com/v2/sessions", {
             ...SESSION,
         });
     },
 
-    /**
-     * Update multiple sessions.
-     * @param {number} payload.clientId - The id of the client.
-     * @param {number} payload.planId - The id of the plan.
-     * @param {array} payload.sessionIds - The ids of the sessions.
-     */
-    async batchUpdateSession({ getters }, payload) {
+    /* Update multiple sessions. */
+    async batchUpdateSession({ getters }, { clientId, planId, sessionIds }) {
         const POST_DATA = [];
-        payload.sessionIds.forEach((sessionId) => {
-            POST_DATA.push(
-                getters.helper(
-                    "match_session",
-                    payload.clientId,
-                    payload.planId,
-                    sessionId
-                )
-            );
+        sessionIds.forEach((sessionId) => {
+            POST_DATA.push(getters.getSession({ clientId, planId, sessionId }));
         });
         await this._vm.$axios.put(
             "https://api.traininblocks.com/v2/batch/sessions",

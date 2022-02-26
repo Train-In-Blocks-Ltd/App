@@ -474,11 +474,10 @@ export default {
             return this.plan.sessions && this.plan.sessions.length > 0;
         },
         plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
+            return this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            });
         },
         weekIsEmpty() {
             if (!this.plan.sessions) return [];
@@ -611,12 +610,11 @@ export default {
 
         /** Resolves the state of the session editor. */
         handleSessionNotesChange(state, id) {
-            const SESSION = this.$store.getters.helper(
-                "match_session",
-                this.$route.params.client_id,
-                this.$route.params.id,
-                id
-            );
+            const SESSION = this.$store.getters.getSession({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+                sessionId: id,
+            });
             switch (state) {
                 case "edit":
                     this.$store.dispatch("setLoading", {
@@ -661,11 +659,10 @@ export default {
             const TO_DUPLICATE = [];
             const CLIENT_ID = this.$route.params.client_id;
             const PLAN_ID = this.$route.params.id;
-            const SESSIONS = this.$store.getters.helper(
-                "match_plan",
-                CLIENT_ID,
-                PLAN_ID
-            ).sessions;
+            const SESSIONS = this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            }).sessions;
             this.selectedIds.forEach((sessionId) => {
                 TO_DUPLICATE.push(
                     SESSIONS.find((session) => session.id === sessionId)

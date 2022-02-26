@@ -1,23 +1,18 @@
 export default {
-    /**
-     * Helps gets plans or sessions.
-     * @returns Specified data.
-     */
-    helper: (state, getters) => (type, clientId, planId, sessionId) => {
-        const CLIENT = state.clients.find(
-            (client) => client.client_id === parseInt(clientId)
-        );
-        switch (type) {
-            case "match_plan":
-                return CLIENT.plans.find(
-                    (plan) => plan.id === parseInt(planId)
-                );
-            case "match_session": {
-                const PLAN = getters.helper("match_plan", clientId, planId);
-                return PLAN.sessions.find(
-                    (session) => session.id === parseInt(sessionId)
-                );
-            }
-        }
-    },
+    /** Finds a client plan. */
+    getPlan:
+        (state) =>
+        ({ clientId, planId }) =>
+            state.clients
+                .find((c) => c.client_id === parseInt(clientId))
+                .plans.find((p) => p.id === parseInt(planId)),
+
+    /** Finds a session. */
+    getSession:
+        (state) =>
+        ({ clientId, planId, sessionId }) =>
+            state.clients
+                .find((c) => c.client_id === parseInt(clientId))
+                .plans.find((p) => p.id === parseInt(planId))
+                .sessions.find((s) => s.id === parseInt(sessionId)),
 };

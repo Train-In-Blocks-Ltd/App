@@ -32,11 +32,10 @@ export default {
     },
     computed: {
         plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
+            return this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            });
         },
         ...mapState(["selectedIds"]),
     },
