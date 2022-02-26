@@ -209,7 +209,10 @@
                             <card-wrapper
                                 v-for="(
                                     session, sessionIndex
-                                ) in sessionsSorter(plan.sessions)"
+                                ) in plan.sessions.sort(
+                                    (a, b) =>
+                                        new Date(a.date) - new Date(b.date)
+                                )"
                                 v-show="session.week_id === currentWeek"
                                 :id="'session-' + session.id"
                                 :key="`session-${sessionIndex}`"
@@ -497,12 +500,43 @@ export default {
         ]),
     },
     created() {
-        this.weekColor = this.plan.block_color
-            .replace("[", "")
-            .replace("]", "")
-            .split(",");
+        this.loadPlanData();
     },
     methods: {
+        /** Loads new data into the plan. */
+        loadPlanData() {
+            this.__getWeekColor();
+            this.__getCalendarSessions();
+        },
+
+        /** Gets the week colors. */
+        __getWeekColor() {
+            this.weekColor = this.plan.block_color
+                .replace("[", "")
+                .replace("]", "")
+                .split(",");
+        },
+
+        /** Updates calendar events. */
+        __getCalendarSessions() {
+            if (!this.plan.sessions) return [];
+
+            this.sessionDates = this.plan.sessions
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map((session) => {
+                    return {
+                        title: session.name,
+                        date: session.date,
+                        color: this.weekColor[session.week_id - 1],
+                        textColor: this.accessible_colors(
+                            this.weekColor[session.week_id - 1]
+                        ),
+                        week_id: session.week_id,
+                        session_id: session.id,
+                    };
+                });
+        },
+
         /**
          * Resolves the actions taken from the session multi-select.
          */
@@ -877,16 +911,6 @@ export default {
         },
 
         /**
-         * Sorts the session.
-         */
-        sessionsSorter(data) {
-            data = data.sort((a, b) => {
-                return new Date(a.date) - new Date(b.date);
-            });
-            return data;
-        },
-
-        /**
          * Expand or de-expand all sessions.
          */
         toggleExpandAll(toExpand) {
@@ -920,6 +944,7 @@ export default {
                     loading: true,
                 });
                 await this.$store.dispatch("updatePlan", this.plan);
+                this.loadPlanData();
                 this.$ga.event("Plan", "update");
                 this.$store.dispatch("setLoading", false);
             } catch (e) {
@@ -937,6 +962,7 @@ export default {
                     planId: this.$route.params.id,
                     sessionIds,
                 });
+                this.loadPlanData();
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("setLoading", false);
             } catch (e) {
@@ -954,6 +980,7 @@ export default {
                     planId: this.$route.params.id,
                     sessionId,
                 });
+                this.loadPlanData();
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("setLoading", false);
             } catch (e) {
@@ -979,6 +1006,7 @@ export default {
                         },
                     }
                 );
+                this.loadPlanData();
                 return NEW_SESSION_ID;
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
@@ -996,9 +1024,9 @@ export default {
                     .replace(/[[\]]/g, "")
                     .replace(/\//g, ""),
             });
-            this.editingWeekColor = false;
             try {
                 await this.$store.dispatch("updatePlan", this.plan);
+                this.loadPlanData();
             } catch {
                 this.$store.dispatch("resolveError", e);
             }
