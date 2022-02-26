@@ -537,9 +537,7 @@ export default {
                 });
         },
 
-        /**
-         * Resolves the actions taken from the session multi-select.
-         */
+        /** Resolves the actions taken from the session multi-select. */
         handleMultiselectResponse(res) {
             switch (res) {
                 case "Complete":
@@ -585,9 +583,7 @@ export default {
             }
         },
 
-        /**
-         * Resolves the state of the plan notes editor.
-         */
+        /** Resolves the state of the plan notes editor. */
         handlePlanNotesChange(state) {
             switch (state) {
                 case "edit":
@@ -613,9 +609,7 @@ export default {
             }
         },
 
-        /**
-         * Resolves the state of the session editor.
-         */
+        /** Resolves the state of the session editor. */
         handleSessionNotesChange(state, id) {
             const SESSION = this.$store.getters.helper(
                 "match_session",
@@ -658,9 +652,7 @@ export default {
             }
         },
 
-        /**
-         * Duplicates the selected sessions.
-         */
+        /** Duplicates the selected sessions. */
         async duplicate() {
             this.$store.dispatch("setLoading", {
                 loading: true,
@@ -699,9 +691,7 @@ export default {
             this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Opens a new tab with the print preview of all the selected sessions.
-         */
+        /** Opens a new tab with the print preview of all the selected sessions. */
         print() {
             const NOTES_ARR = [];
             this.plan.sessions.sort((a, b) => {
@@ -730,9 +720,7 @@ export default {
             });
         },
 
-        /**
-         * Toggles the complete/incomplete state of the selected sessions.
-         */
+        /** Toggles the complete/incomplete state of the selected sessions. */
         async useUpdateCheckedMutation(boolState) {
             this.$store.dispatch("setLoading", {
                 dontLeave: true,
@@ -774,9 +762,7 @@ export default {
             this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Deletes all the selected sessions.
-         */
+        /** Deletes all the selected sessions. */
         async useDeleteSessionMutation() {
             this.$store.dispatch("setLoading", {
                 dontLeave: true,
@@ -816,10 +802,7 @@ export default {
             this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Selects all the sessions in the plan or week.
-         * @param mode - To select all session or all sessions in the current week ('all' or 'week').
-         */
+        /** Selects all the sessions in the plan or week. */
         selectAll(mode) {
             this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
@@ -833,9 +816,7 @@ export default {
             });
         },
 
-        /**
-         * Creates a new session.
-         */
+        /** Creates a new session. */
         async createNewSession() {
             this.$store.dispatch("setLoading", {
                 dontLeave: true,
@@ -857,9 +838,7 @@ export default {
             this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Scrolls to session.
-         */
+        /** Scrolls to session. */
         goToEvent(id, week) {
             this.toggleExpandAll("Expand");
             this.$store.commit("SET_DATA", {
@@ -873,9 +852,7 @@ export default {
             }, 100);
         },
 
-        /**
-         * Expands the main body of the targetted session.
-         */
+        /** Expands the main body of the targetted session. */
         toggleExpandedSessions(id) {
             if (this.expandedSessions.includes(id)) {
                 const INDEX = this.expandedSessions.indexOf(id);
@@ -887,9 +864,7 @@ export default {
             }
         },
 
-        /**
-         * Switch to a different week.
-         */
+        /** Switch to a different week. */
         changeWeek(weekID) {
             this.$store.commit("SET_DATA", {
                 attr: "currentWeek",
@@ -898,9 +873,7 @@ export default {
             this.moveTarget = weekID;
         },
 
-        /**
-         * Returns the duration of the plan as an array to be iterated.
-         */
+        /** Returns the duration of the plan as an array to be iterated. */
         planDuration(duration) {
             const ARR = [];
             let i;
@@ -910,9 +883,7 @@ export default {
             return ARR;
         },
 
-        /**
-         * Expand or de-expand all sessions.
-         */
+        /** Expand or de-expand all sessions. */
         toggleExpandAll(toExpand) {
             try {
                 if (Array.isArray(this.plan.sessions)) {
@@ -935,9 +906,7 @@ export default {
             }
         },
 
-        /**
-         * Updates the details of the plan.
-         */
+        /** Updates the details of the plan. */
         async useUpdatePlanMutation() {
             try {
                 this.$store.dispatch("setLoading", {
@@ -952,9 +921,7 @@ export default {
             }
         },
 
-        /**
-         * Updates the selected sessions.
-         */
+        /** Updates the selected sessions. */
         async useUpdateSessionsMutation(sessionIds) {
             try {
                 await this.$store.dispatch("batchUpdateSession", {
@@ -970,9 +937,7 @@ export default {
             }
         },
 
-        /**
-         * Updates a single session.
-         */
+        /** Updates a single session. */
         async useUpdateSessionMutation(sessionId) {
             try {
                 await this.$store.dispatch("updateSession", {
@@ -988,9 +953,7 @@ export default {
             }
         },
 
-        /**
-         * Creates a new session with our without existing data.
-         */
+        /** Creates a new session with our without existing data. */
         async useCreateSessionMutation(data) {
             try {
                 const NEW_SESSION_ID = await this.$store.dispatch(
