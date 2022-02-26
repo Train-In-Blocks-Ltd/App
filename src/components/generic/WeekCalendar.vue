@@ -77,7 +77,7 @@
                                 : 'border-transparent'
                         "
                         @click="
-                            $parent.goToEvent(event.session_id, event.week_id)
+                            () => onEventPress(event.session_id, event.week_id)
                         "
                     >
                         <txt :style="{ color: event.textColor }">
@@ -102,7 +102,7 @@ export default {
     },
     props: {
         events: Array,
-        forceUpdate: Number,
+        onEventPress: Function,
     },
     data() {
         return {
@@ -113,9 +113,6 @@ export default {
     },
     watch: {
         events() {
-            this.getWeek();
-        },
-        forceUpdate() {
             this.getWeek();
         },
     },

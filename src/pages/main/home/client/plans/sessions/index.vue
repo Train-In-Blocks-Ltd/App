@@ -55,14 +55,14 @@
                 <week-calendar
                     v-if="!showMonthlyCal"
                     :events="sessionDates"
-                    :force-update="forceUpdate"
                     :is-trainer="true"
+                    :on-event-press="goToEvent"
                 />
                 <month-calendar
                     v-else
                     :events="sessionDates"
-                    :force-update="forceUpdate"
                     :is-trainer="true"
+                    :on-event-press="goToEvent"
                 />
             </div>
 
@@ -462,7 +462,6 @@ export default {
 
             showMonthlyCal: false,
             sessionDates: [],
-            forceUpdate: 0,
 
             // MICROCYCLE
 

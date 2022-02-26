@@ -39,14 +39,14 @@
             <week-calendar
                 v-if="!showMonthlyCal"
                 :events="sessionDates"
-                :force-update="forceUpdate"
                 :is-trainer="false"
+                :on-event-press="goToEvent"
             />
             <month-calendar
                 v-else
                 :events="sessionDates"
-                :force-update="forceUpdate"
                 :is-trainer="false"
+                :on-event-press="goToEvent"
             />
         </div>
 
@@ -214,7 +214,6 @@ export default {
 
             showMonthlyCal: false,
             sessionDates: [],
-            forceUpdate: 0,
         };
     },
     computed: {
@@ -232,9 +231,44 @@ export default {
         this.willBodyScroll(true);
         await this.$parent.setup();
         await this.$parent.getClientSideData();
+        this.loadPlanData();
         this.$store.dispatch("setLoading", false);
     },
     methods: {
+        /** Loads new data into the plan. */
+        loadPlanData() {
+            this.__getWeekColor();
+            this.__getCalendarSessions();
+        },
+
+        /** Gets the week colors. */
+        __getWeekColor() {
+            this.weekColor = this.plan.block_color
+                .replace("[", "")
+                .replace("]", "")
+                .split(",");
+        },
+
+        /** Updates calendar events. */
+        __getCalendarSessions() {
+            if (!this.plan.sessions) return [];
+
+            this.sessionDates = this.plan.sessions
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map((session) => {
+                    return {
+                        title: session.name,
+                        date: session.date,
+                        color: this.weekColor[session.week_id - 1],
+                        textColor: this.accessible_colors(
+                            this.weekColor[session.week_id - 1]
+                        ),
+                        week_id: session.week_id,
+                        session_id: session.id,
+                    };
+                });
+        },
+
         /**
          * Resolves the state of the feedback editor.
          */
@@ -301,35 +335,6 @@ export default {
             });
             this.$parent.updateClientSideSession(planId, sessionId);
             this.$store.dispatch("setLoading", false);
-        },
-
-        /**
-         * Scans the sessions and updates the page.
-         */
-        scan() {
-            this.sessionDates.length = 0;
-            const PLAN = this.clientUser.plans.find(
-                (plan) => plan.id === parseInt(this.$route.params.id)
-            );
-            const WEEK_COLOR = PLAN.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
-            if (PLAN.sessions !== null) {
-                PLAN.sessions.forEach((session) => {
-                    this.sessionDates.push({
-                        title: session.name,
-                        date: session.date,
-                        color: WEEK_COLOR[session.week_id - 1],
-                        textColor: this.accessible_colors(
-                            WEEK_COLOR[session.week_id - 1]
-                        ),
-                        week_id: session.week_id,
-                        session_id: session.id,
-                    });
-                });
-            }
-            this.forceUpdate += 1;
         },
     },
 };
