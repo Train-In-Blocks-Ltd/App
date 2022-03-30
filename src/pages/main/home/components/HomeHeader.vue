@@ -35,7 +35,6 @@
                     () =>
                         $store.dispatch('openModal', {
                             name: 'install-pwa',
-                            size: 'lg',
                         })
                 "
                 :icon-size="28"

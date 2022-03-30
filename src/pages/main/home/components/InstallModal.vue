@@ -37,7 +37,7 @@
         </div>
 
         <!-- Buttons -->
-        <div class="grid gap-4 mt-8">
+        <div class="mt-8">
             <default-button v-if="pwa.canInstall" :on-click="handleInstall">
                 Install
             </default-button>
@@ -48,13 +48,6 @@
             >
                 <default-button>Launch</default-button>
             </a>
-            <default-button
-                v-if="pwa.canInstall || pwa.installed"
-                theme="red"
-                :on-click="handleClose"
-            >
-                Close
-            </default-button>
         </div>
     </div>
 </template>
@@ -94,9 +87,6 @@ export default Vue.extend({
                     }
                 }
             );
-            this.$store.dispatch("closeModal");
-        },
-        handleClose() {
             this.$store.dispatch("closeModal");
         },
     },
