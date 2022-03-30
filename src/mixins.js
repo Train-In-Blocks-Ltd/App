@@ -117,7 +117,7 @@ export default {
     },
 
     /**
-     * @returns Today's date in YYY-MM-DD.
+     * @returns Today's date in YYYY-MM-DD.
      */
     today() {
         const DATE = new Date();
