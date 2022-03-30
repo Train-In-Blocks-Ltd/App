@@ -29,10 +29,18 @@
                     }"
                     @click="$emit('response', option.name)"
                 >
-                    <txt class="mr-2">
+                    <txt
+                        class="mr-2"
+                        :class="{ 'text-red-700': option.name === 'Delete' }"
+                    >
                         {{ option.name }}
                     </txt>
-                    <icon v-if="option.svg" :svg="option.svg" :icon-size="31" />
+                    <icon
+                        v-if="option.svg"
+                        :svg="option.svg"
+                        :icon-size="31"
+                        :class="{ 'text-red-700': option.name === 'Delete' }"
+                    />
                 </a>
             </div>
         </div>

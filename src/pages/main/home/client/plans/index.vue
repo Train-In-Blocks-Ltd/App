@@ -23,6 +23,7 @@
                         () =>
                             $store.dispatch('openModal', {
                                 name: 'new-plan',
+                                size: 'xs',
                             })
                     "
                     :icon-size="28"
@@ -30,10 +31,19 @@
             </div>
 
             <!-- Plans grid -->
-            <skeleton v-if="loading" :type="'plan'" class="fadeIn" />
+            <div v-if="loading" class="grid sm:grid-cols-2 gap-4">
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+            </div>
             <div
                 v-else-if="clientDetails.plans.length !== 0"
-                class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                class="grid sm:grid-cols-2 gap-4"
             >
                 <plan-card
                     v-for="(plan, index) in clientDetails.plans"
@@ -81,9 +91,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -103,24 +112,31 @@ export default {
          * Resolves the client information editor.
          * @param {string} state - The returned state from the editor.
          */
-        resolve_client_info_editor(state) {
+        async resolve_client_info_editor(state) {
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.editingClientNotes = true;
                     this.tempEditorStore = this.clientDetails.notes;
                     break;
                 case "save":
                     this.editingClientNotes = false;
-                    this.$parent.updateClient(this.clientDetails);
+                    try {
+                        this.$store.dispatch("setLoading", {
+                            silentLoading: true,
+                            dontLeave: true,
+                        });
+                        await this.$store.dispatch("updateClient");
+                        this.$store.dispatch("setLoading", false);
+                    } catch (e) {
+                        this.$store.dispatch("resolveError", e);
+                    }
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.editingClientNotes = false;
                     this.clientDetails.notes = this.tempEditorStore;

@@ -75,18 +75,18 @@ export default Vue.extend({
                 (choiceResult: { outcome: string }) => {
                     if (choiceResult.outcome === "accepted") {
                         // Hide the app provided install promotion
-                        this.$store.commit("setDataDeep", {
+                        this.$store.commit("SET_DATA_DEEP", {
                             attrParent: "pwa",
                             attrChild: "canInstall",
                             data: false,
                         });
-                        this.$store.commit("setDataDeep", {
+                        this.$store.commit("SET_DATA_DEEP", {
                             attrParent: "pwa",
                             attrChild: "displayMode",
                             data: "standalone",
                         });
                     } else {
-                        this.$store.commit("setDataDeep", {
+                        this.$store.commit("SET_DATA_DEEP", {
                             attrParent: "pwa",
                             attrChild: "canInstall",
                             data: true,

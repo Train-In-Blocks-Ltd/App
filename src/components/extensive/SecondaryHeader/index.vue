@@ -1,13 +1,6 @@
-<style lang="scss" scoped>
-.secondary_header .top {
-    display: flex;
-    justify-content: space-between;
-}
-</style>
-
 <template>
-    <div class="secondary_header">
-        <div class="top">
+    <div>
+        <div class="flex justify-between">
             <txt type="subtitle">{{ title }}</txt>
             <slot name="right" />
         </div>

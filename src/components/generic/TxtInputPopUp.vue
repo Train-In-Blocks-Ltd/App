@@ -12,7 +12,7 @@
                 :value="txtInputValue"
                 @output="
                     (data) =>
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'txtInputValue',
                             data,
                         })

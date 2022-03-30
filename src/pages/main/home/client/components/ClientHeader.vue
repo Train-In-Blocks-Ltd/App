@@ -10,7 +10,7 @@
             v-else
             svg="user"
             :icon-size="144"
-            class="m-auto p-8 border-3 border-gray-800 rounded-full"
+            class="m-auto p-8 border-3 border-gray-800 dark:border-white rounded-full"
         />
         <txt-input
             type="text"
@@ -113,23 +113,22 @@ export default {
             clientSuspend: null,
         };
     },
-    computed: mapState(["clientDetails", "silentLoading"]),
+    mounted() {
+        this.checkClient();
+    },
+    computed: mapState(["clientDetails", "silentLoading", "claims"]),
     methods: {
         /**
          * Updates the client.
          */
         async updateClient() {
             try {
-                this.$store.commit("setData", {
-                    attr: "silentLoading",
-                    data: true,
-                });
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    silentLoading: true,
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("updateClient");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -139,9 +138,8 @@ export default {
          * Gives access to the client user.
          */
         async giveAccess() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             try {
                 if (this.clientAlreadyMsg === "Resend activation email") {
@@ -239,14 +237,14 @@ export default {
                 persist: true,
                 backdrop: true,
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         /**
          * Checks if the client already exists on Okta.
          */
         async checkClient() {
-            if (this.$parent.claims.email !== "demo@traininblocks.com") {
+            if (this.claims.email !== "demo@traininblocks.com") {
                 this.clientAlreadyMsg = "Loading...";
                 try {
                     const RESULT = await this.$axios.post(
@@ -299,9 +297,8 @@ export default {
                 })
             ) {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     await this.$store.dispatch("clientArchive", clientId);
                     this.$ga.event("Client", "archive");
@@ -310,7 +307,7 @@ export default {
                         description:
                             "Their data will be kept safe on the archive page",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                     this.$router.push("/");
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);

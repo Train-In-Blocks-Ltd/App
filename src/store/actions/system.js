@@ -1,238 +1,236 @@
 export default {
-    /** Ends all loading. */
-    endLoading({ commit }) {
-        commit("setData", {
+    /** Sets loading states */
+    setLoading(
+        { commit },
+        { loading, silentLoading, dontLeave, disableButtons }
+    ) {
+        commit("SET_DATA", {
             attr: "loading",
-            data: false,
+            data: !!loading,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "silentLoading",
-            data: false,
+            data: !!silentLoading,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "dontLeave",
-            data: false,
+            data: !!dontLeave,
+        });
+        commit("SET_DATA", {
+            attr: "disableButtons",
+            data: !!disableButtons,
         });
     },
 
-    /**
-     * Opens a global modal
-     * @param {string} payload.name - The name of the modal.
-     * @param {string} payload.size - The size of the modal.
-     */
-    openModal({ commit }, payload) {
-        commit("setData", {
-            attr: "modalSize",
-            data: payload.size ?? "sm",
+    /** Opens a global modal. */
+    openModal({ commit }, { name, size, persist }) {
+        commit("SET_DATA", {
+            attr: "modalContent",
+            data: name,
         });
-        commit("setData", {
+        commit("SET_DATA", {
+            attr: "modalSize",
+            data: size ?? "sm",
+        });
+        commit("SET_DATA", {
+            attr: "modalPersist",
+            data: persist,
+        });
+        commit("SET_DATA", {
             attr: "modalOpen",
             data: true,
         });
-        commit("setData", {
-            attr: "modalContent",
-            data: payload.name,
-        });
     },
 
-    /**
-     * Closes and resets the global modal.
-     */
+    /** Closes and resets the global modal. */
     closeModal({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "previewHTML",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalSize",
             data: null,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalOpen",
             data: false,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "modalContent",
             data: null,
         });
+        commit("SET_DATA", {
+            attr: "modalPersist",
+            data: false,
+        });
     },
 
-    /**
-     * Opens the response pop-up
-     * @param {string} payload.title - The title of the pop-up.
-     * @param {string} payload.description - The body text of the pop-up.
-     * @param {boolean} payload.persist - Whether it will disappear automatically after some time.
-     * @param {boolean} payload.backdrop - Whether it will have a dark backdrop.
-     */
-    openResponsePopUp({ commit }, payload) {
-        commit("setData", {
+    /** Opens the response pop-up. */
+    openResponsePopUp({ commit }, { title, description, persist, backdrop }) {
+        commit("SET_DATA", {
             attr: "responseOpen",
             data: true,
         });
-        if (payload.title)
-            commit("setData", {
-                attr: "responseTitle",
-                data: payload.title,
-            });
-        if (payload.description)
-            commit("setData", {
-                attr: "responseDescription",
-                data: payload.description,
-            });
-        if (payload.persist)
-            commit("setData", {
-                attr: "responsePersist",
-                data: payload.persist,
-            });
-        if (payload.backdrop)
-            commit("setData", {
-                attr: "responseBackdrop",
-                data: payload.backdrop,
-            });
+        commit("SET_DATA", {
+            attr: "responseTitle",
+            data: title,
+        });
+        commit("SET_DATA", {
+            attr: "responseDescription",
+            data: description,
+        });
+        commit("SET_DATA", {
+            attr: "responsePersist",
+            data: persist,
+        });
+        commit("SET_DATA", {
+            attr: "responseBackdrop",
+            data: backdrop,
+        });
     },
 
+    /** Closes the response pop-up. */
     closeResponsePopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseOpen",
             data: false,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseTitle",
             data: null,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseDescription",
             data: null,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responsePersist",
             data: false,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "responseBackdrop",
             data: false,
         });
     },
 
-    async openConfirmPopUp({ commit }, payload) {
+    /** Opens the confirm pop-up. */
+    async openConfirmPopUp({ commit }, { title, text }) {
         return new Promise((resolve) => {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "confirmPromise",
                 data: resolve,
             });
-            if (payload.title)
-                commit("setData", {
-                    attr: "confirmTitle",
-                    data: payload.title,
-                });
-            if (payload.text)
-                commit("setData", {
-                    attr: "confirmText",
-                    data: payload.text,
-                });
+            commit("SET_DATA", {
+                attr: "confirmTitle",
+                data: title,
+            });
+            commit("SET_DATA", {
+                attr: "confirmText",
+                data: text,
+            });
         });
     },
 
+    /** Closes the confirm pop-up. */
     closeConfirmPopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "confirmPromise",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "confirmTitle",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "confirmText",
             data: undefined,
         });
     },
 
-    async openUploadPopUp({ commit }, payload) {
+    /** Opens the upload pop-up */
+    async openUploadPopUp({ commit }, { title, text }) {
         return new Promise((resolve) => {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "uploadPromise",
                 data: resolve,
             });
-            if (payload.title)
-                commit("setData", {
-                    attr: "uploadTitle",
-                    data: payload.title,
-                });
-            if (payload.text)
-                commit("setData", {
-                    attr: "uploadText",
-                    data: payload.text,
-                });
+            commit("SET_DATA", {
+                attr: "uploadTitle",
+                data: title,
+            });
+            commit("SET_DATA", {
+                attr: "uploadText",
+                data: text,
+            });
         });
     },
 
+    /** Closes the upload pop-up */
     closeUploadPopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "uploadPromise",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "uploadTitle",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "uploadText",
             data: undefined,
         });
     },
 
-    async openTxtInputPopUp({ commit }, payload) {
+    /** Opens the text input pop-up */
+    async openTxtInputPopUp({ commit }, { title, text, label, placeholder }) {
         return new Promise((resolve) => {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "txtInputPromise",
                 data: resolve,
             });
-            if (payload.title)
-                commit("setData", {
-                    attr: "txtInputTitle",
-                    data: payload.title,
-                });
-            if (payload.text)
-                commit("setData", {
-                    attr: "txtInputText",
-                    data: payload.text,
-                });
-            if (payload.label)
-                commit("setData", {
-                    attr: "txtInputLabel",
-                    data: payload.label,
-                });
-            if (payload.placeholder)
-                commit("setData", {
-                    attr: "txtInputPlaceholder",
-                    data: payload.placeholder,
-                });
+            commit("SET_DATA", {
+                attr: "txtInputTitle",
+                data: title,
+            });
+            commit("SET_DATA", {
+                attr: "txtInputText",
+                data: text,
+            });
+            commit("SET_DATA", {
+                attr: "txtInputLabel",
+                data: label,
+            });
+            commit("SET_DATA", {
+                attr: "txtInputPlaceholder",
+                data: placeholder,
+            });
         });
     },
 
+    /** Closes the text input pop-up */
     closeTxtInputPopUp({ commit }) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputPromise",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputTitle",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputText",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputLabel",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputValue",
             data: undefined,
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "txtInputPlaceholder",
             data: undefined,
         });
@@ -251,7 +249,7 @@ export default {
             const NAME_B = b.name.toUpperCase();
             return NAME_A < NAME_B ? -1 : NAME_A > NAME_B ? 1 : 0;
         });
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "clients",
             data: SORTED_CLIENTS,
         });
@@ -262,14 +260,14 @@ export default {
             const NAME_B = b.name.toUpperCase();
             return NAME_A < NAME_B ? -1 : NAME_A > NAME_B ? 1 : 0;
         });
-        commit("setDataDeep", {
+        commit("SET_DATA_DEEP", {
             attrParent: "archive",
             attrChild: "clients",
             data: SORTED_ARCHIVE_CLIENTS,
         });
 
         // Sets templates and portfolio
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "templates",
             data: RESPONSE.data[2],
         });
@@ -277,7 +275,7 @@ export default {
         if (RESPONSE.data[3].length === 0) {
             await dispatch("createPortfolio");
         } else {
-            commit("setData", {
+            commit("SET_DATA", {
                 attr: "portfolio",
                 data: { ...RESPONSE.data[3][0] },
             });
@@ -307,20 +305,21 @@ export default {
                 ].join(" ");
             });
         }
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "bookings",
             data: SORTED_BOOKINGS,
         });
 
         // Sets products
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "products",
             data: RESPONSE.data[5],
         });
     },
 
+    /** Changes the state of the selected checkbox. */
     toggleCheckbox({ state, commit }, id) {
-        commit("setData", {
+        commit("SET_DATA", {
             attr: "selectedIds",
             data: !state.selectedIds.includes(id)
                 ? [...state.selectedIds, id]
@@ -328,10 +327,7 @@ export default {
         });
     },
 
-    /**
-     * Processes captured error and sends to Jira.
-     * @param msg - The error text.
-     */
+    /** Processes captured error and sends to Jira. */
     async resolveError({ state, dispatch }, msg) {
         if (state.claims.user_type !== "Admin") {
             await this._vm.$axios.post("/.netlify/functions/error", {
@@ -339,7 +335,7 @@ export default {
                 claims: state.claims,
             });
         }
-        dispatch("endLoading");
+        dispatch("setLoading", false);
         dispatch("openResponsePopUp", {
             title: "ERROR: this problem has been reported to our developers",
             description:

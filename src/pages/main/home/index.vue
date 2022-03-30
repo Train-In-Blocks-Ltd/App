@@ -1,17 +1,13 @@
 <template>
     <wrapper id="home">
-        <div v-if="loading">
-            <skeleton :type="'input_large'" class="mb-8" />
-            <skeleton :type="'client'" />
-        </div>
-        <div v-else-if="!noClients" class="grid mb-8">
+        <div class="grid mb-8">
             <home-header />
-            <clients-list />
+            <clients-list v-if="clients.length > 0 && !loading" />
+            <txt v-else type="large-body" grey>
+                No clients added yet, use the button on the top-right of your
+                screen.
+            </txt>
         </div>
-        <txt v-else type="large-body" class="mt-8 mb-16" grey>
-            No clients added yet, use the button on the top-right of your
-            screen.
-        </txt>
     </wrapper>
 </template>
 
@@ -37,18 +33,17 @@ export default {
             persistResponse: "",
         };
     },
-    computed: mapState(["noClients", "loading", "modalOpen"]),
+    computed: mapState(["clients", "loading", "modalOpen"]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
-        this.$store.commit("setData", {
+        this.$store.commit("SET_DATA", {
             attr: "clientDetails",
             data: null,
         });
         await this.$parent.setup();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
 };
 </script>

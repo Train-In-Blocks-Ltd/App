@@ -10,7 +10,7 @@ export default {
                 notes: "",
             }
         );
-        dispatch("setData", {
+        dispatch("SET_DATA", {
             attr: "portfolio",
             data: {
                 trainer_name: "",

@@ -15,7 +15,7 @@
                 href="javascript:void(0)"
                 @click="
                     () => {
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'selectedIds',
                             data: archive.clients.map(
                                 (client) => client.client_id
@@ -27,7 +27,18 @@
                 <txt>Select all</txt>
             </a>
         </div>
-        <txt v-if="archive.clients.length === 0" type="large-body" grey>
+
+        <div v-if="loading">
+            <div class="skeleton-box animate-pulse p-4 mb-8">
+                <div class="skeleton-item" />
+            </div>
+            <div class="skeleton-box animate-pulse p-4">
+                <div class="skeleton-item-lg w-3/4" />
+                <div class="skeleton-item w-1/3" />
+                <div class="skeleton-item w-2/3" />
+            </div>
+        </div>
+        <txt v-else-if="archive.clients.length === 0" type="large-body" grey>
             No clients are archived
         </txt>
         <div v-else>
@@ -39,10 +50,9 @@
                 aria-label="Search by name"
                 autocomplete="name"
                 inputClass="text--small"
-                style="margin-bottom: 2rem"
+                class="mb-8"
                 @output="(data) => (search = data)"
             />
-            <skeleton v-if="loading" :type="'archived'" />
             <client-link
                 v-for="(client, index) in archive.clients"
                 v-show="
@@ -66,11 +76,11 @@
 import { mapState } from "vuex";
 const ClientLink = () =>
     import(
-        /* webpackChunkName: "components.clientlink", webpackPreload: true  */ "@/components/ClientLink"
+        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/generic/ClientLink"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/generic/Multiselect"
     );
 
 export default {
@@ -95,13 +105,12 @@ export default {
     },
     computed: mapState(["loading", "archive", "selectedIds"]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -117,7 +126,7 @@ export default {
                     this.deleteClients();
                     break;
                 case "Deselect":
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -130,9 +139,8 @@ export default {
          */
         async deleteClients() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 if (this.selectedIds.length !== 0) {
                     if (
@@ -152,13 +160,13 @@ export default {
                                     : "Client Delete",
                             description: "All their data has been removed",
                         });
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "selectedIds",
                             data: [],
                         });
                     }
                 }
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -169,9 +177,8 @@ export default {
          */
         async unarchiveClients() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 if (this.selectedIds.length !== 0) {
                     if (
@@ -191,13 +198,13 @@ export default {
                                     : "Unarchived client",
                             description: "All their data has been recovered",
                         });
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "selectedIds",
                             data: [],
                         });
                     }
                 }
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

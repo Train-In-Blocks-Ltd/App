@@ -1,18 +1,13 @@
 <template>
-    <form class="grid gap-4" @submit.prevent="createBooking()">
-        <div class="grid grid-cols-2 gap-2">
+    <form @submit.prevent="createBooking()">
+        <div class="grid grid-cols-2 gap-2 mb-4">
             <txt-input
                 :value="bookingForm.date"
                 :min="today()"
                 type="date"
                 placeholder="Date"
                 aria-label="Date"
-                @output="
-                    (data) => {
-                        bookingForm.date = data;
-                        checkForm();
-                    }
-                "
+                @output="(data) => (bookingForm.date = data)"
                 required
             />
             <txt-input
@@ -21,12 +16,7 @@
                 type="time"
                 placeholder="Time"
                 aria-label="Time"
-                @output="
-                    (data) => {
-                        bookingForm.time = data;
-                        checkForm();
-                    }
-                "
+                @output="(data) => (bookingForm.time = data)"
                 required
             />
         </div>
@@ -35,15 +25,17 @@
             rows="5"
             placeholder="Additional information"
             aria-label="Additional information"
-            @output="
-                (data) => {
-                    bookingForm.notes = data;
-                    checkForm();
-                }
-            "
+            class="mb-4"
+            @output="(data) => (bookingForm.notes = data)"
             required
         />
-        <default-button type="submit" :is-disabled="disableCreateBookingButton">
+        <default-button
+            type="submit"
+            class="w-full"
+            :is-disabled="
+                !(bookingForm.date && bookingForm.time && bookingForm.notes)
+            "
+        >
             Create booking
         </default-button>
     </form>
@@ -63,23 +55,20 @@ export default {
                 time: this.timeNow(),
                 notes: null,
             },
-            disableCreateBookingButton: true,
         };
     },
     computed: mapState(["claims"]),
     methods: {
-        /**
-         * Creates a new booking.
-         */
+        /** Creates a new booking. */
         async createBooking() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
+                    disableButtons: true,
                 });
                 await this.$store.dispatch("createBooking", {
                     clientId: this.isTrainer
-                        ? parseInt(this.$route.params.client_id)
+                        ? this.$route.params.client_id
                         : this.claims.client_id_db,
                     datetime:
                         this.bookingForm.date + " " + this.bookingForm.time,
@@ -92,28 +81,16 @@ export default {
                     time: this.timeNow(),
                     notes: null,
                 };
-                this.disableCreateBookingButton = true;
                 this.$store.dispatch("openResponsePopUp", {
                     title: "Booking created",
                     description: this.isTrainer
                         ? "Your client will be notified of any upcoming bookings that were created."
                         : "Your trainer will be notified of your request.",
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
-        },
-
-        /**
-         * Checks and validates form.
-         */
-        checkForm() {
-            this.disableCreateBookingButton = !(
-                this.bookingForm.date &&
-                this.bookingForm.time &&
-                this.bookingForm.notes
-            );
         },
     },
 };

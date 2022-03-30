@@ -32,6 +32,7 @@
             svg="trash"
             :on-click="() => deletePlan()"
             :icon-size="32"
+            class="text-red-700"
         />
     </div>
 </template>
@@ -50,9 +51,8 @@ export default {
                 })
             ) {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     await this.$store.dispatch("deletePlan", {
                         clientId: this.$route.params.client_id,
@@ -63,7 +63,7 @@ export default {
                         title: "Plan deleted",
                         description: "Your changes have been saved",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                     this.$router.push({
                         path: `/client/${this.clientDetails.client_id}/`,
                     });

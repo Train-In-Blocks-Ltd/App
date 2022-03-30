@@ -1,6 +1,5 @@
 export default {
     // Auth
-
     authenticated: false,
     isTrainer: false,
     claims: {
@@ -11,6 +10,7 @@ export default {
     modalSize: null,
     modalOpen: false,
     modalContent: null,
+    modalPersist: false,
 
     // Response pop-up
     responseOpen: false,
@@ -22,14 +22,15 @@ export default {
     // Selection
     selectedIds: [],
 
-    // System
-
-    search: "",
-    instanceReady: false,
+    // App state
     loading: false,
     silentLoading: false,
     dontLeave: false,
-    noClients: true,
+    disableButtons: false,
+
+    // System
+    search: "",
+    instanceReady: false,
     pwa: {
         deferredPrompt: null,
         displayMode: "browser tab",
@@ -62,7 +63,6 @@ export default {
     bookings: [],
 
     // Clients
-
     clients: null,
     clientDetails: null,
     clientUser: {
@@ -74,7 +74,6 @@ export default {
     },
 
     // Portfolio
-
     portfolio: {
         business_name: "",
         trainer_name: "",
@@ -87,23 +86,18 @@ export default {
     products: [],
 
     // Template
-
     templates: null,
 
     // Archive
-
     archive: {
         clients: {},
-        noArchive: true,
     },
 
     // Versioning
-
     policyVersion: "1.1",
     versionName: "Andromeda",
     versionBuild: "4.0",
     newBuild: false,
-    showEULA: false,
 
     // Coupons
     coupon: {

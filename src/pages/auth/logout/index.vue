@@ -21,11 +21,12 @@
     }
 }
 </style>
+
 <template>
     <wrapper id="logout">
         <div class="logout_message">
             <div class="top">
-                <inline-svg :src="require('@/assets/svg/logout_success.svg')" />
+                <icon svg="check" :icon-size="64" />
                 <div class="text-container">
                     <txt type="title" is-main
                         >You have been logged out successfully</txt

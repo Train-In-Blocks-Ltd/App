@@ -11,12 +11,13 @@
             </txt>
             <default-button
                 v-if="responsePersist"
+                class="mt-4"
                 :on-click="() => $store.dispatch('closeResponsePopUp')"
             >
                 Okay
             </default-button>
         </div>
-        <backdrop v-if="responseBackdrop" class="z-50" />
+        <backdrop v-if="responseBackdrop" />
     </div>
 </template>
 

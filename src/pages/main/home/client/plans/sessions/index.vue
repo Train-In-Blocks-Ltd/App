@@ -18,8 +18,12 @@
                     @output="(data) => (plan.name = data)"
                 />
 
-                <plan-progress-bar class="my-4" :sessions="plan.sessions" />
-                <plan-options />
+                <plan-progress-bar
+                    v-if="hasSessions"
+                    class="mt-4"
+                    :sessions="plan.sessions"
+                />
+                <plan-options class="mt-4" />
             </div>
 
             <!-- Plan notes -->
@@ -51,14 +55,14 @@
                 <week-calendar
                     v-if="!showMonthlyCal"
                     :events="sessionDates"
-                    :force-update="forceUpdate"
                     :is-trainer="true"
+                    :on-event-press="goToEvent"
                 />
                 <month-calendar
                     v-else
                     :events="sessionDates"
-                    :force-update="forceUpdate"
                     :is-trainer="true"
+                    :on-event-press="goToEvent"
                 />
             </div>
 
@@ -89,7 +93,9 @@
                             }"
                             :key="weekNumber"
                             :week-number="weekNumber"
+                            :week-color="weekColor"
                             :current-week="currentWeek"
+                            :plan="plan"
                         />
                     </div>
                 </div>
@@ -97,14 +103,23 @@
                 <!-- Sessions section -->
                 <div class="mt-12">
                     <!-- Options -->
-                    <skeleton v-if="loading" :type="'session'" />
-                    <div>
+                    <div
+                        v-if="loading"
+                        class="skeleton-box animate-pulse p-4 mb-8"
+                    >
+                        <div class="skeleton-item w-1/3" />
+                        <div class="skeleton-item w-2/3" />
+                        <div class="skeleton-item w-5/12" />
+                        <div class="skeleton-item w-1/2" />
+                        <div class="skeleton-item w-1/4" />
+                    </div>
+                    <div v-else>
                         <div class="flex items-center justify-between mb-4">
                             <!-- Left side -->
                             <div class="flex items-center">
                                 <a
                                     v-if="
-                                        plan.sessions &&
+                                        hasSessions &&
                                         selectedIds.length <
                                             plan.sessions.length &&
                                         !weekIsEmpty
@@ -117,7 +132,7 @@
                                 </a>
                                 <a
                                     v-if="
-                                        plan.sessions &&
+                                        hasSessions &&
                                         selectedIds.length <
                                             plan.sessions.length
                                     "
@@ -128,7 +143,7 @@
                                     Select all
                                 </a>
                                 <a
-                                    v-if="plan.sessions && !isEditingSession"
+                                    v-if="hasSessions && !isEditingSession"
                                     href="javascript:void(0)"
                                     class="mr-4 text-sm"
                                     @click="
@@ -150,12 +165,22 @@
 
                             <!-- Right side  -->
                             <div class="flex items-center">
-                                <color-picker :current-week="currentWeek" />
+                                <color-picker
+                                    :plan="plan"
+                                    :week-color="weekColor"
+                                    :current-week="currentWeek"
+                                    @output="
+                                        (data) => {
+                                            weekColor[currentWeek - 1] = data;
+                                            useUpdateWeekColorMutation();
+                                        }
+                                    "
+                                />
                                 <icon-button
                                     svg="info"
                                     :on-click="
                                         () => {
-                                            $store.commit('setData', {
+                                            $store.commit('SET_DATA', {
                                                 attr: 'previewHTML',
                                                 data: '<p><b>[ </b><i>Exercise Name</i><b>:</b> <i>Sets</i> <b>x</b> <i>Reps</i> <b>at</b> <i>Load</i> <b>]</b></p><br> <p><b>Examples</b></p><p><i>[Back Squat: 3x6 at 50kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50kg]</i></p> <p><i>[Back Squat: 3x6 at 50/55/60kg]</i></p> <p><i>[Back Squat: 3x6/4/3 at 50/55/60kg]</i></p><br><hr><br><p><b>[ </b><i>Measurement</i><b>:</b> <i>Value</i> <b>]</b></p><br><p><b>Examples</b></p><p><i>[Weight: 50kg]</i></p> <p><i>[Vertical Jump: 43.3cm]</i></p> <p><i>[Body Fat (%): 12]</i></p> <p><i>[sRPE (CR10): 8]</i></p> <p><i>[sRPE (Borg): 16]</i></p><br> <p>See <i>Help</i> for more information</p><br>',
                                             });
@@ -177,14 +202,17 @@
 
                         <!-- Sessions list -->
                         <div
-                            v-if="!noSessions && !weekIsEmpty && !loading"
+                            v-if="hasSessions && !weekIsEmpty && !loading"
                             class="grid gap-8"
                         >
                             <!-- Session -->
                             <card-wrapper
                                 v-for="(
                                     session, sessionIndex
-                                ) in sessionsSorter(plan.sessions)"
+                                ) in plan.sessions.sort(
+                                    (a, b) =>
+                                        new Date(a.date) - new Date(b.date)
+                                )"
                                 v-show="session.week_id === currentWeek"
                                 :id="'session-' + session.id"
                                 :key="`session-${sessionIndex}`"
@@ -256,7 +284,7 @@
                                             class="mr-4 hover:opacity-60 transition-opacity cursor-pointer"
                                             @click="
                                                 () => {
-                                                    $store.commit('setData', {
+                                                    $store.commit('SET_DATA', {
                                                         attr: 'previewHTML',
                                                         data: session.feedback,
                                                     });
@@ -326,25 +354,26 @@
 
 <script>
 import { mapState } from "vuex";
+
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true */ "@/components/Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true */ "@/components/generic/Checkbox"
     );
 const WeekCalendar = () =>
     import(
-        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/WeekCalendar"
+        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/generic/WeekCalendar"
     );
 const MonthCalendar = () =>
     import(
-        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/MonthCalendar"
+        /* webpackChunkName: "components.calendar", webpackPreload: true */ "@/components/generic/MonthCalendar"
     );
 const ColorPicker = () =>
     import(
-        /* webpackChunkName: "components.colorPicker", webpackPrefetch: true */ "@/components/ColorPicker"
+        /* webpackChunkName: "components.colorPicker", webpackPrefetch: true */ "@/components/generic/ColorPicker"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPrefetch: true */ "@/components/generic/Multiselect"
     );
 const PlanOptions = () =>
     import(
@@ -389,9 +418,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -411,7 +439,6 @@ export default {
 
             // SYSTEM
 
-            noSessions: false,
             expandedSessions: [],
             force: true,
             multiselectOption: [
@@ -429,12 +456,12 @@ export default {
             // WEEK
 
             weekSessions: [],
+            weekColor: [],
 
             // CALENDAR
 
             showMonthlyCal: false,
             sessionDates: [],
-            forceUpdate: 0,
 
             // MICROCYCLE
 
@@ -442,22 +469,19 @@ export default {
         };
     },
     computed: {
-        plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
+        hasSessions() {
+            return this.plan.sessions && this.plan.sessions.length > 0;
         },
-        weekColor() {
-            return this.plan.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
+        plan() {
+            return this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            });
         },
         weekIsEmpty() {
+            if (!this.plan.sessions) return [];
             return (
-                this.plan.sessions?.filter(
+                this.plan.sessions.filter(
                     (session) => session.week_id === this.currentWeek
                 ).length === 0
             );
@@ -473,30 +497,45 @@ export default {
             "clientDetails",
         ]),
     },
-    async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
-        });
-        this.willBodyScroll(true);
-        this.$parent.sessions = true;
-        this.noSessions =
-            (await this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            ).sessions) === false;
-    },
-    mounted() {
-        if (!this.noSessions) {
-            this.updater();
-        }
-        this.$store.dispatch("endLoading");
+    created() {
+        this.loadPlanData();
     },
     methods: {
-        /**
-         * Resolves the actions taken from the session multi-select.
-         */
+        /** Loads new data into the plan. */
+        loadPlanData() {
+            this.__getWeekColor();
+            this.__getCalendarSessions();
+        },
+
+        /** Gets the week colors. */
+        __getWeekColor() {
+            this.weekColor = this.plan.block_color
+                .replace("[", "")
+                .replace("]", "")
+                .split(",");
+        },
+
+        /** Updates calendar events. */
+        __getCalendarSessions() {
+            if (!this.plan.sessions) return [];
+
+            this.sessionDates = this.plan.sessions
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map((session) => {
+                    return {
+                        title: session.name,
+                        date: session.date,
+                        color: this.weekColor[session.week_id - 1],
+                        textColor: this.accessible_colors(
+                            this.weekColor[session.week_id - 1]
+                        ),
+                        week_id: session.week_id,
+                        session_id: session.id,
+                    };
+                });
+        },
+
+        /** Resolves the actions taken from the session multi-select. */
         handleMultiselectResponse(res) {
             switch (res) {
                 case "Complete":
@@ -512,7 +551,7 @@ export default {
                     break;
                 case "Duplicate":
                     this.duplicate();
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -532,10 +571,9 @@ export default {
                     break;
                 case "Delete":
                     this.useDeleteSessionMutation();
-                    this.updater();
                     break;
                 case "Deselect":
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -543,15 +581,12 @@ export default {
             }
         },
 
-        /**
-         * Resolves the state of the plan notes editor.
-         */
+        /** Resolves the state of the plan notes editor. */
         handlePlanNotesChange(state) {
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.tempEditorStore = this.plan.notes;
                     break;
@@ -559,9 +594,8 @@ export default {
                     this.useUpdatePlanMutation();
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.$store.commit("updatePlanAttr", {
                         clientId: this.clientDetails.client_id,
@@ -573,21 +607,17 @@ export default {
             }
         },
 
-        /**
-         * Resolves the state of the session editor.
-         */
+        /** Resolves the state of the session editor. */
         handleSessionNotesChange(state, id) {
-            const SESSION = this.$store.getters.helper(
-                "match_session",
-                this.$route.params.client_id,
-                this.$route.params.id,
-                id
-            );
+            const SESSION = this.$store.getters.getSession({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+                sessionId: id,
+            });
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.isEditingSession = true;
                     this.editSession = id;
@@ -596,9 +626,8 @@ export default {
                     this.goToEvent(SESSION.id, SESSION.week_id);
                     break;
                 case "save":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.isEditingSession = false;
                     this.editSession = null;
@@ -607,12 +636,11 @@ export default {
                         title: "Session updated",
                         description: "Your changes have been saved",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.isEditingSession = false;
                     this.editSession = null;
@@ -621,26 +649,19 @@ export default {
             }
         },
 
-        /**
-         * Duplicates the selected sessions.
-         */
+        /** Duplicates the selected sessions. */
         async duplicate() {
-            this.$store.commit("setData", {
-                attr: "loading",
-                data: true,
-            });
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                loading: true,
+                dontLeave: true,
             });
             const TO_DUPLICATE = [];
             const CLIENT_ID = this.$route.params.client_id;
             const PLAN_ID = this.$route.params.id;
-            const SESSIONS = this.$store.getters.helper(
-                "match_plan",
-                CLIENT_ID,
-                PLAN_ID
-            ).sessions;
+            const SESSIONS = this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            }).sessions;
             this.selectedIds.forEach((sessionId) => {
                 TO_DUPLICATE.push(
                     SESSIONS.find((session) => session.id === sessionId)
@@ -656,8 +677,6 @@ export default {
                     sessionWeek: SESSION.week_id,
                 });
             }
-            this.checkForWeekSessions();
-            this.updater();
             this.$ga.event("Session", "duplicate");
             this.$store.dispatch("openResponsePopUp", {
                 title: `${
@@ -665,12 +684,10 @@ export default {
                 } duplicated`,
                 description: "Get programming!",
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Opens a new tab with the print preview of all the selected sessions.
-         */
+        /** Opens a new tab with the print preview of all the selected sessions. */
         print() {
             const NOTES_ARR = [];
             this.plan.sessions.sort((a, b) => {
@@ -693,19 +710,16 @@ export default {
             NEW_WINDOW.stop();
             NEW_WINDOW.print();
             this.$ga.event("Plan", "print");
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: [],
             });
         },
 
-        /**
-         * Toggles the complete/incomplete state of the selected sessions.
-         */
+        /** Toggles the complete/incomplete state of the selected sessions. */
         async useUpdateCheckedMutation(boolState) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             if (this.selectedIds.length !== 0) {
                 if (
@@ -735,22 +749,19 @@ export default {
                                 : "Session updated",
                         description: "Your changes have been saved",
                     });
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
                 }
             }
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Deletes all the selected sessions.
-         */
+        /** Deletes all the selected sessions. */
         async useDeleteSessionMutation() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             if (this.selectedIds.length !== 0) {
                 if (
@@ -768,13 +779,11 @@ export default {
                     } catch (e) {
                         this.$store.dispatch("resolveError", e);
                     }
-                    this.checkForWeekSessions();
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
                     this.toggleExpandAll("Collapse");
-                    this.updater();
                     this.$ga.event("Session", "delete");
                     this.$store.dispatch("openResponsePopUp", {
                         title:
@@ -783,18 +792,15 @@ export default {
                                 : "Session deleted",
                         description: "Your changes have been saved",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 }
             }
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Selects all the sessions in the plan or week.
-         * @param mode - To select all session or all sessions in the current week ('all' or 'week').
-         */
+        /** Selects all the sessions in the plan or week. */
         selectAll(mode) {
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: this.plan.sessions
                     .filter((session) =>
@@ -806,13 +812,10 @@ export default {
             });
         },
 
-        /**
-         * Creates a new session.
-         */
+        /** Creates a new session. */
         async createNewSession() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             const NEW_SESSION_ID = await this.useCreateSessionMutation({
                 clientId: this.$route.params.client_id,
@@ -822,23 +825,19 @@ export default {
                 sessionNotes: "",
                 sessionWeek: this.currentWeek,
             });
-            this.checkForWeekSessions();
-            this.updater();
             this.goToEvent(NEW_SESSION_ID, this.currentWeek);
             this.$ga.event("Session", "new");
             this.$store.dispatch("openResponsePopUp", {
                 title: "New session added",
                 description: "Get programming!",
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
-        /**
-         * Scrolls to session.
-         */
+        /** Scrolls to session. */
         goToEvent(id, week) {
             this.toggleExpandAll("Expand");
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "currentWeek",
                 data: week,
             });
@@ -849,30 +848,7 @@ export default {
             }, 100);
         },
 
-        /**
-         * Checks if the current week has sessions.
-         */
-        checkForWeekSessions() {
-            let arr = 0;
-            const SESSIONS = this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            ).sessions;
-            this.noSessions = SESSIONS === false;
-            if (SESSIONS && !this.noSessions) {
-                SESSIONS.forEach((session) => {
-                    if (session.week_id === this.currentWeek) {
-                        arr += 1;
-                        this.weekSessions.push(session.id);
-                    }
-                });
-            }
-        },
-
-        /**
-         * Expands the main body of the targetted session.
-         */
+        /** Expands the main body of the targetted session. */
         toggleExpandedSessions(id) {
             if (this.expandedSessions.includes(id)) {
                 const INDEX = this.expandedSessions.indexOf(id);
@@ -884,21 +860,16 @@ export default {
             }
         },
 
-        /**
-         * Switch to a different week.
-         */
+        /** Switch to a different week. */
         changeWeek(weekID) {
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "currentWeek",
                 data: week,
             });
             this.moveTarget = weekID;
-            this.checkForWeekSessions();
         },
 
-        /**
-         * Returns the duration of the plan as an array to be iterated.
-         */
+        /** Returns the duration of the plan as an array to be iterated. */
         planDuration(duration) {
             const ARR = [];
             let i;
@@ -908,40 +879,7 @@ export default {
             return ARR;
         },
 
-        /**
-         * Sorts the session.
-         */
-        sessionsSorter(data) {
-            data = data.sort((a, b) => {
-                return new Date(a.date) - new Date(b.date);
-            });
-            return data;
-        },
-
-        /**
-         * Updates the state of the plan page to show the correct data.
-         */
-        updater() {
-            this.sessionDates = [];
-            if (this.plan.sessions) {
-                for (const SESSION of this.plan.sessions) {
-                    this.sessionDates.push({
-                        title: SESSION.name,
-                        date: SESSION.date,
-                        color: this.weekColor[SESSION.week_id - 1],
-                        textColor: this.accessible_colors(
-                            this.weekColor[SESSION.week_id - 1]
-                        ),
-                        week_id: SESSION.week_id,
-                        session_id: SESSION.id,
-                    });
-                }
-            }
-        },
-
-        /**
-         * Expand or de-expand all sessions.
-         */
+        /** Expand or de-expand all sessions. */
         toggleExpandAll(toExpand) {
             try {
                 if (Array.isArray(this.plan.sessions)) {
@@ -964,26 +902,22 @@ export default {
             }
         },
 
-        /**
-         * Updates the details of the plan.
-         */
+        /** Updates the details of the plan. */
         async useUpdatePlanMutation() {
             try {
-                this.$store.commit("setData", {
-                    attr: "loading",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    loading: true,
                 });
                 await this.$store.dispatch("updatePlan", this.plan);
+                this.loadPlanData();
                 this.$ga.event("Plan", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
         },
 
-        /**
-         * Updates the selected sessions.
-         */
+        /** Updates the selected sessions. */
         async useUpdateSessionsMutation(sessionIds) {
             try {
                 await this.$store.dispatch("batchUpdateSession", {
@@ -991,16 +925,15 @@ export default {
                     planId: this.$route.params.id,
                     sessionIds,
                 });
+                this.loadPlanData();
                 this.$ga.event("Session", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
         },
 
-        /**
-         * Updates a single session.
-         */
+        /** Updates a single session. */
         async useUpdateSessionMutation(sessionId) {
             try {
                 await this.$store.dispatch("updateSession", {
@@ -1008,16 +941,15 @@ export default {
                     planId: this.$route.params.id,
                     sessionId,
                 });
+                this.loadPlanData();
                 this.$ga.event("Session", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
         },
 
-        /**
-         * Creates a new session with our without existing data.
-         */
+        /** Creates a new session with our without existing data. */
         async useCreateSessionMutation(data) {
             try {
                 const NEW_SESSION_ID = await this.$store.dispatch(
@@ -1033,8 +965,28 @@ export default {
                         },
                     }
                 );
+                this.loadPlanData();
                 return NEW_SESSION_ID;
             } catch (e) {
+                this.$store.dispatch("resolveError", e);
+            }
+        },
+
+        /** Updates the week color. */
+        async useUpdateWeekColorMutation() {
+            this.$store.dispatch("updatePlanAttr", {
+                clientId: this.clientDetails.client_id,
+                planId: this.plan.id,
+                attr: "block_color",
+                data: JSON.stringify(this.weekColor)
+                    .replace(/"/g, "")
+                    .replace(/[[\]]/g, "")
+                    .replace(/\//g, ""),
+            });
+            try {
+                await this.$store.dispatch("updatePlan", this.plan);
+                this.loadPlanData();
+            } catch {
                 this.$store.dispatch("resolveError", e);
             }
         },

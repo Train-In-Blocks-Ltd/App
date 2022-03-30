@@ -10,7 +10,7 @@
                     class="mr-4"
                     :on-click="
                         () => {
-                            $store.commit('setData', {
+                            $store.commit('SET_DATA', {
                                 attr: 'previewHTML',
                                 data: portfolio.notes,
                             });
@@ -35,7 +35,13 @@
         </div>
 
         <!-- Sessions section -->
-        <skeleton v-if="loading" :type="'session'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mt-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <div v-else-if="clientUser.sessionsToday" class="grid gap-8 mt-8">
             <!-- Session -->
             <card-wrapper
@@ -102,11 +108,17 @@
         <!-- Plans section -->
         <div class="mt-16">
             <txt type="title" class="mb-8">Plans</txt>
-            <skeleton v-if="loading" :type="'plan'" />
-            <div
-                v-else-if="clientUser.plans"
-                class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
-            >
+            <div v-if="loading" class="grid sm:grid-cols-2 gap-4">
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/3" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+            </div>
+            <div v-else-if="clientUser.plans" class="grid sm:grid-cols-2 gap-4">
                 <plan-card
                     v-for="(plan, index) in clientUser.plans"
                     :key="`plan-${index}`"
@@ -119,38 +131,6 @@
                 information
             </txt>
         </div>
-
-        <!-- Products section -->
-        <!-- <div class="products_section">
-                <txt type="title">Services</txt>
-                <skeleton v-if="loading" :type="'product'" />
-                <div v-else class="products">
-                    <div
-                        v-for="(product, productIndex) in clientUser.products"
-                        :key="`product_${productIndex}`"
-                        class="product fadeIn"
-                    >
-                        <div class="header">
-                            <txt type="subtitle">
-                                {{ product.name }}
-                            </txt>
-                            <button @click.prevent="checkout(product.id)">
-                                Purchase
-                            </button>
-                        </div>
-                        <txt type="body">
-                            <b class="type">{{ product.type }}</b> payment of
-                            <b>{{ `${product.price} ${product.currency}` }}</b>
-                        </txt>
-                        <txt type="body">
-                            {{ product.notes }}
-                        </txt>
-                        <button @click.prevent="checkout(product.id)">
-                            Purchase
-                        </button>
-                    </div>
-                </div>
-            </div> -->
     </wrapper>
 </template>
 
@@ -182,9 +162,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -211,14 +190,13 @@ export default {
         "portfolio",
     ]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
         await this.$parent.getClientSideData();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -239,9 +217,8 @@ export default {
             });
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.feedbackId = id;
                     this.forceStop += 1;
@@ -252,9 +229,8 @@ export default {
                     this.$parent.updateClientSideSession(plan.id, session.id);
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.feedbackId = null;
                     session.feedback = this.tempEditorStore;
@@ -273,14 +249,13 @@ export default {
                 data: !currentChecked ? 1 : 0,
             });
             this.$parent.updateClientSideSession(planId, sessionId);
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
 
         async checkout(productId) {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 const RESPONSE = await this.$axios.post(
                     "/.netlify/functions/checkout",
@@ -297,7 +272,7 @@ export default {
                 stripe.redirectToCheckout({
                     sessionId: await RESPONSE.data.sessionId,
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

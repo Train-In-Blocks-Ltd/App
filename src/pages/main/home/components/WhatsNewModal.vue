@@ -117,7 +117,7 @@ export default {
          */
         updateVersion() {
             localStorage.setItem("versionBuild", this.versionBuild);
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "newBuild",
                 data: false,
             });

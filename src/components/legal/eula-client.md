@@ -1,5 +1,5 @@
 <!-- markdownlint-disable MD033 -->
-# End-User License Agreement (EULA)
+#
 
 The nature of this agreement is to set out the rules of using our products and services. You **MUST** agree and sign this agreement before using any of our products or services.
 

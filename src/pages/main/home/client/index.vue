@@ -39,9 +39,8 @@ export default {
     },
     computed: mapState(["loading", "clients", "clientDetails"]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
@@ -50,12 +49,11 @@ export default {
                 client.client_id === parseInt(this.$route.params.client_id)
         );
         await this.$store.dispatch("getPlans", CLIENT.client_id);
-        this.$store.commit("setData", {
+        this.$store.commit("SET_DATA", {
             attr: "clientDetails",
             data: CLIENT,
         });
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
-    methods: {},
 };
 </script>

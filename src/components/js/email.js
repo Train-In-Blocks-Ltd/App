@@ -3,10 +3,6 @@
  * @author Train In Blocks Ltd.
  */
 
-// -----------------------------
-// Builder and content
-// -----------------------------
-
 /**
  * Builds an email HTML template to send to users.
  * @param {string} type - The email body text to use.
@@ -209,10 +205,6 @@ const bodyHtml = (type, data) => {
       </p>`;
     }
 };
-
-// -----------------------------
-// Template
-// -----------------------------
 
 /**
  * The base email template.

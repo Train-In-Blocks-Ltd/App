@@ -208,7 +208,7 @@ export default {
                         LazyImage,
                     ],
                     onUpdate: () => {
-                        this.$store.commit("setDataDeep", {
+                        this.$store.commit("SET_DATA_DEEP", {
                             attrParent: "cloudinaryImages",
                             attrChild: "endingWith",
                             data: this.imgFinder(this.value),
@@ -221,7 +221,7 @@ export default {
                         this.willBodyScroll(true);
                     },
                     onBlur: () => {
-                        this.$store.commit("setDataDeep", {
+                        this.$store.commit("SET_DATA_DEEP", {
                             attrParent: "cloudinaryImages",
                             attrChild: "endingWith",
                             data: this.imgFinder(this.value),
@@ -231,7 +231,7 @@ export default {
                     onDestroy: async () => {
                         if (!this.saving) {
                             await this.cancelledRemoveNewImgs();
-                            this.$store.commit("setDataDeep", {
+                            this.$store.commit("SET_DATA_DEEP", {
                                 attrParent: "cloudinaryImages",
                                 attrChild: "endingWith",
                                 data: this.cloudinaryImages.startingWith,
@@ -254,27 +254,27 @@ export default {
                             }
                         );
                         this.initialValue = null;
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "cloudinaryImages",
                             data: {
                                 startingWith: [],
                                 endingWith: [],
                             },
                         });
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "newImgs",
                             data: [],
                         });
                     },
                 });
 
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "editor",
                     data: editor,
                 });
 
                 const FOUND_IMGS = this.imgFinder(this.value);
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "cloudinaryImages",
                     data: {
                         startingWith: FOUND_IMGS,
@@ -283,7 +283,7 @@ export default {
                 });
             } else {
                 this.editor.destroy();
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "editor",
                     data: undefined,
                 });
@@ -321,7 +321,7 @@ export default {
                                 })
                                 .then((response) => {
                                     RETURN_ARR.push(response.data.url);
-                                    this.$store.commit("setData", {
+                                    this.$store.commit("SET_DATA", {
                                         attr: "cloudinaryImages",
                                         data: {
                                             startingWith: [
@@ -336,7 +336,7 @@ export default {
                                             ],
                                         },
                                     });
-                                    this.$store.commit("setData", {
+                                    this.$store.commit("SET_DATA", {
                                         attr: "newImgs",
                                         data: [
                                             ...this.newImgs,

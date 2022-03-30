@@ -33,16 +33,17 @@
                 href="javascript:void(0)"
                 @click="cancelBooking(booking.id, booking.datetime)"
             >
-                <txt class="text-red-700" bold>Cancel</txt>
+                <txt class="text-red-700">Cancel</txt>
             </a>
-            <div v-else>
+            <div class="flex" v-else>
                 <a
                     v-if="booking.status === 'Pending' && !isInThePast(booking)"
                     href="javascript:void(0)"
                     aria-label="Accept booking"
+                    class="mr-2"
                     @click="acceptBookingRequest(booking.id)"
                 >
-                    <txt>Accept</txt>
+                    <txt class="text-green-700">Accept</txt>
                 </a>
                 <a href="javascript:void(0)" @click="cancelBooking">
                     <txt class="text-red-700">
@@ -78,9 +79,7 @@ export default {
     },
     computed: mapState(["claims"]),
     methods: {
-        /**
-         * Determines the colour of the text for booking statuses.
-         */
+        /** Determines the colour of the text for booking statuses. */
         getStatusColor(status) {
             switch (status) {
                 case "Pending" || "Past":
@@ -92,41 +91,8 @@ export default {
             }
         },
 
-        /**
-         * Accepts a booking request made by the client-user.
-         */
+        /** Accepts a booking request made by the client-user. */
         async acceptBookingRequest() {
-            if (
-                await this.$store.dispatch("openConfirmPopUp", {
-                    title: "Are you sure you want to cancel this booking?",
-                    text: "Your trainer will be notified.",
-                })
-            ) {
-                try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
-                    });
-                    await this.$store.dispatch("updateBooking", {
-                        id: this.booking.id,
-                        status: "Scheduled",
-                    });
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "Booking request accepted",
-                        description:
-                            "Your client will be notified of any upcoming bookings that were accepeted.",
-                    });
-                    this.$store.dispatch("endLoading");
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
-            }
-        },
-
-        /**
-         * Cancels a booking.
-         */
-        async cancelBooking() {
             if (
                 await this.$store.dispatch("openConfirmPopUp", {
                     title: "Are you sure you want to accept this booking?",
@@ -134,9 +100,39 @@ export default {
                 })
             ) {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
+                    });
+                    await this.$store.dispatch("updateBooking", {
+                        bookingId: this.booking.id,
+                        clientId: this.isTrainer
+                            ? this.$route.params.client_id
+                            : this.claims.client_id_db,
+                        status: "Scheduled",
+                    });
+                    this.$store.dispatch("openResponsePopUp", {
+                        title: "Booking request accepted",
+                        description:
+                            "Your client will be notified of any upcoming bookings that were accepted.",
+                    });
+                    this.$store.dispatch("setLoading", false);
+                } catch (e) {
+                    this.$store.dispatch("resolveError", e);
+                }
+            }
+        },
+
+        /** Cancels a booking. */
+        async cancelBooking() {
+            if (
+                await this.$store.dispatch("openConfirmPopUp", {
+                    title: "Are you sure you want to cancel this booking?",
+                    text: "Your trainer will be notified.",
+                })
+            ) {
+                try {
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     await this.$store.dispatch("deleteBooking", {
                         clientId: this.isTrainer
@@ -150,7 +146,7 @@ export default {
                         title: "Booking cancelled",
                         description: "Your trainer will be notified",
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }

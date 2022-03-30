@@ -9,7 +9,7 @@
         <label-wrapper title="Plan notes" class="my-16">
             <div
                 v-if="plan.notes && plan.notes !== '<p></p>'"
-                class="show_html fadeIn mt-8"
+                class="show_html mt-8"
                 v-html="updateHTML(plan.notes, true)"
             />
             <txt
@@ -29,7 +29,7 @@
         <!-- Calendar section -->
         <div class="mb-16">
             <a
-                class="flex items-center"
+                class="flex items-center mb-4"
                 href="javascript:void(0)"
                 @click="showMonthlyCal = !showMonthlyCal"
             >
@@ -39,21 +39,25 @@
             <week-calendar
                 v-if="!showMonthlyCal"
                 :events="sessionDates"
-                :force-update="forceUpdate"
                 :is-trainer="false"
-                class="fadeIn"
+                :on-event-press="goToEvent"
             />
             <month-calendar
                 v-else
                 :events="sessionDates"
-                :force-update="forceUpdate"
                 :is-trainer="false"
-                class="fadeIn"
+                :on-event-press="goToEvent"
             />
         </div>
 
         <!-- Sessions section -->
-        <skeleton v-if="loading" :type="'session'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <div v-else-if="plan.sessions">
             <!-- Navigation controls -->
             <div class="flex items-center justify-between mb-8">
@@ -152,11 +156,11 @@ import { mapState } from "vuex";
 
 const WeekCalendar = () =>
     import(
-        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "../../components/WeekCalendar"
+        /* webpackChunkName: "components.weekCalendar", webpackPreload: true  */ "@/components/generic/WeekCalendar"
     );
 const MonthCalendar = () =>
     import(
-        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "../../components/MonthCalendar"
+        /* webpackChunkName: "components.monthCalendar", webpackPreload: true */ "@/components/generic/MonthCalendar"
     );
 const LabelWrapper = () =>
     import(
@@ -188,9 +192,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -211,7 +214,6 @@ export default {
 
             showMonthlyCal: false,
             sessionDates: [],
-            forceUpdate: 0,
         };
     },
     computed: {
@@ -223,16 +225,50 @@ export default {
         },
     },
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
         await this.$parent.getClientSideData();
-        this.$store.dispatch("endLoading");
+        this.loadPlanData();
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
+        /** Loads new data into the plan. */
+        loadPlanData() {
+            this.__getWeekColor();
+            this.__getCalendarSessions();
+        },
+
+        /** Gets the week colors. */
+        __getWeekColor() {
+            this.weekColor = this.plan.block_color
+                .replace("[", "")
+                .replace("]", "")
+                .split(",");
+        },
+
+        /** Updates calendar events. */
+        __getCalendarSessions() {
+            if (!this.plan.sessions) return [];
+
+            this.sessionDates = this.plan.sessions
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .map((session) => {
+                    return {
+                        title: session.name,
+                        date: session.date,
+                        color: this.weekColor[session.week_id - 1],
+                        textColor: this.accessible_colors(
+                            this.weekColor[session.week_id - 1]
+                        ),
+                        week_id: session.week_id,
+                        session_id: session.id,
+                    };
+                });
+        },
+
         /**
          * Resolves the state of the feedback editor.
          */
@@ -251,9 +287,8 @@ export default {
             });
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.feedbackId = id;
                     this.forceStop += 1;
@@ -264,9 +299,8 @@ export default {
                     this.$parent.updateClientSideSession(plan.id, session.id);
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.feedbackId = null;
                     session.feedback = this.tempEditorStore;
@@ -300,36 +334,7 @@ export default {
                 data: !currentChecked ? 1 : 0,
             });
             this.$parent.updateClientSideSession(planId, sessionId);
-            this.$store.dispatch("endLoading");
-        },
-
-        /**
-         * Scans the sessions and updates the page.
-         */
-        scan() {
-            this.sessionDates.length = 0;
-            const PLAN = this.clientUser.plans.find(
-                (plan) => plan.id === parseInt(this.$route.params.id)
-            );
-            const WEEK_COLOR = PLAN.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
-            if (PLAN.sessions !== null) {
-                PLAN.sessions.forEach((session) => {
-                    this.sessionDates.push({
-                        title: session.name,
-                        date: session.date,
-                        color: WEEK_COLOR[session.week_id - 1],
-                        textColor: this.accessible_colors(
-                            WEEK_COLOR[session.week_id - 1]
-                        ),
-                        week_id: session.week_id,
-                        session_id: session.id,
-                    });
-                });
-            }
-            this.forceUpdate += 1;
+            this.$store.dispatch("setLoading", false);
         },
     },
 };

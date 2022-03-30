@@ -29,21 +29,8 @@ export default {
     props: {
         weekNumber: Number,
         currentWeek: Number,
-    },
-    computed: {
-        plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
-        },
-        weekColor() {
-            return this.plan.block_color
-                .replace("[", "")
-                .replace("]", "")
-                .split(",");
-        },
+        weekColor: Array,
+        plan: Object,
     },
 };
 </script>

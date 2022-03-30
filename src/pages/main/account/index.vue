@@ -154,9 +154,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -223,13 +222,12 @@ export default {
         },
     },
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     async mounted() {
         if (!this.coupon.checked) {
@@ -255,12 +253,12 @@ export default {
          */
         openEULA() {
             if (this.claims.user_type === "Client")
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "previewHTML",
                     data: require("@/components/legal/eula-client.md").html,
                 });
             else
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "previewHTML",
                     data: require("@/components/legal/eula.md").html,
                 });
@@ -314,9 +312,8 @@ export default {
          */
         async checkCoupon() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 const RESPONSE = await this.$axios.post(
                     "/.netlify/functions/check-coupon",
@@ -340,14 +337,14 @@ export default {
                                 .replace(/[\W_]+/g, "")
                     ).active
                 ) {
-                    this.$store.commit("setDataDeep", {
+                    this.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "generated",
                         data: this.claims.email
                             .toUpperCase()
                             .replace(/[\W_]+/g, ""),
                     });
-                    this.$store.commit("setDataDeep", {
+                    this.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "code",
                         data: this.claims.email
@@ -355,40 +352,39 @@ export default {
                             .replace(/[\W_]+/g, ""),
                     });
                 }
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "coupon",
                     attrChild: "checked",
                     data: true,
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
         },
         async generateCoupon() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$axios.post("/.netlify/functions/create-coupon", {
                     email: this.claims.email,
                 });
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "coupon",
                     attrChild: "generated",
                     data: this.claims.email
                         .toUpperCase()
                         .replace(/[\W_]+/g, ""),
                 });
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "coupon",
                     attrChild: "code",
                     data: this.claims.email
                         .toUpperCase()
                         .replace(/[\W_]+/g, ""),
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -398,13 +394,13 @@ export default {
             const self = this;
             navigator.clipboard.writeText(link).then(
                 function () {
-                    self.$store.commit("setDataDeep", {
+                    self.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "code",
                         data: "Copied!",
                     });
                     setTimeout(function () {
-                        self.$store.commit("setDataDeep", {
+                        self.$store.commit("SET_DATA_DEEP", {
                             attrParent: "coupon",
                             attrChild: "code",
                             data: self.claims.email
@@ -414,7 +410,7 @@ export default {
                     }, 2000);
                 },
                 function (err) {
-                    self.$store.commit("setDataDeep", {
+                    self.$store.commit("SET_DATA_DEEP", {
                         attrParent: "coupon",
                         attrChild: "code",
                         data: "Could not copy text: " + err,
