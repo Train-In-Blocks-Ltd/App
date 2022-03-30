@@ -201,7 +201,7 @@
         />
         <div
             v-if="isNewProductOpen"
-            class="tab_overlay_content fadeIn delay fill_mode_both"
+            class="tab_overlay_content delay fill_mode_both"
         >
             <form
                 name="add_product"
@@ -322,22 +322,14 @@
         />
         <div :class="{ connected: isStripeConnected }" class="option_bar">
             <h2>Products</h2>
-            <skeleton
-                v-if="loading || silentLoading"
-                :type="'button'"
-                class="stripe_skeleton"
-            />
             <a
-                v-else-if="!isStripeConnected"
+                v-if="!isStripeConnected"
                 href="javascript:void(0)"
                 class="stripe-connect"
                 @click="isStripeConnectedConnect()"
             >
                 <span> Connect with </span>
-                <inline-svg
-                    :src="require('../assets/svg/stripe.svg')"
-                    aria-label="Connect with stripe"
-                />
+                <icon svg="stripe" :icon-size="32" />
             </a>
             <div
                 v-else-if="
@@ -345,14 +337,14 @@
                     products.length !== 0 &&
                     selectedIds.length < products.length
                 "
-                class="options fadeIn"
+                class="options"
             >
                 <a
                     href="javascript:void(0)"
                     class="a_link select_all"
                     @click="
                         () => {
-                            $store.commit('setData', {
+                            $store.commit('SET_DATA', {
                                 attr: 'selectedIds',
                                 data: products.map((product) => product.id),
                             });
@@ -386,19 +378,14 @@
                 New product
             </button>
         </div>
-        <skeleton
-            v-if="loading || silentLoading"
-            :type="'product'"
-            class="fadeIn"
-        />
         <div
-            v-else-if="products.length !== 0 && isStripeConnected"
+            v-if="products.length !== 0 && isStripeConnected"
             class="products_container"
         >
             <form
                 v-for="(product, productIndex) in products"
                 :key="`product_${productIndex}`"
-                class="product fadeIn"
+                class="product"
             >
                 <div class="header">
                     <input
@@ -497,11 +484,11 @@ import { mapState } from "vuex";
 
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "../components/Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/generic/Checkbox"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "../components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/generic/Multiselect"
     );
 
 export default {
@@ -537,10 +524,6 @@ export default {
         "selectedIds",
     ]),
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         checkForm() {
             this.disableCreateProductButton = !(
                 this.newProduct.name &&
@@ -561,7 +544,7 @@ export default {
                     this.deleteProducts();
                     break;
                 case "Deselect":
-                    this.$store.dispatch("setData", {
+                    this.$store.dispatch("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -593,9 +576,8 @@ export default {
          */
         async createProduct() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("createProduct", {
                     pt_id: this.claims.sub,
@@ -608,7 +590,7 @@ export default {
                     currency: null,
                     type: null,
                 };
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -620,13 +602,12 @@ export default {
          */
         async updateProduct(productId) {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("updateProduct", productId);
                 this.productChanged = false;
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -643,19 +624,18 @@ export default {
                 })
             ) {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     await this.$store.dispatch(
                         "deleteProduct",
                         this.selectedIds
                     );
-                    this.$store.dispatch("setData", {
+                    this.$store.dispatch("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }

@@ -1,27 +1,12 @@
 export default {
-    /**
-     * Sets the state on Vuex.
-     * @param {string} payload.attr - The key of the state to change.
-     * @param {*} payload.data - The new data.
-     */
-    setData(state, payload) {
-        state[payload.attr] = payload.data;
-        if (payload.attr === "clients") {
-            state.noClients = state.clients.length === 0;
-        }
+    /** Sets the state on Vuex */
+    SET_DATA(state, { attr, data }) {
+        state[attr] = data;
     },
 
-    /**
-     * Sets the second level of any object data.
-     * @param {string} payload.attrParent - The key of the first level state to change.
-     * @param {string} payload.attrChild - The key of the second level state to change.
-     * @param {*} payload.data - The new data.
-     */
-    setDataDeep(state, payload) {
-        state[payload.attrParent][payload.attrChild] = payload.data;
-        if (payload.attrParent === "archive") {
-            state.archive.noArchive = state.archive.clients.length === 0;
-        }
+    /** Sets the second level of any object data. */
+    SET_DATA_DEEP(state, { attrParent, attrChild, data }) {
+        state[attrParent][attrChild] = data;
     },
 
     /**

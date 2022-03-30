@@ -225,7 +225,7 @@ const userType = async (to, from, next) => {
             }
             sessionStorage.setItem("claims", JSON.stringify(result));
         }
-        store.commit("setData", {
+        store.commit("SET_DATA", {
             attr: "claims",
             data: result,
         });

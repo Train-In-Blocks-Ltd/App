@@ -5,6 +5,8 @@
             :options="multiselectOptions"
             @response="resolve_template_multiselect"
         />
+
+        <!-- Top section -->
         <txt-input
             v-model="search"
             type="search"
@@ -22,7 +24,7 @@
                 href="javascript:void(0)"
                 @click="
                     () => {
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'selectedIds',
                             data: templates.map((template) => template.id),
                         });
@@ -38,7 +40,15 @@
                 class="ml-4"
             />
         </div>
-        <skeleton v-if="loading" :type="'session'" />
+
+        <!-- Templates list -->
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 my-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <div v-else-if="templates" class="grid gap-8 my-8">
             <card-wrapper
                 v-for="(template, index) in templates"
@@ -109,11 +119,11 @@ import { mapState } from "vuex";
 
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/generic/Checkbox"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/generic/Multiselect"
     );
 const CardWrapper = () =>
     import(
@@ -141,9 +151,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -177,13 +186,12 @@ export default {
     },
     computed: mapState(["loading", "dontLeave", "templates", "selectedIds"]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -196,7 +204,7 @@ export default {
                     this.deleteMultiTemplates();
                     break;
                 case "Deselect":
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
@@ -215,9 +223,8 @@ export default {
             );
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.isEditingTemplate = true;
                     this.editTemplate = id;
@@ -230,9 +237,8 @@ export default {
                     this.updateTemplate(id);
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.isEditingTemplate = false;
                     this.editTemplate = null;
@@ -280,15 +286,14 @@ export default {
                     })
                 ) {
                     try {
-                        this.$store.commit("setData", {
-                            attr: "dontLeave",
-                            data: true,
+                        this.$store.dispatch("setLoading", {
+                            dontLeave: true,
                         });
                         await this.$store.dispatch(
                             "deleteTemplate",
                             this.selectedIds
                         );
-                        this.$store.dispatch("endLoading");
+                        this.$store.dispatch("setLoading", false);
                         this.$store.dispatch("openResponsePopUp", {
                             title:
                                 this.selectedIds.length > 1
@@ -297,7 +302,7 @@ export default {
                             description: "Your changes have been saved",
                         });
                         this.$ga.event("Template", "delete");
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "selectedIds",
                             data: [],
                         });
@@ -313,9 +318,8 @@ export default {
          */
         async createTemplate() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("newTemplate");
                 this.checkForNew();
@@ -324,7 +328,7 @@ export default {
                     description: "Edit and use it in a client's plan",
                 });
                 this.$ga.event("Template", "new");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -336,9 +340,8 @@ export default {
          */
         async updateTemplate(templateId) {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("updateTemplate", templateId);
                 this.$store.dispatch("openResponsePopUp", {
@@ -346,7 +349,7 @@ export default {
                     description: "Your changes have been saved",
                 });
                 this.$ga.event("Template", "update");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

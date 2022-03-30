@@ -31,11 +31,10 @@ export default {
     computed: {
         ...mapState(["selectedIds"]),
         plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
+            return this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            });
         },
     },
     methods: {
@@ -43,9 +42,8 @@ export default {
          * Shifts the selected sessions by specified days.
          */
         async shiftAcross() {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                dontLeave: true,
             });
             this.plan.sessions.forEach((session) => {
                 if (this.selectedIds.includes(session.id)) {
@@ -75,12 +73,12 @@ export default {
                 description: "Your changes have been saved",
             });
             this.shiftDays = 1;
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: [],
             });
             this.$ga.event("Session", "shift");
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
     },
 };

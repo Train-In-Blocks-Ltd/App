@@ -77,7 +77,7 @@
                                 : 'border-transparent'
                         "
                         @click="
-                            $parent.goToEvent(event.session_id, event.week_id)
+                            () => onEventPress(event.session_id, event.week_id)
                         "
                     >
                         <txt :style="{ color: event.textColor }">
@@ -93,7 +93,7 @@
 <script>
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "./generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 
 export default {
@@ -102,7 +102,7 @@ export default {
     },
     props: {
         events: Array,
-        forceUpdate: Number,
+        onEventPress: Function,
     },
     data() {
         return {
@@ -115,18 +115,11 @@ export default {
         events() {
             this.getWeek();
         },
-        forceUpdate() {
-            this.getWeek();
-        },
     },
     created() {
         this.getWeek();
     },
     methods: {
-        // -----------------------------
-        // Events
-        // -----------------------------
-
         /**
          * Adds the event to the correct day of the week.
          */
@@ -139,10 +132,6 @@ export default {
                 });
             });
         },
-
-        // -----------------------------
-        // Week
-        // -----------------------------
 
         /**
          * Determines the day based on the date provided.

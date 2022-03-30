@@ -129,7 +129,7 @@
                 :icon-size="22"
                 :on-click="
                     () => {
-                        $store.commit('setData', {
+                        $store.commit('SET_DATA', {
                             attr: 'editor',
                             data: editor,
                         });
@@ -210,7 +210,7 @@ export default {
                                     loading: "lazy",
                                 })
                                 .run();
-                            this.$store.commit("setData", {
+                            this.$store.commit("SET_DATA", {
                                 attr: "cloudinaryImages",
                                 data: {
                                     startingWith: [
@@ -223,7 +223,7 @@ export default {
                                     ],
                                 },
                             });
-                            this.$store.commit("setData", {
+                            this.$store.commit("SET_DATA", {
                                 attr: "newImgs",
                                 data: [...this.newImgs, response.data.url],
                             });

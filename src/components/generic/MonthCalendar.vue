@@ -74,7 +74,7 @@
                     v-for="event in day[0]"
                     href="javascript:void(0)"
                     :key="`event-${event.session_id}`"
-                    @click="$parent.goToEvent(event.session_id, event.week_id)"
+                    @click="() => onEventPress(event.session_id, event.week_id)"
                 >
                     <txt
                         type="tiny"
@@ -102,7 +102,7 @@
 <script>
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "./generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
     );
 
 export default {
@@ -111,7 +111,7 @@ export default {
     },
     props: {
         events: Array,
-        forceUpdate: Number,
+        onEventPress: Function,
     },
     data() {
         return {
@@ -123,9 +123,6 @@ export default {
     },
     watch: {
         events() {
-            this.getMonth();
-        },
-        forceUpdate() {
             this.getMonth();
         },
     },

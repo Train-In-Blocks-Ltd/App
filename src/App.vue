@@ -4,17 +4,21 @@
     box-sizing: border-box;
 }
 :root {
-    --transition_standard: 0.6s all cubic-bezier(0.165, 0.84, 0.44, 1);
-    --fore: white;
-    --base: #282828;
-    --base_light: #585858;
-    --base_faint: #28282840;
-    --skeleton_1: #f4f4f4;
-    --skeleton_2: #e4e4e4;
-    --light_opacity: 0.6;
-
     height: stretch;
     height: calc(100vh - env(safe-area-inset-bottom));
+}
+
+ol {
+    li {
+        list-style: decimal;
+        margin-left: 1rem;
+    }
+}
+ul {
+    li {
+        list-style: disc;
+        margin-left: 1rem;
+    }
 }
 
 // Client user
@@ -76,42 +80,17 @@ body {
 /* Loading bar */
 #nprogress {
     .bar {
-        /* stylelint-disable-next-line */
-        background-color: var(--base) !important;
+        background-color: currentColor;
     }
     .peg {
         /* stylelint-disable-next-line */
-        box-shadow: 0 0 10px var(--base), 0 0 5px var(--base) !important;
+        box-shadow: 0 0 10px currentColor, 0 0 5px currentColor !important;
     }
     .spinner-icon {
         /* stylelint-disable-next-line */
-        border-top-color: var(--base) !important;
+        border-top-color: currentColor !important;
         /* stylelint-disable-next-line */
-        border-left-color: var(--base) !important;
-    }
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-::-webkit-scrollbar-track {
-    background-color: var(--base_faint);
-}
-::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: var(--base);
-    &:hover {
-        background-color: var(--base_faint);
-    }
-}
-
-@media (max-width: 576px) {
-    /* Elements */
-    ::-webkit-scrollbar {
-        width: 0;
-        background-color: transparent;
+        border-left-color: currentColor !important;
     }
 }
 
@@ -128,31 +107,12 @@ body {
 </style>
 
 <template>
-    <div
-        id="app"
-        class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white"
-        :class="{ authenticated: authenticated }"
-    >
+    <div id="app" :class="{ authenticated: authenticated }">
         <modal />
         <response-pop-up />
         <confirm-pop-up />
         <top-banner />
-        <div
-            v-if="showEULA"
-            class="tab_overlay_content fadeIn delay fill_mode_both"
-        >
-            <policy :type="claims.user_type" />
-        </div>
-        <skeleton
-            v-if="
-                (!authenticated || (loading && !instanceReady)) &&
-                $route.path !== '/login'
-            "
-            :type="'nav'"
-            class="fadeIn"
-        />
-        <nav-bar v-else-if="$route.path !== '/login'" class="fadeIn" />
-        <div :class="{ opened_sections: showEULA }" class="section_overlay" />
+        <nav-bar v-if="$route.path !== '/login'" class="fadeIn" />
         <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
@@ -166,7 +126,6 @@ body {
 
 <script>
 import { mapState } from "vuex";
-import Policy from "./components/Policy";
 
 const NavBar = () =>
     import(
@@ -199,7 +158,6 @@ export default {
     },
     components: {
         NavBar,
-        Policy,
         Modal,
         ResponsePopUp,
         ConfirmPopUp,
@@ -210,7 +168,6 @@ export default {
         "clientUserLoaded",
         "loading",
         "claims",
-        "showEULA",
         "clients",
         "connected",
         "instanceReady",
@@ -226,14 +183,19 @@ export default {
         },
     },
     created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.isAuthenticated();
         this.willBodyScroll(true);
     },
     async mounted() {
+        // Sets the body to have dark mode.
+        document.body.setAttribute(
+            "class",
+            "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white"
+        );
+
         if (
             process.env.NODE_ENV === "production" &&
             "serviceWorker" in navigator
@@ -269,14 +231,14 @@ export default {
             e.preventDefault();
 
             // Stash the event so it can be triggered later.
-            SELF.$store.commit("setDataDeep", {
+            SELF.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "deferredPrompt",
                 data: e,
             });
 
             // Update UI notify the user they can install the PWA
-            SELF.$store.commit("setDataDeep", {
+            SELF.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "canInstall",
                 data: true,
@@ -285,7 +247,7 @@ export default {
         if ("getInstalledRelatedApps" in navigator) {
             const RELATED_APPS = await navigator.getInstalledRelatedApps();
             if (RELATED_APPS.length > 0) {
-                this.$store.commit("setDataDeep", {
+                this.$store.commit("SET_DATA_DEEP", {
                     attrParent: "pwa",
                     attrChild: "installed",
                     data: true,
@@ -293,14 +255,14 @@ export default {
             }
         }
         if (navigator.standalone) {
-            this.$store.commit("setDataDeep", {
+            this.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "displayMode",
                 data: "standalone-ios",
             });
         }
         if (window.matchMedia("(display-mode: standalone)").matches) {
-            this.$store.commit("setDataDeep", {
+            this.$store.commit("SET_DATA_DEEP", {
                 attrParent: "pwa",
                 attrChild: "displayMode",
                 data: "standalone",
@@ -319,7 +281,7 @@ export default {
                         backdrop: true,
                     });
                     SELF.willBodyScroll(false);
-                    SELF.$store.dispatch("endLoading");
+                    SELF.$store.dispatch("setLoading", false);
                     throw new SELF.$axios.Cancel(
                         "You are using the demo account. Your changes won't be saved"
                     );
@@ -338,23 +300,8 @@ export default {
         darkmode(mode) {
             const MATCHED_MEDIA =
                 window.matchMedia("(prefers-color-scheme)") || false;
-            if (mode === "dark") {
-                document.documentElement.classList.add("dark");
-                document.documentElement.style.setProperty("--fore", "#383838");
-                document.documentElement.style.setProperty("--base", "white");
-                document.documentElement.style.setProperty(
-                    "--base_faint",
-                    "#FFFFFF40"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_1",
-                    "#686868"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_2",
-                    "#484848"
-                );
-            } else if (
+            if (mode === "dark") document.documentElement.classList.add("dark");
+            else if (
                 mode === "system" &&
                 (MATCHED_MEDIA === false
                     ? false
@@ -370,58 +317,14 @@ export default {
                     .addListener((e) => {
                         this.darkmode(e.matches ? "dark" : "light");
                     });
-            } else {
-                document.documentElement.classList.remove("dark");
-                document.documentElement.style.setProperty("--fore", "white");
-                document.documentElement.style.setProperty("--base", "#282828");
-                document.documentElement.style.setProperty(
-                    "--base_faint",
-                    "#28282840"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_1",
-                    "#F4F4F4"
-                );
-                document.documentElement.style.setProperty(
-                    "--skeleton_2",
-                    "#E4E4E4"
-                );
-            }
+            } else document.documentElement.classList.remove("dark");
         },
-
-        /**
-         * Processes captured error and sends to Jira.
-         * @param {string} msg - The error text.
-         */
-        async resolveError(msg) {
-            if (this.claims.user_type !== "Admin") {
-                await this.$axios.post("/.netlify/functions/error", {
-                    msg,
-                    claims: this.claims,
-                });
-            }
-            this.$store.dispatch("endLoading");
-            this.$store.dispatch("openResponsePopUp", {
-                title: "ERROR: this problem has been reported to our developers",
-                description:
-                    msg.toString() !== "Error: Network Error"
-                        ? msg.toString()
-                        : "You may be offline. We'll try that request again once you've reconnected",
-                persist: true,
-                backdrop: true,
-            });
-            this.willBodyScroll(false);
-        },
-
-        // -----------------------------
-        // Auth
-        // -----------------------------
 
         /**
          * Checks if the user is authenticated and sets the Vuex state accordingly.
          */
         async isAuthenticated() {
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "authenticated",
                 data: await this.$auth.isAuthenticated(),
             });
@@ -435,7 +338,7 @@ export default {
             force = force || false;
             if (!this.instanceReady || force) {
                 // Set claims
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "claims",
                     data: await this.$auth.getUser(),
                 });
@@ -443,20 +346,20 @@ export default {
                     this.claims.user_type === "Trainer" ||
                     this.claims.user_type === "Admin"
                 ) {
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "isTrainer",
                         data: true,
                     });
                 }
                 if (this.claims) {
                     if (!this.claims.ga || !this.claims) {
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "ga",
                             data: true,
                         });
                     }
                     if (!this.claims.theme || !this.claims) {
-                        this.$store.commit("setData", {
+                        this.$store.commit("SET_DATA", {
                             attr: "theme",
                             data: "system",
                         });
@@ -479,9 +382,9 @@ export default {
                         this.authenticated
                     ) {
                         this.willBodyScroll(false);
-                        this.$store.commit("setData", {
-                            attr: "showEULA",
-                            data: true,
+                        this.$store.dispatch("openModal", {
+                            name: "eula",
+                            persist: true,
                         });
                     }
                 }
@@ -490,19 +393,19 @@ export default {
                 this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
                 // Set connection
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "connected",
                     data: navigator.onLine,
                 });
                 const SELF = this;
                 window.addEventListener("offline", function (event) {
-                    SELF.$store.commit("setData", {
+                    SELF.$store.commit("SET_DATA", {
                         attr: "connected",
                         data: false,
                     });
                 });
                 window.addEventListener("online", function (event) {
-                    SELF.$store.commit("setData", {
+                    SELF.$store.commit("SET_DATA", {
                         attr: "connected",
                         data: true,
                     });
@@ -513,7 +416,7 @@ export default {
                     localStorage.getItem("versionBuild") !==
                     this.$store.state.versionBuild
                 ) {
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "newBuild",
                         data: true,
                     });
@@ -532,7 +435,7 @@ export default {
                 }
 
                 // Stops setup from running more than once
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "instanceReady",
                     data: true,
                 });
@@ -544,20 +447,15 @@ export default {
          */
         async saveClaims() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("saveClaims");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
         },
-
-        // -----------------------------
-        // Client-side
-        // -----------------------------
 
         /**
          * Gets all the data for setup on the client-side
@@ -567,7 +465,7 @@ export default {
                 try {
                     await this.$store.dispatch("getClientSideInfo");
                     await this.$store.dispatch("getClientSidePlans");
-                    this.$store.commit("setData", {
+                    this.$store.commit("SET_DATA", {
                         attr: "clientUserLoaded",
                         data: true,
                     });
@@ -593,7 +491,7 @@ export default {
                     title: "Session updated",
                     description: "Your changes haver been saved",
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

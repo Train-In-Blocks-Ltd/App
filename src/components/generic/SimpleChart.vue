@@ -1,107 +1,30 @@
-<style lang="scss" scoped>
-.simple_chart {
-    padding: 1rem;
-    margin: 2rem 0;
-    .content_wrapper {
-        display: grid;
-        grid-gap: 1rem;
-        .selected_bar {
-            display: flex;
-            justify-content: space-between;
-        }
-        .x_axis line,
-        .y_axis line {
-            stroke: var(--base);
-            stroke-dasharray: 0;
-            stroke-width: 2;
-        }
-        .x_axis_label {
-            margin-left: 1rem;
-        }
-        .plot {
-            circle {
-                cursor: pointer;
-                outline-width: 0;
-                fill: transparent;
-                stroke: var(--base);
-                stroke-width: 2;
-                transition: var(--transition_standard);
-                animation: 1.6s show cubic-bezier(0.165, 0.84, 0.44, 1);
-                &:hover {
-                    fill: var(--base);
-                }
-            }
-            line {
-                stroke: var(--base_faint);
-                stroke-width: 2;
-                transition: var(--transition_standard);
-                animation: 1.6s show cubic-bezier(0.165, 0.84, 0.44, 1);
-            }
-        }
-
-        /* Scatter options */
-        .scatter_options {
-            display: grid;
-            grid-gap: 0.6rem;
-            margin: 1rem;
-        }
-
-        /* List view */
-        .data_list_view {
-            margin-top: 1rem;
-            .row {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                padding: 0.4rem 1rem;
-                &:not(:first-child) {
-                    border-top: 1px solid var(--base_faint);
-                }
-            }
-        }
-    }
-}
-
-@keyframes show {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-@media (max-width: 567px) {
-    .data_list_view {
-        font-size: 0.8rem;
-    }
-}
-</style>
-
 <template>
-    <card-wrapper
-        class="simple_chart"
-        :style="{ backgroundColor: 'var(--fore)' }"
-        noHover
-    >
-        <div class="content_wrapper">
-            <div class="selected_bar">
-                <h3>
-                    {{ focusText !== "Select a point" ? focusText[1] : "" }}
-                    <br />
-                    <span
+    <card-wrapper class="p-4 my-8 bg-white dark:bg-gray-800" no-hover>
+        <div class="grid gap-4">
+            <!-- Data preview -->
+            <div class="flex justify-between">
+                <div>
+                    <txt type="large-body" bold>
+                        {{ focusText !== "Select a point" ? focusText[1] : "" }}
+                    </txt>
+                    <txt
                         v-if="focusText !== 'Select a point'"
-                        class="text--small grey"
+                        type="large-body"
+                        grey
                     >
                         {{ focusText[2] === undefined ? "" : focusText[2] }}
-                    </span>
-                </h3>
-                <p class="text--small grey">
+                    </txt>
+                </div>
+                <txt type="large-body" grey>
                     {{
                         focusText !== "Select a point"
                             ? focusText[0]
                             : focusText
                     }}
-                </p>
+                </txt>
             </div>
+
+            <!-- Graph -->
             <svg
                 version="1.2"
                 xmlns="http://www.w3.org/2000/svg"
@@ -110,11 +33,32 @@
                 width="100%"
                 height="400"
             >
-                <g class="x_axis">
-                    <line x1="2%" x2="98%" y1="98%" y2="98%" />
-                    <line x1="98%" x2="98%" y1="100%" y2="96%" />
-                    <line x1="2%" x2="2%" y1="100%" y2="96%" />
+                <!-- x-axis -->
+                <g>
+                    <line
+                        x1="2%"
+                        x2="98%"
+                        y1="98%"
+                        y2="98%"
+                        class="stroke-current stroke-2"
+                    />
+                    <line
+                        x1="98%"
+                        x2="98%"
+                        y1="100%"
+                        y2="96%"
+                        class="stroke-current stroke-2"
+                    />
+                    <line
+                        x1="2%"
+                        x2="2%"
+                        y1="100%"
+                        y2="96%"
+                        class="stroke-current stroke-2"
+                    />
                 </g>
+
+                <!-- Plot circles -->
                 <g class="plot">
                     <g
                         v-for="(data, index) in pathValues"
@@ -122,6 +66,7 @@
                     >
                         <line
                             v-if="!isNaN(data[1])"
+                            class="stroke-current stroke-2 opacity-60 transition-all"
                             :x1="`${data[0]}%`"
                             :x2="`${data[2]}%`"
                             :y1="`${data[1]}%`"
@@ -131,73 +76,79 @@
                     </g>
                     <circle
                         v-for="(data, index) in dataValues"
+                        r="4"
+                        class="cursor-pointer outline-none stroke-current stroke-2 transition-all"
                         :key="'dtVal_' + index"
                         :cx="`${data[0][0]}%`"
                         :cy="`${data[0][1]}%`"
-                        r="4"
                         @click="select_point(data[1], data[2], data[3])"
                     />
                 </g>
             </svg>
-            <p class="x_axis_label">
-                <b>{{
+
+            <!-- x-axis label -->
+            <txt class="ml-4" bold>
+                {{
                     chartType === "scatter"
                         ? "Sessions relative to days apart"
                         : "Sessions"
-                }}</b
-                ><br />
-                <span v-if="chartType === 'scatter' && !isNaN(rValue)">
-                    Correlation (r): {{ rValue }}
-                </span>
-            </p>
+                }}
+            </txt>
+
+            <!-- Prediction correlation -->
+            <txt v-if="chartType === 'scatter' && !isNaN(rValue)" class="ml-4">
+                Correlation (r): {{ rValue }}
+            </txt>
+
+            <!-- Scatter options -->
             <div
                 v-if="chartType === 'scatter' && !isNaN(rValue)"
-                class="scatter_options"
+                class="grid gap-2 mx-4"
             >
-                <label for="prediction">
-                    <b>
-                        Predict
-                        {{
-                            showDataType
-                                ? `${dataType.type.toLowerCase()} for ${dataType.name.toLowerCase()}`
-                                : dataType.name.toLowerCase()
-                        }}
-                    </b>
-                </label>
-                <input
-                    v-model="predictionDay"
-                    class="width_300 small_border_radius"
+                <txt-input
                     name="prediction"
                     type="number"
                     min="1"
                     placeholder="Days since starting the plan"
+                    :label="`Predict ${
+                        showDataType
+                            ? `${dataType.type.toLowerCase()} for ${dataType.name.toLowerCase()}`
+                            : dataType.name.toLowerCase()
+                    }`"
+                    :value="predictionDay"
+                    @output="(data) => (predictionDay = data)"
                 />
-                <p v-if="predictionDay">
+                <txt v-if="predictionDay">
                     Expected
                     {{
                         showDataType
                             ? dataType.type.toLowerCase()
                             : dataType.name.toLowerCase()
                     }}: {{ prediction(predictionDay) }}
-                </p>
-                <p v-if="predictionDay && predictionError">
+                </txt>
+                <txt v-if="predictionDay && predictionError">
                     Prediction error (RMS): {{ predictionError }}
-                </p>
+                </txt>
             </div>
-            <div class="data_list_view">
-                <div class="row">
-                    <p><b>Measure</b></p>
-                    <p><b>Date</b></p>
-                    <p><b>Value</b></p>
+
+            <!-- List of records -->
+            <div class="mt-4 mx-4">
+                <!-- Header -->
+                <div class="grid grid-cols-3 py-1 px-4">
+                    <txt bold>Measure</txt>
+                    <txt bold>Date</txt>
+                    <txt bold>Value</txt>
                 </div>
+
+                <!-- Records -->
                 <div
                     v-for="(dataValue, dataValueIndex) in dataPoints"
                     :key="`dataValue_${dataValueIndex}`"
-                    class="row"
+                    class="grid grid-cols-3 py-1 px-4 border-t border-current"
                 >
-                    <p>{{ labels[dataValueIndex][0] }}</p>
-                    <p>{{ labels[dataValueIndex][1] }}</p>
-                    <p>{{ dataValue }}</p>
+                    <txt>{{ labels[dataValueIndex][0] }}</txt>
+                    <txt>{{ labels[dataValueIndex][1] }}</txt>
+                    <txt>{{ dataValue }}</txt>
                 </div>
             </div>
         </div>
@@ -207,7 +158,7 @@
 <script>
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "./generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPrefetch: true */ "@/components/generic/CardWrapper"
     );
 
 export default {
@@ -252,10 +203,6 @@ export default {
         this.processAndPlot();
     },
     methods: {
-        // -----------------------------
-        // General
-        // -----------------------------
-
         /**
          * Generates a prediction based on the day.
          * @param {integer} day - The day specified by the user.

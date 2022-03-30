@@ -26,11 +26,10 @@ export default {
             });
         },
         plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
+            return this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            });
         },
     },
     data() {
@@ -44,9 +43,8 @@ export default {
          */
         async duplicatePlan() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("duplicatePlan", {
                     clientId: this.duplicateId,
@@ -63,7 +61,7 @@ export default {
                     description: "Access it on your client's profile",
                 });
                 this.$store.dispatch("closeModal");
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
                 this.$router.push({ path: `/client/${this.duplicateId}/` });
             } catch (e) {
                 this.$store.dispatch("resolveError", e);

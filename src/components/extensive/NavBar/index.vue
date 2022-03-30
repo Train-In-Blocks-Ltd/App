@@ -1,5 +1,22 @@
 <template>
+    <div
+        v-if="
+            (!authenticated || (loading && !instanceReady)) &&
+            $route.path !== '/login'
+        "
+        class="fixed bottom-0 md:top-0 left-0 flex md:flex-col items-center justify-evenly md:justify-end w-full md:w-24 h-16 md:h-full py-6 rounded-r-xl z-10 shadow-lg bg-skeleton-light-back dark:bg-skeleton-dark-back animate-pulse"
+    >
+        <div class="hidden md:block skeleton-item h-10 w-10 mb-auto" />
+        <div class="skeleton-item h-8 w-8 mt-6" />
+        <div class="skeleton-item h-8 w-8 mt-6" />
+        <div class="skeleton-item h-8 w-8 mt-6" />
+        <div class="skeleton-item h-8 w-8 mt-6" />
+        <div class="skeleton-item h-8 w-8 mt-6" />
+        <div class="skeleton-item h-8 w-8 mt-6" />
+        <div class="skeleton-item h-8 w-8 mt-6" />
+    </div>
     <nav
+        v-else
         class="fixed bottom-0 md:top-0 left-0 flex md:flex-col items-center justify-evenly md:justify-end w-full md:w-24 h-16 md:h-full py-6 rounded-r-xl z-10 shadow-lg bg-white dark:bg-gray-600"
     >
         <!-- Logo -->
@@ -16,11 +33,7 @@
                         : '/clientUser'
                 "
             >
-                <inline-svg
-                    :src="require('../../../assets/svg/logo-icon.svg')"
-                    class="logo_svg fadeIn"
-                    aria-label="Home"
-                />
+                <icon svg="logo-icon" :icon-size="36" />
             </router-link>
         </div>
 
@@ -50,7 +63,7 @@ export default {
     components: {
         NavLink,
     },
-    computed: mapState(["claims"]),
+    computed: mapState(["claims", "authenticated", "loading", "instanceReady"]),
     data() {
         return {
             navLinks: [

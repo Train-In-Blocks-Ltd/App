@@ -18,11 +18,12 @@
                     }
                 "
             />
-            <inline-svg
+            <icon-button
                 v-else
-                :src="require('@/assets/svg/profile-image.svg')"
-                class="h-32 w-32 bg-cover bg-center rounded-full mb-8 border-3 border-gray-800 cursor-pointer hover:opacity-60 transition-opacity"
-                @click="
+                svg="user"
+                class="p-8 rounded-full mb-8 border-3 border-gray-800 dark:border-white cursor-pointer hover:opacity-60 transition-opacity"
+                :icon-size="64"
+                :on-click="
                     () => {
                         $store.dispatch('openUploadPopUp', {
                             title: 'Upload image',
@@ -115,9 +116,8 @@ export default {
          */
         handleImageSelect() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 const FILE = document.getElementById("img-uploader").files[0];
                 const READER = new FileReader();
@@ -173,7 +173,7 @@ export default {
                         document.getElementById("img-uploader").value = "";
                     }
                 }
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -184,13 +184,9 @@ export default {
          */
         updateClientDetails() {
             try {
-                this.$store.commit("setData", {
-                    attr: "silentLoading",
-                    data: true,
-                });
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    silentLoading: true,
+                    dontLeave: true,
                 });
                 this.$store.dispatch("updateClientSideDetails", {
                     id: this.claims.client_id_db,

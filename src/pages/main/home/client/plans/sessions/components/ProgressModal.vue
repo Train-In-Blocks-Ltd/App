@@ -185,11 +185,10 @@ export default {
     },
     computed: {
         plan() {
-            return this.$store.getters.helper(
-                "match_plan",
-                this.$route.params.client_id,
-                this.$route.params.id
-            );
+            return this.$store.getters.getPlan({
+                clientId: this.$route.params.client_id,
+                planId: this.$route.params.id,
+            });
         },
         ...mapState(["selectedIds", "currentWeek"]),
     },
@@ -262,9 +261,8 @@ export default {
          * Initiates the changes and POST it to the database.
          */
         progressComplete() {
-            this.$store.commit("setData", {
-                attr: "loading",
-                data: true,
+            this.$store.dispatch("setLoading", {
+                loading: true,
             });
             const PROGRESS_SESSIONS = [];
             this.selectedIds.forEach((sessionId) => {
@@ -306,11 +304,11 @@ export default {
                 });
             }
             this.$store.dispatch("closeModal");
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "currentWeek",
                 data: this.progressInputs.target,
             });
-            this.$store.commit("setData", {
+            this.$store.commit("SET_DATA", {
                 attr: "selectedIds",
                 data: [],
             });
@@ -322,7 +320,7 @@ export default {
                 description:
                     "Please go through them to make sure that you're happy with it",
             });
-            this.$store.dispatch("endLoading");
+            this.$store.dispatch("setLoading", false);
         },
     },
 };

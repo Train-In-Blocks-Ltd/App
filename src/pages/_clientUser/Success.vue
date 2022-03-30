@@ -40,14 +40,13 @@ export default {
         };
     },
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
         await this.$parent.getClientSideData();
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     mounted() {
         const self = this;

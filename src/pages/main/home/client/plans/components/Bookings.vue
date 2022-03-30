@@ -13,13 +13,47 @@
                 :icon-size="28"
             />
         </div>
-        <skeleton v-if="loading" :type="'bookings'" />
+
+        <!-- Skeleton -->
+        <div v-if="loading" class="grid grid-cols-2 gap-8">
+            <div>
+                <div class="skeleton-box animate-pulse p-4 mb-4">
+                    <div class="skeleton-item" />
+                </div>
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-11/12" />
+                    <div class="skeleton-item w-3/4" />
+                    <div class="skeleton-item w-5/12" />
+                </div>
+            </div>
+            <div class="grid gap-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="skeleton-box animate-pulse p-4">
+                        <div class="skeleton-item" />
+                    </div>
+                    <div class="skeleton-box animate-pulse p-4">
+                        <div class="skeleton-item" />
+                    </div>
+                </div>
+                <div class="skeleton-box animate-pulse p-4">
+                    <div class="skeleton-item w-1/2" />
+                    <div class="skeleton-item" />
+                    <div class="skeleton-item w-3/4" />
+                </div>
+                <div class="skeleton-box animate-pulse">
+                    <div class="skeleton-item-lg" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking grid -->
         <div v-else class="grid grid-cols-2 gap-8">
             <div v-if="upcoming().length > 0" class="flex flex-col">
                 <booking
                     v-for="(booking, bookingIndex) in upcoming().slice(0, 3)"
                     :key="`bookings_${bookingIndex}`"
                     :booking="booking"
+                    class="mb-4"
                     is-trainer
                 />
             </div>
@@ -51,13 +85,17 @@ export default {
     computed: mapState(["bookings", "loading"]),
     methods: {
         upcoming() {
-            return this.bookings
-                .filter((booking) => new Date(booking.datetime) > new Date())
-                .filter(
-                    (booking) =>
-                        booking.client_id ===
-                        parseInt(this.$route.params.client_id)
-                );
+            return (
+                this.bookings
+                    .filter(
+                        (booking) => new Date(booking.datetime) > new Date()
+                    )
+                    .filter(
+                        (booking) =>
+                            booking.client_id ===
+                            parseInt(this.$route.params.client_id)
+                    ) ?? []
+            );
         },
     },
 };

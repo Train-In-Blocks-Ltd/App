@@ -4,9 +4,12 @@
             class="fixed md:top-16 p-8 md:rounded-lg z-40 overflow-y-auto"
             :class="{
                 'w-full max-h-screen': modalSize === 'full',
-                'w-full md:w-10/12 max-h-screen md:max-h-4/5':
+                'w-full md:w-10/12 max-h-screen md:max-h-4/5 h-screen md:h-auto':
                     modalSize === 'lg',
-                'w-full md:w-3/5 max-h-screen md:max-h-4/5': modalSize === 'sm',
+                'w-full md:w-3/5 max-h-screen md:max-h-4/5 h-screen md:h-auto':
+                    modalSize === 'sm',
+                'w-full md:w-3/4 lg:w-2/5 max-h-screen md:max-h-4/5 h-screen md:h-auto':
+                    modalSize === 'xs',
             }"
             noHover
             noBorder
@@ -14,6 +17,7 @@
             <secondary-header :title="title()">
                 <template v-slot:right>
                     <icon-button
+                        v-if="!modalPersist"
                         svg="x"
                         :on-click="() => $store.dispatch('closeModal')"
                         :icon-size="32"
@@ -45,8 +49,15 @@
             <progress-modal v-else-if="modalContent === 'progress'" />
             <statistics-modal v-else-if="modalContent === 'statistics'" />
             <templates-modal v-else-if="modalContent === 'templates'" />
+            <policy-modal v-else-if="modalContent === 'eula'" />
         </card-wrapper>
-        <backdrop :on-click="handleBackdropClick" />
+        <backdrop
+            :on-click="
+                () => {
+                    if (!modalPersist) handleBackdropClick();
+                }
+            "
+        />
     </div>
 </template>
 
@@ -128,6 +139,10 @@ const TemplatesModal = () =>
     import(
         /* webpackChunkName: "components.templatesModal", webpackPrefetch: true  */ "@/components/extensive/RichEditor/components/TemplatesModal"
     );
+const PolicyModal = () =>
+    import(
+        /* webpackChunkName: "components.policyModal", webpackPrefetch: true  */ "@/components/extensive/Modal/components/PolicyModal"
+    );
 
 export default {
     components: {
@@ -149,11 +164,13 @@ export default {
         ProgressModal,
         StatisticsModal,
         TemplatesModal,
+        PolicyModal,
     },
     computed: mapState([
         "modalSize",
         "modalOpen",
         "modalContent",
+        "modalPersist",
         "versionBuild",
         "versionName",
     ]),
@@ -199,6 +216,8 @@ export default {
                     return "Statistics";
                 case "templates":
                     return "Templates";
+                case "eula":
+                    return "End-User License Agreement (EULA)";
                 default:
                     return "";
             }

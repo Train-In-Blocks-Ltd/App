@@ -1,7 +1,9 @@
 <template>
     <wrapper id="portfolio">
         <!-- Business name -->
-        <skeleton v-if="loading" :type="'input_large'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-4">
+            <div class="skeleton-item-lg" />
+        </div>
         <txt-input
             v-else
             placeholder="Business name"
@@ -18,7 +20,9 @@
         />
 
         <!-- Trainer name -->
-        <skeleton v-if="loading" :type="'input_small'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-16">
+            <div class="skeleton-item" />
+        </div>
         <txt-input
             v-else
             placeholder="Trainer Name"
@@ -34,7 +38,13 @@
         />
 
         <!-- Portfolio content -->
-        <skeleton v-if="loading" :type="'session'" />
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 mb-8">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
         <label-wrapper v-else title="Portfolio">
             <rich-editor
                 v-model="portfolio.notes"
@@ -75,9 +85,8 @@ export default {
                   })
                 : true
         ) {
-            this.$store.commit("setData", {
-                attr: "dontLeave",
-                data: false,
+            this.$store.dispatch("setLoading", {
+                dontLeave: false,
             });
             next();
         }
@@ -97,14 +106,13 @@ export default {
         "hasCheckedStripeConnect",
     ]),
     async created() {
-        this.$store.commit("setData", {
-            attr: "loading",
-            data: true,
+        this.$store.dispatch("setLoading", {
+            loading: true,
         });
         this.willBodyScroll(true);
         await this.$parent.setup();
         // await this.checkStripeConnect()
-        this.$store.dispatch("endLoading");
+        this.$store.dispatch("setLoading", false);
     },
     methods: {
         /**
@@ -114,9 +122,8 @@ export default {
         resolve_portfolio_editor(state) {
             switch (state) {
                 case "edit":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.editingPortfolio = true;
                     this.tempEditorStore = this.portfolio.notes;
@@ -126,12 +133,11 @@ export default {
                     this.updatePortfolio();
                     break;
                 case "cancel":
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: false,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: false,
                     });
                     this.editingPortfolio = false;
-                    this.$store.commit("setDataDeep", {
+                    this.$store.commit("SET_DATA_DEEP", {
                         attrParent: "portfolio",
                         attrChild: "notes",
                         data: this.tempEditorStore,
@@ -145,13 +151,9 @@ export default {
          */
         async updatePortfolio() {
             try {
-                this.$store.commit("setData", {
-                    attr: "silentLoading",
-                    data: true,
-                });
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    silentLoading: true,
+                    dontLeave: true,
                 });
                 await this.$store.dispatch("updatePortfolio");
                 this.$ga.event("Portfolio", "update");
@@ -159,7 +161,7 @@ export default {
                     title: "Portfolio updated",
                     description: "Your clients can access this information",
                 });
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -167,9 +169,8 @@ export default {
 
         async stripeConnect() {
             try {
-                this.$store.commit("setData", {
-                    attr: "dontLeave",
-                    data: true,
+                this.$store.dispatch("setLoading", {
+                    dontLeave: true,
                 });
                 const RESPONSE = await this.$axios.post(
                     "/.netlify/functions/create-connected-account",
@@ -182,7 +183,7 @@ export default {
                     RESPONSE.data.connectedAccountId;
                 await this.$store.dispatch("saveClaims");
                 window.location.href = RESPONSE.data.url;
-                this.$store.dispatch("endLoading");
+                this.$store.dispatch("setLoading", false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -195,13 +196,13 @@ export default {
                         connectedAccountId: this.claims.connectedAccountId,
                     }
                 );
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "isStripeConnected",
                     data:
                         this.claims.email === "demo@traininblocks.com" ||
                         RESPONSE_STRIPE.data,
                 });
-                this.$store.commit("setData", {
+                this.$store.commit("SET_DATA", {
                     attr: "hasCheckedStripeConnect",
                     data: true,
                 });

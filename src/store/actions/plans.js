@@ -132,6 +132,10 @@ export default {
         commit("updateEntirePlan", payload);
     },
 
+    updatePlanAttr({ commit }, payload) {
+        commit("updatePlanAttr", payload);
+    },
+
     /**
      * Deletes a plan.
      * @param {number} payload.clientId - The id of the client.

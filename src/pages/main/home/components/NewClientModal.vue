@@ -109,9 +109,8 @@ export default {
                 );
             } else {
                 try {
-                    this.$store.commit("setData", {
-                        attr: "dontLeave",
-                        data: true,
+                    this.$store.dispatch("setLoading", {
+                        dontLeave: true,
                     });
                     this.$store.dispatch("createClient", {
                         name: this.newClient.name,
@@ -133,7 +132,7 @@ export default {
                         notes: "",
                     };
                     this.$ga.event("Client", "new");
-                    this.$store.dispatch("endLoading");
+                    this.$store.dispatch("setLoading", false);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }
