@@ -34,7 +34,7 @@
                 <txt>Select all</txt>
             </a>
             <icon-button
-                svg="plus-square"
+                svg="file-plus"
                 :on-click="() => createTemplate()"
                 :icon-size="28"
                 class="ml-4"
