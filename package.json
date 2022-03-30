@@ -58,7 +58,6 @@
         "@vue/cli-service": "^4.5.13",
         "@vue/eslint-config-typescript": "^10.0.0",
         "@vue/preload-webpack-plugin": "^2.0.0",
-        "autoprefixer": "9.8.6",
         "babel-loader": "8.2.2",
         "chalk": "^4.1.1",
         "copy-webpack-plugin": "9.0.1",
