@@ -265,6 +265,10 @@ export default {
                             attr: "newImgs",
                             data: [],
                         });
+                        this.$store.commit("SET_DATA", {
+                            attr: "editor",
+                            data: undefined,
+                        });
                     },
                 });
 
