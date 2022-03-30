@@ -5,6 +5,18 @@
             <txt type="title">Today</txt>
             <div class="flex">
                 <icon-button
+                    v-if="pwa.displayMode === 'browser tab'"
+                    svg="download"
+                    :on-click="
+                        () =>
+                            $store.dispatch('openModal', {
+                                name: 'install-pwa',
+                            })
+                    "
+                    :icon-size="28"
+                    class="mr-4"
+                />
+                <icon-button
                     svg="info"
                     :icon-size="32"
                     class="mr-4"
@@ -182,6 +194,7 @@ export default {
         };
     },
     computed: mapState([
+        "pwa",
         "clientUserLoaded",
         "loading",
         "dontLeave",
