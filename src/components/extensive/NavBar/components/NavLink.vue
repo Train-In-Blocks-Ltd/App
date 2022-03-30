@@ -17,6 +17,7 @@
     <a
         v-else
         :href="link"
+        :target="name === 'Help' && '_blank'"
         :title="name"
         @click="onClick()"
         :class="{ 'md:hidden': name === 'Refresh' }"
