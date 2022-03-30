@@ -54,7 +54,7 @@ netlify deploy
 
 ## Browser support
 
-We support the latest 2 versions of all major browsers.
+We support the latest 20 versions of all major browsers.
 
 We do not support IE.
 
