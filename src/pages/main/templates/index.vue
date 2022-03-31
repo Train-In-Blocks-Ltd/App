@@ -8,7 +8,8 @@
 
         <!-- Top section -->
         <txt-input
-            v-model="search"
+            :value="search"
+            @output="(data) => (search = data)"
             type="search"
             rel="search"
             placeholder="Find a template"
