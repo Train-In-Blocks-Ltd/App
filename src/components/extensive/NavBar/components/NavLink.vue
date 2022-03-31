@@ -9,6 +9,7 @@
         v-if="internal && forUser.includes(claims.user_type)"
         :to="link"
         :title="name"
+        :aria-label="name"
         :class="{ 'md:hidden': name === 'Refresh' }"
         class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all p-3 md:p-0"
     >
@@ -18,6 +19,7 @@
         v-else
         :href="link"
         :title="name"
+        :aria-label="name"
         @click="onClick()"
         :class="{ 'md:hidden': name === 'Refresh' }"
         class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all p-3 md:p-0"
