@@ -18,6 +18,7 @@
     <a
         v-else
         :href="link"
+        :target="name === 'Help' && '_blank'"
         :title="name"
         :aria-label="name"
         @click="onClick()"
