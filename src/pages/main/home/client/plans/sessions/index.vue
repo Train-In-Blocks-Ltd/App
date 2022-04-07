@@ -285,6 +285,10 @@
                                             @click="
                                                 () => {
                                                     $store.commit('SET_DATA', {
+                                                        attr: 'previewTitle',
+                                                        data: 'Feedback',
+                                                    });
+                                                    $store.commit('SET_DATA', {
                                                         attr: 'previewHTML',
                                                         data: session.feedback,
                                                     });
@@ -432,10 +436,6 @@ export default {
             tempEditorStore: null,
             isEditingSession: false,
             editSession: null,
-
-            // Feedback
-
-            showFeedback: false,
 
             // SYSTEM
 
