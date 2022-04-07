@@ -18,6 +18,7 @@
                 v-for="(item, index) in items"
                 :key="`option-${index}`"
                 :value="item.value"
+                class="bg-white dark:bg-gray-800"
             >
                 <txt>{{ item.label }}</txt>
             </option>
