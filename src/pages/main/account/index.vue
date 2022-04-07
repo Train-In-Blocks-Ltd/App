@@ -251,36 +251,30 @@ export default {
         }/.netlify/functions/calendar?email=${this.claims.email}`;
     },
     methods: {
-        /**
-         * Stores theme in local storage.
-         */
+        /** Stores theme in local storage. */
         handleThemeSelect(theme) {
             localStorage.setItem("darkmode", theme);
             this.$parent.darkmode(theme);
         },
 
-        /**
-         * Opens EULA modal respective to user type.
-         */
+        /** Opens EULA modal respective to user type. */
         openEULA() {
-            if (this.claims.user_type === "Client")
-                this.$store.commit("SET_DATA", {
-                    attr: "previewHTML",
-                    data: require("@/components/legal/eula-client.md").html,
-                });
-            else
-                this.$store.commit("SET_DATA", {
-                    attr: "previewHTML",
-                    data: require("@/components/legal/eula.md").html,
-                });
+            this.$store.commit("SET_DATA", {
+                attr: "previewTitle",
+                data: "EULA",
+            });
+            this.$store.commit("SET_DATA", {
+                attr: "previewHTML",
+                data: require(`@/components/legal/eula${
+                    this.claims.user_type === "Client" ? "-client" : ""
+                }.md`).html,
+            });
             this.$store.dispatch("openModal", {
                 name: "preview",
             });
         },
 
-        /**
-         * Redirects the user to their Stripe management page.
-         */
+        /** Redirects the user to their Stripe management page. */
         async manageSubscription() {
             try {
                 const RESPONSE = await this.$axios.post(
@@ -295,9 +289,7 @@ export default {
             }
         },
 
-        /**
-         * Generates the user's calendar link.
-         */
+        /** Generates the user's calendar link. */
         copyCalendarLink() {
             const link = `${
                 window.location.host === "localhost:8080"
@@ -318,9 +310,7 @@ export default {
             );
         },
 
-        /*
-         * Checks if the user already has coupons activated.
-         */
+        /** Checks if the user already has coupons activated. */
         async checkCoupon() {
             try {
                 this.$store.dispatch("setLoading", {

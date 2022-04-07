@@ -173,6 +173,7 @@ export default {
         "modalPersist",
         "versionBuild",
         "versionName",
+        "previewTitle",
     ]),
     watch: {
         modalContent(val) {
@@ -195,7 +196,7 @@ export default {
                 case "reset-password":
                     return "Reset password";
                 case "preview":
-                    return "Preview";
+                    return this.previewTitle ?? "Preview";
                 case "info":
                     return "Information";
                 case "new-plan":

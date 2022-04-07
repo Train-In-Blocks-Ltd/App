@@ -39,6 +39,7 @@ export default {
     },
     connected: true,
     clientUserLoaded: false,
+    previewTitle: undefined,
     previewHTML: undefined,
 
     // Confirm pop up
