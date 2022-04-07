@@ -1,7 +1,7 @@
 <template>
     <card-wrapper
         :class="{
-            'border-gray-400 dark:border-gray-400': isInThePast(booking),
+            'border-opacity-60 dark:border-gray-400': isInThePast(booking),
         }"
         class="p-2 sm:p-4"
         no-hover
