@@ -57,7 +57,7 @@
                     is-trainer
                 />
             </div>
-            <txt v-else type="large-body" grey
+            <txt v-else type="large-body" grey class="mb-4 sm:mb-0"
                 >No upcoming bookings made or confirmed</txt
             >
             <booking-form is-trainer />
