@@ -47,7 +47,7 @@
         </div>
 
         <!-- Booking grid -->
-        <div v-else class="grid grid-cols-2 gap-8">
+        <div v-else class="grid sm:grid-cols-2 sm:gap-8">
             <div v-if="upcoming().length > 0" class="flex flex-col">
                 <booking
                     v-for="(booking, bookingIndex) in upcoming().slice(0, 3)"
