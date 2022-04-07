@@ -108,11 +108,11 @@ body {
 
 <template>
     <div id="app" :class="{ authenticated: authenticated }">
-        <modal />
-        <response-pop-up />
-        <confirm-pop-up />
-        <top-banner />
-        <nav-bar v-if="$route.path !== '/login'" class="fadeIn" />
+        <modal v-if="authenticated" />
+        <response-pop-up v-if="authenticated" />
+        <confirm-pop-up v-if="authenticated" />
+        <top-banner v-if="authenticated" />
+        <nav-bar v-if="authenticated" class="fadeIn" />
         <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
