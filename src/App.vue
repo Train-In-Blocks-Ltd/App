@@ -489,7 +489,7 @@ export default {
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("openResponsePopUp", {
                     title: "Session updated",
-                    description: "Your changes haver been saved",
+                    description: "Your changes have been saved",
                 });
                 this.$store.dispatch("setLoading", false);
             } catch (e) {
