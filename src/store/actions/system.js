@@ -45,6 +45,10 @@ export default {
     /** Closes and resets the global modal. */
     closeModal({ commit }) {
         commit("SET_DATA", {
+            attr: "previewTitle",
+            data: undefined,
+        });
+        commit("SET_DATA", {
             attr: "previewHTML",
             data: undefined,
         });
