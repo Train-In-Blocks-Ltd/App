@@ -2,7 +2,9 @@
     <wrapper v-if="claims" id="account">
         <txt type="title" is-main>Your Account</txt>
         <div v-if="claims" class="grid md:grid-cols-2 gap-16 my-8">
+            <!-- Left-side -->
             <div>
+                <!-- General -->
                 <div class="grid gap-4 mb-12">
                     <txt type="large-body" bold>General settings</txt>
                     <txt class="mb-4"><b>Email: </b>{{ claims.email }}</txt>
@@ -11,7 +13,7 @@
                             claims.user_type != 'Client' ||
                             claims.user_type == 'Admin'
                         "
-                        :on-click-prevent="() => manageSubscription()"
+                        :on-click="() => manageSubscription()"
                     >
                         Manage Subscription
                     </default-button>
@@ -26,6 +28,8 @@
                         Change Password
                     </default-button>
                 </div>
+
+                <!-- Theme -->
                 <div class="grid gap-4 mb-12">
                     <label for="theme">
                         <txt type="large-body" bold>Theme</txt>
@@ -36,6 +40,8 @@
                         @output="(data) => handleThemeSelect(data)"
                     />
                 </div>
+
+                <!-- Referral -->
                 <div class="grid gap-4">
                     <txt type="large-body" bold>Referral Code</txt>
                     <txt>
@@ -46,18 +52,21 @@
                     </txt>
                     <default-button
                         v-if="!coupon.generated"
-                        :on-click-prevent="() => generateCoupon()"
+                        :on-click="() => generateCoupon()"
                     >
                         Generate Coupon
                     </default-button>
                     <default-button
                         v-else
-                        :on-click-prevent="() => copyCoupon()"
+                        :on-click="() => copyCoupon()"
                         v-html="coupon.code"
                     />
                 </div>
             </div>
+
+            <!-- Right-side -->
             <div>
+                <!-- Calendar -->
                 <div class="grid gap-4 mb-12">
                     <txt type="large-body" bold>Calendar</txt>
                     <label>
@@ -87,10 +96,12 @@
                     </div>
                     <default-button
                         v-if="claims.calendar"
-                        :on-click-prevent="() => copyCalendarLink()"
+                        :on-click="() => copyCalendarLink()"
                         v-html="calendarText"
                     />
                 </div>
+
+                <!-- Privacy and data -->
                 <div class="grid gap-4">
                     <txt type="large-body" bold>Your Privacy and Data</txt>
                     <txt>
