@@ -1,7 +1,7 @@
 <template>
     <div v-if="modalOpen" class="flex justify-center w-full">
         <card-wrapper
-            class="fixed md:top-16 p-8 md:rounded-lg z-40 overflow-y-auto"
+            class="fixed md:top-16 p-8 md:rounded-lg z-50 overflow-y-auto"
             :class="{
                 'w-full max-h-screen': modalSize === 'full',
                 'w-full md:w-10/12 max-h-screen md:max-h-4/5 h-screen md:h-auto':
