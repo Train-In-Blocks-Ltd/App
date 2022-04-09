@@ -134,7 +134,6 @@ export default {
                     description: "Remember to not share it and keep it safe",
                 });
                 this.showPasswordReset = false;
-                this.willBodyScroll(true);
                 this.password = {
                     old: null,
                     new: null,

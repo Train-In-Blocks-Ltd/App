@@ -207,11 +207,7 @@
                 name="add_product"
                 class="form_grid add_product"
                 spellcheck="false"
-                @submit.prevent="
-                    createProduct(),
-                        (isNewProductOpen = false),
-                        willBodyScroll(true)
-                "
+                @submit.prevent="createProduct(), (isNewProductOpen = false)"
             >
                 <div class="bottom_margin">
                     <h3>Add a new product</h3>
@@ -307,9 +303,7 @@
                     </button>
                     <button
                         class="red_button"
-                        @click.prevent="
-                            (isNewProductOpen = false), willBodyScroll(true)
-                        "
+                        @click.prevent="isNewProductOpen = false"
                     >
                         Close
                     </button>
@@ -353,11 +347,7 @@
                 >
                     Select all
                 </a>
-                <button
-                    @click="(isNewProductOpen = true), willBodyScroll(false)"
-                >
-                    New product
-                </button>
+                <button @click="isNewProductOpen = true">New product</button>
                 <a
                     v-if="claims.email !== 'demo@traininblocks.com'"
                     :href="`https://dashboard.stripe.com/b/${claims.connectedAccountId}`"
@@ -371,12 +361,7 @@
                     />
                 </a>
             </div>
-            <button
-                v-else
-                @click="(isNewProductOpen = true), willBodyScroll(false)"
-            >
-                New product
-            </button>
+            <button v-else @click="isNewProductOpen = true">New product</button>
         </div>
         <div
             v-if="products.length !== 0 && isStripeConnected"
