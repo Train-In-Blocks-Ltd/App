@@ -16,7 +16,7 @@
         <icon :svg="svg" :icon-size="24" />
     </router-link>
     <a
-        v-else
+        v-else-if="forUser.includes(claims.user_type)"
         :href="link"
         :target="name === 'Help' && '_blank'"
         :title="name"
