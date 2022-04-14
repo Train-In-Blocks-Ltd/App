@@ -71,9 +71,9 @@
             </txt>
             <reset-password v-if="open" />
             <txt v-if="!open" class="flex items-center">
-                Forgot your password?
+                Forgotten password?
                 <a href="javascript:(0)" @click="open = !open" class="ml-4">
-                    <txt bold>Reset it here</txt>
+                    <txt bold>Reset here</txt>
                 </a>
             </txt>
         </div>
