@@ -55,7 +55,7 @@
         </div>
 
         <!-- Next booking section -->
-        <div v-if="nextBooking" class="flex items-center">
+        <div v-if="nextBooking" class="sm:flex items-center">
             <txt class="mr-2" bold> Next booking: </txt>
             <txt>
                 {{
