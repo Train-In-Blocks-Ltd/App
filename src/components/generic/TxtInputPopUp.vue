@@ -68,6 +68,12 @@ export default {
         "txtInputLabel",
         "txtInputPlaceholder",
     ]),
+    watch: {
+        txtInputPromise(val) {
+            if (val) document.body.style.overflow = "hidden";
+            else document.body.style.overflow = "auto";
+        },
+    },
     methods: {
         handleBackdropClick() {
             this.txtInputPromise(false);
