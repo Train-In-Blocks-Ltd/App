@@ -6,7 +6,11 @@
 
 <template>
     <router-link
-        v-if="internal && forUser.includes(claims.user_type)"
+        v-if="
+            internal &&
+            forUser.includes(claims.user_type) &&
+            !(isDemo && link === '/account')
+        "
         :to="link"
         :title="name"
         :aria-label="name"
@@ -16,7 +20,10 @@
         <icon :svg="svg" :icon-size="24" />
     </router-link>
     <a
-        v-else
+        v-else-if="
+            forUser.includes(claims.user_type) &&
+            !(isDemo && link === '/account')
+        "
         :href="link"
         :target="name === 'Help' && '_blank'"
         :title="name"
@@ -41,6 +48,6 @@ export default {
         forUser: Array,
         onClick: Function,
     },
-    computed: mapState(["claims"]),
+    computed: mapState(["claims", "isDemo"]),
 };
 </script>
