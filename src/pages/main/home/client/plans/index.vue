@@ -104,9 +104,6 @@ export default {
         };
     },
     computed: mapState(["loading", "dontLeave", "clients", "clientDetails"]),
-    created() {
-        this.willBodyScroll(true);
-    },
     methods: {
         /**
          * Resolves the client information editor.

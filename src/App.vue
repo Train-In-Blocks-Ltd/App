@@ -113,7 +113,7 @@ body {
         <confirm-pop-up />
         <top-banner />
         <nav-bar v-if="$route.path !== '/login'" class="fadeIn" />
-        <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
+        <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
                 leave-active-class="fadeOut fill_mode_both"
@@ -187,7 +187,6 @@ export default {
             loading: true,
         });
         this.isAuthenticated();
-        this.willBodyScroll(true);
     },
     async mounted() {
         // Sets the body to have dark mode.
@@ -280,7 +279,6 @@ export default {
                         persist: true,
                         backdrop: true,
                     });
-                    SELF.willBodyScroll(false);
                     SELF.$store.dispatch("setLoading", false);
                     throw new SELF.$axios.Cancel(
                         "You are using the demo account. Your changes won't be saved"
@@ -381,7 +379,6 @@ export default {
                         this.claims.email !== "demo@traininblocks.com" &&
                         this.authenticated
                     ) {
-                        this.willBodyScroll(false);
                         this.$store.dispatch("openModal", {
                             name: "eula",
                             persist: true,
@@ -489,7 +486,7 @@ export default {
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("openResponsePopUp", {
                     title: "Session updated",
-                    description: "Your changes haver been saved",
+                    description: "Your changes have been saved",
                 });
                 this.$store.dispatch("setLoading", false);
             } catch (e) {

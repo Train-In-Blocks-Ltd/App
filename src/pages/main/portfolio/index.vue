@@ -109,7 +109,6 @@ export default {
         this.$store.dispatch("setLoading", {
             loading: true,
         });
-        this.willBodyScroll(true);
         await this.$parent.setup();
         // await this.checkStripeConnect()
         this.$store.dispatch("setLoading", false);

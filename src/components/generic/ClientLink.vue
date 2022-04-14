@@ -17,7 +17,7 @@
 <template>
     <card-wrapper class="grid p-4 md:p-8 gap-4" :no-hover="archive">
         <!-- Top section -->
-        <div class="sm:flex">
+        <div class="relative sm:flex">
             <div
                 v-if="client.profile_image"
                 :style="{ backgroundImage: `url(${client.profile_image})` }"
@@ -50,7 +50,7 @@
             <checkbox
                 v-if="archive"
                 :item-id="client.client_id"
-                class="ml-auto"
+                class="absolute top-0 right-0"
             />
         </div>
 

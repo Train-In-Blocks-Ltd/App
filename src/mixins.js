@@ -1,16 +1,5 @@
 export default {
     /**
-     * Toggles body scroll.
-     * @param {boolean} state
-     */
-    willBodyScroll(state) {
-        const BODY = document.getElementsByTagName("body")[0];
-        state
-            ? (BODY.style.overflow = "auto")
-            : (BODY.style.overflow = "hidden");
-    },
-
-    /**
      * Extracts anything that is wrapped in square brackets
      * @param {string} sessionName - The title or name of the session.
      * @param {string} text - The body or notes of the session.

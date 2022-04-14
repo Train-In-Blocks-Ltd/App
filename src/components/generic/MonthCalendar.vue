@@ -60,7 +60,7 @@
                 :key="`day_${index}`"
                 :class="{
                     'bg-transparent shadow-none': day[1] === '',
-                    'bg-yellow-100': today() === day[2],
+                    'bg-yellow-100 dark:bg-gray-400': today() === day[2],
                 }"
                 class="min-h-28 p-2 rounded-lg shadow-lg text-right"
             >

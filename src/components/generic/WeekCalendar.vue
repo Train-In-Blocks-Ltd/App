@@ -42,12 +42,14 @@
         </div>
 
         <!-- Calendar content -->
-        <div class="grid gap-8">
+        <div class="grid gap-2">
             <div
                 v-for="(day, index) in thisWeek"
                 :key="'day-' + index"
-                :class="{ is_today: day.date === today() }"
-                class="flex items-start"
+                :class="{
+                    'bg-yellow-100 dark:bg-gray-400': today() === day.date,
+                }"
+                class="flex items-start p-4 rounded-lg"
             >
                 <!-- Date -->
                 <div class="flex items-center w-1/3 md:w-1/6 mr-4">
