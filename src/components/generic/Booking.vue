@@ -1,10 +1,12 @@
 <template>
     <card-wrapper
-        :class="{ 'opacity-60': isInThePast(booking) }"
+        :class="{
+            'border-opacity-60 dark:border-gray-400': isInThePast(booking),
+        }"
         class="p-2 sm:p-4"
         no-hover
     >
-        <txt bold>
+        <txt :class="{ 'opacity-60': isInThePast(booking) }" bold>
             {{
                 day(
                     booking.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]
@@ -14,7 +16,11 @@
             at
             {{ shortTime(booking.datetime) }}
         </txt>
-        <txt type="tiny" class="my-2">
+        <txt
+            :class="{ 'opacity-60': isInThePast(booking) }"
+            type="tiny"
+            class="my-2"
+        >
             {{ booking.notes }}
         </txt>
         <div class="flex justify-between">
@@ -82,7 +88,9 @@ export default {
         /** Determines the colour of the text for booking statuses. */
         getStatusColor(status) {
             switch (status) {
-                case "Pending" || "Past":
+                case "Past":
+                    return "opacity-60";
+                case "Pending":
                     return "text-gray-400";
                 case "Scheduled":
                     return "text-green-700";

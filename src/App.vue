@@ -111,9 +111,9 @@ body {
         <modal v-if="authenticated" />
         <response-pop-up v-if="authenticated" />
         <confirm-pop-up v-if="authenticated" />
-        <top-banner v-if="authenticated" />
         <nav-bar v-if="authenticated" class="fadeIn" />
         <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
+            <top-banner v-if="authenticated" />
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
                 leave-active-class="fadeOut fill_mode_both"
@@ -187,7 +187,6 @@ export default {
             loading: true,
         });
         this.isAuthenticated();
-        this.willBodyScroll(true);
     },
     async mounted() {
         // Sets the body to have dark mode.
@@ -280,7 +279,6 @@ export default {
                         persist: true,
                         backdrop: true,
                     });
-                    SELF.willBodyScroll(false);
                     SELF.$store.dispatch("setLoading", false);
                     throw new SELF.$axios.Cancel(
                         "You are using the demo account. Your changes won't be saved"
@@ -342,6 +340,14 @@ export default {
                     attr: "claims",
                     data: await this.$auth.getUser(),
                 });
+
+                // Sets demo flag
+                if (this.claims.email === "demo@traininblocks.com")
+                    this.$store.commit("SET_DATA", {
+                        attr: "isDemo",
+                        data: true,
+                    });
+
                 if (
                     this.claims.user_type === "Trainer" ||
                     this.claims.user_type === "Admin"
@@ -381,7 +387,6 @@ export default {
                         this.claims.email !== "demo@traininblocks.com" &&
                         this.authenticated
                     ) {
-                        this.willBodyScroll(false);
                         this.$store.dispatch("openModal", {
                             name: "eula",
                             persist: true,
@@ -489,7 +494,7 @@ export default {
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("openResponsePopUp", {
                     title: "Session updated",
-                    description: "Your changes haver been saved",
+                    description: "Your changes have been saved",
                 });
                 this.$store.dispatch("setLoading", false);
             } catch (e) {

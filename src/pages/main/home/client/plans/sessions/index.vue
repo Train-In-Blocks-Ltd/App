@@ -114,9 +114,13 @@
                         <div class="skeleton-item w-1/4" />
                     </div>
                     <div v-else>
-                        <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="flex items-center justify-between mb-8 sm:mb-4"
+                        >
                             <!-- Left side -->
-                            <div class="flex items-center">
+                            <div
+                                class="grid gap-2 sm:gap-0 sm:flex sm:items-center"
+                            >
                                 <a
                                     v-if="
                                         hasSessions &&
@@ -128,7 +132,7 @@
                                     class="mr-4 text-sm"
                                     @click="selectAll('week')"
                                 >
-                                    Select this microcycle
+                                    Select microcycle
                                 </a>
                                 <a
                                     v-if="
@@ -285,6 +289,10 @@
                                             @click="
                                                 () => {
                                                     $store.commit('SET_DATA', {
+                                                        attr: 'previewTitle',
+                                                        data: 'Feedback',
+                                                    });
+                                                    $store.commit('SET_DATA', {
                                                         attr: 'previewHTML',
                                                         data: session.feedback,
                                                     });
@@ -432,10 +440,6 @@ export default {
             tempEditorStore: null,
             isEditingSession: false,
             editSession: null,
-
-            // Feedback
-
-            showFeedback: false,
 
             // SYSTEM
 

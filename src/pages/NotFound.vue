@@ -24,8 +24,5 @@ export default {
             title: "404 Not Found",
         };
     },
-    created() {
-        this.willBodyScroll(true);
-    },
 };
 </script>

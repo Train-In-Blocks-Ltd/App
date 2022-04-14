@@ -27,6 +27,7 @@ export default {
     silentLoading: false,
     dontLeave: false,
     disableButtons: false,
+    isDemo: false,
 
     // System
     search: "",
@@ -39,6 +40,7 @@ export default {
     },
     connected: true,
     clientUserLoaded: false,
+    previewTitle: undefined,
     previewHTML: undefined,
 
     // Confirm pop up
