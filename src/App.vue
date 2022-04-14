@@ -342,6 +342,14 @@ export default {
                     attr: "claims",
                     data: await this.$auth.getUser(),
                 });
+
+                // Sets demo flag
+                if (this.claims.email === "demo@traininblocks.com")
+                    this.$store.commit("SET_DATA", {
+                        attr: "isDemo",
+                        data: true,
+                    });
+
                 if (
                     this.claims.user_type === "Trainer" ||
                     this.claims.user_type === "Admin"

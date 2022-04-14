@@ -27,6 +27,7 @@ export default {
     silentLoading: false,
     dontLeave: false,
     disableButtons: false,
+    isDemo: false,
 
     // System
     search: "",
