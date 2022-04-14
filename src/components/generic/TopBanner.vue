@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!connected || isDemo" class="flex justify-center">
+    <div v-if="!connected || isDemo" class="flex justify-center mb-8">
         <txt
             v-if="!connected"
             type="tiny"
