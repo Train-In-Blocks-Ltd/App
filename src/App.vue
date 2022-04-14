@@ -111,9 +111,9 @@ body {
         <modal />
         <response-pop-up />
         <confirm-pop-up />
-        <top-banner />
         <nav-bar v-if="$route.path !== '/login'" class="fadeIn" />
         <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
+            <top-banner />
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
                 leave-active-class="fadeOut fill_mode_both"
