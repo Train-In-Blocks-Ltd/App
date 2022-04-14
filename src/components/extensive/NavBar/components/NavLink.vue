@@ -11,7 +11,7 @@
         :title="name"
         :aria-label="name"
         :class="{ 'md:hidden': name === 'Refresh' }"
-        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all p-3 md:p-0"
+        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
         <icon :svg="svg" :icon-size="24" />
     </router-link>
@@ -23,7 +23,7 @@
         :aria-label="name"
         @click="onClick()"
         :class="{ 'md:hidden': name === 'Refresh' }"
-        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all p-3 md:p-0"
+        class="flex justify-center h-fit no-underline cursor-pointer my-3 opacity-50 hover:opacity-100 transition-all"
     >
         <icon :svg="svg" :icon-size="24" />
     </a>

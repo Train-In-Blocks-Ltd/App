@@ -17,7 +17,7 @@
 <template>
     <card-wrapper class="grid p-4 md:p-8 gap-4" :no-hover="archive">
         <!-- Top section -->
-        <div class="flex">
+        <div class="sm:flex">
             <div
                 v-if="client.profile_image"
                 :style="{ backgroundImage: `url(${client.profile_image})` }"
@@ -30,7 +30,7 @@
                 :icon-size="80"
                 class="p-4 border-3 border-gray-800 dark:border-white rounded-full mr-4"
             />
-            <div>
+            <div class="mt-4 sm:mt-0">
                 <txt type="large-body" bold>
                     {{ client.name }}
                 </txt>
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Next booking section -->
-        <div v-if="nextBooking" class="flex items-center">
+        <div v-if="nextBooking" class="sm:flex items-center">
             <txt class="mr-2" bold> Next booking: </txt>
             <txt>
                 {{
