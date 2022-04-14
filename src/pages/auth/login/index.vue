@@ -44,54 +44,49 @@
 <template>
     <div
         v-if="!authenticated"
-        class="px-4 sm:px-8 md:px-0 lg:flex lg:items-center"
+        class="p-8 md:p-0 w-full max-w-xl pb-16 md:pr-24 m-auto"
     >
         <splash v-if="!splashed" />
-        <div class="w-full lg:w-1/2 md:pr-24 lg:pr-0 mr-16">
-            <icon svg="full-logo" :icon-size="150" />
-            <a
-                class="demo-details"
-                href="javascript:void(0)"
-                @click="showDemo = !showDemo"
-            >
-                <txt bold>
-                    {{ showDemo ? "Hide" : "Show demo account details" }}
-                </txt>
-            </a>
-            <div v-if="showDemo" class="demo_details">
-                <div class="info">demo@traininblocks.com</div>
-                <div class="info">testingaccount123</div>
-            </div>
-            <div id="okta-signin-container" />
-        </div>
-        <div class="w-full lg:w-1/2 pr-24">
-            <div class="grid gap-4 mt-8">
-                <txt class="flex items-center">
-                    Need an account?
-                    <a href="https://traininblocks.com/#pricing" class="ml-4">
-                        <txt bold>Sign up here</txt>
-                    </a>
-                </txt>
-                <reset-password v-if="open" />
-                <txt v-if="!open" class="flex items-center">
-                    Forgot your password?
-                    <a href="javascript:(0)" @click="open = !open" class="ml-4">
-                        <txt bold>Reset it here</txt>
-                    </a>
-                </txt>
-            </div>
-            <txt type="tiny" class="my-8">
-                By logging in and using this application you agree that
-                essential first-party cookies will be placed on your computer.
-                Non-essential third party cookies may also be placed but can be
-                opted out of from your account page. For more information please
-                read our
-                <a href="https://traininblocks.com/legal/cookies-policy/"
-                    >Cookie Policy</a
-                >.
+        <icon svg="full-logo" :icon-size="150" />
+        <a
+            class="demo-details"
+            href="javascript:void(0)"
+            @click="showDemo = !showDemo"
+        >
+            <txt bold>
+                {{ showDemo ? "Hide" : "Show demo account details" }}
             </txt>
-            <version-label />
+        </a>
+        <div v-if="showDemo" class="demo_details">
+            <div class="info">demo@traininblocks.com</div>
+            <div class="info">testingaccount123</div>
         </div>
+        <div id="okta-signin-container" />
+        <div class="grid gap-4 mt-8">
+            <txt class="flex items-center">
+                Need an account?
+                <a href="https://traininblocks.com/#pricing" class="ml-4">
+                    <txt bold>Sign up here</txt>
+                </a>
+            </txt>
+            <reset-password v-if="open" />
+            <txt v-if="!open" class="flex items-center">
+                Forgotten password?
+                <a href="javascript:(0)" @click="open = !open" class="ml-4">
+                    <txt bold>Reset here</txt>
+                </a>
+            </txt>
+        </div>
+        <txt type="tiny" class="my-8">
+            By logging in and using this application you agree that essential
+            first-party cookies will be placed on your computer. Non-essential
+            third party cookies may also be placed but can be opted out of from
+            your account page. For more information please read our
+            <a href="https://traininblocks.com/legal/cookies-policy/"
+                >Cookie Policy</a
+            >.
+        </txt>
+        <version-label />
     </div>
 </template>
 
