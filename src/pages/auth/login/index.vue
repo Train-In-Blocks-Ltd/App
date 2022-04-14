@@ -140,7 +140,6 @@ export default {
             OktaSignIn = module.default;
         });
         this.splashed = true;
-        this.willBodyScroll(true);
         this.$nextTick(function () {
             this.widget = new OktaSignIn({
                 baseUrl: CUSTOM_ENV.OKTA.CLIENT_ID,

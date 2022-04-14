@@ -187,7 +187,6 @@ export default {
             loading: true,
         });
         this.isAuthenticated();
-        this.willBodyScroll(true);
     },
     async mounted() {
         // Sets the body to have dark mode.
@@ -280,7 +279,6 @@ export default {
                         persist: true,
                         backdrop: true,
                     });
-                    SELF.willBodyScroll(false);
                     SELF.$store.dispatch("setLoading", false);
                     throw new SELF.$axios.Cancel(
                         "You are using the demo account. Your changes won't be saved"
@@ -381,7 +379,6 @@ export default {
                         this.claims.email !== "demo@traininblocks.com" &&
                         this.authenticated
                     ) {
-                        this.willBodyScroll(false);
                         this.$store.dispatch("openModal", {
                             name: "eula",
                             persist: true,

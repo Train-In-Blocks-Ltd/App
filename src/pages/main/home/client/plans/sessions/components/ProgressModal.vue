@@ -129,11 +129,7 @@
         <!-- Complete flow -->
         <form
             v-else-if="progressPage === 2"
-            @submit.prevent="
-                progressComplete(),
-                    ($parent.showProgress = false),
-                    willBodyScroll(true)
-            "
+            @submit.prevent="progressComplete(), ($parent.showProgress = false)"
         >
             <txt bold>You're all set</txt>
             <txt grey>

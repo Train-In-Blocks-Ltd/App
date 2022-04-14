@@ -43,7 +43,6 @@ export default {
         this.$store.dispatch("setLoading", {
             loading: true,
         });
-        this.willBodyScroll(true);
         await this.$parent.setup();
         await this.$parent.getClientSideData();
         this.$store.dispatch("setLoading", false);

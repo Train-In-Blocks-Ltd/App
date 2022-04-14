@@ -131,7 +131,6 @@ div#rich_show_content {
                         saving = true;
                         editState = false;
                         $emit('on-edit-change', 'save', itemId);
-                        willBodyScroll(true);
                     }
                 "
             >
@@ -144,7 +143,6 @@ div#rich_show_content {
                         saving = false;
                         editState = false;
                         $emit('on-edit-change', 'cancel', itemId);
-                        willBodyScroll(true);
                     }
                 "
             >
@@ -218,7 +216,6 @@ export default {
                     onFocus: () => {
                         this.caretInEditor = true;
                         this.showAddTemplate = false;
-                        this.willBodyScroll(true);
                     },
                     onBlur: () => {
                         this.$store.commit("SET_DATA_DEEP", {
