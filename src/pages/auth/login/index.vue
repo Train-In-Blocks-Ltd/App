@@ -51,6 +51,7 @@
         <a
             class="demo-details"
             href="javascript:void(0)"
+            :aria-label="showDemo ? 'Hide' : 'Show demo account details'"
             @click="showDemo = !showDemo"
         >
             <txt bold>

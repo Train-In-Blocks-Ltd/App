@@ -31,6 +31,9 @@
             <a
                 class="flex items-center mb-4"
                 href="javascript:void(0)"
+                :aria-label="`Switch to ${
+                    !showMonthlyCal ? 'month' : 'week'
+                } view`"
                 @click="showMonthlyCal = !showMonthlyCal"
             >
                 <icon svg="calendar" :icon-size="20" class="mr-2" />

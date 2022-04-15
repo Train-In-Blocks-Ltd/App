@@ -124,7 +124,11 @@
                                 {{ policy.title }}
                             </txt>
                         </a>
-                        <a href="javascript:void(0)" @click="openEULA">
+                        <a
+                            href="javascript:void(0)"
+                            aria-label="Read EULA"
+                            @click="openEULA"
+                        >
                             <txt bold>EULA</txt>
                         </a>
                     </div>

@@ -4,12 +4,18 @@
             {{ plan.name }}
         </txt>
         <div class="flex">
-            <router-link :to="link" href="javascript:void(0)" class="mr-3">
+            <router-link
+                :to="link"
+                href="javascript:void(0)"
+                :aria-label="isTrainer ? 'Edit' : 'View'"
+                class="mr-3"
+            >
                 {{ isTrainer ? "Edit" : "View" }}
             </router-link>
             <a
                 v-if="plan.notes && plan.notes !== '<p></p>'"
                 href="javascript:void(0)"
+                aria-label="Plan notes"
                 @click="
                     () => {
                         $store.commit('SET_DATA', {

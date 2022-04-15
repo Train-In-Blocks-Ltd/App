@@ -319,6 +319,7 @@
             <a
                 v-if="!isStripeConnected"
                 href="javascript:void(0)"
+                aria-label="Connect Stripe"
                 class="stripe-connect"
                 @click="isStripeConnectedConnect()"
             >
@@ -335,6 +336,7 @@
             >
                 <a
                     href="javascript:void(0)"
+                    aria-label="Select all"
                     class="a_link select_all"
                     @click="
                         () => {

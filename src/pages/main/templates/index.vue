@@ -23,6 +23,7 @@
         >
             <a
                 href="javascript:void(0)"
+                aria-label="Select all"
                 @click="
                     () => {
                         $store.commit('SET_DATA', {

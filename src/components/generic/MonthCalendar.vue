@@ -23,6 +23,7 @@
                         getMonth();
                     }
                 "
+                aria-label="Today"
             >
                 Today
             </a>
@@ -77,6 +78,7 @@
                 <a
                     v-for="event in day[0]"
                     href="javascript:void(0)"
+                    :aria-label="event.title"
                     :key="`event-${event.session_id}`"
                     @click="() => onEventPress(event.session_id, event.week_id)"
                 >

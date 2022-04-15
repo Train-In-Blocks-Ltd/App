@@ -22,6 +22,7 @@
             <a
                 href="javascript:void(0)"
                 :class="{ 'opacity-60 cursor-default': weekDiff === 0 }"
+                aria-label="Today"
                 @click="
                     () => {
                         weekDiff = 0;
