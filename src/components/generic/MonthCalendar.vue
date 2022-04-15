@@ -11,6 +11,8 @@
                         getMonth();
                     }
                 "
+                aria-label="Previous month"
+                title="Previous month"
             />
             <a
                 href="javascript:void(0)"
@@ -33,6 +35,8 @@
                         getMonth();
                     }
                 "
+                aria-label="Next month"
+                title="Next month"
             />
         </div>
 

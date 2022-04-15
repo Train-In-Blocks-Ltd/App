@@ -11,6 +11,8 @@
                         })
                 "
                 :icon-size="28"
+                aria-label="See all bookings"
+                title="See all bookings"
             />
         </div>
 

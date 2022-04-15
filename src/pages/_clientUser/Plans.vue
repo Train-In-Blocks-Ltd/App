@@ -66,6 +66,8 @@
                     :icon-size="32"
                     :on-click="() => showing_current_session--"
                     :disabled="showing_current_session === 0"
+                    aria-label="Previous session"
+                    title="Previous session"
                 />
                 <txt type="subtitle">
                     {{ showing_current_session + 1 }}/{{ plan.sessions.length }}
@@ -78,6 +80,8 @@
                         showing_current_session ===
                         parseInt(plan.sessions.length) - 1
                     "
+                    aria-label="Next session"
+                    title="Next session"
                 />
             </div>
 

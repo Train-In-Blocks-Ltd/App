@@ -27,6 +27,8 @@
                             })
                     "
                     :icon-size="28"
+                    aria-label="New plan"
+                    title="New plan"
                 />
             </div>
 

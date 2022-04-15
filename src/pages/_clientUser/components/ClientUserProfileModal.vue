@@ -31,6 +31,8 @@
                         });
                     }
                 "
+                aria-label="Upload profile image"
+                title="Upload profile image"
             />
             <txt-input
                 :value="clientUser.name"

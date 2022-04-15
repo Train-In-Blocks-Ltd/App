@@ -89,11 +89,15 @@
                     "
                     :icon-size="32"
                     class="mr-4"
+                    aria-label="Toolkit"
+                    title="Toolkit"
                 />
                 <icon-button
                     svg="archive"
                     :on-click="() => clientArchive(clientDetails.client_id)"
                     :icon-size="32"
+                    aria-label="Archive client"
+                    title="Archive client"
                 />
             </div>
         </div>

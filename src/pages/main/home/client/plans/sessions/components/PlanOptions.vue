@@ -5,6 +5,8 @@
             svg="arrow-left"
             :on-click="() => $router.back()"
             :icon-size="32"
+            aria-label="Back"
+            title="Back"
         />
         <icon-button
             class="mr-4"
@@ -16,6 +18,8 @@
                     })
             "
             :icon-size="32"
+            aria-label="Duplicate plan"
+            title="Duplicate plan"
         />
         <icon-button
             class="mr-4"
@@ -27,12 +31,16 @@
                     })
             "
             :icon-size="32"
+            aria-label="Statistics"
+            title="Statistics"
         />
         <icon-button
             svg="trash"
             :on-click="() => deletePlan()"
             :icon-size="32"
             class="text-red-700"
+            aria-label="Delete plan"
+            title="Delete plan"
         />
     </div>
 </template>

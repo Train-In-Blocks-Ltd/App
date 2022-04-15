@@ -18,6 +18,8 @@
                             })
                     "
                     :icon-size="28"
+                    aria-label="New client"
+                    title="New client"
                 />
                 <icon-button
                     svg="bookmark"
@@ -29,6 +31,8 @@
                             })
                     "
                     :icon-size="28"
+                    aria-label="What's new"
+                    title="What's new"
                     class="ml-4"
                 />
                 <icon-button
@@ -41,6 +45,8 @@
                             })
                     "
                     :icon-size="28"
+                    aria-label="Install"
+                    title="Install"
                     class="ml-4"
                 />
             </div>

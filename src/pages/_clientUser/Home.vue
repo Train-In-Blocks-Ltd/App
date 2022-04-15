@@ -15,6 +15,8 @@
                     "
                     :icon-size="28"
                     class="mr-4"
+                    aria-label="Install"
+                    title="Install"
                 />
                 <icon-button
                     svg="info"
@@ -31,6 +33,8 @@
                             });
                         }
                     "
+                    aria-label="Your trainer"
+                    title="Your trainer"
                 />
                 <icon-button
                     svg="user"
@@ -42,6 +46,8 @@
                             });
                         }
                     "
+                    aria-label="Your profile"
+                    title="Your profile"
                 />
             </div>
         </div>

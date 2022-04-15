@@ -16,6 +16,8 @@
                         getWeek();
                     }
                 "
+                aria-label="Previous week"
+                title="Previous week"
             />
             <a
                 href="javascript:void(0)"
@@ -38,6 +40,8 @@
                         getWeek();
                     }
                 "
+                aria-label="Next week"
+                title="Next week"
             />
         </div>
 

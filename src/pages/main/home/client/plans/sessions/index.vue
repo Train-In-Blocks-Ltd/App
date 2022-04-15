@@ -195,11 +195,15 @@
                                     "
                                     :icon-size="28"
                                     class="mr-4"
+                                    aria-label="Info"
+                                    title="Info"
                                 />
                                 <icon-button
                                     svg="plus"
                                     :on-click="() => createNewSession()"
                                     :icon-size="28"
+                                    aria-label="New session"
+                                    title="New session"
                                 />
                             </div>
                         </div>
@@ -329,6 +333,8 @@
                                                             session.id
                                                         )
                                                 "
+                                                aria-label="Expand"
+                                                title="Expand"
                                             />
                                         </div>
                                     </div>

@@ -38,6 +38,8 @@
                 svg="file-plus"
                 :on-click="() => createTemplate()"
                 :icon-size="28"
+                aria-label="Create template"
+                title="Create template"
                 class="ml-4"
             />
         </div>
@@ -96,6 +98,8 @@
                                 () => toggle_expanded_templates(template.id)
                             "
                             :icon-size="20"
+                            aria-label="Expand"
+                            title="Expand"
                             class="mt-2"
                         />
                     </div>
