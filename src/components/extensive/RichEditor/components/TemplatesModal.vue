@@ -30,6 +30,7 @@
                         $store.dispatch('closeModal');
                     }
                 "
+                :aria-label="system.name"
             >
                 {{ system.name }}
             </default-button>
@@ -55,6 +56,7 @@
                             $store.dispatch('closeModal');
                         }
                     "
+                    :aria-label="item.name"
                 >
                     {{ item.name }}
                 </default-button>

@@ -12,6 +12,7 @@
             <default-button
                 v-if="responsePersist"
                 class="mt-4"
+                aria-label="Okay"
                 :on-click="() => $store.dispatch('closeResponsePopUp')"
             >
                 Okay

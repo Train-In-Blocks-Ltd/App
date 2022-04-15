@@ -38,7 +38,11 @@
             "
             required
         />
-        <default-button :is-disabled="disableCreatePlanButton" type="submit">
+        <default-button
+            :is-disabled="disableCreatePlanButton"
+            type="submit"
+            aria-label="Save"
+        >
             Save
         </default-button>
     </form>

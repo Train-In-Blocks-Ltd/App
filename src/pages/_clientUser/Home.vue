@@ -89,6 +89,11 @@
                                 session.checked
                             )
                     "
+                    :aria-label="
+                        session.checked === 1
+                            ? 'Completed'
+                            : 'Click to complete'
+                    "
                     class="mt-4"
                 >
                     {{

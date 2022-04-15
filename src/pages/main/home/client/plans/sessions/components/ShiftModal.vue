@@ -13,7 +13,7 @@
             @output="(data) => (shiftDays = data)"
             required
         />
-        <default-button :disabled="!shiftDays" type="submit"
+        <default-button :disabled="!shiftDays" type="submit" aria-label="Shift"
             >Shift</default-button
         >
     </form>

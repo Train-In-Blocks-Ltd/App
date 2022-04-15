@@ -15,7 +15,7 @@
             @output="(data) => (moveTarget = data)"
             required
         />
-        <default-button :disabled="!moveTarget" type="submit"
+        <default-button :disabled="!moveTarget" type="submit" aria-label="Move"
             >Move</default-button
         >
     </form>

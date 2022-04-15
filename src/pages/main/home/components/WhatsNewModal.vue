@@ -35,7 +35,9 @@
                 @output="(data) => (idea.idea_text = data)"
                 required
             />
-            <default-button type="submit">Submit</default-button>
+            <default-button type="submit" aria-label="Submit"
+                >Submit</default-button
+            >
         </form>
     </div>
 </template>

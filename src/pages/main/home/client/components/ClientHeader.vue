@@ -48,6 +48,7 @@
                 v-if="clientAlreadyMsg === 'Restricted'"
                 :is-disabled="clientAlready"
                 :on-click="() => giveAccess()"
+                :aria-label="clientAlreadyMsg"
             >
                 {{ clientAlreadyMsg }}
             </default-button>
@@ -64,6 +65,7 @@
                         updateClient();
                     }
                 "
+                aria-label="Email notification"
             >
                 {{ clientDetails.notifications === 1 ? "Disable" : "Enable" }}
                 email notifications
@@ -72,6 +74,7 @@
                 v-else
                 :is-disabled="clientAlready"
                 :on-click="() => giveAccess()"
+                :aria-label="clientAlreadyMsg"
             >
                 {{ clientAlreadyMsg }}
             </default-button>

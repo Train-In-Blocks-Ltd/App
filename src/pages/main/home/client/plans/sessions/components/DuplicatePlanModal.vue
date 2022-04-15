@@ -8,7 +8,11 @@
             @output="(data) => (duplicateId = data)"
             required
         />
-        <default-button :is-disabled="!duplicateId" type="submit">
+        <default-button
+            :is-disabled="!duplicateId"
+            type="submit"
+            aria-label="Duplicate"
+        >
             Duplicate
         </default-button>
     </form>

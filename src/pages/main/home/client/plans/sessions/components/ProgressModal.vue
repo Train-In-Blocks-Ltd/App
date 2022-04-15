@@ -39,6 +39,7 @@
                 :disabled="
                     !progressInputs.daysBetween || !progressInputs.target
                 "
+                aria-label="Next"
             >
                 Next
             </default-button>
@@ -117,11 +118,14 @@
                                     ? (progressPage -= 1)
                                     : (progressSection -= 1)
                         "
+                        aria-label="Back"
                         prevent
                     >
                         Back
                     </default-button>
-                    <default-button type="submit">Next</default-button>
+                    <default-button type="submit" aria-label="Next"
+                        >Next</default-button
+                    >
                 </div>
             </form>
         </div>
@@ -140,11 +144,14 @@
                 <default-button
                     theme="red"
                     :on-click-prevent="() => (progressPage -= 1)"
+                    aria-label="Back"
                     prevent
                 >
                     Back
                 </default-button>
-                <default-button type="submit">Progress</default-button>
+                <default-button type="submit" aria-label="Progress"
+                    >Progress</default-button
+                >
             </div>
         </form>
     </div>

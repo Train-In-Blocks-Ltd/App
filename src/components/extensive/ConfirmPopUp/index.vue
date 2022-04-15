@@ -13,12 +13,14 @@
                             $store.dispatch('closeConfirmPopUp');
                         }
                     "
+                    aria-label="Confirm"
                     class="mr-2"
                 >
                     Confirm
                 </default-button>
                 <default-button
                     theme="red"
+                    aria-label="Cancel"
                     :on-click="
                         () => {
                             confirmPromise(false);
