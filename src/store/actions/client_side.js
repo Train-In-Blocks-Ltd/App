@@ -88,7 +88,6 @@ export default {
         const RESPONSE = await this._vm.$axios.get(
             `https://api.traininblocks.com/v2/plans/${state.claims.client_id_db}`
         );
-        console.log("Loaded data");
         commit("SET_DATA_DEEP", {
             attrParent: "clientUser",
             attrChild: "plans",
