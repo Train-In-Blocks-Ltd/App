@@ -491,6 +491,7 @@ export default {
                     planId,
                     sessionId,
                 });
+                await this.$store.dispatch("getClientSidePlans");
                 this.$ga.event("Session", "update");
                 this.$store.dispatch("openResponsePopUp", {
                     title: "Session updated",
