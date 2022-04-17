@@ -219,8 +219,10 @@ export default {
     computed: {
         ...mapState(["clientUserLoaded", "loading", "dontLeave", "clientUser"]),
         plan() {
-            return this.$store.state.clientUser.plans.find(
-                (plan) => plan.id === parseInt(this.$route.params.id)
+            return (
+                this.$store.state.clientUser.plans?.find(
+                    (plan) => plan.id === parseInt(this.$route.params.id)
+                ) ?? []
             );
         },
     },
