@@ -48,7 +48,7 @@
                 </div>
             </div>
             <checkbox
-                v-if="archive"
+                v-if="archive && !isDemo"
                 :item-id="client.client_id"
                 class="absolute top-0 right-0"
             />
@@ -108,7 +108,7 @@ export default {
             nextBooking: undefined,
         };
     },
-    computed: mapState(["bookings"]),
+    computed: mapState(["bookings", "isDemo"]),
     created() {
         if (this.bookings) {
             const clientBookings = this.bookings.filter(

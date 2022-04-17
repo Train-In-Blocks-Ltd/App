@@ -311,18 +311,22 @@
 
                                         <!-- Checkbox and expand -->
                                         <div class="flex flex-col items-center">
-                                            <checkbox :item-id="session.id" />
+                                            <checkbox
+                                                v-if="!isDemo"
+                                                :item-id="session.id"
+                                                class="mb-2"
+                                            />
                                             <icon-button
                                                 v-if="!isEditingSession"
-                                                svg="chevron-down"
-                                                class="ml-auto mt-2 transform transition-transform"
-                                                :class="{
-                                                    'rotate-180':
-                                                        expandedSessions.includes(
-                                                            session.id
-                                                        ),
-                                                }"
-                                                :icon-size="28"
+                                                :svg="
+                                                    expandedSessions.includes(
+                                                        session.id
+                                                    )
+                                                        ? 'corner-right-up'
+                                                        : 'corner-right-down'
+                                                "
+                                                class="ml-auto"
+                                                :icon-size="20"
                                                 :on-click="
                                                     () =>
                                                         toggleExpandedSessions(
@@ -499,6 +503,7 @@ export default {
             "clients",
             "templates",
             "clientDetails",
+            "isDemo",
         ]),
     },
     created() {
