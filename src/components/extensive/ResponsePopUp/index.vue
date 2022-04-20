@@ -34,12 +34,14 @@ export default {
         Backdrop,
     },
     watch: {
-        responseOpen() {
+        responseOpen(val) {
             if (!this.responsePersist) {
                 setTimeout(() => {
                     this.$store.dispatch("closeResponsePopUp");
                 }, 3000);
             }
+            if (val) document.body.style.overflow = "hidden";
+            else document.body.style.overflow = "auto";
         },
     },
     computed: mapState([

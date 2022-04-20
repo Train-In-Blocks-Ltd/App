@@ -85,10 +85,11 @@
                             })
                     "
                     :icon-size="32"
-                    class="mr-4"
                 />
                 <icon-button
+                    v-if="!isDemo"
                     svg="archive"
+                    class="ml-4"
                     :on-click="() => clientArchive(clientDetails.client_id)"
                     :icon-size="32"
                 />
@@ -116,7 +117,7 @@ export default {
     mounted() {
         this.checkClient();
     },
-    computed: mapState(["clientDetails", "silentLoading", "claims"]),
+    computed: mapState(["clientDetails", "silentLoading", "claims", "isDemo"]),
     methods: {
         /**
          * Updates the client.

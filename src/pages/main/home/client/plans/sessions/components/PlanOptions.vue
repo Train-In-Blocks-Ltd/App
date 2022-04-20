@@ -29,6 +29,7 @@
             :icon-size="32"
         />
         <icon-button
+            v-if="!isDemo"
             svg="trash"
             :on-click="() => deletePlan()"
             :icon-size="32"
@@ -38,11 +39,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
+    computed: mapState(["isDemo"]),
     methods: {
-        /**
-         * Deletes the plan.
-         */
+        /** Deletes the plan. */
         async deletePlan() {
             if (
                 await this.$store.dispatch("openConfirmPopUp", {
