@@ -3,15 +3,13 @@
         <txt
             v-if="!connected"
             type="tiny"
-            class="text-white dark:text-gray-800 bg-gray-800 dark:bg-white px-12 pt-1 pb-2 rounded-b-2xl fixed"
-            style="z-index: 50"
+            class="text-white dark:text-gray-800 bg-gray-800 dark:bg-white px-12 pt-1 pb-2 rounded-b-2xl fixed z-50"
         >
             You are in offline mode
         </txt>
         <a
             v-else-if="isDemo"
-            class="text-sm text-white dark:text-gray-800 bg-gray-800 dark:bg-white px-12 pt-1 pb-2 rounded-b-2xl fixed"
-            style="z-index: 50"
+            class="text-sm text-white dark:text-gray-800 bg-gray-800 dark:bg-white px-12 pt-1 pb-2 rounded-b-2xl fixed z-50"
             href="https://traininblocks.com/#pricing"
             target="_blank"
         >
