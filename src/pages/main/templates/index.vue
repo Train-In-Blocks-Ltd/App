@@ -87,7 +87,7 @@
                         <checkbox
                             v-if="!isDemo"
                             :item-id="template.id"
-                            class="mt-2"
+                            class="mb-2"
                         />
                         <icon-button
                             v-show="!isEditingTemplate"
