@@ -1,12 +1,22 @@
 <template>
     <wrapper id="client-plan">
         <!-- Plan name -->
-        <txt type="title">
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 w-1/3">
+            <div class="skeleton-item-lg" />
+        </div>
+        <txt v-else type="title">
             {{ plan.name }}
         </txt>
 
         <!-- Plan notes -->
-        <label-wrapper title="Plan notes" class="my-16">
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 sm:p-8 my-16">
+            <div class="skeleton-item w-1/3" />
+            <div class="skeleton-item w-2/3" />
+            <div class="skeleton-item w-5/12" />
+            <div class="skeleton-item w-1/2" />
+            <div class="skeleton-item w-1/4" />
+        </div>
+        <label-wrapper v-else title="Plan notes" class="my-16">
             <div
                 v-if="plan.notes && plan.notes !== '<p></p>'"
                 class="show_html mt-8"
@@ -27,7 +37,18 @@
         </label-wrapper>
 
         <!-- Calendar section -->
-        <div class="mb-16">
+        <div v-if="loading" class="skeleton-box animate-pulse p-4 sm:p-8 mb-16">
+            <div class="skeleton-item-lg" />
+            <div
+                v-for="index in 7"
+                :key="`calendar-skeleton-${index}`"
+                class="flex"
+            >
+                <div class="skeleton-item-lg w-1/4 mr-4" />
+                <div class="skeleton-item w-1/4" />
+            </div>
+        </div>
+        <div v-else class="mb-16">
             <a
                 class="flex items-center mb-4"
                 href="javascript:void(0)"
@@ -231,8 +252,10 @@ export default {
     computed: {
         ...mapState(["clientUserLoaded", "loading", "dontLeave", "clientUser"]),
         plan() {
-            return this.$store.state.clientUser.plans.find(
-                (plan) => plan.id === parseInt(this.$route.params.id)
+            return (
+                this.$store.state.clientUser.plans?.find(
+                    (plan) => plan.id === parseInt(this.$route.params.id)
+                ) ?? []
             );
         },
     },

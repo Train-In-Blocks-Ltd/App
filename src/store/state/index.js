@@ -98,7 +98,7 @@ export default {
     // Versioning
     policyVersion: "1.1",
     versionName: "Andromeda",
-    versionBuild: "4.0",
+    versionBuild: "4.1",
     newBuild: false,
 
     // Coupons

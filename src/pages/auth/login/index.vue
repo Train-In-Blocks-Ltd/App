@@ -87,7 +87,7 @@
                 >Cookie Policy</a
             >.
         </txt>
-        <version-label />
+        <version-label class="mb-12" />
     </div>
 </template>
 

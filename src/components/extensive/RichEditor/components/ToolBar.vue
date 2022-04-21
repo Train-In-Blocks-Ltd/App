@@ -3,13 +3,13 @@
         <upload-pop-up />
         <txt-input-pop-up />
         <div
-            class="flex px-4 py-3 border-2 rounded-t-lg transition-all"
+            class="flex flex-wrap px-4 pt-4 border-2 rounded-t-lg transition-all"
             :class="toolbarClass"
         >
             <!-- Bold -->
             <icon-button
                 svg="bold"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{ 'opacity-60': editor.isActive('bold') }"
                 :on-click="() => editor.chain().focus().toggleBold().run()"
@@ -20,7 +20,7 @@
             <!-- Italic -->
             <icon-button
                 svg="italic"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{ 'opacity-60': editor.isActive('italic') }"
                 :on-click="() => editor.chain().focus().toggleItalic().run()"
@@ -31,7 +31,7 @@
             <!-- Underline -->
             <icon-button
                 svg="underline"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{ 'opacity-60': editor.isActive('underline') }"
                 :on-click="() => editor.chain().focus().toggleUnderline().run()"
@@ -42,7 +42,7 @@
             <!-- Ordered list -->
             <icon-button
                 svg="ol"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{
                     'opacity-60': editor.isActive('ordered_list'),
@@ -57,7 +57,7 @@
             <!-- Bullet list -->
             <icon-button
                 svg="ul"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{
                     'opacity-60': editor.isActive('bullet_list'),
@@ -72,7 +72,7 @@
             <!-- Check list -->
             <icon-button
                 svg="check-square"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{
                     'opacity-60': editor.isActive('taskList'),
@@ -85,7 +85,7 @@
             <!-- Divider -->
             <icon-button
                 svg="horizontal-rule"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{
                     'opacity-60': editor.isActive('horizontalRule'),
@@ -100,7 +100,7 @@
             <!-- Link -->
             <icon-button
                 svg="link"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :class="{
                     'opacity-60': editor.isActive('link'),
@@ -125,7 +125,7 @@
             <!-- Image -->
             <icon-button
                 svg="image"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :on-click="
                     () => {
@@ -143,7 +143,7 @@
             <icon-button
                 v-if="templates"
                 svg="file-text"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :on-click="
                     () => {
@@ -163,7 +163,7 @@
             <!-- Undo -->
             <icon-button
                 svg="rotate-ccw"
-                class="mr-3"
+                class="mr-3 mb-4"
                 :icon-size="22"
                 :on-click="() => editor.chain().focus().undo().run()"
                 aria-label="Undo"
@@ -173,6 +173,7 @@
             <!-- Redo -->
             <icon-button
                 svg="rotate-cw"
+                class="mb-4"
                 :icon-size="22"
                 :on-click="() => editor.chain().focus().redo().run()"
                 aria-label="Redo"

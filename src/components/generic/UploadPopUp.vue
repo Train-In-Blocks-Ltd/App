@@ -35,6 +35,12 @@ export default {
         Backdrop,
     },
     computed: mapState(["uploadPromise", "uploadTitle", "uploadText"]),
+    watch: {
+        uploadPromise(val) {
+            if (val) document.body.style.overflow = "hidden";
+            else document.body.style.overflow = "auto";
+        },
+    },
     methods: {
         handleBackdropClick() {
             this.uploadPromise(false);

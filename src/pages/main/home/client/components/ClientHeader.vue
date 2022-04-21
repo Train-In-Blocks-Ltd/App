@@ -93,7 +93,9 @@
                     title="Toolkit"
                 />
                 <icon-button
+                    v-if="!isDemo"
                     svg="archive"
+                    class="ml-4"
                     :on-click="() => clientArchive(clientDetails.client_id)"
                     :icon-size="32"
                     aria-label="Archive client"
@@ -123,7 +125,7 @@ export default {
     mounted() {
         this.checkClient();
     },
-    computed: mapState(["clientDetails", "silentLoading", "claims"]),
+    computed: mapState(["clientDetails", "silentLoading", "claims", "isDemo"]),
     methods: {
         /**
          * Updates the client.

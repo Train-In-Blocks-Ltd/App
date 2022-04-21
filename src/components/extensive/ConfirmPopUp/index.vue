@@ -49,6 +49,12 @@ export default {
         Backdrop,
     },
     computed: mapState(["confirmPromise", "confirmTitle", "confirmText"]),
+    watch: {
+        confirmPromise(val) {
+            if (val) document.body.style.overflow = "hidden";
+            else document.body.style.overflow = "auto";
+        },
+    },
     methods: {
         handleBackdropClick() {
             this.confirmPromise(false);
