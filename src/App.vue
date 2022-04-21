@@ -112,7 +112,7 @@ body {
         <response-pop-up v-if="authenticated" />
         <confirm-pop-up v-if="authenticated" />
         <nav-bar v-if="authenticated" class="fadeIn" />
-        <main class="md:ml-24" :class="{ 'm-0': !authenticated }">
+        <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
             <top-banner v-if="authenticated" />
             <transition
                 enter-active-class="fadeIn fill_mode_both delay"
