@@ -44,7 +44,9 @@
                 @output="(data) => (name = data)"
                 required
             />
-            <default-button type="submit"> Agree </default-button>
+            <default-button type="submit" aria-label="Agree">
+                Agree
+            </default-button>
         </div>
     </form>
 </template>

@@ -13,6 +13,8 @@
                 :icon-size="22"
                 :class="{ 'opacity-60': editor.isActive('bold') }"
                 :on-click="() => editor.chain().focus().toggleBold().run()"
+                aria-label="Bold"
+                title="Bold"
             />
 
             <!-- Italic -->
@@ -22,6 +24,8 @@
                 :icon-size="22"
                 :class="{ 'opacity-60': editor.isActive('italic') }"
                 :on-click="() => editor.chain().focus().toggleItalic().run()"
+                aria-label="Italic"
+                title="Italic"
             />
 
             <!-- Underline -->
@@ -31,6 +35,8 @@
                 :icon-size="22"
                 :class="{ 'opacity-60': editor.isActive('underline') }"
                 :on-click="() => editor.chain().focus().toggleUnderline().run()"
+                aria-label="Underline"
+                title="Underline"
             />
 
             <!-- Ordered list -->
@@ -44,6 +50,8 @@
                 :on-click="
                     () => editor.chain().focus().toggleOrderedList().run()
                 "
+                aria-label="Ordered list"
+                title="Ordered list"
             />
 
             <!-- Bullet list -->
@@ -57,6 +65,8 @@
                 :on-click="
                     () => editor.chain().focus().toggleBulletList().run()
                 "
+                aria-label="Bullet list"
+                title="Bullet list"
             />
 
             <!-- Check list -->
@@ -68,6 +78,8 @@
                     'opacity-60': editor.isActive('taskList'),
                 }"
                 :on-click="() => editor.chain().focus().toggleTaskList().run()"
+                aria-label="Check list"
+                title="Check list"
             />
 
             <!-- Divider -->
@@ -81,6 +93,8 @@
                 :on-click="
                     () => editor.chain().focus().setHorizontalRule().run()
                 "
+                aria-label="Divider"
+                title="Divider"
             />
 
             <!-- Link -->
@@ -104,6 +118,8 @@
                         });
                     }
                 "
+                aria-label="Link"
+                title="Link"
             />
 
             <!-- Image -->
@@ -119,6 +135,8 @@
                         });
                     }
                 "
+                aria-label="Image"
+                title="Image"
             />
 
             <!-- Templates -->
@@ -138,6 +156,8 @@
                         });
                     }
                 "
+                aria-label="Templates"
+                title="Templates"
             />
 
             <!-- Undo -->
@@ -146,6 +166,8 @@
                 class="mr-3 mb-4"
                 :icon-size="22"
                 :on-click="() => editor.chain().focus().undo().run()"
+                aria-label="Undo"
+                title="Undo"
             />
 
             <!-- Redo -->
@@ -154,6 +176,8 @@
                 class="mb-4"
                 :icon-size="22"
                 :on-click="() => editor.chain().focus().redo().run()"
+                aria-label="Redo"
+                title="redo"
             />
         </div>
     </div>

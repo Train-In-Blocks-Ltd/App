@@ -13,6 +13,7 @@
                             claims.user_type != 'Client' ||
                             claims.user_type == 'Admin'
                         "
+                        aria-label="Manage subscription"
                         :on-click="() => manageSubscription()"
                     >
                         Manage Subscription
@@ -24,6 +25,7 @@
                                     name: 'reset-password',
                                 })
                         "
+                        aria-label="Change password"
                     >
                         Change Password
                     </default-button>
@@ -53,6 +55,7 @@
                     <default-button
                         v-if="!coupon.generated"
                         :on-click="() => generateCoupon()"
+                        aria-label="Generate coupon"
                     >
                         Generate Coupon
                     </default-button>
@@ -60,6 +63,7 @@
                         v-else
                         :on-click="() => copyCoupon()"
                         v-html="coupon.code"
+                        aria-label="Coupon code"
                     />
                 </div>
             </div>
@@ -98,6 +102,7 @@
                         v-if="claims.calendar"
                         :on-click="() => copyCalendarLink()"
                         v-html="calendarText"
+                        aria-label="Calendar link"
                     />
                 </div>
 
@@ -119,7 +124,11 @@
                                 {{ policy.title }}
                             </txt>
                         </a>
-                        <a href="javascript:void(0)" @click="openEULA">
+                        <a
+                            href="javascript:void(0)"
+                            aria-label="Read EULA"
+                            @click="openEULA"
+                        >
                             <txt bold>EULA</txt>
                         </a>
                     </div>

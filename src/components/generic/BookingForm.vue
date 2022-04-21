@@ -35,6 +35,7 @@
             :is-disabled="
                 !(bookingForm.date && bookingForm.time && bookingForm.notes)
             "
+            aria-label="Create booking"
         >
             Create booking
         </default-button>

@@ -44,6 +44,9 @@
                 <a
                     class="hidden sm:flex items-center mb-4"
                     href="javascript:void(0)"
+                    :aria-label="`Switch to ${
+                        !showMonthlyCal ? 'month' : 'week'
+                    } view`"
                     @click="showMonthlyCal = !showMonthlyCal"
                 >
                     <icon svg="calendar" :icon-size="20" class="mr-2" />
@@ -129,6 +132,7 @@
                                         !weekIsEmpty
                                     "
                                     href="javascript:void(0)"
+                                    aria-label="Select microcycle"
                                     class="mr-4 text-sm"
                                     @click="selectAll('week')"
                                 >
@@ -141,6 +145,7 @@
                                             plan.sessions.length
                                     "
                                     href="javascript:void(0)"
+                                    aria-label="Select all"
                                     class="mr-4 text-sm"
                                     @click="selectAll('all')"
                                 >
@@ -149,6 +154,11 @@
                                 <a
                                     v-if="hasSessions && !isEditingSession"
                                     href="javascript:void(0)"
+                                    :aria-label="
+                                        expandedSessions.length !== 0
+                                            ? 'Collapse'
+                                            : 'Expand'
+                                    "
                                     class="mr-4 text-sm"
                                     @click="
                                         toggleExpandAll(
@@ -195,11 +205,15 @@
                                     "
                                     :icon-size="28"
                                     class="mr-4"
+                                    aria-label="Info"
+                                    title="Info"
                                 />
                                 <icon-button
                                     svg="plus"
                                     :on-click="() => createNewSession()"
                                     :icon-size="28"
+                                    aria-label="New session"
+                                    title="New session"
                                 />
                             </div>
                         </div>
@@ -333,6 +347,8 @@
                                                             session.id
                                                         )
                                                 "
+                                                aria-label="Expand"
+                                                title="Expand"
                                             />
                                         </div>
                                     </div>

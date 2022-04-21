@@ -20,6 +20,7 @@
                     v-for="(option, index) in options"
                     href="javascript:void(0)"
                     class="flex items-center w-max m-auto text-2xl hover:opacity-60 transition-opacity"
+                    :aria-label="option.name"
                     :key="`${type}_option_${index}`"
                     :style="{
                         color:

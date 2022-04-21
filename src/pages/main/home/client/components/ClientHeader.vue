@@ -48,6 +48,7 @@
                 v-if="clientAlreadyMsg === 'Restricted'"
                 :is-disabled="clientAlready"
                 :on-click="() => giveAccess()"
+                :aria-label="clientAlreadyMsg"
             >
                 {{ clientAlreadyMsg }}
             </default-button>
@@ -64,6 +65,7 @@
                         updateClient();
                     }
                 "
+                aria-label="Email notification"
             >
                 {{ clientDetails.notifications === 1 ? "Disable" : "Enable" }}
                 email notifications
@@ -72,6 +74,7 @@
                 v-else
                 :is-disabled="clientAlready"
                 :on-click="() => giveAccess()"
+                :aria-label="clientAlreadyMsg"
             >
                 {{ clientAlreadyMsg }}
             </default-button>
@@ -85,6 +88,9 @@
                             })
                     "
                     :icon-size="32"
+                    class="mr-4"
+                    aria-label="Toolkit"
+                    title="Toolkit"
                 />
                 <icon-button
                     v-if="!isDemo"
@@ -92,6 +98,8 @@
                     class="ml-4"
                     :on-click="() => clientArchive(clientDetails.client_id)"
                     :icon-size="32"
+                    aria-label="Archive client"
+                    title="Archive client"
                 />
             </div>
         </div>

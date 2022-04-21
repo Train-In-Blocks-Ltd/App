@@ -16,10 +16,13 @@
                         getWeek();
                     }
                 "
+                aria-label="Previous week"
+                title="Previous week"
             />
             <a
                 href="javascript:void(0)"
                 :class="{ 'opacity-60 cursor-default': weekDiff === 0 }"
+                aria-label="Today"
                 @click="
                     () => {
                         weekDiff = 0;
@@ -38,6 +41,8 @@
                         getWeek();
                     }
                 "
+                aria-label="Next week"
+                title="Next week"
             />
         </div>
 

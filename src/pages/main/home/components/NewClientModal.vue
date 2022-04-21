@@ -64,6 +64,7 @@
                 newClient.email !== newClient.confirm
             "
             type="submit"
+            aria-label="Save"
         >
             Save
         </default-button>

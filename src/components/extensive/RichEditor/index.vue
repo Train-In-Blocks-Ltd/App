@@ -133,6 +133,7 @@ div#rich_show_content {
                         $emit('on-edit-change', 'save', itemId);
                     }
                 "
+                aria-label="Save"
             >
                 Save
             </default-button>
@@ -145,6 +146,7 @@ div#rich_show_content {
                         $emit('on-edit-change', 'cancel', itemId);
                     }
                 "
+                aria-label="Cancel"
             >
                 Cancel
             </default-button>

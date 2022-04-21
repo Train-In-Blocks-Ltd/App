@@ -61,6 +61,7 @@
                 password.new !== password.match
             "
             class="mr-4"
+            aria-label="Change your password"
         >
             Change your password
         </default-button>

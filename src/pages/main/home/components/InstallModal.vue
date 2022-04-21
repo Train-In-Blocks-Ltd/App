@@ -38,7 +38,11 @@
 
         <!-- Buttons -->
         <div class="mt-8">
-            <default-button v-if="pwa.canInstall" :on-click="handleInstall">
+            <default-button
+                v-if="pwa.canInstall"
+                :on-click="handleInstall"
+                aria-label="Install"
+            >
                 Install
             </default-button>
             <a
@@ -46,7 +50,7 @@
                 href="https://app.traininblocks.com"
                 target="_blank"
             >
-                <default-button>Launch</default-button>
+                <default-button aria-label="Launch">Launch</default-button>
             </a>
         </div>
     </div>

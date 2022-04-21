@@ -21,6 +21,8 @@
                         svg="x"
                         :on-click="() => $store.dispatch('closeModal')"
                         :icon-size="32"
+                        aria-label="Close"
+                        title="Close"
                     />
                 </template>
             </secondary-header>

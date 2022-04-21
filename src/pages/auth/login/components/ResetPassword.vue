@@ -9,7 +9,9 @@
             @output="(data) => (email = data)"
             focus-first
         />
-        <default-button type="submit">Send recovery email</default-button>
+        <default-button type="submit" aria-label="Send recovery email"
+            >Send recovery email</default-button
+        >
     </form>
 </template>
 

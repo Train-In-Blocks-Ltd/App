@@ -52,6 +52,9 @@
             <a
                 class="flex items-center mb-4"
                 href="javascript:void(0)"
+                :aria-label="`Switch to ${
+                    !showMonthlyCal ? 'month' : 'week'
+                } view`"
                 @click="showMonthlyCal = !showMonthlyCal"
             >
                 <icon svg="calendar" :icon-size="20" class="mr-2" />
@@ -87,6 +90,8 @@
                     :icon-size="32"
                     :on-click="() => showing_current_session--"
                     :disabled="showing_current_session === 0"
+                    aria-label="Previous session"
+                    title="Previous session"
                 />
                 <txt type="subtitle">
                     {{ showing_current_session + 1 }}/{{ plan.sessions.length }}
@@ -99,6 +104,8 @@
                         showing_current_session ===
                         parseInt(plan.sessions.length) - 1
                     "
+                    aria-label="Next session"
+                    title="Next session"
                 />
             </div>
 
@@ -136,6 +143,11 @@
                                 session.id,
                                 session.checked
                             )
+                    "
+                    :aria-label="
+                        session.checked === 1
+                            ? 'Completed'
+                            : 'Click to complete'
                     "
                     class="mt-4"
                 >

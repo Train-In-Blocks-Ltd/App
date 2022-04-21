@@ -27,6 +27,7 @@
                             $store.dispatch('closeTxtInputPopUp');
                         }
                     "
+                    aria-label="Confirm"
                     class="mr-2"
                 >
                     Confirm
@@ -39,6 +40,7 @@
                             $store.dispatch('closeTxtInputPopUp');
                         }
                     "
+                    aria-label="Cancel"
                 >
                     Cancel
                 </default-button>

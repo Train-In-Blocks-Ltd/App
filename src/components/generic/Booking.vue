@@ -37,6 +37,7 @@
             <a
                 v-if="!isInThePast(booking) && !isTrainer"
                 href="javascript:void(0)"
+                aria-label="Cancel"
                 @click="cancelBooking(booking.id, booking.datetime)"
             >
                 <txt class="text-red-700">Cancel</txt>
@@ -51,7 +52,17 @@
                 >
                     <txt class="text-green-700">Accept</txt>
                 </a>
-                <a href="javascript:void(0)" @click="cancelBooking">
+                <a
+                    href="javascript:void(0)"
+                    :aria-label="
+                        isInThePast(booking)
+                            ? 'Delete'
+                            : booking.status === 'Pending'
+                            ? 'Reject'
+                            : 'Cancel'
+                    "
+                    @click="cancelBooking"
+                >
                     <txt class="text-red-700">
                         {{
                             isInThePast(booking)
