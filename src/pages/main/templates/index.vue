@@ -84,7 +84,11 @@
                         @output="(data) => (template.name = data)"
                     />
                     <div class="flex flex-col items-center">
-                        <checkbox :item-id="template.id" />
+                        <checkbox
+                            v-if="!isDemo"
+                            :item-id="template.id"
+                            class="mt-2"
+                        />
                         <icon-button
                             v-show="!isEditingTemplate"
                             :svg="
@@ -96,7 +100,6 @@
                                 () => toggle_expanded_templates(template.id)
                             "
                             :icon-size="20"
-                            class="mt-2"
                         />
                     </div>
                 </div>
@@ -185,7 +188,13 @@ export default {
             expandedTemplates: [],
         };
     },
-    computed: mapState(["loading", "dontLeave", "templates", "selectedIds"]),
+    computed: mapState([
+        "loading",
+        "dontLeave",
+        "templates",
+        "selectedIds",
+        "isDemo",
+    ]),
     async created() {
         this.$store.dispatch("setLoading", {
             loading: true,
