@@ -1,16 +1,13 @@
 export default {
-    /**
-     * Pushes new booking to 'bookings'.
-     * @param {number} payload.id - The id of the booking.
-     * @param {number} payload.client_id - The client id of the booking.
-     * @param {string} payload.datetime - The date and time of the booking.
-     * @param {string} payload.notes - The description or additional information that goes with the booking.
-     * @param {string} payload.status - The status of the booking.
-     * @param {boolean} payload.isClientSide - Is this to be added on the client or trainer side.
-     */
-    addNewBooking(state, payload) {
-        delete payload.isClientSide;
-        state.bookings.push({ ...payload });
+    /** Pushes new booking to 'bookings'. */
+    addNewBooking(state, { id, client_id, notes, status, datetime }) {
+        state.bookings.push({
+            id,
+            client_id: parseInt(client_id),
+            notes,
+            status,
+            datetime,
+        });
         state.bookings.sort((a, b) => {
             return (
                 new Date(a.datetime.match(/\d{4}-\d{2}-\d{2}/)[0]) -
@@ -19,22 +16,15 @@ export default {
         });
     },
 
-    /**
-     * Updates a booking.
-     * @param {number} payload.id - The id of the booking.
-     * @param {string} payload.status - The status of the booking.
-     */
-    updateBooking(state, payload) {
+    /** Updates a booking. */
+    updateBooking(state, { id, status }) {
         const BOOKING = state.bookings.find(
-            (booking) => booking.id === parseInt(payload.id)
+            (booking) => booking.id === parseInt(id)
         );
-        BOOKING.status = payload.status;
+        BOOKING.status = status;
     },
 
-    /**
-     * Removes a booking.
-     * @param {number} bookingId - The id of the booking.
-     */
+    /** Removes a booking. */
     removeBooking(state, bookingId) {
         const BOOKING = state.bookings.find(
             (booking) => booking.id === parseInt(bookingId)
