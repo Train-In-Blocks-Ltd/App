@@ -42,7 +42,7 @@
                 </div>
 
                 <!-- Referral -->
-                <div class="grid gap-4">
+                <div v-if="isTrainer" class="grid gap-4">
                     <txt type="large-body" bold>Referral Code</txt>
                     <txt>
                         <b>Earn up to 15% off!</b> You'll receive a 5% discount
@@ -225,6 +225,7 @@ export default {
             "versionName",
             "versionBuild",
             "coupon",
+            "isTrainer",
         ]),
         darkmodeTheme() {
             const theme = localStorage.getItem("darkmode");
