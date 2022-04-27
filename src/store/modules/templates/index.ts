@@ -1,9 +1,9 @@
 import { store } from "@/store";
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
-import { Template } from "./types";
+import { Template } from "../types";
 
 @Module({ name: "templates", store })
-export default class Templates extends VuexModule {
+export default class TemplatesModule extends VuexModule {
     public templates: Template[] = [];
 
     @Mutation
