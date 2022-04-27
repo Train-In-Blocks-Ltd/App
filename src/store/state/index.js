@@ -65,7 +65,7 @@ export default {
     bookings: [],
 
     // Clients
-    clients: null,
+    clients: [],
     clientDetails: null,
     clientUser: {
         plans: null,
