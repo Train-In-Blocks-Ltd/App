@@ -86,11 +86,10 @@
                         :value="template.name"
                         @output="(data) => (template.name = data)"
                     />
-                    <div class="flex flex-col items-center">
+                    <div class="flex flex-col items-center gap-4">
                         <checkbox
                             v-if="!isDemo"
                             :item-id="template.id"
-                            class="mt-2"
                         />
                         <icon-button
                             v-show="!isEditingTemplate"
