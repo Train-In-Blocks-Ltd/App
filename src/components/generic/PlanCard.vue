@@ -6,7 +6,6 @@
         <div class="flex">
             <router-link
                 :to="link"
-                href="javascript:void(0)"
                 :aria-label="isTrainer ? 'Edit' : 'View'"
                 class="mr-3"
             >
