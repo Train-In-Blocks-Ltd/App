@@ -2,8 +2,8 @@
     <wrapper id="home">
         <div class="grid mb-8">
             <home-header />
-            <clients-list v-if="clients.length > 0 && !loading" />
-            <txt v-else type="large-body" grey>
+            <clients-list />
+            <txt v-if="!loading" type="large-body" grey>
                 No clients added yet, use the button on the top-right of your
                 screen.
             </txt>
@@ -33,7 +33,7 @@ export default {
             persistResponse: "",
         };
     },
-    computed: mapState(["clients", "loading", "modalOpen"]),
+    computed: mapState(["loading", "modalOpen"]),
     async created() {
         this.$store.dispatch("setLoading", {
             loading: true,
