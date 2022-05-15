@@ -20,7 +20,7 @@ import store from "../..";
 })
 class AppStateModule extends VuexModule {
     authenticated: boolean = false;
-    connected: boolean = false;
+    connected: boolean = true;
     isTrainer: boolean = false;
     isDemo: boolean = false;
     loading: boolean = false;
@@ -35,7 +35,6 @@ class AppStateModule extends VuexModule {
         installed: false,
     };
     clientUserLoaded: boolean = false;
-    search: string = "";
 
     // Versioning
     policyVersion: string = "1.1";
@@ -141,10 +140,6 @@ class AppStateModule extends VuexModule {
     @MutationAction
     async setClientUserLoaded(clientUserLoaded: boolean) {
         return { clientUserLoaded };
-    }
-    @MutationAction
-    async setSearch(search: string) {
-        return { search };
     }
 
     //! To remove

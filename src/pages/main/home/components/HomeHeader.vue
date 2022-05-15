@@ -71,16 +71,17 @@
 
 <script lang="ts">
 import appState from "../../../../store/modules/appState";
+import utils from "../../../../store/modules/utils";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
     computed: {
         search: {
             get() {
-                return appState.search;
+                return utils.search;
             },
             set(value) {
-                appState.setSearch(value);
+                utils.setSearch(value);
             },
         },
     },

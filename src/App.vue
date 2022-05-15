@@ -125,8 +125,7 @@ body {
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { baseAPI } from "./api";
 import appState from "./store/modules/appState";
 import clients from "./store/modules/clients";
@@ -153,7 +152,7 @@ const TopBanner = () =>
         /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "./components/generic/TopBanner.vue"
     );
 
-export default Vue.extend({
+@Component({
     metaInfo() {
         return {
             title: "Home",
@@ -168,29 +167,42 @@ export default Vue.extend({
         ConfirmPopUp,
         TopBanner,
     },
-    computed: mapState([
-        "authenticated",
-        "clientUserLoaded",
-        "loading",
-        "claims",
-        "clients",
-        "connected",
-        "instanceReady",
-    ]),
-    watch: {
-        $route(to, from) {
-            this.isAuthenticated();
-        },
-        async connected() {
-            if (this.connected === true) {
-                await this.setup();
-            }
-        },
-    },
+})
+export default class App extends Vue {
+    get authenticated() {
+        return appState.authenticated;
+    }
+    get clientUserLoaded() {
+        return appState.clientUserLoaded;
+    }
+    get loading() {
+        return appState.loading;
+    }
+    get claims() {
+        return appState.claims;
+    }
+    get connected() {
+        return appState.connected;
+    }
+    get instanceReady() {
+        return appState.instanceReady;
+    }
+
+    @Watch("connected")
+    onConnectedChange() {
+        if (this.connected) this.setup();
+    }
+
+    @Watch("$route")
+    onRouteChange() {
+        this.isAuthenticated();
+    }
+
     created() {
         appState.setLoading(true);
         this.isAuthenticated();
-    },
+    }
+
     async mounted() {
         // Sets the body to have dark mode.
         document.body.setAttribute(
@@ -272,168 +284,163 @@ export default Vue.extend({
                 return Promise.reject(error);
             }
         );
-    },
-    methods: {
-        /** Gives darkmode theme to the app. */
-        darkmode(mode?: DarkmodeType) {
-            const MATCHED_MEDIA =
-                window.matchMedia("(prefers-color-scheme)") || false;
-            if (mode === "dark") document.documentElement.classList.add("dark");
-            else if (mode === "system" && !!MATCHED_MEDIA) {
-                this.darkmode(
-                    window.matchMedia("(prefers-color-scheme: dark)").matches
-                        ? "dark"
-                        : "light"
-                );
-                window
-                    .matchMedia("(prefers-color-scheme: dark)")
-                    .addListener((e) => {
-                        this.darkmode(e.matches ? "dark" : "light");
-                    });
-            } else document.documentElement.classList.remove("dark");
-        },
+    }
 
-        /** Checks if the user is authenticated and sets the Vuex state accordingly. */
-        async isAuthenticated() {
-            appState.setAuthenticated(await this.$auth.isAuthenticated());
-        },
+    /* --------------------------------- Methods -------------------------------- */
 
-        /** Initiates all the crucial setup for the app. */
-        async setup() {
-            if (!this.instanceReady) {
-                // Set claims
-                appState.setClaims(
-                    (await this.$auth.getUser()) as TIBUserClaims
-                );
-
-                // Sets demo flag
-                appState.setIsDemo(
-                    appState.claims?.email === "demo@traininblocks.com"
-                );
-
-                // Sets trainer flag
-                appState.setIsTrainer(
-                    appState.claims?.user_type === "Trainer" ||
-                        appState.claims?.user_type === "Admin"
-                );
-
-                if (appState.claims) {
-                    if (!appState.claims.ga || !appState.claims)
-                        appState.setClaimsAnalytics(true);
-
-                    if (!appState.claims.theme || !appState.claims)
-                        appState.setClaimsTheme("system");
-
-                    // Set analytics and theme
-                    appState.claims.ga !== false
-                        ? this.$ga.enable()
-                        : this.$ga.disable();
-
-                    if (localStorage.getItem("darkmode"))
-                        this.darkmode(
-                            localStorage.getItem("darkmode") as DarkmodeType
-                        );
-
-                    // Set EULA
-                    if (
-                        (!appState.claims.policy ||
-                            appState.policyVersion !==
-                                appState.claims.policy[2]) &&
-                        appState.claims.email !== "demo@traininblocks.com" &&
-                        this.authenticated
-                    ) {
-                        this.$store.dispatch("openModal", {
-                            name: "eula",
-                            persist: true,
-                        });
-                    }
-                }
-
-                // Set auth header
-                baseAPI.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
-
-                // Set connection
-                appState.setConnected(navigator.onLine);
-                window.addEventListener("offline", () => {
-                    appState.setConnected(false);
+    /** Gives darkmode theme to the app. */
+    darkmode(mode?: DarkmodeType) {
+        const MATCHED_MEDIA =
+            window.matchMedia("(prefers-color-scheme)") || false;
+        if (mode === "dark") document.documentElement.classList.add("dark");
+        else if (mode === "system" && !!MATCHED_MEDIA) {
+            this.darkmode(
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+                    ? "dark"
+                    : "light"
+            );
+            window
+                .matchMedia("(prefers-color-scheme: dark)")
+                .addListener((e) => {
+                    this.darkmode(e.matches ? "dark" : "light");
                 });
-                window.addEventListener("online", () => {
-                    appState.setConnected(true);
-                });
+        } else document.documentElement.classList.remove("dark");
+    }
 
-                // Check build
-                if (
-                    localStorage.getItem("versionBuild") !==
-                    appState.versionBuild
-                )
-                    appState.setNewBuild(true);
+    /** Checks if the user is authenticated and sets the Vuex state accordingly. */
+    async isAuthenticated() {
+        appState.setAuthenticated(await this.$auth.isAuthenticated());
+    }
 
-                // Get data if not client
+    /** Initiates all the crucial setup for the app. */
+    async setup() {
+        if (!this.instanceReady) {
+            // Set claims
+            appState.setClaims((await this.$auth.getUser()) as TIBUserClaims);
+
+            // Sets demo flag
+            appState.setIsDemo(
+                appState.claims?.email === "demo@traininblocks.com"
+            );
+
+            // Sets trainer flag
+            appState.setIsTrainer(
+                appState.claims?.user_type === "Trainer" ||
+                    appState.claims?.user_type === "Admin"
+            );
+
+            if (appState.claims) {
+                if (!appState.claims.ga || !appState.claims)
+                    appState.setClaimsAnalytics(true);
+
+                if (!appState.claims.theme || !appState.claims)
+                    appState.setClaimsTheme("system");
+
+                // Set analytics and theme
+                appState.claims.ga !== false
+                    ? this.$ga.enable()
+                    : this.$ga.disable();
+
+                if (localStorage.getItem("darkmode"))
+                    this.darkmode(
+                        localStorage.getItem("darkmode") as DarkmodeType
+                    );
+
+                // Set EULA
                 if (
-                    appState.claims?.user_type === "Admin" ||
-                    appState.claims?.user_type === "Trainer"
+                    (!appState.claims.policy ||
+                        appState.policyVersion !== appState.claims.policy[2]) &&
+                    appState.claims.email !== "demo@traininblocks.com" &&
+                    this.authenticated
                 ) {
-                    try {
-                        clients.fetchClients();
-                    } catch (e) {
-                        this.$store.dispatch("resolveError", e);
-                    }
+                    this.$store.dispatch("openModal", {
+                        name: "eula",
+                        persist: true,
+                    });
                 }
-
-                // Stops setup from running more than once
-                appState.setInstanceReady();
             }
-        },
 
-        /**
-         * Saves the user's claims to Okta.
-         */
-        async saveClaims() {
-            try {
-                appState.setLoading(true);
-                await this.$store.dispatch("saveClaims");
-                appState.setLoading(false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
+            // Set auth header
+            baseAPI.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
-        /**
-         * Gets all the data for setup on the client-side
-         */
-        async getClientSideData() {
-            if (!this.clientUserLoaded) {
+            // Set connection
+            appState.setConnected(navigator.onLine);
+            window.addEventListener("offline", () => {
+                appState.setConnected(false);
+            });
+            window.addEventListener("online", () => {
+                appState.setConnected(true);
+            });
+
+            // Check build
+            if (localStorage.getItem("versionBuild") !== appState.versionBuild)
+                appState.setNewBuild(true);
+
+            // Get data if not client
+            if (
+                appState.claims?.user_type === "Admin" ||
+                appState.claims?.user_type === "Trainer"
+            ) {
                 try {
-                    await this.$store.dispatch("getClientSideInfo");
-                    await this.$store.dispatch("getClientSidePlans");
-                    appState.setClientUserLoaded(true);
+                    clients.fetchClients();
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }
             }
-        },
 
-        /**
-         * Updates a client-side session.
-         * @param {integer} planId - The id of the plan.
-         * @param {integer} sessionId - The id of the session to update.
-         */
-        async updateClientSideSession(planId: number, sessionId: number) {
+            // Stops setup from running more than once
+            appState.setInstanceReady();
+        }
+    }
+
+    /**
+     * Saves the user's claims to Okta.
+     */
+    async saveClaims() {
+        try {
+            appState.setLoading(true);
+            await this.$store.dispatch("saveClaims");
+            appState.setLoading(false);
+        } catch (e) {
+            this.$store.dispatch("resolveError", e);
+        }
+    }
+
+    /**
+     * Gets all the data for setup on the client-side
+     */
+    async getClientSideData() {
+        if (!this.clientUserLoaded) {
             try {
-                await this.$store.dispatch("updateClientSideSession", {
-                    planId,
-                    sessionId,
-                });
-                this.$ga.event("Session", "update");
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Session updated",
-                    description: "Your changes have been saved",
-                });
-                appState.setLoading(false);
+                await this.$store.dispatch("getClientSideInfo");
+                await this.$store.dispatch("getClientSidePlans");
+                appState.setClientUserLoaded(true);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
-        },
-    },
-});
+        }
+    }
+
+    /**
+     * Updates a client-side session.
+     * @param {integer} planId - The id of the plan.
+     * @param {integer} sessionId - The id of the session to update.
+     */
+    async updateClientSideSession(planId: number, sessionId: number) {
+        try {
+            await this.$store.dispatch("updateClientSideSession", {
+                planId,
+                sessionId,
+            });
+            this.$ga.event("Session", "update");
+            this.$store.dispatch("openResponsePopUp", {
+                title: "Session updated",
+                description: "Your changes have been saved",
+            });
+            appState.setLoading(false);
+        } catch (e) {
+            this.$store.dispatch("resolveError", e);
+        }
+    }
+}
 </script>

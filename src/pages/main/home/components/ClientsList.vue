@@ -28,6 +28,7 @@
 import appState from "../../../../store/modules/appState";
 import clientsModule from "../../../../store/modules/clients";
 import { Component, Vue } from "vue-property-decorator";
+import utils from "../../../../store/modules/utils";
 
 const ClientLink = () =>
     import(
@@ -44,7 +45,7 @@ export default class ClientList extends Vue {
         return appState.loading;
     }
     get search() {
-        return appState.search;
+        return utils.search;
     }
     get clients() {
         return clientsModule.clients;
