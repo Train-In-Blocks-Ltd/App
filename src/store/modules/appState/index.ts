@@ -27,7 +27,6 @@ class AppStateModule extends VuexModule {
     silentLoading: boolean = false;
     dontLeave: boolean = false;
     disableButtons: boolean = false;
-    newBuild: boolean = false;
     claims: TIBUserClaims | null = null;
     pwa: PWASettings = {
         deferredPrompt: null,
@@ -37,6 +36,12 @@ class AppStateModule extends VuexModule {
     };
     clientUserLoaded: boolean = false;
     search: string = "";
+
+    // Versioning
+    policyVersion: string = "1.1";
+    versionName: string = "Andromeda";
+    versionBuild: string = "4.1";
+    newBuild: boolean = false;
 
     //! To remove
     instanceReady: boolean = false;

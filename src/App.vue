@@ -127,7 +127,9 @@ body {
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
+import { baseAPI } from "./api";
 import appState from "./store/modules/appState";
+import clients from "./store/modules/clients";
 import { DarkmodeType, TIBUserClaims } from "./store/modules/types";
 
 const NavBar = () =>
@@ -219,8 +221,7 @@ export default Vue.extend({
                 });
         }
         window.addEventListener("beforeunload", (e) => {
-            // @ts-expect-error
-            if (this.dontLeave) {
+            if (appState.dontLeave) {
                 e.preventDefault();
                 e.returnValue =
                     "Your changes might not be saved, are you sure you want to leave?";
@@ -245,11 +246,9 @@ export default Vue.extend({
         if (navigator.standalone) appState.setPWADisplayMode("standalone-ios");
 
         if (window.matchMedia("(display-mode: standalone)").matches)
-            this.$store.dispatch("setPWADisplayMode", "standalone");
+            appState.setPWADisplayMode("standalone");
 
-        // @ts-expect-error
-        this.$axios.interceptors.request.use(
-            // @ts-expect-error
+        baseAPI.interceptors.request.use(
             (config) => {
                 if (
                     appState.claims?.email === "demo@traininblocks.com" &&
@@ -263,13 +262,12 @@ export default Vue.extend({
                     });
                     appState.setLoading(false);
                     // @ts-expect-error
-                    throw new SELF.$axios.Cancel(
+                    throw new baseAPI.Cancel(
                         "You are using the demo account. Your changes won't be saved"
                     );
                 }
                 return config;
             },
-            // @ts-expect-error
             (error) => {
                 return Promise.reject(error);
             }
@@ -315,19 +313,19 @@ export default Vue.extend({
 
                 // Sets trainer flag
                 appState.setIsTrainer(
-                    this.claims.user_type === "Trainer" ||
-                        this.claims.user_type === "Admin"
+                    appState.claims?.user_type === "Trainer" ||
+                        appState.claims?.user_type === "Admin"
                 );
 
-                if (this.claims) {
-                    if (!this.claims.ga || !this.claims)
+                if (appState.claims) {
+                    if (!appState.claims.ga || !appState.claims)
                         appState.setClaimsAnalytics(true);
 
-                    if (!this.claims.theme || !this.claims)
+                    if (!appState.claims.theme || !appState.claims)
                         appState.setClaimsTheme("system");
 
                     // Set analytics and theme
-                    this.claims.ga !== false
+                    appState.claims.ga !== false
                         ? this.$ga.enable()
                         : this.$ga.disable();
 
@@ -338,10 +336,10 @@ export default Vue.extend({
 
                     // Set EULA
                     if (
-                        (!this.claims.policy ||
-                            this.$store.state.policyVersion !==
-                                this.claims.policy[2]) &&
-                        this.claims.email !== "demo@traininblocks.com" &&
+                        (!appState.claims.policy ||
+                            appState.policyVersion !==
+                                appState.claims.policy[2]) &&
+                        appState.claims.email !== "demo@traininblocks.com" &&
                         this.authenticated
                     ) {
                         this.$store.dispatch("openModal", {
@@ -352,8 +350,7 @@ export default Vue.extend({
                 }
 
                 // Set auth header
-                // @ts-expect-error
-                this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
+                baseAPI.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
                 // Set connection
                 appState.setConnected(navigator.onLine);
@@ -367,17 +364,17 @@ export default Vue.extend({
                 // Check build
                 if (
                     localStorage.getItem("versionBuild") !==
-                    this.$store.state.versionBuild
+                    appState.versionBuild
                 )
                     appState.setNewBuild(true);
 
                 // Get data if not client
                 if (
-                    this.claims.user_type === "Admin" ||
-                    this.claims.user_type === "Trainer"
+                    appState.claims?.user_type === "Admin" ||
+                    appState.claims?.user_type === "Trainer"
                 ) {
                     try {
-                        await this.$store.dispatch("getHighLevelData");
+                        clients.getClients();
                     } catch (e) {
                         this.$store.dispatch("resolveError", e);
                     }

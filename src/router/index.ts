@@ -3,6 +3,7 @@ import Router, { NavigationGuardNext, Route } from "vue-router";
 import OktaVue, { LoginCallback } from "@okta/okta-vue";
 import { OktaAuth } from "@okta/okta-auth-js";
 import appState from "../store/modules/appState";
+import { baseAPI } from "../api";
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
         ? require("../../config/prod.env")
@@ -223,7 +224,7 @@ const onAuthRequired = async (
 const userType = async (to: Route, from: Route, next: NavigationGuardNext) => {
     let result;
     if (await Vue.prototype.$auth.isAuthenticated()) {
-        Vue.prototype.$axios.defaults.headers.common.Authorization = `Bearer ${await Vue.prototype.$auth.getAccessToken()}`;
+        baseAPI.defaults.headers.common.Authorization = `Bearer ${await Vue.prototype.$auth.getAccessToken()}`;
         if (sessionStorage.getItem("claims")) {
             result = JSON.parse(sessionStorage.getItem("claims") ?? "");
         } else {
