@@ -1,13 +1,24 @@
-import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
+import {
+    getModule,
+    Module,
+    MutationAction,
+    VuexModule,
+} from "vuex-module-decorators";
 import {
     DarkmodeType,
     PWADisplayMode,
     PWASettings,
     TIBUserClaims,
 } from "../types";
+import store from "../..";
 
-@Module
-export default class AppState extends VuexModule {
+@Module({
+    namespaced: true,
+    name: "appState",
+    store,
+    dynamic: true,
+})
+class AppStateModule extends VuexModule {
     authenticated: boolean = false;
     connected: boolean = false;
     isTrainer: boolean = false;
@@ -17,9 +28,9 @@ export default class AppState extends VuexModule {
     dontLeave: boolean = false;
     disableButtons: boolean = false;
     newBuild: boolean = false;
-    claims: TIBUserClaims | undefined = undefined;
+    claims: TIBUserClaims | null = null;
     pwa: PWASettings = {
-        deferredPrompt: undefined,
+        deferredPrompt: null,
         displayMode: "browser tab",
         canInstall: false,
         installed: false,
@@ -29,157 +40,110 @@ export default class AppState extends VuexModule {
     //! To remove
     instanceReady: boolean = false;
 
-    /* -------------------------------- Mutations ------------------------------- */
-
-    @Mutation
-    SET_AUTHENTICATED(authenticated: boolean) {
-        this.authenticated = authenticated;
+    @MutationAction
+    async setAuthenticated(authenticated: boolean) {
+        return {
+            authenticated,
+        };
     }
-    @Mutation
-    SET_CONNECTED(connected: boolean) {
-        this.connected = connected;
+    @MutationAction
+    async setConnected(connected: boolean) {
+        return {
+            connected,
+        };
     }
-    @Mutation
-    SET_IS_TRAINER(isTrainer: boolean) {
-        this.isTrainer = isTrainer;
+    @MutationAction
+    async setIsTrainer(isTrainer: boolean) {
+        return { isTrainer };
     }
-    @Mutation
-    SET_IS_DEMO(isDemo: boolean) {
-        this.isDemo = isDemo;
+    @MutationAction
+    async setIsDemo(isDemo: boolean) {
+        return { isDemo };
     }
-    @Mutation
-    SET_LOADING(loading: boolean) {
-        this.loading = loading;
+    @MutationAction
+    async setLoading(loading: boolean) {
+        return { loading };
     }
-    @Mutation
-    SET_SILENT_LOADING(silentLoading: boolean) {
-        this.silentLoading = silentLoading;
+    @MutationAction
+    async setSilentLoading(silentLoading: boolean) {
+        return { silentLoading };
     }
-    @Mutation
-    SET_DONT_LEAVE(dontLeave: boolean) {
-        this.dontLeave = dontLeave;
+    @MutationAction
+    async setDontLeave(dontLeave: boolean) {
+        return { dontLeave };
     }
-    @Mutation
-    SET_DISABLE_BUTTONS(disableButtons: boolean) {
-        this.disableButtons = disableButtons;
+    @MutationAction
+    async setDisableButton(disableButtons: boolean) {
+        return { disableButtons };
     }
-    @Mutation
-    SET_NEW_BUILD(newBuild: boolean) {
-        this.newBuild = newBuild;
+    @MutationAction
+    async setNewBuild(newBuild: boolean) {
+        return { newBuild };
     }
-    @Mutation
-    SET_CLAIMS(claims: TIBUserClaims) {
-        this.claims = claims;
+    @MutationAction
+    async setClaims(claims: TIBUserClaims) {
+        return { claims };
     }
-    @Mutation
-    SET_CLAIMS_GA(mode: boolean) {
-        this.claims!.ga = mode;
+    @MutationAction
+    async setClaimsAnalytics(ga: boolean) {
+        return {
+            claims: {
+                ga,
+            },
+        };
     }
-    @Mutation
-    SET_CLAIMS_THEME(mode: DarkmodeType) {
-        this.claims!.theme = mode;
+    @MutationAction
+    async setClaimsTheme(theme: DarkmodeType) {
+        return {
+            claims: {
+                theme,
+            },
+        };
     }
-    @Mutation
-    SET_PWA_DEFERRED_PROMPT(e: Event) {
-        this.pwa.deferredPrompt = e;
+    @MutationAction
+    async setPWADeferredPrompt(deferredPrompt: Event | null) {
+        return {
+            pwa: {
+                deferredPrompt,
+            },
+        };
     }
-    @Mutation
-    SET_PWA_CAN_INSTALL(canInstall: boolean) {
-        this.pwa.canInstall = canInstall;
+    @MutationAction
+    async setPWACanInstall(canInstall: boolean) {
+        return {
+            pwa: {
+                canInstall,
+            },
+        };
     }
-    @Mutation
-    SET_PWA_INSTALLED(installed: boolean) {
-        this.pwa.installed = installed;
+    @MutationAction
+    async PWAInstalled() {
+        return {
+            pwa: {
+                installed: true,
+            },
+        };
     }
-    @Mutation
-    SET_PWA_DISPLAY_MODE(mode: PWADisplayMode) {
-        this.pwa.displayMode = mode;
+    @MutationAction
+    async setPWADisplayMode(displayMode: PWADisplayMode) {
+        return {
+            pwa: {
+                displayMode,
+            },
+        };
     }
-    @Mutation
-    SET_CLIENT_USER_LOADED(clientUserLoaded: boolean) {
-        this.clientUserLoaded = clientUserLoaded;
-    }
-
-    //! To remove
-    @Mutation
-    SET_INSTANCE_READY(instanceReady: boolean) {
-        this.instanceReady = instanceReady;
-    }
-
-    /* --------------------------------- Actions -------------------------------- */
-
-    @Action({ commit: "SET_AUTHENTICATED" })
-    setAuthenticated(authenticated: boolean) {
-        return authenticated;
-    }
-    @Action({ commit: "SET_AUTHENTICATED" })
-    setConnected(connected: boolean) {
-        return connected;
-    }
-    @Action({ commit: "SET_IS_TRAINER" })
-    setIsTrainer(isTrainer: boolean) {
-        return isTrainer;
-    }
-    @Action({ commit: "SET_IS_DEMO" })
-    setIsDemo(isDemo: boolean) {
-        return isDemo;
-    }
-    @Action({ commit: "SET_LOADING" })
-    setLoading(loading: boolean) {
-        return loading;
-    }
-    @Action({ commit: "SET_SILENT_LOADING" })
-    setSilentLoading(silentLoading: boolean) {
-        return silentLoading;
-    }
-    @Action({ commit: "SET_DONT_LEAVE" })
-    setDontLeave(dontLeave: boolean) {
-        return dontLeave;
-    }
-    @Action({ commit: "SET_DISABLE_BUTTONS" })
-    setDisableButton(disableButton: boolean) {
-        return disableButton;
-    }
-    @Action({ commit: "SET_NEW_BUILD" })
-    setNewBuild(newBuild: boolean) {
-        return newBuild;
-    }
-    @Action({ commit: "SET_CLAIMS" })
-    setClaims(claims: TIBUserClaims) {
-        return claims;
-    }
-    @Action({ commit: "SET_CLAIMS_GA" })
-    setClaimsAnalytics(mode: boolean) {
-        return mode;
-    }
-    @Action({ commit: "SET_CLAIMS_THEME" })
-    setClaimsTheme(mode: DarkmodeType) {
-        return mode;
-    }
-    @Action({ commit: "SET_PWA_DEFERRED_PROMPT" })
-    setPWADeferredPrompt(e: Event) {
-        return e;
-    }
-    @Action({ commit: "SET_PWA_CAN_INSTALL" })
-    setPWACanInstall(canInstall: boolean) {
-        return canInstall;
-    }
-    @Action({ commit: "SET_PWA_INSTALLED" })
-    PWAInstalled() {
-        return true;
-    }
-    @Action({ commit: "SET_PWA_DISPLAY_MODE" })
-    setPWADisplayMode(mode: PWADisplayMode) {
-        return mode;
-    }
-    @Action({ commit: "SET_CLIENT_USER_LOADED" })
-    setClientUserLoaded(clientUserLoaded: boolean) {
-        return clientUserLoaded;
+    @MutationAction
+    async setClientUserLoaded(clientUserLoaded: boolean) {
+        return { clientUserLoaded };
     }
 
     //! To remove
-    @Action({ commit: "SET_INSTANCE_READY" })
-    setInstanceReady() {
-        return true;
+    @MutationAction
+    async setInstanceReady() {
+        return {
+            instanceReady: true,
+        };
     }
 }
+
+export default getModule(AppStateModule);

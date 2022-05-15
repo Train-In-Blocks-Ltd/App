@@ -28,7 +28,7 @@ export type DarkmodeType = "light" | "dark" | "system";
 
 export type PWADisplayMode = "browser tab" | "standalone" | "standalone-ios";
 export type PWASettings = {
-    deferredPrompt?: Event;
+    deferredPrompt: Event | null;
     displayMode: PWADisplayMode;
     canInstall: boolean;
     installed: boolean;

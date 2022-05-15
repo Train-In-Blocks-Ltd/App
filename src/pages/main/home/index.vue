@@ -11,19 +11,21 @@
     </wrapper>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapState } from "vuex";
+import appState from "../../../store/modules/appState";
 
 const HomeHeader = () =>
     import(
-        /* webpackChunkName: "components.homeHeader", webpackPreload: true  */ "./components/HomeHeader"
+        /* webpackChunkName: "components.homeHeader", webpackPreload: true  */ "./components/HomeHeader.vue"
     );
 const ClientsList = () =>
     import(
-        /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "./components/ClientsList"
+        /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "./components/ClientsList.vue"
     );
 
-export default {
+export default Vue.extend({
     components: {
         ClientsList,
         HomeHeader,
@@ -35,11 +37,10 @@ export default {
     },
     computed: mapState(["loading", "modalOpen"]),
     async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
+        appState.setLoading(true);
+        // @ts-expect-error
         await this.$parent.setup();
         this.$store.dispatch("setLoading", false);
     },
-};
+});
 </script>

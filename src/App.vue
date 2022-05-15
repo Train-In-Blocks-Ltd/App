@@ -127,7 +127,8 @@ body {
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import { DarkmodeType } from "./store/modules/types";
+import appState from "./store/modules/appState";
+import { DarkmodeType, TIBUserClaims } from "./store/modules/types";
 
 const NavBar = () =>
     import(
@@ -185,7 +186,7 @@ export default Vue.extend({
         },
     },
     created() {
-        this.$store.dispatch("setLoading", true);
+        appState.setLoading(true);
         this.isAuthenticated();
     },
     async mounted() {
@@ -225,27 +226,23 @@ export default Vue.extend({
                     "Your changes might not be saved, are you sure you want to leave?";
             }
         });
-        const SELF = this;
         window.addEventListener("beforeinstallprompt", (e) => {
             // Prevent the mini-infobar from appearing on mobile
             e.preventDefault();
 
             // Stash the event so it can be triggered later.
-            SELF.$store.dispatch("setPWADeferredPrompt", e);
+            appState.setPWADeferredPrompt(e);
 
             // Update UI notify the user they can install the PWA
-            SELF.$store.dispatch("setPWACanInstall", true);
+            appState.setPWACanInstall(true);
         });
         if ("getInstalledRelatedApps" in navigator) {
             // @ts-expect-error
             const RELATED_APPS = await navigator.getInstalledRelatedApps();
-            if (RELATED_APPS.length > 0) {
-                this.$store.dispatch("PWAInstalled");
-            }
+            if (RELATED_APPS.length > 0) appState.PWAInstalled();
         }
         // @ts-expect-error
-        if (navigator.standalone)
-            this.$store.dispatch("setPWADisplayMode", "standalone-ios");
+        if (navigator.standalone) appState.setPWADisplayMode("standalone-ios");
 
         if (window.matchMedia("(display-mode: standalone)").matches)
             this.$store.dispatch("setPWADisplayMode", "standalone");
@@ -255,7 +252,7 @@ export default Vue.extend({
             // @ts-expect-error
             (config) => {
                 if (
-                    SELF.claims.email === "demo@traininblocks.com" &&
+                    appState.claims?.email === "demo@traininblocks.com" &&
                     config.method !== "get"
                 ) {
                     this.$store.dispatch("openResponsePopUp", {
@@ -264,7 +261,7 @@ export default Vue.extend({
                         persist: true,
                         backdrop: true,
                     });
-                    this.$store.dispatch("setLoading", false);
+                    appState.setLoading(false);
                     // @ts-expect-error
                     throw new SELF.$axios.Cancel(
                         "You are using the demo account. Your changes won't be saved"
@@ -300,37 +297,34 @@ export default Vue.extend({
 
         /** Checks if the user is authenticated and sets the Vuex state accordingly. */
         async isAuthenticated() {
-            this.$store.dispatch(
-                "setAuthenticated",
-                await this.$auth.isAuthenticated()
-            );
+            appState.setAuthenticated(await this.$auth.isAuthenticated());
         },
 
         /** Initiates all the crucial setup for the app. */
         async setup() {
             if (!this.instanceReady) {
                 // Set claims
-                this.$store.dispatch("setClaims", await this.$auth.getUser());
+                appState.setClaims(
+                    (await this.$auth.getUser()) as TIBUserClaims
+                );
 
                 // Sets demo flag
-                this.$store.dispatch(
-                    "setIsDemo",
+                appState.setIsDemo(
                     this.claims.email === "demo@traininblocks.com"
                 );
 
                 // Sets trainer flag
-                this.$store.dispatch(
-                    "setIsTrainer",
+                appState.setIsTrainer(
                     this.claims.user_type === "Trainer" ||
                         this.claims.user_type === "Admin"
                 );
 
                 if (this.claims) {
                     if (!this.claims.ga || !this.claims)
-                        this.$store.dispatch("setClaimsAnalytics", true);
+                        appState.setClaimsAnalytics(true);
 
                     if (!this.claims.theme || !this.claims)
-                        this.$store.dispatch("setClaimsTheme", "system");
+                        appState.setClaimsTheme("system");
 
                     // Set analytics and theme
                     this.claims.ga !== false
@@ -363,12 +357,12 @@ export default Vue.extend({
 
                 // Set connection
                 this.$store.dispatch("setConnected", navigator.onLine);
-                const SELF = this;
+                appState.setConnected(navigator.onLine);
                 window.addEventListener("offline", () => {
-                    SELF.$store.dispatch("setConnected", false);
+                    appState.setConnected(false);
                 });
                 window.addEventListener("online", () => {
-                    SELF.$store.dispatch("setConnected", true);
+                    appState.setConnected(true);
                 });
 
                 // Check build
@@ -376,7 +370,7 @@ export default Vue.extend({
                     localStorage.getItem("versionBuild") !==
                     this.$store.state.versionBuild
                 )
-                    this.$store.dispatch("setNewBuild", true);
+                    appState.setNewBuild(true);
 
                 // Get data if not client
                 if (
@@ -391,7 +385,7 @@ export default Vue.extend({
                 }
 
                 // Stops setup from running more than once
-                this.$store.dispatch("setInstanceReady");
+                appState.setInstanceReady();
             }
         },
 
@@ -400,9 +394,9 @@ export default Vue.extend({
          */
         async saveClaims() {
             try {
-                this.$store.dispatch("setLoading", true);
+                appState.setLoading(true);
                 await this.$store.dispatch("saveClaims");
-                this.$store.dispatch("setLoading", false);
+                appState.setLoading(false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }
@@ -416,7 +410,7 @@ export default Vue.extend({
                 try {
                     await this.$store.dispatch("getClientSideInfo");
                     await this.$store.dispatch("getClientSidePlans");
-                    this.$store.dispatch("setClientUserLoaded", true);
+                    appState.setClientUserLoaded(true);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }
@@ -439,7 +433,7 @@ export default Vue.extend({
                     title: "Session updated",
                     description: "Your changes have been saved",
                 });
-                this.$store.dispatch("setLoading", false);
+                appState.setLoading(false);
             } catch (e) {
                 this.$store.dispatch("resolveError", e);
             }

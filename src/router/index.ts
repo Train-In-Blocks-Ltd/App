@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router, { NavigationGuardNext, Route } from "vue-router";
 import OktaVue, { LoginCallback } from "@okta/okta-vue";
 import { OktaAuth } from "@okta/okta-auth-js";
-import { store } from "../store";
+import appState from "../store/modules/appState";
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
         ? require("../../config/prod.env")
@@ -235,7 +235,7 @@ const userType = async (to: Route, from: Route, next: NavigationGuardNext) => {
             }
             sessionStorage.setItem("claims", JSON.stringify(result));
         }
-        store.dispatch("setClaims", result);
+        appState.setClaims(result);
     }
     if (result) {
         if (to.matched.some((record) => record.meta.requiresTrainer)) {

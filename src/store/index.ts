@@ -5,9 +5,4 @@ import appState from "./modules/appState";
 
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({
-    state: {},
-    modules: {
-        appState,
-    },
-});
+export default new Vuex.Store({});
