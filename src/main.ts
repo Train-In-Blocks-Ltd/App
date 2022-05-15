@@ -7,21 +7,21 @@ import VueMeta from "vue-meta";
 
 import { InlineSvgPlugin } from "vue-inline-svg";
 
-import Txt from "@/components/elements/Txt.vue";
-import TxtInput from "@/components/elements/TxtInput.vue";
-import TxtArea from "@/components/elements/TxtArea.vue";
-import Dropdown from "@/components/elements/Dropdown.vue";
-import DefaultButton from "@/components/elements/DefaultButton.vue";
-import Icon from "@/components/elements/Icon.vue";
-import IconButton from "@/components/elements/IconButton.vue";
-import LinkButton from "@/components/elements/LinkButton.vue";
-import Divider from "@/components/elements/Divider.vue";
-// import RichEditor from "@/components/extensive/RichEditor.vue";
-import Wrapper from "@/components/generic/Wrapper.vue";
+import Txt from "./components/elements/Txt.vue";
+import TxtInput from "./components/elements/TxtInput.vue";
+import TxtArea from "./components/elements/TxtArea.vue";
+import Dropdown from "./components/elements/Dropdown.vue";
+import DefaultButton from "./components/elements/DefaultButton.vue";
+import Icon from "./components/elements/Icon.vue";
+import IconButton from "./components/elements/IconButton.vue";
+import LinkButton from "./components/elements/LinkButton.vue";
+import Divider from "./components/elements/Divider.vue";
+import RichEditor from "./components/extensive/RichEditor/index.vue";
+import Wrapper from "./components/generic/Wrapper.vue";
 
 import App from "./App.vue";
 import router from "./router";
-// import { store } from "./store";
+import { store } from "./store";
 import mixins from "./mixins";
 import "./assets/tailwind.css";
 loadProgressBar();
@@ -49,7 +49,7 @@ Vue.component("Icon", Icon);
 Vue.component("IconButton", IconButton);
 Vue.component("LinkButton", LinkButton);
 Vue.component("Divider", Divider);
-// Vue.component("RichEditor", RichEditor);
+Vue.component("RichEditor", RichEditor);
 Vue.component("Wrapper", Wrapper);
 
 Vue.config.productionTip = false;
@@ -62,7 +62,7 @@ Vue.mixin({
 new Vue({
     el: "#app",
     router,
-    // store,
+    store,
     components: { App },
     template: "<App/>",
 });
