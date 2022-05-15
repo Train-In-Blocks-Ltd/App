@@ -22,35 +22,46 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue, Watch } from "vue-property-decorator";
+import utilsStore from "../../../store/modules/utils";
 
 const Backdrop = () =>
     import(
-        /* webpackChunkName: "components.backdrop", webpackPrefetch: true  */ "@/components/generic/Backdrop"
+        /* webpackChunkName: "components.backdrop", webpackPrefetch: true  */ "../../../components/generic/Backdrop.vue"
     );
 
-export default {
+@Component({
     components: {
         Backdrop,
     },
-    watch: {
-        responseOpen(val) {
-            if (!this.responsePersist) {
-                setTimeout(() => {
-                    this.$store.dispatch("closeResponsePopUp");
-                }, 3000);
-            }
-            if (val) document.body.style.overflow = "hidden";
-            else document.body.style.overflow = "auto";
-        },
-    },
-    computed: mapState([
-        "responseOpen",
-        "responseTitle",
-        "responseDescription",
-        "responsePersist",
-        "responseBackdrop",
-    ]),
-};
+})
+export default class ResponsePopUp extends Vue {
+    get responseOpen() {
+        return utilsStore.responseOpen;
+    }
+    get responseTitle() {
+        return utilsStore.responseTitle;
+    }
+    get responseDescription() {
+        return utilsStore.responseDescription;
+    }
+    get responsePersist() {
+        return utilsStore.responsePersist;
+    }
+    get responseBackdrop() {
+        return utilsStore.responseBackdrop;
+    }
+
+    @Watch("responseOpen")
+    onResponseOpen(old: boolean) {
+        if (!this.responsePersist) {
+            setTimeout(() => {
+                this.$store.dispatch("closeResponsePopUp");
+            }, 3000);
+        }
+        if (old) document.body.style.overflow = "hidden";
+        else document.body.style.overflow = "auto";
+    }
+}
 </script>
