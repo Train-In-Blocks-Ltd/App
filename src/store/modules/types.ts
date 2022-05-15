@@ -70,3 +70,5 @@ export type MultiselectOption = {
     name: string;
     svg?: string;
 };
+
+export type ModalSize = "xs" | "sm" | "lg" | "full";

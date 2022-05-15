@@ -2,17 +2,41 @@ import {
     Action,
     getModule,
     Module,
+    Mutation,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
 import store from "../..";
 import appState from "../appState";
+import { ModalSize } from "../types";
 
 type ResponsePopUpParams = {
     title: string;
     description?: string;
     persist?: boolean;
     backdrop?: boolean;
+};
+
+type ModalParams =
+    | {
+          name: string;
+          size?: string;
+          persist?: boolean;
+          previewTitle?: never;
+          previewHTML?: never;
+      }
+    | {
+          name: "preview";
+          size?: string;
+          persist?: boolean;
+          previewTitle: string;
+          previewHTML: string;
+      };
+
+type ConfirmPopUpParams = {
+    title: string;
+    text: string;
+    onResolve: () => void;
 };
 
 @Module({
@@ -32,10 +56,27 @@ class UtilsModule extends VuexModule {
     responsePersist: boolean = false;
     responseBackdrop: boolean = false;
 
+    // Modal and preview
+    modalOpen: boolean = false;
+    modalContent: string | null = "";
+    modalSize: ModalSize = "sm";
+    modalPersist: boolean = false;
+    previewTitle: string | null = "";
+    previewHTML: string | null = "";
+
+    // Confirm pop-up
+    confirmOpen: boolean = false;
+    confirmTitle: string | null = "";
+    confirmText: string | null = "";
+    confirmResolve: () => void = () => {};
+
     @MutationAction
     async setSearch(search: string) {
         return { search };
     }
+
+    /* -------------------------------- Checkbox -------------------------------- */
+
     @MutationAction
     async selectAll(selectedIds: number[]) {
         return { selectedIds };
@@ -52,6 +93,9 @@ class UtilsModule extends VuexModule {
                 : this.selectedIds.filter((selectedId) => selectedId !== id),
         };
     }
+
+    /* -------------------------------- Response -------------------------------- */
+
     @MutationAction
     async openResponsePopUp({
         title,
@@ -77,6 +121,70 @@ class UtilsModule extends VuexModule {
             responseBackdrop: false,
         };
     }
+
+    /* ---------------------------------- Modal --------------------------------- */
+
+    @MutationAction
+    async openModal({
+        name,
+        size,
+        persist,
+        previewHTML,
+        previewTitle,
+    }: ModalParams) {
+        return {
+            modalOpen: true,
+            modalContent: name,
+            modalSize: size,
+            modalPersist: persist,
+            previewTitle,
+            previewHTML,
+        };
+    }
+    @MutationAction
+    async closeModal() {
+        return {
+            modalOpen: false,
+            modalContent: "",
+            modalSize: "sm",
+            modalPersist: false,
+            previewTitle: "",
+            previewHTML: "",
+        };
+    }
+
+    /* ------------------------------ Confirmation ------------------------------ */
+
+    @Mutation
+    SET_CONFIRM_POP_UP({
+        mode,
+        title,
+        text,
+        onResolve,
+    }: ConfirmPopUpParams & { mode: boolean }) {
+        this.confirmOpen = mode;
+        this.confirmTitle = title;
+        this.confirmText = text;
+        this.confirmResolve = onResolve;
+    }
+    @Action({ commit: "SET_CONFIRM_POP_UP" })
+    async openConfirmPopUp(params: ConfirmPopUpParams) {
+        return {
+            mode: true,
+            ...params,
+        };
+    }
+    @MutationAction
+    async closeConfirmPopUp() {
+        return {
+            confirmOpen: false,
+            confirmTitle: "",
+            confirmText: "",
+            confirmResolve: () => {},
+        };
+    }
+
+    /* ---------------------------------- Error --------------------------------- */
 
     @Action
     async resolveError(msg: string) {

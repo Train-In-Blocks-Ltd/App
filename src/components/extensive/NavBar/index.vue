@@ -53,6 +53,7 @@
 
 <script lang="ts">
 import appState from "../../../store/modules/appState";
+import utilsStore from "../../../store/modules/utils";
 import { NavLinkType } from "../../../store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -131,7 +132,7 @@ export default class NavBar extends Vue {
             svg: "log-out",
             forUser: ["Admin", "Trainer", "Client"],
             internal: false,
-            onClick: this.logout,
+            onClick: this.handleLogout,
         },
     ];
 
@@ -153,13 +154,8 @@ export default class NavBar extends Vue {
     }
 
     /** Logs out the user. */
-    async logout() {
-        if (
-            await this.$store.dispatch("openConfirmPopUp", {
-                title: "Are you sure you want to log out?",
-                text: "It's recommended to do so if you are using a public device.",
-            })
-        ) {
+    handleLogout() {
+        const logout = async () => {
             await this.$parent.$auth.signOut();
             // @ts-expect-error
             await this.$parent.isAuthenticated();
@@ -178,7 +174,12 @@ export default class NavBar extends Vue {
                     NAME + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
             }
             this.$ga.event("Auth", "logout");
-        }
+        };
+        utilsStore.openConfirmPopUp({
+            title: "Are you sure you want to log out?",
+            text: "It's recommended to do so if you are using a public device.",
+            onResolve: logout,
+        });
     }
 }
 </script>
