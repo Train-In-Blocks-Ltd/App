@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Router from "vue-router";
+import Router, { NavigationGuardNext, Route } from "vue-router";
 import OktaVue, { LoginCallback } from "@okta/okta-vue";
 import { OktaAuth } from "@okta/okta-auth-js";
 import { store } from "../store";
@@ -10,46 +10,46 @@ const CUSTOM_ENV =
 
 // Auth
 const LoginComponent = () =>
-    import(/* webpackChunkName: "login" */ "@/pages/auth/login");
+    import(/* webpackChunkName: "login" */ "@/pages/auth/login.vue");
 const LogoutComponent = () =>
-    import(/* webpackChunkName: "logout" */ "@/pages/auth/logout");
+    import(/* webpackChunkName: "logout" */ "@/pages/auth/logout.vue");
 
 // Main
 const HomeComponent = () =>
-    import(/* webpackChunkName: "home" */ "@/pages/main/home");
+    import(/* webpackChunkName: "home" */ "@/pages/main/home.vue");
 const TemplateComponent = () =>
-    import(/* webpackChunkName: "templates" */ "@/pages/main/templates");
+    import(/* webpackChunkName: "templates" */ "@/pages/main/templates.vue");
 const PortfolioComponent = () =>
-    import(/* webpackChunkName: "portfolio" */ "@/pages/main/portfolio");
+    import(/* webpackChunkName: "portfolio" */ "@/pages/main/portfolio.vue");
 const ArchiveComponent = () =>
-    import(/* webpackChunkName: "archive" */ "@/pages/main/archive");
+    import(/* webpackChunkName: "archive" */ "@/pages/main/archive.vue");
 const ProfileComponent = () =>
-    import(/* webpackChunkName: "account" */ "@/pages/main/account");
+    import(/* webpackChunkName: "account" */ "@/pages/main/account.vue");
 const ClientComponent = () =>
-    import(/* webpackChunkName: "clientHome" */ "@/pages/main/home/client");
+    import(/* webpackChunkName: "clientHome" */ "@/pages/main/home/client.vue");
 const ClientPlans = () =>
     import(
-        /* webpackChunkName: "clientPlans" */ "@/pages/main/home/client/plans"
+        /* webpackChunkName: "clientPlans" */ "@/pages/main/home/client/plans.vue"
     );
 const ClientSessions = () =>
     import(
-        /* webpackChunkName: "clientSessions" */ "@/pages/main/home/client/plans/sessions"
+        /* webpackChunkName: "clientSessions" */ "@/pages/main/home/client/plans/sessions.vue"
     );
 
 const ClientUserComponent = () =>
     import(
-        /* webpackChunkName: "client-user.home" */ "@/pages/_clientUser/Home"
+        /* webpackChunkName: "client-user.home" */ "@/pages/_clientUser/Home.vue"
     );
 const ClientUserPlans = () =>
     import(
-        /* webpackChunkName: "client-user.plans" */ "@/pages/_clientUser/Plans"
+        /* webpackChunkName: "client-user.plans" */ "@/pages/_clientUser/Plans.vue"
     );
 const ClientUserSuccess = () =>
     import(
-        /* webpackChunkName: "client-user.success" */ "@/pages/_clientUser/Success"
+        /* webpackChunkName: "client-user.success" */ "@/pages/_clientUser/Success.vue"
     );
 const NotFound = () =>
-    import(/* webpackChunkName: "notfound" */ "@/pages/NotFound");
+    import(/* webpackChunkName: "notfound" */ "@/pages/NotFound.vue");
 
 Vue.use(Router);
 const oktaAuth = new OktaAuth({
@@ -61,15 +61,15 @@ const oktaAuth = new OktaAuth({
             : "https://" + window.location.host + "/implicit/callback",
     scopes: ["openid", "profile", "email"],
     pkce: true,
-    autoRenew: false,
-    async onSessionExpired() {
-        await Vue.prototype.$auth.logout({
-            postLogoutRedirectUri:
-                window.location.host === "localhost:8080"
-                    ? "http://" + window.location.host
-                    : "https://" + window.location.host,
-        });
-    },
+    // autoRenew: false,
+    // async onSessionExpired() {
+    //     await Vue.prototype.$auth.logout({
+    //         postLogoutRedirectUri:
+    //             window.location.host === "localhost:8080"
+    //                 ? "http://" + window.location.host
+    //                 : "https://" + window.location.host,
+    //     });
+    // },
 });
 Vue.use(OktaVue, { oktaAuth });
 
@@ -190,7 +190,11 @@ const router = new Router({
     },
 });
 
-const onAuthRequired = async (to, from, next) => {
+const onAuthRequired = async (
+    to: Route,
+    from: Route,
+    next: NavigationGuardNext
+) => {
     if (
         to.matched.some((record) => record.meta.requiresAuth) &&
         !(await Vue.prototype.$auth.isAuthenticated())
@@ -210,12 +214,12 @@ const onAuthRequired = async (to, from, next) => {
     }
 };
 
-const userType = async (to, from, next) => {
+const userType = async (to: Route, from: Route, next: NavigationGuardNext) => {
     let result;
     if (await Vue.prototype.$auth.isAuthenticated()) {
         Vue.prototype.$axios.defaults.headers.common.Authorization = `Bearer ${await Vue.prototype.$auth.getAccessToken()}`;
         if (sessionStorage.getItem("claims")) {
-            result = JSON.parse(sessionStorage.getItem("claims"));
+            result = JSON.parse(sessionStorage.getItem("claims") ?? "");
         } else {
             const claims = await Vue.prototype.$auth.getUser();
             if (claims !== undefined && claims !== null) {

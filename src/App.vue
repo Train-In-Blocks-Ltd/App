@@ -129,23 +129,23 @@ import { mapState } from "vuex";
 
 const NavBar = () =>
     import(
-        /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar"
+        /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar.vue"
     );
 const Modal = () =>
     import(
-        /* webpackChunkName: "components.modal", webpackPreload: true  */ "@/components/extensive/Modal"
+        /* webpackChunkName: "components.modal", webpackPreload: true  */ "@/components/extensive/Modal.vue"
     );
 const ResponsePopUp = () =>
     import(
-        /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "@/components/extensive/ResponsePopUp"
+        /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "@/components/extensive/ResponsePopUp.vue"
     );
 const ConfirmPopUp = () =>
     import(
-        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "@/components/extensive/ConfirmPopUp"
+        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "@/components/extensive/ConfirmPopUp.vue"
     );
 const TopBanner = () =>
     import(
-        /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "@/components/generic/TopBanner"
+        /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "@/components/generic/TopBanner.vue"
     );
 
 export default {
