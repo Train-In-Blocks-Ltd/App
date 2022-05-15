@@ -235,10 +235,7 @@ const userType = async (to: Route, from: Route, next: NavigationGuardNext) => {
             }
             sessionStorage.setItem("claims", JSON.stringify(result));
         }
-        store.commit("SET_DATA", {
-            attr: "claims",
-            data: result,
-        });
+        store.dispatch("setClaims", result);
     }
     if (result) {
         if (to.matched.some((record) => record.meta.requiresTrainer)) {

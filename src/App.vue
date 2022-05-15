@@ -124,8 +124,10 @@ body {
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import { mapState } from "vuex";
+import { DarkmodeType } from "./store/modules/types";
 
 const NavBar = () =>
     import(
@@ -148,7 +150,7 @@ const TopBanner = () =>
         /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "./components/generic/TopBanner.vue"
     );
 
-export default {
+export default Vue.extend({
     metaInfo() {
         return {
             title: "Home",
@@ -183,9 +185,7 @@ export default {
         },
     },
     created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
+        this.$store.dispatch("setLoading", true);
         this.isAuthenticated();
     },
     async mounted() {
@@ -218,6 +218,7 @@ export default {
                 });
         }
         window.addEventListener("beforeunload", (e) => {
+            // @ts-expect-error
             if (this.dontLeave) {
                 e.preventDefault();
                 e.returnValue =
@@ -230,44 +231,28 @@ export default {
             e.preventDefault();
 
             // Stash the event so it can be triggered later.
-            SELF.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "deferredPrompt",
-                data: e,
-            });
+            SELF.$store.dispatch("setPWADeferredPrompt", e);
 
             // Update UI notify the user they can install the PWA
-            SELF.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "canInstall",
-                data: true,
-            });
+            SELF.$store.dispatch("setPWACanInstall", true);
         });
         if ("getInstalledRelatedApps" in navigator) {
+            // @ts-expect-error
             const RELATED_APPS = await navigator.getInstalledRelatedApps();
             if (RELATED_APPS.length > 0) {
-                this.$store.commit("SET_DATA_DEEP", {
-                    attrParent: "pwa",
-                    attrChild: "installed",
-                    data: true,
-                });
+                this.$store.dispatch("PWAInstalled");
             }
         }
-        if (navigator.standalone) {
-            this.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "displayMode",
-                data: "standalone-ios",
-            });
-        }
-        if (window.matchMedia("(display-mode: standalone)").matches) {
-            this.$store.commit("SET_DATA_DEEP", {
-                attrParent: "pwa",
-                attrChild: "displayMode",
-                data: "standalone",
-            });
-        }
+        // @ts-expect-error
+        if (navigator.standalone)
+            this.$store.dispatch("setPWADisplayMode", "standalone-ios");
+
+        if (window.matchMedia("(display-mode: standalone)").matches)
+            this.$store.dispatch("setPWADisplayMode", "standalone");
+
+        // @ts-expect-error
         this.$axios.interceptors.request.use(
+            // @ts-expect-error
             (config) => {
                 if (
                     SELF.claims.email === "demo@traininblocks.com" &&
@@ -279,32 +264,27 @@ export default {
                         persist: true,
                         backdrop: true,
                     });
-                    SELF.$store.dispatch("setLoading", false);
+                    this.$store.dispatch("setLoading", false);
+                    // @ts-expect-error
                     throw new SELF.$axios.Cancel(
                         "You are using the demo account. Your changes won't be saved"
                     );
                 }
                 return config;
             },
+            // @ts-expect-error
             (error) => {
                 return Promise.reject(error);
             }
         );
     },
     methods: {
-        /**
-         * Gives darkmode theme to the app.
-         */
-        darkmode(mode) {
+        /** Gives darkmode theme to the app. */
+        darkmode(mode?: DarkmodeType) {
             const MATCHED_MEDIA =
                 window.matchMedia("(prefers-color-scheme)") || false;
             if (mode === "dark") document.documentElement.classList.add("dark");
-            else if (
-                mode === "system" &&
-                (MATCHED_MEDIA === false
-                    ? false
-                    : MATCHED_MEDIA.media !== "not all")
-            ) {
+            else if (mode === "system" && !!MATCHED_MEDIA) {
                 this.darkmode(
                     window.matchMedia("(prefers-color-scheme: dark)").matches
                         ? "dark"
@@ -318,58 +298,39 @@ export default {
             } else document.documentElement.classList.remove("dark");
         },
 
-        /**
-         * Checks if the user is authenticated and sets the Vuex state accordingly.
-         */
+        /** Checks if the user is authenticated and sets the Vuex state accordingly. */
         async isAuthenticated() {
-            this.$store.commit("SET_DATA", {
-                attr: "authenticated",
-                data: await this.$auth.isAuthenticated(),
-            });
+            this.$store.dispatch(
+                "setAuthenticated",
+                await this.$auth.isAuthenticated()
+            );
         },
 
-        /**
-         * Initiates all the crucial setup for the app.
-         * @param {boolean} force - Whether this process is forced.
-         */
-        async setup(force) {
-            force = force || false;
-            if (!this.instanceReady || force) {
+        /** Initiates all the crucial setup for the app. */
+        async setup() {
+            if (!this.instanceReady) {
                 // Set claims
-                this.$store.commit("SET_DATA", {
-                    attr: "claims",
-                    data: await this.$auth.getUser(),
-                });
+                this.$store.dispatch("setClaims", await this.$auth.getUser());
 
                 // Sets demo flag
-                if (this.claims.email === "demo@traininblocks.com")
-                    this.$store.commit("SET_DATA", {
-                        attr: "isDemo",
-                        data: true,
-                    });
+                this.$store.dispatch(
+                    "setIsDemo",
+                    this.claims.email === "demo@traininblocks.com"
+                );
 
-                if (
+                // Sets trainer flag
+                this.$store.dispatch(
+                    "setIsTrainer",
                     this.claims.user_type === "Trainer" ||
-                    this.claims.user_type === "Admin"
-                ) {
-                    this.$store.commit("SET_DATA", {
-                        attr: "isTrainer",
-                        data: true,
-                    });
-                }
+                        this.claims.user_type === "Admin"
+                );
+
                 if (this.claims) {
-                    if (!this.claims.ga || !this.claims) {
-                        this.$store.commit("SET_DATA", {
-                            attr: "ga",
-                            data: true,
-                        });
-                    }
-                    if (!this.claims.theme || !this.claims) {
-                        this.$store.commit("SET_DATA", {
-                            attr: "theme",
-                            data: "system",
-                        });
-                    }
+                    if (!this.claims.ga || !this.claims)
+                        this.$store.dispatch("setClaimsAnalytics", true);
+
+                    if (!this.claims.theme || !this.claims)
+                        this.$store.dispatch("setClaimsTheme", "system");
 
                     // Set analytics and theme
                     this.claims.ga !== false
@@ -377,7 +338,9 @@ export default {
                         : this.$ga.disable();
 
                     if (localStorage.getItem("darkmode"))
-                        this.darkmode(localStorage.getItem("darkmode"));
+                        this.darkmode(
+                            localStorage.getItem("darkmode") as DarkmodeType
+                        );
 
                     // Set EULA
                     if (
@@ -395,37 +358,25 @@ export default {
                 }
 
                 // Set auth header
+                // @ts-expect-error
                 this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
                 // Set connection
-                this.$store.commit("SET_DATA", {
-                    attr: "connected",
-                    data: navigator.onLine,
-                });
+                this.$store.dispatch("setConnected", navigator.onLine);
                 const SELF = this;
-                window.addEventListener("offline", function (event) {
-                    SELF.$store.commit("SET_DATA", {
-                        attr: "connected",
-                        data: false,
-                    });
+                window.addEventListener("offline", () => {
+                    SELF.$store.dispatch("setConnected", false);
                 });
-                window.addEventListener("online", function (event) {
-                    SELF.$store.commit("SET_DATA", {
-                        attr: "connected",
-                        data: true,
-                    });
+                window.addEventListener("online", () => {
+                    SELF.$store.dispatch("setConnected", true);
                 });
 
                 // Check build
                 if (
                     localStorage.getItem("versionBuild") !==
                     this.$store.state.versionBuild
-                ) {
-                    this.$store.commit("SET_DATA", {
-                        attr: "newBuild",
-                        data: true,
-                    });
-                }
+                )
+                    this.$store.dispatch("setNewBuild", true);
 
                 // Get data if not client
                 if (
@@ -440,10 +391,7 @@ export default {
                 }
 
                 // Stops setup from running more than once
-                this.$store.commit("SET_DATA", {
-                    attr: "instanceReady",
-                    data: true,
-                });
+                this.$store.dispatch("setInstanceReady");
             }
         },
 
@@ -452,9 +400,7 @@ export default {
          */
         async saveClaims() {
             try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
+                this.$store.dispatch("setLoading", true);
                 await this.$store.dispatch("saveClaims");
                 this.$store.dispatch("setLoading", false);
             } catch (e) {
@@ -470,10 +416,7 @@ export default {
                 try {
                     await this.$store.dispatch("getClientSideInfo");
                     await this.$store.dispatch("getClientSidePlans");
-                    this.$store.commit("SET_DATA", {
-                        attr: "clientUserLoaded",
-                        data: true,
-                    });
+                    this.$store.dispatch("setClientUserLoaded", true);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }
@@ -485,7 +428,7 @@ export default {
          * @param {integer} planId - The id of the plan.
          * @param {integer} sessionId - The id of the session to update.
          */
-        async updateClientSideSession(planId, sessionId) {
+        async updateClientSideSession(planId: number, sessionId: number) {
             try {
                 await this.$store.dispatch("updateClientSideSession", {
                     planId,
@@ -502,5 +445,5 @@ export default {
             }
         },
     },
-};
+});
 </script>

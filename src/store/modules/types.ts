@@ -1,3 +1,5 @@
+import { UserClaims } from "@okta/okta-auth-js";
+
 export type GenericResponse = {
     created_at?: Date;
     updated_at?: Date;
@@ -21,3 +23,18 @@ export type Client = {
     notifications: number;
     notes: string;
 } & GenericResponse;
+
+export type DarkmodeType = "light" | "dark" | "system";
+
+export type PWADisplayMode = "browser tab" | "standalone" | "standalone-ios";
+export type PWASettings = {
+    deferredPrompt?: Event;
+    displayMode: PWADisplayMode;
+    canInstall: boolean;
+    installed: boolean;
+};
+
+export type TIBUserClaims = UserClaims & {
+    ga: boolean;
+    theme: DarkmodeType;
+};
