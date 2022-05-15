@@ -393,9 +393,7 @@ export default class App extends Vue {
         }
     }
 
-    /**
-     * Saves the user's claims to Okta.
-     */
+    /** Saves the user's claims to Okta. */
     async saveClaims() {
         try {
             appState.setLoading(true);
@@ -406,9 +404,7 @@ export default class App extends Vue {
         }
     }
 
-    /**
-     * Gets all the data for setup on the client-side
-     */
+    /** Gets all the data for setup on the client-side. */
     async getClientSideData() {
         if (!this.clientUserLoaded) {
             try {
@@ -421,11 +417,7 @@ export default class App extends Vue {
         }
     }
 
-    /**
-     * Updates a client-side session.
-     * @param {integer} planId - The id of the plan.
-     * @param {integer} sessionId - The id of the session to update.
-     */
+    /** Updates a client-side session. */
     async updateClientSideSession(planId: number, sessionId: number) {
         try {
             await this.$store.dispatch("updateClientSideSession", {
