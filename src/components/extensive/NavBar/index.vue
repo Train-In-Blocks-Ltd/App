@@ -148,14 +148,23 @@ export default class NavBar extends Vue {
     get instanceReady() {
         return appState.instanceReady;
     }
+    get confirmPopUp() {
+        return utilsStore.confirmRef;
+    }
 
     hardRefresh() {
         location.reload();
     }
 
     /** Logs out the user. */
-    handleLogout() {
-        const logout = async () => {
+    async handleLogout() {
+        if (
+            // @ts-expect-error
+            await this.confirmPopUp.open({
+                title: "Are you sure you want to log out?",
+                text: "It's recommended to do so if you are using a public device.",
+            })
+        ) {
             await this.$parent.$auth.signOut();
             // @ts-expect-error
             await this.$parent.isAuthenticated();
@@ -174,12 +183,7 @@ export default class NavBar extends Vue {
                     NAME + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
             }
             this.$ga.event("Auth", "logout");
-        };
-        utilsStore.openConfirmPopUp({
-            title: "Are you sure you want to log out?",
-            text: "It's recommended to do so if you are using a public device.",
-            onResolve: logout,
-        });
+        }
     }
 }
 </script>

@@ -33,12 +33,6 @@ type ModalParams =
           previewHTML: string;
       };
 
-type ConfirmPopUpParams = {
-    title: string;
-    text: string;
-    onResolve: () => void;
-};
-
 @Module({
     namespaced: true,
     name: "utils",
@@ -64,11 +58,8 @@ class UtilsModule extends VuexModule {
     previewTitle: string | null = "";
     previewHTML: string | null = "";
 
-    // Confirm pop-up
-    confirmOpen: boolean = false;
-    confirmTitle: string | null = "";
-    confirmText: string | null = "";
-    confirmResolve: () => void = () => {};
+    // Refs
+    confirmRef = null;
 
     @MutationAction
     async setSearch(search: string) {
@@ -153,34 +144,12 @@ class UtilsModule extends VuexModule {
         };
     }
 
-    /* ------------------------------ Confirmation ------------------------------ */
+    /* ------------------------------ Pop-ups ------------------------------ */
 
-    @Mutation
-    SET_CONFIRM_POP_UP({
-        mode,
-        title,
-        text,
-        onResolve,
-    }: ConfirmPopUpParams & { mode: boolean }) {
-        this.confirmOpen = mode;
-        this.confirmTitle = title;
-        this.confirmText = text;
-        this.confirmResolve = onResolve;
-    }
-    @Action({ commit: "SET_CONFIRM_POP_UP" })
-    async openConfirmPopUp(params: ConfirmPopUpParams) {
-        return {
-            mode: true,
-            ...params,
-        };
-    }
     @MutationAction
-    async closeConfirmPopUp() {
+    async setConfirmRef(confirmRef: any) {
         return {
-            confirmOpen: false,
-            confirmTitle: "",
-            confirmText: "",
-            confirmResolve: () => {},
+            confirmRef,
         };
     }
 

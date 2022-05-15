@@ -110,7 +110,7 @@ body {
     <div id="app" :class="{ authenticated: authenticated }">
         <modal v-if="authenticated" />
         <response-pop-up v-if="authenticated" />
-        <confirm-pop-up v-if="authenticated" />
+        <confirm-pop-up ref="confirmPopUp" />
         <nav-bar v-if="authenticated" class="fadeIn" />
         <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
             <top-banner v-if="authenticated" />
@@ -125,15 +125,19 @@ body {
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Ref, Vue, Watch } from "vue-property-decorator";
 import { baseAPI } from "./api";
 import appState from "./store/modules/appState";
+import utilsStore from "./store/modules/utils";
 import clientsStore from "./store/modules/clients";
 import templatesStore from "./store/modules/templates";
 import bookingsStore from "./store/modules/bookings";
 import portfolioStore from "./store/modules/portfolio";
 import { useGetHighLevelData } from "./api";
 import { DarkmodeType, TIBUserClaims } from "./store/modules/types";
+
+//* Needed to import like this to use refs
+import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";
 
 const NavBar = () =>
     import(
@@ -146,10 +150,6 @@ const Modal = () =>
 const ResponsePopUp = () =>
     import(
         /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "./components/extensive/ResponsePopUp/index.vue"
-    );
-const ConfirmPopUp = () =>
-    import(
-        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "./components/extensive/ConfirmPopUp/index.vue"
     );
 const TopBanner = () =>
     import(
@@ -192,11 +192,12 @@ export default class App extends Vue {
         return appState.instanceReady;
     }
 
+    @Ref() readonly confirmPopUp!: typeof ConfirmPopUp;
+
     @Watch("connected")
     onConnectedChange() {
         if (this.connected) this.setup();
     }
-
     @Watch("$route")
     onRouteChange() {
         this.isAuthenticated();
@@ -206,8 +207,8 @@ export default class App extends Vue {
         appState.setLoading(true);
         this.isAuthenticated();
     }
-
     async mounted() {
+        utilsStore.setConfirmRef(this.confirmPopUp);
         // Sets the body to have dark mode.
         document.body.setAttribute(
             "class",
