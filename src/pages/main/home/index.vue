@@ -3,10 +3,6 @@
         <div class="grid mb-8">
             <home-header />
             <clients-list />
-            <txt v-if="!loading" type="large-body" grey>
-                No clients added yet, use the button on the top-right of your
-                screen.
-            </txt>
         </div>
     </wrapper>
 </template>
@@ -32,10 +28,6 @@ const ClientsList = () =>
 })
 export default class Home extends Vue {
     persistResponse: string = "";
-
-    get loading() {
-        return appState.loading;
-    }
 
     // TODO: Need to readd modal
     get modalOpen() {

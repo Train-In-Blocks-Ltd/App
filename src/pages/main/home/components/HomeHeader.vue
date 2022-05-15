@@ -57,13 +57,7 @@
                 placeholder="Find a client"
                 aria-label="Find a client"
                 :value="search"
-                @output="
-                    (data) =>
-                        $store.commit('SET_DATA', {
-                            attr: 'search',
-                            data,
-                        })
-                "
+                @output="handleSearch"
             />
         </div>
     </div>
@@ -71,17 +65,17 @@
 
 <script lang="ts">
 import appState from "../../../../store/modules/appState";
-import utils from "../../../../store/modules/utils";
+import utilsStore from "../../../../store/modules/utils";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
     computed: {
         search: {
             get() {
-                return utils.search;
+                return utilsStore.search;
             },
             set(value) {
-                utils.setSearch(value);
+                utilsStore.setSearch(value);
             },
         },
     },
@@ -92,6 +86,10 @@ export default class HomeHeader extends Vue {
     }
     get loading() {
         return appState.loading;
+    }
+
+    handleSearch(value: string) {
+        utilsStore.setSearch(value);
     }
 }
 </script>

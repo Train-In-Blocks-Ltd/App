@@ -4,7 +4,7 @@
         <div class="skeleton-item" />
         <div class="skeleton-item" />
     </div>
-    <div v-else class="grid gap-8 mb-8">
+    <div v-else-if="!loading && clients.length > 0" class="grid gap-8 mb-8">
         <!-- Perform case insensitive search -->
         <router-link
             v-for="(client, index) in clients"
@@ -22,6 +22,9 @@
             <client-link :client="client" />
         </router-link>
     </div>
+    <txt v-else type="large-body" grey>
+        No clients added yet, use the button on the top-right of your screen.
+    </txt>
 </template>
 
 <script lang="ts">

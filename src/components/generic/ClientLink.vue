@@ -83,7 +83,8 @@
 
 <script lang="ts">
 import appState from "../../store/modules/appState";
-import { Client } from "../../store/modules/types";
+import bookingsStore from "../../store/modules/bookings";
+import { Booking, Client } from "../../store/modules/types";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 const CardWrapper = () =>
@@ -106,20 +107,22 @@ export default class ClientLink extends Vue {
     @Prop(Number) readonly clientIndex!: number;
     @Prop(Boolean) readonly archive!: boolean;
 
-    nextBooking = undefined;
+    nextBooking: Booking | undefined = undefined;
 
     get isDemo() {
         return appState.isDemo;
     }
+    get bookings() {
+        return bookingsStore.bookings;
+    }
 
-    // TODO: Bring back bookings
-    // created() {
-    //     if (this.bookings) {
-    //         const clientBookings = this.bookings.filter(
-    //             (booking) => booking.client_id === this.client.client_id
-    //         );
-    //         if (clientBookings) this.nextBooking = clientBookings[0];
-    //     }
-    // },
+    created() {
+        if (this.bookings) {
+            const clientBookings = this.bookings.filter(
+                (booking) => booking.client_id === this.client.client_id
+            );
+            if (clientBookings) this.nextBooking = clientBookings[0];
+        }
+    }
 }
 </script>
