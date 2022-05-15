@@ -51,125 +51,134 @@
     </nav>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../store/modules/appState";
+import { NavLinkType } from "../../../store/modules/types";
+import { Component, Vue } from "vue-property-decorator";
 
 const NavLink = () =>
     import(
         /* webpackChunkName: "components.navLink", webpackPreload: true  */ "./components/NavLink.vue"
     );
 
-export default {
+@Component({
     components: {
         NavLink,
     },
-    computed: mapState(["claims", "authenticated", "loading", "instanceReady"]),
-    data() {
-        return {
-            navLinks: [
-                {
-                    name: "Home",
-                    link: "/",
-                    svg: "home",
-                    forUser: ["Admin", "Trainer"],
-                    internal: true,
-                },
-                {
-                    name: "Home",
-                    link: "/clientUser",
-                    svg: "home",
-                    forUser: ["Admin", "Client"],
-                    internal: true,
-                },
-                {
-                    name: "Help",
-                    link: "https://traininblocks.com/help/",
-                    svg: "help-circle",
-                    forUser: ["Admin", "Trainer"],
-                    internal: false,
-                },
-                {
-                    name: "Templates",
-                    link: "/templates",
-                    svg: "file-text",
-                    forUser: ["Admin", "Trainer"],
-                    internal: true,
-                },
-                {
-                    name: "Portfolio",
-                    link: "/portfolio",
-                    svg: "briefcase",
-                    forUser: ["Admin", "Trainer"],
-                    internal: true,
-                },
-                {
-                    name: "Archive",
-                    link: "/archive",
-                    svg: "archive",
-                    forUser: ["Admin", "Trainer"],
-                    internal: true,
-                },
-                {
-                    name: "Account",
-                    link: "/account",
-                    svg: "settings",
-                    forUser: ["Admin", "Trainer", "Client"],
-                    internal: true,
-                },
-                {
-                    name: "Refresh",
-                    link: "javascript:void(0)",
-                    svg: "refresh-ccw",
-                    forUser: ["Admin", "Trainer", "Client"],
-                    internal: false,
-                    onClick: this.hardRefresh,
-                },
-                {
-                    name: "Log out",
-                    link: "javascript:void(0)",
-                    svg: "log-out",
-                    forUser: ["Admin", "Trainer", "Client"],
-                    internal: false,
-                    onClick: this.logout,
-                },
-            ],
-        };
-    },
-    methods: {
-        hardRefresh() {
-            location.reload();
+})
+export default class NavBar extends Vue {
+    navLinks: NavLinkType[] = [
+        {
+            name: "Home",
+            link: "/",
+            svg: "home",
+            forUser: ["Admin", "Trainer"],
+            internal: true,
         },
+        {
+            name: "Home",
+            link: "/clientUser",
+            svg: "home",
+            forUser: ["Admin", "Client"],
+            internal: true,
+        },
+        {
+            name: "Help",
+            link: "https://traininblocks.com/help/",
+            svg: "help-circle",
+            forUser: ["Admin", "Trainer"],
+            internal: false,
+        },
+        {
+            name: "Templates",
+            link: "/templates",
+            svg: "file-text",
+            forUser: ["Admin", "Trainer"],
+            internal: true,
+        },
+        {
+            name: "Portfolio",
+            link: "/portfolio",
+            svg: "briefcase",
+            forUser: ["Admin", "Trainer"],
+            internal: true,
+        },
+        {
+            name: "Archive",
+            link: "/archive",
+            svg: "archive",
+            forUser: ["Admin", "Trainer"],
+            internal: true,
+        },
+        {
+            name: "Account",
+            link: "/account",
+            svg: "settings",
+            forUser: ["Admin", "Trainer", "Client"],
+            internal: true,
+        },
+        {
+            name: "Refresh",
+            link: "javascript:void(0)",
+            svg: "refresh-ccw",
+            forUser: ["Admin", "Trainer", "Client"],
+            internal: false,
+            onClick: this.hardRefresh,
+        },
+        {
+            name: "Log out",
+            link: "javascript:void(0)",
+            svg: "log-out",
+            forUser: ["Admin", "Trainer", "Client"],
+            internal: false,
+            onClick: this.logout,
+        },
+    ];
 
-        /**
-         * Logs out the user.
-         */
-        async logout() {
-            if (
-                await this.$store.dispatch("openConfirmPopUp", {
-                    title: "Are you sure you want to log out?",
-                    text: "It's recommended to do so if you are using a public device.",
-                })
-            ) {
-                await this.$parent.$auth.signOut();
-                await this.$parent.isAuthenticated();
-                localStorage.clear();
-                sessionStorage.clear();
-                localStorage.setItem(
-                    "versionBuild",
-                    this.$store.state.versionBuild
-                );
-                const COOKIES = document.cookie.split(";");
-                for (let i = 0; i < COOKIES.length; i++) {
-                    const COOKIE = COOKIES[i];
-                    const EQ_POS = COOKIE.indexOf("=");
-                    const NAME =
-                        EQ_POS > -1 ? COOKIE.substr(0, EQ_POS) : COOKIE;
-                    document.cookie =
-                        NAME + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                }
-                this.$ga.event("Auth", "logout");
+    get claims() {
+        return appState.claims;
+    }
+    get authenticated() {
+        return appState.authenticated;
+    }
+    get loading() {
+        return appState.loading;
+    }
+    get instanceReady() {
+        return appState.instanceReady;
+    }
+
+    hardRefresh() {
+        location.reload();
+    }
+
+    /** Logs out the user. */
+    async logout() {
+        if (
+            await this.$store.dispatch("openConfirmPopUp", {
+                title: "Are you sure you want to log out?",
+                text: "It's recommended to do so if you are using a public device.",
+            })
+        ) {
+            await this.$parent.$auth.signOut();
+            // @ts-expect-error
+            await this.$parent.isAuthenticated();
+            localStorage.clear();
+            sessionStorage.clear();
+            localStorage.setItem(
+                "versionBuild",
+                this.$store.state.versionBuild
+            );
+            const COOKIES = document.cookie.split(";");
+            for (let i = 0; i < COOKIES.length; i++) {
+                const COOKIE = COOKIES[i];
+                const EQ_POS = COOKIE.indexOf("=");
+                const NAME = EQ_POS > -1 ? COOKIE.substr(0, EQ_POS) : COOKIE;
+                document.cookie =
+                    NAME + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
             }
-        },
-    },
-};
+            this.$ga.event("Auth", "logout");
+        }
+    }
+}
 </script>

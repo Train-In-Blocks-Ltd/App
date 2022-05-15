@@ -128,7 +128,11 @@ body {
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { baseAPI } from "./api";
 import appState from "./store/modules/appState";
-import clients from "./store/modules/clients";
+import clientsStore from "./store/modules/clients";
+import templatesStore from "./store/modules/templates";
+import bookingsStore from "./store/modules/bookings";
+import portfolioStore from "./store/modules/portfolio";
+import { useGetHighLevelData } from "./api";
 import { DarkmodeType, TIBUserClaims } from "./store/modules/types";
 
 const NavBar = () =>
@@ -382,7 +386,19 @@ export default class App extends Vue {
                 appState.claims?.user_type === "Trainer"
             ) {
                 try {
-                    clients.fetchClients();
+                    const {
+                        sortedClients,
+                        sortedArchiveClients,
+                        sortedBookings,
+                        templates,
+                        portfolio,
+                    } = await useGetHighLevelData();
+                    clientsStore.setClients(sortedClients);
+                    clientsStore.setArchivedClients(sortedArchiveClients);
+                    bookingsStore.setBookings(sortedBookings);
+                    templatesStore.setTemplates(templates);
+
+                    if (portfolio) portfolioStore.setPortfolio(portfolio);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }

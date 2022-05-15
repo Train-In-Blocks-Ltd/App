@@ -6,8 +6,6 @@ import {
 } from "vuex-module-decorators";
 import store from "../..";
 import { Client } from "../types";
-import { baseAPI } from "../../../api";
-import appState from "../appState";
 
 @Module({
     namespaced: true,
@@ -17,14 +15,19 @@ import appState from "../appState";
 })
 class ClientsModule extends VuexModule {
     clients: Client[] = [];
+    archivedClients: Client[] = [];
 
     @MutationAction
-    async fetchClients() {
-        const RESPONSE = await baseAPI.get(
-            `https://api.traininblocks.com/v2/${appState.claims?.sub}`
-        );
+    async setClients(clients: Client[]) {
         return {
-            clients: RESPONSE.data[0][0],
+            clients,
+        };
+    }
+
+    @MutationAction
+    async setArchivedClients(archivedClients: Client[]) {
+        return {
+            archivedClients,
         };
     }
 }

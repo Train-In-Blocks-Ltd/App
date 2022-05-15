@@ -102,9 +102,9 @@ const Checkbox = () =>
     },
 })
 export default class ClientLink extends Vue {
-    @Prop(Number) readonly client!: Client;
+    @Prop(Object) readonly client!: Client;
     @Prop(Number) readonly clientIndex!: number;
-    @Prop(Number) readonly archive!: boolean;
+    @Prop(Boolean) readonly archive!: boolean;
 
     nextBooking = undefined;
 

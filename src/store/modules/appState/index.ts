@@ -1,4 +1,5 @@
 import {
+    Action,
     getModule,
     Module,
     MutationAction,

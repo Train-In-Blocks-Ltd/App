@@ -36,18 +36,24 @@
     </a>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../../store/modules/appState";
+import { Component, Vue, Prop } from "vue-property-decorator";
 
-export default {
-    props: {
-        internal: Boolean,
-        name: String,
-        link: String,
-        svg: String,
-        forUser: Array,
-        onClick: Function,
-    },
-    computed: mapState(["claims", "isDemo"]),
-};
+@Component
+export default class NavLink extends Vue {
+    @Prop(Boolean) readonly internal!: boolean;
+    @Prop(String) readonly name!: string;
+    @Prop(String) readonly link!: string;
+    @Prop(String) readonly svg!: string;
+    @Prop(Array) readonly forUser!: string[];
+    @Prop(Function) readonly onClick!: () => void;
+
+    get claims() {
+        return appState.claims;
+    }
+    get isDemo() {
+        return appState.isDemo;
+    }
+}
 </script>

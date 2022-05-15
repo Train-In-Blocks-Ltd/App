@@ -12,6 +12,22 @@ export type Template = {
     template: string;
 } & GenericResponse;
 
+export type Portfolio =
+    | {
+          business_name: string;
+          notes: string;
+          pt_id: string;
+          trainer_name: string;
+      } & GenericResponse;
+
+export type Booking = {
+    id: number;
+    client_id: number;
+    datetime: Date;
+    notes: string;
+    status: string;
+} & GenericResponse;
+
 export type Client = {
     client_id: number;
     pt_id: string;
@@ -37,4 +53,13 @@ export type PWASettings = {
 export type TIBUserClaims = UserClaims & {
     ga: boolean;
     theme: DarkmodeType;
+};
+
+export type NavLinkType = {
+    name: string;
+    link: string;
+    svg: string;
+    forUser: string[];
+    internal: boolean;
+    onClick?: () => void;
 };

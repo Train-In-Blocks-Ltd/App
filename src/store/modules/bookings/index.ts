@@ -5,23 +5,23 @@ import {
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
-import { Template } from "../types";
+import { Booking } from "../types";
 
 @Module({
     namespaced: true,
-    name: "templates",
+    name: "bookings",
     store,
     dynamic: true,
 })
-class TemplatesModule extends VuexModule {
-    public templates: Template[] = [];
+class BookingsModule extends VuexModule {
+    public bookings: Booking[] = [];
 
     @MutationAction
-    async setTemplates(templates: Template[]) {
+    async setBookings(bookings: Booking[]) {
         return {
-            templates,
+            bookings,
         };
     }
 }
 
-export default getModule(TemplatesModule);
+export default getModule(BookingsModule);
