@@ -70,23 +70,27 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
+import appState from "../../../../store/modules/appState";
+import { Component, Vue } from "vue-property-decorator";
 
-export default Vue.extend({
+@Component({
     computed: {
-        ...mapState(["pwa", "loading"]),
         search: {
             get() {
-                return this.$store.state.search;
+                return appState.search;
             },
             set(value) {
-                this.$store.commit("SET_DATA", {
-                    attr: "search",
-                    data: value,
-                });
+                appState.setSearch(value);
             },
         },
     },
-});
+})
+export default class HomeHeader extends Vue {
+    get pwa() {
+        return appState.pwa;
+    }
+    get loading() {
+        return appState.loading;
+    }
+}
 </script>

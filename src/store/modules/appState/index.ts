@@ -36,6 +36,7 @@ class AppStateModule extends VuexModule {
         installed: false,
     };
     clientUserLoaded: boolean = false;
+    search: string = "";
 
     //! To remove
     instanceReady: boolean = false;
@@ -135,6 +136,10 @@ class AppStateModule extends VuexModule {
     @MutationAction
     async setClientUserLoaded(clientUserLoaded: boolean) {
         return { clientUserLoaded };
+    }
+    @MutationAction
+    async setSearch(search: string) {
+        return { search };
     }
 
     //! To remove

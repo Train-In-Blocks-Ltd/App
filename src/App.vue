@@ -310,7 +310,7 @@ export default Vue.extend({
 
                 // Sets demo flag
                 appState.setIsDemo(
-                    this.claims.email === "demo@traininblocks.com"
+                    appState.claims?.email === "demo@traininblocks.com"
                 );
 
                 // Sets trainer flag
@@ -356,7 +356,6 @@ export default Vue.extend({
                 this.$axios.defaults.headers.common.Authorization = `Bearer ${await this.$auth.getAccessToken()}`;
 
                 // Set connection
-                this.$store.dispatch("setConnected", navigator.onLine);
                 appState.setConnected(navigator.onLine);
                 window.addEventListener("offline", () => {
                     appState.setConnected(false);
