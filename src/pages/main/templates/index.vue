@@ -87,10 +87,7 @@
                         @output="(data) => (template.name = data)"
                     />
                     <div class="flex flex-col items-center gap-4">
-                        <checkbox
-                            v-if="!isDemo"
-                            :item-id="template.id"
-                        />
+                        <checkbox v-if="!isDemo" :item-id="template.id" />
                         <icon-button
                             v-show="!isEditingTemplate"
                             :svg="
@@ -123,23 +120,28 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../store/modules/appState";
+import templatesStore from "../../../store/modules/templates";
+import utilsStore from "../../../store/modules/utils";
+import { Component, Vue } from "vue-property-decorator";
+import { NavigationGuardNext, Route } from "vue-router";
+import { EditorState } from "@/src/store/modules/types";
 
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "@/components/generic/Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "../../../components/generic/Checkbox.vue"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/generic/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "../../../components/generic/Multiselect.vue"
     );
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../../components/generic/CardWrapper.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Templates",
@@ -150,8 +152,40 @@ export default {
         Multiselect,
         CardWrapper,
     },
+})
+export default class Templates extends Vue {
+    search: string = "";
+    new_template_form = {
+        name: "Untitled",
+        note: "",
+    };
+    forceStop: number = 0;
+    isEditingTemplate: boolean = false;
+    tempEditorStore: string | null = null;
+    editTemplate: number | null = null;
+    multiselectOptions = [
+        { name: "Delete", svg: "trash" },
+        { name: "Deselect", svg: null },
+    ];
+    expandedTemplates: number[] = [];
 
-    async beforeRouteLeave(to, from, next) {
+    get loading() {
+        return appState.loading;
+    }
+    get dontLeave() {
+        return appState.dontLeave;
+    }
+    get isDemo() {
+        return appState.isDemo;
+    }
+    get templates() {
+        return templatesStore.templates;
+    }
+    get selectedIds() {
+        return utilsStore.selectedIds;
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
                 ? await this.$store.dispatch("openConfirmPopUp", {
@@ -160,214 +194,151 @@ export default {
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appState.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            search: "",
+    }
 
-            // CREATE
-
-            new_template_form: {
-                name: "Untitled",
-                note: "",
-            },
-
-            // EDIT
-
-            forceStop: 0,
-            isEditingTemplate: false,
-            tempEditorStore: null,
-            editTemplate: null,
-
-            // SELECTED AND EXPANDED
-
-            multiselectOptions: [
-                { name: "Delete", svg: "trash" },
-                { name: "Deselect", svg: null },
-            ],
-            expandedTemplates: [],
-        };
-    },
-    computed: mapState([
-        "loading",
-        "dontLeave",
-        "templates",
-        "selectedIds",
-        "isDemo",
-    ]),
     async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
+        appState.setLoading(true);
+        // @ts-expect-error
         await this.$parent.setup();
-        this.$store.dispatch("setLoading", false);
-    },
-    methods: {
-        /**
-         * Resolves the action taken from the multi-select.
-         * @param res - The action taken.
-         */
-        resolve_template_multiselect(res) {
-            switch (res) {
-                case "Delete":
-                    this.deleteMultiTemplates();
-                    break;
-                case "Deselect":
+        appState.setLoading(false);
+    }
+
+    /** Resolves the action taken from the multi-select. */
+    resolve_template_multiselect(res: string) {
+        switch (res) {
+            case "Delete":
+                this.deleteMultiTemplates();
+                break;
+            case "Deselect":
+                utilsStore.deselectAll();
+                break;
+        }
+    }
+
+    /** Resolves the editor state before taking the corresponding action. */
+    resolve_template_editor(state: EditorState, id: number) {
+        const foundTemplate = this.templates.find(
+            (template) => template.id === id
+        );
+        switch (state) {
+            case "edit":
+                appState.setDontLeave(true);
+                this.isEditingTemplate = true;
+                this.editTemplate = id;
+                this.forceStop += 1;
+                this.tempEditorStore = foundTemplate?.template ?? null;
+                break;
+            case "save":
+                this.isEditingTemplate = false;
+                this.editTemplate = null;
+                this.updateTemplate(id);
+                break;
+            case "cancel":
+                appState.setDontLeave(false);
+                this.isEditingTemplate = false;
+                this.editTemplate = null;
+                if (foundTemplate && this.tempEditorStore)
+                    templatesStore.revertTemplate(
+                        id,
+                        foundTemplate,
+                        this.tempEditorStore
+                    );
+                break;
+        }
+    }
+
+    /** Determines if new templates were create before expanding it. */
+    checkForNew() {
+        this.expandedTemplates = [];
+        this.templates.forEach((template) => {
+            if (
+                template.template === null ||
+                template.template === "<p><br></p>"
+            )
+                this.expandedTemplates.push(template.id);
+        });
+    }
+
+    /** Expands the main body of the template. */
+    toggle_expanded_templates(id: number) {
+        if (this.expandedTemplates.includes(id)) {
+            const TEMPLATE_INDEX = this.expandedTemplates.indexOf(id);
+            if (TEMPLATE_INDEX > -1) {
+                this.expandedTemplates.splice(TEMPLATE_INDEX, 1);
+            }
+        } else {
+            this.expandedTemplates.push(id);
+        }
+    }
+
+    async deleteMultiTemplates() {
+        if (this.selectedIds.length !== 0) {
+            if (
+                await this.$store.dispatch("openConfirmPopUp", {
+                    title: "Are you sure you want to delete all the selected templates?",
+                    text: "We will remove these templates from our database and it won't be recoverable.",
+                })
+            ) {
+                try {
+                    appState.setDontLeave(true);
+                    await this.$store.dispatch(
+                        "deleteTemplate",
+                        this.selectedIds
+                    );
+                    appState.stopLoaders();
+                    this.$store.dispatch("openResponsePopUp", {
+                        title:
+                            this.selectedIds.length > 1
+                                ? "Deleted templates"
+                                : "Deleted template",
+                        description: "Your changes have been saved",
+                    });
+                    this.$ga.event("Template", "delete");
                     this.$store.commit("SET_DATA", {
                         attr: "selectedIds",
                         data: [],
                     });
-                    break;
-            }
-        },
-
-        /**
-         * Resolves the editor state before taking the corresponding action.
-         * @param state - The returned state of the editor.
-         * @param id - The id of the template.
-         */
-        resolve_template_editor(state, id) {
-            const TEMPLATE = this.templates.find(
-                (template) => template.id === id
-            );
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.isEditingTemplate = true;
-                    this.editTemplate = id;
-                    this.forceStop += 1;
-                    this.tempEditorStore = TEMPLATE.template;
-                    break;
-                case "save":
-                    this.isEditingTemplate = false;
-                    this.editTemplate = null;
-                    this.updateTemplate(id);
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.isEditingTemplate = false;
-                    this.editTemplate = null;
-                    TEMPLATE.template = this.tempEditorStore;
-                    break;
-            }
-        },
-
-        /**
-         * Determines if new templates were create before expanding it.
-         */
-        checkForNew() {
-            this.expandedTemplates = [];
-            this.templates.forEach((template) => {
-                if (
-                    template.template === null ||
-                    template.template === "<p><br></p>"
-                ) {
-                    this.expandedTemplates.push(template.id);
+                } catch (e) {
+                    this.$store.dispatch("resolveError", e);
                 }
+            }
+        }
+    }
+
+    /** Creates a new template. */
+    async createTemplate() {
+        try {
+            appState.setDontLeave(true);
+            await this.$store.dispatch("newTemplate");
+            this.checkForNew();
+            this.$store.dispatch("openResponsePopUp", {
+                title: "New template created",
+                description: "Edit and use it in a client's plan",
             });
-        },
+            this.$ga.event("Template", "new");
+            appState.stopLoaders();
+        } catch (e) {
+            this.$store.dispatch("resolveError", e);
+        }
+    }
 
-        /**
-         * Expands the main body of the template.
-         * @param {integer} id - The id of the template.
-         */
-        toggle_expanded_templates(id) {
-            if (this.expandedTemplates.includes(id)) {
-                const TEMPLATE_INDEX = this.expandedTemplates.indexOf(id);
-                if (TEMPLATE_INDEX > -1) {
-                    this.expandedTemplates.splice(TEMPLATE_INDEX, 1);
-                }
-            } else {
-                this.expandedTemplates.push(id);
-            }
-        },
-
-        async deleteMultiTemplates() {
-            if (this.selectedIds.length !== 0) {
-                if (
-                    await this.$store.dispatch("openConfirmPopUp", {
-                        title: "Are you sure you want to delete all the selected templates?",
-                        text: "We will remove these templates from our database and it won't be recoverable.",
-                    })
-                ) {
-                    try {
-                        this.$store.dispatch("setLoading", {
-                            dontLeave: true,
-                        });
-                        await this.$store.dispatch(
-                            "deleteTemplate",
-                            this.selectedIds
-                        );
-                        this.$store.dispatch("setLoading", false);
-                        this.$store.dispatch("openResponsePopUp", {
-                            title:
-                                this.selectedIds.length > 1
-                                    ? "Deleted templates"
-                                    : "Deleted template",
-                            description: "Your changes have been saved",
-                        });
-                        this.$ga.event("Template", "delete");
-                        this.$store.commit("SET_DATA", {
-                            attr: "selectedIds",
-                            data: [],
-                        });
-                    } catch (e) {
-                        this.$store.dispatch("resolveError", e);
-                    }
-                }
-            }
-        },
-
-        /**
-         * Creates a new template.
-         */
-        async createTemplate() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("newTemplate");
-                this.checkForNew();
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "New template created",
-                    description: "Edit and use it in a client's plan",
-                });
-                this.$ga.event("Template", "new");
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-
-        /**
-         * Updates a template.
-         * @param {integer} templateId - The id of the template.
-         */
-        async updateTemplate(templateId) {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("updateTemplate", templateId);
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Updated template",
-                    description: "Your changes have been saved",
-                });
-                this.$ga.event("Template", "update");
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+    /** Updates a template. */
+    async updateTemplate(templateId: number) {
+        try {
+            appState.setDontLeave(true);
+            await this.$store.dispatch("updateTemplate", templateId);
+            this.$store.dispatch("openResponsePopUp", {
+                title: "Updated template",
+                description: "Your changes have been saved",
+            });
+            this.$ga.event("Template", "update");
+            appState.stopLoaders();
+        } catch (e) {
+            this.$store.dispatch("resolveError", e);
+        }
+    }
+}
 </script>

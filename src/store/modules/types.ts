@@ -63,3 +63,10 @@ export type NavLinkType = {
     internal: boolean;
     onClick?: () => void;
 };
+
+export type EditorState = "edit" | "save" | "cancel";
+
+export type MultiselectOption = {
+    name: string;
+    svg?: string;
+};
