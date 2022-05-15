@@ -1,23 +1,4 @@
 export default {
-    /** Adds a new template. */
-    async newTemplate({ commit, state }) {
-        const RESPONSE = await this._vm.$axios
-            .post("https://api.traininblocks.com/v2/templates", {
-                pt_id: state.claims.sub,
-                name: "Untitled",
-                template: "",
-            })
-            .catch((e) => {
-                console.error(e);
-            });
-        commit("addNewTemplate", {
-            templateId: RESPONSE.data[0]["LAST_INSERT_ID()"],
-            ptId: state.claims.sub,
-            name: "Untitled",
-            template: "",
-        });
-    },
-
     /**
      * Updates a template.
      * @param {number} templateId - The id of the template.

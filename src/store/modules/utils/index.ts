@@ -21,6 +21,10 @@ class UtilsModule extends VuexModule {
         return { search };
     }
     @MutationAction
+    async selectAll(selectedIds: number[]) {
+        return { selectedIds };
+    }
+    @MutationAction
     async deselectAll() {
         return { selectedIds: [] as number[] };
     }

@@ -24,14 +24,7 @@
             <a
                 href="javascript:void(0)"
                 aria-label="Select all"
-                @click="
-                    () => {
-                        $store.commit('SET_DATA', {
-                            attr: 'selectedIds',
-                            data: templates.map((template) => template.id),
-                        });
-                    }
-                "
+                @click="handleSelectAll"
             >
                 <txt>Select all</txt>
             </a>
@@ -274,6 +267,10 @@ export default class Templates extends Vue {
         }
     }
 
+    handleSelectAll() {
+        utilsStore.selectAll(this.templates.map((template) => template.id));
+    }
+
     async deleteMultiTemplates() {
         if (this.selectedIds.length !== 0) {
             if (
@@ -297,10 +294,7 @@ export default class Templates extends Vue {
                         description: "Your changes have been saved",
                     });
                     this.$ga.event("Template", "delete");
-                    this.$store.commit("SET_DATA", {
-                        attr: "selectedIds",
-                        data: [],
-                    });
+                    utilsStore.deselectAll();
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }
@@ -312,7 +306,7 @@ export default class Templates extends Vue {
     async createTemplate() {
         try {
             appState.setDontLeave(true);
-            await this.$store.dispatch("newTemplate");
+            await this.$store.dispatch("addTemplate");
             this.checkForNew();
             this.$store.dispatch("openResponsePopUp", {
                 title: "New template created",

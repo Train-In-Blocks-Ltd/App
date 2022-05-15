@@ -6,6 +6,8 @@ import {
     VuexModule,
 } from "vuex-module-decorators";
 import { Template } from "../types";
+import { baseAPI } from "../../../api";
+import appState from "../appState";
 
 @Module({
     namespaced: true,
@@ -43,6 +45,34 @@ class TemplatesModule extends VuexModule {
                       } as Template)
             ),
         };
+    }
+
+    @MutationAction
+    async addTemplate() {
+        try {
+            const response = await baseAPI.post(
+                "https://api.traininblocks.com/v2/templates",
+                {
+                    pt_id: appState.claims?.sub,
+                    name: "Untitled",
+                    template: "",
+                }
+            );
+            const templates: Template[] = [
+                ...this.templates,
+                {
+                    id: response.data[0]["LAST_INSERT_ID()"],
+                    pt_id: appState.claims?.sub ?? "",
+                    name: "Untitled",
+                    template: "",
+                },
+            ];
+            return {
+                templates,
+            };
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 
