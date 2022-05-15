@@ -24,18 +24,30 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../../store/modules/appState";
+import clientsModule from "../../../../store/modules/clients";
+import { Component, Vue } from "vue-property-decorator";
 
 const ClientLink = () =>
     import(
-        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/generic/ClientLink"
+        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "../../../../components/generic/ClientLink.vue"
     );
 
-export default {
+@Component({
     components: {
         ClientLink,
     },
-    computed: mapState(["clients", "search", "loading"]),
-};
+})
+export default class ClientList extends Vue {
+    get loading() {
+        return appState.loading;
+    }
+    get search() {
+        return appState.search;
+    }
+    get clients() {
+        return clientsModule.clients;
+    }
+}
 </script>

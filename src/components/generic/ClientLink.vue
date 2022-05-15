@@ -81,41 +81,45 @@
     </card-wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../store/modules/appState";
+import { Client } from "../../store/modules/types";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "./CardWrapper.vue"
     );
 const Checkbox = () =>
     import(
-        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "./Checkbox"
+        /* webpackChunkName: "components.checkbox", webpackPreload: true  */ "./Checkbox.vue"
     );
 
-export default {
+@Component({
     components: {
         CardWrapper,
         Checkbox,
     },
-    props: {
-        client: Object,
-        clientIndex: Number,
-        archive: Boolean,
-    },
-    data() {
-        return {
-            nextBooking: undefined,
-        };
-    },
-    computed: mapState(["bookings", "isDemo"]),
-    created() {
-        if (this.bookings) {
-            const clientBookings = this.bookings.filter(
-                (booking) => booking.client_id === this.client.client_id
-            );
-            if (clientBookings) this.nextBooking = clientBookings[0];
-        }
-    },
-};
+})
+export default class ClientLink extends Vue {
+    @Prop(Number) readonly client!: Client;
+    @Prop(Number) readonly clientIndex!: number;
+    @Prop(Number) readonly archive!: boolean;
+
+    nextBooking = undefined;
+
+    get isDemo() {
+        return appState.isDemo;
+    }
+
+    // TODO: Bring back bookings
+    // created() {
+    //     if (this.bookings) {
+    //         const clientBookings = this.bookings.filter(
+    //             (booking) => booking.client_id === this.client.client_id
+    //         );
+    //         if (clientBookings) this.nextBooking = clientBookings[0];
+    //     }
+    // },
+}
 </script>

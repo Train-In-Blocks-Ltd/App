@@ -374,7 +374,7 @@ export default Vue.extend({
                     appState.claims?.user_type === "Trainer"
                 ) {
                     try {
-                        clients.getClients();
+                        clients.fetchClients();
                     } catch (e) {
                         this.$store.dispatch("resolveError", e);
                     }

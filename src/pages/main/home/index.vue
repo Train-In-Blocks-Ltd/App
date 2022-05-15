@@ -12,8 +12,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
+import { Component, Vue } from "vue-property-decorator";
 import appState from "../../../store/modules/appState";
 
 const HomeHeader = () =>
@@ -25,22 +24,29 @@ const ClientsList = () =>
         /* webpackChunkName: "components.clientsList", webpackPreload: true  */ "./components/ClientsList.vue"
     );
 
-export default Vue.extend({
+@Component({
     components: {
         ClientsList,
         HomeHeader,
     },
-    data() {
-        return {
-            persistResponse: "",
-        };
-    },
-    computed: mapState(["loading", "modalOpen"]),
+})
+export default class Home extends Vue {
+    persistResponse: string = "";
+
+    get loading() {
+        return appState.loading;
+    }
+
+    // TODO: Need to readd modal
+    get modalOpen() {
+        return false;
+    }
+
     async created() {
         appState.setLoading(true);
         // @ts-expect-error
         await this.$parent.setup();
-        this.$store.dispatch("setLoading", false);
-    },
-});
+        appState.setLoading(false);
+    }
+}
 </script>

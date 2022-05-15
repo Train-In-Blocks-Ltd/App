@@ -19,13 +19,12 @@ class ClientsModule extends VuexModule {
     clients: Client[] = [];
 
     @MutationAction
-    async getClients() {
+    async fetchClients() {
         const RESPONSE = await baseAPI.get(
             `https://api.traininblocks.com/v2/${appState.claims?.sub}`
         );
-        console.log(RESPONSE);
         return {
-            clients: RESPONSE.data[0],
+            clients: RESPONSE.data[0][0],
         };
     }
 }
