@@ -1,4 +1,4 @@
-import { store } from "@/store";
+import { store } from "../..";
 import { Module, VuexModule } from "vuex-module-decorators";
 import { Client } from "../types";
 

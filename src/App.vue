@@ -129,23 +129,23 @@ import { mapState } from "vuex";
 
 const NavBar = () =>
     import(
-        /* webpackChunkName: "components.navBar", webpackPreload: true  */ "@/components/extensive/NavBar.vue"
+        /* webpackChunkName: "components.navBar", webpackPreload: true  */ "./components/extensive/NavBar/index.vue"
     );
 const Modal = () =>
     import(
-        /* webpackChunkName: "components.modal", webpackPreload: true  */ "@/components/extensive/Modal.vue"
+        /* webpackChunkName: "components.modal", webpackPreload: true  */ "./components/extensive/Modal/index.vue"
     );
 const ResponsePopUp = () =>
     import(
-        /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "@/components/extensive/ResponsePopUp.vue"
+        /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "./components/extensive/ResponsePopUp/index.vue"
     );
 const ConfirmPopUp = () =>
     import(
-        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "@/components/extensive/ConfirmPopUp.vue"
+        /* webpackChunkName: "components.confirmPopUp", webpackPreload: true  */ "./components/extensive/ConfirmPopUp/index.vue"
     );
 const TopBanner = () =>
     import(
-        /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "@/components/generic/TopBanner.vue"
+        /* webpackChunkName: "components.topBanner", webpackPreload: true  */ "./components/generic/TopBanner.vue"
     );
 
 export default {

@@ -1,4 +1,4 @@
-import { store } from "@/store";
+import { store } from "../..";
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
 import { Template } from "../types";
 

@@ -10,46 +10,52 @@ const CUSTOM_ENV =
 
 // Auth
 const LoginComponent = () =>
-    import(/* webpackChunkName: "login" */ "@/pages/auth/login.vue");
+    import(/* webpackChunkName: "login" */ "../pages/auth/login/index.vue");
 const LogoutComponent = () =>
-    import(/* webpackChunkName: "logout" */ "@/pages/auth/logout.vue");
+    import(/* webpackChunkName: "logout" */ "../pages/auth/logout/index.vue");
 
 // Main
 const HomeComponent = () =>
-    import(/* webpackChunkName: "home" */ "@/pages/main/home.vue");
+    import(/* webpackChunkName: "home" */ "../pages/main/home/index.vue");
 const TemplateComponent = () =>
-    import(/* webpackChunkName: "templates" */ "@/pages/main/templates.vue");
+    import(
+        /* webpackChunkName: "templates" */ "../pages/main/templates/index.vue"
+    );
 const PortfolioComponent = () =>
-    import(/* webpackChunkName: "portfolio" */ "@/pages/main/portfolio.vue");
+    import(
+        /* webpackChunkName: "portfolio" */ "../pages/main/portfolio/index.vue"
+    );
 const ArchiveComponent = () =>
-    import(/* webpackChunkName: "archive" */ "@/pages/main/archive.vue");
+    import(/* webpackChunkName: "archive" */ "../pages/main/archive/index.vue");
 const ProfileComponent = () =>
-    import(/* webpackChunkName: "account" */ "@/pages/main/account.vue");
+    import(/* webpackChunkName: "account" */ "../pages/main/account/index.vue");
 const ClientComponent = () =>
-    import(/* webpackChunkName: "clientHome" */ "@/pages/main/home/client.vue");
+    import(
+        /* webpackChunkName: "clientHome" */ "../pages/main/home/client/index.vue"
+    );
 const ClientPlans = () =>
     import(
-        /* webpackChunkName: "clientPlans" */ "@/pages/main/home/client/plans.vue"
+        /* webpackChunkName: "clientPlans" */ "../pages/main/home/client/plans/index.vue"
     );
 const ClientSessions = () =>
     import(
-        /* webpackChunkName: "clientSessions" */ "@/pages/main/home/client/plans/sessions.vue"
+        /* webpackChunkName: "clientSessions" */ "../pages/main/home/client/plans/sessions/index.vue"
     );
 
 const ClientUserComponent = () =>
     import(
-        /* webpackChunkName: "client-user.home" */ "@/pages/_clientUser/Home.vue"
+        /* webpackChunkName: "client-user.home" */ "../pages/_clientUser/Home.vue"
     );
 const ClientUserPlans = () =>
     import(
-        /* webpackChunkName: "client-user.plans" */ "@/pages/_clientUser/Plans.vue"
+        /* webpackChunkName: "client-user.plans" */ "../pages/_clientUser/Plans.vue"
     );
 const ClientUserSuccess = () =>
     import(
-        /* webpackChunkName: "client-user.success" */ "@/pages/_clientUser/Success.vue"
+        /* webpackChunkName: "client-user.success" */ "../pages/_clientUser/Success.vue"
     );
 const NotFound = () =>
-    import(/* webpackChunkName: "notfound" */ "@/pages/NotFound.vue");
+    import(/* webpackChunkName: "notfound" */ "../pages/NotFound.vue");
 
 Vue.use(Router);
 const oktaAuth = new OktaAuth({

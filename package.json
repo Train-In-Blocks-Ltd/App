@@ -14,9 +14,9 @@
         "webpack:start": "cross-env NODE_ENV=development webpack serve --config build/webpack.dev.conf.js"
     },
     "dependencies": {
-        "@okta/okta-auth-js": "^6.5.1",
-        "@okta/okta-signin-widget": "^6.3.2",
-        "@okta/okta-vue": "^5.2.1",
+        "@okta/okta-auth-js": "^4.7.2",
+        "@okta/okta-signin-widget": "^5.4.3",
+        "@okta/okta-vue": "^3.1.0",
         "@tailwindcss/postcss7-compat": "^2.2.17",
         "@tiptap/core": "^2.0.0-beta.86",
         "@tiptap/extension-image": "^2.0.0-beta.14",
@@ -46,8 +46,7 @@
         "vue-inline-svg": "^2.0.0",
         "vue-meta": "^2.4.0",
         "vue-router": "^3.5.2",
-        "vuex": "^3.6.2",
-        "vuex-module-decorators": "^2.0.0"
+        "vuex": "^3.6.2"
     },
     "devDependencies": {
         "@babel/core": "^7.14.8",
@@ -98,6 +97,7 @@
         "vue-loader": "^15.9.6",
         "vue-style-loader": "^4.1.2",
         "vue-template-compiler": "^2.6.14",
+        "vuex-module-decorators": "^2.0.0",
         "webpack": "^5.44.0",
         "webpack-bundle-analyzer": "^4.4.2",
         "webpack-cli": "^4.7.2",

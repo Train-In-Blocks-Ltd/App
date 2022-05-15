@@ -1,4 +1,7 @@
-import { GenericResponse } from "@/types";
+export type GenericResponse = {
+    created_at?: Date;
+    updated_at?: Date;
+};
 
 export type Template = {
     id: number;
