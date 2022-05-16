@@ -117,7 +117,7 @@
                         v-model="session.feedback"
                         :item-id="session.id"
                         :editing="feedbackId"
-                        :empty-placeholder="'What would you like to share with your trainer?'"
+                        :placeholder="'What would you like to share with your trainer?'"
                         :force-stop="forceStop"
                         @on-edit-change="resolveFeedbackEditor"
                     />

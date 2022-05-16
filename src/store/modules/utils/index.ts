@@ -8,6 +8,7 @@ import {
 import store from "../..";
 import appState from "../appState";
 import { ConfirmPopUpRef, ModalSize, ResponsePopUpRef } from "../types";
+import { Editor } from "@tiptap/core";
 
 type ModalParams =
     | {
@@ -46,6 +47,10 @@ class UtilsModule extends VuexModule {
     // Refs
     responsePopUpRef: ResponsePopUpRef = null;
     confirmPopUpRef: ConfirmPopUpRef = null;
+
+    // Editor
+    editor: Editor | null = null;
+    newImgs = [];
 
     @MutationAction
     async setSearch(search: string) {
@@ -114,6 +119,21 @@ class UtilsModule extends VuexModule {
     async setConfirmPopUpRef(confirmPopUpRef: ConfirmPopUpRef) {
         return {
             confirmPopUpRef,
+        };
+    }
+
+    /* --------------------------------- Editor --------------------------------- */
+
+    @MutationAction
+    async setEditor(editor: Editor | null) {
+        return {
+            editor,
+        };
+    }
+    @MutationAction
+    async setNewImgs(newImgs: string[]) {
+        return {
+            newImgs,
         };
     }
 

@@ -4,7 +4,7 @@
         <label-wrapper title="Client Information" class="my-16">
             <rich-editor
                 v-model="clientDetails.notes"
-                :empty-placeholder="'What goals does your client have? What physical measures have you taken?'"
+                :placeholder="'What goals does your client have? What physical measures have you taken?'"
                 @on-edit-change="resolve_client_info_editor"
             />
         </label-wrapper>

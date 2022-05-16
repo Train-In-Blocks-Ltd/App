@@ -154,7 +154,8 @@ div#rich_show_content {
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { Editor, EditorContent } from "@tiptap/vue-2";
 import { defaultExtensions } from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -162,258 +163,110 @@ import Link from "@tiptap/extension-link";
 import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import LazyImage from "../../js/LazyImage";
-import { mapState } from "vuex";
+import utilsStore from "../../../store/modules/utils";
+import { baseAPI } from "../../../api";
 
 const ToolBar = () =>
     import(
-        /* webpackChunkName: "components.toolBar", webpackPreload: true  */ "./components/ToolBar"
+        /* webpackChunkName: "components.toolBar", webpackPreload: true  */ "./components/ToolBar.vue"
     );
 
-export default {
+@Component({
     components: {
         EditorContent,
         ToolBar,
     },
-    props: {
-        itemId: [Number, String],
-        weekId: Number,
-        editing: [Number, String],
-        value: String,
-        emptyPlaceholder: String,
-        forceStop: Number,
-        templates: Boolean,
-    },
-    data() {
-        return {
-            // Editor
-            initialValue: null,
-            editState: false,
-            caretInEditor: false,
-            saving: false,
-        };
-    },
-    computed: mapState(["editor", "cloudinaryImages", "newImgs"]),
-    watch: {
-        editState() {
-            if (this.editState) {
-                this.initialValue = this.value;
-                const editor = new Editor({
-                    content: this.value,
-                    extensions: [
-                        ...defaultExtensions(),
-                        Underline,
-                        Link,
-                        TaskList,
-                        TaskItem,
-                        LazyImage,
-                    ],
-                    onUpdate: () => {
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "cloudinaryImages",
-                            attrChild: "endingWith",
-                            data: this.imgFinder(this.value),
-                        });
-                        this.$emit("input", this.editor.getHTML());
-                    },
-                    onFocus: () => {
-                        this.caretInEditor = true;
-                        this.showAddTemplate = false;
-                    },
-                    onBlur: () => {
-                        this.$store.commit("SET_DATA_DEEP", {
-                            attrParent: "cloudinaryImages",
-                            attrChild: "endingWith",
-                            data: this.imgFinder(this.value),
-                        });
-                        this.caretInEditor = false;
-                    },
-                    onDestroy: async () => {
-                        if (!this.saving) {
-                            await this.cancelledRemoveNewImgs();
-                            this.$store.commit("SET_DATA_DEEP", {
-                                attrParent: "cloudinaryImages",
-                                attrChild: "endingWith",
-                                data: this.cloudinaryImages.startingWith,
-                            });
-                        }
-                        this.cloudinaryImages.startingWith.forEach(
-                            async (url) => {
-                                if (
-                                    !this.cloudinaryImages.endingWith.includes(
-                                        url
-                                    )
-                                ) {
-                                    await this.$axios.post(
-                                        "/.netlify/functions/delete-image",
-                                        {
-                                            file: url,
-                                        }
-                                    );
-                                }
-                            }
-                        );
-                        this.initialValue = null;
-                        this.$store.commit("SET_DATA", {
-                            attr: "cloudinaryImages",
-                            data: {
-                                startingWith: [],
-                                endingWith: [],
-                            },
-                        });
-                        this.$store.commit("SET_DATA", {
-                            attr: "newImgs",
-                            data: [],
-                        });
-                        this.$store.commit("SET_DATA", {
-                            attr: "editor",
-                            data: undefined,
-                        });
-                    },
-                });
+})
+export default class RichEditor extends Vue {
+    @Prop([Number, String]) readonly itemId!: number | string;
+    @Prop([Number, String]) readonly editing!: number | string;
+    @Prop(String) readonly value!: string;
+    @Prop(String) readonly placeholder!: string;
+    @Prop(Number) readonly forceStop!: number;
 
-                this.$store.commit("SET_DATA", {
-                    attr: "editor",
-                    data: editor,
-                });
+    editState: boolean = false;
+    caretInEditor: boolean = false;
+    saving: boolean = false;
 
-                const FOUND_IMGS = this.imgFinder(this.value);
-                this.$store.commit("SET_DATA", {
-                    attr: "cloudinaryImages",
-                    data: {
-                        startingWith: FOUND_IMGS,
-                        endingWith: FOUND_IMGS,
-                    },
-                });
-            } else {
-                this.editor.destroy();
-                this.$store.commit("SET_DATA", {
-                    attr: "editor",
-                    data: undefined,
-                });
-            }
-        },
-        forceStop() {
-            if (this.editing !== this.itemId) {
-                this.editState = false;
-            }
-        },
-    },
-    beforeDestroy() {
-        if (this.editor) {
-            this.editor.destroy();
+    get editor() {
+        return utilsStore.editor;
+    }
+    get newImgs() {
+        return utilsStore.newImgs;
+    }
+
+    @Watch("editState")
+    onEditChange() {
+        if (this.editState) {
+            const editor = new Editor({
+                content: this.value,
+                extensions: [
+                    ...defaultExtensions(),
+                    Underline,
+                    Link,
+                    TaskList,
+                    TaskItem,
+                    LazyImage,
+                ],
+                onUpdate: () => {
+                    this.$emit("input", this.editor?.getHTML());
+                },
+                onFocus: () => {
+                    this.caretInEditor = true;
+                },
+                onBlur: () => {
+                    this.caretInEditor = false;
+                },
+                onDestroy: async () => {
+                    if (!this.saving) await this.cancelledRemoveNewImgs();
+                    utilsStore.setEditor(null);
+                    utilsStore.setNewImgs([]);
+                },
+            });
+
+            utilsStore.setEditor(editor);
+        } else {
+            this.editor?.destroy();
+            utilsStore.setEditor(null);
         }
-    },
-    methods: {
-        /**
-         * Finds all the images in the html.
-         */
-        imgFinder(html) {
-            const IMG_REGEX = /<img.*?src="(.*?)".*?>/gi;
-            const RETURN_ARR = [];
-            let finder;
-            while ((finder = IMG_REGEX.exec(html)) !== null) {
-                if (finder.index === IMG_REGEX.lastIndex) {
-                    IMG_REGEX.lastIndex++;
-                }
-                finder.forEach(async (match, groupIndex) => {
-                    if (groupIndex === 1) {
-                        if (match.includes("base64")) {
-                            await this.$axios
-                                .post("/.netlify/functions/upload-image", {
-                                    file: match,
-                                })
-                                .then((response) => {
-                                    RETURN_ARR.push(response.data.url);
-                                    this.$store.commit("SET_DATA", {
-                                        attr: "cloudinaryImages",
-                                        data: {
-                                            startingWith: [
-                                                ...this.cloudinaryImages
-                                                    .startingWith,
-                                                response.data.url,
-                                            ],
-                                            endingWith: [
-                                                ...this.cloudinaryImages
-                                                    .endingWith,
-                                                response.data.url,
-                                            ],
-                                        },
-                                    });
-                                    this.$store.commit("SET_DATA", {
-                                        attr: "newImgs",
-                                        data: [
-                                            ...this.newImgs,
-                                            response.data.url,
-                                        ],
-                                    });
-                                    this.initialValue =
-                                        this.initialValue.replace(
-                                            `${match}"`,
-                                            `${response.data.url}" loading="lazy"`
-                                        );
-                                    this.editor.commands.setContent(
-                                        this.initialValue
-                                    );
-                                    this.$emit("input", this.editor.getHTML());
-                                });
-                        } else {
-                            RETURN_ARR.push(match);
-                        }
-                    } else if (match.includes("base64")) {
-                        const WRAPPED_REGEX = /<p>(<img.*?">).*?<\/p>/gi;
-                        let wrappedFinder;
-                        while (
-                            (wrappedFinder = WRAPPED_REGEX.exec(
-                                this.initialValue
-                            )) !== null
-                        ) {
-                            if (
-                                wrappedFinder.index === WRAPPED_REGEX.lastIndex
-                            ) {
-                                WRAPPED_REGEX.lastIndex++;
-                            }
-                            this.initialValue = this.initialValue.replace(
-                                wrappedFinder[0],
-                                wrappedFinder[1]
-                            );
-                        }
-                    }
-                });
-            }
-            return RETURN_ARR;
-        },
+    }
+    @Watch("forceStop")
+    onForceStop() {
+        if (this.editing !== this.itemId) {
+            this.editState = false;
+        }
+    }
 
-        /**
-         * Removes images uploaded on cancel
-         */
-        cancelledRemoveNewImgs() {
-            if (this.newImgs) {
-                this.newImgs.forEach(async (url) => {
-                    await this.$axios.post("/.netlify/functions/delete-image", {
-                        file: url,
-                    });
-                });
-            }
-        },
+    beforeDestroy() {
+        if (this.editor) this.editor.destroy();
+    }
 
-        /**
-         * Tests injected html to see if it's empty.
-         */
-        test_empty_html(text) {
-            if (text !== null) {
-                const REMOVE_TAGS_AND_SPACE = text
-                    .replace(/<[^>]*>?/gm, "")
-                    .replace(/&nbsp;/g, "")
-                    .replace(/ /g, "");
-                if (REMOVE_TAGS_AND_SPACE === "") {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
+    /** Removes images uploaded on cancel. */
+    cancelledRemoveNewImgs() {
+        if (this.newImgs) {
+            this.newImgs.forEach(async (url) => {
+                await baseAPI.post("/.netlify/functions/delete-image", {
+                    file: url,
+                });
+            });
+        }
+    }
+
+    /** Tests injected html to see if it's empty. */
+    test_empty_html(text: string) {
+        if (text !== null) {
+            const REMOVE_TAGS_AND_SPACE = text
+                .replace(/<[^>]*>?/gm, "")
+                .replace(/&nbsp;/g, "")
+                .replace(/ /g, "");
+            if (REMOVE_TAGS_AND_SPACE === "") {
                 return true;
+            } else {
+                return false;
             }
-        },
-    },
-};
+        } else {
+            return true;
+        }
+    }
+}
 </script>

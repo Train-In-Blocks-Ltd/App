@@ -183,103 +183,104 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import templatesStore from "../../../../store/modules/templates";
+import utilsStore from "../../../../store/modules/utils";
 import Compressor from "compressorjs";
+import { baseAPI } from "../../../../api";
 
 const UploadPopUp = () =>
     import(
-        /* webpackChunkName: "components.uploadPopUp", webpackPrefetch: true  */ "@/components/generic/UploadPopUp"
+        /* webpackChunkName: "components.uploadPopUp", webpackPrefetch: true  */ "../../../../components/generic/UploadPopUp.vue"
     );
 const TxtInputPopUp = () =>
     import(
-        /* webpackChunkName: "components.txtInputPopUp", webpackPrefetch: true  */ "@/components/generic/TxtInputPopUp"
+        /* webpackChunkName: "components.txtInputPopUp", webpackPrefetch: true  */ "../../../../components/generic/TxtInputPopUp.vue"
     );
 
-export default {
+@Component({
     components: {
         UploadPopUp,
         TxtInputPopUp,
     },
-    props: {
-        toolbarClass: String,
-    },
-    computed: mapState(["editor", "templates", "cloudinaryImages", "newImgs"]),
-    methods: {
-        /**
-         * Sets the link of the selected text.
-         */
-        handleReturnInput(link) {
-            this.editor.chain().focus().setLink({ href: link }).run();
-        },
+})
+export default class ToolBar extends Vue {
+    @Prop(String) readonly toolbarClass!: string;
 
-        /**
-         * Adds an image.
-         */
-        handleImageSelect() {
-            const FILE = document.getElementById("img-uploader").files[0];
-            const READER = new FileReader();
-            READER.addEventListener(
-                "load",
-                () => {
-                    this.$axios
-                        .post("/.netlify/functions/upload-image", {
-                            file: READER.result.toString(),
-                        })
-                        .then((response) => {
-                            this.editor
-                                .chain()
-                                .focus()
-                                .setImage({
-                                    src: response.data.url,
-                                    loading: "lazy",
-                                })
-                                .run();
-                            this.$store.commit("SET_DATA", {
-                                attr: "cloudinaryImages",
-                                data: {
-                                    startingWith: [
-                                        ...this.cloudinaryImages.startingWith,
-                                        response.data.url,
-                                    ],
-                                    endingWith: [
-                                        ...this.cloudinaryImages.endingWith,
-                                        response.data.url,
-                                    ],
-                                },
-                            });
-                            this.$store.commit("SET_DATA", {
-                                attr: "newImgs",
-                                data: [...this.newImgs, response.data.url],
-                            });
-                        });
+    get editor() {
+        return utilsStore.editor;
+    }
+    get templates() {
+        return templatesStore.templates;
+    }
+    get newImgs() {
+        return utilsStore.newImgs;
+    }
+
+    /** Sets the link of the selected text. */
+    handleReturnInput(link: string) {
+        this.editor?.chain().focus().setLink({ href: link }).run();
+    }
+
+    /** Adds an image. */
+    handleImageSelect() {
+        const uploader = document.getElementById(
+            "img-uploader"
+        ) as HTMLElement & { files: any[] };
+        if (!uploader) return;
+        const file = uploader.files[0];
+        const reader = new FileReader();
+        reader.addEventListener(
+            "load",
+            () => {
+                baseAPI
+                    .post("/.netlify/functions/upload-image", {
+                        file: reader.result?.toString(),
+                    })
+                    .then((response) => {
+                        this.editor
+                            ?.chain()
+                            .focus()
+                            // @ts-expect-error
+                            .setImage({
+                                src: response.data.url,
+                                loading: "lazy",
+                            })
+                            .run();
+                        utilsStore.setNewImgs([
+                            ...this.newImgs,
+                            response.data.url,
+                        ]);
+                    });
+            },
+            false
+        );
+
+        if (file.size < 1100000) {
+            // eslint-disable-next-line
+            new Compressor(file, {
+                quality: 0.6,
+                success(result) {
+                    reader.readAsDataURL(result);
                 },
-                false
-            );
-
-            if (FILE) {
-                if (FILE.size < 1100000) {
-                    // eslint-disable-next-line
-                    new Compressor(FILE, {
-                        quality: 0.6,
-                        success(result) {
-                            READER.readAsDataURL(result);
-                        },
-                        error(err) {
-                            console.error(err.message);
-                        },
-                    });
-                } else {
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "File size is too big",
-                        description: "Please compress it to 1MB or lower",
-                        persist: true,
-                        backdrop: true,
-                    });
-                    document.getElementById("img-uploader").value = "";
-                }
-            }
-        },
-    },
-};
+                error(err) {
+                    console.error(err.message);
+                },
+            });
+        } else {
+            this.$store.dispatch("openResponsePopUp", {
+                title: "File size is too big",
+                description: "Please compress it to 1MB or lower",
+                persist: true,
+                backdrop: true,
+            });
+            const uploader = document.getElementById(
+                "img-uploader"
+            ) as HTMLElement & { value: any };
+            if (!uploader) return;
+            uploader.value = "";
+        }
+    }
+}
 </script>

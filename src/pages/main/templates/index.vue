@@ -103,7 +103,7 @@
                     v-model="template.template"
                     :item-id="template.id"
                     :editing="editTemplate"
-                    :empty-placeholder="'What do you plan for your clients frequently?'"
+                    :placeholder="'What do you plan for your clients frequently?'"
                     :force-stop="forceStop"
                     @on-edit-change="resolve_template_editor"
                 />

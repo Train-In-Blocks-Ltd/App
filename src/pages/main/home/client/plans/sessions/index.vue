@@ -32,7 +32,7 @@
                     v-model="plan.notes"
                     :item-id="'plan_notes'"
                     :editing="editSession"
-                    :empty-placeholder="'What do you want to achieve in this plan?'"
+                    :placeholder="'What do you want to achieve in this plan?'"
                     :force-stop="forceStop"
                     @on-edit-change="handlePlanNotesChange"
                 />
@@ -361,9 +361,8 @@
                                     "
                                     v-model="session.notes"
                                     :item-id="session.id"
-                                    :week-id="currentWeek"
                                     :editing="editSession"
-                                    :empty-placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
+                                    :placeholder="'What are your looking to achieve in this session? Is it for fitness, nutrition or therapy?'"
                                     :force-stop="forceStop"
                                     @on-edit-change="handleSessionNotesChange"
                                     templates
