@@ -1,4 +1,6 @@
+import { AxiosInstance } from "axios";
+
 declare module "axios-progress-bar" {
-    function loadProgressBar();
+    function loadProgressBar(config: any, instance: any);
     export { loadProgressBar };
 }

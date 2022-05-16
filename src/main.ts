@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueAnalytics from "vue-analytics";
 import axios from "axios";
+// @ts-expect-error
 import { loadProgressBar } from "axios-progress-bar";
 import "axios-progress-bar/dist/nprogress.css";
 import VueMeta from "vue-meta";
@@ -26,7 +27,10 @@ import router from "./router";
 import store from "./store";
 import mixins from "./mixins";
 import "./assets/tailwind.css";
-loadProgressBar();
+import { baseAPI } from "./api";
+
+// Loading bar
+loadProgressBar({}, baseAPI);
 
 Vue.prototype.$axios = axios;
 
