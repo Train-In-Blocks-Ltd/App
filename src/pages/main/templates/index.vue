@@ -181,7 +181,7 @@ export default class Templates extends Vue {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await utilsStore.confirmRef?.open({
+                ? await utilsStore.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -271,51 +271,20 @@ export default class Templates extends Vue {
         utilsStore.selectAll(this.templates.map((template) => template.id));
     }
 
-    async deleteMultiTemplates() {
-        if (this.selectedIds.length !== 0) {
-            if (
-                await utilsStore.confirmRef?.open({
-                    title: "Are you sure you want to delete all the selected templates?",
-                    text: "We will remove these templates from our database and it won't be recoverable.",
-                })
-            ) {
-                try {
-                    appState.setDontLeave(true);
-                    await this.$store.dispatch(
-                        "deleteTemplate",
-                        this.selectedIds
-                    );
-                    appState.stopLoaders();
-                    this.$store.dispatch("openResponsePopUp", {
-                        title:
-                            this.selectedIds.length > 1
-                                ? "Deleted templates"
-                                : "Deleted template",
-                        description: "Your changes have been saved",
-                    });
-                    this.$ga.event("Template", "delete");
-                    utilsStore.deselectAll();
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
-            }
-        }
-    }
-
     /** Creates a new template. */
     async createTemplate() {
         try {
             appState.setDontLeave(true);
-            await this.$store.dispatch("addTemplate");
+            await templatesStore.addTemplate();
             this.checkForNew();
-            this.$store.dispatch("openResponsePopUp", {
+            utilsStore.responsePopUpRef?.open({
                 title: "New template created",
-                description: "Edit and use it in a client's plan",
+                text: "Edit and use it in a client's plan",
             });
             this.$ga.event("Template", "new");
             appState.stopLoaders();
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 
@@ -323,15 +292,44 @@ export default class Templates extends Vue {
     async updateTemplate(templateId: number) {
         try {
             appState.setDontLeave(true);
-            await this.$store.dispatch("updateTemplate", templateId);
-            this.$store.dispatch("openResponsePopUp", {
+            await templatesStore.updateTemplate(templateId);
+            utilsStore.responsePopUpRef?.open({
                 title: "Updated template",
-                description: "Your changes have been saved",
+                text: "Your changes have been saved",
             });
             this.$ga.event("Template", "update");
             appState.stopLoaders();
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
+        }
+    }
+
+    /** Deletes multiple templates. */
+    async deleteMultiTemplates() {
+        if (this.selectedIds.length !== 0) {
+            if (
+                await utilsStore.confirmPopUpRef?.open({
+                    title: "Are you sure you want to delete all the selected templates?",
+                    text: "We will remove these templates from our database and it won't be recoverable.",
+                })
+            ) {
+                try {
+                    appState.setDontLeave(true);
+                    await templatesStore.deleteTemplates(this.selectedIds);
+                    utilsStore.deselectAll();
+                    appState.stopLoaders();
+                    utilsStore.responsePopUpRef?.open({
+                        title:
+                            this.selectedIds.length > 1
+                                ? "Deleted templates"
+                                : "Deleted template",
+                        text: "Your changes have been saved",
+                    });
+                    this.$ga.event("Template", "delete");
+                } catch (e) {
+                    utilsStore.resolveError(e as string);
+                }
+            }
         }
     }
 }

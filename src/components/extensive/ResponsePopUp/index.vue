@@ -1,30 +1,30 @@
 <template>
-    <div v-if="responseOpen">
+    <div v-if="show">
         <div
             class="fixed top-0 left-0 z-50 bg-white dark:bg-gray-800 shadow-lg rounded-lg ml-8 mt-8 p-4 w-2/3 max-w-xl"
         >
             <txt bold>
-                {{ responseTitle }}
+                {{ title }}
             </txt>
             <txt>
-                {{ responseDescription }}
+                {{ text }}
             </txt>
             <default-button
-                v-if="responsePersist"
+                v-if="persist"
                 class="mt-4"
                 aria-label="Okay"
-                :on-click="() => $store.dispatch('closeResponsePopUp')"
+                :on-click="close"
             >
                 Okay
             </default-button>
         </div>
-        <backdrop v-if="responseBackdrop" />
+        <backdrop v-if="backdrop" />
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
-import utilsStore from "../../../store/modules/utils";
+import { ResponsePopUpParams } from "../../../store/modules/types";
+import { Component, Vue } from "vue-property-decorator";
 
 const Backdrop = () =>
     import(
@@ -37,31 +37,25 @@ const Backdrop = () =>
     },
 })
 export default class ResponsePopUp extends Vue {
-    get responseOpen() {
-        return utilsStore.responseOpen;
-    }
-    get responseTitle() {
-        return utilsStore.responseTitle;
-    }
-    get responseDescription() {
-        return utilsStore.responseDescription;
-    }
-    get responsePersist() {
-        return utilsStore.responsePersist;
-    }
-    get responseBackdrop() {
-        return utilsStore.responseBackdrop;
-    }
+    show: boolean = false;
+    title: string = "";
+    text?: string = "";
+    persist?: boolean = false;
+    backdrop?: boolean = false;
 
-    @Watch("responseOpen")
-    onResponseOpen(old: boolean) {
-        if (!this.responsePersist) {
-            setTimeout(() => {
-                this.$store.dispatch("closeResponsePopUp");
-            }, 3000);
-        }
-        if (old) document.body.style.overflow = "hidden";
-        else document.body.style.overflow = "auto";
+    open({ title, text, persist, backdrop }: ResponsePopUpParams) {
+        this.show = true;
+        this.title = title;
+        this.text = text;
+        this.persist = persist;
+        this.backdrop = backdrop;
+    }
+    close() {
+        this.show = false;
+        this.title = "";
+        this.text = "";
+        this.persist = false;
+        this.backdrop = false;
     }
 }
 </script>

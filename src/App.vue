@@ -109,7 +109,7 @@ body {
 <template>
     <div id="app" :class="{ authenticated: authenticated }">
         <modal v-if="authenticated" />
-        <response-pop-up v-if="authenticated" />
+        <response-pop-up ref="responsePopUp" />
         <confirm-pop-up ref="confirmPopUp" />
         <nav-bar v-if="authenticated" class="fadeIn" />
         <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
@@ -134,10 +134,16 @@ import templatesStore from "./store/modules/templates";
 import bookingsStore from "./store/modules/bookings";
 import portfolioStore from "./store/modules/portfolio";
 import { useGetHighLevelData } from "./api";
-import { ConfirmRef, DarkmodeType, TIBUserClaims } from "./store/modules/types";
+import {
+    ConfirmPopUpRef,
+    DarkmodeType,
+    ResponsePopUpRef,
+    TIBUserClaims,
+} from "./store/modules/types";
 
 //* Needed to import like this to use refs
 import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";
+import ResponsePopUp from "./components/extensive/ResponsePopUp/index.vue";
 
 const NavBar = () =>
     import(
@@ -146,10 +152,6 @@ const NavBar = () =>
 const Modal = () =>
     import(
         /* webpackChunkName: "components.modal", webpackPreload: true  */ "./components/extensive/Modal/index.vue"
-    );
-const ResponsePopUp = () =>
-    import(
-        /* webpackChunkName: "components.responsePopUp", webpackPreload: true  */ "./components/extensive/ResponsePopUp/index.vue"
     );
 const TopBanner = () =>
     import(
@@ -192,7 +194,9 @@ export default class App extends Vue {
         return appState.instanceReady;
     }
 
-    @Ref() readonly confirmPopUp!: ConfirmRef;
+    // Pop-up refs
+    @Ref("responsePopUp") readonly responsePopUpRef!: ResponsePopUpRef;
+    @Ref("confirmPopUp") readonly confirmPopUpRef!: ConfirmPopUpRef;
 
     @Watch("connected")
     onConnectedChange() {
@@ -208,7 +212,10 @@ export default class App extends Vue {
         this.isAuthenticated();
     }
     async mounted() {
-        utilsStore.setConfirmRef(this.confirmPopUp);
+        // Sets refs after app mount
+        utilsStore.setResponsePopUpRef(this.responsePopUpRef);
+        utilsStore.setConfirmPopUpRef(this.confirmPopUpRef);
+
         // Sets the body to have dark mode.
         document.body.setAttribute(
             "class",

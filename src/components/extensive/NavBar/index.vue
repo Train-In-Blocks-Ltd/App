@@ -148,9 +148,6 @@ export default class NavBar extends Vue {
     get instanceReady() {
         return appState.instanceReady;
     }
-    get confirmPopUp() {
-        return utilsStore.confirmRef;
-    }
 
     hardRefresh() {
         location.reload();
@@ -159,7 +156,7 @@ export default class NavBar extends Vue {
     /** Logs out the user. */
     async handleLogout() {
         if (
-            await this.confirmPopUp?.open({
+            await utilsStore.confirmPopUpRef?.open({
                 title: "Are you sure you want to log out?",
                 text: "It's recommended to do so if you are using a public device.",
             })

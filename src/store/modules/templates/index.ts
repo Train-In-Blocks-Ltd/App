@@ -74,6 +74,38 @@ class TemplatesModule extends VuexModule {
             console.error(e);
         }
     }
+
+    @MutationAction
+    async updateTemplate(id: number) {
+        const foundTemplate = this.templates.find(
+            (template) => template.id === id
+        );
+        await baseAPI.put(
+            "https://api.traininblocks.com/v2/templates",
+            foundTemplate
+        );
+        return {
+            templates: this.templates,
+        };
+    }
+
+    @MutationAction
+    async deleteTemplates(ids: number[]) {
+        const deleteIds: { id: number }[] = [];
+        ids.forEach((id) => {
+            deleteIds.push({ id });
+        });
+        await baseAPI.delete(
+            "https://api.traininblocks.com/v2/batch/templates",
+            {
+                data: deleteIds,
+            }
+        );
+        const templates = this.templates.filter((t) => !ids.includes(t.id));
+        return {
+            templates,
+        };
+    }
 }
 
 export default getModule(TemplatesModule);

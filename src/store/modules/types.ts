@@ -73,9 +73,17 @@ export type MultiselectOption = {
 
 export type ModalSize = "xs" | "sm" | "lg" | "full";
 
-export type ConfirmPopUpParams = {
+export type BasePopUpParams = {
     title: string;
     text?: string;
 };
-
-export type ConfirmRef = { open: (params: ConfirmPopUpParams) => void } | null;
+export type BasePopUpMethods<T> = {
+    open: (params: T) => void;
+};
+export type ConfirmPopUpParams = BasePopUpParams;
+export type ConfirmPopUpRef = BasePopUpMethods<ConfirmPopUpParams> | null;
+export type ResponsePopUpParams = {
+    persist?: boolean;
+    backdrop?: boolean;
+} & BasePopUpParams;
+export type ResponsePopUpRef = BasePopUpMethods<ResponsePopUpParams> | null;

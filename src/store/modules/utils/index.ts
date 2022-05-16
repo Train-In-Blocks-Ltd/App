@@ -2,20 +2,12 @@ import {
     Action,
     getModule,
     Module,
-    Mutation,
     MutationAction,
     VuexModule,
 } from "vuex-module-decorators";
 import store from "../..";
 import appState from "../appState";
-import { ConfirmRef, ModalSize } from "../types";
-
-type ResponsePopUpParams = {
-    title: string;
-    description?: string;
-    persist?: boolean;
-    backdrop?: boolean;
-};
+import { ConfirmPopUpRef, ModalSize, ResponsePopUpRef } from "../types";
 
 type ModalParams =
     | {
@@ -43,13 +35,6 @@ class UtilsModule extends VuexModule {
     search: string = "";
     selectedIds: number[] = [];
 
-    // Response pop-up
-    responseOpen: boolean = false;
-    responseTitle: string | null = "";
-    responseDescription: string | null = "";
-    responsePersist: boolean = false;
-    responseBackdrop: boolean = false;
-
     // Modal and preview
     modalOpen: boolean = false;
     modalContent: string | null = "";
@@ -59,7 +44,8 @@ class UtilsModule extends VuexModule {
     previewHTML: string | null = "";
 
     // Refs
-    confirmRef: ConfirmRef = null;
+    responsePopUpRef: ResponsePopUpRef = null;
+    confirmPopUpRef: ConfirmPopUpRef = null;
 
     @MutationAction
     async setSearch(search: string) {
@@ -82,34 +68,6 @@ class UtilsModule extends VuexModule {
             selectedIds: !this.selectedIds.includes(id)
                 ? [...this.selectedIds, id]
                 : this.selectedIds.filter((selectedId) => selectedId !== id),
-        };
-    }
-
-    /* -------------------------------- Response -------------------------------- */
-
-    @MutationAction
-    async openResponsePopUp({
-        title,
-        description,
-        persist,
-        backdrop,
-    }: ResponsePopUpParams) {
-        return {
-            responseOpen: true,
-            responseTitle: title,
-            responseDescription: description,
-            responsePersist: persist,
-            responseBackdrop: backdrop,
-        };
-    }
-    @MutationAction
-    async closeResponsePopUp() {
-        return {
-            responseOpen: false,
-            responseTitle: "",
-            responseDescription: "",
-            responsePersist: false,
-            responseBackdrop: false,
         };
     }
 
@@ -147,9 +105,15 @@ class UtilsModule extends VuexModule {
     /* ------------------------------ Pop-ups ------------------------------ */
 
     @MutationAction
-    async setConfirmRef(confirmRef: ConfirmRef) {
+    async setResponsePopUpRef(responsePopUpRef: ResponsePopUpRef) {
         return {
-            confirmRef,
+            responsePopUpRef,
+        };
+    }
+    @MutationAction
+    async setConfirmPopUpRef(confirmPopUpRef: ConfirmPopUpRef) {
+        return {
+            confirmPopUpRef,
         };
     }
 
@@ -158,9 +122,9 @@ class UtilsModule extends VuexModule {
     @Action
     async resolveError(msg: string) {
         appState.stopLoaders();
-        this.openResponsePopUp({
+        this.responsePopUpRef?.open({
             title: "ERROR: this problem has been reported to our developers",
-            description:
+            text:
                 msg.toString() !== "Error: Network Error"
                     ? msg.toString()
                     : "You may be offline. We'll try that request again once you've reconnected",
