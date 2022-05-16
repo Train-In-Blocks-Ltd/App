@@ -20,6 +20,9 @@
 <script lang="ts">
 import { UploadPopUpParams } from "../../store/modules/types";
 import { Component, Vue, Watch } from "vue-property-decorator";
+import Compressor from "compressorjs";
+import { baseAPI } from "../../api";
+import utilsStore from "../../store/modules/utils";
 
 const Backdrop = () =>
     import(
@@ -37,6 +40,7 @@ export default class UploadPopUp extends Vue {
     text?: string = "";
     resolve: ((reason?: any) => void) | null = null;
     reject: ((reason?: any) => void) | null = null;
+    onSuccess: ((response: { data: { url: string } }) => void) | null = null;
 
     @Watch("show")
     onShowChange(old: boolean) {
@@ -44,10 +48,11 @@ export default class UploadPopUp extends Vue {
         else document.body.style.overflow = "auto";
     }
 
-    open({ title, text }: UploadPopUpParams) {
+    open({ title, text, onSuccess }: UploadPopUpParams) {
         this.show = true;
         this.title = title;
         this.text = text;
+        this.onSuccess = onSuccess;
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
@@ -62,10 +67,59 @@ export default class UploadPopUp extends Vue {
         this.reject = null;
     }
 
+    /** Adds an image. */
+    handleImageSelect() {
+        const uploader = document.getElementById(
+            "img-uploader"
+        ) as HTMLElement & { files: any[] };
+        if (!uploader) return;
+        const file = uploader.files[0];
+        const reader = new FileReader();
+        reader.addEventListener(
+            "load",
+            () => {
+                baseAPI
+                    .post("/.netlify/functions/upload-image", {
+                        file: reader.result?.toString(),
+                    })
+                    .then((response) => {
+                        console.log(response);
+                        console.log(this.onSuccess);
+                        if (this.onSuccess) this.onSuccess(response);
+                    });
+            },
+            false
+        );
+
+        if (file.size < 1100000) {
+            // eslint-disable-next-line
+            new Compressor(file, {
+                quality: 0.6,
+                success(result) {
+                    reader.readAsDataURL(result);
+                },
+                error(err) {
+                    console.error(err.message);
+                },
+            });
+        } else {
+            utilsStore.responsePopUpRef?.open({
+                title: "File size is too big",
+                text: "Please compress it to 1MB or lower",
+                persist: true,
+                backdrop: true,
+            });
+            const uploader = document.getElementById(
+                "img-uploader"
+            ) as HTMLElement & { value: any };
+            if (!uploader) return;
+            uploader.value = "";
+        }
+    }
+
     _confirm() {
         if (this.resolve) this.resolve(true);
-        // @ts-expect-error
-        this.$parent.handleImageSelect();
+        this.handleImageSelect();
         this.close();
     }
     _cancel() {

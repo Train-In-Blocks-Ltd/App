@@ -1,7 +1,6 @@
 <template>
     <div class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
-        <upload-pop-up ref="uploadPopUp" />
-        <txt-input-pop-up />
+        <txt-input-pop-up ref="txtInputPopUp" />
         <div
             class="flex flex-wrap px-4 pt-4 border-2 rounded-t-lg transition-all"
             :class="toolbarClass"
@@ -105,19 +104,7 @@
                 :class="{
                     'opacity-60': editor.isActive('link'),
                 }"
-                :on-click="
-                    () => {
-                        if (editor.isActive('link'))
-                            return editor.chain().focus().unsetLink().run();
-
-                        $store.dispatch('openTxtInputPopUp', {
-                            title: 'Enter URL link',
-                            text: 'Make sure to include the https://',
-                            label: 'Link',
-                            placeholder: 'Link',
-                        });
-                    }
-                "
+                :on-click="handleOpenLinkBuilder"
                 aria-label="Link"
                 title="Link"
             />
@@ -170,26 +157,19 @@
 import { Component, Prop, Ref, Vue } from "vue-property-decorator";
 import templatesStore from "../../../../store/modules/templates";
 import utilsStore from "../../../../store/modules/utils";
-import Compressor from "compressorjs";
-import { baseAPI } from "../../../../api";
-import UploadPopUp from "../../../../components/generic/UploadPopUp.vue";
-import { UploadPopUpRef } from "../../../../store/modules/types";
-
-const TxtInputPopUp = () =>
-    import(
-        /* webpackChunkName: "components.txtInputPopUp", webpackPrefetch: true  */ "../../../../components/generic/TxtInputPopUp.vue"
-    );
+import TxtInputPopUp from "../../../../components/generic/TxtInputPopUp.vue";
+import { TxtInputPopUpRef } from "../../../../store/modules/types";
+import { ChainedCommands } from "@tiptap/core";
 
 @Component({
     components: {
-        UploadPopUp,
         TxtInputPopUp,
     },
 })
 export default class ToolBar extends Vue {
     @Prop(String) readonly toolbarClass!: string;
 
-    @Ref("uploadPopUp") readonly uploadPopUpRef!: UploadPopUpRef;
+    @Ref("txtInputPopUp") readonly txtInputPopUpRef!: TxtInputPopUpRef;
 
     get editor() {
         return utilsStore.editor;
@@ -202,7 +182,7 @@ export default class ToolBar extends Vue {
     }
 
     mounted() {
-        utilsStore.setUploadPopUpRef(this.uploadPopUpRef);
+        utilsStore.setTxtInputPopUpRef(this.txtInputPopUpRef);
     }
 
     /** Sets the link of the selected text. */
@@ -218,74 +198,37 @@ export default class ToolBar extends Vue {
     }
 
     /** Opens link builder. */
-    handleOpenLinkBuilder() {}
+    handleOpenLinkBuilder() {
+        if (this.editor?.isActive("link"))
+            return this.editor?.chain().focus().unsetLink().run();
+
+        utilsStore.txtInputPopUpRef?.open({
+            title: "Enter URL link",
+            text: "Make sure to include the https://",
+            label: "Link",
+            placeholder: "Link",
+        });
+    }
 
     /** Opens image picker. */
     handleOpenUpload() {
         utilsStore.uploadPopUpRef?.open({
             title: "Upload image",
             text: "Please make sure that it's less than 1MB.",
-        });
-    }
-
-    /** Adds an image. */
-    handleImageSelect() {
-        const uploader = document.getElementById(
-            "img-uploader"
-        ) as HTMLElement & { files: any[] };
-        if (!uploader) return;
-        const file = uploader.files[0];
-        const reader = new FileReader();
-        reader.addEventListener(
-            "load",
-            () => {
-                baseAPI
-                    .post("/.netlify/functions/upload-image", {
-                        file: reader.result?.toString(),
+            onSuccess: (response) => {
+                (
+                    this.editor?.chain().focus() as ChainedCommands & {
+                        setImage: any;
+                    }
+                )
+                    .setImage({
+                        src: response.data.url,
+                        loading: "lazy",
                     })
-                    .then((response) => {
-                        this.editor
-                            ?.chain()
-                            .focus()
-                            // @ts-expect-error
-                            .setImage({
-                                src: response.data.url,
-                                loading: "lazy",
-                            })
-                            .run();
-                        utilsStore.setNewImgs([
-                            ...this.newImgs,
-                            response.data.url,
-                        ]);
-                    });
+                    .run();
+                utilsStore.setNewImgs([...this.newImgs, response.data.url]);
             },
-            false
-        );
-
-        if (file.size < 1100000) {
-            // eslint-disable-next-line
-            new Compressor(file, {
-                quality: 0.6,
-                success(result) {
-                    reader.readAsDataURL(result);
-                },
-                error(err) {
-                    console.error(err.message);
-                },
-            });
-        } else {
-            utilsStore.responsePopUpRef?.open({
-                title: "File size is too big",
-                text: "Please compress it to 1MB or lower",
-                persist: true,
-                backdrop: true,
-            });
-            const uploader = document.getElementById(
-                "img-uploader"
-            ) as HTMLElement & { value: any };
-            if (!uploader) return;
-            uploader.value = "";
-        }
+        });
     }
 }
 </script>

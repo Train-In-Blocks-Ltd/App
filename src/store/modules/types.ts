@@ -87,5 +87,12 @@ export type ResponsePopUpParams = {
     backdrop?: boolean;
 } & BasePopUpParams;
 export type ResponsePopUpRef = BasePopUpMethods<ResponsePopUpParams> | null;
-export type UploadPopUpParams = BasePopUpParams;
+export type UploadPopUpParams = {
+    onSuccess: (response: { data: { url: string } }) => void;
+} & BasePopUpParams;
 export type UploadPopUpRef = BasePopUpMethods<UploadPopUpParams> | null;
+export type TxtInputPopUpParams = {
+    label: string;
+    placeholder: string;
+} & BasePopUpParams;
+export type TxtInputPopUpRef = BasePopUpMethods<TxtInputPopUpParams> | null;

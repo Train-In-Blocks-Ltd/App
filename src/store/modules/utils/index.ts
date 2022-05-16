@@ -11,6 +11,7 @@ import {
     ConfirmPopUpRef,
     ModalSize,
     ResponsePopUpRef,
+    TxtInputPopUpRef,
     UploadPopUpRef,
 } from "../types";
 import { Editor } from "@tiptap/core";
@@ -53,6 +54,7 @@ class UtilsModule extends VuexModule {
     responsePopUpRef: ResponsePopUpRef = null;
     confirmPopUpRef: ConfirmPopUpRef = null;
     uploadPopUpRef: UploadPopUpRef = null;
+    txtInputPopUpRef: TxtInputPopUpRef = null;
 
     // Editor
     editor: Editor | null = null;
@@ -131,6 +133,12 @@ class UtilsModule extends VuexModule {
     async setUploadPopUpRef(uploadPopUpRef: UploadPopUpRef) {
         return {
             uploadPopUpRef,
+        };
+    }
+    @MutationAction
+    async setTxtInputPopUpRef(txtInputPopUpRef: TxtInputPopUpRef) {
+        return {
+            txtInputPopUpRef,
         };
     }
 

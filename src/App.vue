@@ -111,6 +111,7 @@ body {
         <modal v-if="authenticated" />
         <response-pop-up ref="responsePopUp" />
         <confirm-pop-up ref="confirmPopUp" />
+        <upload-pop-up ref="uploadPopUp" />
         <nav-bar v-if="authenticated" class="fadeIn" />
         <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
             <top-banner v-if="authenticated" />
@@ -139,11 +140,13 @@ import {
     DarkmodeType,
     ResponsePopUpRef,
     TIBUserClaims,
+    UploadPopUpRef,
 } from "./store/modules/types";
 
 //* Needed to import like this to use refs
 import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";
 import ResponsePopUp from "./components/extensive/ResponsePopUp/index.vue";
+import UploadPopUp from "./components/generic/UploadPopUp.vue";
 
 const NavBar = () =>
     import(
@@ -171,6 +174,7 @@ const TopBanner = () =>
         Modal,
         ResponsePopUp,
         ConfirmPopUp,
+        UploadPopUp,
         TopBanner,
     },
 })
@@ -197,6 +201,7 @@ export default class App extends Vue {
     // Pop-up refs
     @Ref("responsePopUp") readonly responsePopUpRef!: ResponsePopUpRef;
     @Ref("confirmPopUp") readonly confirmPopUpRef!: ConfirmPopUpRef;
+    @Ref("uploadPopUp") readonly uploadPopUpRef!: UploadPopUpRef;
 
     @Watch("connected")
     onConnectedChange() {
@@ -215,6 +220,7 @@ export default class App extends Vue {
         // Sets refs after app mount
         utilsStore.setResponsePopUpRef(this.responsePopUpRef);
         utilsStore.setConfirmPopUpRef(this.confirmPopUpRef);
+        utilsStore.setUploadPopUpRef(this.uploadPopUpRef);
 
         // Sets the body to have dark mode.
         document.body.setAttribute(
