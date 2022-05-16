@@ -49,6 +49,8 @@ export default class ResponsePopUp extends Vue {
         this.text = text;
         this.persist = persist;
         this.backdrop = backdrop;
+
+        if (!persist) setTimeout(this.close, 3000);
     }
     close() {
         this.show = false;
