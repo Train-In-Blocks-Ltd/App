@@ -125,7 +125,7 @@ div#rich_show_content {
             "
         >
             <txt class="mr-4">
-                {{ emptyPlaceholder }}
+                {{ placeholder }}
             </txt>
             <icon svg="edit-2" :icon-size="24" class="absolute top-2 right-2" />
         </div>

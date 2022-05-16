@@ -174,6 +174,9 @@ export default class Templates extends Vue {
     get templates() {
         return templatesStore.templates;
     }
+    set templates(value) {
+        templatesStore.setTemplates(value);
+    }
     get selectedIds() {
         return utilsStore.selectedIds;
     }
@@ -233,12 +236,15 @@ export default class Templates extends Vue {
                 appState.setDontLeave(false);
                 this.isEditingTemplate = false;
                 this.editTemplate = null;
-                if (foundTemplate && this.tempEditorStore)
-                    templatesStore.revertTemplate(
-                        id,
-                        foundTemplate,
-                        this.tempEditorStore
-                    );
+                if (!foundTemplate) return;
+                this.templates = this.templates.map((t) =>
+                    t.id !== id
+                        ? t
+                        : {
+                              ...foundTemplate,
+                              template: this.tempEditorStore ?? "",
+                          }
+                );
                 break;
         }
     }

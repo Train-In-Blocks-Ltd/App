@@ -55,11 +55,6 @@ class PortfolioModule extends VuexModule implements Portfolio {
     }
 
     @MutationAction
-    async revertPortfolio(oldData: Portfolio) {
-        return oldData;
-    }
-
-    @MutationAction
     async createPortfolio() {
         const pt_id = appState.claims?.sub;
         await baseAPI.post("https://api.traininblocks.com/v2/portfolio", {

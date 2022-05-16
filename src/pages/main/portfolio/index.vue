@@ -64,6 +64,7 @@ import portfolioStore from "../../../store/modules/portfolio";
 import utilsStore from "../../../store/modules/utils";
 import { NavigationGuardNext, Route } from "vue-router";
 import { EditorState } from "@/src/store/modules/types";
+import portfolio from "../../../store/modules/portfolio";
 
 const LabelWrapper = () =>
     import(
@@ -163,7 +164,7 @@ export default class Portfolio extends Vue {
                 appState.setDontLeave(false);
                 this.editingPortfolio = false;
                 const { pt_id, business_name, trainer_name } = this;
-                portfolioStore.revertPortfolio({
+                portfolioStore.setPortfolio({
                     pt_id,
                     business_name,
                     trainer_name,
