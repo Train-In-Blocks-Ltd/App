@@ -420,7 +420,7 @@ export default class App extends Vue {
 
                     if (!!portfolio) portfolioStore.setPortfolio(portfolio);
                 } catch (e) {
-                    this.$store.dispatch("resolveError", e);
+                    utilsStore.resolveError(e as string);
                 }
             }
 
@@ -436,7 +436,7 @@ export default class App extends Vue {
             await this.$store.dispatch("saveClaims");
             appState.setLoading(false);
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 
@@ -448,7 +448,7 @@ export default class App extends Vue {
                 await this.$store.dispatch("getClientSidePlans");
                 appState.setClientUserLoaded(true);
             } catch (e) {
-                this.$store.dispatch("resolveError", e);
+                utilsStore.resolveError(e as string);
             }
         }
     }
@@ -467,7 +467,7 @@ export default class App extends Vue {
             });
             appState.setLoading(false);
         } catch (e) {
-            this.$store.dispatch("resolveError", e);
+            utilsStore.resolveError(e as string);
         }
     }
 }
