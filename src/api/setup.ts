@@ -32,7 +32,7 @@ export const useGetHighLevelData = async (): Promise<HighLevelData> => {
         return new Date(a.datetime) < new Date(b.datetime);
     });
     const templates = response.data[2] as Template[];
-    const portfolio = response.data[3] as Portfolio | undefined;
+    const portfolio = response.data[3][0] as Portfolio | undefined;
 
     return {
         sortedClients,

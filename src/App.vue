@@ -406,7 +406,7 @@ export default class App extends Vue {
                     bookingsStore.setBookings(sortedBookings);
                     templatesStore.setTemplates(templates);
 
-                    if (portfolio) portfolioStore.setPortfolio(portfolio);
+                    if (!!portfolio) portfolioStore.setPortfolio(portfolio);
                 } catch (e) {
                     this.$store.dispatch("resolveError", e);
                 }

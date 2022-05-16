@@ -57,16 +57,21 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appState from "../../../store/modules/appState";
+import portfolioStore from "../../../store/modules/portfolio";
+import utilsStore from "../../../store/modules/utils";
+import { NavigationGuardNext, Route } from "vue-router";
+import { EditorState } from "@/src/store/modules/types";
 
 const LabelWrapper = () =>
     import(
-        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "@/components/generic/LabelWrapper"
+        /* webpackChunkName: "components.labelWrapper", webpackPreload: true  */ "../../../components/generic/LabelWrapper.vue"
     );
 // const Products = () => import(/* webpackChunkName: "components.products", webpackPreload: true  */ '@/components/Products')
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Portfolio",
@@ -76,137 +81,140 @@ export default {
         LabelWrapper,
         // Products
     },
-    async beforeRouteLeave(to, from, next) {
+})
+export default class Portfolio extends Vue {
+    tempEditorStore: string | null = null;
+    editingPortfolio: boolean = false;
+
+    get dontLeave() {
+        return appState.dontLeave;
+    }
+    get claims() {
+        return appState.claims;
+    }
+    get loading() {
+        return appState.loading;
+    }
+    get silentLoading() {
+        return appState.silentLoading;
+    }
+    get portfolio() {
+        const { pt_id, business_name, trainer_name, notes } = portfolioStore;
+        return {
+            pt_id,
+            business_name,
+            trainer_name,
+            notes,
+        };
+    }
+
+    async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsStore.confirmPopUpRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
                 : true
         ) {
-            this.$store.dispatch("setLoading", {
-                dontLeave: false,
-            });
+            appState.setDontLeave(false);
             next();
         }
-    },
-    data() {
-        return {
-            editingPortfolio: false,
-            tempEditorStore: null,
-        };
-    },
-    computed: mapState([
-        "claims",
-        "loading",
-        "silentLoading",
-        "dontLeave",
-        "portfolio",
-        "hasCheckedStripeConnect",
-    ]),
+    }
+
     async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
+        appState.setLoading(true);
+        // @ts-expect-error
         await this.$parent.setup();
         // await this.checkStripeConnect()
-        this.$store.dispatch("setLoading", false);
-    },
-    methods: {
-        /**
-         * Resolves the state of the portfolio editor.
-         * @param {string} state - The returned state of the editor.
-         */
-        resolve_portfolio_editor(state) {
-            switch (state) {
-                case "edit":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    this.editingPortfolio = true;
-                    this.tempEditorStore = this.portfolio.notes;
-                    break;
-                case "save":
-                    this.editingPortfolio = false;
-                    this.updatePortfolio();
-                    break;
-                case "cancel":
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: false,
-                    });
-                    this.editingPortfolio = false;
-                    this.$store.commit("SET_DATA_DEEP", {
-                        attrParent: "portfolio",
-                        attrChild: "notes",
-                        data: this.tempEditorStore,
-                    });
-                    break;
-            }
-        },
+        appState.stopLoaders();
+    }
 
-        /**
-         * Updates the portfolio.
-         */
-        async updatePortfolio() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    silentLoading: true,
-                    dontLeave: true,
+    /** Resolves the state of the portfolio editor. */
+    resolve_portfolio_editor(state: EditorState) {
+        switch (state) {
+            case "edit":
+                appState.setDontLeave(true);
+                this.editingPortfolio = true;
+                this.tempEditorStore = this.portfolio.notes;
+                break;
+            case "save":
+                this.editingPortfolio = false;
+                this.updatePortfolio();
+                break;
+            case "cancel":
+                appState.setDontLeave(false);
+                this.editingPortfolio = false;
+                const { pt_id, business_name, trainer_name } = this.portfolio;
+                portfolioStore.revertPortfolio({
+                    pt_id,
+                    business_name,
+                    trainer_name,
+                    notes: this.tempEditorStore ?? "",
                 });
-                await this.$store.dispatch("updatePortfolio");
-                this.$ga.event("Portfolio", "update");
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Portfolio updated",
-                    description: "Your clients can access this information",
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
+                break;
+        }
+    }
 
-        async stripeConnect() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                const RESPONSE = await this.$axios.post(
-                    "/.netlify/functions/create-connected-account",
-                    {
-                        email: this.claims.email,
-                        connectedAccountId: this.claims.connectedAccountId,
-                    }
-                );
-                this.claims.connectedAccountId =
-                    RESPONSE.data.connectedAccountId;
-                await this.$store.dispatch("saveClaims");
-                window.location.href = RESPONSE.data.url;
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-        async checkStripeConnect() {
-            if (!this.hasCheckedStripeConnect) {
-                const RESPONSE_STRIPE = await this.$axios.post(
-                    "/.netlify/functions/check-connected-account",
-                    {
-                        connectedAccountId: this.claims.connectedAccountId,
-                    }
-                );
-                this.$store.commit("SET_DATA", {
-                    attr: "isStripeConnected",
-                    data:
-                        this.claims.email === "demo@traininblocks.com" ||
-                        RESPONSE_STRIPE.data,
-                });
-                this.$store.commit("SET_DATA", {
-                    attr: "hasCheckedStripeConnect",
-                    data: true,
-                });
-            }
-        },
-    },
-};
+    /** Updates the portfolio. */
+    async updatePortfolio() {
+        try {
+            appState.setSilentLoading(true);
+            appState.setDontLeave(true);
+            await portfolioStore.updatePortfolio();
+            this.$ga.event("Portfolio", "update");
+            utilsStore.responsePopUpRef?.open({
+                title: "Portfolio updated",
+                text: "Your clients can access this information",
+            });
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+
+    // TODO: Stripe integration
+    // async stripeConnect() {
+    //     try {
+    //         this.$store.dispatch("setLoading", {
+    //             dontLeave: true,
+    //         });
+    //         const RESPONSE = await this.$axios.post(
+    //             "/.netlify/functions/create-connected-account",
+    //             {
+    //                 email: this.claims.email,
+    //                 connectedAccountId: this.claims.connectedAccountId,
+    //             }
+    //         );
+    //         this.claims.connectedAccountId =
+    //             RESPONSE.data.connectedAccountId;
+    //         await this.$store.dispatch("saveClaims");
+    //         window.location.href = RESPONSE.data.url;
+    //         this.$store.dispatch("setLoading", false);
+    //     } catch (e) {
+    //         this.$store.dispatch("resolveError", e);
+    //     }
+    // },
+
+    // async checkStripeConnect() {
+    //     if (!this.hasCheckedStripeConnect) {
+    //         const RESPONSE_STRIPE = await this.$axios.post(
+    //             "/.netlify/functions/check-connected-account",
+    //             {
+    //                 connectedAccountId: this.claims.connectedAccountId,
+    //             }
+    //         );
+    //         this.$store.commit("SET_DATA", {
+    //             attr: "isStripeConnected",
+    //             data:
+    //                 this.claims.email === "demo@traininblocks.com" ||
+    //                 RESPONSE_STRIPE.data,
+    //         });
+    //         this.$store.commit("SET_DATA", {
+    //             attr: "hasCheckedStripeConnect",
+    //             data: true,
+    //         });
+    //     }
+    // },
+}
 </script>
