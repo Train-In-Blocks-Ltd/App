@@ -12,11 +12,11 @@
             autocomplete="name"
             class="mb-4"
             input-class="text-4xl"
-            :value="portfolio.business_name"
+            :value="business_name"
             :disabled="silentLoading"
             :on-blur="() => updatePortfolio()"
             :on-input="() => (editing_info = true)"
-            @output="(data) => (portfolio.business_name = data)"
+            @output="(data) => (business_name = data)"
         />
 
         <!-- Trainer name -->
@@ -30,11 +30,11 @@
             type="text"
             autocomplete="name"
             class="mb-16"
-            :value="portfolio.trainer_name"
+            :value="trainer_name"
             :disabled="silentLoading"
             :on-blur="() => updatePortfolio()"
             :on-input="() => (editing_info = true)"
-            @output="(data) => (portfolio.trainer_name = data)"
+            @output="(data) => (trainer_name = data)"
         />
 
         <!-- Portfolio content -->
@@ -47,7 +47,7 @@
         </div>
         <label-wrapper v-else title="Portfolio">
             <rich-editor
-                v-model="portfolio.notes"
+                v-model="notes"
                 :empty-placeholder="'Your clients will be able to access this information. What do you want to share with them? You should include payment information and any important links.'"
                 @on-edit-change="resolve_portfolio_editor"
             />
@@ -86,11 +86,11 @@ export default class Portfolio extends Vue {
     tempEditorStore: string | null = null;
     editingPortfolio: boolean = false;
 
-    get dontLeave() {
-        return appState.dontLeave;
-    }
     get claims() {
         return appState.claims;
+    }
+    get dontLeave() {
+        return appState.dontLeave;
     }
     get loading() {
         return appState.loading;
@@ -98,14 +98,31 @@ export default class Portfolio extends Vue {
     get silentLoading() {
         return appState.silentLoading;
     }
-    get portfolio() {
-        const { pt_id, business_name, trainer_name, notes } = portfolioStore;
-        return {
-            pt_id,
-            business_name,
-            trainer_name,
-            notes,
-        };
+    get pt_id() {
+        return portfolioStore.pt_id;
+    }
+
+    // Form data
+
+    get business_name() {
+        return portfolioStore.business_name;
+    }
+    set business_name(value) {
+        portfolioStore.setBusinessName(value);
+    }
+
+    get trainer_name() {
+        return portfolioStore.trainer_name;
+    }
+    set trainer_name(value) {
+        portfolioStore.setTrainerName(value);
+    }
+
+    get notes() {
+        return portfolioStore.notes;
+    }
+    set notes(value) {
+        portfolioStore.setNotes(value);
     }
 
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
@@ -136,7 +153,7 @@ export default class Portfolio extends Vue {
             case "edit":
                 appState.setDontLeave(true);
                 this.editingPortfolio = true;
-                this.tempEditorStore = this.portfolio.notes;
+                this.tempEditorStore = this.notes;
                 break;
             case "save":
                 this.editingPortfolio = false;
@@ -145,7 +162,7 @@ export default class Portfolio extends Vue {
             case "cancel":
                 appState.setDontLeave(false);
                 this.editingPortfolio = false;
-                const { pt_id, business_name, trainer_name } = this.portfolio;
+                const { pt_id, business_name, trainer_name } = this;
                 portfolioStore.revertPortfolio({
                     pt_id,
                     business_name,
@@ -161,6 +178,7 @@ export default class Portfolio extends Vue {
         try {
             appState.setSilentLoading(true);
             appState.setDontLeave(true);
+
             await portfolioStore.updatePortfolio();
             this.$ga.event("Portfolio", "update");
             utilsStore.responsePopUpRef?.open({

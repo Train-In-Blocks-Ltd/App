@@ -35,6 +35,24 @@ class PortfolioModule extends VuexModule implements Portfolio {
             notes,
         };
     }
+    @MutationAction
+    async setBusinessName(business_name: string) {
+        return {
+            business_name,
+        };
+    }
+    @MutationAction
+    async setTrainerName(trainer_name: string) {
+        return {
+            trainer_name,
+        };
+    }
+    @MutationAction
+    async setNotes(notes: string) {
+        return {
+            notes,
+        };
+    }
 
     @MutationAction
     async revertPortfolio(oldData: Portfolio) {
@@ -60,7 +78,7 @@ class PortfolioModule extends VuexModule implements Portfolio {
 
     @MutationAction
     async updatePortfolio() {
-        const { business_name, notes, pt_id, trainer_name } = this;
+        const { pt_id, business_name, trainer_name, notes } = this;
         await baseAPI.put(
             `https://api.traininblocks.com/v2/portfolio/${appState.claims?.sub}`,
             {
