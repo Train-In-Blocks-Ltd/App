@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
-        <upload-pop-up />
+        <upload-pop-up ref="uploadPopUp" />
         <txt-input-pop-up />
         <div
             class="flex flex-wrap px-4 pt-4 border-2 rounded-t-lg transition-all"
@@ -127,14 +127,7 @@
                 svg="image"
                 class="mr-3 mb-4"
                 :icon-size="22"
-                :on-click="
-                    () => {
-                        $store.dispatch('openUploadPopUp', {
-                            title: 'Upload image',
-                            text: 'Please make sure that it\'s less than 1MB.',
-                        });
-                    }
-                "
+                :on-click="handleOpenUpload"
                 aria-label="Image"
                 title="Image"
             />
@@ -145,17 +138,7 @@
                 svg="file-text"
                 class="mr-3 mb-4"
                 :icon-size="22"
-                :on-click="
-                    () => {
-                        $store.commit('SET_DATA', {
-                            attr: 'editor',
-                            data: editor,
-                        });
-                        $store.dispatch('openModal', {
-                            name: 'templates',
-                        });
-                    }
-                "
+                :on-click="handleOpenTemplates"
                 aria-label="Templates"
                 title="Templates"
             />
@@ -184,16 +167,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Ref, Vue } from "vue-property-decorator";
 import templatesStore from "../../../../store/modules/templates";
 import utilsStore from "../../../../store/modules/utils";
 import Compressor from "compressorjs";
 import { baseAPI } from "../../../../api";
+import UploadPopUp from "../../../../components/generic/UploadPopUp.vue";
+import { UploadPopUpRef } from "../../../../store/modules/types";
 
-const UploadPopUp = () =>
-    import(
-        /* webpackChunkName: "components.uploadPopUp", webpackPrefetch: true  */ "../../../../components/generic/UploadPopUp.vue"
-    );
 const TxtInputPopUp = () =>
     import(
         /* webpackChunkName: "components.txtInputPopUp", webpackPrefetch: true  */ "../../../../components/generic/TxtInputPopUp.vue"
@@ -208,6 +189,8 @@ const TxtInputPopUp = () =>
 export default class ToolBar extends Vue {
     @Prop(String) readonly toolbarClass!: string;
 
+    @Ref("uploadPopUp") readonly uploadPopUpRef!: UploadPopUpRef;
+
     get editor() {
         return utilsStore.editor;
     }
@@ -218,9 +201,31 @@ export default class ToolBar extends Vue {
         return utilsStore.newImgs;
     }
 
+    mounted() {
+        utilsStore.setUploadPopUpRef(this.uploadPopUpRef);
+    }
+
     /** Sets the link of the selected text. */
     handleReturnInput(link: string) {
         this.editor?.chain().focus().setLink({ href: link }).run();
+    }
+
+    /** Opens templates selector. */
+    handleOpenTemplates() {
+        utilsStore.openModal({
+            name: "templates",
+        });
+    }
+
+    /** Opens link builder. */
+    handleOpenLinkBuilder() {}
+
+    /** Opens image picker. */
+    handleOpenUpload() {
+        utilsStore.uploadPopUpRef?.open({
+            title: "Upload image",
+            text: "Please make sure that it's less than 1MB.",
+        });
     }
 
     /** Adds an image. */
@@ -269,9 +274,9 @@ export default class ToolBar extends Vue {
                 },
             });
         } else {
-            this.$store.dispatch("openResponsePopUp", {
+            utilsStore.responsePopUpRef?.open({
                 title: "File size is too big",
-                description: "Please compress it to 1MB or lower",
+                text: "Please compress it to 1MB or lower",
                 persist: true,
                 backdrop: true,
             });

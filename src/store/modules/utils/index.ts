@@ -7,7 +7,12 @@ import {
 } from "vuex-module-decorators";
 import store from "../..";
 import appState from "../appState";
-import { ConfirmPopUpRef, ModalSize, ResponsePopUpRef } from "../types";
+import {
+    ConfirmPopUpRef,
+    ModalSize,
+    ResponsePopUpRef,
+    UploadPopUpRef,
+} from "../types";
 import { Editor } from "@tiptap/core";
 
 type ModalParams =
@@ -47,6 +52,7 @@ class UtilsModule extends VuexModule {
     // Refs
     responsePopUpRef: ResponsePopUpRef = null;
     confirmPopUpRef: ConfirmPopUpRef = null;
+    uploadPopUpRef: UploadPopUpRef = null;
 
     // Editor
     editor: Editor | null = null;
@@ -119,6 +125,12 @@ class UtilsModule extends VuexModule {
     async setConfirmPopUpRef(confirmPopUpRef: ConfirmPopUpRef) {
         return {
             confirmPopUpRef,
+        };
+    }
+    @MutationAction
+    async setUploadPopUpRef(uploadPopUpRef: UploadPopUpRef) {
+        return {
+            uploadPopUpRef,
         };
     }
 

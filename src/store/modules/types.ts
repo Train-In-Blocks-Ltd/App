@@ -87,3 +87,5 @@ export type ResponsePopUpParams = {
     backdrop?: boolean;
 } & BasePopUpParams;
 export type ResponsePopUpRef = BasePopUpMethods<ResponsePopUpParams> | null;
+export type UploadPopUpParams = BasePopUpParams;
+export type UploadPopUpRef = BasePopUpMethods<UploadPopUpParams> | null;
