@@ -66,48 +66,52 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import templatesStore from "../../../../store/modules/templates";
+import utilsStore from "../../../../store/modules/utils";
 
 const CardWrapper = () =>
     import(
-        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "@/components/generic/CardWrapper"
+        /* webpackChunkName: "components.cardWrapper", webpackPreload: true  */ "../../../../components/generic/CardWrapper.vue"
     );
 
-export default {
+@Component({
     components: {
         CardWrapper,
     },
-    data() {
-        return {
-            search: "",
-            systemTemplates: [
-                {
-                    name: "Track with sets, reps, and load",
-                    html: "<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>",
-                },
-                {
-                    name: "Track with sets, reps",
-                    html: "<div>[ EXERCISE: SETS x REPS ]</div>",
-                },
-                {
-                    name: "Track with other measurements",
-                    html: "<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>",
-                },
-            ],
-        };
-    },
-    computed: {
-        ...mapState(["templates", "editor"]),
-        searchEmpty() {
-            return (
-                this.templates.filter((template) =>
-                    template.name
-                        .toLowerCase()
-                        .startsWith(this.search.toLowerCase())
-                ).length === 0
-            );
+})
+export default class TemplatesModal extends Vue {
+    search: string = "";
+    systemTemplates: { name: string; html: string }[] = [
+        {
+            name: "Track with sets, reps, and load",
+            html: "<div>[ EXERCISE: SETS x REPS at LOAD ]</div><div>Tip: You can break LOAD into different sets. E.g. 70/80/90kg where SETS must be 3.</div>",
         },
-    },
-};
+        {
+            name: "Track with sets, reps",
+            html: "<div>[ EXERCISE: SETS x REPS ]</div>",
+        },
+        {
+            name: "Track with other measurements",
+            html: "<div>[ MEASUREMENT: VALUE ]</div><div>You can use any single measurements like [ BD Fat: 16% ]. E.g. RPE, weight, body-fat, jump height, etc. </div>",
+        },
+    ];
+
+    get templates() {
+        return templatesStore.templates;
+    }
+    get editor() {
+        return utilsStore.editor;
+    }
+    get searchEmpty() {
+        return (
+            this.templates.filter((template) =>
+                template.name
+                    .toLowerCase()
+                    .startsWith(this.search?.toLowerCase())
+            ).length === 0
+        );
+    }
+}
 </script>
