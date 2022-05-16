@@ -112,6 +112,7 @@ body {
         <response-pop-up ref="responsePopUp" />
         <confirm-pop-up ref="confirmPopUp" />
         <upload-pop-up ref="uploadPopUp" />
+        <txt-input-pop-up ref="txtInputPopUp" />
         <nav-bar v-if="authenticated" class="fadeIn" />
         <main class="pb-16 sm:pb-0 md:ml-24" :class="{ 'm-0': !authenticated }">
             <top-banner v-if="authenticated" />
@@ -140,6 +141,7 @@ import {
     DarkmodeType,
     ResponsePopUpRef,
     TIBUserClaims,
+    TxtInputPopUpRef,
     UploadPopUpRef,
 } from "./store/modules/types";
 
@@ -147,6 +149,7 @@ import {
 import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";
 import ResponsePopUp from "./components/extensive/ResponsePopUp/index.vue";
 import UploadPopUp from "./components/generic/UploadPopUp.vue";
+import TxtInputPopUp from "./components/generic/TxtInputPopUp.vue";
 
 const NavBar = () =>
     import(
@@ -175,6 +178,7 @@ const TopBanner = () =>
         ResponsePopUp,
         ConfirmPopUp,
         UploadPopUp,
+        TxtInputPopUp,
         TopBanner,
     },
 })
@@ -202,6 +206,7 @@ export default class App extends Vue {
     @Ref("responsePopUp") readonly responsePopUpRef!: ResponsePopUpRef;
     @Ref("confirmPopUp") readonly confirmPopUpRef!: ConfirmPopUpRef;
     @Ref("uploadPopUp") readonly uploadPopUpRef!: UploadPopUpRef;
+    @Ref("txtInputPopUp") readonly txtInputPopUpRef!: TxtInputPopUpRef;
 
     @Watch("connected")
     onConnectedChange() {
@@ -221,6 +226,7 @@ export default class App extends Vue {
         utilsStore.setResponsePopUpRef(this.responsePopUpRef);
         utilsStore.setConfirmPopUpRef(this.confirmPopUpRef);
         utilsStore.setUploadPopUpRef(this.uploadPopUpRef);
+        utilsStore.setTxtInputPopUpRef(this.txtInputPopUpRef);
 
         // Sets the body to have dark mode.
         document.body.setAttribute(

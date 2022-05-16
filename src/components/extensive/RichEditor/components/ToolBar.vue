@@ -1,6 +1,5 @@
 <template>
     <div class="bg-white dark:bg-gray-800 z-10 sticky top-0 pt-4">
-        <txt-input-pop-up ref="txtInputPopUp" />
         <div
             class="flex flex-wrap px-4 pt-4 border-2 rounded-t-lg transition-all"
             :class="toolbarClass"
@@ -154,22 +153,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Ref, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import templatesStore from "../../../../store/modules/templates";
 import utilsStore from "../../../../store/modules/utils";
-import TxtInputPopUp from "../../../../components/generic/TxtInputPopUp.vue";
-import { TxtInputPopUpRef } from "../../../../store/modules/types";
 import { ChainedCommands } from "@tiptap/core";
 
-@Component({
-    components: {
-        TxtInputPopUp,
-    },
-})
+@Component
 export default class ToolBar extends Vue {
     @Prop(String) readonly toolbarClass!: string;
-
-    @Ref("txtInputPopUp") readonly txtInputPopUpRef!: TxtInputPopUpRef;
 
     get editor() {
         return utilsStore.editor;
@@ -179,15 +170,6 @@ export default class ToolBar extends Vue {
     }
     get newImgs() {
         return utilsStore.newImgs;
-    }
-
-    mounted() {
-        utilsStore.setTxtInputPopUpRef(this.txtInputPopUpRef);
-    }
-
-    /** Sets the link of the selected text. */
-    handleReturnInput(link: string) {
-        this.editor?.chain().focus().setLink({ href: link }).run();
     }
 
     /** Opens templates selector. */
@@ -207,6 +189,9 @@ export default class ToolBar extends Vue {
             text: "Make sure to include the https://",
             label: "Link",
             placeholder: "Link",
+            onSuccess: (link: string) => {
+                this.editor?.chain().focus().setLink({ href: link }).run();
+            },
         });
     }
 

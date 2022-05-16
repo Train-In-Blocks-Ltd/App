@@ -94,5 +94,6 @@ export type UploadPopUpRef = BasePopUpMethods<UploadPopUpParams> | null;
 export type TxtInputPopUpParams = {
     label: string;
     placeholder: string;
+    onSuccess: (link: string) => void;
 } & BasePopUpParams;
 export type TxtInputPopUpRef = BasePopUpMethods<TxtInputPopUpParams> | null;

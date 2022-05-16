@@ -56,6 +56,7 @@ export default class TxtInputPopUp extends Vue {
     placeholder?: string = "";
     resolve: ((reason?: any) => void) | null = null;
     reject: ((reason?: any) => void) | null = null;
+    onSuccess: ((link: string) => void) | null = null;
 
     @Watch("show")
     onShowChange(old: boolean) {
@@ -63,12 +64,13 @@ export default class TxtInputPopUp extends Vue {
         else document.body.style.overflow = "auto";
     }
 
-    open({ title, text, label, placeholder }: TxtInputPopUpParams) {
+    open({ title, text, label, placeholder, onSuccess }: TxtInputPopUpParams) {
         this.show = true;
         this.title = title;
         this.text = text;
         this.label = label;
         this.placeholder = placeholder;
+        this.onSuccess = onSuccess;
 
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
@@ -85,8 +87,7 @@ export default class TxtInputPopUp extends Vue {
 
     _confirm() {
         if (this.resolve) this.resolve(true);
-        // @ts-expect-error
-        this.$parent.handleReturnInput(this.value);
+        if (this.onSuccess) this.onSuccess(this.value ?? "");
         this.close();
     }
     _cancel() {

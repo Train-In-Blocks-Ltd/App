@@ -27,6 +27,13 @@ div#rich_show_content {
             }
         }
     }
+    a {
+        text-decoration: underline;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.6;
+        }
+    }
     .ProseMirror {
         outline: none;
     }
