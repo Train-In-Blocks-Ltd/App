@@ -8,7 +8,7 @@ import {
 } from "vuex-module-decorators";
 import store from "../..";
 import appState from "../appState";
-import { ModalSize } from "../types";
+import { ConfirmRef, ModalSize } from "../types";
 
 type ResponsePopUpParams = {
     title: string;
@@ -59,7 +59,7 @@ class UtilsModule extends VuexModule {
     previewHTML: string | null = "";
 
     // Refs
-    confirmRef = null;
+    confirmRef: ConfirmRef = null;
 
     @MutationAction
     async setSearch(search: string) {
@@ -147,7 +147,7 @@ class UtilsModule extends VuexModule {
     /* ------------------------------ Pop-ups ------------------------------ */
 
     @MutationAction
-    async setConfirmRef(confirmRef: any) {
+    async setConfirmRef(confirmRef: ConfirmRef) {
         return {
             confirmRef,
         };

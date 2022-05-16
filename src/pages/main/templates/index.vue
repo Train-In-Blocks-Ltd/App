@@ -181,7 +181,7 @@ export default class Templates extends Vue {
     async beforeRouteLeave(to: Route, from: Route, next: NavigationGuardNext) {
         if (
             this.dontLeave
-                ? await this.$store.dispatch("openConfirmPopUp", {
+                ? await utilsStore.confirmRef?.open({
                       title: "Your changes might not be saved",
                       text: "Are you sure you want to leave?",
                   })
@@ -274,7 +274,7 @@ export default class Templates extends Vue {
     async deleteMultiTemplates() {
         if (this.selectedIds.length !== 0) {
             if (
-                await this.$store.dispatch("openConfirmPopUp", {
+                await utilsStore.confirmRef?.open({
                     title: "Are you sure you want to delete all the selected templates?",
                     text: "We will remove these templates from our database and it won't be recoverable.",
                 })

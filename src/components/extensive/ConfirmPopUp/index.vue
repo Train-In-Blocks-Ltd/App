@@ -27,17 +27,13 @@
 </template>
 
 <script lang="ts">
+import { ConfirmPopUpParams } from "../../../store/modules/types";
 import { Component, Vue } from "vue-property-decorator";
 
 const Backdrop = () =>
     import(
         /* webpackChunkName: "components.backdrop", webpackPrefetch: true  */ "../../../components/generic/Backdrop.vue"
     );
-
-type ConfirmPopUpParams = {
-    title: string;
-    text?: string;
-};
 
 @Component({
     components: {

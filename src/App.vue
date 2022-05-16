@@ -134,7 +134,7 @@ import templatesStore from "./store/modules/templates";
 import bookingsStore from "./store/modules/bookings";
 import portfolioStore from "./store/modules/portfolio";
 import { useGetHighLevelData } from "./api";
-import { DarkmodeType, TIBUserClaims } from "./store/modules/types";
+import { ConfirmRef, DarkmodeType, TIBUserClaims } from "./store/modules/types";
 
 //* Needed to import like this to use refs
 import ConfirmPopUp from "./components/extensive/ConfirmPopUp/index.vue";
@@ -192,7 +192,7 @@ export default class App extends Vue {
         return appState.instanceReady;
     }
 
-    @Ref() readonly confirmPopUp!: typeof ConfirmPopUp;
+    @Ref() readonly confirmPopUp!: ConfirmRef;
 
     @Watch("connected")
     onConnectedChange() {
