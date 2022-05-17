@@ -5,8 +5,8 @@ import axios from "axios";
 import { loadProgressBar } from "axios-progress-bar";
 import "axios-progress-bar/dist/nprogress.css";
 import VueMeta from "vue-meta";
-import * as Sentry from "@sentry/vue";
-import { BrowserTracing } from "@sentry/tracing";
+// import * as Sentry from "@sentry/vue";
+// import { BrowserTracing } from "@sentry/tracing";
 
 import { InlineSvgPlugin } from "vue-inline-svg";
 
@@ -64,20 +64,20 @@ Vue.mixin({
     methods: mixins,
 });
 
-Sentry.init({
-    Vue,
-    dsn: "https://bd7f685125dc403c8befd8a7f9b48967@o1247945.ingest.sentry.io/6407922",
-    integrations: [
-        new BrowserTracing({
-            routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-            tracingOrigins: ["localhost", "traininblocks.com", /^\//],
-        }),
-    ],
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    // We recommend adjusting this value in production
-    tracesSampleRate: 0,
-});
+// Sentry.init({
+//     Vue,
+//     dsn: "https://bd7f685125dc403c8befd8a7f9b48967@o1247945.ingest.sentry.io/6407922",
+//     integrations: [
+//         new BrowserTracing({
+//             routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+//             tracingOrigins: ["localhost", "traininblocks.com", /^\//],
+//         }),
+//     ],
+//     // Set tracesSampleRate to 1.0 to capture 100%
+//     // of transactions for performance monitoring.
+//     // We recommend adjusting this value in production
+//     tracesSampleRate: 0,
+// });
 
 /* eslint-disable no-new */
 new Vue({

@@ -20,12 +20,13 @@ export type Portfolio =
           trainer_name: string;
       } & GenericResponse;
 
+export type BookingStatus = "Past" | "Pending" | "Scheduled" | "Cancelled";
 export type Booking = {
     id: number;
     client_id: number;
-    datetime: Date;
+    datetime: string;
     notes: string;
-    status: string;
+    status: BookingStatus;
 } & GenericResponse;
 
 export type Session = {

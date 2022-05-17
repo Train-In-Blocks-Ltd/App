@@ -20,7 +20,7 @@ class ClientModule extends VuexModule {
 
     @MutationAction
     async setClientDetails(clientDetails: Client | null) {
-        return {
+        return await {
             clientDetails,
         };
     }
@@ -31,49 +31,36 @@ class ClientModule extends VuexModule {
             (c) => c.client_id === id
         );
 
-        return {
+        return await {
             clientDetails,
         };
     }
 
     @MutationAction
-    async setClientPlans(plans: Plan[]) {
-        return {
-            clientDetails: {
-                ...this.clientDetails,
-                plans,
-            } as Client,
-        };
-    }
-
-    @MutationAction
-    async setClientSessions(sessions: Session[]) {
-        return {
-            clientDetails: {
-                plans: this.clientDetails?.plans?.map((p) => {
-                    return {
-                        ...p,
-                        sessions: sessions.filter((s) => s.plan_id === p.id),
-                    };
-                }),
-            } as Client,
-        };
-    }
-
-    @MutationAction
     async getPlans(id: number) {
-        if (!this.clientDetails) return;
-        const { plans, client_id } = this.clientDetails;
-        if (!plans) {
+        try {
             const response = await baseAPI.get(
-                `https://api.traininblocks.com/v2/plans/${client_id}`
+                `https://api.traininblocks.com/v2/plans/${id}`
             );
 
-            this.setClientPlans(response.data[0]);
-            this.setClientSessions(response.data[1]);
-        }
+            const clientDetails = {
+                ...this.clientDetails,
+                plans: response.data[0].map((p: Plan) => {
+                    return {
+                        ...p,
+                        sessions: response.data[1].filter(
+                            (s: Session) => s.plan_id === p.id
+                        ),
+                    };
+                }),
+            } as Client;
 
-        return {};
+            return {
+                clientDetails,
+            };
+        } catch (e) {
+            return utilsStore.resolveError(e as string);
+        }
     }
 
     @MutationAction

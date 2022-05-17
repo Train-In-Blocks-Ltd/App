@@ -42,57 +42,60 @@
     </form>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Mixins, Prop } from "vue-property-decorator";
+import GeneralMixins from "../../generalMixins";
+import appState from "../../store/modules/appState";
+import accountStore from "../../store/modules/account";
+import utilsStore from "../../store/modules/utils";
+import bookingsStore from "../../store/modules/bookings";
 
-export default {
-    props: {
-        isTrainer: Boolean,
-    },
-    data() {
-        return {
-            bookingForm: {
+@Component
+export default class BookingForm extends Mixins(GeneralMixins) {
+    @Prop(Boolean) readonly isTrainer!: boolean;
+
+    bookingForm = {
+        date: this.today(),
+        time: this.timeNow(),
+        notes: null,
+    };
+
+    get claims() {
+        return accountStore.claims;
+    }
+
+    /** Creates a new booking. */
+    async createBooking() {
+        try {
+            appState.setDontLeave(true);
+            appState.setDisableButton(true);
+            await bookingsStore.createBooking(
+                {
+                    client_id: this.isTrainer
+                        ? this.$route.params.client_id
+                        : this.claims?.client_id_db,
+                    datetime:
+                        this.bookingForm.date + " " + this.bookingForm.time,
+                    notes: this.bookingForm.notes ?? "",
+                    status: this.isTrainer ? "Scheduled" : "Pending",
+                },
+                this.isTrainer
+            );
+            this.bookingForm = {
                 date: this.today(),
                 time: this.timeNow(),
                 notes: null,
-            },
-        };
-    },
-    computed: mapState(["claims"]),
-    methods: {
-        /** Creates a new booking. */
-        async createBooking() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                    disableButtons: true,
-                });
-                await this.$store.dispatch("createBooking", {
-                    clientId: this.isTrainer
-                        ? this.$route.params.client_id
-                        : this.claims.client_id_db,
-                    datetime:
-                        this.bookingForm.date + " " + this.bookingForm.time,
-                    notes: this.bookingForm.notes,
-                    status: this.isTrainer ? "Scheduled" : "Pending",
-                    isTrainer: this.isTrainer,
-                });
-                this.bookingForm = {
-                    date: this.today(),
-                    time: this.timeNow(),
-                    notes: null,
-                };
-                this.$store.dispatch("openResponsePopUp", {
-                    title: "Booking created",
-                    description: this.isTrainer
-                        ? "Your client will be notified of any upcoming bookings that were created."
-                        : "Your trainer will be notified of your request.",
-                });
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
-    },
-};
+            };
+            utilsStore.responsePopUpRef?.open({
+                title: "Booking created",
+                text: this.isTrainer
+                    ? "Your client will be notified of any upcoming bookings that were created."
+                    : "Your trainer will be notified of your request.",
+            });
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+}
 </script>

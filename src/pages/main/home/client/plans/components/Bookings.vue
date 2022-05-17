@@ -67,38 +67,44 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../../../../store/modules/appState";
+import bookingsStore from "../../../../../../store/modules/bookings";
+import { Component, Vue } from "vue-property-decorator";
 
 const Booking = () =>
     import(
-        /* webpackChunkName: "components.booking", webpackPreload: true  */ "@/components/generic/Booking"
+        /* webpackChunkName: "components.booking", webpackPreload: true  */ "../../../../../../components/generic/Booking.vue"
     );
 const BookingForm = () =>
     import(
-        /* webpackChunkName: "components.bookingForm", webpackPreload: true  */ "@/components/generic/BookingForm"
+        /* webpackChunkName: "components.bookingForm", webpackPreload: true  */ "./../../../../../../components/generic/BookingForm.vue"
     );
 
-export default {
+@Component({
     components: {
         Booking,
         BookingForm,
     },
-    computed: mapState(["bookings", "loading"]),
-    methods: {
-        upcoming() {
-            return (
-                this.bookings
-                    .filter(
-                        (booking) => new Date(booking.datetime) > new Date()
-                    )
-                    .filter(
-                        (booking) =>
-                            booking.client_id ===
-                            parseInt(this.$route.params.client_id)
-                    ) ?? []
-            );
-        },
-    },
-};
+})
+export default class Bookings extends Vue {
+    get bookings() {
+        return bookingsStore.bookings;
+    }
+    get loading() {
+        return appState.loading;
+    }
+
+    upcoming() {
+        return (
+            this.bookings
+                .filter((booking) => new Date(booking.datetime) > new Date())
+                .filter(
+                    (booking) =>
+                        booking.client_id ===
+                        parseInt(this.$route.params.client_id)
+                ) ?? []
+        );
+    }
+}
 </script>
