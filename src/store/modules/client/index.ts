@@ -10,7 +10,6 @@ import clientsStore from "../clients";
 import { baseAPI } from "../../../api";
 
 @Module({
-    namespaced: true,
     name: "client",
     store,
     dynamic: true,

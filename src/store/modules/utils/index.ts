@@ -34,7 +34,6 @@ type ModalParams =
       };
 
 @Module({
-    namespaced: true,
     name: "utils",
     store,
     dynamic: true,

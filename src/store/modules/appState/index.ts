@@ -8,7 +8,6 @@ import { PWADisplayMode, PWASettings } from "../types";
 import store from "../..";
 
 @Module({
-    namespaced: true,
     name: "appState",
     store,
     dynamic: true,

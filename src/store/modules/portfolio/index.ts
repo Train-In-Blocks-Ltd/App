@@ -10,7 +10,6 @@ import { baseAPI } from "../../../api";
 import accountStore from "../account";
 
 @Module({
-    namespaced: true,
     name: "portfolio",
     store,
     dynamic: true,

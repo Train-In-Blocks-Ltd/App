@@ -9,7 +9,6 @@ import { Coupon, DarkmodeType, TIBUserClaims } from "../types";
 import { baseAPI } from "../../../api";
 
 @Module({
-    namespaced: true,
     name: "account",
     store,
     dynamic: true,

@@ -9,7 +9,6 @@ import store from "../..";
 import { Client } from "../types";
 
 @Module({
-    namespaced: true,
     name: "clients",
     store,
     dynamic: true,

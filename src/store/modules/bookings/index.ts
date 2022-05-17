@@ -8,7 +8,6 @@ import {
 import { Booking } from "../types";
 
 @Module({
-    namespaced: true,
     name: "bookings",
     store,
     dynamic: true,
