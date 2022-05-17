@@ -98,7 +98,7 @@ class UtilsModule extends VuexModule {
         return {
             modalOpen: true,
             modalContent: name,
-            modalSize: size,
+            modalSize: size ?? "sm",
             modalPersist: persist,
             previewTitle,
             previewHTML,

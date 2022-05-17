@@ -85,13 +85,13 @@ export default class HomeHeader extends Vue {
     handleOpenWhatsNew() {
         utilsStore.openModal({
             name: "whats-new",
+            size: "lg",
         });
     }
 
     handleOpenInstall() {
         utilsStore.openModal({
             name: "install-pwa",
-            size: "lg",
         });
     }
 }
