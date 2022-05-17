@@ -1,3 +1,4 @@
+import { baseAPI } from "../../../api";
 import {
     getModule,
     Module,
@@ -26,6 +27,45 @@ class ClientsModule extends VuexModule {
 
     @MutationAction
     async setArchivedClients(archivedClients: Client[]) {
+        return {
+            archivedClients,
+        };
+    }
+
+    @MutationAction
+    async setUnarchivedClients(ids: number[]) {
+        await baseAPI.put(
+            "https://api.traininblocks.com/v2/batch/clients/unarchive",
+            ids.map((i) => {
+                return { id: i };
+            })
+        );
+
+        const clients = [
+            ...this.clients,
+            ...this.archivedClients.filter((c) => ids.includes(c.client_id)),
+        ];
+        const archivedClients = [
+            ...this.archivedClients,
+            ...this.clients.filter((c) => !ids.includes(c.client_id)),
+        ];
+        return {
+            clients,
+            archivedClients,
+        };
+    }
+
+    @MutationAction
+    async deleteClients(ids: number[]) {
+        await baseAPI.delete("https://api.traininblocks.com/v2/batch/clients", {
+            data: ids.map((i) => {
+                return { id: i };
+            }),
+        });
+
+        const archivedClients = this.archivedClients.filter(
+            (c) => !ids.includes(c.client_id)
+        );
         return {
             archivedClients,
         };

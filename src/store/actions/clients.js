@@ -68,38 +68,4 @@ export default {
             });
         }
     },
-
-    /**
-     * Unarchive clients.
-     * @param {array} clientIds - The ids of clients.
-     */
-    async clientUnarchive({ commit }, clientIds) {
-        const POST_DATA = [];
-        clientIds.forEach((clientId) => {
-            POST_DATA.push({ id: clientId });
-        });
-        commit("unarchiveClient", clientIds);
-        await this._vm.$axios.put(
-            "https://api.traininblocks.com/v2/batch/clients/unarchive",
-            POST_DATA
-        );
-    },
-
-    /**
-     * Delete clients from the archive.
-     * @param {array} clientIds - The ids of clients.
-     */
-    async clientDelete({ commit }, clientIds) {
-        const DELETE_IDS = [];
-        clientIds.forEach((clientId) => {
-            DELETE_IDS.push({ id: clientId });
-        });
-        await this._vm.$axios.delete(
-            "https://api.traininblocks.com/v2/batch/clients",
-            {
-                data: DELETE_IDS,
-            }
-        );
-        commit("removeClient", clientIds);
-    },
 };

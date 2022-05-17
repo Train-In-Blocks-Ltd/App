@@ -9,21 +9,12 @@
             <txt type="title" is-main>Archive</txt>
             <a
                 v-if="
-                    archive.clients.length !== 0 &&
-                    selectedIds.length < archive.clients.length
+                    archivedClients.length !== 0 &&
+                    selectedIds.length < archivedClients.length
                 "
                 href="javascript:void(0)"
                 aria-label="Select all"
-                @click="
-                    () => {
-                        $store.commit('SET_DATA', {
-                            attr: 'selectedIds',
-                            data: archive.clients.map(
-                                (client) => client.client_id
-                            ),
-                        });
-                    }
-                "
+                @click="handleSelectAll"
             >
                 <txt>Select all</txt>
             </a>
@@ -39,7 +30,7 @@
                 <div class="skeleton-item w-2/3" />
             </div>
         </div>
-        <txt v-else-if="archive.clients.length === 0" type="large-body" grey>
+        <txt v-else-if="archivedClients.length === 0" type="large-body" grey>
             No clients are archived
         </txt>
         <div v-else>
@@ -55,7 +46,7 @@
                 @output="(data) => (search = data)"
             />
             <client-link
-                v-for="(client, index) in archive.clients"
+                v-for="(client, index) in archivedClients"
                 v-show="
                     (!search ||
                         client.name
@@ -73,18 +64,23 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import appState from "../../../store/modules/appState";
+import utilsStore from "../../../store/modules/utils";
+import clientsStore from "../../../store/modules/clients";
+import { MultiselectOption } from "../../../store/modules/types";
+import { Component, Vue } from "vue-property-decorator";
+
 const ClientLink = () =>
     import(
-        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "@/components/generic/ClientLink"
+        /* webpackChunkName: "components.clientLink", webpackPreload: true  */ "../../../components/generic/ClientLink.vue"
     );
 const Multiselect = () =>
     import(
-        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "@/components/generic/Multiselect"
+        /* webpackChunkName: "components.multiselect", webpackPreload: true  */ "../../../components/generic/Multiselect.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
             title: "Archive",
@@ -94,121 +90,105 @@ export default {
         ClientLink,
         Multiselect,
     },
-    data() {
-        return {
-            search: "",
-            multiselectOptions: [
-                { name: "Unarchive", svg: "archive" },
-                { name: "Delete", svg: "trash" },
-                { name: "Deselect", svg: null },
-            ],
-        };
-    },
-    computed: mapState(["loading", "archive", "selectedIds"]),
+})
+export default class Archive extends Vue {
+    search: string = "";
+    multiselectOptions: MultiselectOption[] = [
+        { name: "Unarchive", svg: "archive" },
+        { name: "Delete", svg: "trash" },
+        { name: "Deselect", svg: undefined },
+    ];
+
+    get loading() {
+        return appState.loading;
+    }
+    get archivedClients() {
+        return clientsStore.archivedClients;
+    }
+    get selectedIds() {
+        return utilsStore.selectedIds;
+    }
+
     async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
+        appState.setLoading(true);
+        // @ts-expect-error
         await this.$parent.setup();
-        this.$store.dispatch("setLoading", false);
-    },
-    methods: {
-        /**
-         * Resolves the archive multi-select.
-         * @param {string} res - The action selected from the multi-select.
-         */
-        resolveArchiveMultiselect(res) {
-            switch (res) {
-                case "Unarchive":
-                    this.unarchiveClients();
-                    break;
-                case "Delete":
-                    this.deleteClients();
-                    break;
-                case "Deselect":
-                    this.$store.commit("SET_DATA", {
-                        attr: "selectedIds",
-                        data: [],
+        appState.stopLoaders();
+    }
+
+    handleSelectAll() {
+        utilsStore.selectAll(this.archivedClients.map((c) => c.client_id));
+    }
+
+    /** Resolves the archive multi-select. */
+    resolveArchiveMultiselect(res: string) {
+        switch (res) {
+            case "Unarchive":
+                this.unarchiveClients();
+                break;
+            case "Delete":
+                this.deleteClients();
+                break;
+            case "Deselect":
+                utilsStore.deselectAll();
+                break;
+        }
+    }
+
+    /** Deletes the selected clients. */
+    async deleteClients() {
+        try {
+            appState.setDontLeave(true);
+            if (this.selectedIds.length !== 0) {
+                if (
+                    await utilsStore.confirmPopUpRef?.open({
+                        title: "Are you sure that you want to delete all the selected clients?",
+                        text: "We will remove their data(s) from our database and it won't be recoverable.",
+                    })
+                ) {
+                    clientsStore.deleteClients(this.selectedIds);
+                    utilsStore.responsePopUpRef?.open({
+                        title:
+                            this.selectedIds.length > 1
+                                ? "Clients deleted"
+                                : "Client Delete",
+                        text: "All their data has been removed",
                     });
-                    break;
-            }
-        },
-
-        /**
-         * Deletes trhe selected clients.
-         */
-        async deleteClients() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                if (this.selectedIds.length !== 0) {
-                    if (
-                        await this.$store.dispatch("openConfirmPopUp", {
-                            title: "Are you sure that you want to delete all the selected clients?",
-                            text: "We will remove their data(s) from our database and it won't be recoverable.",
-                        })
-                    ) {
-                        await this.$store.dispatch(
-                            "clientDelete",
-                            this.selectedIds
-                        );
-                        this.$store.dispatch("openResponsePopUp", {
-                            title:
-                                this.selectedIds.length > 1
-                                    ? "Clients deleted"
-                                    : "Client Delete",
-                            description: "All their data has been removed",
-                        });
-                        this.$store.commit("SET_DATA", {
-                            attr: "selectedIds",
-                            data: [],
-                        });
-                    }
+                    utilsStore.deselectAll();
                 }
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
             }
-        },
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
 
-        /**
-         * Unarchives the selected clients.
-         */
-        async unarchiveClients() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    dontLeave: true,
-                });
-                if (this.selectedIds.length !== 0) {
-                    if (
-                        await this.$store.dispatch("openConfirmPopUp", {
-                            title: "Are you sure that you want to unarchive all the selected clients?",
-                            text: "Their data will be recovered and available on the Home page.",
-                        })
-                    ) {
-                        await this.$store.dispatch(
-                            "clientUnarchive",
-                            this.selectedIds
-                        );
-                        this.$store.dispatch("openResponsePopUp", {
-                            title:
-                                this.selectedIds.length > 1
-                                    ? "Unarchived clients"
-                                    : "Unarchived client",
-                            description: "All their data has been recovered",
-                        });
-                        this.$store.commit("SET_DATA", {
-                            attr: "selectedIds",
-                            data: [],
-                        });
-                    }
+    /** Unarchives the selected clients. */
+    async unarchiveClients() {
+        try {
+            appState.setDontLeave(true);
+            if (this.selectedIds.length !== 0) {
+                if (
+                    await utilsStore.confirmPopUpRef?.open({
+                        title: "Are you sure that you want to unarchive all the selected clients?",
+                        text: "Their data will be recovered and available on the Home page.",
+                    })
+                ) {
+                    clientsStore.setUnarchivedClients(this.selectedIds);
+                    utilsStore.responsePopUpRef?.open({
+                        title:
+                            this.selectedIds.length > 1
+                                ? "Unarchived clients"
+                                : "Unarchived client",
+                        text: "All their data has been recovered",
+                    });
+                    utilsStore.deselectAll();
                 }
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
             }
-        },
-    },
-};
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+}
 </script>
