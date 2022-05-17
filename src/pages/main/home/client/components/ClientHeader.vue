@@ -106,223 +106,219 @@
     </div>
 </template>
 
-<script>
-import { mapState } from "vuex";
-const emailBuilder = require("@/components/js/email");
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appState from "../../../../../store/modules/appState";
+import clientStore from "../../../../../store/modules/client";
+import accountStore from "../../../../../store/modules/account";
+import utilsStore from "../../../../../store/modules/utils";
+import { baseAPI } from "../../../../../api";
+
+const emailBuilder = require("../../../../../components/js/email");
 const CUSTOM_ENV =
     process.env.NODE_ENV === "production"
-        ? require("@/../config/prod.env")
-        : require("@/../config/dev.env");
+        ? require("../../../../../../config/prod.env")
+        : require("../../../../../../config/dev.env");
 
-export default {
-    data() {
-        return {
-            clientAlreadyMsg: "Loading...",
-            clientAlready: true,
-            clientSuspend: null,
-        };
-    },
+@Component
+export default class ClientHeader extends Vue {
+    clientAlreadyMsg: string = "Loading...";
+    clientAlready: boolean = true;
+    clientSuspend: string | null = null;
+
+    get clientDetails() {
+        return clientStore.clientDetails;
+    }
+    get silentLoading() {
+        return appState.silentLoading;
+    }
+    get isDemo() {
+        return appState.isDemo;
+    }
+    get claims() {
+        return accountStore.claims;
+    }
+
     mounted() {
         this.checkClient();
-    },
-    computed: mapState(["clientDetails", "silentLoading", "claims", "isDemo"]),
-    methods: {
-        /**
-         * Updates the client.
-         */
-        async updateClient() {
-            try {
-                this.$store.dispatch("setLoading", {
-                    silentLoading: true,
-                    dontLeave: true,
-                });
-                await this.$store.dispatch("updateClient");
-                this.$store.dispatch("setLoading", false);
-            } catch (e) {
-                this.$store.dispatch("resolveError", e);
-            }
-        },
+    }
 
-        /**
-         * Gives access to the client user.
-         */
-        async giveAccess() {
-            this.$store.dispatch("setLoading", {
-                dontLeave: true,
-            });
-            try {
-                if (this.clientAlreadyMsg === "Resend activation email") {
-                    const OKTA_ONE = await this.$axios.post(
-                        "/.netlify/functions/okta",
-                        {
-                            type: "GET",
-                            url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`,
-                        }
-                    );
-                    const OKTA_TWO = await this.$axios.post(
-                        "/.netlify/functions/okta",
-                        {
-                            type: "POST",
-                            body: {},
-                            url: `${OKTA_ONE.data[0].id}/lifecycle/reactivate?sendEmail=false`,
-                        }
-                    );
-                    await this.$axios.post("/.netlify/functions/send-email", {
-                        to: this.clientDetails.email,
-                        ...emailBuilder("activate-account", {
-                            link: OKTA_TWO.data.activationUrl.replace(
-                                CUSTOM_ENV.OKTA.ISSUER,
-                                "https://auth.traininblocks.com"
-                            ),
-                        }),
-                    });
-                } else if (this.clientSuspend) {
-                    await this.$axios.post("/.netlify/functions/okta", {
+    /** Updates the client. */
+    async updateClient() {
+        try {
+            appState.setSilentLoading(true);
+            appState.setDontLeave(true);
+            await this.$store.dispatch("updateClient");
+            appState.stopLoaders();
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+
+    /** Gives access to the client user. */
+    async giveAccess() {
+        appState.setDontLeave(true);
+        try {
+            if (this.clientAlreadyMsg === "Resend activation email") {
+                const OKTA_ONE = await baseAPI.post(
+                    "/.netlify/functions/okta",
+                    {
+                        type: "GET",
+                        url: `?filter=profile.email+eq+"${this.clientDetails?.email}"&limit=1`,
+                    }
+                );
+                const OKTA_TWO = await baseAPI.post(
+                    "/.netlify/functions/okta",
+                    {
                         type: "POST",
                         body: {},
-                        url: `${this.clientSuspend}/lifecycle/unsuspend`,
-                    });
-                    const PASSWORD = await this.$axios.post(
-                        "/.netlify/functions/okta",
-                        {
-                            type: "POST",
-                            body: {},
-                            url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`,
-                        }
-                    );
-                    await this.$axios.post("/.netlify/functions/send-email", {
-                        to: this.clientDetails.email,
-                        ...emailBuilder("client-account-reactivated", {
-                            link: PASSWORD.data.resetPasswordUrl.replace(
-                                CUSTOM_ENV.OKTA.ISSUER,
-                                "https://auth.traininblocks.com"
-                            ),
-                        }),
-                    });
-                } else {
-                    const OKTA_ONE = await this.$axios.post(
-                        "/.netlify/functions/okta",
-                        {
-                            type: "POST",
-                            body: {
-                                profile: {
-                                    firstName: this.clientDetails.email,
-                                    email: this.clientDetails.email,
-                                    login: this.clientDetails.email,
-                                    ga: true,
-                                    client_id_db: this.clientDetails.client_id,
-                                    user_type: "Client",
-                                },
-                                groupIds: ["00gf929legrtSjxOe4x6"],
+                        url: `${OKTA_ONE.data[0].id}/lifecycle/reactivate?sendEmail=false`,
+                    }
+                );
+                await baseAPI.post("/.netlify/functions/send-email", {
+                    to: this.clientDetails?.email,
+                    ...emailBuilder("activate-account", {
+                        link: OKTA_TWO.data.activationUrl.replace(
+                            CUSTOM_ENV.OKTA.ISSUER,
+                            "https://auth.traininblocks.com"
+                        ),
+                    }),
+                });
+            } else if (this.clientSuspend) {
+                await baseAPI.post("/.netlify/functions/okta", {
+                    type: "POST",
+                    body: {},
+                    url: `${this.clientSuspend}/lifecycle/unsuspend`,
+                });
+                const PASSWORD = await baseAPI.post(
+                    "/.netlify/functions/okta",
+                    {
+                        type: "POST",
+                        body: {},
+                        url: `${this.clientSuspend}/lifecycle/reset_password?sendEmail=false`,
+                    }
+                );
+                await baseAPI.post("/.netlify/functions/send-email", {
+                    to: this.clientDetails?.email,
+                    ...emailBuilder("client-account-reactivated", {
+                        link: PASSWORD.data.resetPasswordUrl.replace(
+                            CUSTOM_ENV.OKTA.ISSUER,
+                            "https://auth.traininblocks.com"
+                        ),
+                    }),
+                });
+            } else {
+                const OKTA_ONE = await baseAPI.post(
+                    "/.netlify/functions/okta",
+                    {
+                        type: "POST",
+                        body: {
+                            profile: {
+                                firstName: this.clientDetails?.email,
+                                email: this.clientDetails?.email,
+                                login: this.clientDetails?.email,
+                                ga: true,
+                                client_id_db: this.clientDetails?.client_id,
+                                user_type: "Client",
                             },
-                            url: "?activate=false",
-                        }
-                    );
-                    const OKTA_TWO = await this.$axios.post(
-                        "/.netlify/functions/okta",
-                        {
-                            type: "POST",
-                            body: {},
-                            url: `${OKTA_ONE.data.id}/lifecycle/activate?sendEmail=false`,
-                        }
-                    );
-                    await this.$axios.post("/.netlify/functions/send-email", {
-                        to: this.clientDetails.email,
-                        ...emailBuilder("activate-account", {
-                            link: OKTA_TWO.data.activationUrl.replace(
-                                CUSTOM_ENV.OKTA.ISSUER,
-                                "https://auth.traininblocks.com"
-                            ),
-                        }),
-                    });
+                            groupIds: ["00gf929legrtSjxOe4x6"],
+                        },
+                        url: "?activate=false",
+                    }
+                );
+                const OKTA_TWO = await baseAPI.post(
+                    "/.netlify/functions/okta",
+                    {
+                        type: "POST",
+                        body: {},
+                        url: `${OKTA_ONE.data.id}/lifecycle/activate?sendEmail=false`,
+                    }
+                );
+                await baseAPI.post("/.netlify/functions/send-email", {
+                    to: this.clientDetails?.email,
+                    ...emailBuilder("activate-account", {
+                        link: OKTA_TWO.data.activationUrl.replace(
+                            CUSTOM_ENV.OKTA.ISSUER,
+                            "https://auth.traininblocks.com"
+                        ),
+                    }),
+                });
+            }
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+        await this.checkClient();
+        utilsStore.responsePopUpRef?.open({
+            title: "An activation email was sent to your client",
+            text: "Please ask them to check their inbox",
+            persist: true,
+            backdrop: true,
+        });
+        appState.stopLoaders();
+    }
+
+    /** Checks if the client already exists on Okta. */
+    async checkClient() {
+        if (this.claims?.email !== "demo@traininblocks.com") {
+            this.clientAlreadyMsg = "Loading...";
+            try {
+                const RESULT = await baseAPI.post("/.netlify/functions/okta", {
+                    type: "GET",
+                    url: `?filter=profile.email+eq+"${this.clientDetails?.email}"&limit=1`,
+                });
+                if (RESULT.data.length > 0) {
+                    switch (RESULT.data[0].status) {
+                        case "ACTIVE":
+                            this.clientAlready = true;
+                            this.clientAlreadyMsg = "User activated";
+                            break;
+                        case "PROVISIONED":
+                        case "RECOVERY":
+                            this.clientAlready = false;
+                            this.clientAlreadyMsg = "Resend activation email";
+                            break;
+                        case "SUSPENDED":
+                            this.clientSuspend = RESULT.data[0].id;
+                            this.clientAlready = false;
+                            this.clientAlreadyMsg = "Give Access";
+                            break;
+                    }
+                } else {
+                    this.clientAlready = false;
+                    this.clientAlreadyMsg = "Give Access";
                 }
             } catch (e) {
-                this.$store.dispatch("resolveError", e);
+                this.clientAlready = true;
+                this.clientAlreadyMsg = "Error";
+                utilsStore.resolveError(e as string);
             }
-            await this.checkClient();
-            this.$store.dispatch("openResponsePopUp", {
-                title: "An activation email was sent to your client",
-                description: "Please ask them to check their inbox",
-                persist: true,
-                backdrop: true,
-            });
-            this.$store.dispatch("setLoading", false);
-        },
+        } else {
+            this.clientAlreadyMsg = "Restricted";
+        }
+    }
 
-        /**
-         * Checks if the client already exists on Okta.
-         */
-        async checkClient() {
-            if (this.claims.email !== "demo@traininblocks.com") {
-                this.clientAlreadyMsg = "Loading...";
-                try {
-                    const RESULT = await this.$axios.post(
-                        "/.netlify/functions/okta",
-                        {
-                            type: "GET",
-                            url: `?filter=profile.email+eq+"${this.clientDetails.email}"&limit=1`,
-                        }
-                    );
-                    if (RESULT.data.length > 0) {
-                        switch (RESULT.data[0].status) {
-                            case "ACTIVE":
-                                this.clientAlready = true;
-                                this.clientAlreadyMsg = "User activated";
-                                break;
-                            case "PROVISIONED":
-                            case "RECOVERY":
-                                this.clientAlready = false;
-                                this.clientAlreadyMsg =
-                                    "Resend activation email";
-                                break;
-                            case "SUSPENDED":
-                                this.clientSuspend = RESULT.data[0].id;
-                                this.clientAlready = false;
-                                this.clientAlreadyMsg = "Give Access";
-                                break;
-                        }
-                    } else {
-                        this.clientAlready = false;
-                        this.clientAlreadyMsg = "Give Access";
-                    }
-                } catch (e) {
-                    this.clientAlready = true;
-                    this.clientAlreadyMsg = "Error";
-                    this.$store.dispatch("resolveError", e);
-                }
-            } else {
-                this.clientAlreadyMsg = "Restricted";
+    /** * Archives the client. */
+    async clientArchive(id: number) {
+        if (
+            await utilsStore.confirmPopUpRef?.open({
+                title: "Are you sure that you want to archive/hide this client?",
+                text: "Their data will be stored, but it will be removed if deleted from the Archive.",
+            })
+        ) {
+            try {
+                appState.setDontLeave(true);
+                await this.$store.dispatch("clientArchive", id);
+                this.$ga.event("Client", "archive");
+                utilsStore.responsePopUpRef?.open({
+                    title: "Client archived",
+                    text: "Their data will be kept safe on the archive page",
+                });
+                appState.stopLoaders();
+                this.$router.push("/");
+            } catch (e) {
+                utilsStore.resolveError(e as string);
             }
-        },
-
-        /**
-         * Archives the client.
-         */
-        async clientArchive(clientId) {
-            if (
-                await this.$store.dispatch("openConfirmPopUp", {
-                    title: "Are you sure that you want to archive/hide this client?",
-                    text: "Their data will be stored, but it will be removed if deleted from the Archive.",
-                })
-            ) {
-                try {
-                    this.$store.dispatch("setLoading", {
-                        dontLeave: true,
-                    });
-                    await this.$store.dispatch("clientArchive", clientId);
-                    this.$ga.event("Client", "archive");
-                    this.$store.dispatch("openResponsePopUp", {
-                        title: "Client archived",
-                        description:
-                            "Their data will be kept safe on the archive page",
-                    });
-                    this.$store.dispatch("setLoading", false);
-                    this.$router.push("/");
-                } catch (e) {
-                    this.$store.dispatch("resolveError", e);
-                }
-            }
-        },
-    },
-};
+        }
+    }
+}
 </script>

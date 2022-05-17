@@ -13,46 +13,47 @@
     </wrapper>
 </template>
 
-<script>
-import { mapState } from "vuex";
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import appState from "../../../../store/modules/appState";
+import clientStore from "../../../../store/modules/client";
 
 const ClientHeader = () =>
     import(
-        /* webpackChunkName: "components.clientHeader", webpackPrefetch: true  */ "./components/ClientHeader"
+        /* webpackChunkName: "components.clientHeader", webpackPrefetch: true  */ "./components/ClientHeader.vue"
     );
 
-export default {
+@Component({
     metaInfo() {
         return {
-            title: this.loading ? "Loading..." : this.clientDetails.name,
+            title: appState.loading
+                ? "Loading..."
+                : clientStore.clientDetails?.name,
         };
     },
     components: {
         ClientHeader,
     },
-    data() {
-        return {
-            showOptions: false,
-            showToolkit: false,
-            sessions: false,
-        };
-    },
-    computed: mapState(["loading", "clients", "clientDetails"]),
+})
+export default class Client extends Vue {
+    showOptions: boolean = false;
+    showToolkit: boolean = false;
+    sessions: boolean = false;
+
+    get loading() {
+        return appState.loading;
+    }
+    get clientDetails() {
+        return clientStore.clientDetails;
+    }
+
     async created() {
-        this.$store.dispatch("setLoading", {
-            loading: true,
-        });
+        appState.setLoading(true);
+        // @ts-expect-error
         await this.$parent.setup();
-        const CLIENT = this.clients.find(
-            (client) =>
-                client.client_id === parseInt(this.$route.params.client_id)
-        );
-        await this.$store.dispatch("getPlans", CLIENT.client_id);
-        this.$store.commit("SET_DATA", {
-            attr: "clientDetails",
-            data: CLIENT,
-        });
-        this.$store.dispatch("setLoading", false);
-    },
-};
+        clientStore.setCurrentClient(parseInt(this.$route.params.client_id));
+        await clientStore.getPlans(parseInt(this.$route.params.client_id));
+        appState.stopLoaders();
+    }
+}
 </script>

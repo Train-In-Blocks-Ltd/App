@@ -1,41 +1,5 @@
 export default {
     /**
-     * Get all the plans and sessions for a client.
-     * @param {number} clientId - The id of the client.
-     */
-    async getPlans({ commit, state }, clientId) {
-        const CLIENT = state.clients.find(
-            (client) => client.client_id === parseInt(clientId)
-        );
-        if (!CLIENT.plans) {
-            const RESPONSE = await this._vm.$axios.get(
-                `https://api.traininblocks.com/v2/plans/${CLIENT.client_id}`
-            );
-            commit("updateClient", {
-                clientId: CLIENT.client_id,
-                attr: "plans",
-                data: RESPONSE.data.length === 0 ? false : RESPONSE.data[0],
-            });
-
-            // Resolves sessions and assigns to correct plan
-            if (RESPONSE.data[1]) {
-                CLIENT.plans.forEach((plan) => {
-                    const SESSION_DATA =
-                        RESPONSE.data[1].filter(
-                            (session) => session.programme_id === plan.id
-                        ) || false;
-                    commit("updatePlanAttr", {
-                        clientId,
-                        planId: plan.id,
-                        attr: "sessions",
-                        data: SESSION_DATA.length === 0 ? false : SESSION_DATA,
-                    });
-                });
-            }
-        }
-    },
-
-    /**
      * Creates a new plan.
      * @param {number} payload.clientId - The id of the client that the plan belongs to.
      * @param {string} payload.name - The name of the plan.

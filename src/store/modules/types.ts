@@ -28,6 +28,20 @@ export type Booking = {
     status: string;
 } & GenericResponse;
 
+export type Session = {
+    id: number;
+    plan_id: number;
+} & GenericResponse;
+
+export type Plan = {
+    id: number;
+    client_id: number;
+    name: string;
+    duration: number;
+    block_color: string;
+    sessions?: Session[];
+} & GenericResponse;
+
 export type Client = {
     client_id: number;
     pt_id: string;
@@ -38,6 +52,7 @@ export type Client = {
     profile_image?: string;
     notifications: number;
     notes: string;
+    plans?: Plan[];
 } & GenericResponse;
 
 export type DarkmodeType = "light" | "dark" | "system";
