@@ -81,12 +81,7 @@
             <div class="flex">
                 <icon-button
                     svg="divide-square"
-                    :on-click="
-                        () =>
-                            $store.dispatch('openModal', {
-                                name: 'toolkit',
-                            })
-                    "
+                    :on-click="handleOpenToolkit"
                     :icon-size="32"
                     class="mr-4"
                     aria-label="Toolkit"
@@ -96,7 +91,7 @@
                     v-if="!isDemo"
                     svg="archive"
                     class="ml-4"
-                    :on-click="() => clientArchive(clientDetails.client_id)"
+                    :on-click="archiveClient"
                     :icon-size="32"
                     aria-label="Archive client"
                     title="Archive client"
@@ -110,6 +105,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import appState from "../../../../../store/modules/appState";
 import clientStore from "../../../../../store/modules/client";
+import clientsStore from "../../../../../store/modules/clients";
 import accountStore from "../../../../../store/modules/account";
 import utilsStore from "../../../../../store/modules/utils";
 import { baseAPI } from "../../../../../api";
@@ -141,6 +137,13 @@ export default class ClientHeader extends Vue {
 
     mounted() {
         this.checkClient();
+    }
+
+    /** Opens toolkit. */
+    handleOpenToolkit() {
+        utilsStore.openModal({
+            name: "toolkit",
+        });
     }
 
     /** Updates the client. */
@@ -297,17 +300,19 @@ export default class ClientHeader extends Vue {
         }
     }
 
-    /** * Archives the client. */
-    async clientArchive(id: number) {
+    /** Archives the client. */
+    async archiveClient() {
         if (
-            await utilsStore.confirmPopUpRef?.open({
+            (await utilsStore.confirmPopUpRef?.open({
                 title: "Are you sure that you want to archive/hide this client?",
                 text: "Their data will be stored, but it will be removed if deleted from the Archive.",
-            })
+            })) &&
+            this.clientDetails
         ) {
             try {
+                const { client_id: id, email } = this.clientDetails;
                 appState.setDontLeave(true);
-                await this.$store.dispatch("clientArchive", id);
+                await clientsStore.archiveClient(id, email);
                 this.$ga.event("Client", "archive");
                 utilsStore.responsePopUpRef?.open({
                     title: "Client archived",

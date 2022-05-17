@@ -7,6 +7,7 @@ import {
 } from "vuex-module-decorators";
 import { Client, Plan, Session } from "../types";
 import clientsStore from "../clients";
+import utilsStore from "../utils";
 import { baseAPI } from "../../../api";
 
 @Module({
@@ -66,6 +67,22 @@ class ClientModule extends VuexModule {
         }
 
         return {};
+    }
+
+    @MutationAction
+    async updateClient() {
+        try {
+            if (!this.clientDetails) return;
+            const { client_id } = this.clientDetails;
+            await baseAPI.put("https://api.traininblocks.com/v2/clients", {
+                ...this.clientDetails,
+                id: client_id,
+            });
+
+            return {};
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
     }
 }
 

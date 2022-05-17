@@ -174,7 +174,7 @@ export default class Archive extends Vue {
                         text: "Their data will be recovered and available on the Home page.",
                     })
                 ) {
-                    clientsStore.setUnarchivedClients(this.selectedIds);
+                    clientsStore.unarchiveClients(this.selectedIds);
                     utilsStore.responsePopUpRef?.open({
                         title:
                             this.selectedIds.length > 1

@@ -1,4 +1,5 @@
 import { baseAPI } from "../../../api";
+const emailBuilder = require("../../../components/js/email");
 import {
     getModule,
     Module,
@@ -7,6 +8,7 @@ import {
 } from "vuex-module-decorators";
 import store from "../..";
 import { Client } from "../types";
+import utilsStore from "../utils";
 
 @Module({
     name: "clients",
@@ -32,7 +34,43 @@ class ClientsModule extends VuexModule {
     }
 
     @MutationAction
-    async setUnarchivedClients(ids: number[]) {
+    async archiveClient(id: number, email: string) {
+        try {
+            await baseAPI.put(
+                `https://api.traininblocks.com/v2/clients/archive/${id}`
+            );
+            const response = await baseAPI.post("/.netlify/functions/okta", {
+                type: "GET",
+                url: `?filter=profile.email+eq+"${email}"&limit=1`,
+            });
+            if (response.data.length >= 1) {
+                await baseAPI.post("/.netlify/functions/okta", {
+                    type: "POST",
+                    body: {},
+                    url: `${response.data[0].id}/lifecycle/suspend`,
+                });
+                await baseAPI.post("/.netlify/functions/send-email", {
+                    to: email,
+                    ...emailBuilder("client-account-deactivated"),
+                });
+            }
+
+            const clients = this.clients.filter((c) => c.client_id !== id);
+            const archivedClients = [
+                this.archivedClients.find((c) => c.client_id === id),
+                ...this.clients,
+            ];
+            return {
+                clients,
+                archivedClients,
+            };
+        } catch (e) {
+            utilsStore.resolveError(e as string);
+        }
+    }
+
+    @MutationAction
+    async unarchiveClients(ids: number[]) {
         await baseAPI.put(
             "https://api.traininblocks.com/v2/batch/clients/unarchive",
             ids.map((i) => {
@@ -44,10 +82,9 @@ class ClientsModule extends VuexModule {
             ...this.clients,
             ...this.archivedClients.filter((c) => ids.includes(c.client_id)),
         ];
-        const archivedClients = [
-            ...this.archivedClients,
-            ...this.clients.filter((c) => !ids.includes(c.client_id)),
-        ];
+        const archivedClients = this.archivedClients.filter(
+            (c) => !ids.includes(c.client_id)
+        );
         return {
             clients,
             archivedClients,
